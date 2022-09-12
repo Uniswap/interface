@@ -119,11 +119,13 @@ interface GasFeeResponseLegacy extends GasFeeResponseBase {
 
 type TransactionLegacyFeeParams = {
   gasPrice: string
+  gasLimit: string
 }
 
 type TransactionEip1559FeeParams = {
   maxFeePerGas: string
   maxPriorityFeePerGas: string
+  gasLimit: string
 }
 
 // GasFeeResponse is the type that comes directly from the Gas Service API

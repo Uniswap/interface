@@ -39,9 +39,11 @@ export function useTransactionGasFee(
         ? {
             maxPriorityFeePerGas: currentData.maxPriorityFeePerGas[speed],
             maxFeePerGas: currentData.maxFeePerGas[speed],
+            gasLimit: currentData.gasLimit,
           }
         : {
             gasPrice: currentData.gasPrice[speed],
+            gasLimit: currentData.gasLimit,
           }
 
     return {

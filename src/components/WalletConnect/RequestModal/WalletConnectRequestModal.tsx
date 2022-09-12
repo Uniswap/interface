@@ -158,7 +158,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
         signWcRequestActions.trigger({
           requestInternalId: request.internalId,
           method: request.type,
-          transaction: tx,
+          transaction: { ...tx, ...gasFeeInfo.params },
           account: activeAccount,
           dapp: request.dapp,
         })
