@@ -3,16 +3,16 @@ import { useEffect, useState } from 'react'
 
 const isClient = typeof window !== 'undefined'
 
-function getIsMobile() {
-  return isClient ? window.innerWidth < breakpoints.sm : false
+function getIsTablet() {
+  return isClient ? window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.sm : false
 }
 
-export function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(getIsMobile)
+export function useIsTablet(): boolean {
+  const [isTablet, setIsTablet] = useState(getIsTablet)
 
   useEffect(() => {
     function handleResize() {
-      setIsMobile(getIsMobile())
+      setIsTablet(getIsTablet())
     }
 
     if (isClient) {
@@ -24,5 +24,5 @@ export function useIsMobile(): boolean {
     return undefined
   }, [])
 
-  return isMobile
+  return isTablet
 }

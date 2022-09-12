@@ -209,6 +209,7 @@ export const vars = createGlobalTheme(':root', {
     black: '900',
   },
   time: {
+    '125': '125ms',
     '250': '250ms',
     '500': '500ms',
   },
@@ -297,6 +298,7 @@ const layoutStyles = defineProperties({
     position: ['absolute', 'fixed', 'relative', 'sticky', 'static'],
     objectFit: ['contain', 'cover'],
     order: [0, 1],
+    opacity: ['auto', '0', '1'],
   } as const,
   shorthands: {
     paddingX: ['paddingLeft', 'paddingRight'],
