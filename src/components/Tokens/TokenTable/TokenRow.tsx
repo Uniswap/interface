@@ -364,7 +364,6 @@ function HeaderCell({
 
 /* Token Row: skeleton row component */
 export function TokenRow({
-  style,
   favorited,
   header,
   listNumber,
@@ -376,7 +375,6 @@ export function TokenRow({
   sparkLine,
   ...rest
 }: {
-  style?: CSSProperties
   favorited: ReactNode
   first?: boolean
   header: boolean
@@ -403,11 +401,7 @@ export function TokenRow({
     </>
   )
   if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
-  return (
-    <StyledTokenRow style={style} {...rest}>
-      {rowCells}
-    </StyledTokenRow>
-  )
+  return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
 }
 
 /* Header Row: top header row component for table */

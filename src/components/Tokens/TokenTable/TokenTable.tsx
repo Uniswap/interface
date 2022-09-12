@@ -28,10 +28,10 @@ const MAX_TOKENS_TO_LOAD = 100
 const PAGE_SIZE = 20
 const MAX_PAGE = MAX_TOKENS_TO_LOAD / PAGE_SIZE
 
-const GridContainer = styled.div`
+const GridContainer = styled.div<{ fixedHeight?: boolean }>`
   display: flex;
   flex-direction: column;
-  height: 70vh;
+  height: ${({ fixedHeight }) => fixedHeight && '70vh'};
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   background-color: ${({ theme }) => theme.backgroundSurface};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
@@ -60,9 +60,6 @@ const NoTokenDisplay = styled.div`
   align-items: center;
   padding: 0px 28px;
   gap: 8px;
-`
-const TokenRowsContainer = styled.div`
-  width: 100%;
 `
 
 const DEFAULT_FILTER_STRING = ''
@@ -211,7 +208,7 @@ function createFetchTokensPromise(
                     [TimePeriod.ALL]: token?.markets?.[0]?.pricePercentChangeAll,
                   },
                 }
-              : ({} as TokenData)
+              : ({ loading: false } as TokenData)
           )
         : []
       const currentTopTokens = [...topTokens]
@@ -232,19 +229,15 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
-const LoadRow = function TokenRow({ data, index, style }: TokenRowProps) {
-  return <LoadingRow style={style} key={index} />
-}
-
 export function LoadingTokenTable() {
   return (
-    <GridContainer>
+    <GridContainer fixedHeight={true}>
       <HeaderRow />
       <TokenDataContainer>
         <AutoSizer>
           {({ height, width }) => (
             <FixedSizeList className="List" height={height} width={width} itemCount={MAX_TOKENS_TO_LOAD} itemSize={70}>
-              {LoadRow}
+              {({ index, style }) => <LoadingRow style={style} key={index} />}
             </FixedSizeList>
           )}
         </AutoSizer>
@@ -311,7 +304,7 @@ export default function TokenTable() {
   }
 
   /* loading and error state */
-  if (error || !topTokens) {
+  if (usePreloadedTokens ? !sortedFilteredTokens : error || !topTokens) {
     return (
       <NoTokensState
         message={
@@ -324,23 +317,22 @@ export default function TokenTable() {
     )
   }
 
-  if (showFavorites && topTokens?.length === 0) {
+  if (showFavorites && sortedFilteredTokens?.length === 0) {
     return <NoTokensState message={<Trans>You have no favorited tokens</Trans>} />
   }
 
-  if (!showFavorites && topTokens?.length === 0) {
+  if (!showFavorites && (usePreloadedTokens ? sortedFilteredTokens?.length === 0 : topTokens?.length === 0)) {
     return <NoTokensState message={<Trans>No tokens found</Trans>} />
   }
 
   return (
-    <GridContainer>
+    <GridContainer fixedHeight={true}>
       <HeaderRow />
       <TokenDataContainer>
         <AutoSizer>
           {({ height, width }) =>
             usePreloadedTokens ? (
               <FixedSizeList
-                className="List"
                 height={height}
                 width={width}
                 itemCount={MAX_TOKENS_TO_LOAD}
@@ -359,7 +351,6 @@ export default function TokenTable() {
                   ref: any
                 }) => (
                   <FixedSizeList
-                    className="List"
                     height={height}
                     width={width}
                     itemCount={MAX_TOKENS_TO_LOAD}
