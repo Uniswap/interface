@@ -57,7 +57,6 @@ export const searchBarInput = style([
     color: { default: 'blackBlue', placeholder: 'placeholder' },
     border: 'none',
     background: 'none',
-    width: 'full',
   }),
   {
     lineHeight: '24px',
