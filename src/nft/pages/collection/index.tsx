@@ -1,7 +1,7 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
-import { useIsMobile } from 'nft/hooks/useIsMobile'
+import { useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { useQuery } from 'react-query'
@@ -11,6 +11,7 @@ const Collection = () => {
   const { contractAddress } = useParams()
 
   const isMobile = useIsMobile()
+  const isFiltersExpanded = useFiltersExpanded()
 
   const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
@@ -34,7 +35,10 @@ const Collection = () => {
         </Row>
       )}
       <Row alignItems="flex-start" position="relative" paddingX="48">
-        <Filters />
+        <AnimatedBox position="sticky" top="72" width="0">
+          {isFiltersExpanded && <Filters />}
+        </AnimatedBox>
+
         <AnimatedBox width="full">
           {contractAddress && <CollectionNfts contractAddress={contractAddress} />}
         </AnimatedBox>

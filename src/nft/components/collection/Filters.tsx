@@ -8,8 +8,10 @@ import { useReducer } from 'react'
 
 export const Filters = () => {
   const isMobile = useIsMobile()
-  const setBuyNow = useCollectionFilters((state) => state.setBuyNow)
-  const buyNow = useCollectionFilters((state) => state.buyNow)
+  const { buyNow, setBuyNow } = useCollectionFilters((state) => ({
+    buyNow: state.buyNow,
+    setBuyNow: state.setBuyNow,
+  }))
   const [buyNowHovered, toggleBuyNowHover] = useReducer((state) => !state, false)
 
   const handleBuyNowToggle = () => {
