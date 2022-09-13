@@ -44,7 +44,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   })
 
   const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
-    // Price-fetching is informational and costly, so its done less frequently.
+    // Price-fetching is informational and costly, so it's done less frequently.
     pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`,
   })
 
