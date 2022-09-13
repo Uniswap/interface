@@ -8,7 +8,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { AvatarWithVisibilityBadge } from 'src/components/unicons/AvatarWithVisibilityBadge'
 import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
-import useENSAvatar from 'src/features/ens/useENSAvatar'
+import { useENSAvatar } from 'src/features/ens/api'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -74,7 +74,7 @@ export function AddressDisplay({
   const theme = useAppTheme()
   const displayName = useDisplayName(address, showShortenedEns)
   const nameTypeIsAddress = displayName?.type === 'address'
-  const { avatar } = useENSAvatar(address)
+  const { data: avatar } = useENSAvatar(address)
 
   const onPressCopyAddress = () => {
     if (!address) return

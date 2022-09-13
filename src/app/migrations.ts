@@ -212,4 +212,10 @@ export const migrations = {
     newState.wallet = { ...state.wallet, accounts }
     return newState
   },
+
+  18: (state: any) => {
+    const newState = { ...state }
+    delete newState.ens
+    return newState
+  },
 }

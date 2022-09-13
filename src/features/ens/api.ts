@@ -7,7 +7,7 @@ import { areAddressesEqual } from 'src/utils/addresses'
 
 export type EnslookupParams = {
   nameOrAddress: string
-  provider: providers.Provider
+  provider: providers.JsonRpcProvider
   chainId: ChainId
 }
 
@@ -21,7 +21,7 @@ const serializeQueryArgs: SerializeQueryArgs<string | FetchArgs> = (args) => {
   return `${ENS_REDUCER_NAME}-${endpointName}-${ensArgs.chainId}-${ensArgs.nameOrAddress}`
 }
 
-export const ens = createApi({
+export const ensApi = createApi({
   reducerPath: ENS_REDUCER_NAME,
   serializeQueryArgs,
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
@@ -61,10 +61,28 @@ export const ens = createApi({
         }
       },
     }),
+
+    // Takes an address, does ens name lookup, and returns the URL for ENS Avatar, if set.
+    // We duplicate logic from "name" query to benefit from caching on address only
+    avatar: builder.query<string | null, EnslookupParams>({
+      queryFn: async (params: EnslookupParams) => {
+        const { nameOrAddress: address, provider } = params
+        try {
+          const name = await provider.lookupAddress(address)
+          const fwdAddr = name ? await provider.resolveName(name) : null
+          const checkedName = areAddressesEqual(address, fwdAddr) ? name : null
+          const avatarURL = checkedName ? await provider.getAvatar(checkedName) : null
+          return { data: avatarURL }
+        } catch (_) {
+          // ENS lookup may throw an error if the chain (e.g. Optimism) does not support ENS
+          return { data: null }
+        }
+      },
+    }),
   }),
 })
 
-const { useNameQuery, useAddressQuery } = ens
+const { useNameQuery, useAddressQuery, useAvatarQuery } = ensApi
 
 export function useENSName(address?: Address, chainId: ChainId = ChainId.Mainnet) {
   const provider = useProvider(chainId)
@@ -77,5 +95,12 @@ export function useAddressFromEns(ensName?: string | null, chainId: ChainId = Ch
   const provider = useProvider(chainId)
   return useAddressQuery(
     provider && ensName ? { provider, nameOrAddress: ensName, chainId } : skipToken
+  )
+}
+
+export function useENSAvatar(address?: string | null, chainId: ChainId = ChainId.Mainnet) {
+  const provider = useProvider(chainId)
+  return useAvatarQuery(
+    provider && address ? { provider, nameOrAddress: address, chainId } : skipToken
   )
 }
