@@ -17,9 +17,18 @@ export const FilterButton = ({
   results?: number
   onClick: () => void
 }) => {
-  const buyNow = useCollectionFilters((state) => state.buyNow)
+  const { minPrice, maxPrice, minRarity, maxRarity, traits, markets, buyNow } = useCollectionFilters((state) => ({
+    minPrice: state.minPrice,
+    maxPrice: state.maxPrice,
+    minRarity: state.minRarity,
+    maxRarity: state.maxRarity,
+    traits: state.traits,
+    markets: state.markets,
+    buyNow: state.buyNow,
+  }))
 
-  const showFilterBadge = !buyNow
+  const showFilterBadge =
+    minPrice || maxPrice || minRarity || maxRarity || traits.length || markets.length || buyNow ? true : false
   return (
     <Box
       className={clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)}
