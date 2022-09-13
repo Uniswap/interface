@@ -18,6 +18,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
 import { AppStackParamList, TabNavigationProp } from 'src/app/navigation/types'
+import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { FavoriteTokensCard } from 'src/components/explore/FavoriteTokensCard'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { TopTokensCard } from 'src/components/explore/TopTokensCard'
@@ -27,7 +28,6 @@ import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
-import { AnimatedText } from 'src/components/Text'
 import { ClientSideOrderBy } from 'src/features/dataApi/coingecko/types'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { Screens, Tabs } from 'src/screens/Screens'
@@ -37,7 +37,7 @@ import { theme } from 'src/styles/theme'
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
 // For content Y offset since Header has abolute position
-const SEARCH_BAR_HEIGHT = 48
+const SEARCH_BAR_HEIGHT = 66
 const HEADER_HEIGHT =
   theme.textVariants.headlineSmall.lineHeight +
   theme.spacing.xxxs +
@@ -124,12 +124,6 @@ export function ExploreScreen({ navigation }: Props) {
     }
   })
 
-  const titleStyle = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y], [1, 0], Extrapolate.CLAMP),
-    }
-  })
-
   return (
     <Screen edges={['top', 'left', 'right']}>
       <AppBackground />
@@ -144,22 +138,22 @@ export function ExploreScreen({ navigation }: Props) {
           },
         ]}
         tint={isDarkMode ? 'dark' : 'default'}>
-        <Flex gap={isSearchMode ? 'none' : 'lg'} m="sm">
+        <Flex gap={isSearchMode ? 'none' : 'lg'}>
           <Flex height={isSearchMode ? 0 : 'auto'} opacity={isSearchMode ? 0 : 1}>
-            <AnimatedText mx="xs" style={titleStyle} variant="headlineSmall">
-              {t('Explore')}
-            </AnimatedText>
+            <AccountHeader />
           </Flex>
-          <SearchTextInput
-            ref={textInputRef}
-            showCancelButton
-            backgroundColor="backgroundContainer"
-            placeholder={t('Search tokens or addresses')}
-            value={searchQuery}
-            onCancel={onSearchCancel}
-            onChangeText={onChangeSearchFilter}
-            onFocus={onSearchFocus}
-          />
+          <Flex m="sm">
+            <SearchTextInput
+              ref={textInputRef}
+              showCancelButton
+              backgroundColor="backgroundContainer"
+              placeholder={t('Search tokens or addresses')}
+              value={searchQuery}
+              onCancel={onSearchCancel}
+              onChangeText={onChangeSearchFilter}
+              onFocus={onSearchFocus}
+            />
+          </Flex>
         </Flex>
       </AnimatedBlurView>
       {isSearchMode ? (

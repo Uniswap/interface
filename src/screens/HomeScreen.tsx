@@ -1,9 +1,7 @@
-import { DrawerActions } from '@react-navigation/native'
 import { selectionAsync } from 'expo-haptics'
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { useHomeStackNavigation } from 'src/app/navigation/types'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -13,15 +11,12 @@ import { SendButton } from 'src/components/buttons/SendButton'
 import { AppBackground } from 'src/components/gradients/AppBackground'
 import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { QRScannerIconButton } from 'src/components/QRCodeScanner/QRScannerIconButton'
-import { Pill } from 'src/components/text/Pill'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { openModal } from 'src/features/modals/modalSlice'
-import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
@@ -30,7 +25,6 @@ import {
   useActiveAccountWithThrow,
 } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
 
 export function HomeScreen() {
   // imports test account for easy development/testing
@@ -42,7 +36,7 @@ export function HomeScreen() {
     <>
       <HeaderScrollScreen
         background={<AppBackground />}
-        contentHeader={<ContentHeader />}
+        contentHeader={<AccountHeader />}
         fixedHeader={<FixedHeader />}>
         <Flex gap="lg" px="sm">
           <Flex gap="md" p="sm">
@@ -69,59 +63,6 @@ function FixedHeader() {
     <Flex centered mb="xxs">
       <AddressDisplay address={activeAccountAddress} variant="mediumLabel" />
     </Flex>
-  )
-}
-
-function ContentHeader() {
-  const navigation = useHomeStackNavigation()
-  const theme = useAppTheme()
-  const dispatch = useAppDispatch()
-
-  const onPressAccountHeader = useCallback(() => {
-    navigation.dispatch(DrawerActions.openDrawer())
-  }, [navigation])
-
-  const onPressQRScanner = useCallback(() => {
-    // in case we received a pending session from a previous scan after closing modal
-    dispatch(removePendingSession())
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
-    )
-  }, [dispatch])
-
-  const activeAccount = useActiveAccountWithThrow()
-
-  return (
-    <Box
-      alignItems="center"
-      flexDirection="row"
-      justifyContent="space-between"
-      mb="xxs"
-      mt="sm"
-      mx="sm"
-      px="xs">
-      <Flex row alignItems="center" gap="xs">
-        <AccountHeader onPress={onPressAccountHeader} />
-        {activeAccount?.type === AccountType.Readonly && (
-          <Pill
-            alignItems="center"
-            borderRadius="xs"
-            customBackgroundColor={theme.colors.backgroundContainer}
-            foregroundColor={theme.colors.textPrimary}
-            label="View only"
-            px="xxs"
-            py="xxs"
-            textVariant="badge"
-          />
-        )}
-      </Flex>
-      <Flex row alignItems="center" gap="sm">
-        <PendingNotificationBadge />
-        {isWalletConnectSupportedAccount(activeAccount) && (
-          <QRScannerIconButton onPress={onPressQRScanner} />
-        )}
-      </Flex>
-    </Box>
   )
 }
 
