@@ -21,6 +21,8 @@ import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
 import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
 import { useTranslation } from 'react-i18next'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { useTokenBalance } from 'state/wallet/hooks'
 // const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
 //   display: flex;
 //   justify-content: space-between;
@@ -43,7 +45,7 @@ interface StakingModalProps {
 }
 
 export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalProps) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const { t } = useTranslation()
   // track and parse user input
   const [typedValue, setTypedValue] = useState('0')
@@ -72,7 +74,7 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
     stakingCurrency,
     utils.parseUnits(typedValue, stakingCurrency.decimals).toString()
   )
-  console.info('tokenAmount', tokenAmount)
+  const stakeTokenBalance = useTokenBalance(account, stakingCurrency)
   const stakingContract = useChefContractForCurrentChain()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
   const [approval, approve] = useApproveCallback(tokenAmount, stakingContract?.address)
@@ -106,11 +108,11 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   }, [])
 
   // used for max input button
-  // const maxAmountInput = maxAmountSpend(userLiquidityUnstaked)
+  const maxAmountInput = maxAmountSpend(stakeTokenBalance)
   // const atMaxAmount = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
-  // const handleMax = useCallback(() => {
-  //   maxAmountInput && onUserInput(maxAmountInput.toExact())
-  // }, [maxAmountInput, onUserInput])
+  const handleMax = useCallback(() => {
+    if (maxAmountInput) onUserInput(maxAmountInput.toExact())
+  }, [maxAmountInput, onUserInput])
 
   // async function onAttemptToApprove() {
   //   // @todo: approve stake token to masterchef
@@ -128,13 +130,12 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
           <CurrencyInputPanel
             value={typedValue}
             onUserInput={onUserInput}
-            onMax={() => console.error('@todo: max disabled')}
-            showMaxButton={false}
+            onMax={handleMax}
+            showMaxButton={true}
             currency={stakingCurrency}
             // pair={dummyPair}
             label={''}
             disableCurrencySelect={true}
-            customBalanceText={'Available to deposit: '}
             id="stake-liquidity-token"
           />
 
