@@ -1,21 +1,27 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
+import { CollectionNfts, CollectionStats, FilterButton, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
 import { useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
+import { useSpring } from 'react-spring/web'
 
 const Collection = () => {
   const { contractAddress } = useParams()
 
   const isMobile = useIsMobile()
-  const isFiltersExpanded = useFiltersExpanded()
+  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
 
   const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
   )
+
+  const { gridX, gridWidthOffset } = useSpring({
+    gridX: isFiltersExpanded ? 332 : 0,
+    gridWidthOffset: isFiltersExpanded ? 332 : 0,
+  })
 
   return (
     <Column width="full">
@@ -35,11 +41,29 @@ const Collection = () => {
         </Row>
       )}
       <Row alignItems="flex-start" position="relative" paddingX="48">
-        <AnimatedBox position="sticky" top="72" width="0">
+        <Box position="sticky" top="72" width="0">
           {isFiltersExpanded && <Filters />}
-        </AnimatedBox>
+        </Box>
 
-        <AnimatedBox width="full">
+        {/* @ts-ignore */}
+        <AnimatedBox
+          style={{
+            transform: gridX.interpolate((x) => `translate(${x as number}px)`),
+            width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
+          }}
+        >
+          <AnimatedBox position="sticky" top="72" width="full" zIndex="3">
+            <Box backgroundColor="white08" width="full" paddingBottom="8" style={{ backdropFilter: 'blur(24px)' }}>
+              <Row marginTop="12" gap="12">
+                <FilterButton
+                  isMobile={isMobile}
+                  isFiltersExpanded={isFiltersExpanded}
+                  onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                />
+              </Row>
+            </Box>
+          </AnimatedBox>
+
           {contractAddress && <CollectionNfts contractAddress={contractAddress} />}
         </AnimatedBox>
       </Row>
