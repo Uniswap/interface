@@ -5,6 +5,7 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from 'components/Tokens/constants'
+import { filterTimeAtom } from 'components/Tokens/state'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
 import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetail'
@@ -16,10 +17,12 @@ import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
+import { useTokenQuery } from 'graphql/data/Token'
 import { useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
+import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const Footer = styled.div`
@@ -77,7 +80,6 @@ function NetworkBalances(tokenAddress: string | undefined) {
 }
 
 export default function TokenDetails() {
-  const location = useLocation()
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const token = useToken(tokenAddress)
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
@@ -115,6 +117,9 @@ export default function TokenDetails() {
     return chainIds
   }, [connectedChainId])
 
+  const timePeriod = useAtomValue(filterTimeAtom)
+  const query = useTokenQuery(tokenAddress ?? '', 'ETHEREUM', timePeriod)
+
   const balancesByNetwork = networkData
     ? chainsToList.map((chainId) => {
         const amount = networkData[chainId]
@@ -137,15 +142,17 @@ export default function TokenDetails() {
       })
     : null
 
-  if (token === undefined) {
-    return <Navigate to={{ ...location, pathname: '/tokens' }} replace />
-  }
+  // TODO: Fix this logic to not automatically redirect on refresh, yet still catch invalid addresses
+  //const location = useLocation()
+  //if (token === undefined) {
+  //  return <Navigate to={{ ...location, pathname: '/tokens' }} replace />
+  //}
 
   return (
     <TokenDetailsLayout>
       {token && (
         <>
-          <TokenDetail address={token.address} />
+          <TokenDetail address={token.address} query={query} />
           <RightPanel>
             <Widget defaultToken={token ?? undefined} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}
