@@ -5,7 +5,6 @@ import useDebounce from 'hooks/useDebounce'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
-import { TRANSITION_TIME } from 'theme'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { filterStringAtom } from '../state'
@@ -28,7 +27,7 @@ const SearchInput = styled.input`
   font-size: 16px;
   padding-left: 40px;
   color: ${({ theme }) => theme.textSecondary};
-  transition: ${TRANSITION_TIME};
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   :hover {
     background-color: ${({ theme }) => theme.backgroundSurface};

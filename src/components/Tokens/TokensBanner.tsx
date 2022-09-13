@@ -32,7 +32,7 @@ const PopupContainer = styled.div<{ show: boolean }>`
     theme: {
       transition: { duration, timing },
     },
-  }) => `${duration.slow}ms opacity ${timing.in}`};
+  }) => `${duration.slow} opacity ${timing.in}`};
 `
 const Header = styled.div`
   display: flex;

@@ -64,10 +64,6 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   }
 `
 
-export const OPACITY_HOVER = 0.6
-export const OPACITY_CLICK = 0.4
-export const TRANSITION_TIME = '0.125s'
-
 export const ButtonText = styled.button`
   outline: none;
   border: none;
@@ -76,10 +72,10 @@ export const ButtonText = styled.button`
   margin: 0;
   background: none;
   cursor: pointer;
-  transition: ${TRANSITION_TIME};
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   :hover {
-    opacity: ${OPACITY_HOVER};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 
   :focus {
@@ -90,13 +86,13 @@ export const ButtonText = styled.button`
 export const ClickableStyle = css`
   text-decoration: none;
   cursor: pointer;
-  transition: ${TRANSITION_TIME};
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   :hover {
-    opacity: ${OPACITY_HOVER};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
   :active {
-    opacity: ${OPACITY_CLICK};
+    opacity: ${({ theme }) => theme.opacity.click};
   }
 `
 
@@ -296,7 +292,7 @@ const CopyAddressRow = styled.div<{ isClicked: boolean }>`
   justify-content: center;
   display: flex;
   gap: 6px;
-  ${({ isClicked }) => isClicked && `opacity: ` + OPACITY_CLICK + ` !important`}
+  ${({ theme, isClicked }) => isClicked && `opacity: ${theme.opacity.click} !important`}
 `
 
 const CopyContractAddressWrapper = styled.div`

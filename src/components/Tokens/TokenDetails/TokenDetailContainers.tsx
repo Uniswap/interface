@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { TRANSITION_TIME } from 'theme'
 
 export const AboutContainer = styled.div`
   gap: 16px;
@@ -19,7 +18,7 @@ export const BreadcrumbNavLink = styled(Link)`
   gap: 4px;
   text-decoration: none;
   margin-bottom: 16px;
-  transition: ${TRANSITION_TIME};
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   &:hover {
     color: ${({ theme }) => theme.textTertiary};

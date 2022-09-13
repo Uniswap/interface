@@ -12,7 +12,7 @@ import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { ClickableStyle, TRANSITION_TIME } from 'theme'
+import { ClickableStyle } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -60,7 +60,7 @@ const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean; loading?: b
     },
   }) => css`background-color ${duration.medium} ${timing.ease}`};
   width: 100%;
-  transition: ${TRANSITION_TIME};
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   &:hover {
     ${({ loading, theme }) =>
