@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<51f7ea46d6dd92dc64ab9fa3a5873da2>>
+ * @generated SignedSource<<c566e0be2f65e53641bfe6c251ebd91d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,18 +8,18 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest } from 'relay-runtime';
-export type Chain = "ARBITRUM" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
+import { ConcreteRequest, Query } from 'relay-runtime';
+export type Chain = "ARBITRUM" | "CELO" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
 export type ContractInput = {
   address?: string | null;
   chain: Chain;
 };
 export type spotPricesQuery$variables = {
   contracts: ReadonlyArray<ContractInput>;
-  skip: Boolean
+  skip: boolean;
 };
 export type spotPricesQuery$data = {
-  readonly tokenProjects: ReadonlyArray<{
+  readonly tokenProjects?: ReadonlyArray<{
     readonly markets: ReadonlyArray<{
       readonly price: {
         readonly value: number | null;
@@ -41,6 +41,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "contracts"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "skip"
   }
 ],
 v1 = [
@@ -88,46 +93,53 @@ return {
     "name": "spotPricesQuery",
     "selections": [
       {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "TokenProject",
-        "kind": "LinkedField",
-        "name": "tokenProjects",
-        "plural": true,
+        "condition": "skip",
+        "kind": "Condition",
+        "passingValue": false,
         "selections": [
           {
             "alias": null,
-            "args": (v2/*: any*/),
-            "concreteType": "TokenProjectMarket",
+            "args": (v1/*: any*/),
+            "concreteType": "TokenProject",
             "kind": "LinkedField",
-            "name": "markets",
+            "name": "tokenProjects",
             "plural": true,
             "selections": [
               {
                 "alias": null,
-                "args": null,
-                "concreteType": "Amount",
+                "args": (v2/*: any*/),
+                "concreteType": "TokenProjectMarket",
                 "kind": "LinkedField",
-                "name": "price",
-                "plural": false,
-                "selections": (v4/*: any*/),
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Amount",
-                "kind": "LinkedField",
-                "name": "pricePercentChange24h",
-                "plural": false,
-                "selections": (v4/*: any*/),
-                "storageKey": null
+                "name": "markets",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Amount",
+                    "kind": "LinkedField",
+                    "name": "price",
+                    "plural": false,
+                    "selections": (v4/*: any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Amount",
+                    "kind": "LinkedField",
+                    "name": "pricePercentChange24h",
+                    "plural": false,
+                    "selections": (v4/*: any*/),
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": "markets(currencies:[\"USD\"])"
               }
             ],
-            "storageKey": "markets(currencies:[\"USD\"])"
+            "storageKey": null
           }
-        ],
-        "storageKey": null
+        ]
       }
     ],
     "type": "Query",
@@ -140,62 +152,69 @@ return {
     "name": "spotPricesQuery",
     "selections": [
       {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "TokenProject",
-        "kind": "LinkedField",
-        "name": "tokenProjects",
-        "plural": true,
+        "condition": "skip",
+        "kind": "Condition",
+        "passingValue": false,
         "selections": [
           {
             "alias": null,
-            "args": (v2/*: any*/),
-            "concreteType": "TokenProjectMarket",
+            "args": (v1/*: any*/),
+            "concreteType": "TokenProject",
             "kind": "LinkedField",
-            "name": "markets",
+            "name": "tokenProjects",
             "plural": true,
             "selections": [
               {
                 "alias": null,
-                "args": null,
-                "concreteType": "Amount",
+                "args": (v2/*: any*/),
+                "concreteType": "TokenProjectMarket",
                 "kind": "LinkedField",
-                "name": "price",
-                "plural": false,
-                "selections": (v6/*: any*/),
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Amount",
-                "kind": "LinkedField",
-                "name": "pricePercentChange24h",
-                "plural": false,
-                "selections": (v6/*: any*/),
-                "storageKey": null
+                "name": "markets",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Amount",
+                    "kind": "LinkedField",
+                    "name": "price",
+                    "plural": false,
+                    "selections": (v6/*: any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Amount",
+                    "kind": "LinkedField",
+                    "name": "pricePercentChange24h",
+                    "plural": false,
+                    "selections": (v6/*: any*/),
+                    "storageKey": null
+                  },
+                  (v5/*: any*/)
+                ],
+                "storageKey": "markets(currencies:[\"USD\"])"
               },
               (v5/*: any*/)
             ],
-            "storageKey": "markets(currencies:[\"USD\"])"
-          },
-          (v5/*: any*/)
-        ],
-        "storageKey": null
+            "storageKey": null
+          }
+        ]
       }
     ]
   },
   "params": {
-    "cacheID": "5b012655036c295ec3043c71e53e097a",
+    "cacheID": "e27049b5dd72cae5a6ca98527e6b9428",
     "id": null,
     "metadata": {},
     "name": "spotPricesQuery",
     "operationKind": "query",
-    "text": "query spotPricesQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    markets(currencies: [USD]) {\n      price {\n        value\n        id\n      }\n      pricePercentChange24h {\n        value\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query spotPricesQuery(\n  $contracts: [ContractInput!]!\n  $skip: Boolean!\n) {\n  tokenProjects(contracts: $contracts) @skip(if: $skip) {\n    markets(currencies: [USD]) {\n      price {\n        value\n        id\n      }\n      pricePercentChange24h {\n        value\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "75c5be860a564b0145990df8cacb1381";
+(node as any).hash = "af5b9be8ceecb6325ca3d43c335e6e08";
 
 export default node;

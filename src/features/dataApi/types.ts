@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { Chain } from 'src/features/dataApi/__generated__/tokenProjectsQuery.graphql'
 import { CurrencyId } from 'src/utils/currencyId'
 
 export type CurrencyInfo = {
@@ -13,4 +14,17 @@ export type PortfolioBalance = {
   balanceUSD: number
   currencyInfo: CurrencyInfo
   relativeChange24: number
+}
+
+export type GQLToken = {
+  readonly chain: Chain
+  readonly address: string | null
+  readonly decimals: number | null
+  readonly symbol: string | null
+  readonly name: string | null
+}
+
+export type GQLTokenProject = {
+  readonly tokens: readonly GQLToken[]
+  readonly logoUrl: string | null
 }

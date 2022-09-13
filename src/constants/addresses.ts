@@ -19,6 +19,8 @@ export const NATIVE_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
 
 export const WETH_ADDRESS = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 
+export const MATIC_MAINNET_ADDRESS = '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0'
+
 /** Alternative addres used to denote a native currency (e.g. MATIC on Polygon) */
 export const NATIVE_ADDRESS_ALT = '0x0000000000000000000000000000000000001010'
 

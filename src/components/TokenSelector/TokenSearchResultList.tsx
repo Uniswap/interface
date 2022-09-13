@@ -7,7 +7,10 @@ import { AnimatedBox, Box, Flex, Inset } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { filter } from 'src/components/TokenSelector/filter'
-import { useCommonBases, useFavoriteCurrencies } from 'src/components/TokenSelector/hooks'
+import {
+  useAllCommonBaseCurrencies,
+  useFavoriteCurrencies,
+} from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import { TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
@@ -15,6 +18,7 @@ import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { usePortfolioBalances } from 'src/features/dataApi/balances'
+import { useSearchTokens } from 'src/features/dataApi/searchTokens'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
 import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWarningLevel'
@@ -80,7 +84,7 @@ export function useTokenSectionsByVariation(
   }, [portfolioBalancesById, hideSmallBalances])
 
   const favoriteCurrencies = useFavoriteCurrencies()
-  const commonBaseCurrencies = useCommonBases(chainFilter)
+  const commonBaseCurrencies = useAllCommonBaseCurrencies()
 
   const popularWithoutBalances = useMemo(() => {
     return popularTokens
@@ -113,18 +117,41 @@ export function useTokenSectionsByVariation(
     })
   }, [commonBaseCurrencies, portfolioBalancesById])
 
+  // Only call search endpoint if searchFilter is non-null and TokenSelectorVariation includes tokens without balance
+  const skipSearch = !searchFilter || variation === TokenSelectorVariation.BalancesOnly
+  const searchResultCurrencies = useSearchTokens(searchFilter, chainFilter, skipSearch)
+  const searchResults = useMemo(() => {
+    return searchResultCurrencies.map((currencyInfo) => {
+      return (
+        portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo)
+      )
+    })
+  }, [searchResultCurrencies, portfolioBalancesById])
+
   const sections = useMemo(() => {
-    if (searchFilter && searchFilter?.length > 0) {
-      // TODO: Use GraphQL API search query for variations BalancesAndPopular and SuggestedAndPopular
-      const results = filter(portfolioBalances, chainFilter, searchFilter)
-      return results.length > 0
-        ? [
-            {
-              title: t('Search results'),
-              data: results,
-            },
-          ]
-        : []
+    // Return single "search results" section when user has searchFilter
+    if (searchFilter && searchFilter.length > 0) {
+      if (variation === TokenSelectorVariation.BalancesOnly) {
+        // Use local search when only searching balances
+        const results = filter(portfolioBalances, chainFilter, searchFilter)
+        return results.length > 0
+          ? [
+              {
+                title: t('Search results'),
+                data: results,
+              },
+            ]
+          : []
+      } else {
+        return searchResults.length > 0
+          ? [
+              {
+                title: t('Search results'),
+                data: searchResults,
+              },
+            ]
+          : []
+      }
     }
 
     if (variation === TokenSelectorVariation.BalancesOnly) {
@@ -170,6 +197,7 @@ export function useTokenSectionsByVariation(
     popularWithoutBalances,
     portfolioBalances,
     favoritesWithoutBalances,
+    searchResults,
     t,
     variation,
     chainFilter,

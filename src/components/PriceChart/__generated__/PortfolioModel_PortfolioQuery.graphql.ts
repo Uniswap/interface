@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f6157bb683f7ded31124b64f715d022d>>
+ * @generated SignedSource<<0f4f2106b41dcb935d3766340f56f2b2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type Chain = "ARBITRUM" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
+export type Chain = "ARBITRUM" | "CELO" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
 export type Currency = "ETH" | "USD" | "%future added value";
 export type PortfolioModel_PortfolioQuery$variables = {
   ownerAddress: string;

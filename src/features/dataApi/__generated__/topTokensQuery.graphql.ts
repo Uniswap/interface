@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6b150990b036f419082e2630f2a0b7ea>>
+ * @generated SignedSource<<81f2ab4a607b1920b7f54b7c2b3c9f2f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,11 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type Chain = "ARBITRUM" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
+export type Chain = "ARBITRUM" | "CELO" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
 export type topTokensQuery$variables = {};
 export type topTokensQuery$data = {
   readonly topTokenProjects: ReadonlyArray<{
     readonly logoUrl: string | null;
-    readonly name: string | null;
     readonly tokens: ReadonlyArray<{
       readonly address: string | null;
       readonly chain: Chain;
@@ -51,35 +50,35 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "logoUrl",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "logoUrl",
+  "name": "chain",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "chain",
+  "name": "address",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "address",
+  "name": "decimals",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "decimals",
+  "name": "name",
   "storageKey": null
 },
 v6 = {
@@ -112,7 +111,6 @@ return {
         "plural": true,
         "selections": [
           (v1/*: any*/),
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -121,10 +119,10 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
+              (v2/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
-              (v1/*: any*/),
               (v6/*: any*/)
             ],
             "storageKey": null
@@ -151,7 +149,6 @@ return {
         "plural": true,
         "selections": [
           (v1/*: any*/),
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -160,10 +157,10 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
+              (v2/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
-              (v1/*: any*/),
               (v6/*: any*/),
               (v7/*: any*/)
             ],
@@ -176,16 +173,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7b9c2350a3d7478340d6aadac419764c",
+    "cacheID": "5605b4e593b68e266d27666ed5607af4",
     "id": null,
     "metadata": {},
     "name": "topTokensQuery",
     "operationKind": "query",
-    "text": "query topTokensQuery {\n  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {\n    name\n    logoUrl\n    tokens {\n      chain\n      address\n      decimals\n      name\n      symbol\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query topTokensQuery {\n  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {\n    logoUrl\n    tokens {\n      chain\n      address\n      decimals\n      name\n      symbol\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d90b6ecdd0c0ef07e49a1296c6202f29";
+(node as any).hash = "0333f2e936b1cb9080eb7deea61e09a3";
 
 export default node;

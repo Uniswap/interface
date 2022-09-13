@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Token } from '@uniswap/sdk-core'
+import { useCallback, useEffect, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
+import { MATIC_MAINNET_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { COMMON_BASES } from 'src/constants/tokens'
+import { DAI, nativeOnChain, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
+import { areAddressesEqual } from 'src/utils/addresses'
 import { currencyId } from 'src/utils/currencyId'
 
 export function useFavoriteCurrencies(): CurrencyInfo[] {
@@ -12,14 +15,28 @@ export function useFavoriteCurrencies(): CurrencyInfo[] {
   return useTokenProjects(Array.from(favoriteCurrencyIds))
 }
 
-export function useCommonBases(chainFilter: ChainId | null): CurrencyInfo[] {
-  const baseCurrencyIds = useMemo(() => {
-    // If no chain filter is selected (All networks), use mainnet common bases
-    const baseCurrencies = COMMON_BASES[chainFilter ?? ChainId.Mainnet]
-    return baseCurrencies.map((currency) => currencyId(currency))
-  }, [chainFilter])
+export function useAllCommonBaseCurrencies(): CurrencyInfo[] {
+  // Use Mainnet base token addresses since TokenProjects query returns each token on Arbitrum, Optimism, Polygon
+  // TODO(DATA-269): Missing native ETH on Arbitrum and Optimism from API response
+  const baseCurrencies = [
+    nativeOnChain(ChainId.Mainnet),
+    nativeOnChain(ChainId.Polygon), // Used for MATIC base currency on Polygon
+    DAI,
+    USDC,
+    USDT,
+    WBTC,
+    WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet],
+  ]
 
-  return useTokenProjects(baseCurrencyIds)
+  const baseCurrencyIds = baseCurrencies.map((currency) => currencyId(currency))
+  const baseCurrencyInfos = useTokenProjects(baseCurrencyIds)
+
+  // TokenProjects returns MATIC on Mainnet and Polygon, but we only want MATIC on Polygon
+  const filteredBaseCurrencyInfos = baseCurrencyInfos.filter(
+    (currencyInfo) =>
+      !areAddressesEqual((currencyInfo.currency as Token).address, MATIC_MAINNET_ADDRESS)
+  )
+  return filteredBaseCurrencyInfos
 }
 
 export function useFilterCallbacks(chainId: ChainId | null) {

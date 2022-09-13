@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<09fbe0b0b123240b527f952051fe417a>>
+ * @generated SignedSource<<d2d37be55f5726c6c3fc8949823fae12>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type ActivityType = "APPROVE" | "BORROW" | "BURN" | "CANCEL" | "CLAIM" | "DEPLOYMENT" | "LEND" | "MINT" | "NFT" | "RECEIVE" | "REPAY" | "SEND" | "STAKE" | "SWAP" | "Staking" | "UNKNOWN" | "UNSTAKE" | "WITHDRAW" | "market" | "money" | "%future added value";
-export type Chain = "ARBITRUM" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
+export type Chain = "ARBITRUM" | "CELO" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
 export type Currency = "ETH" | "USD" | "%future added value";
 export type NftStandard = "ERC1155" | "ERC721" | "NONCOMPLIANT" | "%future added value";
 export type TokenStandard = "ERC1155" | "ERC20" | "NATIVE" | "%future added value";
