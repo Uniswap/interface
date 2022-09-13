@@ -9,6 +9,7 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
+import FilterOption from './FilterOption'
 
 export const DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.HOUR]: '1H',
@@ -39,7 +40,6 @@ const InternalMenuItem = styled.div`
     text-decoration: none;
   }
 `
-
 const InternalLinkMenuItem = styled(InternalMenuItem)`
   display: flex;
   flex-direction: row;
@@ -76,36 +76,6 @@ const MenuTimeFlyout = styled.span`
     left: unset;
   }
 `
-
-const StyledMenuButton = styled.button<{ open: boolean }>`
-  width: 100%;
-  height: 100%;
-  border: none;
-  color: ${({ theme, open }) => (open ? theme.accentActive : theme.textPrimary)};
-  margin: 0;
-  background-color: ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundInteractive)};
-  padding: 6px 12px 6px 12px;
-  border-radius: 12px;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-
-  :hover {
-    cursor: pointer;
-    border: none;
-    outline: none;
-    background-color: ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundModule)};
-  }
-  :focus {
-    background-color: ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundInteractive)};
-    border: none;
-    outline: none;
-  }
-  svg {
-    margin-top: 2px;
-  }
-`
-
 const StyledMenu = styled.div`
   display: flex;
   justify-content: center;
@@ -113,22 +83,20 @@ const StyledMenu = styled.div`
   position: relative;
   border: none;
   text-align: left;
-  width: 80px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     width: 72px;
   }
 `
-
 const StyledMenuContent = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 8px;
   align-items: center;
   border: none;
   width: 100%;
   vertical-align: middle;
 `
-
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
   color: ${({ open, theme }) => (open ? theme.accentActive : theme.textSecondary)};
@@ -145,14 +113,18 @@ export default function TimeSelector() {
 
   return (
     <StyledMenu ref={node}>
-      <StyledMenuButton onClick={toggleMenu} aria-label={`timeSelector`} open={open}>
+      <FilterOption onClick={toggleMenu} aria-label={`timeSelector`} active={open}>
         <StyledMenuContent>
           {DISPLAYS[activeTime]}
           <Chevron open={open}>
-            {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
+            {open ? (
+              <ChevronUp width={20} height={15} viewBox="0 0 24 20" />
+            ) : (
+              <ChevronDown width={20} height={15} viewBox="0 0 24 20" />
+            )}
           </Chevron>
         </StyledMenuContent>
-      </StyledMenuButton>
+      </FilterOption>
       {open && (
         <MenuTimeFlyout>
           {ORDERED_TIMES.map((time) => (
