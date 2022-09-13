@@ -42,17 +42,22 @@ function deserializeToken(serializedToken: SerializedToken): Token {
 }
 
 export function useIsDarkMode(): boolean {
-  const { userDarkMode, matchesDarkMode } = useSelector<
-    AppState,
-    { userDarkMode: boolean | null; matchesDarkMode: boolean }
-  >(
-    ({ user: { matchesDarkMode, userDarkMode } }) => ({
-      userDarkMode,
-      matchesDarkMode
-    }),
-    shallowEqual
-  )
-  return userDarkMode === null ? matchesDarkMode : userDarkMode
+  // const { userDarkMode, matchesDarkMode } = useSelector<
+  //   AppState,
+  //   { userDarkMode: boolean | null; matchesDarkMode: boolean }
+  // >(
+  //   ({ user: { matchesDarkMode, userDarkMode } }) => ({
+  //     userDarkMode,
+  //     matchesDarkMode
+  //   }),
+  //   shallowEqual
+  // )
+  // return userDarkMode === null ? matchesDarkMode : userDarkMode
+  /**
+   * @dev Teleswap UI is all dark, so I set them to true only.
+   * remove line below if we have light mode
+   */
+  return true
 }
 
 export function useDarkModeManager(): [boolean, () => void] {
