@@ -3,6 +3,7 @@ import { devtools } from 'zustand/middleware'
 
 interface BagState {
   bagExpanded: boolean
+  toggleBag: () => void
 }
 
 export const useBag = create<BagState>()(
