@@ -5,15 +5,7 @@ import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { subhead, subheadSmall } from 'nft/css/common.css'
-import {
-  useBag,
-  useFiltersExpanded,
-  useIsMobile,
-  useSellAsset,
-  useSellPageState,
-  useWalletBalance,
-  useWalletCollections,
-} from 'nft/hooks'
+import { useBag, useIsMobile, useSellAsset, useSellPageState, useWalletBalance, useWalletCollections } from 'nft/hooks'
 import { fetchWalletAssets } from 'nft/queries'
 import { fetchMultipleCollectionStats, OSCollectionsFetcher } from 'nft/queries'
 import { SellPageStateType, WalletAsset } from 'nft/types'
@@ -23,7 +15,7 @@ import { useInfiniteQuery, useQuery } from 'react-query'
 
 import * as styles from './SelectPage.css'
 
-export const formatEth = (price: number) => {
+const formatEth = (price: number) => {
   if (price > 1000000) {
     return `${Math.round(price / 1000000)}M`
   } else if (price > 1000) {
@@ -112,8 +104,6 @@ export const SelectPage = () => {
     setDisplayAssets(walletAssets, listFilter)
   }, [walletAssets, listFilter, setDisplayAssets])
 
-  const [isFiltersExpanded] = useFiltersExpanded()
-
   useEffect(() => {
     if (ownerCollections?.length && collectionStats?.length) {
       const ownerCollectionsCopy = [...ownerCollections]
@@ -126,7 +116,8 @@ export const SelectPage = () => {
   }, [collectionStats, ownerCollections, setWalletCollections])
 
   return (
-    <Column>
+    // Column style is temporary while we move over the filters bar that adjust width
+    <Column style={{ width: 'calc(100vw - 32px)' }}>
       <Row
         alignItems="flex-start"
         position="relative"
@@ -134,7 +125,7 @@ export const SelectPage = () => {
         paddingRight={{ sm: '0', md: '72' }}
         paddingTop={{ sm: '16', md: '40' }}
       >
-        <AnimatedBox paddingX={isFiltersExpanded ? '24' : '16'} flexShrink="0" width="viewWidth">
+        <AnimatedBox paddingX="16" flexShrink="0" width="full">
           <Row gap="8" flexWrap="nowrap">
             <CollectionSearch searchText={searchText} setSearchText={setSearchText} />
             <SelectAllButton />
@@ -164,7 +155,7 @@ export const SelectPage = () => {
         <Row
           display={{ sm: 'flex', md: 'none' }}
           position="fixed"
-          bottom="24"
+          bottom="60"
           left="16"
           height="56"
           borderRadius="12"
