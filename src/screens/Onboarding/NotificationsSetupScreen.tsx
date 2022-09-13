@@ -1,11 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, Image } from 'react-native'
+import { Alert } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { ONBOARDING_NOTIFICATIONS_BGICON } from 'src/assets'
+import OnboardingNotificationIcon from 'src/assets/backgrounds/onboarding-notifications-bgicon.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Flex } from 'src/components/layout'
@@ -82,7 +82,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
       title={t('Turn on push notifications')}>
       <Flex grow alignItems="center" justifyContent="space-between">
         <Flex centered grow>
-          <Image source={ONBOARDING_NOTIFICATIONS_BGICON} />
+          <OnboardingNotificationIcon />
         </Flex>
         <Flex alignItems="center" gap="sm" justifyContent="flex-end" width="100%">
           <TextButton

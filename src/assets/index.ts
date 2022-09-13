@@ -19,7 +19,6 @@ export const LANDING_BACKGROUND = require('./backgrounds/landingBackground.png')
 export const LANDING_BLUR_BACKGROUND_LIGHT = require('./backgrounds/landingBlurBackgroundLight.png')
 export const LANDING_BLUR_BACKGROUND_DARK = require('./backgrounds/landingBlurBackgroundDark.png')
 export const UNISWAP_LOGO = require('./logos/uniswap-logo.png')
-export const ONBOARDING_NOTIFICATIONS_BGICON = require('./backgrounds/onboarding-notifications-bgicon.png')
 export const ONBOARDING_QR_ETCHING_VIDEO = require('./videos/etching.mp4')
 
 export const MAIN_BLUR_BG_VIOLET = require('./backgrounds/blurBackgroundViolet.png')
