@@ -104,6 +104,7 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   // wrapped onUserInput to clear signatures
   const onUserInput = useCallback((typedValue: string) => {
     // setSignatureData(null)
+    if (!typedValue) return
     setTypedValue(typedValue)
   }, [])
 
