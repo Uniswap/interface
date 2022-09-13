@@ -11,7 +11,7 @@ export const navIcon = style([
     justifyContent: 'center',
     textAlign: 'center',
     cursor: 'pointer',
-    padding: '8',
+    padding: '10',
     borderRadius: '8',
     transition: '250',
   }),
