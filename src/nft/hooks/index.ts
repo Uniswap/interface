@@ -1,4 +1,4 @@
-export * from './useCart'
+export * from './useBag'
 export * from './useCollectionFilters'
 export * from './useFiltersExpanded'
 export * from './useGenieList'
