@@ -4,8 +4,7 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
-import Scan from 'src/assets/icons/qr-simple.svg'
-import Settings from 'src/assets/icons/settings.svg'
+import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
@@ -48,11 +47,6 @@ export function ProfileScreen({ navigation }: Props) {
     )
   }, [dispatch])
 
-  const onPressSettings = useCallback(() => {
-    selectionAsync()
-    navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
-  }, [navigation])
-
   const onPressSessions = useCallback(() => {
     if (address) {
       navigation.navigate(Screens.SettingsWalletManageConnection, { address })
@@ -65,34 +59,15 @@ export function ProfileScreen({ navigation }: Props) {
 
   const ContentHeader = useMemo(
     () => (
-      <Flex gap="lg" m="sm">
-        {/* nav header */}
-        <Flex row justifyContent="space-between" mx="xs">
-          <BackButton size={theme.iconSizes.lg} />
-          <Flex centered row gap="md">
-            <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-              <Scan color={theme.colors.textSecondary} height={24} width={24} />
-            </Button>
-            <Button name={ElementName.Settings} onPress={onPressSettings}>
-              <Settings color={theme.colors.textSecondary} height={24} width={24} />
-            </Button>
-          </Flex>
-        </Flex>
-        {/* profile info */}
-        <Flex centered gap="sm" my="lg">
-          <AddressDisplay
-            address={address}
-            captionVariant="mediumLabel"
-            direction="column"
-            showAddressAsSubtitle={true}
-            showCopy={true}
-            size={48}
-            variant="headlineMedium"
-          />
-        </Flex>
+      <Flex row alignItems="center" justifyContent="space-between" p="md">
+        <BackButton size={theme.iconSizes.lg} />
+        <Text variant="mediumLabel">{t('Activity')}</Text>
+        <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
+          <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
+        </Button>
       </Flex>
     ),
-    [address, onPressScan, onPressSettings, theme.colors.textSecondary, theme.iconSizes.lg]
+    [onPressScan, t, theme.colors.textSecondary, theme.iconSizes.lg]
   )
 
   return (
@@ -127,7 +102,7 @@ export function ProfileScreen({ navigation }: Props) {
                 {/* TODO: Add a buy button when fiat OR is implemented */}
                 <PrimaryButton
                   borderRadius="md"
-                  icon={<Scan color={theme.colors.textPrimary} height={20} width={20} />}
+                  icon={<ScanQRIcon color={theme.colors.textPrimary} height={20} width={20} />}
                   label={t('Receive')}
                   variant="transparent"
                   onPress={onPressScan}
