@@ -14,7 +14,7 @@ function getRpcUrl(chainId: SupportedChainId): string {
       return RPC_URLS[chainId][0]
     // Attempting to add a chain using an infura URL will not work, as the URL will be unreachable from the MetaMask background page.
     // MetaMask allows switching to any publicly reachable URL, but for novel chains, it will display a warning if it is not on the "Safe" list.
-    // FALLBACK_URLS are explicitly selected from the "Safe" list to avoid this quirk.
+    // See the definition of FALLBACK_URLS for more details.
     default:
       return FALLBACK_URLS[chainId][0]
   }
