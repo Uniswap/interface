@@ -46,6 +46,7 @@ export const tab = style([
         color: vars.color.blackBlue,
       },
     },
+    cursor: 'pointer',
   },
 ])
 

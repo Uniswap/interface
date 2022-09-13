@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useWeb3React } from '@web3-react/core'
 
 import AssetToolTip from '../../components/badge/AssetToolTip'
 import { AnimatedBox, Box } from '../../components/Box'
@@ -13,19 +14,52 @@ import { CollectionProfile } from '../../components/details/CollectionProfile'
 import { Details } from '../../components/details/Details'
 import { Traits } from '../../components/details/Traits'
 import { Center, Column, Row } from '../../components/Flex'
-import { CloseDropDownIcon, CornerDownLeftIcon, ShareIcon, SuspiciousIcon } from '../../components/icons'
+import { CloseDropDownIcon, CornerDownLeftIcon, Eth2Icon, ShareIcon, SuspiciousIcon } from '../../components/icons'
 import { ExpandableText } from '../../components/layout/ExpandableText'
 import { Panel, Tab, Tabs } from '../../components/layout/Tabs'
-import { badge, header2 } from '../../css/common.css'
+import { bodySmall, caption, header2, badge, subhead } from '../../css/common.css'
 import { themeVars } from '../../css/sprinkles.css'
 import { useBag } from '../../hooks'
 import { fetchSingleAsset } from '../../queries'
-import { CollectionInfoForAsset, GenieAsset } from '../../types'
+import { CollectionInfoForAsset, GenieAsset, SellOrder } from '../../types'
 import { shortenAddress } from '../../utils/address'
 import { isAudio } from '../../utils/isAudio'
 import { isVideo } from '../../utils/isVideo'
 import { fallbackProvider, rarityProviderLogo } from '../../utils/rarity'
 import * as styles from './Asset.css'
+import { isAssetOwnedByUser } from '../../utils/isAssetOwnedByUser'
+import { formatEthPrice } from '../../utils/currency'
+import { toSignificant } from '../../utils/toSignificant'
+import { useTimeout } from '../../hooks/useTimeout'
+
+const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
+
+const CountdownTimer = ({ sellOrder }: { sellOrder: SellOrder }) => {
+  const { date, expires } = useMemo(() => {
+    const date = new Date(sellOrder.orderClosingDate)
+    return {
+      date,
+      expires: formatter.format(date),
+    }
+  }, [sellOrder])
+  const [days, hours, minutes, seconds] = useTimeout(date)
+
+  return (
+    <AssetToolTip
+      prompt={
+        <Box as="span" fontWeight="normal" className={caption} color="darkGray">
+          Expires: {days !== 0 ? `${days} days` : ''} {hours !== 0 ? `${hours} hours` : ''} {minutes} minutes {seconds}{' '}
+          seconds
+        </Box>
+      }
+      tooltipPrompt={
+        <Box height="16" width="full">
+          Expires {expires}
+        </Box>
+      }
+    />
+  )
+}
 
 const AudioPlayer = ({
   imageUrl,
@@ -97,6 +131,7 @@ const Asset = () => {
   const bagExpanded = useBag((state) => state.bagExpanded)
   const [creatorAddress, setCreatorAddress] = useState('')
   const [ownerAddress, setOwnerAddress] = useState('')
+  const [isOwned, setIsOwned] = useState(false)
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
   const creatorEnsName = useENSName(creatorAddress)
   const ownerEnsName = useENSName(ownerAddress)
@@ -106,6 +141,10 @@ const Asset = () => {
   const { gridWidthOffset } = useSpring({
     gridWidthOffset: bagExpanded ? 324 : 0,
   })
+  const [isSelected, setSelected] = useState(false)
+  const itemsInBag = useBag((state) => state.itemsInBag)
+  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetToBag = useBag((state) => state.addAssetToBag)
 
   useEffect(() => {
     if (asset.creator) setCreatorAddress(asset.creator.address)
@@ -114,8 +153,7 @@ const Asset = () => {
     if (asset.owner) setOwnerAddress(asset.owner)
   }, [asset])
 
-  console.log(ownerAddress)
-  console.log(asset.owner)
+  console.log(asset.sellorders)
 
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
@@ -129,6 +167,24 @@ const Asset = () => {
         : {},
     [asset.rarity]
   )
+
+  useEffect(() => {
+    setSelected(
+      !!itemsInBag.find((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
+    )
+  }, [asset, itemsInBag])
+
+  const { account: address } = useWeb3React()
+
+  useEffect(() => {
+    // @ts-ignore
+    isAssetOwnedByUser({
+      tokenId: asset.tokenId,
+      userAddress: address || '',
+      assetAddress: asset.address,
+      tokenType: asset.tokenType,
+    }).then(setIsOwned)
+  }, [asset, address])
 
   const assetMediaType = useMemo(() => {
     if (isAudio(asset.animationUrl)) {
@@ -160,7 +216,7 @@ const Asset = () => {
             <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
           )}
         </Column>
-        <Column className={clsx(styles.column, styles.columnRight)} width="full">
+        <Column className={clsx(styles.column, styles.columnRight)} style={{ paddingTop: 50 }} width="full">
           <Column>
             <Row marginBottom="8" alignItems="center" justifyContent={rarityProvider ? 'space-between' : 'flex-end'}>
               {rarityProvider ? (
@@ -191,6 +247,7 @@ const Asset = () => {
                   as="button"
                   padding="0"
                   border="none"
+                  cursor="pointer"
                   background="transparent"
                   onClick={async () => {
                     await navigator.clipboard.writeText(window.location.hostname + pathname)
@@ -257,7 +314,7 @@ const Asset = () => {
                 <a
                   target="_blank"
                   rel="noreferrer"
-                  href={`https://etherscan.io/address/${asset.owner?.address}`}
+                  href={`https://etherscan.io/address/${asset.owner}`}
                   style={{ textDecoration: 'none' }}
                 >
                   <CollectionProfile
@@ -268,7 +325,7 @@ const Asset = () => {
                 </a>
               )}
 
-              <a href={`/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
+              <a href={`#/nfts/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
                 <CollectionProfile
                   label="Collection"
                   avatarUrl={collection.collectionImageUrl}
@@ -294,30 +351,86 @@ const Asset = () => {
                 </a>
               ) : null}
             </Row>
-            <Tabs>
-              <Row gap="32" marginBottom="20">
-                <Tab>
-                  <button className={styles.tab}>Traits</button>
-                </Tab>
-                <Tab>
-                  <button className={styles.tab}>Details</button>
-                </Tab>
-              </Row>
-              <Panel>
-                <Traits collectionAddress={asset.address} traits={asset.traits ? asset.traits : []} />
-              </Panel>
-              <Panel>
-                <Details
-                  contractAddress={contractAddress}
-                  tokenId={tokenId}
-                  tokenType={asset.tokenType}
-                  blockchain="Ethereum"
-                  metadataUrl={asset.externalLink}
-                  totalSupply={collection.totalSupply}
-                />
-              </Panel>
-            </Tabs>
           </Column>
+          {asset.priceInfo && !isOwned ? (
+            <Row
+              marginTop="8"
+              marginBottom="40"
+              justifyContent="space-between"
+              borderRadius="12"
+              paddingTop="16"
+              paddingBottom="16"
+              paddingLeft="16"
+              paddingRight="24"
+              style={{ background: 'rgba(76, 130, 251, 0.24)' }}
+            >
+              <Column justifyContent="flex-start" gap="8">
+                <Row gap="12" as="a" target="_blank" rel="norefferer" href={asset.sellorders[0].marketplaceUrl}>
+                  <img
+                    className={styles.marketplace}
+                    src={`/nft/svgs/marketplaces/${asset.sellorders[0].marketplace}.svg`}
+                    height={16}
+                    width={16}
+                    alt="Markeplace"
+                  />
+                  <Row as="span" className={subhead} color="blackBlue">
+                    {formatEthPrice(asset.priceInfo.ETHPrice)} <Eth2Icon />
+                  </Row>
+                  <Box as="span" color="darkGray" className={bodySmall}>
+                    ${toSignificant(asset.priceInfo.USDPrice)}
+                  </Box>
+                </Row>
+                {asset.sellorders?.[0].orderClosingDate ? <CountdownTimer sellOrder={asset.sellorders[0]} /> : null}
+              </Column>
+              <Box
+                as="button"
+                paddingTop="14"
+                paddingBottom="14"
+                fontWeight="medium"
+                textAlign="center"
+                fontSize="14"
+                cursor="pointer"
+                style={{ width: '244px' }}
+                color={isSelected ? 'genieBlue' : 'explicitWhite'}
+                border="none"
+                borderRadius="12"
+                background={isSelected ? 'explicitWhite' : 'genieBlue'}
+                transition="250"
+                boxShadow={{ hover: 'elevation' }}
+                onClick={() => {
+                  if (isSelected) {
+                    removeAssetFromBag(asset)
+                  } else addAssetToBag(asset)
+                  setSelected((x) => !x)
+                }}
+              >
+                {isSelected ? 'Added to Bag' : 'Buy Now'}
+              </Box>
+            </Row>
+          ) : null}
+          <Tabs>
+            <Row gap="32" marginBottom="20">
+              <Tab>
+                <button className={styles.tab}>Traits</button>
+              </Tab>
+              <Tab>
+                <button className={styles.tab}>Details</button>
+              </Tab>
+            </Row>
+            <Panel>
+              <Traits collectionAddress={asset.address} traits={asset.traits ? asset.traits : []} />
+            </Panel>
+            <Panel>
+              <Details
+                contractAddress={contractAddress}
+                tokenId={tokenId}
+                tokenType={asset.tokenType}
+                blockchain="Ethereum"
+                metadataUrl={asset.externalLink}
+                totalSupply={collection.totalSupply}
+              />
+            </Panel>
+          </Tabs>
         </Column>
       </div>
     </AnimatedBox>
