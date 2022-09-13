@@ -64,7 +64,7 @@ export const Traits = ({
           return (
             <a
               key={`${item.trait_type}-${item.value}`}
-              href={`#/nft/collection/${collectionAddress}?${params}`}
+              href={`#/nfts/collection/${collectionAddress}?${params}`}
               style={{ textDecoration: 'none' }}
             >
               <Trait label={item.trait_type} value={item.value} />
