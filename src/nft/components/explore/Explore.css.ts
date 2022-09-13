@@ -112,7 +112,7 @@ export const valuePropWrap = sprinkles({
   width: 'full',
   borderWidth: '1px',
   borderStyle: 'solid',
-  borderColor: 'grey700',
+  borderColor: 'outline',
   borderRadius: '12',
   paddingLeft: '16',
   paddingRight: '16',
@@ -139,10 +139,10 @@ export const valuePropContent = style([
   sprinkles({
     position: 'relative',
     zIndex: '1',
-    paddingLeft: '20',
+    paddingLeft: { sm: '20', md: '36' },
     paddingBottom: '18',
-    fontSize: '20',
-    paddingTop: '28',
+    fontSize: { sm: '20', md: '28' },
+    paddingTop: { sm: '28', md: '32' },
   }),
   {
     lineHeight: '28px',
@@ -151,13 +151,8 @@ export const valuePropContent = style([
       [`(min-width: 400px)`]: { width: '67%' },
       [`(min-width: ${breakpoints.sm}px)`]: {
         width: '74%',
-        paddingLeft: '36px',
-        fontSize: '28px',
         lineHeight: '36px',
-        paddingTop: '32px',
       },
-      // Extra breakpoint for text wrapping
-      [`(min-width: 800px)`]: { width: '60%' },
       [`(min-width: ${breakpoints.md}px)`]: { width: '58%' },
       [`(min-width: ${breakpoints.lg}px)`]: { width: '50%' },
     },
