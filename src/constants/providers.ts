@@ -8,7 +8,15 @@ import { SupportedChainId } from './chains'
 import { RPC_URLS } from './networks'
 
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
-  callCache = new Map<string, Promise<any>>()
+  private _blockCache = new Map<string, Promise<any>>()
+  get blockCache() {
+    // If the blockCache has not yet been initialized this block, do so by
+    // setting a listener to clear it on the next block.
+    if (!this._blockCache.size) {
+      this.once('block', () => this._blockCache.clear())
+    }
+    return this._blockCache
+  }
 
   constructor(urls: string[]) {
     super(urls[0])
@@ -18,11 +26,11 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
     // Only cache eth_call's.
     if (method !== 'eth_call') return super.send(method, params)
 
-    // Only cache what is serializable.
+    // Only cache if params are serializable.
     if (!isPlain(params)) return super.send(method, params)
-    const key = `${JSON.stringify(params)}`
 
-    const cached = this.callCache.get(key)
+    const key = `call:${JSON.stringify(params)}`
+    const cached = this.blockCache.get(key)
     if (cached) {
       this.emit('debug', {
         action: 'request',
@@ -33,8 +41,7 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
     }
 
     const result = super.send(method, params)
-    this.callCache.set(key, result)
-    this.once('block', () => this.callCache.delete(key))
+    this.blockCache.set(key, result)
     return result
   }
 }
