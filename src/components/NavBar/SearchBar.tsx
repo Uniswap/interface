@@ -418,6 +418,7 @@ export const SearchBar = () => {
             }`}
             value={searchValue}
             ref={inputRef}
+            width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}
           />
         </Row>
         <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
