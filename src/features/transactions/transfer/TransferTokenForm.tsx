@@ -18,10 +18,7 @@ import {
   CurrencyField,
   transactionStateActions,
 } from 'src/features/transactions/transactionState/transactionState'
-import {
-  DerivedTransferInfo,
-  useUpdateTransferGasEstimate,
-} from 'src/features/transactions/transfer/hooks'
+import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferFormWarnings } from 'src/features/transactions/transfer/TransferFormWarnings'
 import { createOnToggleShowRecipientSelector } from 'src/features/transactions/transfer/utils'
 import { createTransactionId } from 'src/features/transactions/utils'
@@ -42,7 +39,6 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
   const {
     currencyAmounts,
     currencyBalances,
-    currencyTypes,
     formattedAmounts,
     exactAmountToken,
     exactAmountUSD = '',
@@ -53,16 +49,6 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
     nftIn,
     chainId,
   } = derivedTransferInfo
-
-  useUpdateTransferGasEstimate({
-    transactionStateDispatch: dispatch,
-    chainId,
-    currencyIn,
-    nftIn,
-    amount: currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
-    recipient,
-    assetType: currencyTypes[CurrencyField.INPUT],
-  })
 
   useUSDTokenUpdater(
     dispatch,

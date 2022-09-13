@@ -45,6 +45,7 @@ export function* sendTransaction(params: SendTransactionParams) {
 
   // Sign and send the transaction
   const provider = yield* call(getProvider, chainId, isFlashbots)
+
   const signerManager = yield* call(getSignerManager)
   const { transactionResponse, populatedRequest } = yield* call(
     signAndSendTransaction,

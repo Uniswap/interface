@@ -20,10 +20,6 @@ import {
   updateOptimismL1Fee,
   updateSwapMethodParamaters,
 } from 'src/features/transactions/transactionState/transactionState'
-import {
-  prepareTransfer,
-  TransferTokenParams,
-} from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { currencyAddress, isNativeCurrencyAddress } from 'src/utils/currencyId'
@@ -33,7 +29,6 @@ import { call, takeEvery } from 'typed-redux-saga'
 
 // TODO: remove hardcoded L1 estimates when trade route endpoint can provide accurate Optimism gas estimation
 const OPTIMISM_L1_GAS_LIMIT_ESTIMATES: Partial<Record<TransactionType, string>> = {
-  [TransactionType.Send]: '4000',
   [TransactionType.Approve]: '5000',
   [TransactionType.Swap]: '7200',
 }
@@ -54,17 +49,11 @@ const SWAP_GAS_LIMIT_FALLBACKS: Record<ChainId, string> = {
   [ChainId.ArbitrumRinkeby]: '1200000',
 }
 
-export type GasEstimateParams = SwapGasEstimateParams | TransferGasEstimateParams
+export type GasEstimateParams = SwapGasEstimateParams
 
 export interface SwapGasEstimateParams {
   txType: TransactionType.Swap
   trade: Trade
-  transactionStateDispatch: Dispatch<AnyAction>
-}
-
-export interface TransferGasEstimateParams {
-  txType: TransactionType.Send
-  params: TransferTokenParams
   transactionStateDispatch: Dispatch<AnyAction>
 }
 
@@ -160,25 +149,6 @@ export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) 
 
         break
       }
-      case TransactionType.Send: {
-        const { params, transactionStateDispatch } = payload
-        const provider = yield* call(getProvider, params.chainId)
-
-        const transferFeeInfo = yield* call(estimateTransferGasFee, provider, params)
-        const optimismL1Fee = yield* call(
-          estimateOptimismL1Fee,
-          params.chainId,
-          TransactionType.Send
-        )
-
-        transactionStateDispatch(
-          updateGasEstimates({ gasEstimates: { [TransactionType.Send]: transferFeeInfo } })
-        )
-        transactionStateDispatch(
-          updateOptimismL1Fee({ optimismL1Fee: { [TransactionType.Send]: optimismL1Fee } })
-        )
-        break
-      }
     }
   } catch (error) {
     logger.error('estimateGasSaga', 'estimateGas', 'Failed:', error)
@@ -246,21 +216,6 @@ function* estimateApproveGasFee(params: EstiamteApproveGasInfo) {
     gasFeeEstimate: { [TransactionType.Approve]: approveGasInfo },
     optimismL1Fee,
   }
-}
-
-function* estimateTransferGasFee(provider: providers.Provider, params: TransferTokenParams) {
-  const { chainId } = params
-
-  const { transferTxRequest } = yield* call(prepareTransfer, params, true)
-
-  const transferFeeInfo = yield* call(
-    computeGasFee,
-    chainId,
-    transferTxRequest,
-    provider as providers.JsonRpcProvider
-  )
-
-  return transferFeeInfo
 }
 
 function* estimateSwapGasInfo(params: EstimateSwapGasInfo) {

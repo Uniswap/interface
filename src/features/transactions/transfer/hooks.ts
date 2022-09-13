@@ -1,34 +1,25 @@
 import { Currency } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers'
-import React, { useEffect, useMemo, useState } from 'react'
+import { providers } from 'ethers'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
-import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
-import { FeeInfo, GasSpeed } from 'src/features/gas/types'
 import { useNFT } from 'src/features/nfts/hooks'
 import { NFTAsset } from 'src/features/nfts/types'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import {
   CurrencyField,
-  GasFeeByTransactionType,
-  OptimismL1FeeEstimate,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
-import {
-  transferTokenActions,
-  TransferTokenParams,
-} from 'src/features/transactions/transfer/transferTokenSaga'
+import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
+import { transferTokenActions } from 'src/features/transactions/transfer/transferTokenSaga'
 import { getTransferWarnings } from 'src/features/transactions/transfer/validate'
-import { TransactionType } from 'src/features/transactions/types'
-import { useActiveAccount, useActiveAccountWithThrow } from 'src/features/wallet/hooks'
-import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
-import { logger } from 'src/utils/logger'
+import { useActiveAccount } from 'src/features/wallet/hooks'
+import { buildCurrencyId } from 'src/utils/currencyId'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 
 export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
@@ -39,16 +30,6 @@ export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
   exactCurrencyField: CurrencyField.INPUT
   recipient?: string
   isUSDInput?: boolean
-}
-
-interface UpdateTransferGasEstimateParams {
-  transactionStateDispatch: React.Dispatch<AnyAction>
-  chainId: NullUndefined<ChainId>
-  currencyIn: Currency | undefined
-  nftIn: NFTAsset.Asset | undefined
-  amount: string | undefined
-  recipient: Address | undefined
-  assetType: AssetType | undefined
 }
 
 export function useDerivedTransferInfo(state: TransactionState): DerivedTransferInfo {
@@ -139,13 +120,13 @@ export function useTransferERC20Callback(
   toAddress?: Address,
   tokenAddress?: Address,
   amountInWei?: string,
-  feeInfo?: FeeInfo,
+  transferTxWithGasSettings?: providers.TransactionRequest,
   onSubmit?: () => void
 ) {
   const account = useActiveAccount()
 
   return useTransferCallback(
-    chainId && toAddress && tokenAddress && amountInWei && account && feeInfo
+    chainId && toAddress && tokenAddress && amountInWei && account
       ? {
           account,
           chainId,
@@ -154,9 +135,9 @@ export function useTransferERC20Callback(
           amountInWei,
           type: AssetType.Currency,
           txId,
-          feeInfo,
         }
-      : null,
+      : undefined,
+    transferTxWithGasSettings,
     onSubmit
   )
 }
@@ -168,13 +149,13 @@ export function useTransferNFTCallback(
   toAddress?: Address,
   tokenAddress?: Address,
   tokenId?: string,
-  feeInfo?: FeeInfo,
+  txRequest?: providers.TransactionRequest,
   onSubmit?: () => void
 ) {
   const account = useActiveAccount()
 
   return useTransferCallback(
-    account && chainId && toAddress && tokenAddress && tokenId && feeInfo
+    account && chainId && toAddress && tokenAddress && tokenId
       ? {
           account,
           chainId,
@@ -183,128 +164,29 @@ export function useTransferNFTCallback(
           tokenId,
           type: AssetType.ERC721,
           txId,
-          feeInfo,
         }
-      : null,
+      : undefined,
+    txRequest,
     onSubmit
   )
 }
 
 /** General purpose transfer callback for ERC20s, NFTs, etc. */
 function useTransferCallback(
-  transferTokenParams: TransferTokenParams | null,
+  transferTokenParams?: TransferTokenParams,
+  txRequest?: providers.TransactionRequest,
   onSubmit?: () => void
 ): null | (() => void) {
   const dispatch = useAppDispatch()
 
   return useMemo(() => {
-    return transferTokenParams
-      ? () => {
-          dispatch(transferTokenActions.trigger(transferTokenParams))
-          onSubmit?.()
-        }
-      : null
-  }, [dispatch, transferTokenParams, onSubmit])
-}
+    if (!transferTokenParams || !txRequest) return null
 
-export function useUpdateTransferGasEstimate({
-  transactionStateDispatch,
-  chainId,
-  currencyIn,
-  nftIn,
-  amount,
-  recipient,
-  assetType,
-}: UpdateTransferGasEstimateParams) {
-  const dispatch = useAppDispatch()
-  const account = useActiveAccountWithThrow()
-  const tokenAddress = currencyIn ? currencyAddress(currencyIn) : nftIn?.asset_contract.address
-
-  useEffect(() => {
-    if (!chainId || !tokenAddress || !recipient || !assetType || (!currencyIn && !nftIn)) {
-      logger.info(
-        'hooks',
-        'useUpdateTransferGasEstimate',
-        'One of the required parameters is undefined'
-      )
-      return
+    return () => {
+      dispatch(transferTokenActions.trigger({ transferTokenParams, txRequest }))
+      onSubmit?.()
     }
-
-    let params: TransferTokenParams
-    if (assetType === AssetType.ERC1155 || assetType === AssetType.ERC721) {
-      if (!nftIn) {
-        logger.info(
-          'hooks',
-          'useUpdateTransferGasEstimate',
-          'Asset type corresponds to a NFT but `nftIn` is undefined'
-        )
-        return
-      }
-
-      params = {
-        account,
-        chainId,
-        toAddress: recipient,
-        tokenAddress,
-        type: assetType,
-        tokenId: nftIn.token_id,
-      }
-    } else {
-      if (!currencyIn || amount === undefined) {
-        logger.info(
-          'hooks',
-          'useUpdateTransferGasEstimate',
-          'Asset type corresponds to a Currency but `currencyIn` or `amount` is undefined'
-        )
-        return
-      }
-
-      params = {
-        account,
-        chainId,
-        toAddress: recipient,
-        tokenAddress,
-        type: AssetType.Currency,
-        amountInWei: amount,
-      }
-    }
-
-    dispatch(
-      estimateGasAction({
-        txType: TransactionType.Send,
-        params,
-        transactionStateDispatch,
-      })
-    )
-  }, [
-    account,
-    recipient,
-    chainId,
-    dispatch,
-    amount,
-    tokenAddress,
-    transactionStateDispatch,
-    assetType,
-    currencyIn,
-    nftIn,
-  ])
-}
-
-export function useTransferGasFee(
-  gasFeeEstimate: GasFeeByTransactionType | undefined,
-  gasSpeedPreference: GasSpeed,
-  optimismL1Fee?: OptimismL1FeeEstimate
-) {
-  const txFee = gasFeeEstimate?.[TransactionType.Send]?.fee[gasSpeedPreference]
-  const optimismL1TransferFee = optimismL1Fee?.[TransactionType.Send]
-
-  return useMemo(() => {
-    if (!txFee) return undefined
-
-    return optimismL1TransferFee
-      ? BigNumber.from(txFee).add(optimismL1TransferFee).toString()
-      : txFee
-  }, [txFee, optimismL1TransferFee])
+  }, [transferTokenParams, dispatch, txRequest, onSubmit])
 }
 
 export function useIsSmartContractAddress(address: string | undefined, chainId: ChainId) {

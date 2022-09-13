@@ -4,177 +4,39 @@ import ERC20_ABI from 'src/abis/erc20.json'
 import ERC721_ABI from 'src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'src/abis/types'
 import { getContractManager, getProvider } from 'src/app/walletContext'
-import { ChainId } from 'src/constants/chains'
-import { AssetType, NFTAssetType } from 'src/entities/assets'
-import { ContractManager } from 'src/features/contracts/ContractManager'
-import { FeeInfo } from 'src/features/gas/types'
-import { getTxGasSettings } from 'src/features/gas/utils'
+import { AssetType } from 'src/entities/assets'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { formatAsHexString } from 'src/features/transactions/swap/utils'
+import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
-import { Account } from 'src/features/wallet/accounts/types'
 import { isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 
-interface BaseTransferParams {
-  type: AssetType
-  txId?: string
-  account: Account
-  chainId: ChainId
-  toAddress: Address
-  tokenAddress: Address
-  feeInfo?: FeeInfo
+type Params = {
+  transferTokenParams: TransferTokenParams
+  txRequest: providers.TransactionRequest
 }
 
-export interface TransferCurrencyParams extends BaseTransferParams {
-  type: AssetType.Currency
-  amountInWei: string
-}
-
-export interface TransferNFTParams extends BaseTransferParams {
-  type: NFTAssetType
-  tokenId: string
-}
-
-export type TransferTokenParams = TransferCurrencyParams | TransferNFTParams
-
-export function* transferToken(params: TransferTokenParams) {
-  const { txId, account, chainId } = params
-
-  const { transferTxRequest, typeInfo } = yield* call(prepareTransfer, params)
-
+export function* transferToken(params: Params) {
+  const { transferTokenParams, txRequest } = params
+  const { txId, account, chainId } = transferTokenParams
+  const typeInfo = getTransferTypeInfo(transferTokenParams)
+  yield* call(validateTransfer, transferTokenParams)
   yield* call(sendTransaction, {
     txId,
     chainId,
     account,
-    options: { request: transferTxRequest },
+
+    // TODO: ideally hexlifying the transaction request should happen after
+    // the call to provider.populateTransaction, which fills in nonce info.
+    // move hexlifying to the `sendTransaction` saga and pass in decimal tx requests here instead
+    options: { request: hexlifyTransaction(txRequest) },
     typeInfo,
   })
 
   logger.debug('transferToken', '', 'Transfer complete')
-}
-
-export function* prepareTransfer(
-  params: TransferTokenParams,
-  prepareForEstimation: boolean = false
-) {
-  const { chainId, type: assetType, tokenAddress, feeInfo } = params
-
-  const provider = yield* call(getProvider, chainId)
-  const contractManager = yield* call(getContractManager)
-
-  let transferTxRequest: providers.TransactionRequest
-  const typeInfo: SendTokenTransactionInfo = {
-    assetType,
-    recipient: params.toAddress,
-    tokenAddress,
-    type: TransactionType.Send,
-  }
-
-  switch (assetType) {
-    case AssetType.ERC1155:
-    case AssetType.ERC721:
-      transferTxRequest = yield* call(prepareNFTTransfer, params, provider, contractManager)
-      typeInfo.tokenId = params.tokenId
-      break
-    case AssetType.Currency:
-      typeInfo.currencyAmountRaw = params.amountInWei
-      if (isNativeCurrencyAddress(tokenAddress)) {
-        transferTxRequest = yield* call(prepareNativeTransfer, params, provider)
-      } else {
-        transferTxRequest = yield* call(prepareTokenTransfer, params, provider, contractManager)
-      }
-
-      break
-  }
-
-  // feeInfo will be undefined when prepareTransfer is called in estimateTransferGasFee
-  // if prepareTransfer is not being called as part of the estimation saga, then feeInfo should always be defined
-  if (!prepareForEstimation) {
-    if (!feeInfo) {
-      throw new Error('No fee info provided for transfer')
-    }
-    transferTxRequest = setTxGasParamsAndHexifyValues(transferTxRequest, feeInfo)
-  }
-
-  return { transferTxRequest, typeInfo }
-}
-
-async function prepareNativeTransfer(params: TransferCurrencyParams, provider: providers.Provider) {
-  const { account, toAddress, amountInWei } = params
-  const currentBalance = await provider.getBalance(account.address)
-
-  validateTransferAmount(amountInWei, currentBalance)
-
-  const transactionRequest: providers.TransactionRequest = {
-    from: account.address,
-    to: toAddress,
-    value: amountInWei,
-  }
-  return transactionRequest
-}
-
-async function prepareTokenTransfer(
-  params: TransferCurrencyParams,
-  provider: providers.Provider,
-  contractManager: ContractManager
-) {
-  const { account, toAddress, chainId, tokenAddress, amountInWei } = params
-  const tokenContract = contractManager.getOrCreateContract<Erc20>(
-    chainId,
-    tokenAddress,
-    provider,
-    ERC20_ABI
-  )
-  const currentBalance = await tokenContract.balanceOf(account.address)
-
-  validateTransferAmount(amountInWei, currentBalance)
-
-  const transactionRequest = await tokenContract.populateTransaction.transfer(
-    toAddress,
-    amountInWei,
-    { from: account.address }
-  )
-  return transactionRequest
-}
-
-async function prepareNFTTransfer(
-  params: TransferNFTParams,
-  provider: providers.Provider,
-  contractManager: ContractManager
-) {
-  const { chainId, account, toAddress, tokenAddress, tokenId } = params
-
-  switch (params.type) {
-    case AssetType.ERC1155:
-      const erc1155Contract = contractManager.getOrCreateContract<Erc1155>(
-        chainId,
-        tokenAddress,
-        provider,
-        ERC1155_ABI
-      )
-      validateTransferAmount('1', await erc1155Contract.balanceOf(account.address, tokenId))
-      // TODO: handle `non ERC1155 Receiver implement` error
-      return erc1155Contract.populateTransaction.safeTransferFrom(
-        account.address,
-        toAddress,
-        tokenId,
-        /*amount=*/ '1',
-        /*data=*/ '0x0'
-      )
-    case AssetType.ERC721:
-      const erc20Contract = contractManager.getOrCreateContract<Erc721>(
-        chainId,
-        tokenAddress,
-        provider,
-        ERC721_ABI
-      )
-      const currentBalance = await erc20Contract.balanceOf(account.address)
-      validateTransferAmount('1', currentBalance)
-      return erc20Contract.populateTransaction.transferFrom(account.address, toAddress, tokenId)
-  }
 }
 
 function validateTransferAmount(amountInWei: string, currentBalance: BigNumberish) {
@@ -189,18 +51,96 @@ function validateTransferAmount(amountInWei: string, currentBalance: BigNumberis
   }
 }
 
-export function setTxGasParamsAndHexifyValues(
-  transferTxRequest: providers.TransactionRequest,
-  feeInfo: FeeInfo
-) {
-  const gasSettings = getTxGasSettings(feeInfo)
-  const value = transferTxRequest.value
-    ? formatAsHexString(transferTxRequest.value.toString())
-    : undefined
-  const nonce = transferTxRequest.nonce
-    ? formatAsHexString(transferTxRequest.nonce.toString())
-    : undefined
-  return { ...transferTxRequest, nonce, value, ...gasSettings }
+export function* validateTransfer(transferTokenParams: TransferTokenParams) {
+  const { type, chainId, tokenAddress, account } = transferTokenParams
+  const contractManager = yield* call(getContractManager)
+  const provider = yield* call(getProvider, chainId)
+
+  switch (type) {
+    case AssetType.ERC1155: {
+      const erc1155Contract = contractManager.getOrCreateContract<Erc1155>(
+        chainId,
+        tokenAddress,
+        provider,
+        ERC1155_ABI
+      )
+
+      const balance = yield* call(
+        erc1155Contract.balanceOf,
+        account.address,
+        transferTokenParams.tokenId
+      )
+
+      validateTransferAmount('1', balance)
+      return
+    }
+    case AssetType.ERC721: {
+      const erc721Contract = contractManager.getOrCreateContract<Erc721>(
+        chainId,
+        tokenAddress,
+        provider,
+        ERC721_ABI
+      )
+      const balance = yield* call(erc721Contract.balanceOf, account.address)
+      validateTransferAmount('1', balance)
+      return
+    }
+    case AssetType.Currency: {
+      if (isNativeCurrencyAddress(tokenAddress)) {
+        const balance = yield* call([provider, provider.getBalance], account.address)
+        validateTransferAmount(transferTokenParams.amountInWei, balance)
+        return
+      }
+
+      const tokenContract = contractManager.getOrCreateContract<Erc20>(
+        chainId,
+        tokenAddress,
+        provider,
+        ERC20_ABI
+      )
+      const currentBalance = yield* call(tokenContract.balanceOf, account.address)
+      validateTransferAmount(transferTokenParams.amountInWei, currentBalance)
+    }
+  }
+}
+
+function getTransferTypeInfo(params: TransferTokenParams) {
+  const { type: assetType, toAddress, tokenAddress } = params
+  const typeInfo: SendTokenTransactionInfo = {
+    assetType,
+    recipient: toAddress,
+    tokenAddress,
+    type: TransactionType.Send,
+  }
+
+  if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {
+    typeInfo.tokenId = params.tokenId
+  } else if (assetType === AssetType.Currency) {
+    typeInfo.currencyAmountRaw = params.amountInWei
+  }
+
+  return typeInfo
+}
+
+export function hexlifyTransaction(transferTxRequest: providers.TransactionRequest) {
+  const { value, nonce, gasLimit, gasPrice, maxPriorityFeePerGas, maxFeePerGas } = transferTxRequest
+  return {
+    ...transferTxRequest,
+    nonce: formatAsHexString(nonce),
+    value: formatAsHexString(value),
+    gasLimit: formatAsHexString(gasLimit),
+
+    // only pass in for legacy chains
+    ...(gasPrice ? { gasPrice: formatAsHexString(gasPrice) } : {}),
+
+    // only pass in for eip1559 tx
+    ...(maxPriorityFeePerGas
+      ? {
+          maxPriorityFeePerGas: formatAsHexString(maxPriorityFeePerGas),
+          maxFeePerGas: formatAsHexString(maxFeePerGas),
+        }
+      : {}),
+  }
 }
 
 export const {
@@ -208,4 +148,4 @@ export const {
   wrappedSaga: transferTokenSaga,
   reducer: transferTokenReducer,
   actions: transferTokenActions,
-} = createMonitoredSaga<TransferTokenParams>(transferToken, 'transferToken')
+} = createMonitoredSaga<Params>(transferToken, 'transferToken')

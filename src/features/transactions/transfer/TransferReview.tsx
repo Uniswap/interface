@@ -2,7 +2,7 @@ import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'src/components/modals/types'
-import { GasSpeed } from 'src/features/gas/types'
+import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import {
@@ -12,12 +12,10 @@ import {
 import {
   DerivedTransferInfo,
   useTransferERC20Callback,
-  useTransferGasFee,
   useTransferNFTCallback,
-  useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
+import { useTransferTransactionRequest } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { TransferDetails } from 'src/features/transactions/transfer/TransferDetails'
-import { TransactionType } from 'src/features/transactions/types'
 import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferFormProps {
@@ -28,18 +26,11 @@ interface TransferFormProps {
   onPrev: () => void
 }
 
-export function TransferReview({
-  derivedTransferInfo,
-  state,
-  dispatch,
-  onNext,
-  onPrev,
-}: TransferFormProps) {
+export function TransferReview({ derivedTransferInfo, state, onNext, onPrev }: TransferFormProps) {
   const { t } = useTranslation()
 
   const {
     currencyAmounts,
-    currencyTypes,
     formattedAmounts,
     recipient,
     isUSDInput = false,
@@ -48,23 +39,15 @@ export function TransferReview({
     nftIn,
     chainId,
   } = derivedTransferInfo
-  const { gasFeeEstimate, txId, optimismL1Fee } = state
-  const feeInfo = gasFeeEstimate?.[TransactionType.Send]
-  const gasFee = useTransferGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
+  const { txId } = state
+
+  const txRequest = useTransferTransactionRequest(derivedTransferInfo)
+  const gasFeeInfo = useTransactionGasFee(txRequest)
+  const transferTxWithGasSettings = gasFeeInfo ? { ...txRequest, ...gasFeeInfo.params } : txRequest
 
   // TODO: how should we surface this warning?
   const actionButtonDisabled =
-    warnings.some((warning) => warning.action === WarningAction.DisableReview) || !gasFee
-
-  useUpdateTransferGasEstimate({
-    transactionStateDispatch: dispatch,
-    chainId,
-    currencyIn,
-    nftIn,
-    amount: currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
-    recipient,
-    assetType: currencyTypes[CurrencyField.INPUT],
-  })
+    warnings.some((warning) => warning.action === WarningAction.DisableReview) || !gasFeeInfo
 
   const transferERC20Callback = useTransferERC20Callback(
     txId,
@@ -72,7 +55,7 @@ export function TransferReview({
     recipient,
     currencyIn ? currencyAddress(currencyIn) : undefined,
     currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
-    feeInfo,
+    transferTxWithGasSettings,
     onNext
   )
   // TODO: if readonly account, not sendable
@@ -82,7 +65,7 @@ export function TransferReview({
     recipient,
     nftIn?.asset_contract.address,
     nftIn?.token_id,
-    feeInfo,
+    transferTxWithGasSettings,
     onNext
   )
 
@@ -108,7 +91,7 @@ export function TransferReview({
       isUSDInput={isUSDInput}
       nftIn={nftIn}
       recipient={recipient}
-      transactionDetails={<TransferDetails chainId={chainId} gasFee={gasFee} />}
+      transactionDetails={<TransferDetails chainId={chainId} gasFee={gasFeeInfo?.gasFee} />}
       onPrev={onPrev}
     />
   )

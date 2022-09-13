@@ -1,5 +1,5 @@
 import { Currency, Price, TradeType } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers'
+import { BigNumber, BigNumberish } from 'ethers'
 import { TFunction } from 'i18next'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { DEFAULT_SLIPPAGE_TOLERANCE_PERCENT } from 'src/features/transactions/swap/hooks'
@@ -106,7 +106,7 @@ export const getRateToDisplay = (trade: Trade, showInverseRate: boolean) => {
   return showInverseRate ? rate : inverseRate
 }
 
-export const formatAsHexString = (input?: string | number) =>
+export const formatAsHexString = (input?: BigNumberish) =>
   input !== undefined ? BigNumber.from(input).toHexString() : input
 
 export const getActionName = (t: TFunction, wrapType: WrapType) => {
