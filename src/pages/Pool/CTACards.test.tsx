@@ -9,7 +9,7 @@ jest.mock('@web3-react/core', () => {
   return {
     ...web3React,
     useWeb3React: () => ({
-      chainId: 99999,
+      chainId: 42,
     }),
   }
 })
