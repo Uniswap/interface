@@ -19,7 +19,7 @@ const StyledRangeInput = styled.input<{ size: string }>`
     -webkit-appearance: none;
     height: ${({ size }) => size};
     width: ${({ size }) => size};
-    background-color: ${({ theme }) => theme.colorGreen39};
+    background-color: ${({ theme }) => theme.primary1};
     border-radius: 100%;
     border: none;
     transform: translateY(-50%);
@@ -35,7 +35,7 @@ const StyledRangeInput = styled.input<{ size: string }>`
   &::-moz-range-thumb {
     height: ${({ size }) => size};
     width: ${({ size }) => size};
-    background-color: ${({ theme }) => theme.colorGreen39};
+    background-color: ${({ theme }) => theme.primary1};
     border-radius: 100%;
     border: none;
     color: ${({ theme }) => theme.bg1};
@@ -50,7 +50,7 @@ const StyledRangeInput = styled.input<{ size: string }>`
   &::-ms-thumb {
     height: ${({ size }) => size};
     width: ${({ size }) => size};
-    background-color: ${({ theme }) => theme.colorGreen39};
+    background-color: ${({ theme }) => theme.primary1};
     border-radius: 100%;
     color: ${({ theme }) => theme.bg1};
 
@@ -63,13 +63,13 @@ const StyledRangeInput = styled.input<{ size: string }>`
 
   &::-webkit-slider-runnable-track {
     // background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.bg3});
-    background-color: ${({ theme }) => theme.colorGray37};
+    background-color: ${({ theme }) => theme.common3};
     height: 2px;
   }
 
   &::-moz-range-track {
     // background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.bg3});
-    background-color: ${({ theme }) => theme.colorGray37};
+    background-color: ${({ theme }) => theme.common3};
     height: 2px;
   }
 

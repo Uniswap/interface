@@ -51,7 +51,7 @@ import { DomainName } from '../../constants'
 const PageWrapper = styled(AutoColumn)`
   max-width: 1200px;
   width: 38rem;
-  background-color: ${({ theme }) => theme.colorBlack05};
+  background-color: ${({ theme }) => theme.common1};
 `
 
 export default function RemoveLiquidity({
@@ -487,7 +487,7 @@ export default function RemoveLiquidity({
     <>
       <PageWrapper>
         <AddRemoveTabs creating={false} adding={false} />
-        <Wrapper style={{ backgroundColor: theme.colorBlack05 }}>
+        <Wrapper style={{ backgroundColor: theme.common1 }}>
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={handleDismissConfirmation}
@@ -503,7 +503,7 @@ export default function RemoveLiquidity({
             )}
             pendingText={pendingText}
           />
-          <AutoColumn gap="0" style={{ border: `1px solid ${theme.colorGray37}`, borderRadius: ".8rem" }}>
+          <AutoColumn gap="0" style={{ border: `1px solid ${theme.common3}`, borderRadius: ".8rem" }}>
             {/* <BlueCard>
               <AutoColumn gap="10px">
                 <TYPE.link fontWeight={400} color={'primaryText1'}>
@@ -525,7 +525,7 @@ export default function RemoveLiquidity({
                     {showDetailed ? 'Simple' : 'Detailed'}
                   </ClickableText> */}
                 </RowBetween>
-                <Row style={{ alignItems: 'center', justifyContent: 'center', border: `1px solid ${theme.colorGray69}`, borderRadius: ".8rem", padding: ".8rem" }}>
+                <Row style={{ alignItems: 'center', justifyContent: 'center', border: `1px solid ${theme.common3}`, borderRadius: ".8rem", padding: ".8rem" }}>
                   <Text fontSize={"1.6rem"} fontWeight={600} style={{ flex: "2" }}>
                     {formattedAmounts[Field.LIQUIDITY_PERCENT]}%
                   </Text>
@@ -563,22 +563,22 @@ export default function RemoveLiquidity({
                     <RowBetween>
                       <RowFixed>
                         <CurrencyLogo currency={currencyA} style={{ marginRight: '12px' }} />
-                        <Text fontSize={".6rem"} fontWeight={600} style={{ color: theme.colorWhiteFF }} id="remove-liquidity-tokena-symbol">
+                        <Text fontSize={".6rem"} fontWeight={600} style={{ color: theme.common2 }} id="remove-liquidity-tokena-symbol">
                           {currencyA?.symbol}
                         </Text>
                       </RowFixed>
-                      <Text fontSize={".6rem"} fontWeight={500} style={{ color: theme.colorWhiteFF }}>
+                      <Text fontSize={".6rem"} fontWeight={500} style={{ color: theme.common2 }}>
                         {formattedAmounts[Field.CURRENCY_A] || '-'}
                       </Text>
                     </RowBetween>
                     <RowBetween>
                       <RowFixed>
                         <CurrencyLogo currency={currencyB} style={{ marginRight: '12px' }} />
-                        <Text fontSize={".6rem"} fontWeight={600} style={{ color: theme.colorWhiteFF }} id="remove-liquidity-tokenb-symbol">
+                        <Text fontSize={".6rem"} fontWeight={600} style={{ color: theme.common2 }} id="remove-liquidity-tokenb-symbol">
                           {currencyB?.symbol}
                         </Text>
                       </RowFixed>
-                      <Text fontSize={".6rem"} fontWeight={500} style={{ color: theme.colorWhiteFF }}>
+                      <Text fontSize={".6rem"} fontWeight={500} style={{ color: theme.common2 }}>
                         {formattedAmounts[Field.CURRENCY_B] || '-'}
                       </Text>
                     </RowBetween>

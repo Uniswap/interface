@@ -15,14 +15,22 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   height: ${({ size }) => size};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   border-radius: 24px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 1.5rem;
+    height: auto;
+  `}
 `
 
-const StyledLogo = styled(Logo)<{ size: string }>`
+const StyledLogo = styled(Logo) <{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   background-color: ${({ theme }) => theme.white};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 1.5rem;
+    height: auto;
+  `}
 `
 
 export default function CurrencyLogo({
@@ -38,7 +46,6 @@ export default function CurrencyLogo({
 
   const srcs: string[] = useMemo(() => {
     if (currency === ETHER) return []
-
     if (currency instanceof Token) {
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, getTokenLogoURL(currency.address)]

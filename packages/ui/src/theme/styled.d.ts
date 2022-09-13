@@ -20,21 +20,14 @@ export interface Colors {
   bg3: Color
   bg4: Color
   bg5: Color
-  bgHtml: Color
   bgSwap: Color
   bgSwapInput: Color
-  bgTransparent: Color
-  bgGreen: Color
-  bgGreenHover: Color
-  bgGreenSelect: Color
-  bgGreenDisable: Color
-  bgDisable: Color
+  colorTransparent: Color
 
   modalBG: Color
   advancedBG: Color
 
   //blues
-  primary1: Color
   primary2: Color
   primary3: Color
   primary4: Color
@@ -57,21 +50,17 @@ export interface Colors {
   blue1: Color
 
   // tele
-  textNormal: Color
   textHover: Color
   textSelect: Color
   textDisable : Color
 
-  colorBlack05: Color
-  colorBlack00: Color
 
-  colorGray69: Color
-  colorGray37: Color
 
-  colorWhiteCd: Color
-  colorWhiteFF: Color
-
-  colorGreen39: Color
+  common1: Color
+  common2: Color
+  common3: Color
+  primary1: Color
+  primary1Hover: Color
 }
 
 export interface Grids {

@@ -331,7 +331,7 @@ export default function Swap({ history }: RouteComponentProps) {
               id="swap-currency-input"
             />
             <AutoColumn justify="space-between">
-              <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem', position: 'absolute', marginTop: '-1rem', zIndex: 100 }}>
+              <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem', position: 'absolute', marginTop: '-1rem', zIndex: 90 }}>
                 <ArrowWrapper clickable>
                   {/* <ArrowDown
                     size="16"

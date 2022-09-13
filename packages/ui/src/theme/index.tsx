@@ -22,7 +22,7 @@ const MEDIA_WIDTHS = {
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
-    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    ; (accumulator as any)[size] = (a: any, b: any, c: any) => css`
       @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
         ${css(a, b, c)}
       }
@@ -42,49 +42,54 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: darkMode ? '#D7DCE0' : '#000000',
-    text2: darkMode ? '#D7DCE0' : '#565A69',
-    text3: darkMode ? '#6C7284' : '#888D9B',
-    text4: darkMode ? '#565A69' : '#C3C5CB',
-    text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text1: darkMode ? '#D7DCE0' : '#D7DCE0',
+    text2: darkMode ? '#D7DCE0' : '#D7DCE0',
+    text3: darkMode ? '#6C7284' : '#6C7284',
+    text4: darkMode ? '#565A69' : '#565A69',
+    text5: darkMode ? '#2C2F36' : '#2C2F36',
     textBlack: darkMode ? '#05050E' : '#05050E',
 
     // backgrounds / greys
-    bg1: darkMode ? '#212429' : '#FFFFFF',
-    bg2: darkMode ? 'rgba(5, 5, 14, 0.8)' : '#F7F8FA',
-    bg3: darkMode ? '#40444F' : '#EDEEF2',
-    bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
-    bgSwap: darkMode ? '#1d2f38' : '#1d2f38',
-    bgSwapInput: darkMode ? 'rgba(5, 5, 14, 0.5)' : 'rgba(5, 5, 14, 0.5)',
-    bgHtml: darkMode ? '#05050e' : '#05050e',
-    bgTransparent: darkMode ? 'transparent' : 'transparent',
-    bgGreen: darkMode ? '#39E1BA' : '#39E1BA',
-    bgGreenHover: darkMode ? '#74EACF' : '#39E1BA',
-    bgGreenSelect: darkMode ? '#2FB598' : '#39E1BA',
-    bgGreenDisable: darkMode ? '#CCCCCC' : '#39E1BA',
-    
-    
-    bgDisable: darkMode ? '#CCCCCC' : '#CCCCCC',
+    bg1: darkMode ? '#212429' : '#212429',
+    bg2: darkMode ? 'rgba(5, 5, 14, 0.8)' : 'rgba(5, 5, 14, 0.8)',
+    bg3: darkMode ? '#40444F' : '#40444F',
+    bg4: darkMode ? '#565A69' : '#565A69',
+    bg5: darkMode ? '#6C7284' : '#6C7284',
+
 
     //specialty colors
-    modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
-    advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
+    modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,.425)',
+    advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.1)',
 
     //primary colors
-    primary1: darkMode ? '#00C6A9' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    // green
+    // white
+    primary2: darkMode ? '#FFFFFF' : '#FFFFFF',
+    primary3: darkMode ? '#4D8FEA' : '#4D8FEA',
+    primary4: darkMode ? '#376bad70' : '#376bad70',
+    primary5: darkMode ? '#153d6f70' : '#153d6f70',
+
+    // 黑白灰
+    common1: darkMode ? '#05050e' : '#05050e',
+    common2: darkMode ? '#FFFFFF' : '#FFFFFF',
+    common3: darkMode ? '#9b9b9f' : '#9b9b9f',
+    // green
+    primary1: darkMode ? '#39E1BA' : '#39E1BA',
+    primary1Hover: darkMode ? '#74EACF' : '#74EACF',
+
+    bgSwap: darkMode ? '#1d2f38' : '#1d2f38',
+    colorTransparent: darkMode ? 'transparent' : 'transparent',
+    bgSwapInput: darkMode ? 'rgba(5, 5, 14, 0.5)' : 'rgba(5, 5, 14, 0.5)',
+
+
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: darkMode ? '#6da8ff' : '#6da8ff',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#ff007a',
-    secondary2: darkMode ? '#17000b26' : '#F6DDE8',
-    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+    secondary1: darkMode ? '#2172E5' : '#2172E5',
+    secondary2: darkMode ? '#17000b26' : '#17000b26',
+    secondary3: darkMode ? '#17000b26' : '#17000b26',
 
     // other
     red1: '#FD4040',
@@ -99,21 +104,9 @@ export function colors(darkMode: boolean): Colors {
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
 
-    textNormal: darkMode ? '#05050E' : '#ff007a',
-    textHover: darkMode ? '#05050E' : '#ff007a',
-    textSelect: darkMode ? '#05050E' : '#ff007a',
-    textDisable: darkMode ? '#05050E' : '#ff007a',
-
-    colorBlack05: darkMode ? '#05050e' : '#05050e',
-    colorBlack00: darkMode ? '#000000' : '#000000',
-    
-    colorGray69: darkMode ? '#69696e' : '#69696e',
-    colorGray37: darkMode ? '#37373e' : '#37373e',
-
-    colorWhiteCd: darkMode ? '#cdcdcf' : '#cdcdcf',
-    colorWhiteFF: darkMode ? '#FFFFFF' : '#FFFFFF',
-     
-    colorGreen39: darkMode ? '#39E1BA' : '#39E1BA',
+    textHover: darkMode ? '#05050E' : '#05050E',
+    textSelect: darkMode ? '#05050E' : '#05050E',
+    textDisable: darkMode ? '#05050E' : '#05050E',
 
   }
 }
@@ -154,7 +147,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text)<{ color: keyof Colors }>`
+const TextWrapper = styled(Text) <{ color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
@@ -256,13 +249,19 @@ html {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.colorBlack05};
+  background-color: ${({ theme }) => theme.common1};
   /* background: url(${swapBottomBg}) center top 7rem no-repeat rgba(0,0,0,1);
   background-size: 61%; */
+  box-sizing: border-box;
+  font-size: max(1.56vw, 16px);
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    // font-size: max(4.15vw, 16px);
+    font-size: 4.15vw;
+  `};
 }
 
 body {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   background-position: 0 -30vh;
   background-repeat: no-repeat;
   background-image: ${({ theme }) =>

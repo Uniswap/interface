@@ -29,6 +29,20 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 const PageWrapper = styled(AutoColumn)`
   max-width: 1132px;
   width: 37.3rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+  `};
+  .YourLiquidityText {
+    justify-self: flex-start;
+    font-family: 'Dela Gothic One';
+    font-weight: '400';
+    font-size: '.8rem';
+    color: '#FFFFFF';
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+      font-size: .9rem;
+      color: #FFFFFF;
+    `};
+  }
 `
 
 const VoteCard = styled(DataCard)`
@@ -41,14 +55,15 @@ const TitleRow = styled(RowBetween)`
     flex-wrap: wrap;
     gap: 12px;
     width: 100%;
-    flex-direction: column-reverse;
+    // flex-direction: column-reverse;
+    flex-direction: row;
   `};
 `
 
 const ButtonRow = styled(RowFixed)`
   gap: 8px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 100%;
+    // width: 100%;
     flex-direction: row-reverse;
     justify-content: space-between;
   `};
@@ -59,9 +74,17 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: .3rem;
   padding: .3rem 1.3rem;
   text-align: center;
-  /* ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
-  `}; */
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+      font-weight: 500;
+      font-size: .9rem;
+      color: #000000;
+      padding: 0;
+      border-radius: .4rem;
+      width: 8rem;
+      height: 2.3rem
+      line-height: 2.3rem;
+  `};
+   
 `
 
 const ResponsiveButtonSecondary = styled(ButtonSecondary)`
@@ -120,13 +143,26 @@ const HeaderItem = styled(Box)`
   color: rgba(255, 255, 255, 0.6);
   white-space: nowrap;
 `
+const TopPoolsStyled = styled(Box)`
+  height: 300px;
+  iframe {
+    width: 100%;
+    height: 700px;
+    position: relative;      
+    overflow-y: scroll;     
+    -webkit-overflow-scrolling: touch;
+  }
+`
 
 const StyledTableView = styled(Box)`
-  height: 12rem;
+  /* height: 12rem; */
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: .8rem;
   box-sizing: border-box;
   padding: 1.6rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 1px;
+  `};
   >thead {
     display: inline-block;
     width: 100%;
@@ -150,7 +186,7 @@ const StyledTableView = styled(Box)`
           flex: 3;
         }
         &:nth-of-type(5) {
-          flex: 3;
+          flex: 2;
         }
         &:nth-of-type(6) {
           flex: 2;
@@ -183,7 +219,7 @@ const StyledTableView = styled(Box)`
           flex: 3;
         }
         &:nth-of-type(5) {
-          flex: 3;
+          flex: 2;
         }
         &:nth-of-type(6) {
           flex: 2;
@@ -273,19 +309,11 @@ export default function Pool() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <HideSmall>
-                <TYPE.mediumHeader
-                  style={{
-                    justifySelf: 'flex-start',
-                    fontFamily: 'Dela Gothic One',
-                    fontWeight: '400',
-                    fontSize: '.8rem',
-                    color: '#FFFFFF',
-                  }}
-                >
-                  Your liquidity
+              {/* <HideSmall> */}
+              <TYPE.mediumHeader className="YourLiquidityText">
+                Your liquidity
                 </TYPE.mediumHeader>
-              </HideSmall>
+              {/* </HideSmall> */}
               <ButtonRow>
                 {/* <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
                   Create a pair
@@ -295,7 +323,7 @@ export default function Pool() {
                   as={Link}
                   to="/add/ETH"
                 >
-                  <Text sx={{ fontWeight: 500, fontSize: ".5rem", color: "#000000" }}>
+                  <Text className="AddLiquidity" sx={{ fontWeight: 500, fontSize: ".5rem", color: "#000000" }}>
                     Add Liquidity
                   </Text>
                 </ResponsiveButtonPrimary>
@@ -323,7 +351,7 @@ export default function Pool() {
                       <th>Token</th>
                       <th>Amount</th>
                       <th>Value</th>
-                      <th>Unclaimed Earnings</th>
+                      {/* <th>Unclaimed Earnings</th> */}
                       <th></th>
                     </tr>
                   </thead>
@@ -381,21 +409,23 @@ export default function Pool() {
                     </EmptyProposals>
                   )}
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <HideSmall>
-                <TYPE.mediumHeader
-                  style={{
-                    justifySelf: 'flex-start',
-                    fontFamily: 'Dela Gothic One',
-                    fontSize: '.8rem',
-                    color: '#FFFFFF',
-                  }}
-                >
-                  Top Pools
+              {/* <HideSmall> */}
+              <TYPE.mediumHeader
+                style={{
+                  justifySelf: 'flex-start',
+                  fontFamily: 'Dela Gothic One',
+                  fontSize: '.8rem',
+                  color: '#FFFFFF',
+                }}
+              >
+                Top Pools
                 </TYPE.mediumHeader>
-              </HideSmall>
+              {/* </HideSmall> */}
             </TitleRow>
+            {/* <TopPoolsStyled>
+              <iframe src="https://info.uniswap.org/#/pools" height="600" width="1280" title="xxxx"></iframe>
+            </TopPoolsStyled> */}
             <TopPoolsGrid>
-              {/*   <Table /> */}
               <HeaderItem>#</HeaderItem>
               <HeaderItem>Pools</HeaderItem>
               <HeaderItem>TVL</HeaderItem>

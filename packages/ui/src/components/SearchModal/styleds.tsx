@@ -59,6 +59,10 @@ export const Checkbox = styled.input`
 export const PaddedColumn = styled(AutoColumn)`
   /* padding: 20px; */
   padding: 1.6rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 1rem
+  `};
+
 `
 
 export const MenuItem = styled(RowBetween)`

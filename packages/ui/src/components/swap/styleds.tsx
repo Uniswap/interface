@@ -51,7 +51,7 @@ export const BottomGrouping = styled.div`
   /* bottom: -6rem; */
   width: 100%;
   left: 0;
-  /* background: ${({theme }) => theme.bgGreen}; */
+  /* background: ${({theme }) => theme.primary1}; */
 `
 
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
