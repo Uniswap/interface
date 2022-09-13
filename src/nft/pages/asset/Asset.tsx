@@ -204,7 +204,7 @@ const Asset = () => {
       className={styles.container}
     >
       <div className={styles.columns}>
-        <Column className={styles.column}>
+        <Column>
           {assetMediaType === 'image' ? (
             <img
               className={styles.image}
@@ -363,6 +363,7 @@ const Asset = () => {
               paddingLeft="16"
               paddingRight="24"
               style={{ background: 'rgba(76, 130, 251, 0.24)' }}
+              gap="8"
             >
               <Column justifyContent="flex-start" gap="8">
                 <Row gap="12" as="a" target="_blank" rel="norefferer" href={asset.sellorders[0].marketplaceUrl}>
@@ -390,7 +391,8 @@ const Asset = () => {
                 textAlign="center"
                 fontSize="14"
                 cursor="pointer"
-                style={{ width: '244px' }}
+                style={{ maxWidth: '244px' }}
+                width="full"
                 color={isSelected ? 'genieBlue' : 'explicitWhite'}
                 border="none"
                 borderRadius="12"
