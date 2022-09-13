@@ -1,7 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { GAS_FEE_REFRESH_INTERVAL } from 'src/constants/gas'
@@ -17,6 +17,7 @@ import { FeeInfo, FeeType, GasSpeed, TransactionGasFeeInfo } from 'src/features/
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { TransactionDetails } from 'src/features/transactions/types'
+import { useAsyncData } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
 import { useInterval } from 'src/utils/timing'
 
@@ -103,6 +104,29 @@ export function useUSDGasPrice(chainId: ChainId | undefined, gasFee?: string) {
 // network conditions to reset based on GAS_FEE_REFRESH_INTERVAL.
 const CANCEL_GAS_FEE_INTERVAL_OVERRIDE = 1000
 
+const createTxRequest = async (transaction: TransactionDetails, provider: providers.Provider) => {
+  try {
+    const { options } = transaction
+    const oldRequest = options.request
+    const currentFeeData = await provider.getFeeData()
+    const feeParams = getAdjustedGasFeeParams(
+      oldRequest,
+      currentFeeData,
+      TRANSACTION_CANCELLATION_GAS_FACTOR
+    )
+    const newTxRequest: providers.TransactionRequest = {
+      to: transaction.from,
+      value: '0x0',
+      gasLimit: TRANSACTION_MINIMUM_GAS,
+      ...feeParams,
+    }
+
+    return newTxRequest
+  } catch (error) {
+    logger.error('useCancelationGasFeeInfo', '', 'Error computing cancelation fee', error)
+  }
+}
+
 /**
  * Construct cancelation transaction with increased gas (based on current network conditions),
  * then use it to compute new gas info.
@@ -111,44 +135,19 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): {
   isLoading: boolean
   feeInfo: FeeInfo | undefined
 } {
-  const [txnRequest, setTxnRequest] = useState<providers.TransactionRequest | undefined>()
   const provider = useProvider(transaction.chainId)
-  const [isLoading, setIsLoading] = useState(true)
 
-  const createTxnRequest = useCallback(async () => {
-    if (!provider) return
-    try {
-      const { options } = transaction
-      const oldRequest = options.request
-      const currentFeeData = await provider.getFeeData()
-      const feeParams = getAdjustedGasFeeParams(
-        oldRequest,
-        currentFeeData,
-        TRANSACTION_CANCELLATION_GAS_FACTOR
-      )
-      const newTxRequest: providers.TransactionRequest = {
-        to: transaction.from,
-        value: '0x0',
-        gasLimit: TRANSACTION_MINIMUM_GAS,
-        ...feeParams,
-      }
-      setTxnRequest(newTxRequest)
-    } catch (error) {
-      logger.error('useCancelationGasFeeInfo', '', 'Error computing cancelation fee', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [provider, transaction])
+  const transactionCreator = useCallback(() => {
+    if (!provider) return undefined
 
-  useEffect(() => {
-    if (!txnRequest && isLoading) {
-      createTxnRequest()
-    }
-  }, [createTxnRequest, isLoading, txnRequest])
+    return createTxRequest(transaction, provider)
+  }, [transaction, provider])
+
+  const { data, isLoading } = useAsyncData(transactionCreator)
 
   const feeInfo = useGasFeeInfo(
     transaction.chainId,
-    txnRequest ?? null,
+    data ?? null,
     undefined,
     CANCEL_GAS_FEE_INTERVAL_OVERRIDE
   )

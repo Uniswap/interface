@@ -4,11 +4,11 @@ import {
   isEnrolledAsync,
   supportedAuthenticationTypesAsync,
 } from 'expo-local-authentication'
-import { useEffect, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { BiometricSettingsState } from 'src/features/biometrics/slice'
+import { useAsyncData } from 'src/utils/hooks'
 
 /**
  * Hook shortcut to use the biometric prompt.
@@ -45,6 +45,11 @@ export function biometricAuthenticationDisabledByOS(status: BiometricAuthenticat
   )
 }
 
+const checkAuthenticationTypes = async () => {
+  const res = await supportedAuthenticationTypesAsync()
+  return res?.includes(AuthenticationType.FACIAL_RECOGNITION)
+}
+
 /**
  * Check function of biometric (faceId specific) device support
  * @returns deviceSupportsFaceId Boolean value representing faceId Support availability
@@ -52,32 +57,17 @@ export function biometricAuthenticationDisabledByOS(status: BiometricAuthenticat
 
 export function useDeviceSupportsFaceId() {
   // check if device supports faceId authentication, if not, hide faceId option
-  const [deviceSupportsFaceId, setDeviceSupportsFaceId] = useState<boolean | null>(null)
-  useEffect(() => {
-    // TODO: Move into a saga
-    const checkAuthenticationTypes = async () => {
-      const res = await supportedAuthenticationTypesAsync()
-      setDeviceSupportsFaceId(res?.includes(AuthenticationType.FACIAL_RECOGNITION))
-    }
-    checkAuthenticationTypes()
-  }, [])
+  return useAsyncData(checkAuthenticationTypes).data
+}
 
-  return deviceSupportsFaceId
+const checkOsFaceIdEnabled = async () => {
+  const [compatible, enrolled] = await Promise.all([hasHardwareAsync(), isEnrolledAsync()])
+  return compatible && enrolled
 }
 
 export function useOSFaceIdEnabled() {
   // check if OS settings for Face ID are enabled
-  const [osFaceIdEnabled, setOsFaceIdEnabled] = useState<boolean | null>(null)
-  useEffect(() => {
-    const checkOsFaceIdEnabled = async () => {
-      const compatible = await hasHardwareAsync()
-      const enrolled = await isEnrolledAsync()
-      setOsFaceIdEnabled(compatible && enrolled)
-    }
-    checkOsFaceIdEnabled()
-  }, [])
-
-  return osFaceIdEnabled
+  return useAsyncData(checkOsFaceIdEnabled).data
 }
 
 export function useBiometricAppSettings(): BiometricSettingsState {
