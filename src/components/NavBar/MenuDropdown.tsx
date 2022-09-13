@@ -134,7 +134,7 @@ export const MenuDropdown = () => {
             <Column gap="16">
               <Column paddingX="8" gap="4">
                 {nftFlag === NftVariant.Enabled && (
-                  <PrimaryMenuRow to="/nft/sell" close={toggleOpen}>
+                  <PrimaryMenuRow to="/nfts/sell" close={toggleOpen}>
                     <Icon>
                       <ThinTagIcon width={24} height={24} />
                     </Icon>

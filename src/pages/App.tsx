@@ -233,8 +233,8 @@ export default function App() {
                     <>
                       <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
                       <Route path="/nfts" element={<NftExplore />} />
-                      <Route path="/nft/sell" element={<Sell />} />
-                      <Route path="/nft/asset/:contractAddress/:tokenId" element={<Asset />} />
+                      <Route path="/nfts/sell" element={<Sell />} />
+                      <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
                     </>
                   )}
                 </Routes>
