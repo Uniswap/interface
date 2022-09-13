@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-09 20:05\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -226,6 +226,10 @@ msgstr "อนุญาต"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "จำนวน"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occured loading tokens. Please try again."
+msgstr "เกิดข้อผิดพลาดในการโหลดโทเค็น กรุณาลองอีกครั้ง."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -584,6 +588,10 @@ msgstr "เชื่อมต่อกับ"
 msgid "Connecting..."
 msgstr "กำลังเชื่อมต่อ..."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Contract address"
+msgstr "ที่อยู่สัญญา"
+
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
@@ -596,6 +604,10 @@ msgstr "สำเนา"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "คัดลอกที่อยู่"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "คัดลอกลิงค์"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
@@ -902,6 +914,10 @@ msgstr "สำรวจ Uniswap Analytics"
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "ไม่สามารถสลับเครือข่ายจากอินเทอร์เฟซ Uniswap ในการใช้ Uniswap บน {0}คุณต้องเปลี่ยนเครือข่ายในกระเป๋าเงินของคุณ"
 
+#: src/components/Tokens/TokenTable/FavoriteButton.tsx
+msgid "Favorites"
+msgstr "รายการโปรด"
+
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
 msgstr "คุณสมบัติแฟล็ก"
@@ -1162,6 +1178,10 @@ msgstr "จัดการรายการโทเค็น"
 msgid "Manage this pool."
 msgstr "จัดการพูลนี้"
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Market cap"
+msgstr "มูลค่าตลาด"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1306,6 +1326,10 @@ msgstr "ไม่พบผลลัพธ์."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "ไม่มีข้อมูลโทเค็น"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "ไม่พบโทเค็น"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "No tokens found."
@@ -1709,6 +1733,10 @@ msgstr "ส่วนแบ่งของพูล"
 msgid "Share of Pool:"
 msgstr "ส่วนแบ่งของพูล:"
 
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "แบ่งปันไปที่ Twitter"
+
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
 msgstr "ยกเลิกการแสดง"
@@ -1770,6 +1798,7 @@ msgstr "การจัดหา {0} {1} และ {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/Navbar.tsx
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1925,9 +1954,13 @@ msgstr "ไม่สามารถส่งธุรกรรมได้เน
 msgid "There is no liquidity data."
 msgstr "ไม่มีข้อมูลสภาพคล่อง"
 
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "There was an error fetching your balance"
+msgstr "เกิดข้อผิดพลาดในการเรียกยอดเงินของคุณ"
+
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {tokenSymbol} balance"
-msgstr "เกิดข้อผิดพลาดในการโหลดยอดคงเหลือ {tokenSymbol} ของคุณ"
+msgid "There was an error loading your {0} balance"
+msgstr "เกิดข้อผิดพลาดในการโหลดยอดคงเหลือ {0} ของคุณ"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -2423,6 +2456,10 @@ msgstr "คุณมีคะแนนเสียงไม่เพียงพ
 msgid "You don’t have liquidity in this pool yet."
 msgstr "คุณยังไม่มีสภาพคล่องในกลุ่มนี้"
 
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "You have no favorited tokens"
+msgstr "คุณไม่มีโทเค็นที่ชื่นชอบ"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
 msgstr "คุณอาจสูญเสียการเชื่อมต่อเครือข่าย หรือ {label} อาจหยุดทำงานในขณะนี้"
@@ -2467,6 +2504,10 @@ msgstr "สภาพคล่อง V2 ของคุณ"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "ตำแหน่งสภาพคล่อง V3 ที่ใช้งานอยู่ของคุณจะปรากฏที่นี่"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "Your balances by network"
+msgstr "ยอดคงเหลือของคุณตามเครือข่าย"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2704,6 +2745,10 @@ msgstr "{0} โทเค็น LP UNI-V2 พร้อมใช้งาน"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} โหวต"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "{0} all balances"
+msgstr "{0} ยอดคงเหลือทั้งหมด"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx

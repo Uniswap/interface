@@ -4,7 +4,7 @@ import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
-import { bisect, curveCardinal, NumberValue, scaleLinear } from 'd3'
+import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
 import { TokenPrices$key } from 'graphql/data/__generated__/TokenPrices.graphql'
 import { useTokenPricesCached } from 'graphql/data/Token'
 import { PricePoint, TimePeriod } from 'graphql/data/Token'
@@ -114,35 +114,6 @@ const TimeButton = styled.button<{ active: boolean }>`
   }
 `
 
-function getTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {
-  return Array.from(
-    { length: numTicks },
-    (v, i) => endTimestamp - ((endTimestamp - startTimestamp) / (numTicks + 1)) * (i + 1)
-  )
-}
-
-function tickFormat(
-  startTimestamp: number,
-  endTimestamp: number,
-  timePeriod: TimePeriod,
-  locale: string
-): [TickFormatter<NumberValue>, (v: number) => string, number[]] {
-  switch (timePeriod) {
-    case TimePeriod.HOUR:
-      return [hourFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
-    case TimePeriod.DAY:
-      return [hourFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
-    case TimePeriod.WEEK:
-      return [weekFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp, 6)]
-    case TimePeriod.MONTH:
-      return [monthDayFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
-    case TimePeriod.YEAR:
-      return [monthTickFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
-    case TimePeriod.ALL:
-      return [monthYearFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
-  }
-}
-
 const margin = { top: 100, bottom: 48, crosshair: 72 }
 const timeOptionsHeight = 44
 const crosshairDateOverhang = 80
@@ -174,7 +145,7 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
   // Defining scales
   // x scale
   const timeScale = useMemo(
-    () => scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]),
+    () => scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]).nice(),
     [startingPrice, endingPrice, width]
   )
   // y scale
@@ -185,6 +156,54 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
         .range([graphInnerHeight, 0]),
     [prices, graphInnerHeight]
   )
+
+  function tickFormat(
+    startTimestamp: number,
+    endTimestamp: number,
+    timePeriod: TimePeriod,
+    locale: string
+  ): [TickFormatter<NumberValue>, (v: number) => string, NumberValue[]] {
+    const startDate = new Date(startingPrice.timestamp.valueOf() * 1000)
+    const endDate = new Date(endingPrice.timestamp.valueOf() * 1000)
+    switch (timePeriod) {
+      case TimePeriod.HOUR:
+        return [
+          hourFormatter(locale),
+          dayHourFormatter(locale),
+          timeMinute.range(startDate, endDate, 10).map((x) => x.valueOf() / 1000),
+        ]
+      case TimePeriod.DAY:
+        return [
+          hourFormatter(locale),
+          dayHourFormatter(locale),
+          timeHour.range(startDate, endDate, 4).map((x) => x.valueOf() / 1000),
+        ]
+      case TimePeriod.WEEK:
+        return [
+          weekFormatter(locale),
+          dayHourFormatter(locale),
+          timeDay.range(startDate, endDate, 1).map((x) => x.valueOf() / 1000),
+        ]
+      case TimePeriod.MONTH:
+        return [
+          monthDayFormatter(locale),
+          dayHourFormatter(locale),
+          timeDay.range(startDate, endDate, 7).map((x) => x.valueOf() / 1000),
+        ]
+      case TimePeriod.YEAR:
+        return [
+          monthTickFormatter(locale),
+          monthYearDayFormatter(locale),
+          timeMonth.range(startDate, endDate, 2).map((x) => x.valueOf() / 1000),
+        ]
+      case TimePeriod.ALL:
+        return [
+          monthYearFormatter(locale),
+          monthYearDayFormatter(locale),
+          timeMonth.range(startDate, endDate, 3).map((x) => x.valueOf() / 1000),
+        ]
+    }
+  }
 
   const handleHover = useCallback(
     (event: Element | EventType) => {

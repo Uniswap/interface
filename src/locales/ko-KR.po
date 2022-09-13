@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-09 20:05\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -226,6 +226,10 @@ msgstr "허용됨"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "금액"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occured loading tokens. Please try again."
+msgstr "토큰을 로드하는 중에 오류가 발생했습니다. 다시 시도해 주세요."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -584,6 +588,10 @@ msgstr "와 연결되다"
 msgid "Connecting..."
 msgstr "연결 중..."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Contract address"
+msgstr "계약 주소"
+
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
@@ -596,6 +604,10 @@ msgstr "복사"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "주소 복사"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "링크 복사"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
@@ -902,6 +914,10 @@ msgstr "Uniswap 분석 정보를 살펴보세요."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Uniswap 인터페이스에서 네트워크를 전환하지 못했습니다. Uniswap을 {0} 에서 사용하려면 지갑에서 네트워크를 변경해야 합니다."
 
+#: src/components/Tokens/TokenTable/FavoriteButton.tsx
+msgid "Favorites"
+msgstr "즐겨찾기"
+
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
 msgstr "기능 플래그"
@@ -1162,6 +1178,10 @@ msgstr "토큰 목록 관리"
 msgid "Manage this pool."
 msgstr "이 풀을 관리합니다."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Market cap"
+msgstr "시가총액"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1306,6 +1326,10 @@ msgstr "결과가 없습니다."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "사용 가능한 토큰 정보가 없습니다."
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "토큰을 찾을 수 없습니다."
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "No tokens found."
@@ -1709,6 +1733,10 @@ msgstr "풀 쉐어"
 msgid "Share of Pool:"
 msgstr "풀 쉐어:"
 
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "트위터에 공유"
+
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
 msgstr "취소된 표시"
@@ -1770,6 +1798,7 @@ msgstr "{0} {1} 및 {2} {3} 공급 중"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/Navbar.tsx
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1925,9 +1954,13 @@ msgstr "기한이 지났기 때문에 거래를 보낼 수 없습니다. 거래 
 msgid "There is no liquidity data."
 msgstr "유동성 데이터가 없습니다."
 
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "There was an error fetching your balance"
+msgstr "잔액을 가져오는 중에 오류가 발생했습니다."
+
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {tokenSymbol} balance"
-msgstr "{tokenSymbol} 잔액을 로드하는 중에 오류가 발생했습니다."
+msgid "There was an error loading your {0} balance"
+msgstr "{0} 잔액을 로드하는 중에 오류가 발생했습니다."
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -2423,6 +2456,10 @@ msgstr "제안서를 제출할 수있는 표가 충분하지 않습니다."
 msgid "You don’t have liquidity in this pool yet."
 msgstr "아직 이 풀에 유동성이 없습니다."
 
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "You have no favorited tokens"
+msgstr "즐겨찾는 토큰이 없습니다."
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
 msgstr "네트워크 연결이 끊어졌거나 {label} 이 다운되었을 수 있습니다."
@@ -2467,6 +2504,10 @@ msgstr "V2 유동성"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "활성 V3 유동성 위치가 여기에 표시됩니다."
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "Your balances by network"
+msgstr "네트워크별 잔액"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2704,6 +2745,10 @@ msgstr "{0} UNI-V2 LP 토큰 사용 가능"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} 투표"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "{0} all balances"
+msgstr "{0} 모든 잔액"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx

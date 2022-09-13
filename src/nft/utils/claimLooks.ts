@@ -1,6 +1,6 @@
 import { Signer } from '@ethersproject/abstract-signer'
 import { Contract } from '@ethersproject/contracts'
-import { BaseProvider } from '@ethersproject/providers'
+import type { BaseProvider } from '@ethersproject/providers'
 
 const looksRareContract = new Contract('0xea37093ce161f090e443f304e1bf3a8f14d7bb40', [
   {

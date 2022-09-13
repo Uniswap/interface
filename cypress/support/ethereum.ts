@@ -3,6 +3,7 @@
  */
 
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
 
