@@ -132,19 +132,6 @@ export function useTopTokenQuery(page: number, timePeriod: TimePeriod) {
   return topTokens
 }
 
-// export function checkCachedTopToken(address: string): CachedTopToken {
-//   let cachedTokenData: CachedTopToken = null
-//   return
-//   if (cachedTopTokens) {
-//     cachedTopTokens.topTokenProjects?.forEach((token) => {
-//       if (token?.tokens?.[0].address === address.toLowerCase()) {
-//         cachedTokenData = token
-//       }
-//     })
-//   }
-//   return cachedTokenData
-// }
-
 const tokenQuery = graphql`
   query TokenQuery($contract: ContractInput!, $duration: HistoryDuration!, $skip: Boolean = false) {
     tokenProjects(contracts: [$contract]) @skip(if: $skip) {
