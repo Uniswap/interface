@@ -112,8 +112,8 @@ function Banner({
         // KyberSwap Trading Campaign Lido
         id: 'kyberSwap-trading-campaign-Lido',
         name: 'KyberSwap Trading Campaign Lido',
-        start: new Date('2022-08-15T11:00:00.000Z'),
-        end: new Date('2022-09-30T23:59:59.000Z'),
+        start: new Date('2022-09-15T11:00:00.000Z'),
+        end: new Date('2022-09-29T23:59:59.000Z'),
         img: isInModal
           ? KyberSwapTradingCampaignMobile
           : w > 768
@@ -127,8 +127,8 @@ function Banner({
         // KyberSwap Arbitrum Lido Farm
         id: 'KyberSwap-Arbitrum-Lido-Farm',
         name: 'KyberSwap Arbitrum Lido Farm',
-        start: new Date('2022-08-17T00:00:00.000Z'),
-        end: new Date('2022-09-17T00:00:00.000Z'),
+        start: new Date('2022-09-19T00:00:00.000Z'),
+        end: new Date('2022-10-19T23:59:59.000Z'),
         img: isInModal
           ? KyberSwapArbitrumLidoFarmMobile
           : w > 768
@@ -142,8 +142,8 @@ function Banner({
         // KyberSwap Optimism Lido Farm
         id: 'KyberSwap-Optimism-Lido-Farm',
         name: 'KyberSwap Optimism Lido Farm',
-        start: new Date('2022-08-17T00:00:00.000Z'),
-        end: new Date('2022-09-17T00:00:00.000Z'),
+        start: new Date('2022-09-19T00:00:00.000Z'),
+        end: new Date('2022-10-19T23:59:59.000Z'),
         img: isInModal
           ? KyberSwapOptimismLidoFarmMobile
           : w > 768
@@ -173,7 +173,7 @@ function Banner({
   return (
     <BannerWrapper margin={margin || 'auto'} padding={padding} maxWidth={maxWidth || '1394px'} width="100%">
       <Swiper
-        autoplay={banners.length > 1 ? { delay: 200 } : false}
+        autoplay={banners.length > 1 ? { delay: 5000 } : false}
         slidesPerView={1}
         navigation={true}
         pagination={true}
