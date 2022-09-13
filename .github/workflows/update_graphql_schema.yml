@@ -1,0 +1,63 @@
+name: Update GraphQL Schema
+on:
+  schedule:
+    # every day at 8am
+    - cron: '0 8 * * *'
+
+  # manual trigger
+  workflow_dispatch:
+
+  # TODO: consider using a dispatch from @uniswap/data-api-graphql
+    
+jobs:
+  update-graphql-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          all_but_latest: true
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        name: Yarn Cache
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/package.json') }}
+          restore-keys: ${{ runner.os }}-yarn-v1
+
+      - name: Yarn Install
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 3
+          retry_wait_seconds: 30
+          max_attempts: 3
+          command: yarn --no-audit --prefer-offline
+
+      - name: Update GraphQL Schema
+        run: yarn relay:schema
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: '[bot] Update GraphQL Schema'
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.github.com>
+          signoff: false
+          branch: chore/update-graphql-schema
+          branch-suffix: timestamp
+          delete-branch: true
+          title: 'chore: [bot] Update GraphQL Schema'
+          body: GraphQL schema has been updated
