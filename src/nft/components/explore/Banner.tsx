@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
+import ActivityFeed from './ActivityFeed'
 import * as styles from './Banner.css'
 
 const Banner = () => {
@@ -57,7 +58,18 @@ const Banner = () => {
               style={{ backgroundImage: `url(${collections[current].bannerImageUrl})` }}
             >
               <Box className={styles.bannerOverlay} width="full" />
-              <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
+              <Box
+                as="section"
+                className={styles.section}
+                display="flex"
+                flexDirection="row"
+                flexWrap="nowrap"
+                paddingTop="40"
+              >
+                <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
+                <ActivityFeed address={collections[current].address} />
+              </Box>
+
               <CarouselProgress length={collections.length} currentIndex={current} setCurrent={setCurrent} />
             </div>
           </Box>

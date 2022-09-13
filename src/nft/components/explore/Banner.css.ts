@@ -63,7 +63,7 @@ export const collectionDetails = style([
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.md}px)`]: {
+      [`screen and (min-width: ${breakpoints.sm}px)`]: {
         width: '40%',
       },
     },
@@ -106,3 +106,42 @@ export const carouselIndicator = sprinkles({
   borderRadius: 'round',
   display: 'inline-block',
 })
+
+/* Activity Feed Styles */
+export const activityRow = style([
+  sprinkles({
+    position: 'absolute',
+    alignItems: { sm: 'flex-start', lg: 'center' },
+  }),
+  {
+    transition: 'transform 0.4s ease',
+  },
+])
+
+export const activeRow = sprinkles({
+  //backgroundColor: 'lightGrayContainer',
+})
+
+export const timestamp = style([
+  sprinkles({
+    position: 'absolute',
+    fontSize: '12',
+    color: 'grey300',
+    right: { sm: 'unset', lg: '12' },
+    left: { sm: '64', lg: 'unset' },
+    top: { sm: '28', lg: 'unset' },
+  }),
+])
+
+export const marketplaceIcon = style([
+  sprinkles({
+    width: '16',
+    height: '16',
+    borderRadius: '4',
+    flexShrink: '0',
+    marginLeft: '8',
+  }),
+  {
+    verticalAlign: 'bottom',
+  },
+])
