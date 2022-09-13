@@ -1,13 +1,41 @@
+import { deepCopy } from '@ethersproject/properties'
 // This is the only file which should instantiate new Providers.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
+import { isPlain } from '@reduxjs/toolkit'
 
 import { SupportedChainId } from './chains'
 import { RPC_URLS } from './networks'
 
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
+  callCache = new Map<string, Promise<any>>()
+
   constructor(urls: string[]) {
     super(urls[0])
+  }
+
+  send(method: string, params: Array<any>): Promise<any> {
+    // Only cache eth_call's.
+    if (method !== 'eth_call') return super.send(method, params)
+
+    // Only cache what is serializable.
+    if (!isPlain(params)) return super.send(method, params)
+    const key = `${JSON.stringify(params)}`
+
+    const cached = this.callCache.get(key)
+    if (cached) {
+      this.emit('debug', {
+        action: 'request',
+        request: deepCopy({ method, params, id: 'cache' }),
+        provider: this,
+      })
+      return cached
+    }
+
+    const result = super.send(method, params)
+    this.callCache.set(key, result)
+    this.once('block', () => this.callCache.delete(key))
+    return result
   }
 }
 
