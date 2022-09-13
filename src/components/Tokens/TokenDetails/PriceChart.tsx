@@ -1,4 +1,3 @@
-import { Token } from '@uniswap/sdk-core'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
@@ -6,11 +5,12 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
-import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
-import { TimePeriod } from 'graphql/data/TopTokenQuery'
+import { TokenPrices$key } from 'graphql/data/__generated__/TokenPrices.graphql'
+import { useTokenPricesCached } from 'graphql/data/Token'
+import { PricePoint, TimePeriod } from 'graphql/data/Token'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { OPACITY_HOVER } from 'theme'
@@ -28,8 +28,6 @@ import LineChart from '../../Charts/LineChart'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 // TODO: This should be combined with the logic in TimeSelector.
-
-export type PricePoint = { value: number; timestamp: number }
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -72,7 +70,6 @@ export function formatDelta(delta: number) {
 export const ChartHeader = styled.div`
   position: absolute;
 `
-
 export const TokenPrice = styled.span`
   font-size: 36px;
   line-height: 44px;
@@ -124,37 +121,41 @@ const crosshairDateOverhang = 80
 interface PriceChartProps {
   width: number
   height: number
-  token: Token
+  tokenAddress: string
+  priceData?: TokenPrices$key | null
 }
 
-export function PriceChart({ width, height, token }: PriceChartProps) {
+export function PriceChart({ width, height, tokenAddress, priceData }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
 
-  // TODO: Add network selector input, consider using backend type instead of current front end selector type
-  const pricePoints: PricePoint[] = useTokenPriceQuery(token.address, timePeriod, 'ETHEREUM').filter(
-    (p): p is PricePoint => Boolean(p && p.value)
-  )
+  const { priceMap } = useTokenPricesCached(priceData, tokenAddress, 'ETHEREUM', timePeriod)
+  const prices = priceMap.get(timePeriod)
 
-  const hasData = pricePoints.length !== 0
-
-  /* TODO: Implement API calls & cache to use here */
-  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
-  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
+  const startingPrice = prices?.[0] ?? DATA_EMPTY
+  const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
   const graphWidth = width + crosshairDateOverhang
-  // TODO: remove this logic after suspense is properly added
   const graphHeight = height - timeOptionsHeight > 0 ? height - timeOptionsHeight : 0
   const graphInnerHeight = graphHeight - margin.top - margin.bottom > 0 ? graphHeight - margin.top - margin.bottom : 0
 
   // Defining scales
   // x scale
-  const timeScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]).nice()
+  const timeScale = useMemo(
+    () => scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]).nice(),
+    [startingPrice, endingPrice, width]
+  )
   // y scale
-  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([graphInnerHeight, 0])
+  const rdScale = useMemo(
+    () =>
+      scaleLinear()
+        .domain(getPriceBounds(prices ?? []))
+        .range([graphInnerHeight, 0]),
+    [prices, graphInnerHeight]
+  )
 
   function tickFormat(
     startTimestamp: number,
@@ -206,16 +207,18 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
 
   const handleHover = useCallback(
     (event: Element | EventType) => {
+      if (!prices) return
+
       const { x } = localPoint(event) || { x: 0 }
       const x0 = timeScale.invert(x) // get timestamp from the scalexw
       const index = bisect(
-        pricePoints.map((x) => x.timestamp),
+        prices.map((x) => x.timestamp),
         x0,
         1
       )
 
-      const d0 = pricePoints[index - 1]
-      const d1 = pricePoints[index]
+      const d0 = prices[index - 1]
+      const d1 = prices[index]
       let pricePoint = d0
 
       const hasPreviousData = d1 && d1.timestamp
@@ -226,7 +229,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
       setCrosshair(timeScale(pricePoint.timestamp))
       setDisplayPrice(pricePoint)
     },
-    [timeScale, pricePoints]
+    [timeScale, prices]
   )
 
   const resetDisplay = useCallback(() => {
@@ -234,8 +237,8 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
-  // TODO: connect to loading state
-  if (!hasData) {
+  // TODO: Display no data available error
+  if (!prices) {
     return null
   }
 
@@ -264,7 +267,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
         </DeltaContainer>
       </ChartHeader>
       <LineChart
-        data={pricePoints}
+        data={prices}
         getX={(p: PricePoint) => timeScale(p.timestamp)}
         getY={(p: PricePoint) => rdScale(p.value)}
         marginTop={margin.top}
@@ -335,7 +338,13 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
       <TimeOptionsWrapper>
         <TimeOptionsContainer>
           {ORDERED_TIMES.map((time) => (
-            <TimeButton key={DISPLAYS[time]} active={timePeriod === time} onClick={() => setTimePeriod(time)}>
+            <TimeButton
+              key={DISPLAYS[time]}
+              active={timePeriod === time}
+              onClick={() => {
+                setTimePeriod(time)
+              }}
+            >
               {DISPLAYS[time]}
             </TimeButton>
           ))}
