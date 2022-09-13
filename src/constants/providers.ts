@@ -1,3 +1,5 @@
+// This is the only file which should instantiate new Providers.
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 
 import { SupportedChainId } from './chains'

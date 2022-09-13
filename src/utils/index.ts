@@ -1,7 +1,7 @@
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
+import type { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import { ChainTokenMap } from 'lib/hooks/useTokenList/utils'
 
