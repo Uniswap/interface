@@ -109,7 +109,8 @@ export default function SwapVolume() {
   const {
     volumeInEth,
     volumeInEthBn,
-    volumeInUsd
+    volumeInUsd,
+    volumeInUsdFormatted
   } = useTotalSwapVolume()
   const {
     chainId
@@ -151,7 +152,7 @@ export default function SwapVolume() {
                   {(chainId && chainId === 1 || (!chainId)) && <span style={{ color: '#F76C1D' }}>ETH</span>}
                   {(chainId && chainId === 56) && <span style={{ color: '#F76C1D' }}>BNB</span>}
                   {chainId && chainId === 56 && <>${bnbPrices?.current !== undefined && !isNaN(bnbPrices?.current) ? `${parseFloat(bnbPrices?.current?.toString()).toFixed(2)} USD` : 'Loading..'}</>}
-                  {((chainId && chainId === 1) || (!chainId)) && <>&nbsp;{`$${parseFloat(ethPrices[0] as string).toFixed(2)} USD`}</>}
+                  {(!chainId || (chainId && chainId === 1))  && <>&nbsp;{`$${parseFloat(ethPrices[0] as string).toFixed(2)} USD`}</>}
                 </StyledPollingNumber>
                 <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
               </>
@@ -173,7 +174,7 @@ export default function SwapVolume() {
                 <StyledPollingNumber>
                   <span style={{ color: '#F76C1D' }}>Total Swap Volume</span> <br /> {volumeInEth} Ξ
                   {chainId && (chainId === 1 || !chainId) && <>
-                    {volumeInUsd && volumeInUsd.toString() !== '0' && <>&nbsp;(${(abbreviateNumber(+volumeInUsd))} USD)</>}
+                    {volumeInUsdFormatted && volumeInUsd.toString() !== '0' && <>&nbsp;(${(abbreviateNumber(+volumeInUsd))} USD)</>}
                   </>}
 
                   {chainId && (chainId === 56) && <>

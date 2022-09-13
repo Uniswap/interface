@@ -72,7 +72,6 @@ export const useIsMobile = () => {
 }
 
 const CurrencyInputPanel = React.lazy(() => import("components/CurrencyInputPanel"));
-const CurrencyLogo = React.lazy(() => import("components/CurrencyLogo"));
 
 const Badge = React.lazy(() => import("components/Badge"));
 
@@ -101,7 +100,7 @@ const BackLink = styled(StyledDiv)`
   }
 `;
 
-const WrapperCard = styled(DarkCard) <{embedModel: EmbedModel, darkMode?: boolean, gridTemplateColumns: string, isMobile: boolean }>`
+const WrapperCard = styled(DarkCard) <{ embedModel: EmbedModel, darkMode?: boolean, gridTemplateColumns: string, isMobile: boolean }>`
   background: ${props => props.darkMode ? props.theme.chartBgDark : !props.darkMode ? props.theme.chartBgLight : props.theme.chartTableBg};
   max-width: 100%;
   display: grid;
@@ -124,7 +123,7 @@ export const SelectiveChartWithPair = () => {
         pairAddress?: string;
         network: string;
     }>();
-    const network=params?.network;
+    const network = params?.network;
     const screenerPairChainId = network == 'bsc' ? 56 : network == 'ethereum' ? 1 : 1
     const screenerPair = useDexscreenerPair(params?.pairAddress || '', screenerPairChainId)
     const isMobile = useIsMobile()
@@ -132,9 +131,9 @@ export const SelectiveChartWithPair = () => {
         screenerPair?.baseToken?.address
     );
     const bscTransactionData = useBscTokenTransactions(
-        params?.network == 'bsc' ? screenerPair?.baseToken?.address : '', 
-        network, 
-        5000, 
+        params?.network == 'bsc' ? screenerPair?.baseToken?.address : '',
+        network,
+        5000,
         params?.network == 'bsc' ? params?.pairAddress : ''
     )
     const prebuiltCurrency = React.useMemo(
@@ -156,7 +155,7 @@ export const SelectiveChartWithPair = () => {
         }
     }, [screenerPair?.baseToken?.address])
 
-    const tokenInfo = useTokenInfo(screenerPairChainId , address);
+    const tokenInfo = useTokenInfo(screenerPairChainId, address);
     const embedModel = useIsEmbedMode()
     const tokenData = useTokenData(address?.toLowerCase(), 10000);
     const { pairs } = tokenData;
@@ -229,10 +228,10 @@ export const SelectiveChartWithPair = () => {
         token as Token,
         parseFloat(tokenBalance?.toFixed(2) as string),
         pairs?.[0],
-        transactionData?.data?.swaps?.map((swap: any) => ({
+        React.useMemo(() => transactionData?.data?.swaps?.map((swap: any) => ({
             ...swap,
             timestamp: swap.transaction.timestamp,
-        }))
+        })), [transactionData.data])
     );
 
     const pair = React.useMemo(
@@ -278,8 +277,8 @@ export const SelectiveChartWithPair = () => {
     };
 
     const shareClick = () => {
-        const actionLabel = `${token?.symbol ?? screenerPair?.baseToken?.symbol}/${pairCurrency?.symbol ??  screenerPair?.quoteToken?.symbol}`
-  
+        const actionLabel = `${token?.symbol ?? screenerPair?.baseToken?.symbol}/${pairCurrency?.symbol ?? screenerPair?.quoteToken?.symbol}`
+
         if (navigator && navigator.share) {
             navigator.share({
                 title: `KibaCharts - ${token?.symbol} / ${pairCurrency?.symbol}`,
@@ -288,7 +287,7 @@ export const SelectiveChartWithPair = () => {
                 console.log(`[navigator.share]`, 'Thanks for sharing!');
             })
                 .catch(console.error);
-            
+
             ReactGA.event({
                 category: "Share_Charts",
                 action: `Share Charts via web share API`,
@@ -296,7 +295,7 @@ export const SelectiveChartWithPair = () => {
             });
         } else {
             copy(window.location.href)
-          
+
             ReactGA.event({
                 category: "Share_Charts",
                 action: `Share Charts via clipboard copy`,
@@ -332,10 +331,7 @@ export const SelectiveChartWithPair = () => {
     }, [])
 
     const prices = useBnbPrices()
-
-    console.log(`[SelectiveChartingPair.screenerPair]`, screenerPair)
-
-    /* Memoized function to render the Double Currency Logo for the current chart */
+        /* Memoized function to render the Double Currency Logo for the current chart */
     const LogoMemo = React.useMemo(() => {
         return Boolean(!!hasSelectedData) ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, justifyContent: 'space-between' }}>
@@ -361,7 +357,7 @@ export const SelectiveChartWithPair = () => {
                             currency1={pairCurrency as any}
                         />
                     )}
-                    {network === 'bsc' && <Badge style={{marginLeft:3, marginRight:3}}><TYPE.italic>{screenerPair?.baseToken?.symbol}/{screenerPair?.quoteToken?.symbol}</TYPE.italic></Badge>}
+                    {network === 'bsc' && <Badge style={{ marginLeft: 3, marginRight: 3 }}><TYPE.italic>{screenerPair?.baseToken?.symbol}/{screenerPair?.quoteToken?.symbol}</TYPE.italic></Badge>}
                     on KibaCharts
                 </span>
             </div>
@@ -673,8 +669,8 @@ export const SelectiveChartWithPair = () => {
                                 <React.Fragment>
                                     {isMobile == false && hasSelectedData && (
                                         <React.Fragment>
-                                            <TokenStats 
-                                                tokenData={screenerToken} 
+                                            <TokenStats
+                                                tokenData={screenerToken}
                                             />
                                             <TopTokenHolders
                                                 address={address ?? screenerPair?.baseToken?.address}
@@ -717,12 +713,12 @@ export const SelectiveChartWithPair = () => {
 
                             )}
                         {embedModel.embedMode == false && isMobile == false && (
-                            <TYPE.link style={{ 
-                                fontSize:12, 
-                                alignItems: 'center', 
-                                display: 'flex', 
-                                justifyContent: 'flex-end', 
-                                cursor: 'pointer' 
+                            <TYPE.link style={{
+                                fontSize: 12,
+                                alignItems: 'center',
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                                cursor: 'pointer'
                             }} onClick={embedClick}>
                                 <Code style={{ fontSize: 12 }} /> &nbsp; Embed this chart
                             </TYPE.link>
