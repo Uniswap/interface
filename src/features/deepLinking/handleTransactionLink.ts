@@ -1,5 +1,5 @@
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { Tabs } from 'src/screens/Screens'
+import { Screens } from 'src/screens/Screens'
 import { logger } from 'src/utils/logger'
 import { call } from 'typed-redux-saga'
 
@@ -9,9 +9,9 @@ export function* handleTransactionLink(url: URL) {
     if (!txHash) throw new Error('No `txHash` provided')
     // TODO: validate the txHash exists in the user's tx history
     // and navigate to the specific tx detail screen when it's created
-    yield* call(navigate, Tabs.Profile)
+    yield* call(navigate, Screens.Profile)
   } catch (error: any) {
     logger.info('handleTransactionLink', 'handleTransactionLink', error?.message)
-    yield* call(navigate, Tabs.Profile)
+    yield* call(navigate, Screens.Profile)
   }
 }

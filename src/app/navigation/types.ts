@@ -17,7 +17,6 @@ type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
 export type TabParamList = {
   [Tabs.Home]: undefined
   [Tabs.Explore]: undefined | { screen: Screens; params: { address: string } }
-  [Tabs.Profile]: undefined
 }
 
 export type HomeStackParamList = {
@@ -126,6 +125,7 @@ export type AppStackParamList = {
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.TokenDetails]: { currencyId: string }
+  [Screens.Profile]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }
 

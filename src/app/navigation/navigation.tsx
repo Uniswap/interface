@@ -20,17 +20,13 @@ import {
 } from 'src/app/navigation/types'
 import DiscoverIconFilled from 'src/assets/icons/discover-filled.svg'
 import DiscoverIcon from 'src/assets/icons/discover.svg'
-import ProfileIconFilled from 'src/assets/icons/profile-filled.svg'
-import ProfileIcon from 'src/assets/icons/profile.svg'
 import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 
 import { Chevron } from 'src/components/icons/Chevron'
-import { Box, Flex } from 'src/components/layout'
-import { useSelectAddressNotificationCount } from 'src/features/notifications/hooks'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { selectActiveAccountAddress, selectFinishedOnboarding } from 'src/features/wallet/selectors'
+import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreFavoritesScreen } from 'src/screens/ExploreFavoritesScreen'
@@ -94,13 +90,7 @@ const TAB_NAVIGATOR_HEIGHT = 90
 function TabNavigator() {
   const { t } = useTranslation()
   const theme = useAppTheme()
-
-  const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
-  const addressNotificationCount = useSelectAddressNotificationCount(activeAccountAddress)
-  const hasUnreadNotifications = !!(addressNotificationCount && addressNotificationCount > 0)
-
   const iconTopPaddingMd = theme.spacing.md
-  const iconTopPaddingSm = theme.spacing.sm
 
   return (
     <Tab.Navigator
@@ -154,39 +144,6 @@ function TabNavigator() {
           ),
           tabBarIconStyle: {
             paddingTop: iconTopPaddingMd,
-          },
-        }}
-      />
-      <Tab.Screen
-        component={ProfileScreen}
-        name={Tabs.Profile}
-        options={{
-          tabBarLabel: t('Me'),
-          tabBarIcon: ({ focused, color }) => (
-            <Flex alignItems="center" gap="xxs">
-              <>
-                {focused ? (
-                  <ProfileIconFilled color={theme.colors.userThemeColor} height={24} />
-                ) : (
-                  <ProfileIcon color={color} height={24} />
-                )}
-              </>
-
-              {hasUnreadNotifications && (
-                <Box
-                  backgroundColor="accentAction"
-                  borderRadius="full"
-                  bottom={iconTopPaddingSm - iconTopPaddingMd}
-                  height={4}
-                  position="absolute"
-                  width={4}
-                />
-              )}
-            </Flex>
-          ),
-          // the notifications button pushes the icon up so use smaller padding in that case and offset the button by the difference in padding on this icon compared to the other icons
-          tabBarIconStyle: {
-            paddingTop: hasUnreadNotifications ? iconTopPaddingSm : iconTopPaddingMd,
           },
         }}
       />
@@ -415,6 +372,7 @@ export function AppStackNavigator() {
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
       </AppStack.Group>
+      <AppStack.Screen component={ProfileScreen} name={Screens.Profile} />
       <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
       <AppStack.Screen
@@ -438,7 +396,6 @@ const DRAWER_ENABLED_SCREENS = [
   Screens.Home.valueOf(),
   Screens.Explore.valueOf(),
   Tabs.Explore.valueOf(),
-  Tabs.Profile.valueOf(),
 ]
 const SIDEBAR_WIDTH = Math.min(dimensions.fullWidth * 0.8, 320)
 const SWIPE_WIDTH = dimensions.fullWidth * 0.5

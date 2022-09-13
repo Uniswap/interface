@@ -13,6 +13,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { usePendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
+import { Screens } from 'src/screens/Screens'
 
 export function AccountHeader() {
   const theme = useAppTheme()
@@ -25,6 +26,10 @@ export function AccountHeader() {
 
   const onPressAccountHeader = useCallback(() => {
     navigation.dispatch(DrawerActions.openDrawer())
+  }, [navigation])
+
+  const onPressNotifications = useCallback(() => {
+    navigation.navigate(Screens.Profile)
   }, [navigation])
 
   return (
@@ -49,11 +54,13 @@ export function AccountHeader() {
         )}
       </Button>
       <Box alignItems="center" flexDirection="row" justifyContent="flex-end">
-        {hasPendingTransactions ? (
-          <PendingNotificationBadge />
-        ) : (
-          <NotificationIcon color={theme.colors.textSecondary} height={24} width={24} />
-        )}
+        <Button onPress={onPressNotifications}>
+          {hasPendingTransactions ? (
+            <PendingNotificationBadge />
+          ) : (
+            <NotificationIcon color={theme.colors.textSecondary} height={24} width={24} />
+          )}
+        </Button>
       </Box>
     </Box>
   )

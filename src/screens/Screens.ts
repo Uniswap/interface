@@ -14,6 +14,7 @@ export enum Screens {
   OnboardingStack = 'OnboardingStack',
   PortfolioTokens = 'PortfolioTokens',
   PortfolioNFTs = 'PortfolioNFTs',
+  Profile = 'Profile',
   ProfileStack = 'ProfileStack',
   Settings = 'Settings',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',
@@ -64,5 +65,4 @@ export enum OnboardingScreens {
 export enum Tabs {
   Explore = 'ExploreTab',
   Home = 'HomeTab',
-  Profile = 'Profile',
 }

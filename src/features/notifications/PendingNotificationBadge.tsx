@@ -12,7 +12,7 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionStatus } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
-import { Tabs } from 'src/screens/Screens'
+import { Screens } from 'src/screens/Screens'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
 const LOADING_SPINNER_SIZE = 26
@@ -52,7 +52,7 @@ export function PendingNotificationBadge({ size = 24 }: { size?: number }) {
   const countToDisplay = pendingTransactionCount === 1 ? undefined : pendingTransactionCount
 
   function onPress() {
-    navigate(Tabs.Profile)
+    navigate(Screens.Profile)
   }
 
   return (

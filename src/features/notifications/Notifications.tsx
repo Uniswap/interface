@@ -45,7 +45,7 @@ import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { Tabs } from 'src/screens/Screens'
+import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
@@ -54,7 +54,7 @@ export const NOTIFICATION_ICON_SIZE = 24
 // TODO: once profile tab has screens for transaction details, navigate there instead
 const navigateToProfileTab = () => {
   store.dispatch(closeModal({ name: ModalName.Swap }))
-  navigate(Tabs.Profile)
+  navigate(Screens.Profile)
 }
 
 export function WCNotification({ notification }: { notification: WalletConnectNotification }) {

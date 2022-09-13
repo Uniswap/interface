@@ -7,6 +7,7 @@ import { AppStackParamList } from 'src/app/navigation/types'
 import Scan from 'src/assets/icons/qr-simple.svg'
 import Settings from 'src/assets/icons/settings.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AppBackground } from 'src/components/gradients/AppBackground'
@@ -67,7 +68,7 @@ export function ProfileScreen({ navigation }: Props) {
       <Flex gap="lg" m="sm">
         {/* nav header */}
         <Flex row justifyContent="space-between" mx="xs">
-          <Text variant="headlineSmall">{t('Activity')}</Text>
+          <BackButton size={theme.iconSizes.lg} />
           <Flex centered row gap="md">
             <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
               <Scan color={theme.colors.textSecondary} height={24} width={24} />
@@ -91,7 +92,7 @@ export function ProfileScreen({ navigation }: Props) {
         </Flex>
       </Flex>
     ),
-    [address, onPressScan, onPressSettings, t, theme.colors.textSecondary]
+    [address, onPressScan, onPressSettings, theme.colors.textSecondary, theme.iconSizes.lg]
   )
 
   return (
