@@ -157,7 +157,7 @@
     "react-loading-skeleton": "^3.1.0",
     "react-use": "^15.3.4",
     "recharts": "^2.1.13",
-    "swiper": "^8.0.7",
+    "swiper": "8.0.7",
     "swr": "^1.0.1",
     "ua-parser-js": "^1.0.2",
     "uuidv4": "^6.2.12",

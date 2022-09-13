@@ -4,7 +4,7 @@ import { useLocalStorage } from 'react-use'
 import { Flex } from 'rebass'
 import styled from 'styled-components'
 import { Autoplay, Navigation, Pagination } from 'swiper'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 
 import KyberSwapArbitrumLidoFarmDesktop from 'assets/banners/[Arbitrum]LidoFarm_on_site_desktop.png'
 import KyberSwapArbitrumLidoFarmMobile from 'assets/banners/[Arbitrum]LidoFarm_on_site_mobile.png'
@@ -170,12 +170,10 @@ function Banner({
 
   if (!showBanner) return null
 
-  console.log('x', banners.length > 1 ? { delay: isInModal ? 2000 : 3000 } : false)
-
   return (
     <BannerWrapper margin={margin || 'auto'} padding={padding} maxWidth={maxWidth || '1394px'} width="100%">
       <Swiper
-        autoplay={banners.length > 1 ? { delay: isInModal ? 2000 : 3000 } : false}
+        autoplay={banners.length > 1 ? { delay: 200 } : false}
         slidesPerView={1}
         navigation={true}
         pagination={true}
