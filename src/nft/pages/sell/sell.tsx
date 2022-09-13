@@ -14,11 +14,13 @@ import { useToggleWalletModal } from 'state/application/hooks'
 
 import * as styles from './sell.css'
 
+const SHOPPING_BAG_WIDTH = 324
+
 const Sell = () => {
   const sellPageState = useSellPageState((state) => state.state)
   const setSellPageState = useSellPageState((state) => state.setSellPageState)
   const removeAllMarketplaceWarnings = useSellAsset((state) => state.removeAllMarketplaceWarnings)
-  const reset = useSellAsset((state) => state.reset)
+  const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const setListingStatus = useNFTList((state) => state.setListingStatus)
   const navigate = useNavigate()
@@ -32,10 +34,10 @@ const Sell = () => {
   const toggleWalletModal = useToggleWalletModal()
 
   useEffect(() => {
-    reset()
+    resetSellAssets()
     setSellPageState(SellPageStateType.SELECTING)
     clearCollectionFilters()
-  }, [account, reset, setSellPageState, clearCollectionFilters])
+  }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
   const cartExpanded = useBag((state) => state.bagExpanded)
 
   const exitSellFlow = () => {
@@ -61,7 +63,7 @@ const Sell = () => {
         </Box>
       </Row>
       {account != null ? (
-        <Box style={{ width: `calc(100% - ${cartExpanded ? 324 : 0}px)` }}>
+        <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
           {sellPageState === SellPageStateType.SELECTING ? <SelectPage /> : <ListPage />}
         </Box>
       ) : (
