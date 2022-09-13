@@ -65,4 +65,6 @@ export enum OnboardingScreens {
 export enum Tabs {
   Explore = 'ExploreTab',
   Home = 'HomeTab',
+  Profile = 'Profile',
+  SwapButton = 'SwapButton',
 }

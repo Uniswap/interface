@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import {
@@ -20,12 +20,20 @@ import {
 } from 'src/app/navigation/types'
 import DiscoverIconFilled from 'src/assets/icons/discover-filled.svg'
 import DiscoverIcon from 'src/assets/icons/discover.svg'
+import SwapIcon from 'src/assets/icons/swap-action-button.svg'
 import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
+import { TouchableArea } from 'src/components-uds/TouchableArea'
 
+import { ShadowProps } from '@shopify/restyle'
+import { StyleSheet } from 'react-native'
+import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { Chevron } from 'src/components/icons/Chevron'
+import { Flex } from 'src/components/layout'
+import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
+import { ModalName } from 'src/features/telemetry/constants'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
@@ -73,6 +81,7 @@ import { UserScreen } from 'src/screens/UserScreen'
 import { WatchedWalletsScreen } from 'src/screens/WatchedWalletsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { dimensions } from 'src/styles/sizing'
+import { Theme } from 'src/styles/theme'
 
 const Tab = createBottomTabNavigator<TabParamList>()
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
@@ -87,10 +96,17 @@ const Drawer = createDrawerNavigator()
 
 const TAB_NAVIGATOR_HEIGHT = 90
 
+const NullComponent = () => {
+  return null
+}
+
+const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
+
 function TabNavigator() {
   const { t } = useTranslation()
   const theme = useAppTheme()
-  const iconTopPaddingMd = theme.spacing.md
+
+  const dispatch = useAppDispatch()
 
   return (
     <Tab.Navigator
@@ -100,11 +116,14 @@ function TabNavigator() {
         tabBarShowLabel: false,
         headerShown: false,
         tabBarStyle: {
+          alignItems: 'center',
           backgroundColor: theme.colors.backgroundBackdrop,
           borderTopColor: theme.colors.backgroundOutline,
           borderStyle: 'solid',
           borderTopWidth: 0.5,
+          display: 'flex',
           height: TAB_NAVIGATOR_HEIGHT,
+          justifyContent: 'center',
           paddingTop: theme.spacing.md,
         },
       }}>
@@ -122,8 +141,53 @@ function TabNavigator() {
               )}
             </>
           ),
-          tabBarIconStyle: {
-            paddingTop: iconTopPaddingMd,
+        }}
+      />
+      <Tab.Screen
+        component={NullComponent}
+        name={Tabs.SwapButton}
+        options={{
+          tabBarButton: () => {
+            return (
+              <TouchableArea
+                bg="userThemeColor"
+                borderRadius="md"
+                height="100%"
+                shadowColor="black"
+                shadowOffset={SHADOW_OFFSET}
+                shadowOpacity={0.1}
+                shadowRadius={24}
+                style={styles.swapButton}
+                onPress={() => dispatch(openModal({ name: ModalName.Swap }))}>
+                <Flex centered mx="xs" px="xl" py="sm">
+                  <SwapIcon color={theme.colors.accentTextLightPrimary} height={24} />
+                </Flex>
+                {/* TODO: fix gradient definition so it fills space properly (right now needs 200% height on rect) */}
+                <Flex
+                  borderRadius="md"
+                  height="100%"
+                  overflow="hidden"
+                  position="absolute"
+                  width="100%">
+                  <Svg height="100%" width="100%">
+                    <Defs>
+                      <RadialGradient cy="0" id="background" rx="0.5" ry="0.5">
+                        <Stop offset="0" stopColor={theme.colors.white} stopOpacity="0.5" />
+                        <Stop offset="1" stopColor={theme.colors.white} stopOpacity="0" />
+                      </RadialGradient>
+                    </Defs>
+                    <Rect
+                      fill="url(#background)"
+                      height="200%"
+                      opacity={1}
+                      width="100%"
+                      x="0"
+                      y="0"
+                    />
+                  </Svg>
+                </Flex>
+              </TouchableArea>
+            )
           },
         }}
       />
@@ -142,9 +206,6 @@ function TabNavigator() {
               )}
             </>
           ),
-          tabBarIconStyle: {
-            paddingTop: iconTopPaddingMd,
-          },
         }}
       />
     </Tab.Navigator>
@@ -399,3 +460,11 @@ const DRAWER_ENABLED_SCREENS = [
 ]
 const SIDEBAR_WIDTH = Math.min(dimensions.fullWidth * 0.8, 320)
 const SWIPE_WIDTH = dimensions.fullWidth * 0.5
+
+const styles = StyleSheet.create({
+  swapButton: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+})
