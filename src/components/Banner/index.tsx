@@ -6,12 +6,15 @@ import styled from 'styled-components'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import KyberSwapTradingCampaignDesktop from 'assets/banners/kyberswap-trading-campaign-polygon-desktop.png'
-import KyberSwapTradingCampaignMobile from 'assets/banners/kyberswap-trading-campaign-polygon-mobile.png'
-import KyberSwapTradingCampaignTablet from 'assets/banners/kyberswap-trading-campaign-polygon-tablet.png'
-import PolygonDesktop from 'assets/banners/polygon-desktop.png'
-import PolygonMobile from 'assets/banners/polygon-mobile.png'
-import PolygonTablet from 'assets/banners/polygon-tablet.png'
+import KyberSwapArbitrumLidoFarmDesktop from 'assets/banners/[Arbitrum]LidoFarm_on_site_desktop.png'
+import KyberSwapArbitrumLidoFarmMobile from 'assets/banners/[Arbitrum]LidoFarm_on_site_mobile.png'
+import KyberSwapArbitrumLidoFarmTablet from 'assets/banners/[Arbitrum]LidoFarm_on_site_tablet.png'
+import KyberSwapOptimismLidoFarmDesktop from 'assets/banners/[Optimism]LidoFarm_on_site_desktop.png'
+import KyberSwapOptimismLidoFarmMobile from 'assets/banners/[Optimism]LidoFarm_on_site_mobile.png'
+import KyberSwapOptimismLidoFarmTablet from 'assets/banners/[Optimism]LidoFarm_on_site_tablet.png'
+import KyberSwapTradingCampaignDesktop from 'assets/banners/kyberswap-trading-campaign-Lido-desktop.png'
+import KyberSwapTradingCampaignMobile from 'assets/banners/kyberswap-trading-campaign-Lido-mobile.png'
+import KyberSwapTradingCampaignTablet from 'assets/banners/kyberswap-trading-campaign-Lido-tablet.png'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
@@ -106,11 +109,11 @@ function Banner({
   const ALL_BANNERS = useMemo(
     () => [
       {
-        // KyberSwap Trading Campaign ATH
-        id: 'kyberSwap-trading-campaign-polygon',
-        name: 'KyberSwap Trading Campaign ATH',
+        // KyberSwap Trading Campaign Lido
+        id: 'kyberSwap-trading-campaign-Lido',
+        name: 'KyberSwap Trading Campaign Lido',
         start: new Date('2022-08-15T11:00:00.000Z'),
-        end: new Date('2022-08-30T23:59:59.000Z'),
+        end: new Date('2022-09-30T23:59:59.000Z'),
         img: isInModal
           ? KyberSwapTradingCampaignMobile
           : w > 768
@@ -118,16 +121,37 @@ function Banner({
           : w > 500
           ? KyberSwapTradingCampaignTablet
           : KyberSwapTradingCampaignMobile,
-        link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-polygon-chain-5?networkId=137&utm_source=partner&utm_medium=banner&utm_campaign=polygontradingcontest&utm_content=onsite',
+        link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-polygon-chain-5',
       },
       {
-        // Polygon LM
-        id: 'polygon-lm',
-        name: 'Polygon LM',
+        // KyberSwap Arbitrum Lido Farm
+        id: 'KyberSwap-Arbitrum-Lido-Farm',
+        name: 'KyberSwap Arbitrum Lido Farm',
         start: new Date('2022-08-17T00:00:00.000Z'),
         end: new Date('2022-09-17T00:00:00.000Z'),
-        img: isInModal ? PolygonMobile : w > 768 ? PolygonDesktop : w > 500 ? PolygonTablet : PolygonMobile,
-        link: 'https://kyberswap.com/farms?tab=elastic&networkId=137',
+        img: isInModal
+          ? KyberSwapArbitrumLidoFarmMobile
+          : w > 768
+          ? KyberSwapArbitrumLidoFarmDesktop
+          : w > 500
+          ? KyberSwapArbitrumLidoFarmTablet
+          : KyberSwapArbitrumLidoFarmMobile,
+        link: 'https://kyberswap.com/farms?tab=elastic&networkId=42161&utm_source=kyberswap&utm_medium=banner&utm_campaign=lidofinancelm&utm_content=lidofarm_onsite',
+      },
+      {
+        // KyberSwap Optimism Lido Farm
+        id: 'KyberSwap-Optimism-Lido-Farm',
+        name: 'KyberSwap Optimism Lido Farm',
+        start: new Date('2022-08-17T00:00:00.000Z'),
+        end: new Date('2022-09-17T00:00:00.000Z'),
+        img: isInModal
+          ? KyberSwapOptimismLidoFarmMobile
+          : w > 768
+          ? KyberSwapOptimismLidoFarmDesktop
+          : w > 500
+          ? KyberSwapOptimismLidoFarmTablet
+          : KyberSwapOptimismLidoFarmMobile,
+        link: 'https://kyberswap.com/farms?tab=elastic&networkId=10&utm_source=kyberswap&utm_medium=banner&utm_campaign=lidofinancelm&utm_content=lidofarm_onsite',
       },
     ],
     [isInModal, w],
@@ -146,10 +170,12 @@ function Banner({
 
   if (!showBanner) return null
 
+  console.log('x', banners.length > 1 ? { delay: isInModal ? 2000 : 3000 } : false)
+
   return (
     <BannerWrapper margin={margin || 'auto'} padding={padding} maxWidth={maxWidth || '1394px'} width="100%">
       <Swiper
-        autoplay={banners.length > 1 ? { delay: isInModal ? 2000 : 20000 } : false}
+        autoplay={banners.length > 1 ? { delay: isInModal ? 2000 : 3000 } : false}
         slidesPerView={1}
         navigation={true}
         pagination={true}
