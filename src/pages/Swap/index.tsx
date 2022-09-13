@@ -243,11 +243,8 @@ export default function Swap() {
     [trade, tradeState]
   )
 
-  // show price estimates based on wrap trade
-  const inputValue = showWrap ? parsedAmount : trade?.inputAmount
-  const outputValue = showWrap ? parsedAmount : trade?.outputAmount
-  const fiatValueInput = useStablecoinValue(inputValue)
-  const fiatValueOutput = useStablecoinValue(outputValue)
+  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
+  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
   const stablecoinPriceImpact = useMemo(
     () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
