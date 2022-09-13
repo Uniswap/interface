@@ -16,7 +16,6 @@ import { formatCurrencyAmount } from 'src/utils/format'
 
 type TransferStatusProps = {
   derivedTransferInfo: DerivedTransferInfo
-  txId: string | undefined
   onNext: () => void
   onTryAgain: () => void
 }
@@ -76,16 +75,11 @@ const getTextFromTransferStatus = (
   }
 }
 
-export function TransferStatus({
-  derivedTransferInfo,
-  txId,
-  onNext,
-  onTryAgain,
-}: TransferStatusProps) {
+export function TransferStatus({ derivedTransferInfo, onNext, onTryAgain }: TransferStatusProps) {
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
 
-  const { recipient, chainId } = derivedTransferInfo
+  const { recipient, chainId, txId } = derivedTransferInfo
 
   const transaction = useSelectTransaction(activeAddress, chainId, txId)
 

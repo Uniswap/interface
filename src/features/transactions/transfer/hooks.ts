@@ -30,6 +30,7 @@ export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
   exactCurrencyField: CurrencyField.INPUT
   recipient?: string
   isUSDInput?: boolean
+  txId?: string
 }
 
 export function useDerivedTransferInfo(state: TransactionState): DerivedTransferInfo {
@@ -39,6 +40,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     exactAmountUSD,
     recipient,
     isUSDInput,
+    txId,
   } = state
   const { t } = useTranslation()
 
@@ -93,6 +95,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     chainId,
   })
 
+  // TODO: memoize this return value
   return {
     currencies,
     currencyAmounts,
@@ -110,6 +113,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     isUSDInput,
     recipient,
     warnings,
+    txId,
   }
 }
 

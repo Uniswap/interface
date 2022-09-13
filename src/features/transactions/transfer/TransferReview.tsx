@@ -1,32 +1,26 @@
-import { AnyAction } from '@reduxjs/toolkit'
-import React, { Dispatch } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'src/components/modals/types'
 import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'src/features/transactions/transactionState/transactionState'
+import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import {
   DerivedTransferInfo,
   useTransferERC20Callback,
   useTransferNFTCallback,
 } from 'src/features/transactions/transfer/hooks'
-import { useTransferTransactionRequest } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { TransferDetails } from 'src/features/transactions/transfer/TransferDetails'
+import { useTransferTransactionRequest } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferFormProps {
-  state: TransactionState
   derivedTransferInfo: DerivedTransferInfo
-  dispatch: Dispatch<AnyAction>
   onNext: () => void
   onPrev: () => void
 }
 
-export function TransferReview({ derivedTransferInfo, state, onNext, onPrev }: TransferFormProps) {
+export function TransferReview({ derivedTransferInfo, onNext, onPrev }: TransferFormProps) {
   const { t } = useTranslation()
 
   const {
@@ -38,8 +32,8 @@ export function TransferReview({ derivedTransferInfo, state, onNext, onPrev }: T
     currencyIn,
     nftIn,
     chainId,
+    txId,
   } = derivedTransferInfo
-  const { txId } = state
 
   const txRequest = useTransferTransactionRequest(derivedTransferInfo)
   const gasFeeInfo = useTransactionGasFee(txRequest)

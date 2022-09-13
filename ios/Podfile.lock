@@ -1304,7 +1304,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 60edbf7e11d91ae4c751d26c200dfd037099abe0
   FirebaseRemoteConfig: f6365883d7950d784ee97bcdbbf1e442d4fa6119
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
+  glog: 476ee3e89abb49e07f822b48323c51c57124b572
   GoogleAppMeasurement: 5ba1164e3c844ba84272555e916d0a6d3d977e91
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleMLKit: 755661c46990a85e42278015f26400286d98ad95
@@ -1331,7 +1331,7 @@ SPEC CHECKSUMS:
   Permission-Notifications: 7f2a467ab97a130a847519705340830d52cfc5f0
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Protobuf: 235750e4696ff59fb07d949a9dbbc92b3c0700fe
-  RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
+  RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTRequired: b8caca023d386d43740dfb94c2cf68f695fa5e77
   RCTTypeSafety: ec44ea1d6ad1e5cd6447b22159ff40c2ebbd23b1
   React: 9f8c8afb9a9d61b7a1b01a1c6fb7f0d4f902988f

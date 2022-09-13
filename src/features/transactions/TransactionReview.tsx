@@ -63,9 +63,6 @@ export function TransactionReview({
       <AnimatedFlex centered grow entering={FadeInUp} exiting={FadeOut} gap="sm">
         {currencyIn ? (
           <Flex centered gap="sm">
-            <Text color="textTertiary" variant="caption">
-              {t('Send')}
-            </Text>
             <AmountInput
               alignSelf="stretch"
               backgroundColor="none"
