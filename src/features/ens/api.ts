@@ -30,16 +30,21 @@ export const ens = createApi({
     name: builder.query<string | null, EnslookupParams>({
       queryFn: async (params: EnslookupParams) => {
         const { nameOrAddress: address, provider } = params
-        const name = await provider.lookupAddress(address)
+        try {
+          const name = await provider.lookupAddress(address)
 
-        /* ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy
-          and recommends that you perform a match on the forward resolution
-          see: https://docs.ens.domains/dapp-developer-guide/resolving-names#reverse-resolution
-        */
-        const fwdAddr = name ? await provider.resolveName(name) : null
-        // Normalize data as provider response is checksummed
-        const checkedName = areAddressesEqual(fwdAddr, address) ? name : null
-        return { data: checkedName }
+          /* ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy
+            and recommends that you perform a match on the forward resolution
+            see: https://docs.ens.domains/dapp-developer-guide/resolving-names#reverse-resolution
+          */
+          const fwdAddr = name ? await provider.resolveName(name) : null
+          // Normalize data as provider response is checksummed
+          const checkedName = areAddressesEqual(fwdAddr, address) ? name : null
+          return { data: checkedName }
+        } catch (_) {
+          // ENS lookup may throw an error if the chain (e.g. Optimism) does not support ENS
+          return { data: null }
+        }
       },
     }),
 
@@ -47,8 +52,13 @@ export const ens = createApi({
     address: builder.query<string | null, EnslookupParams>({
       queryFn: async (params: EnslookupParams) => {
         const { nameOrAddress: name, provider } = params
-        const address = await provider.resolveName(name)
-        return { data: address }
+        try {
+          const address = await provider.resolveName(name)
+          return { data: address }
+        } catch (_) {
+          // ENS lookup may throw an error if the chain (e.g. Optimism) does not support ENS
+          return { data: null }
+        }
       },
     }),
   }),
