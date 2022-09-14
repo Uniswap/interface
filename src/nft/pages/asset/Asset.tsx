@@ -1,4 +1,3 @@
-import { useSpring } from '@react-spring/web'
 import clsx from 'clsx'
 import useENSName from 'hooks/useENSName'
 import qs from 'query-string'
@@ -6,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useSpring } from 'react-spring/web'
 
 import AssetToolTip from '../../components/badge/AssetToolTip'
 import { AnimatedBox, Box } from '../../components/Box'
@@ -112,8 +112,6 @@ const Asset = () => {
     if (asset.owner) setOwnerAddress(asset.owner)
   }, [asset])
 
-  console.log(asset)
-
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
       asset.rarity
@@ -140,7 +138,7 @@ const Asset = () => {
     <AnimatedBox
       style={{
         // @ts-ignore
-        width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
+        width: gridWidthOffset.interpolate((x) => `calc(100% - ${x}px)`),
       }}
       className={styles.container}
     >
