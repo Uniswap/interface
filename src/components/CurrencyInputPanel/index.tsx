@@ -117,6 +117,7 @@ interface CurrencyInputPanelProps {
   customBalanceText?: string
   chainId?: ChainId
   balanceOverride?: TokenAmount
+  disabled?: boolean
 }
 
 export default function CurrencyInputPanel({
@@ -139,6 +140,7 @@ export default function CurrencyInputPanel({
   customBalanceText,
   chainId,
   balanceOverride,
+  disabled = false,
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -215,6 +217,7 @@ export default function CurrencyInputPanel({
                 onUserInput={(val) => {
                   onUserInput(val)
                 }}
+                disabled={disabled}
               />
               {account && currency && label !== 'To' && (
                 <ButtonGroup>

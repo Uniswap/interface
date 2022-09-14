@@ -1,20 +1,29 @@
-import { useContractKit } from '@celo-tools/use-contractkit'
-import { currencyEquals, Pair, Percent, Price, Token, TokenAmount, Trade, TradeType } from '@ubeswap/sdk'
+import { ChainId, useContractKit, useProvider } from '@celo-tools/use-contractkit'
+import { currencyEquals, JSBI, Pair, Percent, Price, Token, TokenAmount, Trade, TradeType } from '@ubeswap/sdk'
+import { ERC20_ABI } from 'constants/abis/erc20'
 import {
   BASES_TO_CHECK_TRADES_AGAINST,
   BETTER_TRADE_LESS_HOPS_THRESHOLD,
+  FETCH_MINIMA_ROUTER_TIMER,
+  MINIMA_API_URL,
   UBESWAP_MOOLA_ROUTER_ADDRESS,
 } from 'constants/index'
 import { PairState, usePairs } from 'data/Reserves'
+import { BigNumber, ContractInterface, ethers } from 'ethers'
+import { Erc20 } from 'generated'
+import { useAllTokens } from 'hooks/Tokens'
+import _ from 'lodash'
 import flatMap from 'lodash.flatmap'
-import { useMemo } from 'react'
-import { useUserDisableSmartRouting, useUserSingleHopOnly } from 'state/user/hooks'
+import React, { useMemo } from 'react'
+import { useUserDisableSmartRouting, useUserSingleHopOnly, useUserSlippageTolerance } from 'state/user/hooks'
+import { getProviderOrSigner } from 'utils'
 import { isTradeBetter } from 'utils/trades'
 
 import { MoolaDirectTrade } from '../moola/MoolaDirectTrade'
 import { getMoolaDual } from '../moola/useMoola'
 import { useMoolaDirectRoute } from '../moola/useMoolaDirectRoute'
-import { TradeRouter, UbeswapTrade } from '../trade'
+import { MinimaTradePayload, TradeRouter, UbeswapTrade } from '../trade'
+import { MinimaRouterTrade } from './../trade'
 import { bestTradeExactIn, bestTradeExactOut } from './calculateBestTrades'
 import { useDirectTradeExactIn, useDirectTradeExactOut } from './directTrades'
 
@@ -295,4 +304,151 @@ export function useUbeswapTradeExactOut(tokenIn?: Token, tokenAmountOut?: TokenA
     }
     return bestTrade
   }, [tokenIn, tokenAmountOut, allowedPairs, singleHopOnly, directTrade, disableSmartRouting, moolaRoute])
+}
+
+interface Dependencies {
+  chainId: ChainId
+  account: string | null
+  allowedSlippage: number
+  singleHopOnly: boolean
+  inputAddr: string | undefined
+  outputAddr: string | undefined
+  inputAmount: string | undefined
+}
+
+export function useMinimaTrade(tokenAmountIn?: TokenAmount, tokenOut?: Token): MinimaRouterTrade | null | undefined {
+  const [minimaTrade, setMinimaTrade] = React.useState<MinimaRouterTrade | null | undefined>(undefined)
+  const [deps, setDeps] = React.useState<Dependencies | undefined>(undefined)
+  const [singleHopOnly] = useUserSingleHopOnly()
+  const [allowedSlippage] = useUserSlippageTolerance()
+  const [fetchUpdatedData, setFetchUpdatedData] = React.useState<boolean>(true)
+  const [fetchTimeout, setFetchTimeout] = React.useState<NodeJS.Timeout | undefined>(undefined)
+  const { address: account, network } = useContractKit()
+  const { chainId } = network
+  const library = useProvider()
+  const provider = getProviderOrSigner(library, account || undefined)
+  const tokens = useAllTokens()
+  const call = React.useCallback(async () => {
+    if (!tokenAmountIn?.currency.address || !tokenAmountIn?.raw || !tokenOut?.address) {
+      setMinimaTrade(null)
+      setDeps(undefined)
+      return
+    }
+    const curDeps = {
+      chainId,
+      account,
+      allowedSlippage,
+      singleHopOnly,
+      inputAddr: tokenAmountIn.currency.address,
+      outputAddr: tokenOut.address,
+      inputAmount: tokenAmountIn.raw.toString(),
+    }
+    if (_.isEqual(deps, curDeps) && !fetchUpdatedData) {
+      return
+    }
+    if (!fetchUpdatedData) {
+      setMinimaTrade(undefined)
+    }
+    setDeps(curDeps)
+    setFetchUpdatedData(false)
+    // fetch information of minima router
+    await fetch(
+      `${MINIMA_API_URL}?tokenIn=${tokenAmountIn?.currency.address ?? ''}&tokenOut=${
+        tokenOut?.address ?? ''
+      }&amountIn=${tokenAmountIn?.raw}&slippage=${allowedSlippage}&maxHops=${
+        singleHopOnly ? 1 : MAX_HOPS
+      }&includeTxn=true&priceImpact=true${account ? '&from=' + account : ''}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-KEY': process.env.REACT_APP_MINIMA_KEY ?? '',
+        },
+      }
+    )
+      .then(async (res) => {
+        if (res.status !== 200) {
+          setMinimaTrade(null)
+          return
+        }
+        await res
+          .json()
+          .then(async (data: MinimaTradePayload) => {
+            if (data.details) {
+              const path = await Promise.all(
+                data.details.path.map(async (pathItem) => {
+                  if (!tokens[pathItem]) {
+                    // in case of a token address cannot be found on Ubeswap or Uniswap tokenlists
+                    const tokenContract = new ethers.Contract(
+                      pathItem,
+                      ERC20_ABI as ContractInterface,
+                      provider
+                    ) as unknown as Erc20
+                    const [tokenName, symbol, decimals] = await Promise.all([
+                      tokenContract.name(),
+                      tokenContract.symbol(),
+                      tokenContract.decimals(),
+                    ])
+                    return new Token(chainId as number, pathItem, decimals, symbol, tokenName)
+                  }
+                  return tokens[pathItem]
+                })
+              )
+              const trade = MinimaRouterTrade.fromMinimaTradePayload(
+                [
+                  new Pair(
+                    new TokenAmount(tokenAmountIn.currency, JSBI.BigInt(10000)),
+                    new TokenAmount(tokenOut, JSBI.BigInt(20000))
+                  ),
+                ],
+                tokenAmountIn,
+                new TokenAmount(tokenOut, JSBI.BigInt(data.details.expectedOutputAmount.toString())),
+                data.routerAddress,
+                new Percent(JSBI.BigInt(data.priceImpact.numerator), JSBI.BigInt(data.priceImpact.denominator)),
+                path,
+                {
+                  ...data.details,
+                  inputAmount: BigNumber.from(data.details.inputAmount),
+                  minOutputAmount: BigNumber.from(data.minimumExpectedOut ?? '0'),
+                  expectedOutputAmount: BigNumber.from(data.details.expectedOutputAmount),
+                  deadline: BigNumber.from(data.details.deadline),
+                }
+              )
+              setMinimaTrade(trade)
+              clearTimeout(fetchTimeout)
+              setFetchTimeout(
+                setTimeout(() => {
+                  setFetchUpdatedData(true)
+                }, FETCH_MINIMA_ROUTER_TIMER)
+              )
+            }
+          })
+          .catch((e) => {
+            console.error(e)
+            setMinimaTrade(null)
+          })
+      })
+      .catch((e) => {
+        console.error(e)
+        setMinimaTrade(null)
+      })
+  }, [
+    account,
+    allowedSlippage,
+    chainId,
+    deps,
+    fetchTimeout,
+    fetchUpdatedData,
+    provider,
+    singleHopOnly,
+    tokenAmountIn,
+    tokenOut,
+    tokens,
+  ])
+
+  React.useEffect(() => {
+    call()
+  }, [call])
+
+  return minimaTrade
 }

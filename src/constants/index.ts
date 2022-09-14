@@ -8,6 +8,8 @@ export const ROUTER_ADDRESS = '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121'
 
 export const UBESWAP_MOOLA_ROUTER_ADDRESS = '0x7d28570135a2b1930f331c507f65039d4937f66c'
 
+export const MINIMA_ROUTER_ADDRESS = '0xa730B463395f5ca07EcE5cefeccF7f45e1E2C9Bf'
+
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 // a list of tokens by chain
@@ -198,3 +200,7 @@ export const ZERO_PERCENT = new Percent('0')
 export const ONE_HUNDRED_PERCENT = new Percent('1')
 
 export const IMPORTED_FARMS = 'imported_farms'
+
+export const MINIMA_API_URL = 'https://router.nodefinance.org/routes'
+
+export const FETCH_MINIMA_ROUTER_TIMER = 5000

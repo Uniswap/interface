@@ -1,13 +1,16 @@
 import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import { ChainId, Trade } from '@ubeswap/sdk'
+import useENS from 'hooks/useENS'
 import { SwapCallbackState, useSwapCallback } from 'hooks/useSwapCallback'
 import { useMemo } from 'react'
 
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../../constants'
+import { isAddress, shortenAddress } from '../../../utils'
 import { useDoTransaction } from '.'
+import { executeMinimaTrade } from './minima/executeMinimaTrade'
 import { executeMoolaDirectTrade } from './moola/executeMoolaDirectTrade'
 import { MoolaDirectTrade } from './moola/MoolaDirectTrade'
-
+import { MinimaRouterTrade } from './trade'
 /**
  * Use callback to allow trading
  * @param trade
@@ -24,6 +27,16 @@ export const useTradeCallback = (
   const library = useProvider()
   const chainId = network.chainId as unknown as ChainId
   const doTransaction = useDoTransaction()
+  const { address: recipientAddress } = useENS(recipientAddressOrName)
+  const recipient = recipientAddressOrName === null ? account : recipientAddress
+  const withRecipient =
+    recipient === account
+      ? ''
+      : ` to ${
+          recipientAddressOrName && isAddress(recipientAddressOrName)
+            ? shortenAddress(recipientAddressOrName)
+            : recipientAddressOrName
+        }`
 
   const {
     state: swapState,
@@ -46,7 +59,13 @@ export const useTradeCallback = (
 
     const signer = library.getSigner(account)
     const env = { signer, chainId, doTransaction }
-    if (trade instanceof MoolaDirectTrade) {
+    if (trade instanceof MinimaRouterTrade) {
+      return {
+        state: SwapCallbackState.VALID,
+        callback: async () => (await executeMinimaTrade({ ...env, trade, recipient, withRecipient })).hash,
+        error: null,
+      }
+    } else if (trade instanceof MoolaDirectTrade) {
       return {
         state: SwapCallbackState.VALID,
         callback: async () => (await executeMoolaDirectTrade({ ...env, trade })).hash,
@@ -57,5 +76,5 @@ export const useTradeCallback = (
     } else {
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Unknown trade type' }
     }
-  }, [swapCallback, library, chainId, doTransaction, trade, account, error, swapState])
+  }, [error, library, trade, account, chainId, doTransaction, swapCallback, swapState, recipient, withRecipient])
 }

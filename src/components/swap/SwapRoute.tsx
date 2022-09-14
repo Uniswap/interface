@@ -5,11 +5,11 @@ import { Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
 
 import { TYPE } from '../../theme'
-import { UbeswapTrade } from './routing/trade'
+import { MinimaRouterTrade, UbeswapTrade } from './routing/trade'
 
 export default memo(function SwapRoute({ trade }: { trade: Trade }) {
   const theme = useContext(ThemeContext)
-  const path = trade instanceof UbeswapTrade ? trade.path : trade.route.path
+  const path = trade instanceof MinimaRouterTrade || trade instanceof UbeswapTrade ? trade.path : trade.route.path
   return (
     <Flex flexWrap="wrap" width="100%" justifyContent="flex-end" alignItems="center">
       {path.map((token, i, path) => {

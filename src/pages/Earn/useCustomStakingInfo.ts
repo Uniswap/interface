@@ -1,11 +1,11 @@
 import { useContractKit, useProvider } from '@celo-tools/use-contractkit'
 import IUniswapV2PairABI from '@ubeswap/core/build/abi/IUniswapV2Pair.json'
 import { JSBI, Token, TokenAmount } from '@ubeswap/sdk'
-import ERC20_ABI, { ERC20_BYTES32_ABI } from 'constants/abis/erc20'
+import ERC20_ABI from 'constants/abis/erc20'
 import MOOLA_STAKING_ABI from 'constants/abis/moola/MoolaStakingRewards.json'
 import { BigNumber, ContractInterface, ethers } from 'ethers'
-import { Erc20, Erc20Bytes32, MoolaStakingRewards } from 'generated'
-import { parseStringOrBytes32, useAllTokens, useToken } from 'hooks/Tokens'
+import { Erc20, MoolaStakingRewards } from 'generated'
+import { useAllTokens, useToken } from 'hooks/Tokens'
 import { useMultiStakingContract, useStakingContract } from 'hooks/useContract'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useEffect, useMemo, useState } from 'react'
@@ -95,27 +95,12 @@ export const useCustomStakingInfo = (farmAddress: string): CustomStakingInfo => 
               ERC20_ABI as ContractInterface,
               provider
             ) as unknown as Erc20
-            const tokenContractBytes32 = new ethers.Contract(
-              rewardsTokenAddress,
-              ERC20_BYTES32_ABI as ContractInterface,
-              provider
-            ) as unknown as Erc20Bytes32
-            const [tokenName, tokenNameBytes32, symbol, symbolBytes32, decimals] = await Promise.all([
+            const [tokenName, symbol, decimals] = await Promise.all([
               tokenContract.name(),
-              tokenContractBytes32.name(),
               tokenContract.symbol(),
-              tokenContractBytes32.symbol(),
               tokenContract.decimals(),
             ])
-            externalRewardsTokens.push(
-              new Token(
-                chainId as number,
-                rewardsTokenAddress,
-                decimals,
-                parseStringOrBytes32(symbol, symbolBytes32, 'UNKNOWN'),
-                parseStringOrBytes32(tokenName, tokenNameBytes32, 'Unknown Token')
-              )
-            )
+            externalRewardsTokens.push(new Token(chainId as number, rewardsTokenAddress, decimals, symbol, tokenName))
           }
           rates.push(rewardRate)
           if (i < externalEarned.length - 1) stakingRewardsAddress = await moolaStaking.externalStakingRewards()

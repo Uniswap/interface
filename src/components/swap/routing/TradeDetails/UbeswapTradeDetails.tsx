@@ -16,7 +16,7 @@ interface Props {
 
 export const UbeswapTradeDetails: React.FC<Props> = ({ trade, allowedSlippage }: Props) => {
   const theme = useContext(ThemeContext)
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
+  const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
@@ -48,7 +48,7 @@ export const UbeswapTradeDetails: React.FC<Props> = ({ trade, allowedSlippage }:
         <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
       </RowBetween>
 
-      <RowBetween>
+      {/* <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
             Liquidity Provider Fee
@@ -58,7 +58,7 @@ export const UbeswapTradeDetails: React.FC<Props> = ({ trade, allowedSlippage }:
         <TYPE.black fontSize={14} color={theme.text1}>
           {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
         </TYPE.black>
-      </RowBetween>
+      </RowBetween> */}
     </>
   )
 }

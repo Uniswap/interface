@@ -32,6 +32,8 @@ export interface TradeExecutor<T extends Trade> {
     signer: JsonRpcSigner
     chainId: ChainId.MAINNET | ChainId.ALFAJORES
     doTransaction: DoTransactionFn
+    recipient?: string | null
+    withRecipient?: string
   }): Promise<{
     hash: string
   }>
