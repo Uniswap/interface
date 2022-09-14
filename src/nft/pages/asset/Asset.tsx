@@ -114,9 +114,6 @@ const Asset = () => {
     if (asset.owner) setOwnerAddress(asset.owner)
   }, [asset])
 
-  console.log(ownerAddress)
-  console.log(asset.owner)
-
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
       asset.rarity
@@ -245,10 +242,8 @@ const Asset = () => {
             <Row
               justifyContent={{
                 sm: 'space-between',
-                // mobile: 'flex-start',
               }}
               gap={{
-                // mobile: '64',
                 sm: 'unset',
               }}
               marginBottom="36"
