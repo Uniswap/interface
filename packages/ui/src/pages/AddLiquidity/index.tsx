@@ -1,21 +1,29 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@teleswap/sdk'
+import { ROUTER_ADDRESS } from '@teleswap/sdk'
+import CurrencyLogo from 'components/CurrencyLogo'
+import { BackToMyLiquidity } from 'components/Liquidity'
+import QuestionHelper from 'components/QuestionHelper'
+import Settings from 'components/Settings'
+import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { useIsTransactionUnsupported } from 'hooks/Trades'
+import useThemedContext from 'hooks/useThemedContext'
 import React, { useCallback, useMemo, useState } from 'react'
+import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
-import { ArrowLeft } from 'react-feather'
+import styled from 'styled-components'
+import getRoutePairMode from 'utils/getRoutePairMode'
 
 import SwapIcon from '../../assets/svg/SwapIcon.svg'
-
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { MinimalPositionCardPart } from '../../components/PositionCard'
 import { AutoRow, RowBetween } from '../../components/Row'
-
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -24,26 +32,15 @@ import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
-
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
-import { currencyId } from '../../utils/currencyId'
-import { useIsTransactionUnsupported } from 'hooks/Trades'
-import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import useThemedContext from 'hooks/useThemedContext'
-import styled from 'styled-components'
-import Settings from 'components/Settings'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { ROUTER_ADDRESS } from '@teleswap/sdk'
-import { BackToMyLiquidity } from 'components/Liquidity'
-import getRoutePairMode from 'utils/getRoutePairMode'
-import QuestionHelper from 'components/QuestionHelper'
 
 const BorderVerticalContainer = styled(Flex)`
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -57,9 +54,9 @@ const BorderVerticalContainer = styled(Flex)`
 
 export default function AddLiquidity({
   match: {
-    params: { currencyIdA, currencyIdB },
+    params: { currencyIdA, currencyIdB }
   },
-  history,
+  history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useThemedContext()
@@ -69,14 +66,13 @@ export default function AddLiquidity({
 
   const oneCurrencyIsWETH = Boolean(
     chainId &&
-    ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
-      (currencyB && currencyEquals(currencyB, WETH[chainId])))
+      ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
+        (currencyB && currencyEquals(currencyB, WETH[chainId])))
   )
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode()
-
 
   // mint state
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -91,7 +87,7 @@ export default function AddLiquidity({
     noLiquidity,
     liquidityMinted,
     poolTokenPercentage,
-    error,
+    error
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
 
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
@@ -110,7 +106,7 @@ export default function AddLiquidity({
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+    [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
   }
 
   // get the max amounts user can add
@@ -118,7 +114,7 @@ export default function AddLiquidity({
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmountSpend(currencyBalances[field]),
+        [field]: maxAmountSpend(currencyBalances[field])
       }
     },
     {}
@@ -128,7 +124,7 @@ export default function AddLiquidity({
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0'),
+        [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0')
       }
     },
     {}
@@ -150,12 +146,14 @@ export default function AddLiquidity({
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
-      [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0],
+      [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
 
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number | { from: string | undefined; to: string | undefined; stable: boolean } | Array<any>>,
+      args: Array<
+        string | string[] | number | { from: string | undefined; to: string | undefined; stable: boolean } | Array<any>
+      >,
       value: BigNumber | null
     if (currencyA === ETHER || currencyB === ETHER) {
       const tokenBIsETH = currencyB === ETHER
@@ -167,25 +165,37 @@ export default function AddLiquidity({
         //   to: wrappedCurrency(currencyB, chainId)?.address,
         //   stable: true,
         // },
-        [tokenBIsETH ? wrappedCurrency(currencyA, chainId)?.address ?? '' : wrappedCurrency(currencyB, chainId)?.address ?? '', tokenBIsETH ? wrappedCurrency(currencyB, chainId)?.address ?? '' : wrappedCurrency(currencyA, chainId)?.address ?? '', getRoutePairMode()],
+        [
+          tokenBIsETH
+            ? wrappedCurrency(currencyA, chainId)?.address ?? ''
+            : wrappedCurrency(currencyB, chainId)?.address ?? '',
+          tokenBIsETH
+            ? wrappedCurrency(currencyB, chainId)?.address ?? ''
+            : wrappedCurrency(currencyA, chainId)?.address ?? '',
+          getRoutePairMode()
+        ],
         (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         account,
-        deadline.toHexString(),
+        deadline.toHexString()
       ]
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
       args = [
-        [wrappedCurrency(currencyA, chainId)?.address ?? '', wrappedCurrency(currencyB, chainId)?.address ?? '', pairModeStable],
+        [
+          wrappedCurrency(currencyA, chainId)?.address ?? '',
+          wrappedCurrency(currencyB, chainId)?.address ?? '',
+          pairModeStable
+        ],
         parsedAmountA.raw.toString(),
         parsedAmountB.raw.toString(),
         amountsMin[Field.CURRENCY_A].toString(),
         amountsMin[Field.CURRENCY_B].toString(),
         account,
-        deadline.toHexString(),
+        deadline.toHexString()
       ]
       value = null
     }
@@ -194,7 +204,7 @@ export default function AddLiquidity({
       .then((estimatedGasLimit) => {
         method(...args, {
           ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(estimatedGasLimit),
+          gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then((response) => {
           setAttemptingTxn(false)
 
@@ -207,7 +217,7 @@ export default function AddLiquidity({
               ' and ' +
               parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
               ' ' +
-              currencies[Field.CURRENCY_B]?.symbol,
+              currencies[Field.CURRENCY_B]?.symbol
           })
 
           setTxHash(response.hash)
@@ -215,7 +225,7 @@ export default function AddLiquidity({
           ReactGA.event({
             category: 'Liquidity',
             action: 'Add',
-            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
           })
         })
       })
@@ -237,7 +247,8 @@ export default function AddLiquidity({
     deadline,
     library,
     noLiquidity,
-    parsedAmounts,
+    pairModeStable,
+    parsedAmounts
   ])
 
   const isNew = history.location.pathname.includes('/create')
@@ -265,7 +276,7 @@ export default function AddLiquidity({
                   fontWeight: '600',
                   fontSize: '.6rem',
                   lineHeight: '.8rem',
-                  color: '#FFFFFF',
+                  color: '#FFFFFF'
                 }}
               >
                 {currencies[Field.CURRENCY_A]?.symbol}
@@ -277,7 +288,7 @@ export default function AddLiquidity({
                   fontWeight: '400',
                   fontSize: '.4rem',
                   lineHeight: '.6rem',
-                  color: '#CCCCCC',
+                  color: '#CCCCCC'
                 }}
               >
                 {currencies[Field.CURRENCY_A]?.name}
@@ -292,7 +303,7 @@ export default function AddLiquidity({
                 fontWeight: '500',
                 fontSize: '.6rem',
                 lineHeight: '.8rem',
-                color: '#FFFFFF',
+                color: '#FFFFFF'
               }}
             >
               {parsedAmounts[Field.CURRENCY_A]?.toSignificant(4)}
@@ -308,7 +319,7 @@ export default function AddLiquidity({
                   fontWeight: '600',
                   fontSize: '.6rem',
                   lineHeight: '.8rem',
-                  color: '#FFFFFF',
+                  color: '#FFFFFF'
                 }}
               >
                 {currencies[Field.CURRENCY_B]?.symbol}
@@ -320,7 +331,7 @@ export default function AddLiquidity({
                   fontWeight: '400',
                   fontSize: '.4rem',
                   lineHeight: '.6rem',
-                  color: '#CCCCCC',
+                  color: '#CCCCCC'
                 }}
               >
                 {currencies[Field.CURRENCY_B]?.name}
@@ -335,7 +346,7 @@ export default function AddLiquidity({
                 fontWeight: '500',
                 fontSize: '.6rem',
                 lineHeight: '.8rem',
-                color: '#FFFFFF',
+                color: '#FFFFFF'
               }}
             >
               {parsedAmounts[Field.CURRENCY_B]?.toSignificant(4)}
@@ -353,7 +364,7 @@ export default function AddLiquidity({
                 fontSize: '.5rem',
                 lineHeight: '.8rem',
                 textAlign: 'center',
-                color: '#999999',
+                color: '#999999'
               }}
             >
               Trading fee
@@ -366,7 +377,7 @@ export default function AddLiquidity({
                 fontSize: '.5rem',
                 lineHeight: '.8rem',
                 textAlign: 'center',
-                color: '#999999',
+                color: '#999999'
               }}
             >
               0.3%
@@ -382,7 +393,7 @@ export default function AddLiquidity({
                 fontWeight: '500',
                 fontSize: '.7rem',
                 lineHeight: '.9rem',
-                color: '#FFFFFF',
+                color: '#FFFFFF'
               }}
             >
               Pool Share
@@ -395,7 +406,7 @@ export default function AddLiquidity({
                 fontSize: '.7rem',
                 lineHeight: '.9rem',
                 color: '#FFFFFF',
-                textAlign: 'right',
+                textAlign: 'right'
               }}
             >
               {poolTokenPercentage?.toFixed(2) || 100}%
@@ -411,7 +422,7 @@ export default function AddLiquidity({
                 fontWeight: '500',
                 fontSize: '.7rem',
                 lineHeight: '.9rem',
-                color: '#FFFFFF',
+                color: '#FFFFFF'
               }}
             >
               Price
@@ -424,7 +435,7 @@ export default function AddLiquidity({
                   fontWeight: '500',
                   fontSize: '.5rem',
                   lineHeight: '.8rem',
-                  color: '#FFFFFF',
+                  color: '#FFFFFF'
                 }}
               >
                 {price?.toFixed(2)}
@@ -436,7 +447,7 @@ export default function AddLiquidity({
                   fontWeight: '500',
                   fontSize: '.4rem',
                   lineHeight: '.6rem',
-                  color: '#999999',
+                  color: '#999999'
                 }}
               >
                 {currencies[Field.CURRENCY_A]?.symbol} to {currencies[Field.CURRENCY_B]?.symbol}
@@ -453,7 +464,7 @@ export default function AddLiquidity({
               fontSize: '.8rem',
               lineHeight: '1rem',
               textAlign: 'center',
-              color: '#05050E',
+              color: '#05050E'
             }}
           >
             {pairState === PairState.NOT_EXISTS ? 'Add Liquidity' : pairState === PairState.EXISTS ? 'Increase' : ''}
@@ -465,7 +476,7 @@ export default function AddLiquidity({
 
   const pendingText = `Supplying ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
     currencies[Field.CURRENCY_A]?.symbol
-    } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencies[Field.CURRENCY_B]?.symbol}`
+  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencies[Field.CURRENCY_B]?.symbol}`
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
@@ -520,10 +531,10 @@ export default function AddLiquidity({
           // maxWidth: '420px',
           // maxHeight: '638px',
           // height: 'fit-content',
-          backgroundColor: "#394e5a",
+          backgroundColor: '#394e5a',
           boxShadow: '0px -2px 0px #39E1BA',
           backdropFilter: 'blur(60px)',
-          borderRadius: '1.6rem',
+          borderRadius: '1.6rem'
         }}
       >
         <TransactionConfirmationModal
@@ -543,8 +554,10 @@ export default function AddLiquidity({
           pendingText={pendingText}
           currencyToAdd={pair?.liquidityToken}
         />
-        <AutoRow justify="space-between" style={{ marginBottom: ".9rem" }}>
-          <span style={{ fontFamily: 'Dela Gothic One', fontWeight: 400, fontSize: ".7rem", color: "#FFFFFF" }}>Add  Liquidity</span>
+        <AutoRow justify="space-between" style={{ marginBottom: '.9rem' }}>
+          <span style={{ fontFamily: 'Dela Gothic One', fontWeight: 400, fontSize: '.7rem', color: '#FFFFFF' }}>
+            Add Liquidity
+          </span>
           <Settings />
         </AutoRow>
         <AutoColumn gap=".4rem">
@@ -590,14 +603,17 @@ export default function AddLiquidity({
             id="add-liquidity-input-tokena"
             sx={{
               '& input': {
-                color: 'white',
-              },
+                color: 'white'
+              }
             }}
             showCommonBases
           />
           <ColumnCenter style={{ position: 'relative' }}>
             {/* <Plus size="16" color={theme.text2} /> */}
-            <img src={SwapIcon} style={{ position: 'absolute', transform: 'translateY(-50%)', width: "1.9rem", height: "1.9rem" }} />
+            <img
+              src={SwapIcon}
+              style={{ position: 'absolute', transform: 'translateY(-50%)', width: '1.9rem', height: '1.9rem' }}
+            />
           </ColumnCenter>
           <CurrencyInputPanel
             value={formattedAmounts[Field.CURRENCY_B]}
@@ -611,8 +627,8 @@ export default function AddLiquidity({
             id="add-liquidity-input-tokenb"
             sx={{
               '& input': {
-                color: 'white',
-              },
+                color: 'white'
+              }
             }}
             showCommonBases
           />
@@ -637,27 +653,43 @@ export default function AddLiquidity({
           )} */}
         </AutoColumn>
         <Box sx={{ marginTop: '.9rem' }}>
-          <Box sx={{ fontWeight: 600, fontSize: ".7rem", marginBottom: ".5rem" }}>
-            Pair Mode
-          </Box>
-          <Box sx={{ display: 'flex', fontWeight: 400, fontSize: ".5rem", alignItems: "center" }}>
+          <Box sx={{ fontWeight: 600, fontSize: '.7rem', marginBottom: '.5rem' }}>Pair Mode</Box>
+          <Box sx={{ display: 'flex', fontWeight: 400, fontSize: '.5rem', alignItems: 'center' }}>
             <Box sx={{ flex: 1 }} onClick={() => setPairModeStable(true)}>
-              <input type="radio" name="pairMode" id="Stable" style={{ position: "relative", top: ".2rem", margin: "unset" }} checked={pairModeStable} />
-              <label htmlFor="Stable" style={{ margin: "0 0 0 .7rem" }}>Stable</label>
-              <span style={{ position: "relative", top: "2px" }}>
+              <input
+                type="radio"
+                name="pairMode"
+                id="Stable"
+                style={{ position: 'relative', top: '.2rem', margin: 'unset' }}
+                checked={pairModeStable}
+              />
+              <label htmlFor="Stable" style={{ margin: '0 0 0 .7rem' }}>
+                Stable
+              </label>
+              <span style={{ position: 'relative', top: '2px' }}>
                 <QuestionHelper text="Stable mode, using stable token algorithm curve, mainly designed for 1:1 or approximately equivalent trading pairs, like USDC+DAI or WETH+sETH." />
               </span>
             </Box>
             <Box sx={{ flex: 1 }} onClick={() => setPairModeStable(false)}>
-              <input type="radio" name="pairMode" id="Volatile" style={{ position: "relative", top: ".2rem", margin: "unset" }} checked={!pairModeStable} />
-              <label style={{ margin: "0 0 0 .7rem" }} htmlFor="Volatile">Volatile</label>
-              <span style={{ position: "relative", top: "2px" }}>
+              <input
+                type="radio"
+                name="pairMode"
+                id="Volatile"
+                style={{ position: 'relative', top: '.2rem', margin: 'unset' }}
+                checked={!pairModeStable}
+              />
+              <label style={{ margin: '0 0 0 .7rem' }} htmlFor="Volatile">
+                Volatile
+              </label>
+              <span style={{ position: 'relative', top: '2px' }}>
                 <QuestionHelper text="Volatile mode, using non-stable currency algorithm curve, mainly designed for uncorrelated pools, like WETH+USDC or OP+WETH." />
               </span>
             </Box>
           </Box>
         </Box>
-        <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', marginTop: '.9rem' }}></Box>
+        <Box
+          sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', marginTop: '.9rem' }}
+        ></Box>
         {!addIsUnsupported ? (
           pair && !noLiquidity && pairState !== PairState.INVALID ? (
             <AutoColumn style={{ marginTop: '1rem' }}>
@@ -665,11 +697,11 @@ export default function AddLiquidity({
             </AutoColumn>
           ) : null
         ) : (
-            <UnsupportedCurrencyFooter
-              show={addIsUnsupported}
-              currencies={[currencies.CURRENCY_A, currencies.CURRENCY_B]}
-            />
-          )}
+          <UnsupportedCurrencyFooter
+            show={addIsUnsupported}
+            currencies={[currencies.CURRENCY_A, currencies.CURRENCY_B]}
+          />
+        )}
         <Text
           sx={{
             fontFamily: 'Poppins',
@@ -678,7 +710,7 @@ export default function AddLiquidity({
             fontSize: '.4rem',
             // lineHeight: '18px',
             margin: '.9rem 0',
-            color: '#D7DCE0',
+            color: '#D7DCE0'
           }}
         >
           By adding liquidity to this pair,you’ll earn 0.3% of all the trades on this pair proportional to your share of
@@ -686,9 +718,7 @@ export default function AddLiquidity({
         </Text>
         <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0' }}></Box>
       </AppBody>
-      <Box
-        width="19rem"
-      >
+      <Box width="19rem">
         {addIsUnsupported ? (
           <AutoColumn style={{ marginTop: '1rem' }}>
             <ButtonPrimary disabled={true}>
@@ -700,54 +730,54 @@ export default function AddLiquidity({
             <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
           </AutoColumn>
         ) : (
-              <AutoColumn style={{ marginTop: '1rem' }}>
-                {(approvalA === ApprovalState.NOT_APPROVED ||
-                  approvalA === ApprovalState.PENDING ||
-                  approvalB === ApprovalState.NOT_APPROVED ||
-                  approvalB === ApprovalState.PENDING) &&
-                  isValid && (
-                    <RowBetween>
-                      {approvalA !== ApprovalState.APPROVED && (
-                        <ButtonPrimary
-                          onClick={approveACallback}
-                          disabled={approvalA === ApprovalState.PENDING}
-                          width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
-                        >
-                          {approvalA === ApprovalState.PENDING ? (
-                            <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
-                          ) : (
-                              'Approve ' + currencies[Field.CURRENCY_A]?.symbol
-                            )}
-                        </ButtonPrimary>
+          <AutoColumn style={{ marginTop: '1rem' }}>
+            {(approvalA === ApprovalState.NOT_APPROVED ||
+              approvalA === ApprovalState.PENDING ||
+              approvalB === ApprovalState.NOT_APPROVED ||
+              approvalB === ApprovalState.PENDING) &&
+              isValid && (
+                <RowBetween>
+                  {approvalA !== ApprovalState.APPROVED && (
+                    <ButtonPrimary
+                      onClick={approveACallback}
+                      disabled={approvalA === ApprovalState.PENDING}
+                      width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                    >
+                      {approvalA === ApprovalState.PENDING ? (
+                        <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
+                      ) : (
+                        'Approve ' + currencies[Field.CURRENCY_A]?.symbol
                       )}
-                      {approvalB !== ApprovalState.APPROVED && (
-                        <ButtonPrimary
-                          onClick={approveBCallback}
-                          disabled={approvalB === ApprovalState.PENDING}
-                          width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
-                        >
-                          {approvalB === ApprovalState.PENDING ? (
-                            <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
-                          ) : (
-                              'Approve ' + currencies[Field.CURRENCY_B]?.symbol
-                            )}
-                        </ButtonPrimary>
-                      )}
-                    </RowBetween>
+                    </ButtonPrimary>
                   )}
-                <ButtonError
-                  onClick={() => {
-                    expertMode ? onAdd() : setShowConfirm(true)
-                  }}
-                  disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
-                  error={!!error || (!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B])}
-                >
-                  <Text fontSize={20} fontWeight={500}>
-                    {error ?? 'Supply'}
-                  </Text>
-                </ButtonError>
-              </AutoColumn>
-            )}
+                  {approvalB !== ApprovalState.APPROVED && (
+                    <ButtonPrimary
+                      onClick={approveBCallback}
+                      disabled={approvalB === ApprovalState.PENDING}
+                      width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
+                    >
+                      {approvalB === ApprovalState.PENDING ? (
+                        <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
+                      ) : (
+                        'Approve ' + currencies[Field.CURRENCY_B]?.symbol
+                      )}
+                    </ButtonPrimary>
+                  )}
+                </RowBetween>
+              )}
+            <ButtonError
+              onClick={() => {
+                expertMode ? onAdd() : setShowConfirm(true)
+              }}
+              disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
+              error={!!error || (!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B])}
+            >
+              <Text fontSize={20} fontWeight={500}>
+                {error ?? 'Supply'}
+              </Text>
+            </ButtonError>
+          </AutoColumn>
+        )}
         {/* {!addIsUnsupported ? (
           pair && !noLiquidity && pairState !== PairState.INVALID ? (
             <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '420px', marginTop: '1rem' }}>

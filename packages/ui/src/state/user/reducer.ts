@@ -1,5 +1,6 @@
-import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
 import { createReducer } from '@reduxjs/toolkit'
+
+import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
@@ -8,13 +9,13 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
+  toggleURLWarning,
   updateMatchesDarkMode,
   updateUserDarkMode,
-  updateUserExpertMode,
-  updateUserSlippageTolerance,
   updateUserDeadline,
-  toggleURLWarning,
-  updateUserSingleHopOnly
+  updateUserExpertMode,
+  updateUserSingleHopOnly,
+  updateUserSlippageTolerance
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -70,9 +71,9 @@ export const initialState: UserState = {
   URLWarningVisible: true
 }
 
-export default createReducer(initialState, builder =>
+export default createReducer(initialState, (builder) =>
   builder
-    .addCase(updateVersion, state => {
+    .addCase(updateVersion, (state) => {
       // slippage isnt being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
       if (typeof state.userSlippageTolerance !== 'number') {
@@ -145,7 +146,7 @@ export default createReducer(initialState, builder =>
       }
       state.timestamp = currentTimestamp()
     })
-    .addCase(toggleURLWarning, state => {
+    .addCase(toggleURLWarning, (state) => {
       state.URLWarningVisible = !state.URLWarningVisible
     })
 )

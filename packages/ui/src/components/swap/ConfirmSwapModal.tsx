@@ -1,5 +1,6 @@
 import { currencyEquals, Trade } from '@teleswap/sdk'
 import React, { useCallback, useMemo } from 'react'
+
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent

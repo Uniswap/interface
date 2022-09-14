@@ -1,25 +1,26 @@
-import React, { useState, useCallback } from 'react'
-import styled from 'styled-components'
-import ReactGA from 'react-ga'
-import { TYPE, CloseIcon } from 'theme'
+import { TokenList } from '@uniswap/token-lists'
+import { ButtonPrimary } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed, AutoRow } from 'components/Row'
-import { ArrowLeft, AlertTriangle } from 'react-feather'
+import ListLogo from 'components/ListLogo'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { SectionBreak } from 'components/swap/styleds'
+import { useFetchListCallback } from 'hooks/useFetchListCallback'
 import useThemedContext from 'hooks/useThemedContext'
 import { transparentize } from 'polished'
-import { ButtonPrimary } from 'components/Button'
-import { SectionBreak } from 'components/swap/styleds'
-import { ExternalLink } from '../../theme/components'
-import ListLogo from 'components/ListLogo'
-import { PaddedColumn, Checkbox, TextDot } from './styleds'
-import { TokenList } from '@uniswap/token-lists'
+import React, { useCallback, useState } from 'react'
+import { AlertTriangle, ArrowLeft } from 'react-feather'
+import ReactGA from 'react-ga'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
-import { useFetchListCallback } from 'hooks/useFetchListCallback'
-import { removeList, enableList } from 'state/lists/actions'
-import { CurrencyModalView } from './CurrencySearchModal'
+import { enableList, removeList } from 'state/lists/actions'
 import { useAllLists } from 'state/lists/hooks'
+import styled from 'styled-components'
+import { CloseIcon, TYPE } from 'theme'
+
+import { ExternalLink } from '../../theme/components'
+import { CurrencyModalView } from './CurrencySearchModal'
+import { Checkbox, PaddedColumn, TextDot } from './styleds'
 
 const Wrapper = styled.div`
   position: relative;
@@ -64,7 +65,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
         // go back to lists
         setModalView(CurrencyModalView.manage)
       })
-      .catch(error => {
+      .catch((error) => {
         ReactGA.event({
           category: 'Lists',
           action: 'Add List Failed',

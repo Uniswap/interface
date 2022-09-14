@@ -1,12 +1,13 @@
-import { useMemo } from 'react'
+import { Interface } from '@ethersproject/abi'
+import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
+import { Token } from '@teleswap/sdk'
 import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
 import { useActiveWeb3React } from 'hooks'
-import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
+import { useMemo } from 'react'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
-import { Interface } from '@ethersproject/abi'
+
 import { MasterChefRawPoolInfo, useMasterChefPoolInfo } from './useMasterChefPoolInfo'
-import { Token } from '@teleswap/sdk'
 
 const PAIR_INTERFACE = new Interface(ITeleswapV2PairABI)
 
@@ -68,7 +69,7 @@ export function useChefStakingInfo(): ChefStakingInfo[] {
       ? {
           ...pool.stakingAsset,
           token0: listOfToken0[idx].result?.at(0),
-          token1: listOfToken1[idx].result?.at(0),
+          token1: listOfToken1[idx].result?.at(0)
         }
       : undefined
     return { ...info, isHidden: pool?.isHidden, stakingAsset, stakingToken: stakingTokens[idx] }

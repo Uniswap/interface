@@ -1,20 +1,20 @@
-import React, { useRef, RefObject, useCallback, useState, useMemo } from 'react'
-import Column from 'components/Column'
-import { PaddedColumn, Separator, SearchInput } from './styleds'
-import Row, { RowBetween, RowFixed } from 'components/Row'
-import { TYPE, ExternalLinkIcon, TrashIcon, ButtonText, ExternalLink } from 'theme'
-import { useToken } from 'hooks/Tokens'
-import styled from 'styled-components'
-import { useUserAddedTokens, useRemoveUserAddedToken } from 'state/user/hooks'
 import { Token } from '@teleswap/sdk'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { getEtherscanLink, isAddress } from 'utils'
-import { useActiveWeb3React } from 'hooks'
 import Card from 'components/Card'
-import ImportRow from './ImportRow'
-import useThemedContext from '../../hooks/useThemedContext'
+import Column from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import Row, { RowBetween, RowFixed } from 'components/Row'
+import { useActiveWeb3React } from 'hooks'
+import { useToken } from 'hooks/Tokens'
+import React, { RefObject, useCallback, useMemo, useRef, useState } from 'react'
+import { useRemoveUserAddedToken, useUserAddedTokens } from 'state/user/hooks'
+import styled from 'styled-components'
+import { ButtonText, ExternalLink, ExternalLinkIcon, TrashIcon, TYPE } from 'theme'
+import { getEtherscanLink, isAddress } from 'utils'
 
+import useThemedContext from '../../hooks/useThemedContext'
 import { CurrencyModalView } from './CurrencySearchModal'
+import ImportRow from './ImportRow'
+import { PaddedColumn, SearchInput, Separator } from './styleds'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -49,7 +49,7 @@ export default function ManageTokens({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback(event => {
+  const handleInput = useCallback((event) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
@@ -65,7 +65,7 @@ export default function ManageTokens({
 
   const handleRemoveAll = useCallback(() => {
     if (chainId && userAddedTokens) {
-      userAddedTokens.map(token => {
+      userAddedTokens.map((token) => {
         return removeToken(chainId, token.address)
       })
     }
@@ -74,7 +74,7 @@ export default function ManageTokens({
   const tokenList = useMemo(() => {
     return (
       chainId &&
-      userAddedTokens.map(token => (
+      userAddedTokens.map((token) => (
         <RowBetween key={token.address} width="100%">
           <RowFixed>
             <CurrencyLogo currency={token} size={'20px'} />

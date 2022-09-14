@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
-
-import Modal from '../Modal'
-import { AutoColumn } from '../Column'
-import styled from 'styled-components'
-import { RowBetween } from '../Row'
-import { TYPE } from '../../theme'
-import { X } from 'react-feather'
-import { ButtonPrimary } from '../Button'
-import { useActiveWeb3React } from '../../hooks'
-import AddressInputPanel from '../AddressInputPanel'
 import { isAddress } from 'ethers/lib/utils'
+import React, { useState } from 'react'
+import { X } from 'react-feather'
+import styled from 'styled-components'
+
+import { UNI } from '../../constants'
+import { useActiveWeb3React } from '../../hooks'
 import useENS from '../../hooks/useENS'
 import { useDelegateCallback } from '../../state/governance/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { UNI } from '../../constants'
+import { TYPE } from '../../theme'
+import AddressInputPanel from '../AddressInputPanel'
+import { ButtonPrimary } from '../Button'
+import { AutoColumn } from '../Column'
+import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -77,7 +77,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
     if (!delegateCallback) return
 
     // try delegation and store hash
-    const hash = await delegateCallback(parsedAddress ?? undefined)?.catch(error => {
+    const hash = await delegateCallback(parsedAddress ?? undefined)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })

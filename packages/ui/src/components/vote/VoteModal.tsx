@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
-import { useActiveWeb3React } from '../../hooks'
-
-import Modal from '../Modal'
-import { AutoColumn, ColumnCenter } from '../Column'
-import styled from 'styled-components'
-import { RowBetween } from '../Row'
-import { TYPE, CustomLightSpinner } from '../../theme'
-import { X, ArrowUpCircle } from 'react-feather'
-import { ButtonPrimary } from '../Button'
-import Circle from '../../assets/images/blue-loader.svg'
-import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
-import { getEtherscanLink } from '../../utils'
-import { ExternalLink } from '../../theme/components'
 import { TokenAmount } from '@teleswap/sdk'
 import useThemedContext from 'hooks/useThemedContext'
+import React, { useState } from 'react'
+import { ArrowUpCircle, X } from 'react-feather'
+import styled from 'styled-components'
+
+import Circle from '../../assets/images/blue-loader.svg'
+import { useActiveWeb3React } from '../../hooks'
+import { useUserVotes, useVoteCallback } from '../../state/governance/hooks'
+import { CustomLightSpinner, TYPE } from '../../theme'
+import { ExternalLink } from '../../theme/components'
+import { getEtherscanLink } from '../../utils'
+import { ButtonPrimary } from '../Button'
+import { AutoColumn, ColumnCenter } from '../Column'
+import Modal from '../Modal'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -72,7 +72,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
     if (!voteCallback) return
 
     // try delegation and store hash
-    const hash = await voteCallback(proposalId, support)?.catch(error => {
+    const hash = await voteCallback(proposalId, support)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })

@@ -1,9 +1,10 @@
 import { Currency, CurrencyAmount, Fraction, Percent } from '@teleswap/sdk'
 import React from 'react'
 import { Text } from 'rebass'
+
 import { ButtonPrimary } from '../../components/Button'
-import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
+import { RowBetween, RowFixed } from '../../components/Row'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 
@@ -13,7 +14,7 @@ export function ConfirmAddModalBottom({
   currencies,
   parsedAmounts,
   poolTokenPercentage,
-  onAdd,
+  onAdd
 }: {
   noLiquidity?: boolean
   price?: Fraction

@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+
 import { Field, typeInput } from './actions'
 
 export interface BurnState {
@@ -11,7 +12,7 @@ const initialState: BurnState = {
   typedValue: '0'
 }
 
-export default createReducer<BurnState>(initialState, builder =>
+export default createReducer<BurnState>(initialState, (builder) =>
   builder.addCase(typeInput, (state, { payload: { field, typedValue } }) => {
     return {
       ...state,

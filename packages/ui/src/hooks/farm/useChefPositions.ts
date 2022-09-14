@@ -1,11 +1,11 @@
+import { Zero } from '@ethersproject/constants'
 import { Chef } from 'constants/farm/chef.enum'
+import { MASTERCHEF_ADDRESSBOOK, MINICHEF_ADDRESS } from 'constants/index'
 import { Contract } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
-import { useMemo, useCallback } from 'react'
-import { useSingleCallResult, NEVER_RELOAD, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { zip } from 'lodash'
-import { MASTERCHEF_ADDRESSBOOK, MINICHEF_ADDRESS } from 'constants/index'
-import { Zero } from '@ethersproject/constants'
+import { useCallback, useMemo } from 'react'
+import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 
 export function useChefPositions(contract?: Contract | null, rewarder?: Contract | null, chainId = 420) {
   const { account } = useActiveWeb3React()
@@ -19,7 +19,7 @@ export function useChefPositions(contract?: Contract | null, rewarder?: Contract
     if (!account || !numberOfPools) {
       return
     }
-    return [...Array(numberOfPools.toNumber()).keys()].map(pid => [String(pid), String(account)])
+    return [...Array(numberOfPools.toNumber()).keys()].map((pid) => [String(pid), String(account)])
   }, [numberOfPools, account])
 
   const pendingSushi = useSingleContractMultipleData(args ? contract : null, 'pendingSushi', args)

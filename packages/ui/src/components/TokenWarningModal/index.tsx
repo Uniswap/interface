@@ -1,7 +1,8 @@
 import { Token } from '@teleswap/sdk'
-import React from 'react'
-import Modal from '../Modal'
 import { ImportToken } from 'components/SearchModal/ImportToken'
+import React from 'react'
+
+import Modal from '../Modal'
 
 export default function TokenWarningModal({
   isOpen,

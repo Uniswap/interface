@@ -1,11 +1,12 @@
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from '@teleswap/sdk'
+import { ChainId, CurrencyAmount, JSBI, Pair, Token, TokenAmount, WETH } from '@teleswap/sdk'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useMemo } from 'react'
+
 import { DAI, UNI, USDC, USDT, WBTC } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 
 export const STAKING_GENESIS = 1600387200
 
@@ -76,7 +77,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   const info = useMemo(
     () =>
       chainId
-        ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
+        ? STAKING_REWARDS_INFO[chainId]?.filter((stakingRewardInfo) =>
             pairToFilterBy === undefined
               ? true
               : pairToFilterBy === null
@@ -189,9 +190,9 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
           earnedAmount: new TokenAmount(uni, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
           rewardRate: individualRewardRate,
-          totalRewardRate: totalRewardRate,
-          stakedAmount: stakedAmount,
-          totalStakedAmount: totalStakedAmount,
+          totalRewardRate,
+          stakedAmount,
+          totalStakedAmount,
           getHypotheticalRewardRate,
           active
         })

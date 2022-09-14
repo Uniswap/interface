@@ -5,6 +5,7 @@ import {
 import React from 'react' // useMemo
 import { X } from 'react-feather'
 import styled from 'styled-components'
+
 // import tokenLogo from '../../assets/images/token-logo.png'
 import { UNI } from '../../constants'
 // import { useTotalSupply } from '../../data/TotalSupply'
@@ -24,8 +25,8 @@ import {
 // import { computeUniCirculation } from '../../utils/computeUniCirculation'
 // import useUSDCPrice from '../../utils/useUSDCPrice'
 import { AutoColumn } from '../Column'
-import { RowBetween } from '../Row'
 import { Break, CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;

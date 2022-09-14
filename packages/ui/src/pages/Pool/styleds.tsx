@@ -13,11 +13,11 @@ export const ClickableText = styled(Text)`
   color: ${({ theme }) => theme.primary1};
 `
 export const MaxButton = styled.button<{ width: string }>`
-  padding: .2rem .8rem;
+  padding: 0.2rem 0.8rem;
   background-color: ${({ theme }) => theme.common1};
   border: 1px solid ${({ theme }) => theme.common3};
   border-radius: 0.5rem;
-  font-size: .4rem;
+  font-size: 0.4rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0.15rem 0.5rem;
   `};

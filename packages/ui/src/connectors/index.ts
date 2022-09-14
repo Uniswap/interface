@@ -1,14 +1,13 @@
-import { TeleportInjectedConnector } from './TeleportInjectedConnector';
 import { Web3Provider } from '@ethersproject/providers'
 import { InjectedConnector } from '@web3-react/injected-connector'
+import { PortisConnector } from '@web3-react/portis-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import { PortisConnector } from '@web3-react/portis-connector'
 
+import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
-import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
-import { ChainId } from '@teleswap/sdk'
+import { TeleportInjectedConnector } from './TeleportInjectedConnector'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY

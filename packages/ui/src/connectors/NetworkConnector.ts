@@ -1,5 +1,5 @@
-import { ConnectorUpdate } from '@web3-react/types'
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import { ConnectorUpdate } from '@web3-react/types'
 import invariant from 'tiny-invariant'
 
 interface NetworkConnectorArguments {
@@ -60,7 +60,7 @@ class MiniRpcProvider implements AsyncSendable {
       response = await fetch(this.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', accept: 'application/json' },
-        body: JSON.stringify(batch.map(item => item.request))
+        body: JSON.stringify(batch.map((item) => item.request))
       })
     } catch (error) {
       batch.forEach(({ reject }) => reject(new Error('Failed to send batch call')))
@@ -106,8 +106,8 @@ class MiniRpcProvider implements AsyncSendable {
     callback: (error: any, response: any) => void
   ): void => {
     this.request(request.method, request.params)
-      .then(result => callback(null, { jsonrpc: '2.0', id: request.id, result }))
-      .catch(error => callback(error, null))
+      .then((result) => callback(null, { jsonrpc: '2.0', id: request.id, result }))
+      .catch((error) => callback(error, null))
   }
 
   public readonly request = async (

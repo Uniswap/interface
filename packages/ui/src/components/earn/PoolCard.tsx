@@ -1,20 +1,21 @@
-import React from 'react'
-import { AutoColumn } from '../Column'
-import { RowBetween } from '../Row'
-import styled from 'styled-components'
-import { TYPE, StyledInternalLink } from '../../theme'
-import DoubleCurrencyLogoHorizontal from '../DoubleLogo'
 import { ETHER, JSBI, TokenAmount } from '@teleswap/sdk'
-import { ButtonPrimary } from '../Button'
-import { StakingInfo } from '../../state/stake/hooks'
-import { useColor } from '../../hooks/useColor'
-import { currencyId } from '../../utils/currencyId'
-import { Break, CardNoise, CardBGImage } from './styled'
-import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { useTotalSupply } from '../../data/TotalSupply'
-import { usePair } from '../../data/Reserves'
-import useUSDCPrice from '../../utils/useUSDCPrice'
+import React from 'react'
+import styled from 'styled-components'
+
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
+import { usePair } from '../../data/Reserves'
+import { useTotalSupply } from '../../data/TotalSupply'
+import { useColor } from '../../hooks/useColor'
+import { StakingInfo } from '../../state/stake/hooks'
+import { StyledInternalLink, TYPE } from '../../theme'
+import { currencyId } from '../../utils/currencyId'
+import useUSDCPrice from '../../utils/useUSDCPrice'
+import { unwrappedToken } from '../../utils/wrappedCurrency'
+import { ButtonPrimary } from '../Button'
+import { AutoColumn } from '../Column'
+import DoubleCurrencyLogoHorizontal from '../DoubleLogo'
+import { RowBetween } from '../Row'
+import { Break, CardBGImage, CardNoise } from './styled'
 
 const StatContainer = styled.div`
   display: flex;
@@ -129,8 +130,14 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           <TYPE.white> Total deposited</TYPE.white>
           <TYPE.white>
             {valueOfTotalStakedAmountInUSDC
-              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
+              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, {
+                  groupSeparator: ','
+                })}`
+              : `${
+                  valueOfTotalStakedAmountInWETH?.toSignificant(4, {
+                    groupSeparator: ','
+                  }) ?? '-'
+                } ETH`}
           </TYPE.white>
         </RowBetween>
         <RowBetween>
