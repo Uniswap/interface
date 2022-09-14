@@ -8,6 +8,18 @@ The home of the official Uniswap mobile app for iOS and Android!
 
 I (@judo) recommend setting up your M1 Mac without Rosetta: [link](https://medium.com/@davidjasonharding/developing-a-react-native-app-on-an-m1-mac-without-rosetta-29fcc7314d70).
 
+#### Download environment variables
+
+API keys are stored in [GitHub secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) and included in GitHub actions. To run the app locally you need to download the environment variables onto your machine. You first need to make sure you have access to the 1password engineer vault and you need to [download the 1Password CLI](https://developer.1password.com/docs/cli/get-started#install). Then you can copy the local environment variables onto your own computer by running `yarn download-env-local`.
+
+For instructions on how to update environment variables see [Updating Secret Env Variables section](#updating-secret-env-variables).
+
+#### Updating secret environment variables
+
+Things like API keys must not be checked into GitHub. They should be stored as a GH secret. They can be added to our repo on GH by following [these instructions](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository). When they are added they also need to be added to the appropriate GH action by following [these instructions](https://docs.github.com/en/actions/security-guides/encrypted-secrets#using-encrypted-secrets-in-a-workflow). Finally you should add them into your own .env.local file and then upload them to 1Password using the command `yarn upload-env-local`.
+
+Developers will need to redownload the new file using `yarn download-env-local`.
+
 #### React Native
 
 Follow the general [React Native setup instructions](https://reactnative.dev/docs/environment-setup) but make sure to follow these steps before completing the instructions:

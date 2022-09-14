@@ -13,6 +13,14 @@ if (packageChanged && !lockfileChanged) {
   warn(`${msg} - <i>${idea}</i>`)
 }
 
+/* Warn about storing credentials in GH and uploading env.local to 1Password */
+const envChanged = danger.git.modified_files.includes('.env')
+if (envChanged) {
+  warn(
+    'Changes were made to .env. Confirm that no sensitive data is in the .env file. Sensitive data must go in .env.local and then run `yarn upload-env-local` to store it in 1Password.'
+  )
+}
+
 // Checks for any logging and reminds the developer not to log sensitive data
 const updatedTsFiles = danger.git.modified_files
   .concat(danger.git.created_files)

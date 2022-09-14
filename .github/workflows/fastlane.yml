@@ -108,6 +108,7 @@ jobs:
           CI_KEYCHAIN_PASSWORD: ${{ secrets.CI_KEYCHAIN_PASSWORD }}
           GIT_BRANCH_NAME: ${{ github.ref }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UNISWAP_API_KEY: ${{ secrets.UNISWAP_API_KEY }}
 
       - name: Generate iOS bundle and sourcemaps
         run: |

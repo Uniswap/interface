@@ -81,3 +81,6 @@ src/abis/uniswapV3
 # Storybook
 build-storybook.log
 storybook-static/*
+
+# Private keys
+.env.local

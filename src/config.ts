@@ -51,7 +51,7 @@ const _config: Config = {
   covalentApiKey: COVALENT_API_KEY,
   debug: parseBoolean(DEBUG),
   uniswapApiUrl: UNISWAP_API_URL,
-  uniswapApiKey: UNISWAP_API_KEY,
+  uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
   uniswapGasServiceUrl: UNISWAP_GAS_SERVICE_URL,
   uniswapAppUrl: UNISWAP_APP_URL,
   infuraProjectId: INFURA_PROJECT_ID,
