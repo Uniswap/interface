@@ -13,7 +13,6 @@ import { useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
-import { OPACITY_HOVER } from 'theme'
 import {
   dayHourFormatter,
   hourFormatter,
@@ -109,8 +108,9 @@ const TimeButton = styled.button<{ active: boolean }>`
   border: none;
   cursor: pointer;
   color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
   :hover {
-    ${({ active }) => !active && `opacity: ${OPACITY_HOVER};`}
+    ${({ active, theme }) => !active && `opacity: ${theme.opacity.hover};`}
   }
 `
 

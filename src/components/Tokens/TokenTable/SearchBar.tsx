@@ -27,6 +27,7 @@ const SearchInput = styled.input`
   font-size: 16px;
   padding-left: 40px;
   color: ${({ theme }) => theme.textSecondary};
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   :hover {
     background-color: ${({ theme }) => theme.backgroundSurface};

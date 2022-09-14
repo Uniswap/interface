@@ -42,12 +42,12 @@ const ClearAll = styled.div`
   margin-bottom: auto;
 
   :hover {
-    opacity: 0.6;
+    opacity: ${({ theme }) => theme.opacity.hover};
     transition: ${({
       theme: {
         transition: { duration, timing },
       },
-    }) => `${duration.fast}ms opacity ${timing.in}`};
+    }) => `${duration.fast} opacity ${timing.in}`};
   }
 `
 
@@ -60,7 +60,7 @@ const StyledChevron = styled(ChevronLeft)`
       theme: {
         transition: { duration, timing },
       },
-    }) => `${duration.fast}ms color ${timing.in}`};
+    }) => `${duration.fast} color ${timing.in}`};
   }
 `
 

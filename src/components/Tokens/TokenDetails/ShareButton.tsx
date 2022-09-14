@@ -5,7 +5,7 @@ import { Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
-import { ClickableStyle, CopyHelperRefType, OPACITY_CLICK, Z_INDEX } from 'theme'
+import { ClickableStyle, CopyHelperRefType, Z_INDEX } from 'theme'
 import { colors } from 'theme/colors'
 import { opacify } from 'theme/utils'
 
@@ -25,7 +25,7 @@ const Share = styled(ShareIcon)<{ open: boolean }>`
   height: 24px;
   width: 24px;
   ${ClickableStyle}
-  ${({ open }) => open && `opacity: ${OPACITY_CLICK} !important`};
+  ${({ open, theme }) => open && `opacity: ${theme.opacity.click} !important`};
 `
 
 const ShareActions = styled.div`
