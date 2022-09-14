@@ -38,7 +38,20 @@ static void InitializeFlipper(UIApplication *application) {
 
  [FIRApp configure];
 
-  RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
+  // This is needed so universal links opened from OneSignal notifications navigate to the proper page. More details here: 
+  // https://documentation.onesignal.com/v7.0/docs/react-native-sdk in the deep linking warning section.
+  NSMutableDictionary *newLaunchOptions = [NSMutableDictionary dictionaryWithDictionary:launchOptions];
+    if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]) {
+      NSDictionary *remoteNotif = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+      if (remoteNotif[@"custom"] && remoteNotif[@"custom"][@"u"]) {
+          NSString *initialURL = remoteNotif[@"custom"][@"u"];
+          if (!launchOptions[UIApplicationLaunchOptionsURLKey]) {
+              newLaunchOptions[UIApplicationLaunchOptionsURLKey] = [NSURL URLWithString:initialURL];
+          }
+      }
+    }
+
+  RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:newLaunchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"Uniswap"
                                             initialProperties:nil];
@@ -55,7 +68,7 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
-  [super application:application didFinishLaunchingWithOptions:launchOptions];
+  [super application:application didFinishLaunchingWithOptions:newLaunchOptions];
 
   return YES;
 }

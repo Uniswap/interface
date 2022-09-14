@@ -1,14 +1,7 @@
+import { Linking } from 'react-native'
 import OneSignal, { NotificationReceivedEvent, OpenedEvent } from 'react-native-onesignal'
 import { config } from 'src/config'
-import { openUri } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
-
-interface NotificationAttachments {
-  app_url?: string
-  data?: {
-    address?: Address
-  }
-}
 
 export const initOneSignal = () => {
   OneSignal.setLogLevel(6, 0)
@@ -26,8 +19,12 @@ export const initOneSignal = () => {
       `Notification opened: ${event.notification}`
     )
 
-    const url = (event.notification?.attachments as NotificationAttachments)?.app_url
-    if (url) openUri(url, true)
+    // This emits a url event when coldStart = false. Don't call openURI because that will
+    // send the user to Safari to open the universal link. When coldStart = true, OneSignal
+    // handles the url event and navigates correctly.
+    if (event.notification.launchURL) {
+      Linking.emit('url', { url: event.notification.launchURL })
+    }
   })
 }
 

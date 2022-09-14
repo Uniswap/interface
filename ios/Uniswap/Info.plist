@@ -24,19 +24,6 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>uniswap</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>uniswap</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleVersion</key>
 	<string>194</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -58,8 +45,8 @@
 	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID helps Uniswap keep your assets secure.</string>
-  <key>NSMicrophoneUsageDescription</key>
-  <string>This app does not require access to the microphone.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app does not require access to the microphone.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Inter-Bold.ttf</string>
@@ -84,17 +71,19 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <key>NSUbiquitousContainers</key>
-   <dict>
-       <key>iCloud.Uniswap.UserBackups</key>
-       <dict>
-           <key>NSUbiquitousContainerIsDocumentScopePublic</key>
-           <false/>
-           <key>NSUbiquitousContainerName</key>
-           <string>Uniswap</string>
-           <key>NSUbiquitousContainerSupportedFolderLevels</key>
-           <string>Any</string>
-       </dict>
-   </dict>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.Uniswap.UserBackups</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+			<false/>
+			<key>NSUbiquitousContainerName</key>
+			<string>Uniswap</string>
+			<key>NSUbiquitousContainerSupportedFolderLevels</key>
+			<string>Any</string>
+		</dict>
+	</dict>
+	<key>OneSignal_suppress_launch_urls</key>
+	<true/>
 </dict>
 </plist>
