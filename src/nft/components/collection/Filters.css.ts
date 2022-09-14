@@ -16,22 +16,30 @@ export const container = style([
   },
 ])
 
-export const rowHover = style({
-  borderRadius: '12px',
-  ':hover': {
-    background: themeVars.colors.lightGray,
+export const rowHover = style([
+  sprinkles({
+    borderRadius: '12',
+  }),
+  {
+    ':hover': {
+      background: themeVars.colors.lightGray,
+    },
   },
-})
+])
 
-export const rowHoverOpen = style({
-  borderBottomLeftRadius: '0',
-  borderBottomRightRadius: '0',
-  borderTopLeftRadius: '12px',
-  borderTopRightRadius: '12px',
-  ':hover': {
-    background: themeVars.colors.medGray,
+export const rowHoverOpen = style([
+  sprinkles({
+    borderTopLeftRadius: '12',
+    borderTopRightRadius: '12',
+    borderBottomLeftRadius: '0',
+    borderBottomRightRadius: '0',
+  }),
+  {
+    ':hover': {
+      background: themeVars.colors.medGray,
+    },
   },
-})
+])
 
 export const subRowHover = style({
   ':hover': {
@@ -39,19 +47,27 @@ export const subRowHover = style({
   },
 })
 
-export const detailsOpen = style({
-  background: themeVars.colors.darkGray10,
+export const detailsOpen = sprinkles({
+  background: 'darkGray10',
   overflow: 'hidden',
-  border: `1px solid ${themeVars.colors.medGray}`,
+  borderStyle: 'solid',
+  borderWidth: '1px',
+  borderColor: 'medGray',
 })
 
-export const summaryOpen = style({
-  borderBottom: `1px solid ${themeVars.colors.medGray}`,
+export const summaryOpen = sprinkles({
+  borderStyle: 'solid',
+  borderWidth: '1px',
+  borderColor: 'medGray',
 })
 
-export const filterDropDowns = style({
-  overflowY: 'scroll',
-  maxHeight: '190px',
-  '::-webkit-scrollbar': { display: 'none' },
-  scrollbarWidth: 'none',
-})
+export const filterDropDowns = style([
+  sprinkles({
+    overflowY: 'scroll',
+  }),
+  {
+    maxHeight: '190px',
+    '::-webkit-scrollbar': { display: 'none' },
+    scrollbarWidth: 'none',
+  },
+])

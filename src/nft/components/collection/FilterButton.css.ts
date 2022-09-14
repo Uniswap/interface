@@ -14,10 +14,10 @@ export const filterButtonExpanded = style({
 export const filterBadge = style([
   sprinkles({
     position: 'absolute',
+    left: '18',
     fontSize: '28',
   }),
   {
     top: '-3px',
-    left: '18px',
   },
 ])

@@ -58,9 +58,9 @@ export const FilterButton = ({
       {showFilterBadge && !isMobile ? (
         <Box display="inline-block" position="relative">
           {!isFiltersExpanded && (
-            <span style={{ position: 'absolute', top: '5px', left: '4px', fontSize: '8px' }}>
+            <Box as="span" position="absolute" left="4" style={{ top: '5px', fontSize: '8px' }}>
               {String.fromCharCode(8226)}
-            </span>
+            </Box>
           )}
           <Box paddingLeft={!isFiltersExpanded ? '12' : '2'}>{results ? putCommas(results) : 0} results</Box>
         </Box>
