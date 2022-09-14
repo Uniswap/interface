@@ -8,11 +8,13 @@ export const container = sprinkles({
   width: '24',
 })
 
-export const input = sprinkles({
-  width: '0',
-  height: '0',
-  opacity: '0',
-})
+export const input = style([
+  sprinkles({
+    width: '0',
+    height: '0',
+    opacity: '0',
+  }),
+])
 
 export const radio = style([
   sprinkles({
