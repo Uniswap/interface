@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/layout/Radio.css'
 import { ChangeEvent } from 'react'
 
@@ -9,7 +10,7 @@ interface RadioProps {
 
 export const Radio = ({ onChange, hovered, ...props }: RadioProps & React.HTMLProps<HTMLInputElement>) => {
   return (
-    <label className={styles.container}>
+    <Box as="label" className={styles.container}>
       <input
         className={styles.input}
         type="checkbox"
@@ -18,8 +19,8 @@ export const Radio = ({ onChange, hovered, ...props }: RadioProps & React.HTMLPr
         }}
         {...props}
       />
-      <span className={clsx(styles.radio, hovered && styles.radioHovered)}></span>
-    </label>
+      <Box as="span" className={clsx(styles.radio, hovered && styles.radioHovered)}></Box>
+    </Box>
   )
 }
 
