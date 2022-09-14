@@ -1,4 +1,3 @@
-import { initializeAnalytics } from 'analytics'
 import { sendAnalyticsEvent, user } from 'analytics'
 import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
@@ -122,7 +121,6 @@ export default function App() {
   const isDarkMode = useIsDarkMode()
   const isExpertMode = useIsExpertMode()
 
-  initializeAnalytics()
   useAnalyticsReporter()
 
   useEffect(() => {

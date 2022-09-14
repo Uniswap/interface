@@ -1,4 +1,4 @@
-import { Experiment } from '@amplitude/experiment-js-client'
+import { experiment } from 'analytics/initalize'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
@@ -40,8 +40,10 @@ export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
   const localFeatureFlags = useAtomValue(featureFlagSettings)
   let featureFlags
   if (DEPLOYMENT) {
-    const experiment = Experiment.initializeWithAmplitudeAnalytics(DEPLOYMENT)
+    console.log(experiment)
     console.log(experiment.all())
+    console.log(experiment.variant('swap-button-color'), 'variant')
+    console.log(experiment.variant('redesign'), 'redesign')
     featureFlags = localFeatureFlags
   } else {
     featureFlags = localFeatureFlags

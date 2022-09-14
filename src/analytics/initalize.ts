@@ -1,4 +1,5 @@
 import { init } from '@amplitude/analytics-browser'
+import { Experiment } from '@amplitude/experiment-js-client'
 import { isProductionEnv } from 'utils/env'
 
 /**
@@ -24,10 +25,15 @@ const options = {
   },
 }
 
-export function initializeAnalytics() {
-  if (typeof API_KEY === 'undefined') {
-    console.error(`${AMPLITUDE_KEY_NAME} is undefined, Amplitude analytics will not run.`)
-    return
-  }
-  init(API_KEY, userId, options)
+if (!API_KEY) {
+  throw new Error(`${AMPLITUDE_KEY_NAME} is undefined, Amplitude analytics will not run.`)
 }
+init(API_KEY, userId, options)
+
+const DEPLOYMENT_KEY_NAME = 'REACT_APP_AMPLITUDE_EXPERIMENT_DEPLOYMENT'
+const DEPLOYMENT = process.env.REACT_APP_AMPLITUDE_EXPERIMENT_DEPLOYMENT
+if (!DEPLOYMENT) {
+  throw new Error(`${DEPLOYMENT_KEY_NAME} is undefined, Amplitude analytics will not run.`)
+}
+
+export const experiment = Experiment.initializeWithAmplitudeAnalytics(DEPLOYMENT)
