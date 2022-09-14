@@ -200,7 +200,7 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
         return [
           monthYearFormatter(locale),
           monthYearDayFormatter(locale),
-          timeMonth.range(startDate, endDate, 3).map((x) => x.valueOf() / 1000),
+          timeMonth.range(startDate, endDate, 6).map((x) => x.valueOf() / 1000),
         ]
     }
   }
