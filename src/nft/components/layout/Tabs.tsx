@@ -23,7 +23,7 @@ const Elements = createContext<{ tabs: React.ReactNode[]; panels: React.ReactNod
   panels: [],
 })
 
-export const Tabs: React.FC<{ children: ReactNode; state?: [number, (n: number) => void] }> = ({
+export const Tabs = ({
   state: outerState,
   children,
 }: {
