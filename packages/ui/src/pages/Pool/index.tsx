@@ -421,7 +421,7 @@ export default function Pool() {
             </TopPoolsGrid>
             <AutoColumn justify={'center'} gap="md">
               <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-                Don't see a pool you joined?{' '}
+                {`Don't see a pool you joined?`}&nbsp;
                 <StyledInternalLink id="import-pool-link" to="/find">
                   Import it.
                 </StyledInternalLink>

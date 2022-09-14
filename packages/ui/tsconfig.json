@@ -23,14 +23,14 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "types": [
       "react-spring",
       "jest"
     ],
-    "baseUrl": "src",
+    "baseUrl": "src"
   },
   "exclude": [
     "node_modules",

@@ -52,8 +52,8 @@
     "prettier/prettier": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/ban-ts-ignore": "off",
     "react/react-in-jsx-scope": "off",
     "sort-imports": "off",
     "no-restricted-modules": "warn",
@@ -61,18 +61,6 @@
     "object-shorthand": [
       "error",
       "always"
-    ],
-    "@typescript-eslint/no-restricted-imports": [
-      "error",
-      {
-        "paths": [
-          {
-            "name": "@ethersproject/providers",
-            "message": "Please only use Providers instantiated in constants/providers to improve traceability.",
-            "allowTypeImports": true
-          }
-        ]
-      }
     ]
   }
 }
