@@ -7,9 +7,8 @@ import {
   sortCategoryAtom,
   sortDirectionAtom,
 } from 'components/Tokens/state'
-import { TokenTopQuery$data } from 'graphql/data/__generated__/TokenTopQuery.graphql'
-import { getDurationDetails, SingleTokenData, useTopTokenQuery } from 'graphql/data/Token'
-import { TimePeriod } from 'graphql/data/Token'
+import { TokenTopProjectsQuery$data } from 'graphql/data/__generated__/TokenTopProjectsQuery.graphql'
+import { getDurationDetails, TimePeriod, TopTokenProject, useTopTokenProjectsQuery } from 'graphql/data/Token'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, Suspense, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -49,37 +48,47 @@ const TokenRowsContainer = styled.div`
   width: 100%;
 `
 
-function useFilteredTokens(data: TokenTopQuery$data): SingleTokenData[] | undefined {
+function useFilteredTokenProjects(data: TokenTopProjectsQuery$data): any[] | undefined {
   const filterString = useAtomValue(filterStringAtom)
   const favorites = useAtomValue(favoritesAtom)
   const showFavorites = useAtomValue(showFavoritesAtom)
 
-  return useMemo(
-    () =>
-      data.topTokenProjects
-        ?.filter(
-          (token) => !showFavorites || (token?.tokens?.[0].address && favorites.includes(token?.tokens?.[0].address))
-        )
-        .filter((token) => {
-          const tokenInfo = token?.tokens?.[0]
-          const address = tokenInfo?.address
-          if (!address) {
-            return false
-          } else if (!filterString) {
-            return true
-          } else {
-            const lowercaseFilterString = filterString.toLowerCase()
-            const addressIncludesFilterString = address?.toLowerCase().includes(lowercaseFilterString)
-            const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
-            const symbolIncludesFilterString = tokenInfo?.symbol?.toLowerCase().includes(lowercaseFilterString)
-            return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
-          }
-        }),
-    [data.topTokenProjects, favorites, filterString, showFavorites]
+  const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
+
+  const projectHasTokenField = useCallback(
+    (project: TopTokenProject, field: 'address' | 'symbol') =>
+      project?.tokens?.find((token) => token[field]?.toLowerCase()?.includes(lowercaseFilterString)),
+    [lowercaseFilterString]
   )
+
+  return useMemo(() => {
+    const { topTokenProjects } = data
+    if (!topTokenProjects) {
+      return []
+    }
+    return topTokenProjects
+      .filter(
+        (project) =>
+          !showFavorites || (project?.tokens?.[0].address && favorites.includes(project?.tokens?.[0].address))
+      )
+      .filter((project) => {
+        const tokenInfo = project?.tokens?.[0]
+        const address = tokenInfo?.address
+        if (!address) {
+          return false
+        } else if (!filterString) {
+          return true
+        } else {
+          const addressIncludesFilterString = projectHasTokenField(project, 'address')
+          const nameIncludesFilterString = project?.name?.toLowerCase().includes(lowercaseFilterString)
+          const symbolIncludesFilterString = tokenInfo?.symbol?.toLowerCase().includes(lowercaseFilterString)
+          return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
+        }
+      })
+  }, [data, favorites, filterString, lowercaseFilterString, projectHasTokenField, showFavorites])
 }
 
-function useSortedTokens(tokenData: SingleTokenData[] | undefined) {
+function useSortedTokenProjects(tokenData: TopTokenProject[] | undefined) {
   const sortCategory = useAtomValue(sortCategoryAtom)
   const sortDirection = useAtomValue(sortDirectionAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
@@ -161,12 +170,12 @@ export function LoadingTokenTable() {
 export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
-  const topTokens = useTopTokenQuery(1, timePeriod)
-  const filteredTokens = useFilteredTokens(topTokens)
-  const sortedFilteredTokens = useSortedTokens(filteredTokens)
+  const topTokenProjects = useTopTokenProjectsQuery(1, timePeriod)
+  const filteredTokenProjects = useFilteredTokenProjects(topTokenProjects)
+  const sortedFilteredTokenProjects = useSortedTokenProjects(filteredTokenProjects)
 
   /* loading and error state */
-  if (topTokens === null) {
+  if (topTokenProjects === null) {
     return (
       <NoTokensState
         message={
@@ -179,11 +188,11 @@ export default function TokenTable() {
     )
   }
 
-  if (showFavorites && sortedFilteredTokens?.length === 0) {
+  if (showFavorites && sortedFilteredTokenProjects?.length === 0) {
     return <NoTokensState message={<Trans>You have no favorited tokens</Trans>} />
   }
 
-  if (!showFavorites && sortedFilteredTokens?.length === 0) {
+  if (!showFavorites && sortedFilteredTokenProjects?.length === 0) {
     return <NoTokensState message={<Trans>No tokens found</Trans>} />
   }
 
@@ -192,11 +201,11 @@ export default function TokenTable() {
       <GridContainer>
         <HeaderRow />
         <TokenRowsContainer>
-          {sortedFilteredTokens?.map((token, index) => (
+          {sortedFilteredTokenProjects?.map((token, index) => (
             <LoadedRow
               key={token?.name}
               tokenListIndex={index}
-              tokenListLength={sortedFilteredTokens.length}
+              tokenListLength={sortedFilteredTokenProjects.length}
               tokenData={token}
               timePeriod={timePeriod}
             />

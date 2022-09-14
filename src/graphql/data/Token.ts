@@ -1,11 +1,15 @@
 import graphql from 'babel-plugin-relay/macro'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { fetchQuery, useFragment, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
-import { TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
+import { Chain, TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
 import { TokenPrices$data, TokenPrices$key } from './__generated__/TokenPrices.graphql'
-import { Chain, HistoryDuration, TokenQuery, TokenQuery$data } from './__generated__/TokenQuery.graphql'
-import { TokenTopQuery, TokenTopQuery$data } from './__generated__/TokenTopQuery.graphql'
+import { TokenQuery } from './__generated__/TokenQuery.graphql'
+import {
+  HistoryDuration,
+  TokenTopProjectsQuery,
+  TokenTopProjectsQuery$data,
+} from './__generated__/TokenTopProjectsQuery.graphql'
 
 export enum TimePeriod {
   HOUR,
@@ -35,14 +39,22 @@ function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
 
 export type PricePoint = { value: number; timestamp: number }
 
-const topTokensQuery = graphql`
-  query TokenTopQuery($page: Int!, $duration: HistoryDuration!) {
+export const projectMetaDataFragment = graphql`
+  fragment Token_TokenProject_Metadata on TokenProject {
+    description
+    homepageUrl
+    twitterName
+    name
+  }
+`
+
+const tokenTopProjectsQuery = graphql`
+  query TokenTopProjectsQuery($page: Int!, $duration: HistoryDuration!) {
     topTokenProjects(orderBy: MARKET_CAP, pageSize: 20, currency: USD, page: $page) {
-      description
-      homepageUrl
-      twitterName
+      ...Token_TokenProject_Metadata
       name
       tokens {
+        name
         chain
         address
         symbol
@@ -115,11 +127,14 @@ const tokenPricesFragment = graphql`
     }
   }
 `
-type CachedTopToken = NonNullable<NonNullable<TokenTopQuery$data>['topTokenProjects']>[number]
+type CachedTopToken = NonNullable<NonNullable<TokenTopProjectsQuery$data>['topTokenProjects']>[number]
 
 let cachedTopTokens: Record<string, CachedTopToken> = {}
-export function useTopTokenQuery(page: number, timePeriod: TimePeriod) {
-  const topTokens = useLazyLoadQuery<TokenTopQuery>(topTokensQuery, { page, duration: toHistoryDuration(timePeriod) })
+export function useTopTokenProjectsQuery(page: number, timePeriod: TimePeriod) {
+  const topTokens = useLazyLoadQuery<TokenTopProjectsQuery>(tokenTopProjectsQuery, {
+    page,
+    duration: toHistoryDuration(timePeriod),
+  })
 
   cachedTopTokens =
     topTokens.topTokenProjects?.reduce((acc, current) => {
@@ -262,22 +277,25 @@ function filterPrices(prices: TokenPrices$data['priceHistory'] | undefined) {
 }
 
 export function useTokenPricesCached(
-  key: TokenPrices$key | null | undefined,
+  priceDataFragmentRef: TokenPrices$key | null | undefined,
   address: string,
   chain: Chain,
   timePeriod: TimePeriod
 ) {
   // Attempt to use token prices already provided by TokenDetails / TopToken queries
   const environment = useRelayEnvironment()
-  const fetchedTokenPrices = useFragment(tokenPricesFragment, key ?? null)?.priceHistory
+  const fetchedTokenPrices = useFragment(tokenPricesFragment, priceDataFragmentRef ?? null)?.priceHistory
 
-  const [priceMap, setPriceMap] = useState(
-    new Map<TimePeriod, PricePoint[] | undefined>([[timePeriod, filterPrices(fetchedTokenPrices)]])
+  const [priceMap, setPriceMap] = useState<Map<TimePeriod, PricePoint[] | undefined>>(
+    new Map([[timePeriod, filterPrices(fetchedTokenPrices)]])
   )
 
-  function updatePrices(key: TimePeriod, data?: PricePoint[]) {
-    setPriceMap(new Map(priceMap.set(key, data)))
-  }
+  const updatePrices = useCallback(
+    (key: TimePeriod, data?: PricePoint[]) => {
+      setPriceMap(new Map(priceMap.set(key, data)))
+    },
+    [priceMap]
+  )
 
   // Fetch the other timePeriods after first render
   useEffect(() => {
@@ -309,8 +327,8 @@ export function useTokenPricesCached(
   return { priceMap }
 }
 
-export type SingleTokenData = NonNullable<TokenQuery$data['tokenProjects']>[number]
-export function getDurationDetails(data: SingleTokenData, timePeriod: TimePeriod) {
+export type TopTokenProject = NonNullable<TokenTopProjectsQuery$data['topTokenProjects']>[number]
+export function getDurationDetails(data: TopTokenProject, timePeriod: TimePeriod) {
   let volume = null
   let pricePercentChange = null
 

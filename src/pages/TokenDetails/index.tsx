@@ -152,7 +152,13 @@ export default function TokenDetails() {
     <TokenDetailsLayout>
       {token && (
         <>
-          <TokenDetail address={token.address} query={query} />
+          <TokenDetail
+            address={token.address}
+            // this needs to be updated to provide correct fragment/data prop values
+            tokenMetadataFragmentRef={query}
+            priceDataFragmentRef={query}
+            stablecoinMarket={query}
+          />
           <RightPanel>
             <Widget defaultToken={token ?? undefined} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}

@@ -122,15 +122,15 @@ interface PriceChartProps {
   width: number
   height: number
   tokenAddress: string
-  priceData?: TokenPrices$key | null
+  priceDataFragmentRef?: TokenPrices$key | null
 }
 
-export function PriceChart({ width, height, tokenAddress, priceData }: PriceChartProps) {
+export function PriceChart({ width, height, tokenAddress, priceDataFragmentRef }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
 
-  const { priceMap } = useTokenPricesCached(priceData, tokenAddress, 'ETHEREUM', timePeriod)
+  const { priceMap } = useTokenPricesCached(priceDataFragmentRef, tokenAddress, 'ETHEREUM', timePeriod)
   const prices = priceMap.get(timePeriod)
 
   const startingPrice = prices?.[0] ?? DATA_EMPTY

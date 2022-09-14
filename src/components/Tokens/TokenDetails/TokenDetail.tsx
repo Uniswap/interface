@@ -7,12 +7,15 @@ import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
+import { Token_TokenProject_Metadata$key } from 'graphql/data/__generated__/Token_TokenProject_Metadata.graphql'
+import { TokenPrices$key } from 'graphql/data/__generated__/TokenPrices.graphql'
 import { TokenQuery$data } from 'graphql/data/__generated__/TokenQuery.graphql'
+import { projectMetaDataFragment } from 'graphql/data/Token'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { darken } from 'polished'
-import { Suspense } from 'react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { useFragment } from 'react-relay'
 import styled from 'styled-components/macro'
 import { CopyContractAddress } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
@@ -108,12 +111,6 @@ const TruncateDescriptionButton = styled.div`
 
 const TRUNCATE_CHARACTER_COUNT = 400
 
-type TokenDetailData = {
-  description: string | null | undefined
-  homepageUrl: string | null | undefined
-  twitterName: string | null | undefined
-}
-
 const truncateDescription = (desc: string) => {
   //trim the string to the maximum length
   let tokenDescriptionTruncated = desc.slice(0, TRUNCATE_CHARACTER_COUNT)
@@ -125,18 +122,18 @@ const truncateDescription = (desc: string) => {
   return tokenDescriptionTruncated
 }
 
-export function AboutSection({ address, tokenDetailData }: { address: string; tokenDetailData: TokenDetailData }) {
-  const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
+interface AboutSectionProps {
+  address: string
+  tokenMetadataFragmentRef: Token_TokenProject_Metadata$key
+}
 
-  const shouldTruncate =
-    tokenDetailData && tokenDetailData.description
-      ? tokenDetailData.description.length > TRUNCATE_CHARACTER_COUNT
-      : false
+export function AboutSection({ address, tokenMetadataFragmentRef }: AboutSectionProps) {
+  const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
+  const { description, homepageUrl, twitterName } = useFragment(projectMetaDataFragment, tokenMetadataFragmentRef)
+  const shouldTruncate = description ? description.length > TRUNCATE_CHARACTER_COUNT : false
 
   const tokenDescription =
-    tokenDetailData && tokenDetailData.description && shouldTruncate && isDescriptionTruncated
-      ? truncateDescription(tokenDetailData.description)
-      : tokenDetailData.description
+    description && shouldTruncate && isDescriptionTruncated ? truncateDescription(description) : description
 
   return (
     <AboutContainer>
@@ -144,7 +141,7 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
         <Trans>About</Trans>
       </AboutHeader>
       <TokenDescriptionContainer>
-        {(!tokenDetailData || !tokenDetailData.description) && (
+        {!description && (
           <NoInfoAvailable>
             <Trans>No token information available</Trans>
           </NoInfoAvailable>
@@ -159,17 +156,24 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
       <ResourcesContainer>
         <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
         <Resource name={'Protocol info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-        {tokenDetailData?.homepageUrl && <Resource name={'Website'} link={tokenDetailData.homepageUrl} />}
-        {tokenDetailData?.twitterName && (
-          <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
-        )}
+        {homepageUrl && <Resource name={'Website'} link={homepageUrl ?? ''} />}
+        {twitterName && <Resource name={'Twitter'} link={`https://twitter.com/${twitterName}`} />}
       </ResourcesContainer>
     </AboutContainer>
   )
 }
 
-export default function LoadedTokenDetail({ address, query }: { address: string; query: TokenQuery$data }) {
+interface LoadedTokenDetailProps {
+  address: string
+  stablecoinMarket: NonNullable<NonNullable<NonNullable<TokenQuery$data['tokenProjects']>[number]>['markets']>[number]
+  tokenMetadataFragmentRef: Token_TokenProject_Metadata$key
+  priceDataFragmentRef: TokenPrices$key
+}
+
+export default function LoadedTokenDetail(props: LoadedTokenDetailProps) {
+  const { address, stablecoinMarket, tokenMetadataFragmentRef, ...rest } = props
   const { chainId: connectedChainId } = useWeb3React()
+
   const token = useToken(address)
   let currency = useCurrency(address)
   const isFavorited = useIsFavorited(address)
@@ -179,18 +183,10 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
 
-  const tokenData = query.tokenProjects?.[0]
-  const tokenDetails = tokenData?.markets?.[0]
-  const relevantTokenDetailData = {
-    description: tokenData?.description,
-    homepageUrl: tokenData?.homepageUrl,
-    twitterName: tokenData?.twitterName,
-  }
-
   if (!token || !token.name || !token.symbol || !connectedChainId) {
     return <LoadingTokenDetail />
   }
-
+  const { name, symbol } = token
   const wrappedNativeCurrency = WRAPPED_NATIVE_CURRENCY[connectedChainId]
   const isWrappedNativeToken = wrappedNativeCurrency?.address === token.address
 
@@ -198,8 +194,6 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
     currency = nativeOnChain(connectedChainId)
   }
 
-  const tokenName = tokenData?.name ?? token.name
-  const tokenSymbol = tokenData?.tokens?.[0]?.symbol ?? token.symbol
   return (
     <Suspense fallback={<LoadingTokenDetail />}>
       <TopArea>
@@ -209,9 +203,9 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
         <ChartHeader>
           <TokenInfoContainer>
             <TokenNameCell>
-              <CurrencyLogo currency={currency} size={'32px'} symbol={tokenSymbol} />
-              {tokenName ?? <Trans>Name not found</Trans>}
-              <TokenSymbol>{tokenSymbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+              <CurrencyLogo currency={currency} size={'32px'} symbol={symbol} />
+              {name ?? <Trans>Name not found</Trans>}
+              <TokenSymbol>{symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
               {!warning && <VerifiedIcon size="20px" />}
               {networkBadgebackgroundColor && (
                 <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
@@ -220,9 +214,7 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
               )}
             </TokenNameCell>
             <TokenActions>
-              {tokenName && tokenSymbol && (
-                <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} tokenAddress={address} />
-              )}
+              {name && symbol && <ShareButton tokenName={name} tokenSymbol={symbol} tokenAddress={address} />}
               <ClickFavorited onClick={toggleFavorite}>
                 <FavoriteIcon isFavorited={isFavorited} />
               </ClickFavorited>
@@ -231,7 +223,12 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
           <ChartContainer>
             <ParentSize>
               {({ width, height }) => (
-                <PriceChart tokenAddress={address} width={width} height={height} priceData={tokenData?.prices?.[0]} />
+                <PriceChart
+                  tokenAddress={address}
+                  width={width}
+                  height={height}
+                  priceDataFragmentRef={rest.priceDataFragmentRef}
+                />
               )}
             </ParentSize>
           </ChartContainer>
@@ -239,15 +236,15 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
         <StatsSection>
           <StatPair>
             <Stat>
-              <Trans>Market cap</Trans>
+              <Trans>Total value locked</Trans>
               <StatPrice>
-                {tokenDetails?.marketCap?.value ? formatDollarAmount(tokenDetails.marketCap?.value) : '-'}
+                {stablecoinMarket?.marketCap?.value ? formatDollarAmount(stablecoinMarket.marketCap?.value) : '-'}
               </StatPrice>
             </Stat>
             <Stat>
               24H volume
               <StatPrice>
-                {tokenDetails?.volume1D?.value ? formatDollarAmount(tokenDetails.volume1D.value) : '-'}
+                {stablecoinMarket?.volume1D?.value ? formatDollarAmount(stablecoinMarket.volume1D.value) : '-'}
               </StatPrice>
             </Stat>
           </StatPair>
@@ -255,18 +252,18 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
             <Stat>
               52W low
               <StatPrice>
-                {tokenDetails?.priceLow52W?.value ? formatDollarAmount(tokenDetails.priceLow52W?.value) : '-'}
+                {stablecoinMarket?.priceLow52W?.value ? formatDollarAmount(stablecoinMarket.priceLow52W?.value) : '-'}
               </StatPrice>
             </Stat>
             <Stat>
               52W high
               <StatPrice>
-                {tokenDetails?.priceHigh52W?.value ? formatDollarAmount(tokenDetails.priceHigh52W?.value) : '-'}
+                {stablecoinMarket?.priceHigh52W?.value ? formatDollarAmount(stablecoinMarket.priceHigh52W?.value) : '-'}
               </StatPrice>
             </Stat>
           </StatPair>
         </StatsSection>
-        <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
+        <AboutSection address={address} tokenMetadataFragmentRef={tokenMetadataFragmentRef} />
         <ContractAddressSection>
           <Contract>
             <Trans>Contract address</Trans>

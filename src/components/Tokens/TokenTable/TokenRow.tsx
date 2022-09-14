@@ -5,7 +5,7 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { getDurationDetails, SingleTokenData } from 'graphql/data/Token'
+import { getDurationDetails, TopTokenProject } from 'graphql/data/Token'
 import { TimePeriod } from 'graphql/data/Token'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
@@ -462,7 +462,7 @@ export default function LoadedRow({
 }: {
   tokenListIndex: number
   tokenListLength: number
-  tokenData: SingleTokenData
+  tokenData: TopTokenProject
   timePeriod: TimePeriod
 }) {
   const tokenAddress = tokenData?.tokens?.[0].address
