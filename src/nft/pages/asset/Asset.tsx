@@ -85,6 +85,12 @@ const AssetView = ({
   }
 }
 
+enum MediaType {
+  Audio = 'audio',
+  Video = 'video',
+  Image = 'image',
+}
+
 const Asset = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
   const { data } = useQuery(['assetDetail', contractAddress, tokenId], () =>
@@ -126,11 +132,11 @@ const Asset = () => {
 
   const assetMediaType = useMemo(() => {
     if (isAudio(asset.animationUrl)) {
-      return 'audio'
+      return MediaType.Audio
     } else if (isVideo(asset.animationUrl)) {
-      return 'video'
+      return MediaType.Video
     }
-    return 'image'
+    return MediaType.Image
   }, [asset])
 
   return (
@@ -143,7 +149,7 @@ const Asset = () => {
     >
       <div className={styles.columns}>
         <Column className={styles.column}>
-          {assetMediaType === 'image' ? (
+          {assetMediaType === MediaType.Image ? (
             <img
               className={styles.image}
               src={asset.imageUrl}
