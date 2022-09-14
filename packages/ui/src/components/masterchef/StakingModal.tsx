@@ -75,7 +75,7 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
     stakingCurrency,
     utils.parseUnits(typedValue, stakingCurrency.decimals).toString()
   )
-  const stakeTokenBalance = useTokenBalance(account, stakingCurrency)
+  const stakeTokenBalance = useTokenBalance(account!, stakingCurrency)
   const stakingContract = useChefContractForCurrentChain()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
   const [approval, approve] = useApproveCallback(tokenAmount, stakingContract?.address)
