@@ -1,16 +1,15 @@
+import useThemedContext from 'hooks/useThemedContext'
 import React from 'react'
-import { useActiveWeb3React } from '../../hooks'
-
-import { AutoColumn, ColumnCenter } from '../Column'
-import styled from 'styled-components'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon, CustomLightSpinner } from '../../theme'
 import { ArrowUpCircle } from 'react-feather'
+import styled from 'styled-components'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { getEtherscanLink } from '../../utils'
+import { useActiveWeb3React } from '../../hooks'
+import { CloseIcon, CustomLightSpinner, TYPE } from '../../theme'
 import { ExternalLink } from '../../theme/components'
-import useThemedContext from 'hooks/useThemedContext'
+import { getEtherscanLink } from '../../utils'
+import { AutoColumn, ColumnCenter } from '../Column'
+import { RowBetween } from '../Row'
 
 const ConfirmOrLoadingWrapper = styled.div`
   width: 100%;

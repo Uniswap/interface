@@ -1,4 +1,5 @@
 import { ChainId } from '@teleswap/sdk'
+
 import { Chef } from './farm/chef.enum'
 
 interface FarmConfig {
@@ -37,9 +38,9 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
           name: 'USDC-USDT LP',
           decimal: 18,
           symbol: 'SLP',
-          isLpToken: true,
-        },
-      },
-    ],
-  },
+          isLpToken: true
+        }
+      }
+    ]
+  }
 }

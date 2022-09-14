@@ -3,6 +3,7 @@ import { BigNumber } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
 import { useMemo } from 'react'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
+
 import { useChefContract } from './useChefContract'
 // import useMasterChef from "./useMasterChef"
 

@@ -1,18 +1,18 @@
+import { Chef } from 'constants/farm/chef.enum'
+import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
 import React, { useEffect } from 'react'
-import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
-import { TYPE } from '../../theme'
+import { AutoColumn } from '../../components/Column'
 import { RowBetween } from '../../components/Row'
-// import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 // import { Countdown } from './Countdown'
 import { useActiveWeb3React } from '../../hooks'
+import { TYPE } from '../../theme'
 import PoolCard from './PoolCard'
 // import { useChefPositions } from 'hooks/farm/useChefPositions'
-import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
-import { Chef } from 'constants/farm/chef.enum'
 // import { useChefContract } from 'hooks/farm/useChefContract'
-import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
 import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+
 // import { JSBI } from '@teleswap/sdk'
 // import { BIG_INT_ZERO } from '../../constants'
 // import { OutlineCard } from '../../components/Card'
@@ -30,7 +30,7 @@ const PoolSection = styled.div`
   justify-self: center;
   background: #000;
   padding: 48px;
-  color: #39E1BA;
+  color: #39e1ba;
 
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 24px;

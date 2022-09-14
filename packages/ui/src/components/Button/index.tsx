@@ -1,10 +1,10 @@
-import React from 'react'
-import styled from 'styled-components'
 import { darken, lighten } from 'polished'
-
-import { RowBetween } from '../Row'
+import React from 'react'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
+import styled from 'styled-components'
+
+import { RowBetween } from '../Row'
 
 const Base = styled(RebassButton)<
   {
@@ -41,25 +41,25 @@ const Base = styled(RebassButton)<
 `
 
 export const ButtonPrimary = styled(Base)`
-  background-color: ${({ theme }) => darken(0.1, theme.bgGreen)};
+  background-color: ${({ theme }) => darken(0.1, theme.primary1)};
   color: black;
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => theme.bgGreen};
-    background-color: ${({ theme }) => theme.bgGreen};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary1};
+    background-color: ${({ theme }) => theme.primary1};
     color: black; //${({ theme }) => theme.textHover};
   }
   &:hover {
-    background-color: ${({ theme }) => theme.bgGreen};
+    background-color: ${({ theme }) => theme.primary1};
     color: black; //${({ theme }) => theme.textHover};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => theme.bgGreen};
-    background-color: ${({ theme }) => theme.bgGreen};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary1};
+    background-color: ${({ theme }) => theme.primary1};
     color: black; //${({ theme }) => theme.textHover};
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.bgGreenDisable : theme.primary1) : theme.bgGreenDisable};
+      altDisabledStyle ? (disabled ? theme.common3 : theme.primary1) : theme.common3};
     color: ${({ theme, altDisabledStyle, disabled }) =>
       altDisabledStyle ? (disabled ? theme.textDisable : 'white') : theme.textDisable};
     cursor: auto;

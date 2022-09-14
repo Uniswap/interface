@@ -1,10 +1,11 @@
 import { Trade } from '@teleswap/sdk'
+import useThemedContext from 'hooks/useThemedContext'
 import React, { Fragment, memo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'
-import { TYPE } from '../../theme'
 import { unwrappedToken } from 'utils/wrappedCurrency'
-import useThemedContext from 'hooks/useThemedContext'
+
+import { TYPE } from '../../theme'
 
 export default memo(function SwapRoute({ trade }: { trade: Trade }) {
   const theme = useThemedContext()

@@ -41,7 +41,7 @@ export function useTransactionAdder(): (
 export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
   const { chainId } = useActiveWeb3React()
 
-  const state = useSelector<AppState, AppState['transactions']>(state => state.transactions)
+  const state = useSelector<AppState, AppState['transactions']>((state) => state.transactions)
 
   return chainId ? state[chainId] ?? {} : {}
 }
@@ -69,7 +69,7 @@ export function useHasPendingApproval(tokenAddress: string | undefined, spender:
     () =>
       typeof tokenAddress === 'string' &&
       typeof spender === 'string' &&
-      Object.keys(allTransactions).some(hash => {
+      Object.keys(allTransactions).some((hash) => {
         const tx = allTransactions[hash]
         if (!tx) return false
         if (tx.receipt) {
@@ -86,14 +86,15 @@ export function useHasPendingApproval(tokenAddress: string | undefined, spender:
 
 // watch for submissions to claim
 // return null if not done loading, return undefined if not found
-export function useUserHasSubmittedClaim(
-  account?: string
-): { claimSubmitted: boolean; claimTxn: TransactionDetails | undefined } {
+export function useUserHasSubmittedClaim(account?: string): {
+  claimSubmitted: boolean
+  claimTxn: TransactionDetails | undefined
+} {
   const allTransactions = useAllTransactions()
 
   // get the txn if it has been submitted
   const claimTxn = useMemo(() => {
-    const txnIndex = Object.keys(allTransactions).find(hash => {
+    const txnIndex = Object.keys(allTransactions).find((hash) => {
       const tx = allTransactions[hash]
       return tx.claim && tx.claim.recipient === account
     })

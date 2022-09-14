@@ -1,25 +1,26 @@
-import React, { useMemo, useState } from 'react'
-import Modal from '../Modal'
-import { AutoColumn } from '../Column'
-import styled from 'styled-components'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
-import { ButtonError } from '../Button'
-// import { useStakingContract } from '../../hooks/useContract'
-import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import FormattedCurrencyAmount from '../FormattedCurrencyAmount'
-import { useActiveWeb3React } from '../../hooks'
-import useMasterChef from 'hooks/farm/useMasterChef'
-import { Chef } from 'constants/farm/chef.enum'
-import { BigNumber, utils } from 'ethers'
-import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
-import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { CurrencyAmount, Token } from '@teleswap/sdk'
-import { UNI, ZERO_ADDRESS } from 'constants/index'
+import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+import { UNI, ZERO_ADDRESS } from 'constants/index'
+import { BigNumber } from 'ethers'
 import { useChefContract } from 'hooks/farm/useChefContract'
+import { useChefPositions } from 'hooks/farm/useChefPositions'
+import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+import useMasterChef from 'hooks/farm/useMasterChef'
+import React, { useMemo, useState } from 'react'
+import styled from 'styled-components'
+
+import { useActiveWeb3React } from '../../hooks'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import { CloseIcon, TYPE } from '../../theme'
+import { ButtonError } from '../Button'
+import { AutoColumn } from '../Column'
+import FormattedCurrencyAmount from '../FormattedCurrencyAmount'
+import Modal from '../Modal'
+// import { useStakingContract } from '../../hooks/useContract'
+import { LoadingView, SubmittedView } from '../ModalViews'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -88,7 +89,7 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
       .withdraw(pid, positions[pid].amount)
       .then((response: TransactionResponse) => {
         addTransaction(response, {
-          summary: `Withdraw staked token in Farming`,
+          summary: `Withdraw staked token in Farming`
         })
         setHash(response.hash)
       })

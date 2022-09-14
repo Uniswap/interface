@@ -1,5 +1,6 @@
 import { JSBI } from '@teleswap/sdk'
 import { useMemo } from 'react'
+
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useActiveWeb3React } from './index'
 import { useSocksController } from './useContract'

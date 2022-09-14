@@ -1,10 +1,10 @@
-import { JSBI, ETHER, CurrencyAmount, Percent, Price } from '@teleswap/sdk'
 import type { Currency, Pair, TokenAmount } from '@teleswap/sdk'
+import { CurrencyAmount, ETHER, JSBI, Percent, Price } from '@teleswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+
 import { PairState, usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
-
 import { useActiveWeb3React } from '../../hooks'
 import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../index'
@@ -39,7 +39,7 @@ export function useMintActionHandlers(noLiquidity: boolean | undefined): {
 
   return {
     onFieldAInput,
-    onFieldBInput,
+    onFieldBInput
   }
 }
 
@@ -69,7 +69,7 @@ export function useDerivedMintInfo(
   const currencies: { [field in Field]?: Currency } = useMemo(
     () => ({
       [Field.CURRENCY_A]: currencyA ?? undefined,
-      [Field.CURRENCY_B]: currencyB ?? undefined,
+      [Field.CURRENCY_B]: currencyB ?? undefined
     }),
     [currencyA, currencyB]
   )
@@ -84,11 +84,11 @@ export function useDerivedMintInfo(
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [
     currencies[Field.CURRENCY_A],
-    currencies[Field.CURRENCY_B],
+    currencies[Field.CURRENCY_B]
   ])
   const currencyBalances: { [field in Field]?: CurrencyAmount } = {
     [Field.CURRENCY_A]: balances[0],
-    [Field.CURRENCY_B]: balances[1],
+    [Field.CURRENCY_B]: balances[1]
   }
 
   // amounts
@@ -119,7 +119,7 @@ export function useDerivedMintInfo(
   const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = useMemo(() => {
     return {
       [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
-      [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount,
+      [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount
     }
   }, [dependentAmount, independentAmount, independentField])
 
@@ -141,7 +141,7 @@ export function useDerivedMintInfo(
     const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
     const [tokenAmountA, tokenAmountB] = [
       wrappedCurrencyAmount(currencyAAmount, chainId),
-      wrappedCurrencyAmount(currencyBAmount, chainId),
+      wrappedCurrencyAmount(currencyBAmount, chainId)
     ]
     if (pair && totalSupply && tokenAmountA && tokenAmountB) {
       return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
@@ -192,6 +192,6 @@ export function useDerivedMintInfo(
     noLiquidity,
     liquidityMinted,
     poolTokenPercentage,
-    error,
+    error
   }
 }

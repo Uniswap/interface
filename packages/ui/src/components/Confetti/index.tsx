@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactConfetti from 'react-confetti'
+
 import { useWindowSize } from '../../hooks/useWindowSize'
 
 // eslint-disable-next-line react/prop-types

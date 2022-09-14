@@ -1,23 +1,24 @@
-import React, { useState } from 'react'
-import { Token, Currency } from '@teleswap/sdk'
-import styled from 'styled-components'
-import { TYPE, CloseIcon } from 'theme'
+import { Currency, Token } from '@teleswap/sdk'
+import { ButtonPrimary } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { ArrowLeft, AlertTriangle } from 'react-feather'
-import { transparentize } from 'polished'
-import useThemedContext from 'hooks/useThemedContext'
-import { ButtonPrimary } from 'components/Button'
-import { SectionBreak } from 'components/swap/styleds'
-import { useAddUserToken } from 'state/user/hooks'
-import { getEtherscanLink } from 'utils'
-import { useActiveWeb3React } from 'hooks'
-import { ExternalLink } from '../../theme/components'
-import { useCombinedInactiveList } from 'state/lists/hooks'
 import ListLogo from 'components/ListLogo'
-import { PaddedColumn, Checkbox } from './styleds'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { SectionBreak } from 'components/swap/styleds'
+import { useActiveWeb3React } from 'hooks'
+import useThemedContext from 'hooks/useThemedContext'
+import { transparentize } from 'polished'
+import React, { useState } from 'react'
+import { AlertTriangle, ArrowLeft } from 'react-feather'
+import { useCombinedInactiveList } from 'state/lists/hooks'
+import { useAddUserToken } from 'state/user/hooks'
+import styled from 'styled-components'
+import { CloseIcon, TYPE } from 'theme'
+import { getEtherscanLink } from 'utils'
+
+import { ExternalLink } from '../../theme/components'
+import { Checkbox, PaddedColumn } from './styleds'
 
 const Wrapper = styled.div`
   position: relative;
@@ -74,7 +75,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
       </PaddedColumn>
       <SectionBreak />
       <PaddedColumn gap="md">
-        {tokens.map(token => {
+        {tokens.map((token) => {
           const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list
           return (
             <Card backgroundColor={theme.bg2} key={'import' + token.address} className=".token-warning-container">
@@ -151,7 +152,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
           borderRadius="20px"
           padding="10px 1rem"
           onClick={() => {
-            tokens.map(token => addToken(token))
+            tokens.map((token) => addToken(token))
             handleCurrencySelect && handleCurrencySelect(tokens[0])
           }}
           className=".token-dismiss-button"

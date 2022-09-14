@@ -1,20 +1,19 @@
-import { isTradeBetter } from 'utils/trades'
 import { Currency, CurrencyAmount, Pair, Token, Trade } from '@teleswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
+import { useUserSingleHopOnly } from 'state/user/hooks'
+import { isTradeBetter } from 'utils/trades'
 
 import {
+  ADDITIONAL_BASES,
   BASES_TO_CHECK_TRADES_AGAINST,
-  CUSTOM_BASES,
   BETTER_TRADE_LESS_HOPS_THRESHOLD,
-  ADDITIONAL_BASES
+  CUSTOM_BASES
 } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-
 import { useActiveWeb3React } from './index'
 import { useUnsupportedTokens } from './Tokens'
-import { useUserSingleHopOnly } from 'state/user/hooks'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const { chainId } = useActiveWeb3React()
@@ -34,7 +33,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   }, [chainId, tokenA, tokenB])
 
   const basePairs: [Token, Token][] = useMemo(
-    () => flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])),
+    () => flatMap(bases, (base): [Token, Token][] => bases.map((otherBase) => [base, otherBase])),
     [bases]
   )
 
@@ -62,8 +61,8 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
 
               if (!customBasesA && !customBasesB) return true
 
-              if (customBasesA && !customBasesA.find(base => tokenB.equals(base))) return false
-              if (customBasesB && !customBasesB.find(base => tokenA.equals(base))) return false
+              if (customBasesA && !customBasesA.find((base) => tokenB.equals(base))) return false
+              if (customBasesB && !customBasesB.find((base) => tokenA.equals(base))) return false
 
               return true
             })

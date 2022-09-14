@@ -1,11 +1,12 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import { darken } from 'polished'
 import React from 'react'
 import styled from 'styled-components'
-import Option from './Option'
-import { SUPPORTED_WALLETS } from '../../constants'
+
 import { injected } from '../../connectors'
-import { darken } from 'polished'
+import { SUPPORTED_WALLETS } from '../../constants'
 import Loader from '../Loader'
+import Option from './Option'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -100,7 +101,7 @@ export default function PendingView({
           )}
         </LoadingWrapper>
       </LoadingMessage>
-      {Object.keys(SUPPORTED_WALLETS).map(key => {
+      {Object.keys(SUPPORTED_WALLETS).map((key) => {
         const option = SUPPORTED_WALLETS[key]
         if (option.connector === connector) {
           if (option.connector === injected) {

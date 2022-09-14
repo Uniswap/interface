@@ -1,11 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
+
 import { useLastTruthy } from '../../hooks/useLast'
 import { AdvancedSwapDetails, AdvancedSwapDetailsProps } from './AdvancedSwapDetails'
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   // padding-top: calc(16px + 2rem);
-  padding-bottom: 16px;
+  // padding-bottom: 16px;
   // margin-top: -2rem;
   width: 100%;
   // max-width: 400px;

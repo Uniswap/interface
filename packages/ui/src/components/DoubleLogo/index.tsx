@@ -2,6 +2,7 @@ import { Currency } from '@teleswap/sdk'
 import React from 'react'
 import { Flex } from 'rebass'
 import styled from 'styled-components'
+
 import CurrencyLogo from '../CurrencyLogo'
 
 const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`

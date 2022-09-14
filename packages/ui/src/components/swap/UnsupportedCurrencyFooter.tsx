@@ -1,16 +1,17 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { TYPE, CloseIcon, ExternalLink } from 'theme'
+import { Currency, Token } from '@teleswap/sdk'
 import { ButtonEmpty } from 'components/Button'
-import Modal from 'components/Modal'
 import Card, { OutlineCard } from 'components/Card'
-import { RowBetween, AutoRow } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
+import Modal from 'components/Modal'
+import { AutoRow, RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { CloseIcon, ExternalLink, TYPE } from 'theme'
 import { getEtherscanLink } from 'utils'
-import { Currency, Token } from '@teleswap/sdk'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
+
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
@@ -50,7 +51,7 @@ export default function UnsupportedCurrencyFooter({
 
   const tokens =
     chainId && currencies
-      ? currencies.map(currency => {
+      ? currencies.map((currency) => {
           return wrappedCurrency(currency, chainId)
         })
       : []
@@ -66,7 +67,7 @@ export default function UnsupportedCurrencyFooter({
               <TYPE.mediumHeader>Unsupported Assets</TYPE.mediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
-            {tokens.map(token => {
+            {tokens.map((token) => {
               return (
                 token &&
                 unsupportedTokens &&

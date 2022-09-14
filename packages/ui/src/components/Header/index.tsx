@@ -2,16 +2,17 @@ import {
   ChainId
   // TokenAmount
 } from '@teleswap/sdk'
+import useThemedContext from 'hooks/useThemedContext'
 import React, { useState } from 'react'
-import { Text } from 'rebass'
-import { NavLink } from 'react-router-dom'
 // import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
-
+import { NavLink } from 'react-router-dom'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/svg/logo_white.svg'
+// import usePrevious from '../../hooks/usePrevious'
+import TeleLogo from '../../assets/images/tele/logo.svg'
+import TeleLogoText from '../../assets/images/tele/logoText.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import {
@@ -22,20 +23,16 @@ import {
 // import { CountUp } from 'use-count-up'
 // import { TYPE, ExternalLink } from '../../theme'
 import { YellowCard } from '../Card'
-import { Moon, Sun } from 'react-feather'
-// import Menu from '../Menu'
-
-import Row, { RowFixed } from '../Row'
-import Web3Status from '../Web3Status'
 import ClaimModal from '../claim/ClaimModal'
 // import { useToggleSelfClaimModal, useShowClaimPopup } from '../../state/application/hooks'
 // import { useUserHasAvailableClaim } from '../../state/claim/hooks'
 // import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
 // import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
+// import Menu from '../Menu'
+import Row, { RowFixed } from '../Row'
+import Web3Status from '../Web3Status'
 import UniBalanceContent from './UniBalanceContent'
-// import usePrevious from '../../hooks/usePrevious'
-import TeleLogo from '../../assets/images/tele/teleLogoText.svg'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -55,20 +52,21 @@ const HeaderFrame = styled.div`
     position: relative;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  /* ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         padding: 0.5rem 1rem;
-  `}
+  `} */
 `
 
 const HeaderControls = styled.div`
-  padding-right: 2.8rem;
+  padding: 0 1.3rem;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-self: flex-end;
   height: 4rem;
   max-height: 80px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  width: 100%;
+  /* ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: row;
     justify-content: space-between;
     justify-self: center;
@@ -83,20 +81,69 @@ const HeaderControls = styled.div`
     height: 72px;
     border-radius: 12px 12px 0 0;
     background-color: ${({ theme }) => theme.bg1};
-  `};
+  `}; */
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    height: unset;
+    max-height: unset;
+    padding: unset;
+  `}
+`
+
+const HeadLogoView = styled.div`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+      height: 3.5rem;
+      padding-left: 1.1rem;
+  `}
+  .logoImg {
+    width: 1.8rem;
+    height: auto;
+  }
+  .logoText {
+    width: 6.6rem;
+    height: 'auto';
+    margin-left: 0.4rem;
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+      display: none;
+    `}
+  }
+`
+const HeadTabView = styled.div`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+      height: 3rem;
+      background: rgba(255, 255, 255, 0.05);
+  `}
+`
+const HeadWalletView = styled.div`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+      height: 3.5rem;
+      padding-right: 1.1rem;
+  `}
 `
 
 const HeaderElement = styled.div`
-  display: flex;
+  width: 100%;
+  display: grid;
+  align-items: center;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas: 'a1 a2 a3';
+  /* display: flex; */
   align-items: center;
   /* addresses safari's lack of support for "gap" */
   & > *:not(:first-child) {
     margin-left: 8px;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-   flex-direction: row-reverse;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-template-rows: 1fr 1fr ;
+    flex-direction: row-reverse;
     align-items: center;
+    grid-template-areas: 
+          'a1 a1 a3'
+          'a2 a2 a2'; 
+    & > *:not(:first-child) {
+      margin-left: unset;
+    }
   `};
 `
 
@@ -121,27 +168,33 @@ const HeaderLinks = styled(Row)`
   border: 1px solid green;
   height: 1.8rem;
   width: unset;
-  border: 1px solid #FFFFFF;
-  border-radius: .4rem;
+  border: 1px solid #ffffff;
+  border-radius: 0.4rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     // padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
 `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: unset;
+    height: unset;
+`};
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
+  width: "11.5rem"
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
+  background-color: ${({ theme, active }) => (!active ? theme.common1 : theme.common1)};
   border-radius: 12px;
   white-space: nowrap;
-  width: 100%;
   cursor: pointer;
-
   :focus {
     border: 1px solid blue;
   }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 10.5rem;
+`};
 `
 
 // const UNIAmount = styled(AccountElement)`
@@ -176,6 +229,7 @@ const HideSmall = styled.span`
 const NetworkCard = styled(YellowCard)`
   border-radius: 12px;
   padding: 8px 12px;
+  font-size: 0.6rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0;
     margin-right: 0.5rem;
@@ -236,21 +290,30 @@ const StyledNavLink = styled(NavLink).attrs({
   width: fit-content;
   margin: 0;
   font-weight: 500;
-  padding: .4rem 1.2rem;
-  
-  border-radius: .4rem;
+  padding: 0.4rem 1.2rem;
+
+  border-radius: 0.4rem;
 
   font-family: 'Dela Gothic One';
   font-style: normal;
   font-weight: 400;
-  font-size: .7rem;
+  font-size: 0.7rem;
   line-height: 1rem;
-  color: #FFFFFF;
+  color: #ffffff;
+  :hover {
+    /* background: #0A1B1F;
+    color: #FFFFFF;
+    border: none;
+    line-height: .9rem; */
+  }
   &.${activeClassName},:focus {
-    background: ${({ theme }) => theme.bgGreen};
+    background: ${({ theme }) => theme.primary1};
     color: #000000;
   }
-
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+     padding: .6rem 1.2rem;
+     width: unset;
+  `};
   /* :hover  {
     background: #0A1B1F;
     color: #FFFFFF;
@@ -329,6 +392,7 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
+  const theme = useThemedContext()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
@@ -356,12 +420,50 @@ export default function Header() {
       </Modal>
       <HeaderControls>
         <HeaderElement>
-          <img style={{ width: '9rem', height: 'auto', position: 'absolute', left: '2.8rem' }} src={TeleLogo} alt="" />
-          <HideSmall>
-            {chainId && NETWORK_LABELS[chainId] && (
-              <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
-            )}
-          </HideSmall>
+          <HeadLogoView
+            style={{
+              gridArea: 'a1',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'center'
+            }}
+          >
+            <img className="logoImg" src={TeleLogo} alt="" />
+            <img className="logoText" src={TeleLogoText} alt="" />
+          </HeadLogoView>
+          <HeadTabView style={{ gridArea: 'a2', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <HeaderLinks>
+              <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+                {t('Swap')}
+              </StyledNavLink>
+              <StyledNavLink
+                id={`pool-nav-link`}
+                to={'/pool'}
+                isActive={(match, { pathname }) =>
+                  Boolean(match) ||
+                  pathname.startsWith('/add') ||
+                  pathname.startsWith('/remove') ||
+                  pathname.startsWith('/create') ||
+                  pathname.startsWith('/find')
+                }
+              >
+                {t('Liquidity')}
+              </StyledNavLink>
+              <StyledNavLink id={`earn-nav-link`} to={'/farm'}>
+                {t('Earn')}
+              </StyledNavLink>
+              {/* <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
+            UNI
+          </StyledNavLink> */}
+              {/* <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
+            Vote
+          </StyledNavLink> */}
+              {/* <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
+            Charts <span style={{ fontSize: '11px' }}>↗</span>
+          </StyledExternalLink> */}
+            </HeaderLinks>
+          </HeadTabView>
           {/* {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
@@ -398,59 +500,46 @@ export default function Header() {
               <CardNoise />
             </UNIWrapper>
           )} */}
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} TELE
-              </BalanceText>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gridArea: 'a3' }}>
+            <HideSmall>
+              {chainId && NETWORK_LABELS[chainId] && (
+                <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
+              )}
+            </HideSmall>
+            <AccountElement active={!!account} style={{ pointerEvents: 'auto', display: 'flex' }}>
+              {account && userEthBalance ? (
+                <BalanceText
+                  style={{ flexShrink: 0, fontSize: '.6rem', color: theme.common2 }}
+                  pl="0.75rem"
+                  pr="0.5rem"
+                  fontWeight={500}
+                >
+                  {userEthBalance?.toSignificant(4)} TELE
+                </BalanceText>
+              ) : null}
+              <Web3Status />
+            </AccountElement>
+            {/* <div style={{ width: "2rem" }}>
+              <StyledMenuButton onClick={() => toggleDarkMode()}>
+                {darkMode ? <Moon size={20} /> : <Sun size={20} />}
+              </StyledMenuButton>
+            </div> */}
+          </div>
         </HeaderElement>
-        <HeaderElementWrap>
-          {/* <StyledMenuButton onClick={() => toggleDarkMode()}>
+        {/* <HeaderElementWrap>
+          <StyledMenuButton onClick={() => toggleDarkMode()}>
             {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton> */}
-          {/* <Menu /> */}
-        </HeaderElementWrap>
+          </StyledMenuButton>
+          <Menu />
+        </HeaderElementWrap> */}
       </HeaderControls>
-      <HeaderRow>
-        {/* <Title href=".">
+      {/* <HeaderRow>
+        <Title href=".">
           <UniIcon>
             <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
           </UniIcon>
-        </Title> */}
-        <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
-          </StyledNavLink>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pool'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              pathname.startsWith('/find')
-            }
-          >
-            {t('Liquidity')}
-          </StyledNavLink>
-          <StyledNavLink id={`earn-nav-link`} to={'/farm'}>
-            {t('Earn')}
-          </StyledNavLink>
-          {/* <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
-            UNI
-          </StyledNavLink> */}
-          {/* <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-            Vote
-          </StyledNavLink> */}
-          {/* <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
-            Charts <span style={{ fontSize: '11px' }}>↗</span>
-          </StyledExternalLink> */}
-        </HeaderLinks>
-      </HeaderRow>
+        </Title>
+      </HeaderRow> */}
     </HeaderFrame>
   )
 }

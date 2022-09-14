@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+
 import { ExternalLink } from '../../theme'
 
 const InfoCard = styled.button<{ active?: boolean }>`
@@ -16,7 +17,6 @@ const InfoCard = styled.button<{ active?: boolean }>`
   border-width: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   font-weight: 400;
-
 `
 
 const OptionCard = styled(InfoCard as any)`
@@ -41,8 +41,8 @@ const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
   &:hover {
     cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
     background: rgba(57, 225, 186, 0.05);
-    border-radius: .8rem;
-    padding: 1rem .8rem;
+    border-radius: 0.8rem;
+    padding: 1rem 0.8rem;
   }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
@@ -70,7 +70,7 @@ const CircleWrapper = styled.div`
 
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : ({ theme }) => theme.text1)};
+  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.primary1 : ({ theme }) => theme.text1)};
   font-size: 0.8rem;
   font-weight: 400;
 `
@@ -121,7 +121,7 @@ export default function Option({
 }) {
   const content = (
     <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}>
-       <IconWrapper size={size}>
+      <IconWrapper size={size}>
         <img src={icon} alt={'Icon'} />
       </IconWrapper>
       <OptionCardLeft>

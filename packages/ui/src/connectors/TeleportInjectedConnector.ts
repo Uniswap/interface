@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { AbstractConnectorArguments, ConnectorUpdate } from '@web3-react/types'
-import { SendReturnResult, SendReturn, Send, SendOld } from '@web3-react/injected-connector/dist/types'
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import { Send, SendOld, SendReturn, SendReturnResult } from '@web3-react/injected-connector/dist/types'
+import { AbstractConnectorArguments, ConnectorUpdate } from '@web3-react/types'
 import warning from 'tiny-warning'
 
 const __DEV__ = true
@@ -87,7 +87,9 @@ export class TeleportInjectedConnector extends AbstractConnector {
     // try to activate + get account via eth_requestAccounts
     let account
     try {
-      account = await (window.teleport!.send as Send)('eth_requestAccounts').then((sendReturn) => parseSendReturn(sendReturn)[0])
+      account = await (window.teleport!.send as Send)('eth_requestAccounts').then(
+        (sendReturn) => parseSendReturn(sendReturn)[0]
+      )
     } catch (error) {
       if ((error as any).code === 4001) {
         throw new UserRejectedRequestError()
@@ -140,7 +142,11 @@ export class TeleportInjectedConnector extends AbstractConnector {
       if ((window.teleport as any).isDapper) {
         chainId = parseSendReturn((window.teleport as any).cachedResults.net_version)
       } else {
-        chainId = (window.teleport as any).chainId || (window.teleport as any).netVersion || (window.teleport as any).networkVersion || (window.teleport as any)._chainId
+        chainId =
+          (window.teleport as any).chainId ||
+          (window.teleport as any).netVersion ||
+          (window.teleport as any).networkVersion ||
+          (window.teleport as any)._chainId
       }
     }
 
@@ -154,7 +160,9 @@ export class TeleportInjectedConnector extends AbstractConnector {
 
     let account
     try {
-      account = await (window.teleport.send as Send)('eth_accounts').then((sendReturn) => parseSendReturn(sendReturn)[0])
+      account = await (window.teleport.send as Send)('eth_accounts').then(
+        (sendReturn) => parseSendReturn(sendReturn)[0]
+      )
     } catch {
       warning(false, 'eth_accounts was unsuccessful, falling back to enable')
     }

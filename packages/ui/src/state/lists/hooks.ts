@@ -1,12 +1,13 @@
-import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
-import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { ChainId, Token } from '@teleswap/sdk'
+import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { AppState } from '../index'
 import sortByListPriority from 'utils/listSort'
+
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
+import { AppState } from '../index'
+import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -29,9 +30,9 @@ export class WrappedTokenInfo extends Token {
   }
 }
 
-export type TokenAddressMap = Readonly<
-  { [chainId in ChainId]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }> }
->
+export type TokenAddressMap = Readonly<{
+  [chainId in ChainId]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }>
+}>
 
 /**
  * An empty result, useful as a default.
@@ -56,12 +57,13 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
     (tokenMap, tokenInfo) => {
       const tags: TagInfo[] =
         tokenInfo.tags
-          ?.map(tagId => {
+          ?.map((tagId) => {
             if (!list.tags?.[tagId]) return undefined
             return { ...list.tags[tagId], id: tagId }
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
+      // @ts-ignore
       if (tokenMap[token.chainId] && tokenMap[token.chainId][token.address] !== undefined) {
         console.error(new Error(`Duplicate token! ${token.address}`))
       }
@@ -71,7 +73,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           ...tokenMap[token.chainId],
           [token.address]: {
             token,
-            list: list
+            list
           }
         }
       }
@@ -90,7 +92,7 @@ export function useAllLists(): {
     readonly error: string | null
   }
 } {
-  return useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  return useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
 }
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
@@ -133,15 +135,15 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
 
 // filter out unsupported lists
 export function useActiveListUrls(): string[] | undefined {
-  return useSelector<AppState, AppState['lists']['activeListUrls']>(state => state.lists.activeListUrls)?.filter(
-    url => !UNSUPPORTED_LIST_URLS.includes(url)
+  return useSelector<AppState, AppState['lists']['activeListUrls']>((state) => state.lists.activeListUrls)?.filter(
+    (url) => !UNSUPPORTED_LIST_URLS.includes(url)
   )
 }
 
 export function useInactiveListUrls(): string[] {
   const lists = useAllLists()
   const allActiveListUrls = useActiveListUrls()
-  return Object.keys(lists).filter(url => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url))
+  return Object.keys(lists).filter((url) => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url))
 }
 
 // get all the tokens from active lists, combine with local default tokens

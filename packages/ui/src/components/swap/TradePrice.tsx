@@ -1,9 +1,10 @@
-import React from 'react'
 import { Price } from '@teleswap/sdk'
+import useThemedContext from 'hooks/useThemedContext'
+import React from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
+
 import { StyledBalanceMaxMini } from './styleds'
-import useThemedContext from 'hooks/useThemedContext'
 
 interface TradePriceProps {
   price?: Price
@@ -23,8 +24,8 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   return (
     <Text
-      fontWeight={500}
-      fontSize={14}
+      fontWeight={400}
+      fontSize={'.4rem'}
       color={theme.text2}
       style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
     >

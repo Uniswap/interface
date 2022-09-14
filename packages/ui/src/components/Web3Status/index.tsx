@@ -5,9 +5,11 @@ import React, { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
+
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
+import userActiveIcon from '../../assets/images/tele/userActive.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
 import { NetworkContextName } from '../../constants'
@@ -18,22 +20,17 @@ import { isTransactionRecent, useAllTransactions } from '../../state/transaction
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
 import { ButtonSecondary } from '../Button'
-
 import Identicon from '../Identicon'
 import Loader from '../Loader'
-
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
-
-import userActiveIcon from '../../assets/images/tele/userActive.svg'
-
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
-  width: .4rem;
-  height: .4rem;
+  width: 0.4rem;
+  height: 0.4rem;
   & > * {
     height: ${({ size }) => (size ? size + 'px' : '32px')};
     width: ${({ size }) => (size ? size + 'px' : '32px')};
@@ -64,29 +61,29 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.bgGreen};
+  background-color: ${({ theme }) => theme.primary1};
   border: none;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
-  background: ${({theme }) => theme.bgGreen};
-  border-radius: .4rem;
+  background: ${({ theme }) => theme.primary1};
+  border-radius: 0.4rem;
   width: 8rem;
   :hover,
   :focus {
     color: ${({ theme }) => theme.textHover};
-    background-color: ${({theme}) => theme.bgGreenHover};
+    background-color: ${({ theme }) => theme.primary1Hover};
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.bgGreen};
-      border: 1px solid ${({ theme }) => theme.bgGreen};
+      background-color: ${({ theme }) => theme.primary1};
+      border: 1px solid ${({ theme }) => theme.primary1};
       color: ${({ theme }) => theme.textHover};
 
       :hover,
       :focus {
-        background-color: ${({theme}) => theme.bgGreenHover};
+        background-color: ${({ theme }) => theme.primary1Hover};
         color: ${({ theme }) => darken(0.05, theme.textHover)};
       }
     `}
@@ -94,17 +91,17 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: .4rem;
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg2)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg3)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
+  border-radius: 0.4rem;
+  background-color: ${({ pending, theme }) => (pending ? theme.common1 : theme.common1)};
+  border: 1px solid ${({ pending, theme }) => (pending ? theme.common3 : theme.common3)};
+  color: ${({ pending, theme }) => (pending ? theme.common2 : theme.common2)};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.bgGreenHover) : lighten(0.05, theme.bg2))};
-    border: 1px solid ${({ pending, theme }) => (pending ? theme.bgGreenHover :  theme.bgGreenHover)};
+    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.common1) : lighten(0.05, theme.common1))};
+    border: 1px solid ${({ pending, theme }) => (pending ? theme.common3 : theme.common3)};
     :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.bgGreenHover) : darken(0.1, theme.bgGreenHover))};
+      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.common2) : darken(0.1, theme.common2))};
     }
   }
 `
@@ -117,10 +114,10 @@ const Text = styled.p`
   margin: 0 0.5rem 0 0.25rem;
   width: fit-content;
   font-weight: 500;
-  font-size: .8rem;
+  font-size: 0.8rem;
   line-height: 1rem;
   /* color: #000000; */
-  color: #FFFFFF;;
+  color: #ffffff; ;
 `
 
 const NetworkIcon = styled(Activity)`
@@ -174,7 +171,7 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
         <img src={PortisIcon} alt={''} />
       </IconWrapper>
     )
-  }else {
+  } else {
     return (
       <IconWrapper size={16}>
         <img src={userActiveIcon} alt={''} />
@@ -197,7 +194,7 @@ function Web3StatusInner() {
     return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
   }, [allTransactions])
 
-  const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
+  const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
@@ -248,8 +245,8 @@ export default function Web3Status() {
     return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
   }, [allTransactions])
 
-  const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
-  const confirmed = sortedRecentTransactions.filter(tx => tx.receipt).map(tx => tx.hash)
+  const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
+  const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
 
   if (!contextNetwork.active && !active) {
     return null

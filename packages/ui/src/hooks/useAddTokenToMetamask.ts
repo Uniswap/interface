@@ -1,12 +1,14 @@
-import { getTokenLogoURL } from './../components/CurrencyLogo/index'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { Currency, Token } from '@teleswap/sdk'
-import { useCallback, useState } from 'react'
 import { useActiveWeb3React } from 'hooks'
+import { useCallback, useState } from 'react'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
 
-export default function useAddTokenToMetamask(
-  currencyToAdd: Currency | undefined
-): { addToken: () => void; success: boolean | undefined } {
+import { getTokenLogoURL } from './../components/CurrencyLogo/index'
+
+export default function useAddTokenToMetamask(currencyToAdd: Currency | undefined): {
+  addToken: () => void
+  success: boolean | undefined
+} {
   const { library, chainId } = useActiveWeb3React()
 
   const token: Token | undefined = wrappedCurrency(currencyToAdd, chainId)
@@ -19,7 +21,6 @@ export default function useAddTokenToMetamask(
         .request({
           method: 'wallet_watchAsset',
           params: {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
             //@ts-ignore // need this for incorrect ethers provider type
             type: 'ERC20',
             options: {
@@ -30,7 +31,7 @@ export default function useAddTokenToMetamask(
             }
           }
         })
-        .then(success => {
+        .then((success) => {
           setSuccess(success)
         })
         .catch(() => setSuccess(false))

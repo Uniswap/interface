@@ -1,19 +1,20 @@
 import { Contract } from '@ethersproject/contracts'
+import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
+import { ChainId, WETH } from '@teleswap/sdk'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
-import { ChainId, WETH } from '@teleswap/sdk'
-import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
 import { useMemo } from 'react'
+
 import {
   GOVERNANCE_ADDRESS,
   MASTERCHEF_ADDRESSBOOK,
   MASTERCHEFV2_ADDRESSBOOK,
   MERKLE_DISTRIBUTOR_ADDRESS,
+  MINICHEF_ADDRESS,
   SUSHI_ADDRESS,
-  UNI,
-  MINICHEF_ADDRESS
+  UNI
 } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
@@ -25,9 +26,9 @@ import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import MASTERCHEF_ABI from '../constants/abis/masterchef.json'
 import MASTERCHEF_V2_ABI from '../constants/abis/masterchef-v2.json'
+import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
 import MINICHEF_ABI from '../constants/abis/minichef-v2.json'
 import SUSHI_ABI from '../constants/abis/sushi.json'
-import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
 import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'

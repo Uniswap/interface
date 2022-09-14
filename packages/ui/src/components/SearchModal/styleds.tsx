@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 
@@ -21,8 +22,8 @@ export const StyledMenu = styled.div`
 
 export const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 100;
-  visibility: ${props => (props.show ? 'visible' : 'hidden')};
-  opacity: ${props => (props.show ? 1 : 0)};
+  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
   background: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};
@@ -59,6 +60,9 @@ export const Checkbox = styled.input`
 export const PaddedColumn = styled(AutoColumn)`
   /* padding: 20px; */
   padding: 1.6rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 1rem
+  `};
 `
 
 export const MenuItem = styled(RowBetween)`

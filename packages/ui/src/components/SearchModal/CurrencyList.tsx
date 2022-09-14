@@ -1,26 +1,27 @@
 import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@teleswap/sdk'
+import { LightGreyCard } from 'components/Card'
+import QuestionHelper from 'components/QuestionHelper'
+import useThemedContext from 'hooks/useThemedContext'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
+
+import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import { useActiveWeb3React } from '../../hooks'
-import { WrappedTokenInfo, useCombinedActiveList } from '../../state/lists/hooks'
+import { useAllInactiveTokens, useIsUserAddedToken } from '../../hooks/Tokens'
+import { useCombinedActiveList, WrappedTokenInfo } from '../../state/lists/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
-import { useIsUserAddedToken, useAllInactiveTokens } from '../../hooks/Tokens'
-import Column from '../Column'
-import { RowFixed, RowBetween } from '../Row'
-import CurrencyLogo from '../CurrencyLogo'
-import { MouseoverTooltip } from '../Tooltip'
-import { MenuItem } from './styleds'
-import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
+import Column from '../Column'
+import CurrencyLogo from '../CurrencyLogo'
+import Loader from '../Loader'
+import { RowBetween, RowFixed } from '../Row'
+import { MouseoverTooltip } from '../Tooltip'
 import ImportRow from './ImportRow'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
-import { LightGreyCard } from 'components/Card'
-import TokenListLogo from '../../assets/svg/tokenlist.svg'
-import QuestionHelper from 'components/QuestionHelper'
-import useThemedContext from 'hooks/useThemedContext'
+import { MenuItem } from './styleds'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -128,10 +129,10 @@ function CurrencyRow({
     >
       <CurrencyLogo currency={currency} size={'1.2rem'} />
       <Column>
-        <Text title={currency.name} fontWeight={500} style={{fontSize:'.6rem', marginBottom:'.2rem'}}>
+        <Text title={currency.name} fontWeight={500} style={{ fontSize: '.8rem', marginBottom: '.2rem' }}>
           {currency.symbol}
         </Text>
-        <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300} >
+        <TYPE.darkGray ml="0px" fontSize={'.5rem'} fontWeight={300}>
           {currency.name} {!isOnSelectedList && customAdded && '• Added by user'}
         </TYPE.darkGray>
       </Column>

@@ -1,28 +1,29 @@
+import { TokenAmount } from '@teleswap/sdk'
 import React, { useState } from 'react'
-import Modal from '../Modal'
-import { AutoColumn, ColumnCenter } from '../Column'
+import { Text } from 'rebass'
 import styled from 'styled-components'
-import { DataCard, CardSection, Break } from '../earn/styled'
-import { RowBetween } from '../Row'
-import { TYPE, ExternalLink, CloseIcon, CustomLightSpinner, UniTokenAnimated } from '../../theme'
+
+import Circle from '../../assets/images/blue-loader.svg'
+import tokenLogo from '../../assets/images/token-logo.png'
+import { useActiveWeb3React } from '../../hooks'
+import useENS from '../../hooks/useENS'
 // import { ButtonPrimary } from '../Button'
 import {
+  useUserHasAvailableClaim,
   // useClaimCallback,
-  useUserUnclaimedAmount,
-  useUserHasAvailableClaim
+  useUserUnclaimedAmount
 } from '../../state/claim/hooks'
-import tokenLogo from '../../assets/images/token-logo.png'
-import Circle from '../../assets/images/blue-loader.svg'
-import { Text } from 'rebass'
+import { useIsTransactionPending } from '../../state/transactions/hooks'
+import { CloseIcon, CustomLightSpinner, ExternalLink, TYPE, UniTokenAnimated } from '../../theme'
+import { getEtherscanLink, shortenAddress } from '../../utils'
 import AddressInputPanel from '../AddressInputPanel'
-import useENS from '../../hooks/useENS'
-import { useActiveWeb3React } from '../../hooks'
+import { AutoColumn, ColumnCenter } from '../Column'
 // import { isAddress } from 'ethers/lib/utils'
 import Confetti from '../Confetti'
-import { CardNoise, CardBGImage, CardBGImageSmaller } from '../earn/styled'
-import { useIsTransactionPending } from '../../state/transactions/hooks'
-import { TokenAmount } from '@teleswap/sdk'
-import { getEtherscanLink, shortenAddress } from '../../utils'
+import { Break, CardSection, DataCard } from '../earn/styled'
+import { CardBGImage, CardBGImageSmaller, CardNoise } from '../earn/styled'
+import Modal from '../Modal'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;

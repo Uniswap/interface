@@ -4,6 +4,7 @@ import { Chef } from 'constants/farm/chef.enum'
 import { useActiveWeb3React } from 'hooks'
 import { useSushiContract } from 'hooks/useContract'
 import { useCallback } from 'react'
+
 import { useChefContract } from './useChefContract'
 
 // import { Chef } from './enum'
@@ -77,7 +78,7 @@ export default function useMasterChef(chef: Chef) {
             tx = await contract?.batch(
               [
                 contract?.interface?.encodeFunctionData('harvestFromMasterChef'),
-                contract?.interface?.encodeFunctionData('harvest', [pid, account]),
+                contract?.interface?.encodeFunctionData('harvest', [pid, account])
               ],
               true
             )

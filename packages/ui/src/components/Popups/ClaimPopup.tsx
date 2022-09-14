@@ -2,6 +2,7 @@ import { TokenAmount } from '@teleswap/sdk'
 import React, { useEffect } from 'react'
 import { X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
+
 import tokenLogo from '../../assets/images/token-logo.png'
 import { ButtonPrimary } from '../../components/Button'
 import { useActiveWeb3React } from '../../hooks'
@@ -12,7 +13,6 @@ import {
   useToggleSelfClaimModal,
   useToggleShowClaimPopup
 } from '../../state/application/hooks'
-
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'

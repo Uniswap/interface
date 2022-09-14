@@ -1,9 +1,9 @@
 import React from 'react'
+import { isMobile } from 'react-device-detect'
+import { AlertTriangle, X } from 'react-feather'
 import styled from 'styled-components'
 
-import { AlertTriangle, X } from 'react-feather'
 import { useURLWarningToggle, useURLWarningVisible } from '../../state/user/hooks'
-import { isMobile } from 'react-device-detect'
 
 const PhishAlert = styled.div<{ isActive: any }>`
   width: 100%;
