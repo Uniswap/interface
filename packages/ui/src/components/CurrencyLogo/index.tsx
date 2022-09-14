@@ -48,6 +48,7 @@ export default function CurrencyLogo({
     if (currency === ETHER) return []
     if (currency instanceof Token) {
       if (currency instanceof WrappedTokenInfo) {
+        // @ts-ignore
         return [...uriLocations, getTokenLogoURL(currency.address)]
       }
       return [getTokenLogoURL(currency.address)]
