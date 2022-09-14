@@ -237,6 +237,7 @@ const borderWidth = ['0px', '1px', '1.5px', '2px', '4px']
 
 const borderStyle = ['none', 'solid'] as const
 
+// TODO: remove when code is done being ported over
 // I'm leaving this here as a reference of the old breakpoints while we port over the new code
 // tabletSm: 656,
 // tablet: 708,
