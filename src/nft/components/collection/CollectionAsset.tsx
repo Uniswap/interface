@@ -14,11 +14,11 @@ enum AssetMediaType {
 
 interface CollectionAssetProps {
   asset: GenieAsset
-  videoShouldBePlaying: boolean
-  setCurrentTokenPlayingVideo: (tokenId: string | undefined) => void
+  mediaShouldBePlaying: boolean
+  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
-export const CollectionAsset = ({ asset, videoShouldBePlaying, setCurrentTokenPlayingVideo }: CollectionAssetProps) => {
+export const CollectionAsset = ({ asset, mediaShouldBePlaying, setCurrentTokenPlayingMedia }: CollectionAssetProps) => {
   const { notForSale, assetMediaType } = useMemo(() => {
     let notForSale = true
     let assetMediaType = AssetMediaType.Image
@@ -41,9 +41,9 @@ export const CollectionAsset = ({ asset, videoShouldBePlaying, setCurrentTokenPl
       {assetMediaType === AssetMediaType.Image ? (
         <Card.Image />
       ) : assetMediaType === AssetMediaType.Video ? (
-        <Card.Video shouldPlay={videoShouldBePlaying} setCurrentTokenPlayingVideo={setCurrentTokenPlayingVideo} />
+        <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
       ) : (
-        <Card.Audio />
+        <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
       )}
       <Card.DetailsContainer>
         <Card.InfoContainer>

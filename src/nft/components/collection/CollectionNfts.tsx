@@ -43,7 +43,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     }
   )
 
-  const [currentTokenPlayingVideo, setCurrentTokenPlayingVideo] = useState<string | undefined>()
+  const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
 
   const collectionNfts = useMemo(() => {
     if (!collectionAssets || !AssetsFetchSuccess) return undefined
@@ -71,8 +71,8 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
               <CollectionAsset
                 key={asset.address + asset.tokenId}
                 asset={asset}
-                videoShouldBePlaying={asset.tokenId === currentTokenPlayingVideo}
-                setCurrentTokenPlayingVideo={setCurrentTokenPlayingVideo}
+                mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
               />
             ) : null
           })}

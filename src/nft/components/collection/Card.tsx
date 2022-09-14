@@ -123,12 +123,12 @@ const Image = () => {
   )
 }
 
-interface VideoProps {
+interface MediaProps {
   shouldPlay: boolean
-  setCurrentTokenPlayingVideo: (tokenId: string | undefined) => void
+  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
-const Video = ({ shouldPlay, setCurrentTokenPlayingVideo }: VideoProps) => {
+const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   const vidRef = useRef<HTMLVideoElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
@@ -178,7 +178,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingVideo }: VideoProps) => {
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                setCurrentTokenPlayingVideo(undefined)
+                setCurrentTokenPlayingMedia(undefined)
               }}
               className="playback-icon"
             />
@@ -191,7 +191,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingVideo }: VideoProps) => {
               height="full"
               onEnded={(e) => {
                 e.preventDefault()
-                setCurrentTokenPlayingVideo(undefined)
+                setCurrentTokenPlayingMedia(undefined)
               }}
             >
               <source src={asset.animationUrl} />
@@ -207,7 +207,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingVideo }: VideoProps) => {
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                setCurrentTokenPlayingVideo(asset.tokenId)
+                setCurrentTokenPlayingMedia(asset.tokenId)
               }}
               className="playback-icon"
             />
@@ -218,8 +218,94 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingVideo }: VideoProps) => {
   )
 }
 
-const Audio = () => {
-  return <Box>Audio</Box>
+const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+  const audRef = useRef<HTMLAudioElement>(null)
+  const { hovered, asset } = useCardContext()
+  const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const isMobile = useIsMobile()
+
+  if (shouldPlay) {
+    audRef.current?.play()
+  } else {
+    audRef.current?.pause()
+  }
+
+  if (noContent) {
+    return <NoContentContainer />
+  }
+
+  return (
+    <>
+      <Box display="flex" overflow="hidden">
+        <Box
+          as={'img'}
+          alt={asset.name || asset.tokenId}
+          width="full"
+          style={{
+            aspectRatio: 'auto',
+            transition: 'transform 0.4s ease 0s',
+            background: imageLoaded
+              ? 'none'
+              : `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+          }}
+          src={asset.imageUrl || asset.smallImageUrl}
+          objectFit={'contain'}
+          draggable={false}
+          onError={() => setNoContent(true)}
+          onLoad={() => {
+            setImageLoaded(true)
+          }}
+          className={clsx(hovered && styles.cardImageHover)}
+        />
+      </Box>
+      {shouldPlay ? (
+        <>
+          <Box className={styles.playbackSwitch}>
+            <PauseButtonIcon
+              width="100%"
+              height="100%"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentTokenPlayingMedia(undefined)
+              }}
+              className="playback-icon"
+            />
+          </Box>
+          <Box position="absolute" left="0" top="0" display="flex">
+            <Box
+              as="audio"
+              ref={audRef}
+              width="full"
+              height="full"
+              onEnded={(e) => {
+                e.preventDefault()
+                setCurrentTokenPlayingMedia(undefined)
+              }}
+            >
+              <source src={asset.animationUrl} />
+            </Box>
+          </Box>
+        </>
+      ) : (
+        <Box className={styles.playbackSwitch}>
+          {((!isMobile && hovered) || isMobile) && (
+            <PlayButtonIcon
+              width="100%"
+              height="100%"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentTokenPlayingMedia(asset.tokenId)
+              }}
+              className="playback-icon"
+            />
+          )}
+        </Box>
+      )}
+    </>
+  )
 }
 
 /* -------- CARD DETAILS CONTAINER -------- */
