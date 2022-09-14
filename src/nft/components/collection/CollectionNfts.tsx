@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
+import { CollectionAssetLoading } from './CollectionAssetLoading'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { Center } from 'nft/components/Flex'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
@@ -49,6 +50,8 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     return collectionAssets.pages.flat()
   }, [collectionAssets, AssetsFetchSuccess])
 
+  const loadingAssets = useMemo(() => <>{new Array(25).fill(<CollectionAssetLoading />)}</>, [])
+
   if (!collectionNfts) {
     // TODO: collection unavailable page
     return <div>No CollectionAssets</div>
@@ -58,7 +61,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     <InfiniteScroll
       next={fetchNextPage}
       hasMore={hasNextPage ?? false}
-      loader={hasNextPage ? <p>Loading from scroll...</p> : null}
+      loader={hasNextPage ? loadingAssets : null}
       dataLength={collectionNfts.length}
       style={{ overflow: 'unset' }}
     >
