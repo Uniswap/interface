@@ -7,7 +7,6 @@ import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring/web'
 
-import AssetToolTip from '../../components/badge/AssetToolTip'
 import { AnimatedBox, Box } from '../../components/Box'
 import { CollectionProfile } from '../../components/details/CollectionProfile'
 import { Details } from '../../components/details/Details'
@@ -158,29 +157,6 @@ const Asset = () => {
         <Column className={clsx(styles.column, styles.columnRight)} width="full">
           <Column>
             <Row marginBottom="8" alignItems="center" justifyContent={rarityProvider ? 'space-between' : 'flex-end'}>
-              {rarityProvider ? (
-                <AssetToolTip
-                  prompt={
-                    <Center
-                      paddingLeft="6"
-                      paddingRight="4"
-                      className={badge}
-                      backgroundColor="lightGray"
-                      color="blackBlue"
-                      borderRadius="4"
-                    >
-                      #{rarityProvider.rank} <img src="/nft/svgs/rarity.svg" height={15} width={15} alt="Rarity rank" />
-                    </Center>
-                  }
-                  tooltipPrompt={
-                    <Row gap="4">
-                      <img src={rarityLogo} width={16} alt={rarityProvider.provider} />
-                      Ranking by{' '}
-                      {asset.rarity?.primaryProvider === 'Genie' ? fallbackProvider : asset.rarity?.primaryProvider}
-                    </Row>
-                  }
-                />
-              ) : null}
               <Row gap="12">
                 <Center
                   as="button"
@@ -221,12 +197,6 @@ const Asset = () => {
               </Row>
             </Row>
             <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={header2}>
-              {asset.openseaSusFlag ? (
-                <AssetToolTip
-                  prompt={<SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />}
-                  tooltipPrompt={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}
-                />
-              ) : null}
               {asset.name || `${collection.collectionName} #${asset.tokenId}`}
             </Row>
             {collection.collectionDescription ? (
