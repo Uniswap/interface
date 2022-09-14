@@ -58,27 +58,14 @@ const AssetView = ({
   asset: GenieAsset
   dominantColor: [number, number, number]
 }) => {
+  const style = { ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }
+
   switch (mediaType) {
     case 'video':
-      return (
-        <video
-          src={asset.animationUrl}
-          className={styles.image}
-          autoPlay
-          controls
-          muted
-          loop
-          style={{ ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }}
-        />
-      )
+      return <video src={asset.animationUrl} className={styles.image} autoPlay controls muted loop style={style} />
     case 'image':
       return (
-        <img
-          className={styles.image}
-          src={asset.imageUrl}
-          alt={asset.name || asset.collectionName}
-          style={{ ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }}
-        />
+        <img className={styles.image} src={asset.imageUrl} alt={asset.name || asset.collectionName} style={style} />
       )
     case 'audio':
       return <AudioPlayer {...asset} dominantColor={dominantColor} />
