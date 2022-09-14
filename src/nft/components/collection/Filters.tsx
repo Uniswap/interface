@@ -2,12 +2,11 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { Column, Row } from 'nft/components/Flex'
 import { Radio } from 'nft/components/layout/Radio'
-import { useCollectionFilters, useIsMobile } from 'nft/hooks'
+import { useCollectionFilters } from 'nft/hooks'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { useReducer } from 'react'
 
 export const Filters = () => {
-  const isMobile = useIsMobile()
   const { buyNow, setBuyNow } = useCollectionFilters((state) => ({
     buyNow: state.buyNow,
     setBuyNow: state.setBuyNow,
