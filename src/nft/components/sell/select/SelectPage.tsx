@@ -24,6 +24,10 @@ const formatEth = (price: number) => {
   }
 }
 
+function roundFloorPrice(price?: number, n?: number) {
+  return price ? Math.round(price * Math.pow(10, n ?? 3) + Number.EPSILON) / Math.pow(10, n ?? 3) : 0
+}
+
 export const SelectPage = () => {
   const { address } = useWalletBalance()
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
@@ -104,7 +108,7 @@ export const SelectPage = () => {
       const ownerCollectionsCopy = [...ownerCollections]
       for (const collection of ownerCollectionsCopy) {
         const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.floorPrice
-        collection.floorPrice = floorPrice ? Math.round(floorPrice * 1000 + Number.EPSILON) / 1000 : 0 //round to at most 3 digits
+        collection.floorPrice = roundFloorPrice(floorPrice)
       }
       setWalletCollections(ownerCollectionsCopy)
     }
