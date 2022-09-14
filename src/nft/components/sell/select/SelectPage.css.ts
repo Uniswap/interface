@@ -10,10 +10,6 @@ export const section = style([
   { maxWidth: '1000px', margin: '0 auto' },
 ])
 
-export const sellAssetSelected = style({
-  border: `4px solid ${vars.color.genieBlue} !important`,
-})
-
 export const filterRowIcon = sprinkles({ color: { default: 'darkGray', hover: 'blue' } })
 
 export const buttonSelected = style({
