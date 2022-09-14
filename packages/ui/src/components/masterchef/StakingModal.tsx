@@ -1,26 +1,27 @@
-import React, { useState, useCallback } from 'react'
-import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import Modal from '../Modal'
-import { AutoColumn } from '../Column'
-import styled from 'styled-components'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
-import { ButtonConfirmed, ButtonError } from '../Button'
-import ProgressCircles from '../ProgressSteps'
-import CurrencyInputPanel from '../CurrencyInputPanel'
-import { useActiveWeb3React } from '../../hooks'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { TransactionResponse } from '@ethersproject/providers'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import useMasterChef from 'hooks/farm/useMasterChef'
-import { Chef } from 'constants/farm/chef.enum'
-import { utils } from 'ethers'
-import { Token, TokenAmount } from '@teleswap/sdk'
+import { TokenAmount } from '@teleswap/sdk'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
-import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
+import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+import { utils } from 'ethers'
+import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
+import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+import useMasterChef from 'hooks/farm/useMasterChef'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
+
+import { useActiveWeb3React } from '../../hooks'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import { CloseIcon, TYPE } from '../../theme'
+import { ButtonConfirmed, ButtonError } from '../Button'
+import { AutoColumn } from '../Column'
+import CurrencyInputPanel from '../CurrencyInputPanel'
+import Modal from '../Modal'
+import ProgressCircles from '../ProgressSteps'
+import { RowBetween } from '../Row'
 // const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
 //   display: flex;
 //   justify-content: space-between;
@@ -88,7 +89,7 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
           .deposit(pid, utils.parseUnits(typedValue, stakingCurrency.decimals))
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: `Deposit liquidity`,
+              summary: `Deposit liquidity`
             })
             setHash(response.hash)
           })

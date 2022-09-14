@@ -1,17 +1,19 @@
-import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import 'inter-ui'
+import './i18n'
+
+import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import React, { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
+
 import Blocklist from './components/Blocklist'
 import { NetworkContextName } from './constants'
-import './i18n'
 import App from './pages/App'
-import store from './state'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
+import store from './state'
 import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
 import MulticallUpdater from './state/multicall/updater'
@@ -31,16 +33,12 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
   ReactGA.initialize(GOOGLE_ANALYTICS_ID, {
     gaOptions: {
       storage: 'none',
-      storeGac: false,
-    },
+      storeGac: false
+    }
   })
   ReactGA.set({
     anonymizeIp: true,
-    customBrowserType: !isMobile
-      ? 'desktop'
-      : 'web3' in window || 'ethereum' in window
-      ? 'mobileWeb3'
-      : 'mobileRegular',
+    customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'ethereum' in window ? 'mobileWeb3' : 'mobileRegular'
   })
 } else {
   ReactGA.initialize('test', { testMode: true, debug: true })
@@ -49,7 +47,7 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
 window.addEventListener('error', (error) => {
   ReactGA.exception({
     description: `${error.message} @ ${error.filename}:${error.lineno}:${error.colno}`,
-    fatal: true,
+    fatal: true
   })
 })
 

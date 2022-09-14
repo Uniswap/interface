@@ -1,12 +1,12 @@
 import { transparentize } from 'polished'
 import React from 'react'
 import { AlertTriangle } from 'react-feather'
-import styled, { css } from 'styled-components'
 import { Text } from 'rebass'
-import { AutoColumn } from '../Column'
+import styled, { css } from 'styled-components'
+
 import swapArrowIcon from '../../assets/images/tele/swapArrow.png'
 import swapArrowChangeIcon from '../../assets/images/tele/swapArrowChange.png'
-
+import { AutoColumn } from '../Column'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -51,7 +51,7 @@ export const BottomGrouping = styled.div`
   /* bottom: -6rem; */
   width: 100%;
   left: 0;
-  /* background: ${({theme }) => theme.primary1}; */
+  /* background: ${({ theme }) => theme.primary1}; */
 `
 
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`

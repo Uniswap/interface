@@ -12,7 +12,7 @@ export function useChefContract(chef: Chef) {
     () => ({
       [Chef.MASTERCHEF]: masterChefContract,
       [Chef.MASTERCHEF_V2]: masterChefV2Contract,
-      [Chef.MINICHEF]: miniChefContract,
+      [Chef.MINICHEF]: miniChefContract
     }),
     [masterChefContract, masterChefV2Contract, miniChefContract]
   )
@@ -29,7 +29,7 @@ export function useChefContracts(chefs: Chef[]) {
     () => ({
       [Chef.MASTERCHEF]: masterChefContract,
       [Chef.MASTERCHEF_V2]: masterChefV2Contract,
-      [Chef.MINICHEF]: miniChefContract,
+      [Chef.MINICHEF]: miniChefContract
     }),
     [masterChefContract, masterChefV2Contract, miniChefContract]
   )

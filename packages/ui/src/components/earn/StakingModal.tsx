@@ -1,25 +1,26 @@
-import React, { useState, useCallback } from 'react'
+import { TransactionResponse } from '@ethersproject/providers'
+import { Pair, TokenAmount } from '@teleswap/sdk'
+import { splitSignature } from 'ethers/lib/utils'
+import React, { useCallback, useState } from 'react'
+import styled from 'styled-components'
+
+import { useActiveWeb3React } from '../../hooks'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { usePairContract, useStakingContract } from '../../hooks/useContract'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import Modal from '../Modal'
-import { AutoColumn } from '../Column'
-import styled from 'styled-components'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
-import { ButtonConfirmed, ButtonError } from '../Button'
-import ProgressCircles from '../ProgressSteps'
-import CurrencyInputPanel from '../CurrencyInputPanel'
-import { TokenAmount, Pair } from '@teleswap/sdk'
-import { useActiveWeb3React } from '../../hooks'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { usePairContract, useStakingContract } from '../../hooks/useContract'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
-import { splitSignature } from 'ethers/lib/utils'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
-import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
-import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+import { CloseIcon, TYPE } from '../../theme'
+import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
+import { ButtonConfirmed, ButtonError } from '../Button'
+import { AutoColumn } from '../Column'
+import CurrencyInputPanel from '../CurrencyInputPanel'
+import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
+import ProgressCircles from '../ProgressSteps'
+import { RowBetween } from '../Row'
 
 const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;
@@ -75,7 +76,12 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
   // approval data for stake
   const deadline = useTransactionDeadline()
-  const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
+  const [signatureData, setSignatureData] = useState<{
+    v: number
+    r: string
+    s: string
+    deadline: number
+  } | null>(null)
   const [approval, approveCallback] = useApproveCallback(parsedAmount, stakingInfo.stakingRewardAddress)
 
   const isArgentWallet = useIsArgentWallet()
@@ -84,7 +90,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     setAttempting(true)
     if (stakingContract && parsedAmount && deadline) {
       if (approval === ApprovalState.APPROVED) {
-        await stakingContract.stake(`0x${parsedAmount.raw.toString(16)}`, { gasLimit: 350000 })
+        await stakingContract.stake(`0x${parsedAmount.raw.toString(16)}`, {
+          gasLimit: 350000
+        })
       } else if (signatureData) {
         stakingContract
           .stakeWithPermit(
@@ -126,9 +134,13 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   }, [maxAmountInput, onUserInput])
 
   async function onAttemptToApprove() {
-    if (!pairContract || !library || !deadline) throw new Error('missing dependencies')
+    if (!pairContract || !library || !deadline) {
+      throw new Error('missing dependencies')
+    }
     const liquidityAmount = parsedAmount
-    if (!liquidityAmount) throw new Error('missing liquidity amount')
+    if (!liquidityAmount) {
+      throw new Error('missing liquidity amount')
+    }
 
     if (isArgentWallet) {
       return approveCallback()
@@ -146,7 +158,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     const domain = {
       name: 'Uniswap V2',
       version: '1',
-      chainId: chainId,
+      chainId,
       verifyingContract: pairContract.address
     }
     const Permit = [
@@ -176,7 +188,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     library
       .send('eth_signTypedData_v4', [account, data])
       .then(splitSignature)
-      .then(signature => {
+      .then((signature) => {
         setSignatureData({
           v: signature.v,
           r: signature.r,
@@ -184,7 +196,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
           deadline: deadline.toNumber()
         })
       })
-      .catch(error => {
+      .catch((error) => {
         // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
         if (error?.code !== 4001) {
           approveCallback()

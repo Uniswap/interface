@@ -1,13 +1,13 @@
+import { ChainId, Currency, currencyEquals, ETHER, Token } from '@teleswap/sdk'
 import React from 'react'
 import { Text } from 'rebass'
-import { ChainId, Currency, currencyEquals, ETHER, Token } from '@teleswap/sdk'
 import styled from 'styled-components'
 
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
+import CurrencyLogo from '../CurrencyLogo'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
-import CurrencyLogo from '../CurrencyLogo'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -52,7 +52,7 @@ export default function CommonBases({
           disable={selectedCurrency === ETHER}
         >
           <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
-          <Text fontWeight={500} style={{ fontSize: '0.6rem'}}>
+          <Text fontWeight={500} style={{ fontSize: '0.6rem' }}>
             ETH
           </Text>
         </BaseWrapper>
@@ -61,7 +61,7 @@ export default function CommonBases({
           return (
             <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
               <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
-              <Text fontWeight={500} style={{ fontSize: '0.6rem'}}>
+              <Text fontWeight={500} style={{ fontSize: '0.6rem' }}>
                 {token.symbol}
               </Text>
             </BaseWrapper>

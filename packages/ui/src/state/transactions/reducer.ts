@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+
 import {
   addTransaction,
   checkedTransaction,
@@ -29,7 +30,7 @@ export interface TransactionState {
 
 export const initialState: TransactionState = {}
 
-export default createReducer(initialState, builder =>
+export default createReducer(initialState, (builder) =>
   builder
     .addCase(addTransaction, (transactions, { payload: { chainId, from, hash, approval, summary, claim } }) => {
       if (transactions[chainId]?.[hash]) {

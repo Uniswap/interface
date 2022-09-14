@@ -1,8 +1,9 @@
-import { DEFAULT_ACTIVE_LIST_URLS } from './../../constants/lists'
 import { createStore, Store } from 'redux'
+
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
-import { fetchTokenList, acceptListUpdate, addList, removeList, enableList } from './actions'
+import { DEFAULT_ACTIVE_LIST_URLS } from './../../constants/lists'
+import { acceptListUpdate, addList, enableList, fetchTokenList, removeList } from './actions'
 import reducer, { ListsState } from './reducer'
 
 const STUB_TOKEN_LIST = {
@@ -445,7 +446,7 @@ describe('list reducer', () => {
       })
       it('all lists are empty', () => {
         const s = store.getState()
-        Object.keys(s.byUrl).forEach(url => {
+        Object.keys(s.byUrl).forEach((url) => {
           expect(s.byUrl[url]).toEqual({
             error: null,
             current: null,
@@ -502,7 +503,7 @@ describe('list reducer', () => {
         const byUrl = store.getState().byUrl
         // note we don't expect the uniswap default list to be prepopulated
         // this is ok.
-        Object.keys(byUrl).forEach(url => {
+        Object.keys(byUrl).forEach((url) => {
           if (url !== 'https://unpkg.com/@uniswap/default-token-list@latest/uniswap-default.tokenlist.json') {
             expect(byUrl[url]).toEqual({
               error: null,

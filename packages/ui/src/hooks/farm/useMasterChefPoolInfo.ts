@@ -3,6 +3,7 @@ import { BigNumber } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
 import { useMemo } from 'react'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
+
 import { useChefContract } from './useChefContract'
 // import useMasterChef from "./useMasterChef"
 
@@ -32,7 +33,7 @@ export function useMasterChefPoolInfo(chef: Chef): MasterChefRawPoolInfo[] {
     if (!account || !numberOfPools) {
       return
     }
-    return [...Array(numberOfPools.toNumber()).keys()].map(pid => [String(pid)])
+    return [...Array(numberOfPools.toNumber()).keys()].map((pid) => [String(pid)])
   }, [numberOfPools, account])
 
   const result = useSingleContractMultipleData(args ? contract : null, 'poolInfo', args)

@@ -1,29 +1,29 @@
+import * as sdk from '@teleswap/sdk'
+import { BigNumber } from 'ethers'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import { DateTime } from 'luxon'
 import React, { useState } from 'react'
-import { AutoColumn } from '../../components/Column'
+import { ArrowLeft } from 'react-feather'
+import ReactMarkdown from 'react-markdown'
+import { RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { RouteComponentProps } from 'react-router-dom'
-import { TYPE, StyledInternalLink, ExternalLink } from '../../theme'
-import { RowFixed, RowBetween } from '../../components/Row'
-import { CardSection, DataCard } from '../../components/earn/styled'
-import { ArrowLeft } from 'react-feather'
 import { ButtonPrimary } from '../../components/Button'
-import { ProposalStatus } from './styled'
-import { useProposalData, useUserVotesAsOfBlock, ProposalData, useUserDelegatee } from '../../state/governance/hooks'
-import { DateTime } from 'luxon'
-import ReactMarkdown from 'react-markdown'
-import VoteModal from '../../components/vote/VoteModal'
-import * as sdk from '@teleswap/sdk'
-import { useActiveWeb3React } from '../../hooks'
-import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES, UNI, ZERO_ADDRESS } from '../../constants'
-import { isAddress, getEtherscanLink } from '../../utils'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleDelegateModal, useToggleVoteModal, useBlockNumber } from '../../state/application/hooks'
-import DelegateModal from '../../components/vote/DelegateModal'
 import { GreyCard } from '../../components/Card'
+import { AutoColumn } from '../../components/Column'
+import { CardSection, DataCard } from '../../components/earn/styled'
+import { RowBetween, RowFixed } from '../../components/Row'
+import DelegateModal from '../../components/vote/DelegateModal'
+import VoteModal from '../../components/vote/VoteModal'
+import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES, UNI, ZERO_ADDRESS } from '../../constants'
+import { useActiveWeb3React } from '../../hooks'
+import { ApplicationModal } from '../../state/application/actions'
+import { useBlockNumber, useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
+import { ProposalData, useProposalData, useUserDelegatee, useUserVotesAsOfBlock } from '../../state/governance/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
-import { BigNumber } from 'ethers'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import { getEtherscanLink, isAddress } from '../../utils'
+import { ProposalStatus } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -154,7 +154,10 @@ export default function VotePage({
     proposalData &&
     proposalData.status === 'active'
 
-  const uniBalance: sdk.TokenAmount | undefined = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
+  const uniBalance: sdk.TokenAmount | undefined = useTokenBalance(
+    account ?? undefined,
+    chainId ? UNI[chainId] : undefined
+  )
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // in blurb link to home page if they are able to unlock

@@ -1,15 +1,16 @@
 import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
+import { Text, TextProps } from 'rebass'
 import styled, {
-  ThemeProvider as StyledComponentsThemeProvider,
   createGlobalStyle,
   css,
   DefaultTheme,
+  ThemeProvider as StyledComponentsThemeProvider
 } from 'styled-components'
-import { useIsDarkMode } from '../state/user/hooks'
-import { Text, TextProps } from 'rebass'
-import { Colors } from './styled'
+
 import swapBottomBg from '../assets/images/tele/swapBottomBg.svg'
+import { useIsDarkMode } from '../state/user/hooks'
+import { Colors } from './styled'
 
 export * from './components'
 
@@ -17,12 +18,12 @@ const MEDIA_WIDTHS = {
   upToExtraSmall: 500,
   upToSmall: 720,
   upToMedium: 960,
-  upToLarge: 1280,
+  upToLarge: 1280
 }
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
-    ; (accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
       @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
         ${css(a, b, c)}
       }
@@ -56,7 +57,6 @@ export function colors(darkMode: boolean): Colors {
     bg4: darkMode ? '#565A69' : '#565A69',
     bg5: darkMode ? '#6C7284' : '#6C7284',
 
-
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,.425)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.1)',
@@ -81,8 +81,6 @@ export function colors(darkMode: boolean): Colors {
     colorTransparent: darkMode ? 'transparent' : 'transparent',
     bgSwapInput: darkMode ? 'rgba(5, 5, 14, 0.5)' : 'rgba(5, 5, 14, 0.5)',
 
-
-
     // color text
     primaryText1: darkMode ? '#6da8ff' : '#6da8ff',
 
@@ -106,8 +104,7 @@ export function colors(darkMode: boolean): Colors {
 
     textHover: darkMode ? '#05050E' : '#05050E',
     textSelect: darkMode ? '#05050E' : '#05050E',
-    textDisable: darkMode ? '#05050E' : '#05050E',
-
+    textDisable: darkMode ? '#05050E' : '#05050E'
   }
 }
 
@@ -118,7 +115,7 @@ export function theme(darkMode: boolean): DefaultTheme {
     grids: {
       sm: 8,
       md: 12,
-      lg: 24,
+      lg: 24
     },
 
     //shadows
@@ -135,7 +132,7 @@ export function theme(darkMode: boolean): DefaultTheme {
     flexRowNoWrap: css`
       display: flex;
       flex-flow: row nowrap;
-    `,
+    `
   }
 }
 
@@ -147,7 +144,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text) <{ color: keyof Colors }>`
+const TextWrapper = styled(Text)<{ color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
@@ -199,7 +196,7 @@ export const TYPE = {
   },
   error({ error, ...props }: { error: boolean } & TextProps) {
     return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
-  },
+  }
 }
 
 export const FixedGlobalStyle = createGlobalStyle`

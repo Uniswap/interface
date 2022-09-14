@@ -2,16 +2,17 @@ import {
   ChainId
   // TokenAmount
 } from '@teleswap/sdk'
+import useThemedContext from 'hooks/useThemedContext'
 import React, { useState } from 'react'
-import { Text } from 'rebass'
-import { NavLink } from 'react-router-dom'
 // import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
-
+import { NavLink } from 'react-router-dom'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/svg/logo_white.svg'
+// import usePrevious from '../../hooks/usePrevious'
+import TeleLogo from '../../assets/images/tele/logo.svg'
+import TeleLogoText from '../../assets/images/tele/logoText.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import {
@@ -22,23 +23,16 @@ import {
 // import { CountUp } from 'use-count-up'
 // import { TYPE, ExternalLink } from '../../theme'
 import { YellowCard } from '../Card'
-import { Moon, Sun } from 'react-feather'
-// import Menu from '../Menu'
-
-import Row, { RowFixed } from '../Row'
-import Web3Status from '../Web3Status'
 import ClaimModal from '../claim/ClaimModal'
 // import { useToggleSelfClaimModal, useShowClaimPopup } from '../../state/application/hooks'
 // import { useUserHasAvailableClaim } from '../../state/claim/hooks'
 // import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
 // import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
+// import Menu from '../Menu'
+import Row, { RowFixed } from '../Row'
+import Web3Status from '../Web3Status'
 import UniBalanceContent from './UniBalanceContent'
-// import usePrevious from '../../hooks/usePrevious'
-import TeleLogo from '../../assets/images/tele/logo.svg'
-import TeleLogoText from '../../assets/images/tele/logoText.svg'
-
-import useThemedContext from 'hooks/useThemedContext'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -107,7 +101,7 @@ const HeadLogoView = styled.div`
   .logoText {
     width: 6.6rem;
     height: 'auto';
-    margin-left: .4rem;
+    margin-left: 0.4rem;
     ${({ theme }) => theme.mediaWidth.upToSmall`
       display: none;
     `}
@@ -131,9 +125,8 @@ const HeaderElement = styled.div`
   display: grid;
   align-items: center;
   grid-template-rows: 1fr;
-  grid-template-columns: 1fr 1fr 1fr; 
-  grid-template-areas: 
-          'a1 a2 a3'; 
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas: 'a1 a2 a3';
   /* display: flex; */
   align-items: center;
   /* addresses safari's lack of support for "gap" */
@@ -175,13 +168,13 @@ const HeaderLinks = styled(Row)`
   border: 1px solid green;
   height: 1.8rem;
   width: unset;
-  border: 1px solid #FFFFFF;
-  border-radius: .4rem;
+  border: 1px solid #ffffff;
+  border-radius: 0.4rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     // padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
 `};
-${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     width: unset;
     height: unset;
 `};
@@ -236,7 +229,7 @@ const HideSmall = styled.span`
 const NetworkCard = styled(YellowCard)`
   border-radius: 12px;
   padding: 8px 12px;
-  font-size: .6rem;
+  font-size: 0.6rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0;
     margin-right: 0.5rem;
@@ -297,17 +290,17 @@ const StyledNavLink = styled(NavLink).attrs({
   width: fit-content;
   margin: 0;
   font-weight: 500;
-  padding: .4rem 1.2rem;
-  
-  border-radius: .4rem;
+  padding: 0.4rem 1.2rem;
+
+  border-radius: 0.4rem;
 
   font-family: 'Dela Gothic One';
   font-style: normal;
   font-weight: 400;
-  font-size: .7rem;
+  font-size: 0.7rem;
   line-height: 1rem;
-  color: #FFFFFF;
-  :hover { 
+  color: #ffffff;
+  :hover {
     /* background: #0A1B1F;
     color: #FFFFFF;
     border: none;
@@ -427,12 +420,20 @@ export default function Header() {
       </Modal>
       <HeaderControls>
         <HeaderElement>
-          <HeadLogoView style={{ gridArea: "a1", height: "100%", display: "flex", justifyContent: "flex-start", alignItems: "center" }}>
+          <HeadLogoView
+            style={{
+              gridArea: 'a1',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'center'
+            }}
+          >
             <img className="logoImg" src={TeleLogo} alt="" />
             <img className="logoText" src={TeleLogoText} alt="" />
           </HeadLogoView>
-          <HeadTabView style={{ gridArea: "a2", display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <HeaderLinks >
+          <HeadTabView style={{ gridArea: 'a2', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <HeaderLinks>
               <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
                 {t('Swap')}
               </StyledNavLink>
@@ -499,7 +500,7 @@ export default function Header() {
               <CardNoise />
             </UNIWrapper>
           )} */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gridArea: "a3" }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gridArea: 'a3' }}>
             <HideSmall>
               {chainId && NETWORK_LABELS[chainId] && (
                 <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
@@ -507,7 +508,12 @@ export default function Header() {
             </HideSmall>
             <AccountElement active={!!account} style={{ pointerEvents: 'auto', display: 'flex' }}>
               {account && userEthBalance ? (
-                <BalanceText style={{ flexShrink: 0, fontSize: ".6rem", color: theme.common2 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                <BalanceText
+                  style={{ flexShrink: 0, fontSize: '.6rem', color: theme.common2 }}
+                  pl="0.75rem"
+                  pr="0.5rem"
+                  fontWeight={500}
+                >
                   {userEthBalance?.toSignificant(4)} TELE
                 </BalanceText>
               ) : null}
@@ -519,7 +525,6 @@ export default function Header() {
               </StyledMenuButton>
             </div> */}
           </div>
-
         </HeaderElement>
         {/* <HeaderElementWrap>
           <StyledMenuButton onClick={() => toggleDarkMode()}>

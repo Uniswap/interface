@@ -52,9 +52,7 @@ export interface Colors {
   // tele
   textHover: Color
   textSelect: Color
-  textDisable : Color
-
-
+  textDisable: Color
 
   common1: Color
   common2: Color

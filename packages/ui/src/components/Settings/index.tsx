@@ -2,27 +2,24 @@ import useThemedContext from 'hooks/useThemedContext'
 import React, { useRef, useState } from 'react'
 import { X } from 'react-feather'
 // Settings
-import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+
+import SwapSetIcon from '../../assets/images/tele/set.png'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import {
   useExpertModeManager,
-  useUserTransactionTTL,
+  useUserSingleHopOnly,
   useUserSlippageTolerance,
-  useUserSingleHopOnly
+  useUserTransactionTTL
 } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
-import QuestionHelper from '../QuestionHelper'
-import { RowBetween, RowFixed } from '../Row'
-import Toggle from '../Toggle'
+import { RowBetween } from '../Row'
 import TransactionSettings from '../TransactionSettings'
-import SwapSetIcon from '../../assets/images/tele/set.png'
 
 // const StyledMenuIcon = styled(Settings)`
 //   height: 20px;
@@ -72,7 +69,7 @@ const StyledMenuButton = styled.button`
     margin-top: 2px;
   }
   .setIcon {
-    width: 1rem; 
+    width: 1rem;
     height: auto;
     margin-top: 0.4rem;
   }
@@ -112,7 +109,7 @@ const MenuFlyout = styled.span`
   border-radius: 1.6rem;
 
   font-weight: 500;
-  font-size: .4rem;
+  font-size: 0.4rem;
   color: rgba(255, 255, 255, 0.8);
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -207,8 +204,8 @@ export default function SettingsTab() {
       {open && (
         <MenuFlyout>
           <AutoColumn gap="1.2rem" style={{ padding: '1.6rem' }}>
-            <Text fontWeight={400} fontSize={".9rem"} color="#FFFFFF" sx={{fontFamily: 'Dela Gothic One'}}>
-                Swap Settings
+            <Text fontWeight={400} fontSize={'.9rem'} color="#FFFFFF" sx={{ fontFamily: 'Dela Gothic One' }}>
+              Swap Settings
             </Text>
             <TransactionSettings
               rawSlippage={userSlippageTolerance}

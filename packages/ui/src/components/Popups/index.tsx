@@ -1,10 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
+
 import { useActivePopups } from '../../state/application/hooks'
-import { AutoColumn } from '../Column'
-import PopupItem from './PopupItem'
-import ClaimPopup from './ClaimPopup'
 import { useURLWarningVisible } from '../../state/user/hooks'
+import { AutoColumn } from '../Column'
+import ClaimPopup from './ClaimPopup'
+import PopupItem from './PopupItem'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
   position: relative;
@@ -40,7 +41,6 @@ const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean }>`
   // z-index: 3;
   z-index: 100000;
 
-
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
@@ -56,7 +56,7 @@ export default function Popups() {
     <>
       <FixedPopupColumn gap="20px" extraPadding={urlWarningActive}>
         <ClaimPopup />
-        {activePopups.map(item => (
+        {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
       </FixedPopupColumn>
@@ -65,7 +65,7 @@ export default function Popups() {
           {activePopups // reverse so new items up front
             .slice(0)
             .reverse()
-            .map(item => (
+            .map((item) => (
               <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
             ))}
         </MobilePopupInner>

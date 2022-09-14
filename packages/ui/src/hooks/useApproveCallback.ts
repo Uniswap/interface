@@ -1,21 +1,22 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount, ETHER } from '@teleswap/sdk'
+import { CurrencyAmount, ETHER, TokenAmount, Trade } from '@teleswap/sdk'
+import { ROUTER_ADDRESS } from '@teleswap/sdk'
 import { useCallback, useMemo } from 'react'
+
 import { useTokenAllowance } from '../data/Allowances'
 import { Field } from '../state/swap/actions'
-import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
-import { computeSlippageAdjustedAmounts } from '../utils/prices'
+import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils'
-import { useTokenContract } from './useContract'
+import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { useActiveWeb3React } from './index'
-import { ROUTER_ADDRESS } from '@teleswap/sdk'
+import { useTokenContract } from './useContract'
 
 export enum ApprovalState {
   UNKNOWN,
   NOT_APPROVED,
   PENDING,
-  APPROVED,
+  APPROVED
 }
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
@@ -80,12 +81,12 @@ export function useApproveCallback(
 
     return tokenContract
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas),
+        gasLimit: calculateGasMargin(estimatedGas)
       })
       .then((response: TransactionResponse) => {
         addTransaction(response, {
           summary: 'Approve ' + amountToApprove.currency.symbol,
-          approval: { tokenAddress: token.address, spender: spender },
+          approval: { tokenAddress: token.address, spender }
         })
       })
       .catch((error: Error) => {

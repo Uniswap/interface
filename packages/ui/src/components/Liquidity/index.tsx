@@ -1,26 +1,26 @@
-import React, { useCallback, useState } from 'react'
+import { JSBI } from '@teleswap/sdk'
+import { ButtonPrimary } from 'components/Button'
+import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogoHorizontal from 'components/DoubleLogo'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { useTotalSupply } from 'data/TotalSupply'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
-import { useMemo } from 'react'
-import styled from 'styled-components'
-import { Link, RouteComponentProps } from 'react-router-dom'
-import { Flex, Text, Box } from 'rebass'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
-import { ButtonPrimary } from 'components/Button'
-import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
-import { Field, resetMintState } from 'state/mint/actions'
-import { JSBI } from '@teleswap/sdk'
-import { useTotalSupply } from 'data/TotalSupply'
-import { useTokenBalance } from 'state/wallet/hooks'
-import { currencyId } from 'utils/currencyId'
 import AppBody from 'pages/AppBody'
-
-import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import LeftArrow from '../../assets/svg/LeftArrow.svg'
+import React, { useCallback, useState } from 'react'
+import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
+import { Link, RouteComponentProps } from 'react-router-dom'
+import { Box, Flex, Text } from 'rebass'
 import { AppDispatch } from 'state'
+import { Field, resetMintState } from 'state/mint/actions'
+import { useTokenBalance } from 'state/wallet/hooks'
+import styled from 'styled-components'
+import { currencyId } from 'utils/currencyId'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
+
+import LeftArrow from '../../assets/svg/LeftArrow.svg'
+import { useDerivedMintInfo, useMintActionHandlers } from '../../state/mint/hooks'
 
 const BorderVerticalContainer = styled(Flex)`
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -35,8 +35,8 @@ const BorderVerticalContainer = styled(Flex)`
 export default function LiquidityDetail({
   history,
   match: {
-    params: { currencyIdA, currencyIdB },
-  },
+    params: { currencyIdA, currencyIdB }
+  }
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
@@ -51,7 +51,7 @@ export default function LiquidityDetail({
     noLiquidity,
     liquidityMinted,
     poolTokenPercentage,
-    error,
+    error
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
   const [tokenA, tokenB] = useMemo(
     () => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)],
@@ -69,7 +69,7 @@ export default function LiquidityDetail({
     ) {
       return [
         pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
-        pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false),
+        pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
       ]
     }
     return [undefined, undefined]
@@ -97,7 +97,9 @@ export default function LiquidityDetail({
     [currencies, parsedAmounts]
   )
 
-  const claim = useCallback(() => {}, [])
+  const claim = useCallback(() => {
+    console.warn('not implemented')
+  }, [])
 
   const modalHeader = useCallback(() => {
     return (
@@ -114,7 +116,7 @@ export default function LiquidityDetail({
             fontWeight: '500',
             fontSize: '16px',
             lineHeight: '24px',
-            color: '#FFFFFF',
+            color: '#FFFFFF'
           }}
         >
           <HeaderText>Token</HeaderText>
@@ -142,7 +144,7 @@ export default function LiquidityDetail({
             fontSize: '24px',
             lineHeight: '32px',
             textAlign: 'center',
-            color: '#05050E',
+            color: '#05050E'
           }}
         >
           Claim
@@ -170,7 +172,7 @@ export default function LiquidityDetail({
           background: 'rgba(51, 51, 51, 0.5)',
           boxShadow: '0px -2px 0px #39E1BA',
           backdropFilter: 'blur(2rem)',
-          borderRadius: '1.6rem',
+          borderRadius: '1.6rem'
         }}
       >
         <TransactionConfirmationModal
@@ -202,7 +204,7 @@ export default function LiquidityDetail({
                   fontSize: '24px',
                   lineHeight: '32px',
                   alignItems: 'flex-end',
-                  color: '#FFFFFF',
+                  color: '#FFFFFF'
                 }}
               >
                 {currencyA?.symbol?.toUpperCase()}-{currencyB?.symbol?.toUpperCase()}
@@ -216,7 +218,7 @@ export default function LiquidityDetail({
                   fontWeight: '500',
                   fontSize: '14px',
                   lineHeight: '22px',
-                  color: '#000000',
+                  color: '#000000'
                 }}
                 as={Link}
                 to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}`}
@@ -232,7 +234,7 @@ export default function LiquidityDetail({
                   fontWeight: '500',
                   fontSize: '14px',
                   lineHeight: '22px',
-                  color: '#000000',
+                  color: '#000000'
                 }}
               >
                 Remove
@@ -243,7 +245,12 @@ export default function LiquidityDetail({
             <Text>Total Value</Text>
             <Text>$&nbsp;18</Text>
             <Box
-              sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', margin: '24px 0' }}
+              sx={{
+                width: '100%',
+                borderTop: '1px solid rgba(255,255,255,0.2)',
+                height: '0',
+                margin: '24px 0'
+              }}
             ></Box>
             <Box
               sx={{
@@ -257,7 +264,7 @@ export default function LiquidityDetail({
                 fontWeight: '500',
                 fontSize: '16px',
                 lineHeight: '24px',
-                color: '#FFFFFF',
+                color: '#FFFFFF'
               }}
             >
               <HeaderText>Token</HeaderText>
@@ -290,7 +297,7 @@ export default function LiquidityDetail({
                   fontWeight: '500',
                   fontSize: '14px',
                   lineHeight: '22px',
-                  color: '#000000',
+                  color: '#000000'
                 }}
               >
                 Claim
@@ -298,7 +305,12 @@ export default function LiquidityDetail({
             </Flex>
             <Text>$&nbsp;1.8</Text>
             <Box
-              sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', margin: '24px 0' }}
+              sx={{
+                width: '100%',
+                borderTop: '1px solid rgba(255,255,255,0.2)',
+                height: '0',
+                margin: '24px 0'
+              }}
             ></Box>
             <Box
               sx={{
@@ -306,7 +318,7 @@ export default function LiquidityDetail({
                 gridTemplateColumns: '1fr 1fr 1fr',
                 gridTemplateRows: 'repeat(3, 1fr)',
                 gridRowGap: '24px',
-                gridAutoFlow: 'row',
+                gridAutoFlow: 'row'
               }}
             >
               <HeaderText>Token</HeaderText>
@@ -335,7 +347,7 @@ export default function LiquidityDetail({
                   fontWeight: '500',
                   fontSize: '20px',
                   lineHeight: '28px',
-                  color: '#FFFFFF',
+                  color: '#FFFFFF'
                 }}
               >
                 Price
@@ -348,7 +360,7 @@ export default function LiquidityDetail({
                     fontWeight: '500',
                     fontSize: '16px',
                     lineHeight: '24px',
-                    color: 'white',
+                    color: 'white'
                   }}
                 >
                   {token0Deposited?.divide(token1Deposited).toSignificant(4)}
@@ -360,7 +372,7 @@ export default function LiquidityDetail({
                     fontWeight: '400',
                     fontSize: '12px',
                     lineHeight: '18px',
-                    color: '#999999',
+                    color: '#999999'
                   }}
                 >
                   {currencyA?.symbol?.toUpperCase()} per {currencyB?.symbol?.toUpperCase()}
@@ -379,7 +391,7 @@ export function BackToMyLiquidity() {
   const dispatch = useDispatch<AppDispatch>()
 
   return (
-    <Flex height={'22px'} marginBottom={"1.6rem"}>
+    <Flex height={'22px'} marginBottom={'1.6rem'}>
       <Link
         to="/pool"
         onClick={() => {
@@ -391,7 +403,7 @@ export function BackToMyLiquidity() {
           height={'14px'}
           style={{
             display: 'flex',
-            alignItems: 'baseline',
+            alignItems: 'baseline'
           }}
         />
       </Link>
@@ -403,7 +415,7 @@ export function BackToMyLiquidity() {
           fontSize: '14px',
           lineHeight: '14px',
           height: '14px',
-          color: '#FFFFFF',
+          color: '#FFFFFF'
         }}
       >
         Back to My Liquidity

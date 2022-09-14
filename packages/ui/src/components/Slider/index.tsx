@@ -98,14 +98,14 @@ interface InputSliderProps {
   size?: string
 }
 
-export default function Slider({ value, onChange, min = 0, step = 1, max = 100, size = ".8rem" }: InputSliderProps) {
+export default function Slider({ value, onChange, min = 0, step = 1, max = 100, size = '.8rem' }: InputSliderProps) {
   const changeCallback = useCallback(
-    e => {
+    (e) => {
       onChange(parseInt(e.target.value))
     },
     [onChange]
   )
-  
+
   return (
     <StyledRangeInput
       type="range"

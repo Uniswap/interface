@@ -1,9 +1,9 @@
-import { TokenAmount, Pair, Currency } from '@teleswap/sdk'
-import { useMemo } from 'react'
-import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
 import { Interface } from '@ethersproject/abi'
-import { useActiveWeb3React } from '../hooks'
+import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
+import { Currency, Pair, TokenAmount } from '@teleswap/sdk'
+import { useMemo } from 'react'
 
+import { useActiveWeb3React } from '../hooks'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 

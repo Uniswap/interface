@@ -1,20 +1,21 @@
 import { ChainId, Currency } from '@teleswap/sdk'
-import React from 'react'
-import styled from 'styled-components'
-import Modal from '../Modal'
-import { ExternalLink } from '../../theme'
-import { Text } from 'rebass'
-import { CloseIcon, CustomLightSpinner } from '../../theme/components'
-import { RowBetween, RowFixed } from '../Row'
-import { AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
-import { ButtonPrimary, ButtonLight } from '../Button'
-import { AutoColumn, ColumnCenter } from '../Column'
-import Circle from '../../assets/images/blue-loader.svg'
-import MetaMaskLogo from '../../assets/images/metamask.png'
-import { getEtherscanLink } from '../../utils'
-import { useActiveWeb3React } from '../../hooks'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import useThemedContext from 'hooks/useThemedContext'
+import React from 'react'
+import { AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
+import { Text } from 'rebass'
+import styled from 'styled-components'
+
+import Circle from '../../assets/images/blue-loader.svg'
+import MetaMaskLogo from '../../assets/images/metamask.png'
+import { useActiveWeb3React } from '../../hooks'
+import { ExternalLink } from '../../theme'
+import { CloseIcon, CustomLightSpinner } from '../../theme/components'
+import { getEtherscanLink } from '../../utils'
+import { ButtonLight, ButtonPrimary } from '../Button'
+import { AutoColumn, ColumnCenter } from '../Column'
+import Modal from '../Modal'
+import { RowBetween, RowFixed } from '../Row'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -23,7 +24,7 @@ const Section = styled(AutoColumn)`
   padding: 24px;
 `
 
-const BottomSection = styled(Section)`  
+const BottomSection = styled(Section)`
   background-color: rgba(5, 5, 14, 0.8);
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -73,7 +74,7 @@ function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
-  currencyToAdd,
+  currencyToAdd
 }: {
   onDismiss: () => void
   hash: string | undefined
@@ -141,7 +142,7 @@ function TransactionSubmittedContent({
 export function AddLiquidityConfirmationModalContent({
   bottomContent,
   onDismiss,
-  topContent,
+  topContent
 }: {
   onDismiss: () => void
   topContent: () => React.ReactNode
@@ -167,7 +168,7 @@ export function ConfirmationModalContent({
   title,
   bottomContent,
   onDismiss,
-  topContent,
+  topContent
 }: {
   title: string
   onDismiss: () => void
@@ -239,7 +240,7 @@ export default function TransactionConfirmationModal({
   hash,
   pendingText,
   content,
-  currencyToAdd,
+  currencyToAdd
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 

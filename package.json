@@ -42,6 +42,7 @@
   "scripts": {
     "cleanup": "rimraf **/node_modules",
     "postinstall": "lerna run build --stream --ignore  @teleswap/ui",
+    "build": "yarn workspace @teleswap/ui run build",
     "start": "yarn workspace @teleswap/ui run start"
   },
   "repository": {
@@ -59,8 +60,5 @@
     "lerna": "^5.1.8",
     "post-merge-install": "^0.5.1",
     "rimraf": "^3.0.2"
-  },
-  "resolutions": {
-    "eslint-plugin-prettier": "3.1.4"
   }
 }

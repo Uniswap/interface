@@ -1,18 +1,19 @@
 import type { Currency, Percent, Price } from '@teleswap/sdk'
+import useThemedContext from 'hooks/useThemedContext'
 import React from 'react'
 import { Text } from 'rebass'
+
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
 import { ONE_BIPS } from '../../constants'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
-import useThemedContext from 'hooks/useThemedContext'
 
 export function PoolPriceBar({
   currencies,
   noLiquidity,
   poolTokenPercentage,
-  price,
+  price
 }: {
   currencies: { [field in Field]?: Currency }
   noLiquidity?: boolean

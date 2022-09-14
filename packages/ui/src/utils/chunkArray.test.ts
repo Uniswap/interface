@@ -22,8 +22,8 @@ describe('#chunkArray', () => {
 
     expect(chunked).toEqual([
       [...Array(34).keys()],
-      [...Array(34).keys()].map(i => i + 34),
-      [...Array(32).keys()].map(i => i + 68)
+      [...Array(34).keys()].map((i) => i + 34),
+      [...Array(32).keys()].map((i) => i + 68)
     ])
 
     expect(chunked[0][0]).toEqual(0)

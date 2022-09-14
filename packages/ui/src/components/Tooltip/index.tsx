@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
+
 import Popover, { PopoverProps } from '../Popover'
 
 const TooltipContainer = styled.div`
@@ -7,7 +8,7 @@ const TooltipContainer = styled.div`
   padding: 0.6rem 1rem;
   /* line-height: 150%; */
   font-weight: 400;
-  font-size: .6rem;
+  font-size: 0.6rem;
 `
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {

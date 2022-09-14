@@ -1,28 +1,29 @@
 import { Currency, ETHER, Token } from '@teleswap/sdk'
+import useDebounce from 'hooks/useDebounce'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import useThemedContext from 'hooks/useThemedContext'
+import useToggle from 'hooks/useToggle'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Edit } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
+import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import styled from 'styled-components'
+
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList } from '../../hooks/Tokens'
-import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
+import { useAllTokens, useFoundOnInactiveList, useIsUserAddedToken, useToken } from '../../hooks/Tokens'
+import { ButtonText, CloseIcon, IconWrapper, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
 import { filterTokens, useSortedTokensByQuery } from './filtering'
+import ImportRow from './ImportRow'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import styled from 'styled-components'
-import useToggle from 'hooks/useToggle'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import useThemedContext from 'hooks/useThemedContext'
-import ImportRow from './ImportRow'
-import { Edit } from 'react-feather'
-import useDebounce from 'hooks/useDebounce'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -53,16 +54,15 @@ interface CurrencySearchProps {
 }
 
 const AutoSizerWrap = styled.div`
-    margin: 1rem 1.6rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: .8rem;
-    padding: 1rem 0;
-    ${({ theme }) => theme.mediaWidth.upToSmall`
+  margin: 1rem 1.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.8rem;
+  padding: 1rem 0;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
       margin: 0;
       border: none;
       padding: 0;
     `};
-
 `
 
 export function CurrencySearch({
@@ -137,7 +137,7 @@ export function CurrencySearch({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback(event => {
+  const handleInput = useCallback((event) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
@@ -176,7 +176,7 @@ export function CurrencySearch({
     <ContentWrapper>
       <PaddedColumn gap="1rem">
         <RowBetween>
-          <Text style={{fontSize: '1rem', fontFamily: 'Dela Gothic One'}} fontWeight={500}>
+          <Text style={{ fontSize: '1rem', fontFamily: 'Dela Gothic One' }} fontWeight={500}>
             Select Token
           </Text>
           <CloseIcon onClick={onDismiss} />
@@ -203,7 +203,7 @@ export function CurrencySearch({
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Column>
       ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
-        <AutoSizerWrap style={{ flex: '1'}}>
+        <AutoSizerWrap style={{ flex: '1' }}>
           <AutoSizer disableWidth>
             {({ height }) => (
               <CurrencyList

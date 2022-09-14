@@ -1,12 +1,13 @@
+import useThemedContext from 'hooks/useThemedContext'
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
-import useENS from '../../hooks/useENS'
+
 import { useActiveWeb3React } from '../../hooks'
+import useENS from '../../hooks/useENS'
 import { ExternalLink, TYPE } from '../../theme'
+import { getEtherscanLink } from '../../utils'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import { getEtherscanLink } from '../../utils'
-import useThemedContext from 'hooks/useThemedContext'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
