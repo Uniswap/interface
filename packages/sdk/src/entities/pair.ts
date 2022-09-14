@@ -27,7 +27,7 @@ export class Pair {
   private readonly tokenAmounts: [TokenAmount, TokenAmount]
   public readonly stable: boolean
 
-  public static getAddress(tokenA: Token, tokenB: Token, stable: boolean): string {
+  public static getAddress(tokenA: Token, tokenB: Token, stable: boolean = false): string {
     const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
     
     if (PAIR_ADDRESS_CACHE?.[tokens[0].address]?.[tokens[1].address]?.[String(stable)] === undefined) {
