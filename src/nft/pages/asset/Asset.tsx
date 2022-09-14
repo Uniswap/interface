@@ -4,7 +4,7 @@ import qs from 'query-string'
 import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useQuery } from 'react-query'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring/web'
 
 import { AnimatedBox, Box } from '../../components/Box'
@@ -14,7 +14,6 @@ import { Traits } from '../../components/details/Traits'
 import { Center, Column, Row } from '../../components/Flex'
 import { CloseDropDownIcon, CornerDownLeftIcon, ShareIcon } from '../../components/icons'
 import { ExpandableText } from '../../components/layout/ExpandableText'
-import { Panel, Tab, Tabs } from '../../components/layout/Tabs'
 import { header2 } from '../../css/common.css'
 import { themeVars } from '../../css/sprinkles.css'
 import { useBag } from '../../hooks'
@@ -105,6 +104,7 @@ const Asset = () => {
   const { gridWidthOffset } = useSpring({
     gridWidthOffset: bagExpanded ? 324 : 0,
   })
+  const [showTraits, setShowTraits] = useState(true)
 
   useEffect(() => {
     if (asset.creator) setCreatorAddress(asset.creator.address)
@@ -231,14 +231,14 @@ const Asset = () => {
                 </a>
               )}
 
-              <a href={`/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
+              <Link to={`/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
                 <CollectionProfile
                   label="Collection"
                   avatarUrl={collection.collectionImageUrl}
                   name={collection.collectionName}
                   isVerified={collection.isVerified}
                 />
-              </a>
+              </Link>
 
               {creatorAddress ? (
                 <a
@@ -257,29 +257,27 @@ const Asset = () => {
                 </a>
               ) : null}
             </Row>
-            <Tabs>
-              <Row gap="32" marginBottom="20">
-                <Tab>
-                  <button className={styles.tab}>Traits</button>
-                </Tab>
-                <Tab>
-                  <button className={styles.tab}>Details</button>
-                </Tab>
-              </Row>
-              <Panel>
-                <Traits collectionAddress={asset.address} traits={asset.traits ? asset.traits : []} />
-              </Panel>
-              <Panel>
-                <Details
-                  contractAddress={contractAddress}
-                  tokenId={tokenId}
-                  tokenType={asset.tokenType}
-                  blockchain="Ethereum"
-                  metadataUrl={asset.externalLink}
-                  totalSupply={collection.totalSupply}
-                />
-              </Panel>
-            </Tabs>
+
+            <Row gap="32" marginBottom="20">
+              <button data-active={showTraits} onClick={() => setShowTraits(true)} className={styles.tab}>
+                Traits
+              </button>
+              <button data-active={!showTraits} onClick={() => setShowTraits(false)} className={styles.tab}>
+                Details
+              </button>
+            </Row>
+            {showTraits ? (
+              <Traits collectionAddress={asset.address} traits={asset.traits ?? []} />
+            ) : (
+              <Details
+                contractAddress={contractAddress}
+                tokenId={tokenId}
+                tokenType={asset.tokenType}
+                blockchain="Ethereum"
+                metadataUrl={asset.externalLink}
+                totalSupply={collection.totalSupply}
+              />
+            )}
           </Column>
         </Column>
       </div>

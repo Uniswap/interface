@@ -86,8 +86,8 @@ export const column = style({
   alignSelf: 'center',
   '@media': {
     '(max-width: 1024px)': {
-      maxWidth: 'calc(100% - 12%)',
-      width: 'calc(100% - 12%)',
+      maxWidth: 'calc(88%)',
+      width: 'calc(88%)',
     },
   },
 })
