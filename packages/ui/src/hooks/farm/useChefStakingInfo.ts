@@ -19,6 +19,7 @@ interface AdditionalStakingInfo {
      * `isLpToken` - this affect the way for our evaluation of the staked asset and its logo
      */
     isLpToken: boolean
+    isStableLp?: boolean
     /**
      * only exist if `isLpToken` is `true`
      */
@@ -61,6 +62,7 @@ export function useChefStakingInfo(): ChefStakingInfo[] {
   }, [chainId, poolInfos, farmingConfig])
   const listOfToken0 = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'token0')
   const listOfToken1 = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'token1')
+  const listOfStable = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'stable')
 
   // @todo: return the staking infos
   return poolInfos.map((info, idx) => {
@@ -69,7 +71,8 @@ export function useChefStakingInfo(): ChefStakingInfo[] {
       ? {
           ...pool.stakingAsset,
           token0: listOfToken0[idx].result?.at(0),
-          token1: listOfToken1[idx].result?.at(0)
+          token1: listOfToken1[idx].result?.at(0),
+          isStableLp: listOfStable[idx].result?.at(0)
         }
       : undefined
     return { ...info, isHidden: pool?.isHidden, stakingAsset, stakingToken: stakingTokens[idx] }
