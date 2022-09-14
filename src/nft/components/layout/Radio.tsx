@@ -9,7 +9,7 @@ interface RadioProps {
   onClick: (e: MouseEvent) => void
 }
 
-export const Radio = ({ hovered, checked, onClick }: RadioProps & React.HTMLProps<HTMLInputElement>) => {
+export const Radio = ({ hovered, checked, onClick }: RadioProps) => {
   return (
     <Box
       as="label"
