@@ -81,6 +81,18 @@
           }
         ]
       }
+    ],
+    "@typescript-eslint/no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "@ethersproject/providers",
+            "message": "Please only use Providers instantiated in constants/providers to improve traceability.",
+            "allowTypeImports": true
+          }
+        ]
+      }
     ]
   }
 }

@@ -5,30 +5,37 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from 'components/Tokens/constants'
+import { filterTimeAtom } from 'components/Tokens/state'
+import { AboutSection } from 'components/Tokens/TokenDetails/About'
+import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
+import { BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
+import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
-import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetail'
 import NetworkBalance from 'components/Tokens/TokenDetails/NetworkBalance'
-import TokenDetail from 'components/Tokens/TokenDetails/TokenDetail'
+import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
+import { useTokenQuery } from 'graphql/data/Token'
 import { useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
+import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { ArrowLeft } from 'react-feather'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-const Footer = styled.div`
+export const Footer = styled.div`
   display: none;
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: flex;
   }
 `
-const TokenDetailsLayout = styled.div`
+export const TokenDetailsLayout = styled.div`
   display: flex;
   gap: 80px;
   padding: 68px 20px;
@@ -61,7 +68,11 @@ const TokenDetailsLayout = styled.div`
     padding-right: 8px;
   }
 `
-const RightPanel = styled.div`
+export const LeftPanel = styled.div`
+  max-width: 832px;
+  overflow: hidden;
+`
+export const RightPanel = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -71,13 +82,11 @@ const RightPanel = styled.div`
     display: none;
   }
 `
-
 function NetworkBalances(tokenAddress: string | undefined) {
   return useNetworkTokenBalances({ address: tokenAddress })
 }
 
 export default function TokenDetails() {
-  const location = useLocation()
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const token = useToken(tokenAddress)
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
@@ -115,6 +124,9 @@ export default function TokenDetails() {
     return chainIds
   }, [connectedChainId])
 
+  const timePeriod = useAtomValue(filterTimeAtom)
+  const query = useTokenQuery(tokenAddress ?? '', 'ETHEREUM', timePeriod)
+
   const balancesByNetwork = networkData
     ? chainsToList.map((chainId) => {
         const amount = networkData[chainId]
@@ -137,15 +149,38 @@ export default function TokenDetails() {
       })
     : null
 
-  if (token === undefined) {
-    return <Navigate to={{ ...location, pathname: '/tokens' }} replace />
-  }
+  const tokenData = query.tokenProjects?.[0]
+  const tokenDetails = tokenData?.markets?.[0]
+
+  // TODO: Fix this logic to not automatically redirect on refresh, yet still catch invalid addresses
+  //const location = useLocation()
+  //if (token === undefined) {
+  //  return <Navigate to={{ ...location, pathname: '/tokens' }} replace />
+  //}
 
   return (
     <TokenDetailsLayout>
       {token && (
         <>
-          <TokenDetail address={token.address} />
+          <LeftPanel>
+            <BreadcrumbNavLink to="/tokens">
+              <ArrowLeft size={14} /> Tokens
+            </BreadcrumbNavLink>
+            <ChartSection token={token} tokenData={tokenData} />
+            <StatsSection
+              marketCap={tokenDetails?.marketCap?.value}
+              volume24H={tokenDetails?.volume1D?.value}
+              priceHigh52W={tokenDetails?.priceHigh52W?.value}
+              priceLow52W={tokenDetails?.priceLow52W?.value}
+            />
+            <AboutSection
+              address={token.address}
+              description={tokenData?.description}
+              homepageUrl={tokenData?.homepageUrl}
+              twitterName={tokenData?.twitterName}
+            />
+            <AddressSection address={token.address} />
+          </LeftPanel>
           <RightPanel>
             <Widget defaultToken={token ?? undefined} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}
@@ -168,16 +203,6 @@ export default function TokenDetails() {
           />
         </>
       )}
-    </TokenDetailsLayout>
-  )
-}
-
-export function LoadingTokenDetails() {
-  return (
-    <TokenDetailsLayout>
-      <LoadingTokenDetail />
-      <RightPanel />
-      <Footer />
     </TokenDetailsLayout>
   )
 }

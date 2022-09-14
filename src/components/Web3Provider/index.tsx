@@ -1,10 +1,13 @@
-import { Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
+import { SupportedChainId } from '@uniswap/widgets'
+import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { Connection } from 'connection'
 import { getConnectionName } from 'connection/utils'
+import { RPC_PROVIDERS } from 'constants/providers'
+import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
 import useOrderedConnections from 'hooks/useOrderedConnections'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useEffect, useMemo } from 'react'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
   useEagerlyConnect()
@@ -15,7 +18,37 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 
   return (
     <Web3ReactProvider connectors={connectors} key={key}>
+      <Tracer />
       {children}
     </Web3ReactProvider>
   )
+}
+
+function Tracer() {
+  const { chainId, provider } = useWeb3React()
+  const networkProvider = RPC_PROVIDERS[(chainId || SupportedChainId.MAINNET) as SupportedChainId]
+  const shouldTrace = useTraceJsonRpcFlag() === TraceJsonRpcVariant.Enabled
+
+  useEffect(() => {
+    if (shouldTrace) {
+      provider?.on('debug', trace)
+      if (provider !== networkProvider) {
+        networkProvider.on('debug', trace)
+      }
+    }
+    return () => {
+      provider?.off('debug', trace)
+      networkProvider.off('debug', trace)
+    }
+  }, [networkProvider, provider, shouldTrace])
+
+  return null
+}
+
+function trace(event: any) {
+  if (event.action !== 'request') return
+  const { method, id, params } = event.request
+  console.groupCollapsed(method, id)
+  console.debug(params)
+  console.groupEnd()
 }
