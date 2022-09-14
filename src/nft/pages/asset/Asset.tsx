@@ -204,7 +204,7 @@ const Asset = () => {
       className={styles.container}
     >
       <div className={styles.columns}>
-        <Column>
+        <Column paddingTop="48">
           {assetMediaType === 'image' ? (
             <img
               className={styles.image}
@@ -216,7 +216,7 @@ const Asset = () => {
             <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
           )}
         </Column>
-        <Column className={clsx(styles.column, styles.columnRight)} style={{ paddingTop: 50 }} width="full">
+        <Column className={clsx(styles.column, styles.columnRight)} paddingTop="48" width="full">
           <Column>
             <Row marginBottom="8" alignItems="center" justifyContent={rarityProvider ? 'space-between' : 'flex-end'}>
               {rarityProvider ? (
