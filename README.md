@@ -94,6 +94,4 @@ Deploys can also be triggered by running the [`Fastlane deploy iOS` workflow man
 
 ### GraphQL/Relay
 
-If the server schema changes, run `yarn relay:schema` in order to update it.
-
-If you want to write a new query, you should run `yarn relay:compile` in order to generate the TS type to import in your component
+See [data/README.md](./src/data/README.md)
