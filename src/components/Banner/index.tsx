@@ -121,7 +121,7 @@ function Banner({
           : w > 500
           ? KyberSwapTradingCampaignTablet
           : KyberSwapTradingCampaignMobile,
-        link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-polygon-chain-5',
+        link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-lidoldo-token-7&utm_source=kyberswap&utm_medium=banner&utm_campaign=lidotrading&utm_content=lidotrading_onsite',
       },
       {
         // KyberSwap Arbitrum Lido Farm
