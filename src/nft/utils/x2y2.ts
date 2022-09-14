@@ -3,7 +3,7 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { hexZeroPad } from '@ethersproject/bytes'
 import { AddressZero } from '@ethersproject/constants'
 import { keccak256 } from '@ethersproject/keccak256'
-import { Web3Provider } from '@ethersproject/providers'
+import type { Web3Provider } from '@ethersproject/providers'
 import { randomBytes } from '@ethersproject/random'
 
 const dataParamType = `tuple(address token, uint256 tokenId)[]`

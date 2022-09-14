@@ -7,7 +7,9 @@ import {
   sortCategoryAtom,
   sortDirectionAtom,
 } from 'components/Tokens/state'
-import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
+import { TokenTopQuery$data } from 'graphql/data/__generated__/TokenTopQuery.graphql'
+import { getDurationDetails, SingleTokenData, useTopTokenQuery } from 'graphql/data/Token'
+import { TimePeriod } from 'graphql/data/Token'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, Suspense, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -47,33 +49,37 @@ const TokenRowsContainer = styled.div`
   width: 100%;
 `
 
-function useFilteredTokens(tokens: TokenData[] | undefined) {
+function useFilteredTokens(data: TokenTopQuery$data): SingleTokenData[] | undefined {
   const filterString = useAtomValue(filterStringAtom)
-  const favoriteTokenAddresses = useAtomValue(favoritesAtom)
+  const favorites = useAtomValue(favoritesAtom)
   const showFavorites = useAtomValue(showFavoritesAtom)
-  const shownTokens =
-    showFavorites && tokens ? tokens.filter((token) => favoriteTokenAddresses.includes(token.address)) : tokens
 
   return useMemo(
     () =>
-      (shownTokens ?? []).filter((token) => {
-        if (!token.address) {
-          return false
-        }
-        if (!filterString) {
-          return true
-        }
-        const lowercaseFilterString = filterString.toLowerCase()
-        const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
-        const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
-        const symbolIncludesFilterString = token?.symbol?.toLowerCase().includes(lowercaseFilterString)
-        return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
-      }),
-    [shownTokens, filterString]
+      data.topTokenProjects
+        ?.filter(
+          (token) => !showFavorites || (token?.tokens?.[0].address && favorites.includes(token?.tokens?.[0].address))
+        )
+        .filter((token) => {
+          const tokenInfo = token?.tokens?.[0]
+          const address = tokenInfo?.address
+          if (!address) {
+            return false
+          } else if (!filterString) {
+            return true
+          } else {
+            const lowercaseFilterString = filterString.toLowerCase()
+            const addressIncludesFilterString = address?.toLowerCase().includes(lowercaseFilterString)
+            const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
+            const symbolIncludesFilterString = tokenInfo?.symbol?.toLowerCase().includes(lowercaseFilterString)
+            return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
+          }
+        }),
+    [data.topTokenProjects, favorites, filterString, showFavorites]
   )
 }
 
-function useSortedTokens(tokenData: TokenData[] | null) {
+function useSortedTokens(tokenData: SingleTokenData[] | undefined) {
   const sortCategory = useAtomValue(sortCategoryAtom)
   const sortDirection = useAtomValue(sortDirectionAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
@@ -103,22 +109,25 @@ function useSortedTokens(tokenData: TokenData[] | null) {
         }
         let a: number | null | undefined
         let b: number | null | undefined
+
+        const { volume: aVolume, pricePercentChange: aChange } = getDurationDetails(token1, timePeriod)
+        const { volume: bVolume, pricePercentChange: bChange } = getDurationDetails(token2, timePeriod)
         switch (sortCategory) {
           case Category.marketCap:
-            a = token1.marketCap?.value
-            b = token2.marketCap?.value
+            a = token1.markets?.[0]?.marketCap?.value
+            b = token2.markets?.[0]?.marketCap?.value
             break
           case Category.price:
-            a = token1.price?.value
-            b = token2.price?.value
+            a = token1.markets?.[0]?.price?.value
+            b = token2.markets?.[0]?.price?.value
             break
           case Category.volume:
-            a = token1.volume?.[timePeriod]?.value
-            b = token2.volume?.[timePeriod]?.value
+            a = aVolume
+            b = bVolume
             break
           case Category.percentChange:
-            a = token1.percentChange?.[timePeriod]?.value
-            b = token2.percentChange?.[timePeriod]?.value
+            a = aChange
+            b = bChange
             break
         }
         return sortFn(a, b)
@@ -149,14 +158,15 @@ export function LoadingTokenTable() {
   )
 }
 
-export default function TokenTable({ data }: { data: TokenData[] | undefined }) {
+export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
-  const filteredTokens = useFilteredTokens(data)
+  const topTokens = useTopTokenQuery(1, timePeriod)
+  const filteredTokens = useFilteredTokens(topTokens)
   const sortedFilteredTokens = useSortedTokens(filteredTokens)
 
   /* loading and error state */
-  if (data === null) {
+  if (topTokens === null) {
     return (
       <NoTokensState
         message={
@@ -184,8 +194,7 @@ export default function TokenTable({ data }: { data: TokenData[] | undefined }) 
         <TokenRowsContainer>
           {sortedFilteredTokens?.map((token, index) => (
             <LoadedRow
-              key={token.address}
-              tokenAddress={token.address}
+              key={token?.name}
               tokenListIndex={index}
               tokenListLength={sortedFilteredTokens.length}
               tokenData={token}

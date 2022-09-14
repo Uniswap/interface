@@ -265,7 +265,13 @@ export default function TokenSafety({
             </InfoText>
           </ShortColumn>
           <LinkColumn>{urls}</LinkColumn>
-          <Buttons warning={displayWarning} onContinue={acknowledge} onCancel={onCancel} showCancel={showCancel} />
+          <Buttons
+            warning={displayWarning}
+            onContinue={acknowledge}
+            onCancel={onCancel}
+            onBlocked={onBlocked}
+            showCancel={showCancel}
+          />
         </Container>
       </Wrapper>
     )
