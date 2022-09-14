@@ -45,7 +45,7 @@ export const Filters = () => {
           <Box fontSize="14" fontWeight="medium" as="summary">
             Buy now
           </Box>
-          <Radio hovered={buyNowHovered} checked={buyNow} onChange={handleBuyNowToggle} />
+          <Radio hovered={buyNowHovered} checked={buyNow} onClick={handleBuyNowToggle} />
         </Row>
       </Column>
     </Box>
