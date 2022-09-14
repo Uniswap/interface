@@ -20,7 +20,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
   const {
     data: collectionAssets,
     isSuccess: AssetsFetchSuccess,
-    isLoading,
+    // isLoading,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
@@ -48,9 +48,11 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
   )
   const setIsLoading = useCollectionFilters((state) => state.setIsLoading)
 
-  useEffect(() => {
-    setIsLoading(isLoading)
-  }, [isLoading])
+  // useEffect(() => {
+  //   setIsLoading(isLoading)
+  // }, [isLoading])
+
+  const isLoading = true
 
   const collectionNfts = useMemo(() => {
     if (!collectionAssets || !AssetsFetchSuccess) return undefined
