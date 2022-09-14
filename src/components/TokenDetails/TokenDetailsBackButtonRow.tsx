@@ -2,7 +2,6 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
 import Check from 'src/assets/icons/check.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
@@ -13,10 +12,10 @@ import { Box } from 'src/components/layout/Box'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
+import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Screens } from 'src/screens/Screens'
 
 interface TokenDetailsHeaderProps {
   currency: Currency
@@ -33,8 +32,9 @@ export function TokenDetailsBackButtonRow({
   const hasOtherBalances = Boolean(otherChainBalances?.length)
 
   const { t } = useTranslation()
-  const { navigate } = useExploreStackNavigation()
   const [showActionModal, setShowActionModal] = useState(false)
+
+  const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   const options = useMemo(
     (): MenuItemProp[] | null => [
@@ -64,7 +64,8 @@ export function TokenDetailsBackButtonRow({
         return {
           key: `${ElementName.NetworkButton}-${String(chainId)}`,
           onPress: () => {
-            navigate(Screens.TokenDetails, { currencyId: balance.currencyInfo.currencyId })
+            tokenDetailsNavigation.preload(balance.currencyInfo.currencyId)
+            tokenDetailsNavigation.navigate(balance.currencyInfo.currencyId)
             setShowActionModal(false)
           },
           render: () => (
@@ -82,7 +83,7 @@ export function TokenDetailsBackButtonRow({
         }
       }) ?? []),
     ],
-    [otherChainBalances, currentChainId, theme.colors.accentActive, navigate]
+    [currentChainId, otherChainBalances, theme.colors.accentActive, tokenDetailsNavigation]
   )
 
   return (

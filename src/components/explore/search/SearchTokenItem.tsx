@@ -1,10 +1,10 @@
 import { default as React } from 'react'
 import { Image, ImageStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { CoingeckoMarketCoin, CoingeckoSearchCoin } from 'src/features/dataApi/coingecko/types'
 import {
   addToSearchHistory,
@@ -13,7 +13,6 @@ import {
 } from 'src/features/explore/searchHistorySlice'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useCurrencyIdFromCoingeckoId } from 'src/features/tokens/useCurrency'
-import { Screens } from 'src/screens/Screens'
 
 type SearchTokenItemProps = {
   coin: CoingeckoSearchCoin | CoingeckoMarketCoin | TokenSearchResult
@@ -22,9 +21,10 @@ type SearchTokenItemProps = {
 export const TOKEN_SUBHEAD_ROW_HEIGHT = 20
 
 export function SearchTokenItem({ coin }: SearchTokenItemProps) {
-  const { navigate } = useExploreStackNavigation()
   const dispatch = useAppDispatch()
   const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
+
+  const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   if (!_currencyId) return null
 
@@ -40,13 +40,16 @@ export function SearchTokenItem({ coin }: SearchTokenItemProps) {
         searchResult: { type: SearchResultType.Token, id, name, symbol, image: uri },
       })
     )
-    navigate(Screens.TokenDetails, {
-      currencyId: _currencyId,
-    })
+    tokenDetailsNavigation.navigate(_currencyId)
   }
 
   return (
-    <Button name={ElementName.SearchTokenItem} onPress={onPress}>
+    <Button
+      name={ElementName.SearchTokenItem}
+      onPress={onPress}
+      onPressIn={() => {
+        tokenDetailsNavigation.preload(_currencyId)
+      }}>
       <Flex row alignItems="center" gap="xs" px="xs" py="sm">
         <Image source={{ uri }} style={logoStyle} />
         <Flex gap="none">

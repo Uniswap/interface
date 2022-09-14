@@ -3,18 +3,17 @@ import { useTranslation } from 'react-i18next'
 import { FlexAlignType, Image, ImageStyle, Pressable } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { FavoriteButton } from 'src/components/explore/FavoriteButton'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
+import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { CoingeckoMarketCoin, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { useCurrencyIdFromCoingeckoId } from 'src/features/tokens/useCurrency'
-import { Screens } from 'src/screens/Screens'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 
@@ -45,10 +44,11 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
     previousOpenRow
   ) => {
     const { t } = useTranslation()
-    const { navigate } = useExploreStackNavigation()
     const theme = useAppTheme()
 
     const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
+
+    const tokenDetailsNavigation = useTokenDetailsNavigation()
 
     // TODO(judo): better handle when token is last favorite
     const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(_currencyId ?? '')
@@ -108,7 +108,10 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
         <Button
           testID={`token-item-${coin.symbol}`}
           onPress={() => {
-            navigate(Screens.TokenDetails, { currencyId: _currencyId })
+            tokenDetailsNavigation.navigate(_currencyId)
+          }}
+          onPressIn={() => {
+            tokenDetailsNavigation.preload(_currencyId)
           }}>
           <AnimatedFlex
             row
@@ -173,15 +176,18 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
 export const TOKEN_ITEM_BOX_MINWIDTH = 137
 
 export function TokenItemBox({ coin }: TokenItemProps) {
-  const { navigate } = useExploreStackNavigation()
   const theme = useAppTheme()
   const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
+  const tokenDetailsNavigation = useTokenDetailsNavigation()
   if (!_currencyId) return null
   return (
     <Pressable
       testID={`token-box-${coin.symbol}`}
       onPress={() => {
-        navigate(Screens.TokenDetails, { currencyId: _currencyId })
+        tokenDetailsNavigation.navigate(_currencyId)
+      }}
+      onPressIn={() => {
+        tokenDetailsNavigation.preload(_currencyId)
       }}>
       <Box
         bg="backgroundContainer"

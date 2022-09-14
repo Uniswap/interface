@@ -6,10 +6,12 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
+import { PreloadedQuery } from 'react-relay'
 import { EducationContentType } from 'src/components/education'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
+import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 
 type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
   Pick<NFTAsset.Asset, 'token_id'>
@@ -126,7 +128,10 @@ export type AppStackParamList = {
   [Screens.ProfileStack]: NavigatorScreenParams<ProfileStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
-  [Screens.TokenDetails]: { currencyId: string }
+  [Screens.TokenDetails]: {
+    currencyId: string
+    preloadedQuery: PreloadedQuery<TokenDetailsScreenQuery>
+  }
   [Screens.Profile]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }

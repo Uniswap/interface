@@ -1,12 +1,17 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { useEagerNavigation } from 'src/app/navigation/useEagerNavigation'
 import { ChainId } from 'src/constants/chains'
 import { nativeOnChain } from 'src/constants/tokens'
+import { preloadMapping } from 'src/data/preloading'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/balances'
 import { BridgeInfo, WrappedTokenInfo } from 'src/features/tokenLists/wrappedTokenInfo'
 import { useTokenInfoFromAddress } from 'src/features/tokens/useTokenInfoFromAddress'
-import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
+import { Screens } from 'src/screens/Screens'
+import { tokenDetailsScreenQuery } from 'src/screens/TokenDetailsScreen'
+import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
+import { buildCurrencyId, currencyAddress, CurrencyId } from 'src/utils/currencyId'
 import { getKeys } from 'src/utils/objects'
 
 function useBridgeInfo(currency: Currency) {
@@ -65,4 +70,24 @@ export function useCrossChainBalances(currency: Currency) {
     currentChainBalance,
     otherChainBalances,
   }
+}
+
+/** Utility hook to simplify navigating to token details screen */
+export function useTokenDetailsNavigation() {
+  const { registerNavigationIntent, preloadedNavigate } =
+    useEagerNavigation<TokenDetailsScreenQuery>(tokenDetailsScreenQuery)
+
+  const preload = (currencyId: CurrencyId) => {
+    registerNavigationIntent(
+      preloadMapping.tokenDetails({
+        currencyId,
+      })
+    )
+  }
+
+  const navigate = (currencyId: CurrencyId) => {
+    preloadedNavigate(Screens.TokenDetails, { currencyId })
+  }
+
+  return { preload, navigate }
 }

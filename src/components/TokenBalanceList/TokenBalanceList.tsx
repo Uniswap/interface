@@ -10,12 +10,13 @@ import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceIt
 import { TokenBalanceListHeader } from 'src/components/TokenBalanceList/TokenBalanceListHeader'
 import { balancesToSectionListData } from 'src/components/TokenBalanceList/utils'
 import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
-import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
+import { PortfolioBalance } from 'src/features/dataApi/types'
 import { SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
+import { CurrencyId } from 'src/utils/currencyId'
 
 export enum ViewType {
   Flat = 'flat',
@@ -36,7 +37,8 @@ type ViewProps = FlatViewProps | NetworkViewProps
 
 type TokenBalanceListProps = {
   empty?: ReactElement | null
-  onPressToken: (currencyInfo: CurrencyInfo) => void
+  onPressTokenIn: (currencyId: CurrencyId) => void
+  onPressToken: (currencyId: CurrencyId) => void
   onRefresh?: () => void
   refreshing?: boolean
   owner: Address
@@ -46,6 +48,7 @@ export function TokenBalanceList({
   owner,
   empty,
   onPressToken,
+  onPressTokenIn,
   view,
   count,
 }: TokenBalanceListProps) {
@@ -72,6 +75,7 @@ export function TokenBalanceList({
       empty={empty}
       header={header}
       onPressToken={onPressToken}
+      onPressTokenIn={onPressTokenIn}
     />
   ) : (
     <NetworkBalanceList balances={truncatedBalances} header={header} onPressToken={onPressToken} />
@@ -87,7 +91,8 @@ function FlatBalanceList({
   empty,
   header,
   onPressToken,
-}: Pick<TokenBalanceListProps, 'onPressToken' | 'empty'> & {
+  onPressTokenIn,
+}: Pick<TokenBalanceListProps, 'onPressToken' | 'onPressTokenIn' | 'empty'> & {
   header: ReactElement
   balances: PortfolioBalance[]
 }) {
@@ -99,7 +104,11 @@ function FlatBalanceList({
       data={balances}
       keyExtractor={key}
       renderItem={({ item }) => (
-        <TokenBalanceItem portfolioBalance={item} onPressToken={onPressToken} />
+        <TokenBalanceItem
+          portfolioBalance={item}
+          onPressToken={onPressToken}
+          onPressTokenIn={onPressTokenIn}
+        />
       )}
       showsVerticalScrollIndicator={false}
     />

@@ -5,20 +5,30 @@ import { CurrencyInfoLogo } from 'src/components/CurrencyLogo/CurrencyInfoLogo'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
-import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
+import { PortfolioBalance } from 'src/features/dataApi/types'
+import { CurrencyId } from 'src/utils/currencyId'
 import { formatNumberBalance, formatUSDPrice } from 'src/utils/format'
 
 interface TokenBalanceItemProps {
   portfolioBalance: PortfolioBalance
-  onPressToken?: (currencyInfo: CurrencyInfo) => void
+  onPressToken?: (currencyId: CurrencyId) => void
+  onPressTokenIn?: (currencyId: CurrencyId) => void
 }
 
-export function TokenBalanceItem({ portfolioBalance, onPressToken }: TokenBalanceItemProps) {
+export function TokenBalanceItem({
+  portfolioBalance,
+  onPressToken,
+  onPressTokenIn,
+}: TokenBalanceItemProps) {
   const { quantity, currencyInfo, relativeChange24 } = portfolioBalance
   const { currency } = currencyInfo
 
   const onPress = () => {
-    onPressToken?.(currencyInfo)
+    onPressToken?.(currencyInfo.currencyId)
+  }
+
+  const onPressIn = () => {
+    onPressTokenIn?.(currencyInfo.currencyId)
   }
 
   return (
@@ -30,7 +40,8 @@ export function TokenBalanceItem({ portfolioBalance, onPressToken }: TokenBalanc
       justifyContent="space-between"
       minHeight={56}
       p="sm"
-      onPress={onPress}>
+      onPress={onPress}
+      onPressIn={onPressIn}>
       <AnimatedFlex
         row
         alignItems="center"

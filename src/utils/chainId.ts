@@ -1,6 +1,6 @@
 import { BigNumberish } from 'ethers'
-import { Chain as GraphQLChain } from 'src/components/TokenDetails/__generated__/TokenDetailsStatsQuery.graphql'
 import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
+import { Chain as GraphQLChain } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 
 const supportedChains = Object.values(ChainId).map((c) => c.toString())
 

@@ -1,6 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
+import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { IconButton } from 'src/components/buttons/IconButton'
@@ -34,8 +36,17 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
+import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 import { currencyAddress, currencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
+
+export const tokenDetailsScreenQuery = graphql`
+  query TokenDetailsScreenQuery($contract: ContractInput!) {
+    tokenProjects(contracts: [$contract]) {
+      ...TokenDetailsStats_tokenProject
+    }
+  }
+`
 
 interface TokenDetailsHeaderProps {
   currency: Currency
@@ -111,7 +122,7 @@ enum SwapType {
 }
 
 export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
-  const { currencyId: _currencyId } = route.params
+  const { currencyId: _currencyId, preloadedQuery } = route.params
 
   const currency = useCurrency(_currencyId)
 
@@ -121,16 +132,24 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
 
   return (
     <Suspense fallback={<Loading />}>
-      <TokenDetails currency={currency} />
+      <TokenDetails currency={currency} preloadedQuery={preloadedQuery} />
     </Suspense>
   )
 }
 
-function TokenDetails({ currency }: { currency: Currency }) {
-  const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
-
+function TokenDetails({
+  currency,
+  preloadedQuery,
+}: {
+  currency: Currency
+  preloadedQuery: PreloadedQuery<TokenDetailsScreenQuery>
+}) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+
+  const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
+
+  const data = usePreloadedQuery<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, preloadedQuery)
 
   const { tokenWarningLevel, tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(
     currency.wrapped
@@ -221,7 +240,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
             otherChainBalances={otherChainBalances}
           />
           <Flex gap="lg" p="md">
-            <TokenDetailsStats currency={currency} />
+            <TokenDetailsStats currency={currency} tokenProject={data.tokenProjects?.[0]} />
             {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
               <TokenWarningCard
                 tokenWarningLevel={tokenWarningLevel}

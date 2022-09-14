@@ -4,6 +4,7 @@ import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
+import { RelayEnvironmentProvider } from 'react-relay'
 import { PersistGate } from 'redux-persist/integration/react'
 import { RelayEnvironmentProvider as RelayHooksEnvironmentProvider } from 'relay-hooks'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
@@ -55,25 +56,27 @@ function App() {
     <StrictMode>
       <SafeAreaProvider>
         <Provider store={store}>
-          <RelayHooksEnvironmentProvider environment={RelayEnvironment}>
-            <PersistGate loading={null} persistor={persistor}>
-              <DynamicThemeProvider>
-                <ErrorBoundary>
-                  <WalletContextProvider>
-                    <BiometricContextProvider>
-                      <LockScreenContextProvider>
-                        <DataUpdaters />
-                        <BottomSheetModalProvider>
-                          <AppModals />
-                          <NavStack isDarkMode={isDarkMode} />
-                        </BottomSheetModalProvider>
-                      </LockScreenContextProvider>
-                    </BiometricContextProvider>
-                  </WalletContextProvider>
-                </ErrorBoundary>
-              </DynamicThemeProvider>
-            </PersistGate>
-          </RelayHooksEnvironmentProvider>
+          <RelayEnvironmentProvider environment={RelayEnvironment}>
+            <RelayHooksEnvironmentProvider environment={RelayEnvironment}>
+              <PersistGate loading={null} persistor={persistor}>
+                <DynamicThemeProvider>
+                  <ErrorBoundary>
+                    <WalletContextProvider>
+                      <BiometricContextProvider>
+                        <LockScreenContextProvider>
+                          <DataUpdaters />
+                          <BottomSheetModalProvider>
+                            <AppModals />
+                            <NavStack isDarkMode={isDarkMode} />
+                          </BottomSheetModalProvider>
+                        </LockScreenContextProvider>
+                      </BiometricContextProvider>
+                    </WalletContextProvider>
+                  </ErrorBoundary>
+                </DynamicThemeProvider>
+              </PersistGate>
+            </RelayHooksEnvironmentProvider>
+          </RelayEnvironmentProvider>
         </Provider>
       </SafeAreaProvider>
     </StrictMode>

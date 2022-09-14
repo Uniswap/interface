@@ -7,7 +7,7 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
-import { CurrencyInfo } from 'src/features/dataApi/types'
+import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
@@ -18,8 +18,7 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
   const dispatch = useAppDispatch()
   const navigation = useHomeStackNavigation()
 
-  const onPressToken = (currencyInfo: CurrencyInfo) =>
-    navigation.navigate(Screens.TokenDetails, { currencyId: currencyInfo.currencyId })
+  const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   // TODO: remove when buy flow ready
   const onPressScan = () => {
@@ -59,7 +58,8 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
           }
           owner={owner}
           view={ViewType.Flat}
-          onPressToken={onPressToken}
+          onPressToken={tokenDetailsNavigation.navigate}
+          onPressTokenIn={tokenDetailsNavigation.preload}
         />
       </Suspense>
     </BaseCard.Container>
