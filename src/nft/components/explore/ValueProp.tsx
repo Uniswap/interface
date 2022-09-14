@@ -13,7 +13,7 @@ const ValueProp = () => {
           className={clsx(styles.bannerWrap, styles.valuePropWrap)}
           style={{
             height: '135px',
-            background: `url(${MarketplacesImage}) top 0 right 0 no-repeat`,
+            backgroundImage: `url(${MarketplacesImage})`,
           }}
         >
           <Box className={styles.valuePropOverlay} width="full" />
