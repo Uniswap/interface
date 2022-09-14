@@ -64,29 +64,29 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.bgGreen};
+  background-color: ${({ theme }) => theme.primary1};
   border: none;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
-  background: ${({theme }) => theme.bgGreen};
+  background: ${({theme }) => theme.primary1};
   border-radius: .4rem;
   width: 8rem;
   :hover,
   :focus {
     color: ${({ theme }) => theme.textHover};
-    background-color: ${({theme}) => theme.bgGreenHover};
+    background-color: ${({theme}) => theme.primary1Hover};
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.bgGreen};
-      border: 1px solid ${({ theme }) => theme.bgGreen};
+      background-color: ${({ theme }) => theme.primary1};
+      border: 1px solid ${({ theme }) => theme.primary1};
       color: ${({ theme }) => theme.textHover};
 
       :hover,
       :focus {
-        background-color: ${({theme}) => theme.bgGreenHover};
+        background-color: ${({theme}) => theme.primary1Hover};
         color: ${({ theme }) => darken(0.05, theme.textHover)};
       }
     `}
@@ -95,16 +95,16 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: .4rem;
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg2)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg3)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
+  background-color: ${({ pending, theme }) => (pending ? theme.common1 : theme.common1)};
+  border: 1px solid ${({ pending, theme }) => (pending ? theme.common3 : theme.common3)};
+  color: ${({ pending, theme }) => (pending ? theme.common2 : theme.common2)};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.bgGreenHover) : lighten(0.05, theme.bg2))};
-    border: 1px solid ${({ pending, theme }) => (pending ? theme.bgGreenHover :  theme.bgGreenHover)};
+    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.common1) : lighten(0.05, theme.common1))};
+    border: 1px solid ${({ pending, theme }) => (pending ? theme.common3 :  theme.common3)};
     :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.bgGreenHover) : darken(0.1, theme.bgGreenHover))};
+      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.common2) : darken(0.1, theme.common2))};
     }
   }
 `

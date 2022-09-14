@@ -39,7 +39,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
           </RowFixed>
           <RowFixed>
-            <TYPE.black color={theme.text1} fontSize={14}>
+            <TYPE.black color={theme.text1} fontSize={".4rem"}>
               {isExactIn
                 ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.currency.symbol}` ??
                   '-'

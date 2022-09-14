@@ -263,8 +263,8 @@ export default function AddLiquidity({
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
                   fontWeight: '600',
-                  fontSize: '18px',
-                  lineHeight: '26px',
+                  fontSize: '.6rem',
+                  lineHeight: '.8rem',
                   color: '#FFFFFF',
                 }}
               >
@@ -275,8 +275,8 @@ export default function AddLiquidity({
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
                   fontWeight: '400',
-                  fontSize: '12px',
-                  lineHeight: '18px',
+                  fontSize: '.4rem',
+                  lineHeight: '.6rem',
                   color: '#CCCCCC',
                 }}
               >
@@ -290,8 +290,8 @@ export default function AddLiquidity({
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '18px',
-                lineHeight: '26px',
+                fontSize: '.6rem',
+                lineHeight: '.8rem',
                 color: '#FFFFFF',
               }}
             >
@@ -306,8 +306,8 @@ export default function AddLiquidity({
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
                   fontWeight: '600',
-                  fontSize: '18px',
-                  lineHeight: '26px',
+                  fontSize: '.6rem',
+                  lineHeight: '.8rem',
                   color: '#FFFFFF',
                 }}
               >
@@ -318,8 +318,8 @@ export default function AddLiquidity({
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
                   fontWeight: '400',
-                  fontSize: '12px',
-                  lineHeight: '18px',
+                  fontSize: '.4rem',
+                  lineHeight: '.6rem',
                   color: '#CCCCCC',
                 }}
               >
@@ -333,8 +333,8 @@ export default function AddLiquidity({
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '18px',
-                lineHeight: '26px',
+                fontSize: '.6rem',
+                lineHeight: '.8rem',
                 color: '#FFFFFF',
               }}
             >
@@ -350,8 +350,8 @@ export default function AddLiquidity({
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '16px',
-                lineHeight: '24px',
+                fontSize: '.5rem',
+                lineHeight: '.8rem',
                 textAlign: 'center',
                 color: '#999999',
               }}
@@ -363,8 +363,8 @@ export default function AddLiquidity({
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '16px',
-                lineHeight: '24px',
+                fontSize: '.5rem',
+                lineHeight: '.8rem',
                 textAlign: 'center',
                 color: '#999999',
               }}
@@ -380,8 +380,8 @@ export default function AddLiquidity({
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '20px',
-                lineHeight: '28px',
+                fontSize: '.7rem',
+                lineHeight: '.9rem',
                 color: '#FFFFFF',
               }}
             >
@@ -392,8 +392,8 @@ export default function AddLiquidity({
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '20px',
-                lineHeight: '28px',
+                fontSize: '.7rem',
+                lineHeight: '.9rem',
                 color: '#FFFFFF',
                 textAlign: 'right',
               }}
@@ -409,8 +409,8 @@ export default function AddLiquidity({
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '20px',
-                lineHeight: '28px',
+                fontSize: '.7rem',
+                lineHeight: '.9rem',
                 color: '#FFFFFF',
               }}
             >
@@ -422,8 +422,8 @@ export default function AddLiquidity({
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
                   fontWeight: '500',
-                  fontSize: '16px',
-                  lineHeight: '24px',
+                  fontSize: '.5rem',
+                  lineHeight: '.8rem',
                   color: '#FFFFFF',
                 }}
               >
@@ -434,8 +434,8 @@ export default function AddLiquidity({
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
                   fontWeight: '500',
-                  fontSize: '12px',
-                  lineHeight: '18px',
+                  fontSize: '.4rem',
+                  lineHeight: '.6rem',
                   color: '#999999',
                 }}
               >
@@ -450,8 +450,8 @@ export default function AddLiquidity({
               fontFamily: 'Poppins',
               fontStyle: 'normal',
               fontWeight: '500',
-              fontSize: '24px',
-              lineHeight: '32px',
+              fontSize: '.8rem',
+              lineHeight: '1rem',
               textAlign: 'center',
               color: '#05050E',
             }}

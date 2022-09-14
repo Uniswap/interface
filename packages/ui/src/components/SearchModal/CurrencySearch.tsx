@@ -52,6 +52,19 @@ interface CurrencySearchProps {
   setImportToken: (token: Token) => void
 }
 
+const AutoSizerWrap = styled.div`
+    margin: 1rem 1.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: .8rem;
+    padding: 1rem 0;
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+      margin: 0;
+      border: none;
+      padding: 0;
+    `};
+
+`
+
 export function CurrencySearch({
   selectedCurrency,
   onCurrencySelect,
@@ -190,7 +203,7 @@ export function CurrencySearch({
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Column>
       ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
-        <div style={{ flex: '1', margin: '1rem 1.6rem', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '.8rem', padding: '1rem 0'}}>
+        <AutoSizerWrap style={{ flex: '1'}}>
           <AutoSizer disableWidth>
             {({ height }) => (
               <CurrencyList
@@ -209,7 +222,7 @@ export function CurrencySearch({
               />
             )}
           </AutoSizer>
-        </div>
+        </AutoSizerWrap>
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
           <TYPE.main color={theme.text3} textAlign="center" mb="20px">

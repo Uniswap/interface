@@ -55,7 +55,7 @@ interface PositionCardProps {
 
 
 const YourPisitonCard = styled(Box)`
-  border: 1px solid ${({ theme }) => theme.colorGray37};
+  border: 1px solid ${({ theme }) => theme.common3};
   border-radius: 0.8rem;
   padding: 1.25rem;
   font-size: .7rem;
@@ -171,7 +171,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 const YourPisitonCardPart = styled(Box)`
-  /* border: 1px solid ${({ theme }) => theme.colorGray37}; */
+  /* border: 1px solid ${({ theme }) => theme.common3}; */
   /* border-radius: 0.8rem; */
   font-size: .7rem;
   color: #FFFFFF;
@@ -497,7 +497,7 @@ export function LiquidityCard({
       </td>
       <td>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</td>
       <td>xx</td>
-      <td>xx</td>
+      {/* <td>xx</td> */}
       <td style={{ display: 'flex', justifyContent: 'space-between' }}>
         {/* <ButtonPrimary padding={"unset"} width={"5rem"} borderRadius={".3rem"} sx={{ height: "1.3rem", fontSize: ".5rem", color: "#000000" }} as={Link} to="/manager">
           Manage

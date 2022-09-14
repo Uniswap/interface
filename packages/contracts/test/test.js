@@ -164,7 +164,7 @@ describe('Router02', function () {
             } else {
                 [reserveIn, reserveOut] = [reserve1, reserve0]
             }
-            let amountOut = expandTo18Decimals("1")
+            let amountOut = expandTo18Decimals("10")
             // volatile
             let args = [
                 amountOut,
@@ -420,7 +420,7 @@ describe('Router02', function () {
                 liquidity,
                 0, 0,
                 ans.signer.address,
-                dl,
+                getDeadline(),
                 false,
                 await getSig(ans,false,dl)
             ]
@@ -436,7 +436,7 @@ describe('Router02', function () {
                 liquidityStable,
                 0, 0,
                 ans.signer.address,
-                dl,
+                getDeadline(),
                 false,
                 await getSig(ans,true,dl)
             ]

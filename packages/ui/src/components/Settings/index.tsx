@@ -1,6 +1,6 @@
 import useThemedContext from 'hooks/useThemedContext'
 import React, { useRef, useState } from 'react'
-import {  X } from 'react-feather'
+import { X } from 'react-feather'
 // Settings
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
@@ -95,21 +95,27 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span`
-  min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+  width: 21.3rem;
+  background-color: ${({ theme }) => theme.common1};
+  /* box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01); */
   display: flex;
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
   top: 3rem;
-  right: 0rem;
+  right: -1rem;
   z-index: 100;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    min-width: 18.125rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  border-radius: 1.6rem;
+
+  font-weight: 500;
+  font-size: .4rem;
+  color: rgba(255, 255, 255, 0.8);
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
   `};
 `
 
@@ -200,9 +206,9 @@ export default function SettingsTab() {
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
-          <AutoColumn gap="md" style={{ padding: '1rem' }}>
-            <Text fontWeight={600} fontSize={14}>
-              Transaction Settings
+          <AutoColumn gap="1.2rem" style={{ padding: '1.6rem' }}>
+            <Text fontWeight={400} fontSize={".9rem"} color="#FFFFFF" sx={{fontFamily: 'Dela Gothic One'}}>
+                Swap Settings
             </Text>
             <TransactionSettings
               rawSlippage={userSlippageTolerance}
@@ -210,10 +216,10 @@ export default function SettingsTab() {
               deadline={ttl}
               setDeadline={setTtl}
             />
-            <Text fontWeight={600} fontSize={14}>
+            {/* <Text fontWeight={600} fontSize={14}>
               Interface Settings
-            </Text>
-            <RowBetween>
+            </Text> */}
+            {/* <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   Toggle Expert Mode
@@ -226,17 +232,17 @@ export default function SettingsTab() {
                 toggle={
                   expertMode
                     ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
+                      toggleExpertMode()
+                      setShowConfirmation(false)
+                    }
                     : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
+                      toggle()
+                      setShowConfirmation(true)
+                    }
                 }
               />
-            </RowBetween>
-            <RowBetween>
+            </RowBetween> */}
+            {/* <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   Disable Multihops
@@ -254,7 +260,7 @@ export default function SettingsTab() {
                   setSingleHopOnly(!singleHopOnly)
                 }}
               />
-            </RowBetween>
+            </RowBetween> */}
           </AutoColumn>
         </MenuFlyout>
       )}
