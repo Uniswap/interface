@@ -34,13 +34,15 @@ export const ExpandableText = ({ children, ...props }: BoxProps) => {
       {...props}
     >
       <span className={clsx(styles.span, !isExpanded && styles.hiddenText)}>
-        {children} {isExpanded ? null : <RevealButton onClick={() => setExpanded(!isExpanded)}>Show more</RevealButton>}
-      </span>{' '}
-      {isExpanded ? (
-        <RevealButton marginTop={isExpanded ? '8' : 'unset'} onClick={() => setExpanded(!isExpanded)}>
-          Show less
-        </RevealButton>
-      ) : null}
+        {children}{' '}
+        {isExpanded ? (
+          <RevealButton marginTop={isExpanded ? '8' : 'unset'} onClick={() => setExpanded(!isExpanded)}>
+            Show less
+          </RevealButton>
+        ) : (
+          <RevealButton onClick={() => setExpanded(!isExpanded)}>Show more</RevealButton>
+        )}
+      </span>
     </Box>
   )
 }
