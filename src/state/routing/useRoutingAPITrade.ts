@@ -44,7 +44,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   })
 
   const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
-    pollingInterval: ms`15s`,
+    // Price-fetching is informational and costly, so it's done less frequently.
+    pollingInterval: routerPreference === RouterPreference.PRICE ? ms`2m` : ms`15s`,
   })
 
   const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
