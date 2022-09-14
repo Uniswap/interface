@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
@@ -9,6 +10,7 @@ import { AssetsFetcher } from 'nft/queries'
 import { useMemo } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
+import { useCollectionFilters } from '../../hooks/useCollectionFilters'
 
 interface CollectionNftsProps {
   contractAddress: string
@@ -18,6 +20,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
   const {
     data: collectionAssets,
     isSuccess: AssetsFetchSuccess,
+    isLoading,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
@@ -43,6 +46,11 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
       refetchInterval: 5000,
     }
   )
+  const setIsLoading = useCollectionFilters((state) => state.setIsLoading)
+
+  useEffect(() => {
+    setIsLoading(isLoading)
+  }, [isLoading])
 
   const collectionNfts = useMemo(() => {
     if (!collectionAssets || !AssetsFetchSuccess) return undefined
@@ -57,6 +65,12 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     return <div>No CollectionAssets</div>
   }
 
+  const NFTs = collectionNfts.map((asset) =>
+    asset ? <CollectionAsset asset={asset} key={asset.address + asset.tokenId} /> : null
+  )
+
+  const hasNFTs = collectionNfts.length > 0
+
   return (
     <InfiniteScroll
       next={fetchNextPage}
@@ -64,13 +78,14 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
       loader={hasNextPage ? loadingAssets : null}
       dataLength={collectionNfts.length}
       style={{ overflow: 'unset' }}
+      className={hasNFTs ? styles.assetList : undefined}
     >
-      {collectionNfts.length > 0 ? (
-        <div className={styles.assetList}>
-          {collectionNfts.map((asset) => {
-            return asset ? <CollectionAsset asset={asset} key={asset.address + asset.tokenId} /> : null
-          })}
-        </div>
+      {hasNFTs ? (
+        isLoading ? (
+          loadingAssets
+        ) : (
+          NFTs
+        )
       ) : (
         <Center width="full" color="darkGray" style={{ height: '60vh' }}>
           <div style={{ display: 'block', textAlign: 'center' }}>

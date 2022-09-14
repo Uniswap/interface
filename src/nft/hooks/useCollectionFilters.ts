@@ -34,6 +34,7 @@ interface State {
   search: string
   sortBy: SortBy
   showFullTraitName: { shouldShow: boolean; trait_value?: string; trait_type: string }
+  isLoading: boolean
 }
 
 type Actions = {
@@ -51,6 +52,7 @@ type Actions = {
   setSearch: (term: string) => void
   setSortBy: (sortBy: SortBy) => void
   toggleShowFullTraitName: (show: { shouldShow: boolean; trait_value: string; trait_type: string }) => void
+  setIsLoading: (bool: boolean) => void
 }
 
 export type CollectionFilters = State & Actions
@@ -67,6 +69,7 @@ export const initialCollectionFilterState: State = {
   search: '',
   sortBy: SortBy.LowToHigh,
   showFullTraitName: { shouldShow: false, trait_value: '', trait_type: '' },
+  isLoading: false,
 }
 
 export const useCollectionFilters = create<CollectionFilters>()(
@@ -91,6 +94,7 @@ export const useCollectionFilters = create<CollectionFilters>()(
       setMaxRarity: (range) => set(() => ({ maxRarity: range })),
       toggleShowFullTraitName: ({ shouldShow, trait_value, trait_type }) =>
         set(() => ({ showFullTraitName: { shouldShow, trait_value, trait_type } })),
+      setIsLoading: (isLoading) => set(() => ({ isLoading })),
     }),
     { name: 'useCollectionTraits' }
   )
