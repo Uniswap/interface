@@ -27,8 +27,7 @@ export const FilterButton = ({
     buyNow: state.buyNow,
   }))
 
-  const showFilterBadge =
-    minPrice || maxPrice || minRarity || maxRarity || traits.length || markets.length || buyNow ? true : false
+  const showFilterBadge = minPrice || maxPrice || minRarity || maxRarity || traits.length || markets.length || buyNow
   return (
     <Box
       className={clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)}
@@ -47,7 +46,7 @@ export const FilterButton = ({
     >
       {showFilterBadge && (
         <Row className={styles.filterBadge} color={isFiltersExpanded ? 'grey700' : 'blue400'}>
-          {String.fromCharCode(8226)}
+          •
         </Row>
       )}
       <FilterIcon
@@ -59,7 +58,7 @@ export const FilterButton = ({
         <Box display="inline-block" position="relative">
           {!isFiltersExpanded && (
             <Box as="span" position="absolute" left="4" style={{ top: '5px', fontSize: '8px' }}>
-              {String.fromCharCode(8226)}
+              •
             </Box>
           )}
           <Box paddingLeft={!isFiltersExpanded ? '12' : '2'}>{results ? putCommas(results) : 0} results</Box>

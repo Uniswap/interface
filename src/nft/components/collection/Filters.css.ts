@@ -1,13 +1,22 @@
 import { style } from '@vanilla-extract/css'
-import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
+import { breakpoints, sprinkles, themeVars } from 'nft/css/sprinkles.css'
 
 export const container = style([
   sprinkles({
-    paddingTop: '24',
     overflow: 'auto',
-    maxHeight: 'full',
+    height: 'viewHeight',
+    paddingTop: '24',
   }),
   {
+    width: '300px',
+    paddingBottom: '96px',
+    '@media': {
+      [`(max-width: ${breakpoints.sm - 1}px)`]: {
+        width: 'auto',
+        height: 'auto',
+        paddingBottom: '0px',
+      },
+    },
     selectors: {
       '&::-webkit-scrollbar': {
         display: 'none',

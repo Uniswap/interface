@@ -20,13 +20,7 @@ export const Filters = () => {
   }
 
   return (
-    <Box
-      style={{
-        width: !isMobile ? '300px' : '',
-        height: !isMobile ? 'calc(100vh - 96px)' : 'auto',
-      }}
-      className={styles.container}
-    >
+    <Box className={styles.container}>
       <Row width="full" justifyContent="space-between">
         <Row as="span" fontSize="20" color="blackBlue">
           Filters
@@ -36,6 +30,7 @@ export const Filters = () => {
         <Row
           justifyContent="space-between"
           className={styles.rowHover}
+          gap="2"
           paddingTop="12"
           paddingRight="16"
           paddingBottom="12"
@@ -50,7 +45,7 @@ export const Filters = () => {
         >
           <Box fontSize="14" fontWeight="medium" as="summary">
             Buy now
-          </Box>{' '}
+          </Box>
           <Radio hovered={buyNowHovered} checked={buyNow} onChange={handleBuyNowToggle} />
         </Row>
       </Column>

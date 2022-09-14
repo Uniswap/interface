@@ -8,6 +8,8 @@ import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring/web'
 
+const FILTER_WIDTH = 332
+
 const Collection = () => {
   const { contractAddress } = useParams()
 
@@ -18,7 +20,6 @@ const Collection = () => {
     CollectionStatsFetcher(contractAddress as string)
   )
 
-  const FILTER_WIDTH = 332
   /// @reviewer these look the same now but will be diff later
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
@@ -47,7 +48,7 @@ const Collection = () => {
           {isFiltersExpanded && <Filters />}
         </Box>
 
-        {/* @ts-ignore */}
+        {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
         <AnimatedBox
           style={{
             transform: gridX.interpolate((x) => `translate(${x as number}px)`),
