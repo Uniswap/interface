@@ -6,8 +6,7 @@ import { Center, Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { subhead, subheadSmall } from 'nft/css/common.css'
 import { useBag, useIsMobile, useSellAsset, useSellPageState, useWalletBalance, useWalletCollections } from 'nft/hooks'
-import { fetchWalletAssets } from 'nft/queries'
-import { fetchMultipleCollectionStats, OSCollectionsFetcher } from 'nft/queries'
+import { fetchMultipleCollectionStats, fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
 import { SellPageStateType, WalletAsset } from 'nft/types'
 import { Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -99,10 +98,6 @@ export const SelectPage = () => {
       setDisplayAssets(walletAssets, listFilter)
     }
   }, [searchText, walletAssets, listFilter, setDisplayAssets])
-
-  useEffect(() => {
-    setDisplayAssets(walletAssets, listFilter)
-  }, [walletAssets, listFilter, setDisplayAssets])
 
   useEffect(() => {
     if (ownerCollections?.length && collectionStats?.length) {
