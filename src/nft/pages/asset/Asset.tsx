@@ -179,11 +179,13 @@ const Asset = () => {
                   background="transparent"
                   cursor="pointer"
                   onClick={() => {
-                    if (!parsed.origin || parsed.origin === 'collection')
+                    if (!parsed.origin || parsed.origin === 'collection') {
                       navigate(`/nft/collection/${asset.address}`, undefined)
-                    else if (parsed.origin === 'sell') navigate('/nft/sell', undefined)
-                    else if (parsed.origin === 'explore') navigate(`/nft`, undefined)
-                    else if (parsed.origin === 'activity') {
+                    } else if (parsed.origin === 'sell') {
+                      navigate('/nft/sell', undefined)
+                    } else if (parsed.origin === 'explore') {
+                      navigate(`/nft`, undefined)
+                    } else if (parsed.origin === 'activity') {
                       navigate(`/nft/collection/${asset.address}/activity`, undefined)
                     }
                   }}
