@@ -29,7 +29,9 @@ const AdvancedModeSetting = () => {
           <span className="settingLabel">
             <Trans>Advanced Mode</Trans>
           </span>
-          <QuestionHelper text={t`Enables high slippage trades. Use at your own risk`} />
+          <QuestionHelper
+            text={t`You can make trades with high price impact and without any confirmation prompts. Enable at your own risk`}
+          />
         </Flex>
         <Toggle id="toggle-expert-mode-button" isActive={expertMode} toggle={handleToggleAdvancedMode} />
       </Flex>

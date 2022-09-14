@@ -4,7 +4,7 @@ import { X } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import { ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { ButtonWarning } from 'components/Button'
 import Modal from 'components/Modal'
 import useTheme from 'hooks/useTheme'
 import { useExpertModeManager } from 'state/user/hooks'
@@ -79,8 +79,8 @@ function AdvanceModeModal({ show, setShow }: { show: boolean; setShow: (v: boole
             <Text color={theme.warning} as="span" fontWeight="500">
               Advanced Mode
             </Text>{' '}
-            turns off the &apos;Confirm&apos; transaction prompt and allows high slippage trades that can result in bad
-            rates and lost funds.
+            turns off the &apos;Confirm&apos; transaction prompt while trading and allows trades with high price impact
+            that can result in bad rates and lost funds.
           </Trans>
         </Text>
 
@@ -103,14 +103,8 @@ function AdvanceModeModal({ show, setShow }: { show: boolean; setShow: (v: boole
         </Text>
 
         <Flex sx={{ gap: '16px' }} marginTop="28px" justifyContent={'center'}>
-          <ButtonOutlined onClick={handleConfirm} style={{ fontSize: '16px', flex: 1, padding: '10px' }}>
-            <Trans>Confirm</Trans>
-          </ButtonOutlined>
-
-          <ButtonPrimary
+          <ButtonWarning
             style={{
-              border: 'none',
-              background: theme.warning,
               flex: 1,
               fontSize: '16px',
               padding: '10px',
@@ -120,8 +114,15 @@ function AdvanceModeModal({ show, setShow }: { show: boolean; setShow: (v: boole
               setShow(false)
             }}
           >
-            <Trans>Cancel</Trans>
-          </ButtonPrimary>
+            <Trans>No, go back</Trans>
+          </ButtonWarning>
+          <ButtonWarning
+            disabled={confirmText.trim().toLowerCase() !== 'confirm'}
+            style={{ fontSize: '16px', flex: 1, padding: '10px' }}
+            onClick={handleConfirm}
+          >
+            <Trans>Confirm</Trans>
+          </ButtonWarning>
         </Flex>
       </ModalContentWrapper>
     </Modal>

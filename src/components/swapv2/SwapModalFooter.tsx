@@ -1,7 +1,8 @@
 import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
+import { rgba } from 'polished'
 import React, { useMemo, useState } from 'react'
-import { Repeat } from 'react-feather'
+import { AlertTriangle, Repeat } from 'react-feather'
 import { Text } from 'rebass'
 
 import InfoHelper from 'components/InfoHelper'
@@ -49,6 +50,9 @@ export default function SwapModalFooter({
   const nativeOutput = useCurrencyConvertedToNative(trade.outputAmount.currency as Currency)
 
   const formattedFeeAmountUsd = useMemo(() => getFormattedFeeAmountUsd(trade, feeConfig), [trade, feeConfig])
+  const { priceImpact } = trade
+  const highPriceImpact = priceImpact > 5
+  const veryHighPriceImpact = priceImpact > 15
 
   return (
     <>
@@ -114,8 +118,11 @@ export default function SwapModalFooter({
             </TYPE.black>
             <InfoHelper size={14} text={t`Estimated change in price due to the size of your transaction`} />
           </RowFixed>
-          <TYPE.black fontSize={14} color={trade.priceImpact > 5 ? theme.red : theme.text}>
-            {trade.priceImpact > 0.01 ? trade.priceImpact.toFixed(3) : '< 0.01'}%
+          <TYPE.black
+            fontSize={14}
+            color={veryHighPriceImpact ? theme.red : highPriceImpact ? theme.warning : theme.text}
+          >
+            {priceImpact > 0.01 ? parseFloat(priceImpact.toFixed(3)) : '< 0.01'}%
           </TYPE.black>
         </RowBetween>
 
@@ -142,17 +149,37 @@ export default function SwapModalFooter({
           </RowBetween>
         )}
       </AutoColumn>
-
+      {highPriceImpact && (
+        <AutoRow
+          style={{
+            marginTop: '16px',
+            padding: '15px 20px',
+            borderRadius: '16px',
+            backgroundColor: rgba(veryHighPriceImpact ? theme.red : theme.warning, 0.35),
+            color: theme.text,
+            fontSize: '12px',
+            fontWeight: 400,
+            lineHeight: '18px',
+          }}
+        >
+          <AlertTriangle
+            color={veryHighPriceImpact ? theme.red : theme.warning}
+            size={16}
+            style={{ marginRight: '10px' }}
+          />
+          {veryHighPriceImpact ? <Trans>Price impact is Very High!</Trans> : <Trans>Price impact is High!</Trans>}
+        </AutoRow>
+      )}
       <AutoRow>
         <ButtonError
           onClick={onConfirm}
           disabled={disabledConfirm}
           style={{
-            margin: '28px 0 0 0',
-            ...(trade.priceImpact > 5 && {
+            marginTop: '24px',
+            ...((highPriceImpact || veryHighPriceImpact) && {
               border: 'none',
-              background: theme.red,
-              color: theme.white,
+              background: veryHighPriceImpact ? theme.red : theme.warning,
+              color: theme.text,
             }),
           }}
           id="confirm-swap-or-send"
