@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
-import { Currency, Pair, TokenAmount } from '@teleswap/sdk'
+import { Currency, Pair, Token, TokenAmount } from '@teleswap/sdk'
 import { useMemo } from 'react'
 
 import { useActiveWeb3React } from '../hooks'
@@ -16,22 +16,29 @@ export enum PairState {
   INVALID
 }
 
-export function usePairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][] {
+export function usePairs(
+  currencies: [Currency | undefined, Currency | undefined, boolean | undefined][]
+): [PairState, Pair | null][] {
   const { chainId } = useActiveWeb3React()
-
   const tokens = useMemo(
     () =>
-      currencies.map(([currencyA, currencyB]) => [
-        wrappedCurrency(currencyA, chainId),
-        wrappedCurrency(currencyB, chainId)
-      ]),
+      currencies.map(
+        ([currencyA, currencyB, stable]) =>
+          [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId), stable] as [
+            Token | undefined,
+            Token | undefined,
+            boolean | undefined
+          ]
+      ),
     [chainId, currencies]
   )
 
   const pairAddresses = useMemo(
     () =>
-      tokens.map(([tokenA, tokenB]) => {
-        return tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB) : undefined
+      tokens.map(([tokenA, tokenB, stable]) => {
+        return tokenA && tokenB && stable !== undefined && !tokenA.equals(tokenB)
+          ? Pair.getAddress(tokenA, tokenB, stable)
+          : undefined
       }),
     [tokens]
   )
@@ -43,20 +50,22 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       const { result: reserves, loading } = result
       const tokenA = tokens[i][0]
       const tokenB = tokens[i][1]
+      const stable = tokens[i][2]
 
       if (loading) return [PairState.LOADING, null]
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) return [PairState.INVALID, null]
+      if (stable === undefined) return [PairState.INVALID, null]
       if (!reserves) return [PairState.NOT_EXISTS, null]
       const { reserve0, reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       return [
         PairState.EXISTS,
-        new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()))
+        new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()), stable)
       ]
     })
   }, [results, tokens])
 }
 
-export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null] {
-  return usePairs([[tokenA, tokenB]])[0]
+export function usePair(tokenA?: Currency, tokenB?: Currency, stable?: boolean): [PairState, Pair | null] {
+  return usePairs([[tokenA, tokenB, stable]])[0]
 }

@@ -11,6 +11,7 @@ export interface SerializedToken {
 export interface SerializedPair {
   token0: SerializedToken
   token1: SerializedToken
+  stable: boolean
 }
 
 export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>('user/updateMatchesDarkMode')
