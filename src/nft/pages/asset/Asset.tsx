@@ -109,10 +109,10 @@ const Asset = () => {
 
   useEffect(() => {
     if (asset.creator) setCreatorAddress(asset.creator.address)
-
-    // @ts-ignore
     if (asset.owner) setOwnerAddress(asset.owner)
   }, [asset])
+
+  console.log(asset)
 
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
@@ -252,12 +252,12 @@ const Asset = () => {
                 <a
                   target="_blank"
                   rel="noreferrer"
-                  href={`https://etherscan.io/address/${asset.owner?.address}`}
+                  href={`https://etherscan.io/address/${asset.owner}`}
                   style={{ textDecoration: 'none' }}
                 >
                   <CollectionProfile
                     label="Owner"
-                    avatarUrl={asset.owner?.profile_img_url}
+                    avatarUrl=""
                     name={ownerEnsName.ENSName ?? shortenAddress(ownerAddress, 0, 4)}
                   />
                 </a>
