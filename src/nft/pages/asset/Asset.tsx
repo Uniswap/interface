@@ -12,10 +12,10 @@ import { CollectionProfile } from '../../components/details/CollectionProfile'
 import { Details } from '../../components/details/Details'
 import { Traits } from '../../components/details/Traits'
 import { Center, Column, Row } from '../../components/Flex'
-import { CloseDropDownIcon, CornerDownLeftIcon, ShareIcon, SuspiciousIcon } from '../../components/icons'
+import { CloseDropDownIcon, CornerDownLeftIcon, ShareIcon } from '../../components/icons'
 import { ExpandableText } from '../../components/layout/ExpandableText'
 import { Panel, Tab, Tabs } from '../../components/layout/Tabs'
-import { badge, header2 } from '../../css/common.css'
+import { header2 } from '../../css/common.css'
 import { themeVars } from '../../css/sprinkles.css'
 import { useBag } from '../../hooks'
 import { fetchSingleAsset } from '../../queries'
@@ -23,7 +23,7 @@ import { CollectionInfoForAsset, GenieAsset } from '../../types'
 import { shortenAddress } from '../../utils/address'
 import { isAudio } from '../../utils/isAudio'
 import { isVideo } from '../../utils/isVideo'
-import { fallbackProvider, rarityProviderLogo } from '../../utils/rarity'
+import { rarityProviderLogo } from '../../utils/rarity'
 import * as styles from './Asset.css'
 
 const AudioPlayer = ({
@@ -111,7 +111,7 @@ const Asset = () => {
     if (asset.owner) setOwnerAddress(asset.owner)
   }, [asset])
 
-  const { rarityProvider, rarityLogo } = useMemo(
+  const { rarityProvider } = useMemo(
     () =>
       asset.rarity
         ? {
