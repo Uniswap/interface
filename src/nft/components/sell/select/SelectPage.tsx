@@ -11,6 +11,7 @@ import { SellPageStateType, WalletAsset } from 'nft/types'
 import { Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
+import { Link } from 'react-router-dom'
 
 import * as styles from './SelectPage.css'
 
@@ -227,87 +228,90 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
   }
 
   return (
-    <Column
-      as="a"
-      href={`#/nft/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=sell`}
-      color={'blackBlue'}
-      className={subheadSmall}
-      onMouseEnter={toggleBoxHovered}
-      onMouseLeave={toggleBoxHovered}
+    <Link
+      to={`/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=sell`}
+      style={{ textDecoration: 'none' }}
     >
-      <Box
-        as="img"
-        alt={asset.name}
-        width="full"
-        borderTopLeftRadius="20"
-        borderTopRightRadius="20"
-        src={asset.image_url || '/nft/svgs/image-placeholder.svg'}
-        style={{ aspectRatio: '1' }}
-      />
       <Column
-        position="relative"
-        borderBottomLeftRadius="20"
-        borderBottomRightRadius="20"
-        transition="250"
-        backgroundColor={boxHovered ? 'medGray' : 'lightGray'}
-        paddingY="12"
-        paddingX="12"
+        color={'blackBlue'}
+        className={subheadSmall}
+        onMouseEnter={toggleBoxHovered}
+        onMouseLeave={toggleBoxHovered}
       >
-        <Box className={subheadSmall} overflow="hidden" textOverflow="ellipsis" marginTop="4" lineHeight="20">
-          {asset.name ? asset.name : `#${asset.tokenId}`}
-        </Box>
-        <Box fontSize="12" marginTop="4" lineHeight="16" overflow="hidden" textOverflow="ellipsis">
-          {asset.collection?.name}
-          {asset.collectionIsVerified ? <VerifiedIcon className={styles.verifiedBadge} /> : null}
-        </Box>
-        <Box as="span" fontSize="12" lineHeight="16" color="darkGray" marginTop="8">
-          Last:&nbsp;
-          {asset.lastPrice ? (
-            <>
-              {formatEth(asset.lastPrice)}
-              &nbsp;ETH
-            </>
-          ) : (
-            <Box as="span" marginLeft="6">
-              &mdash;
-            </Box>
-          )}
-        </Box>
-        <Box as="span" fontSize="12" lineHeight="16" color="darkGray" marginTop="4">
-          Floor:&nbsp;
-          {asset.floorPrice ? (
-            <>
-              {formatEth(asset.floorPrice)}
-              &nbsp;ETH
-            </>
-          ) : (
-            <Box as="span" marginLeft="8">
-              &mdash;
-            </Box>
-          )}
-        </Box>
         <Box
-          marginTop="12"
-          textAlign="center"
+          as="img"
+          alt={asset.name}
           width="full"
-          borderRadius="12"
-          paddingY="8"
+          borderTopLeftRadius="20"
+          borderTopRightRadius="20"
+          src={asset.image_url || '/nft/svgs/image-placeholder.svg'}
+          style={{ aspectRatio: '1' }}
+        />
+        <Column
+          position="relative"
+          borderBottomLeftRadius="20"
+          borderBottomRightRadius="20"
           transition="250"
-          color={buttonHovered ? 'blackBlue' : isSelected ? 'red400' : 'genieBlue'}
-          backgroundColor={buttonHovered ? (isSelected ? 'red400' : 'genieBlue') : 'lightGray'}
-          className={subheadSmall}
-          onMouseEnter={toggleButtonHovered}
-          onMouseLeave={toggleButtonHovered}
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            handleSelect()
-          }}
+          backgroundColor={boxHovered ? 'medGray' : 'lightGray'}
+          paddingY="12"
+          paddingX="12"
         >
-          {isSelected ? 'Remove' : 'Select'}
-        </Box>
+          <Box className={subheadSmall} overflow="hidden" textOverflow="ellipsis" marginTop="4" lineHeight="20">
+            {asset.name ? asset.name : `#${asset.tokenId}`}
+          </Box>
+          <Box fontSize="12" marginTop="4" lineHeight="16" overflow="hidden" textOverflow="ellipsis">
+            {asset.collection?.name}
+            {asset.collectionIsVerified ? <VerifiedIcon className={styles.verifiedBadge} /> : null}
+          </Box>
+          <Box as="span" fontSize="12" lineHeight="16" color="darkGray" marginTop="8">
+            Last:&nbsp;
+            {asset.lastPrice ? (
+              <>
+                {formatEth(asset.lastPrice)}
+                &nbsp;ETH
+              </>
+            ) : (
+              <Box as="span" marginLeft="6">
+                &mdash;
+              </Box>
+            )}
+          </Box>
+          <Box as="span" fontSize="12" lineHeight="16" color="darkGray" marginTop="4">
+            Floor:&nbsp;
+            {asset.floorPrice ? (
+              <>
+                {formatEth(asset.floorPrice)}
+                &nbsp;ETH
+              </>
+            ) : (
+              <Box as="span" marginLeft="8">
+                &mdash;
+              </Box>
+            )}
+          </Box>
+          <Box
+            marginTop="12"
+            textAlign="center"
+            width="full"
+            borderRadius="12"
+            paddingY="8"
+            transition="250"
+            color={buttonHovered ? 'blackBlue' : isSelected ? 'red400' : 'genieBlue'}
+            backgroundColor={buttonHovered ? (isSelected ? 'red400' : 'genieBlue') : 'lightGray'}
+            className={subheadSmall}
+            onMouseEnter={toggleButtonHovered}
+            onMouseLeave={toggleButtonHovered}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              handleSelect()
+            }}
+          >
+            {isSelected ? 'Remove' : 'Select'}
+          </Box>
+        </Column>
       </Column>
-    </Column>
+    </Link>
   )
 }
 
