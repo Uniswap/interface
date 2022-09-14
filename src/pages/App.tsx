@@ -23,6 +23,7 @@ import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
 import Navbar from '../components/NavBar'
 import Popups from '../components/Popups'
+import { LoadingTokenDetails } from '../components/Tokens/TokenDetails/LoadingTokenDetails'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
@@ -40,7 +41,6 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import { LoadingTokenDetails } from './TokenDetails'
 import Tokens, { LoadingTokens } from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
@@ -233,8 +233,8 @@ export default function App() {
                     <>
                       <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
                       <Route path="/nfts" element={<NftExplore />} />
-                      <Route path="/nft/sell" element={<Sell />} />
-                      <Route path="/nft/asset/:contractAddress/:tokenId" element={<Asset />} />
+                      <Route path="/nfts/sell" element={<Sell />} />
+                      <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
                     </>
                   )}
                 </Routes>

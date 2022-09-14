@@ -1,22 +1,13 @@
+import { Footer, LeftPanel, RightPanel, TokenDetailsLayout } from 'pages/TokenDetails'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { LoadingBubble } from '../loading'
+import { AboutContainer, AboutHeader, ResourcesContainer } from './About'
+import { ContractAddressSection } from './AddressSection'
+import { BreadcrumbNavLink } from './BreadcrumbNavLink'
+import { ChartContainer, ChartHeader, TokenInfoContainer, TokenNameCell } from './ChartSection'
 import { DeltaContainer, TokenPrice } from './PriceChart'
-import {
-  AboutContainer,
-  AboutHeader,
-  BreadcrumbNavLink,
-  ChartContainer,
-  ChartHeader,
-  ContractAddressSection,
-  ResourcesContainer,
-  Stat,
-  StatPair,
-  StatsSection,
-  TokenInfoContainer,
-  TokenNameCell,
-  TopArea,
-} from './TokenDetailContainers'
+import { StatPair, StatWrapper, TokenStatsSection } from './StatsSection'
 
 const LoadingChartContainer = styled(ChartContainer)`
   height: 336px;
@@ -90,7 +81,7 @@ export function Wave() {
 /* Loading State: row component with loading bubbles */
 export default function LoadingTokenDetail() {
   return (
-    <TopArea>
+    <LeftPanel>
       <BreadcrumbNavLink to="/explore">
         <Space heightSize={20} />
       </BreadcrumbNavLink>
@@ -120,30 +111,30 @@ export default function LoadingTokenDetail() {
         </LoadingChartContainer>
         <Space heightSize={32} />
       </ChartHeader>
-      <StatsSection>
+      <TokenStatsSection>
         <StatsLoadingContainer>
           <StatPair>
-            <Stat>
+            <StatWrapper>
               <HalfLoadingBubble />
               <StatLoadingBubble />
-            </Stat>
-            <Stat>
+            </StatWrapper>
+            <StatWrapper>
               <HalfLoadingBubble />
               <StatLoadingBubble />
-            </Stat>
+            </StatWrapper>
           </StatPair>
           <StatPair>
-            <Stat>
+            <StatWrapper>
               <HalfLoadingBubble />
               <StatLoadingBubble />
-            </Stat>
-            <Stat>
+            </StatWrapper>
+            <StatWrapper>
               <HalfLoadingBubble />
               <StatLoadingBubble />
-            </Stat>
+            </StatWrapper>
           </StatPair>
         </StatsLoadingContainer>
-      </StatsSection>
+      </TokenStatsSection>
       <AboutContainer>
         <AboutHeader>
           <SquareLoadingBubble />
@@ -155,6 +146,16 @@ export default function LoadingTokenDetail() {
         <ResourcesContainer>{null}</ResourcesContainer>
       </AboutContainer>
       <ContractAddressSection>{null}</ContractAddressSection>
-    </TopArea>
+    </LeftPanel>
+  )
+}
+
+export function LoadingTokenDetails() {
+  return (
+    <TokenDetailsLayout>
+      <LoadingTokenDetail />
+      <RightPanel />
+      <Footer />
+    </TokenDetailsLayout>
   )
 }

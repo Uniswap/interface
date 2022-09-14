@@ -38,7 +38,7 @@ const useCardContext = () => {
   return context
 }
 
-const baseHref = (asset: GenieAsset) => `/#/nft/asset/${asset.address}/${asset.tokenId}?origin=collection`
+const baseHref = (asset: GenieAsset) => `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
 
 /* -------- ASSET CARD -------- */
 interface CardProps {
