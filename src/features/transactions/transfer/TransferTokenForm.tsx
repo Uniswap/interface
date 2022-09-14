@@ -13,6 +13,7 @@ import { Loading } from 'src/components/loading'
 import { WarningAction } from 'src/components/modals/types'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { ElementName } from 'src/features/telemetry/constants'
+import { useShouldCompressView } from 'src/features/transactions/hooks'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import {
   CurrencyField,
@@ -49,6 +50,8 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
     nftIn,
     chainId,
   } = derivedTransferInfo
+
+  const { shouldCompressView, onLayout } = useShouldCompressView()
 
   useUSDTokenUpdater(
     dispatch,
@@ -97,7 +100,7 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
   }, [])
 
   return (
-    <>
+    <Flex gap="none" onLayout={onLayout}>
       <Suspense fallback={null}>
         <TransferFormWarnings
           chainId={chainId}
@@ -122,6 +125,7 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
               currencyAmount={currencyAmounts[CurrencyField.INPUT]}
               currencyBalance={currencyBalances[CurrencyField.INPUT]}
               isUSDInput={isUSDInput}
+              showSoftInputOnFocus={shouldCompressView}
               value={formattedAmounts[CurrencyField.INPUT]}
               warnings={warnings}
               onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
@@ -157,7 +161,7 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
           </Flex>
         </Flex>
 
-        {!nftIn && (
+        {!nftIn && !shouldCompressView && (
           <DecimalPad
             setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
             value={formattedAmounts[CurrencyField.INPUT]}
@@ -175,6 +179,6 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
           onPress={onPressReview}
         />
       </AnimatedFlex>
-    </>
+    </Flex>
   )
 }

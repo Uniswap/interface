@@ -18,6 +18,7 @@ import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
+import { useShouldCompressView } from 'src/features/transactions/hooks'
 import {
   DerivedSwapInfo,
   useShowSwapNetworkNotification,
@@ -33,10 +34,9 @@ interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
   onNext: () => void
   derivedSwapInfo: DerivedSwapInfo
-  isCompressedView: boolean
 }
 
-export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }: SwapFormProps) {
+export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -64,6 +64,8 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
     onUpdateExactCurrencyField,
     onShowTokenSelector,
   } = useSwapActionHandlers(dispatch)
+
+  const { shouldCompressView, onLayout } = useShouldCompressView()
 
   useUSDTokenUpdater(
     dispatch,
@@ -132,7 +134,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
   }
 
   return (
-    <>
+    <Flex gap="none" onLayout={onLayout}>
       {showWarningModal && swapWarning?.title && (
         <WarningModal
           isVisible
@@ -157,7 +159,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
                 focus={exactCurrencyField === CurrencyField.INPUT}
                 isUSDInput={isUSDInput}
                 selection={inputSelection}
-                showSoftInputOnFocus={isCompressedView}
+                showSoftInputOnFocus={shouldCompressView}
                 value={formattedAmounts[CurrencyField.INPUT]}
                 warnings={warnings}
                 onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
@@ -207,7 +209,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
                     isUSDInput={isUSDInput}
                     selection={outputSelection}
                     showNonZeroBalancesOnly={false}
-                    showSoftInputOnFocus={isCompressedView}
+                    showSoftInputOnFocus={shouldCompressView}
                     value={formattedAmounts[CurrencyField.OUTPUT]}
                     warnings={warnings}
                     onPressIn={onCurrencyInputPress(CurrencyField.OUTPUT)}
@@ -245,7 +247,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
           </Trace>
         </AnimatedFlex>
         <AnimatedFlex exiting={FadeOutDown} gap="sm" justifyContent="flex-end" mb="lg" px="sm">
-          {!isCompressedView ? (
+          {!shouldCompressView ? (
             <DecimalPad
               resetSelection={resetSelection}
               selection={selection[exactCurrencyField]}
@@ -265,6 +267,6 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
           />
         </AnimatedFlex>
       </Flex>
-    </>
+    </Flex>
   )
 }

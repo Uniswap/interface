@@ -1,6 +1,6 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch, ReactElement, useCallback, useEffect, useState } from 'react'
-import { Keyboard, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-native'
+import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -32,9 +32,7 @@ interface TransactionFlowProps {
   onClose: () => void
 }
 
-type InnerContentProps = Pick<TransactionFlowProps, 'derivedInfo' | 'onClose' | 'dispatch'> & {
-  isCompressedView?: boolean
-}
+type InnerContentProps = Pick<TransactionFlowProps, 'derivedInfo' | 'onClose' | 'dispatch'>
 
 function isSwapInfo(
   derivedInfo: DerivedTransferInfo | DerivedSwapInfo
@@ -68,35 +66,14 @@ export function TransactionFlow({
     transform: [{ translateX: screenXOffset.value }],
   }))
 
-  // use initial content height only to determine native keyboard view
-  // because show/hiding the custom keyboard will change the content height
-  const [initialContentHeight, setInitialContentHeight] = useState<number | undefined>(undefined)
-
-  const onLayout = (event: LayoutChangeEvent) => {
-    const totalHeight = event.nativeEvent.layout.height
-    if (initialContentHeight !== undefined) return
-
-    setInitialContentHeight(totalHeight)
-  }
-
-  // TODO: add support for compressed view on TransferTokenForm
-  const isCompressedView = Boolean(
-    initialContentHeight && dimensions.fullHeight < initialContentHeight
-  )
-
   return (
     <TouchableWithoutFeedback onPress={onBackgroundPress}>
       <AnimatedFlex grow row flex={1} gap="none" py="md" style={wrapperStyle}>
-        <Flex grow gap="xs" width="100%" onLayout={onLayout}>
+        <Flex grow gap="xs" width="100%">
           <Text textAlign="center" variant="subhead">
             {flowName}
           </Text>
-          <InnerContentRouter
-            derivedInfo={derivedInfo}
-            dispatch={dispatch}
-            isCompressedView={isCompressedView}
-            onClose={onClose}
-          />
+          <InnerContentRouter derivedInfo={derivedInfo} dispatch={dispatch} onClose={onClose} />
         </Flex>
         {showTokenSelector ? tokenSelector : null}
         {showRecipientSelector && recipientSelector ? recipientSelector : null}
@@ -122,7 +99,6 @@ const useGetInnerContent = ({
   derivedInfo,
   onClose,
   dispatch,
-  isCompressedView,
   setStep,
 }: InnerContentProps & { setStep: (step: TransactionStep) => void }): {
   form: ReactElement
@@ -137,14 +113,7 @@ const useGetInnerContent = ({
   const isSwap = isSwapInfo(derivedInfo)
   if (isSwap) {
     return {
-      form: (
-        <SwapForm
-          derivedSwapInfo={derivedInfo}
-          dispatch={dispatch}
-          isCompressedView={!!isCompressedView}
-          onNext={onFormNext}
-        />
-      ),
+      form: <SwapForm derivedSwapInfo={derivedInfo} dispatch={dispatch} onNext={onFormNext} />,
       review: (
         <SwapReview
           derivedSwapInfo={derivedInfo}

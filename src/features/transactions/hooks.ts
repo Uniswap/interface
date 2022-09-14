@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { BigNumberish } from 'ethers'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { LayoutChangeEvent } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -18,6 +19,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { dimensions } from 'src/styles/sizing'
 
 // sorted oldest to newest
 export function useSortedTransactions(address: Address | null) {
@@ -240,4 +242,25 @@ export function useAllTransactionsBetweenAddresses(
     )
     return commonTxs.length ? commonTxs : EMPTY_ARRAY
   }, [recipient, sender, txnsToSearch])
+}
+
+const SCREEN_HEIGHT_BUFFER = 0.9
+
+export function useShouldCompressView() {
+  // use initial content height only to determine native keyboard view
+  // because show/hiding the custom keyboard will change the content height
+  const [initialContentHeight, setInitialContentHeight] = useState<number | undefined>(undefined)
+
+  const onLayout = (event: LayoutChangeEvent) => {
+    const totalHeight = event.nativeEvent.layout.height
+    if (initialContentHeight !== undefined) return
+
+    setInitialContentHeight(totalHeight)
+  }
+
+  const shouldCompressView = Boolean(
+    initialContentHeight && dimensions.fullHeight * SCREEN_HEIGHT_BUFFER < initialContentHeight
+  )
+
+  return { onLayout, shouldCompressView }
 }
