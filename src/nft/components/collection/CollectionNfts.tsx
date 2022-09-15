@@ -6,7 +6,7 @@ import { Center } from 'nft/components/Flex'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks'
 import { AssetsFetcher } from 'nft/queries'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 
@@ -48,6 +48,8 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     }
   )
 
+  const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
+
   const collectionNfts = useMemo(() => {
     if (!collectionAssets || !AssetsFetchSuccess) return undefined
 
@@ -70,7 +72,14 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
       {collectionNfts.length > 0 ? (
         <div className={styles.assetList}>
           {collectionNfts.map((asset) => {
-            return asset ? <CollectionAsset asset={asset} key={asset.address + asset.tokenId} /> : null
+            return asset ? (
+              <CollectionAsset
+                key={asset.address + asset.tokenId}
+                asset={asset}
+                mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+              />
+            ) : null
           })}
         </div>
       ) : (
