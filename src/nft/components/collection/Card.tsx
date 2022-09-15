@@ -197,6 +197,8 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
                 e.preventDefault()
                 setCurrentTokenPlayingMedia(undefined)
               }}
+              loop
+              playsInline
             >
               <source src={asset.animationUrl} />
             </Box>
