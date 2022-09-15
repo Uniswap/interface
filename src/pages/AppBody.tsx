@@ -1,7 +1,7 @@
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import React from 'react'
 import styled from 'styled-components/macro'
-import { Z_INDEX } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
 export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string; redesignFlag?: boolean }>`
   position: relative;
