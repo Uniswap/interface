@@ -37,6 +37,7 @@ const ActivityFeed = ({ address }: { address: string }) => {
       overflow="hidden"
       onMouseEnter={toggleHover}
       onMouseLeave={toggleHover}
+      marginTop="40"
       style={{ background: 'rgba(13, 14, 14, 0.7)', height: '270px', width: '60%' }}
     >
       {collectionActivity ? (

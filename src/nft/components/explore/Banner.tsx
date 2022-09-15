@@ -58,14 +58,7 @@ const Banner = () => {
               style={{ backgroundImage: `url(${collections[current].bannerImageUrl})` }}
             >
               <Box className={styles.bannerOverlay} width="full" />
-              <Box
-                as="section"
-                className={styles.section}
-                display="flex"
-                flexDirection="row"
-                flexWrap="nowrap"
-                paddingTop="40"
-              >
+              <Box as="section" className={styles.section} display="flex" flexDirection="row" flexWrap="nowrap">
                 <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
                 <ActivityFeed address={collections[current].address} />
               </Box>
