@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components/macro'
-import { Z_INDEX } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { useModalIsOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
