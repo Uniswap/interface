@@ -2,15 +2,24 @@ import { Trans } from '@lingui/macro'
 import { ParentSize } from '@visx/responsive'
 import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName } from 'components/AmplitudeAnalytics/constants'
-import SparklineChart from 'components/Charts/SparklineChart'
+import LineChart from 'components/Charts/LineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { getDurationDetails, SingleTokenData } from 'graphql/data/Token'
-import { TimePeriod } from 'graphql/data/Token'
+import { curveCardinal, scaleLinear } from 'd3'
+import { TokenPrices$key } from 'graphql/data/__generated__/TokenPrices.graphql'
+import {
+  filterPrices,
+  getDurationDetails,
+  PricePoint,
+  SingleTokenData,
+  TimePeriod,
+  tokenPricesFragment,
+} from 'graphql/data/Token'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
+import { useFragment } from 'react-relay'
 import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
@@ -33,7 +42,7 @@ import {
   useSetSortCategory,
   useToggleFavorite,
 } from '../state'
-import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
+import { DATA_EMPTY, formatDelta, getDeltaArrow, getPriceBounds } from '../TokenDetails/PriceChart'
 import { Category, SortDirection } from '../types'
 import { DISPLAYS } from './TimeSelector'
 
@@ -463,6 +472,7 @@ export default function LoadedRow({
   tokenData: SingleTokenData
   timePeriod: TimePeriod
 }) {
+  const theme = useTheme()
   const tokenAddress = tokenData?.tokens?.[0].address
   const currency = useCurrency(tokenAddress)
   const tokenName = tokenData?.name
@@ -476,6 +486,21 @@ export default function LoadedRow({
   const { volume, pricePercentChange } = getDurationDetails(tokenData, timePeriod)
   const arrow = pricePercentChange ? getDeltaArrow(pricePercentChange) : null
   const formattedDelta = pricePercentChange ? formatDelta(pricePercentChange) : null
+
+  // for sparkline
+  const key: TokenPrices$key | null | undefined = tokenData?.prices?.[0]
+  const tokenPricesData = useFragment(tokenPricesFragment, key ?? null)
+  const fetchedTokenPrices = tokenPricesData?.priceHistory
+  const priceMap = new Map<TimePeriod, PricePoint[] | undefined>([[timePeriod, filterPrices(fetchedTokenPrices)]])
+  const pricePoints = priceMap.get(timePeriod) ?? []
+  const hasData = pricePoints.length !== 0
+  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
+  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
+  const widthScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, 124])
+  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([42, 0])
+
+  /* Default curve doesn't look good for the ALL chart */
+  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : 0.9
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -543,7 +568,20 @@ export default function LoadedRow({
         volume={<ClickableContent>{volume ? formatDollarAmount(volume ?? undefined) : '-'}</ClickableContent>}
         sparkLine={
           <SparkLine>
-            <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>
+            <ParentSize>
+              {({ width, height }) => (
+                <LineChart
+                  data={pricePoints}
+                  getX={(p: PricePoint) => widthScale(p.timestamp)}
+                  getY={(p: PricePoint) => rdScale(p.value)}
+                  curve={curveCardinal.tension(curveTension)}
+                  color={pricePercentChange && pricePercentChange < 0 ? theme.accentFailure : theme.accentSuccess}
+                  strokeWidth={2}
+                  width={width}
+                  height={height}
+                />
+              )}
+            </ParentSize>
           </SparkLine>
         }
         first={tokenListIndex === 0}

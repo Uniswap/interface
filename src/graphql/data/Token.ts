@@ -107,7 +107,7 @@ const topTokensQuery = graphql`
     }
   }
 `
-const tokenPricesFragment = graphql`
+export const tokenPricesFragment = graphql`
   fragment TokenPrices on TokenProjectMarket {
     priceHistory(duration: $duration) {
       timestamp
@@ -257,7 +257,7 @@ const tokenPriceQuery = graphql`
   }
 `
 
-function filterPrices(prices: TokenPrices$data['priceHistory'] | undefined) {
+export function filterPrices(prices: TokenPrices$data['priceHistory'] | undefined) {
   return prices?.filter((p): p is PricePoint => Boolean(p && p.value))
 }
 
