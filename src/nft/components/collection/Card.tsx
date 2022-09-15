@@ -153,8 +153,9 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
-            aspectRatio: 'auto',
+            aspectRatio: '1',
             transition: 'transform 0.4s ease 0s',
+            willChange: 'transform',
             background: imageLoaded
               ? 'none'
               : `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
@@ -166,6 +167,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           onLoad={() => {
             setImageLoaded(true)
           }}
+          visibility={shouldPlay ? 'hidden' : 'visible'}
           className={clsx(hovered && styles.cardImageHover)}
         />
       </Box>
@@ -188,7 +190,9 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
               as="video"
               ref={vidRef}
               width="full"
-              height="full"
+              style={{
+                aspectRatio: '1',
+              }}
               onEnded={(e) => {
                 e.preventDefault()
                 setCurrentTokenPlayingMedia(undefined)
