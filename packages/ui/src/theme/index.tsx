@@ -250,7 +250,8 @@ html {
   /* background: url(${swapBottomBg}) center top 7rem no-repeat rgba(0,0,0,1);
   background-size: 61%; */
   box-sizing: border-box;
-  font-size: max(1.56vw, 16px);
+  // font-size: min(1.56vw, 16px);
+  font-size: calc(16.666px + 0.38833vw);
   ${({ theme }) => theme.mediaWidth.upToSmall`
     // font-size: max(4.15vw, 16px);
     font-size: 4.15vw;
