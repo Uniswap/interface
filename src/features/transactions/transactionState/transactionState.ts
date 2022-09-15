@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { MethodParameters } from '@uniswap/v3-sdk'
 import { shallowEqual } from 'react-redux'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
@@ -29,10 +28,6 @@ export interface TransactionState {
   exactAmountUSD?: string
   recipient?: string
   isUSDInput?: boolean
-  gasFeeEstimate?: GasFeeByTransactionType
-  optimismL1Fee?: OptimismL1FeeEstimate // Optimism txs have a L1 fee. Not relevant for submitting txs but needs to be accounted for in SwapDetails
-  exactApproveRequired?: boolean // undefined except in rare instances when infinite approve is not supported by a token
-  swapMethodParameters?: MethodParameters
   selectingCurrencyField?: CurrencyField
   showRecipientSelector?: boolean
 }
@@ -160,36 +155,6 @@ const slice = createSlice({
     toggleUSDInput: (state, action: PayloadAction<boolean>) => {
       state.isUSDInput = action.payload
     },
-    updateGasEstimates: (
-      state,
-      action: PayloadAction<{ gasEstimates: GasFeeByTransactionType }>
-    ) => {
-      state.gasFeeEstimate = {
-        ...state.gasFeeEstimate,
-        ...action.payload.gasEstimates,
-      }
-    },
-    updateOptimismL1Fee: (
-      state,
-      action: PayloadAction<{ optimismL1Fee?: OptimismL1FeeEstimate }>
-    ) => {
-      const { optimismL1Fee } = action.payload
-      state.optimismL1Fee = {
-        ...state.optimismL1Fee,
-        ...(optimismL1Fee ?? {}),
-      }
-    },
-    updateSwapMethodParamaters: (state, action: PayloadAction<MethodParameters | undefined>) => {
-      state.swapMethodParameters = action.payload
-    },
-    setExactApproveRequired: (state, action: PayloadAction<boolean>) => {
-      state.exactApproveRequired = action.payload
-    },
-    clearGasSwapData: (state) => {
-      state.gasFeeEstimate = undefined
-      state.exactApproveRequired = undefined
-      state.swapMethodParameters = undefined
-    },
     setTxId: (state, action: PayloadAction<string>) => {
       state.txId = action.payload
     },
@@ -210,11 +175,6 @@ export const {
   selectRecipient,
   clearRecipient,
   toggleUSDInput,
-  updateGasEstimates,
-  updateOptimismL1Fee,
-  updateSwapMethodParamaters,
-  clearGasSwapData,
-  setExactApproveRequired,
   setTxId,
   showTokenSelector,
   toggleShowRecipientSelector,

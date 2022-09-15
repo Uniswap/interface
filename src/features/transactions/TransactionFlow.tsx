@@ -115,12 +115,7 @@ const useGetInnerContent = ({
     return {
       form: <SwapForm derivedSwapInfo={derivedInfo} dispatch={dispatch} onNext={onFormNext} />,
       review: (
-        <SwapReview
-          derivedSwapInfo={derivedInfo}
-          dispatch={dispatch}
-          onNext={onReviewNext}
-          onPrev={onReviewPrev}
-        />
+        <SwapReview derivedSwapInfo={derivedInfo} onNext={onReviewNext} onPrev={onReviewPrev} />
       ),
       submitted: (
         <SwapStatus derivedSwapInfo={derivedInfo} onNext={onClose} onTryAgain={onRetrySubmit} />

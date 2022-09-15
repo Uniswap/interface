@@ -1,20 +1,12 @@
-import { MaxUint256 } from '@ethersproject/constants'
-import { MethodParameters } from '@uniswap/v3-sdk'
-import { BigNumber, providers } from 'ethers'
+import { providers } from 'ethers'
 import { getProvider } from 'src/app/walletContext'
-import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
-import { getTxGasSettings } from 'src/features/gas/utils'
-import { maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { Trade } from 'src/features/transactions/swap/useTrade'
-import { formatAsHexString, tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
-import { GasFeeByTransactionType } from 'src/features/transactions/transactionState/transactionState'
-import { TransactionType } from 'src/features/transactions/types'
+import { tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
+import { hexlifyTransaction } from 'src/features/transactions/transfer/transferTokenSaga'
+import { TransactionType, TransactionTypeInfo } from 'src/features/transactions/types'
 import { Account } from 'src/features/wallet/accounts/types'
-import { toSupportedChainId } from 'src/utils/chainId'
-import { currencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
-import { isZero } from 'src/utils/number'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 
@@ -22,69 +14,48 @@ export type SwapParams = {
   txId?: string
   account: Account
   trade: Trade
-  exactApproveRequired: boolean
-  methodParameters: MethodParameters
-  gasFeeEstimate: GasFeeByTransactionType
+  approveTxRequest?: providers.TransactionRequest
+  swapTxRequest: providers.TransactionRequest
 }
 
 export function* approveAndSwap(params: SwapParams) {
   try {
-    const {
-      account,
-      trade,
-      exactApproveRequired,
-      methodParameters: { calldata, value },
-      gasFeeEstimate,
-      txId,
-    } = params
-
-    const chainId = toSupportedChainId(trade.inputAmount.currency.chainId)
-    if (!chainId) throw new Error(`Unsupported chainId: ${chainId}`)
-
-    if (!trade.quote) throw new Error('Trade quote not provided by router endpoint')
-
-    const approveGasFeeEstimate = gasFeeEstimate[TransactionType.Approve]
-    const swapGasFeeEstimate = gasFeeEstimate[TransactionType.Swap]
-
-    if (approveGasFeeEstimate === undefined || swapGasFeeEstimate === undefined) {
-      throw new Error('Gas estimates were not provided')
+    const { account, approveTxRequest, swapTxRequest, txId, trade } = params
+    if (!swapTxRequest.chainId || !swapTxRequest.to || (approveTxRequest && !approveTxRequest.to)) {
+      throw new Error('approveAndSwap received incomplete transaction request details')
     }
 
-    const inputTokenAddress = currencyAddress(trade.inputAmount.currency)
-    const typeInfo = tradeToTransactionInfo(trade)
-
-    const approveAmount = exactApproveRequired ? BigNumber.from(trade.quote.amount) : MaxUint256
+    const { chainId } = swapTxRequest
     const provider = yield* call(getProvider, chainId)
     const nonce = yield* call([provider, provider.getTransactionCount], account.address, 'pending')
-    const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId]
 
-    const approveSubmitted = yield* call(maybeApprove, {
-      account,
-      chainId,
-      inputTokenAddress,
-      spender: swapRouterAddress,
-      approveAmount,
-      gasFeeEstimate: approveGasFeeEstimate,
-    })
+    if (approveTxRequest && approveTxRequest.to) {
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.Approve,
+        tokenAddress: approveTxRequest.to,
+        spender: swapTxRequest.to,
+      }
 
-    const swapGasSettings = getTxGasSettings(swapGasFeeEstimate)
-
-    // For whatever reason Ethers throws for L2s if we don't convert strings to hex strings
-    const request: providers.TransactionRequest = {
-      from: account.address,
-      to: swapRouterAddress,
-      data: calldata,
-      nonce: formatAsHexString(approveSubmitted ? nonce + 1 : nonce),
-      ...(!value || isZero(value) ? {} : { value: formatAsHexString(value) }),
-      ...swapGasSettings,
+      yield* call(sendTransaction, {
+        chainId,
+        account,
+        options: { request: hexlifyTransaction(approveTxRequest) },
+        typeInfo,
+      })
     }
 
+    const request = hexlifyTransaction({
+      ...swapTxRequest,
+      nonce: approveTxRequest ? nonce + 1 : undefined,
+    })
+
+    const swapTypeInfo = tradeToTransactionInfo(trade)
     yield* call(sendTransaction, {
       txId,
       chainId,
       account,
       options: { request },
-      typeInfo,
+      typeInfo: swapTypeInfo,
     })
   } catch (e) {
     logger.error('swapSaga', 'approveAndSwap', 'Failed:', e)

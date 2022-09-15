@@ -5,6 +5,7 @@ import WETH_ABI from 'src/abis/weth.json'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
+import { hexlifyTransaction } from 'src/features/transactions/transfer/transferTokenSaga'
 import {
   TransactionOptions,
   TransactionType,
@@ -53,7 +54,9 @@ export function* wrap(params: Params) {
   }
 
   const options: TransactionOptions = {
-    request: txRequest,
+    // TODO: do hexlify in `sendTransaction` instead of before
+    // and change for all other instances
+    request: hexlifyTransaction(txRequest),
   }
 
   yield* call(sendTransaction, {

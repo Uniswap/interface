@@ -1,17 +1,21 @@
+import { MaxUint256 } from '@ethersproject/constants'
+import { SwapRouter } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, NativeCurrency, Percent, TradeType } from '@uniswap/sdk-core'
-import { MethodParameters } from '@uniswap/v3-sdk'
 import { BigNumber, providers } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
+import ERC20_ABI from 'src/abis/erc20.json'
+import { Erc20 } from 'src/abis/types'
 import { useAppDispatch } from 'src/app/hooks'
-import { useProvider } from 'src/app/walletContext'
+import { useContractManager, useProvider } from 'src/app/walletContext'
+import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
-import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
-import { GasSpeed } from 'src/features/gas/types'
+import { ContractManager } from 'src/features/contracts/ContractManager'
+import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import {
@@ -20,9 +24,11 @@ import {
   useUSDCValue,
 } from 'src/features/routing/useUSDCPrice'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import { PERMITTABLE_TOKENS } from 'src/features/transactions/permit/permittableTokens'
+import { usePermitSignature } from 'src/features/transactions/permit/usePermitSignature'
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
-import { getWrapType, isWrapAction } from 'src/features/transactions/swap/utils'
+import { getWrapType, isWrapAction, sumGasFees } from 'src/features/transactions/swap/utils'
 import { getSwapWarnings } from 'src/features/transactions/swap/validate'
 import {
   getWethContract,
@@ -31,20 +37,14 @@ import {
   WrapType,
 } from 'src/features/transactions/swap/wrapSaga'
 import {
-  clearGasSwapData,
   CurrencyField,
-  GasFeeByTransactionType,
-  OptimismL1FeeEstimate,
   TransactionState,
   transactionStateActions,
   updateExactAmountToken,
   updateExactAmountUSD,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
-import { TransactionType } from 'src/features/transactions/types'
-import { Account } from 'src/features/wallet/accounts/types'
-import { useActiveAccount } from 'src/features/wallet/hooks'
-import { toSupportedChainId } from 'src/utils/chainId'
+import { useActiveAccount, useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
 import { useAsyncData, usePrevious } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
@@ -56,11 +56,27 @@ export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_T
 const NUM_CURRENCY_SIG_FIGS = 6
 const NUM_USD_DECIMALS_DISPLAY = 2
 
+// TODO: remove hardcoded values and use gas estimate from trade quote endpoint once
+// it is updated. Until then, using conservative values to ensure swaps succeeed
+const SWAP_GAS_LIMIT_FALLBACKS: Record<ChainId, string> = {
+  [ChainId.Mainnet]: '420000',
+  [ChainId.Rinkeby]: '420000',
+  [ChainId.Ropsten]: '420000',
+  [ChainId.Goerli]: '420000',
+  [ChainId.Kovan]: '420000',
+  [ChainId.Optimism]: '420000',
+  [ChainId.OptimisticKovan]: '420000',
+  [ChainId.Polygon]: '420000',
+  [ChainId.PolygonMumbai]: '420000',
+  [ChainId.ArbitrumOne]: '1200000',
+  [ChainId.ArbitrumRinkeby]: '1200000',
+}
+
 export type DerivedSwapInfo<
   TInput = Currency,
   TOutput extends Currency = Currency
 > = BaseDerivedInfo<TInput> & {
-  chainId?: ChainId
+  chainId: ChainId
   currencies: BaseDerivedInfo<TInput>['currencies'] & {
     [CurrencyField.OUTPUT]: NullUndefined<TOutput>
   }
@@ -76,12 +92,8 @@ export type DerivedSwapInfo<
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
   isUSDInput?: boolean
-  gasFeeEstimate?: GasFeeByTransactionType
-  optimismL1Fee?: OptimismL1FeeEstimate
-  exactApproveRequired?: boolean
   nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
   selectingCurrencyField?: CurrencyField
-  swapMethodParameters?: MethodParameters
   txId?: string
 }
 
@@ -94,11 +106,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountToken,
     exactCurrencyField,
     isUSDInput,
-    gasFeeEstimate,
-    optimismL1Fee,
-    exactApproveRequired,
     selectingCurrencyField,
-    swapMethodParameters,
     txId,
   } = state
 
@@ -121,7 +129,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     }
   }, [currencyIn, currencyOut])
 
-  const chainId = currencyIn?.chainId ?? currencyOut?.chainId
+  const chainId = currencyIn?.chainId ?? currencyOut?.chainId ?? ChainId.Mainnet
 
   const { balance: tokenInBalance } = useTokenBalance(
     currencyIn?.isToken ? currencyIn : undefined,
@@ -238,8 +246,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tokenOutBalance,
   ])
 
-  const gasFee = useSwapGasFee(state.gasFeeEstimate, GasSpeed.Urgent)
-
   const warnings = getSwapWarnings(t, {
     account: activeAccount ?? undefined,
     currencyAmounts,
@@ -247,7 +253,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactCurrencyField,
     currencies,
     trade,
-    gasFee,
     nativeCurrencyBalance: nativeInBalance,
   })
 
@@ -267,12 +272,8 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       trade,
       wrapType,
       isUSDInput,
-      gasFeeEstimate,
-      optimismL1Fee,
-      exactApproveRequired,
       nativeCurrencyBalance: nativeInBalance,
       selectingCurrencyField,
-      swapMethodParameters,
       txId,
       warnings,
     }
@@ -284,15 +285,11 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountToken,
     exactAmountUSD,
     exactCurrencyField,
-    exactApproveRequired,
-    gasFeeEstimate,
-    optimismL1Fee,
     getFormattedInput,
     getFormattedOutput,
     isUSDInput,
     nativeInBalance,
     selectingCurrencyField,
-    swapMethodParameters,
     trade,
     txId,
     warnings,
@@ -382,7 +379,6 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
 
   const onSwitchCurrencies = () => {
     dispatch(transactionStateActions.switchCurrencySides())
-    dispatch(clearGasSwapData)
   }
 
   const onToggleUSDInput = (isUSDInput: boolean) =>
@@ -407,17 +403,24 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
 }
 
 export function useTransactionRequest(
-  derivedSwapInfo: DerivedSwapInfo
+  derivedSwapInfo: DerivedSwapInfo,
+  tokenApprovalInfo?: TokenApprovalInfo
 ): providers.TransactionRequest | undefined {
-  const account = useActiveAccount()
-  const chainId = toSupportedChainId(derivedSwapInfo.chainId)
-  const provider = useProvider(chainId ?? ChainId.Mainnet)
+  const wrapTxRequest = useWrapTransactionRequest(derivedSwapInfo)
+  const swapTxRequest = useSwapTransactionRequest(derivedSwapInfo, tokenApprovalInfo?.allowance)
+  return derivedSwapInfo.wrapType === WrapType.NotApplicable ? swapTxRequest : wrapTxRequest
+}
+
+function useWrapTransactionRequest(derivedSwapInfo: DerivedSwapInfo) {
+  const address = useActiveAccountAddressWithThrow()
+  const { chainId } = derivedSwapInfo
+  const provider = useProvider(chainId)
 
   const transactionFetcher = useCallback(() => {
-    if (!provider) return undefined
+    if (!provider || derivedSwapInfo.wrapType === WrapType.NotApplicable) return
 
-    return getTransactionRequest(provider, chainId, account, derivedSwapInfo)
-  }, [account, chainId, derivedSwapInfo, provider])
+    return getWrapTransactionRequest(provider, chainId, address, derivedSwapInfo)
+  }, [address, chainId, derivedSwapInfo, provider])
 
   return useAsyncData(transactionFetcher).data
 }
@@ -425,12 +428,14 @@ export function useTransactionRequest(
 const getWrapTransactionRequest = async (
   provider: providers.Provider,
   chainId: ChainId,
-  account: Account,
+  address: Address,
   derivedSwapInfo: DerivedSwapInfo
-): Promise<providers.TransactionRequest | undefined> => {
+): Promise<providers.TransactionRequest> => {
   const { currencyAmounts } = derivedSwapInfo
   const inputAmount = currencyAmounts[CurrencyField.INPUT]
-  if (!inputAmount) return
+  if (!inputAmount) {
+    throw new Error('inputAmount not defined when getting wrap tx request')
+  }
 
   const wethContract = await getWethContract(chainId, provider)
   const wethTx =
@@ -440,27 +445,180 @@ const getWrapTransactionRequest = async (
         })
       : await wethContract.populateTransaction.withdraw(`0x${inputAmount.quotient.toString(16)}`)
 
-  return { ...wethTx, from: account.address, chainId }
+  return { ...wethTx, from: address, chainId }
 }
 
-const getTransactionRequest = async (
-  provider: providers.Provider,
-  chainId: ChainId | null,
-  account: Account | null,
-  derivedSwapInfo: DerivedSwapInfo
-): Promise<providers.TransactionRequest | undefined> => {
-  // TODO: also use this to get Swap transaction requests
-  if (!account || !chainId || derivedSwapInfo.wrapType === WrapType.NotApplicable) return
+const MAX_APPROVE_AMOUNT = MaxUint256
+export function useTokenApprovalInfo(derivedSwapInfo: DerivedSwapInfo): {
+  data: TokenApprovalInfo | undefined
+  isLoading: boolean
+} {
+  const address = useActiveAccountAddressWithThrow()
+  const provider = useProvider(derivedSwapInfo.chainId)
+  const contractManager = useContractManager()
 
-  return getWrapTransactionRequest(provider, chainId, account, derivedSwapInfo)
+  const transactionFetcher = useCallback(() => {
+    if (!provider) return
+
+    return getTokenApprovalInfo(provider, contractManager, address, derivedSwapInfo)
+  }, [address, contractManager, derivedSwapInfo, provider])
+
+  return useAsyncData(transactionFetcher)
+}
+
+type TokenApprovalInfo = {
+  txRequest: providers.TransactionRequest | null
+  allowance: BigNumber | null
+}
+
+const NO_APPROVAL_REQUIRED = { txRequest: null, allowance: null }
+const getTokenApprovalInfo = async (
+  provider: providers.Provider,
+  contractManager: ContractManager,
+  address: Address,
+  derivedSwapInfo: DerivedSwapInfo
+): Promise<TokenApprovalInfo> => {
+  // wrap/unwraps do not need approval
+  if (derivedSwapInfo.wrapType !== WrapType.NotApplicable) return NO_APPROVAL_REQUIRED
+  const {
+    currencies,
+    trade: { trade },
+    chainId,
+  } = derivedSwapInfo
+  const currencyIn = currencies[CurrencyField.INPUT]
+
+  if (!currencyIn || !trade?.quote) {
+    throw new Error(
+      'cannot get transaction request for Swap without currencyIn or completed trade quote'
+    )
+  }
+
+  // native tokens do not need approvals
+  if (currencyIn.isNative) return NO_APPROVAL_REQUIRED
+
+  const spender = SWAP_ROUTER_ADDRESSES[chainId]
+  const tokenContract = contractManager.getOrCreateContract<Erc20>(
+    chainId,
+    currencyIn.address,
+    provider,
+    ERC20_ABI
+  )
+  const allowance = await tokenContract.callStatic.allowance(address, spender)
+  // tokens that can call `permit` do not need approve
+  if (PERMITTABLE_TOKENS[chainId]?.[currencyIn.address] || allowance.gt(trade.quote.amount)) {
+    return { txRequest: null, allowance }
+  }
+
+  let baseTransaction
+  try {
+    baseTransaction = await tokenContract.populateTransaction.approve(spender, MAX_APPROVE_AMOUNT, {
+      from: address,
+    })
+  } catch {
+    // above call errors when token restricts max approvals
+    baseTransaction = await tokenContract.populateTransaction.approve(
+      spender,
+      BigNumber.from(trade.quote.amount),
+      {
+        from: address,
+      }
+    )
+  }
+
+  return { txRequest: { ...baseTransaction, from: address, chainId }, allowance }
+}
+
+export function useSwapTransactionRequest(
+  derivedSwapInfo: DerivedSwapInfo,
+  tokenAllowance?: BigNumber | null
+): providers.TransactionRequest | undefined {
+  const {
+    chainId,
+    trade: { trade },
+    wrapType,
+  } = derivedSwapInfo
+  const address = useActiveAccountAddressWithThrow()
+  const { data: permitInfo, isLoading: permitInfoLoading } = usePermitSignature(
+    derivedSwapInfo,
+    tokenAllowance
+  )
+
+  return useMemo(() => {
+    if (wrapType !== WrapType.NotApplicable) return
+
+    const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId]
+    const baseSwapTx = {
+      from: address,
+      to: swapRouterAddress,
+      chainId,
+    }
+
+    if (permitInfoLoading) return
+
+    if (trade && permitInfo) {
+      const { calldata, value } = SwapRouter.swapCallParameters(trade, {
+        slippageTolerance: DEFAULT_SLIPPAGE_TOLERANCE_PERCENT,
+        recipient: address,
+        inputTokenPermit: permitInfo,
+      })
+
+      return { ...baseSwapTx, data: calldata, value }
+    }
+
+    const methodParameters = trade?.quote?.methodParameters
+    if (!methodParameters) {
+      throw new Error('Trade quote methodParameters were not provided by the router endpoint')
+    }
+
+    return {
+      ...baseSwapTx,
+      data: methodParameters.calldata,
+      value: methodParameters.value,
+
+      // TODO: use gasLimit from tenderly simulation if token is not approved
+      gasLimit:
+        tokenAllowance && !tokenAllowance.eq(0) ? undefined : SWAP_GAS_LIMIT_FALLBACKS[chainId],
+    }
+  }, [address, chainId, permitInfo, permitInfoLoading, tokenAllowance, trade, wrapType])
+}
+
+export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo) {
+  const { data: tokenApprovalInfo, isLoading: tokenApprovalInfoLoading } =
+    useTokenApprovalInfo(derivedSwapInfo)
+  const txRequest = useTransactionRequest(derivedSwapInfo, tokenApprovalInfo)
+
+  const approveFeeInfo = useTransactionGasFee(tokenApprovalInfo?.txRequest)
+  const txFeeInfo = useTransactionGasFee(txRequest)
+  const totalGasFee = sumGasFees(approveFeeInfo?.gasFee, txFeeInfo?.gasFee)
+
+  const txWithGasSettings = useMemo(() => {
+    if (!txRequest || !txFeeInfo) return
+
+    return { ...txRequest, ...txFeeInfo.params }
+  }, [txRequest, txFeeInfo])
+
+  const approveLoading =
+    tokenApprovalInfoLoading || Boolean(tokenApprovalInfo?.txRequest && !approveFeeInfo)
+
+  const approveTxWithGasSettings = useMemo(() => {
+    if (approveLoading || !tokenApprovalInfo?.txRequest) return
+
+    return { ...tokenApprovalInfo.txRequest, ...approveFeeInfo?.params }
+  }, [approveLoading, tokenApprovalInfo?.txRequest, approveFeeInfo?.params])
+
+  return {
+    txRequest: txWithGasSettings,
+    approveTxRequest: approveTxWithGasSettings,
+    totalGasFee,
+    isLoading: approveLoading,
+  }
 }
 
 /** Callback to submit trades and track progress */
 export function useSwapCallback(
-  trade: Trade | undefined | null,
-  gasFeeEstimate: GasFeeByTransactionType | undefined,
-  exactApproveRequired: boolean | undefined,
-  swapMethodParameters: MethodParameters | undefined,
+  approveTxRequest: providers.TransactionRequest | undefined,
+  swapTxRequest: providers.TransactionRequest | undefined,
+  trade: Trade | null | undefined,
   onSubmit?: () => void,
   txId?: string
 ): () => void {
@@ -468,16 +626,9 @@ export function useSwapCallback(
   const account = useActiveAccount()
 
   return useMemo(() => {
-    if (
-      !account ||
-      !trade ||
-      exactApproveRequired === undefined ||
-      gasFeeEstimate?.approve === undefined ||
-      !gasFeeEstimate?.swap ||
-      !swapMethodParameters
-    ) {
+    if (!account || !swapTxRequest || !trade) {
       return () => {
-        logger.error('hooks', 'useSwapCallback', 'Missing swapCallback parameters')
+        logger.error('hooks', 'useSwapCallback', 'Missing swapTx')
       }
     }
 
@@ -487,23 +638,13 @@ export function useSwapCallback(
           txId,
           account,
           trade,
-          exactApproveRequired,
-          methodParameters: swapMethodParameters,
-          gasFeeEstimate,
+          approveTxRequest,
+          swapTxRequest,
         })
       )
       onSubmit?.()
     }
-  }, [
-    txId,
-    account,
-    onSubmit,
-    appDispatch,
-    trade,
-    gasFeeEstimate,
-    exactApproveRequired,
-    swapMethodParameters,
-  ])
+  }, [account, swapTxRequest, appDispatch, txId, trade, approveTxRequest, onSubmit])
 }
 
 export function useWrapCallback(
@@ -555,46 +696,6 @@ export function useWrapCallback(
       },
     }
   }, [txId, account, appDispatch, inputCurrencyAmount, wrapType, txRequest])
-}
-
-export function useUpdateSwapGasEstimate(
-  transactionStateDispatch: React.Dispatch<AnyAction>,
-  trade: Trade | null
-) {
-  const dispatch = useAppDispatch()
-  useEffect(() => {
-    if (!trade) return
-    dispatch(estimateGasAction({ txType: TransactionType.Swap, trade, transactionStateDispatch }))
-  }, [trade, transactionStateDispatch, dispatch])
-}
-
-export function useSwapGasFee(
-  gasFeeEstimate: GasFeeByTransactionType | undefined,
-  gasSpeedPreference: GasSpeed,
-  optimismL1Fee?: OptimismL1FeeEstimate
-) {
-  const approveGasFeeInfo = gasFeeEstimate?.[TransactionType.Approve]
-  const approveGasFee =
-    approveGasFeeInfo === null ? '0' : approveGasFeeInfo?.fee[gasSpeedPreference]
-  const swapGasFee = gasFeeEstimate?.[TransactionType.Swap]?.fee[gasSpeedPreference]
-
-  const optimismL1ApproveFee = optimismL1Fee?.[TransactionType.Approve]
-  const optimismL1SwapFee = optimismL1Fee?.[TransactionType.Swap]
-  return useMemo(() => {
-    if (!approveGasFee || !swapGasFee) return undefined
-
-    let gasFee = BigNumber.from(approveGasFee).add(swapGasFee)
-
-    if (optimismL1ApproveFee) {
-      gasFee = gasFee.add(optimismL1ApproveFee)
-    }
-
-    if (optimismL1SwapFee) {
-      gasFee = gasFee.add(optimismL1SwapFee)
-    }
-
-    return gasFee.toString()
-  }, [approveGasFee, swapGasFee, optimismL1ApproveFee, optimismL1SwapFee])
 }
 
 // The first trade shown to the user is implicitly accepted but every subsequent update to

@@ -4,7 +4,6 @@ import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLink'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseData'
 import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
-import { estimateGasWatcher } from 'src/features/gas/estimateGasSaga'
 import {
   importAccountActions,
   importAccountReducer,
@@ -63,7 +62,6 @@ const sagas: any[] = [
   notificationWatcher,
   walletConnectSaga,
   signWcRequestSaga,
-  estimateGasWatcher,
   cloudBackupsManagerSaga,
 ]
 

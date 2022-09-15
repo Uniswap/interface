@@ -23,7 +23,6 @@ import {
   DerivedSwapInfo,
   useShowSwapNetworkNotification,
   useSwapActionHandlers,
-  useUpdateSwapGasEstimate,
   useUSDTokenUpdater,
 } from 'src/features/transactions/swap/hooks'
 import { getReviewActionName, isWrapAction } from 'src/features/transactions/swap/utils'
@@ -75,7 +74,6 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     currencies[exactCurrencyField] ?? undefined
   )
   useShowSwapNetworkNotification(chainId)
-  useUpdateSwapGasEstimate(dispatch, trade.trade)
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 

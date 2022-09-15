@@ -1,15 +1,22 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { MaxUint256 } from '@ethersproject/constants'
 import { BigintIsh } from '@uniswap/sdk-core'
-import { BigNumber, Contract } from 'ethers'
+import { BigNumber, Contract, providers } from 'ethers'
+import { useCallback } from 'react'
 import EIP_2612 from 'src/abis/eip_2612.json'
-import { getProvider, getSignerManager } from 'src/app/walletContext'
+import { useProvider, useWalletSigners } from 'src/app/walletContext'
+import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { PERMITTABLE_TOKENS, PermitType } from 'src/features/transactions/approve/permittableTokens'
-import { selectAccounts } from 'src/features/wallet/selectors'
+import { PERMITTABLE_TOKENS, PermitType } from 'src/features/transactions/permit/permittableTokens'
+import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
+import { WrapType } from 'src/features/transactions/swap/wrapSaga'
+import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
+import { Account } from 'src/features/wallet/accounts/types'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { signTypedData } from 'src/features/walletConnect/saga'
+import { useAsyncData } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
-import { call, select } from 'typed-redux-saga'
 
 const PERMIT_VALIDITY_TIME = 20 * 60 // 20 mins
 
@@ -31,13 +38,13 @@ interface AllowedPermitArguments extends BasePermitArguments {
 
 export type PermitOptions = StandardPermitArguments | AllowedPermitArguments
 
-export interface PermitSagaParams {
-  address: Address
+export interface PermitTokenParams {
+  account: Account
   chainId: ChainId
   tokenAddress: string
   spender: Address
   txAmount: string
-  allowance: BigNumber
+  allowance: BigNumber | null
 }
 
 const EIP712_DOMAIN_TYPE_NO_VERSION = [
@@ -69,25 +76,71 @@ const PERMIT_ALLOWED_TYPE = [
   { name: 'allowed', type: 'bool' },
 ]
 
-export function* signPermitMessage(params: PermitSagaParams) {
-  const { address, chainId, tokenAddress, spender, allowance, txAmount } = params
+export function usePermitSignature(
+  derivedSwapInfo: DerivedSwapInfo,
+  tokenAllowance?: BigNumber | null
+) {
+  const {
+    chainId,
+    currencies,
+    trade: { trade },
+    wrapType,
+  } = derivedSwapInfo
+  const provider = useProvider(chainId)
+  const signerManager = useWalletSigners()
+  const account = useActiveAccountWithThrow()
+  const currencyIn = currencies[CurrencyField.INPUT]
+
+  const permitFetcher = useCallback(() => {
+    // is a wrap or unwrap, skip getting signature
+    if (wrapType !== WrapType.NotApplicable) return
+    // no approvals/permits necessary for native token usage
+    if (!currencyIn || currencyIn.isNative) return
+    // other tx details are still loading
+    if (!provider || !tokenAllowance || !trade?.quote) return
+
+    const params: PermitTokenParams = {
+      account,
+      chainId,
+      tokenAddress: currencyIn.address,
+      spender: SWAP_ROUTER_ADDRESSES[chainId],
+      txAmount: trade.quote.amount,
+      allowance: tokenAllowance,
+    }
+
+    return getPermitSignature(provider, signerManager, params)
+  }, [
+    account,
+    chainId,
+    currencyIn,
+    provider,
+    signerManager,
+    tokenAllowance,
+    trade?.quote,
+    wrapType,
+  ])
+
+  return useAsyncData(permitFetcher)
+}
+
+async function getPermitSignature(
+  provider: providers.Provider,
+  signerManager: SignerManager,
+  params: PermitTokenParams
+) {
+  const { account, chainId, tokenAddress, spender, allowance, txAmount } = params
+  const { address } = account
   const permitInfo = PERMITTABLE_TOKENS[chainId]?.[tokenAddress]
 
-  if (allowance.gt(txAmount) || !permitInfo) {
+  if (allowance?.gt(txAmount) || !permitInfo) {
     logger.info('permitSaga', 'signPermitMessage', 'Permit not needed or not possible')
-    return
+    return null
   }
 
-  const account = (yield* select(selectAccounts))?.[address]
-  if (!account) {
-    throw new Error(`No account associated with address: ${address}. This should never happen`)
-  }
-
-  const provider = yield* call(getProvider, chainId)
   // Need to instantiate the contract directly because ContractManager
   // pulls the cached ERC20 contract, which we don't want here
   const contract = new Contract(tokenAddress, EIP_2612, provider)
-  const nonce = ((yield* call(contract.nonces, address)) as BigNumber).toNumber()
+  const nonce = ((await contract.nonces(address)) as BigNumber).toNumber()
   const allowed = permitInfo.type === PermitType.ALLOWED
   const value = MaxUint256.toString()
   const deadline = Math.round(Date.now() / 1000) + PERMIT_VALIDITY_TIME
@@ -131,9 +184,8 @@ export function* signPermitMessage(params: PermitSagaParams) {
     message,
   })
 
-  const signerManager = yield* call(getSignerManager)
-  const signature = yield* call(signTypedData, data, account, signerManager)
-  const signatureData = yield* call(splitSignature, signature)
+  const signature = await signTypedData(data, account, signerManager)
+  const signatureData = await splitSignature(signature)
   const v = signatureData.v as 0 | 1 | 27 | 28
   const permitOptions: PermitOptions = allowed
     ? {
