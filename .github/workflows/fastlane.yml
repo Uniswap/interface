@@ -12,6 +12,8 @@ jobs:
     runs-on: macos-latest
     # TODO matrix across APIs, at least 11 and 15 (lowest to highest)
     timeout-minutes: 90
+    env:
+      UNISWAP_API_KEY: ${{ secrets.UNISWAP_API_KEY }}
     steps:
       - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
         with:
@@ -112,7 +114,7 @@ jobs:
 
       - name: Generate iOS bundle and sourcemaps
         run: |
-          yarn react-native bundle --platform ios --dev false --entry-file index.js --reset-cache --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map --minify false
+          UNISWAP_API_KEY={{env.UNISWAP_API_KEY}} yarn react-native bundle --platform ios --dev false --entry-file index.js --reset-cache --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map --minify false
 
       - name: Create Sentry release with sourcemaps
         env:

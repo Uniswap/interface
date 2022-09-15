@@ -16,7 +16,17 @@ For instructions on how to update environment variables see [Updating Secret Env
 
 #### Updating secret environment variables
 
-Things like API keys must not be checked into GitHub. They should be stored as a GH secret. They can be added to our repo on GH by following [these instructions](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository). When they are added they also need to be added to the appropriate GH action by following [these instructions](https://docs.github.com/en/actions/security-guides/encrypted-secrets#using-encrypted-secrets-in-a-workflow). Finally you should add them into your own .env.local file and then upload them to 1Password using the command `yarn upload-env-local`.
+Things like API keys must not be checked into GitHub. They should be stored as a GH secret. They can be added to our repo on GH by following [these instructions](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository). To get access the environment variable from the deployed iOS app you must ensure the following:
+
+1. The variable is access with `process.env.SECRET_VARIABLE` ([example](https://github.com/Uniswap/mobile/blob/main/src/config.ts#L54))
+2. The variable is added to the workflow file ([example](https://github.com/Uniswap/mobile/blob/main/.github/workflows/fastlane.yml#L14))
+3. The variable is added to the iOS bundle step ([example](https://github.com/Uniswap/mobile/blob/main/.github/workflows/fastlane.yml#L115))
+4. Finally you should add them into your own .env.local file and then upload them to 1Password using the command `yarn upload-env-local`.
+
+To understand why these steps are needed some additional reading is:
+
+- [Using encrypted secrets in a workflow](https://docs.github.com/en/actions/security-guides/encrypted-secrets#using-encrypted-secrets-in-a-workflow)
+- Then they are made available to the bundled code with [this Babel plugin](https://babeljs.io/docs/en/babel-plugin-transform-inline-environment-variables/)
 
 Developers will need to redownload the new file using `yarn download-env-local`.
 
