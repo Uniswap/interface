@@ -176,7 +176,7 @@ const Asset = () => {
         provider,
       }).then(setIsOwned)
     }
-  }, [asset, address])
+  }, [asset, address, provider])
 
   return (
     <AnimatedBox
