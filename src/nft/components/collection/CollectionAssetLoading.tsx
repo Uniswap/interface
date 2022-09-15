@@ -10,16 +10,7 @@ export const CollectionAssetLoading = () => {
     <Box as="div" className={styles.collectionAssetLoading}>
       <Box as="div" position="relative" width="full">
         <Box as="div" className={styles.collectionAssetsImageLoading} />
-        <Box
-          as={'img'}
-          width="full"
-          style={{
-            transition: 'transform 0.4s ease 0s',
-            opacity: 0,
-          }}
-          src={SizingImage}
-          draggable={false}
-        />
+        <Box as={'img'} width="full" opacity="0" src={SizingImage} draggable={false} />
       </Box>
       <Row justifyContent="space-between" marginTop="12" paddingLeft="12" paddingRight="12">
         <Box as="div" className={loadingAsset} height="12" width="120"></Box>

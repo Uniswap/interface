@@ -19,7 +19,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
   const {
     data: collectionAssets,
     isSuccess: AssetsFetchSuccess,
-    isLoading,
+    // isLoading,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
@@ -64,6 +64,8 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
   )
 
   const hasNFTs = collectionNfts.length > 0
+
+  const isLoading = true
 
   return (
     <InfiniteScroll
