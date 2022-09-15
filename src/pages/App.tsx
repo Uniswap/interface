@@ -19,6 +19,7 @@ import Loader from 'components/LocalLoader'
 import Modal from 'components/Modal'
 import Popups from 'components/Popups'
 import Web3ReactManager from 'components/Web3ReactManager'
+import { GOOGLE_RECAPTCHA_KEY } from 'constants/env'
 import { BLACKLIST_WALLETS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
@@ -184,7 +185,7 @@ export default function App() {
       )}
 
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
-        <GoogleReCaptchaProvider reCaptchaKey="6LdOiKwhAAAAAGnf4xX5H0ZElZt9rQ2neIdL_d_o">
+        <GoogleReCaptchaProvider reCaptchaKey={GOOGLE_RECAPTCHA_KEY}>
           <ApolloProvider client={classicClient}>
             <Route component={DarkModeQueryParamReader} />
             <AppWrapper>

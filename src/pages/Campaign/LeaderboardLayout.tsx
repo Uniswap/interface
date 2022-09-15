@@ -1,6 +1,7 @@
 import { Trans, t } from '@lingui/macro'
+import dayjs from 'dayjs'
 import { rgba } from 'polished'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Clock } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { useMedia, useSize } from 'react-use'
@@ -16,7 +17,7 @@ import Search, { Container as SearchContainer, Wrapper as SearchWrapper } from '
 import { BIG_INT_ZERO, CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, DEFAULT_SIGNIFICANT } from 'constants/index'
 import useTheme from 'hooks/useTheme'
 import { AppState } from 'state'
-import { CampaignState, RewardRandom } from 'state/campaigns/actions'
+import { CampaignState, CampaignStatus, RewardRandom } from 'state/campaigns/actions'
 import {
   useSelectedCampaignLeaderboardLookupAddressManager,
   useSelectedCampaignLeaderboardPageNumberManager,
@@ -46,9 +47,9 @@ export default function LeaderboardLayout({
     </span>
   ))
 
-  const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
-  const selectedCampaignLeaderboard = useSelector((state: AppState) => state.campaigns.selectedCampaignLeaderboard)
-  const selectedCampaignLuckyWinners = useSelector((state: AppState) => state.campaigns.selectedCampaignLuckyWinners)
+  const { selectedCampaignLeaderboard, selectedCampaignLuckyWinners, selectedCampaign } = useSelector(
+    (state: AppState) => state.campaigns,
+  )
 
   const [currentPage, setCurrentPage] = useSelectedCampaignLeaderboardPageNumberManager()
   const [leaderboardSearchValue, setLeaderboardSearchValue] = useSelectedCampaignLeaderboardLookupAddressManager()
@@ -61,7 +62,7 @@ export default function LeaderboardLayout({
   let totalItems = 0
   if (type === 'leaderboard') {
     if (selectedCampaignLeaderboard) {
-      totalItems = leaderboardSearchValue ? 1 : selectedCampaignLeaderboard.numberOfParticipants
+      totalItems = leaderboardSearchValue ? 1 : selectedCampaignLeaderboard.numberOfEligibleParticipants
     }
   }
   if (type === 'lucky_winner') {
@@ -72,7 +73,9 @@ export default function LeaderboardLayout({
         0,
       )
 
-      totalItems = searchValue ? 1 : Math.min(totalRandomRewardItems, selectedCampaignLeaderboard.numberOfParticipants)
+      totalItems = searchValue
+        ? 1
+        : Math.min(totalRandomRewardItems, selectedCampaignLeaderboard.numberOfEligibleParticipants)
     }
   }
 
@@ -82,8 +85,20 @@ export default function LeaderboardLayout({
   const isRewardShown = Boolean(selectedCampaign && selectedCampaign.isRewardShown)
   const showRewardsColumn = (type === 'leaderboard' && isRewardShown) || type === 'lucky_winner'
 
+  useEffect(() => {
+    setCurrentPage(0)
+  }, [selectedCampaign, setCurrentPage])
+
   const leaderboardTableBody = (selectedCampaignLeaderboard?.rankings ?? []).map((data, index) => {
     const isThisRankingEligible = Boolean(selectedCampaign && data.totalPoint >= selectedCampaign.tradingVolumeRequired)
+    const rewardAmount = data.rewardInUSD ? data.rewardAmountUsd : data.rewardAmount
+
+    const rRewardAmount = rewardAmount.equalTo(BIG_INT_ZERO)
+      ? '--'
+      : data.rewardInUSD && selectedCampaign?.campaignState !== CampaignState.CampaignStateDistributedRewards
+      ? t`$${data.rewardAmountUsd.toSignificant(DEFAULT_SIGNIFICANT)}`
+      : `${data.rewardAmount.toSignificant(DEFAULT_SIGNIFICANT)} ${data.token.symbol}`
+
     return (
       <LeaderboardTableBody
         key={index}
@@ -120,8 +135,7 @@ export default function LeaderboardLayout({
         </LeaderboardTableBodyItem>
         {showRewardsColumn && (
           <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
-            {data.rewardAmount.equalTo(BIG_INT_ZERO) ? '--' : data.rewardAmount.toSignificant(DEFAULT_SIGNIFICANT)}{' '}
-            {data?.token?.symbol ?? ''}
+            {rRewardAmount}
           </LeaderboardTableBodyItem>
         )}
       </LeaderboardTableBody>
@@ -141,21 +155,29 @@ export default function LeaderboardLayout({
     )
   })
 
-  if (selectedCampaign === undefined || selectedCampaign.status === 'Upcoming')
+  if (selectedCampaign === undefined || selectedCampaign.status === CampaignStatus.UPCOMING)
     return (
       <Flex justifyContent="center" alignItems="center" height="100%">
         <Trans>This campaign does not have a leaderboard yet.</Trans>
       </Flex>
     )
 
+  let rRewardsDistributedAt = ''
+  if (selectedCampaignLeaderboard && selectedCampaignLeaderboard.distributedRewardsAt) {
+    const formattedUpdatedAt = dayjs(selectedCampaignLeaderboard.distributedRewardsAt * 1000).format('YYYY-MM-DD HH:mm')
+    if (selectedCampaign.campaignState === CampaignState.CampaignStateDistributedRewards) {
+      rRewardsDistributedAt = `${t`Rewards were distributed at`}: ${formattedUpdatedAt}`
+    }
+  }
+
   return (
     <LeaderboardContainer>
-      <RefreshTextAndSearchContainer>
-        {selectedCampaign.campaignState === CampaignState.CampaignStateReady && type === 'leaderboard' && (
-          <RefreshTextContainer>
-            <RefreshText>
+      <TextAndSearchContainer>
+        {selectedCampaign.status !== CampaignStatus.ENDED && type === 'leaderboard' ? (
+          <TextContainer>
+            <SubTextSmall>
               <Trans>Leaderboard refresh in</Trans>
-            </RefreshText>
+            </SubTextSmall>
             <CountdownContainer>
               <Clock size={12} />
               <Text fontSize="12px" lineHeight="14px">
@@ -163,8 +185,12 @@ export default function LeaderboardLayout({
                 {refreshInSecond.toString().length === 1 ? '0' + refreshInSecond : refreshInSecond}
               </Text>
             </CountdownContainer>
-          </RefreshTextContainer>
-        )}
+          </TextContainer>
+        ) : selectedCampaign.campaignState !== CampaignState.CampaignStateReady ? (
+          <TextContainer>
+            <SubTextSmall>{rRewardsDistributedAt}</SubTextSmall>
+          </TextContainer>
+        ) : null}
 
         <CustomSearchContainer>
           <Search
@@ -174,7 +200,7 @@ export default function LeaderboardLayout({
             style={{ background: theme.buttonBlack }}
           />
         </CustomSearchContainer>
-      </RefreshTextAndSearchContainer>
+      </TextAndSearchContainer>
       <LeaderboardTable>
         <LeaderboardTableHeader noColumns={type === 'lucky_winner' ? 2 : isRewardShown ? 4 : 3}>
           {type === 'leaderboard' && <LeaderboardTableHeaderItem>{rank}</LeaderboardTableHeaderItem>}
@@ -236,7 +262,7 @@ const LeaderboardContainer = styled.div`
   padding: 16px 0;
 `
 
-const RefreshTextAndSearchContainer = styled.div`
+const TextAndSearchContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -251,7 +277,7 @@ const RefreshTextAndSearchContainer = styled.div`
   `}
 `
 
-const RefreshTextContainer = styled.div`
+const TextContainer = styled.div`
   flex-wrap: nowrap;
   white-space: nowrap;
   display: flex;
@@ -259,7 +285,7 @@ const RefreshTextContainer = styled.div`
   gap: 8px;
 `
 
-const RefreshText = styled.div`
+const SubTextSmall = styled.div`
   font-size: 12px;
   line-height: 14px;
   color: ${({ theme }) => theme.subText};

@@ -1,6 +1,8 @@
 import { Trans, t } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import dayjs from 'dayjs'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { BarChart, ChevronDown, Clock, Share2, Star, Users } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -11,8 +13,11 @@ import { useSWRConfig } from 'swr'
 
 import { ButtonEmpty, ButtonLight } from 'components/Button'
 import Divider from 'components/Divider'
+import InfoHelper from 'components/InfoHelper'
 import LocalLoader from 'components/LocalLoader'
+import ProgressBar from 'components/ProgressBar'
 import ShareModal from 'components/ShareModal'
+import { MouseoverTooltip, TextDashed } from 'components/Tooltip'
 import YourCampaignTransactionsModal from 'components/YourCampaignTransactionsModal'
 import { SWR_KEYS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
@@ -32,7 +37,14 @@ import {
   useToggleYourCampaignTransactionsModal,
   useWalletModalToggle,
 } from 'state/application/hooks'
-import { CampaignData, CampaignState, setCampaignData, setSelectedCampaign } from 'state/campaigns/actions'
+import {
+  CampaignData,
+  CampaignState,
+  CampaignStatus,
+  CampaignUserInfoStatus,
+  setCampaignData,
+  setSelectedCampaign,
+} from 'state/campaigns/actions'
 import { useAppDispatch } from 'state/hooks'
 import { HideMedium, MediumOnly } from 'theme'
 import { formatNumberWithPrecisionRange } from 'utils'
@@ -53,6 +65,76 @@ const LoaderParagraphs = () => (
   </>
 )
 
+const RankDetailWrapper = styled.div`
+  color: ${({ theme }) => theme.subText};
+  font-size: 14px;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+`
+function RankDetail({ campaign }: { campaign: CampaignData | undefined }) {
+  const theme = useTheme()
+  const { account } = useWeb3React()
+  const isOngoing = campaign?.status === CampaignStatus.ONGOING
+
+  if (!account || !isOngoing || !campaign) return null
+  const {
+    tradingVolumeRequired,
+    tradingNumberRequired,
+    userInfo: { tradingNumber, tradingVolume, status: UserStatus } = { tradingNumber: 0, tradingVolume: 0 },
+  } = campaign
+  const percentVolume = !tradingVolumeRequired ? 0 : (tradingVolume / tradingVolumeRequired) * 100
+  const percentTradingNumber = !tradingNumberRequired ? 0 : (tradingNumber / tradingNumberRequired) * 100
+
+  const isPassedVolume = percentVolume >= 100
+  const isPassedNumberOfTrade = percentTradingNumber >= 100
+
+  if (
+    (isPassedVolume && isPassedNumberOfTrade) ||
+    (isPassedVolume && !tradingNumberRequired) ||
+    (isPassedNumberOfTrade && !tradingVolumeRequired) ||
+    (isOngoing && UserStatus === CampaignUserInfoStatus.Ineligible)
+  ) {
+    return null
+  }
+  return (
+    <InfoHelper
+      placement={isMobile ? 'bottom' : 'left'}
+      width="300px"
+      text={
+        <RankDetailWrapper>
+          <Text color={theme.white} fontSize={16}>
+            <Trans>Requirement</Trans>
+          </Text>
+          <Text lineHeight={'20px'}>
+            <Trans>Fulfill those requirement to participate in the campaign</Trans>
+          </Text>
+          <Flex style={{ gap: 10 }} flexDirection="column">
+            {tradingVolumeRequired > 0 && (
+              <ProgressBar
+                percent={percentVolume}
+                title={t`Trading Volume`}
+                value={`${tradingVolume}/${tradingVolumeRequired}`}
+                color={isPassedVolume ? theme.primary : theme.warning}
+              />
+            )}
+            {tradingNumberRequired > 0 && (
+              <ProgressBar
+                percent={percentTradingNumber}
+                title={t`Number of Trade`}
+                value={`${tradingNumber}/${tradingNumberRequired}`}
+                color={isPassedNumberOfTrade ? theme.primary : theme.warning}
+              />
+            )}
+          </Flex>
+        </RankDetailWrapper>
+      }
+      size={18}
+      color={theme.warning}
+    />
+  )
+}
+
 export default function Campaign() {
   const { account } = useActiveWeb3React()
   const theme = useTheme()
@@ -64,8 +146,7 @@ export default function Campaign() {
   const toggleWalletModal = useWalletModalToggle()
   const toggleShareModal = useToggleModal(ApplicationModal.SHARE)
 
-  const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
-  const selectedCampaignLeaderboard = useSelector((state: AppState) => state.campaigns.selectedCampaignLeaderboard)
+  const { selectedCampaign, selectedCampaignLeaderboard } = useSelector((state: AppState) => state.campaigns)
 
   const rules = selectedCampaign?.rules ?? ''
   const termsAndConditions = selectedCampaign?.termsAndConditions ?? ''
@@ -84,8 +165,10 @@ export default function Campaign() {
   const [campaignDetailMediaLoadedMap, setCampaignDetailMediaLoadedMap] = useState<{ [id: string]: boolean }>({})
   const isSelectedCampaignMediaLoaded = selectedCampaign && campaignDetailMediaLoadedMap[selectedCampaign.id]
 
+  const isOngoing = selectedCampaign?.status === CampaignStatus.ONGOING
+
   useEffect(() => {
-    if (selectedCampaign?.status === 'Ongoing' || selectedCampaign?.status === 'Ended') {
+    if (selectedCampaign?.status === CampaignStatus.ONGOING || selectedCampaign?.status === CampaignStatus.ENDED) {
       setActiveTab('leaderboard')
     }
   }, [selectedCampaign])
@@ -228,9 +311,11 @@ export default function Campaign() {
 
   const now = Date.now()
 
-  const campaigns = useSelector((state: AppState) => state.campaigns.data)
-  const loadingCampaignData = useSelector((state: AppState) => state.campaigns.loadingCampaignData)
-  const loadingCampaignDataError = useSelector((state: AppState) => state.campaigns.loadingCampaignDataError)
+  const {
+    loadingCampaignData,
+    loadingCampaignDataError,
+    data: campaigns,
+  } = useSelector((state: AppState) => state.campaigns)
 
   const MINUTE_TO_REFRESH = 5
   const [campaignsRefreshIn, setCampaignsRefreshIn] = useState(MINUTE_TO_REFRESH * 60)
@@ -238,37 +323,45 @@ export default function Campaign() {
   const dispatch = useAppDispatch()
   useInterval(
     () => {
-      if (selectedCampaign && selectedCampaign.status === 'Upcoming' && selectedCampaign.startTime < now + 1000) {
+      if (
+        selectedCampaign &&
+        selectedCampaign.status === CampaignStatus.UPCOMING &&
+        selectedCampaign.startTime < now + 1000
+      ) {
         dispatch(
           setCampaignData({
             campaigns: campaigns.map(campaign => {
               if (campaign.id === selectedCampaign.id) {
                 return {
                   ...campaign,
-                  status: 'Ongoing',
+                  status: CampaignStatus.ONGOING,
                 }
               }
               return campaign
             }),
           }),
         )
-        dispatch(setSelectedCampaign({ campaign: { ...selectedCampaign, status: 'Ongoing' } }))
+        dispatch(setSelectedCampaign({ campaign: { ...selectedCampaign, status: CampaignStatus.ONGOING } }))
       }
-      if (selectedCampaign && selectedCampaign.status === 'Ongoing' && selectedCampaign.endTime < now + 1000) {
+      if (
+        selectedCampaign &&
+        selectedCampaign.status === CampaignStatus.ONGOING &&
+        selectedCampaign.endTime < now + 1000
+      ) {
         dispatch(
           setCampaignData({
             campaigns: campaigns.map(campaign => {
               if (campaign.id === selectedCampaign.id) {
                 return {
                   ...campaign,
-                  status: 'Ended',
+                  status: CampaignStatus.ENDED,
                 }
               }
               return campaign
             }),
           }),
         )
-        dispatch(setSelectedCampaign({ campaign: { ...selectedCampaign, status: 'Ended' } }))
+        dispatch(setSelectedCampaign({ campaign: { ...selectedCampaign, status: CampaignStatus.ENDED } }))
       }
       setCampaignsRefreshIn(prev => {
         if (prev === 0) {
@@ -281,16 +374,14 @@ export default function Campaign() {
     true,
   )
 
-  const selectedCampaignLeaderboardPageNumber = useSelector(
-    (state: AppState) => state.campaigns.selectedCampaignLeaderboardPageNumber,
-  )
-  const selectedCampaignLeaderboardLookupAddress = useSelector(
-    (state: AppState) => state.campaigns.selectedCampaignLeaderboardLookupAddress,
+  const { selectedCampaignLeaderboardPageNumber, selectedCampaignLeaderboardLookupAddress } = useSelector(
+    (state: AppState) => state.campaigns,
   )
 
   useEffect(() => {
     if (campaignsRefreshIn === 0 && selectedCampaign) {
       mutate([
+        selectedCampaign,
         SWR_KEYS.getLeaderboard(selectedCampaign.id),
         selectedCampaignLeaderboardPageNumber,
         selectedCampaignLeaderboardLookupAddress,
@@ -329,7 +420,7 @@ export default function Campaign() {
     <>
       <PageWrapper>
         <CampaignContainer>
-          <HideMedium style={{ maxWidth: '400px' }}>
+          <HideMedium style={{ maxWidth: 'max(35%, 400px)' }}>
             <CampaignListAndSearch onSelectCampaign={onSelectCampaign} />
           </HideMedium>
 
@@ -404,23 +495,45 @@ export default function Campaign() {
             <CampaignDetailBoxGroup>
               <CampaignDetailBoxGroupItem>
                 <Text fontSize={14} fontWeight={500} color={theme.subText}>
-                  {selectedCampaign?.status === 'Upcoming'
+                  {selectedCampaign?.status === CampaignStatus.UPCOMING
                     ? t`Starting In`
-                    : selectedCampaign?.status === 'Ongoing'
+                    : isOngoing
                     ? t`Ended In`
                     : t`Ended On`}
                 </Text>
                 <Clock size={20} color={theme.subText} />
                 {isSelectedCampaignMediaLoaded ? (
-                  <Text fontSize={20} fontWeight={500} style={{ gridColumn: '1 / -1' }}>
-                    {selectedCampaign
-                      ? selectedCampaign.status === 'Upcoming'
-                        ? getFormattedTimeFromSecond((selectedCampaign.startTime - now) / 1000)
-                        : selectedCampaign.status === 'Ongoing'
-                        ? getFormattedTimeFromSecond((selectedCampaign.endTime - now) / 1000)
-                        : dayjs(selectedCampaign.endTime).format('YYYY-MM-DD HH:mm')
-                      : '--'}
-                  </Text>
+                  <>
+                    {selectedCampaign.status === CampaignStatus.UPCOMING && (
+                      <TextDashed fontSize={20} fontWeight={500} style={{ gridColumn: '1 / -1' }}>
+                        <MouseoverTooltip
+                          width="fit-content"
+                          text={dayjs(selectedCampaign.startTime).format('YYYY-MM-DD HH:mm')}
+                        >
+                          {selectedCampaign
+                            ? getFormattedTimeFromSecond((selectedCampaign.startTime - now) / 1000)
+                            : '--'}
+                        </MouseoverTooltip>
+                      </TextDashed>
+                    )}
+                    {selectedCampaign.status === CampaignStatus.ONGOING && (
+                      <TextDashed fontSize={20} fontWeight={500} style={{ gridColumn: '1 / -1' }}>
+                        <MouseoverTooltip
+                          width="fit-content"
+                          text={dayjs(selectedCampaign.endTime).format('YYYY-MM-DD HH:mm')}
+                        >
+                          {selectedCampaign
+                            ? getFormattedTimeFromSecond((selectedCampaign.endTime - now) / 1000)
+                            : '--'}
+                        </MouseoverTooltip>
+                      </TextDashed>
+                    )}
+                    {selectedCampaign.status === CampaignStatus.ENDED && (
+                      <Text fontSize={20} fontWeight={500} style={{ gridColumn: '1 / -1' }}>
+                        {dayjs(selectedCampaign.endTime).format('YYYY-MM-DD HH:mm')}
+                      </Text>
+                    )}
+                  </>
                 ) : (
                   <Loading style={{ height: '24px' }} />
                 )}
@@ -429,11 +542,11 @@ export default function Campaign() {
                 <Text fontSize={14} fontWeight={500} color={theme.subText}>
                   <Trans>Participants</Trans>
                 </Text>
-                <Users size={20} color={theme.subText} />
+                {!isMobile && <Users size={20} color={theme.subText} />}
                 {isSelectedCampaignMediaLoaded ? (
                   <Text fontSize={20} fontWeight={500} style={{ gridColumn: '1 / -1' }}>
-                    {selectedCampaignLeaderboard?.numberOfParticipants
-                      ? formatNumberWithPrecisionRange(selectedCampaignLeaderboard.numberOfParticipants, 0, 0)
+                    {selectedCampaignLeaderboard?.numberOfEligibleParticipants
+                      ? formatNumberWithPrecisionRange(selectedCampaignLeaderboard.numberOfEligibleParticipants, 0, 0)
                       : '--'}
                   </Text>
                 ) : (
@@ -443,16 +556,20 @@ export default function Campaign() {
               <CampaignDetailBoxGroupItem>
                 <Text fontSize={14} fontWeight={500} color={theme.subText}>
                   <Trans>Your Rank</Trans>
+                  {isMobile && <RankDetail campaign={selectedCampaign} />}
                 </Text>
-                <Star size={20} color={theme.subText} />
+                {!isMobile && <Star size={20} color={theme.subText} />}
                 {isSelectedCampaignMediaLoaded ? (
                   account ? (
                     <Flex justifyContent="space-between" alignItems="center" style={{ gridColumn: '1 / -1' }}>
-                      <Text fontSize={20} fontWeight={500}>
-                        {selectedCampaignLeaderboard?.userRank
-                          ? formatNumberWithPrecisionRange(selectedCampaignLeaderboard?.userRank, 0, 2)
-                          : '--'}
-                      </Text>
+                      <Flex>
+                        <Text fontSize={20} fontWeight={500}>
+                          {selectedCampaign?.userInfo?.rankNo
+                            ? formatNumberWithPrecisionRange(selectedCampaign?.userInfo?.rankNo, 0, 2)
+                            : '--'}
+                        </Text>
+                        {!isMobile && <RankDetail campaign={selectedCampaign} />}
+                      </Flex>
                       <YourTransactionButton onClick={toggleYourCampaignTransactionModal}>
                         {above768 ? <Trans>Your Transactions</Trans> : <Trans>History</Trans>}
                       </YourTransactionButton>
@@ -698,4 +815,5 @@ const YourTransactionButton = styled(ButtonLight)`
   line-height: 16px;
   padding: 2px 8px;
   width: fit-content;
+  z-index: unset;
 `

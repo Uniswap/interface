@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback, useState } from 'react'
 import { isMobile } from 'react-device-detect'
-import { Flex } from 'rebass'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import Popover, { PopoverProps } from '../Popover'
@@ -11,6 +11,11 @@ const TooltipContainer = styled.div<{ width?: string; size?: number }>`
   line-height: 150%;
   font-weight: 400;
   font-size: ${({ size }) => size || 14}px;
+`
+
+export const TextDashed = styled(Text)`
+  border-bottom: 1px dashed ${({ theme }) => theme.border};
+  width: fit-content;
 `
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {

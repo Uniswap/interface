@@ -79,9 +79,9 @@ export const ButtonWarning = styled(Base)`
     background-color: ${({ theme }) => darken(0.1, theme.warning)};
   }
   &:disabled {
-    background-color: ${({ theme }) => theme.warning};
-    opacity: 50%;
+    background-color: ${({ theme }) => rgba(theme.warning, 0.2)};
     cursor: auto;
+    color: ${({ theme }) => theme.warning};
   }
 `
 
