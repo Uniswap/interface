@@ -2,36 +2,32 @@ import { Trans } from '@lingui/macro'
 import axios from 'axios'
 import { useCallback, useState } from 'react'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
-import { useSelector } from 'react-redux'
 import { mutate } from 'swr'
 
 import { CAMPAIGN_BASE_URL, SWR_KEYS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { StyledPrimaryButton } from 'pages/Campaign/CampaignButtonWithOptions'
 import { Dots } from 'pages/Pool/styleds'
-import { AppState } from 'state'
 import { useRegisterCampaignModalToggle } from 'state/application/hooks'
+import { CampaignData } from 'state/campaigns/actions'
 
-export default function CampaignButtonEnterNow() {
+export default function CampaignButtonEnterNow({
+  size,
+  campaign,
+}: {
+  size: 'small' | 'large'
+  campaign?: CampaignData
+}) {
   const { account } = useActiveWeb3React()
-  const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
-
   const { executeRecaptcha } = useGoogleReCaptcha()
 
   const [loading, setLoading] = useState(false)
-
-  const selectedCampaignLeaderboardPageNumber = useSelector(
-    (state: AppState) => state.campaigns.selectedCampaignLeaderboardPageNumber,
-  )
-  const selectedCampaignLeaderboardLookupAddress = useSelector(
-    (state: AppState) => state.campaigns.selectedCampaignLeaderboardLookupAddress,
-  )
 
   const toggleRegisterCampaignModal = useRegisterCampaignModalToggle()
 
   // Create an event handler so you can call the verification on button click event or form submit
   const handleReCaptchaVerify = useCallback(async () => {
-    if (!selectedCampaign || !account) return
+    if (!campaign || !account) return
     if (!executeRecaptcha) {
       console.log('Execute recaptcha not yet available')
       return
@@ -42,19 +38,14 @@ export default function CampaignButtonEnterNow() {
       const token = await executeRecaptcha('enterCampaign')
       const response = await axios({
         method: 'POST',
-        url: `${CAMPAIGN_BASE_URL}/${selectedCampaign.id}/participants`,
+        url: `${CAMPAIGN_BASE_URL}/${campaign.id}/participants`,
         data: {
           token,
           address: account,
         },
       })
       if (response.status === 200) {
-        await mutate([
-          SWR_KEYS.getLeaderboard(selectedCampaign.id),
-          selectedCampaignLeaderboardPageNumber,
-          selectedCampaignLeaderboardLookupAddress,
-          account,
-        ])
+        await mutate([SWR_KEYS.getListCampaign, account])
         toggleRegisterCampaignModal()
       }
     } catch (err) {
@@ -62,17 +53,10 @@ export default function CampaignButtonEnterNow() {
     } finally {
       setLoading(false)
     }
-  }, [
-    account,
-    executeRecaptcha,
-    selectedCampaign,
-    selectedCampaignLeaderboardLookupAddress,
-    selectedCampaignLeaderboardPageNumber,
-    toggleRegisterCampaignModal,
-  ])
+  }, [account, executeRecaptcha, campaign, toggleRegisterCampaignModal])
 
   return (
-    <StyledPrimaryButton onClick={handleReCaptchaVerify} disabled={loading}>
+    <StyledPrimaryButton onClick={handleReCaptchaVerify} disabled={loading} size={size}>
       <Trans>Enter Now</Trans>
       {loading && <Dots />}
     </StyledPrimaryButton>
