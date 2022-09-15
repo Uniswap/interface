@@ -106,3 +106,68 @@ export const carouselIndicator = sprinkles({
   borderRadius: 'round',
   display: 'inline-block',
 })
+
+/* Value Prop Styles */
+export const valuePropWrap = style([
+  {
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'auto',
+    '@media': {
+      [`(max-width: ${breakpoints.sm}px)`]: {
+        backgroundPosition: 'top 0 left 100px',
+      },
+      [`(min-width: ${breakpoints.sm}px)`]: {
+        backgroundPosition: 'top 0 right 0',
+      },
+    },
+  },
+  sprinkles({
+    width: 'full',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'outline',
+    borderRadius: '12',
+    paddingLeft: '16',
+    paddingRight: '16',
+    marginTop: '60',
+    position: 'relative',
+  }),
+])
+
+export const valuePropOverlay = style([
+  {
+    height: '135px',
+  },
+  sprinkles({
+    position: 'absolute',
+    zIndex: '0',
+    width: 'full',
+    backgroundColor: 'grey900',
+    left: '0',
+    top: '0',
+    opacity: { sm: '0.7', xl: '0.1' },
+  }),
+])
+
+export const valuePropContent = style([
+  sprinkles({
+    position: 'relative',
+    zIndex: '1',
+    paddingLeft: { sm: '20', md: '28', lg: '36' },
+    paddingBottom: '18',
+    fontSize: { sm: '20', md: '28' },
+    paddingTop: { sm: '28', md: '32' },
+  }),
+  {
+    lineHeight: '28px',
+    '@media': {
+      [`(max-width: 400px)`]: { width: '88%' },
+      [`(min-width: 400px)`]: { width: '67%' },
+      [`(min-width: ${breakpoints.md}px)`]: {
+        width: '58%',
+        lineHeight: '36px',
+      },
+      [`(min-width: ${breakpoints.lg}px)`]: { width: '50%' },
+    },
+  },
+])

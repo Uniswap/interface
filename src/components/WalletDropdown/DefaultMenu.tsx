@@ -55,7 +55,7 @@ const ToggleMenuItem = styled.button`
       theme: {
         transition: { duration, timing },
       },
-    }) => `${duration.fast}ms all ${timing.in}`};
+    }) => `${duration.fast} all ${timing.in}`};
   }
 `
 
