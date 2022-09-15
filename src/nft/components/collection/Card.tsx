@@ -131,11 +131,13 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
 }
 
 interface MediaProps {
+  uniformHeight: UniformHeight
+  setUniformHeight: (u: UniformHeight) => void
   shouldPlay: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
-const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   const vidRef = useRef<HTMLVideoElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
@@ -169,6 +171,10 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={() => {
+            if (uniformHeight !== UniformHeights.notUniform) {
+              setUniformHeight(UniformHeights.notUniform)
+            }
+
             setImageLoaded(true)
           }}
           visibility={shouldPlay ? 'hidden' : 'visible'}
@@ -228,17 +234,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   )
 }
 
-interface AudioProps {
-  uniformHeight: UniformHeight
-  setUniformHeight: (u: UniformHeight) => void
-}
-
-const Audio = ({
-  uniformHeight,
-  setUniformHeight,
-  shouldPlay,
-  setCurrentTokenPlayingMedia,
-}: MediaProps & AudioProps) => {
+const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   const audRef = useRef<HTMLAudioElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)

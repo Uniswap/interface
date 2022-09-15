@@ -49,7 +49,12 @@ export const CollectionAsset = ({
       {assetMediaType === AssetMediaType.Image ? (
         <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
       ) : assetMediaType === AssetMediaType.Video ? (
-        <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+        <Card.Video
+          uniformHeight={uniformHeight}
+          setUniformHeight={setUniformHeight}
+          shouldPlay={mediaShouldBePlaying}
+          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+        />
       ) : (
         <Card.Audio
           uniformHeight={uniformHeight}
