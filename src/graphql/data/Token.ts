@@ -107,7 +107,7 @@ const topTokensQuery = graphql`
     }
   }
 `
-export const tokenPricesFragment = graphql`
+const tokenPricesFragment = graphql`
   fragment TokenPrices on TokenProjectMarket {
     priceHistory(duration: $duration) {
       timestamp
