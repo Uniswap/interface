@@ -6,42 +6,22 @@ import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from '../types'
 
 type BagState = {
   bagStatus: BagStatus
-  setBagStatus: (state: BagStatus) => void
   itemsInBag: BagItem[]
-  setItemsInBag: (items: BagItem[]) => void
   addAssetToBag: (asset: UpdatedGenieAsset) => void
   removeAssetFromBag: (asset: UpdatedGenieAsset) => void
-  markAssetAsReviewed: (asset: UpdatedGenieAsset, toKeep: boolean) => void
-  didOpenUnavailableAssets: boolean
-  setDidOpenUnavailableAssets: (didOpen: boolean) => void
-  bagExpanded: boolean
-  toggleBag: () => void
   isLocked: boolean
   setLocked: (isLocked: boolean) => void
-  reset: () => void
+  didOpenUnavailableAssets: boolean
+
+  bagExpanded: boolean
+  toggleBag: () => void
 }
 
 export const useBag = create<BagState>()(
   devtools(
     (set, get) => ({
       bagStatus: BagStatus.ADDING_TO_BAG,
-      setBagStatus: (newBagStatus) =>
-        set(() => ({
-          bagStatus: newBagStatus,
-        })),
-      markAssetAsReviewed: (asset, toKeep) =>
-        set(({ itemsInBag }) => {
-          if (itemsInBag.length === 0) return { itemsInBag: [] }
-          const itemsInBagCopy = [...itemsInBag]
-          const index = itemsInBagCopy.findIndex((item) => item.asset.id === asset.id)
-          if (!toKeep && index !== -1) itemsInBagCopy.splice(index, 1)
-          else if (index !== -1) {
-            itemsInBagCopy[index].status = BagItemStatus.REVIEWED
-          }
-          return {
-            itemsInBag: itemsInBagCopy,
-          }
-        }),
+
       didOpenUnavailableAssets: false,
       setDidOpenUnavailableAssets: (didOpen) =>
         set(() => ({
@@ -58,10 +38,6 @@ export const useBag = create<BagState>()(
           isLocked: _isLocked,
         })),
       itemsInBag: [],
-      setItemsInBag: (items) =>
-        set(() => ({
-          itemsInBag: items,
-        })),
       addAssetToBag: (asset) =>
         set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: itemsInBag }
@@ -90,17 +66,6 @@ export const useBag = create<BagState>()(
           return { itemsInBag: itemsCopy }
         })
       },
-      reset: () =>
-        set(() => {
-          if (!get().isLocked)
-            return {
-              bagStatus: BagStatus.ADDING_TO_BAG,
-              itemsInBag: [],
-              didOpenUnavailableAssets: false,
-              isLocked: false,
-            }
-          else return {}
-        }),
     }),
     { name: 'useBag' }
   )
