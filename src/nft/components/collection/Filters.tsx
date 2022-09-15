@@ -3,7 +3,6 @@ import * as styles from 'nft/components/collection/Filters.css'
 import { Column, Row } from 'nft/components/Flex'
 import { Radio } from 'nft/components/layout/Radio'
 import { useCollectionFilters } from 'nft/hooks'
-import { scrollToTop } from 'nft/utils/scrollToTop'
 import { useReducer } from 'react'
 
 export const Filters = () => {
@@ -14,7 +13,6 @@ export const Filters = () => {
   const [buyNowHovered, toggleBuyNowHover] = useReducer((state) => !state, false)
 
   const handleBuyNowToggle = () => {
-    scrollToTop()
     setBuyNow(!buyNow)
   }
 
