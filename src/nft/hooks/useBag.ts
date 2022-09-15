@@ -23,10 +23,7 @@ export const useBag = create<BagState>()(
       bagStatus: BagStatus.ADDING_TO_BAG,
 
       didOpenUnavailableAssets: false,
-      setDidOpenUnavailableAssets: (didOpen) =>
-        set(() => ({
-          didOpenUnavailableAssets: didOpen,
-        })),
+
       bagExpanded: false,
       toggleBag: () =>
         set(({ bagExpanded }) => ({
