@@ -6,20 +6,17 @@ import LineChart from 'components/Charts/LineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { curveCardinal, scaleLinear } from 'd3'
-import { TokenPrices$key } from 'graphql/data/__generated__/TokenPrices.graphql'
 import {
-  filterPrices,
   getDurationDetails,
   PricePoint,
   SingleTokenData,
   TimePeriod,
-  tokenPricesFragment,
+  useTokenPricesFromFragment,
 } from 'graphql/data/Token'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
-import { useFragment } from 'react-relay'
 import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
@@ -488,11 +485,7 @@ export default function LoadedRow({
   const formattedDelta = pricePercentChange ? formatDelta(pricePercentChange) : null
 
   // for sparkline
-  const key: TokenPrices$key | null | undefined = tokenData?.prices?.[0]
-  const tokenPricesData = useFragment(tokenPricesFragment, key ?? null)
-  const fetchedTokenPrices = tokenPricesData?.priceHistory
-  const priceMap = new Map<TimePeriod, PricePoint[] | undefined>([[timePeriod, filterPrices(fetchedTokenPrices)]])
-  const pricePoints = priceMap.get(timePeriod) ?? []
+  const pricePoints = useTokenPricesFromFragment(tokenData?.prices?.[0]) ?? []
   const hasData = pricePoints.length !== 0
   const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
   const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY

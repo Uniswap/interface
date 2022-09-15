@@ -261,6 +261,13 @@ export function filterPrices(prices: TokenPrices$data['priceHistory'] | undefine
   return prices?.filter((p): p is PricePoint => Boolean(p && p.value))
 }
 
+export function useTokenPricesFromFragment(key: TokenPrices$key | null | undefined) {
+  const fetchedTokenPrices = useFragment(tokenPricesFragment, key ?? null)?.priceHistory
+  const filteredPrices = filterPrices(fetchedTokenPrices)
+
+  return filteredPrices
+}
+
 export function useTokenPricesCached(
   key: TokenPrices$key | null | undefined,
   address: string,
