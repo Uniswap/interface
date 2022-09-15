@@ -12,7 +12,7 @@ export const StyledChevronDown = styled(ChevronDown)<{ customColor?: string }>`
       theme: {
         transition: { duration, timing },
       },
-    }) => `${duration.fast}ms color ${timing.in}`};
+    }) => `${duration.fast} color ${timing.in}`};
   }
 `
 
@@ -27,6 +27,6 @@ export const StyledChevronUp = styled(ChevronUp)<{ customColor?: string }>`
       theme: {
         transition: { duration, timing },
       },
-    }) => `${duration.fast}ms color ${timing.in}`};
+    }) => `${duration.fast} color ${timing.in}`};
   }
 `

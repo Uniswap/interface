@@ -14,7 +14,7 @@ import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
 import ActivityFeed from './ActivityFeed'
-import * as styles from './Banner.css'
+import * as styles from './Explore.css'
 
 const Banner = () => {
   /* Sets initially displayed collection to random number between 0 and 4  */
