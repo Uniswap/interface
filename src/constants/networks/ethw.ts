@@ -21,8 +21,7 @@ const ethereumInfo: NetworkInfo = {
     'https://ethereum-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-ethereum',
   ),
   blockClient: createClient('https://ethereum-graph.kyberengineering.io/subgraphs/name/kybernetwork/ethereum-blocks'),
-  // TODO
-  etherscanUrl: 'https://mainnet.ethwscan.com',
+  etherscanUrl: 'https://www.oklink.com/en/ethw',
   etherscanName: 'Ethwscan',
   tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainId=${ChainId.ETHW}`,
   bridgeURL: EMPTY,
@@ -33,7 +32,7 @@ const ethereumInfo: NetworkInfo = {
     logo: Mainnet,
     decimal: 18,
   },
-  rpcUrl: 'https://mainnet.ethereumpow.org',
+  rpcUrl: 'https://ethereumpow.kyberengineering.io',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/ethw/route/encode`,
   classic: {
     static: {
@@ -60,7 +59,6 @@ const ethereumInfo: NetworkInfo = {
     routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
   },
   averageBlockTimeInSeconds: 13.13,
-  // TODO
   coingeckoNetworkId: '',
   coingeckoNativeTokenId: '',
   deBankSlug: '',

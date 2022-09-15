@@ -46,7 +46,7 @@ const listCache: { [list: string]: TokenAddressMap } = {}
 const serializeList = (list: TokenList): string => {
   return list.tokens
     .slice(0, 5)
-    .map(token => token.address)
+    .map(token => `${token.chainId}-${token.address}`)
     .join('')
 }
 
