@@ -10,7 +10,7 @@ import { useEffect, useMemo, useReducer, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
-import * as styles from './Banner.css'
+import * as styles from './Explore.css'
 
 const ActivityFeed = ({ address }: { address: string }) => {
   const [current, setCurrent] = useState(0)
