@@ -1,10 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { ModalName } from 'components/AmplitudeAnalytics/constants'
+import { EventName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
-import { ReactNode, useCallback, useMemo, useState } from 'react'
+import { formatPercentInBasisPointsNumber, formatToDecimal, getTokenAddress } from 'components/AmplitudeAnalytics/utils'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { computeRealizedPriceImpact } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import TransactionConfirmationModal, {
@@ -13,6 +17,27 @@ import TransactionConfirmationModal, {
 } from '../TransactionConfirmationModal'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
+
+const formatAnalyticsEventProperties = ({
+  trade,
+  txHash,
+}: {
+  trade: InterfaceTrade<Currency, Currency, TradeType>
+  txHash: string
+}) => ({
+  transaction_hash: txHash,
+  token_in_address: getTokenAddress(trade.inputAmount.currency),
+  token_out_address: getTokenAddress(trade.outputAmount.currency),
+  token_in_symbol: trade.inputAmount.currency.symbol,
+  token_out_symbol: trade.outputAmount.currency.symbol,
+  token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
+  token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
+  chain_id:
+    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+      ? trade.inputAmount.currency.chainId
+      : undefined,
+})
 
 export default function ConfirmSwapModal({
   trade,
@@ -48,6 +73,7 @@ export default function ConfirmSwapModal({
   // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
   // and an event triggered by modal closing should be logged.
   const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
+  const [lastTxnHashLogged, setLastTxnHashLogged] = useState<string | null>(null)
   const showAcceptChanges = useMemo(
     () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
     [originalTrade, trade]
@@ -121,8 +147,15 @@ export default function ConfirmSwapModal({
     [onModalDismiss, modalBottom, modalHeader, swapErrorMessage]
   )
 
+  useEffect(() => {
+    if (!attemptingTxn && isOpen && txHash && trade && txHash !== lastTxnHashLogged) {
+      sendAnalyticsEvent(EventName.SWAP_SIGNED, formatAnalyticsEventProperties({ trade, txHash }))
+      setLastTxnHashLogged(txHash)
+    }
+  }, [attemptingTxn, isOpen, txHash, trade, lastTxnHashLogged])
+
   return (
-    <Trace modal={ModalName.CONFIRM_SWAP} shouldLogImpression={isOpen}>
+    <Trace modal={ModalName.CONFIRM_SWAP}>
       <TransactionConfirmationModal
         isOpen={isOpen}
         onDismiss={onModalDismiss}
