@@ -5,8 +5,8 @@ import '../libraries/SafeMath.sol';
 contract TT {
     using SafeMath for uint;
 
-    string public constant name = 'Test Token';
-    string public constant symbol = 'TT';
+    string public  name;
+    string public  symbol;
     uint8 public constant decimals = 18;
     uint  public totalSupply;
     mapping(address => uint) public balanceOf;
@@ -20,7 +20,7 @@ contract TT {
     event Approval(address indexed owner, address indexed spender, uint value);
     event Transfer(address indexed from, address indexed to, uint value);
 
-    constructor() public {
+    constructor(string memory _name, string memory _symbol) public {
         uint chainId;
         assembly {
             chainId := chainid()
@@ -34,6 +34,8 @@ contract TT {
                 address(this)
             )
         );
+        name = _name;
+        symbol = _symbol;
     }
 
     function mint() public {

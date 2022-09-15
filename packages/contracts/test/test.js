@@ -10,13 +10,12 @@ describe('Router02', function () {
 
     async function deployContracts() {
         let ans = await hre.run("deploy")
-        const approveAmount = expandTo18Decimals(1e4)
         let weth = ans.weth
         let tt = ans.tt
         let factory = ans.factory
         let router = ans.router
-
-        await weth.mint()
+        let approveAmount = depositAmount = expandTo18Decimals(15)
+        await weth.deposit({value:depositAmount })
         await weth.approve(router.address, expandTo18Decimals(approveAmount))
         await tt.mint()
         await tt.approve(router.address, expandTo18Decimals(approveAmount))
@@ -24,12 +23,12 @@ describe('Router02', function () {
 
         let args = [
             [weth.address, tt.address],
-            expandTo18Decimals(10),
-            expandTo18Decimals(8),
-            1,
-            1,
+            expandTo18Decimals(5),
+            expandTo18Decimals(5),
+            0,
+            0,
             (await ethers.getSigners())[0].address,
-           getDeadline()
+            getDeadline()
         ]
         await router.addLiquidity(...args)
         let pair = await factory.getPair(weth.address, tt.address, false)
@@ -37,8 +36,8 @@ describe('Router02', function () {
 
         let argsStable = [
             [weth.address, tt.address, true],
-            expandTo18Decimals(10),
-            expandTo18Decimals(8),
+            expandTo18Decimals(5),
+            expandTo18Decimals(5),
             1,
             1,
             (await ethers.getSigners())[0].address,
@@ -49,12 +48,12 @@ describe('Router02', function () {
         pairStable = await (await ethers.getContractFactory("TeleswapV2Pair")).attach(pairStable)
         const signer = (await ethers.getSigners())[0]
 
-        await signer.sendTransaction(
-            {
-                to: weth.address,
-                value: expandTo18Decimals(100)
-            }
-        )
+        // await signer.sendTransaction(
+        //     {
+        //         to: weth.address,
+        //         value: expandTo18Decimals(100)
+        //     }
+
 
         ans.pair = pair
         ans.pairStable = pairStable
@@ -69,16 +68,25 @@ describe('Router02', function () {
 
             let router = ans.router
 
-            let reserveIn = expandTo18Decimals("100"), reserveOut = expandTo18Decimals("100"),
-                amountIn = expandTo18Decimals("10")
-            let desireAmountOut = reserveOut.sub(reserveIn.mul(reserveOut).div(reserveIn.add(amountIn)))
-            console.log("volatile desireAmountOut without fee:", ethers.utils.formatEther(desireAmountOut))
-
+            let args = [
+                expandTo18Decimals(1),
+                expandTo18Decimals(10),
+                expandTo18Decimals(10),
+                false,
+                decimals18,decimals18
+            ]
             // volatile
-            let calcAmount = await router.getAmountOut(amountIn, reserveIn, reserveOut, false, decimals18, decimals18)
+            let calcAmount = await router.getAmountOut(...args)
             console.log("volatile calcAmount:", ethers.utils.formatEther(calcAmount))
             // stable
-            calcAmount = await router.getAmountOut(amountIn, reserveIn, reserveOut, true, decimals18, decimals18)
+            let stableArgs = [
+                expandTo18Decimals(1),
+                expandTo18Decimals(10),
+                expandTo18Decimals(10),
+                true,
+                decimals18,decimals18
+            ]
+            calcAmount = await router.getAmountOut(...stableArgs)
             console.log("stable calcAmount:", ethers.utils.formatEther(calcAmount))
 
         });
@@ -98,7 +106,7 @@ describe('Router02', function () {
             } else {
                 [reserveIn, reserveOut] = [reserve1, reserve0]
             }
-            let amountIn = expandTo18Decimals("10")
+            let amountIn = expandTo18Decimals("1")
 
             let desireAmountOut = reserveOut.sub(reserveIn.mul(reserveOut).div(reserveIn.add(amountIn)))
             console.log("volatile desireAmountOut without fee:", ethers.utils.formatEther(desireAmountOut))
@@ -164,7 +172,7 @@ describe('Router02', function () {
             } else {
                 [reserveIn, reserveOut] = [reserve1, reserve0]
             }
-            let amountOut = expandTo18Decimals("10")
+            let amountOut = expandTo18Decimals("1")
             // volatile
             let args = [
                 amountOut,
@@ -348,8 +356,6 @@ describe('Router02', function () {
             let burnAmt = (await ans.pair.balanceOf(ans.signer.address))
 
 
-
-
             let args = [
                 getRoute(ans, false),
                 burnAmt,
@@ -357,11 +363,10 @@ describe('Router02', function () {
                 ans.signer.address,
                 dl,
                 false,
-                await getSig(ans,false,dl)
+                await getSig(ans, false, dl)
             ]
             console.log("before remove", await ans.pair.balanceOf(ans.signer.address))
             await ans.router.removeLiquidityWithPermit(...args)
-
 
 
             // stable
@@ -422,7 +427,7 @@ describe('Router02', function () {
                 ans.signer.address,
                 getDeadline(),
                 false,
-                await getSig(ans,false,dl)
+                await getSig(ans, false, dl)
             ]
             await ans.router.removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(...args)
 
@@ -438,7 +443,7 @@ describe('Router02', function () {
                 ans.signer.address,
                 getDeadline(),
                 false,
-                await getSig(ans,true,dl)
+                await getSig(ans, true, dl)
             ]
             await ans.router.removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(...stableArgs)
         })
@@ -743,22 +748,22 @@ describe('Router02', function () {
             let ans = await loadFixture(deployContracts)
             let args = [
                 expandTo18Decimals(1),
-                [[ans.weth.address,ans.tt.address,false]],
+                [[ans.weth.address, ans.tt.address, false]],
                 ans.signer.address,
                 getDeadline()
             ]
-            await ans.router.swapETHForExactTokens(...args,{value:expandTo18Decimals(2)})
+            await ans.router.swapETHForExactTokens(...args, {value: expandTo18Decimals(2)})
 
 
             // stable
             console.log("stable")
             let stableArgs = [
                 expandTo18Decimals(1),
-                [[ans.weth.address,ans.tt.address,true]],
+                [[ans.weth.address, ans.tt.address, true]],
                 ans.signer.address,
                 getDeadline()
             ]
-            await ans.router.swapETHForExactTokens(...stableArgs,{value:expandTo18Decimals(2)})
+            await ans.router.swapETHForExactTokens(...stableArgs, {value: expandTo18Decimals(2)})
 
         })
         it("swapExactTokensForTokensSupportingFeeOnTransferTokens", async () => {
@@ -806,7 +811,6 @@ describe('Router02', function () {
             await ans.router.swapExactETHForTokensSupportingFeeOnTransferTokens(...stableArgs, {value: expandTo18Decimals(1)})
 
 
-
         })
         it("swapExactTokensForETHSupportingFeeOnTransferTokens", async () => {
             let ans = await loadFixture(deployContracts)
@@ -819,7 +823,7 @@ describe('Router02', function () {
             ]
             await ans.router.swapExactTokensForETHSupportingFeeOnTransferTokens(...args)
 
-        //    stable
+            //    stable
             let stableArgs = [
                 expandTo18Decimals(1),
                 0,
@@ -865,9 +869,6 @@ describe('Router02', function () {
                 deadline * 2
             ]
             await ans.router.swapExactTokensForTokens(...swapargs)
-            await ans.router.swapExactTokensForTokens(...swapargs)
-            await ans.router.swapExactTokensForTokens(...swapargs)
-            await ans.router.swapExactTokensForTokens(...swapargs)
 
             // twice add
             await ans.router.addLiquidity(...args)
@@ -883,6 +884,10 @@ describe('Router02', function () {
 
 function expandTo18Decimals(n) {
     return BigNumber.from(n).mul(BigNumber.from("10").pow(18))
+}
+
+function expandToXDecimals(n, x) {
+    return BigNumber.from(n).mul(BigNumber.from("10").pow(x))
 }
 
 function getDeadline() {
