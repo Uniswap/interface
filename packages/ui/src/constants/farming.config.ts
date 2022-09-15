@@ -51,7 +51,6 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
     pools: [
       {
         // pid 0
-        isHidden: true,
         stakingAsset: {
           name: 'USDC-USDT sLP',
           decimal: 18,

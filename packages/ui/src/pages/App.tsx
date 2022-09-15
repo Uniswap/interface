@@ -112,6 +112,7 @@ export default function App() {
               <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/liquidity/:currencyIdA/:currencyIdB" component={LiquidityDetail} />
+              <Route exact strict path="/liquidity/:currencyIdA/:currencyIdB/:stable" component={LiquidityDetail} />
               {/*    <Route exact strict path="/migrate/v1" component={MigrateV1} />
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} /> */}
               <Route exact strict path="/vote/:id" component={VotePage} />
