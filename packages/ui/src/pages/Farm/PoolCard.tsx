@@ -38,12 +38,12 @@ const StatContainer = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: 0.4rem;
 };
 `
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
-  border-radius: 12px;
+  border-radius: 0.4rem;
   width: 100%;
   overflow: hidden;
   position: relative;
@@ -59,19 +59,8 @@ const TopSection = styled.div`
   `};
 `
 
-// const BottomSection = styled.div<{ showBackground: boolean }>`
-//   padding: 12px 16px;
-//   opacity: ${({ showBackground }) => (showBackground ? '1' : '0.4')};
-//   border-radius: 0 0 12px 12px;
-//   display: flex;
-//   flex-direction: row;
-//   align-items: baseline;
-//   justify-content: space-between;
-//   z-index: 1;
-// `
-
 const StakingColumn = styled.div`
-  max-width: 288px;
+  max-width: 9.6rem;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -80,7 +69,7 @@ const StakingColumn = styled.div`
     margin-bottom: 0.46rem;
   }
   .actions {
-    margin-left: 24px;
+    margin-left: 0.8rem;
 
     svg.button {
       cursor: pointer;
@@ -197,7 +186,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <TopSection>
         <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
-        <TYPE.white fontWeight={600} fontSize={18} style={{ marginLeft: '8px' }}>
+        <TYPE.white fontWeight={600} fontSize={18} style={{ marginLeft: '0.26rem' }}>
           {farmingConfig?.pools[pid].stakingAsset.name}
         </TYPE.white>
 
@@ -242,8 +231,8 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
               height={28}
               width="auto"
               fontSize={12}
-              padding="5px 12px"
-              borderRadius="4px"
+              padding="0.166rem 0.4rem"
+              borderRadius="0.133rem"
               onClick={() => setShowClaimRewardModal(true)}
             >
               Claim
