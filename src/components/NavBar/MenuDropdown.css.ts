@@ -45,7 +45,6 @@ export const SecondaryText = style([
   }),
   {
     lineHeight: '20px',
-    //width: '100%',
   },
 ])
 
