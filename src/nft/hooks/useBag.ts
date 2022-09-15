@@ -5,14 +5,11 @@ import { v4 as uuidv4 } from 'uuid'
 import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from '../types'
 
 type BagState = {
-  bagStatus: BagStatus
   itemsInBag: BagItem[]
   addAssetToBag: (asset: UpdatedGenieAsset) => void
   removeAssetFromBag: (asset: UpdatedGenieAsset) => void
   isLocked: boolean
   setLocked: (isLocked: boolean) => void
-  didOpenUnavailableAssets: boolean
-
   bagExpanded: boolean
   toggleBag: () => void
 }
@@ -20,10 +17,6 @@ type BagState = {
 export const useBag = create<BagState>()(
   devtools(
     (set, get) => ({
-      bagStatus: BagStatus.ADDING_TO_BAG,
-
-      didOpenUnavailableAssets: false,
-
       bagExpanded: false,
       toggleBag: () =>
         set(({ bagExpanded }) => ({
