@@ -108,21 +108,21 @@ function Banner({
 
   const ALL_BANNERS = useMemo(
     () => [
-      // {
-      //   // KyberSwap Trading Campaign Lido
-      //   id: 'kyberSwap-trading-campaign-Lido',
-      //   name: 'KyberSwap Trading Campaign Lido',
-      //   start: new Date('2022-09-15T11:00:00.000Z'),
-      //   end: new Date('2022-09-29T23:59:59.000Z'),
-      //   img: isInModal
-      //     ? KyberSwapTradingCampaignMobile
-      //     : w > 768
-      //     ? KyberSwapTradingCampaignDesktop
-      //     : w > 500
-      //     ? KyberSwapTradingCampaignTablet
-      //     : KyberSwapTradingCampaignMobile,
-      //   link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-lidoldo-token-7&utm_source=kyberswap&utm_medium=banner&utm_campaign=lidotrading&utm_content=lidotrading_onsite',
-      // },
+      {
+        // KyberSwap Trading Campaign Lido
+        id: 'kyberSwap-trading-campaign-Lido',
+        name: 'KyberSwap Trading Campaign Lido',
+        start: new Date('2022-09-15T11:03:00.000Z'),
+        end: new Date('2022-10-09T03:00:00.000Z'),
+        img: isInModal
+          ? KyberSwapTradingCampaignMobile
+          : w > 768
+          ? KyberSwapTradingCampaignDesktop
+          : w > 500
+          ? KyberSwapTradingCampaignTablet
+          : KyberSwapTradingCampaignMobile,
+        link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-lido-finance-8?networkId=137&utm_source=kyberswap&utm_medium=banner&utm_campaign=lidotradingcontest&utm_content=lidotrading_onsite',
+      },
       {
         // KyberSwap Arbitrum Lido Farm
         id: 'KyberSwap-Arbitrum-Lido-Farm',
