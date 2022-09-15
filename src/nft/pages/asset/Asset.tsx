@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown'
 import { useQuery } from 'react-query'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring/web'
+import { useWeb3React } from '@web3-react/core'
 
 import { AnimatedBox, Box } from '../../components/Box'
 import { CollectionProfile } from '../../components/details/CollectionProfile'
@@ -28,6 +29,7 @@ import { formatEthPrice } from '../../utils/currency'
 import { bodySmall, caption, header2, badge, subhead } from '../../css/common.css'
 import { useTimeout } from '../../hooks/useTimeout'
 import { MouseoverTooltip } from '../../../components/Tooltip/index'
+import { isAssetOwnedByUser } from '../../utils/isAssetOwnedByUser'
 
 const AudioPlayer = ({
   imageUrl,
@@ -157,7 +159,25 @@ const Asset = () => {
     return MediaType.Image
   }, [asset])
 
-  const props = { onChange: () => console.log('hi') }
+  useEffect(() => {
+    setSelected(
+      !!itemsInBag.find((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
+    )
+  }, [asset, itemsInBag])
+
+  const { account: address, provider } = useWeb3React()
+
+  useEffect(() => {
+    if (provider) {
+      isAssetOwnedByUser({
+        tokenId: asset.tokenId,
+        userAddress: address || '',
+        assetAddress: asset.address,
+        tokenType: asset.tokenType,
+        provider,
+      }).then(setIsOwned)
+    }
+  }, [asset, address])
 
   return (
     <AnimatedBox
