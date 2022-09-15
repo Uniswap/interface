@@ -15,12 +15,16 @@ const görliInfo: NetworkInfo = {
   route: 'goerli',
   name: 'Görli',
   icon: Mainnet,
-  classicClient: createClient('https://api.thegraph.com/subgraphs/name/nguyenhuudungz/dmm-exchange-ropsten'), //todo: not exits yet
-  elasticClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/promm-rinkeby'), //todo: not exits yet
-  blockClient: createClient('https://api.thegraph.com/subgraphs/name/edwardevans094/ropsten-blocks'), //todo: not exits yet
+  classicClient: createClient(
+    'https://ethereum-graph.dev.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-classic-goerli',
+  ),
+  elasticClient: createClient(
+    'https://ethereum-graph.dev.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-elastic-goerli',
+  ),
+  blockClient: createClient('https://ethereum-graph.dev.kyberengineering.io/subgraphs/name/kybernetwork/goerli-blocks'),
   etherscanUrl: 'https://goerli.etherscan.io',
   etherscanName: 'Goerli Explorer',
-  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainId=${ChainId.ROPSTEN}`,
+  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainId=${ChainId.GÖRLI}`,
   bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'ETH',
@@ -34,8 +38,8 @@ const görliInfo: NetworkInfo = {
   classic: {
     static: {
       zap: EMPTY,
-      router: EMPTY,
-      factory: EMPTY,
+      router: '0x4F4994415B72FE87E01345f522D0A62A584D19b4',
+      factory: '0xE612668FbE2CfDb71A4b6cD422d611E63585D33A',
     },
     oldStatic: NOT_SUPPORT,
     dynamic: NOT_SUPPORT,
@@ -44,12 +48,12 @@ const görliInfo: NetworkInfo = {
     fairlaunchV2: EMPTY_ARRAY,
   },
   elastic: {
-    coreFactory: '0x5F1dddbf348aC2fbe22a163e30F99F9ECE3DD50a',
-    nonfungiblePositionManager: '0x2B1c7b41f6A8F2b2bc45C3233a5d5FB3cD6dC9A8',
-    tickReader: '0xe3AC3fd66EB31cAf4EE0831b262D837c479FFCe5',
+    coreFactory: '0x1a91f5ADc7cB5763d35A26e98A18520CB9b67e70',
+    nonfungiblePositionManager: '0x8B76f8e008570686aD5933e5669045c5B01DB7bE',
+    tickReader: '0x24F40B8a021d5442B97459A336D1363E4D0f1388',
     initCodeHash: '0xc597aba1bb02db42ba24a8878837965718c032f8b46be94a6e46452a9f89ca01',
-    quoter: '0x0D125c15D54cA1F8a813C74A81aEe34ebB508C1f',
-    routers: '0xC1e7dFE73E1598E3910EF4C7845B68A9Ab6F4c83',
+    quoter: '0x032c677619f72c670e4DA64126B48d906dfa952F',
+    routers: '0x45a5B8Cf524EC574b40e80274F0F3856A679C5c4',
   },
   averageBlockTimeInSeconds: 13.13,
   coingeckoNetworkId: EMPTY,

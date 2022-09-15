@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Edit, FileText, Plus, Repeat } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useMedia } from 'react-use'
@@ -30,6 +30,7 @@ import {
   CronosLogoFull,
   Drop,
   Enter,
+  EthW,
   Ethereum,
   Fantom,
   FantomLogoFull,
@@ -446,6 +447,7 @@ function AboutKyberSwap() {
 
           <SupportedChain>
             <Ethereum />
+            <EthW />
             <Polygon />
             <Binance />
             <Avalanche />

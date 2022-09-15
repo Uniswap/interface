@@ -106,6 +106,7 @@ export const defaultShowLiveCharts: { [chainId in ChainId]: boolean } = {
   [ChainId.CRONOSTESTNET]: false,
   [ChainId.AVAXTESTNET]: false,
   [ChainId.ARBITRUM_TESTNET]: false,
+  [ChainId.ETHW]: false,
 }
 
 export const initialState: UserState = {

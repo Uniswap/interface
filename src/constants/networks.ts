@@ -12,6 +12,7 @@ import {
   cronos,
   cronosTestnet,
   ethereum,
+  ethw,
   fantom,
   görli,
   kovan,
@@ -39,6 +40,7 @@ export const TRUESIGHT_NETWORK_TO_CHAINID: NetToChain = {
 
 export const NETWORKS_INFO_CONFIG: { [chain in ChainId]: NetworkInfo } = {
   [ChainId.MAINNET]: ethereum,
+  [ChainId.ETHW]: ethw,
   [ChainId.ROPSTEN]: ropsten,
   [ChainId.RINKEBY]: rinkeby,
   [ChainId.GÖRLI]: görli,
@@ -74,6 +76,7 @@ export const SUPPORTED_NETWORKS = Object.keys(NETWORKS_INFO).map(Number) as Chai
 
 export const MAINNET_NETWORKS = [
   ChainId.MAINNET,
+  ChainId.ETHW,
   ChainId.MATIC,
   ChainId.BSCMAINNET,
   ChainId.AVAXMAINNET,

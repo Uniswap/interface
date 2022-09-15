@@ -32,6 +32,7 @@ export function getNetworkLibrary(): Web3Provider {
 const injectedConnectorParam = {
   supportedChainIds: [
     ChainId.MAINNET,
+    ChainId.ETHW,
     ChainId.ROPSTEN,
     ChainId.RINKEBY,
     ChainId.GÖRLI,
@@ -62,6 +63,7 @@ export const braveInjectedConnector = new InjectedConnector(injectedConnectorPar
 
 const WALLET_CONNECT_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.MAINNET,
+  ChainId.ETHW,
   ChainId.ROPSTEN,
   ChainId.MUMBAI,
   ChainId.MATIC,
