@@ -13,7 +13,7 @@ export function SortingGroup({ onPressOrderBy }: FilterGroupProps) {
   return (
     <TextButton onPress={onPressOrderBy}>
       <Flex row alignItems="center" gap="xs" justifyContent="flex-end">
-        <ArrowUpDown color={theme.colors.textTertiary} height={24} width={24} />
+        <ArrowUpDown color={theme.colors.textTertiary} height={20} width={20} />
       </Flex>
     </TextButton>
   )

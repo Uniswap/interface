@@ -1,25 +1,23 @@
 import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { FadeInUp } from 'react-native-reanimated'
-import { useAppSelector } from 'src/app/hooks'
-import { BaseTokensCardProps, GenericTokensCard } from 'src/components/explore/GenericTokensCard'
+import { SortingGroup } from 'src/components/explore/FilterGroup'
+import { useOrderByModal } from 'src/components/explore/Modals'
 import { TokenItem } from 'src/components/explore/TokenItem'
-import { AnimatedBox } from 'src/components/layout'
+import { AnimatedBox, Flex } from 'src/components/layout'
+import { Text } from 'src/components/Text'
 import { CoingeckoMarketCoin } from 'src/features/dataApi/coingecko/types'
-import { useMarketTokens } from 'src/features/explore/hooks'
+import { useMarketTokens, useTokenMetadataDisplayType } from 'src/features/explore/hooks'
 import { getOrderByValues } from 'src/features/explore/utils'
-import { selectTokensOrderBy } from 'src/features/wallet/selectors'
 
 /** Renders the top X tokens in a card on the Explore page */
-export function TopTokensCard(props: BaseTokensCardProps) {
+export function TopTokensCard() {
   const { t } = useTranslation()
-
-  const orderBy = useAppSelector(selectTokensOrderBy)
-
-  const { tokens: topTokens, isLoading } = useMarketTokens(
-    useMemo(() => getOrderByValues(orderBy), [orderBy])
-  )
+  const { orderBy, setOrderByModalIsVisible, orderByModal } = useOrderByModal()
+  const [tokenMetadataDisplayType, cycleTokenMetadataDisplayType] = useTokenMetadataDisplayType()
+  const { tokens: topTokens } = useMarketTokens(useMemo(() => getOrderByValues(orderBy), [orderBy]))
 
   const renderItem = useCallback(
     ({ item: coin, index }: ListRenderItemInfo<CoingeckoMarketCoin>) => (
@@ -27,23 +25,28 @@ export function TopTokensCard(props: BaseTokensCardProps) {
         coin={coin}
         gesturesEnabled={false}
         index={index}
-        metadataDisplayType={props.metadataDisplayType}
-        onCycleMetadata={props.onCycleMetadata}
+        metadataDisplayType={tokenMetadataDisplayType}
+        onCycleMetadata={cycleTokenMetadataDisplayType}
       />
     ),
-    [props.metadataDisplayType, props.onCycleMetadata]
+    [cycleTokenMetadataDisplayType, tokenMetadataDisplayType]
   )
 
   return (
     <AnimatedBox entering={FadeInUp}>
-      <GenericTokensCard
-        {...props}
-        assets={topTokens}
-        id="explore-tokens-header"
-        loading={isLoading}
+      <Flex row alignItems="center" justifyContent="space-between" mx="sm" my="xs">
+        <Text color="textSecondary" variant="smallLabel">
+          {t('Top Tokens')}
+        </Text>
+        <SortingGroup onPressOrderBy={() => setOrderByModalIsVisible(true)} />
+      </Flex>
+      <FlatList
+        data={topTokens}
+        keyExtractor={({ id }) => id}
         renderItem={renderItem}
-        title={t('Tokens')}
+        showsVerticalScrollIndicator={false}
       />
+      {orderByModal}
     </AnimatedBox>
   )
 }

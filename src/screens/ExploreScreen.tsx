@@ -16,7 +16,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useAppSelector } from 'src/app/hooks'
 import { AppStackParamList, TabNavigationProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { FavoriteTokensCard } from 'src/components/explore/FavoriteTokensCard'
@@ -29,7 +28,6 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { ClientSideOrderBy } from 'src/features/dataApi/coingecko/types'
-import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
@@ -181,16 +179,13 @@ type CardSectionsProps = {
   textInputRef: React.RefObject<TextInput>
 }
 const CardSections = ({ textInputRef }: CardSectionsProps) => {
-  const hasWatchedWallets = useAppSelector(selectHasWatchedWallets)
-  const hasFavoriteTokens = useAppSelector(selectHasFavoriteTokens)
   // Adding 'weight' to card sections depending on if they are empty or not
   // Order will go watchedWallets > favoriteTokens > topTokens
   const cardSections = useMemo(() => {
     const SORT_SHOW_FIRST = 0
-    const SORT_SHOW_LAST = 1
     const sections = [
       {
-        order: hasWatchedWallets ? SORT_SHOW_FIRST : SORT_SHOW_LAST,
+        order: SORT_SHOW_FIRST,
         section: (
           <WatchedWalletsCard
             onSearchWallets={() => {
@@ -200,7 +195,7 @@ const CardSections = ({ textInputRef }: CardSectionsProps) => {
         ),
       },
       {
-        order: hasFavoriteTokens ? SORT_SHOW_FIRST : SORT_SHOW_LAST,
+        order: SORT_SHOW_FIRST,
         section: (
           <FavoriteTokensCard
             fixedCount={5}
@@ -210,16 +205,11 @@ const CardSections = ({ textInputRef }: CardSectionsProps) => {
       },
       {
         order: SORT_SHOW_FIRST,
-        section: (
-          <TopTokensCard
-            fixedCount={15}
-            metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
-          />
-        ),
+        section: <TopTokensCard />,
       },
     ]
     return sections.sort((a, b) => a.order - b.order).map(({ section }) => section)
-  }, [textInputRef, hasWatchedWallets, hasFavoriteTokens])
+  }, [textInputRef])
 
   return (
     <Flex gap="sm" pb="lg">
