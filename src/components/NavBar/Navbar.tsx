@@ -1,16 +1,16 @@
 import { Trans } from '@lingui/macro'
+import { ChainSwitcher } from 'components/NavBar/ChainSwitcher'
+import { MenuDropdown } from 'components/NavBar/MenuDropdown'
+import * as styles from 'components/NavBar/Navbar.css'
+import { SearchBar } from 'components/NavBar/SearchBar'
+import { ShoppingBag } from 'components/NavBar/ShoppingBag'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { Box } from 'nft/components/Box'
+import { Row } from 'nft/components/Flex'
+import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
-
-import { Box } from '../../nft/components/Box'
-import { Row } from '../../nft/components/Flex'
-import { UniIcon } from '../../nft/components/icons'
-import { ChainSwitcher } from './ChainSwitcher'
-import { MenuDropdown } from './MenuDropdown'
-import * as styles from './Navbar.css'
-import { SearchBar } from './SearchBar'
 
 interface MenuItemProps {
   href: string
@@ -64,6 +64,9 @@ const PageTabs = () => {
 }
 
 const Navbar = () => {
+  const { pathname } = useLocation()
+  const isNftPage = pathname.startsWith('/nfts')
+
   return (
     <>
       <nav className={styles.nav}>
@@ -90,6 +93,7 @@ const Navbar = () => {
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <MenuDropdown />
               </Box>
+              {isNftPage && <ShoppingBag />}
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <ChainSwitcher />
               </Box>

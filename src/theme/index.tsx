@@ -39,9 +39,9 @@ const BREAKPOINTS = {
 
 const transitions = {
   duration: {
-    slow: 500,
-    medium: 250,
-    fast: 125,
+    slow: '500ms',
+    medium: '250ms',
+    fast: '125ms',
   },
   timing: {
     ease: 'ease',
@@ -49,6 +49,11 @@ const transitions = {
     out: 'ease-out',
     inOut: 'ease-in-out',
   },
+}
+
+const opacities = {
+  hover: 0.6,
+  click: 0.4,
 }
 
 // Migrating to a standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
@@ -287,6 +292,8 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
     breakpoint: BREAKPOINTS,
 
     transition: transitions,
+
+    opacity: opacities,
 
     // css snippets
     flexColumnNoWrap: css`

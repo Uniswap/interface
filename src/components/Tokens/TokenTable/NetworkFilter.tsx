@@ -10,6 +10,7 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { filterNetworkAtom } from '../state'
+import FilterOption from './FilterOption'
 
 const NETWORKS = [
   SupportedChainId.MAINNET,
@@ -28,7 +29,6 @@ const InternalMenuItem = styled.div`
     text-decoration: none;
   }
 `
-
 const InternalLinkMenuItem = styled(InternalMenuItem)`
   display: flex;
   align-items: center;
@@ -59,36 +59,6 @@ const MenuTimeFlyout = styled.span`
   z-index: 100;
   left: 0px;
 `
-
-const StyledMenuButton = styled.button<{ open: boolean }>`
-  width: 100%;
-  height: 100%;
-  color: ${({ theme, open }) => (open ? theme.accentActive : theme.textPrimary)};
-  border: none;
-  background-color: ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundInteractive)};
-  margin: 0;
-  padding: 6px 12px 6px 12px;
-  border-radius: 12px;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
-
-  :hover {
-    cursor: pointer;
-    outline: none;
-    border: none;
-    background-color: ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundModule)};
-  }
-  :focus {
-    background-color: ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundInteractive)};
-    border: none;
-    outline: none;
-  }
-  svg {
-    margin-top: 2px;
-  }
-`
-
 const StyledMenu = styled.div`
   display: flex;
   justify-content: center;
@@ -96,23 +66,21 @@ const StyledMenu = styled.div`
   position: relative;
   border: none;
   text-align: left;
-  width: 160px;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     flex: 1;
   }
 `
-
 const StyledMenuContent = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 8px;
   align-items: center;
   border: none;
   width: 100%;
   font-weight: 600;
   vertical-align: middle;
 `
-
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
   color: ${({ open, theme }) => (open ? theme.accentActive : theme.textSecondary)};
@@ -143,16 +111,20 @@ export default function NetworkFilter() {
 
   return (
     <StyledMenu ref={node}>
-      <StyledMenuButton onClick={toggleMenu} aria-label={`networkFilter`} open={open}>
+      <FilterOption onClick={toggleMenu} aria-label={`networkFilter`} active={open}>
         <StyledMenuContent>
           <NetworkLabel>
             <Logo src={circleLogoUrl ?? logoUrl} /> {label}
           </NetworkLabel>
           <Chevron open={open}>
-            {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
+            {open ? (
+              <ChevronUp width={20} height={15} viewBox="0 0 24 20" />
+            ) : (
+              <ChevronDown width={20} height={15} viewBox="0 0 24 20" />
+            )}
           </Chevron>
         </StyledMenuContent>
-      </StyledMenuButton>
+      </FilterOption>
       {open && (
         <MenuTimeFlyout>
           {NETWORKS.map((network) => (
