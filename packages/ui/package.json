@@ -122,7 +122,6 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@uniswap/default-token-list": "^2.0.0",
-    "eslint-plugin-prettier": "4.2.1",
     "levenary": "^1.1.1",
     "prettier": "^2.7.1",
     "react-table": "^7.8.0"
