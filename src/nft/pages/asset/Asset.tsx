@@ -72,19 +72,6 @@ const CountdownTimer = ({ sellOrder }: { sellOrder: SellOrder }) => {
         seconds
       </Box>
     </MouseoverTooltip>
-    // <AssetToolTip
-    //   prompt={
-    //     <Box as="span" fontWeight="normal" className={caption} color="darkGray">
-    // Expires: {days !== 0 ? `${days} days` : ''} {hours !== 0 ? `${hours} hours` : ''} {minutes} minutes {seconds}{' '}
-    // seconds
-    //     </Box>
-    //   }
-    //   tooltipPrompt={
-    // <Box height="16" width="full">
-    //   Expires {expires}
-    // </Box>
-    //   }
-    // />
   )
 }
 
