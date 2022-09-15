@@ -56,7 +56,6 @@ const createEmptyBalanceOption = (currencyInfo: CurrencyInfo): TokenOption => ({
   quantity: null,
 })
 
-// TODO: alphabetically sort each of these token sections
 export function useTokenSectionsByVariation(
   variation: TokenSelectorVariation,
   chainFilter: ChainId | null,
@@ -262,6 +261,7 @@ export function TokenSearchResultList({
         }
         ListFooterComponent={Footer}
         keyExtractor={key}
+        keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="always"
         renderItem={renderItem}
         renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
