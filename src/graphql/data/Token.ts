@@ -263,9 +263,7 @@ export function filterPrices(prices: TokenPrices$data['priceHistory'] | undefine
 
 export function useTokenPricesFromFragment(key: TokenPrices$key | null | undefined) {
   const fetchedTokenPrices = useFragment(tokenPricesFragment, key ?? null)?.priceHistory
-  const filteredPrices = filterPrices(fetchedTokenPrices)
-
-  return filteredPrices
+  return filterPrices(fetchedTokenPrices)
 }
 
 export function useTokenPricesCached(
