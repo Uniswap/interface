@@ -126,7 +126,7 @@ export const MenuDropdown = () => {
     <>
       <Box position="relative" ref={ref}>
         <NavIcon isActive={isOpen} onClick={toggleOpen}>
-          <EllipsisIcon />
+          <EllipsisIcon width={20} height={20} />
         </NavIcon>
 
         {isOpen && (
@@ -134,7 +134,7 @@ export const MenuDropdown = () => {
             <Column gap="16">
               <Column paddingX="8" gap="4">
                 {nftFlag === NftVariant.Enabled && (
-                  <PrimaryMenuRow to="/nft/sell" close={toggleOpen}>
+                  <PrimaryMenuRow to="/nfts/sell" close={toggleOpen}>
                     <Icon>
                       <ThinTagIcon width={24} height={24} />
                     </Icon>

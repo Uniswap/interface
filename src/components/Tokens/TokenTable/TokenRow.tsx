@@ -5,7 +5,8 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
+import { getDurationDetails, SingleTokenData } from 'graphql/data/Token'
+import { TimePeriod } from 'graphql/data/Token'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
@@ -60,6 +61,7 @@ const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean; loading?: b
     },
   }) => css`background-color ${duration.medium} ${timing.ease}`};
   width: 100%;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   &:hover {
     ${({ loading, theme }) =>
@@ -224,15 +226,12 @@ const SortArrowCell = styled(Cell)`
 `
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
+  ${ClickableStyle}
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
   height: 100%;
   justify-content: flex-end;
   width: 100%;
-
-  &:hover {
-    opacity: 60%;
-  }
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -454,29 +453,29 @@ export function LoadingRow() {
 
 /* Loaded State: row component with token information */
 export default function LoadedRow({
-  tokenAddress,
   tokenListIndex,
   tokenListLength,
   tokenData,
   timePeriod,
 }: {
-  tokenAddress: string
   tokenListIndex: number
   tokenListLength: number
-  tokenData: TokenData
+  tokenData: SingleTokenData
   timePeriod: TimePeriod
 }) {
+  const tokenAddress = tokenData?.tokens?.[0].address
   const currency = useCurrency(tokenAddress)
-  const tokenName = tokenData.name
-  const tokenSymbol = tokenData.symbol
+  const tokenName = tokenData?.name
+  const tokenSymbol = tokenData?.tokens?.[0].symbol
   const isFavorited = useIsFavorited(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
-  const delta = tokenData.percentChange?.[timePeriod]?.value
-  const arrow = delta ? getDeltaArrow(delta) : null
-  const formattedDelta = delta ? formatDelta(delta) : null
+  const tokenDetails = tokenData?.markets?.[0]
+  const { volume, pricePercentChange } = getDurationDetails(tokenData, timePeriod)
+  const arrow = pricePercentChange ? getDeltaArrow(pricePercentChange) : null
+  const formattedDelta = pricePercentChange ? formatDelta(pricePercentChange) : null
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -522,7 +521,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {tokenData.price?.value ? formatDollarAmount(tokenData.price?.value) : '-'}
+              {tokenDetails?.price?.value ? formatDollarAmount(tokenDetails?.price?.value) : '-'}
               <PercentChangeInfoCell>
                 {formattedDelta}
                 {arrow}
@@ -538,16 +537,10 @@ export default function LoadedRow({
         }
         marketCap={
           <ClickableContent>
-            {tokenData.marketCap?.value ? formatDollarAmount(tokenData.marketCap?.value) : '-'}
+            {tokenDetails?.marketCap?.value ? formatDollarAmount(tokenDetails?.marketCap?.value) : '-'}
           </ClickableContent>
         }
-        volume={
-          <ClickableContent>
-            {tokenData.volume?.[timePeriod]?.value
-              ? formatDollarAmount(tokenData.volume?.[timePeriod]?.value ?? undefined)
-              : '-'}
-          </ClickableContent>
-        }
+        volume={<ClickableContent>{volume ? formatDollarAmount(volume ?? undefined) : '-'}</ClickableContent>}
         sparkLine={
           <SparkLine>
             <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>

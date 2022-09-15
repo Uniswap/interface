@@ -145,7 +145,7 @@ const CloseIcon = styled.div`
   top: 14px;
   &:hover {
     cursor: pointer;
-    opacity: 0.6;
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 `
 

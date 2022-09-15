@@ -6,7 +6,7 @@ import { sprinkles, vars } from '../../css/sprinkles.css'
 export const image = style([
   sprinkles({ borderRadius: '20', height: 'full', alignSelf: 'center' }),
   {
-    // width: 'calc(90vh - 165px)',
+    width: 'calc(90vh - 165px)',
     height: 'calc(90vh - 165px)',
     maxHeight: '678px',
     maxWidth: '678px',
@@ -18,7 +18,7 @@ export const image = style([
       },
       '(max-width: 640px)': {
         maxHeight: '56vh',
-        maxWidth: 'min(56vh, 100%)',
+        maxWidth: '56vh',
       },
     },
   },
@@ -46,7 +46,6 @@ export const tab = style([
         color: vars.color.blackBlue,
       },
     },
-    cursor: 'pointer',
   },
 ])
 
@@ -87,8 +86,8 @@ export const column = style({
   alignSelf: 'center',
   '@media': {
     '(max-width: 1024px)': {
-      maxWidth: 'calc(100% - 12%)',
-      width: 'calc(100% - 12%)',
+      maxWidth: 'calc(88%)',
+      width: 'calc(88%)',
     },
   },
 })
