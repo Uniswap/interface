@@ -59,7 +59,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     return <div>No CollectionAssets</div>
   }
 
-  const NFTs = collectionNfts.map((asset) =>
+  const Nfts = collectionNfts.map((asset) =>
     asset ? <CollectionAsset asset={asset} key={asset.address + asset.tokenId} /> : null
   )
 
@@ -78,7 +78,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
         isLoading ? (
           loadingAssets
         ) : (
-          NFTs
+          Nfts
         )
       ) : (
         <Center width="full" color="darkGray" style={{ height: '60vh' }}>
