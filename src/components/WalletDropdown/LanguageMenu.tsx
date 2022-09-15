@@ -33,7 +33,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
       theme: {
         transition: { duration, timing },
       },
-    }) => `${duration.fast}ms background-color ${timing.in}`};
+    }) => `${duration.fast} background-color ${timing.in}`};
   }
 `
 

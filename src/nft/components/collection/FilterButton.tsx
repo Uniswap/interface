@@ -1,23 +1,33 @@
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
+import * as styles from 'nft/components/collection/FilterButton.css'
+import { Row } from 'nft/components/Flex'
 import { FilterIcon } from 'nft/components/icons'
+import { useCollectionFilters } from 'nft/hooks'
 import { putCommas } from 'nft/utils/putCommas'
-
-import * as styles from './FilterButton.css'
 
 export const FilterButton = ({
   onClick,
   isMobile,
   isFiltersExpanded,
-  showFilterBadge,
   results,
 }: {
   isMobile: boolean
   isFiltersExpanded: boolean
   results?: number
-  showFilterBadge?: boolean
   onClick: () => void
 }) => {
+  const { minPrice, maxPrice, minRarity, maxRarity, traits, markets, buyNow } = useCollectionFilters((state) => ({
+    minPrice: state.minPrice,
+    maxPrice: state.maxPrice,
+    minRarity: state.minRarity,
+    maxRarity: state.maxRarity,
+    traits: state.traits,
+    markets: state.markets,
+    buyNow: state.buyNow,
+  }))
+
+  const showFilterBadge = minPrice || maxPrice || minRarity || maxRarity || traits.length || markets.length || buyNow
   return (
     <Box
       className={clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)}
@@ -35,19 +45,21 @@ export const FilterButton = ({
       whiteSpace="nowrap"
     >
       {showFilterBadge && (
-        <Box className={styles.filterBadge} color={isFiltersExpanded ? 'grey700' : 'blue400'}>
-          {String.fromCharCode(8226)}
-        </Box>
+        <Row className={styles.filterBadge} color={isFiltersExpanded ? 'grey700' : 'blue400'}>
+          •
+        </Row>
       )}
-      <FilterIcon style={{ marginBottom: '-4px', paddingRight: '6px' }} />
+      <FilterIcon
+        style={{ marginBottom: '-4px', paddingRight: `${!isFiltersExpanded || showFilterBadge ? '6px' : '0px'}` }}
+      />
       {!isMobile && !isFiltersExpanded && 'Filter'}
 
       {showFilterBadge && !isMobile ? (
         <Box display="inline-block" position="relative">
           {!isFiltersExpanded && (
-            <span style={{ position: 'absolute', top: '5px', left: '4px', fontSize: '8px' }}>
-              {String.fromCharCode(8226)}
-            </span>
+            <Box as="span" position="absolute" left="4" style={{ top: '5px', fontSize: '8px' }}>
+              •
+            </Box>
           )}
           <Box paddingLeft={!isFiltersExpanded ? '12' : '2'}>{results ? putCommas(results) : 0} results</Box>
         </Box>

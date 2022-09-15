@@ -7,17 +7,17 @@ export const filterButton = sprinkles({
 })
 
 export const filterButtonExpanded = style({
-  background: vars.color.lightGray,
+  background: vars.color.lightGrayButton,
   color: themeVars.colors.blackBlue,
 })
 
 export const filterBadge = style([
   sprinkles({
     position: 'absolute',
+    left: '18',
     fontSize: '28',
   }),
   {
     top: '-3px',
-    left: '18px',
   },
 ])

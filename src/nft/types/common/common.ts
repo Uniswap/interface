@@ -99,7 +99,7 @@ export interface GenieAsset {
   decimals?: number
   collectionIsVerified?: boolean
   rarity?: Rarity
-  owner: OpenSeaUser
+  owner: string
   creator: OpenSeaUser
   externalLink: string
   traits?: {
