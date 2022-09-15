@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import { Pagination } from 'swiper'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 
 import KNCGraphic from 'assets/images/knc-graphic.png'
 import CoinGecko from 'assets/svg/coingecko_color.svg'
