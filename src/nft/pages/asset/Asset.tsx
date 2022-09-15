@@ -131,11 +131,7 @@ const Asset = () => {
   const [showTraits, setShowTraits] = useState(true)
   const [isSelected, setSelected] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
-
-  useEffect(() => {
-    if (asset.creator) setCreatorAddress(asset.creator.address)
-    if (asset.owner) setOwnerAddress(asset.owner)
-  }, [asset])
+  const { account: address, provider } = useWeb3React()
 
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
@@ -160,12 +156,15 @@ const Asset = () => {
   }, [asset])
 
   useEffect(() => {
+    if (asset.creator) setCreatorAddress(asset.creator.address)
+    if (asset.owner) setOwnerAddress(asset.owner)
+  }, [asset])
+
+  useEffect(() => {
     setSelected(
       !!itemsInBag.find((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
     )
   }, [asset, itemsInBag])
-
-  const { account: address, provider } = useWeb3React()
 
   useEffect(() => {
     if (provider) {
@@ -201,145 +200,147 @@ const Asset = () => {
           )}
         </Column>
         <Column className={clsx(styles.column, styles.columnRight)} width="full">
-          <Row
-            marginBottom="8"
-            alignItems="center"
-            textAlign="center"
-            justifyContent={rarityProvider ? 'space-between' : 'flex-end'}
-          >
-            {rarityProvider && (
-              <MouseoverTooltip
-                text={
-                  <Row gap="4">
-                    <img src={rarityLogo} width={16} alt={rarityProvider.provider} />
-                    Ranking by
-                    {asset.rarity?.primaryProvider === 'Genie' ? fallbackProvider : asset.rarity?.primaryProvider}
-                  </Row>
-                }
-              >
-                {' '}
-                <Center
-                  paddingLeft="6"
-                  paddingRight="4"
-                  className={badge}
-                  backgroundColor="lightGray"
-                  color="blackBlue"
-                  borderRadius="4"
-                >
-                  #{rarityProvider.rank} <img src="/nft/svgs/rarity.svg" height={15} width={15} alt="Rarity rank" />
-                </Center>
-              </MouseoverTooltip>
-            )}
-            <Row gap="12">
-              <Center
-                as="button"
-                padding="0"
-                border="none"
-                background="transparent"
-                onClick={async () => {
-                  await navigator.clipboard.writeText(window.location.hostname + pathname)
-                }}
-              >
-                <ShareIcon />
-              </Center>
-
-              <Center
-                as="button"
-                border="none"
-                width="32"
-                height="32"
-                padding="0"
-                background="transparent"
-                cursor="pointer"
-                onClick={() => {
-                  if (!parsed.origin || parsed.origin === 'collection') {
-                    navigate(`/nft/collection/${asset.address}`, undefined)
-                  } else if (parsed.origin === 'sell') {
-                    navigate('/nft/sell', undefined)
-                  } else if (parsed.origin === 'explore') {
-                    navigate(`/nft`, undefined)
-                  } else if (parsed.origin === 'activity') {
-                    navigate(`/nft/collection/${asset.address}/activity`, undefined)
+          <Column>
+            <Row
+              marginBottom="8"
+              alignItems="center"
+              textAlign="center"
+              justifyContent={rarityProvider ? 'space-between' : 'flex-end'}
+            >
+              {rarityProvider && (
+                <MouseoverTooltip
+                  text={
+                    <Row gap="4">
+                      <img src={rarityLogo} width={16} alt={rarityProvider.provider} />
+                      Ranking by
+                      {asset.rarity?.primaryProvider === 'Genie' ? fallbackProvider : asset.rarity?.primaryProvider}
+                    </Row>
                   }
-                }}
-              >
-                {parsed.origin ? (
-                  <CornerDownLeftIcon width="28" height="28" />
-                ) : (
-                  <CloseDropDownIcon color={themeVars.colors.darkGray} />
-                )}
-              </Center>
-            </Row>
-          </Row>
-          <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={header2}>
-            {asset.openseaSusFlag && (
-              <Box marginTop="8">
-                <MouseoverTooltip text={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}>
-                  <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />
+                >
+                  <Center
+                    paddingLeft="6"
+                    paddingRight="4"
+                    className={badge}
+                    backgroundColor="lightGray"
+                    color="blackBlue"
+                    borderRadius="4"
+                  >
+                    #{rarityProvider.rank} <img src="/nft/svgs/rarity.svg" height={15} width={15} alt="Rarity rank" />
+                  </Center>
                 </MouseoverTooltip>
-              </Box>
-            )}
+              )}
+              <Row gap="12">
+                <Center
+                  as="button"
+                  padding="0"
+                  border="none"
+                  background="transparent"
+                  cursor="pointer"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(window.location.hostname + pathname)
+                  }}
+                >
+                  <ShareIcon />
+                </Center>
 
-            {asset.name || `${collection.collectionName} #${asset.tokenId}`}
-          </Row>
-          {collection.collectionDescription ? (
-            <ExpandableText>
-              <ReactMarkdown
-                allowedTypes={['link', 'paragraph', 'strong', 'code', 'emphasis', 'text']}
-                source={collection.collectionDescription}
-              />
-            </ExpandableText>
-          ) : null}
-          <Row
-            justifyContent={{
-              sm: 'space-between',
-            }}
-            gap={{
-              sm: 'unset',
-            }}
-            marginBottom="36"
-          >
-            {ownerAddress.length > 0 && (
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={`https://etherscan.io/address/${asset.owner}`}
-                style={{ textDecoration: 'none' }}
-              >
-                <CollectionProfile
-                  label="Owner"
-                  avatarUrl=""
-                  name={ownerEnsName.ENSName ?? shortenAddress(ownerAddress, 0, 4)}
+                <Center
+                  as="button"
+                  border="none"
+                  width="32"
+                  height="32"
+                  padding="0"
+                  background="transparent"
+                  cursor="pointer"
+                  onClick={() => {
+                    if (!parsed.origin || parsed.origin === 'collection') {
+                      navigate(`/nft/collection/${asset.address}`, undefined)
+                    } else if (parsed.origin === 'sell') {
+                      navigate('/nft/sell', undefined)
+                    } else if (parsed.origin === 'explore') {
+                      navigate(`/nft`, undefined)
+                    } else if (parsed.origin === 'activity') {
+                      navigate(`/nft/collection/${asset.address}/activity`, undefined)
+                    }
+                  }}
+                >
+                  {parsed.origin ? (
+                    <CornerDownLeftIcon width="28" height="28" />
+                  ) : (
+                    <CloseDropDownIcon color={themeVars.colors.darkGray} />
+                  )}
+                </Center>
+              </Row>
+            </Row>
+            <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={header2}>
+              {asset.openseaSusFlag && (
+                <Box marginTop="8">
+                  <MouseoverTooltip text={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}>
+                    <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />
+                  </MouseoverTooltip>
+                </Box>
+              )}
+
+              {asset.name || `${collection.collectionName} #${asset.tokenId}`}
+            </Row>
+            {collection.collectionDescription ? (
+              <ExpandableText>
+                <ReactMarkdown
+                  allowedTypes={['link', 'paragraph', 'strong', 'code', 'emphasis', 'text']}
+                  source={collection.collectionDescription}
                 />
-              </a>
-            )}
-
-            <Link to={`/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
-              <CollectionProfile
-                label="Collection"
-                avatarUrl={collection.collectionImageUrl}
-                name={collection.collectionName}
-                isVerified={collection.isVerified}
-              />
-            </Link>
-
-            {creatorAddress ? (
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={`https://etherscan.io/address/${creatorAddress}`}
-                style={{ textDecoration: 'none' }}
-              >
-                <CollectionProfile
-                  label="Creator"
-                  avatarUrl={asset.creator.profile_img_url}
-                  name={creatorEnsName.ENSName ?? shortenAddress(creatorAddress, 0, 4)}
-                  isVerified
-                  className={styles.creator}
-                />
-              </a>
+              </ExpandableText>
             ) : null}
-          </Row>
+            <Row
+              justifyContent={{
+                sm: 'space-between',
+              }}
+              gap={{
+                sm: 'unset',
+              }}
+              marginBottom="36"
+            >
+              {ownerAddress.length > 0 && (
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={`https://etherscan.io/address/${asset.owner}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <CollectionProfile
+                    label="Owner"
+                    avatarUrl=""
+                    name={ownerEnsName.ENSName ?? shortenAddress(ownerAddress, 0, 4)}
+                  />
+                </a>
+              )}
+
+              <Link to={`/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
+                <CollectionProfile
+                  label="Collection"
+                  avatarUrl={collection.collectionImageUrl}
+                  name={collection.collectionName}
+                  isVerified={collection.isVerified}
+                />
+              </Link>
+
+              {creatorAddress ? (
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={`https://etherscan.io/address/${creatorAddress}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <CollectionProfile
+                    label="Creator"
+                    avatarUrl={asset.creator.profile_img_url}
+                    name={creatorEnsName.ENSName ?? shortenAddress(creatorAddress, 0, 4)}
+                    isVerified
+                    className={styles.creator}
+                  />
+                </a>
+              ) : null}
+            </Row>
+          </Column>
 
           {asset.priceInfo && !isOwned ? (
             <Row
