@@ -16,17 +16,19 @@ import PoolCard from './PoolCard'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1132px;
-  width: 100%;
+  width: 37.3rem;
 `
 
 const PoolSection = styled.div`
+  border: 1px solid rgba(255, 255, 255, 0.4); //test usage
   display: grid;
+  border-radius: 24px;
   grid-template-columns: 1fr;
   column-gap: 10px;
   row-gap: 15px;
   width: 100%;
   justify-self: center;
-  background: #000;
+  // background: #000;
   padding: 48px;
   color: #39e1ba;
 `

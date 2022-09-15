@@ -90,7 +90,8 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
 `
 
 const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.text4};
+  // border: 1px solid ${({ theme }) => theme.text4};
+  border: 1px solid rgba(255, 255, 255, 0.4); //test usage
   padding: 16px 12px;
   border-radius: 12px;
   display: flex;
@@ -116,7 +117,7 @@ const YourLiquidityGrid = styled(Box)`
 
 const TopPoolsGrid = styled(Box)`
   // border: 1px solid rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(0, 0, 0, 0.2); //test usage
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 24px;
   padding: 48px;
   display: grid;
