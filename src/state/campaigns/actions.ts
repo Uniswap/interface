@@ -3,7 +3,11 @@ import { createAction } from '@reduxjs/toolkit'
 
 import { SerializedToken } from 'state/user/actions'
 
-export type CampaignStatus = 'Upcoming' | 'Ongoing' | 'Ended'
+export enum CampaignStatus {
+  ONGOING = 'Ongoing',
+  UPCOMING = 'Upcoming',
+  ENDED = 'Ended',
+}
 
 export enum CampaignState {
   CampaignStateReady,
@@ -11,28 +15,45 @@ export enum CampaignState {
   CampaignStateDistributedRewards,
 }
 
+export enum CampaignUserInfoStatus {
+  Eligible = 'ELIGIBLE',
+  Ineligible = 'INELIGIBLE',
+  Banned = 'BANNED',
+}
+
+export type CampaignUserInfo = {
+  address: string
+  tradingVolume: number
+  tradingNumber: number
+  rankNo: number
+  status: CampaignUserInfoStatus
+}
+
 export type RewardSingle = {
   type: 'Single'
-  rank?: number
-  amount?: string
-  token?: SerializedToken
+  amount: string
+  token: SerializedToken
+  rewardInUSD: boolean
+  rank: number
 }
 
 export type RewardRange = {
   type: 'Range'
-  from?: number
-  to?: number
-  amount?: string
-  token?: SerializedToken
+  amount: string
+  token: SerializedToken
+  rewardInUSD: boolean
+  from: number
+  to: number
 }
 
 export type RewardRandom = {
   type: 'Random'
+  amount: string
+  token: SerializedToken
+  rewardInUSD: boolean
   from?: number
   to?: number
   nWinners?: number
-  amount?: string
-  token?: SerializedToken
 }
 
 export type RewardDistribution = RewardSingle | RewardRange | RewardRandom
@@ -42,7 +63,9 @@ export interface CampaignLeaderboardRanking {
   totalPoint: number
   rankNo: number
   rewardAmount: Fraction
-  token?: SerializedToken
+  rewardAmountUsd: Fraction
+  rewardInUSD: boolean
+  token: SerializedToken
 }
 
 export interface CampaignLeaderboardReward {
@@ -53,11 +76,12 @@ export interface CampaignLeaderboardReward {
 }
 
 export interface CampaignLeaderboard {
-  numberOfParticipants: number
+  numberOfEligibleParticipants: number
   userRank: number
+  finalizedAt: number
+  distributedRewardsAt: number
   rankings: CampaignLeaderboardRanking[]
   rewards: CampaignLeaderboardReward[]
-  isParticipated: boolean
 }
 
 export interface CampaignLuckyWinner {
@@ -86,6 +110,9 @@ export interface CampaignData {
   chainIds: string
   rewardChainIds: string
   tradingVolumeRequired: number
+  userInfo?: CampaignUserInfo
+  tradingNumberRequired: number
+  leaderboard: CampaignLeaderboard | undefined
 }
 
 export interface CampaignProofData {

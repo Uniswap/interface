@@ -2,8 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
 import axios from 'axios'
-import React, { useMemo, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useMemo, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
@@ -20,19 +20,27 @@ import useTheme from 'hooks/useTheme'
 import { Dots } from 'pages/Pool/styleds'
 import { OptionsContainer } from 'pages/TrueSight/styled'
 import { AppState } from 'state'
-import { CampaignData, CampaignLeaderboardReward } from 'state/campaigns/actions'
+import {
+  CampaignData,
+  CampaignLeaderboardReward,
+  setCampaignData,
+  setSelectedCampaignLeaderboard,
+} from 'state/campaigns/actions'
 import { useSwapNowHandler } from 'state/campaigns/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 
+type Size = 'small' | 'large'
 export default function CampaignButtonWithOptions({
   campaign,
   disabled = false,
   type,
   addTemporaryClaimedRefs,
+  size,
 }: {
   campaign: CampaignData | undefined
   disabled?: boolean
   type: 'swap_now' | 'claim_rewards'
+  size: Size
   addTemporaryClaimedRefs?: (claimedRefs: string[]) => void
 }) {
   const theme = useTheme()
@@ -48,12 +56,11 @@ export default function CampaignButtonWithOptions({
 
   const { account, library } = useActiveWeb3React()
 
-  const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
-  const selectedCampaignLeaderboard = useSelector((state: AppState) => state.campaigns.selectedCampaignLeaderboard)
+  const leaderboardInfo = campaign?.leaderboard
 
   const refs: string[] = []
-  if (selectedCampaignLeaderboard && selectedCampaignLeaderboard.rewards) {
-    selectedCampaignLeaderboard.rewards.forEach(reward => {
+  if (leaderboardInfo && leaderboardInfo.rewards) {
+    leaderboardInfo.rewards.forEach(reward => {
       if (!reward.claimed && reward.rewardAmount.greaterThan(BIG_INT_ZERO)) {
         refs.push(reward.ref)
       }
@@ -61,9 +68,14 @@ export default function CampaignButtonWithOptions({
   }
 
   const transactionsState = useSelector<AppState, AppState['transactions']>(state => state.transactions)
+  const {
+    selectedCampaign,
+    data: campaignData,
+    selectedCampaignLeaderboard,
+  } = useSelector((state: AppState) => state.campaigns)
   const transactions = useMemo(
-    () => (selectedCampaign ? transactionsState[parseInt(selectedCampaign.rewardChainIds)] ?? {} : {}),
-    [transactionsState, selectedCampaign],
+    () => (campaign ? transactionsState[parseInt(campaign.rewardChainIds)] ?? {} : {}),
+    [transactionsState, campaign],
   )
 
   const [ref2Hash, setRef2Hash] = useState<{ [ref: string]: string }>({})
@@ -72,26 +84,44 @@ export default function CampaignButtonWithOptions({
     return transactions[hash] !== undefined && transactions[hash]?.receipt === undefined
   })
 
+  const dispatch = useDispatch()
+  const updateCampaignStore = () => {
+    const rewards: CampaignLeaderboardReward[] = leaderboardInfo?.rewards?.map(rw => ({ ...rw, claimed: true })) ?? []
+
+    // update selected leaderboard of campaign
+    if (campaign?.id === selectedCampaign?.id && selectedCampaignLeaderboard) {
+      const newLeaderboard = { ...selectedCampaignLeaderboard, rewards }
+      dispatch(
+        setSelectedCampaignLeaderboard({
+          leaderboard: newLeaderboard,
+        }),
+      )
+    }
+
+    // update leaderboard of list campaign
+    const campaigns = campaignData?.map((el: CampaignData) => {
+      if (el.id === campaign?.id && el.leaderboard) return { ...el, leaderboard: { ...el.leaderboard, rewards } }
+      return el
+    })
+    dispatch(setCampaignData({ campaigns }))
+  }
+
   const addTransactionWithType = useTransactionAdder()
   const sendTransaction = useSendTransactionCallback()
   const claimRewards = async (claimChainId: ChainId) => {
-    if (!account || !library || !selectedCampaign || !selectedCampaignLeaderboard) return
+    if (!account || !library || !campaign || !leaderboardInfo) return
 
     const url = process.env.REACT_APP_REWARD_SERVICE_API + '/rewards/claim'
 
     const data = {
       wallet: account.toLowerCase(),
-      chainId: selectedCampaign.rewardChainIds,
+      chainId: campaign.rewardChainIds,
       clientCode: 'campaign',
       ref: refs.join(','),
     }
     let response: any
     try {
-      response = await axios({
-        method: 'POST',
-        url,
-        data,
-      })
+      response = await axios({ method: 'POST', url, data })
     } catch (err) {
       console.error(err)
     }
@@ -101,7 +131,7 @@ export default function CampaignButtonWithOptions({
       const encodedData = response.data.data.EncodedData
       try {
         await sendTransaction(rewardContractAddress, encodedData, BigNumber.from(0), async transactionResponse => {
-          const accumulatedUnclaimedRewards = selectedCampaignLeaderboard.rewards
+          const accumulatedUnclaimedRewards = leaderboardInfo?.rewards
             .filter(reward => !reward.claimed)
             .reduce((acc: { [p: string]: CampaignLeaderboardReward }, value) => {
               const key = value.token.chainId + '_' + value.token.address
@@ -115,13 +145,13 @@ export default function CampaignButtonWithOptions({
               }
               return acc
             }, {})
-          const rewardString = Object.values(accumulatedUnclaimedRewards)
+          const rewardString = Object.values(accumulatedUnclaimedRewards ?? {})
             .map(reward => reward.rewardAmount.toSignificant(DEFAULT_SIGNIFICANT) + ' ' + reward.token.symbol)
             .join(' ' + t`and` + ' ')
           addTransactionWithType(transactionResponse, {
             type: 'Claim',
             desiredChainId: claimChainId,
-            summary: `${rewardString} from campaign "${selectedCampaign.name}"`,
+            summary: `${rewardString} from campaign "${campaign?.name}"`,
           })
           const newRef2Hash = refs
             .filter(ref => !!ref)
@@ -130,6 +160,7 @@ export default function CampaignButtonWithOptions({
           const transactionReceipt = await transactionResponse.wait()
           if (transactionReceipt.status === 1) {
             addTemporaryClaimedRefs && addTemporaryClaimedRefs(refs)
+            updateCampaignStore()
           }
         })
       } catch (err) {
@@ -142,6 +173,7 @@ export default function CampaignButtonWithOptions({
 
   return (
     <StyledPrimaryButton
+      size={size}
       onClick={e => {
         e.stopPropagation()
         setIsShowNetworks(prev => !prev)
@@ -183,15 +215,16 @@ export default function CampaignButtonWithOptions({
   )
 }
 
-export const StyledPrimaryButton = styled(ButtonPrimary)`
+export const StyledPrimaryButton = styled(ButtonPrimary)<{ size: Size }>`
   position: relative;
   font-size: 14px;
   padding: 12px 48px;
   min-width: fit-content;
-  height: 44px;
+  height: ${({ size }) => (size === 'large' ? '44px' : '35px')};
   font-weight: 500;
   color: ${({ theme }) => theme.textReverse};
   border: none;
+  z-index: unset;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     ${css`

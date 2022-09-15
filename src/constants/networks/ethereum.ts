@@ -29,10 +29,7 @@ const ethereumInfo: NetworkInfo = {
     logo: EthereumLogo,
     decimal: 18,
   },
-  rpcUrl:
-    process.env.NODE_ENV === 'development'
-      ? 'https://cloudflare-eth.com'
-      : 'https://proxy.kyberengineering.io/ethereum',
+  rpcUrl: 'https://ethereum.kyberengineering.io',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/ethereum/route/encode`,
   classic: {
     static: {
