@@ -63,7 +63,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     asset ? <CollectionAsset asset={asset} key={asset.address + asset.tokenId} /> : null
   )
 
-  const hasNFTs = collectionNfts.length > 0
+  const hasNfts = collectionNfts.length > 0
 
   return (
     <InfiniteScroll
@@ -72,9 +72,9 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
       loader={hasNextPage ? loadingAssets : null}
       dataLength={collectionNfts.length}
       style={{ overflow: 'unset' }}
-      className={hasNFTs ? styles.assetList : undefined}
+      className={hasNfts ? styles.assetList : undefined}
     >
-      {hasNFTs ? (
+      {hasNfts ? (
         isLoading ? (
           loadingAssets
         ) : (
