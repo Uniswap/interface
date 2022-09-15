@@ -31,10 +31,10 @@ contract WETH9 {
     // function() public payable {
     //     deposit();
     // }
-    function mint() public {
-        balanceOf[msg.sender] += 10000e18;
-        emit Deposit(msg.sender, 10000);
-    }
+//    function mint() public {
+//        balanceOf[msg.sender] += 10000e18;
+//        emit Deposit(msg.sender, 10000);
+//    }
 
     function deposit() public payable {
         balanceOf[msg.sender] += msg.value;

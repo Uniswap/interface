@@ -66,10 +66,10 @@ task("calcpair", "")
 // test case run on testnet
 async function getFactorys() {
     return {
-        factory: await (await ethers.getContractFactory("TeleswapV2Factory")).attach(process.env.FACTORY),
-        router: await (await ethers.getContractFactory("TeleswapV2Router02")).attach(process.env.ROUTER),
-        weth: await (await ethers.getContractFactory("WETH9")).attach(process.env.WETH),
-        tt: await (await ethers.getContractFactory("TT")).attach(process.env.TT),
+        factory: await (await ethers.getContractFactory("TeleswapV2Factory")).attach(process.env.factory),
+        router: await (await ethers.getContractFactory("TeleswapV2Router02")).attach(process.env.router),
+        weth: await (await ethers.getContractFactory("WETH9")).attach(process.env.weth),
+        tt: await (await ethers.getContractFactory("TT")).attach(process.env.tt),
         signer: (await ethers.getSigners())[0]
     }
 }
