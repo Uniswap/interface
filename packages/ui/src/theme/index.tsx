@@ -1,4 +1,3 @@
-import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import { Text, TextProps } from 'rebass'
 import styled, {
@@ -214,6 +213,15 @@ html,
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
 }
 
 iframe {
@@ -251,7 +259,7 @@ html {
   background-size: 61%; */
   box-sizing: border-box;
   // font-size: min(1.56vw, 16px);
-  font-size: calc(16.666px + 0.38833vw);
+  font-size: calc(12px + 0.33333vw);
   ${({ theme }) => theme.mediaWidth.upToSmall`
     // font-size: max(4.15vw, 16px);
     font-size: 4.15vw;
@@ -260,12 +268,9 @@ html {
 
 body {
   /* min-height: 100vh; */
-  background-position: 0 -30vh;
-  background-repeat: no-repeat;
-  background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
-      1,
-      theme.bg1
-    )} 100%)`};
+}
+#root {
+  width: 100%;
+  height: 100%;
 }
 `

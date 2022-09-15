@@ -110,7 +110,6 @@ const HeadLogoView = styled.div`
 const HeadTabView = styled.div`
   ${({ theme }) => theme.mediaWidth.upToSmall`
       height: 3rem;
-      background: rgba(255, 255, 255, 0.05);
   `}
 `
 const HeadWalletView = styled.div`
