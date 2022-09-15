@@ -1,5 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css'
 import { darken } from 'polished'
+
 import { sprinkles } from './sprinkles.css'
 
 export const loadingAnimation = keyframes({
