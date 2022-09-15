@@ -153,7 +153,7 @@ export const valuePropContent = style([
   sprinkles({
     position: 'relative',
     zIndex: '1',
-    paddingLeft: { sm: '20', md: '36' },
+    paddingLeft: { sm: '20', md: '28', lg: '36' },
     paddingBottom: '18',
     fontSize: { sm: '20', md: '28' },
     paddingTop: { sm: '28', md: '32' },
@@ -164,10 +164,9 @@ export const valuePropContent = style([
       [`(max-width: 400px)`]: { width: '88%' },
       [`(min-width: 400px)`]: { width: '67%' },
       [`(min-width: ${breakpoints.md}px)`]: {
-        width: '74%',
+        width: '58%',
         lineHeight: '36px',
       },
-      [`(min-width: ${breakpoints.md}px)`]: { width: '58%' },
       [`(min-width: ${breakpoints.lg}px)`]: { width: '50%' },
     },
   },
