@@ -330,14 +330,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onDismiss={handleDismissTokenWarning}
       />
       <SwapPoolTabs active={'swap'} />
-      <AppBody
-        sx={{
-          backgroundColor: '#394e5a',
-          boxShadow: '0px -2px 0px #39E1BA',
-          backdropFilter: 'blur(60px)',
-          borderRadius: '1.6rem'
-        }}
-      >
+      <AppBody>
         {/* <SwapHeader /> */}
         <Wrapper id="swap-page">
           <ConfirmSwapModal

@@ -39,8 +39,6 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
     padding: 0px;
     width: 50vw;
     overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
-    overflow-x: hidden;
-
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
     background: rgba(5, 5, 14, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.6);

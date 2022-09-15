@@ -1,6 +1,8 @@
+import bg from 'assets/svg/background.svg'
 import LiquidityDetail from 'components/Liquidity'
 import React, { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
+import { Box } from 'rebass'
 import styled from 'styled-components'
 
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
@@ -31,14 +33,16 @@ import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 
 const AppWrapper = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-flow: column;
   align-items: flex-start;
-  overflow-x: hidden;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
   font-size: 0.6rem;
+  position: relative;
 `
 
 const HeaderWrapper = styled.div`
@@ -51,11 +55,9 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 6.18rem;
+  padding-top: 5rem;
   align-items: center;
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
   z-index: 10;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -82,6 +84,16 @@ export default function App() {
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
+        <Box
+          sx={{
+            position: 'fixed',
+            background: `url(${bg})`,
+            width: '100vw',
+            height: '100vh',
+            backgroundRepeat: 'no-repeat',
+            backgroundPositionX: '50%'
+          }}
+        ></Box>
         <URLWarning />
         <HeaderWrapper>
           <Header />

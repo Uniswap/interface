@@ -164,15 +164,11 @@ export default function LiquidityDetail({
           flexDirection: 'column',
           alignItems: 'stretch',
           padding: '1.2rem .9rem',
-          width: '19rem',
+          width: '21rem',
           // width: '556px',
           // maxWidth: '420px',
           // maxHeight: '638px',
-          height: 'fit-content',
-          background: 'rgba(51, 51, 51, 0.5)',
-          boxShadow: '0px -2px 0px #39E1BA',
-          backdropFilter: 'blur(2rem)',
-          borderRadius: '1.6rem'
+          height: 'fit-content'
         }}
       >
         <TransactionConfirmationModal
