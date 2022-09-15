@@ -18,6 +18,7 @@ export enum EventName {
   SWAP_SIGNED = 'Swap Signed',
   SWAP_SUBMITTED_BUTTON_CLICKED = 'Swap Submit Button Clicked',
   SWAP_TOKENS_REVERSED = 'Swap Tokens Reversed',
+  SWAP_TRANSACTION_COMPLETED = 'Swap Transaction Completed',
   TOKEN_IMPORTED = 'Token Imported',
   TOKEN_SELECTED = 'Token Selected',
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
