@@ -5,8 +5,7 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { getDurationDetails, SingleTokenData } from 'graphql/data/Token'
-import { TimePeriod } from 'graphql/data/Token'
+import { getDurationDetails, SingleTokenData, TimePeriod } from 'graphql/data/Token'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
@@ -543,7 +542,17 @@ export default function LoadedRow({
         volume={<ClickableContent>{volume ? formatDollarAmount(volume ?? undefined) : '-'}</ClickableContent>}
         sparkLine={
           <SparkLine>
-            <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>
+            <ParentSize>
+              {({ width, height }) => (
+                <SparklineChart
+                  width={width}
+                  height={height}
+                  tokenData={tokenData}
+                  pricePercentChange={pricePercentChange}
+                  timePeriod={timePeriod}
+                />
+              )}
+            </ParentSize>
           </SparkLine>
         }
         first={tokenListIndex === 0}
