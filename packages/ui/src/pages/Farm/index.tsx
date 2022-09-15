@@ -1,9 +1,9 @@
-import { Chef } from 'constants/farm/chef.enum'
-import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+// import { Chef } from 'constants/farm/chef.enum'
+// import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
 // import { useChefPositions } from 'hooks/farm/useChefPositions'
 // import { useChefContract } from 'hooks/farm/useChefContract'
 import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
-import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
+// import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
@@ -46,14 +46,12 @@ flex-direction: column;
 export default function FarmList() {
   const { chainId } = useActiveWeb3React()
   console.debug('chainId', chainId)
-  const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
   // const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
   // const positions = useChefPositions(mchefContract, undefined, chainId)
-  const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
   const stakingInfos = useChefStakingInfo()
   useEffect(() => {
-    console.info('useMasterChefPoolInfo', poolInfos)
-  }, [poolInfos])
+    console.info('useChefStakingInfo', stakingInfos)
+  }, [stakingInfos])
   // // staking info for connected account
   // const stakingInfos = useStakingInfo()
 
@@ -99,10 +97,12 @@ export default function FarmList() {
         </DataRow>
 
         <PoolSection>
-          {poolInfos.length === 0
+          {stakingInfos.length === 0
             ? 'Loading...'
-            : poolInfos.map((_poolInfo, pid) => {
-                return <PoolCard key={pid} pid={pid} stakingInfo={stakingInfos[pid]} />
+            : stakingInfos.map((_poolInfo, pid) => {
+                if (!_poolInfo) return null
+                if (_poolInfo.isHidden) return null
+                return <PoolCard key={pid} pid={pid} stakingInfo={_poolInfo} />
               })}
         </PoolSection>
       </AutoColumn>

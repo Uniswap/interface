@@ -1,37 +1,35 @@
 import { CurrencyAmount, Token } from '@teleswap/sdk'
+import { ReactComponent as AddIcon } from 'assets/svg/add.svg'
+import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 import { ButtonPrimary } from 'components/Button'
-// import { currencyId } from '../../utils/currencyId'
-// import { unwrappedToken } from '../../utils/wrappedCurrency'
-// import { useTotalSupply } from '../../data/TotalSupply'
-// import { usePair } from '../../data/Reserves'
-// import useUSDCPrice from '../../utils/useUSDCPrice'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { AutoColumn } from 'components/Column'
-import ClaimRewardModal from 'components/masterchef/ClaimRewardModal'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
+import ClaimRewardModal from 'components/masterchef/ClaimRewardModal'
 // import { Break } from 'components/earn/styled'
 // import { RowBetween } from 'components/Row'
 import StakingModal from 'components/masterchef/StakingModal'
 import UnstakingModal from 'components/masterchef/UnstakingModal'
 import { Chef } from 'constants/farm/chef.enum'
 // import { Chef } from 'constants/farm/chef.enum'
-import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+import { CHAINID_TO_FARMING_CONFIG, LiquidityAsset } from 'constants/farming.config'
 import { UNI, ZERO_ADDRESS } from 'constants/index'
+import { usePair } from 'data/Reserves'
 import { BigNumber } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
 import { useChefContract } from 'hooks/farm/useChefContract'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
+import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 import React, { useMemo, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-// import { ETHER, JSBI, TokenAmount } from '@teleswap/sdk'
+// import { currencyId } from '../../utils/currencyId'
+// import { unwrappedToken } from '../../utils/wrappedCurrency'
+import { useTotalSupply } from '../../data/TotalSupply'
 // import { StakingInfo } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
 import { TYPE } from '../../theme'
-import { ReactComponent as AddIcon } from 'assets/svg/add.svg'
-import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
-import { useHistory } from 'react-router-dom'
-import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 // import { Token } from '@teleswap/sdk'
 // import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
 
@@ -104,12 +102,8 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   // const token0 = stakingInfo.tokens[0]
   // const token1 = stakingInfo.tokens[1]
 
-  const currency0 = stakingInfo.stakingAsset?.token0
-    ? new Token(chainId || 420, stakingInfo.stakingAsset.token0, 18)
-    : undefined
-  const currency1 = stakingInfo.stakingAsset?.token1
-    ? new Token(chainId || 420, stakingInfo.stakingAsset.token1, 18)
-    : undefined
+  const currency0: Token | undefined = (stakingInfo.stakingAsset as LiquidityAsset).tokenA
+  const currency1: Token | undefined = (stakingInfo.stakingAsset as LiquidityAsset).tokenB
 
   // const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
@@ -121,9 +115,11 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const [showClaimRewardModal, setShowClaimRewardModal] = useState(false)
   const backgroundColor = useColor()
 
-  // const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakedAmount.token)
-  // const [, stakingTokenPair] = usePair(...stakingInfo.tokens)
+  const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakingToken)
+  const [, stakingTokenPair] = usePair(currency0, currency1, (stakingInfo.stakingAsset as LiquidityAsset).isStable)
 
+  console.info('totalSupplyOfStakingToken', totalSupplyOfStakingToken)
+  console.info('stakingTokenPair', stakingTokenPair)
   // // let returnOverMonth: Percent = new Percent('0')
   // let valueOfTotalStakedAmountInWETH: TokenAmount | undefined
   // if (totalSupplyOfStakingToken && stakingTokenPair) {
@@ -144,6 +140,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   // const USDPrice = useUSDCPrice(WETH)
   // const valueOfTotalStakedAmountInUSDC =
   //   valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
+  // console.debug('valueOfTotalStakedAmountInUSDC', valueOfTotalStakedAmountInUSDC)
 
   const isStaking = true
   const rewardToken = UNI[chainId || 420]

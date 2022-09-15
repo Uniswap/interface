@@ -50,7 +50,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid }: ClaimReward
   // track and parse user input
   const stakingInfos = useChefStakingInfo()
   const thisPool = stakingInfos[pid]
-  const stakingCurrency = thisPool.stakingToken
+  const stakingCurrency = thisPool?.stakingToken
 
   const rewardToken = UNI[chainId || 420]
   const positions = useChefPositions(mchefContract, undefined, chainId)
@@ -133,7 +133,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid }: ClaimReward
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.white fontSize={20}>Withdrew {stakingCurrency.symbol}!</TYPE.white>
+            <TYPE.white fontSize={20}>Withdrew {stakingCurrency?.symbol}!</TYPE.white>
             <TYPE.white fontSize={20}>
               {t('claimed')} {rewardToken.symbol}!
             </TYPE.white>

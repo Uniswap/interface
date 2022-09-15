@@ -48,7 +48,7 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
   // track and parse user input
   const stakingInfos = useChefStakingInfo()
   const thisPool = stakingInfos[pid]
-  const stakingCurrency = thisPool.stakingToken
+  const stakingCurrency = thisPool?.stakingToken
 
   const rewardToken = UNI[chainId || 420]
   const positions = useChefPositions(mchefContract, undefined, chainId)
@@ -140,7 +140,7 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.white fontSize={20}>
-              Withdrawing {parsedStakedAmount?.toSignificant(4)} {stakingCurrency.symbol}
+              Withdrawing {parsedStakedAmount?.toSignificant(4)} {stakingCurrency?.symbol}
             </TYPE.white>
             <TYPE.white fontSize={20}>
               Claiming {parsedPendingSushiAmount?.toSignificant(4)} {rewardToken.symbol}
@@ -152,7 +152,7 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.white fontSize={20}>Withdrew {stakingCurrency.symbol}!</TYPE.white>
+            <TYPE.white fontSize={20}>Withdrew {stakingCurrency?.symbol}!</TYPE.white>
             <TYPE.white fontSize={20}>Claimed {rewardToken.symbol}!</TYPE.white>
           </AutoColumn>
         </SubmittedView>

@@ -69,13 +69,12 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   const signatureData = null
   const stakingInfos = useChefStakingInfo()
   const thisPool = stakingInfos[pid]
-  const stakingCurrency = thisPool.stakingToken
+  const stakingCurrency = thisPool?.stakingToken
 
-  const tokenAmount = new TokenAmount(
-    stakingCurrency,
-    utils.parseUnits(typedValue, stakingCurrency.decimals).toString()
-  )
-  const stakeTokenBalance = useTokenBalance(account!, stakingCurrency)
+  const tokenAmount = stakingCurrency
+    ? new TokenAmount(stakingCurrency, utils.parseUnits(typedValue, stakingCurrency.decimals).toString())
+    : undefined
+  const stakeTokenBalance = useTokenBalance(account === null ? undefined : account, stakingCurrency)
   const stakingContract = useChefContractForCurrentChain()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
   const [approval, approve] = useApproveCallback(tokenAmount, stakingContract?.address)
@@ -88,7 +87,7 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
     if (stakingContract && deadline) {
       if (approval === ApprovalState.APPROVED) {
         mchef
-          .deposit(pid, utils.parseUnits(typedValue, stakingCurrency.decimals))
+          .deposit(pid, utils.parseUnits(typedValue, stakingCurrency?.decimals))
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               summary: `Deposit liquidity`
@@ -120,6 +119,8 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   //   // @todo: approve stake token to masterchef
   //   approve()
   // }
+
+  if (!stakingCurrency) return <p>Loading...</p>
 
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
@@ -177,7 +178,7 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Depositing</TYPE.largeHeader>
             <TYPE.body fontSize={20}>
-              {tokenAmount?.toSignificant(4)} {stakingCurrency.symbol}
+              {tokenAmount?.toSignificant(4)} {stakingCurrency?.symbol}
             </TYPE.body>
           </AutoColumn>
         </LoadingView>
@@ -187,7 +188,7 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
             <TYPE.body fontSize={20}>
-              Deposited {tokenAmount?.toSignificant(4)} {stakingCurrency.symbol}
+              Deposited {tokenAmount?.toSignificant(4)} {stakingCurrency?.symbol}
             </TYPE.body>
           </AutoColumn>
         </SubmittedView>
