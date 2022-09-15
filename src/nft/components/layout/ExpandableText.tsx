@@ -34,15 +34,6 @@ export const ExpandableText = ({ children, ...props }: BoxProps) => {
       {...props}
     >
       <span className={clsx(styles.span, !isExpanded && styles.hiddenText)}>
-<<<<<<< HEAD
-        {children} {isExpanded ? null : <RevealButton onClick={() => setExpanded(!isExpanded)}>Show more</RevealButton>}
-      </span>{' '}
-      {isExpanded ? (
-        <RevealButton marginTop={isExpanded ? '8' : 'unset'} onClick={() => setExpanded(!isExpanded)}>
-          Show less
-        </RevealButton>
-      ) : null}
-=======
         {children}{' '}
         {isExpanded ? (
           <RevealButton marginTop={isExpanded ? '8' : 'unset'} onClick={() => setExpanded(!isExpanded)}>
@@ -52,7 +43,6 @@ export const ExpandableText = ({ children, ...props }: BoxProps) => {
           <RevealButton onClick={() => setExpanded(!isExpanded)}>Show more</RevealButton>
         )}
       </span>
->>>>>>> main
     </Box>
   )
 }
