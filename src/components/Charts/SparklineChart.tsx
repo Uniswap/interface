@@ -3,7 +3,6 @@ import { SingleTokenData, TimePeriod, useTokenPricesFromFragment } from 'graphql
 import React from 'react'
 import { useTheme } from 'styled-components/macro'
 
-// src/components/Tokens/TokenDetails/PriceChart.tsx
 import { DATA_EMPTY, getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
 import LineChart from './LineChart'
 
