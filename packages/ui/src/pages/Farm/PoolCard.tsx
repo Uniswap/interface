@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '@teleswap/sdk'
+import { CurrencyAmount, Token, TokenAmount } from '@teleswap/sdk'
 import { ReactComponent as AddIcon } from 'assets/svg/add.svg'
 import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 import { ButtonPrimary } from 'components/Button'
@@ -20,7 +20,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useChefContract } from 'hooks/farm/useChefContract'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
-import { usePairUSDValue } from 'hooks/usePairValue'
+import { usePairSidesValueEstimate, usePairUSDValue } from 'hooks/usePairValue'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
@@ -36,11 +36,10 @@ import { TYPE } from '../../theme'
 
 const StatContainer = styled.div`
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  display: none;
-`};
+};
 `
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
@@ -77,6 +76,9 @@ const StakingColumn = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  .stakingColTitle {
+    margin-bottom: 0.46rem;
+  }
   .actions {
     margin-left: 24px;
 
@@ -84,10 +86,16 @@ const StakingColumn = styled.div`
       cursor: pointer;
     }
   }
+  .estimated-staked-lp-value {
+    font-family: 'Poppins';
+    font-size: 0.4rem;
+    margin-top: 0.33rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
 `
 
 const StakingColumnTitle = ({ children }: { children: React.ReactNode }) => (
-  <TYPE.gray fontSize={12} width="100%">
+  <TYPE.gray fontSize={12} width="100%" className="stakingColTitle">
     {children}
   </TYPE.gray>
 )
@@ -180,6 +188,11 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
     return '--.--'
   }, [rewardToken, positions, pid])
 
+  const { liquidityValueOfToken0, liquidityValueOfToken1 } = usePairSidesValueEstimate(
+    stakingTokenPair,
+    new TokenAmount(stakingInfo.stakingToken, positions[pid]?.amount || '0')
+  )
+
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <TopSection>
@@ -212,6 +225,12 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
             <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
             <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
           </div>
+          {stakingInfo.stakingAsset.isLpToken && (
+            <div className="estimated-staked-lp-value">
+              {liquidityValueOfToken0?.toSignificant(6)} {liquidityValueOfToken0?.token.symbol} +{' '}
+              {liquidityValueOfToken1?.toSignificant(6)} {liquidityValueOfToken1?.token.symbol}
+            </div>
+          )}
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>Earned Rewards</StakingColumnTitle>
@@ -233,7 +252,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>APR</StakingColumnTitle>
-          <TYPE.white fontSize={16}>19.810%</TYPE.white>
+          <TYPE.white fontSize={16}>--.--%</TYPE.white>
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>Liquidity TVL</StakingColumnTitle>

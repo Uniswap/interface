@@ -35,3 +35,16 @@ export function usePairUSDValue(pair: Pair | null, liquidity?: TokenAmount) {
 
   return '--.--'
 }
+
+export function usePairSidesValueEstimate(
+  pair: Pair | null,
+  liquidity?: TokenAmount
+): { liquidityValueOfToken0?: TokenAmount; liquidityValueOfToken1?: TokenAmount } {
+  const totalSupplyOfLPToken = useTotalSupply(pair?.liquidityToken)
+  if (totalSupplyOfLPToken && liquidity) {
+    const liquidityValueOfToken0 = pair?.getLiquidityValue(pair.token0, totalSupplyOfLPToken, liquidity)
+    const liquidityValueOfToken1 = pair?.getLiquidityValue(pair.token1, totalSupplyOfLPToken, liquidity)
+    return { liquidityValueOfToken0, liquidityValueOfToken1 }
+  }
+  return {}
+}
