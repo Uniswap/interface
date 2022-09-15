@@ -1,8 +1,9 @@
-import { Box } from '../../components/Box'
-import * as styles from './CollectionAssetLoading.css'
-import { Row } from '../Flex'
-import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
+import { loadingAsset } from 'nft/css/loading.css'
+
 import SizingImage from '../../../assets/images/sizing-image.png'
+import { Box } from '../../components/Box'
+import { Row } from '../Flex'
+import * as styles from './CollectionAssetLoading.css'
 
 export const CollectionAssetLoading = () => {
   return (

@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css'
-import { themeVars } from '../../css/sprinkles.css'
 import { loadingAsset } from 'nft/css/loading.css'
+
+import { themeVars } from '../../css/sprinkles.css'
 
 export const collectionAssetLoading = style([
   {

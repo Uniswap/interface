@@ -1,8 +1,6 @@
-import { useEffect } from 'react'
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
-import { CollectionAssetLoading } from './CollectionAssetLoading'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { Center } from 'nft/components/Flex'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
@@ -10,7 +8,8 @@ import { AssetsFetcher } from 'nft/queries'
 import { useMemo } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
-import { useCollectionFilters } from '../../hooks/useCollectionFilters'
+
+import { CollectionAssetLoading } from './CollectionAssetLoading'
 
 interface CollectionNftsProps {
   contractAddress: string
@@ -20,7 +19,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
   const {
     data: collectionAssets,
     isSuccess: AssetsFetchSuccess,
-    // isLoading,
+    isLoading,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
@@ -46,13 +45,6 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
       refetchInterval: 5000,
     }
   )
-  const setIsLoading = useCollectionFilters((state) => state.setIsLoading)
-
-  // useEffect(() => {
-  //   setIsLoading(isLoading)
-  // }, [isLoading])
-
-  const isLoading = true
 
   const collectionNfts = useMemo(() => {
     if (!collectionAssets || !AssetsFetchSuccess) return undefined
