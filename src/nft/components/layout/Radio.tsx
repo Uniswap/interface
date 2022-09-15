@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/layout/Radio.css'
 import { MouseEvent } from 'react'
@@ -13,7 +12,7 @@ export const Radio = ({ hovered, checked, onClick }: RadioProps) => {
   return (
     <Box
       as="label"
-      className={clsx(checked ? styles.selectedRadio : hovered ? styles.blueBorderRadio : styles.greyBorderRadio)}
+      className={checked ? styles.selectedRadio : hovered ? styles.blueBorderRadio : styles.greyBorderRadio}
       onClick={onClick}
     />
   )
