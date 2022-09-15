@@ -20,7 +20,8 @@ import { useActiveWeb3React } from 'hooks'
 import { useChefContract } from 'hooks/farm/useChefContract'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
-import React, { useMemo, useState } from 'react'
+import { usePairUSDValue } from 'hooks/usePairValue'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -145,6 +146,15 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const isStaking = true
   const rewardToken = UNI[chainId || 420]
 
+  useEffect(() => {
+    console.log('stakingInfo::tvl:', stakingInfo.tvl?.toSignificant(6))
+  }, [stakingInfo])
+  useEffect(() => {
+    console.debug('stakingTokenPair', stakingTokenPair)
+  }, [stakingTokenPair])
+
+  const totalValueLockedInUSD = usePairUSDValue(stakingTokenPair, stakingInfo.tvl)
+
   const parsedStakedAmount = useMemo(() => {
     try {
       if (positions && positions[pid] && positions[pid].amount) {
@@ -226,8 +236,8 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
           <TYPE.white fontSize={16}>19.810%</TYPE.white>
         </StakingColumn>
         <StakingColumn>
-          <StakingColumnTitle>Liquidity</StakingColumnTitle>
-          <TYPE.white fontSize={16}>$1145141919.810</TYPE.white>
+          <StakingColumnTitle>Liquidity TVL</StakingColumnTitle>
+          <TYPE.white fontSize={16}>{totalValueLockedInUSD}</TYPE.white>
         </StakingColumn>
       </StatContainer>
 
