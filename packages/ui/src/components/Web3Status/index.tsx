@@ -93,16 +93,13 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 0.4rem;
   background-color: ${({ pending, theme }) => (pending ? theme.common1 : theme.common1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.common3 : theme.common3)};
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: ${({ pending, theme }) => (pending ? theme.common2 : theme.common2)};
   font-weight: 500;
   :hover,
   :focus {
     background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.common1) : lighten(0.05, theme.common1))};
-    border: 1px solid ${({ pending, theme }) => (pending ? theme.common3 : theme.common3)};
-    :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.common2) : darken(0.1, theme.common2))};
-    }
+    border: 1px solid ${darken(0.1, `rgba(255, 255, 255, 0.2)`)};
   }
 `
 
