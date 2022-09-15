@@ -113,7 +113,6 @@ export const SelectPage = () => {
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
   const listFilter = useWalletCollections((state) => state.listFilter)
-  const setListFilter = useWalletCollections((state) => state.setListFilter)
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const reset = useSellAsset((state) => state.reset)
   const setSellPageState = useSellPageState((state) => state.setSellPageState)
@@ -173,7 +172,7 @@ export const SelectPage = () => {
     else if (sortBy === SortBy.DateListed && orderByASC) sorted?.sort((a, b) => +b.listing_date - +a.listing_date)
     else if (sortBy === SortBy.DateListed && !orderByASC) sorted?.sort((a, b) => +a.listing_date - +b.listing_date)
     setDisplayAssets(sorted, listFilter)
-  }, [sortBy, orderByASC, listFilter])
+  }, [sortBy, orderByASC, listFilter, displayAssets, setDisplayAssets])
 
   useEffect(() => {
     if (ownerCollections?.length && collectionStats?.length) {
@@ -184,7 +183,7 @@ export const SelectPage = () => {
       }
       setWalletCollections(ownerCollectionsCopy)
     }
-  }, [collectionStats])
+  }, [collectionStats, ownerCollections, setWalletCollections])
 
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded ? 300 : -16,

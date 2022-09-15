@@ -79,17 +79,17 @@ export const SortDropdown = ({
                 e.stopPropagation()
 
                 if (dropDownOptions[selectedIndex].reverseOnClick) {
-                  dropDownOptions[selectedIndex].reverseOnClick!()
+                  dropDownOptions[selectedIndex].reverseOnClick?.()
                   toggleReversed()
                 } else {
-                  dropDownOptions[dropDownOptions[selectedIndex].reverseIndex! - 1].onClick()
-                  setSelectedIndex(dropDownOptions[selectedIndex].reverseIndex! - 1)
+                  dropDownOptions[dropDownOptions[selectedIndex].reverseIndex ?? 1 - 1].onClick()
+                  setSelectedIndex(dropDownOptions[selectedIndex].reverseIndex ?? 1 - 1)
                 }
               }}
             >
               {dropDownOptions[selectedIndex].reverseOnClick && (isReversed ? <ArrowsIcon /> : <ReversedArrowsIcon />)}
               {dropDownOptions[selectedIndex].reverseIndex &&
-                (selectedIndex > dropDownOptions[selectedIndex].reverseIndex! - 1 ? (
+                (selectedIndex > (dropDownOptions[selectedIndex].reverseIndex ?? 1) - 1 ? (
                   <ArrowsIcon />
                 ) : (
                   <ReversedArrowsIcon />
