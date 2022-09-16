@@ -15,7 +15,6 @@ export function initializeAnalytics() {
     console.error(`${keyName} is undefined, Amplitude analytics will not run.`)
     return
   }
-  
   init(
     API_KEY,
     /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
