@@ -1,5 +1,6 @@
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
+import { MarketplaceSelect } from 'nft/components/collection/MarketplaceSelect'
 import { Column, Row } from 'nft/components/Flex'
 import { Radio } from 'nft/components/layout/Radio'
 import { useCollectionFilters } from 'nft/hooks'
@@ -45,6 +46,7 @@ export const Filters = () => {
           </Box>
           <Radio hovered={buyNowHovered} checked={buyNow} onClick={handleBuyNowToggle} />
         </Row>
+        <MarketplaceSelect />
       </Column>
     </Box>
   )
