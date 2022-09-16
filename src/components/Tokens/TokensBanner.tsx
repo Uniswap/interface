@@ -18,7 +18,7 @@ const PopupContainer = styled.div<{ show: boolean }>`
   right: 16px;
   width: 320px;
   height: 88px;
-  z-index: ${Z_INDEX.popover};
+  z-index: ${Z_INDEX.sticky};
   background-color: ${({ theme }) => (theme.darkMode ? theme.backgroundScrim : opacify(60, '#FDF0F8'))};
   color: ${({ theme }) => theme.textPrimary};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
