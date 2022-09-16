@@ -6,6 +6,7 @@ import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { FormEvent, useEffect, useReducer, useState } from 'react'
+import { Checkbox } from '../layout/Checkbox'
 
 export const marketPlaceItems = {
   looksrare: 'LooksRare',
@@ -31,7 +32,7 @@ const MarketplaceItem = ({
   count?: number
 }) => {
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
-  const [, toggleHover] = useReducer((state) => !state, false)
+  const [hovered, toggleHover] = useReducer((state) => !state, false)
   useEffect(() => {
     setCheckboxSelected(isMarketSelected)
   }, [isMarketSelected])
@@ -67,7 +68,11 @@ const MarketplaceItem = ({
         {title}{' '}
       </Box>
       <Box as="input" checked={isCheckboxSelected} onChange={handleCheckbox} type="checkbox" />
-      <Box>{count}</Box>
+      <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
+        <Box as="span" color="darkGray" marginLeft="4" paddingRight={'12'}>
+          {count}
+        </Box>
+      </Checkbox>
     </Row>
   )
 }

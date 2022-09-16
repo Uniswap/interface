@@ -1,7 +1,9 @@
+import { useEffect, useRef } from 'react'
 import { AnimatedBox, Box } from 'nft/components/Box'
+import { CollectionFilters } from '../../hooks/useCollectionAttributes'
 import { CollectionNfts, CollectionStats, FilterButton, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
-import { useFiltersExpanded, useIsMobile } from 'nft/hooks'
+import { useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { useQuery } from 'react-query'
@@ -15,6 +17,8 @@ const Collection = () => {
 
   const isMobile = useIsMobile()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
+  const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
+  const oldStateRef = useRef<CollectionFilters | null>(null)
 
   const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
@@ -24,6 +28,15 @@ const Collection = () => {
     gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
     gridWidthOffset: isFiltersExpanded ? FILTER_WIDTH : 0,
   })
+
+  useEffect(() => {
+    const marketCount: any = {}
+    collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
+      marketCount[marketplace] = count
+    })
+    setMarketCount(marketCount)
+    oldStateRef.current = useCollectionFilters.getState()
+  }, [collectionStats?.marketplaceCount, setMarketCount])
 
   return (
     <Column width="full">
