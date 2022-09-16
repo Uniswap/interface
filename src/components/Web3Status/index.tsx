@@ -60,9 +60,7 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   }
 `
 
-const Web3StatusConnectNavbar = styled.button<{ faded?: boolean }>`
-  dispay: flex;
-  align-items: center;
+const Web3StatusConnectButton = styled.button<{ faded?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   background-color: ${({ theme }) => theme.accentActionSoft};
   border-radius: 12px;
@@ -251,7 +249,7 @@ function Web3StatusInner() {
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
         {navbarFlagEnabled ? (
-          <Web3StatusConnectNavbar faded={!account}>
+          <Web3StatusConnectButton faded={!account}>
             <StyledConnect data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
               <Trans>Connect</Trans>
             </StyledConnect>
@@ -269,7 +267,7 @@ function Web3StatusInner() {
                 onClick={toggleWalletDropdown}
               />
             )}
-          </Web3StatusConnectNavbar>
+          </Web3StatusConnectButton>
         ) : (
           <Web3StatusConnect onClick={toggleWallet} faded={!account}>
             <Text>
