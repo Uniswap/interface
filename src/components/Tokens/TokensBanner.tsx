@@ -8,7 +8,7 @@ import tokensPromoDark from '../../assets/images/tokensPromoDark.png'
 import tokensPromoLight from '../../assets/images/tokensPromoLight.png'
 
 const PopupContainer = styled.div<{ show: boolean }>`
-  position: absolute;
+  position: fixed;
   display: ${({ show }) => (show ? 'flex' : 'none')};
   flex-direction: column;
   padding: 12px 16px 12px 20px;
