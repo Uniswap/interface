@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { outboundLink } from 'components/analytics'
 import { MOBILE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import React, { forwardRef, HTMLProps, ReactNode, useCallback, useImperativeHandle } from 'react'
+import React, { forwardRef, HTMLProps, ReactNode, useCallback, useImperativeHandle, useState } from 'react'
 import {
   ArrowLeft,
   CheckCircle,
@@ -209,12 +209,12 @@ export function ExternalLinkIcon({
   )
 }
 
-const ToolTipWrapper = styled.div<{ isCopyContractTooltip?: boolean }>`
+const ToolTipWrapper = styled.div<{ isCopyContractTooltip?: boolean; tooltipX?: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   position: ${({ isCopyContractTooltip }) => (isCopyContractTooltip ? 'relative' : 'absolute')};
-  right: ${({ isCopyContractTooltip }) => isCopyContractTooltip && '50%'};
+  left: ${({ isCopyContractTooltip, tooltipX }) => isCopyContractTooltip && 0};
   transform: translate(5px, 32px);
   z-index: ${Z_INDEX.tooltip};
 `
@@ -240,9 +240,9 @@ const CopiedTooltip = styled.div<{ isCopyContractTooltip?: boolean }>`
   font-size: 12px;
 `
 
-function Tooltip({ isCopyContractTooltip }: { isCopyContractTooltip: boolean }) {
+function Tooltip({ isCopyContractTooltip, tooltipX }: { isCopyContractTooltip: boolean; tooltipX?: number }) {
   return (
-    <ToolTipWrapper isCopyContractTooltip={isCopyContractTooltip}>
+    <ToolTipWrapper isCopyContractTooltip={isCopyContractTooltip} tooltipX={tooltipX}>
       <StyledTooltipTriangle />
       <CopiedTooltip isCopyContractTooltip={isCopyContractTooltip}>Copied!</CopiedTooltip>
     </ToolTipWrapper>
@@ -295,7 +295,6 @@ const CopyAddressRow = styled.div<{ isClicked: boolean }>`
 `
 
 const CopyContractAddressWrapper = styled.div`
-  position: relative;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -303,9 +302,15 @@ const CopyContractAddressWrapper = styled.div`
 
 export function CopyContractAddress({ address }: { address: string }) {
   const [isCopied, setCopied] = useCopyClipboard()
-  const copy = useCallback(() => {
-    setCopied(address)
-  }, [address, setCopied])
+  const [tooltipX, setTooltipX] = useState<number | undefined>()
+  const copy = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      setTooltipX(e.clientX)
+      console.log(e.clientX)
+      setCopied(address)
+    },
+    [address, setCopied]
+  )
 
   const truncated = `${address.slice(0, 4)}...${address.slice(-3)}`
   return (
@@ -315,7 +320,7 @@ export function CopyContractAddress({ address }: { address: string }) {
         <TruncatedAddress>{truncated}</TruncatedAddress>
         <Copy size={14} />
       </CopyAddressRow>
-      {isCopied && <Tooltip isCopyContractTooltip={true} />}
+      {true && <Tooltip isCopyContractTooltip tooltipX={tooltipX} />}
     </CopyContractAddressWrapper>
   )
 }
