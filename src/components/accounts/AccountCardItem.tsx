@@ -1,76 +1,49 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import QrCode from 'src/assets/icons/qr-code.svg'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
-import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
+import { Text } from 'src/components/Text'
+import { AvatarWithVisibilityBadge } from 'src/components/unicons/AvatarWithVisibilityBadge'
+import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
+import { useENSAvatar } from 'src/features/ens/api'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Account } from 'src/features/wallet/accounts/types'
-import { opacify } from 'src/utils/colors'
+import { useDisplayName } from 'src/features/wallet/hooks'
 
 interface Props {
   account: Account
   isActive?: boolean
   isViewOnly: boolean
   onPress?: (address: Address) => void
-  onPressQRCode: (address: Address) => void
   onPressEdit?: (address: Address) => void
 }
 
-export function AccountCardItem({
-  account,
-  isActive,
-  isViewOnly,
-  onPress,
-  onPressQRCode,
-  onPressEdit,
-}: Props) {
+export function AccountCardItem({ account, onPress, onPressEdit }: Props) {
   const { address } = account
   const theme = useAppTheme()
-  return (
-    <Button mx="lg" onPress={onPress ? () => onPress(address) : undefined}>
-      <Flex
-        borderRadius="lg"
-        borderWidth={isActive ? 0.5 : 0}
-        flexDirection="column"
-        gap="xxl"
-        my="xs"
-        p="md"
-        style={{
-          borderColor: theme.colors.userThemeColor,
-          backgroundColor: isActive
-            ? opacify(12, theme.colors.userThemeColor)
-            : theme.colors.backgroundContainer,
-        }}
-        testID={`account_item/${address.toLowerCase()}`}>
-        <Flex row alignItems="flex-start" borderRadius="sm" justifyContent="space-between">
-          <AddressDisplay
-            showAddressAsSubtitle
-            address={address}
-            flexShrink={1}
-            showNotificationBadge={true}
-            showViewOnly={isViewOnly}
-            size={36}
-            variant="subhead"
-            verticalGap="none"
-          />
+  const displayName = useDisplayName(address)
+  const { data: avatar } = useENSAvatar(address)
 
-          {isActive && (
-            <Button
-              alignItems="center"
-              height={24}
-              justifyContent="center"
-              padding="sm"
-              width={24}
-              onPress={() => onPressQRCode(address)}>
-              <QrCode color={theme.colors.textSecondary} height={24} strokeWidth={2} width={24} />
-            </Button>
-          )}
+  // Use ENS avatar if found, if not revert to Unicon
+  const icon = useMemo(() => {
+    if (avatar) {
+      return <AvatarWithVisibilityBadge avatarUri={avatar} showViewOnlyBadge={false} size={36} />
+    }
+
+    return <UniconWithVisibilityBadge address={address} showViewOnlyBadge={false} size={36} />
+  }, [address, avatar])
+
+  return (
+    <Button mb="md" mx="lg" onPress={onPress ? () => onPress(address) : undefined}>
+      <Flex row alignItems="center" testID={`account_item/${address.toLowerCase()}`}>
+        {icon}
+        <Flex grow gap="none">
+          <Text variant="subhead">{displayName?.name}</Text>
+          <TotalBalance owner={address} variant="caption" />
         </Flex>
         <Flex row alignItems="center" justifyContent="space-between">
-          <TotalBalance owner={address} variant="body" />
           {onPressEdit && (
             <Button name={ElementName.Edit} onPress={() => onPressEdit(address)}>
               <TripleDots

@@ -1,39 +1,58 @@
-import { ComponentProps, default as React, useCallback, useMemo } from 'react'
+import { ComponentProps, default as React, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo } from 'react-native'
-import 'react-native-gesture-handler'
-import {
-  Extrapolate,
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
+import { ListRenderItemInfo, SectionList } from 'react-native'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
-import { AnimatedBox, Flex } from 'src/components/layout'
-import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
+import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
-const CONTENT_MAX_SCROLL_Y = 20
-
-type AccountListProps = Pick<
-  ComponentProps<typeof AccountCardItem>,
-  'onPress' | 'onPressEdit' | 'onPressQRCode'
-> & {
-  data: Account[]
+type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress' | 'onPressEdit'> & {
+  mnenomicAccounts: Account[]
+  viewOnlyAccounts: Account[]
 }
 
-export function AccountList({ data, onPressQRCode, onPressEdit, onPress }: AccountListProps) {
+export function AccountList({
+  mnenomicAccounts,
+  viewOnlyAccounts,
+  onPressEdit,
+  onPress,
+}: AccountListProps) {
   const { t } = useTranslation()
 
   const activeAccount = useActiveAccount()
 
-  const { scrollHandler, headerBorderStyle } = useListScroll()
+  const sectionData = useMemo(
+    () => [
+      ...(mnenomicAccounts.length > 0
+        ? [
+            {
+              title: t('Wallets'),
+              data: mnenomicAccounts,
+            },
+          ]
+        : []),
+      ...(viewOnlyAccounts.length > 0
+        ? [
+            {
+              title: t('View Only'),
+              data: viewOnlyAccounts,
+            },
+          ]
+        : []),
+    ],
+    [mnenomicAccounts, t, viewOnlyAccounts]
+  )
 
-  const renderItem = useCallback(
+  const renderSectionHeader = useMemo(() => {
+    return ({ section: { title } }: { section: { title: string } }) => (
+      <Box bg="backgroundBackdrop" pb="md" px="lg">
+        <Text variant="body">{title}</Text>
+      </Box>
+    )
+  }, [])
+
+  const renderItem = useMemo(
     () =>
       ({ item }: ListRenderItemInfo<Account>) => {
         return (
@@ -43,60 +62,21 @@ export function AccountList({ data, onPressQRCode, onPressEdit, onPress }: Accou
             isViewOnly={item.type === AccountType.Readonly}
             onPress={onPress}
             onPressEdit={onPressEdit}
-            onPressQRCode={onPressQRCode}
           />
         )
       },
-    [activeAccount, onPress, onPressEdit, onPressQRCode]
+    [activeAccount, onPress, onPressEdit]
   )
 
   return (
-    <AnimatedFlatList
-      ListHeaderComponent={
-        <Flex bg="backgroundBackdrop" borderBottomColor="backgroundOutline" pt="sm">
-          <Text color="textPrimary" px="lg" variant="headlineSmall">
-            {t('Your wallets')}
-          </Text>
-          <AnimatedBox bg="backgroundOutline" height={1} style={headerBorderStyle} />
-        </Flex>
-      }
-      data={data}
+    <SectionList
       keyExtractor={key}
-      renderItem={renderItem()}
-      showsHorizontalScrollIndicator={false}
+      renderItem={renderItem}
+      renderSectionHeader={renderSectionHeader}
+      sections={sectionData}
       showsVerticalScrollIndicator={false}
-      stickyHeaderIndices={[0]}
-      onScroll={scrollHandler}
     />
   )
-}
-
-function useListScroll() {
-  const scrollY = useSharedValue(0)
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y
-    },
-    onEndDrag: (event) => {
-      scrollY.value = withTiming(
-        event.contentOffset.y > CONTENT_MAX_SCROLL_Y / 2 ? CONTENT_MAX_SCROLL_Y : 0
-      )
-    },
-  })
-
-  const _headerBorderStyle = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y], [0, 1], Extrapolate.CLAMP),
-    }
-  }, [scrollY.value])
-
-  // useAnimatedStyle gets rebuilt on every re-render
-  // https://github.com/software-mansion/react-native-reanimated/issues/1767
-  // Make headerBorderStyle to depend only on `scrollY.value`
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const headerBorderStyle = useMemo(() => _headerBorderStyle, [scrollY.value])
-
-  return { scrollHandler, headerBorderStyle }
 }
 
 const key = (account: Account) => account.address

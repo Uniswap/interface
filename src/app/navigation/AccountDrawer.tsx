@@ -4,11 +4,15 @@ import { useTranslation } from 'react-i18next'
 import 'react-native-gesture-handler'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import PlusSquareIcon from 'src/assets/icons/plus-square.svg'
+import QRCode from 'src/assets/icons/qr-code.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountList } from 'src/components/accounts/AccountList'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
+import { IconButton } from 'src/components/buttons/IconButton'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
+import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningSeverity } from 'src/components/modals/types'
@@ -22,7 +26,11 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useAccounts, useActiveAccount, useNativeAccountExists } from 'src/features/wallet/hooks'
+import {
+  useAccounts,
+  useActiveAccountAddressWithThrow,
+  useNativeAccountExists,
+} from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -35,22 +43,22 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const activeAccount = useActiveAccount()
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
   const addressToAccount = useAccounts()
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
 
-  const [qrCodeAddress, setQRCodeAddress] = useState(activeAccount?.address)
+  const [qrCodeAddress, setQRCodeAddress] = useState(activeAccountAddress)
   const [showQRModal, setShowQRModal] = useState(false)
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
   const [showEditAccountModal, setShowEditAccountModal] = useState(false)
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
   const [pendingRemoveAccount, setPendingRemoveAccount] = useState<Account | null>(null)
 
-  const { accountsData, mnemonicWallets } = useMemo(() => {
+  const { accountsData, mnemonicWallets, viewOnlyWallets } = useMemo(() => {
     const accounts = Object.values(addressToAccount)
     const _mnemonicWallets = accounts
-      .filter((a) => a.type === AccountType.SignerMnemonic)
+      .filter((a) => a.address !== activeAccountAddress && a.type === AccountType.SignerMnemonic)
       .sort((a, b) => {
         return (
           (a as SignerMnemonicAccount).derivationIndex -
@@ -65,8 +73,9 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     return {
       accountsData: [..._mnemonicWallets, ..._viewOnlyWallets],
       mnemonicWallets: _mnemonicWallets,
+      viewOnlyWallets: _viewOnlyWallets,
     }
-  }, [addressToAccount])
+  }, [activeAccountAddress, addressToAccount])
 
   const onPressEdit = useCallback((address: Address) => {
     setShowEditAccountModal(true)
@@ -103,10 +112,10 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     [navigation, dispatch]
   )
 
-  const onPressQRCode = useCallback((address: Address) => {
-    setQRCodeAddress(address)
+  const onPressQRCode = useCallback(() => {
+    setQRCodeAddress(activeAccountAddress)
     setShowQRModal(true)
-  }, [])
+  }, [activeAccountAddress])
 
   const onCloseQrCode = () => setShowQRModal(false)
 
@@ -287,11 +296,35 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
 
   return (
     <Screen bg="backgroundBackdrop">
+      <Flex row alignItems="center" pb="md" pt="xxl" px="lg">
+        <AddressDisplay
+          showAddressAsSubtitle
+          showCopy
+          address={activeAccountAddress}
+          captionVariant="bodySmall"
+          flex={1}
+          variant="headlineSmall"
+          verticalGap="none"
+        />
+        <IconButton
+          icon={
+            <QRCode
+              color={theme.colors.textTertiary}
+              height={theme.iconSizes.md}
+              width={theme.iconSizes.md}
+            />
+          }
+          onPress={onPressQRCode}
+        />
+      </Flex>
+
+      {accountsData.length > 0 && <Separator mb="sm" />}
+
       <AccountList
-        data={accountsData}
+        mnenomicAccounts={mnemonicWallets}
+        viewOnlyAccounts={viewOnlyWallets}
         onPress={onPressAccount}
         onPressEdit={onPressEdit}
-        onPressQRCode={onPressQRCode}
       />
 
       <Flex>
