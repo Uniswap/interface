@@ -73,7 +73,7 @@ export const SortDropdown = ({
         className={clsx(isOpen && !mini && styles.activeDropdown)}
       >
         <Box display="flex" alignItems="center">
-          {isOpen || !reversable ? null : (
+          {!isOpen && reversable && (
             <Row
               onClick={(e) => {
                 e.stopPropagation()
