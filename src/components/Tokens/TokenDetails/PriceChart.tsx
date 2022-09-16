@@ -10,7 +10,7 @@ import { useTokenPricesCached } from 'graphql/data/Token'
 import { PricePoint, TimePeriod } from 'graphql/data/Token'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import {
@@ -127,15 +127,26 @@ interface PriceChartProps {
 
 export function PriceChart({ width, height, tokenAddress, priceData }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
+  const [firstLoadedPriceDisplayed, setFirstLoadedPriceDisplayed] = useState(false)
   const locale = useActiveLocale()
   const theme = useTheme()
 
   const { priceMap } = useTokenPricesCached(priceData, tokenAddress, 'ETHEREUM', timePeriod)
   const prices = priceMap.get(timePeriod)
 
+  // first price point on the x-axis of the current time period's chart
   const startingPrice = prices?.[0] ?? DATA_EMPTY
+  // last price point on the x-axis of the current time period's chart
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
+
+  // set display price to ending price once first set of prices is loaded.
+  useEffect(() => {
+    if (prices && !firstLoadedPriceDisplayed) {
+      setDisplayPrice(endingPrice)
+      setFirstLoadedPriceDisplayed(true)
+    }
+  }, [prices, firstLoadedPriceDisplayed, endingPrice])
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
   const graphWidth = width + crosshairDateOverhang
