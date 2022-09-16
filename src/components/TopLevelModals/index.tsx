@@ -6,7 +6,7 @@ import { lazy } from 'react'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 
-const Cart = lazy(() => import('nft/components/cart/Cart'))
+const Cart = lazy(() => import('nft/components/sell/modal/ListingTag'))
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
