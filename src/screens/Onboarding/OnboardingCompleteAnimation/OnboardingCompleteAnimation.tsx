@@ -48,9 +48,11 @@ import { dimensions } from 'src/styles/sizing'
 
 export function OnboardingCompleteAnimation({
   activeAddress,
+  isNewWallet,
   onPressNext,
 }: {
   activeAddress: string
+  isNewWallet: boolean
   onPressNext: (event: GestureResponderEvent) => void
 }) {
   const theme = useAppTheme()
@@ -275,9 +277,13 @@ export function OnboardingCompleteAnimation({
               {t("You're ready to go!")}
             </Text>
             <Text color="textSecondary" textAlign="center" variant="body">
-              {t(
-                'Transfer tokens to your wallet to make a swap or add assets to your watchlist to save them for later.'
-              )}
+              {isNewWallet
+                ? t(
+                    'Transfer tokens to your wallet to make a swap or add assets to your watchlist to save them for later.'
+                  )
+                : t(
+                    'Check out your tokens and NFTs, watch other wallets, connect to web3 sites, and swap directly in the app.'
+                  )}
             </Text>
           </Animated.View>
         </Flex>

@@ -3,7 +3,7 @@ import React from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
-import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
+import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
@@ -31,7 +31,11 @@ export function OutroScreen({ navigation, route: { params } }: Props) {
 
   return (
     <Screen>
-      <OnboardingCompleteAnimation activeAddress={activeAddress ?? ''} onPressNext={onPressNext} />
+      <OnboardingCompleteAnimation
+        activeAddress={activeAddress ?? ''}
+        isNewWallet={params?.importType === ImportType.Create}
+        onPressNext={onPressNext}
+      />
     </Screen>
   )
 }
