@@ -57,10 +57,8 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
           name: 'USDC-USDT sLP',
           decimal: 18,
           symbol: 'SLP',
-          isLpToken: true,
-          isStable: true,
-          tokenA: new Token(ChainId.OP_GOERLI, '0x56c822f91C1DC40ce32Ae6109C7cc1D18eD08ECE', 6, 'USDC', 'USDC'),
-          tokenB: new Token(ChainId.OP_GOERLI, '0x70aBC17e870366C336A5DAd05061828fEff76fF5', 6, 'USDT', 'USDT')
+          // if you disable a LP token pool, make sure to set `isLpToken` to `false`
+          isLpToken: false
         }
       },
       {
@@ -78,11 +76,11 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
       {
         // pid 2
         stakingAsset: {
-          name: 'USDT-ETH sLP',
+          name: 'USDT-ETH vLP',
           decimal: 18,
-          symbol: 'SLP',
+          symbol: 'VLP',
           isLpToken: true,
-          isStable: true,
+          isStable: false,
           tokenA: USDT,
           tokenB: WETH[ChainId.OP_GOERLI]
         }
@@ -90,11 +88,11 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
       {
         // pid 3
         stakingAsset: {
-          name: 'USDC-ETH sLP',
+          name: 'USDC-ETH vLP',
           decimal: 18,
-          symbol: 'SLP',
+          symbol: 'VLP',
           isLpToken: true,
-          isStable: true,
+          isStable: false,
           tokenA: USDC,
           tokenB: WETH[ChainId.OP_GOERLI]
         }
