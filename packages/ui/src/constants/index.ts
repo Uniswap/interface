@@ -17,14 +17,14 @@ export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC
 export const USDC = new Token(
   ChainId.OP_GOERLI,
   '0x56c822f91C1DC40ce32Ae6109C7cc1D18eD08ECE',
-  6,
+  18,
   'USDC',
   'Fake USD Coin'
 )
 export const USDT = new Token(
   ChainId.OP_GOERLI,
   '0x70abc17e870366c336a5dad05061828feff76ff5',
-  6,
+  18,
   'USDT',
   'Fake Tether USD'
 )
