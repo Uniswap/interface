@@ -1,6 +1,7 @@
 import bg from 'assets/svg/background.svg'
 import LiquidityDetail from 'components/Liquidity'
 import React, { Suspense } from 'react'
+import { isMobile } from 'react-device-detect'
 import { Route, Switch } from 'react-router-dom'
 import { Box } from 'rebass'
 import styled from 'styled-components'
@@ -9,7 +10,7 @@ import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsRepo
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
-import URLWarning from '../components/Header/URLWarning'
+// import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import { ApplicationModal } from '../state/application/actions'
@@ -51,7 +52,7 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{ mobile?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -59,9 +60,9 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   z-index: 10;
-
+  ${({ mobile }) => (mobile ? `overflow: auto;` : '')}
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 8px;
+    padding: 1rem;
     padding-top: 2rem;
   `};
 
@@ -94,11 +95,11 @@ export default function App() {
             backgroundPositionX: '50%'
           }}
         ></Box>
-        <URLWarning />
+        {/* <URLWarning /> */}
         <HeaderWrapper>
           <Header />
         </HeaderWrapper>
-        <BodyWrapper>
+        <BodyWrapper mobile={isMobile}>
           <Popups />
           <Polling />
           <TopLevelModals />
