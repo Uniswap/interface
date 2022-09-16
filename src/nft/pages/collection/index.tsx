@@ -44,7 +44,9 @@ const Collection = () => {
       )}
       <Row alignItems="flex-start" position="relative" paddingX="48">
         <Box position="sticky" top="72" width="0">
-          {isFiltersExpanded && <Filters />}
+          {isFiltersExpanded && (
+            <Filters traitsByAmount={collectionStats?.numTraitsByAmount || []} traits={collectionStats?.traits || []} />
+          )}
         </Box>
 
         {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
