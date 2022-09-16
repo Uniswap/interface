@@ -3,7 +3,8 @@ import React, { Suspense, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { useAppTheme } from 'src/app/hooks'
+import { GradientButton } from 'src/components/buttons/GradientButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
@@ -12,6 +13,7 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { WarningAction } from 'src/components/modals/types'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
+import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useShouldCompressView } from 'src/features/transactions/hooks'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
@@ -66,6 +68,8 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
     currencyIn ?? undefined
   )
 
+  const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
+
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [transferWarning, setTransferWarning] = useState<TransferWarning>({
     loading: true,
@@ -73,6 +77,7 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
   })
 
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const { onShowTokenSelector, onSetAmount, onSetMax } = useSwapActionHandlers(dispatch)
   const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
@@ -134,6 +139,7 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
                 isUSDInput={isUSDInput}
                 showSoftInputOnFocus={shouldCompressView}
+                usdValue={inputCurrencyUSDValue}
                 value={formattedAmounts[CurrencyField.INPUT]}
                 warnings={warnings}
                 onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
@@ -160,14 +166,16 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
                 </Box>
               </Box>
             </Box>
-            <Flex pb="xl" pt="xl" px="md">
-              <Suspense fallback={<Loading type="image" />}>
-                <RecipientInputPanel
-                  recipientAddress={recipient}
-                  onToggleShowRecipientSelector={onToggleShowRecipientSelector}
-                />
-              </Suspense>
-            </Flex>
+            {recipient && (
+              <Flex px="md" py="xl">
+                <Suspense fallback={<Loading type="image" />}>
+                  <RecipientInputPanel
+                    recipientAddress={recipient}
+                    onToggleShowRecipientSelector={onToggleShowRecipientSelector}
+                  />
+                </Suspense>
+              </Flex>
+            )}
           </Flex>
         </AnimatedFlex>
         <AnimatedFlex exiting={FadeOutDown} gap="xs">
@@ -177,14 +185,14 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
               value={formattedAmounts[CurrencyField.INPUT]}
             />
           )}
-          <PrimaryButton
+          <GradientButton
             disabled={actionButtonDisabled}
+            height={56}
             label={t('Review transfer')}
             name={ElementName.ReviewTransfer}
-            py="md"
             testID={ElementName.ReviewTransfer}
+            textColor={theme.colors.accentTextLightPrimary}
             textVariant="largeLabel"
-            variant="blue"
             onPress={onPressReview}
           />
         </AnimatedFlex>

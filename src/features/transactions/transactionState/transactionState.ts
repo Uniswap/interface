@@ -48,7 +48,7 @@ export const initialState: Readonly<TransactionState> = {
   exactAmountUSD: '',
   isUSDInput: false,
   selectingCurrencyField: undefined,
-  showRecipientSelector: false,
+  showRecipientSelector: true,
 }
 
 // using `createSlice` for convenience -- slice is not added to root reducer

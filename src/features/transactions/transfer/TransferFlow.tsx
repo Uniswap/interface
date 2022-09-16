@@ -37,6 +37,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
       flowName={t('Send')}
       recipientSelector={
         <RecipientSelect
+          recipient={state.recipient}
           onSelectRecipient={onSelectRecipient}
           onToggleShowRecipientSelector={onToggleShowRecipientSelector}
         />

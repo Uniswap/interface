@@ -81,7 +81,7 @@ export function TransactionFlow({
         <Flex gap="xs" px="md" width="100%">
           {step !== TransactionStep.SUBMITTED && (
             <Flex row alignItems="center" justifyContent="space-between" px="sm">
-              <Text pt="sm" textAlign="left" variant="subhead">
+              <Text py="xs" textAlign="left" variant="subhead">
                 {flowName}
               </Text>
               {step === TransactionStep.FORM && (

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import ActionButton, { ActionButtonProps } from 'src/components/buttons/ActionButton'
+import { ActionButtonProps, GradientActionButton } from 'src/components/buttons/ActionButton'
 import { Button } from 'src/components/buttons/Button'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
@@ -16,6 +16,7 @@ import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
 import { NFTAsset } from 'src/features/nfts/types'
 import { dimensions } from 'src/styles/sizing'
+import { Theme } from 'src/styles/theme'
 
 interface BaseReviewProps {
   actionButtonProps: ActionButtonProps
@@ -138,10 +139,11 @@ export function TransactionReview({
             <Arrow color={theme.colors.textPrimary} direction="w" size={20} />
           </Button>
           <Flex grow>
-            <ActionButton
+            <GradientActionButton
               disabled={actionButtonProps.disabled}
               label={actionButtonProps.label}
               name={actionButtonProps.name}
+              textColor={theme.colors.accentTextLightPrimary as keyof Theme['colors']}
               onPress={actionButtonProps.onPress}
             />
           </Flex>

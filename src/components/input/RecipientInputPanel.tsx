@@ -11,7 +11,7 @@ import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/ho
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 
 interface RecipientInputPanelProps {
-  recipientAddress?: string
+  recipientAddress: string
   onToggleShowRecipientSelector: () => void
 }
 
@@ -24,7 +24,6 @@ export function RecipientInputPanel({
   onToggleShowRecipientSelector,
 }: RecipientInputPanelProps) {
   const theme = useAppTheme()
-  const { t } = useTranslation()
 
   return (
     <Flex centered gap="sm">
@@ -37,13 +36,7 @@ export function RecipientInputPanel({
         onPress={onToggleShowRecipientSelector}>
         <Flex gap="xxs">
           <Flex centered row gap="sm">
-            {recipientAddress ? (
-              <AddressDisplay address={recipientAddress} variant="headlineSmall" />
-            ) : (
-              <Text color="white" variant="mediumLabel">
-                {t('Choose recipient')}
-              </Text>
-            )}
+            <AddressDisplay address={recipientAddress} variant="headlineSmall" />
             <Chevron color={theme.colors.textPrimary} direction="e" />
           </Flex>
           {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}

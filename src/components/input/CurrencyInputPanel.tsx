@@ -11,7 +11,7 @@ import { Warning, WarningLabel } from 'src/components/modals/types'
 import { Text } from 'src/components/Text'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { Theme } from 'src/styles/theme'
-import { formatCurrencyAmount } from 'src/utils/format'
+import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 
 const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
@@ -35,6 +35,7 @@ type CurrentInputPanelProps = {
   dimTextColor?: boolean
   selection?: TextInputProps['selection']
   onSelectionChange?: (start: number, end: number) => void
+  usdValue: CurrencyAmount<Currency> | null
 } & RestyleProps
 
 /** Input panel for a single side of a transfer action. */
@@ -58,6 +59,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     dimTextColor,
     selection,
     onSelectionChange,
+    usdValue,
     ...rest
   } = props
 
@@ -136,18 +138,23 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
         </Flex>
       </Flex>
 
-      <Flex alignItems="flex-end" gap="xs" justifyContent="flex-end">
-        {showInsufficientBalanceWarning && (
-          <Text color="accentWarning" variant="caption">
-            {insufficientBalanceWarning.title}
-          </Text>
-        )}
+      <Flex row alignItems="center" gap="xs" justifyContent="space-between">
+        <Text color="textSecondary" variant="caption">
+          {usdValue ? `${formatUSDPrice(usdValue?.toExact())}` : ''}
+        </Text>
+        <Flex alignItems="flex-end" gap="xs" justifyContent="flex-end">
+          {showInsufficientBalanceWarning && (
+            <Text color="accentWarning" variant="caption">
+              {insufficientBalanceWarning.title}
+            </Text>
+          )}
 
-        {currency && !showInsufficientBalanceWarning && (
-          <Text color="textSecondary" variant="caption">
-            {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
-          </Text>
-        )}
+          {currency && !showInsufficientBalanceWarning && (
+            <Text color="textSecondary" variant="caption">
+              {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
+            </Text>
+          )}
+        </Flex>
       </Flex>
     </Flex>
   )

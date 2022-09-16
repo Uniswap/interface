@@ -6,8 +6,8 @@ import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
+import { GradientButton } from 'src/components/buttons/GradientButton'
+import { SwapArrowButton } from 'src/components/buttons/SwapArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Flex } from 'src/components/layout'
@@ -16,6 +16,7 @@ import { LaserLoader } from 'src/components/loading/LaserLoader'
 import { WarningAction, WarningSeverity } from 'src/components/modals/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
+import { useUSDCPrice, useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { useShouldCompressView } from 'src/features/transactions/hooks'
@@ -25,9 +26,14 @@ import {
   useSwapActionHandlers,
   useUSDTokenUpdater,
 } from 'src/features/transactions/swap/hooks'
-import { getReviewActionName, isWrapAction } from 'src/features/transactions/swap/utils'
+import {
+  getRateToDisplay,
+  getReviewActionName,
+  isWrapAction,
+} from 'src/features/transactions/swap/utils'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { createTransactionId } from 'src/features/transactions/utils'
+import { formatPrice } from 'src/utils/format'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -77,6 +83,10 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     exactAmountUSD,
     currencies[exactCurrencyField] ?? undefined
   )
+
+  const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
+  const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])
+
   useShowSwapNetworkNotification(chainId)
 
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -99,7 +109,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
   const swapDataRefreshing =
     !isWrapAction(wrapType) && (trade.isFetching || trade.loading || otherAmountNotLoaded)
 
-  const noValidSwap = !isWrapAction(wrapType) && !trade
+  const noValidSwap = !isWrapAction(wrapType) && !trade.trade
   const blockingWarning = warnings.some((warning) => warning.action === WarningAction.DisableReview)
 
   const actionButtonDisabled = noValidSwap || blockingWarning || swapDataRefreshing
@@ -133,6 +143,10 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     reset({ start, end })
   }
 
+  const [showInverseRate, setShowInverseRate] = useState(false)
+  const price = trade.trade?.executionPrice
+  const rateUnitPrice = useUSDCPrice(showInverseRate ? price?.quoteCurrency : price?.baseCurrency)
+
   return (
     <>
       {showWarningModal && swapWarning?.title && (
@@ -165,6 +179,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                 isUSDInput={isUSDInput}
                 selection={inputSelection}
                 showSoftInputOnFocus={shouldCompressView}
+                usdValue={inputCurrencyUSDValue}
                 value={formattedAmounts[CurrencyField.INPUT]}
                 warnings={warnings}
                 onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
@@ -179,8 +194,8 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
           <Box zIndex="popover">
             <Box alignItems="center" height={ARROW_SIZE} style={StyleSheet.absoluteFill}>
               <Box alignItems="center" bottom={ARROW_SIZE / 2} position="absolute">
-                <TransferArrowButton
-                  bg={currencies[CurrencyField.OUTPUT] ? 'backgroundAction' : 'backgroundSurface'}
+                <SwapArrowButton
+                  bg="backgroundSurface"
                   disabled={!currencies[CurrencyField.OUTPUT]}
                   onPress={onSwitchCurrencies}
                 />
@@ -193,8 +208,8 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
               <Flex
                 fill
                 backgroundColor={currencies[CurrencyField.OUTPUT] ? 'backgroundContainer' : 'none'}
-                borderBottomLeftRadius={swapWarning ? 'none' : 'xl'}
-                borderBottomRightRadius={swapWarning ? 'none' : 'xl'}
+                borderBottomLeftRadius={swapWarning || trade.trade ? 'none' : 'xl'}
+                borderBottomRightRadius={swapWarning || trade.trade ? 'none' : 'xl'}
                 borderTopLeftRadius="xl"
                 borderTopRightRadius="xl"
                 gap="none"
@@ -218,6 +233,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                   selection={outputSelection}
                   showNonZeroBalancesOnly={false}
                   showSoftInputOnFocus={shouldCompressView}
+                  usdValue={outputCurrencyUSDValue}
                   value={formattedAmounts[CurrencyField.OUTPUT]}
                   warnings={warnings}
                   onPressIn={onCurrencyInputPress(CurrencyField.OUTPUT)}
@@ -250,6 +266,40 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                   </Flex>
                 </Button>
               )}
+              {trade.trade && !swapWarning && (
+                <Button onPress={() => setShowInverseRate(!showInverseRate)}>
+                  <Flex
+                    row
+                    alignItems="center"
+                    alignSelf="stretch"
+                    backgroundColor="backgroundAction"
+                    borderBottomLeftRadius="lg"
+                    borderBottomRightRadius="lg"
+                    flexGrow={1}
+                    gap="xs"
+                    justifyContent="space-between"
+                    px="lg"
+                    py="sm">
+                    <Flex row gap="none">
+                      <Text color="accentTextLightPrimary" variant="bodySmall">
+                        {getRateToDisplay(trade.trade, showInverseRate)}
+                      </Text>
+                      <Text color="textSecondary" variant="bodySmall">
+                        {rateUnitPrice &&
+                          ` (${formatPrice(rateUnitPrice, {
+                            maximumFractionDigits: 6,
+                            notation: 'standard',
+                          })})`}
+                      </Text>
+                    </Flex>
+                    <InfoCircle
+                      color={theme.colors.textSecondary}
+                      height={theme.iconSizes.md}
+                      width={theme.iconSizes.md}
+                    />
+                  </Flex>
+                </Button>
+              )}
             </Flex>
           </Trace>
         </AnimatedFlex>
@@ -262,14 +312,14 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
               value={formattedAmounts[exactCurrencyField]}
             />
           )}
-          <PrimaryButton
+          <GradientButton
             disabled={actionButtonDisabled}
+            height={56}
             label={getReviewActionName(t, wrapType)}
             name={ElementName.ReviewSwap}
-            py="md"
             testID={ElementName.ReviewSwap}
+            textColor={theme.colors.accentTextLightPrimary}
             textVariant="largeLabel"
-            variant="blue"
             onPress={onReview}
           />
         </AnimatedFlex>

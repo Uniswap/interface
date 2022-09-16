@@ -304,7 +304,7 @@ export function useUSDTokenUpdater(
   exactAmountUSD: string,
   exactCurrency?: Currency
 ) {
-  const price = useUSDCPrice(exactCurrency ?? undefined)
+  const price = useUSDCPrice(exactCurrency)
   const shouldUseUSDRef = useRef(isUSDInput)
 
   useEffect(() => {

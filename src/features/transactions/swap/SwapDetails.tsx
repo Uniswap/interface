@@ -80,7 +80,7 @@ export function SwapDetails({
           </Flex>
           <Flex centered row gap="none">
             <Button
-              backgroundColor="accentActive"
+              backgroundColor="userThemeColor"
               borderRadius="md"
               padding="xs"
               onPress={onAcceptTrade}>

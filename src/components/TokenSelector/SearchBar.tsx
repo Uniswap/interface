@@ -8,16 +8,19 @@ import { ElementName } from 'src/features/telemetry/constants'
 
 interface SearchBarProps extends SearchTextInputProps {
   onBack: () => void
+  hideBackButton?: boolean
 }
 
 // Use instead of SearchTextInput when you need back button functionality outside of nav stack (i.e., inside BottomSheetModals)
-export function SearchBar({ onBack, ...rest }: SearchBarProps) {
+export function SearchBar({ onBack, hideBackButton, ...rest }: SearchBarProps) {
   const theme = useAppTheme()
   return (
     <Flex centered row gap="sm" mx="md">
-      <Button name={ElementName.Back} testID={ElementName.Back} onPress={onBack}>
-        <Chevron color={theme.colors.textPrimary} />
-      </Button>
+      {!hideBackButton && (
+        <Button name={ElementName.Back} testID={ElementName.Back} onPress={onBack}>
+          <Chevron color={theme.colors.textPrimary} />
+        </Button>
+      )}
       <SearchTextInput {...rest} />
     </Flex>
   )

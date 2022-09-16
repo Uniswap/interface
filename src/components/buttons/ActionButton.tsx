@@ -1,5 +1,6 @@
 import { notificationAsync } from 'expo-haptics'
 import React, { ComponentProps } from 'react'
+import { GradientButton } from 'src/components/buttons/GradientButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -44,5 +45,38 @@ export default function ActionButton({
         }}
       />
     </>
+  )
+}
+
+// TODO: make this a more extensible component for use throughout the app
+export function GradientActionButton({
+  onPress,
+  disabled,
+  label,
+  name,
+  textVariant = 'largeLabel',
+  ...rest
+}: ActionButtonProps) {
+  const { trigger: actionButtonTrigger } = useBiometricPrompt(onPress)
+  const { requiredForTransactions } = useBiometricAppSettings()
+
+  return (
+    <GradientButton
+      {...rest}
+      disabled={disabled}
+      height={56}
+      label={label}
+      name={name}
+      testID={name}
+      textVariant={textVariant}
+      onPress={() => {
+        notificationAsync()
+        if (requiredForTransactions) {
+          actionButtonTrigger()
+        } else {
+          onPress()
+        }
+      }}
+    />
   )
 }

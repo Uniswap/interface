@@ -15,11 +15,13 @@ import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 interface RecipientSelectProps {
   onSelectRecipient: (newRecipientAddress: string) => void
   onToggleShowRecipientSelector: () => void
+  recipient?: string
 }
 
 export function RecipientSelect({
   onSelectRecipient,
   onToggleShowRecipientSelector,
+  recipient,
 }: RecipientSelectProps) {
   const { t } = useTranslation()
   const [showQRScanner, setShowQRScanner] = useState(false)
@@ -52,6 +54,7 @@ export function RecipientSelect({
           autoFocus
           backgroundColor="backgroundContainer"
           endAdornment={<QRScannerIconButton size={20} onPress={onPressQRScanner} />}
+          hideBackButton={!recipient}
           placeholder={t('Search addresses or ENS names')}
           value={pattern ?? ''}
           onBack={onToggleShowRecipientSelector}
