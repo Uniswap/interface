@@ -3,6 +3,7 @@ import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useState } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
@@ -173,9 +174,11 @@ export default function FooterBalanceSummary({
             )}
           </BalanceInfo>
         )}
-        <SwapButton onClick={() => (window.location.href = 'https://app.uniswap.org/#/swap')}>
-          <Trans>Swap</Trans>
-        </SwapButton>
+        <Link to={`/swap?inputCurrency=${address}`}>
+          <SwapButton>
+            <Trans>Swap</Trans>
+          </SwapButton>
+        </Link>
       </TotalBalancesSection>
       {showMultipleBalances && (
         <NetworkBalancesSection>

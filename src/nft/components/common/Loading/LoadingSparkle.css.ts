@@ -12,19 +12,21 @@ const pathAnim = keyframes({
 const pathAnimCommonProps = {
   animationDirection: 'alternate',
   animationTimingFunction: 'linear',
-  animation: `0.5s infinite ${pathAnim}`,
 }
 
 export const path = style({
   selectors: {
     '&:nth-child(1)': {
+      animation: `0.5s infinite ${pathAnim}`,
       ...pathAnimCommonProps,
     },
     '&:nth-child(2)': {
+      animation: `0.5s infinite ${pathAnim}`,
       animationDelay: '0.1s',
       ...pathAnimCommonProps,
     },
     '&:nth-child(3)': {
+      animation: `0.5s infinite ${pathAnim}`,
       animationDelay: '0.2s',
       ...pathAnimCommonProps,
     },
