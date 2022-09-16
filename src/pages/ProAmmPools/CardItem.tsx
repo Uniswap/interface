@@ -3,7 +3,7 @@ import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
 import { useState } from 'react'
 import { ChevronUp, Share2 } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -21,7 +21,9 @@ import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
+import { useToggleEthPowAckModal } from 'state/application/hooks'
 import { useProMMFarms } from 'state/farms/promm/hooks'
+import { useUrlOnEthPowAck } from 'state/pools/hooks'
 import { ProMMPoolData } from 'state/prommPools/hooks'
 import { ExternalLink } from 'theme'
 import { isAddressString, shortenAddress } from 'utils'
@@ -70,6 +72,9 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
   const [isOpen, setIsOpen] = useState(true)
+  const history = useHistory()
+  const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
+  const toggleEthPowAckModal = useToggleEthPowAckModal()
 
   const allTokens = useAllTokens()
   const { data: farms } = useProMMFarms()
@@ -216,13 +221,19 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
               )}
 
               <ButtonPrimary
-                as={Link}
                 padding="10px"
-                to={
-                  myLiquidity
+                onClick={() => {
+                  const url = myLiquidity
                     ? `/myPools?tab=${VERSION.ELASTIC}&search=${pool.address}`
                     : `/elastic/add/${token0Address}/${token1Address}/${pool.feeTier}`
-                }
+
+                  if (chainId === ChainId.ETHW) {
+                    setUrlOnEthPoWAck(url)
+                    toggleEthPowAckModal()
+                  } else {
+                    history.push(url)
+                  }
+                }}
               >
                 <Text width="max-content" fontSize="14px">
                   <Trans>Add Liquidity</Trans>

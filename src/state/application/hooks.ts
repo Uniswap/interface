@@ -122,6 +122,10 @@ export function useTrueSightUnsubscribeModalToggle(): () => void {
   return useToggleModal(ApplicationModal.UNSUBSCRIBE_TRUESIGHT)
 }
 
+export function useToggleEthPowAckModal(): () => void {
+  return useToggleModal(ApplicationModal.ETH_POW_ACK)
+}
+
 // returns a function that allows adding a popup
 function useAddPopup(): (
   content: PopupContent,

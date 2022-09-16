@@ -5,7 +5,7 @@ import { rgba } from 'polished'
 import React, { CSSProperties, useState } from 'react'
 import { AlertTriangle, ChevronDown, ChevronUp, Info, Minus, Plus, Share2 } from 'react-feather'
 import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { Flex } from 'rebass'
 
 import { ButtonEmpty } from 'components/Button'
@@ -36,10 +36,10 @@ import { MAX_ALLOW_APY } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
-import { usePoolDetailModalToggle } from 'state/application/hooks'
+import { usePoolDetailModalToggle, useToggleEthPowAckModal } from 'state/application/hooks'
 import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
 import { setSelectedPool } from 'state/pools/actions'
-import { SubgraphPoolData, UserLiquidityPosition, useSharedPoolIdManager } from 'state/pools/hooks'
+import { SubgraphPoolData, UserLiquidityPosition, useSharedPoolIdManager, useUrlOnEthPowAck } from 'state/pools/hooks'
 import { formattedNum, shortenAddress } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { getMyLiquidity, getTradingFeeAPR, parseSubgraphPoolData } from 'utils/dmm'
@@ -131,6 +131,10 @@ const ListItemGroup = ({
   const togglePoolDetailModal = usePoolDetailModalToggle()
 
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(10000))
+
+  const history = useHistory()
+  const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
+  const toggleEthPowAckModal = useToggleEthPowAckModal()
 
   const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
   const farm = uniqueAndActiveFarms.find(f => f.id.toLowerCase() === poolData.id.toLowerCase())
@@ -277,14 +281,24 @@ const ListItemGroup = ({
         <ButtonWrapper style={{ marginRight: '-3px' }}>
           <ButtonEmpty
             padding="0"
-            as={Link}
-            to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`}
             style={{
               background: rgba(theme.primary, 0.2),
               minWidth: '28px',
               minHeight: '28px',
               width: '28px',
               height: '28px',
+            }}
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation()
+
+              const url = `/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`
+              setUrlOnEthPoWAck(url)
+
+              if (chainId === ChainId.ETHW) {
+                toggleEthPowAckModal()
+              } else {
+                history.push(url)
+              }
             }}
           >
             <Plus size={16} color={theme.primary} />
@@ -307,7 +321,7 @@ const ListItemGroup = ({
           )}
           <ButtonEmpty
             padding="0"
-            onClick={e => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
               setSharedPoolId(poolData.id)
             }}

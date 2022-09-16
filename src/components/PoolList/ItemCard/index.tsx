@@ -1,9 +1,9 @@
 import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import JSBI from 'jsbi'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { AlertTriangle, Share2 } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
@@ -39,8 +39,9 @@ import { DMM_ANALYTICS_URL, SUBGRAPH_AMP_MULTIPLIER } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
+import { useToggleEthPowAckModal } from 'state/application/hooks'
 import { useUserStakedBalance } from 'state/farms/hooks'
-import { useSharedPoolIdManager } from 'state/pools/hooks'
+import { useSharedPoolIdManager, useUrlOnEthPowAck } from 'state/pools/hooks'
 import { ExternalLink } from 'theme'
 import { formattedNum, shortenAddress } from 'utils'
 import { currencyId } from 'utils/currencyId'
@@ -56,6 +57,9 @@ const TAB = {
 const ItemCard = ({ poolData, style = {}, myLiquidity }: ListItemProps) => {
   const { chainId } = useActiveWeb3React()
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(SUBGRAPH_AMP_MULTIPLIER))
+  const history = useHistory()
+  const [, setUrlOnEthPoWAck] = useUrlOnEthPowAck()
+  const toggleEthPowAckModal = useToggleEthPowAckModal()
 
   const isFarmingPool = useCheckIsFarmingPool(poolData.id)
 
@@ -203,8 +207,15 @@ const ItemCard = ({ poolData, style = {}, myLiquidity }: ListItemProps) => {
           {isHaveLiquidity ? <Trans>Remove Liquidity</Trans> : <Trans>Swap</Trans>}
         </ButtonOutlined>
         <ButtonPrimary
-          as={Link}
-          to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`}
+          onClick={() => {
+            const url = `/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`
+            if (chainId === ChainId.ETHW) {
+              setUrlOnEthPoWAck(url)
+              toggleEthPowAckModal()
+            } else {
+              history.push(url)
+            }
+          }}
           style={{
             padding: '10px',
             fontSize: '14px',

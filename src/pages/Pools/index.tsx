@@ -1,8 +1,8 @@
-import { Currency } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useCallback, useMemo, useState } from 'react'
 import { Plus } from 'react-feather'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled, { DefaultTheme, keyframes } from 'styled-components'
@@ -27,9 +27,12 @@ import useTheme from 'hooks/useTheme'
 import FarmingPoolsMarquee from 'pages/Pools/FarmingPoolsMarquee'
 import { GlobalData, Instruction } from 'pages/Pools/InstructionAndGlobalData'
 import ProAmmPoolList from 'pages/ProAmmPools'
+import { useToggleEthPowAckModal } from 'state/application/hooks'
 import { Field } from 'state/pair/actions'
+import { useUrlOnEthPowAck } from 'state/pools/hooks'
 import { currencyId } from 'utils/currencyId'
 
+import ModalEthPoWAck from './ModalEthPoWAck'
 import { CurrencyWrapper, PoolsPageWrapper, ToolbarWrapper } from './styleds'
 
 const highlight = (theme: DefaultTheme) => keyframes`
@@ -90,6 +93,9 @@ const Pools = ({
   const tab = (qs.tab as string) || VERSION.ELASTIC
   const shouldHighlightCreatePoolButton = qs.highlightCreateButton === 'true'
 
+  const [, setUrlOnEthPowAck] = useUrlOnEthPowAck()
+  const toggleEthPowAckModal = useToggleEthPowAckModal()
+
   const onSearch = (search: string) => {
     history.replace(location.pathname + '?search=' + search + '&tab=' + tab)
   }
@@ -135,6 +141,32 @@ const Pools = ({
   }, [currencyIdA, history, tab])
 
   const { mixpanelHandler } = useMixpanel()
+
+  const handleClickCreatePoolButton = () => {
+    if (tab === VERSION.CLASSIC) {
+      mixpanelHandler(MIXPANEL_TYPE.CREATE_POOL_INITITATED)
+    } else {
+      mixpanelHandler(MIXPANEL_TYPE.ELASTIC_CREATE_POOL_INITIATED)
+    }
+
+    const url =
+      tab === VERSION.CLASSIC
+        ? `/create/${currencyIdA === '' ? undefined : currencyIdA}/${currencyIdB === '' ? undefined : currencyIdB}`
+        : `/elastic/add${
+            currencyIdA && currencyIdB
+              ? `/${currencyIdA}/${currencyIdB}`
+              : currencyIdA || currencyIdB
+              ? `/${currencyIdA || currencyIdB}`
+              : ''
+          }`
+
+    if (chainId === ChainId.ETHW) {
+      setUrlOnEthPowAck(url)
+      toggleEthPowAckModal()
+    } else {
+      history.push(url)
+    }
+  }
 
   return (
     <>
@@ -253,27 +285,7 @@ const Pools = ({
 
               <ToolbarWrapper style={{ marginBottom: '0px' }}>
                 <ButtonPrimaryWithHighlight
-                  as={Link}
-                  onClick={() => {
-                    if (tab === VERSION.CLASSIC) {
-                      mixpanelHandler(MIXPANEL_TYPE.CREATE_POOL_INITITATED)
-                    } else {
-                      mixpanelHandler(MIXPANEL_TYPE.ELASTIC_CREATE_POOL_INITIATED)
-                    }
-                  }}
-                  to={
-                    tab === VERSION.CLASSIC
-                      ? `/create/${currencyIdA === '' ? undefined : currencyIdA}/${
-                          currencyIdB === '' ? undefined : currencyIdB
-                        }`
-                      : `/elastic/add${
-                          currencyIdA && currencyIdB
-                            ? `/${currencyIdA}/${currencyIdB}`
-                            : currencyIdA || currencyIdB
-                            ? `/${currencyIdA || currencyIdB}`
-                            : ''
-                        }`
-                  }
+                  onClick={handleClickCreatePoolButton}
                   data-highlight={shouldHighlightCreatePoolButton}
                   style={{
                     height: '38px',
@@ -299,17 +311,7 @@ const Pools = ({
               />
               {tab === VERSION.ELASTIC && (
                 <ButtonPrimaryWithHighlight
-                  as={Link}
-                  onClick={() => {
-                    mixpanelHandler(MIXPANEL_TYPE.ELASTIC_CREATE_POOL_INITIATED)
-                  }}
-                  to={`/elastic/add${
-                    currencyIdA && currencyIdB
-                      ? `/${currencyIdA}/${currencyIdB}`
-                      : currencyIdA || currencyIdB
-                      ? `/${currencyIdA || currencyIdB}`
-                      : ''
-                  }`}
+                  onClick={handleClickCreatePoolButton}
                   data-highlight={shouldHighlightCreatePoolButton}
                   style={{
                     width: '38px',
@@ -322,13 +324,7 @@ const Pools = ({
               )}
               {tab === VERSION.CLASSIC && (
                 <ButtonPrimaryWithHighlight
-                  as={Link}
-                  onClick={() => {
-                    mixpanelHandler(MIXPANEL_TYPE.CREATE_POOL_INITITATED)
-                  }}
-                  to={`/create/${currencyIdA === '' ? undefined : currencyIdA}/${
-                    currencyIdB === '' ? undefined : currencyIdB
-                  }`}
+                  onClick={handleClickCreatePoolButton}
                   data-highlight={shouldHighlightCreatePoolButton}
                   style={{
                     width: '38px',
@@ -437,6 +433,8 @@ const Pools = ({
         )}
       </PoolsPageWrapper>
       <SwitchLocaleLink />
+
+      <ModalEthPoWAck />
     </>
   )
 }
