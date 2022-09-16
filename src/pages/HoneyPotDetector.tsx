@@ -29,7 +29,7 @@ import { useTokenInfo } from "components/swap/ChartPage";
 import { useWeb3Endpoint } from "./Charts/PairSearch";
 import { useWeb3React } from "@web3-react/core";
 
-type GetMaxesResponse = { BuyGas: number, BuyTax: number, Error: any, IsHoneypot: boolean, MaxTxAmount: number, MaxTxAmountBNB: number, SellGas: number, SellTax: number } | undefined
+export type GetMaxesResponse = { BuyGas: number, BuyTax: number, Error: any, IsHoneypot: boolean, MaxTxAmount: number, MaxTxAmountBNB: number, SellGas: number, SellTax: number } | undefined
 
 export const getMaxes = async (value: string, chain = 'eth'): Promise<GetMaxesResponse> => {
     if (!value) return 

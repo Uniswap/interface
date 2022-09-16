@@ -7,6 +7,7 @@ import { getTokenData, useEthPrice, useTokenData } from 'state/logs/utils';
 
 import { DarkCard } from 'components/Card';
 import Modal from 'components/Modal';
+import { NewToken } from 'state/transactions/hooks';
 import React from 'react';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
 import _ from 'lodash'
@@ -14,6 +15,7 @@ import moment from 'moment';
 import styled from 'styled-components/macro'
 import { useContractOwner } from './ConfirmSwapModal';
 import useTheme from 'hooks/useTheme'
+import { useTokenInfo } from './ChartPage';
 import { useWeb3React } from '@web3-react/core';
 
 const StyledHeader = styled.div<{ size?: 'lg' }>`
@@ -26,13 +28,34 @@ export const RENOUNCED_ADDRESSES = [
     '0x0000000000000000000000000000000000000000'
 ]
 
+
+const RenderRecursive = ({ thekey, object }: { thekey: keyof any, object: Record<string, any> }) => {
+    const obj = (object as any)
+    return (typeof obj[thekey] == 'object') ? (
+        <div style={{display:'flex', flexFlow: `row wrap`, alignItems:"center", justifyContent:'stretch', gap: 15}}>
+            <Badge style={{width:'100%'}}>{thekey}</Badge>
+            <hr style={{color:"#444"}}/>
+            {Object.keys(obj[thekey]).map(subkey => (
+                <RenderRecursive thekey={subkey} key={subkey} object={obj[thekey]} />
+            ))}
+        </div>
+    ) : (
+        <div style={{padding:2}}>
+            <StyledHeader>{_.startCase(thekey?.toString())}</StyledHeader>
+            <Badge variant={BadgeVariant.HOLLOW}>{((obj as any)?.[thekey])}</Badge>
+        </div>
+    )
+}
+
 export const DetailsModal = ({
+    token,
     network,
     symbol,
     address,
     isOpen,
     onDismiss
 }: {
+    token: NewToken,
     network: 'bsc' | 'eth',
     symbol: string,
     address: string,
@@ -47,22 +70,10 @@ export const DetailsModal = ({
         [owner])
 
     const isRenounced = React.useMemo(() => RENOUNCED_ADDRESSES.some(isEqualShallow), [owner, isEqualShallow])
-    const [tokenData, setTokenData] = React.useState<any>()
     const bnbPrice = useBnbPrices()
     const [ethPrice, ethPriceOld] = useEthPrice()
-    const [loadedTokenData, setLoadedTokenData] = React.useState(false)
-    React.useEffect(() => {
-        const func = async () => {
-            if (ethPrice && ethPriceOld && !tokenData) {
-                const tokenDataFn = network?.toLowerCase() === 'bsc' ? fetchBscTokenData : network?.toLowerCase() === 'eth' ? getTokenData : (add: string, p1: any, p2: any) => ({ totalLiquidity: undefined });
-                const [price1, price2] = network?.toLowerCase() === 'bsc' ? [bnbPrice?.current, bnbPrice?.current] : [ethPrice, ethPriceOld]
-                const tokenData = await tokenDataFn(address, price1, price2);
-                setTokenData(tokenData);
-                setLoadedTokenData(true)
-            }
-        }
-        func();
-    }, [ethPrice, ethPriceOld])
+    const tokenData = useTokenData(address, 10000)
+    const [loadedTokenData, setLoadedTokenData] = React.useState(Boolean(tokenData))
 
     const LIQUIDITY_ENDPOINT = `https://team-finance-backend-origdfl2wq-uc.a.run.app/api/app/explorer/search?network=ethereum&chainId=0x1&input=${symbol}&skip=0&limit=15&order=4`
     const [lockedMap, setLockedMap] = React.useState<any>()
@@ -79,9 +90,12 @@ export const DetailsModal = ({
             })
     }, [])
 
+    const tokenInfo = useTokenInfo(network == 'eth' ? 1 : network == 'bsc' ? 56 : 1, address)
+
     const MARKET_CAP = React.useMemo(() => {
-        if (!CIRCULATING_SUPPLY || !tokenData?.priceUSD) return undefined
-        return `$${(CIRCULATING_SUPPLY * Number(tokenData?.priceUSD)).toLocaleString()}`
+        const price = tokenData?.priceUSD || tokenInfo?.price || token.screenerToken?.priceUsd
+        if (!CIRCULATING_SUPPLY || !price) return undefined
+        return `$${(CIRCULATING_SUPPLY * Number(price)).toLocaleString()}`
     }, [CIRCULATING_SUPPLY, tokenData])
 
     return (
@@ -103,7 +117,7 @@ export const DetailsModal = ({
                         <div style={{ borderRadius: 12, border: `1px solid #444`, padding: '1rem', maxWidth: '100%', marginTop: '.25rem', display: 'flex', flexFlow: 'column wrap' }}>
                             <div style={{ display: 'grid', justifyContent: 'space-between', gridTemplateColumns: 'auto auto', columnGap: 35 }}>
                                 <ul style={{ display: 'flex', gap: 18, flexFlow: 'row wrap', alignItems: 'center', listStyle: 'none', padding: 5 }}>
-                                    {owner && owner !== '?' && <li style={{ borderBottom: '1px solid #444', paddingLeft: 0, marginBottom: 10 }}>
+                                    {owner &&  <li style={{ borderBottom: '1px solid #444', paddingLeft: 0, marginBottom: 10 }}>
                                         <StyledHeader style={{ display: 'flex', flexFlow: 'column wrap' }}>Contract Owner &nbsp; <small>
                                             <Badge style={{ marginBottom: 10, marginRight: 5 }} variant={isRenounced ? BadgeVariant.POSITIVE_OUTLINE : BadgeVariant.WARNING_OUTLINE}>{isRenounced ? 'Renounced' : 'Not Renounced'}</Badge>
                                             <Badge variant={BadgeVariant.DEFAULT}><ExternalLink style={{ color: theme.text1 }} href={`${network.toLowerCase() === 'bsc' ? 'https://bscscan.com/address/' : 'https://etherscan.io/address/'}${owner}`}> {owner !== '?' && owner.substring(0, 8) + '...' + owner.substring(34, 42)} </ExternalLink>  <ExternalLinkIcon href={`${network.toLowerCase() === 'bsc' ? 'https://bscscan.com/address/' : 'https://etherscan.io/address/'}${owner}`} style={{ display: 'inline-block' }} /></Badge></small> </StyledHeader>
@@ -111,7 +125,7 @@ export const DetailsModal = ({
                                     </li>}
 
                                     {!!tokenData?.totalLiquidityUSD && tokenData?.totalLiquidityUSD > 0 && <li style={{ paddingLeft: 0, marginBottom: 10 }}>
-                                        <StyledHeader>Liquidity (USD)</StyledHeader>
+                                        <StyledHeader>Paired Liquidity Value (USD)</StyledHeader>
                                         <Badge variant={BadgeVariant.HOLLOW}>${Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()}</Badge>
                                     </li>}
                                     {MARKET_CAP && <li style={{ borderBottom: '1px solid #444', marginBottom: 10 }}><StyledHeader>MarketCap</StyledHeader> <Badge variant={BadgeVariant.HOLLOW}>{MARKET_CAP}</Badge></li>}
@@ -124,10 +138,9 @@ export const DetailsModal = ({
                                     </li>}
 
 
-                                    {Object.keys(tokenData)?.filter((key) =>  !['symbol','name','decimals','typename', '__typename', 'id'].includes(key.toLowerCase()) && !key?.toLowerCase()?.includes('type') &&  Boolean(key) && !Number.isNaN(tokenData?.[key]) && Boolean(tokenData?.[key]) && parseFloat(tokenData?.[key])?.toFixed(0) != '0').map((key) => (
+                                    {!!token && !!token.screenerToken && Object.keys(token?.screenerToken || {})?.filter((key) => !['symbol', 'name', 'decimals', 'typename', '__typename', 'id'].includes(key.toLowerCase()) && !key?.toLowerCase()?.includes('type') && Boolean(key)).map((key) => (
                                         <li key={key} style={{ paddingLeft: 0, marginBottom: 10 }}>
-                                            <StyledHeader>{_.startCase(key)}</StyledHeader>
-                                            <Badge variant={BadgeVariant.HOLLOW}>{parseFloat(tokenData?.[key]).toFixed(2)}</Badge>
+                                            <RenderRecursive thekey={key} object={token?.screenerToken || {}} />
                                         </li>
                                     ))}
 

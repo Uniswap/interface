@@ -29,13 +29,16 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Wrapper } from 'components/swap/styleds'
 import _ from 'lodash'
 import { addTransaction } from './actions'
+import { getMaxes } from 'pages/HoneyPotDetector'
 import moment from 'moment'
 import { orderBy } from 'lodash'
 import styled from 'styled-components/macro'
+import { truncate } from 'fs'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import { useHasAccess } from 'pages/Account/AccountPage'
 import useInterval from 'hooks/useInterval'
+import { useIsDarkMode } from 'state/user/hooks'
 import { useKiba } from 'pages/Vote/VotePage'
 import useTheme from 'hooks/useTheme'
 import { useWeb3React } from '@web3-react/core'
@@ -179,7 +182,61 @@ export const LimitOrders = () => {
   </div>
 }
 
-interface NewToken {
+interface Pair {
+  chainId: string;
+  dexId: string;
+  url: string;
+  pairAddress: string;
+  baseToken: {
+    address: string;
+    name: string;
+    symbol: string;
+  };
+  quoteToken: {
+    symbol: string;
+  };
+  priceNative: string;
+  priceUsd?: string;
+  txns: {
+    m5: {
+      buys: number;
+      sells: number;
+    };
+    h1: {
+      buys: number;
+      sells: number;
+    };
+    h6: {
+      buys: number;
+      sells: number;
+    };
+    h24: {
+      buys: number;
+      sells: number;
+    };
+  };
+  volume: {
+    m5: number;
+    h1: number;
+    h6: number;
+    h24: number;
+  };
+  priceChange: {
+    m5: number;
+    h1: number;
+    h6: number;
+    h24: number;
+  };
+  liquidity?: {
+    usd?: number;
+    base: number;
+    quote: number;
+  };
+  fdv?: number;
+  pairCreatedAt?: number;
+}
+
+export interface NewToken {
   network: string;
   symbol: string;
   name: string;
@@ -189,8 +246,9 @@ interface NewToken {
   buyTax?: number | null;
   sellTax?: number | null;
   liquidity?: any;
+  screenerToken?: Pair;
+  pairs?: Pair[];
 }
-
 const StyledDiv = styled.div`
   font-family:"Open Sans";
   font-size:14px;
@@ -248,7 +306,7 @@ export const FomoPage = () => {
   const [lastFetched, setLastFetched] = React.useState<Date | undefined>()
   const [showInfo, setShowInfo] = React.useState(false)
   const [showHpInfo, setShowHpInfo] = React.useState(false)
-  const [flaggin,setFlaggin] = React.useState(false)
+  const [flaggin, setFlaggin] = React.useState(false)
 
   const theme = useTheme()
   const hasAccess = useHasAccess()
@@ -315,12 +373,12 @@ export const FomoPage = () => {
 
     let sorted = data?.filter(a => {
       return searchValue ?
-       a?.addr?.toLowerCase().includes(searchValue.toLowerCase()) || 
-       a.name?.toLowerCase().includes(searchValue?.toLowerCase()) ||
-       a?.symbol.toLowerCase().includes(searchValue?.toLowerCase()) :
-       true
+        a?.addr?.toLowerCase().includes(searchValue.toLowerCase()) ||
+        a.name?.toLowerCase().includes(searchValue?.toLowerCase()) ||
+        a?.symbol.toLowerCase().includes(searchValue?.toLowerCase()) :
+        true
     })
-    
+
     if (shouldFlagSafe) {
       sorted = sorted?.filter(item => item?.safe === true)
     }
@@ -339,61 +397,8 @@ export const FomoPage = () => {
     setData(orderBy(data, item => item[key as keyof NewToken], direction))
   }, [data, sortState])
 
-  const flagAllCallback = React.useCallback(async (items: any[]) => {
-    try {
-      if (flaggin) return;
-      if (!items?.length || !library?.provider) return;
-      setFlaggin(true)
 
-      let safe: any[] = [];
-      if (shouldFlagSafe) {
-        safe = await Promise.all((data ?? [])?.filter(item => item.safe === undefined).map(async item => {
-          const isHoneyPotFn = item.network?.toLowerCase() === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
-          const [isSafe] = await Promise.all([isHoneyPotFn(item.addr, library?.provider)])
-          return {
-            ...item,
-            safe: !isSafe.honeypot,
-            buyTax: isSafe?.buy,
-            sellTax: isSafe?.sell,
-          }
-        })) as Array<NewToken>;
-        setData(curr => _.uniqBy([...(curr || [])?.filter(i => i.safe !== undefined)?.concat(safe)], a => a.addr))
-        setFlaggin(false)
-      } else {
-        safe = await Promise.all(
-          items?.map(async item => {
-            const isHoneyPotFn = item?.network?.toLowerCase() === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
-            const [isSafe] = await Promise.all([isHoneyPotFn(item.addr, library?.provider)])
-            return {
-              ...item,
-              safe: !isSafe.honeypot,
-              buyTax: isSafe?.buy,
-              sellTax: isSafe?.sell,
-            }
-          })) as Array<NewToken>;
-        setData(data =>
-          _.uniqBy(
-            data?.map((item) => safe?.some(safeItem => safeItem.addr == item.addr) ? safe.find((safeItem) => safeItem.addr == item.addr) : item),
-            a => a.addr
-          )
-        )
-        setFlaggin(false)
-      }
-    } catch (err) {
-      console.error(err)
-      setFlaggin(false)
-    }
-  }, [
-    network,
-    data,
-    chainId,
-    library,
-    shouldFlagSafe,
-    flaggin,
-    setFlaggin
-  ])
-
-  const getData = React.useCallback((networkPassed?: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax") => {
+  const getData = (networkPassed?: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax") => {
     if (error) return
     if (stateMap.current.get('nextRefetch')) {
       const refetchTime = stateMap.current.get('nextRefetch') as any
@@ -411,7 +416,7 @@ export const FomoPage = () => {
 
     const finallyErrorClause = (err: any) => {
       console.error(`error in fetching for token data`, err)
-      stateMap.current.set('nextRefetch', moment().add(2,'minutes').toDate().getTime())
+      stateMap.current.set('nextRefetch', moment().add(2, 'minutes').toDate().getTime())
       stateMap.current.set('count', (stateMap.current.get('count') as any || 0) + 1)
       if (stateMap.current.get('count') > 6) {
         setError(true)
@@ -419,92 +424,80 @@ export const FomoPage = () => {
       setLoading(false)
     }
 
-    return fetch
-      (
-        `https://kiba-api.vercel.app/api/pairs?network=${networkString}`,
-        { method: "GET", redirect: 'follow', headers: {
-          Authorization: `adassabdaklcajcklasd1231asdcascc`
-        } }
-      ).then(async (response) => {
-        const dataV = await response.json()
-        const json = dataV;
-        const dataNew = json.filter((a: NewToken) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
-        const sorted = orderBy(dataNew, i => new Date(+i.timestamp * 1000), 'desc')
-        const activeSort = getActiveSort();
-        const newDataValue = orderBy(
-          [
-            ...sorted.filter((item: any) => item.network?.toLowerCase() === networkString?.toLowerCase() && !data?.some((i: any) => item?.addr === i?.addr))
-          ],
-          item => new Date(+item.timestamp * 1000),
-          'desc'
-        );
-        const nonExistingItems = newDataValue.filter(item => !data?.some(dataItem => dataItem.addr == item.addr))
-        const shouldFlagCallback = nonExistingItems?.length > 0
+    if (!networkString) return;
 
-        if (!!data?.length) {
-          setData(data =>
-            _.uniqBy
-              (
-                _.orderBy
-                  (
-                   [
-                     ...(data ? data : []),
-                     ...newDataValue.filter((newItem) => !data?.some((orginal) => orginal.addr === newItem.addr))
-                      .filter(({ network:zeNetwork }) => zeNetwork?.toLowerCase() === network),
-                   ],
-                    i => +i.timestamp,
-                    'desc'
-                  ),
-                a => a.addr
-              )
-          )
-        } else {
-          setData(data => newDataValue)
-        }
-        
-        if (shouldFlagCallback) {
-          await flagAllCallback(
-            _.orderBy(
-              nonExistingItems,
-              (i: NewToken) => activeSort && activeSort?.key ? i[activeSort.key as keyof NewToken] : new Date(+i.timestamp * 1000),
-              activeSort && activeSort.direction ? activeSort.direction : 'desc'
+    if (canExecute() || !!networkString) {
+
+      return fetch
+        (
+          `https://kiba-api.vercel.app/api/pairs?network=${networkString}`,
+          { method: "GET", redirect: 'follow' }
+        ).then(async (response) => {
+          const dataV = await response.json()
+          const json = dataV;
+          const dataNew = json.filter((a: NewToken) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
+          const sorted = orderBy(dataNew, i => new Date(+i.timestamp * 1000), 'desc')
+          const activeSort = getActiveSort();
+          const newDataValue = orderBy(
+            [
+              ...sorted.filter((item: any) => item.network?.toLowerCase() === networkString?.toLowerCase() && !data?.some((i: any) => item?.addr === i?.addr))
+            ],
+            item => new Date(+item.timestamp * 1000),
+            'desc'
+          );
+          const nonExistingItems = newDataValue.filter(item => !data?.some(dataItem => dataItem.addr == item.addr))
+          const shouldFlagCallback = nonExistingItems?.length > 0
+
+          if (!!data?.length) {
+            setData(data =>
+              _.uniqBy
+                (
+                  _.orderBy
+                    (
+                      [
+                        ...(data ? data : []),
+                        ...newDataValue.filter((newItem) => !data?.some((orginal) => orginal.addr === newItem.addr))
+                          .filter(({ network: zeNetwork }) => zeNetwork?.toLowerCase() === network),
+                      ],
+                      i => +i.timestamp,
+                      'desc'
+                    ),
+                  a => a.addr
+                )
             )
-          )
-        }
-        
-      })
-      .finally(finallyClause)
-      .catch(finallyErrorClause)
-  }, [
-    network, 
-    page, 
-    stateMap.current,
-    getActiveSort(), 
-    data, 
-    error,
-    flagAllCallback
-  ])
+          } else {
+            setData(data => newDataValue)
+          }
 
-  useInterval(
-    useCallback(async () => {
-      if (data?.length) {
-        setInit(true)
+          return doExecute();
+        })
+        .finally(finallyClause)
+        .catch(finallyErrorClause)
+    } else {
+      return Promise.resolve()
+    }
+  }
+
+
+  React.useEffect(() => {
+    setLoading (true)
+    
+    const interval = setInterval(async () => {
+      await getData()
+    }, 60000)
+
+    return () => {
+      if (interval != null) {
+        clearInterval(interval)
       }
-      if ((!init && !loading) && !data?.length) {
-        setInit(true)
-        setLoading(true)
-        await getData('eth')
-      }
-      else {
-        await getData();
-      }
-    }, [init, data, getData, setLoading, setInit, loading]),
-    30000,
-    true
-  )
+    }
+    setLoading(false)
+  }, [])
+
 
   const fetchedText = React.useMemo(() => lastFetched ? moment(lastFetched).fromNow() : undefined, [moment(lastFetched).fromNow()])
   const kibaBalance = useKiba(account)
+
 
   const onSortClick = (key: keyof NewToken) => {
     if (accessDenied) {
@@ -524,22 +517,39 @@ export const FomoPage = () => {
     if (activeKey && activeKey?.key !== key) {
       setSortState({
         ...sortState,
-        [key]: sortState[key] !== undefined && sortState[key] === 'asc' ? 'desc' : 'asc',
+        [key]: (sortState as any)[key] !== undefined &&  (sortState as any)[key] === 'asc' ? 'desc' : 'asc',
         [activeKey.key]: undefined
       })
     } else {
       setSortState({
         ...sortState,
-        [key]: sortState[key] !== undefined && sortState[key] === 'asc' ? 'desc' : 'asc',
+        [key]:  (sortState as any)[key] !== undefined &&  (sortState as any)[key] === 'asc' ? 'desc' : 'asc',
       })
     }
-  } 
+  }
+
+
+  const doExecute = (): void => {
+    stateMap.current.set('last_load', moment().add('seconds', 30).toDate().getTime());
+  }
+
+  const canExecute = (): boolean => {
+    if (stateMap.current.get('last_load')) {
+      const time = stateMap.current.get('last_load') as number
+      const isFetchToSoon = new Date().getTime() <= time
+      return isFetchToSoon ? false : true
+    }
+    return true
+  }
+
+  const darkTheme = useIsDarkMode()
+  const iconColor = darkTheme ? '#fff' : ''
 
   const RefetchNode = React.useMemo(() => !Boolean(stateMap.current?.get('nextRefetch')) ? null : (
     <tr>
-      <td colSpan={4} style={{borderRight: 'none'}}>
+      <td colSpan={4} style={{ borderRight: 'none' }}>
         <TYPE.small>
-          Encountered an <span style={{color: theme.error }}> error </span> 
+          Encountered an <span style={{ color: theme.error }}> error </span>
           while fetching data. Automated refetch&apos;s will occur every 2 minutes
         </TYPE.small>
       </td>
@@ -562,8 +572,10 @@ export const FomoPage = () => {
   }
 
 
-  const TableMemo = React.useMemo(() => (
-    !data?.length && !pagedData?.length && !searchValue && !loading ? RefetchNode : !loading && !!pagedData?.length && pagedData.map((item, index) => (
+  const TableMemo = React.useCallback(() => (
+    !data?.length && !pagedData?.length && !searchValue && !loading ? 
+    RefetchNode : 
+    !loading && !!pagedData?.length && pagedData.map((item, index) => (
       <CSSTransition
         key={`row_${index}_${item.addr}`}
         in={index <= 3}
@@ -585,7 +597,7 @@ export const FomoPage = () => {
               <small>{item.addr}</small>
               {/* Etherscan / Explorer Link */}
               <ExternalLinkIcon
-                style={{ fill: theme.backgroundInteractive }}
+                style={{ color: iconColor, fill: theme.backgroundInteractive }}
                 href={getNetworkLink(item)} />
 
               {/* Chart Link */}
@@ -604,8 +616,6 @@ export const FomoPage = () => {
             </div>
           </td>
 
-          {['eth'].includes(network) && item?.liquidity && <td>
-            <Badge variant={BadgeVariant.PRIMARY}>{`${item.liquidity !== '?' ? `$${item.liquidity}` : '?'}`}</Badge></td>}
           {(<td style={{ textAlign: "center" }}>
             {['bsc', 'eth'].includes(network) && <>
               {item?.safe === undefined && <Loader />}
@@ -614,30 +624,32 @@ export const FomoPage = () => {
             </>}
             {!['bsc', 'eth'].includes(item.network?.toLowerCase()) && <p>Switch networks to use this feature</p>}
           </td>)}
-          {accessDenied === false && network === 'eth' && (
+          {accessDenied === false && (network === 'eth' || network ==='bsc') && (
             <td>
               <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
-                <Liquidity addr={item.addr} ethPrice={ethPrice} ethPriceOld={ethPriceOld} bnbPrice={bnbPrice} network={item.network} />
-                {['bsc', 'eth'].includes(item.network.toLowerCase()) && 
+             {item?.screenerToken?.fdv && <Badge variant={BadgeVariant.PRIMARY}>{`$${item?.screenerToken?.fdv.toFixed(2)}`}</Badge>}
+                {['bsc', 'eth'].includes(item.network.toLowerCase()) &&
                   <>
-                    {!modalShowing && 
-                      <LinkStyledButton style={{ fontSize: 10, fontFamily: 'Archivo Narrow', borderRadius: 10, fontWeight: 600, padding: 8, color: '#4F4F62' }} 
-                      onClick={(e: any) => { 
-                        e.stopPropagation(); 
-                        e.preventDefault(); 
-                        setModalShowing(item); 
-                      }}>More
+                    {!modalShowing &&
+                      <LinkStyledButton style={{ fontSize: 10, fontFamily: 'Archivo Narrow', borderRadius: 10, fontWeight: 600, padding: 8, color: '#4F4F62' }}
+                        onClick={(e: any) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          setModalShowing(item);
+                        }}>More
                       </LinkStyledButton>
                     }
                     {!!modalShowing && modalShowing?.addr === item.addr && (
-                    <DetailsModal address={item.addr} 
-                                  isOpen={modalShowing} 
-                                  onDismiss={() => setModalShowing(undefined)} 
-                                  network={item.network.toLowerCase() as 'bsc' | 'eth'} 
-                                  symbol={item.symbol} />
+                      <DetailsModal 
+                        token={item}
+                        address={item.addr}
+                        isOpen={modalShowing}
+                        onDismiss={() => setModalShowing(undefined)}
+                        network={item.network.toLowerCase() as 'bsc' | 'eth'}
+                        symbol={item.symbol} />
                     )}
-                    </>
-                  }
+                  </>
+                }
               </div>
             </td>
           )}
@@ -679,12 +691,8 @@ export const FomoPage = () => {
     getData(network)
   }, [network])
 
-  React.useEffect(() => {
-    if (pagedData.some(i => i.safe === undefined))
-      flagAllCallback(pagedData.filter(item => item.safe === undefined))
-  }, [pagedData])
 
-  
+
   // React.useEffect(() => {
   //   if (data &&
   //     !data?.every(a => a.safe !== undefined)
@@ -823,13 +831,14 @@ export const FomoPage = () => {
                 <Info onMouseEnter={() => setShowHpInfo(true)} onMouseLeave={() => setShowHpInfo(false)} />
               </Tooltip>
             </th>}
-            {accessDenied === false && ['bsc', 'eth'].includes(network) && (
-              <>
-                {network === 'eth' && <th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>Liquidity
+            { <th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>Liquidity
                   {getActiveSort()?.key === 'liquidity' && <>
                     {getActiveSort()?.direction === 'asc' && <ChevronUp />}
                     {getActiveSort()?.direction === 'desc' && <ChevronDown />}
                   </>}</th>}
+            {accessDenied === false && ['bsc', 'eth'].includes(network) && (
+              <>
+
                 <th onClick={() => onSortClick('buyTax')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>Buy
                   {getActiveSort()?.key === 'buyTax' && <>
                     {getActiveSort()?.direction === 'asc' && <ChevronUp />}
@@ -851,7 +860,7 @@ export const FomoPage = () => {
               </>}</th>
           </tr>
           <ReactCSSTransitionGroup component="tbody">
-            {TableMemo}
+            {TableMemo()}
           </ReactCSSTransitionGroup>
         </Table>}
         {accessDenied === false && <ul style={{ display: 'flex', flexFlow: 'row wrap', justifyContent: 'center', alignItems: 'center', listStyle: 'none' }}>
