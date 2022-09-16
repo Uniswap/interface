@@ -30,7 +30,7 @@ import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
-function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
+export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
   const min = Math.min(...prices)
   const max = Math.max(...prices)

@@ -257,8 +257,13 @@ const tokenPriceQuery = graphql`
   }
 `
 
-function filterPrices(prices: TokenPrices$data['priceHistory'] | undefined) {
+export function filterPrices(prices: TokenPrices$data['priceHistory'] | undefined) {
   return prices?.filter((p): p is PricePoint => Boolean(p && p.value))
+}
+
+export function useTokenPricesFromFragment(key: TokenPrices$key | null | undefined) {
+  const fetchedTokenPrices = useFragment(tokenPricesFragment, key ?? null)?.priceHistory
+  return filterPrices(fetchedTokenPrices)
 }
 
 export function useTokenPricesCached(

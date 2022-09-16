@@ -35,7 +35,6 @@ export const bannerOverlay = style([
   },
   sprinkles({
     position: 'absolute',
-    zIndex: '0',
     width: 'full',
     backgroundColor: 'grey900',
     left: '0',
@@ -179,7 +178,6 @@ export const valuePropOverlay = style([
   },
   sprinkles({
     position: 'absolute',
-    zIndex: '0',
     width: 'full',
     backgroundColor: 'grey900',
     left: '0',

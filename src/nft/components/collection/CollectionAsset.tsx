@@ -1,27 +1,50 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import * as Card from 'nft/components/collection/Card'
+import { GenieAsset } from 'nft/types'
+import { formatWeiToDecimal } from 'nft/utils/currency'
+import { isAudio } from 'nft/utils/isAudio'
+import { isVideo } from 'nft/utils/isVideo'
 import { MouseEvent, useMemo } from 'react'
 
-import { GenieAsset } from '../../types'
-import { formatWeiToDecimal } from '../../utils/currency'
+enum AssetMediaType {
+  Image,
+  Video,
+  Audio,
+}
 
-export const CollectionAsset = ({ asset }: { asset: GenieAsset }) => {
-  // ignore structure more will go inside
-  const { notForSale } = useMemo(() => {
-    if (asset) {
-      return {
-        notForSale: asset.notForSale || BigNumber.from(asset.currentEthPrice ? asset.currentEthPrice : 0).lt(0),
-      }
-    } else {
-      return {
-        notForSale: true,
-      }
+interface CollectionAssetProps {
+  asset: GenieAsset
+  mediaShouldBePlaying: boolean
+  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
+}
+
+export const CollectionAsset = ({ asset, mediaShouldBePlaying, setCurrentTokenPlayingMedia }: CollectionAssetProps) => {
+  const { notForSale, assetMediaType } = useMemo(() => {
+    let notForSale = true
+    let assetMediaType = AssetMediaType.Image
+
+    notForSale = asset.notForSale || BigNumber.from(asset.currentEthPrice ? asset.currentEthPrice : 0).lt(0)
+    if (isAudio(asset.animationUrl)) {
+      assetMediaType = AssetMediaType.Audio
+    } else if (isVideo(asset.animationUrl)) {
+      assetMediaType = AssetMediaType.Video
+    }
+
+    return {
+      notForSale,
+      assetMediaType,
     }
   }, [asset])
 
   return (
     <Card.Container asset={asset}>
-      <Card.Image />
+      {assetMediaType === AssetMediaType.Image ? (
+        <Card.Image />
+      ) : assetMediaType === AssetMediaType.Video ? (
+        <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+      ) : (
+        <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+      )}
       <Card.DetailsContainer>
         <Card.InfoContainer>
           <Card.PrimaryRow>
