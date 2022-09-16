@@ -42,6 +42,7 @@ const StatContainer = styled.div`
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   border-radius: 0.4rem;
+  height: 5rem;
   width: 100%;
   overflow: hidden;
   position: relative;
@@ -58,7 +59,7 @@ const TopSection = styled.div`
 `
 
 const StakingColumn = styled.div`
-  max-width: 9.6rem;
+  max-width: 13rem;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -77,6 +78,7 @@ const StakingColumn = styled.div`
     font-family: 'Poppins';
     font-size: 0.4rem;
     margin-top: 0.33rem;
+    width: 100%;
     color: rgba(255, 255, 255, 0.8);
   }
 `

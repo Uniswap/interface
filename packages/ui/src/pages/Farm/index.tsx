@@ -19,19 +19,21 @@ import PoolCard from './PoolCard'
 // import { OutlineCard } from '../../components/Card'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 1132px;
-  width: 37.3rem;
+  max-width: 67.5rem;
+  width: 100%;
 `
 
 const PoolSection = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.4); //test usage
   display: grid;
+  height: 60vh;
+  overflow-y: auto;
   border-radius: 24px;
   grid-template-columns: 1fr;
   row-gap: 24px;
   width: 100%;
   justify-self: center;
-  // background: #000;
+  background: #000;
   padding: 48px;
   color: #39e1ba;
 
