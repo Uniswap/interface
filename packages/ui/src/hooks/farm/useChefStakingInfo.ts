@@ -30,6 +30,7 @@ interface AdditionalStakingInfo {
 
   stakedAmount: CurrencyAmount
   pendingReward: CurrencyAmount
+  rewardDebt: CurrencyAmount
   rewardToken: Token
 }
 export type ChefStakingInfo = MasterChefRawPoolInfo & FarmingPool & AdditionalStakingInfo
@@ -87,7 +88,8 @@ export function useChefStakingInfo(): (ChefStakingInfo | undefined)[] {
       parsedData,
       rewardToken,
       stakedAmount: CurrencyAmount.fromRawAmount(stakingToken, position.amount.toBigInt()),
-      pendingReward: CurrencyAmount.fromRawAmount(stakingToken, position.pendingSushi.toBigInt())
+      pendingReward: CurrencyAmount.fromRawAmount(stakingToken, position.pendingSushi.toBigInt()),
+      rewardDebt: CurrencyAmount.fromRawAmount(rewardToken, position.rewardDebt.toBigInt())
     }
   })
 }

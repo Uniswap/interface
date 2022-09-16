@@ -22,7 +22,6 @@ import {
   RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
 import FarmList from './Farm'
-import SimpleSushiMCManage from './Farm/FarmDetail'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -129,7 +128,6 @@ export default function App() {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} /> */}
               <Route exact strict path="/vote/:id" component={VotePage} />
               <Route exact strict path="/farm" component={FarmList} />
-              <Route exact strict path="/farm/:pid" component={SimpleSushiMCManage} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>
