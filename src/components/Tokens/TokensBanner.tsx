@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom'
 import { useShowTokensPromoBanner } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
+import { Z_INDEX } from 'theme/zIndex'
 
 import tokensPromoDark from '../../assets/images/tokensPromoDark.png'
 import tokensPromoLight from '../../assets/images/tokensPromoLight.png'
 
 const PopupContainer = styled.div<{ show: boolean }>`
-  position: absolute;
+  position: fixed;
   display: ${({ show }) => (show ? 'flex' : 'none')};
   flex-direction: column;
   padding: 12px 16px 12px 20px;
@@ -17,7 +18,7 @@ const PopupContainer = styled.div<{ show: boolean }>`
   right: 16px;
   width: 320px;
   height: 88px;
-  z-index: 5;
+  z-index: ${Z_INDEX.sticky};
   background-color: ${({ theme }) => (theme.darkMode ? theme.backgroundScrim : opacify(60, '#FDF0F8'))};
   color: ${({ theme }) => theme.textPrimary};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
