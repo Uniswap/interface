@@ -29,7 +29,7 @@ export const FilterButton = ({
   }))
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const { pathname } = useLocation()
-  const isSellPage = pathname.startsWith('nfts/sell')
+  const isSellPage = pathname.startsWith('/nfts/sell')
 
   const showFilterBadge = isSellPage
     ? collectionFilters.length > 0
