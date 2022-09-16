@@ -46,7 +46,7 @@ interface StakingModalProps {
   // userLiquidityUnstaked: TokenAmount | undefined
 }
 
-export default function StakingModal({ isOpen, onDismiss, pid, stakingInfo: thisPool }: StakingModalProps) {
+export default function StakingModal({ isOpen, onDismiss, pid, stakingInfo }: StakingModalProps) {
   const { chainId, account } = useActiveWeb3React()
   const { t } = useTranslation()
   // track and parse user input
@@ -68,7 +68,7 @@ export default function StakingModal({ isOpen, onDismiss, pid, stakingInfo: this
   // disabled
   // const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const signatureData = null
-  const stakingCurrency = thisPool?.stakingToken
+  const stakingCurrency = stakingInfo?.stakingToken
 
   const tokenAmount = stakingCurrency
     ? new TokenAmount(stakingCurrency, utils.parseUnits(typedValue, stakingCurrency.decimals).toString())

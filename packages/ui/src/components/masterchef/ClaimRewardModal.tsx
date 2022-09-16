@@ -30,7 +30,7 @@ interface ClaimRewardModalProps {
   stakingInfo: ChefStakingInfo
 }
 
-export default function ClaimRewardModal({ isOpen, onDismiss, pid, stakingInfo: thisPool }: ClaimRewardModalProps) {
+export default function ClaimRewardModal({ isOpen, onDismiss, pid, stakingInfo }: ClaimRewardModalProps) {
   const { account } = useActiveWeb3React()
   const { t } = useTranslation()
   // monitor call to help UI loading state
@@ -41,7 +41,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid, stakingInfo: 
   const masterChef = useMasterChef(Chef.MINICHEF)
 
   // track and parse user input
-  const stakingCurrency = thisPool?.stakingToken
+  const stakingCurrency = stakingInfo?.stakingToken
   function wrappedOndismiss() {
     setHash(undefined)
     setAttempting(false)
@@ -77,20 +77,24 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid, stakingInfo: 
             <TYPE.mediumHeader color="#FFFFFF">{t('claimRewards')}</TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOndismiss} color="#FFFFFF" />
           </RowBetween>
-          {thisPool.pendingReward && (
+          {stakingInfo.pendingReward && (
             <AutoColumn justify="center" gap="md">
               <TYPE.white fontWeight={600} fontSize={36}>
-                {<FormattedCurrencyAmount currencyAmount={thisPool.pendingReward} />}
+                {<FormattedCurrencyAmount currencyAmount={stakingInfo.pendingReward} />}
               </TYPE.white>
               <TYPE.white>
-                {t('unclaimed')} {thisPool.rewardToken.symbol}
+                {t('unclaimed')} {stakingInfo.rewardToken.symbol}
               </TYPE.white>
             </AutoColumn>
           )}
           {/* <TYPE.subHeader style={{ textAlign: 'center' }}>
             Unused sub header, we will block this. Enable this when we need to do so.
           </TYPE.subHeader> */}
-          <ButtonError disabled={!!error} error={!!error && !!thisPool.stakedAmount} onClick={onHarvestButtonClicked}>
+          <ButtonError
+            disabled={!!error}
+            error={!!error && !!stakingInfo.stakedAmount}
+            onClick={onHarvestButtonClicked}
+          >
             {error ?? t('claim')}
           </ButtonError>
         </ContentWrapper>
@@ -99,7 +103,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid, stakingInfo: 
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.white fontSize={20}>
-              {t('claiming')} {thisPool?.pendingReward.toSignificant(4)} {thisPool?.rewardToken.symbol}
+              {t('claiming')} {stakingInfo?.pendingReward.toSignificant(4)} {stakingInfo?.rewardToken.symbol}
             </TYPE.white>
           </AutoColumn>
         </LoadingView>
@@ -110,7 +114,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid, stakingInfo: 
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
             <TYPE.white fontSize={20}>Withdrew {stakingCurrency?.symbol}!</TYPE.white>
             <TYPE.white fontSize={20}>
-              {t('claimed')} {thisPool.rewardToken.symbol}!
+              {t('claimed')} {stakingInfo.rewardToken.symbol}!
             </TYPE.white>
           </AutoColumn>
         </SubmittedView>

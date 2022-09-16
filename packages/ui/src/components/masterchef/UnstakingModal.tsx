@@ -33,7 +33,7 @@ interface StakingModalProps {
   stakingInfo: ChefStakingInfo
 }
 
-export default function UnstakingModal({ isOpen, onDismiss, pid, stakingInfo: thisPool }: StakingModalProps) {
+export default function UnstakingModal({ isOpen, onDismiss, pid, stakingInfo }: StakingModalProps) {
   const { account, chainId } = useActiveWeb3React()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
   const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
@@ -45,14 +45,14 @@ export default function UnstakingModal({ isOpen, onDismiss, pid, stakingInfo: th
   const masterChef = useMasterChef(Chef.MINICHEF)
 
   // track and parse user input
-  const stakingCurrency = thisPool?.stakingToken
+  const stakingCurrency = stakingInfo?.stakingToken
 
   const rewardToken = UNI[chainId || 420]
   const positions = useChefPositions(mchefContract, undefined, chainId)
 
-  const parsedStakedAmount = thisPool?.stakedAmount
+  const parsedStakedAmount = stakingInfo?.stakedAmount
 
-  const parsedPendingSushiAmount = thisPool?.pendingReward
+  const parsedPendingSushiAmount = stakingInfo?.pendingReward
   function wrappedOndismiss() {
     setHash(undefined)
     setAttempting(false)
