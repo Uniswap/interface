@@ -8,6 +8,7 @@ export const ChainSwitcher = style([
   sprinkles({
     borderRadius: '8',
     paddingX: '12',
+    height: '40',
     cursor: 'pointer',
     border: 'none',
     color: 'blackBlue',

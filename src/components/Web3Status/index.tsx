@@ -69,6 +69,7 @@ const Web3StatusConnectNavbar = styled.button<{ faded?: boolean }>`
   border: none;
   cursor: pointer;
   padding: 0 12px;
+  height: 40px;
 
   :hover,
   :active,
