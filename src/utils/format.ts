@@ -125,3 +125,34 @@ export function formatNumber(num: NullUndefined<number>) {
 
   return formatter.format(num)
 }
+
+export function formatNFTFloorPrice(num: NullUndefined<number>) {
+  if (!num) {
+    return '-'
+  }
+
+  if (num === 0) {
+    return '0'
+  }
+
+  if (num < 0.001) {
+    return '<0.001'
+  }
+
+  if (num < 1) {
+    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 3 }).format(num)
+  }
+
+  if (num < 1000000) {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(num)
+  }
+
+  return new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(num)
+}

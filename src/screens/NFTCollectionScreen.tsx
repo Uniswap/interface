@@ -24,7 +24,7 @@ import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { formatNumber } from 'src/utils/format'
+import { formatNumber, formatNFTFloorPrice } from 'src/utils/format'
 import { openUri } from 'src/utils/linking'
 
 interface Props {
@@ -81,7 +81,9 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                   {t('Floor')}
                 </Text>
                 <Text variant="subhead">
-                  {t('{{price}} ETH', { price: formatNumber(collection?.stats.floor_price) })}
+                  {t('{{price}} ETH', {
+                    price: formatNFTFloorPrice(collection?.stats.floor_price),
+                  })}
                 </Text>
               </Flex>
             )}
