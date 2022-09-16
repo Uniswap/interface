@@ -89,8 +89,10 @@ export function useSwapNowHandler() {
       mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_SWAP_NOW_CLICKED, { campaign_name: selectedCampaign?.name })
       let url = selectedCampaign?.enterNowUrl + '?networkId=' + chainId
       if (selectedCampaign?.eligibleTokens?.length) {
-        const outputCurrency = selectedCampaign?.eligibleTokens[0].address
-        url += '&outputCurrency=' + outputCurrency
+        const firstTokenOfChain = selectedCampaign.eligibleTokens.find(token => token.chainId === chainId)
+        if (firstTokenOfChain) {
+          url += '&outputCurrency=' + firstTokenOfChain.address
+        }
       }
       window.open(url)
     },

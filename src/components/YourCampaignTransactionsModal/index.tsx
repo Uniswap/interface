@@ -97,12 +97,17 @@ export default function YourCampaignTransactionsModal() {
           </TableHeader>
           <TableBodyWrapper>
             {userCampaignTransactions && userCampaignTransactions.length === 0 && (
-              <Flex flexDirection="column" alignItems="center" justifyContent="center" style={{ minHeight: '20vh' }}>
-                <Info size={48} color={theme.subText} style={{ marginBottom: '16px' }} />
-                <Text>
+              <Flex
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                sx={{ minHeight: '20vh', padding: '0 8px' }}
+              >
+                <Info size={48} color={theme.subText} style={{ margin: '16px 0' }} />
+                <Text as="span" textAlign="center">
                   <Trans>You haven&apos;t made any eligible transactions yet.</Trans>
                 </Text>
-                <Text mt="8px">
+                <Text as="span" textAlign="center" mt="8px">
                   <Trans>Read the rules for this campaign & start swapping!</Trans>
                 </Text>
               </Flex>

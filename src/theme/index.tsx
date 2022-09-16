@@ -412,5 +412,4 @@ export const ThemedGlobalStyle = createGlobalStyle`
   .grecaptcha-badge {
     visibility: hidden;
   }
-
 `

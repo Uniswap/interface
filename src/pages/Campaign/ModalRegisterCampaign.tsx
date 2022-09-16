@@ -1,9 +1,9 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import React from 'react'
+import { isMobile } from 'react-device-detect'
 import { useSelector } from 'react-redux'
 import { Flex, Text } from 'rebass'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import RegisterCampaignBg from 'assets/images/register-campaign-bg.png'
 import { ButtonPrimary } from 'components/Button'
@@ -13,6 +13,13 @@ import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useRegisterCampaignModalToggle } from 'state/application/hooks'
 import { useSwapNowHandler } from 'state/campaigns/hooks'
 
+const CustomModal = styled(Modal)`
+  ${isMobile &&
+  css`
+    align-self: unset !important;
+  `}
+`
+
 export default function ModalRegisterCampaign() {
   const isRegisterCampaignModalOpen = useModalOpen(ApplicationModal.REGISTER_CAMPAIGN)
   const toggleRegisterCampaignModal = useRegisterCampaignModalToggle()
@@ -20,7 +27,7 @@ export default function ModalRegisterCampaign() {
   const handleSwapNow = useSwapNowHandler()
 
   return (
-    <Modal
+    <CustomModal
       isOpen={isRegisterCampaignModalOpen}
       onDismiss={toggleRegisterCampaignModal}
       maxHeight={70}
@@ -51,7 +58,7 @@ export default function ModalRegisterCampaign() {
           </ResponsiveButtonPrimary>
         </RegisterCampaignBackground>
       </Flex>
-    </Modal>
+    </CustomModal>
   )
 }
 
