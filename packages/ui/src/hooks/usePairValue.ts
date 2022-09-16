@@ -4,16 +4,19 @@ import { useTotalSupply } from 'data/TotalSupply'
 // import useUSDCPrice from 'utils/useUSDCPrice'
 
 export function usePairUSDValue(pair: Pair | null, liquidity?: TokenAmount) {
-  console.debug('usePairUSDValue:1')
   const totalSupplyOfLPToken = useTotalSupply(pair?.liquidityToken)
-  console.debug('usePairUSDValue:2', pair)
   // @todo: should be compatible with a single token
   if (!pair) return '--.--'
   const isUSDCInThisPair = pair.involvesToken(USDC)
   const isPair0USDC = pair.token0.equals(USDC)
   // const usdPriceOfToken0 = useUSDCPrice(pair.token0)
   // const usdPriceOfToken1 = useUSDCPrice(pair.token1)
-  console.debug('usePairUSDValue:3')
+  console.debug('usePairUSDValue:state', {
+    pair,
+    isPair0USDC,
+    isUSDCInThisPair,
+    totalSupplyOfLPToken
+  })
 
   // let price: Price | undefined
   console.debug(

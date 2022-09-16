@@ -20,7 +20,7 @@ import { useChefContract } from 'hooks/farm/useChefContract'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 import { usePairSidesValueEstimate, usePairUSDValue } from 'hooks/usePairValue'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -116,8 +116,14 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const [, stakingTokenPair] = stakingInfo.stakingPair
   // const [, stakingTokenPair] = usePair(currency0, currency1, (stakingInfo.stakingAsset as LiquidityAsset).isStable)
 
-  console.info('totalSupplyOfStakingToken', totalSupplyOfStakingToken)
-  console.info('stakingTokenPair', stakingTokenPair)
+  useEffect(() => {
+    console.debug('PoolCard data:', {
+      pid,
+      stakingTokenPair,
+      totalSupplyOfStakingToken
+    })
+  }, [pid, stakingTokenPair, totalSupplyOfStakingToken])
+
   // // let returnOverMonth: Percent = new Percent('0')
   // let valueOfTotalStakedAmountInWETH: TokenAmount | undefined
   // if (totalSupplyOfStakingToken && stakingTokenPair) {
@@ -161,7 +167,6 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
     try {
       if (positions && positions[pid] && positions[pid].pendingSushi) {
         const bi = (positions[pid].pendingSushi as BigNumber).toBigInt()
-        console.debug('parsedPendingSushiAmount::bi', bi)
         return CurrencyAmount.fromRawAmount(rewardToken, bi).toSignificant(4)
       }
     } catch (error) {
