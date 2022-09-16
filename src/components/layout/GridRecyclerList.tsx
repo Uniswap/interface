@@ -19,11 +19,14 @@ const COLUMN_COUNT = 2
 const GRID_CELL_SPAN = 1
 const NFT_VIEW_TYPE = 'NFT'
 
+const ESTIMATED_NFT_METADATA_HEIGHT = 40
+const FOOTER_HEIGHT = 300
+
 const layoutProvider = new GridLayoutProvider(
   COLUMN_COUNT,
   () => NFT_VIEW_TYPE,
   () => GRID_CELL_SPAN,
-  () => dimensions.fullWidth / COLUMN_COUNT // used as a heuristic
+  () => dimensions.fullWidth / COLUMN_COUNT + ESTIMATED_NFT_METADATA_HEIGHT // used as a heuristic
 )
 
 export function GridRecyclerList<T>({
@@ -48,13 +51,8 @@ export function GridRecyclerList<T>({
       forceNonDeterministicRendering={true}
       layoutProvider={layoutProvider}
       renderAheadOffset={300}
-      rowRenderer={(_type: string | number, item: T) => {
-        return (
-          <Box aspectRatio={1} borderColor="backgroundBackdrop" borderWidth={2} width="100%">
-            {renderItem(item)}
-          </Box>
-        )
-      }}
+      renderFooter={() => <Box height={FOOTER_HEIGHT} width="100%" />}
+      rowRenderer={(_type: string | number, item: T) => renderItem(item)}
       scrollThrottle={TAB_VIEW_SCROLL_THROTTLE}
       scrollViewProps={{ showsVerticalScrollIndicator: false }}
       style={tabViewScrollProps?.contentContainerStyle}
