@@ -47,18 +47,17 @@ export function useChefPositions(contract?: Contract | null, rewarder?: Contract
     if (!pendingSushi && !userInfo) {
       return []
     }
-    return zip(pendingSushi, userInfo)
-      .map((data, i) => ({
-        // @todo: possible undefined
-        id: (args as string[][])[i][0],
-        pendingSushi: data[0]?.result?.[0] || Zero,
-        amount: data[1]?.result?.[0] || Zero,
-        chef: getChef(),
-        rewardDebt: data[1]?.result?.[1] || Zero
-        // pendingTokens: data?.[2]?.result,
-      }))
-      .filter(({ pendingSushi, amount }) => {
-        return (pendingSushi && !pendingSushi.isZero()) || (amount && !amount.isZero())
-      })
+    return zip(pendingSushi, userInfo).map((data, i) => ({
+      // @todo: possible undefined
+      id: (args as string[][])[i][0],
+      pendingSushi: data[0]?.result?.[0] || Zero,
+      amount: data[1]?.result?.[0] || Zero,
+      chef: getChef(),
+      rewardDebt: data[1]?.result?.[1] || Zero
+      // pendingTokens: data?.[2]?.result,
+    }))
+    // .filter(({ pendingSushi, amount }) => {
+    //   return (pendingSushi && !pendingSushi.isZero()) || (amount && !amount.isZero())
+    // })
   }, [args, getChef, pendingSushi, userInfo])
 }
