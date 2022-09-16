@@ -15,7 +15,7 @@ export function initializeAnalytics() {
     console.error(`${keyName} is undefined, Amplitude analytics will not run.`)
     return
   }
-
+  
   init(
     API_KEY,
     /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
@@ -23,7 +23,7 @@ export function initializeAnalytics() {
     {
       // Disable tracking of private user information by Amplitude
       trackingOptions: {
-        ipAddress: false,
+        ipAddress: isProductionEnv() ? false : true,
         carrier: false,
         city: false,
         region: false,
