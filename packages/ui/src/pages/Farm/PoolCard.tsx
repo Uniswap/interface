@@ -14,14 +14,13 @@ import { Chef } from 'constants/farm/chef.enum'
 // import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG, LiquidityAsset } from 'constants/farming.config'
 import { UNI, ZERO_ADDRESS } from 'constants/index'
-import { usePair } from 'data/Reserves'
 import { BigNumber } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
 import { useChefContract } from 'hooks/farm/useChefContract'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 import { usePairSidesValueEstimate, usePairUSDValue } from 'hooks/usePairValue'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -114,7 +113,8 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const backgroundColor = useColor()
 
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakingToken)
-  const [, stakingTokenPair] = usePair(currency0, currency1, (stakingInfo.stakingAsset as LiquidityAsset).isStable)
+  const [, stakingTokenPair] = stakingInfo.stakingPair
+  // const [, stakingTokenPair] = usePair(currency0, currency1, (stakingInfo.stakingAsset as LiquidityAsset).isStable)
 
   console.info('totalSupplyOfStakingToken', totalSupplyOfStakingToken)
   console.info('stakingTokenPair', stakingTokenPair)
@@ -142,13 +142,6 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
 
   const isStaking = true
   const rewardToken = UNI[chainId || 420]
-
-  useEffect(() => {
-    console.log('stakingInfo::tvl:', stakingInfo.tvl?.toSignificant(6))
-  }, [stakingInfo])
-  useEffect(() => {
-    console.debug('stakingTokenPair', stakingTokenPair)
-  }, [stakingTokenPair])
 
   const totalValueLockedInUSD = usePairUSDValue(stakingTokenPair, stakingInfo.tvl)
 
