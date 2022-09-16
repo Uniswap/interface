@@ -8,7 +8,7 @@ import { useCollectionFilters } from 'nft/hooks'
 import { FocusEventHandler, FormEvent, useMemo, useState } from 'react'
 import { useReducer } from 'react'
 
-import { Trait } from '../../hooks/useCollectionAttributes'
+import { Trait } from '../../hooks/useCollectionFilters'
 import { groupBy } from '../../utils/groupBy'
 import { Input } from '../layout/Input'
 import { TraitSelect } from './TraitSelect'

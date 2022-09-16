@@ -176,6 +176,10 @@ export const SelectPage = () => {
   }, [sortBy, orderByASC, listFilter])
 
   useEffect(() => {
+    setDisplayAssets(walletAssets, listFilter)
+  }, [walletAssets, listFilter, setDisplayAssets])
+
+  useEffect(() => {
     if (ownerCollections?.length && collectionStats?.length) {
       const ownerCollectionsCopy = [...ownerCollections]
       for (const collection of ownerCollectionsCopy) {

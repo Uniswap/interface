@@ -83,6 +83,8 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     return collectionAssets.pages.flat()
   }, [collectionAssets, AssetsFetchSuccess])
 
+  console.log(collectionNfts?.[0]?.totalCount)
+
   useEffect(() => {
     setUniformHeight(UniformHeights.unset)
   }, [contractAddress])
