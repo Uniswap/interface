@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css'
+import { calc } from '@vanilla-extract/css-utils'
 import { breakpoints, sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const card = style([
@@ -21,6 +22,10 @@ export const card = style([
     },
   },
 ])
+
+export const loadingBackground = style({
+  background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+})
 
 export const notSelectedCard = style([
   card,
@@ -128,5 +133,18 @@ export const erc1155MinusButton = style([
       backgroundColor: themeVars.colors.error,
       color: themeVars.colors.blackBlue,
     },
+  },
+])
+
+export const playbackSwitch = style([
+  sprinkles({
+    position: 'absolute',
+    width: '40',
+    height: '40',
+    zIndex: '1',
+  }),
+  {
+    marginLeft: calc.subtract('100%', '50px'),
+    transform: 'translateY(-56px)',
   },
 ])

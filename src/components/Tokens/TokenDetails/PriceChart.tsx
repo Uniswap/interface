@@ -30,7 +30,7 @@ import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
-function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
+export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
   const min = Math.min(...prices)
   const max = Math.max(...prices)
@@ -254,8 +254,8 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
-  /* Default curve doesn't look good for the ALL chart */
-  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : 0.9
+  /* Default curve doesn't look good for the HOUR/ALL chart */
+  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : timePeriod === TimePeriod.HOUR ? 1 : 0.9
 
   return (
     <>

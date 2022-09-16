@@ -78,6 +78,7 @@ export default function Updater() {
           },
         })
       )
+
       const tx = transactions[chainId]?.[hash]
 
       if (tx.info.type === TransactionType.SWAP && trade) {

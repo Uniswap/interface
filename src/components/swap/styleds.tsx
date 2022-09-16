@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components/macro'
-import { Z_INDEX } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { AutoColumn } from '../Column'
 

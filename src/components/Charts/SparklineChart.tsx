@@ -1,49 +1,45 @@
-import { curveCardinalOpen, scaleLinear } from 'd3'
+import { curveCardinal, scaleLinear } from 'd3'
+import { SingleTokenData, TimePeriod, useTokenPricesFromFragment } from 'graphql/data/Token'
 import React from 'react'
 import { useTheme } from 'styled-components/macro'
 
-import data from './data.json'
+import { DATA_EMPTY, getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
 import LineChart from './LineChart'
 
 type PricePoint = { value: number; timestamp: number }
 
-function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
-  const prices = pricePoints.map((x) => x.value)
-  const min = Math.min(...prices)
-  const max = Math.max(...prices)
-  return [min, max]
-}
-
 interface SparklineChartProps {
   width: number
   height: number
+  tokenData: SingleTokenData
+  pricePercentChange: number | undefined | null
+  timePeriod: TimePeriod
 }
 
-function SparklineChart({ width, height }: SparklineChartProps) {
+function SparklineChart({ width, height, tokenData, pricePercentChange, timePeriod }: SparklineChartProps) {
   const theme = useTheme()
+  // for sparkline
+  const pricePoints = useTokenPricesFromFragment(tokenData?.prices?.[0]) ?? []
+  const hasData = pricePoints.length !== 0
+  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
+  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
+  const widthScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, 124])
+  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([42, 0])
 
-  /* TODO: Implement API calls & cache to use here */
-  const pricePoints = data.day
-  const startingPrice = pricePoints[0]
-  const endingPrice = pricePoints[pricePoints.length - 1]
-
-  const timeScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width])
-  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([height, 0])
-
-  const isPositive = endingPrice.value >= startingPrice.value
+  /* Default curve doesn't look good for the ALL chart */
+  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : 0.9
 
   return (
     <LineChart
       data={pricePoints}
-      getX={(p: PricePoint) => timeScale(p.timestamp)}
+      getX={(p: PricePoint) => widthScale(p.timestamp)}
       getY={(p: PricePoint) => rdScale(p.value)}
-      curve={curveCardinalOpen.tension(0.9)}
-      marginTop={0}
-      color={isPositive ? theme.accentSuccess : theme.accentFailure}
+      curve={curveCardinal.tension(curveTension)}
+      color={pricePercentChange && pricePercentChange < 0 ? theme.accentFailure : theme.accentSuccess}
       strokeWidth={1.5}
       width={width}
       height={height}
-    ></LineChart>
+    />
   )
 }
 
