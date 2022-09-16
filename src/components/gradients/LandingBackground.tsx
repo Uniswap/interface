@@ -3,7 +3,8 @@ import React, { memo } from 'react'
 import { Image, ImageStyle, StyleSheet, useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import {
-  LANDING_BACKGROUND,
+  LANDING_BACKGROUND_LIGHT,
+  LANDING_BACKGROUND_DARK,
   LANDING_BLUR_BACKGROUND_LIGHT,
   LANDING_BLUR_BACKGROUND_DARK,
 } from 'src/assets'
@@ -27,7 +28,10 @@ export const LandingBackground = memo(() => {
 
   return (
     <GradientBackground>
-      <Image source={LANDING_BACKGROUND} style={backgroundImageStyle} />
+      <Image
+        source={isDarkMode ? LANDING_BACKGROUND_DARK : LANDING_BACKGROUND_LIGHT}
+        style={backgroundImageStyle}
+      />
       <Box left={0} position="absolute" right={0} top={0}>
         <Image source={isDarkMode ? LANDING_BLUR_BACKGROUND_DARK : LANDING_BLUR_BACKGROUND_LIGHT} />
       </Box>
