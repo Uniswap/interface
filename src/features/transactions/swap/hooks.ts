@@ -140,11 +140,11 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     currencyOut?.isToken ? currencyOut : undefined,
     activeAccount?.address
   )
+
   const { balance: nativeInBalance } = useNativeCurrencyBalance(
     currencyIn?.chainId ?? ChainId.Mainnet,
     activeAccount?.address
   )
-
   const { balance: nativeOutBalance } = useNativeCurrencyBalance(
     currencyOut?.chainId ?? ChainId.Mainnet,
     activeAccount?.address
@@ -247,15 +247,26 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tokenOutBalance,
   ])
 
-  const warnings = getSwapWarnings(t, {
-    account: activeAccount ?? undefined,
+  const warnings = useMemo(() => {
+    return getSwapWarnings(t, {
+      account: activeAccount ?? undefined,
+      currencyAmounts,
+      currencyBalances,
+      exactCurrencyField,
+      currencies,
+      trade,
+      nativeCurrencyBalance: nativeInBalance,
+    })
+  }, [
+    activeAccount,
+    currencies,
     currencyAmounts,
     currencyBalances,
     exactCurrencyField,
-    currencies,
+    nativeInBalance,
+    t,
     trade,
-    nativeCurrencyBalance: nativeInBalance,
-  })
+  ])
 
   return useMemo(() => {
     return {
@@ -499,7 +510,7 @@ export function useTokenApprovalInfo(derivedSwapInfo: DerivedSwapInfo): {
 
 type TokenApprovalInfo = {
   txRequest: providers.TransactionRequest | null
-  allowance: BigNumber | null
+  allowance: string | null
 }
 
 const NO_APPROVAL_REQUIRED = { txRequest: null, allowance: null }
@@ -537,7 +548,7 @@ const getTokenApprovalInfo = async (
   const allowance = await tokenContract.callStatic.allowance(address, spender)
   // tokens that can call `permit` do not need approve
   if (PERMITTABLE_TOKENS[chainId]?.[currencyIn.address] || allowance.gt(trade.quote.amount)) {
-    return { txRequest: null, allowance }
+    return { txRequest: null, allowance: allowance.toString() }
   }
 
   let baseTransaction
@@ -556,12 +567,17 @@ const getTokenApprovalInfo = async (
     )
   }
 
-  return { txRequest: { ...baseTransaction, from: address, chainId }, allowance }
+  return {
+    txRequest: { ...baseTransaction, from: address, chainId },
+
+    // cast as string so that downstream hooks can properly memoize based on string value
+    allowance: allowance.toString(),
+  }
 }
 
 export function useSwapTransactionRequest(
   derivedSwapInfo: DerivedSwapInfo,
-  tokenAllowance?: BigNumber | null
+  tokenAllowance?: string | null
 ): providers.TransactionRequest | undefined {
   const {
     chainId,
@@ -608,7 +624,9 @@ export function useSwapTransactionRequest(
 
       // TODO: use gasLimit from tenderly simulation if token is not approved
       gasLimit:
-        tokenAllowance && !tokenAllowance.eq(0) ? undefined : SWAP_GAS_LIMIT_FALLBACKS[chainId],
+        tokenAllowance && !BigNumber.from(tokenAllowance).eq(0)
+          ? undefined
+          : SWAP_GAS_LIMIT_FALLBACKS[chainId],
     }
   }, [address, chainId, permitInfo, permitInfoLoading, tokenAllowance, trade, wrapType])
 }
@@ -641,7 +659,11 @@ export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo) {
     txRequest: txWithGasSettings,
     approveTxRequest: approveTxWithGasSettings,
     totalGasFee,
-    isLoading: approveLoading,
+
+    // TODO: fix tokenApprovalInfo to not recalculate when non-relevant fields from derivedSwapInfo change
+    // for now, only block on first load when no `tokenApprovalInfo` has been found
+    // useTokenApprovalInfo will rerender on new `trade` but could return same info
+    isLoading: !tokenApprovalInfo && approveLoading,
   }
 }
 

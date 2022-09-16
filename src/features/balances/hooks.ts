@@ -31,13 +31,13 @@ export function useTokenBalance(
     blocksPerFetchOption
   )
 
+  const amount = callState.result?.[0]?.toString()
+  const loading = callState.loading
   const currencyAmount = useMemo(() => {
-    const value = callState.result?.[0]
-    const amount = value?.toString()
     return amount && token ? CurrencyAmount.fromRawAmount<Token>(token, amount) : undefined
-  }, [callState.result, token])
+  }, [amount, token])
 
-  return { balance: currencyAmount, loading: callState.loading }
+  return useMemo(() => ({ balance: currencyAmount, loading: loading }), [currencyAmount, loading])
 }
 
 export function useNativeCurrencyBalance(
@@ -56,11 +56,17 @@ export function useNativeCurrencyBalance(
   )
 
   const loading = callState.loading
+  const amount = callState.result?.[0]?.toString()
   const balance = useMemo(() => {
-    const value = callState.result?.[0]
-    if (!value) return CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), 0)
-    return CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), value.toString())
-  }, [callState, chainId])
+    if (!amount) return CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), 0)
+    return CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), amount)
+  }, [amount, chainId])
 
-  return { balance, loading }
+  return useMemo(
+    () => ({
+      balance,
+      loading,
+    }),
+    [balance, loading]
+  )
 }

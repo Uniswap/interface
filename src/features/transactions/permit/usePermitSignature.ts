@@ -44,7 +44,7 @@ export interface PermitTokenParams {
   tokenAddress: string
   spender: Address
   txAmount: string
-  allowance: BigNumber | null
+  allowance: string | null
 }
 
 const EIP712_DOMAIN_TYPE_NO_VERSION = [
@@ -78,7 +78,7 @@ const PERMIT_ALLOWED_TYPE = [
 
 export function usePermitSignature(
   derivedSwapInfo: DerivedSwapInfo,
-  tokenAllowance?: BigNumber | null
+  tokenAllowance?: string | null
 ) {
   const {
     chainId,
@@ -132,7 +132,8 @@ async function getPermitSignature(
   const { address } = account
   const permitInfo = PERMITTABLE_TOKENS[chainId]?.[tokenAddress]
 
-  if (allowance?.gt(txAmount) || !permitInfo) {
+  if (!allowance) return null
+  if (!permitInfo || BigNumber.from(allowance).gt(txAmount)) {
     logger.info('permitSaga', 'signPermitMessage', 'Permit not needed or not possible')
     return null
   }

@@ -65,18 +65,25 @@ export function useTokenInfoFromAddress(
     NEVER_RELOAD
   )
 
+  // x.result returns a new array object every render, so memoize based on inner value
+  const decimalValue = decimals.result?.[0]
+  const symbolValue = symbol.result?.[0]
+  const symbolBytesValue = symbolBytes32.result?.[0]
+  const tokenNameValue = tokenName.result?.[0]
+  const tokenBytesValue = tokenNameBytes32.result?.[0]
+
   return useMemo(() => {
     if (token) return token
     if (tokenAddress === null) return null
     if (!chainId || !address) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
-    if (decimals.result) {
+    if (decimalValue) {
       return new Token(
         chainId,
         address,
-        decimals.result[0],
-        parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
-        parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token')
+        decimalValue,
+        parseStringOrBytes32(symbolValue, symbolBytesValue, 'UNKNOWN'),
+        parseStringOrBytes32(tokenNameValue, tokenBytesValue, 'Unknown Token')
       )
     }
     return undefined
@@ -84,15 +91,15 @@ export function useTokenInfoFromAddress(
     address,
     chainId,
     decimals.loading,
-    decimals.result,
+    decimalValue,
     symbol.loading,
-    symbol.result,
-    symbolBytes32.result,
+    symbolValue,
+    symbolBytesValue,
     token,
     tokenAddress,
     tokenName.loading,
-    tokenName.result,
-    tokenNameBytes32.result,
+    tokenNameValue,
+    tokenBytesValue,
   ])
 }
 

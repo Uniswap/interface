@@ -26,34 +26,34 @@ export function useTransactionGasFee(
   speed: GasSpeed = GasSpeed.Urgent
 ): TransactionGasFeeInfo | undefined {
   // TODO: Handle error responses from gas endpoint
-  const { currentData } = useGasFeeQuery(tx ?? skipToken, {
+  const { data } = useGasFeeQuery(tx ?? skipToken, {
     // poll new gas fees around every block time
     // TODO: use faster speed for Polygon, which has around ~3s block times
     pollingInterval: PollingInterval.Fast,
   })
 
   return useMemo(() => {
-    if (!currentData) return undefined
+    if (!data) return undefined
 
     const params =
-      currentData.type === FeeType.Eip1559
+      data.type === FeeType.Eip1559
         ? {
-            maxPriorityFeePerGas: currentData.maxPriorityFeePerGas[speed],
-            maxFeePerGas: currentData.maxFeePerGas[speed],
-            gasLimit: currentData.gasLimit,
+            maxPriorityFeePerGas: data.maxPriorityFeePerGas[speed],
+            maxFeePerGas: data.maxFeePerGas[speed],
+            gasLimit: data.gasLimit,
           }
         : {
-            gasPrice: currentData.gasPrice[speed],
-            gasLimit: currentData.gasLimit,
+            gasPrice: data.gasPrice[speed],
+            gasLimit: data.gasLimit,
           }
 
     return {
-      type: currentData.type,
+      type: data.type,
       speed,
-      gasFee: currentData.gasFee[speed],
+      gasFee: data.gasFee[speed],
       params,
     }
-  }, [currentData, speed])
+  }, [data, speed])
 }
 
 // TODO: deprecate this
