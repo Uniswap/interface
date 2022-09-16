@@ -1,18 +1,20 @@
 import { selectionAsync } from 'expo-haptics'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ViewStyle } from 'react-native'
+import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
-import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SendButton } from 'src/components/buttons/SendButton'
-import { AppBackground } from 'src/components/gradients/AppBackground'
-import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
-import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
+import { NFTCollectionsTab } from 'src/components/home/NFTCollectionsTab'
+import { TokensTab } from 'src/components/home/TokensTab'
 import { Flex } from 'src/components/layout'
-import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import TabbedScrollScreen, {
+  TabViewScrollProps,
+} from 'src/components/layout/screens/TabbedScrollScreen'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
@@ -20,26 +22,48 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
-import {
-  useActiveAccountAddressWithThrow,
-  useActiveAccountWithThrow,
-} from 'src/features/wallet/hooks'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 
+const TOKENS_KEY = 'tokens'
+const NFTS_KEY = 'nfts'
 export function HomeScreen() {
   // imports test account for easy development/testing
   useTestAccount()
   useBiometricCheck()
   const activeAccount = useActiveAccountWithThrow()
+  const { t } = useTranslation()
+
+  const renderTab = useMemo(() => {
+    return (route: Route, scrollProps: TabViewScrollProps, loadingContainerStyle: ViewStyle) => {
+      switch (route?.key) {
+        case NFTS_KEY:
+          return (
+            <NFTCollectionsTab
+              loadingContainerStyle={loadingContainerStyle}
+              owner={activeAccount.address}
+              tabViewScrollProps={scrollProps}
+            />
+          )
+        case TOKENS_KEY:
+          return (
+            <TokensTab
+              loadingContainerStyle={loadingContainerStyle}
+              owner={activeAccount.address}
+              tabViewScrollProps={scrollProps}
+            />
+          )
+      }
+      return null
+    }
+  }, [activeAccount.address])
 
   return (
-    <>
-      <HeaderScrollScreen
-        background={<AppBackground />}
-        contentHeader={<AccountHeader />}
-        fixedHeader={<FixedHeader />}>
-        <Flex gap="lg" px="sm">
-          <Flex gap="md" p="sm">
+    <TabbedScrollScreen
+      headerContent={
+        <Flex bg="backgroundBackdrop" gap="sm" pb="md">
+          <AccountHeader />
+          <Flex gap="sm" px="lg">
             <TotalBalance showRelativeChange owner={activeAccount.address} />
             {activeAccount?.type !== AccountType.Readonly && (
               <Flex pt="xxs">
@@ -47,22 +71,14 @@ export function HomeScreen() {
               </Flex>
             )}
           </Flex>
-          <Flex gap="sm">
-            <PortfolioTokensSection count={4} owner={activeAccount.address} />
-            <PortfolioNFTsSection count={6} owner={activeAccount.address} />
-          </Flex>
         </Flex>
-      </HeaderScrollScreen>
-    </>
-  )
-}
-
-function FixedHeader() {
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
-  return (
-    <Flex centered mb="xxs">
-      <AddressDisplay address={activeAccountAddress} variant="mediumLabel" />
-    </Flex>
+      }
+      renderTab={renderTab}
+      tabs={[
+        { key: TOKENS_KEY, title: t('Tokens') },
+        { key: NFTS_KEY, title: t('NFTs') },
+      ]}
+    />
   )
 }
 
@@ -87,6 +103,7 @@ function QuickActions() {
 
   return (
     <Flex centered row gap="xs">
+      <SendButton flex={1} />
       <PrimaryButton
         borderRadius="md"
         flex={1}
@@ -114,7 +131,6 @@ function QuickActions() {
         variant="transparent"
         onPress={onPressSwap}
       />
-      <SendButton flex={1} />
     </Flex>
   )
 }

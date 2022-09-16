@@ -1,13 +1,18 @@
 import React, { ReactElement } from 'react'
 import { DataProvider, GridLayoutProvider, RecyclerListView } from 'recyclerlistview'
 import { Box } from 'src/components/layout/Box'
+import {
+  TabViewScrollProps,
+  TAB_VIEW_SCROLL_THROTTLE,
+} from 'src/components/layout/screens/TabbedScrollScreen'
 import { dimensions } from 'src/styles/sizing'
 
 interface GridRecyclerListProps<T> {
   data: T[]
   getKey: (data: T) => string
   renderItem: (data: T) => ReactElement
-  height: number
+  height?: number
+  tabViewScrollProps?: TabViewScrollProps
 }
 
 const COLUMN_COUNT = 2
@@ -25,7 +30,7 @@ export function GridRecyclerList<T>({
   data,
   getKey,
   renderItem,
-  height,
+  tabViewScrollProps,
 }: GridRecyclerListProps<T>) {
   const dataProvider = new DataProvider((row1: T, row2: T) => {
     return getKey(row1) !== getKey(row2)
@@ -40,24 +45,20 @@ export function GridRecyclerList<T>({
     <RecyclerListView
       canChangeSize={false}
       dataProvider={dataProvider.cloneWithRows(data)}
-      forceNonDeterministicRendering={false}
+      forceNonDeterministicRendering={true}
       layoutProvider={layoutProvider}
       renderAheadOffset={300}
       rowRenderer={(_type: string | number, item: T) => {
         return (
-          <Box
-            borderColor="backgroundBackdrop"
-            borderWidth={2}
-            height={dimensions.fullWidth / 2}
-            width={dimensions.fullWidth / 2}>
+          <Box aspectRatio={1} borderColor="backgroundBackdrop" borderWidth={2} width="100%">
             {renderItem(item)}
           </Box>
         )
       }}
-      scrollViewProps={{
-        showsVerticalScrollIndicator: false,
-      }}
-      style={{ height: height }}
+      scrollThrottle={TAB_VIEW_SCROLL_THROTTLE}
+      scrollViewProps={{ showsVerticalScrollIndicator: false }}
+      style={tabViewScrollProps?.contentContainerStyle}
+      onScroll={tabViewScrollProps?.onScroll} // TODO (Thomas) Implement better onScroll
     />
   )
 }

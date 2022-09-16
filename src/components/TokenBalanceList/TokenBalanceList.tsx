@@ -1,39 +1,16 @@
-import React, { ReactElement, useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo, SectionList } from 'react-native'
+import React, { ReactElement, useMemo } from 'react'
+import Animated from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
-import { useHomeStackNavigation } from 'src/app/navigation/types'
-import { Inset } from 'src/components/layout'
-import { BaseCard } from 'src/components/layout/BaseCard'
+import {
+  TabViewScrollProps,
+  TAB_VIEW_SCROLL_THROTTLE,
+} from 'src/components/layout/screens/TabbedScrollScreen'
 import { Separator } from 'src/components/layout/Separator'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
-import { TokenBalanceListHeader } from 'src/components/TokenBalanceList/TokenBalanceListHeader'
-import { balancesToSectionListData } from 'src/components/TokenBalanceList/utils'
 import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
-import { SectionName } from 'src/features/telemetry/constants'
-import { Trace } from 'src/features/telemetry/Trace'
 import { selectHideSmallBalances } from 'src/features/wallet/selectors'
-import { Screens } from 'src/screens/Screens'
-import { toSupportedChainId } from 'src/utils/chainId'
 import { CurrencyId } from 'src/utils/currencyId'
-
-export enum ViewType {
-  Flat = 'flat',
-  Network = 'network',
-}
-
-type FlatViewProps = {
-  view: ViewType.Flat
-  count?: number
-}
-
-type NetworkViewProps = {
-  view: ViewType.Network
-  count?: number
-}
-
-type ViewProps = FlatViewProps | NetworkViewProps
 
 type TokenBalanceListProps = {
   empty?: ReactElement | null
@@ -42,115 +19,42 @@ type TokenBalanceListProps = {
   onRefresh?: () => void
   refreshing?: boolean
   owner: Address
-} & ViewProps
+  count?: number
+  tabViewScrollProps?: TabViewScrollProps
+}
 
 export function TokenBalanceList({
   owner,
+  count,
   empty,
   onPressToken,
   onPressTokenIn,
-  view,
-  count,
+  tabViewScrollProps,
 }: TokenBalanceListProps) {
   const hideSmallBalances = useAppSelector(selectHideSmallBalances)
   const balances = useSortedPortfolioBalancesList(owner, hideSmallBalances)
-  const { t } = useTranslation()
-  const navigation = useHomeStackNavigation()
-
-  const header: ReactElement = useMemo(
-    () => (
-      <BaseCard.Header
-        title={t('Tokens ({{totalCount}})', { totalCount: balances.length })}
-        onPress={() => navigation.navigate(Screens.PortfolioTokens, { owner })}
-      />
-    ),
-    [balances.length, navigation, owner, t]
-  )
-
   const truncatedBalances = useMemo(() => balances.slice(0, count), [balances, count])
-
-  return view === ViewType.Flat ? (
-    <FlatBalanceList
-      balances={truncatedBalances}
-      empty={empty}
-      header={header}
-      onPressToken={onPressToken}
-      onPressTokenIn={onPressTokenIn}
-    />
-  ) : (
-    <NetworkBalanceList balances={truncatedBalances} header={header} onPressToken={onPressToken} />
-  )
-}
-
-function key({ currencyInfo }: PortfolioBalance) {
-  return currencyInfo.currencyId
-}
-
-function FlatBalanceList({
-  balances,
-  empty,
-  header,
-  onPressToken,
-  onPressTokenIn,
-}: Pick<TokenBalanceListProps, 'onPressToken' | 'onPressTokenIn' | 'empty'> & {
-  header: ReactElement
-  balances: PortfolioBalance[]
-}) {
   return (
-    <FlatList
+    <Animated.FlatList
       ItemSeparatorComponent={() => <Separator />}
       ListEmptyComponent={empty}
-      ListHeaderComponent={header}
-      data={balances}
+      data={truncatedBalances}
       keyExtractor={key}
-      renderItem={({ item }) => (
+      renderItem={({ item }: { item: PortfolioBalance }) => (
         <TokenBalanceItem
           portfolioBalance={item}
           onPressToken={onPressToken}
           onPressTokenIn={onPressTokenIn}
         />
       )}
+      scrollEventThrottle={TAB_VIEW_SCROLL_THROTTLE}
       showsVerticalScrollIndicator={false}
+      onScroll={tabViewScrollProps?.onScroll}
+      {...tabViewScrollProps}
     />
   )
 }
 
-function NetworkBalanceList({
-  balances,
-  header,
-  onPressToken,
-}: Pick<TokenBalanceListProps, 'onPressToken'> & {
-  header: ReactElement
-  balances: PortfolioBalance[]
-}) {
-  const chainIdToCurrencyAmounts = useMemo(() => {
-    return balancesToSectionListData(balances)
-  }, [balances])
-
-  const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<PortfolioBalance>) => (
-      <TokenBalanceItem portfolioBalance={item} onPressToken={onPressToken} />
-    ),
-    [onPressToken]
-  )
-
-  return (
-    <Trace logImpression section={SectionName.TokenBalance}>
-      <SectionList
-        ItemSeparatorComponent={() => <Separator />}
-        ListFooterComponent={
-          <Inset all="xxl">
-            <Inset all="md" />
-          </Inset>
-        }
-        ListHeaderComponent={header}
-        keyExtractor={key}
-        renderItem={renderItem}
-        renderSectionHeader={({ section: { chainId } }) => (
-          <TokenBalanceListHeader chainId={toSupportedChainId(chainId)!} />
-        )}
-        sections={chainIdToCurrencyAmounts}
-      />
-    </Trace>
-  )
+function key({ currencyInfo }: PortfolioBalance) {
+  return currencyInfo.currencyId
 }

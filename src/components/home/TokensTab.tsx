@@ -1,9 +1,10 @@
 import { selectionAsync } from 'expo-haptics'
 import React, { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
+import { View, ViewStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { BaseCard } from 'src/components/layout/BaseCard'
+import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
@@ -11,14 +12,27 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Screens } from 'src/screens/Screens'
+import { CurrencyId } from 'src/utils/currencyId'
 
-export function PortfolioTokensSection({ count, owner }: { count?: number; owner: string }) {
+export function TokensTab({
+  owner,
+  tabViewScrollProps,
+  loadingContainerStyle,
+}: {
+  owner: string
+  tabViewScrollProps: TabViewScrollProps
+  loadingContainerStyle: ViewStyle
+}) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const navigation = useHomeStackNavigation()
-
   const tokenDetailsNavigation = useTokenDetailsNavigation()
+
+  const onPressToken = (currencyId: CurrencyId) => {
+    tokenDetailsNavigation.navigate(currencyId)
+  }
+  const onPressTokenIn = (currencyId: CurrencyId) => {
+    tokenDetailsNavigation.preload(currencyId)
+  }
 
   // TODO: remove when buy flow ready
   const onPressScan = () => {
@@ -31,19 +45,14 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
   }
 
   return (
-    <BaseCard.Container>
+    <View>
       <Suspense
         fallback={
-          <>
-            <BaseCard.Header
-              title={t('Tokens')}
-              onPress={() => navigation.navigate(Screens.PortfolioTokens, { owner })}
-            />
+          <View style={loadingContainerStyle}>
             <Loading showSeparator repeat={4} type="token" />
-          </>
+          </View>
         }>
         <TokenBalanceList
-          count={count}
           empty={
             <BaseCard.EmptyState
               additionalButtonLabel={t('Transfer')}
@@ -57,10 +66,11 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
             />
           }
           owner={owner}
-          onPressToken={tokenDetailsNavigation.navigate}
-          onPressTokenIn={tokenDetailsNavigation.preload}
+          tabViewScrollProps={tabViewScrollProps}
+          onPressToken={onPressToken}
+          onPressTokenIn={onPressTokenIn}
         />
       </Suspense>
-    </BaseCard.Container>
+    </View>
   )
 }
