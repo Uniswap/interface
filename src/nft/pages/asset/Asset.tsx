@@ -212,7 +212,7 @@ const Asset = () => {
                   text={
                     <Row gap="4">
                       <img src={rarityLogo} width={16} alt={rarityProvider.provider} />
-                      Ranking by
+                      Ranking by{' '}
                       {asset.rarity?.primaryProvider === 'Genie' ? fallbackProvider : asset.rarity?.primaryProvider}
                     </Row>
                   }
@@ -237,7 +237,7 @@ const Asset = () => {
                   background="transparent"
                   cursor="pointer"
                   onClick={async () => {
-                    await navigator.clipboard.writeText(window.location.hostname + pathname)
+                    await navigator.clipboard.writeText(`${window.location.hostname}/#${pathname}`)
                   }}
                 >
                   <ShareIcon />
@@ -253,13 +253,13 @@ const Asset = () => {
                   cursor="pointer"
                   onClick={() => {
                     if (!parsed.origin || parsed.origin === 'collection') {
-                      navigate(`/nft/collection/${asset.address}`, undefined)
+                      navigate(`/nfts/collection/${asset.address}`)
                     } else if (parsed.origin === 'sell') {
-                      navigate('/nft/sell', undefined)
+                      navigate('/nfts/sell', undefined)
                     } else if (parsed.origin === 'explore') {
-                      navigate(`/nft`, undefined)
+                      navigate(`/nfts`, undefined)
                     } else if (parsed.origin === 'activity') {
-                      navigate(`/nft/collection/${asset.address}/activity`, undefined)
+                      navigate(`/nfts/collection/${asset.address}/activity`, undefined)
                     }
                   }}
                 >
@@ -352,17 +352,19 @@ const Asset = () => {
               paddingBottom="16"
               paddingLeft="16"
               paddingRight="24"
-              style={{ background: 'rgba(76, 130, 251, 0.24)' }}
+              background="accentActiveSoft"
             >
               <Column justifyContent="flex-start" gap="8">
-                <Row gap="12" as="a" target="_blank" rel="norefferer" href={asset.sellorders[0].marketplaceUrl}>
-                  <img
-                    className={styles.marketplace}
-                    src={`/nft/svgs/marketplaces/${asset.sellorders[0].marketplace}.svg`}
-                    height={16}
-                    width={16}
-                    alt="Markeplace"
-                  />
+                <Row gap="12" as="a" target="_blank" rel="norefferer">
+                  <a href={asset.sellorders[0].marketplaceUrl} rel="noreferrer" target="_blank">
+                    <img
+                      className={styles.marketplace}
+                      src={`/nft/svgs/marketplaces/${asset.sellorders[0].marketplace}.svg`}
+                      height={16}
+                      width={16}
+                      alt="Markeplace"
+                    />
+                  </a>
                   <Row as="span" className={subhead} color="blackBlue">
                     {formatEthPrice(asset.priceInfo.ETHPrice)} <Eth2Icon />
                   </Row>
