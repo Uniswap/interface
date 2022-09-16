@@ -1,6 +1,7 @@
 import { DrawerActions } from '@react-navigation/core'
 import React, { useCallback } from 'react'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import NotificationIcon from 'src/assets/icons/bell.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -13,12 +14,13 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { usePendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
-import { Screens } from 'src/screens/Screens'
 
 export function AccountHeader() {
   const theme = useAppTheme()
   const navigation = useAppStackNavigation()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
+
+  const { preload, navigate } = useEagerActivityNavigation()
 
   const pendingTransactions: TransactionDetails[] | undefined =
     usePendingTransactions(activeAddress) ?? []
@@ -29,8 +31,16 @@ export function AccountHeader() {
   }, [navigation])
 
   const onPressNotifications = useCallback(() => {
-    navigation.navigate(Screens.Profile)
-  }, [navigation])
+    if (activeAddress) {
+      navigate(activeAddress)
+    }
+  }, [activeAddress, navigate])
+
+  const onPressInNotifications = useCallback(() => {
+    if (activeAddress) {
+      preload(activeAddress)
+    }
+  }, [activeAddress, preload])
 
   return (
     <Box
@@ -54,7 +64,7 @@ export function AccountHeader() {
         )}
       </Button>
       <Box alignItems="center" flexDirection="row" justifyContent="flex-end">
-        <Button onPress={onPressNotifications}>
+        <Button onPress={onPressNotifications} onPressIn={onPressInNotifications}>
           {hasPendingTransactions ? (
             <PendingNotificationBadge />
           ) : (

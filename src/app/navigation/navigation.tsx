@@ -35,6 +35,7 @@ import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
+import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreFavoritesScreen } from 'src/screens/ExploreFavoritesScreen'
@@ -61,7 +62,6 @@ import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { PortfolioNFTsScreen } from 'src/screens/PortfolioNFTsScreen'
 import { PortfolioTokensScreen } from 'src/screens/PortfolioTokensScreen'
-import { ProfileScreen } from 'src/screens/ProfileScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
@@ -433,7 +433,7 @@ export function AppStackNavigator() {
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
       </AppStack.Group>
-      <AppStack.Screen component={ProfileScreen} name={Screens.Profile} />
+      <AppStack.Screen component={ActivityScreen} name={Screens.Activity} />
       <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
       <AppStack.Screen

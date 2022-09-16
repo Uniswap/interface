@@ -1,9 +1,10 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { graphql } from 'babel-plugin-relay/macro'
 import { selectionAsync } from 'expo-haptics'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { Suspense, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { AppStackParamList } from 'src/app/navigation/types'
+import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
@@ -12,6 +13,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AppBackground } from 'src/components/gradients/AppBackground'
 import { Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import TransactionList from 'src/components/TransactionList/TransactionList'
@@ -22,15 +24,100 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { Screens } from 'src/screens/Screens'
+import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
 
 const MAX_SCROLL_HEIGHT = 180
 
-type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
+export const activityScreenQuery = graphql`
+  query ActivityScreenQuery($address: String!) {
+    assetActivities(address: $address, pageSize: 50, page: 1) {
+      timestamp
+      type
+      transaction {
+        hash
+        status
+        to
+        from
+      }
+      assetChanges {
+        __typename
+        ... on TokenTransfer {
+          asset {
+            name
+            symbol
+            address
+            decimals
+            chain
+          }
+          tokenStandard
+          quantity
+          sender
+          recipient
+          direction
+          transactedValue {
+            currency
+            value
+          }
+        }
+        ... on NftTransfer {
+          asset {
+            name
+            nftContract {
+              chain
+              address
+            }
+            tokenId
+            imageUrl
+            collection {
+              name
+            }
+          }
+          nftStandard
+          sender
+          recipient
+          direction
+        }
+        ... on TokenApproval {
+          asset {
+            name
+            symbol
+            decimals
+            address
+            chain
+          }
+          tokenStandard
+          approvedAddress
+          quantity
+        }
+      }
+    }
+  }
+`
 
-export function ProfileScreen({ navigation }: Props) {
+export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) {
+  const { preloadedQuery } = route.params
+  return (
+    <Suspense fallback={<Loading />}>
+      <Activity preloadedQuery={preloadedQuery} />
+    </Suspense>
+  )
+}
+
+export function Activity({
+  preloadedQuery,
+}: {
+  preloadedQuery: PreloadedQuery<ActivityScreenQuery>
+}) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
+  const navigation = useAppStackNavigation()
   const { t } = useTranslation()
+
+  /**
+   * @TODO: in follow-up PR use this data to populate transaction list
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const data = usePreloadedQuery<ActivityScreenQuery>(activityScreenQuery, preloadedQuery)
 
   const activeAccount = useActiveAccountWithThrow()
   const address = activeAccount.address

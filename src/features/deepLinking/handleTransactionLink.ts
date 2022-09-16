@@ -9,9 +9,9 @@ export function* handleTransactionLink(url: URL) {
     if (!txHash) throw new Error('No `txHash` provided')
     // TODO: validate the txHash exists in the user's tx history
     // and navigate to the specific tx detail screen when it's created
-    yield* call(navigate, Screens.Profile)
+    yield* call(navigate, Screens.Activity)
   } catch (error: any) {
     logger.info('handleTransactionLink', 'handleTransactionLink', error?.message)
-    yield* call(navigate, Screens.Profile)
+    yield* call(navigate, Screens.Activity)
   }
 }

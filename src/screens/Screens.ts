@@ -1,6 +1,7 @@
 export enum Screens {
   Accounts = 'Accounts',
   AccountStack = 'AccountStack',
+  Activity = 'Activity',
   Dev = 'Dev',
   Education = 'Education',
   Explore = 'Explore',
@@ -14,7 +15,6 @@ export enum Screens {
   OnboardingStack = 'OnboardingStack',
   PortfolioTokens = 'PortfolioTokens',
   PortfolioNFTs = 'PortfolioNFTs',
-  Profile = 'Profile',
   ProfileStack = 'ProfileStack',
   Settings = 'Settings',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',

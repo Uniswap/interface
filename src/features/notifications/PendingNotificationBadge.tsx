@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
-import { navigate } from 'src/app/navigation/rootNavigation'
+import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import AlertCircle from 'src/assets/icons/alert-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
@@ -12,7 +12,6 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionStatus } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
-import { Screens } from 'src/screens/Screens'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
 const LOADING_SPINNER_SIZE = 26
@@ -23,6 +22,8 @@ export function PendingNotificationBadge({ size = 24 }: { size?: number }) {
   const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
   const pendingTransactions = useSortedPendingTransactions(activeAccountAddress) ?? []
   const notifications = useAppSelector(selectActiveAccountNotifications)
+
+  const { preload, navigate } = useEagerActivityNavigation()
 
   const currentNotification = notifications[0]
   if (currentNotification?.type === AppNotificationType.Transaction) {
@@ -51,12 +52,11 @@ export function PendingNotificationBadge({ size = 24 }: { size?: number }) {
 
   const countToDisplay = pendingTransactionCount === 1 ? undefined : pendingTransactionCount
 
-  function onPress() {
-    navigate(Screens.Profile)
-  }
-
   return (
-    <Button position="relative" onPress={onPress}>
+    <Button
+      position="relative"
+      onPress={() => (activeAccountAddress ? navigate(activeAccountAddress) : null)}
+      onPressIn={() => (activeAccountAddress ? preload(activeAccountAddress) : null)}>
       <Box
         alignItems="center"
         height={size}

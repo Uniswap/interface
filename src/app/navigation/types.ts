@@ -11,6 +11,7 @@ import { EducationContentType } from 'src/components/education'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
+import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 
 type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
@@ -19,7 +20,6 @@ type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
 export type TabParamList = {
   [Tabs.Home]: undefined
   [Tabs.Explore]: undefined | { screen: Screens; params: { address: string } }
-  [Tabs.Profile]: undefined
   [Tabs.SwapButton]: undefined
 }
 
@@ -132,7 +132,9 @@ export type AppStackParamList = {
     currencyId: string
     preloadedQuery: PreloadedQuery<TokenDetailsScreenQuery>
   }
-  [Screens.Profile]: undefined
+  [Screens.Activity]: {
+    preloadedQuery: PreloadedQuery<ActivityScreenQuery>
+  }
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }
 

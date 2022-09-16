@@ -31,6 +31,7 @@ export interface NotificationContentProps {
     onPress: () => void
   }
   onPress?: () => void
+  onPressIn?: () => void
 }
 
 export interface NotificationToastProps extends NotificationContentProps {
@@ -44,6 +45,7 @@ export function NotificationToast({
   icon,
   balanceUpdate,
   onPress,
+  onPressIn,
   hideDelay,
   actionButton,
   address,
@@ -113,7 +115,12 @@ export function NotificationToast({
         style={animatedStyle}
         zIndex="modal">
         {useSmallDisplay ? (
-          <NotificationContentSmall icon={icon} title={title} onPress={onNotificationPress} />
+          <NotificationContentSmall
+            icon={icon}
+            title={title}
+            onPress={onNotificationPress}
+            onPressIn={onPressIn}
+          />
         ) : (
           <NotificationContent
             actionButton={
@@ -123,6 +130,7 @@ export function NotificationToast({
             icon={icon}
             title={title}
             onPress={onNotificationPress}
+            onPressIn={onPressIn}
           />
         )}
       </AnimatedBox>
@@ -136,6 +144,7 @@ export function NotificationContent({
   balanceUpdate,
   actionButton,
   onPress,
+  onPressIn,
 }: NotificationContentProps) {
   const endAdornment = balanceUpdate || actionButton
   return (
@@ -148,7 +157,8 @@ export function NotificationContent({
       minHeight={NOTIFICATION_HEIGHT}
       px="md"
       py="md"
-      onPress={onPress}>
+      onPress={onPress}
+      onPressIn={onPressIn}>
       <Flex row alignItems="center" gap="xs" justifyContent="space-between" width="100%">
         <Flex
           row
@@ -180,7 +190,12 @@ export function NotificationContent({
   )
 }
 
-export function NotificationContentSmall({ title, icon, onPress }: NotificationContentProps) {
+export function NotificationContentSmall({
+  title,
+  icon,
+  onPress,
+  onPressIn,
+}: NotificationContentProps) {
   return (
     <Flex alignItems="center">
       <Button
@@ -189,7 +204,8 @@ export function NotificationContentSmall({ title, icon, onPress }: NotificationC
         borderRadius="full"
         borderWidth={1}
         p="sm"
-        onPress={onPress}>
+        onPress={onPress}
+        onPressIn={onPressIn}>
         <Flex row alignItems="center" gap="xxs" justifyContent="flex-start">
           {icon}
           <Text adjustsFontSizeToFit numberOfLines={1} variant="bodySmall">

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import { navigate } from 'src/app/navigation/rootNavigation'
+import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { store } from 'src/app/store'
 import CheckCircle from 'src/assets/icons/check-circle.svg'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
@@ -45,16 +45,30 @@ import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
 export const NOTIFICATION_ICON_SIZE = 24
 
-// TODO: once profile tab has screens for transaction details, navigate there instead
-const navigateToProfileTab = () => {
-  store.dispatch(closeModal({ name: ModalName.Swap }))
-  navigate(Screens.Profile)
+// Helpers to preload profile data, and dismiss swap and navigate
+const useNavigateToProfileTab = (address: string | undefined) => {
+  const { preload, navigate } = useEagerActivityNavigation()
+
+  const onPressIn = () => {
+    if (!address) return
+    preload(address)
+  }
+
+  const onPress = () => {
+    if (!address) return
+    store.dispatch(closeModal({ name: ModalName.Swap }))
+    navigate(address)
+  }
+
+  return {
+    onPressIn,
+    onPress,
+  }
 }
 
 export function WCNotification({ notification }: { notification: WalletConnectNotification }) {
@@ -104,6 +118,8 @@ export function ApproveNotification({
 }: {
   notification: ApproveTxNotification
 }) {
+  const { onPress, onPressIn } = useNavigateToProfileTab(address)
+
   const currency = useCurrency(buildCurrencyId(chainId, tokenAddress))
   const title = formApproveNotificationTitle(txStatus, currency, tokenAddress, spender)
   const icon = (
@@ -117,7 +133,13 @@ export function ApproveNotification({
   )
 
   return (
-    <NotificationToast address={address} icon={icon} title={title} onPress={navigateToProfileTab} />
+    <NotificationToast
+      address={address}
+      icon={icon}
+      title={title}
+      onPress={onPress}
+      onPressIn={onPressIn}
+    />
   )
 }
 
@@ -164,6 +186,8 @@ export function SwapNotification({
         }
       : undefined
 
+  const { onPress, onPressIn } = useNavigateToProfileTab(address)
+
   const icon = (
     <SwapLogoOrLogoWithTxStatus
       inputCurrency={inputCurrency}
@@ -187,7 +211,8 @@ export function SwapNotification({
       }
       icon={icon}
       title={title}
-      onPress={navigateToProfileTab}
+      onPress={onPress}
+      onPressIn={onPressIn}
     />
   )
 }
@@ -213,6 +238,8 @@ export function TransferCurrencyNotification({
     ensName ?? senderOrRecipient
   )
 
+  const { onPress, onPressIn } = useNavigateToProfileTab(address)
+
   const icon = (
     <LogoWithTxStatus
       assetType={assetType}
@@ -236,7 +263,8 @@ export function TransferCurrencyNotification({
       }
       icon={icon}
       title={title}
-      onPress={navigateToProfileTab}
+      onPress={onPress}
+      onPressIn={onPressIn}
     />
   )
 }
@@ -262,6 +290,8 @@ export function TransferNFTNotification({
     ensName ?? senderOrRecipient
   )
 
+  const { onPress, onPressIn } = useNavigateToProfileTab(address)
+
   const icon = (
     <LogoWithTxStatus
       assetType={assetType}
@@ -273,7 +303,13 @@ export function TransferNFTNotification({
   )
 
   return (
-    <NotificationToast address={address} icon={icon} title={title} onPress={navigateToProfileTab} />
+    <NotificationToast
+      address={address}
+      icon={icon}
+      title={title}
+      onPress={onPress}
+      onPressIn={onPressIn}
+    />
   )
 }
 
@@ -295,8 +331,16 @@ export function UnknownTxNotification({
     />
   )
 
+  const { onPress, onPressIn } = useNavigateToProfileTab(address)
+
   return (
-    <NotificationToast address={address} icon={icon} title={title} onPress={navigateToProfileTab} />
+    <NotificationToast
+      address={address}
+      icon={icon}
+      title={title}
+      onPress={onPress}
+      onPressIn={onPressIn}
+    />
   )
 }
 
