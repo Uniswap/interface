@@ -16,7 +16,10 @@ interface CollectionNftsProps {
 }
 
 export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
-  const buyNow = useCollectionFilters((state) => state.buyNow)
+  const { markets, buyNow } = useCollectionFilters((state) => ({
+    markets: state.markets,
+    buyNow: state.buyNow,
+  }))
   const {
     data: collectionAssets,
     isSuccess: AssetsFetchSuccess,
@@ -27,12 +30,14 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
       'collectionNfts',
       {
         contractAddress,
+        markets,
         notForSale: !buyNow,
       },
     ],
     async ({ pageParam = 0 }) => {
       return await AssetsFetcher({
         contractAddress,
+        markets,
         notForSale: !buyNow,
         pageParam,
       })
