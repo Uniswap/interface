@@ -94,6 +94,7 @@ export function GenericImportForm({
               px="none"
               py="none"
               returnKeyType="done"
+              scrollEnabled={false}
               selectionColor={theme.colors.textPrimary}
               spellCheck={false}
               testID="import_account_form/input"
