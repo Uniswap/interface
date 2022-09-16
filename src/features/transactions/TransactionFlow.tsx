@@ -2,9 +2,10 @@ import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch, ReactElement, useCallback, useEffect, useState } from 'react'
 import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
+import { DerivedSwapInfo, useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
 import { SwapStatus } from 'src/features/transactions/swap/SwapStatus'
@@ -32,7 +33,10 @@ interface TransactionFlowProps {
   onClose: () => void
 }
 
-type InnerContentProps = Pick<TransactionFlowProps, 'derivedInfo' | 'onClose' | 'dispatch'>
+type InnerContentProps = Pick<TransactionFlowProps, 'derivedInfo' | 'onClose' | 'dispatch'> & {
+  step: number
+  setStep: (step: TransactionStep) => void
+}
 
 function isSwapInfo(
   derivedInfo: DerivedTransferInfo | DerivedSwapInfo
@@ -66,14 +70,41 @@ export function TransactionFlow({
     transform: [{ translateX: screenXOffset.value }],
   }))
 
+  const { onToggleUSDInput } = useSwapActionHandlers(dispatch)
+  const { isUSDInput } = derivedInfo
+
+  const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
+
   return (
     <TouchableWithoutFeedback onPress={onBackgroundPress}>
-      <AnimatedFlex grow row flex={1} gap="none" py="md" style={wrapperStyle}>
-        <Flex grow gap="xs" width="100%">
-          <Text textAlign="center" variant="subhead">
-            {flowName}
-          </Text>
-          <InnerContentRouter derivedInfo={derivedInfo} dispatch={dispatch} onClose={onClose} />
+      <AnimatedFlex grow row gap="none" height="100%" paddingBottom="xl" style={wrapperStyle}>
+        <Flex gap="xs" px="md" width="100%">
+          {step !== TransactionStep.SUBMITTED && (
+            <Flex row alignItems="center" justifyContent="space-between" px="sm">
+              <Text pt="sm" textAlign="left" variant="subhead">
+                {flowName}
+              </Text>
+              {step === TransactionStep.FORM && (
+                <PrimaryButton
+                  borderRadius="md"
+                  label="$   USD"
+                  px="sm"
+                  py="xs"
+                  testID="toggle-usd"
+                  textVariant="smallLabel"
+                  variant={isUSDInput ? 'transparentBlue' : 'transparent'}
+                  onPress={() => onToggleUSDInput(!isUSDInput)}
+                />
+              )}
+            </Flex>
+          )}
+          <InnerContentRouter
+            derivedInfo={derivedInfo}
+            dispatch={dispatch}
+            setStep={setStep}
+            step={step}
+            onClose={onClose}
+          />
         </Flex>
         {showTokenSelector ? tokenSelector : null}
         {showRecipientSelector && recipientSelector ? recipientSelector : null}
@@ -83,15 +114,16 @@ export function TransactionFlow({
 }
 
 function InnerContentRouter(props: InnerContentProps) {
-  const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
-  const { form, review, submitted } = useGetInnerContent({ ...props, setStep })
-  switch (step) {
+  const { form, review, submitted } = useGetInnerContent(props)
+  switch (props.step) {
     case TransactionStep.SUBMITTED:
       return submitted
     case TransactionStep.FORM:
       return form
     case TransactionStep.REVIEW:
       return review
+    default:
+      return null
   }
 }
 
@@ -100,7 +132,7 @@ const useGetInnerContent = ({
   onClose,
   dispatch,
   setStep,
-}: InnerContentProps & { setStep: (step: TransactionStep) => void }): {
+}: InnerContentProps): {
   form: ReactElement
   review: ReactElement
   submitted: ReactElement

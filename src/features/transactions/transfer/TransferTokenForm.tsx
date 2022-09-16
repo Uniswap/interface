@@ -2,7 +2,7 @@ import { AnyAction } from '@reduxjs/toolkit'
 import React, { Suspense, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
@@ -15,6 +15,11 @@ import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useShouldCompressView } from 'src/features/transactions/hooks'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
+import {
+  ARROW_SIZE,
+  MAX_INPUT_HEIGHT,
+  MIN_INPUT_HEIGHT,
+} from 'src/features/transactions/swap/SwapForm'
 import {
   CurrencyField,
   transactionStateActions,
@@ -69,8 +74,7 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
 
   const { t } = useTranslation()
 
-  const { onShowTokenSelector, onSetAmount, onSetMax, onToggleUSDInput } =
-    useSwapActionHandlers(dispatch)
+  const { onShowTokenSelector, onSetAmount, onSetMax } = useSwapActionHandlers(dispatch)
   const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
 
   const actionButtonDisabled =
@@ -100,7 +104,7 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
   }, [])
 
   return (
-    <Flex gap="none" onLayout={onLayout}>
+    <>
       <Suspense fallback={null}>
         <TransferFormWarnings
           chainId={chainId}
@@ -112,40 +116,46 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
           onNext={goToNext}
         />
       </Suspense>
-      <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} justifyContent="space-between" p="md">
-        <Flex gap="sm">
+      <Flex fill grow gap="xs" justifyContent="space-between" onLayout={onLayout}>
+        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="lg">
           {nftIn ? (
-            <Box mx="xl">
-              <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
-            </Box>
+            <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
-            <CurrencyInputPanel
-              autoFocus
-              currency={currencyIn}
-              currencyAmount={currencyAmounts[CurrencyField.INPUT]}
-              currencyBalance={currencyBalances[CurrencyField.INPUT]}
-              isUSDInput={isUSDInput}
-              showSoftInputOnFocus={shouldCompressView}
-              value={formattedAmounts[CurrencyField.INPUT]}
-              warnings={warnings}
-              onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
-              onSetMax={onSetMax}
-              onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
-              onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
-            />
+            <Flex
+              fill
+              justifyContent="center"
+              maxHeight={MAX_INPUT_HEIGHT}
+              minHeight={MIN_INPUT_HEIGHT}
+              p="md">
+              <CurrencyInputPanel
+                autoFocus
+                currency={currencyIn}
+                currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+                currencyBalance={currencyBalances[CurrencyField.INPUT]}
+                isUSDInput={isUSDInput}
+                showSoftInputOnFocus={shouldCompressView}
+                value={formattedAmounts[CurrencyField.INPUT]}
+                warnings={warnings}
+                onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
+                onSetMax={onSetMax}
+                onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
+              />
+            </Flex>
           )}
           <Flex
+            fill
             backgroundColor={recipient ? 'backgroundContainer' : 'none'}
-            borderRadius="lg"
-            mt="xl"
-            width="100%">
+            borderRadius="xl"
+            justifyContent="center"
+            maxHeight={140}
+            minHeight={100}
+            p="md">
             <Box zIndex="popover">
-              <Box alignItems="center" height={36} style={StyleSheet.absoluteFill}>
-                <Box alignItems="center" position="absolute" top={-24}>
+              <Box alignItems="center" height={ARROW_SIZE} style={StyleSheet.absoluteFill}>
+                <Box alignItems="center" bottom={ARROW_SIZE / 2} position="absolute">
                   <TransferArrowButton
                     disabled
-                    bg="backgroundAction"
-                    borderColor="backgroundSurface"
+                    bg={recipient ? 'backgroundAction' : 'backgroundSurface'}
                   />
                 </Box>
               </Box>
@@ -159,26 +169,26 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
               </Suspense>
             </Flex>
           </Flex>
-        </Flex>
-
-        {!nftIn && !shouldCompressView && (
-          <DecimalPad
-            setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
-            value={formattedAmounts[CurrencyField.INPUT]}
+        </AnimatedFlex>
+        <AnimatedFlex exiting={FadeOutDown} gap="xs">
+          {!nftIn && !shouldCompressView && (
+            <DecimalPad
+              setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
+              value={formattedAmounts[CurrencyField.INPUT]}
+            />
+          )}
+          <PrimaryButton
+            disabled={actionButtonDisabled}
+            label={t('Review transfer')}
+            name={ElementName.ReviewTransfer}
+            py="md"
+            testID={ElementName.ReviewTransfer}
+            textVariant="largeLabel"
+            variant="blue"
+            onPress={onPressReview}
           />
-        )}
-
-        <PrimaryButton
-          disabled={actionButtonDisabled}
-          label={t('Review transfer')}
-          name={ElementName.ReviewTransfer}
-          py="md"
-          testID={ElementName.ReviewTransfer}
-          textVariant="largeLabel"
-          variant="blue"
-          onPress={onPressReview}
-        />
-      </AnimatedFlex>
-    </Flex>
+        </AnimatedFlex>
+      </Flex>
+    </>
   )
 }

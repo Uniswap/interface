@@ -1,9 +1,8 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlexAlignType, StyleProp, ViewStyle } from 'react-native'
+import { StyleProp, ViewStyle } from 'react-native'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { Box } from 'src/components/layout'
 import { maxAmountSpend } from 'src/utils/balance'
 
 interface MaxAmountButtonProps {
@@ -43,28 +42,11 @@ export function MaxAmountButton({
       borderRadius="md"
       disabled={disableMaxButton}
       label={t('Max')}
-      px="xs"
-      py="sm"
+      p="xs"
       style={style}
       textVariant="smallLabel"
       variant="transparent"
       onPress={onPress}
     />
-  )
-}
-
-type InlineMaxAmountButtonProps = MaxAmountButtonProps & { alignItems?: FlexAlignType }
-
-/** Wraps MaxAmountButton in a box to specify common layout props */
-export function InlineMaxAmountButton({
-  // inline max button typically found centered to the right in mocks
-  alignItems = 'flex-end',
-  ...props
-}: InlineMaxAmountButtonProps) {
-  return (
-    /* flex-grow/basis on first/child to keep middle always centered on screen */
-    <Box alignItems={alignItems} flexBasis={0} flexGrow={1}>
-      <MaxAmountButton {...props} />
-    </Box>
   )
 }

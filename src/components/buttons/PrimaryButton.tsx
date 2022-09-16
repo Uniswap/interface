@@ -20,7 +20,7 @@ type Props = ButtonProps & {
 } & SpacingShorthandProps<Theme>
 
 // A rounded, borderless, solid color button with optional icon left of text
-function _PrimaryButton({ label, icon, textVariant, disabled, style, ...rest }: Props) {
+function _PrimaryButton({ label, icon, textVariant, disabled, style, p, px, py, ...rest }: Props) {
   const theme = useAppTheme()
 
   // Restyle variants do not have any mechanism for using a variant value on a child
@@ -42,8 +42,8 @@ function _PrimaryButton({ label, icon, textVariant, disabled, style, ...rest }: 
       flexDirection="row"
       justifyContent="center"
       opacity={disabled ? 0.6 : 1}
-      px="md"
-      py="sm"
+      px={p ?? px ?? 'md'}
+      py={p ?? py ?? 'sm'}
       style={style}
       {...rest}>
       {icon && <Box mr="sm">{icon}</Box>}

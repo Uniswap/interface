@@ -7,7 +7,6 @@ import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
-import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Theme } from 'src/styles/theme'
@@ -38,26 +37,24 @@ export function SelectTokenButton({
       name={ElementName.TokenSelectorToggle}
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
       onPress={selectCurrency}>
-      <CenterBox>
-        {selectedCurrency ? (
-          <Flex centered row flexDirection="row" gap="xs" pl="xxs" pr="xs" py="xxs">
-            <CurrencyLogo currency={selectedCurrency} size={28} />
-            <Text color="textPrimary" variant="largeLabel">
-              {selectedCurrency.symbol}
+      {selectedCurrency ? (
+        <Flex centered row flexDirection="row" gap="xs" pl="xxs" pr="xs" py="xxs">
+          <CurrencyLogo currency={selectedCurrency} size={28} />
+          <Text color="textPrimary" variant="largeLabel">
+            {selectedCurrency.symbol}
+          </Text>
+          <Chevron color={theme.colors.textPrimary} direction="e" />
+        </Flex>
+      ) : (
+        <Flex centered row py="xxs">
+          <Flex centered row gap="xs" pl="sm" pr="xs" py="xxxs">
+            <Text color="accentTextLightPrimary" variant="largeLabel">
+              {t('Choose token')}
             </Text>
-            <Chevron color={theme.colors.textPrimary} direction="e" />
+            <Chevron color={theme.colors.accentTextLightPrimary} direction="e" />
           </Flex>
-        ) : (
-          <Flex centered row py="xxs">
-            <Flex centered row gap="xs" pl="sm" pr="xs" py="xxxs">
-              <Text color="accentTextLightPrimary" variant="largeLabel">
-                {t('Choose token')}
-              </Text>
-              <Chevron color={theme.colors.accentTextLightPrimary} direction="e" />
-            </Flex>
-          </Flex>
-        )}
-      </CenterBox>
+        </Flex>
+      )}
     </Button>
   )
 }

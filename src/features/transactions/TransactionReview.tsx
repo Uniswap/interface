@@ -76,7 +76,6 @@ export function TransactionReview({
               showCurrencySign={isUSDInput}
               showSoftInputOnFocus={false}
               testID="amount-input-in"
-              textAlign="center"
               value={formattedAmountIn}
             />
             <CurrencyLogoWithLabel currency={currencyIn} />
@@ -98,12 +97,9 @@ export function TransactionReview({
                 fontFamily={theme.textVariants.headlineLarge.fontFamily}
                 fontSize={theme.textVariants.headlineHero.fontSize}
                 height={theme.textVariants.headlineHero.lineHeight}
-                px="md"
-                py="none"
                 showCurrencySign={isUSDInput}
                 showSoftInputOnFocus={false}
                 testID="amount-input-out"
-                textAlign="center"
                 value={formattedAmountOut}
               />
               <CurrencyLogoWithLabel currency={currencyOut} />
@@ -126,9 +122,7 @@ export function TransactionReview({
         exiting={FadeOut}
         flexGrow={0}
         gap="sm"
-        justifyContent="flex-end"
-        mb="xl"
-        px="md">
+        justifyContent="flex-end">
         {transactionDetails}
         <Flex row gap="xs">
           <Button
