@@ -19,7 +19,7 @@ const HandleAccent = styled.path`
 
   stroke-width: 1.5;
   stroke: ${({ theme }) => theme.deprecated_white};
-  opacity: 0.6;
+  opacity: ${({ theme }) => theme.opacity.hover};
 `
 
 const LabelGroup = styled.g<{ visible: boolean }>`

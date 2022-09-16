@@ -4,8 +4,9 @@ import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { Center } from 'nft/components/Flex'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
+import { useCollectionFilters } from 'nft/hooks'
 import { AssetsFetcher } from 'nft/queries'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 
@@ -16,6 +17,8 @@ interface CollectionNftsProps {
 }
 
 export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
+  const buyNow = useCollectionFilters((state) => state.buyNow)
+
   const {
     data: collectionAssets,
     isSuccess: AssetsFetchSuccess,
@@ -27,11 +30,13 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
       'collectionNfts',
       {
         contractAddress,
+        notForSale: !buyNow,
       },
     ],
     async ({ pageParam = 0 }) => {
       return await AssetsFetcher({
         contractAddress,
+        notForSale: !buyNow,
         pageParam,
       })
     },
@@ -45,6 +50,8 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
       refetchInterval: 5000,
     }
   )
+
+  const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
 
   const collectionNfts = useMemo(() => {
     if (!collectionAssets || !AssetsFetchSuccess) return undefined
@@ -60,7 +67,14 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
   }
 
   const Nfts = collectionNfts.map((asset) =>
-    asset ? <CollectionAsset asset={asset} key={asset.address + asset.tokenId} /> : null
+    asset ? (
+      <CollectionAsset
+        asset={asset}
+        key={asset.address + asset.tokenId}
+        mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+        setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+      />
+    ) : null
   )
 
   const hasNfts = collectionNfts.length > 0

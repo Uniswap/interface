@@ -14,6 +14,7 @@ import {
 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { ReactComponent as TooltipTriangle } from '../assets/svg/tooltip_triangle.svg'
 import { anonymizeLink } from '../utils/anonymizeLink'
@@ -64,9 +65,6 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   }
 `
 
-export const OPACITY_HOVER = 0.6
-export const OPACITY_CLICK = 0.4
-
 export const ButtonText = styled.button`
   outline: none;
   border: none;
@@ -75,9 +73,10 @@ export const ButtonText = styled.button`
   margin: 0;
   background: none;
   cursor: pointer;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   :hover {
-    opacity: ${OPACITY_HOVER};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
 
   :focus {
@@ -88,12 +87,13 @@ export const ButtonText = styled.button`
 export const ClickableStyle = css`
   text-decoration: none;
   cursor: pointer;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   :hover {
-    opacity: ${OPACITY_HOVER};
+    opacity: ${({ theme }) => theme.opacity.hover};
   }
   :active {
-    opacity: ${OPACITY_CLICK};
+    opacity: ${({ theme }) => theme.opacity.click};
   }
 `
 
@@ -135,6 +135,7 @@ const CopyIcon = styled(Copy)`
 `
 
 export const TrashIcon = styled(Trash)`
+  ${ClickableStyle}
   ${IconStyle}
   stroke: ${({ theme }) => theme.deprecated_text3};
 
@@ -142,10 +143,6 @@ export const TrashIcon = styled(Trash)`
   align-items: center;
   justify-content: center;
   display: flex;
-
-  :hover {
-    opacity: ${OPACITY_HOVER};
-  }
 `
 
 const rotateImg = keyframes`
@@ -212,8 +209,6 @@ export function ExternalLinkIcon({
   )
 }
 
-export const MAX_Z_INDEX = 9999
-
 const ToolTipWrapper = styled.div<{ isCopyContractTooltip?: boolean }>`
   display: flex;
   flex-direction: column;
@@ -221,7 +216,7 @@ const ToolTipWrapper = styled.div<{ isCopyContractTooltip?: boolean }>`
   position: ${({ isCopyContractTooltip }) => (isCopyContractTooltip ? 'relative' : 'absolute')};
   right: ${({ isCopyContractTooltip }) => isCopyContractTooltip && '50%'};
   transform: translate(5px, 32px);
-  z-index: ${MAX_Z_INDEX};
+  z-index: ${Z_INDEX.tooltip};
 `
 
 const StyledTooltipTriangle = styled(TooltipTriangle)`
@@ -296,7 +291,7 @@ const CopyAddressRow = styled.div<{ isClicked: boolean }>`
   justify-content: center;
   display: flex;
   gap: 6px;
-  ${({ isClicked }) => isClicked && `opacity: ` + OPACITY_CLICK + ` !important`}
+  ${({ theme, isClicked }) => isClicked && `opacity: ${theme.opacity.click} !important`}
 `
 
 const CopyContractAddressWrapper = styled.div`

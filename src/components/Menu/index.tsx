@@ -278,7 +278,7 @@ export default function Menu() {
                     </ToggleMenuItem>
                     <ToggleMenuItem onClick={() => toggleDarkMode()}>
                       <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
-                      {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
+                      {darkMode ? <Sun opacity={0.6} size={16} /> : <Moon opacity={0.6} size={16} />}
                     </ToggleMenuItem>
                     <MenuItem href="https://docs.uniswap.org/">
                       <div>

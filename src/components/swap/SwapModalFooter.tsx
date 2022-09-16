@@ -132,7 +132,7 @@ export default function SwapModalFooter({
         <TraceEvent
           events={[Event.onClick]}
           element={ElementName.CONFIRM_SWAP_BUTTON}
-          name={EventName.SWAP_SUBMITTED}
+          name={EventName.SWAP_SUBMITTED_BUTTON_CLICKED}
           properties={formatAnalyticsEventProperties({
             trade,
             hash,

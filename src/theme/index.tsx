@@ -13,7 +13,6 @@ import { darkTheme } from '../nft/themes/darkTheme'
 import { lightTheme } from '../nft/themes/lightTheme'
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
-import { MAX_Z_INDEX } from './components'
 import { AllColors, Colors, ThemeColors } from './styled'
 import { opacify } from './utils'
 
@@ -39,9 +38,9 @@ const BREAKPOINTS = {
 
 const transitions = {
   duration: {
-    slow: 500,
-    medium: 250,
-    fast: 125,
+    slow: '500ms',
+    medium: '250ms',
+    fast: '125ms',
   },
   timing: {
     ease: 'ease',
@@ -51,20 +50,9 @@ const transitions = {
   },
 }
 
-// Migrating to a standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
-// Please avoid using deprecated numbers
-export enum Z_INDEX {
-  deprecated_zero = 0,
-  deprecated_content = 1,
-  dropdown = 1000,
-  sticky = 1020,
-  fixed = 1030,
-  modalBackdrop = 1040,
-  offcanvas = 1050,
-  modal = 1060,
-  popover = 1070,
-  tooltip = 1080,
-  absoluteTop = MAX_Z_INDEX,
+const opacities = {
+  hover: 0.6,
+  click: 0.4,
 }
 
 const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
@@ -287,6 +275,8 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
     breakpoint: BREAKPOINTS,
 
     transition: transitions,
+
+    opacity: opacities,
 
     // css snippets
     flexColumnNoWrap: css`

@@ -1,8 +1,9 @@
 import clsx from 'clsx'
 import Column from 'components/Column'
 import { Box } from 'nft/components/Box'
+import * as styles from 'nft/components/collection/Card.css'
 import { Row } from 'nft/components/Flex'
-import { MinusIconLarge, PlusIconLarge } from 'nft/components/icons'
+import { MinusIconLarge, PauseButtonIcon, PlayButtonIcon, PlusIconLarge } from 'nft/components/icons'
 import { body, subheadSmall } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
@@ -18,8 +19,6 @@ import {
   useRef,
   useState,
 } from 'react'
-
-import * as styles from './Card.css'
 
 /* -------- ASSET CONTEXT -------- */
 export interface CardContextProps {
@@ -94,33 +93,222 @@ const Image = () => {
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
 
+  if (noContent) {
+    return <NoContentContainer />
+  }
+
+  return (
+    <Box display="flex" overflow="hidden">
+      <Box
+        as={'img'}
+        alt={asset.name || asset.tokenId}
+        width="full"
+        style={{
+          aspectRatio: 'auto',
+          transition: 'transform 0.4s ease 0s',
+          background: loaded
+            ? 'none'
+            : `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+        }}
+        src={asset.imageUrl || asset.smallImageUrl}
+        objectFit={'contain'}
+        draggable={false}
+        onError={() => setNoContent(true)}
+        onLoad={() => {
+          setLoaded(true)
+        }}
+        className={clsx(hovered && styles.cardImageHover)}
+      />
+    </Box>
+  )
+}
+
+interface MediaProps {
+  shouldPlay: boolean
+  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
+}
+
+const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+  const vidRef = useRef<HTMLVideoElement>(null)
+  const { hovered, asset } = useCardContext()
+  const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const isMobile = useIsMobile()
+
+  if (shouldPlay) {
+    vidRef.current?.play()
+  } else {
+    vidRef.current?.pause()
+  }
+
+  if (noContent) {
+    return <NoContentContainer />
+  }
+
   return (
     <>
-      {!noContent ? (
-        <Box display="flex" overflow="hidden">
-          <Box
-            as={'img'}
-            alt={asset.name || asset.tokenId}
-            width="full"
-            style={{
-              aspectRatio: 'auto',
-              transition: 'transform 0.4s ease 0s',
-              background: loaded
-                ? 'none'
-                : `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
-            }}
-            src={asset.imageUrl || asset.smallImageUrl}
-            objectFit={'contain'}
-            draggable={false}
-            onError={() => setNoContent(true)}
-            onLoad={() => {
-              setLoaded(true)
-            }}
-            className={clsx(hovered && styles.cardImageHover)}
-          />
-        </Box>
+      <Box display="flex" overflow="hidden">
+        <Box
+          as={'img'}
+          alt={asset.name || asset.tokenId}
+          width="full"
+          style={{
+            aspectRatio: '1',
+            transition: 'transform 0.4s ease 0s',
+            willChange: 'transform',
+            background: imageLoaded
+              ? 'none'
+              : `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+          }}
+          src={asset.imageUrl || asset.smallImageUrl}
+          objectFit={'contain'}
+          draggable={false}
+          onError={() => setNoContent(true)}
+          onLoad={() => {
+            setImageLoaded(true)
+          }}
+          visibility={shouldPlay ? 'hidden' : 'visible'}
+          className={clsx(hovered && styles.cardImageHover)}
+        />
+      </Box>
+      {shouldPlay ? (
+        <>
+          <Box className={styles.playbackSwitch}>
+            <PauseButtonIcon
+              width="100%"
+              height="100%"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentTokenPlayingMedia(undefined)
+              }}
+              className="playback-icon"
+            />
+          </Box>
+          <Box position="absolute" left="0" top="0" display="flex">
+            <Box
+              as="video"
+              ref={vidRef}
+              width="full"
+              style={{
+                aspectRatio: '1',
+              }}
+              onEnded={(e) => {
+                e.preventDefault()
+                setCurrentTokenPlayingMedia(undefined)
+              }}
+              loop
+              playsInline
+            >
+              <source src={asset.animationUrl} />
+            </Box>
+          </Box>
+        </>
       ) : (
-        <NoContentContainer />
+        <Box className={styles.playbackSwitch}>
+          {((!isMobile && hovered) || isMobile) && (
+            <PlayButtonIcon
+              width="100%"
+              height="100%"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentTokenPlayingMedia(asset.tokenId)
+              }}
+              className="playback-icon"
+            />
+          )}
+        </Box>
+      )}
+    </>
+  )
+}
+
+const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+  const audRef = useRef<HTMLAudioElement>(null)
+  const { hovered, asset } = useCardContext()
+  const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const isMobile = useIsMobile()
+
+  if (shouldPlay) {
+    audRef.current?.play()
+  } else {
+    audRef.current?.pause()
+  }
+
+  if (noContent) {
+    return <NoContentContainer />
+  }
+
+  return (
+    <>
+      <Box display="flex" overflow="hidden">
+        <Box
+          as={'img'}
+          alt={asset.name || asset.tokenId}
+          width="full"
+          style={{
+            aspectRatio: 'auto',
+            transition: 'transform 0.4s ease 0s',
+            background: imageLoaded
+              ? 'none'
+              : `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+          }}
+          src={asset.imageUrl || asset.smallImageUrl}
+          objectFit={'contain'}
+          draggable={false}
+          onError={() => setNoContent(true)}
+          onLoad={() => {
+            setImageLoaded(true)
+          }}
+          className={clsx(hovered && styles.cardImageHover)}
+        />
+      </Box>
+      {shouldPlay ? (
+        <>
+          <Box className={styles.playbackSwitch}>
+            <PauseButtonIcon
+              width="100%"
+              height="100%"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentTokenPlayingMedia(undefined)
+              }}
+              className="playback-icon"
+            />
+          </Box>
+          <Box position="absolute" left="0" top="0" display="flex">
+            <Box
+              as="audio"
+              ref={audRef}
+              width="full"
+              height="full"
+              onEnded={(e) => {
+                e.preventDefault()
+                setCurrentTokenPlayingMedia(undefined)
+              }}
+            >
+              <source src={asset.animationUrl} />
+            </Box>
+          </Box>
+        </>
+      ) : (
+        <Box className={styles.playbackSwitch}>
+          {((!isMobile && hovered) || isMobile) && (
+            <PlayButtonIcon
+              width="100%"
+              height="100%"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentTokenPlayingMedia(asset.tokenId)
+              }}
+              className="playback-icon"
+            />
+          )}
+        </Box>
       )}
     </>
   )
@@ -342,6 +530,7 @@ const NoContentContainer = () => (
 )
 
 export {
+  Audio,
   Button,
   Container,
   DetailsContainer,
@@ -355,4 +544,5 @@ export {
   SecondaryInfo,
   SecondaryRow,
   TertiaryInfo,
+  Video,
 }
