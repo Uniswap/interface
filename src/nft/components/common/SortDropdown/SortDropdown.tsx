@@ -213,6 +213,8 @@ const DropDownItem = ({
   )
 }
 
+const MAX_PADDING = 52
+
 const LargestItem = ({
   option,
   index,
@@ -222,7 +224,6 @@ const LargestItem = ({
   index: number
   setMaxWidth: (width: number) => void
 }) => {
-  const MAX_PADDING = 52
   const maxWidthRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
