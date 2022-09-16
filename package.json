@@ -125,7 +125,8 @@
     "workbox-strategies": "^6.1.0"
   },
   "resolutions": {
-    "@walletconnect/web3-provider": "1.5.2"
+    "@walletconnect/web3-provider": "1.5.2",
+    "source-map": "^0.8.0-beta.0"
   },
   "scripts": {
     "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",
@@ -160,7 +161,10 @@
     ]
   },
   "license": "GPL-3.0-or-later",
+
   "dependencies": {
+    "source-map": "^0.8.0-beta.0",
+
     "@apollo/client": "^3.4.17",
     "@coreui/coreui": "^4.2.1",
     "@coreui/react": "^4.3.1",

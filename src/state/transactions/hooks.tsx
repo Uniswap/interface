@@ -294,6 +294,29 @@ export const LockedLiquidity = ({ symbol, ...rest }: NewToken) => {
   return null
 }
 
+const Row = styled.tr<{item: NewToken}>`
+  ${props => [props.item.sellTax, props.item.buyTax].some((tax) => Boolean(tax) && Boolean((tax ?? 0) > 50)) ? 
+    `
+     filter: blur(0.85px);
+     opacity:0.5;
+     >td > .rug-overlay {   
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      background: #fc414087;
+      opacity: 1;
+      text-align:center;
+      font-size:36px;
+      font-weight:700;
+      width:100%;
+      color:#fff;
+    }
+    ` : ``
+  }
+`
+
 export const FomoPage = () => {
   const { chainId, account, library } = useWeb3React();
   const [data, setData] = React.useState<NewToken[] | undefined>([])
@@ -515,6 +538,7 @@ export const FomoPage = () => {
 
   const fetchedText = React.useMemo(() => lastFetched ? moment(lastFetched).fromNow() : undefined, [moment(lastFetched).fromNow()])
   const kibaBalance = useKiba(account)
+  
 
 
   const onSortClick = (key: keyof NewToken) => {
@@ -597,14 +621,22 @@ export const FomoPage = () => {
     RefetchNode : 
     !loading && !!pagedData?.length && pagedData.map((item, index) => (
       <CSSTransition
+        style={{postion:'relative'}}
         key={`row_${index}_${item.addr}`}
         in={index <= 3}
         classNames={"alert"}
         timeout={600}
       >
-        <tr>
+        <Row item={item}>
+ 
+          <React.Fragment>
           <td style={{ fontSize: 12 }}>
             <span>{item.name}</span>
+            {[item?.sellTax, item?.buyTax].some((tax) => Boolean(tax) && Boolean(tax ?? 0 > 50)) && (
+              <div className="rug-overlay">
+                RUG PULLED
+              </div>
+            )}
           </td>
           <td style={{ width: '3%' }}>{item.symbol}</td>
           {/* CONTRACT ADDRESS AND LINKS */}
@@ -695,7 +727,8 @@ export const FomoPage = () => {
             </td>
           )}
           <td>{moment(+item.timestamp * 1000).fromNow()}</td>
-        </tr>
+          </React.Fragment>
+        </Row>
       </CSSTransition>
     ))), [data, setShowModal, showModal, modalShowing, RefetchNode, setModalShowing, pagedData, error, searchValue, loading])
 
