@@ -7,7 +7,6 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { Overlay } from 'nft/components/modals/Overlay'
 import { magicalGradientOnHover, subheadSmall } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet, useSearchHistory } from 'nft/hooks'
 import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
@@ -435,7 +434,6 @@ export const SearchBar = () => {
       <NavIcon onClick={toggleOpen}>
         <NavMagnifyingGlassIcon width={28} height={28} />
       </NavIcon>
-      {isOpen && <Overlay />}
     </Box>
   )
 }
