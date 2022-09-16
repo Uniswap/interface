@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import {
+  setClaimingCampaignRewardId,
   setSelectedCampaignLeaderboardLookupAddress,
   setSelectedCampaignLeaderboardPageNumber,
   setSelectedCampaignLuckyWinnersLookupAddress,
+  setSelectedCampaignLuckyWinnersPageNumber,
 } from 'state/campaigns/actions'
 import { AppState } from 'state/index'
 
-export function useSelectedCampaignLeaderboardPageNumberManager() {
+export function useSelectedCampaignLeaderboardPageNumberManager(): [number, (page: number) => void] {
   const selectedCampaignLeaderboardPageNumber = useSelector(
     (state: AppState) => state.campaigns.selectedCampaignLeaderboardPageNumber,
   )
@@ -23,10 +25,21 @@ export function useSelectedCampaignLeaderboardPageNumberManager() {
     [dispatch],
   )
 
-  return useMemo(
-    () => [selectedCampaignLeaderboardPageNumber, updateSelectedCampaignLeaderboardPageNumberCallback] as const,
-    [selectedCampaignLeaderboardPageNumber, updateSelectedCampaignLeaderboardPageNumberCallback],
+  return [selectedCampaignLeaderboardPageNumber, updateSelectedCampaignLeaderboardPageNumberCallback]
+}
+
+export function useSelectedCampaignLuckyWinnerPageNumber(): [number, (page: number) => void] {
+  const page = useSelector((state: AppState) => state.campaigns.selectedCampaignLuckyWinnersPageNumber)
+  const dispatch = useDispatch()
+
+  const setPage = useCallback(
+    (newPageNumber: number) => {
+      dispatch(setSelectedCampaignLuckyWinnersPageNumber(newPageNumber))
+    },
+    [dispatch],
   )
+
+  return [page, setPage]
 }
 
 export function useSelectedCampaignLeaderboardLookupAddressManager() {
@@ -83,4 +96,18 @@ export function useSwapNowHandler() {
     },
     [mixpanelHandler, selectedCampaign],
   )
+}
+
+export function useSetClaimingCampaignRewardId(): [number | null, (id: number | null) => void] {
+  const { claimingCampaignRewardId } = useSelector((state: AppState) => state.campaigns)
+  const dispatch = useDispatch()
+
+  const setClamingRewardId = useCallback(
+    (id: number | null) => {
+      dispatch(setClaimingCampaignRewardId(id))
+    },
+    [dispatch],
+  )
+
+  return [claimingCampaignRewardId, setClamingRewardId]
 }

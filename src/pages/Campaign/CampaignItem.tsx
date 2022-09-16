@@ -154,7 +154,7 @@ export default function CampaignItem({
               color={percentVolume >= 100 ? theme.primary : theme.warning}
             />
           )}
-          {tradingNumberRequired > 0 && (
+          {tradingNumberRequired > 1 && (
             <ProgressBar
               title={t`Your Number of Trade`}
               percent={percentTradingNumber}
@@ -168,7 +168,7 @@ export default function CampaignItem({
 
       {!isShowProgressBar && (
         <div>
-          <CampaignActions campaign={campaign} size="small" hideWhenDisabled />
+          <CampaignActions campaign={campaign} leaderboard={campaign.leaderboard} size="small" hideWhenDisabled />
         </div>
       )}
     </CampaignItemWrapper>

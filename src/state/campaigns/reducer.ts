@@ -5,6 +5,7 @@ import {
   CampaignLeaderboard,
   CampaignLuckyWinner,
   setCampaignData,
+  setClaimingCampaignRewardId,
   setLoadingCampaignData,
   setLoadingCampaignDataError,
   setLoadingSelectedCampaignLeaderboard,
@@ -34,6 +35,8 @@ export interface CampaignsState {
   readonly loadingCampaignLuckyWinners: boolean
   readonly selectedCampaignLuckyWinnersPageNumber: number
   readonly selectedCampaignLuckyWinnersLookupAddress: string
+
+  readonly claimingCampaignRewardId: number | null // id that is being claimed
 }
 
 const initialState: CampaignsState = {
@@ -52,6 +55,8 @@ const initialState: CampaignsState = {
   loadingCampaignLuckyWinners: false,
   selectedCampaignLuckyWinnersPageNumber: 0,
   selectedCampaignLuckyWinnersLookupAddress: '',
+
+  claimingCampaignRewardId: null,
 }
 
 export default createReducer<CampaignsState>(initialState, builder =>
@@ -66,6 +71,12 @@ export default createReducer<CampaignsState>(initialState, builder =>
       return {
         ...state,
         loadingCampaignData: loading,
+      }
+    })
+    .addCase(setClaimingCampaignRewardId, (state, { payload: claimingCampaignRewardId }) => {
+      return {
+        ...state,
+        claimingCampaignRewardId,
       }
     })
     .addCase(setLoadingCampaignDataError, (state, { payload: error }) => {

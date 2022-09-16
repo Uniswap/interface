@@ -9,15 +9,23 @@ import useTemporaryClaimedRefsManager from 'hooks/campaigns/useTemporaryClaimedR
 import CampaignButtonEnterNow from 'pages/Campaign/CampaignButtonEnterNow'
 import CampaignButtonWithOptions from 'pages/Campaign/CampaignButtonWithOptions'
 import { AppState } from 'state'
-import { CampaignData, CampaignState, CampaignStatus, CampaignUserInfoStatus } from 'state/campaigns/actions'
+import {
+  CampaignData,
+  CampaignLeaderboard,
+  CampaignState,
+  CampaignStatus,
+  CampaignUserInfoStatus,
+} from 'state/campaigns/actions'
 
 type Size = 'small' | 'large'
 export default function CampaignActions({
   campaign,
+  leaderboard,
   size = 'large',
   hideWhenDisabled = false,
 }: {
   campaign?: CampaignData
+  leaderboard?: CampaignLeaderboard
   size?: Size
   hideWhenDisabled?: boolean
 }) {
@@ -26,7 +34,7 @@ export default function CampaignActions({
   const { selectedCampaign, selectedCampaignLeaderboard } = useSelector((state: AppState) => state.campaigns)
 
   const campaignInfo = campaign || selectedCampaign
-  const leaderboardInfo = campaign?.leaderboard || selectedCampaignLeaderboard
+  const leaderboardInfo = leaderboard || campaign?.leaderboard || selectedCampaignLeaderboard
 
   const [temporaryClaimedRefs, addTemporaryClaimedRefs] = useTemporaryClaimedRefsManager()
 
@@ -44,7 +52,9 @@ export default function CampaignActions({
   }
 
   if (campaignInfo.status === CampaignStatus.ONGOING) {
-    return <CampaignButtonWithOptions size={size} campaign={campaignInfo} type="swap_now" />
+    return (
+      <CampaignButtonWithOptions size={size} campaign={campaignInfo} leaderboard={leaderboardInfo} type="swap_now" />
+    )
   }
 
   if (
@@ -53,7 +63,13 @@ export default function CampaignActions({
       campaignInfo.campaignState === CampaignState.CampaignStateFinalizedLeaderboard)
   ) {
     return hideWhenDisabled ? null : (
-      <CampaignButtonWithOptions size={size} campaign={campaignInfo} type="claim_rewards" disabled />
+      <CampaignButtonWithOptions
+        size={size}
+        campaign={campaignInfo}
+        leaderboard={leaderboardInfo}
+        type="claim_rewards"
+        disabled
+      />
     )
   }
 
@@ -73,6 +89,7 @@ export default function CampaignActions({
       <CampaignButtonWithOptions
         size={size}
         campaign={campaignInfo}
+        leaderboard={leaderboardInfo}
         type="claim_rewards"
         disabled={isUserClaimedRewardsInThisCampaign}
         addTemporaryClaimedRefs={addTemporaryClaimedRefs}

@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC } from 'constants/index'
 import useMixpanel, { MIXPANEL_TYPE, NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES } from 'hooks/useMixpanel'
+import { AppPaths } from 'pages/App'
+import { useSetClaimingCampaignRewardId } from 'state/campaigns/hooks'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -99,6 +101,7 @@ export default function Updater(): null {
   )
   const { mixpanelHandler, subgraphMixpanelHandler } = useMixpanel()
   const transactionNotify = useTransactionNotify()
+  const setClaimingCampaignRewardId = useSetClaimingCampaignRewardId()[1]
 
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return
@@ -138,26 +141,38 @@ export default function Updater(): null {
                 type: parseTransactionType(receipt),
                 summary: parseTransactionSummary(receipt),
               })
-              if (receipt.status === 1 && transaction && transaction.arbitrary) {
+              if (receipt.status === 1 && transaction) {
                 switch (transaction.type) {
                   case 'Swap': {
-                    mixpanelHandler(MIXPANEL_TYPE.SWAP_COMPLETED, {
-                      arbitrary: transaction.arbitrary,
-                      actual_gas: receipt.gasUsed || BigNumber.from(0),
-                      gas_price: receipt.effectiveGasPrice || BigNumber.from(0),
-                      tx_hash: hash,
-                    })
+                    if (transaction.arbitrary) {
+                      mixpanelHandler(MIXPANEL_TYPE.SWAP_COMPLETED, {
+                        arbitrary: transaction.arbitrary,
+                        actual_gas: receipt.gasUsed || BigNumber.from(0),
+                        gas_price: receipt.effectiveGasPrice || BigNumber.from(0),
+                        tx_hash: hash,
+                      })
+                    }
                     break
                   }
                   case 'Collect fee': {
-                    mixpanelHandler(MIXPANEL_TYPE.ELASTIC_COLLECT_FEES_COMPLETED, transaction.arbitrary)
+                    if (transaction.arbitrary) {
+                      mixpanelHandler(MIXPANEL_TYPE.ELASTIC_COLLECT_FEES_COMPLETED, transaction.arbitrary)
+                    }
                     break
                   }
                   case 'Increase liquidity': {
-                    mixpanelHandler(MIXPANEL_TYPE.ELASTIC_INCREASE_LIQUIDITY_COMPLETED, {
-                      ...transaction.arbitrary,
-                      tx_hash: hash,
-                    })
+                    if (transaction.arbitrary) {
+                      mixpanelHandler(MIXPANEL_TYPE.ELASTIC_INCREASE_LIQUIDITY_COMPLETED, {
+                        ...transaction.arbitrary,
+                        tx_hash: hash,
+                      })
+                    }
+                    break
+                  }
+                  case 'Claim': {
+                    // claim campaign reward successfully
+                    // reset id claiming when finished
+                    if (window.location.pathname.startsWith(AppPaths.CAMPAIGN)) setClaimingCampaignRewardId(null)
                     break
                   }
                   default:

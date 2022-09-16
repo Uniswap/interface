@@ -118,7 +118,7 @@ function RankDetail({ campaign }: { campaign: CampaignData | undefined }) {
                 color={isPassedVolume ? theme.primary : theme.warning}
               />
             )}
-            {tradingNumberRequired > 0 && (
+            {tradingNumberRequired > 1 && (
               <ProgressBar
                 percent={percentTradingNumber}
                 title={t`Number of Trade`}
@@ -474,7 +474,7 @@ export default function Campaign() {
                 {selectedCampaign?.name}
               </Text>
               <ButtonContainer>
-                <CampaignActions />
+                <CampaignActions campaign={selectedCampaign} leaderboard={selectedCampaignLeaderboard} />
                 <ButtonLight
                   borderRadius="50%"
                   style={{ padding: '8px', flex: 0, minWidth: '44px', minHeight: '44px' }}

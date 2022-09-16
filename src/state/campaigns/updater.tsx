@@ -141,6 +141,7 @@ export default function CampaignsUpdater(): null {
     // each of campaign: fetch leaderboard once to display claim button if eligible, and cache that leaderboard
     const promises = response.data.map((campaignInfo: CampaignData) => {
       const leaderboardCache = refLeaderboardData.current[campaignInfo.id]
+      if (!account) return Promise.resolve(campaignInfo)
       return leaderboardCache
         ? Promise.resolve({
             ...campaignInfo,

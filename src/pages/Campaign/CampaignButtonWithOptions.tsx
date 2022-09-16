@@ -22,22 +22,25 @@ import { OptionsContainer } from 'pages/TrueSight/styled'
 import { AppState } from 'state'
 import {
   CampaignData,
+  CampaignLeaderboard,
   CampaignLeaderboardReward,
   setCampaignData,
   setSelectedCampaignLeaderboard,
 } from 'state/campaigns/actions'
-import { useSwapNowHandler } from 'state/campaigns/hooks'
+import { useSetClaimingCampaignRewardId, useSwapNowHandler } from 'state/campaigns/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 
 type Size = 'small' | 'large'
 export default function CampaignButtonWithOptions({
   campaign,
+  leaderboard,
   disabled = false,
   type,
   addTemporaryClaimedRefs,
   size,
 }: {
   campaign: CampaignData | undefined
+  leaderboard?: CampaignLeaderboard
   disabled?: boolean
   type: 'swap_now' | 'claim_rewards'
   size: Size
@@ -56,7 +59,7 @@ export default function CampaignButtonWithOptions({
 
   const { account, library } = useActiveWeb3React()
 
-  const leaderboardInfo = campaign?.leaderboard
+  const leaderboardInfo = leaderboard || campaign?.leaderboard
 
   const refs: string[] = []
   if (leaderboardInfo && leaderboardInfo.rewards) {
@@ -77,14 +80,16 @@ export default function CampaignButtonWithOptions({
     () => (campaign ? transactionsState[parseInt(campaign.rewardChainIds)] ?? {} : {}),
     [transactionsState, campaign],
   )
-
+  const [claimingCampaignRewardId, setClaimingCampaignRewardId] = useSetClaimingCampaignRewardId()
   const [ref2Hash, setRef2Hash] = useState<{ [ref: string]: string }>({})
   const claimRewardHashes = refs.map(ref => ref2Hash[ref]).filter(hash => !!hash)
-  const isClaimingThisCampaignRewards = claimRewardHashes.some(hash => {
-    return transactions[hash] !== undefined && transactions[hash]?.receipt === undefined
-  })
+  const isClaimingThisCampaignRewards =
+    claimRewardHashes.some(hash => {
+      return transactions[hash] !== undefined && transactions[hash]?.receipt === undefined
+    }) || campaign?.id === claimingCampaignRewardId
 
   const dispatch = useDispatch()
+
   const updateCampaignStore = () => {
     const rewards: CampaignLeaderboardReward[] = leaderboardInfo?.rewards?.map(rw => ({ ...rw, claimed: true })) ?? []
 
@@ -108,9 +113,10 @@ export default function CampaignButtonWithOptions({
 
   const addTransactionWithType = useTransactionAdder()
   const sendTransaction = useSendTransactionCallback()
+
   const claimRewards = async (claimChainId: ChainId) => {
     if (!account || !library || !campaign || !leaderboardInfo) return
-
+    setClaimingCampaignRewardId(campaign.id)
     const url = process.env.REACT_APP_REWARD_SERVICE_API + '/rewards/claim'
 
     const data = {
@@ -124,6 +130,7 @@ export default function CampaignButtonWithOptions({
       response = await axios({ method: 'POST', url, data })
     } catch (err) {
       console.error(err)
+      setClaimingCampaignRewardId(null)
     }
 
     if (response?.data?.code === 200000) {
@@ -165,6 +172,7 @@ export default function CampaignButtonWithOptions({
         })
       } catch (err) {
         console.error(err)
+        setClaimingCampaignRewardId(null)
       }
     }
   }
