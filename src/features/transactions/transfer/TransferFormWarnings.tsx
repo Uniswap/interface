@@ -1,7 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Box } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { WarningSeverity } from 'src/components/modals/types'
 import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
@@ -11,7 +11,7 @@ import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/ho
 import { clearRecipient } from 'src/features/transactions/transactionState/transactionState'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { TransferWarning } from 'src/features/transactions/transfer/TransferTokenForm'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow, useDisplayName } from 'src/features/wallet/hooks'
 
 interface TransferFormWarningProps {
   dispatch: React.Dispatch<AnyAction>
@@ -59,6 +59,8 @@ export function TransferFormWarnings({
     [setShowWarningModal]
   )
 
+  const displayName = useDisplayName(recipient)
+
   return (
     <>
       {showWarningModal && isSmartContractAddress && (
@@ -88,13 +90,41 @@ export function TransferFormWarnings({
           title={t('New address')}
           onClose={onCloseNewRecipientWarning}
           onConfirm={onNext}>
-          <Box borderColor="backgroundOutline" borderRadius="xs" borderWidth={1}>
-            <Text color="textPrimary" px="md" py="sm" textAlign="center" variant="subheadSmall">
-              {recipient}
-            </Text>
-          </Box>
+          <TransferRecipient
+            address={recipient}
+            displayName={displayName?.name}
+            type={displayName?.type}
+          />
         </WarningModal>
       )}
     </>
+  )
+}
+
+interface TransferRecipientProps {
+  displayName?: string
+  address?: string
+  type?: string
+}
+
+const TransferRecipient = ({ displayName, address, type = 'address' }: TransferRecipientProps) => {
+  return (
+    <Flex
+      centered
+      borderColor="backgroundOutline"
+      borderRadius="md"
+      borderWidth={1}
+      gap="xs"
+      px="md"
+      py="sm">
+      <Text color="textPrimary" textAlign="center" variant="subheadSmall">
+        {type === 'ens' ? displayName : address}
+      </Text>
+      {type === 'ens' && (
+        <Text color="textSecondary" textAlign="center" variant="caption">
+          {address}
+        </Text>
+      )}
+    </Flex>
   )
 }
