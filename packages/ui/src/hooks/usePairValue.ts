@@ -16,18 +16,28 @@ export function usePairUSDValue(pair: Pair | null, liquidity?: TokenAmount) {
   console.debug('usePairUSDValue:3')
 
   // let price: Price | undefined
-  console.debug('isUSDCInThisPair', isUSDCInThisPair)
-  console.debug('totalSupplyOfLPToken', totalSupplyOfLPToken)
-  console.debug('liquidity', liquidity)
-  if (isUSDCInThisPair && totalSupplyOfLPToken && liquidity) {
-    const liquidityValue = pair.getLiquidityValue(
-      isPair0USDC ? pair.token0 : pair.token1,
+  console.debug(
+    'usePairUSDValue',
+    {
+      isUSDCInThisPair,
       totalSupplyOfLPToken,
       liquidity
-    )
-    console.debug('usePairUSDValue:10')
-    // lp value = one side value * 2
-    return `$ ${liquidityValue.add(liquidityValue).toSignificant(6)}`
+    },
+    pair
+  )
+  if (isUSDCInThisPair && totalSupplyOfLPToken && liquidity) {
+    try {
+      const liquidityValue = pair.getLiquidityValue(
+        isPair0USDC ? pair.token0 : pair.token1,
+        totalSupplyOfLPToken,
+        liquidity
+      )
+      // lp value = one side value * 2
+      return `$ ${liquidityValue.add(liquidityValue).toSignificant(6)}`
+    } catch (error) {
+      console.error('usePairUSDValue::failed for pair:', pair)
+      console.error(error)
+    }
   } else {
     // todo: i do not know what to do now
     // price = usdPriceOfToken0 || usdPriceOfToken1
@@ -42,9 +52,14 @@ export function usePairSidesValueEstimate(
 ): { liquidityValueOfToken0?: TokenAmount; liquidityValueOfToken1?: TokenAmount } {
   const totalSupplyOfLPToken = useTotalSupply(pair?.liquidityToken)
   if (totalSupplyOfLPToken && liquidity) {
-    const liquidityValueOfToken0 = pair?.getLiquidityValue(pair.token0, totalSupplyOfLPToken, liquidity)
-    const liquidityValueOfToken1 = pair?.getLiquidityValue(pair.token1, totalSupplyOfLPToken, liquidity)
-    return { liquidityValueOfToken0, liquidityValueOfToken1 }
+    try {
+      const liquidityValueOfToken0 = pair?.getLiquidityValue(pair.token0, totalSupplyOfLPToken, liquidity)
+      const liquidityValueOfToken1 = pair?.getLiquidityValue(pair.token1, totalSupplyOfLPToken, liquidity)
+      return { liquidityValueOfToken0, liquidityValueOfToken1 }
+    } catch (error) {
+      console.error('usePairSidesValueEstimate failed for pair', pair)
+      console.error(error)
+    }
   }
   return {}
 }
