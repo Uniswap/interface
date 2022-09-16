@@ -111,7 +111,14 @@ const CollectionSelect = ({
             collectionSearchText={collectionSearchText}
             setCollectionSearchText={setCollectionSearchText}
           />
-          <Box background="lightGray" borderRadius="12" paddingTop="8" paddingBottom="8" overflowY="scroll">
+          <Box
+            background="lightGray"
+            borderRadius="12"
+            paddingTop="8"
+            paddingBottom="8"
+            overflowY="scroll"
+            style={{ scrollbarWidth: 'none' }}
+          >
             {displayCollections?.map((collection, index) => (
               <CollectionItem
                 key={index}
