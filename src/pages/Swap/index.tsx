@@ -2,16 +2,16 @@ import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
-import { ElementName, Event, EventName, PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { sendAnalyticsEvent } from 'analytics/amplitude'
+import { ElementName, Event, EventName, PageName, SectionName } from 'analytics/amplitude/constants'
+import { Trace } from 'analytics/amplitude/Trace'
+import { TraceEvent } from 'analytics/amplitude/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
   formatToDecimal,
   getDurationFromDateMilliseconds,
   getTokenAddress,
-} from 'components/AmplitudeAnalytics/utils'
+} from 'analytics/amplitude/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
