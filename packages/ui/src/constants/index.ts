@@ -14,8 +14,20 @@ type ChainTokenList = {
 
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
-export const USDC = new Token(ChainId.OP_GOERLI, '0x84B1d9EFf4363650f2811A8eD3b913Aa44C7F706', 6, 'FUSDC', 'Fake USDC')
-export const USDT = new Token(ChainId.OP_GOERLI, '0x0093d164e9C57dc0EbC00d58E429AdCf383B65d1', 6, 'FUSDT', 'Fake USDT')
+export const USDC = new Token(
+  ChainId.OP_GOERLI,
+  '0x56c822f91C1DC40ce32Ae6109C7cc1D18eD08ECE',
+  6,
+  'USDC',
+  'Fake USD Coin'
+)
+export const USDT = new Token(
+  ChainId.OP_GOERLI,
+  '0x70abc17e870366c336a5dad05061828feff76ff5',
+  6,
+  'USDT',
+  'Fake Tether USD'
+)
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 export const FEI = new Token(ChainId.MAINNET, '0x956F47F50A910163D8BF957Cf5846D573E7f87CA', 18, 'FEI', 'Fei USD')
 export const TRIBE = new Token(ChainId.MAINNET, '0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B', 18, 'TRIBE', 'Tribe')

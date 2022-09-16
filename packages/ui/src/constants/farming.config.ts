@@ -1,4 +1,5 @@
-import { ChainId, Token } from '@teleswap/sdk'
+import { ChainId, Token, WETH } from '@teleswap/sdk'
+import { USDC, USDT } from 'constants/index'
 
 import { Chef } from './farm/chef.enum'
 
@@ -50,6 +51,7 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
     chainId: ChainId.OP_GOERLI,
     pools: [
       {
+        isHidden: true,
         // pid 0
         stakingAsset: {
           name: 'USDC-USDT sLP',
@@ -59,6 +61,42 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
           isStable: true,
           tokenA: new Token(ChainId.OP_GOERLI, '0x56c822f91C1DC40ce32Ae6109C7cc1D18eD08ECE', 6, 'USDC', 'USDC'),
           tokenB: new Token(ChainId.OP_GOERLI, '0x70aBC17e870366C336A5DAd05061828fEff76fF5', 6, 'USDT', 'USDT')
+        }
+      },
+      {
+        // pid 1
+        stakingAsset: {
+          name: 'USDC-USDT sLP',
+          decimal: 18,
+          symbol: 'SLP',
+          isLpToken: true,
+          isStable: true,
+          tokenA: USDC,
+          tokenB: USDT
+        }
+      },
+      {
+        // pid 2
+        stakingAsset: {
+          name: 'USDT-ETH sLP',
+          decimal: 18,
+          symbol: 'SLP',
+          isLpToken: true,
+          isStable: true,
+          tokenA: USDT,
+          tokenB: WETH[ChainId.OP_GOERLI]
+        }
+      },
+      {
+        // pid 3
+        stakingAsset: {
+          name: 'USDC-ETH sLP',
+          decimal: 18,
+          symbol: 'SLP',
+          isLpToken: true,
+          isStable: true,
+          tokenA: USDC,
+          tokenB: WETH[ChainId.OP_GOERLI]
         }
       }
     ]
