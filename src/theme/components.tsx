@@ -209,12 +209,15 @@ export function ExternalLinkIcon({
   )
 }
 
+const TOOLTIP_WIDTH = 60
+
 const ToolTipWrapper = styled.div<{ isCopyContractTooltip?: boolean; tooltipX?: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   position: absolute;
-  left: ${({ isCopyContractTooltip, tooltipX }) => isCopyContractTooltip && (`${tooltipX}px` || '50%')};
+  left: ${({ isCopyContractTooltip, tooltipX }) =>
+    isCopyContractTooltip && (tooltipX ? `${tooltipX - TOOLTIP_WIDTH / 2}px` : '50%')};
   transform: translate(5px, 32px);
   z-index: ${Z_INDEX.tooltip};
 `
@@ -229,7 +232,7 @@ const CopiedTooltip = styled.div<{ isCopyContractTooltip?: boolean }>`
   background-color: ${({ theme }) => theme.black};
   text-align: center;
   justify-content: center;
-  width: ${({ isCopyContractTooltip }) => !isCopyContractTooltip && '60px'};
+  width: ${({ isCopyContractTooltip }) => !isCopyContractTooltip && `${TOOLTIP_WIDTH}px`};
   height: ${({ isCopyContractTooltip }) => !isCopyContractTooltip && '32px'};
   line-height: ${({ isCopyContractTooltip }) => !isCopyContractTooltip && '32px'};
 
