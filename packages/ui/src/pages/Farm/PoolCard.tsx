@@ -200,9 +200,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
           <StakingColumnTitle>
             Staked {farmingConfig?.pools[pid].stakingAsset.isLpToken ? 'LP' : 'Token'}
           </StakingColumnTitle>
-          <TYPE.white fontSize={16}>
-            {parsedStakedAmount} {farmingConfig?.pools[pid].stakingAsset.symbol}
-          </TYPE.white>
+          <TYPE.white fontSize={16}>{parsedStakedAmount}</TYPE.white>
           <div className="actions">
             <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
             <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
