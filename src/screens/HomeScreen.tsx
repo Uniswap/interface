@@ -88,6 +88,7 @@ function QuickActions() {
   const { t } = useTranslation()
 
   const onPressSwap = () => {
+    selectionAsync()
     dispatch(openModal({ name: ModalName.Swap }))
   }
 

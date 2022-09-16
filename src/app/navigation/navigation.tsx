@@ -26,6 +26,7 @@ import WalletIcon from 'src/assets/icons/wallet.svg'
 import { TouchableArea } from 'src/components-uds/TouchableArea'
 
 import { ShadowProps } from '@shopify/restyle'
+import { selectionAsync } from 'expo-haptics'
 import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -158,7 +159,10 @@ function TabNavigator() {
                 shadowOpacity={0.1}
                 shadowRadius={24}
                 style={styles.swapButton}
-                onPress={() => dispatch(openModal({ name: ModalName.Swap }))}>
+                onPress={() => {
+                  selectionAsync()
+                  dispatch(openModal({ name: ModalName.Swap }))
+                }}>
                 <Flex centered mx="xs" px="xl" py="sm">
                   <SwapIcon color={theme.colors.accentTextLightPrimary} height={24} />
                 </Flex>
