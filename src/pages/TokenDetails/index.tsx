@@ -5,7 +5,6 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from 'components/Tokens/constants'
-import { filterTimeAtom } from 'components/Tokens/state'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
 import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetail'
@@ -17,10 +16,8 @@ import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
-import { useTokenQuery } from 'graphql/data/Token'
 import { useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -117,8 +114,8 @@ export default function TokenDetails() {
     return chainIds
   }, [connectedChainId])
 
-  const timePeriod = useAtomValue(filterTimeAtom)
-  const query = useTokenQuery(tokenAddress ?? '', 'ETHEREUM', timePeriod)
+  //const timePeriod = useAtomValue(filterTimeAtom)
+  //const query = useTokenQuery(tokenAddress ?? '', 'ETHEREUM', timePeriod)
 
   const balancesByNetwork = networkData
     ? chainsToList.map((chainId) => {
@@ -155,9 +152,9 @@ export default function TokenDetails() {
           <TokenDetail
             address={token.address}
             // this needs to be updated to provide correct fragment/data prop values
-            tokenMetadataFragmentRef={query}
-            priceDataFragmentRef={query}
-            stablecoinMarket={query}
+            // tokenMetadataFragmentRef={query}
+            // priceDataFragmentRef={query}
+            // stablecoinMarket={query}
           />
           <RightPanel>
             <Widget defaultToken={token ?? undefined} onReviewSwapClick={onReviewSwap} />

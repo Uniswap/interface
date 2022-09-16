@@ -124,12 +124,13 @@ const truncateDescription = (desc: string) => {
 
 interface AboutSectionProps {
   address: string
-  tokenMetadataFragmentRef: Token_TokenProject_Metadata$key
+  tokenMetadataFragmentRef?: Token_TokenProject_Metadata$key
 }
 
 export function AboutSection({ address, tokenMetadataFragmentRef }: AboutSectionProps) {
   const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
-  const { description, homepageUrl, twitterName } = useFragment(projectMetaDataFragment, tokenMetadataFragmentRef)
+  const { description, homepageUrl, twitterName } =
+    useFragment(projectMetaDataFragment, tokenMetadataFragmentRef ?? null) ?? {}
   const shouldTruncate = description ? description.length > TRUNCATE_CHARACTER_COUNT : false
 
   const tokenDescription =
@@ -165,9 +166,9 @@ export function AboutSection({ address, tokenMetadataFragmentRef }: AboutSection
 
 interface LoadedTokenDetailProps {
   address: string
-  stablecoinMarket: NonNullable<NonNullable<NonNullable<TokenQuery$data['tokenProjects']>[number]>['markets']>[number]
-  tokenMetadataFragmentRef: Token_TokenProject_Metadata$key
-  priceDataFragmentRef: TokenPrices$key
+  stablecoinMarket?: NonNullable<NonNullable<NonNullable<TokenQuery$data['tokenProjects']>[number]>['markets']>[number]
+  tokenMetadataFragmentRef?: Token_TokenProject_Metadata$key
+  priceDataFragmentRef?: TokenPrices$key
 }
 
 export default function LoadedTokenDetail(props: LoadedTokenDetailProps) {

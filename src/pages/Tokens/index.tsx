@@ -75,6 +75,8 @@ const Tokens = () => {
     resetFilterString()
   }, [location, resetFilterString])
 
+  //const [queryReference, loadQuery] = useQueryLoader<TopTokens_TokensQuery>(tokensQuery)
+
   return (
     <Trace page={PageName.TOKENS_PAGE} shouldLogImpression>
       <ExploreContainer>
