@@ -402,7 +402,7 @@ export const FomoPage = () => {
         return
       }
     }
-    const networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = networkPassed || network;
+    const networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = networkPassed as any;
 
     const finallyClause = () => {
       setLastFetched(new Date())
@@ -421,8 +421,10 @@ export const FomoPage = () => {
 
     return fetch
       (
-        `https://tokenfomo.io/api/tokens/${networkString}?limit=500&apikey=9fc79d0c27451ea57effb62ca206529c3d9a0586`,
-        { method: "GET", redirect: 'follow' }
+        `https://kiba-api.vercel.app/api/pairs?network=${networkString}`,
+        { method: "GET", redirect: 'follow', headers: {
+          Authorization: `adassabdaklcajcklasd1231asdcascc`
+        } }
       ).then(async (response) => {
         const dataV = await response.json()
         const json = dataV;
@@ -445,8 +447,11 @@ export const FomoPage = () => {
               (
                 _.orderBy
                   (
-                    data?.concat(newDataValue.filter((newItem) => !data?.some((orginal) => orginal.addr === newItem.addr)))
-                      .filter(({ network }) => network?.toLowerCase() === networkString?.toLowerCase()),
+                   [
+                     ...(data ? data : []),
+                     ...newDataValue.filter((newItem) => !data?.some((orginal) => orginal.addr === newItem.addr))
+                      .filter(({ network:zeNetwork }) => zeNetwork?.toLowerCase() === network),
+                   ],
                     i => +i.timestamp,
                     'desc'
                   ),

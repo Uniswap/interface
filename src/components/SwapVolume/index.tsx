@@ -106,12 +106,15 @@ const StyledLoader = styled(Loader)`
 `
 
 export default function SwapVolume() {
+  
+
   const {
     volumeInEth,
     volumeInEthBn,
     volumeInUsd,
     volumeInUsdFormatted
   } = useTotalSwapVolume()
+
   const {
     chainId
   } = useWeb3React()
@@ -174,7 +177,7 @@ export default function SwapVolume() {
                 <StyledPollingNumber>
                   <span style={{ color: '#F76C1D' }}>Total Swap Volume</span> <br /> {volumeInEth} Ξ
                   {chainId && (chainId === 1 || !chainId) && <>
-                    {volumeInUsdFormatted && volumeInUsd.toString() !== '0' && <>&nbsp;(${(abbreviateNumber(+volumeInUsd))} USD)</>}
+                    {volumeInUsd && volumeInUsd?.toString() !== '0' && <>&nbsp;(${(abbreviateNumber(+volumeInUsd))} USD)</>}
                   </>}
 
                   {chainId && (chainId === 56) && <>

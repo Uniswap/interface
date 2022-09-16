@@ -227,11 +227,13 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
 
 export const useHolderCount = (chainId: any) => {
     const [holdersCount, setHoldersCount] = React.useState<any | undefined>()
+    function handleError (error: unknown) { console.error(`[useHolderCount]: Error`, error);}
     function intervalCallback() {
         if (chainId === 1 || !chainId)
             fetch('https://api.ethplorer.io/getTokenInfo/0x005d1123878fc55fbd56b54c73963b234a64af3c?apiKey=EK-htz4u-dfTvjqu-7YmJq', { method: 'get' })
                 .then(res => res.json())
-                .then(setHoldersCount);
+                .then(setHoldersCount)
+                .catch(handleError);
         if (chainId === 56) fetchBscHolders('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5').then((response: any) => {
             setHoldersCount({ holdersCount: response })
         })

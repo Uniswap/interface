@@ -10,8 +10,8 @@ import { DarkCard } from 'components/Card';
 import { ExternalLink } from 'theme';
 import Tooltip from 'components/Tooltip'
 import _ from 'lodash'
-import { isMobile } from 'react-device-detect';
 import styled from 'styled-components/macro'
+import { useIsMobile } from 'pages/Swap/SelectiveChartingBsc';
 import { usePairs } from 'state/logs/utils';
 import useTheme from 'hooks/useTheme'
 import { useTokenInfo } from 'components/swap/ChartPage';
@@ -57,6 +57,7 @@ const fetchBscscanTopHolders = async (tokenAddress: string) => {
 }
 
 export const TopTokenHolders: FC<Props> = (props: Props) => {
+    const isMobile = useIsMobile()
     const { address, chainId } = props;
     const [holders, setHolders] = useState<TopHolder[]>()
     const pairs = usePairs(address)
