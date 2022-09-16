@@ -52,7 +52,7 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
     pools: [
       {
         isHidden: true,
-        // pid 0
+        // pid 0 -- ABANDONED for changing the swap contract
         stakingAsset: {
           name: 'USDC-USDT sLP',
           decimal: 18,
@@ -62,7 +62,8 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
         }
       },
       {
-        // pid 1
+        isHidden: true,
+        // pid 1 -- ABANDONED for changing the swap contract
         stakingAsset: {
           name: 'USDC-USDT sLP',
           decimal: 18,
@@ -95,6 +96,18 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
           isStable: false,
           tokenA: USDC,
           tokenB: WETH[ChainId.OP_GOERLI]
+        }
+      },
+      {
+        // pid 4
+        stakingAsset: {
+          name: 'USDC-USDT sLP',
+          decimal: 18,
+          symbol: 'SLP',
+          isLpToken: true,
+          isStable: true,
+          tokenA: USDC,
+          tokenB: USDT
         }
       }
     ]

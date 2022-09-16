@@ -42,8 +42,8 @@ export function useChefStakingInfo(): (ChefStakingInfo | undefined)[] {
   }, [chainId, poolInfos, poolPresets])
 
   const stakingPairAsset: [Token | undefined, Token | undefined, boolean | undefined][] = poolPresets.map(
-    ({ stakingAsset }) => {
-      if (!stakingAsset.isLpToken) return [undefined, undefined, undefined]
+    ({ stakingAsset, isHidden }) => {
+      if (!stakingAsset.isLpToken || isHidden) return [undefined, undefined, undefined]
       else return [stakingAsset.tokenA, stakingAsset.tokenB, stakingAsset.isStable] as [Token, Token, boolean]
     }
   )
