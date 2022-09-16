@@ -6,7 +6,7 @@ import { buttonTextSmall, headlineSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
-import { Dispatch, FormEvent, SetStateAction, useEffect, useReducer, useState } from 'react'
+import { Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import { useSpring } from 'react-spring/web'
 
 import * as styles from './SelectPage.css'
@@ -167,9 +167,12 @@ const CollectionItem = ({
   const [hovered, toggleHovered] = useReducer((state) => {
     return !state
   }, false)
-  const isChecked = (address: string) => {
-    return collectionFilters.some((collection) => collection === address)
-  }
+  const isChecked = useCallback(
+    (address: string) => {
+      return collectionFilters.some((collection) => collection === address)
+    },
+    [collectionFilters]
+  )
   const handleCheckbox = () => {
     setCheckboxSelected(!isCheckboxSelected)
     setCollectionFilters(collection.address)
