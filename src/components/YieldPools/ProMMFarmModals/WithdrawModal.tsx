@@ -347,7 +347,7 @@ function WithdrawModal({
           )}
         </TableHeader>
 
-        <div style={{ overflowY: 'scroll' }}>
+        <div style={{ overflowY: 'auto' }}>
           {(eligiblePositions as UserPositionFarm[])
             .filter(pos => {
               if (forced) {

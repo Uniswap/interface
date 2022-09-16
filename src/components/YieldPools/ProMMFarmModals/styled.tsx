@@ -38,7 +38,7 @@ export const TableHeader = styled.div`
 
 export const TableRow = styled(TableHeader)`
   background: ${({ theme }) => theme.background};
-  boder-radius: 0;
+  border-radius: 0;
   text-transform: none;
   margin-top: 0;
   font-weight: 400;

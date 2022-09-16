@@ -1,11 +1,11 @@
 import { Position } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Info, X } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
@@ -27,12 +27,23 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 
 import { Checkbox, ModalContentWrapper, TableHeader, TableRow, Title } from './styled'
 
+const generateCommonCSS = (isUnstake: boolean) => {
+  return css`
+    ${isUnstake
+      ? 'grid-template-columns: 18px 120px repeat(2, 1fr);'
+      : 'grid-template-columns: 18px 120px repeat(3, 1fr);'}
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        grid-template-columns: 18px 120px 1fr;
+      `}
+  `
+}
+
 const StakeTableHeader = styled(TableHeader)<{ isUnstake: boolean }>`
-  grid-template-columns: 18px 90px repeat(${({ isUnstake }) => (isUnstake ? 2 : 3)}, 1fr);
+  ${({ isUnstake }) => generateCommonCSS(isUnstake)}
 `
 
 const StakeTableRow = styled(TableRow)<{ isUnstake: boolean }>`
-  grid-template-columns: 18px 90px repeat(${({ isUnstake }) => (isUnstake ? 2 : 3)}, 1fr);
+  ${({ isUnstake }) => generateCommonCSS(isUnstake)}
 `
 
 const PositionRow = ({
@@ -105,7 +116,6 @@ const PositionRow = ({
       />
       {above768 ? (
         <Flex alignItems="center">
-          {/* <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} /> */}
           <Text>{position.tokenId.toString()}</Text>
         </Flex>
       ) : (
