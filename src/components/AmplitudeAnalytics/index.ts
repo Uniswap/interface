@@ -22,7 +22,7 @@ export function initializeAnalytics() {
     {
       // Disable tracking of private user information by Amplitude
       trackingOptions: {
-        // IP is being dropped before ingestion on Amplitude side, only being used to determine country. 
+        // IP is being dropped before ingestion on Amplitude side, only being used to determine country.
         ipAddress: isProductionEnv() ? false : true,
         carrier: false,
         city: false,
