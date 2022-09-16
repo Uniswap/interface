@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import * as Card from 'nft/components/collection/Card'
-import { GenieAsset } from 'nft/types'
+import { GenieAsset, UniformHeight } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
@@ -14,11 +14,19 @@ enum AssetMediaType {
 
 interface CollectionAssetProps {
   asset: GenieAsset
+  uniformHeight: UniformHeight
+  setUniformHeight: (u: UniformHeight) => void
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
-export const CollectionAsset = ({ asset, mediaShouldBePlaying, setCurrentTokenPlayingMedia }: CollectionAssetProps) => {
+export const CollectionAsset = ({
+  asset,
+  uniformHeight,
+  setUniformHeight,
+  mediaShouldBePlaying,
+  setCurrentTokenPlayingMedia,
+}: CollectionAssetProps) => {
   const { notForSale, assetMediaType } = useMemo(() => {
     let notForSale = true
     let assetMediaType = AssetMediaType.Image
@@ -39,11 +47,21 @@ export const CollectionAsset = ({ asset, mediaShouldBePlaying, setCurrentTokenPl
   return (
     <Card.Container asset={asset}>
       {assetMediaType === AssetMediaType.Image ? (
-        <Card.Image />
+        <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
       ) : assetMediaType === AssetMediaType.Video ? (
-        <Card.Video shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+        <Card.Video
+          uniformHeight={uniformHeight}
+          setUniformHeight={setUniformHeight}
+          shouldPlay={mediaShouldBePlaying}
+          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+        />
       ) : (
-        <Card.Audio shouldPlay={mediaShouldBePlaying} setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia} />
+        <Card.Audio
+          uniformHeight={uniformHeight}
+          setUniformHeight={setUniformHeight}
+          shouldPlay={mediaShouldBePlaying}
+          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+        />
       )}
       <Card.DetailsContainer>
         <Card.InfoContainer>
