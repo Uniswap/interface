@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css'
+
 import { sprinkles, vars } from '../../css/sprinkles.css'
 
 export const input = style({

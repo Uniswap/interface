@@ -1,12 +1,13 @@
+import { useIsMobile } from 'nft/hooks'
 import { useEffect, useState } from 'react'
+import { FocusEventHandler, FormEvent } from 'react'
+import { useLocation } from 'react-router-dom'
+
 import { useCollectionAttributes } from '../../hooks/useCollectionAttributes'
+import { isNumber } from '../../utils/numbers'
+import { scrollToTop } from '../../utils/scrollToTop'
 import { Row } from '../Flex'
 import { NumericInput } from '../layout/Input'
-import { FormEvent, FocusEventHandler } from 'react'
-import { isNumber } from '../../utils/numbers'
-import { useLocation } from 'react-router-dom'
-import { scrollToTop } from '../../utils/scrollToTop'
-import { useIsMobile } from 'nft/hooks'
 
 export const PriceRange = () => {
   const [placeholderText, setPlaceholderText] = useState('')
@@ -21,7 +22,7 @@ export const PriceRange = () => {
   useEffect(() => {
     setMinPrice('')
     setMaxPrice('')
-  }, [location.pathname])
+  }, [location.pathname, setMinPrice, setMaxPrice])
 
   const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
     setPlaceholderText(e.currentTarget.placeholder)

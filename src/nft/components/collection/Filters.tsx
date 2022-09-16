@@ -1,4 +1,3 @@
-import { useMemo, useState } from 'react'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { MarketplaceSelect } from 'nft/components/collection/MarketplaceSelect'
@@ -6,10 +5,13 @@ import { PriceRange } from 'nft/components/collection/PriceRange'
 import { Column, Row } from 'nft/components/Flex'
 import { Radio } from 'nft/components/layout/Radio'
 import { useCollectionFilters } from 'nft/hooks'
+import { FocusEventHandler, FormEvent, useMemo, useState } from 'react'
 import { useReducer } from 'react'
-import { TraitSelect } from './TraitSelect'
+
 import { Trait } from '../../hooks/useCollectionAttributes'
 import { groupBy } from '../../utils/groupBy'
+import { Input } from '../layout/Input'
+import { TraitSelect } from './TraitSelect'
 
 export const Filters = ({
   traits,
@@ -45,6 +47,13 @@ export const Filters = ({
 
   const handleBuyNowToggle = () => {
     setBuyNow(!buyNow)
+  }
+
+  const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
+    e.currentTarget.placeholder = ''
+  }
+  const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+    e.currentTarget.placeholder = 'Search traits'
   }
 
   return (
@@ -89,7 +98,7 @@ export const Filters = ({
           </Box>
 
           <Column marginTop="12" marginBottom="60" gap={{ sm: '4' }}>
-            {/* <Input
+            <Input
               display={!traits?.length ? 'none' : undefined}
               value={search}
               onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
@@ -100,7 +109,7 @@ export const Filters = ({
               onFocus={handleFocus}
               onBlur={handleBlur}
               style={{ border: '2px solid rgba(153, 161, 189, 0.24)', maxWidth: '300px' }}
-            /> */}
+            />
             {Object.entries(traitsByGroup).map(([type, traits]) => (
               <TraitSelect key={type} {...{ type, traits, search }} />
             ))}

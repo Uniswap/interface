@@ -1,8 +1,9 @@
 import { forwardRef } from 'react'
 import { FormEvent } from 'react'
-import { Box, BoxProps } from '../Box'
-import { isNumber } from '../../utils/numbers'
+
 import { Atoms } from '../../css/atoms'
+import { isNumber } from '../../utils/numbers'
+import { Box, BoxProps } from '../Box'
 
 export const defaultInputStyle: Atoms = {
   borderColor: { default: 'medGray', focus: 'darkGray' },

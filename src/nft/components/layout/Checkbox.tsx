@@ -1,8 +1,9 @@
-import { ChangeEvent } from 'react'
 import clsx from 'clsx'
+import { ChangeEvent } from 'react'
+
 import { Box } from '../Box'
-import * as styles from './Checkbox.css'
 import { ApprovedCheckmarkIcon } from '../icons'
+import * as styles from './Checkbox.css'
 
 interface CheckboxProps {
   checked: boolean

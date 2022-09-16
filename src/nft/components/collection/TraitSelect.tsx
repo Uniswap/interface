@@ -1,17 +1,17 @@
-import { FormEvent, MouseEvent } from 'react'
 import clsx from 'clsx'
+import useDebounce from 'hooks/useDebounce'
+import { pluralize } from 'nft/utils/roundAndPluralize'
+import { scrollToTop } from 'nft/utils/scrollToTop'
+import { FormEvent, MouseEvent } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
+
+import { subheadSmall } from '../../css/common.css'
+import { Trait, useCollectionAttributes } from '../../hooks/useCollectionAttributes'
 import { Box } from '../Box'
 import { Column, Row } from '../Flex'
-import { Checkbox } from '../layout/Checkbox'
-import { useEffect, useState, useLayoutEffect } from 'react'
-import { Trait, useCollectionAttributes } from '../../hooks/useCollectionAttributes'
 import { ChevronUpIcon } from '../icons'
-import { subheadSmall } from '../../css/common.css'
+import { Checkbox } from '../layout/Checkbox'
 import * as styles from './Filters.css'
-
-import { scrollToTop } from 'nft/utils/scrollToTop'
-import { pluralize } from 'nft/utils/roundAndPluralize'
-import useDebounce from 'hooks/useDebounce'
 
 const TraitItem = ({
   trait,
