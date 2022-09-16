@@ -23,6 +23,10 @@ export const card = style([
   },
 ])
 
+export const loadingBackground = style({
+  background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+})
+
 export const notSelectedCard = style([
   card,
   sprinkles({

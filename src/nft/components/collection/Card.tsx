@@ -7,7 +7,7 @@ import { MinusIconLarge, PauseButtonIcon, PlayButtonIcon, PlusIconLarge } from '
 import { body, subheadSmall } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset } from 'nft/types'
+import { GenieAsset, UniformHeight, UniformHeights } from 'nft/types'
 import {
   createContext,
   MouseEvent,
@@ -88,13 +88,18 @@ const Container = ({ asset, children }: CardProps) => {
 }
 
 /* -------- CARD IMAGE -------- */
-const Image = () => {
+interface ImageProps {
+  uniformHeight: UniformHeight
+  setUniformHeight: (height: UniformHeight) => void
+}
+
+const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
 
   if (noContent) {
-    return <NoContentContainer />
+    return <NoContentContainer uniformHeight={uniformHeight} />
   }
 
   return (
@@ -104,31 +109,35 @@ const Image = () => {
         alt={asset.name || asset.tokenId}
         width="full"
         style={{
-          aspectRatio: 'auto',
+          aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
           transition: 'transform 0.4s ease 0s',
-          background: loaded
-            ? 'none'
-            : `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
         }}
         src={asset.imageUrl || asset.smallImageUrl}
         objectFit={'contain'}
         draggable={false}
         onError={() => setNoContent(true)}
-        onLoad={() => {
+        onLoad={(e) => {
+          if (uniformHeight === UniformHeights.unset) {
+            setUniformHeight(e.currentTarget.clientHeight)
+          } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
+            setUniformHeight(UniformHeights.notUniform)
+          }
           setLoaded(true)
         }}
-        className={clsx(hovered && styles.cardImageHover)}
+        className={clsx(hovered && styles.cardImageHover, !loaded && styles.loadingBackground)}
       />
     </Box>
   )
 }
 
 interface MediaProps {
+  uniformHeight: UniformHeight
+  setUniformHeight: (u: UniformHeight) => void
   shouldPlay: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
 
-const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   const vidRef = useRef<HTMLVideoElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
@@ -142,7 +151,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   }
 
   if (noContent) {
-    return <NoContentContainer />
+    return <NoContentContainer uniformHeight={UniformHeights.notUniform} />
   }
 
   return (
@@ -156,19 +165,20 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
             aspectRatio: '1',
             transition: 'transform 0.4s ease 0s',
             willChange: 'transform',
-            background: imageLoaded
-              ? 'none'
-              : `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
           }}
           src={asset.imageUrl || asset.smallImageUrl}
           objectFit={'contain'}
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={() => {
+            if (uniformHeight !== UniformHeights.notUniform) {
+              setUniformHeight(UniformHeights.notUniform)
+            }
+
             setImageLoaded(true)
           }}
           visibility={shouldPlay ? 'hidden' : 'visible'}
-          className={clsx(hovered && styles.cardImageHover)}
+          className={clsx(hovered && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
         />
       </Box>
       {shouldPlay ? (
@@ -224,7 +234,7 @@ const Video = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   )
 }
 
-const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   const audRef = useRef<HTMLAudioElement>(null)
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
@@ -238,7 +248,7 @@ const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
   }
 
   if (noContent) {
-    return <NoContentContainer />
+    return <NoContentContainer uniformHeight={uniformHeight} />
   }
 
   return (
@@ -249,20 +259,22 @@ const Audio = ({ shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
           alt={asset.name || asset.tokenId}
           width="full"
           style={{
-            aspectRatio: 'auto',
+            aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
             transition: 'transform 0.4s ease 0s',
-            background: imageLoaded
-              ? 'none'
-              : `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
           }}
           src={asset.imageUrl || asset.smallImageUrl}
           objectFit={'contain'}
           draggable={false}
           onError={() => setNoContent(true)}
-          onLoad={() => {
+          onLoad={(e) => {
+            if (uniformHeight === UniformHeights.unset) {
+              setUniformHeight(e.currentTarget.clientHeight)
+            } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
+              setUniformHeight(UniformHeights.notUniform)
+            }
             setImageLoaded(true)
           }}
-          className={clsx(hovered && styles.cardImageHover)}
+          className={clsx(hovered && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
         />
       </Box>
       {shouldPlay ? (
@@ -503,30 +515,57 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
   )
 }
 
-const NoContentContainer = () => (
-  <Box
-    position="relative"
-    width="full"
-    style={{
-      paddingTop: '100%',
-      background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
-    }}
-  >
-    <Box
-      position="absolute"
-      textAlign="center"
-      left="1/2"
-      top="1/2"
-      style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-      fontWeight="normal"
-      color="grey500"
-      className={body}
-    >
-      Content not
-      <br />
-      available yet
-    </Box>
-  </Box>
+interface NoContentContainerProps {
+  uniformHeight: UniformHeight
+}
+
+const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
+  <>
+    {uniformHeight !== UniformHeights.unset && uniformHeight !== UniformHeights.notUniform ? (
+      <Box
+        display="flex"
+        width="full"
+        style={{
+          height: `${uniformHeight as number}px`,
+          background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+        }}
+        fontWeight="normal"
+        color="grey500"
+        className={body}
+        justifyContent="center"
+        alignItems="center"
+        textAlign="center"
+      >
+        Content not
+        <br />
+        available yet
+      </Box>
+    ) : (
+      <Box
+        position="relative"
+        width="full"
+        style={{
+          paddingTop: '100%',
+          background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+        }}
+      >
+        <Box
+          position="absolute"
+          textAlign="center"
+          left="1/2"
+          top="1/2"
+          style={{ transform: 'translate3d(-50%, -50%, 0)' }}
+          fontWeight="normal"
+          color="grey500"
+          className={body}
+        >
+          Content not
+          <br />
+          available yet
+        </Box>
+      </Box>
+    )}
+  </>
 )
 
 export {

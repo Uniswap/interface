@@ -20,7 +20,6 @@ const Collection = () => {
     CollectionStatsFetcher(contractAddress as string)
   )
 
-  /// @reviewer these look the same now but will be diff later
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
     gridWidthOffset: isFiltersExpanded ? FILTER_WIDTH : 0,

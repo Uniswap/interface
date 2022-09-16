@@ -128,6 +128,21 @@ const spacing = {
   unset: 'unset',
 }
 
+const zIndices = {
+  auto: 'auto',
+  '1': '1',
+  '2': '2',
+  '3': '3',
+  dropdown: '1000',
+  sticky: '1020',
+  fixed: '1030',
+  modalBackdrop: '1040',
+  offcanvas: '1050',
+  modal: '1060',
+  popover: '1070',
+  tooltip: '1080',
+}
+
 export const vars = createGlobalTheme(':root', {
   color: {
     ...themeVars.colors,
@@ -296,7 +311,7 @@ const layoutStyles = defineProperties({
     right: spacing,
     top: spacing,
     margin: spacing,
-    zIndex: ['auto', '0', '1', '2', '3'],
+    zIndex: zIndices,
     gap: spacing,
     flexShrink: spacing,
     flex: ['1', '2', '3'],
