@@ -1,14 +1,12 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { CurrencyAmount, Token } from '@teleswap/sdk'
 import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
-import { UNI, ZERO_ADDRESS } from 'constants/index'
-import { BigNumber } from 'ethers'
+import { UNI } from 'constants/index'
 import { useChefContract } from 'hooks/farm/useChefContract'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
-import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 import useMasterChef from 'hooks/farm/useMasterChef'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -32,9 +30,10 @@ interface StakingModalProps {
   isOpen: boolean
   onDismiss: () => void
   pid: number
+  stakingInfo: ChefStakingInfo
 }
 
-export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalProps) {
+export default function UnstakingModal({ isOpen, onDismiss, pid, stakingInfo: thisPool }: StakingModalProps) {
   const { account, chainId } = useActiveWeb3React()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
   const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
@@ -46,37 +45,14 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
   const masterChef = useMasterChef(Chef.MINICHEF)
 
   // track and parse user input
-  const stakingInfos = useChefStakingInfo()
-  const thisPool = stakingInfos[pid]
   const stakingCurrency = thisPool?.stakingToken
 
   const rewardToken = UNI[chainId || 420]
   const positions = useChefPositions(mchefContract, undefined, chainId)
 
-  const parsedStakedAmount = useMemo(() => {
-    try {
-      if (positions && positions[pid] && positions[pid].amount) {
-        const bi = (positions[pid].amount as BigNumber).toBigInt()
-        return CurrencyAmount.fromRawAmount(new Token(chainId || 420, ZERO_ADDRESS, 18), bi)
-      }
-    } catch (error) {
-      console.error('parsedStakedAmount::error', error)
-    }
-    return undefined
-  }, [chainId, positions, pid])
+  const parsedStakedAmount = thisPool?.stakedAmount
 
-  const parsedPendingSushiAmount = useMemo(() => {
-    try {
-      if (positions && positions[pid] && positions[pid].pendingSushi) {
-        const bi = (positions[pid].pendingSushi as BigNumber).toBigInt()
-        console.debug('parsedPendingSushiAmount::bi', bi)
-        return CurrencyAmount.fromRawAmount(rewardToken, bi)
-      }
-    } catch (error) {
-      console.error('parsedPendingSushiAmount::error', error)
-    }
-    return undefined
-  }, [rewardToken, positions, pid])
+  const parsedPendingSushiAmount = thisPool?.pendingReward
   function wrappedOndismiss() {
     setHash(undefined)
     setAttempting(false)

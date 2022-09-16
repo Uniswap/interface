@@ -7,7 +7,19 @@ import { zip } from 'lodash'
 import { useCallback, useMemo } from 'react'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 
-export function useChefPositions(contract?: Contract | null, rewarder?: Contract | null, chainId = 420) {
+export interface ChefPosition {
+  id: string
+  pendingSushi: BigNumber
+  amount: BigNumber
+  chef: Chef | undefined
+  rewardDebt: BigNumber
+}
+
+export function useChefPositions(
+  contract?: Contract | null,
+  rewarder?: Contract | null,
+  chainId = 420
+): ChefPosition[] {
   const { account } = useActiveWeb3React()
 
   const poolLength: BigNumber | undefined = useSingleCallResult(

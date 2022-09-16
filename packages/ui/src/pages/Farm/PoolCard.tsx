@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token, TokenAmount } from '@teleswap/sdk'
+import { Token, TokenAmount } from '@teleswap/sdk'
 import { ReactComponent as AddIcon } from 'assets/svg/add.svg'
 import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 import { ButtonPrimary } from 'components/Button'
@@ -13,14 +13,13 @@ import UnstakingModal from 'components/masterchef/UnstakingModal'
 import { Chef } from 'constants/farm/chef.enum'
 // import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG, LiquidityAsset } from 'constants/farming.config'
-import { UNI, ZERO_ADDRESS } from 'constants/index'
-import { BigNumber } from 'ethers'
+import { UNI } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useChefContract } from 'hooks/farm/useChefContract'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 import { usePairSidesValueEstimate, usePairUSDValue } from 'hooks/usePairValue'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -151,33 +150,9 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
 
   const totalValueLockedInUSD = usePairUSDValue(stakingTokenPair, stakingInfo.tvl)
 
-  const parsedStakedAmount = useMemo(() => {
-    try {
-      if (positions && positions[pid] && positions[pid].amount) {
-        const bi = (positions[pid].amount as BigNumber).toBigInt()
-        return CurrencyAmount.fromRawAmount(new Token(chainId || 420, ZERO_ADDRESS, 18), bi)?.toSignificant(4)
-      }
-    } catch (error) {
-      console.error('parsedStakedAmount::error', error)
-    }
-    return '--.--'
-  }, [chainId, positions, pid])
-
-  const parsedPendingSushiAmount = useMemo(() => {
-    try {
-      if (positions && positions[pid] && positions[pid].pendingSushi) {
-        const bi = (positions[pid].pendingSushi as BigNumber).toBigInt()
-        return CurrencyAmount.fromRawAmount(rewardToken, bi).toSignificant(4)
-      }
-    } catch (error) {
-      console.error('parsedPendingSushiAmount::error', error)
-    }
-    return '--.--'
-  }, [rewardToken, positions, pid])
-
   const { liquidityValueOfToken0, liquidityValueOfToken1 } = usePairSidesValueEstimate(
     stakingTokenPair,
-    new TokenAmount(stakingInfo.stakingToken, positions[pid]?.amount || '0')
+    new TokenAmount(stakingInfo.stakingToken, stakingInfo.stakedAmount.raw || '0')
   )
 
   return (
@@ -205,7 +180,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
           <StakingColumnTitle>
             Staked {farmingConfig?.pools[pid].stakingAsset.isLpToken ? 'LP' : 'Token'}
           </StakingColumnTitle>
-          <TYPE.white fontSize={16}>{parsedStakedAmount}</TYPE.white>
+          <TYPE.white fontSize={16}>{stakingInfo.stakedAmount.toSignificant(6)}</TYPE.white>
           <div className="actions">
             <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
             <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
@@ -220,7 +195,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         <StakingColumn>
           <StakingColumnTitle>Earned Rewards</StakingColumnTitle>
           <TYPE.white fontSize={16}>
-            {parsedPendingSushiAmount} {rewardToken.symbol}
+            {stakingInfo.pendingReward.toSignificant(6)} {rewardToken.symbol}
           </TYPE.white>
           <div className="actions">
             <ButtonPrimary
@@ -266,9 +241,24 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         </>
       )} */}
       <>
-        <StakingModal isOpen={showStakingModal} pid={pid} onDismiss={() => setShowStakingModal(false)} />
-        <UnstakingModal isOpen={showUnstakingModal} pid={pid} onDismiss={() => setShowUnstakingModal(false)} />
-        <ClaimRewardModal isOpen={showClaimRewardModal} pid={pid} onDismiss={() => setShowClaimRewardModal(false)} />
+        <StakingModal
+          stakingInfo={stakingInfo}
+          isOpen={showStakingModal}
+          pid={pid}
+          onDismiss={() => setShowStakingModal(false)}
+        />
+        <UnstakingModal
+          stakingInfo={stakingInfo}
+          isOpen={showUnstakingModal}
+          pid={pid}
+          onDismiss={() => setShowUnstakingModal(false)}
+        />
+        <ClaimRewardModal
+          isOpen={showClaimRewardModal}
+          pid={pid}
+          stakingInfo={stakingInfo}
+          onDismiss={() => setShowClaimRewardModal(false)}
+        />
       </>
     </Wrapper>
   )

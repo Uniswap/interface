@@ -5,7 +5,7 @@ import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
 import { utils } from 'ethers'
 import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
-import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 import useMasterChef from 'hooks/farm/useMasterChef'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -42,10 +42,11 @@ interface StakingModalProps {
   isOpen: boolean
   onDismiss: () => void
   pid: number
+  stakingInfo: ChefStakingInfo
   // userLiquidityUnstaked: TokenAmount | undefined
 }
 
-export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalProps) {
+export default function StakingModal({ isOpen, onDismiss, pid, stakingInfo: thisPool }: StakingModalProps) {
   const { chainId, account } = useActiveWeb3React()
   const { t } = useTranslation()
   // track and parse user input
@@ -67,8 +68,6 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   // disabled
   // const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const signatureData = null
-  const stakingInfos = useChefStakingInfo()
-  const thisPool = stakingInfos[pid]
   const stakingCurrency = thisPool?.stakingToken
 
   const tokenAmount = stakingCurrency

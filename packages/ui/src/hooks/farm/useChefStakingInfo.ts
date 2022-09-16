@@ -1,12 +1,15 @@
-import { Pair, Token, TokenAmount } from '@teleswap/sdk'
+import { CurrencyAmount, Pair, Token, TokenAmount } from '@teleswap/sdk'
 import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG, FarmingPool } from 'constants/farming.config'
+import { UNI } from 'constants/index'
 import { PairState, usePairs } from 'data/Reserves'
+import { BigNumber } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
 import { useMemo } from 'react'
 import { useTokenBalances } from 'state/wallet/hooks'
 
 import { useChefContractForCurrentChain } from './useChefContract'
+import { ChefPosition, useChefPositions } from './useChefPositions'
 import { MasterChefRawPoolInfo, useMasterChefPoolInfo } from './useMasterChefPoolInfo'
 
 interface AdditionalStakingInfo {
@@ -19,6 +22,15 @@ interface AdditionalStakingInfo {
    */
   stakingPair: [PairState, Pair | null]
   tvl?: TokenAmount
+
+  parsedData?: {
+    stakedAmount: string
+    pendingReward: string
+  }
+
+  stakedAmount: CurrencyAmount
+  pendingReward: CurrencyAmount
+  rewardToken: Token
 }
 export type ChefStakingInfo = MasterChefRawPoolInfo & FarmingPool & AdditionalStakingInfo
 
@@ -26,6 +38,10 @@ export function useChefStakingInfo(): (ChefStakingInfo | undefined)[] {
   const { chainId } = useActiveWeb3React()
   const mchefContract = useChefContractForCurrentChain()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
+  // @todo: include rewardToken in the farmingConfig
+  const rewardToken = UNI[chainId || 420]
+
+  const positions = useChefPositions(mchefContract, undefined, chainId)
   const poolPresets = useMemo(() => farmingConfig?.pools || [], [farmingConfig])
   const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
 
@@ -56,13 +72,48 @@ export function useChefStakingInfo(): (ChefStakingInfo | undefined)[] {
     const pool = poolPresets[idx]
     const stakingToken = stakingTokens[idx]
     const tvl = tvls[stakingToken.address]
+    const position = positions[idx]
+    const parsedData = {
+      pendingReward: parsedPendingRewardTokenAmount(position, rewardToken),
+      stakedAmount: parsedStakedTokenAmount(position, stakingToken)
+    }
     return {
       ...info,
       isHidden: pool?.isHidden,
       stakingAsset: pool.stakingAsset,
       stakingToken,
       tvl,
-      stakingPair: pairs[idx]
+      stakingPair: pairs[idx],
+      parsedData,
+      rewardToken,
+      stakedAmount: CurrencyAmount.fromRawAmount(stakingToken, position.amount.toBigInt()),
+      pendingReward: CurrencyAmount.fromRawAmount(stakingToken, position.pendingSushi.toBigInt())
     }
   })
+}
+
+/** Some utils to help our hook fns */
+
+const parsedStakedTokenAmount = (position: ChefPosition, stakingToken: Token) => {
+  try {
+    if (position.amount) {
+      const bi = position.amount.toBigInt()
+      return CurrencyAmount.fromRawAmount(stakingToken, bi)?.toSignificant(4)
+    }
+  } catch (error) {
+    console.error('parsedStakedAmount::error', error)
+  }
+  return '--.--'
+}
+
+const parsedPendingRewardTokenAmount = (position: ChefPosition, rewardToken: Token) => {
+  try {
+    if (position && position.pendingSushi) {
+      const bi = (position.pendingSushi as BigNumber).toBigInt()
+      return CurrencyAmount.fromRawAmount(rewardToken, bi).toSignificant(4)
+    }
+  } catch (error) {
+    console.error('parsedPendingSushiAmount::error', error)
+  }
+  return '--.--'
 }
