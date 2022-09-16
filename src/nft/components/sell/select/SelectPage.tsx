@@ -262,7 +262,7 @@ export const SelectPage = () => {
             flexShrink="0"
             style={{
               transform: gridX.interpolate(
-                (x) => `translate(${parseInt(`${x}`) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`
+                (x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`
               ),
               width: gridWidthOffset.interpolate((x) => `calc(100% - ${x}px)`),
             }}
@@ -534,7 +534,7 @@ const CollectionFiltersRow = ({
       {collectionFilters &&
         collectionFilters.map((collectionAddress, index) => (
           <CollectionFilterItem
-            collection={getCollection(collectionAddress) ?? ({} as WalletCollection)}
+            collection={getCollection(collectionAddress)}
             key={index}
             setCollectionFilters={setCollectionFilters}
           />
@@ -562,9 +562,10 @@ const CollectionFilterItem = ({
   collection,
   setCollectionFilters,
 }: {
-  collection: WalletCollection
+  collection: WalletCollection | undefined
   setCollectionFilters: (address: string) => void
 }) => {
+  if (!collection) return null
   return (
     <Row
       justifyContent="center"
@@ -576,7 +577,7 @@ const CollectionFilterItem = ({
       background="medGray"
       fontSize="14"
     >
-      <Box as="img" borderRadius="round" width="20" height="20" src={collection?.image} />
+      <Box as="img" borderRadius="round" width="20" height="20" src={collection.image} />
       <Box marginLeft="6" className={styles.collectionFilterBubbleText}>
         {collection?.name}
       </Box>
@@ -589,7 +590,7 @@ const CollectionFilterItem = ({
         as="button"
         border="none"
         cursor="pointer"
-        onClick={() => setCollectionFilters(collection?.address)}
+        onClick={() => setCollectionFilters(collection.address)}
       >
         <CrossIcon />
       </Box>
