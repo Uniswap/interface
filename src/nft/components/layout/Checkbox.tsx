@@ -23,13 +23,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({ hovered, children, ...props 
     >
       {children}
       <span
-        className={clsx(styles.checkbox, props.checked ? styles.checkboxActive : '', hovered && styles.checkboxActive)}
+        className={clsx(styles.checkbox, props.checked && styles.checkboxActive, hovered && styles.checkboxActive)}
         // This element is purely decorative so
         // we hide it for screen readers
         aria-hidden="true"
       />
       <input {...props} className={styles.input} type="checkbox" />
-      <ApprovedCheckmarkIcon className={clsx(styles.checkMark, props.checked ? styles.checkMarkActive : '')} />
+      <ApprovedCheckmarkIcon className={clsx(styles.checkMark, props.checked && styles.checkMarkActive)} />
     </Box>
   )
 }
