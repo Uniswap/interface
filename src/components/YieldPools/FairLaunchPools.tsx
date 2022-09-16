@@ -1,9 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { Trans } from '@lingui/macro'
-import React from 'react'
+import { Trans, t } from '@lingui/macro'
+import { useEffect, useState } from 'react'
 import { Text } from 'rebass'
 
+import ShareModal from 'components/ShareModal'
 import { OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
@@ -11,7 +12,8 @@ import { useFairLaunchVersion } from 'hooks/useContract'
 import useFairLaunch from 'hooks/useFairLaunch'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
-import { useBlockNumber } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/actions'
+import { useBlockNumber, useModalOpen, useOpenModal } from 'state/application/hooks'
 import { setAttemptingTxn, setShowConfirm, setTxHash, setYieldPoolsError } from 'state/farms/actions'
 import { FairLaunchVersion, Farm } from 'state/farms/types'
 import { useAppDispatch } from 'state/hooks'
@@ -32,12 +34,21 @@ interface FarmsListProps {
 const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
   const dispatch = useAppDispatch()
   const { chainId, account } = useActiveWeb3React()
+  const networkRoute = chainId ? NETWORKS_INFO[chainId].route : undefined
   const theme = useTheme()
   const blockNumber = useBlockNumber()
   const totalRewards = useFarmRewards(farms)
   const fairLaunchVersion = useFairLaunchVersion(fairLaunchAddress)
   const { harvestMultiplePools } = useFairLaunch(fairLaunchAddress)
   const { mixpanelHandler } = useMixpanel()
+
+  const [sharedPoolAddress, setSharedPoolAddress] = useState('')
+  const openShareModal = useOpenModal(ApplicationModal.SHARE)
+  const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
+
+  const shareUrl = sharedPoolAddress
+    ? window.location.origin + '/farms?search=' + sharedPoolAddress + '&tab=classic&networkId=' + networkRoute
+    : undefined
 
   const handleHarvestAll = async () => {
     if (!chainId || !account) {
@@ -147,6 +158,22 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
 
   const outsideFarm = OUTSIDE_FAIRLAUNCH_ADDRESSES[fairLaunchAddress]
 
+  useEffect(() => {
+    if (sharedPoolAddress) {
+      openShareModal()
+    }
+  }, [openShareModal, sharedPoolAddress])
+
+  useEffect(() => {
+    setSharedPoolAddress(addr => {
+      if (!isShareModalOpen) {
+        return ''
+      }
+
+      return addr
+    })
+  }, [isShareModalOpen, setSharedPoolAddress])
+
   return (
     <FairLaunchPoolsWrapper>
       {!!displayFarms.length && (
@@ -171,12 +198,15 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
                   key={`${farm.fairLaunchAddress}_${farm.stakeToken}`}
                   farm={farm}
                   oddRow={(index + 1) % 2 !== 0}
+                  setSharedPoolAddress={setSharedPoolAddress}
                 />
               )
             })}
           </ListItemWrapper>
         </>
       )}
+
+      <ShareModal title={t`Share this farm with your friends!`} url={shareUrl} />
     </FairLaunchPoolsWrapper>
   )
 }

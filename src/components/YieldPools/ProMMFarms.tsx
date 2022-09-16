@@ -7,12 +7,16 @@ import { Flex, Text } from 'rebass'
 
 import FarmIssueAnnouncement from 'components/FarmIssueAnnouncement'
 import LocalLoader from 'components/LocalLoader'
+import ShareModal from 'components/ShareModal'
 import Toggle from 'components/Toggle'
+import { NETWORKS_INFO } from 'constants/networks'
 import { VERSION } from 'constants/v2'
+import { useActiveWeb3React } from 'hooks'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
-import { useBlockNumber } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/actions'
+import { useBlockNumber, useModalOpen, useOpenModal } from 'state/application/hooks'
 import { useFailedNFTs, useGetProMMFarms, useProMMFarms } from 'state/farms/promm/hooks'
 import { ProMMFarm } from 'state/farms/promm/types'
 import { StyledInternalLink } from 'theme'
@@ -21,6 +25,7 @@ import ProMMFarmGroup from './ProMMFarmGroup'
 import { DepositModal, StakeUnstakeModal } from './ProMMFarmModals'
 import HarvestModal from './ProMMFarmModals/HarvestModal'
 import WithdrawModal from './ProMMFarmModals/WithdrawModal'
+import { SharePoolContext } from './SharePoolContext'
 import {
   HeadingContainer,
   HeadingRight,
@@ -37,6 +42,7 @@ const affectedFairlaunchAddress = '0x5C503D4b7DE0633f031229bbAA6A5e4A31cc35d8'
 
 function ProMMFarms({ active }: { active: boolean }) {
   const theme = useTheme()
+  const { chainId } = useActiveWeb3React()
   const [stakedOnly, setStakedOnly] = useState({
     active: false,
     ended: false,
@@ -106,6 +112,14 @@ function ProMMFarms({ active }: { active: boolean }) {
   const [selectedModal, setSeletedModal] = useState<ModalType | null>(null)
   const [selectedPoolId, setSeletedPoolId] = useState<number | null>(null)
 
+  const openShareModal = useOpenModal(ApplicationModal.SHARE)
+  const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
+  const [sharePoolAddress, setSharePoolAddress] = useState('')
+  const networkRoute = chainId ? NETWORKS_INFO[chainId].route : undefined
+  const shareUrl = sharePoolAddress
+    ? `${window.location.origin}/farms?search=${sharePoolAddress}&tab=elastic&type=${activeTab}&networkId=${networkRoute}`
+    : undefined
+
   const onDismiss = () => {
     setSeletedFarm(null)
     setSeletedModal(null)
@@ -136,8 +150,24 @@ function ProMMFarms({ active }: { active: boolean }) {
     return null
   }
 
+  useEffect(() => {
+    if (sharePoolAddress) {
+      openShareModal()
+    }
+  }, [openShareModal, sharePoolAddress])
+
+  useEffect(() => {
+    setSharePoolAddress(addr => {
+      if (!isShareModalOpen) {
+        return ''
+      }
+
+      return addr
+    })
+  }, [isShareModalOpen, setSharePoolAddress])
+
   return (
-    <>
+    <SharePoolContext.Provider value={setSharePoolAddress}>
       {selectedFarm && selectedModal === 'deposit' && (
         <DepositModal selectedFarmAddress={selectedFarm} onDismiss={onDismiss} />
       )}
@@ -213,7 +243,12 @@ function ProMMFarms({ active }: { active: boolean }) {
       )}
 
       {loading && noFarms ? (
-        <Flex backgroundColor={theme.background}>
+        <Flex
+          sx={{
+            borderRadius: '16px',
+          }}
+          backgroundColor={theme.background}
+        >
           <LocalLoader />
         </Flex>
       ) : noFarms ? (
@@ -254,7 +289,8 @@ function ProMMFarms({ active }: { active: boolean }) {
           })}
         </Flex>
       )}
-    </>
+      <ShareModal title={t`Share this farm with your friends!`} url={shareUrl} />
+    </SharePoolContext.Provider>
   )
 }
 

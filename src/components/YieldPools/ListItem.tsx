@@ -5,7 +5,7 @@ import { Trans, t } from '@lingui/macro'
 import { ethers } from 'ethers'
 import JSBI from 'jsbi'
 import React, { useMemo, useState } from 'react'
-import { Clock, Minus, Plus, X } from 'react-feather'
+import { Clock, Minus, Plus, Share2, X } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
@@ -16,6 +16,7 @@ import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Divider from 'components/Divider'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
+import { MoneyBag } from 'components/Icons'
 import Harvest from 'components/Icons/Harvest'
 import InfoHelper from 'components/InfoHelper'
 import Modal from 'components/Modal'
@@ -47,8 +48,9 @@ import {
   OUTSIDE_FAIRLAUNCH_ADDRESSES,
   TOBE_EXTENDED_FARMING_POOLS,
 } from '../../constants'
+import { APRTooltipContent } from './FarmingPoolAPRCell'
 import { ModalContentWrapper } from './ProMMFarmModals/styled'
-import { APY, ActionButton, DataText, GetLP, RewardBalanceWrapper, StyledItemCard, TableRow } from './styleds'
+import { ActionButton, DataText, GetLP, RewardBalanceWrapper, StyledItemCard, TableRow } from './styleds'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -63,9 +65,10 @@ const fixedFormatting = (value: BigNumber, decimals: number) => {
 interface ListItemProps {
   farm: Farm
   oddRow?: boolean
+  setSharedPoolAddress: (addr: string) => void
 }
 
-const ListItem = ({ farm }: ListItemProps) => {
+const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
   const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
   const currentTimestamp = Math.floor(Date.now() / 1000)
@@ -533,6 +536,19 @@ const ListItem = ({ farm }: ListItemProps) => {
                       <Clock size={14} style={{ marginLeft: '6px' }} />
                     </MouseoverTooltip>
                   )}
+
+                  <Flex
+                    onClick={() => {
+                      setSharedPoolAddress(farm.id)
+                    }}
+                    sx={{
+                      marginLeft: '8px',
+                      cursor: 'pointer',
+                    }}
+                    role="button"
+                  >
+                    <Share2 size="14px" color={theme.subText} />
+                  </Flex>
                 </Flex>
                 <Text marginLeft="36px" marginTop="4px" color={theme.subText} fontSize={12}>
                   AMP = {amp}
@@ -540,27 +556,43 @@ const ListItem = ({ farm }: ListItemProps) => {
               </div>
             </DataText>
             <DataText grid-area="liq">{formattedNum(liquidity.toString(), true)}</DataText>
-            {/* <DataText grid-area="end" align="left" flexDirection="column" alignItems="flex-start">
-              {farm.time}
-              {tobeExtended && (
-                <Text color={theme.subText} fontSize="12px" marginTop="6px">
-                  <Trans>To be extended</Trans>
-                </Text>
-              )}
+            <DataText
+              grid-area="apy"
+              align="right"
+              style={{
+                color: theme.apr,
+              }}
+            >
+              <Flex
+                sx={{
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                {apr.toFixed(2)}%
+                <Flex
+                  sx={{
+                    width: '16px',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {apr !== 0 && (
+                    <MouseoverTooltip
+                      width="fit-content"
+                      placement="right"
+                      text={
+                        <APRTooltipContent
+                          farmAPR={farmAPR}
+                          poolAPR={tradingFeeAPR < MAX_ALLOW_APY ? tradingFeeAPR : 0}
+                        />
+                      }
+                    >
+                      <MoneyBag size={16} color={theme.apr} />
+                    </MouseoverTooltip>
+                  )}
+                </Flex>
+              </Flex>
             </DataText>
-            */}
-            <APY grid-area="apy" align="right">
-              {apr.toFixed(2)}%
-              {apr !== 0 && (
-                <InfoHelper
-                  text={
-                    tradingFeeAPR < MAX_ALLOW_APY
-                      ? t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`
-                      : `${farmAPR.toFixed(2)}% Rewards`
-                  }
-                />
-              )}
-            </APY>
             <DataText grid-area="vesting_duration" align="right">
               {getFormattedTimeFromSecond(farm.vestingDuration, true)}
             </DataText>
@@ -587,7 +619,8 @@ const ListItem = ({ farm }: ListItemProps) => {
                 )
               })}
             </DataText>
-            <Flex justifyContent="flex-end" sx={{ gap: '4px' }}>
+
+            <Flex grid-area="action" justifyContent="flex-end" sx={{ gap: '4px' }}>
               <ActionButton
                 disabled={tab === 'ended'}
                 onClick={() => {

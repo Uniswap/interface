@@ -3,6 +3,8 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 
 export type NetworkInfo = {
   readonly chainId: ChainId
+
+  // route can be used to detect which chain is favored in query param, check out useActiveNetwork.ts
   readonly route: string
   readonly name: string
   readonly icon: string

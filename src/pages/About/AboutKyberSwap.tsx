@@ -426,6 +426,44 @@ function AboutKyberSwap() {
     </ForLiquidityProviderItem>
   )
 
+  const renderCreateNewPoolButton = () => {
+    return (
+      <BtnPrimary
+        as={Link}
+        to={'/pools?tab=elastic&highlightCreateButton=true'}
+        onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_CREATE_NEW_POOL_CLICKED)}
+        style={{ flex: '0 0 216px', padding: '12px' }}
+      >
+        <Plus size={20} />
+        <Text marginLeft="8px" fontSize={['14px', '16px']}>
+          <Trans>Create New Pool</Trans>
+        </Text>
+      </BtnPrimary>
+    )
+  }
+
+  const renderContactUsButton = () => {
+    return (
+      <ButtonLight style={{ flex: '0 0 216px' }} as={ExternalLink} href="https://forms.gle/gLiNsi7iUzHws2BY8">
+        <Edit color={theme.primary} size={20} />
+        <Text marginLeft="8px" fontSize={['14px', '16px']}>
+          <Trans>Contact Us</Trans>
+        </Text>
+      </ButtonLight>
+    )
+  }
+
+  const renderDocsButton = () => {
+    return (
+      <BtnOutlined style={{ flex: '0 0 216px' }} as={ExternalLink} href="https://docs.kyberswap.com/">
+        <FileText color={theme.subText} size={20} />
+        <Text marginLeft="8px" fontSize={['14px', '16px']}>
+          <Trans>Docs</Trans>
+        </Text>
+      </BtnOutlined>
+    )
+  }
+
   return (
     <div style={{ position: 'relative', background: isDarkMode ? theme.buttonBlack : theme.white, width: '100%' }}>
       <AboutPage>
@@ -722,9 +760,7 @@ function AboutKyberSwap() {
             <BtnPrimary
               as={Link}
               to={
-                activeTab === VERSION.ELASTIC
-                  ? '/pools?tab=elastic&highlightAddLiquidityButton=true'
-                  : '/pools?tab=classic&highlightCreateButton=true'
+                activeTab === VERSION.ELASTIC ? '/pools?tab=elastic' : '/pools?tab=classic&highlightCreateButton=true'
               }
               onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
             >
@@ -801,39 +837,21 @@ function AboutKyberSwap() {
             </Flex>
           </Flex>
 
-          <Flex
-            sx={{ gap: '24px' }}
-            marginTop={['40px', '48px']}
-            flexDirection={above768 ? 'row' : 'column'}
-            maxWidth="756px"
-          >
-            <BtnPrimary
-              as={Link}
-              to={'/pools?tab=elastic&highlightCreateButton=true'}
-              onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_CREATE_NEW_POOL_CLICKED)}
-              style={{ flex: 1 }}
-            >
-              <Plus size={20} />
-              <Text marginLeft="8px" fontSize={['14px', '16px']}>
-                <Trans>Create New Pool</Trans>
-              </Text>
-            </BtnPrimary>
-            <Flex sx={{ flex: 2, gap: above768 ? '24px' : '16px' }}>
-              <ButtonLight style={{ flex: 1 }} as={ExternalLink} href="https://forms.gle/gLiNsi7iUzHws2BY8">
-                <Edit color={theme.primary} size={20} />
-                <Text marginLeft="8px" fontSize={['14px', '16px']}>
-                  <Trans>Contact Us</Trans>
-                </Text>
-              </ButtonLight>
-
-              <BtnOutlined style={{ flex: 1 }} as={ExternalLink} href="https://docs.kyberswap.com/">
-                <FileText color={theme.subText} size={20} />
-                <Text marginLeft="8px" fontSize={['14px', '16px']}>
-                  <Trans>Docs</Trans>
-                </Text>
-              </BtnOutlined>
+          {above768 ? (
+            <Flex sx={{ gap: '24px' }} marginTop={['40px', '48px']} maxWidth="696px">
+              {renderCreateNewPoolButton()}
+              {renderContactUsButton()}
+              {renderDocsButton()}
             </Flex>
-          </Flex>
+          ) : (
+            <Flex sx={{ gap: '24px', alignItems: 'center' }} marginTop={['40px', '48px']} flexDirection="column">
+              <Flex sx={{ justifyContent: 'center' }}>{renderCreateNewPoolButton()}</Flex>
+              <Flex sx={{ gap: '16px', width: '100%', justifyContent: 'center', flexWrap: 'wrap' }}>
+                {renderContactUsButton()}
+                {renderDocsButton()}
+              </Flex>
+            </Flex>
+          )}
 
           <Text as="h2" marginTop={['100px', '160px']} fontSize={['28px', '36px']} fontWeight="500" textAlign="center">
             <Trans>Committed to Security</Trans>

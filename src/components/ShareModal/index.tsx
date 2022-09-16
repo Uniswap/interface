@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import React, { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { Share2, X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
@@ -90,24 +90,30 @@ const ButtonWithHoverEffect = ({ children, onClick }: { children: (color: string
   )
 }
 
-export default function ShareModal({ url, onShared = () => null }: { url?: string; onShared?: () => void }) {
+export default function ShareModal({
+  title,
+  url,
+  onShared = () => null,
+}: {
+  title?: string
+  url?: string
+  onShared?: () => void
+}) {
   const isOpen = useModalOpen(ApplicationModal.SHARE)
   const toggle = useToggleModal(ApplicationModal.SHARE)
   const theme = useTheme()
   const { chainId } = useActiveWeb3React()
   const { pathname } = useLocation()
 
-  const modalTitle = pathname.startsWith('/swap')
-    ? t`Share this with your friends!`
-    : pathname.startsWith('/campaigns')
-    ? t`Share this campaign with your friends!`
-    : t`Share this pool with your friends!`
+  const modalTitle =
+    title ??
+    (pathname.startsWith('/swap')
+      ? t`Share this with your friends!`
+      : pathname.startsWith('/campaigns')
+      ? t`Share this campaign with your friends!`
+      : t`Share this pool with your friends!`)
 
-  const shareUrl = useMemo(() => {
-    if (url) return url
-    return window.location.href + `?networkId=${chainId}`
-  }, [chainId, url])
-
+  const shareUrl = url || window.location.href + `?networkId=${chainId}`
   const [showAlert, setShowAlert] = useState(false)
   const handleCopyClick = () => {
     setShowAlert(true)
@@ -177,7 +183,13 @@ export default function ShareModal({ url, onShared = () => null }: { url?: strin
           </ButtonWithHoverEffect>
         </Flex>
         <InputWrapper>
-          <input type="text" value={shareUrl} />
+          <input
+            type="text"
+            value={shareUrl}
+            onChange={() => {
+              /* empty */
+            }}
+          />
           <CopyToClipboard text={shareUrl} onCopy={handleCopyClick}>
             <ButtonPrimary fontSize={14} padding="8px 12px" width="auto">
               Copy Link

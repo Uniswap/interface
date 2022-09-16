@@ -1,9 +1,10 @@
 import { Trans } from '@lingui/macro'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
-import { ChevronDown, Eye } from 'react-feather'
+import { ChevronDown, Edit2, Eye } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
 
 import { Drop, MoneyBagOutline } from 'components/Icons'
 import AgriCulture from 'components/Icons/AgriCulture'
@@ -14,38 +15,132 @@ import { ExternalLink, StyledInternalLink } from 'theme'
 
 import { ChevronRight, GuideItem, GuideWrapper, ProMMFarmGuide, ProMMFarmGuideWrapper, ShowGuideBtn } from './styleds'
 
+const IconWrapper = styled.div`
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: ${({ theme }) => theme.primary};
+`
+
+const Highlight = styled.span`
+  color: ${({ theme }) => theme.text};
+  font-weight: 500;
+`
+
+const guideStepByVersion: Record<
+  VERSION,
+  Array<{
+    icon: React.ReactElement
+    content: React.ReactElement
+    title: string
+  }>
+> = {
+  [VERSION.ELASTIC]: [
+    {
+      content: (
+        <Trans>
+          <Highlight>Identify</Highlight> the Elastic farm you would like to participate in
+        </Trans>
+      ),
+      icon: <Eye size={20} />,
+      title: 'Step 1',
+    },
+    {
+      content: (
+        <Trans>
+          <Highlight>Add liquidity</Highlight> to the corresponding{' '}
+          {<StyledInternalLink to="/pools?tab=elastic">Elastic pool</StyledInternalLink>} and receive a NFT token for
+          your liquidity position
+        </Trans>
+      ),
+      icon: <Drop size={20} />,
+      title: 'Step 2',
+    },
+    {
+      content: (
+        <Trans>
+          <Highlight>Approve</Highlight> the farming contract (if you haven&apos;t) to let it access your liquidity
+          positions (NFT tokens)
+        </Trans>
+      ),
+      icon: <Edit2 size={18} />,
+      title: 'Step 3',
+    },
+    {
+      content: (
+        <Trans>
+          <Highlight>Deposit</Highlight> your liquidity position (NFT token) into the farming contract. Then{' '}
+          <Highlight>stake</Highlight> it into the farm
+        </Trans>
+      ),
+      icon: <Deposit width={20} height={20} />,
+      title: 'Step 4',
+    },
+    {
+      content: (
+        <Trans>
+          <Highlight>Harvest</Highlight> your farming rewards whenever you want
+        </Trans>
+      ),
+      icon: <AgriCulture width={20} height={20} />,
+      title: 'Step 5',
+    },
+    {
+      content: (
+        <Trans>
+          <Highlight>Claim</Highlight> your farming rewards from the{' '}
+          <StyledInternalLink to="/farms?type=vesting&tab=elastic">Vesting</StyledInternalLink> tab! Note: some farms
+          may have a vesting period
+        </Trans>
+      ),
+      icon: <MoneyBagOutline size={20} />,
+      title: 'Step 6',
+    },
+  ],
+  [VERSION.CLASSIC]: [
+    {
+      content: <Trans>Identify the Classic farm you would like to participate in</Trans>,
+      icon: <Eye size={20} />,
+      title: 'Step 1',
+    },
+    {
+      content: (
+        <Trans>
+          Add liquidity to the corresponding{' '}
+          <StyledInternalLink to="/pools?tab=classic">Classic pool</StyledInternalLink> to receive Liquidity Provider
+          (LP) tokens
+        </Trans>
+      ),
+      icon: <Drop size={20} />,
+      title: 'Step 2',
+    },
+    {
+      content: <Trans>Stake your LP tokens in the farm you identified earlier</Trans>,
+      icon: <Deposit width={20} height={20} />,
+      title: 'Step 3',
+    },
+    {
+      content: <Trans>Harvest your farming rewards whenever you want</Trans>,
+      icon: <AgriCulture width={20} height={20} />,
+      title: 'Step 4',
+    },
+    {
+      content: <Trans>Claim your farming rewards! (Note: some farms may have a vesting period)</Trans>,
+      icon: <MoneyBagOutline size={20} />,
+      title: 'Step 5',
+    },
+  ],
+}
+
 function FarmGuide({ farmType }: { farmType: VERSION }) {
   const [show, setShow] = useState(!isMobile)
   const theme = useTheme()
   const upToMedium = useMedia('(max-width: 992px)')
 
-  const step1Text =
-    farmType === VERSION.ELASTIC ? (
-      <Trans>Identify the Elastic farm you would like to participate in</Trans>
-    ) : (
-      <Trans>Identify the Classic farm you would like to participate in</Trans>
-    )
-
-  const step2Text =
-    farmType === VERSION.CLASSIC ? (
-      <Trans>
-        Add liquidity to the corresponding{' '}
-        {<StyledInternalLink to="/pools?tab=classic">Classic pool</StyledInternalLink>} to receive Liquidity Provider
-        (LP) tokens
-      </Trans>
-    ) : (
-      <Trans>
-        Add liquidity to the corresponding{' '}
-        {<StyledInternalLink to="/pools?tab=elastic">Elastic pool</StyledInternalLink>} to receive a NFT token that
-        represents your liquidity position
-      </Trans>
-    )
-  const step3Text =
-    farmType === VERSION.CLASSIC ? (
-      <Trans>Stake your LP tokens in the farm you identified earlier</Trans>
-    ) : (
-      <Trans>Deposit your liquidity position (NFT token) and then stake it into the farm you identified earlier </Trans>
-    )
+  const guideSteps = guideStepByVersion[farmType]
 
   return (
     <ProMMFarmGuideWrapper>
@@ -85,85 +180,33 @@ function FarmGuide({ farmType }: { farmType: VERSION }) {
         </ShowGuideBtn>
       </Flex>
 
-      <GuideWrapper show={show}>
-        <GuideItem>
-          <Flex marginBottom="0.5rem" alignItems="center" sx={{ gap: '8px' }}>
-            <Eye size={20} color={theme.primary} />
-            <Text flex={1}>
-              <Text color={theme.text} fontWeight="500" as="span">
-                STEP 1
-              </Text>
-              {upToMedium && <>: {step1Text} </>}
-            </Text>
-          </Flex>
-          {!upToMedium && step1Text}
-        </GuideItem>
-        <ChevronRight />
-
-        <GuideItem>
-          <Flex marginBottom="0.5rem" alignItems="center" sx={{ gap: '8px' }}>
-            <Drop size={20} />
-            <Text flex={1}>
-              <Text fontWeight="500" color={theme.text} as="span">
-                STEP 2
-              </Text>
-              {upToMedium && <>: {step2Text}</>}
-            </Text>
-          </Flex>
-          {!upToMedium && step2Text}
-        </GuideItem>
-        <ChevronRight />
-
-        <GuideItem>
-          <Flex marginBottom="0.5rem" alignItems="center" sx={{ gap: '8px' }} color={theme.primary}>
-            <Deposit width={20} height={20} />
-            <Text color={theme.subText} flex={1}>
-              <Text fontWeight="500" color={theme.text} as="span">
-                STEP 3
-              </Text>
-              {upToMedium && <>: {step3Text}</>}
-            </Text>
-          </Flex>
-          {!upToMedium && step3Text}
-        </GuideItem>
-
-        <ChevronRight />
-
-        <GuideItem>
-          <Flex marginBottom="0.5rem" alignItems="center" sx={{ gap: '8px' }}>
-            <AgriCulture color={theme.primary} width={20} height={20} />
-            <Text flex={1}>
-              <Text fontWeight="500" color={theme.text} as="span">
-                STEP 4
-              </Text>
-
-              {upToMedium && (
-                <>
-                  : <Trans>Harvest your farming rewards whenever you want</Trans>
-                </>
-              )}
-            </Text>
-          </Flex>
-          {!upToMedium && <Trans>Harvest your farming rewards whenever you want</Trans>}
-        </GuideItem>
-
-        <ChevronRight />
-        <GuideItem>
-          <Flex marginBottom="0.5rem" alignItems="center" sx={{ gap: '8px' }}>
-            <MoneyBagOutline size={20} color={theme.primary} />
-            <Text flex={1}>
-              <Text fontWeight="500" color={theme.text} as="span">
-                STEP 5
-              </Text>
-              {upToMedium && (
-                <>
-                  : <Trans>Claim your farming rewards! (Note: some farms may have a vesting period)</Trans>
-                </>
-              )}
-            </Text>
-          </Flex>
-          {!upToMedium && <Trans>Claim your farming rewards! (Note: some farms may have a vesting period)</Trans>}
-        </GuideItem>
+      <GuideWrapper show={show} numOfSteps={guideSteps.length}>
+        {guideSteps.map((step, i) => {
+          return (
+            <>
+              {i !== 0 && <ChevronRight />}
+              <GuideItem>
+                <Flex marginBottom="0.5rem" alignItems="center" sx={{ gap: '8px' }}>
+                  <IconWrapper>{step.icon}</IconWrapper>
+                  <Text flex={1}>
+                    <Text
+                      color={theme.text}
+                      fontWeight="500"
+                      as="span"
+                      sx={{
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {step.title}
+                    </Text>
+                    {upToMedium && <>: {step.content} </>}
+                  </Text>
+                </Flex>
+                {!upToMedium && step.content}
+              </GuideItem>
+            </>
+          )
+        })}
 
         {upToMedium && (
           <Flex justifyContent="flex-end">

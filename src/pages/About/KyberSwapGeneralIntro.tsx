@@ -77,7 +77,7 @@ const KyberSwapGeneralIntro = () => {
     return (
       <ButtonLight
         as={Link}
-        to={'/pools?tab=elastic&highlightAddLiquidityButton=true'}
+        to={'/pools?tab=elastic'}
         onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
         style={{
           width: '216px',

@@ -1,4 +1,4 @@
-import { Currency } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -12,6 +12,7 @@ import LocalLoader from 'components/LocalLoader'
 import Pagination from 'components/Pagination'
 import { Input as PaginationInput } from 'components/Pagination/PaginationInputOnMobile'
 import ShareModal from 'components/ShareModal'
+import { NETWORKS_INFO } from 'constants/networks'
 import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
@@ -230,14 +231,17 @@ export default function ProAmmPoolList({
             )}
           </ClickableText>
         </Flex>
-        <Flex alignItems="center" justifyContent="flex-start">
+        <Flex alignItems="center" justifyContent="flex-end">
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.APR)
               setSortDirection(sortedColumn !== SORT_FIELD.APR ? true : !sortDirection)
             }}
+            style={{
+              paddingRight: '20px', // leave some space for the money bag in the value rows
+            }}
           >
-            <Trans>AVG APR</Trans>
+            <Trans>APR</Trans>
             {sortedColumn === SORT_FIELD.APR ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -248,7 +252,9 @@ export default function ProAmmPoolList({
               ''
             )}
 
-            <InfoHelper text={t`Average estimated return based on yearly fees of the pool`} />
+            <InfoHelper
+              text={t`Average estimated return based on yearly trading fees from the pool & additional bonus rewards if you participate in the farm`}
+            />
           </ClickableText>
         </Flex>
         <Flex alignItems="center" justifyContent="flex-end">
@@ -313,8 +319,9 @@ export default function ProAmmPoolList({
   const openShareModal = useOpenModal(ApplicationModal.SHARE)
   const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
 
+  const chainRoute = NETWORKS_INFO[chainId as ChainId].route
   const shareUrl = sharedPoolId
-    ? window.location.origin + '/pools?search=' + sharedPoolId + '&tab=elastic&networkId=' + chainId
+    ? window.location.origin + '/pools?search=' + sharedPoolId + '&tab=elastic&networkId=' + chainRoute
     : undefined
 
   useEffect(() => {

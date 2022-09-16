@@ -40,9 +40,13 @@ export const ShowGuideBtn = styled.button<{ show: boolean }>`
   transition: transform 0.2s;
 `
 
-export const GuideWrapper = styled.div<{ show?: boolean }>`
+export const GuideWrapper = styled.div<{ show?: boolean; numOfSteps: number }>`
   display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+  ${({ numOfSteps }) =>
+    // this is to generate 1fr auto 1fr auto 1fr ....
+    css`
+      grid-template-columns: ${Array(numOfSteps).fill('1fr').join(' auto ')};
+    `}
   margin-top: ${({ show }) => (show ? '1rem' : 0)};
   height: ${({ show }) => (show ? 'auto' : 0)};
   max-height: ${({ show }) => (show ? '1000px' : 0)};
@@ -338,9 +342,9 @@ export const ListItemWrapper = styled.div`
 export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 1.5fr 1fr 0.75fr 1fr 1.5fr 1fr 1fr;
-  grid-template-areas: 'pools liq apy vesting_duration reward staked_balance expand action';
-  padding: 16px 20px;
+  grid-template-columns: 1.5fr 1fr 0.75fr 1fr 1.5fr 1fr 140px;
+  grid-template-areas: 'pools liq apy vesting_duration reward staked_balance action';
+  padding: 16px 24px;
   font-size: 12px;
   align-items: center;
   height: fit-content;
@@ -368,6 +372,9 @@ export const ProMMFarmTableHeader = styled(TableHeader)`
   grid-template-columns: 200px 0.5fr 0.75fr 1fr 0.5fr 0.75fr 0.75fr;
   grid-template-areas: 'token_pairs staked_tvl apr ending_in my_deposit reward action';
   grid-gap: 2rem;
+
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     grid-template-columns: 170px 0.5fr 0.75fr 1fr 0.5fr 0.75fr 0.75fr;
@@ -432,8 +439,8 @@ export const Tag = styled.div<{ tag?: string }>`
 export const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 1.5fr 1fr 0.75fr 1fr 1.5fr 1fr 1fr;
-  grid-template-areas: 'pools liq end apy vesting_duration reward staked_balance expand';
+  grid-template-columns: 1.5fr 1fr 0.75fr 1fr 1.5fr 1fr 140px;
+  grid-template-areas: 'pools liq apy vesting_duration reward staked_balance action';
   padding: 15px 0 13px;
   font-size: 14px;
   align-items: center;
@@ -584,7 +591,7 @@ export const InfoRow = styled.div`
 
 export const RewardMobileArea = styled.div`
   background: ${({ theme }) => theme.buttonBlack};
-  border-radius: 8px;
+  border-radius: 16px;
   padding: 12px;
   margin-top: 12px;
 `

@@ -16,6 +16,7 @@ import UpcomingFarms from 'components/UpcomingFarms'
 import Vesting from 'components/Vesting'
 import ProMMVesting from 'components/Vesting/ProMMVesting'
 import YieldPools from 'components/YieldPools'
+import ElasticFarmSummary from 'components/YieldPools/ElasticFarmSummary'
 import FarmGuide from 'components/YieldPools/FarmGuide'
 import ProMMFarms from 'components/YieldPools/ProMMFarms'
 import {
@@ -137,6 +138,8 @@ const Farms = () => {
         </TopBar>
 
         <FarmGuide farmType={farmType as VERSION} />
+
+        {farmType === VERSION.ELASTIC && <ElasticFarmSummary />}
 
         {below768 && rewardPriceAndTutorial}
 

@@ -93,6 +93,17 @@ const StakedRow = styled.div`
   font-size: 12px;
 `
 
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 20px;
+
+  > * {
+    /* to make sure all immediate buttons take equal width */
+    flex: 1;
+  }
+`
+
 interface PositionListItemProps {
   positionDetails: PositionDetails | UserPositionFarm
   farmAvailable?: boolean
@@ -277,7 +288,7 @@ export default function PositionListItem({
               <Trans>Go to Farm</Trans>
             </ButtonPrimary>
           ) : (
-            <Flex marginBottom="20px" sx={{ gap: '1rem' }}>
+            <ButtonGroup>
               {removed ? (
                 <ButtonOutlined disabled padding="8px" style={{ flex: 1 }}>
                   <Text width="max-content" fontSize="14px">
@@ -285,21 +296,24 @@ export default function PositionListItem({
                   </Text>
                 </ButtonOutlined>
               ) : farmAvailable ? (
-                <ButtonOutlined
-                  padding="0"
-                  style={{
-                    flex: 1,
-                    color: theme.disableText,
-                    border: `1px solid ${theme.disableText}`,
-                    cursor: 'not-allowed',
-                  }}
+                <MouseoverTooltip
+                  text={t`You need to withdraw your deposited liquidity position from the Farm first`}
+                  placement="top"
                 >
-                  <MouseoverTooltip text={farmAvailable ? t`You need to withdraw your liquidity first` : ''}>
+                  <ButtonOutlined
+                    padding="0"
+                    style={{
+                      width: '100%',
+                      color: theme.disableText,
+                      border: `1px solid ${theme.disableText}`,
+                      cursor: 'not-allowed',
+                    }}
+                  >
                     <Text width="max-content" fontSize="14px" padding="8px">
                       <Trans>Remove Liquidity</Trans>
                     </Text>
-                  </MouseoverTooltip>
-                </ButtonOutlined>
+                  </ButtonOutlined>
+                </MouseoverTooltip>
               ) : (
                 <ButtonOutlined
                   padding="8px"
@@ -352,7 +366,7 @@ export default function PositionListItem({
                   </Text>
                 </ButtonPrimary>
               )}
-            </Flex>
+            </ButtonGroup>
           )}
           <Divider sx={{ marginBottom: '20px' }} />
           <RowBetween>

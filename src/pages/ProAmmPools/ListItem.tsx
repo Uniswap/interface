@@ -13,6 +13,7 @@ import Divider from 'components/Divider'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
+import FarmingPoolAPRCell from 'components/YieldPools/FarmingPoolAPRCell'
 import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
@@ -106,6 +107,7 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
   const { data: farms } = useProMMFarms()
 
   const { mixpanelHandler } = useMixpanel()
+
   return (
     <>
       {pair.map((pool, index) => {
@@ -133,11 +135,20 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
             ? nativeOnChain(chainId as ChainId).symbol
             : token1.symbol
 
-        const isFarmingPool = Object.values(farms)
-          .flat()
-          .filter(item => item.endTime > +new Date() / 1000)
-          .map(item => item.poolAddress.toLowerCase())
-          .includes(pool.address.toLowerCase())
+        let fairlaunchAddress = ''
+        let pid = -1
+        Object.keys(farms).forEach(addr => {
+          const farm = farms[addr]
+            .filter(item => item.endTime > Date.now() / 1000)
+            .find(item => item.poolAddress.toLowerCase() === pool.address.toLowerCase())
+
+          if (farm) {
+            fairlaunchAddress = addr
+            pid = farm.pid
+          }
+        })
+
+        const isFarmingPool = !!fairlaunchAddress && pid !== -1
 
         return (
           <TableRow
@@ -159,7 +170,6 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
             ) : (
               <DataText />
             )}
-
             <DataText grid-area="pool" style={{ position: 'relative' }}>
               {isFarmingPool && (
                 <Flex
@@ -187,8 +197,19 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
               </Text>
             </DataText>
             <DataText alignItems="flex-start">{formatDollarAmount(pool.tvlUSD)}</DataText>
-            <DataText alignItems="flex-start" color={theme.apr}>
-              {pool.apr.toFixed(2)}%
+            <DataText alignItems="flex-end" color={theme.apr}>
+              {isFarmingPool ? (
+                <FarmingPoolAPRCell poolAPR={pool.apr} fairlaunchAddress={fairlaunchAddress} pid={pid} />
+              ) : (
+                <Flex
+                  sx={{
+                    alignItems: 'center',
+                    paddingRight: '20px', // to make all the APR numbers vertically align
+                  }}
+                >
+                  {pool.apr.toFixed(2)}%
+                </Flex>
+              )}
             </DataText>
             <DataText alignItems="flex-end">{formatDollarAmount(pool.volumeUSD)}</DataText>
             <DataText alignItems="flex-end">
@@ -249,14 +270,16 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
                 </MouseoverTooltip>
               </ExternalLink>
 
-              {index === 0 && (
-                <ButtonIcon
-                  disabled={pair.length === 1}
-                  style={{ transition: 'transform 0.2s', transform: `rotate(${isOpen ? '0' : '180deg'})` }}
-                >
-                  <ChevronUp size="16px" color={theme.text} />
-                </ButtonIcon>
-              )}
+              <ButtonIcon
+                disabled={pair.length === 1}
+                style={{
+                  transition: 'transform 0.2s',
+                  transform: `rotate(${isOpen ? '0' : '180deg'})`,
+                  visibility: index === 0 ? 'visible' : 'hidden',
+                }}
+              >
+                <ChevronUp size="16px" color={theme.text} />
+              </ButtonIcon>
             </ButtonWrapper>
           </TableRow>
         )

@@ -5,7 +5,15 @@ import styled from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import useTheme from 'hooks/useTheme'
-import { ButtonText, ExternalLink } from 'theme'
+import { ExternalLink } from 'theme'
+
+const DropdownIcon = styled(DropdownSVG)`
+  transition: transform 300ms;
+  color: ${({ theme }) => theme.subText};
+  &[data-flip='true'] {
+    transform: rotate(180deg);
+  }
+`
 
 const Wrapper = styled.div`
   border-radius: 20px;
@@ -55,7 +63,7 @@ export const Highlighted = styled.span`
 const ContentForActiveFarms = () => {
   const theme = useTheme()
   return (
-    <StyledUL>
+    <StyledUL style={{ marginTop: '8px' }}>
       <li>
         <Trans>
           We recently discovered an issue in our Elastic farming contract where you might not be able to harvest your
@@ -109,7 +117,7 @@ const ContentForActiveFarms = () => {
 const ContentForEndedFarms = () => {
   const theme = useTheme()
   return (
-    <StyledUL>
+    <StyledUL style={{ marginTop: '8px' }}>
       <li>
         <Trans>
           We recently discovered an issue in our Elastic farming contract where you might not be able to harvest your
@@ -148,7 +156,13 @@ const FarmIssueAnnouncement: React.FC<Props> = ({ isEnded }) => {
 
   return (
     <Wrapper>
-      <Flex justifyContent="space-between">
+      <Flex
+        justifyContent="space-between"
+        onClick={() => setShow(prev => !prev)}
+        sx={{
+          cursor: 'pointer',
+        }}
+      >
         <Flex alignItems="center">
           <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -161,9 +175,15 @@ const FarmIssueAnnouncement: React.FC<Props> = ({ isEnded }) => {
           </Text>
         </Flex>
 
-        <ButtonText onClick={() => setShow(prev => !prev)} style={{ color: theme.subText }}>
-          <DropdownSVG style={{ transform: `rotate(${!show ? 0 : '180deg'})` }} />
-        </ButtonText>
+        <Flex
+          sx={{
+            flex: '0 0 24px',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <DropdownIcon data-flip={show} />
+        </Flex>
       </Flex>
 
       {show && (

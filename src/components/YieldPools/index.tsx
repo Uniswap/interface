@@ -209,7 +209,14 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
             </ClickableText>
           </Flex>
 
-          <Flex grid-area="apy" alignItems="center" justifyContent="flex-end">
+          <Flex
+            grid-area="apy"
+            alignItems="center"
+            justifyContent="flex-end"
+            sx={{
+              paddingRight: '18px', // to make the cells vertically align
+            }}
+          >
             <ClickableText>
               <Trans>APR</Trans>
             </ClickableText>

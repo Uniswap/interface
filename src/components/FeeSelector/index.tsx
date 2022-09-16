@@ -7,10 +7,15 @@ import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as Down } from 'assets/svg/down.svg'
+import { MoneyBag } from 'components/Icons'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useProAmmPoolInfos } from 'hooks/useProAmmPoolInfo'
 import useTheme from 'hooks/useTheme'
+import { useProMMFarmsFetchOnlyOne } from 'state/farms/promm/hooks'
 
 import { useFeeTierDistribution } from './hook'
+
+const FEE_AMOUNTS = [FeeAmount.STABLE, FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH]
 
 const FEE_AMOUNT_DETAIL: { [key: string]: { label: string; description: ReactNode } } = {
   [FeeAmount.STABLE]: {
@@ -55,24 +60,39 @@ const FeeOption = ({
   description,
   onClick,
   percentSelected,
+  hasFarm,
 }: {
   onClick: () => void
   active: boolean
   label: string
   description: ReactNode
   percentSelected?: string
+  hasFarm: boolean
 }) => {
   const theme = useTheme()
   return (
     <Option active={active} role="button" onClick={onClick}>
-      <div>
-        <Text fontWeight={500} fontSize="14px">
-          {label}%
-        </Text>
-        <Text color={theme.subText} marginTop="4px" fontSize="10px">
+      <Flex
+        sx={{
+          flexDirection: 'column',
+        }}
+      >
+        <Flex
+          sx={{
+            alignItems: 'center',
+            gap: '4px',
+          }}
+        >
+          <Text as="span" fontWeight={500} fontSize="14px">
+            {label}%
+          </Text>
+          {hasFarm && <MoneyBag size={14} color={theme.apr} />}
+        </Flex>
+
+        <Text as="span" color={theme.subText} marginTop="4px" fontSize="10px">
           {description}
         </Text>
-      </div>
+      </Flex>
       {percentSelected && <FeeSelectionPercent>{percentSelected}% select</FeeSelectionPercent>}
     </Option>
   )
@@ -123,8 +143,11 @@ function FeeSelector({
   currencyA: Currency | undefined
   currencyB: Currency | undefined
 }) {
+  const theme = useTheme()
   const [show, setShow] = useState(false)
   const feeTierDistribution = useFeeTierDistribution(currencyA, currencyB)
+
+  const farms = useProMMFarmsFetchOnlyOne()
 
   const showFeeDistribution = Object.values(feeTierDistribution).some(item => item !== 0)
 
@@ -133,16 +156,39 @@ function FeeSelector({
     setShow(false)
   })
 
+  const farmingPoolAddress = Object.values(farms)
+    .flat()
+    .map(farm => farm.poolAddress)
+
+  const poolAddresses = useProAmmPoolInfos(currencyA, currencyB, FEE_AMOUNTS)
+  const tiersThatHasFarm = FEE_AMOUNTS.filter((fee, i) => {
+    const poolAddress = poolAddresses[i]
+    return farmingPoolAddress.includes(poolAddress)
+  })
+
   return (
     <FeeSelectorWrapper role="button" onClick={() => setShow(prev => !prev)} ref={ref}>
-      <div>
-        <Text fontSize="14px" lineHeight="20px" fontWeight={500}>
-          {FEE_AMOUNT_DETAIL[feeAmount].label}%
-        </Text>
-        <Text fontSize={10} marginTop="4px">
+      <Flex
+        sx={{
+          flexDirection: 'column',
+        }}
+      >
+        <Flex
+          sx={{
+            alignItems: 'center',
+            gap: '4px',
+          }}
+        >
+          <Text as="span" fontSize="14px" lineHeight="20px" fontWeight={500}>
+            {FEE_AMOUNT_DETAIL[feeAmount].label}%
+          </Text>
+          {tiersThatHasFarm.includes(feeAmount) && <MoneyBag size={14} color={theme.apr} />}
+        </Flex>
+
+        <Text as="span" marginTop="4px" fontSize="10px">
           {FEE_AMOUNT_DETAIL[feeAmount].description}
         </Text>
-      </div>
+      </Flex>
 
       <Flex alignItems="center" sx={{ gap: '8px' }}>
         {showFeeDistribution && (
@@ -153,7 +199,7 @@ function FeeSelector({
       </Flex>
 
       <SelectWrapper show={show}>
-        {[FeeAmount.STABLE, FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map(_feeAmount => {
+        {FEE_AMOUNTS.map(_feeAmount => {
           return (
             <FeeOption
               onClick={() => onChange(_feeAmount)}
@@ -162,6 +208,7 @@ function FeeSelector({
               label={FEE_AMOUNT_DETAIL[_feeAmount].label}
               description={FEE_AMOUNT_DETAIL[_feeAmount].description}
               percentSelected={showFeeDistribution ? feeTierDistribution[_feeAmount].toFixed(0) : undefined}
+              hasFarm={tiersThatHasFarm.includes(_feeAmount)}
             />
           )
         })}

@@ -15,7 +15,6 @@ import { MoneyBag } from 'components/Icons'
 import Loader from 'components/Loader'
 import {
   AMPLiquidityAndTVLContainer,
-  APR,
   AddressAndAMPContainer,
   AddressWrapper,
   ButtonWrapper,
@@ -32,16 +31,18 @@ import {
   TokenPairContainer,
 } from 'components/PoolList/styled'
 import { MouseoverTooltip } from 'components/Tooltip'
+import FarmingPoolAPRCell from 'components/YieldPools/FarmingPoolAPRCell'
 import { MAX_ALLOW_APY } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
 import { usePoolDetailModalToggle } from 'state/application/hooks'
+import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
 import { setSelectedPool } from 'state/pools/actions'
 import { SubgraphPoolData, UserLiquidityPosition, useSharedPoolIdManager } from 'state/pools/hooks'
 import { formattedNum, shortenAddress } from 'utils'
 import { currencyId } from 'utils/currencyId'
-import { getMyLiquidity, getTradingFeeAPR, parseSubgraphPoolData, useCheckIsFarmingPool } from 'utils/dmm'
+import { getMyLiquidity, getTradingFeeAPR, parseSubgraphPoolData } from 'utils/dmm'
 
 export interface ListItemGroupProps {
   sortedFilteredSubgraphPoolsObject: Map<string, SubgraphPoolData[]>
@@ -131,7 +132,9 @@ const ListItemGroup = ({
 
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(10000))
 
-  const isFarmingPool = useCheckIsFarmingPool(poolData.id)
+  const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
+  const farm = uniqueAndActiveFarms.find(f => f.id.toLowerCase() === poolData.id.toLowerCase())
+  const isFarmingPool = !!farm
 
   // Shorten address with 0x + 3 characters at start and end
   const shortenPoolAddress = shortenAddress(poolData.id, 3)
@@ -171,6 +174,33 @@ const ListItemGroup = ({
   const theme = useTheme()
 
   const [, setSharedPoolId] = useSharedPoolIdManager()
+
+  const renderAPR = () => {
+    if (!poolData) {
+      return <Loader />
+    }
+
+    if (Number(oneYearFL) > MAX_ALLOW_APY) {
+      return '--'
+    }
+
+    if (isFarmingPool) {
+      return (
+        <FarmingPoolAPRCell poolAPR={Number(oneYearFL)} fairlaunchAddress={farm.fairLaunchAddress} pid={farm.pid} />
+      )
+    }
+
+    return (
+      <Flex
+        sx={{
+          alignItems: 'center',
+          paddingRight: '20px', // to make all the APR numbers vertically align
+        }}
+      >
+        {oneYearFL}%
+      </Flex>
+    )
+  }
 
   return (
     <>
@@ -233,9 +263,14 @@ const ListItemGroup = ({
             </AMPLiquidityAndTVLContainer>
           )}
         </DataText>
-        <APR alignItems="flex-end">
-          {!poolData ? <Loader /> : `${Number(oneYearFL) > MAX_ALLOW_APY ? '--' : oneYearFL + '%'}`}
-        </APR>
+        <DataText
+          alignItems="flex-end"
+          style={{
+            color: theme.apr,
+          }}
+        >
+          {renderAPR()}
+        </DataText>
         <DataText alignItems="flex-end">{!poolData ? <Loader /> : formattedNum(volume, true)}</DataText>
         <DataText alignItems="flex-end">{!poolData ? <Loader /> : formattedNum(fee24H, true)}</DataText>
         <DataText alignItems="flex-end">{getMyLiquidity(myLiquidity)}</DataText>

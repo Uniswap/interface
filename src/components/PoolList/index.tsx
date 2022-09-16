@@ -1,4 +1,4 @@
-import { Currency } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -15,6 +15,7 @@ import ListItem from 'components/PoolList/ListItem'
 import ShareModal from 'components/ShareModal'
 import { ClickableText } from 'components/YieldPools/styleds'
 import { AMP_HINT, AMP_LIQUIDITY_HINT, MAX_ALLOW_APY } from 'constants/index'
+import { NETWORKS_INFO } from 'constants/networks'
 import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
@@ -182,7 +183,13 @@ const PoolList = ({
             )}
           </ClickableText>
         </Flex>
-        <Flex alignItems="center" justifyContent="flex-end">
+        <Flex
+          alignItems="center"
+          justifyContent="flex-end"
+          sx={{
+            paddingRight: '20px', // to make the money bag icon in the cells vertically align
+          }}
+        >
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.APR)
@@ -367,8 +374,10 @@ const PoolList = ({
   const [sharedPoolId, setSharedPoolId] = useSharedPoolIdManager()
   const openShareModal = useOpenModal(ApplicationModal.SHARE)
   const isShareModalOpen = useModalOpen(ApplicationModal.SHARE)
+
+  const chainRoute = NETWORKS_INFO[chainId as ChainId].route
   const shareUrl = sharedPoolId
-    ? window.location.origin + '/pools?search=' + sharedPoolId + '&networkId=' + chainId
+    ? window.location.origin + '/pools?tab=classic&search=' + sharedPoolId + '&networkId=' + chainRoute
     : undefined
 
   useEffect(() => {
