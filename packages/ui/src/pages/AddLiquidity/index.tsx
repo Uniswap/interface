@@ -789,7 +789,13 @@ export default function AddLiquidity({
           the pool. And earnings will be claimed while removing your liquidity.
         </Text>
         <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0' }}></Box> */}
-        <Box>
+        <Box
+          sx={{
+            button: {
+              maxHeight: '3rem'
+            }
+          }}
+        >
           {addIsUnsupported ? (
             <AutoColumn style={{ marginTop: '1rem' }}>
               <ButtonPrimary disabled={true}>
@@ -810,6 +816,9 @@ export default function AddLiquidity({
                   <RowBetween>
                     {approvalA !== ApprovalState.APPROVED && (
                       <ButtonPrimary
+                        style={{
+                          marginBottom: '0.5rem'
+                        }}
                         onClick={approveACallback}
                         disabled={approvalA === ApprovalState.PENDING}
                         width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
@@ -823,6 +832,9 @@ export default function AddLiquidity({
                     )}
                     {approvalB !== ApprovalState.APPROVED && (
                       <ButtonPrimary
+                        style={{
+                          marginBottom: '0.5rem'
+                        }}
                         onClick={approveBCallback}
                         disabled={approvalB === ApprovalState.PENDING}
                         width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
