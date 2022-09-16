@@ -69,7 +69,7 @@ export const SwapTokenForTokenComponent = () => {
 export const SwapTokenForTokenModal = (props: Props) => {
     const { isOpen, onDismiss, item } = props
     const [inputCurrency, outputCurrency] = [
-        useCurrency(item?.screenerToken?.quoteToken?.address || WETH9[1].address),
+        useCurrency(item?.screenerToken?.quoteToken?.address || 'ETH'),
         useCurrency(item?.screenerToken?.baseToken?.address || item?.addr)
     ]
 

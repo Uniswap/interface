@@ -376,7 +376,7 @@ export const FomoPage = () => {
         || a?.symbol.toLowerCase().includes(searchValue?.toLowerCase());
       return true;
     });
-    if (shouldFlagSafe)
+    if (shouldFlagSafe) 
       sorted = sorted.filter(i => !!i.safe)
     const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
     const endIndex = startIndex + AMT_PER_PAGE;
@@ -407,7 +407,7 @@ export const FomoPage = () => {
     })
 
     if (shouldFlagSafe) {
-      sorted = sorted?.filter(item => item?.safe === true)
+      sorted = sorted?.filter(item => item?.safe === true && (item?.buyTax ?? 0) < 50 && (item?.sellTax ?? 0) < 50)
     }
 
     const pages = sorted.length / AMT_PER_PAGE;
@@ -632,7 +632,7 @@ export const FomoPage = () => {
           <React.Fragment>
           <td style={{ fontSize: 12 }}>
             <span>{item.name}</span>
-            {[item?.sellTax, item?.buyTax].some((tax) => Boolean(tax) && Boolean(tax ?? 0 > 50)) && (
+            {[item.sellTax, item.buyTax].some((tax) => Boolean(tax) && Boolean((tax ?? 0) > 50)) && (
               <div className="rug-overlay">
                 RUG PULLED
               </div>
