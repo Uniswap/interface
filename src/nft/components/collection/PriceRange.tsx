@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { FocusEventHandler, FormEvent } from 'react'
 import { useLocation } from 'react-router-dom'
 
-import { useCollectionAttributes } from '../../hooks/useCollectionAttributes'
+import { useCollectionFilters } from '../../hooks/useCollectionFilters'
 import { isNumber } from '../../utils/numbers'
 import { scrollToTop } from '../../utils/scrollToTop'
 import { Row } from '../Flex'
@@ -11,10 +11,10 @@ import { NumericInput } from '../layout/Input'
 
 export const PriceRange = () => {
   const [placeholderText, setPlaceholderText] = useState('')
-  const setMinPrice = useCollectionAttributes((state) => state.setMinPrice)
-  const setMaxPrice = useCollectionAttributes((state) => state.setMaxPrice)
-  const minPrice = useCollectionAttributes((state) => state.minPrice)
-  const maxPrice = useCollectionAttributes((state) => state.maxPrice)
+  const setMinPrice = useCollectionFilters((state) => state.setMinPrice)
+  const setMaxPrice = useCollectionFilters((state) => state.setMaxPrice)
+  const minPrice = useCollectionFilters((state) => state.minPrice)
+  const maxPrice = useCollectionFilters((state) => state.maxPrice)
   const isMobile = useIsMobile()
 
   const location = useLocation()

@@ -42,6 +42,7 @@ export const Filters = ({
       return groupedTraits
     } else return {}
   }, [traits, traitsByAmount])
+
   const [buyNowHovered, toggleBuyNowHover] = useReducer((state) => !state, false)
   const [search, setSearch] = useState('')
 

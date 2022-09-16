@@ -11,15 +11,24 @@ import { useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 
+import useDebounce from '../../../hooks/useDebounce'
+
 interface CollectionNftsProps {
   contractAddress: string
 }
 
 export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
-  const { markets, buyNow } = useCollectionFilters((state) => ({
+  const { markets, minPrice, maxPrice, buyNow, traits } = useCollectionFilters((state) => ({
     markets: state.markets,
     buyNow: state.buyNow,
+    traits: state.traits,
+    minPrice: state.minPrice,
+    maxPrice: state.maxPrice,
   }))
+
+  const debouncedMinPrice = useDebounce(minPrice, 500)
+  const debouncedMaxPrice = useDebounce(maxPrice, 500)
+
   const {
     data: collectionAssets,
     isSuccess: AssetsFetchSuccess,
@@ -29,9 +38,15 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     [
       'collectionNfts',
       {
+        traits,
         contractAddress,
         markets,
         notForSale: !buyNow,
+        price: {
+          low: debouncedMinPrice,
+          high: debouncedMaxPrice,
+          symbol: 'ETH',
+        },
       },
     ],
     async ({ pageParam = 0 }) => {
@@ -40,6 +55,12 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
         markets,
         notForSale: !buyNow,
         pageParam,
+        traits,
+        price: {
+          low: debouncedMinPrice,
+          high: debouncedMaxPrice,
+          symbol: 'ETH',
+        },
       })
     },
     {

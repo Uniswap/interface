@@ -6,7 +6,7 @@ import { FormEvent, MouseEvent } from 'react'
 import { useEffect, useLayoutEffect, useState } from 'react'
 
 import { subheadSmall } from '../../css/common.css'
-import { Trait, useCollectionAttributes } from '../../hooks/useCollectionAttributes'
+import { Trait, useCollectionFilters } from '../../hooks/useCollectionFilters'
 import { Box } from '../Box'
 import { Column, Row } from '../Flex'
 import { ChevronUpIcon } from '../icons'
@@ -27,9 +27,9 @@ const TraitItem = ({
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
   const [hovered, setHovered] = useState(false)
   const handleHover = () => setHovered(!hovered)
-  const toggleShowFullTraitName = useCollectionAttributes((state) => state.toggleShowFullTraitName)
+  const toggleShowFullTraitName = useCollectionFilters((state) => state.toggleShowFullTraitName)
 
-  const { shouldShow, trait_value, trait_type } = useCollectionAttributes((state) => state.showFullTraitName)
+  const { shouldShow, trait_value, trait_type } = useCollectionFilters((state) => state.showFullTraitName)
   const isEllipsisActive = (e: MouseEvent<HTMLElement>) => {
     if (e.currentTarget.offsetWidth < e.currentTarget.scrollWidth) {
       toggleShowFullTraitName({
@@ -57,6 +57,7 @@ const TraitItem = ({
   }
 
   const showFullTraitName = shouldShow && trait_type === trait.trait_type && trait_value === trait.trait_value
+
   return (
     <Row
       key={trait.trait_value}
@@ -84,7 +85,7 @@ const TraitItem = ({
         onMouseLeave={() => toggleShowFullTraitName({ shouldShow: false, trait_type: '', trait_value: '' })}
       >
         {trait.trait_type === 'Number of traits'
-          ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}}`
+          ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
           : trait.trait_value}
       </Box>
       <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
@@ -99,9 +100,9 @@ const TraitItem = ({
 export const TraitSelect = ({ traits, type, search }: { traits: Trait[]; type: string; search: string }) => {
   const debouncedSearch = useDebounce(search, 300)
 
-  const addTrait = useCollectionAttributes((state) => state.addTrait)
-  const removeTrait = useCollectionAttributes((state) => state.removeTrait)
-  const selectedTraits = useCollectionAttributes((state) => state.traits)
+  const addTrait = useCollectionFilters((state) => state.addTrait)
+  const removeTrait = useCollectionFilters((state) => state.removeTrait)
+  const selectedTraits = useCollectionFilters((state) => state.traits)
 
   const [isOpen, setOpen] = useState(
     traits.some(({ trait_type, trait_value }) => {
