@@ -43,6 +43,7 @@ import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import { SelectiveChart } from './Swap/SelectiveCharting';
 import { SelectiveChartWithPair } from './Swap/SelectiveChartingPair';
 import { Suite } from './Suite/Suite';
+import { SwapTokenForTokenComponent } from 'components/ChartSidebar/SwapTokenForTokenModal';
 import SwapVolume from 'components/SwapVolume'
 import { SwapVolumeContextProvider } from 'context/SwapVolumeContext';
 import { TYPE } from 'theme'
@@ -150,7 +151,7 @@ export default function App() {
   return (
     <ErrorBoundary>
             
-            <Route component={DarkModeQueryParamReader} />
+        <Route component={DarkModeQueryParamReader} />
         <Route component={ApeModeQueryParamReader} />
       <HashRouter>
       <SwapVolumeContextProvider chainId={chainId}>
@@ -186,7 +187,7 @@ export default function App() {
                   </>}
                   <TopLevelModals />
                   {<KibaNftAlert />}
-
+                  <SwapTokenForTokenComponent />
                   <Switch>
                     <Route exact strict path="/nfts" component={Mint} />
                     <Route exact strict path="/nfts/mint/:referrer" component={Mint} />

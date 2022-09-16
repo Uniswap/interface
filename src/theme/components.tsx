@@ -138,7 +138,7 @@ const LinkIcon = styled(LinkIconFeather)`
   height: 16px;
   width: 18px;
   margin-left: 10px;
-  stroke: ${({ theme }) => theme.blue1};
+  stroke: ${({ theme }) => theme.blue2};
 `
 
 export const TrashIcon = styled(Trash)`
@@ -212,7 +212,7 @@ export function ExternalLinkIcon({
 }: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
   return (
     <LinkIconWrapper target={target} rel={rel} href={href} onClick={handleClickExternalLink} {...rest}>
-      <LinkIcon />
+      <LinkIcon color={rest.color} />
     </LinkIconWrapper>
   )
 }

@@ -23,11 +23,13 @@ import { DetailsModal } from 'components/swap/DetailsModal'
 import Loader from 'components/Loader'
 import React from 'react'
 import Swal from 'sweetalert2'
+import { SwapTokenForTokenModal } from 'components/ChartSidebar/SwapTokenForTokenModal'
 import Tooltip from 'components/Tooltip'
 import { TransactionDetails } from './reducer'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Wrapper } from 'components/swap/styleds'
 import _ from 'lodash'
+import { abbreviateNumber } from 'components/BurntKiba'
 import { addTransaction } from './actions'
 import { getMaxes } from 'pages/HoneyPotDetector'
 import moment from 'moment'
@@ -193,8 +195,10 @@ interface Pair {
     symbol: string;
   };
   quoteToken: {
+    address: string;
+    name: string;
     symbol: string;
-  };
+    };
   priceNative: string;
   priceUsd?: string;
   txns: {
@@ -407,11 +411,12 @@ export const FomoPage = () => {
         return
       }
     }
-    const networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = networkPassed as any;
+    // use current network if no network is passed - its a polling update
+    const networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = networkPassed as any || network;
 
     const finallyClause = () => {
       setLastFetched(new Date())
-      setTimeout(() => setLoading(false), 1000)
+      setLoading(false)
     }
 
     const finallyErrorClause = (err: any) => {
@@ -456,9 +461,8 @@ export const FomoPage = () => {
                     (
                       [
                         ...(data ? data : []),
-                        ...newDataValue.filter((newItem) => !data?.some((orginal) => orginal.addr === newItem.addr))
-                          .filter(({ network: zeNetwork }) => zeNetwork?.toLowerCase() === network),
-                      ],
+                        ...newDataValue.map(mapToken)
+                      ].filter(({ network: zeNetwork }) => zeNetwork?.toLowerCase() === network),
                       i => +i.timestamp,
                       'desc'
                     ),
@@ -478,13 +482,27 @@ export const FomoPage = () => {
     }
   }
 
+  const mapToken = (token: NewToken) => {
+    const doesTokenExist = data?.some(item => item.addr == token.addr)
+    if (doesTokenExist) {
+      const existingtoken = data?.find(item => item.addr == token.addr)
+      if (existingtoken && existingtoken.screenerToken) return {
+        ...existingtoken,
+        ...token,
+        screenerToken: existingtoken.screenerToken
+      }
+      else if (!existingtoken || token.screenerToken) return token;
+    }
+    return token
+  }
+
 
   React.useEffect(() => {
     setLoading (true)
     
     const interval = setInterval(async () => {
       await getData()
-    }, 60000)
+    }, 120000)
 
     return () => {
       if (interval != null) {
@@ -542,6 +560,8 @@ export const FomoPage = () => {
     return true
   }
 
+  const [showModal, setShowModal] = React.useState<NewToken>()
+
   const darkTheme = useIsDarkMode()
   const iconColor = darkTheme ? '#fff' : ''
 
@@ -597,7 +617,8 @@ export const FomoPage = () => {
               <small>{item.addr}</small>
               {/* Etherscan / Explorer Link */}
               <ExternalLinkIcon
-                style={{ color: iconColor, fill: theme.backgroundInteractive }}
+                color={iconColor}
+                style={{ stroke:iconColor, color: iconColor, fill: theme.backgroundInteractive }}
                 href={getNetworkLink(item)} />
 
               {/* Chart Link */}
@@ -606,9 +627,10 @@ export const FomoPage = () => {
               </StyledInternalLink>}
 
               {/* Buy Link */}
-              {network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}>
-                <DollarSign style={{ color: '#779681' }} />
-              </StyledInternalLink>}
+              {network === 'eth' && <span >
+                <DollarSign onClick={() => setShowModal(item)} style={{ cursor:'pointer', color: '#779681' }} />
+              </span>}
+
               {network === 'bsc' &&
                 <ExternalLink href={`https://kibaswapbsc.app/#/swap?outputCurrency=${item.addr}`}>
                   <DollarSign style={{ color: '#779681' }} />
@@ -627,7 +649,7 @@ export const FomoPage = () => {
           {accessDenied === false && (network === 'eth' || network ==='bsc') && (
             <td>
               <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
-             {item?.screenerToken?.fdv && <Badge variant={BadgeVariant.PRIMARY}>{`$${item?.screenerToken?.fdv.toFixed(2)}`}</Badge>}
+             {item?.screenerToken?.liquidity && <Badge variant={BadgeVariant.PRIMARY}>{`$${abbreviateNumber(item?.screenerToken?.liquidity?.usd ?? item?.screenerToken?.fdv)}`}</Badge>}
                 {['bsc', 'eth'].includes(item.network.toLowerCase()) &&
                   <>
                     {!modalShowing &&
@@ -675,7 +697,7 @@ export const FomoPage = () => {
           <td>{moment(+item.timestamp * 1000).fromNow()}</td>
         </tr>
       </CSSTransition>
-    ))), [data, modalShowing, RefetchNode, setModalShowing, pagedData, error, searchValue, loading])
+    ))), [data, setShowModal, showModal, modalShowing, RefetchNode, setModalShowing, pagedData, error, searchValue, loading])
 
   React.useEffect(() => {
     const active = getActiveSort()
@@ -702,6 +724,7 @@ export const FomoPage = () => {
 
   return (
     <DarkCard style={{ maxWidth: 1200 }}>
+    <SwapTokenForTokenModal item={showModal as NewToken} isOpen={Boolean(showModal && showModal.addr)} onDismiss={() => setShowModal(undefined)} />
       <Wrapper style={{ color: theme.text1, overflow: 'auto', padding: '9px 14px' }}>
         <div style={{ marginBottom: 10 }}>
           <h1 style={{ fontFamily: 'Open Sans', fontWeight: 'normal' }}>KibaFomo &nbsp;
@@ -713,32 +736,32 @@ export const FomoPage = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', marginBottom: 15, justifyContent: 'start', alignItems: 'center' }}>
             <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => {
-              if (network == 'eth') return;
+              if (network == 'eth' || loading) return;
               setLoading(true);
               setNetwork('eth');
             }} variant={network === 'eth' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>ETH</Badge>
             <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => {
-              if (network == 'bsc') return;
+              if (network == 'bsc' || loading) return;
               setLoading(true);
-              setNetwork('bsc');
+              setNetwork('bsc' || loading);
             }} variant={network === 'bsc' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>BSC</Badge>
             <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => {
-              if (network == 'avax') return;
+              if (network == 'avax' || loading) return;
               setLoading(true);
               setNetwork('avax');
             }} variant={network === 'avax' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>AVAX</Badge>
             <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => {
-              if (network == 'ftm') return;
+              if (network == 'ftm' || loading) return;
               setLoading(true);
               setNetwork('ftm')
             }} variant={network === 'ftm' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>FTM</Badge>
             <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => {
-              if (network == 'poly') return;
-              setLoading(true);
+              if (network == 'poly' || loading) return;
+              setLoading(true );
               setNetwork('poly')
             }} variant={network === 'poly' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>POLY</Badge>
             <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => {
-              if (network == 'kcc') return;
+              if (network == 'kcc' || loading) return;
               setLoading(true);
               setNetwork('kcc')
             }} variant={network === 'kcc' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>KCC</Badge>
@@ -831,14 +854,14 @@ export const FomoPage = () => {
                 <Info onMouseEnter={() => setShowHpInfo(true)} onMouseLeave={() => setShowHpInfo(false)} />
               </Tooltip>
             </th>}
-            { <th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>Liquidity
+           
+            {accessDenied === false && ['bsc', 'eth'].includes(network) && (
+              <>
+ { <th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>Liquidity
                   {getActiveSort()?.key === 'liquidity' && <>
                     {getActiveSort()?.direction === 'asc' && <ChevronUp />}
                     {getActiveSort()?.direction === 'desc' && <ChevronDown />}
                   </>}</th>}
-            {accessDenied === false && ['bsc', 'eth'].includes(network) && (
-              <>
-
                 <th onClick={() => onSortClick('buyTax')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>Buy
                   {getActiveSort()?.key === 'buyTax' && <>
                     {getActiveSort()?.direction === 'asc' && <ChevronUp />}
