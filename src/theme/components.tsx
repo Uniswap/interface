@@ -213,8 +213,8 @@ const ToolTipWrapper = styled.div<{ isCopyContractTooltip?: boolean; tooltipX?: 
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: ${({ isCopyContractTooltip }) => (isCopyContractTooltip ? 'relative' : 'absolute')};
-  left: ${({ isCopyContractTooltip, tooltipX }) => isCopyContractTooltip && 0};
+  position: absolute;
+  left: ${({ isCopyContractTooltip, tooltipX }) => isCopyContractTooltip && (`${tooltipX}px` || '50%')};
   transform: translate(5px, 32px);
   z-index: ${Z_INDEX.tooltip};
 `
@@ -306,7 +306,6 @@ export function CopyContractAddress({ address }: { address: string }) {
   const copy = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       setTooltipX(e.clientX)
-      console.log(e.clientX)
       setCopied(address)
     },
     [address, setCopied]
@@ -320,7 +319,7 @@ export function CopyContractAddress({ address }: { address: string }) {
         <TruncatedAddress>{truncated}</TruncatedAddress>
         <Copy size={14} />
       </CopyAddressRow>
-      {true && <Tooltip isCopyContractTooltip tooltipX={tooltipX} />}
+      {isCopied && <Tooltip isCopyContractTooltip tooltipX={tooltipX} />}
     </CopyContractAddressWrapper>
   )
 }
