@@ -180,6 +180,26 @@ class OptimismNativeCurrency extends NativeCurrency {
   }
 }
 
+function isETHW(chainId: number): chainId is ChainId.ETHW {
+  return chainId === ChainId.ETHW
+}
+
+class ETHWNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isETHW(this.chainId)) throw new Error('Not ETHW')
+    return WETH[this.chainId]
+  }
+
+  public constructor(chainId: number) {
+    if (!isETHW(chainId)) throw new Error('Not ETHW')
+    super(chainId, 18, 'ETHW', 'Ethereum PoW')
+  }
+}
+
 export class ExtendedEther extends Ether {
   public get wrapped(): Token {
     if (this.chainId in WETH) return WETH[this.chainId as ChainId]
@@ -215,6 +235,8 @@ export function nativeOnChain(chainId: number): NativeCurrency {
       ? new OasisNativeCurrency(chainId)
       : isOptimism(chainId)
       ? new OptimismNativeCurrency(chainId)
+      : isETHW(chainId)
+      ? new ETHWNativeCurrency(chainId)
       : ExtendedEther.onChain(chainId))
   )
 }
