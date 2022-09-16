@@ -179,7 +179,7 @@ export function useTokenSectionsByVariation(
     const balancesAndFavorites = [
       ...commonBases,
       ...difference(portfolioBalances, commonBases),
-      ...difference(favoritesWithoutBalances, portfolioBalances),
+      ...difference(favoritesWithoutBalances, [...portfolioBalances, ...commonBases]),
     ]
     return [
       {
