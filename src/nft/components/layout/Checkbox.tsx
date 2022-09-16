@@ -1,18 +1,16 @@
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import { ApprovedCheckmarkIcon } from 'nft/components/icons'
-import { ChangeEvent } from 'react'
+import React from 'react'
 
 import * as styles from './Checkbox.css'
 
-interface CheckboxProps {
-  checked: boolean
+interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   hovered: boolean
   children: React.ReactNode
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-export const Checkbox = ({ onChange, children, checked, hovered, ...props }: CheckboxProps) => {
+export const Checkbox: React.FC<CheckboxProps> = ({ hovered, children, ...props }: CheckboxProps) => {
   return (
     <Box
       as="label"
@@ -25,20 +23,13 @@ export const Checkbox = ({ onChange, children, checked, hovered, ...props }: Che
     >
       {children}
       <span
-        className={clsx(styles.checkbox, checked ? styles.checkboxActive : '', hovered && styles.checkboxActive)}
+        className={clsx(styles.checkbox, props.checked ? styles.checkboxActive : '', hovered && styles.checkboxActive)}
         // This element is purely decorative so
         // we hide it for screen readers
         aria-hidden="true"
       />
-      <input
-        {...props}
-        className={styles.input}
-        type="checkbox"
-        onChange={(e) => {
-          onChange(e)
-        }}
-      />
-      <ApprovedCheckmarkIcon className={clsx(styles.checkMark, checked ? styles.checkMarkActive : '')} />
+      <input {...props} className={styles.input} type="checkbox" />
+      <ApprovedCheckmarkIcon className={clsx(styles.checkMark, props.checked ? styles.checkMarkActive : '')} />
     </Box>
   )
 }
