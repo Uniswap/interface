@@ -17,6 +17,9 @@ import PoolCard from './PoolCard'
 const PageWrapper = styled(AutoColumn)`
   max-width: 1132px;
   width: 37.3rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  width: 100%;
+`};
 `
 
 const PoolSection = styled.div`

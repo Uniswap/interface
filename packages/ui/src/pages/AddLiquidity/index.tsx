@@ -17,7 +17,7 @@ import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import getRoutePairMode from 'utils/getRoutePairMode'
 
-import SwapIcon from '../../assets/svg/SwapIcon.svg'
+import AddIcon from '../../assets/svg/add.svg'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -58,7 +58,7 @@ const CustomizedRadio = styled.input`
   width: 0.7rem;
   height: 0.7rem;
   margin: 0;
-  transform: translateY(-0.075em);
+  // transform: translateY(-0.075em);
   display: grid;
   border-radius: 50%;
   // transform: 'translateY(-0.075em)',
@@ -634,8 +634,9 @@ export default function AddLiquidity({
           <ColumnCenter style={{ position: 'relative' }}>
             {/* <Plus size="16" color={theme.text2} /> */}
             <img
-              src={SwapIcon}
-              style={{ position: 'absolute', transform: 'translateY(-50%)', width: '1.9rem', height: '1.9rem' }}
+              src={AddIcon}
+              alt={'add-icon'}
+              style={{ position: 'absolute', transform: 'translateY(-50%)', width: '56px', height: '56px' }}
             />
           </ColumnCenter>
           <CurrencyInputPanel
