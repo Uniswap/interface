@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
+import { ListRenderItemInfo, SectionList } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { AnimatedBox, Box, Flex, Inset } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
@@ -206,7 +206,7 @@ export function useTokenSectionsByVariation(
   return sections
 }
 
-export function TokenSearchResultList({
+function _TokenSearchResultList({
   onChangeChainFilter,
   onSelectCurrency,
   chainFilter,
@@ -267,7 +267,6 @@ export function TokenSearchResultList({
         renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
         sections={sections}
         showsVerticalScrollIndicator={false}
-        style={styles.list}
         windowSize={1}
       />
       {sections.length > 0 && (
@@ -301,9 +300,4 @@ function key(item: TokenOption) {
   return item.currencyInfo.currencyId
 }
 
-const styles = StyleSheet.create({
-  list: {
-    height: '100%',
-    width: '100%',
-  },
-})
+export const TokenSearchResultList = memo(_TokenSearchResultList)

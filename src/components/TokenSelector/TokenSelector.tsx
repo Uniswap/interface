@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { Suspense } from 'react'
+import React, { memo, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -28,7 +28,7 @@ interface TokenSelectorProps {
   variation: TokenSelectorVariation
 }
 
-export function TokenSelector({
+function _TokenSelector({
   onSelectCurrency,
   otherCurrency,
   onBack,
@@ -78,3 +78,5 @@ function TokenSearchResultsLoading() {
     </Flex>
   )
 }
+
+export const TokenSelector = memo(_TokenSelector)

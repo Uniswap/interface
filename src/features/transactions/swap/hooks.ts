@@ -116,6 +116,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const currencyIn = useCurrency(
     currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn?.address) : undefined
   )
+
   const currencyOut = useCurrency(
     currencyAssetOut
       ? buildCurrencyId(currencyAssetOut.chainId, currencyAssetOut?.address)
@@ -338,56 +339,86 @@ export function useUSDTokenUpdater(
 
 /** Set of handlers wrapping actions involving user input */
 export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
-  const onSelectCurrency = (field: CurrencyField, currency: Currency) => {
-    dispatch(
-      transactionStateActions.selectCurrency({
-        field,
-        tradeableAsset: {
-          address: currencyAddress(currency),
-          chainId: currency.chainId,
-          type: AssetType.Currency,
-        },
-      })
-    )
+  const onHideTokenSelector = useCallback(
+    () => dispatch(transactionStateActions.showTokenSelector(undefined)),
+    [dispatch]
+  )
 
-    // hide screen when done selecting
-    onHideTokenSelector()
-  }
+  const onSelectCurrency = useCallback(
+    (field: CurrencyField, currency: Currency) => {
+      dispatch(
+        transactionStateActions.selectCurrency({
+          field,
+          tradeableAsset: {
+            address: currencyAddress(currency),
+            chainId: currency.chainId,
+            type: AssetType.Currency,
+          },
+        })
+      )
 
-  const onHideTokenSelector = () => dispatch(transactionStateActions.showTokenSelector(undefined))
+      // hide screen when done selecting
+      onHideTokenSelector()
+    },
+    [dispatch, onHideTokenSelector]
+  )
 
-  const onUpdateExactTokenAmount = (field: CurrencyField, amount: string) =>
-    dispatch(transactionStateActions.updateExactAmountToken({ field, amount }))
+  const onUpdateExactTokenAmount = useCallback(
+    (field: CurrencyField, amount: string) =>
+      dispatch(transactionStateActions.updateExactAmountToken({ field, amount })),
+    [dispatch]
+  )
 
-  const onUpdateExactUSDAmount = (field: CurrencyField, amount: string) =>
-    dispatch(transactionStateActions.updateExactAmountUSD({ field, amount }))
+  const onUpdateExactUSDAmount = useCallback(
+    (field: CurrencyField, amount: string) =>
+      dispatch(transactionStateActions.updateExactAmountUSD({ field, amount })),
+    [dispatch]
+  )
 
-  const onUpdateExactCurrencyField = (currencyField: CurrencyField, newExactAmount: string) =>
-    dispatch(transactionStateActions.updateExactCurrencyField({ currencyField, newExactAmount }))
+  const onUpdateExactCurrencyField = useCallback(
+    (currencyField: CurrencyField, newExactAmount: string) =>
+      dispatch(transactionStateActions.updateExactCurrencyField({ currencyField, newExactAmount })),
+    [dispatch]
+  )
 
-  const onSetAmount = (field: CurrencyField, value: string, isUSDInput: boolean) => {
-    const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
-    updater(field, value)
-  }
+  const onSetAmount = useCallback(
+    (field: CurrencyField, value: string, isUSDInput: boolean) => {
+      const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
+      updater(field, value)
+    },
+    [onUpdateExactUSDAmount, onUpdateExactTokenAmount]
+  )
 
-  const onSetMax = (amount: string) => {
-    // when setting max amount, always switch to token mode because
-    // our token/usd updater doesnt handle this case yet
-    dispatch(transactionStateActions.toggleUSDInput(false))
-    dispatch(transactionStateActions.updateExactAmountToken({ field: CurrencyField.INPUT, amount }))
-  }
+  const onSetMax = useCallback(
+    (amount: string) => {
+      // when setting max amount, always switch to token mode because
+      // our token/usd updater doesnt handle this case yet
+      dispatch(transactionStateActions.toggleUSDInput(false))
+      dispatch(
+        transactionStateActions.updateExactAmountToken({ field: CurrencyField.INPUT, amount })
+      )
+    },
+    [dispatch]
+  )
 
-  const onSwitchCurrencies = () => {
+  const onSwitchCurrencies = useCallback(() => {
     dispatch(transactionStateActions.switchCurrencySides())
-  }
+  }, [dispatch])
 
-  const onToggleUSDInput = (isUSDInput: boolean) =>
-    dispatch(transactionStateActions.toggleUSDInput(isUSDInput))
+  const onToggleUSDInput = useCallback(
+    (isUSDInput: boolean) => dispatch(transactionStateActions.toggleUSDInput(isUSDInput)),
+    [dispatch]
+  )
 
-  const onCreateTxId = (txId: string) => dispatch(transactionStateActions.setTxId(txId))
+  const onCreateTxId = useCallback(
+    (txId: string) => dispatch(transactionStateActions.setTxId(txId)),
+    [dispatch]
+  )
 
-  const onShowTokenSelector = (field: CurrencyField) =>
-    dispatch(transactionStateActions.showTokenSelector(field))
+  const onShowTokenSelector = useCallback(
+    (field: CurrencyField) => dispatch(transactionStateActions.showTokenSelector(field)),
+    [dispatch]
+  )
 
   return {
     onCreateTxId,

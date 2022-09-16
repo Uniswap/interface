@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
 import { useDerivedSwapInfo, useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
@@ -42,6 +42,13 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
     }
   }, [selectingCurrencyField])
 
+  const onTokenSelectorSelectCurrency = useCallback(
+    (currency: Currency) => {
+      selectingCurrencyField && onSelectCurrency(selectingCurrencyField, currency)
+    },
+    [selectingCurrencyField, onSelectCurrency]
+  )
+
   return (
     <TransactionFlow
       derivedInfo={derivedSwapInfo}
@@ -58,9 +65,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
           selectedCurrency={selectingCurrencyField ? currencies[selectingCurrencyField] : undefined}
           variation={listVariation}
           onBack={onHideTokenSelector}
-          onSelectCurrency={(currency: Currency) =>
-            selectingCurrencyField && onSelectCurrency(selectingCurrencyField, currency)
-          }
+          onSelectCurrency={onTokenSelectorSelectCurrency}
         />
       }
       onClose={onClose}
