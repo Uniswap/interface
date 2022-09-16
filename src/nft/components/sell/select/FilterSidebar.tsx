@@ -33,9 +33,9 @@ export const FilterSidebar = ({ SortDropdown }: { SortDropdown: () => JSX.Elemen
       left={{ sm: '0', md: 'unset' }}
       width={{ sm: 'full', md: 'auto' }}
       height={{ sm: 'full', md: 'auto' }}
-      style={{ transform: sidebarX.interpolate((x) => `translateX(${x}px)`) }}
       zIndex={{ sm: '3', md: 'auto' }}
       display={isFiltersExpanded ? 'flex' : 'none'}
+      style={{ transform: sidebarX.interpolate((x) => `translateX(${x}px)`) }}
     >
       <Box
         paddingTop={{ sm: '24', md: '0' }}
@@ -111,7 +111,7 @@ const CollectionSelect = ({
             collectionSearchText={collectionSearchText}
             setCollectionSearchText={setCollectionSearchText}
           />
-          <Box background="lightGray" borderRadius="12" paddingTop="8" paddingBottom="8" overflow="scroll">
+          <Box background="lightGray" borderRadius="12" paddingTop="8" paddingBottom="8" overflowY="scroll">
             {displayCollections?.map((collection, index) => (
               <CollectionItem
                 key={index}
