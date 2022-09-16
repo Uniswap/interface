@@ -172,7 +172,8 @@ export const SelectPage = () => {
     else if (sortBy === SortBy.DateListed && orderByASC) sorted?.sort((a, b) => +b.listing_date - +a.listing_date)
     else if (sortBy === SortBy.DateListed && !orderByASC) sorted?.sort((a, b) => +a.listing_date - +b.listing_date)
     setDisplayAssets(sorted, listFilter)
-  }, [sortBy, orderByASC, listFilter, displayAssets, setDisplayAssets])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortBy, orderByASC, listFilter])
 
   useEffect(() => {
     if (ownerCollections?.length && collectionStats?.length) {
@@ -271,7 +272,6 @@ export const SelectPage = () => {
                 isMobile={isMobile}
                 isFiltersExpanded={isFiltersExpanded}
                 results={displayAssets.length}
-                showFilterBadge={collectionFilters.length > 0}
                 onClick={() => setFiltersExpanded(!isFiltersExpanded)}
               />
               {!isMobile && <SortDropdown dropDownOptions={sortDropDownOptions} />}
@@ -479,11 +479,13 @@ const SelectAllButton = () => {
   const resetSellAssets = useSellAsset((state) => state.reset)
 
   useEffect(() => {
-    if (!isAllSelected) resetSellAssets()
     if (isAllSelected) {
       displayAssets.forEach((asset) => selectSellAsset(asset))
+    } else {
+      resetSellAssets()
     }
-  }, [displayAssets, isAllSelected, resetSellAssets, selectSellAsset])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAllSelected, resetSellAssets, selectSellAsset])
 
   const toggleAllSelected = () => {
     setIsAllSelected(!isAllSelected)
