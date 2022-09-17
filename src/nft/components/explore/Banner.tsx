@@ -1,25 +1,30 @@
 import clsx from 'clsx'
+import { useWindowSize } from 'hooks/useWindowSize'
 import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { bodySmall, buttonMedium, header1 } from 'nft/css/common.css'
 import { vars } from 'nft/css/sprinkles.css'
-import { fetchTrendingCollections } from 'nft/queries'
+import { breakpoints } from 'nft/css/sprinkles.css'
+import { ActivityFetcher, fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { formatChange, toSignificant } from 'nft/utils/toSignificant'
 import { useEffect, useState } from 'react'
-import { useQuery } from 'react-query'
+import { QueryClient, useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
 import ActivityFeed from './ActivityFeed'
 import * as styles from './Explore.css'
 
+const queryClient = new QueryClient()
+
 const Banner = () => {
   /* Sets initially displayed collection to random number between 0 and 4  */
   const [current, setCurrent] = useState(Math.floor(Math.random() * 5))
   const [hovered, setHover] = useState(false)
+  const { width: windowWidth } = useWindowSize()
   const { data: collections } = useQuery(
     ['trendingCollections'],
     () => {
@@ -39,7 +44,11 @@ const Banner = () => {
     const interval = setInterval(async () => {
       if (collections) {
         const nextCollectionIndex = (current + 1) % collections.length
+        const nextCollectionAddress = collections[nextCollectionIndex].address
         setCurrent(nextCollectionIndex)
+        await queryClient.prefetchQuery(['collectionActivity', nextCollectionAddress], () =>
+          ActivityFetcher(nextCollectionAddress as string)
+        )
       }
     }, 15_000)
     return () => {
@@ -60,7 +69,7 @@ const Banner = () => {
               <Box className={styles.bannerOverlay} width="full" />
               <Box as="section" className={styles.section} display="flex" flexDirection="row" flexWrap="nowrap">
                 <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
-                <ActivityFeed address={collections[current].address} />
+                {windowWidth && windowWidth > breakpoints.lg && <ActivityFeed address={collections[current].address} />}
               </Box>
 
               <CarouselProgress length={collections.length} currentIndex={current} setCurrent={setCurrent} />
