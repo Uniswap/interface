@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { MATIC_MAINNET_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
@@ -15,27 +15,28 @@ export function useFavoriteCurrencies(): CurrencyInfo[] {
   return useTokenProjects(Array.from(favoriteCurrencyIds))
 }
 
-export function useAllCommonBaseCurrencies(): CurrencyInfo[] {
-  // Use Mainnet base token addresses since TokenProjects query returns each token on Arbitrum, Optimism, Polygon
-  // TODO(DATA-269): Missing native ETH on Arbitrum and Optimism from API response
-  const baseCurrencies = [
-    nativeOnChain(ChainId.Mainnet),
-    nativeOnChain(ChainId.Polygon), // Used for MATIC base currency on Polygon
-    DAI,
-    USDC,
-    USDT,
-    WBTC,
-    WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet],
-  ]
+// Use Mainnet base token addresses since TokenProjects query returns each token on Arbitrum, Optimism, Polygon
+const baseCurrencies = [
+  nativeOnChain(ChainId.Mainnet),
+  nativeOnChain(ChainId.Polygon), // Used for MATIC base currency on Polygon
+  DAI,
+  USDC,
+  USDT,
+  WBTC,
+  WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet],
+]
 
+export function useAllCommonBaseCurrencies(): CurrencyInfo[] {
   const baseCurrencyIds = baseCurrencies.map((currency) => currencyId(currency))
   const baseCurrencyInfos = useTokenProjects(baseCurrencyIds)
 
   // TokenProjects returns MATIC on Mainnet and Polygon, but we only want MATIC on Polygon
-  const filteredBaseCurrencyInfos = baseCurrencyInfos.filter(
-    (currencyInfo) =>
-      !areAddressesEqual((currencyInfo.currency as Token).address, MATIC_MAINNET_ADDRESS)
-  )
+  const filteredBaseCurrencyInfos = useMemo(() => {
+    return baseCurrencyInfos.filter(
+      (currencyInfo) =>
+        !areAddressesEqual((currencyInfo.currency as Token).address, MATIC_MAINNET_ADDRESS)
+    )
+  }, [baseCurrencyInfos])
   return filteredBaseCurrencyInfos
 }
 
