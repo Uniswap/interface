@@ -118,7 +118,7 @@ export const activityRow = style([
 ])
 
 export const activeRow = sprinkles({
-  //backgroundColor: 'lightGrayContainer',
+  backgroundColor: 'grey800',
 })
 
 export const timestamp = style([
