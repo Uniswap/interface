@@ -509,12 +509,20 @@ export const FomoPage = () => {
     const doesTokenExist = data?.some(item => item.addr == token.addr)
     if (doesTokenExist) {
       const existingtoken = data?.find(item => item.addr == token.addr)
-      if (existingtoken && existingtoken.screenerToken) return {
+      if (existingtoken && existingtoken.screenerToken) {
+        let screenerToken = existingtoken.screenerToken
+        if(token.screenerToken) {
+          screenerToken = token.screenerToken
+        }
+        return {
         ...existingtoken,
         ...token,
-        screenerToken: existingtoken.screenerToken
+        screenerToken
       }
-      else if (!existingtoken || token.screenerToken) return token;
+    }
+      else if (!existingtoken || token.screenerToken) {
+        return token;
+      }
     }
     return token
   }

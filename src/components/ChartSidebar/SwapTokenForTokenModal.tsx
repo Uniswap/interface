@@ -22,7 +22,6 @@ type Props = {
 
 export const SwapTokenForTokenComponent = () => {
     const embedModel = useIsEmbedMode()
-
     const location = useLocation()
     const params = new URLSearchParams(location.search)
     const outputCurrencyAddress = params.get('tokenAddress') || null
@@ -32,13 +31,13 @@ export const SwapTokenForTokenComponent = () => {
     const onDismiss = () =>  history.pushState('', '', '/#/swap')
 
     const [inputCurrency, outputCurrency] = [
-        useCurrency(item?.screenerToken?.quoteToken?.address),
-        useCurrency(item?.screenerToken?.baseToken?.address)
+        useCurrency(item?.screenerToken?.quoteToken?.address || 'ETH'),
+        useCurrency(item?.screenerToken?.baseToken?.address || outputCurrencyAddress)
     ]
     const theme = useTheme()
 
     const buySellTax = useBuySellTax(item?.screenerToken?.baseToken?.address as string, item?.screenerToken?.chainId)
-    if (!embedModel.embedMode || !outputCurrency) return null
+    if (!embedModel.embedMode || !outputCurrencyAddress) return null;
 
     return (
         <Modal maxHeight={210} isOpen={true} onDismiss={onDismiss}>

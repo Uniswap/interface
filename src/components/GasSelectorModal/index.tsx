@@ -174,7 +174,7 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
           {view !== 'advanced' && (
            <RowBetween style={{ flexDirection: isMobile ? 'column': 'row', gap: isMobile ? 15 : 20, justifyContent: 'center'}}> 
              {!!prices &&  <StyledAutoColumn onClick={updateSettingsForLow} style={{cursor: 'pointer', padding:5, borderRadius:12, border: `1px solid ${gasSettings?.low ? 'lightgreen' : 'transparent'}`}} justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
+              <TYPE.body fontWeight={600} fontSize={isMobile ? 24 : 36}>
                   Low
               </TYPE.body>
               <TYPE.body>
@@ -182,7 +182,7 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
               </TYPE.body>
             </StyledAutoColumn>}
             {!!prices &&  <StyledAutoColumn onClick={updateSettingsForMed} style={{ cursor: 'pointer', padding:5, borderRadius:12, border: `1px solid ${gasSettings?.medium ? 'lightgreen' : 'transparent'}`}} justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
+              <TYPE.body fontWeight={600} fontSize={isMobile ? 24 : 36}>
                   Medium
               </TYPE.body>
               <TYPE.body>
@@ -190,7 +190,7 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
               </TYPE.body>
             </StyledAutoColumn>}
             {!!prices &&  <StyledAutoColumn onClick={updateSettingsForHigh} style={{ padding:5, borderRadius:12,cursor: 'pointer', border: `1px solid ${gasSettings?.high ? 'lightgreen' : 'transparent'}`}} justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
+              <TYPE.body fontWeight={600} fontSize={isMobile ? 24 : 36}>
                   High
               </TYPE.body>
               <TYPE.body>
@@ -199,7 +199,7 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
                 </StyledAutoColumn>
             }
               {!!prices &&  <StyledAutoColumn onClick={updateSettingsForUltra} style={{ padding:5, borderRadius:12,cursor: 'pointer', border: `1px solid ${gasSettings?.ultra ? 'lightgreen' : 'transparent'}`}} justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
+              <TYPE.body fontWeight={600} fontSize={isMobile ? 24 : 36}>
                   Ultra
               </TYPE.body>
               <TYPE.body>
