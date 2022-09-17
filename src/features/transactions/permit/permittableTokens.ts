@@ -1,5 +1,5 @@
 import { ChainId } from 'src/constants/chains'
-import { DAI, DAI_RINKEBY, UNI, USDC } from 'src/constants/tokens'
+import { DAI, UNI, USDC } from 'src/constants/tokens'
 
 export enum PermitType {
   AMOUNT = 1,
@@ -20,24 +20,9 @@ export const PERMITTABLE_TOKENS: {
   [ChainId.Mainnet]: {
     [USDC.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[1].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  },
-  [ChainId.Rinkeby]: {
-    [DAI_RINKEBY.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[4].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  },
-  [ChainId.Ropsten]: {
-    [UNI[3].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-    '0x07865c6E87B9F70255377e024ace6630C1Eaa37F': {
-      type: PermitType.AMOUNT,
-      name: 'USD Coin',
-      version: '2',
-    },
+    [UNI[ChainId.Mainnet].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
   [ChainId.Goerli]: {
-    [UNI[5].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  },
-  [ChainId.Kovan]: {
-    [UNI[42].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    [UNI[ChainId.Goerli].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
 }

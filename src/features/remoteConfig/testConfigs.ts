@@ -16,13 +16,13 @@ type ConfigValue = 'disabled' | 'enabled'
 export enum TestConfig {
   DisplayExtractedNFTColors = 'extract-nft-colors',
   TokenBalancesQualityFilter = 'token_balances_quality_filter',
-  RinkebyNFTs = 'rinkeby-nfts',
+  GoerliNFTs = 'goerli-nfts',
   ShowDevSettings = 'show_dev_settings',
 }
 
 export const TestConfigValues: Record<TestConfig, ConfigValue> = {
   [TestConfig.DisplayExtractedNFTColors]: __DEV__ ? 'enabled' : 'disabled',
   [TestConfig.TokenBalancesQualityFilter]: 'enabled',
-  [TestConfig.RinkebyNFTs]: 'disabled',
+  [TestConfig.GoerliNFTs]: 'disabled',
   [TestConfig.ShowDevSettings]: __DEV__ ? 'enabled' : 'disabled',
 }

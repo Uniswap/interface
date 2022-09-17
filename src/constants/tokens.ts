@@ -17,13 +17,6 @@ export const DAI = new Token(
   'DAI',
   'Dai Stablecoin'
 )
-export const DAI_RINKEBY = new Token(
-  ChainId.Rinkeby,
-  '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735',
-  18,
-  'DAI',
-  'Dai Stablecoin'
-)
 export const DAI_ARBITRUM_ONE = new Token(
   ChainId.ArbitrumOne,
   '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
@@ -198,10 +191,7 @@ export const ETH2X_FLI = new Token(
 )
 export const UNI: { [chainId: number]: Token } = {
   [ChainId.Mainnet]: new Token(ChainId.Mainnet, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
-  [ChainId.Rinkeby]: new Token(ChainId.Rinkeby, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
-  [ChainId.Ropsten]: new Token(ChainId.Ropsten, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
   [ChainId.Goerli]: new Token(ChainId.Goerli, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
-  [ChainId.Kovan]: new Token(ChainId.Kovan, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
 }
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {

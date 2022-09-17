@@ -18,8 +18,8 @@ exports[`renders a NetworkPill with border 1`] = `
         "paddingVertical": 8,
       },
       Object {
-        "backgroundColor": "#FB118E1a",
-        "borderColor": "#FB118E",
+        "backgroundColor": "#2098531a",
+        "borderColor": "#209853",
       },
     ]
   }
@@ -34,7 +34,7 @@ exports[`renders a NetworkPill with border 1`] = `
           "marginRight": 8,
         },
         Object {
-          "borderColor": "#FB118E",
+          "borderColor": "#209853",
         },
       ]
     }
@@ -83,12 +83,12 @@ exports[`renders a NetworkPill with border 1`] = `
           "lineHeight": 20,
         },
         Object {
-          "color": "#FB118E",
+          "color": "#209853",
         },
       ]
     }
   >
-    Rinkeby
+    Görli
   </Text>
 </View>
 `;
@@ -111,7 +111,7 @@ exports[`renders a NetworkPill without image 1`] = `
         "paddingVertical": 8,
       },
       Object {
-        "backgroundColor": "#FB118E1a",
+        "backgroundColor": "#2098531a",
         "borderColor": "transparent",
       },
     ]
@@ -127,7 +127,7 @@ exports[`renders a NetworkPill without image 1`] = `
           "marginRight": 8,
         },
         Object {
-          "borderColor": "#FB118E",
+          "borderColor": "#209853",
         },
       ]
     }
@@ -176,12 +176,12 @@ exports[`renders a NetworkPill without image 1`] = `
           "lineHeight": 20,
         },
         Object {
-          "color": "#FB118E",
+          "color": "#209853",
         },
       ]
     }
   >
-    Rinkeby
+    Görli
   </Text>
 </View>
 `;
@@ -204,7 +204,7 @@ exports[`renders an InlineNetworkPill 1`] = `
         "paddingVertical": 2,
       },
       Object {
-        "backgroundColor": "#FB118E1a",
+        "backgroundColor": "#2098531a",
         "borderColor": "transparent",
       },
     ]
@@ -221,12 +221,12 @@ exports[`renders an InlineNetworkPill 1`] = `
           "lineHeight": 12,
         },
         Object {
-          "color": "#FB118E",
+          "color": "#209853",
         },
       ]
     }
   >
-    Rinkeby
+    Görli
   </Text>
 </View>
 `;

@@ -17,7 +17,11 @@ export default function createMigrate(
       const inboundVersion: number = state._persist?.version ?? DEFAULT_VERSION
 
       if (inboundVersion === currentVersion) {
-        logger.info('redux-persist', 'createMigrate', 'versions match, noop migration')
+        logger.info(
+          'redux-persist',
+          'createMigrate',
+          `versions match (${currentVersion}), noop migration`
+        )
         return Promise.resolve(state)
       }
 

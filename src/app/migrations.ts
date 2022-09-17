@@ -1,7 +1,12 @@
 import dayjs from 'dayjs'
 import { ChainId } from 'src/constants/chains'
+import { BlockState } from 'src/features/blocks/blocksSlice'
+import { ChainsState } from 'src/features/chains/chainsSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { TransactionState } from 'src/features/transactions/slice'
+import { ChainIdToTxIdToDetails } from 'src/features/transactions/types'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { toSupportedChainId } from 'src/utils/chainId'
 
 export const migrations = {
   0: (state: any) => {
@@ -217,5 +222,72 @@ export const migrations = {
     const newState = { ...state }
     delete newState.ens
     return newState
+  },
+
+  19: (state: any) => {
+    const newState = { ...state }
+
+    const chainState: ChainsState | undefined = newState?.chains
+    const newChainState = Object.keys(chainState?.byChainId ?? {}).reduce<ChainsState>(
+      (tempState, chainIdString) => {
+        const chainId = toSupportedChainId(chainIdString)
+        if (!chainId) return tempState
+
+        const chainInfo = chainState?.byChainId[chainId]
+        if (!chainInfo) return tempState
+
+        tempState.byChainId[chainId] = chainInfo
+        return tempState
+      },
+      { byChainId: {} }
+    )
+
+    const blockState: BlockState | undefined = newState?.blocks
+    const newBlockState = Object.keys(blockState?.byChainId ?? {}).reduce<BlockState>(
+      (tempState, chainIdString) => {
+        const chainId = toSupportedChainId(chainIdString)
+        if (!chainId) return tempState
+
+        const blockInfo = blockState?.byChainId[chainId]
+        if (!blockInfo) return tempState
+
+        tempState.byChainId[chainId] = blockInfo
+        return tempState
+      },
+      { byChainId: {} }
+    )
+
+    const transactionState: TransactionState | undefined = newState?.transactions
+    const newTransactionState = Object.keys(transactionState ?? {}).reduce<TransactionState>(
+      (tempState, address) => {
+        const txs = transactionState?.[address]
+        if (!txs) return tempState
+
+        const newAddressTxState = Object.keys(txs).reduce<ChainIdToTxIdToDetails>(
+          (tempAddressState, chainIdString) => {
+            const chainId = toSupportedChainId(chainIdString)
+            if (!chainId) return tempAddressState
+
+            const txInfo = txs[chainId]
+            if (!txInfo) return tempAddressState
+
+            tempAddressState[chainId] = txInfo
+            return tempAddressState
+          },
+          {}
+        )
+
+        tempState[address] = newAddressTxState
+        return tempState
+      },
+      {}
+    )
+
+    return {
+      ...newState,
+      chains: newChainState,
+      blocks: newBlockState,
+      transactions: newTransactionState,
+    }
   },
 }

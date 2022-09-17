@@ -15,7 +15,7 @@ import { getChecksumAddress } from 'src/utils/addresses'
 
 const CURSOR_LIMIT = 50
 const OPENSEA_BASE_URL = 'https://api.opensea.io/api/v1/'
-const OPENSEA_BASE_URL_RINKEBY = 'https://rinkeby-api.opensea.io/api/v1/'
+const OPENSEA_BASE_URL_GOERLI = 'https://testnets-api.opensea.io/api/v1'
 const TOTAL_LIMIT = 1_000
 
 const baseQueryOptions = {
@@ -40,7 +40,7 @@ export const nftApi = createApi({
         let cursor: string | null = ''
         let error: FetchBaseQueryError | null = null
 
-        const chainId = isEnabled(TestConfig.RinkebyNFTs) ? ChainId.Rinkeby : ChainId.Mainnet
+        const chainId = isEnabled(TestConfig.GoerliNFTs) ? ChainId.Goerli : ChainId.Mainnet
 
         // recursively fetch NFTs
         while (cursor !== null && assets.length <= TOTAL_LIMIT) {
@@ -50,8 +50,8 @@ export const nftApi = createApi({
             cursor,
           })}`
           const cursorResult = (
-            chainId === ChainId.Rinkeby
-              ? await fetchBaseQuery({ baseUrl: OPENSEA_BASE_URL_RINKEBY })(
+            chainId === ChainId.Goerli
+              ? await fetchBaseQuery({ baseUrl: OPENSEA_BASE_URL_GOERLI })(
                   params,
                   _api,
                   _extraOptions

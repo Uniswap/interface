@@ -60,10 +60,7 @@ const NUM_USD_DECIMALS_DISPLAY = 2
 // it is updated. Until then, using conservative values to ensure swaps succeeed
 const SWAP_GAS_LIMIT_FALLBACKS: Record<ChainId, string> = {
   [ChainId.Mainnet]: '420000',
-  [ChainId.Rinkeby]: '420000',
-  [ChainId.Ropsten]: '420000',
   [ChainId.Goerli]: '420000',
-  [ChainId.Kovan]: '420000',
   [ChainId.Optimism]: '420000',
   [ChainId.OptimisticKovan]: '420000',
   [ChainId.Polygon]: '420000',

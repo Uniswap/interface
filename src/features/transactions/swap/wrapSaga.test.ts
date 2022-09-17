@@ -31,7 +31,7 @@ const params: Params = {
   account,
   txRequest: transaction,
   inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-    NativeCurrency.onChain(ChainId.Rinkeby),
+    NativeCurrency.onChain(ChainId.Goerli),
     '200000'
   ),
 }
@@ -42,7 +42,7 @@ describe(wrap, () => {
       .next()
       .call(sendTransaction, {
         txId: '1',
-        chainId: ChainId.Rinkeby,
+        chainId: ChainId.Goerli,
         account: params.account,
         typeInfo: wrapTxInfo,
         options: { request: hexlifyTransaction(transaction) },
@@ -55,7 +55,7 @@ describe(wrap, () => {
     const unwrapParams: Params = {
       ...params,
       inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-        NativeCurrency.onChain(ChainId.Rinkeby).wrapped,
+        NativeCurrency.onChain(ChainId.Goerli).wrapped,
         '200000'
       ),
     }
@@ -63,7 +63,7 @@ describe(wrap, () => {
       .next()
       .call(sendTransaction, {
         txId: '1',
-        chainId: ChainId.Rinkeby,
+        chainId: ChainId.Goerli,
         account: params.account,
         typeInfo: unwrapTxInfo,
         options: { request: hexlifyTransaction(transaction) },

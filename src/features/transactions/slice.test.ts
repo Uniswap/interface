@@ -192,7 +192,7 @@ describe('transaction reducer', () => {
         store.dispatch(
           cancelTransaction({
             address: '0xaddress',
-            chainId: ChainId.Rinkeby,
+            chainId: ChainId.Goerli,
             id,
           })
         )
@@ -235,7 +235,7 @@ describe('transaction reducer', () => {
         store.dispatch(
           replaceTransaction({
             address: '0xaddress',
-            chainId: ChainId.Rinkeby,
+            chainId: ChainId.Goerli,
             id,
             newTxParams,
           })
@@ -274,7 +274,7 @@ describe('transaction reducer', () => {
       const address1 = '0x123'
       const address2 = '0xabc'
       const chainId1 = ChainId.Mainnet
-      const chainId2 = ChainId.Rinkeby
+      const chainId2 = ChainId.Goerli
       store.dispatch(
         addTransaction({
           chainId: chainId1,

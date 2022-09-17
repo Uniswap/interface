@@ -21,7 +21,7 @@ const methodParameters: MethodParameters = {
   calldata: '0x01',
 }
 
-const CHAIN_ID = ChainId.Rinkeby
+const CHAIN_ID = ChainId.Goerli
 const swapRouterAddress = SWAP_ROUTER_ADDRESSES[CHAIN_ID]
 
 const transactionTypeInfo: ExactInputSwapTransactionInfo = {

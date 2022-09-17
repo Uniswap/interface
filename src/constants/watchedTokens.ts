@@ -12,8 +12,4 @@ export const DEFAULT_WATCHED_TOKENS = {
     [NATIVE_ADDRESS]: true, // Native Eth
     [UNI[ChainId.Goerli].address]: true,
   },
-  [ChainId.Rinkeby]: {
-    [NATIVE_ADDRESS]: true, // Native Eth
-    [UNI[ChainId.Rinkeby].address]: true,
-  },
 }

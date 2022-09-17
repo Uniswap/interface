@@ -13,6 +13,6 @@ it('renders a currency logo without network logo', () => {
 })
 
 it('renders a currency logo with network logo', () => {
-  const tree = renderWithTheme(<CurrencyLogo currency={UNI[ChainId.Rinkeby]} size={20} />)
+  const tree = renderWithTheme(<CurrencyLogo currency={UNI[ChainId.Goerli]} size={20} />)
   expect(tree).toMatchSnapshot()
 })

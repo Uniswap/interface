@@ -1,4 +1,4 @@
-import { DAI, DAI_RINKEBY, USDC } from 'src/constants/tokens'
+import { DAI, USDC, USDC_ARBITRUM } from 'src/constants/tokens'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
 describe(flattenObjectOfObjects, () => {
@@ -13,12 +13,12 @@ describe(flattenObjectOfObjects, () => {
           [DAI.address]: DAI,
           [USDC.address]: USDC,
         },
-        4: {
-          [DAI_RINKEBY.address]: DAI_RINKEBY,
-        },
         5: {},
+        42161: {
+          [USDC_ARBITRUM.address]: USDC_ARBITRUM,
+        },
       })
-    ).toEqual([DAI, USDC, DAI_RINKEBY])
+    ).toEqual([DAI, USDC, USDC_ARBITRUM])
 
     expect(flattenObjectOfObjects({ 1: { '0x1': [1, 2, 3], '0x2': 4 } })).toEqual([[1, 2, 3], 4])
   })

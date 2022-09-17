@@ -12,7 +12,7 @@ import {
   updateExactAmountUSD,
 } from './transactionState'
 
-const chainId = ChainId.Rinkeby
+const chainId = ChainId.Goerli
 const ethAddress = NATIVE_ADDRESS
 const daiTradeableAsset: CurrencyAsset = { address: 'DAI', chainId, type: AssetType.Currency }
 const ethTradeableAsset: CurrencyAsset = { address: ethAddress, chainId, type: AssetType.Currency }
@@ -20,7 +20,7 @@ const ethTradeableAsset: CurrencyAsset = { address: ethAddress, chainId, type: A
 const testInitialState: Readonly<TransactionState> = {
   [CurrencyField.INPUT]: {
     address: NATIVE_ADDRESS,
-    chainId: ChainId.Rinkeby,
+    chainId: ChainId.Goerli,
     type: AssetType.Currency,
   },
   [CurrencyField.OUTPUT]: null,

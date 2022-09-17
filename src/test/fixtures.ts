@@ -83,17 +83,17 @@ export const mockTokenContract = {
 }
 
 export const contractManager = new ContractManager()
-contractManager.getOrCreateContract(ChainId.Rinkeby, DAI.address, provider, ERC20_ABI)
+contractManager.getOrCreateContract(ChainId.Goerli, DAI.address, provider, ERC20_ABI)
 contractManager.getOrCreateContract(
-  ChainId.Rinkeby,
-  WRAPPED_NATIVE_CURRENCY[ChainId.Rinkeby].address,
+  ChainId.Goerli,
+  WRAPPED_NATIVE_CURRENCY[ChainId.Goerli].address,
   provider,
   WETH_ABI
 )
-export const tokenContract = contractManager.getContract(ChainId.Rinkeby, DAI.address) as Erc20
+export const tokenContract = contractManager.getContract(ChainId.Goerli, DAI.address) as Erc20
 export const wethContract = contractManager.getContract(
-  ChainId.Rinkeby,
-  WRAPPED_NATIVE_CURRENCY[ChainId.Rinkeby].address
+  ChainId.Goerli,
+  WRAPPED_NATIVE_CURRENCY[ChainId.Goerli].address
 ) as Weth
 
 /**
@@ -125,7 +125,7 @@ export const txResponse = {
 export const txTypeInfo: ApproveTransactionInfo = {
   type: TransactionType.Approve,
   tokenAddress: tokenContract.address,
-  spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
+  spender: SWAP_ROUTER_ADDRESSES[ChainId.Goerli],
 }
 
 export const txDetailsPending: TransactionDetails = {

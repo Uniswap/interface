@@ -2,16 +2,13 @@
 
 import {
   ARBITRUM_LOGO,
+  ARBITRUM_RINKEBY_LOGO,
   ETHEREUM_LOGO,
   GOERLI_LOGO,
-  KOVAN_LOGO,
+  MUMBAI_LOGO,
   OPTIMISM_LOGO,
   OPTIMISTIC_KOVAN_LOGO,
   POLYGON_LOGO,
-  RINKEBY_LOGO,
-  ROPSTEN_LOGO,
-  MUMBAI_LOGO,
-  ARBITRUM_RINKEBY_LOGO,
 } from 'src/assets'
 
 export type ChainIdTo<T> = Partial<Record<ChainId, T>>
@@ -20,10 +17,7 @@ export type ChainIdToCurrencyIdTo<T> = ChainIdTo<{ [currencyId: string]: T }>
 // Renamed from SupportedChainId in web app
 export enum ChainId {
   Mainnet = 1,
-  Ropsten = 3,
-  Rinkeby = 4,
   Goerli = 5,
-  Kovan = 42,
 
   ArbitrumOne = 42161,
   ArbitrumRinkeby = 421611,
@@ -36,26 +30,17 @@ export enum ChainId {
 // Order here determines ordering of token balance sections
 export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.Mainnet,
-
-  ChainId.ArbitrumOne,
-  ChainId.Optimism,
-  ChainId.Polygon,
-
-  ChainId.Ropsten,
-  ChainId.Rinkeby,
   ChainId.Goerli,
-  ChainId.Kovan,
-
+  ChainId.ArbitrumOne,
   ChainId.ArbitrumRinkeby,
+  ChainId.Optimism,
   ChainId.OptimisticKovan,
+  ChainId.Polygon,
   ChainId.PolygonMumbai,
 ]
 
 export const TESTNET_CHAIN_IDS = [
-  ChainId.Rinkeby,
-  ChainId.Ropsten,
   ChainId.Goerli,
-  ChainId.Kovan,
   ChainId.ArbitrumRinkeby,
   ChainId.OptimisticKovan,
   ChainId.PolygonMumbai,
@@ -63,10 +48,7 @@ export const TESTNET_CHAIN_IDS = [
 
 export const L1_CHAIN_IDS = [
   ChainId.Mainnet,
-  ChainId.Ropsten,
-  ChainId.Rinkeby,
   ChainId.Goerli,
-  ChainId.Kovan,
   ChainId.Polygon,
   ChainId.PolygonMumbai,
 ] as const
@@ -83,8 +65,6 @@ export const L2_CHAIN_IDS = [
 
 export const EIP_1559_CHAINS = [
   ChainId.Mainnet,
-  ChainId.Ropsten,
-  ChainId.Rinkeby,
   ChainId.Goerli,
   ChainId.Polygon,
   ChainId.PolygonMumbai,
@@ -158,30 +138,6 @@ export const CHAIN_INFO: ChainInfo = {
     logo: ETHEREUM_LOGO,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   },
-  [ChainId.Rinkeby]: {
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://rinkeby.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Rinkeby',
-    logo: RINKEBY_LOGO,
-    nativeCurrency: { name: 'Rinkeby ETH', symbol: 'rinkETH', decimals: 18 },
-  },
-  [ChainId.Ropsten]: {
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://ropsten.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ropsten',
-    logo: ROPSTEN_LOGO,
-    nativeCurrency: { name: 'Ropsten ETH', symbol: 'ropETH', decimals: 18 },
-  },
-  [ChainId.Kovan]: {
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://kovan.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Kovan',
-    logo: KOVAN_LOGO,
-    nativeCurrency: { name: 'Kovan ETH', symbol: 'kovETH', decimals: 18 },
-  },
   [ChainId.Goerli]: {
     blockWaitMsBeforeWarning: 180000, // 3 minutes
     docs: 'https://docs.uniswap.org/',
@@ -252,10 +208,7 @@ export function isPolygonChain(
 
 export const CHAIN_ID_TO_LOGO: Record<ChainId, any> = {
   [ChainId.Mainnet]: ETHEREUM_LOGO,
-  [ChainId.Rinkeby]: ETHEREUM_LOGO,
   [ChainId.Goerli]: ETHEREUM_LOGO,
-  [ChainId.Ropsten]: ETHEREUM_LOGO,
-  [ChainId.Kovan]: ETHEREUM_LOGO,
   [ChainId.Optimism]: ETHEREUM_LOGO,
   [ChainId.OptimisticKovan]: ETHEREUM_LOGO,
   [ChainId.ArbitrumOne]: ETHEREUM_LOGO,

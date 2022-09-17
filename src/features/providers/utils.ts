@@ -4,14 +4,8 @@ export function getInfuraChainName(chainId: ChainId) {
   switch (chainId) {
     case ChainId.Mainnet:
       return 'homestead'
-    case ChainId.Rinkeby:
-      return 'rinkeby'
-    case ChainId.Ropsten:
-      return 'ropsten'
     case ChainId.Goerli:
       return 'goerli'
-    case ChainId.Kovan:
-      return 'kovan'
     case ChainId.ArbitrumOne:
       return 'arbitrum'
     case ChainId.ArbitrumRinkeby:

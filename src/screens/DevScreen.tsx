@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
-import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Switch } from 'src/components/buttons/Switch'
@@ -26,7 +25,7 @@ import { logger } from 'src/utils/logger'
 export function DevScreen({ navigation }: any) {
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
-  const [currentChain] = useState(ChainId.Rinkeby)
+  const [currentChain] = useState(ChainId.Goerli)
   const flashbotsEnabled = useAppSelector(selectFlashbotsEnabled)
 
   const onPressResetTokenWarnings = () => {
@@ -43,12 +42,9 @@ export function DevScreen({ navigation }: any) {
 
   const activeChains = useActiveChainIds()
   const onPressToggleTestnets = () => {
-    // always rely on the state of rinkeby
-    const isRinkebyActive = activeChains.includes(ChainId.Rinkeby)
-    batch(() => {
-      dispatch(setChainActiveStatus({ chainId: ChainId.Rinkeby, isActive: !isRinkebyActive }))
-      dispatch(setChainActiveStatus({ chainId: ChainId.Goerli, isActive: !isRinkebyActive }))
-    })
+    // always rely on the state of goerli
+    const isGoerliActive = activeChains.includes(ChainId.Goerli)
+    dispatch(setChainActiveStatus({ chainId: ChainId.Goerli, isActive: !isGoerliActive }))
   }
 
   const onToggleFlashbots = (enabled: boolean) => {

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface BlockState {
+export interface BlockState {
   byChainId: {
     [chainId: number]: {
       latestBlockNumber: number

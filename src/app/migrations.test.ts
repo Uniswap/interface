@@ -13,6 +13,7 @@ import {
   v15Schema,
   v16Schema,
   v17Schema,
+  v18Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -28,8 +29,8 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
-import { initialBlockState } from 'src/features/blocks/blocksSlice'
-import { initialChainsState } from 'src/features/chains/chainsSlice'
+import { BlockState, initialBlockState } from 'src/features/blocks/blocksSlice'
+import { ChainsState, initialChainsState } from 'src/features/chains/chainsSlice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
 import { initialFavoritesState } from 'src/features/favorites/slice'
@@ -39,7 +40,7 @@ import { initialProvidersState } from 'src/features/providers/providerSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { initialTokenListsState } from 'src/features/tokenLists/reducer'
 import { initialTokensState } from 'src/features/tokens/tokensSlice'
-import { initialTransactionsState } from 'src/features/transactions/slice'
+import { initialTransactionsState, TransactionState } from 'src/features/transactions/slice'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -160,7 +161,7 @@ describe('Redux state migrations', () => {
     }
 
     const txDetails1: TransactionDetails = {
-      chainId: ChainId.Rinkeby,
+      chainId: ChainId.Goerli,
       id: '1',
       from: '0xKingHodler',
       options: {
@@ -176,7 +177,7 @@ describe('Redux state migrations', () => {
       typeInfo: {
         type: TransactionType.Approve,
         tokenAddress: '0xtokenAddress',
-        spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
+        spender: SWAP_ROUTER_ADDRESSES[ChainId.Goerli],
       },
       status: TransactionStatus.Success,
       addedTime: 1487076708000,
@@ -190,7 +191,7 @@ describe('Redux state migrations', () => {
           [ChainId.Mainnet]: {
             '0': txDetails0,
           },
-          [ChainId.Rinkeby]: {
+          [ChainId.Goerli]: {
             '1': txDetails1,
           },
         },
@@ -209,10 +210,8 @@ describe('Redux state migrations', () => {
       TransactionStatus.Pending
     )
     expect(newSchema.transactions['0xKingHodler'][ChainId.Mainnet]).toBeUndefined()
-    expect(newSchema.transactions['0xKingHodler'][ChainId.Rinkeby]['0']).toBeUndefined()
-    expect(newSchema.transactions['0xKingHodler'][ChainId.Rinkeby]['1'].from).toEqual(
-      '0xKingHodler'
-    )
+    expect(newSchema.transactions['0xKingHodler'][ChainId.Goerli]['0']).toBeUndefined()
+    expect(newSchema.transactions['0xKingHodler'][ChainId.Goerli]['1'].from).toEqual('0xKingHodler')
 
     expect(newSchema.notifications.lastTxNotificationUpdate).toBeDefined()
     expect(
@@ -574,5 +573,168 @@ describe('Redux state migrations', () => {
     }
     const v18 = migrations[18](v17Stub)
     expect(v18.ens).toBeUndefined()
+  })
+
+  it('migrates from v18 to v19', () => {
+    const TEST_ADDRESS = '0xShadowySuperCoder'
+    const txDetails0: TransactionDetails = {
+      chainId: ChainId.Mainnet,
+      id: '0',
+      from: TEST_ADDRESS,
+      options: {
+        request: {
+          from: '0x123',
+          to: '0x456',
+          value: '0x0',
+          data: '0x789',
+          nonce: 10,
+          gasPrice: BigNumber.from('10000'),
+        },
+      },
+      typeInfo: {
+        type: TransactionType.Approve,
+        tokenAddress: '0xtokenAddress',
+        spender: SWAP_ROUTER_ADDRESSES[ChainId.Mainnet],
+      },
+      status: TransactionStatus.Pending,
+      addedTime: 1487076708000,
+      hash: '0x123',
+    }
+
+    const TEST_ADDRESS_2 = '0xKingHodler'
+    const txDetails1: TransactionDetails = {
+      chainId: ChainId.Goerli,
+      id: '1',
+      from: TEST_ADDRESS_2,
+      options: {
+        request: {
+          from: '0x123',
+          to: '0x456',
+          value: '0x0',
+          data: '0x789',
+          nonce: 10,
+          gasPrice: BigNumber.from('10000'),
+        },
+      },
+      typeInfo: {
+        type: TransactionType.Approve,
+        tokenAddress: '0xtokenAddress',
+        spender: SWAP_ROUTER_ADDRESSES[ChainId.Goerli],
+      },
+      status: TransactionStatus.Success,
+      addedTime: 1487076708000,
+      hash: '0x123',
+    }
+
+    const ROPSTEN = 3 as ChainId
+    const RINKEBY = 4 as ChainId
+    const KOVAN = 42 as ChainId
+
+    const transactions: TransactionState = {
+      [TEST_ADDRESS]: {
+        [ChainId.Mainnet]: {
+          '0': txDetails0,
+        },
+        [ChainId.Goerli]: {
+          '0': txDetails0,
+          '1': txDetails1,
+        },
+        [ChainId.OptimisticKovan]: {
+          '0': txDetails0,
+          '1': txDetails1,
+        },
+        [ROPSTEN]: {
+          '0': txDetails0,
+          '1': txDetails1,
+        },
+        [RINKEBY]: {
+          '0': txDetails1,
+        },
+        [KOVAN]: {
+          '1': txDetails1,
+        },
+      },
+      [TEST_ADDRESS_2]: {
+        [ChainId.ArbitrumOne]: {
+          '0': txDetails0,
+        },
+        [ChainId.ArbitrumRinkeby]: {
+          '0': txDetails0,
+        },
+        [ChainId.Optimism]: {
+          '0': txDetails0,
+          '1': txDetails1,
+        },
+        [ROPSTEN]: {
+          '0': txDetails0,
+          '1': txDetails1,
+        },
+        [RINKEBY]: {
+          '0': txDetails1,
+        },
+        [KOVAN]: {
+          '1': txDetails1,
+        },
+      },
+    }
+
+    const blocks: BlockState = {
+      byChainId: {
+        [ChainId.Mainnet]: { latestBlockNumber: 123456789 },
+        [ChainId.Goerli]: { latestBlockNumber: 123456789 },
+        [ROPSTEN]: { latestBlockNumber: 123456789 },
+        [RINKEBY]: { latestBlockNumber: 123456789 },
+        [KOVAN]: { latestBlockNumber: 123456789 },
+        [ChainId.Optimism]: { latestBlockNumber: 123456789 },
+      },
+    }
+
+    const chains: ChainsState = {
+      byChainId: {
+        [ChainId.ArbitrumOne]: { isActive: true },
+        [ChainId.Goerli]: { isActive: true },
+        [ROPSTEN]: { isActive: true },
+        [RINKEBY]: { isActive: true },
+        [KOVAN]: { isActive: true },
+        [ChainId.Optimism]: { isActive: true },
+      },
+    }
+
+    const v18Stub = {
+      ...v18Schema,
+      transactions,
+      blocks,
+      chains,
+    }
+
+    const v19 = migrations[19](v18Stub)
+
+    expect(v19.transactions[TEST_ADDRESS][ChainId.Mainnet]).toBeDefined()
+    expect(v19.transactions[TEST_ADDRESS][ChainId.Goerli]).toBeDefined()
+    expect(v19.transactions[TEST_ADDRESS][ChainId.OptimisticKovan]).toBeDefined()
+    expect(v19.transactions[TEST_ADDRESS][ROPSTEN]).toBeUndefined()
+    expect(v19.transactions[TEST_ADDRESS][RINKEBY]).toBeUndefined()
+    expect(v19.transactions[TEST_ADDRESS][KOVAN]).toBeUndefined()
+
+    expect(v19.transactions[TEST_ADDRESS_2][ChainId.ArbitrumOne]).toBeDefined()
+    expect(v19.transactions[TEST_ADDRESS_2][ChainId.ArbitrumRinkeby]).toBeDefined()
+    expect(v19.transactions[TEST_ADDRESS_2][ChainId.Optimism]).toBeDefined()
+    expect(v19.transactions[TEST_ADDRESS_2][ROPSTEN]).toBeUndefined()
+    expect(v19.transactions[TEST_ADDRESS_2][RINKEBY]).toBeUndefined()
+    expect(v19.transactions[TEST_ADDRESS_2][KOVAN]).toBeUndefined()
+
+    expect(v19.blocks.byChainId[ChainId.Mainnet]).toBeDefined()
+    expect(v19.blocks.byChainId[ChainId.Goerli]).toBeDefined()
+    expect(v19.blocks.byChainId[ChainId.Optimism]).toBeDefined()
+    expect(v19.blocks.byChainId[ROPSTEN]).toBeUndefined()
+    expect(v19.blocks.byChainId[RINKEBY]).toBeUndefined()
+    expect(v19.blocks.byChainId[KOVAN]).toBeUndefined()
+
+    expect(v19.chains.byChainId[ChainId.ArbitrumOne]).toBeDefined()
+    expect(v19.chains.byChainId[ChainId.Goerli]).toBeDefined()
+    expect(v19.chains.byChainId[ChainId.Optimism]).toBeDefined()
+    expect(v19.chains.byChainId[ROPSTEN]).toBeUndefined()
+    expect(v19.chains.byChainId[RINKEBY]).toBeUndefined()
+    expect(v19.chains.byChainId[KOVAN]).toBeUndefined()
   })
 })

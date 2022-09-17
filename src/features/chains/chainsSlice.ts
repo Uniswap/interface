@@ -4,7 +4,7 @@ import { config } from 'src/config'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
 
-interface ChainsState {
+export interface ChainsState {
   byChainId: ChainIdTo<ChainState>
 }
 

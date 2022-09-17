@@ -9,13 +9,13 @@ import { DAI } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
-  TransferCurrencyParams,
-  TransferNFTParams,
-} from 'src/features/transactions/transfer/useTransferTransactionRequest'
-import {
   hexlifyTransaction,
   transferToken,
 } from 'src/features/transactions/transfer/transferTokenSaga'
+import {
+  TransferCurrencyParams,
+  TransferNFTParams,
+} from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockContractManager, mockProvider, txRequest } from 'src/test/fixtures'
 
@@ -24,7 +24,7 @@ const erc20TranferParams: TransferCurrencyParams = {
   type: AssetType.Currency,
   account: account,
   tokenAddress: DAI.address,
-  chainId: ChainId.Rinkeby,
+  chainId: ChainId.Goerli,
   toAddress: '0xdefaced',
   amountInWei: '100000000000000000',
 }
@@ -35,7 +35,7 @@ const nativeTranferParams: TransferCurrencyParams = {
 const erc721TransferParams: TransferNFTParams = {
   txId: '1',
   type: AssetType.ERC721,
-  chainId: ChainId.Rinkeby,
+  chainId: ChainId.Goerli,
   account: account,
   toAddress: '0xdefaced',
   tokenAddress: '0xdeadbeef',
