@@ -41,7 +41,7 @@ export const useWeb3Endpoint = (chainId?:number | undefined) => {
   const { chainId: chain } = useActiveWeb3React()
   if (!chainId && chain) 
     chainId = chain
-  const WEB3_ENDPOINT = chainId == 1 ? 'https://cloudflare-eth.com' : chainId == 56 ? 'https://bsc-dataseed1.defibit.io/' : 'https://cloudflare-eth.com'
+  const WEB3_ENDPOINT = chainId == 1 ? 'https://cloudflare-eth.com' : chainId == 56 ? 'https://bsc-dataseed1.defibit.io' : 'https://cloudflare-eth.com'
   return WEB3_ENDPOINT
 }
   ;

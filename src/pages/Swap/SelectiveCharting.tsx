@@ -19,6 +19,7 @@ import styled, { useTheme } from "styled-components/macro";
 import {
   toChecksum,
   useEthPrice,
+  usePairs,
   useTokenData,
   useTokenTransactions,
 } from "state/logs/utils";
@@ -179,6 +180,7 @@ export const SelectiveChart = () => {
   const hasSelectedData = Boolean(params?.tokenAddress && selectedCurrency?.selectedCurrency?.name);
   const theme = useTheme()
   const [loadingNewData, setLoadingNewData] = React.useState(false);
+  const _pairs = usePairs(params?.tokenAddress)
 
   const locationCallback = React.useCallback((location: any) => {
     console.log(`location listener`, location);
@@ -534,8 +536,13 @@ export const SelectiveChart = () => {
 
   const pairAddress = React.useMemo(() => {
     if (params?.pairAddress) return params?.pairAddress;
-    return screenerToken?.pairAddress ? screenerToken?.pairAddress : pairs?.[0]?.id
-  }, [screenerToken, pairs, params.pairAddress])
+    let pairAddress =  screenerToken?.pairAddress ? screenerToken?.pairAddress : pairs?.[0]?.id
+    if (pairAddress) return pairAddress
+    if (_pairs) {
+      pairAddress = _pairs[0]?.id
+    }
+    return pairAddress
+  }, [screenerToken, _pairs, pairs, params.pairAddress])
 
   if (chainId && chainId == 56) {
     return <SelectiveChartBsc />

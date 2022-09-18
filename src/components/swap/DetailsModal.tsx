@@ -7,8 +7,8 @@ import { getTokenData, useEthPrice, useTokenData } from 'state/logs/utils';
 
 import { DarkCard } from 'components/Card';
 import Modal from 'components/Modal';
-import { NewToken } from 'state/transactions/hooks';
 import React from 'react';
+import { Token } from 'state/transactions/hooks';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
 import _ from 'lodash'
 import moment from 'moment';
@@ -55,7 +55,7 @@ export const DetailsModal = ({
     isOpen,
     onDismiss
 }: {
-    token: NewToken,
+    token: Token,
     network: 'bsc' | 'eth',
     symbol: string,
     address: string,

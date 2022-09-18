@@ -2,10 +2,10 @@ import { BuySellTax } from 'pages/Charts/BuySellTax'
 import Card from 'components/Card'
 import Loader from 'components/Loader'
 import Modal from 'components/Modal'
-import { NewToken } from 'state/transactions/hooks'
 import React from 'react'
 import { SwapTokenForToken } from 'pages/Swap/SwapTokenForToken'
 import { TYPE } from 'theme'
+import { Token } from 'state/transactions/hooks'
 import { WETH9 } from '@uniswap/sdk-core'
 import { X } from 'react-feather'
 import { useBuySellTax } from 'pages/Charts/hooks'
@@ -17,7 +17,7 @@ import useTheme from 'hooks/useTheme'
 type Props = {
     isOpen: boolean
     onDismiss: () => void
-    item: NewToken
+    item: Token
 }
 
 export const SwapTokenForTokenComponent = () => {

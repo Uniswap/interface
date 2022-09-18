@@ -46,6 +46,8 @@ import useTheme from 'hooks/useTheme'
 import { useWeb3React } from '@web3-react/core'
 
 type SortStateKey = 'asc' | 'desc' | undefined;
+
+const PAIRS_API = process.env.NODE_ENV == 'development' ? 'http://localhost:3001/api/pairs?network=' :  `https://kiba-api.vercel.app/api/pairs?network=`
 type SortState = {
   network: SortStateKey,
   symbol: SortStateKey
@@ -240,7 +242,7 @@ interface Pair {
   pairCreatedAt?: number;
 }
 
-export interface NewToken {
+export interface Token {
   network: string;
   symbol: string;
   name: string;
@@ -249,10 +251,17 @@ export interface NewToken {
   safe?: boolean;
   buyTax?: number | null;
   sellTax?: number | null;
-  liquidity?: any;
+  error?:string // error that occurred when trying to swap the token
+  liquidity: {
+    eth?: number
+    usd?: number
+  }
   screenerToken?: Pair;
   pairs?: Pair[];
+  pairAddress?: string
+  lastUpdated?:number
 }
+
 const StyledDiv = styled.div`
   font-family:"Open Sans";
   font-size:14px;
@@ -290,11 +299,11 @@ const ContractOwner = ({ address }: { address: string }) => {
   )
 }
 
-export const LockedLiquidity = ({ symbol, ...rest }: NewToken) => {
+export const LockedLiquidity = ({ symbol, ...rest }: Token) => {
   return null
 }
 
-const Row = styled.tr<{item: NewToken}>`
+const Row = styled.tr<{item: Token}>`
   ${props => [props.item.sellTax, props.item.buyTax].some((tax) => Boolean(tax) && Boolean((tax ?? 0) > 50)) ? 
     `
      filter: blur(0.85px);
@@ -319,7 +328,7 @@ const Row = styled.tr<{item: NewToken}>`
 
 export const FomoPage = () => {
   const { chainId, account, library } = useWeb3React();
-  const [data, setData] = React.useState<NewToken[] | undefined>([])
+  const [data, setData] = React.useState<Token[] | undefined>([])
   const [init, setInit] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState(false)
@@ -420,8 +429,8 @@ export const FomoPage = () => {
 
   const accessDenied = false
 
-  const orderByCallback = React.useCallback((key: string | keyof NewToken, direction: 'asc' | 'desc') => {
-    setData(orderBy(data, item => item[key as keyof NewToken], direction))
+  const orderByCallback = React.useCallback((key: string | keyof Token, direction: 'asc' | 'desc') => {
+    setData(orderBy(data, item => item[key as keyof Token], direction))
   }, [data, sortState])
 
 
@@ -435,7 +444,10 @@ export const FomoPage = () => {
       }
     }
     // use current network if no network is passed - its a polling update
-    const networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = networkPassed as any || network;
+    let networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = networkPassed as any
+    if (!networkString) {
+      networkString = network
+    }
 
     const finallyClause = () => {
       setLastFetched(new Date())
@@ -454,24 +466,24 @@ export const FomoPage = () => {
 
     if (!networkString) return;
 
-    if (canExecute() || !!networkString) {
+    if (canExecute() || !!(networkString && networkString === network)) {
 
       return fetch
         (
-          `https://kiba-api.vercel.app/api/pairs?network=${networkString}`,
+         `${PAIRS_API}${networkString}`,
           { method: "GET", redirect: 'follow' }
         ).then(async (response) => {
           const dataV = await response.json()
           const json = dataV;
-          const dataNew = json.filter((a: NewToken) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
+          const dataNew = json.filter((a: Token) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
           const sorted = orderBy(dataNew, i => new Date(+i.timestamp * 1000), 'desc')
           const activeSort = getActiveSort();
           const newDataValue = orderBy(
             [
               ...sorted.filter((item: any) => item.network?.toLowerCase() === networkString?.toLowerCase() && !data?.some((i: any) => item?.addr === i?.addr))
             ],
-            item => new Date(+item.timestamp * 1000),
-            'desc'
+            item => item[activeSort?.key || 'timestamp'] ,
+            activeSort?.direction || 'desc'
           );
           const nonExistingItems = newDataValue.filter(item => !data?.some(dataItem => dataItem.addr == item.addr))
           const shouldFlagCallback = nonExistingItems?.length > 0
@@ -486,8 +498,8 @@ export const FomoPage = () => {
                         ...(data ? data : []),
                         ...newDataValue.map(mapToken)
                       ].filter(({ network: zeNetwork }) => zeNetwork?.toLowerCase() === network),
-                      i => +i.timestamp,
-                      'desc'
+                      (i: Token) => i[activeSort?.key as keyof Token || 'timestamp'],
+                      activeSort?.direction || 'desc'
                     ),
                   a => a.addr
                 )
@@ -505,14 +517,14 @@ export const FomoPage = () => {
     }
   }
 
-  const mapToken = (token: NewToken) => {
+  const mapToken = (token: Token) => {
     const doesTokenExist = data?.some(item => item.addr == token.addr)
     if (doesTokenExist) {
       const existingtoken = data?.find(item => item.addr == token.addr)
       if (existingtoken && existingtoken.screenerToken) {
         let screenerToken = existingtoken.screenerToken
         if(token.screenerToken) {
-          screenerToken = token.screenerToken
+          screenerToken = (existingtoken?.lastUpdated || 0) < (token?.lastUpdated || 0) ? token.screenerToken : existingtoken.screenerToken
         }
         return {
         ...existingtoken,
@@ -549,7 +561,7 @@ export const FomoPage = () => {
   
 
 
-  const onSortClick = (key: keyof NewToken) => {
+  const onSortClick = (key: keyof Token) => {
     if (accessDenied) {
       Swal.fire({
         icon: "warning",
@@ -592,7 +604,7 @@ export const FomoPage = () => {
     return true
   }
 
-  const [showModal, setShowModal] = React.useState<NewToken>()
+  const [showModal, setShowModal] = React.useState<Token>()
 
   const darkTheme = useIsDarkMode()
   const iconColor = darkTheme ? '#fff' : ''
@@ -611,7 +623,7 @@ export const FomoPage = () => {
     </tr>
   ), [stateMap.current?.get('nextRefetch') as any])
 
-  const getNetworkLink = function (item: NewToken) {
+  const getNetworkLink = function (item: Token) {
     switch (item.network.toLowerCase()) {
       case 'eth': return `https://etherscan.io/token/${item.addr}`
       case 'bsc': return `https://bscscan.com/token/${item.addr}`
@@ -623,6 +635,25 @@ export const FomoPage = () => {
     }
   }
 
+  const liquidityString = React.useMemo(() => 
+    (item: Token) => {
+      let liquidity: number | undefined = undefined
+      if (item?.liquidity?.usd) {
+        liquidity = item?.liquidity?.usd
+      } else if (item?.screenerToken?.liquidity?.usd) {
+        liquidity = item?.screenerToken?.liquidity?.usd
+      }
+      return liquidity?.toFixed(2)
+    }, [data])
+
+const getChartLink = (item: Token)  => {
+  const network = item.network.toLowerCase() == 'eth' ? 'ethereum' : item?.network?.toLowerCase()
+  if (network && item.screenerToken?.pairAddress) return `/selective-charts/${network}/${item.screenerToken?.pairAddress}`
+  if (network && item.pairAddress) return `/selective-charts/${network}/${item.pairAddress}s`
+
+
+  return `/selective-charts/${item.addr}/${item.name}/${item.symbol}/18`
+}
 
   const TableMemo = React.useCallback(() => (
     !data?.length && !pagedData?.length && !searchValue && !loading ? 
@@ -662,7 +693,7 @@ export const FomoPage = () => {
                 href={getNetworkLink(item)} />
 
               {/* Chart Link */}
-              {network === 'eth' && <StyledInternalLink to={`/selective-charts/${item.addr}/${item.symbol}/${item.name}/18`}>
+              {(network === 'eth' || network =='bsc') && <StyledInternalLink to={getChartLink(item)}>
                 <BarChart2 style={{ color: '#F76C1D' }} />
               </StyledInternalLink>}
 
@@ -689,7 +720,7 @@ export const FomoPage = () => {
           {accessDenied === false && (network === 'eth' || network ==='bsc') && (
             <td>
               <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
-             {item?.screenerToken?.liquidity && <Badge variant={BadgeVariant.PRIMARY}>{`$${abbreviateNumber(item?.screenerToken?.liquidity?.usd ?? item?.screenerToken?.fdv)}`}</Badge>}
+             {Boolean(liquidityString(item)) && <Badge variant={BadgeVariant.PRIMARY}>{`$${abbreviateNumber(liquidityString(item))}`}</Badge>}
                 {['bsc', 'eth'].includes(item.network.toLowerCase()) &&
                   <>
                     {!modalShowing &&
@@ -743,7 +774,7 @@ export const FomoPage = () => {
   React.useEffect(() => {
     const active = getActiveSort()
     if (active?.key && active?.direction) {
-      orderByCallback(active?.key as keyof NewToken, active?.direction)
+      orderByCallback(active?.key as keyof Token, active?.direction)
     }
   }, [sortState])
 
@@ -765,7 +796,7 @@ export const FomoPage = () => {
 
   return (
     <DarkCard style={{ maxWidth: 1200 }}>
-    <SwapTokenForTokenModal item={showModal as NewToken} isOpen={Boolean(showModal && showModal.addr)} onDismiss={() => setShowModal(undefined)} />
+    <SwapTokenForTokenModal item={showModal as Token} isOpen={Boolean(showModal && showModal.addr)} onDismiss={() => setShowModal(undefined)} />
       <Wrapper style={{ color: theme.text1, overflow: 'auto', padding: '9px 14px' }}>
         <div style={{ marginBottom: 10 }}>
           <h1 style={{ fontFamily: 'Open Sans', fontWeight: 'normal' }}>KibaFomo &nbsp;

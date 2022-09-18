@@ -125,7 +125,7 @@ export const SelectiveChartWithPair = () => {
     }>();
     const network = params?.network;
     const screenerPairChainId = network == 'bsc' ? 56 : network == 'ethereum' ? 1 : 1
-    const screenerPair = useDexscreenerPair(params?.pairAddress || '', screenerPairChainId)
+    const screenerPair = useDexscreenerPair(toChecksum(params?.pairAddress) || '', screenerPairChainId)
     const isMobile = useIsMobile()
     const mainnetCurrency = useCurrency(
         screenerPair?.baseToken?.address
@@ -687,6 +687,7 @@ export const SelectiveChartWithPair = () => {
                                     ) ? (
                                         <>
                                             <ChartComponent
+
                                                 networkProvided={network}
                                                 pairAddress={pairAddress}
                                                 pairData={pairs}
