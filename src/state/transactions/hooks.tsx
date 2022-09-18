@@ -510,8 +510,9 @@ export const FomoPage = () => {
 
           return doExecute();
         })
-        .finally(finallyClause)
         .catch(finallyErrorClause)
+        .finally(finallyClause)
+        
     } else {
       return Promise.resolve()
     }
@@ -592,7 +593,9 @@ export const FomoPage = () => {
 
 
   const doExecute = (): void => {
-    stateMap.current.set('last_load', moment().add('seconds', 30).toDate().getTime());
+    setLastFetched(new Date())
+    stateMap.current.set('last_load', moment().add('seconds', 30).toDate().getTime())
+    setLopading(false)
   }
 
   const canExecute = (): boolean => {
