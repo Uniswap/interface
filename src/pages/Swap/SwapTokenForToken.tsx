@@ -666,7 +666,7 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
                     <MouseoverTooltip
                       text={
                         <Trans>
-                          You must give the Uniswap smart contracts permission to use your{' '}
+                          You must give the Kibaswap smart contracts permission to use your{' '}
                           {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
                         </Trans>
                       }

@@ -34,6 +34,7 @@ import { addTransaction } from './actions'
 import { getMaxes } from 'pages/HoneyPotDetector'
 import moment from 'moment'
 import { orderBy } from 'lodash'
+import { setOpenModal } from 'state/application/actions'
 import styled from 'styled-components/macro'
 import { truncate } from 'fs'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -186,6 +187,16 @@ export const LimitOrders = () => {
   </div>
 }
 
+type TipProps = {
+  error: string;
+}
+
+const ItemTooltip = (props: TipProps) => {
+  const [isOpen, setIsOpen] = React.useState(false)
+  return <Tooltip show={isOpen} text={props.error}>
+    <Info onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)} color={'red'} size={20} />
+  </Tooltip>
+}
 interface Pair {
   chainId: string;
   dexId: string;
@@ -595,7 +606,7 @@ export const FomoPage = () => {
   const doExecute = (): void => {
     setLastFetched(new Date())
     stateMap.current.set('last_load', moment().add('seconds', 30).toDate().getTime())
-    setLopading(false)
+    setLoading(false)
   }
 
   const canExecute = (): boolean => {
@@ -658,6 +669,7 @@ const getChartLink = (item: Token)  => {
   return `/selective-charts/${item.addr}/${item.name}/${item.symbol}/18`
 }
 
+
   const TableMemo = React.useCallback(() => (
     !data?.length && !pagedData?.length && !searchValue && !loading ? 
     RefetchNode : 
@@ -712,13 +724,21 @@ const getChartLink = (item: Token)  => {
             </div>
           </td>
 
-          {(<td style={{ textAlign: "center" }}>
+          {(<td style={{  textAlign: "center" }}>
+          <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
             {['bsc', 'eth'].includes(network) && <>
               {item?.safe === undefined && <Loader />}
               {item?.safe === true && <CheckCircle fontSize={'18px'} fill={'green'} fillOpacity={0.7} />}
               {item?.safe === false && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />}
             </>}
+
+            {item?.error && <ItemTooltip error={item.error} /> }
             {!['bsc', 'eth'].includes(item.network?.toLowerCase()) && <p>Switch networks to use this feature</p>}
+            </div>
           </td>)}
           {accessDenied === false && (network === 'eth' || network ==='bsc') && (
             <td>
@@ -874,7 +894,7 @@ const getChartLink = (item: Token)  => {
             type={'search'}
           />
         </div>
-        {accessDenied === false && <ul style={{ display: 'flex', flexFlow: 'row wrap', justifyContent: 'center', alignItems: 'center', listStyle: 'none' }}>
+        {accessDenied === false && <ul style={{ display:'flex', flexFlow: 'row', justifyContent: 'center', alignItems: 'center', listStyle: 'none' }}>
           {getPaginationGroup().map((number) => (
             <li style={{
               color: number === page ? theme.secondary1 : theme.text1,
