@@ -1,6 +1,9 @@
-import { Chef } from 'constants/farm/chef.enum'
-import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
-import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
+// import { Chef } from 'constants/farm/chef.enum'
+// import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+// import { useChefPositions } from 'hooks/farm/useChefPositions'
+// import { useChefContract } from 'hooks/farm/useChefContract'
+import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+// import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
@@ -10,13 +13,14 @@ import { RowBetween } from '../../components/Row'
 import { useActiveWeb3React } from '../../hooks'
 import { TYPE } from '../../theme'
 import PoolCard from './PoolCard'
+
 // import { JSBI } from '@teleswap/sdk'
 // import { BIG_INT_ZERO } from '../../constants'
 // import { OutlineCard } from '../../components/Card'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 1132px;
-  width: 37.3rem;
+  max-width: 67.5rem;
+  width: 100%;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: 100%;
 `};
@@ -25,15 +29,19 @@ const PageWrapper = styled(AutoColumn)`
 const PoolSection = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.4); //test usage
   display: grid;
+  height: 60vh;
+  overflow-y: auto;
   border-radius: 24px;
   grid-template-columns: 1fr;
-  column-gap: 10px;
-  row-gap: 15px;
+  row-gap: 24px;
   width: 100%;
   justify-self: center;
-  // background: #000;
+  background: #000;
   padding: 48px;
   color: #39e1ba;
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
 `
 
 const DataRow = styled(RowBetween)`
@@ -45,14 +53,12 @@ flex-direction: column;
 export default function FarmList() {
   const { chainId } = useActiveWeb3React()
   console.debug('chainId', chainId)
-  const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
   // const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
   // const positions = useChefPositions(mchefContract, undefined, chainId)
-  const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
-
+  const stakingInfos = useChefStakingInfo()
   useEffect(() => {
-    console.info('useMasterChefPoolInfo', poolInfos)
-  }, [poolInfos])
+    console.info('useChefStakingInfo', stakingInfos)
+  }, [stakingInfos])
   // // staking info for connected account
   // const stakingInfos = useStakingInfo()
 
@@ -98,10 +104,12 @@ export default function FarmList() {
         </DataRow>
 
         <PoolSection>
-          {poolInfos.length === 0
+          {stakingInfos.length === 0
             ? 'Loading...'
-            : poolInfos.map((_poolInfo, pid) => {
-                return <PoolCard key={pid} pid={pid} />
+            : stakingInfos.map((_poolInfo, pid) => {
+                if (!_poolInfo) return null
+                if (_poolInfo.isHidden) return null
+                return <PoolCard key={pid} pid={pid} stakingInfo={_poolInfo} />
               })}
         </PoolSection>
       </AutoColumn>

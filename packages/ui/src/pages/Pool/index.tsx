@@ -1,4 +1,4 @@
-import { JSBI, Pair } from '@teleswap/sdk'
+import { Pair } from '@teleswap/sdk'
 import useThemedContext from 'hooks/useThemedContext'
 import namor from 'namor'
 import React, { useMemo } from 'react'
@@ -11,13 +11,10 @@ import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import { DataCard } from '../../components/earn/styled'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
-import FullPositionCard, { LiquidityCard } from '../../components/PositionCard'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
-import { BIG_INT_ZERO } from '../../constants'
 import { usePairs } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
-import { useStakingInfo } from '../../state/stake/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
@@ -255,17 +252,18 @@ export default function Pool() {
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
   // show liquidity even if its deposited in rewards contract
-  const stakingInfo = useStakingInfo()
-  const stakingInfosWithBalance = stakingInfo?.filter((pool) => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
-  const stakingPairs = usePairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
+  // const stakingInfo = useStakingInfo()
+  // const stakingInfosWithBalance = stakingInfo?.filter((pool) => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
+  // const stakingPairs = usePairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
+
   // remove any pairs that also are included in pairs with stake in mining pool
-  const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter((v2Pair) => {
-    return (
-      stakingPairs
-        ?.map((stakingPair) => stakingPair[1])
-        .filter((stakingPair) => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
-    )
-  })
+  // const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter((v2Pair) => {
+  //   return (
+  //     stakingPairs
+  //       ?.map((stakingPair) => stakingPair[1])
+  //       .filter((stakingPair) => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
+  //   )
+  // })
 
   return (
     <>
@@ -327,7 +325,8 @@ export default function Pool() {
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </EmptyProposals>
-            ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
+            ) : allV2PairsWithLiquidity?.length > 0 ? (
+              //  || stakingPairs?.length > 0
               <>
                 <StyledTableView>
                   <thead>
@@ -341,7 +340,7 @@ export default function Pool() {
                     </tr>
                   </thead>
                   <tbody style={{ overflow: 'hidden auto' }}>
-                    {v2PairsWithoutStakedAmount.map((v2Pair, index) => (
+                    {/* {v2PairsWithoutStakedAmount.map((v2Pair, index) => (
                       <LiquidityCard
                         key={index}
                         pair={v2Pair}
@@ -350,7 +349,7 @@ export default function Pool() {
                         border={`1px solid rgba(255, 255, 255, 0.2)!important`}
                         borderRadius={`24px`}
                       ></LiquidityCard>
-                    ))}
+                    ))} */}
                   </tbody>
                 </StyledTableView>
 
@@ -372,7 +371,7 @@ export default function Pool() {
                     />
                   </YourLiquidityGrid>
                 ))} */}
-                {stakingPairs.map(
+                {/* {stakingPairs.map(
                   (stakingPair, i) =>
                     stakingPair[1] && ( // skip pairs that arent loaded
                       <FullPositionCard
@@ -384,7 +383,7 @@ export default function Pool() {
                         stakedBalance={stakingInfosWithBalance[i].stakedAmount}
                       />
                     )
-                )}
+                )} */}
               </>
             ) : (
               <EmptyProposals>

@@ -1,77 +1,121 @@
-import { Interface } from '@ethersproject/abi'
-import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
-import { Token } from '@teleswap/sdk'
+import { CurrencyAmount, Pair, Token, TokenAmount } from '@teleswap/sdk'
 import { Chef } from 'constants/farm/chef.enum'
-import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+import { CHAINID_TO_FARMING_CONFIG, FarmingPool } from 'constants/farming.config'
+import { UNI } from 'constants/index'
+import { PairState, usePairs } from 'data/Reserves'
+import { BigNumber } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
 import { useMemo } from 'react'
-import { useMultipleContractSingleData } from 'state/multicall/hooks'
+import { useTokenBalances } from 'state/wallet/hooks'
 
+import { useChefContractForCurrentChain } from './useChefContract'
+import { ChefPosition, useChefPositions } from './useChefPositions'
 import { MasterChefRawPoolInfo, useMasterChefPoolInfo } from './useMasterChefPoolInfo'
 
-const PAIR_INTERFACE = new Interface(ITeleswapV2PairABI)
-
 interface AdditionalStakingInfo {
-  isHidden?: boolean
-  stakingAsset?: {
-    name: string
-    /**
-     * `isLpToken` - this affect the way for our evaluation of the staked asset and its logo
-     */
-    isLpToken: boolean
-    /**
-     * only exist if `isLpToken` is `true`
-     */
-    token0?: string
-    /**
-     * only exist if `isLpToken` is `true`
-     */
-    token1?: string
-  }
   /**
    * the `Token` object that generated from `lpToken` address
    */
   stakingToken: Token
-}
-export type ChefStakingInfo = MasterChefRawPoolInfo & AdditionalStakingInfo
+  /**
+   * `stakingPair` is null if this is no a LP Token
+   */
+  stakingPair: [PairState, Pair | null]
+  tvl?: TokenAmount
 
-export function useChefStakingInfo(): ChefStakingInfo[] {
+  parsedData?: {
+    stakedAmount: string
+    pendingReward: string
+  }
+
+  stakedAmount: CurrencyAmount
+  pendingReward: CurrencyAmount
+  rewardDebt: CurrencyAmount
+  rewardToken: Token
+}
+export type ChefStakingInfo = MasterChefRawPoolInfo & FarmingPool & AdditionalStakingInfo
+
+export function useChefStakingInfo(): (ChefStakingInfo | undefined)[] {
   const { chainId } = useActiveWeb3React()
+  const mchefContract = useChefContractForCurrentChain()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
+  // @todo: include rewardToken in the farmingConfig
+  const rewardToken = UNI[chainId || 420]
+
+  const positions = useChefPositions(mchefContract, undefined, chainId)
+  const poolPresets = useMemo(() => farmingConfig?.pools || [], [farmingConfig])
   const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
 
-  // const pairContract = usePairContract()
-  const pairAddresses = useMemo(
-    () =>
-      poolInfos.map(({ lpToken }, idx) => {
-        return farmingConfig?.pools[idx].stakingAsset.isLpToken ? lpToken : undefined
-      }),
-    [farmingConfig, poolInfos]
-  )
   const stakingTokens = useMemo(() => {
     return poolInfos.map((poolInfo, idx) => {
       return new Token(
         chainId || 420,
         poolInfo.lpToken,
-        farmingConfig?.pools[idx].stakingAsset.decimal || 18,
-        farmingConfig?.pools[idx].stakingAsset.symbol,
-        farmingConfig?.pools[idx].stakingAsset.name
+        poolPresets[idx].stakingAsset.decimal || 18,
+        poolPresets[idx].stakingAsset.symbol,
+        poolPresets[idx].stakingAsset.name
       )
     })
-  }, [chainId, poolInfos, farmingConfig])
-  const listOfToken0 = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'token0')
-  const listOfToken1 = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'token1')
+  }, [chainId, poolInfos, poolPresets])
 
-  // @todo: return the staking infos
+  const stakingPairAsset: [Token | undefined, Token | undefined, boolean | undefined][] = poolPresets.map(
+    ({ stakingAsset, isHidden }) => {
+      if (!stakingAsset.isLpToken || isHidden) return [undefined, undefined, undefined]
+      else return [stakingAsset.tokenA, stakingAsset.tokenB, stakingAsset.isStable] as [Token, Token, boolean]
+    }
+  )
+  const pairs = usePairs(stakingPairAsset)
+  const tvls = useTokenBalances(mchefContract?.address, stakingTokens)
+
   return poolInfos.map((info, idx) => {
-    const pool = farmingConfig?.pools[idx]
-    const stakingAsset = pool
-      ? {
-          ...pool.stakingAsset,
-          token0: listOfToken0[idx].result?.at(0),
-          token1: listOfToken1[idx].result?.at(0)
-        }
-      : undefined
-    return { ...info, isHidden: pool?.isHidden, stakingAsset, stakingToken: stakingTokens[idx] }
+    if (!poolPresets[idx]) return undefined
+
+    const pool = poolPresets[idx]
+    const stakingToken = stakingTokens[idx]
+    const tvl = tvls[stakingToken.address]
+    const position = positions[idx]
+    const parsedData = {
+      pendingReward: parsedPendingRewardTokenAmount(position, rewardToken),
+      stakedAmount: parsedStakedTokenAmount(position, stakingToken)
+    }
+    return {
+      ...info,
+      isHidden: pool?.isHidden,
+      stakingAsset: pool.stakingAsset,
+      stakingToken,
+      tvl,
+      stakingPair: pairs[idx],
+      parsedData,
+      rewardToken,
+      stakedAmount: CurrencyAmount.fromRawAmount(stakingToken, position.amount.toBigInt()),
+      pendingReward: CurrencyAmount.fromRawAmount(stakingToken, position.pendingSushi.toBigInt()),
+      rewardDebt: CurrencyAmount.fromRawAmount(rewardToken, position.rewardDebt.toBigInt())
+    }
   })
+}
+
+/** Some utils to help our hook fns */
+
+const parsedStakedTokenAmount = (position: ChefPosition, stakingToken: Token) => {
+  try {
+    if (position.amount) {
+      const bi = position.amount.toBigInt()
+      return CurrencyAmount.fromRawAmount(stakingToken, bi)?.toSignificant(4)
+    }
+  } catch (error) {
+    console.error('parsedStakedAmount::error', error)
+  }
+  return '--.--'
+}
+
+const parsedPendingRewardTokenAmount = (position: ChefPosition, rewardToken: Token) => {
+  try {
+    if (position && position.pendingSushi) {
+      const bi = (position.pendingSushi as BigNumber).toBigInt()
+      return CurrencyAmount.fromRawAmount(rewardToken, bi).toSignificant(4)
+    }
+  } catch (error) {
+    console.error('parsedPendingSushiAmount::error', error)
+  }
+  return '--.--'
 }

@@ -45,7 +45,8 @@ export function useMintActionHandlers(noLiquidity: boolean | undefined): {
 
 export function useDerivedMintInfo(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyB: Currency | undefined,
+  stable: boolean | undefined
 ): {
   dependentField: Field
   currencies: { [field in Field]?: Currency }
@@ -75,7 +76,7 @@ export function useDerivedMintInfo(
   )
 
   // pair
-  const [pairState, pair] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
+  const [pairState, pair] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B], stable)
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
   const noLiquidity: boolean =

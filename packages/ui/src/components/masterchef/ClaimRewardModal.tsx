@@ -1,14 +1,8 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { CurrencyAmount } from '@teleswap/sdk'
 import { Chef } from 'constants/farm/chef.enum'
-import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
-import { UNI } from 'constants/index'
-import { BigNumber } from 'ethers'
-import { useChefContract } from 'hooks/farm/useChefContract'
-import { useChefPositions } from 'hooks/farm/useChefPositions'
-import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 import useMasterChef from 'hooks/farm/useMasterChef'
-import React, { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 
@@ -33,13 +27,12 @@ interface ClaimRewardModalProps {
   isOpen: boolean
   onDismiss: () => void
   pid: number
+  stakingInfo: ChefStakingInfo
 }
 
-export default function ClaimRewardModal({ isOpen, onDismiss, pid }: ClaimRewardModalProps) {
-  const { account, chainId } = useActiveWeb3React()
+export default function ClaimRewardModal({ isOpen, onDismiss, pid, stakingInfo }: ClaimRewardModalProps) {
+  const { account } = useActiveWeb3React()
   const { t } = useTranslation()
-  const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
-  const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
   // monitor call to help UI loading state
   const addTransaction = useTransactionAdder()
   const [hash, setHash] = useState<string | undefined>()
@@ -48,25 +41,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid }: ClaimReward
   const masterChef = useMasterChef(Chef.MINICHEF)
 
   // track and parse user input
-  const stakingInfos = useChefStakingInfo()
-  const thisPool = stakingInfos[pid]
-  const stakingCurrency = thisPool.stakingToken
-
-  const rewardToken = UNI[chainId || 420]
-  const positions = useChefPositions(mchefContract, undefined, chainId)
-
-  const parsedPendingSushiAmount = useMemo(() => {
-    try {
-      if (positions && positions[pid] && positions[pid].pendingSushi) {
-        const bi = (positions[pid].pendingSushi as BigNumber).toBigInt()
-        console.debug('parsedPendingSushiAmount::bi', bi)
-        return CurrencyAmount.fromRawAmount(rewardToken, bi)
-      }
-    } catch (error) {
-      console.error('parsedPendingSushiAmount::error', error)
-    }
-    return undefined
-  }, [rewardToken, positions, pid])
+  const stakingCurrency = stakingInfo?.stakingToken
   function wrappedOndismiss() {
     setHash(undefined)
     setAttempting(false)
@@ -79,7 +54,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid }: ClaimReward
       .harvest(pid)
       .then((response: TransactionResponse) => {
         addTransaction(response, {
-          summary: `Claim Reward of Staking ${farmingConfig?.pools[pid].stakingAsset.name}`
+          summary: `Claim Reward of Staking ${stakingCurrency.name}`
         })
         setHash(response.hash)
       })
@@ -102,20 +77,24 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid }: ClaimReward
             <TYPE.mediumHeader color="#FFFFFF">{t('claimRewards')}</TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOndismiss} color="#FFFFFF" />
           </RowBetween>
-          {parsedPendingSushiAmount && (
+          {stakingInfo.pendingReward && (
             <AutoColumn justify="center" gap="md">
               <TYPE.white fontWeight={600} fontSize={36}>
-                {<FormattedCurrencyAmount currencyAmount={parsedPendingSushiAmount} />}
+                {<FormattedCurrencyAmount currencyAmount={stakingInfo.pendingReward} />}
               </TYPE.white>
               <TYPE.white>
-                {t('unclaimed')} {rewardToken.symbol}
+                {t('unclaimed')} {stakingInfo.rewardToken.symbol}
               </TYPE.white>
             </AutoColumn>
           )}
           {/* <TYPE.subHeader style={{ textAlign: 'center' }}>
             Unused sub header, we will block this. Enable this when we need to do so.
           </TYPE.subHeader> */}
-          <ButtonError disabled={!!error} error={!!error && !!positions[pid].amount} onClick={onHarvestButtonClicked}>
+          <ButtonError
+            disabled={!!error}
+            error={!!error && !!stakingInfo.stakedAmount}
+            onClick={onHarvestButtonClicked}
+          >
             {error ?? t('claim')}
           </ButtonError>
         </ContentWrapper>
@@ -124,7 +103,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid }: ClaimReward
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.white fontSize={20}>
-              {t('claiming')} {parsedPendingSushiAmount?.toSignificant(4)} {rewardToken.symbol}
+              {t('claiming')} {stakingInfo?.pendingReward.toSignificant(4)} {stakingInfo?.rewardToken.symbol}
             </TYPE.white>
           </AutoColumn>
         </LoadingView>
@@ -133,9 +112,9 @@ export default function ClaimRewardModal({ isOpen, onDismiss, pid }: ClaimReward
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.white fontSize={20}>Withdrew {stakingCurrency.symbol}!</TYPE.white>
+            <TYPE.white fontSize={20}>Withdrew {stakingCurrency?.symbol}!</TYPE.white>
             <TYPE.white fontSize={20}>
-              {t('claimed')} {rewardToken.symbol}!
+              {t('claimed')} {stakingInfo.rewardToken.symbol}!
             </TYPE.white>
           </AutoColumn>
         </SubmittedView>

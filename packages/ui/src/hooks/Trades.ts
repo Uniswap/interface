@@ -15,6 +15,8 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useActiveWeb3React } from './index'
 import { useUnsupportedTokens } from './Tokens'
 
+type PairParams = [Token, Token, boolean]
+
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const { chainId } = useActiveWeb3React()
 
@@ -32,25 +34,31 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     return [...common, ...additionalA, ...additionalB]
   }, [chainId, tokenA, tokenB])
 
-  const basePairs: [Token, Token][] = useMemo(
-    () => flatMap(bases, (base): [Token, Token][] => bases.map((otherBase) => [base, otherBase])),
+  const basePairs: PairParams[] = useMemo(
+    () =>
+      flatMap(bases, (base): PairParams[] => bases.map((otherBase) => [base, otherBase, false])).concat(
+        flatMap(bases, (base): PairParams[] => bases.map((otherBase) => [base, otherBase, true]))
+      ),
     [bases]
   )
 
-  const allPairCombinations: [Token, Token][] = useMemo(
+  const allPairCombinations: PairParams[] = useMemo(
     () =>
       tokenA && tokenB
         ? [
             // the direct pair
-            [tokenA, tokenB],
+            [tokenA, tokenB, false],
+            [tokenA, tokenB, true],
             // token A against all bases
-            ...bases.map((base): [Token, Token] => [tokenA, base]),
+            ...bases.map((base): PairParams => [tokenA, base, false]),
+            ...bases.map((base): PairParams => [tokenA, base, true]),
             // token B against all bases
-            ...bases.map((base): [Token, Token] => [tokenB, base]),
+            ...bases.map((base): PairParams => [tokenB, base, false]),
+            ...bases.map((base): PairParams => [tokenB, base, true]),
             // each base against all bases
             ...basePairs
           ]
-            .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
+            .filter((tokens): tokens is [Token, Token, boolean] => Boolean(tokens[0] && tokens[1]))
             .filter(([t0, t1]) => t0.address !== t1.address)
             .filter(([tokenA, tokenB]) => {
               if (!chainId) return true

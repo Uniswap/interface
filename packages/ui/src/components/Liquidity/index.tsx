@@ -35,9 +35,9 @@ const BorderVerticalContainer = styled(Flex)`
 export default function LiquidityDetail({
   history,
   match: {
-    params: { currencyIdA, currencyIdB }
+    params: { currencyIdA, currencyIdB, stable }
   }
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; stable: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
   const {
@@ -52,7 +52,7 @@ export default function LiquidityDetail({
     liquidityMinted,
     poolTokenPercentage,
     error
-  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
+  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, !!stable ?? undefined)
   const [tokenA, tokenB] = useMemo(
     () => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)],
     [currencyA, currencyB, chainId]

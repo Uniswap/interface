@@ -26,15 +26,14 @@ export interface MasterChefRawPoolInfo {
 export function useMasterChefPoolInfo(chef: Chef): MasterChefRawPoolInfo[] {
   const { account } = useActiveWeb3React()
   const contract = useChefContract(chef)
-  const numberOfPools = useSingleCallResult(contract ? contract : null, 'poolLength', undefined, NEVER_RELOAD)
-    ?.result?.[0]
+  const poolLength = useSingleCallResult(contract ? contract : null, 'poolLength', undefined, NEVER_RELOAD)?.result?.[0]
 
   const args = useMemo(() => {
-    if (!account || !numberOfPools) {
+    if (!account || !poolLength) {
       return
     }
-    return [...Array(numberOfPools.toNumber()).keys()].map((pid) => [String(pid)])
-  }, [numberOfPools, account])
+    return [...Array(poolLength.toNumber()).keys()].map((pid) => [String(pid)])
+  }, [poolLength, account])
 
   const result = useSingleContractMultipleData(args ? contract : null, 'poolInfo', args)
   const mcv2LpToken = useSingleContractMultipleData(chef !== Chef.MASTERCHEF ? contract : null, 'lpToken', args)

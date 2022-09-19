@@ -35,7 +35,54 @@ module.exports = {
                         runs: 200
                     }
                 }
-            }]
+            }],
+        overrides: {
+            "contracts/spirit-v2-farming/Bribes.sol": {
+                version: "0.8.11",
+                settings: {
+                  optimizer: {
+                    enabled: true,
+                    runs: 200,
+                  },
+                }
+              },
+              "contracts/spirit-v2-farming/VariableGaugeProxy.sol": {
+                version: "0.8.11",
+                settings: {
+                  optimizer: {
+                    enabled: true,
+                    runs: 200,
+                  },
+                }
+              },
+              "contracts/spirit-v2-farming/StableGaugeProxy.sol": {
+                version: "0.8.11",
+                settings: {
+                  optimizer: {
+                    enabled: true,
+                    runs: 200,
+                  },
+                }
+              },
+              "contracts/spirit-v2-farming/AdminGaugeProxy.sol": {
+                version: "0.8.11",
+                settings: {
+                  optimizer: {
+                    enabled: true,
+                    runs: 200,
+                  },
+                }
+              },
+              "contracts/spirit-v2-farming/utils.sol": {
+                version: "0.8.11",
+                settings: {
+                  optimizer: {
+                    enabled: true,
+                    runs: 200,
+                  },
+                }
+              },
+        }
     },
     defaultNetwork: "hardhat",
     networks: {
@@ -61,7 +108,7 @@ module.exports = {
         runOnCompile: true,
         clear: true,
         flat: true,
-        except: ['@openzeppelin/contracts'],
+        except: ['@openzeppelin/contracts', 'contracts/spirit-v2-farming/utils.sol'],
         spacing: 2
         // pretty: true,
     }

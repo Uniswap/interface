@@ -1,26 +1,42 @@
 import { Zero } from '@ethersproject/constants'
 import { Chef } from 'constants/farm/chef.enum'
 import { MASTERCHEF_ADDRESSBOOK, MINICHEF_ADDRESS } from 'constants/index'
-import { Contract } from 'ethers'
+import { BigNumber, Contract } from 'ethers'
 import { useActiveWeb3React } from 'hooks'
 import { zip } from 'lodash'
 import { useCallback, useMemo } from 'react'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 
-export function useChefPositions(contract?: Contract | null, rewarder?: Contract | null, chainId = 420) {
+export interface ChefPosition {
+  id: string
+  pendingSushi: BigNumber
+  amount: BigNumber
+  chef: Chef | undefined
+  rewardDebt: BigNumber
+}
+
+export function useChefPositions(
+  contract?: Contract | null,
+  rewarder?: Contract | null,
+  chainId = 420
+): ChefPosition[] {
   const { account } = useActiveWeb3React()
 
-  const numberOfPools = useSingleCallResult(contract ? contract : null, 'poolLength', undefined, NEVER_RELOAD)
-    ?.result?.[0]
+  const poolLength: BigNumber | undefined = useSingleCallResult(
+    contract ? contract : null,
+    'poolLength',
+    undefined,
+    NEVER_RELOAD
+  )?.result?.[0]
 
-  console.info('numberOfPools', numberOfPools)
+  console.debug('useChefPositions::poolLength', poolLength?.toString())
 
   const args = useMemo(() => {
-    if (!account || !numberOfPools) {
+    if (!account || !poolLength) {
       return
     }
-    return [...Array(numberOfPools.toNumber()).keys()].map((pid) => [String(pid), String(account)])
-  }, [numberOfPools, account])
+    return [...Array(poolLength.toNumber()).keys()].map((pid) => [String(pid), String(account)])
+  }, [poolLength, account])
 
   const pendingSushi = useSingleContractMultipleData(args ? contract : null, 'pendingSushi', args)
 
@@ -47,18 +63,17 @@ export function useChefPositions(contract?: Contract | null, rewarder?: Contract
     if (!pendingSushi && !userInfo) {
       return []
     }
-    return zip(pendingSushi, userInfo)
-      .map((data, i) => ({
-        // @todo: possible undefined
-        id: (args as string[][])[i][0],
-        pendingSushi: data[0]?.result?.[0] || Zero,
-        amount: data[1]?.result?.[0] || Zero,
-        chef: getChef(),
-        rewardDebt: data[1]?.result?.[1] || Zero
-        // pendingTokens: data?.[2]?.result,
-      }))
-      .filter(({ pendingSushi, amount }) => {
-        return (pendingSushi && !pendingSushi.isZero()) || (amount && !amount.isZero())
-      })
+    return zip(pendingSushi, userInfo).map((data, i) => ({
+      // @todo: possible undefined
+      id: (args as string[][])[i][0],
+      pendingSushi: data[0]?.result?.[0] || Zero,
+      amount: data[1]?.result?.[0] || Zero,
+      chef: getChef(),
+      rewardDebt: data[1]?.result?.[1] || Zero
+      // pendingTokens: data?.[2]?.result,
+    }))
+    // .filter(({ pendingSushi, amount }) => {
+    //   return (pendingSushi && !pendingSushi.isZero()) || (amount && !amount.isZero())
+    // })
   }, [args, getChef, pendingSushi, userInfo])
 }
