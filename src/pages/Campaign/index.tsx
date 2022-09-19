@@ -104,24 +104,24 @@ function RankDetail({ campaign }: { campaign: CampaignData | undefined }) {
       text={
         <RankDetailWrapper>
           <Text color={theme.white} fontSize={16}>
-            <Trans>Requirement</Trans>
+            <Trans>Requirements</Trans>
           </Text>
           <Text lineHeight={'20px'}>
-            <Trans>Fulfill those requirement to participate in the campaign</Trans>
+            <Trans>Fulfill these requirements to participate in the campaign</Trans>
           </Text>
           <Flex style={{ gap: 10 }} flexDirection="column">
             {tradingVolumeRequired > 0 && (
               <ProgressBar
                 percent={percentVolume}
                 title={t`Trading Volume`}
-                value={`${tradingVolume}/${tradingVolumeRequired}`}
+                value={`${tradingVolume}/${tradingVolumeRequired}$`}
                 color={isPassedVolume ? theme.primary : theme.warning}
               />
             )}
             {tradingNumberRequired > 1 && (
               <ProgressBar
                 percent={percentTradingNumber}
-                title={t`Number of Trade`}
+                title={t`Number of Trades`}
                 value={`${tradingNumber}/${tradingNumberRequired}`}
                 color={isPassedNumberOfTrade ? theme.primary : theme.warning}
               />
@@ -498,7 +498,7 @@ export default function Campaign() {
                   {selectedCampaign?.status === CampaignStatus.UPCOMING
                     ? t`Starting In`
                     : isOngoing
-                    ? t`Ended In`
+                    ? t`Ending In`
                     : t`Ended On`}
                 </Text>
                 <Clock size={20} color={theme.subText} />

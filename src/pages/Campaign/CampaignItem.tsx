@@ -149,14 +149,14 @@ export default function CampaignItem({
             <ProgressBar
               title={t`Your Trading Volume`}
               percent={percentVolume}
-              value={`${tradingVolume}/${tradingVolumeRequired}`}
+              value={`${tradingVolume}/${tradingVolumeRequired}$`}
               valueTextColor={theme.primary}
               color={percentVolume >= 100 ? theme.primary : theme.warning}
             />
           )}
           {tradingNumberRequired > 1 && (
             <ProgressBar
-              title={t`Your Number of Trade`}
+              title={t`Your Number of Trades`}
               percent={percentTradingNumber}
               value={`${tradingNumber}/${tradingNumberRequired}`}
               valueTextColor={theme.primary}
