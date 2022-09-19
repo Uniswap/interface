@@ -1,6 +1,5 @@
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 /**
@@ -19,14 +18,11 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
     [Field.OUTPUT]: defaultToken,
   })
 
-  const previousDefaultToken = usePrevious(defaultToken)
   useEffect(() => {
-    if (previousDefaultToken && previousDefaultToken !== defaultToken) {
-      setTokens({
-        [Field.OUTPUT]: defaultToken,
-      })
-    }
-  }, [previousDefaultToken, defaultToken])
+    setTokens({
+      [Field.OUTPUT]: defaultToken,
+    })
+  }, [defaultToken])
 
   const onSwitchTokens = useCallback(() => {
     setType((type) => invertTradeType(type))
