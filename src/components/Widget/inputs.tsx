@@ -22,6 +22,7 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
     setTokens({
       [Field.OUTPUT]: defaultToken,
     })
+    setAmount('')
   }, [defaultToken])
 
   const onSwitchTokens = useCallback(() => {
