@@ -29,16 +29,14 @@ export const SwapVolumeContextProvider = ({ children, chainId }: { children: any
     const intervalFn = (
         React.useCallback(
             async (isIntervalledCallback: boolean) => {
-            console.log('interval function->totalSwapVolume->', ethRelayed.formatted)
-            if (relayer && (isIntervalledCallback || !ethRelayed.value)) {
-                relayer.totalEthRelayed().then((response: any) => {
-                    if (!_.isEqual(ethRelayed.value, response)) {
+                console.log('interval function->totalSwapVolume->', ethRelayed.formatted)
+                if (relayer) {
+                    relayer.totalEthRelayed().then((response: any) => {
                         const formattedEth = parseFloat(utils.formatEther(response)).toFixed(6);
                         setEthRelayed({ type: "UPDATE", payload: { formatted: formattedEth, value: response } });
-                    }
-                })
-            }
-        }, [relayer, ethRelayed])
+                    })
+                }
+            }, [relayer, ethRelayed])
     )
     const [initialized, setInitialized] = React.useState(false)
     const intervalledFunction = async () => await intervalFn(true)
@@ -57,12 +55,12 @@ export const SwapVolumeContextProvider = ({ children, chainId }: { children: any
     }, [relayer, initialized, chainId])
 
     React.useEffect(() => {
-         // this will keep the swap volume consistently updating, every 5 minutes or so.
-          const interval = setInterval(async () => {
-                console.log(`[SwapVolumeContextProvider] - Run Interval Update on Swap Volume`)
-                await intervalledFunction()
-            }, 60000 * 3.5)
-            return () => clearInterval(interval)
+        // this will keep the swap volume consistently updating, every 5 minutes or so.
+        const interval = setInterval(async () => {
+            console.log(`[SwapVolumeContextProvider] - Run Interval Update on Swap Volume`)
+            await intervalledFunction()
+        }, 60000 * 3.5)
+        return () => clearInterval(interval)
     }, [])
 
 

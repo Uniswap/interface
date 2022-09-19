@@ -331,6 +331,7 @@ const Row = styled.tr<{item: Token}>`
       font-size:36px;
       font-weight:700;
       width:100%;
+      height:fit-content;
       color:#fff;
     }
     ` : ``

@@ -157,13 +157,13 @@ export const SelectiveChartWithPair = () => {
 
     const tokenInfo = useTokenInfo(screenerPairChainId, address);
     const embedModel = useIsEmbedMode()
-    const tokenData = useTokenData(address?.toLowerCase(), 10000);
+    const tokenData = useTokenData(address?.toLowerCase(), 7000);
     const { pairs } = tokenData;
     const token = useToken(address);
     const tokenBalance = useTokenBalance(account ?? undefined, token as any);
     const [ethPrice] = useEthPrice()
     const screenerToken = useDexscreenerToken(address);
-    const transactionData = useTokenTransactions(address, pairs, 5000);
+    const transactionData = useTokenTransactions(address, pairs, 3000);
     const buySellTax = useBuySellTax(address, network)
     const [selectedCurrency, setSelectedCurrency] = React.useReducer(
         function (
@@ -189,11 +189,8 @@ export const SelectiveChartWithPair = () => {
     const [loadingNewData, setLoadingNewData] = React.useState(false);
 
     // if they change chains on a chart page , need to redirect them back to the select charts page
-    const chainChanged = Boolean(chainId) && Boolean(lastChainId) && chainId !== lastChainId
     const [userChartHistory, updateUserChartHistory] =
         useUserChartHistoryManager();
-
-
 
     React.useEffect(() => {
         if (Object.keys(params).every((key) => !Boolean((params as any)[key]))) {
