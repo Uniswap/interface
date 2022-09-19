@@ -312,10 +312,16 @@ const Row = ({
                 }
               />
             </Text>
-            <Text color={theme.apr}>
-              {(farmAPR + poolAPY).toFixed(2)}%
-              <InfoHelper text={`${poolAPY.toFixed(2)}% Fee + ${farmAPR.toFixed(2)}% Rewards`} />
-            </Text>
+            <Flex alignItems={'center'} sx={{ gap: '4px' }} color={theme.apr}>
+              <Text as="span">{(farmAPR + poolAPY).toFixed(2)}%</Text>
+              <MouseoverTooltip
+                width="fit-content"
+                placement="top"
+                text={<APRTooltipContent farmAPR={farmAPR} poolAPR={poolAPY} />}
+              >
+                <MoneyBag size={16} color={theme.apr} />
+              </MouseoverTooltip>
+            </Flex>
           </InfoRow>
 
           <InfoRow>

@@ -9,14 +9,14 @@ import InfoHelper from 'components/InfoHelper'
 import { SubgraphPoolData } from 'state/pools/hooks'
 import { priceRangeCalcBySubgraphPool } from 'utils/dmm'
 
-const Field = styled.div`
+export const Field = styled.div`
   font-size: 12px;
   font-weight: 500;
   color: ${({ theme }) => theme.subText};
   line-height: 24px;
 `
 
-const Value = styled.div`
+export const Value = styled.div`
   font-size: 12px;
   font-weight: 400;
   color: ${({ theme }) => theme.text};

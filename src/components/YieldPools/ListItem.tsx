@@ -715,12 +715,16 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
                 />
               </Text>
 
-              <Text color={theme.apr} fontWeight="500">
-                {apr.toFixed(2)}%
-                {apr !== 0 && (
-                  <InfoHelper text={t`${tradingFeeAPR.toFixed(2)}% LP Fee + ${farmAPR.toFixed(2)}% Rewards`} />
-                )}
-              </Text>
+              <Flex alignItems={'center'} sx={{ gap: '4px' }} color={theme.apr} fontWeight="500">
+                <Text as="span">{(tradingFeeAPR + farmAPR).toFixed(2)}%</Text>
+                <MouseoverTooltip
+                  width="fit-content"
+                  placement="top"
+                  text={<APRTooltipContent farmAPR={farmAPR} poolAPR={tradingFeeAPR} />}
+                >
+                  <MoneyBag size={16} color={theme.apr} />
+                </MouseoverTooltip>
+              </Flex>
             </Flex>
 
             <Flex justifyContent="space-between" fontSize={12} marginTop="12px">

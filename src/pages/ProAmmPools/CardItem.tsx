@@ -11,9 +11,10 @@ import { ButtonEmpty, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import CopyHelper from 'components/Copy'
 import Divider from 'components/Divider'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import AgriCulture from 'components/Icons/AgriCulture'
+import { MoneyBagOutline } from 'components/Icons'
 import InfoHelper from 'components/InfoHelper'
 import { MouseoverTooltip } from 'components/Tooltip'
+import FarmingPoolAPRCell from 'components/YieldPools/FarmingPoolAPRCell'
 import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
@@ -131,11 +132,19 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
         const hasLiquidity = pool.address in userPositions
         if (pair.length > 1 && index !== 0 && !isOpen) return null
 
-        const isFarmingPool = Object.values(farms)
-          .flat()
-          .filter(item => item.endTime > +new Date() / 1000)
-          .map(item => item.poolAddress.toLowerCase())
-          .includes(pool.address.toLowerCase())
+        let fairlaunchAddress = ''
+        let pid = -1
+        Object.keys(farms).forEach(addr => {
+          const farm = farms[addr]
+            .filter(item => item.endTime > Date.now() / 1000)
+            .find(item => item.poolAddress.toLowerCase() === pool.address.toLowerCase())
+
+          if (farm) {
+            fairlaunchAddress = addr
+            pid = farm.pid
+          }
+        })
+        const isFarmingPool = !!fairlaunchAddress && pid !== -1
 
         return (
           <Wrapper key={pool.address}>
@@ -150,7 +159,7 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
               >
                 <MouseoverTooltip text={t`Available for yield farming`}>
                   <IconWrapper style={{ width: '24px', height: '24px' }}>
-                    <AgriCulture width={16} height={16} color={theme.textReverse} />
+                    <MoneyBagOutline size={16} color={theme.textReverse} />
                   </IconWrapper>
                 </MouseoverTooltip>
               </div>
@@ -186,7 +195,22 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
                 <InfoHelper size={14} text={t`Average estimated return based on yearly fees of the pool`} />
               </Text>
               <DataText alignItems="flex-end" color={theme.apr}>
-                {pool.apr.toFixed(2)}%
+                {isFarmingPool ? (
+                  <FarmingPoolAPRCell
+                    tooltipPlacement="top"
+                    poolAPR={pool.apr}
+                    fairlaunchAddress={fairlaunchAddress}
+                    pid={pid}
+                  />
+                ) : (
+                  <Flex
+                    sx={{
+                      alignItems: 'center',
+                    }}
+                  >
+                    {pool.apr.toFixed(2)}%
+                  </Flex>
+                )}
               </DataText>
             </Flex>
 
