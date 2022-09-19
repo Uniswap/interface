@@ -37,7 +37,7 @@ export function usePools(
     const proAmmCoreFactoryAddress = chainId && NETWORKS_INFO[chainId].elastic.coreFactory
 
     return transformed.map(value => {
-      if (!proAmmCoreFactoryAddress || !value || !value[0].equals(value[1])) return undefined
+      if (!proAmmCoreFactoryAddress || !value || value[0].equals(value[1])) return undefined
       return computePoolAddress({
         factoryAddress: proAmmCoreFactoryAddress,
         tokenA: value[0],
