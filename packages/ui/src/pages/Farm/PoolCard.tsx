@@ -1,5 +1,5 @@
 import { Token, TokenAmount } from '@teleswap/sdk'
-import { ReactComponent as AddIcon } from 'assets/svg/add.svg'
+import { ReactComponent as AddIcon } from 'assets/svg/action/add.svg'
 import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 import { ButtonPrimary } from 'components/Button'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
