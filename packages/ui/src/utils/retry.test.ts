@@ -58,7 +58,7 @@ describe('retry', () => {
           () => expect(retry(makeFn(4, 'abc'), { n: 3, maxWait: 100, minWait: 50 }).promise).rejects.toThrow('failure'),
           150,
           400
-        )
+        ) as never
       )
     }
     await Promise.all(promises)

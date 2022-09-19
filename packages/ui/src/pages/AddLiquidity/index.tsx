@@ -54,27 +54,29 @@ const BorderVerticalContainer = styled(Flex)`
 
 const CustomizedRadio = styled.input`
   appearance: none;
-  border: 0.1rem solid #4ed7b6;
+  border: 1px solid #4ed7b6;
   width: 0.7rem;
   height: 0.7rem;
   margin: 0;
-  // transform: translateY(-0.075em);
-  display: grid;
   border-radius: 50%;
-  // transform: 'translateY(-0.075em)',
-  place-content: center;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   :before {
     content: '';
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.7rem;
+    height: 0.7rem;
     border-radius: 50%;
-    transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em #4ed7b6;
+    background-color: #4ed7b6;
+    transition: 120ms all ease-in-out;
+    box-shadow: inset 0.35rem 0.35rem #4ed7b6;
     transform: scale(0);
+    position: absolute;
   }
   :checked {
     :before {
-      transform: scale(0.618);
+      transform: scale(0.5);
     }
   }
 `
@@ -578,7 +580,7 @@ export default function AddLiquidity({
           currencyToAdd={pair?.liquidityToken}
         />
         <AutoRow justify="space-between" style={{ marginBottom: '.9rem' }}>
-          <span style={{ fontFamily: 'Dela Gothic One', fontWeight: 400, fontSize: '.7rem', color: '#FFFFFF' }}>
+          <span style={{ fontFamily: 'Dela Gothic One', fontWeight: 400, fontSize: '0.7rem', color: '#FFFFFF' }}>
             Add Liquidity
           </span>
           <Settings />
@@ -727,7 +729,7 @@ export default function AddLiquidity({
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: 400,
-                fontSize: '12px',
+                fontSize: '0.8rem',
                 lineHeight: '18px',
                 color: 'rgba(255, 255, 255, 0.6)'
               }}
@@ -752,7 +754,7 @@ export default function AddLiquidity({
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: 400,
-                fontSize: '12px',
+                fontSize: '0.8rem',
                 lineHeight: '18px',
                 color: 'rgba(255, 255, 255, 0.6)'
               }}

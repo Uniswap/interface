@@ -351,7 +351,7 @@ export default function Swap({ history }: RouteComponentProps) {
               style={{
                 fontFamily: 'Dela Gothic One',
                 fontWeight: 400,
-                fontSize: '.7rem',
+                fontSize: '.8rem',
                 color: '#FFFFFF'
               }}
             >

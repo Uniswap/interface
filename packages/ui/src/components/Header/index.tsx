@@ -7,12 +7,13 @@ import React, { useState } from 'react'
 // import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
-import { Text } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
+import TeleLogo from 'assets/images/tele/logo.svg'
+import TextLogo from 'assets/svg/textLogo.svg'
 
 // import usePrevious from '../../hooks/usePrevious'
-import TeleLogo from '../../assets/images/tele/logo.svg'
-import TeleLogoText from '../../assets/images/tele/logoText.svg'
+// import TeleLogoText from '../../assets/images/tele/logoText.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import {
@@ -35,6 +36,7 @@ import Web3Status from '../Web3Status'
 import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div`
+  padding-top: 2rem;
   display: grid;
   grid-template-columns: 1fr;
   justify-content: space-between;
@@ -90,27 +92,33 @@ const HeaderControls = styled.div`
 `
 
 const HeadLogoView = styled.div`
+  .logoImg {
+    display: none;
+  }
   ${({ theme }) => theme.mediaWidth.upToSmall`
       height: 3.5rem;
       padding-left: 1.1rem;
-  `}
-  .logoImg {
-    width: 1.8rem;
-    height: auto;
-  }
-  .logoText {
+      .logoImg {
+        width: 1.8rem;
+        height: auto;
+        display: block;
+      }
+      .textLogo {
+        display: none;
+      }
+  `}/*  .logoText {
     width: 6.6rem;
     height: 'auto';
     margin-left: 0.4rem;
     ${({ theme }) => theme.mediaWidth.upToSmall`
       display: none;
     `}
-  }
+  } */
 `
 const HeadTabView = styled.div`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-      height: 3rem;
-  `}
+  height: 100%;
+  /*  ${({ theme }) => theme.mediaWidth.upToSmall`
+  `} */
 `
 const HeadWalletView = styled.div`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -121,13 +129,13 @@ const HeadWalletView = styled.div`
 
 const HeaderElement = styled.div`
   width: 100%;
-  display: grid;
+  height: 100%;
   align-items: center;
+  display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-areas: 'a1 a2 a3';
-  /* display: flex; */
-  align-items: center;
+  width: 100%;
   /* addresses safari's lack of support for "gap" */
   & > *:not(:first-child) {
     margin-left: 8px;
@@ -135,8 +143,12 @@ const HeaderElement = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-rows: 1fr 1fr ;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     flex-direction: row-reverse;
     align-items: center;
+    padding: 0 1rem;
+    grid-row-gap: 1.5rem;
     grid-template-areas: 
           'a1 a1 a3'
           'a2 a2 a2'; 
@@ -164,11 +176,10 @@ const HeaderRow = styled(RowFixed)`
 
 const HeaderLinks = styled(Row)`
   justify-content: center;
-  border: 1px solid green;
-  height: 1.8rem;
+  height: 2.5rem;
   width: unset;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 0.4rem;
+  border-radius: 0.8rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     // padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
@@ -179,7 +190,7 @@ const HeaderLinks = styled(Row)`
 `};
 `
 
-const AccountElement = styled.div<{ active: boolean }>`
+const AccountElement = styled(Box)<{ active: boolean }>`
   width: "11.5rem"
   display: flex;
   flex-direction: row;
@@ -279,24 +290,25 @@ const StyledNavLink = styled(NavLink).attrs({
     position: relative;
     right: -1px;
   }
+  height: 100%;
+  padding: 0 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
+  // color: ${({ theme }) => theme.text2};
   font-size: 1rem;
-  width: fit-content;
+  width: max-content;
   margin: 0;
   font-weight: 500;
-  padding: 0.4rem 1.2rem;
-
-  border-radius: 0.4rem;
-
+  border-radius: 0.8rem;
   font-family: 'Dela Gothic One';
   font-style: normal;
   font-weight: 400;
-  font-size: 0.7rem;
+  // font-size: 0.7rem;
   line-height: 1rem;
   color: #ffffff;
   :hover {
@@ -425,11 +437,12 @@ export default function Header() {
               height: '100%',
               display: 'flex',
               justifyContent: 'flex-start',
-              alignItems: 'center'
+              alignItems: 'center',
+              padding: '0.2rem 0'
             }}
           >
             <img className="logoImg" src={TeleLogo} alt="" />
-            <img className="logoText" src={TeleLogoText} alt="" />
+            <img className="textLogo" src={TextLogo} alt="" />
           </HeadLogoView>
           <HeadTabView style={{ gridArea: 'a2', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <HeaderLinks>
@@ -499,13 +512,36 @@ export default function Header() {
               <CardNoise />
             </UNIWrapper>
           )} */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gridArea: 'a3' }}>
+          <Flex
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              height: '2.5rem',
+              gridArea: 'a3',
+              '*': {
+                fontSize: '1rem!important'
+              },
+              '&>*': {
+                display: 'flex',
+                alignItems: 'center',
+                height: '100%'
+              }
+            }}
+          >
             <HideSmall>
               {chainId && NETWORK_LABELS[chainId] && (
                 <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
               )}
             </HideSmall>
-            <AccountElement active={!!account} style={{ pointerEvents: 'auto', display: 'flex' }}>
+            <AccountElement
+              active={!!account}
+              sx={{
+                pointerEvents: 'auto',
+                display: 'flex',
+                '*': { height: '100%', display: 'flex', alignItems: 'center' }
+              }}
+            >
               {account && userEthBalance ? (
                 <BalanceText
                   style={{ flexShrink: 0, fontSize: '.6rem', color: theme.common2 }}
@@ -523,7 +559,7 @@ export default function Header() {
                 {darkMode ? <Moon size={20} /> : <Sun size={20} />}
               </StyledMenuButton>
             </div> */}
-          </div>
+          </Flex>
         </HeaderElement>
         {/* <HeaderElementWrap>
           <StyledMenuButton onClick={() => toggleDarkMode()}>

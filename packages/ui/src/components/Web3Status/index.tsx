@@ -67,7 +67,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   font-weight: 500;
   background: ${({ theme }) => theme.primary1};
   border-radius: 0.4rem;
-  width: 8rem;
+  width: max-content;
   :hover,
   :focus {
     color: ${({ theme }) => theme.textHover};
@@ -91,7 +91,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 0.4rem;
+  border-radius: 0.8rem;
   background-color: ${({ pending, theme }) => (pending ? theme.common1 : theme.common1)};
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: ${({ pending, theme }) => (pending ? theme.common2 : theme.common2)};
@@ -222,8 +222,25 @@ function Web3StatusInner() {
     )
   } else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>{t('Connect Wallet')}</Text>
+      <Web3StatusConnect
+        id="connect-wallet"
+        onClick={toggleWalletModal}
+        faded={!account}
+        sx={{
+          fontFamily: 'Poppins',
+          fontStyle: 'normal',
+          fontWeight: '500',
+          fontSize: '24px',
+          lineHeight: '32px',
+          alignItems: 'flex-end',
+          display: 'flex',
+          color: '#000000',
+          padding: '0 0.3rem',
+          borderRadius: '0.8rem!important',
+          height: '2.5rem'
+        }}
+      >
+        {t('Connect Wallet')}
       </Web3StatusConnect>
     )
   }
