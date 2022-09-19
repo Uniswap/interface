@@ -4,7 +4,7 @@ import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { Center } from 'nft/components/Flex'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
-import { useCollectionFilters } from 'nft/hooks'
+import { useCollectionFilters, useCollectionCount } from 'nft/hooks'
 import { AssetsFetcher } from 'nft/queries'
 import { UniformHeight, UniformHeights } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
@@ -25,6 +25,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     minPrice: state.minPrice,
     maxPrice: state.maxPrice,
   }))
+  const setCollectionCount = useCollectionCount((state) => state.setCollectionCount)
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
@@ -83,7 +84,13 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     return collectionAssets.pages.flat()
   }, [collectionAssets, AssetsFetchSuccess])
 
-  console.log(collectionNfts?.[0]?.totalCount)
+  useEffect(() => {
+    const count = collectionNfts?.[0]?.totalCount
+
+    if (count) {
+      setCollectionCount(count)
+    }
+  }, [collectionNfts])
 
   useEffect(() => {
     setUniformHeight(UniformHeights.unset)

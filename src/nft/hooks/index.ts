@@ -1,5 +1,6 @@
 export * from './useBag'
 export * from './useCollectionFilters'
+export * from './useCollectionCount'
 export * from './useFiltersExpanded'
 export * from './useGenieList'
 export * from './useIsMobile'
