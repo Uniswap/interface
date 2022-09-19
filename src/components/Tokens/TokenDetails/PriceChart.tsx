@@ -127,7 +127,6 @@ interface PriceChartProps {
 
 export function PriceChart({ width, height, tokenAddress, priceData }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
-  const [firstLoadedPriceDisplayed, setFirstLoadedPriceDisplayed] = useState(false)
   const locale = useActiveLocale()
   const theme = useTheme()
 
@@ -140,13 +139,12 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
 
-  // set display price to ending price once first set of prices is loaded.
+  // set display price to ending price when prices have changed.
   useEffect(() => {
-    if (prices && !firstLoadedPriceDisplayed) {
+    if (prices) {
       setDisplayPrice(endingPrice)
-      setFirstLoadedPriceDisplayed(true)
     }
-  }, [prices, firstLoadedPriceDisplayed, endingPrice])
+  }, [prices, endingPrice])
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
   const graphWidth = width + crosshairDateOverhang
