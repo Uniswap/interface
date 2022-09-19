@@ -1,5 +1,5 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { CollectionNfts, CollectionStats, FilterButton, Filters } from 'nft/components/collection'
+import { CollectionNfts, CollectionStats, FilterButton, Filters, CollectionSearch } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
 import { useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
@@ -62,6 +62,7 @@ const Collection = () => {
                   isFiltersExpanded={isFiltersExpanded}
                   onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                 />
+                <CollectionSearch />
               </Row>
             </Box>
           </AnimatedBox>
