@@ -20,7 +20,7 @@ import { fetchPrice } from 'nft/utils/fetchPrice'
 import { roundAndPluralize } from 'nft/utils/roundAndPluralize'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { sortUpdatedAssets } from 'nft/utils/updatedAssets'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
@@ -158,15 +158,12 @@ const Bag = () => {
   const [isOpen, setModalIsOpen] = useState(false)
   const [userCanScroll, setUserCanScroll] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
-  const scrollRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (node !== null) {
-        const canScroll = node.scrollHeight > node.clientHeight
-        canScroll !== userCanScroll && setUserCanScroll(canScroll)
-      }
-    },
-    [userCanScroll, setUserCanScroll]
-  )
+  const scrollRef = (node: HTMLDivElement) => {
+    if (node !== null) {
+      const canScroll = node.scrollHeight > node.clientHeight
+      canScroll !== userCanScroll && setUserCanScroll(canScroll)
+    }
+  }
 
   const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
   const { data: routingData, refetch } = useQuery(
