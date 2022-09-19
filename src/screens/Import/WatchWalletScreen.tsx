@@ -101,7 +101,9 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
 
   return (
     <OnboardingScreen
-      subtitle={t('Enter an Ethereum wallet address or ENS name.')}
+      subtitle={t(
+        'Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).'
+      )}
       title={t('Enter a wallet address')}>
       <Flex pt="lg">
         <GenericImportForm
