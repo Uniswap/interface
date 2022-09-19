@@ -6,6 +6,7 @@ import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { FormEvent, useEffect, useReducer, useState } from 'react'
+
 import { Checkbox } from '../layout/Checkbox'
 
 export const marketPlaceItems = {

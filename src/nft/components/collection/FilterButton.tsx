@@ -3,7 +3,7 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/FilterButton.css'
 import { Row } from 'nft/components/Flex'
 import { FilterIcon } from 'nft/components/icons'
-import { useCollectionFilters, useCollectionCount, useWalletCollections } from 'nft/hooks'
+import { useCollectionCount, useCollectionFilters, useWalletCollections } from 'nft/hooks'
 import { putCommas } from 'nft/utils/putCommas'
 import { useLocation } from 'react-router-dom'
 

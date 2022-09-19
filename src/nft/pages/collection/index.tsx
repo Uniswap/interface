@@ -1,14 +1,15 @@
-import { useEffect, useRef } from 'react'
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { CollectionFilters } from '../../hooks/useCollectionFilters'
 import { CollectionNfts, CollectionStats, FilterButton, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
-import { useFiltersExpanded, useIsMobile, useCollectionFilters, useWalletCollections } from 'nft/hooks'
+import { useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
+import { useEffect, useRef } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring/web'
+
+import { CollectionFilters } from '../../hooks/useCollectionFilters'
 
 const FILTER_WIDTH = 332
 

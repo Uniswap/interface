@@ -4,7 +4,7 @@ import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { Center } from 'nft/components/Flex'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
-import { useCollectionFilters, useCollectionCount } from 'nft/hooks'
+import { useCollectionCount, useCollectionFilters } from 'nft/hooks'
 import { AssetsFetcher } from 'nft/queries'
 import { UniformHeight, UniformHeights } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
@@ -90,7 +90,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
     if (count) {
       setCollectionCount(count)
     }
-  }, [collectionNfts])
+  }, [collectionNfts, setCollectionCount])
 
   useEffect(() => {
     setUniformHeight(UniformHeights.unset)
