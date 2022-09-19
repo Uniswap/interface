@@ -66,7 +66,8 @@ const Web3StatusConnectButton = styled.button<{ faded?: boolean }>`
   border-radius: 12px;
   border: none;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 0 12px;
+  height: 40px;
 
   :hover,
   :active,
