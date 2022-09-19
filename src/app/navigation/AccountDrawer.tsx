@@ -28,7 +28,7 @@ import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import {
   useAccounts,
-  useActiveAccountAddressWithThrow,
+  useActiveAccountAddress,
   useNativeAccountExists,
 } from 'src/features/wallet/hooks'
 import {
@@ -43,12 +43,11 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const activeAccountAddress = useActiveAccountAddress()
   const addressToAccount = useAccounts()
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
 
-  const [qrCodeAddress, setQRCodeAddress] = useState(activeAccountAddress)
   const [showQRModal, setShowQRModal] = useState(false)
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
   const [showEditAccountModal, setShowEditAccountModal] = useState(false)
@@ -113,9 +112,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   )
 
   const onPressQRCode = useCallback(() => {
-    setQRCodeAddress(activeAccountAddress)
     setShowQRModal(true)
-  }, [activeAccountAddress])
+  }, [setShowQRModal])
 
   const onCloseQrCode = () => setShowQRModal(false)
 
@@ -294,6 +292,10 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     return menuItems
   }, [hasImportedSeedPhrase, dispatch, navigation, t])
 
+  if (!activeAccountAddress) {
+    return null
+  }
+
   return (
     <Screen bg="backgroundBackdrop">
       <Flex row alignItems="center" pb="md" pt="xxl" px="lg">
@@ -386,7 +388,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         name={ModalName.WalletQRCode}
         onClose={onCloseQrCode}>
         <Flex py="xxxl">
-          <WalletQRCode address={qrCodeAddress} />
+          <WalletQRCode address={activeAccountAddress} />
           <Flex centered mt="md" position="absolute" width="100%">
             <Box bg="backgroundOutline" borderRadius="sm" height={4} width={40} />
           </Flex>
