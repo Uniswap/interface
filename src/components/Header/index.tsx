@@ -183,6 +183,7 @@ const UniIcon = styled.div`
   }
 
   position: relative;
+  z-index: 10;
 `
 
 // can't be customized under react-router-dom v6
