@@ -461,7 +461,12 @@ export default function Header() {
           </DiscoverWrapper>
 
           <AnalyticsWrapper>
-            <StyledNavExternalLink href={PROMM_ANALYTICS_URL[chainId as ChainId] + '/home'}>
+            <StyledNavExternalLink
+              onClick={() => {
+                mixpanelHandler(MIXPANEL_TYPE.ANALYTICS_MENU_CLICKED)
+              }}
+              href={PROMM_ANALYTICS_URL[chainId as ChainId] + '/home'}
+            >
               <Trans>Analytics</Trans>
             </StyledNavExternalLink>
           </AnalyticsWrapper>

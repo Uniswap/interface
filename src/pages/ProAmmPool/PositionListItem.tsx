@@ -130,12 +130,8 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
     base: token0,
   }
 }
-export default function PositionListItem({
-  stakedLayout,
-  farmAvailable,
-  positionDetails,
-  refe,
-}: PositionListItemProps) {
+
+function PositionListItem({ stakedLayout, farmAvailable, positionDetails, refe }: PositionListItemProps) {
   const { chainId } = useWeb3React()
   const {
     token0: token0Address,
@@ -394,3 +390,5 @@ export default function PositionListItem({
     <ContentLoader />
   )
 }
+
+export default React.memo(PositionListItem)

@@ -1100,7 +1100,9 @@ export default function Swap({ history }: RouteComponentProps) {
             <InfoComponentsWrapper>
               {isShowLiveChart && (
                 <LiveChartWrapper>
-                  <Suspense fallback={<Skeleton height="100%" />}>
+                  <Suspense
+                    fallback={<Skeleton height="100%" baseColor={theme.background} highlightColor={theme.buttonGray} />}
+                  >
                     <LiveChart onRotateClick={handleRotateClick} currencies={currencies} />
                   </Suspense>
                 </LiveChartWrapper>
@@ -1114,7 +1116,11 @@ export default function Swap({ history }: RouteComponentProps) {
                         <Trans>Your trade route</Trans>
                       </Text>
                     </Flex>
-                    <Suspense fallback={<Skeleton height="100px" />}>
+                    <Suspense
+                      fallback={
+                        <Skeleton height="100px" baseColor={theme.background} highlightColor={theme.buttonGray} />
+                      }
+                    >
                       <Routing trade={trade} currencies={currencies} formattedAmounts={formattedAmounts} />
                     </Suspense>
                   </Flex>

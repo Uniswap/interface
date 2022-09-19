@@ -61,13 +61,17 @@ export default function ProAmmPool() {
       .flat()
   }, [farms])
 
-  const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
-    (acc, p) => {
-      acc[p.liquidity?.isZero() ? 1 : 0].push(p)
-      return acc
-    },
-    [[], []],
-  ) ?? [[], []]
+  const [openPositions, closedPositions] = useMemo(
+    () =>
+      positions?.reduce<[PositionDetails[], PositionDetails[]]>(
+        (acc, p) => {
+          acc[p.liquidity?.eq(0) ? 1 : 0].push(p)
+          return acc
+        },
+        [[], []],
+      ) ?? [[], []],
+    [positions],
+  )
 
   const theme = useTheme()
 
@@ -87,31 +91,44 @@ export default function ProAmmPool() {
 
   const [showClosed, setShowClosed] = useState(false)
 
-  const filteredPositions = (!showClosed ? openPositions : [...openPositions, ...closedPositions]).filter(position => {
-    return (
-      debouncedSearchText.trim().length === 0 ||
-      (!!tokenAddressSymbolMap.current[position.token0.toLowerCase()] &&
-        tokenAddressSymbolMap.current[position.token0.toLowerCase()].includes(debouncedSearchText)) ||
-      (!!tokenAddressSymbolMap.current[position.token1.toLowerCase()] &&
-        tokenAddressSymbolMap.current[position.token1.toLowerCase()].includes(debouncedSearchText)) ||
-      position.poolId.toLowerCase() === debouncedSearchText
-    )
-  })
+  const filteredFarmPositions = useMemo(
+    () =>
+      farmPositions.filter(pos => {
+        return (
+          debouncedSearchText.trim().length === 0 ||
+          (!!tokenAddressSymbolMap.current[pos.token0.toLowerCase()] &&
+            tokenAddressSymbolMap.current[pos.token0.toLowerCase()].includes(debouncedSearchText)) ||
+          (!!tokenAddressSymbolMap.current[pos.token1.toLowerCase()] &&
+            tokenAddressSymbolMap.current[pos.token1.toLowerCase()].includes(debouncedSearchText)) ||
+          pos.poolId.toLowerCase() === debouncedSearchText
+        )
+      }),
+    [debouncedSearchText, farmPositions],
+  )
 
-  const filteredFarmPositions = farmPositions.filter(pos => {
-    return (
-      debouncedSearchText.trim().length === 0 ||
-      (!!tokenAddressSymbolMap.current[pos.token0.toLowerCase()] &&
-        tokenAddressSymbolMap.current[pos.token0.toLowerCase()].includes(debouncedSearchText)) ||
-      (!!tokenAddressSymbolMap.current[pos.token1.toLowerCase()] &&
-        tokenAddressSymbolMap.current[pos.token1.toLowerCase()].includes(debouncedSearchText)) ||
-      pos.poolId.toLowerCase() === debouncedSearchText
-    )
-  })
+  const filteredPositions = useMemo(
+    () =>
+      (!showClosed
+        ? [...openPositions, ...filteredFarmPositions]
+        : [...openPositions, ...filteredFarmPositions, ...closedPositions]
+      )
+        .filter(position => {
+          return (
+            debouncedSearchText.trim().length === 0 ||
+            (!!tokenAddressSymbolMap.current[position.token0.toLowerCase()] &&
+              tokenAddressSymbolMap.current[position.token0.toLowerCase()].includes(debouncedSearchText)) ||
+            (!!tokenAddressSymbolMap.current[position.token1.toLowerCase()] &&
+              tokenAddressSymbolMap.current[position.token1.toLowerCase()].includes(debouncedSearchText)) ||
+            position.poolId.toLowerCase() === debouncedSearchText
+          )
+        })
+        .filter((pos, index, array) => array.findIndex(pos2 => pos2.tokenId.eq(pos.tokenId)) === index),
+    [showClosed, openPositions, closedPositions, debouncedSearchText, filteredFarmPositions],
+  )
+
   const [showStaked, setShowStaked] = useState(false)
 
   const upToSmall = useMedia('(max-width: 768px)')
-
   return (
     <>
       <PageWrapper style={{ padding: 0, marginTop: '24px' }}>
@@ -202,26 +219,27 @@ export default function ProAmmPool() {
               <ContentLoader />
             </PositionCardGrid>
           ) : (filteredPositions && filteredPositions.length > 0) || filteredFarmPositions.length > 0 ? (
-            <PositionCardGrid>
-              {!showStaked &&
-                filteredPositions.map(p => {
+            <>
+              {/* Use display attribute here instead of condition rendering to prevent re-render full list when toggle showStaked => increase performance */}
+              <PositionCardGrid style={{ display: showStaked ? 'none' : 'grid' }}>
+                {filteredPositions.map(p => (
+                  <PositionListItem refe={tokenAddressSymbolMap} positionDetails={p} key={p.tokenId.toString()} />
+                ))}
+              </PositionCardGrid>
+              <PositionCardGrid style={{ display: !showStaked ? 'none' : 'grid' }}>
+                {filteredFarmPositions.map(p => {
                   return (
-                    <PositionListItem refe={tokenAddressSymbolMap} key={p.tokenId.toString()} positionDetails={p} />
+                    <PositionListItem
+                      stakedLayout
+                      farmAvailable
+                      refe={tokenAddressSymbolMap}
+                      positionDetails={p}
+                      key={p.tokenId.toString()}
+                    />
                   )
                 })}
-
-              {filteredFarmPositions.map(p => {
-                return (
-                  <PositionListItem
-                    stakedLayout={showStaked}
-                    farmAvailable
-                    refe={tokenAddressSymbolMap}
-                    key={p.tokenId.toString()}
-                    positionDetails={p}
-                  />
-                )
-              })}
-            </PositionCardGrid>
+              </PositionCardGrid>
+            </>
           ) : (
             <Flex flexDirection="column" alignItems="center" marginTop="60px">
               <Info size={48} color={theme.subText} />

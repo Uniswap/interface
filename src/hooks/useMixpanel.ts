@@ -70,6 +70,7 @@ export enum MIXPANEL_TYPE {
   ABOUT_START_EARNING_CLICKED,
   ABOUT_VIEW_FARMS_CLICKED,
   ABOUT_CREATE_NEW_POOL_CLICKED,
+  ANALYTICS_MENU_CLICKED,
   CREATE_REFERRAL_CLICKED,
   DISCOVER_TRENDING_SOON_CLICKED,
   DISCOVER_TRENDING_CLICKED,
@@ -423,6 +424,10 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
         }
         case MIXPANEL_TYPE.ABOUT_CREATE_NEW_POOL_CLICKED: {
           mixpanel.track('About - Create New Pool Clicked')
+          break
+        }
+        case MIXPANEL_TYPE.ANALYTICS_MENU_CLICKED: {
+          mixpanel.track('Analytics Page Clicked')
           break
         }
         case MIXPANEL_TYPE.CREATE_REFERRAL_CLICKED: {

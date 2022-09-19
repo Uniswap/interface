@@ -191,13 +191,17 @@ function Pool() {
   const [searchText, setSearchText] = useState('')
   const debouncedSearchText = useDebounce(searchText.trim().toLowerCase(), 300)
 
-  const userFarms = Object.values(farms)
-    .flat()
-    .filter(
-      farm =>
-        JSBI.greaterThan(JSBI.BigInt(farm.userData?.stakedBalance || 0), JSBI.BigInt(0)) &&
-        !OUTSIDE_FAIRLAUNCH_ADDRESSES[farm.fairLaunchAddress],
-    )
+  const userFarms = useMemo(
+    () =>
+      Object.values(farms)
+        .flat()
+        .filter(
+          farm =>
+            JSBI.greaterThan(JSBI.BigInt(farm.userData?.stakedBalance || 0), JSBI.BigInt(0)) &&
+            !OUTSIDE_FAIRLAUNCH_ADDRESSES[farm.fairLaunchAddress],
+        ),
+    [farms],
+  )
 
   const tokenPairsWithLiquidityTokens = useToV2LiquidityTokens(liquidityPositionTokenPairs)
 
@@ -234,18 +238,25 @@ function Pool() {
     v2Pairs?.length < liquidityTokensWithBalances.length ||
     v2Pairs?.some(V2Pair => !V2Pair[1])
 
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
+  const allV2PairsWithLiquidity = useMemo(
+    () => v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair)),
+    [v2Pairs],
+  )
 
   // // remove any pairs that also are included in pairs with stake in mining pool
-  const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity
-    .filter(v2Pair => {
-      return debouncedSearchText
-        ? v2Pair.token0.symbol?.toLowerCase().includes(debouncedSearchText) ||
-            v2Pair.token1.symbol?.toLowerCase().includes(debouncedSearchText) ||
-            v2Pair.address.toLowerCase() === debouncedSearchText
-        : true
-    })
-    .filter(v2Pair => !userFarms.map(farm => farm.id.toLowerCase()).includes(v2Pair.address.toLowerCase()))
+  const v2PairsWithoutStakedAmount = useMemo(
+    () =>
+      allV2PairsWithLiquidity
+        .filter(v2Pair => {
+          return debouncedSearchText
+            ? v2Pair.token0.symbol?.toLowerCase().includes(debouncedSearchText) ||
+                v2Pair.token1.symbol?.toLowerCase().includes(debouncedSearchText) ||
+                v2Pair.address.toLowerCase() === debouncedSearchText
+            : true
+        })
+        .filter(v2Pair => !userFarms.map(farm => farm.id.toLowerCase()).includes(v2Pair.address.toLowerCase())),
+    [allV2PairsWithLiquidity, debouncedSearchText, userFarms],
+  )
 
   const transformedUserLiquidityPositions: {
     [key: string]: UserLiquidityPosition

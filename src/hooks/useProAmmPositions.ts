@@ -72,10 +72,12 @@ export function useProAmmPositionsFromTokenIds(tokenIds: BigNumber[] | undefined
     return undefined
   }, [loading, error, results, tokenIds, chainId])
 
-  return {
-    loading,
-    positions: positions?.map((position, i) => ({ ...position, tokenId: inputs[i][0] })),
-  }
+  return useMemo(() => {
+    return {
+      loading,
+      positions: positions?.map((position, i) => ({ ...position, tokenId: inputs[i][0] })),
+    }
+  }, [loading, positions, inputs])
 }
 
 interface UseProAmmPositionResults {
@@ -165,8 +167,10 @@ export function useProAmmPositions(account: string | null | undefined): UseProAm
 
   const { positions, loading: positionsLoading } = useProAmmPositionsFromTokenIds(tokenIds)
 
-  return {
-    loading: someTokenIdsLoading || balanceLoading || positionsLoading,
-    positions,
-  }
+  return useMemo(() => {
+    return {
+      loading: someTokenIdsLoading || balanceLoading || positionsLoading,
+      positions,
+    }
+  }, [someTokenIdsLoading, balanceLoading, positionsLoading, positions])
 }
