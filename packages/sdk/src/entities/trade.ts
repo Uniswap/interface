@@ -1,4 +1,4 @@
-import { InsufficientInputAmountError, InsufficientReservesError } from 'errors'
+import { InsufficientInputAmountError, InsufficientReservesError } from '../errors'
 import invariant from 'tiny-invariant'
 
 import { ChainId, ONE, TradeType, ZERO } from '../constants'
