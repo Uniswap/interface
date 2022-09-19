@@ -1,6 +1,6 @@
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 /**
  * Integrates the Widget's inputs.
@@ -17,6 +17,13 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   const [tokens, setTokens] = useState<{ [Field.INPUT]?: Currency; [Field.OUTPUT]?: Currency }>({
     [Field.OUTPUT]: defaultToken,
   })
+
+  useEffect(() => {
+    setTokens({
+      [Field.OUTPUT]: defaultToken,
+    })
+  }, [defaultToken])
+
   const onSwitchTokens = useCallback(() => {
     setType((type) => invertTradeType(type))
     setTokens((tokens) => ({
