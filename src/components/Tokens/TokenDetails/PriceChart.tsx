@@ -10,7 +10,7 @@ import { useTokenPricesCached } from 'graphql/data/Token'
 import { PricePoint, TimePeriod } from 'graphql/data/Token'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import {
@@ -116,7 +116,6 @@ const TimeButton = styled.button<{ active: boolean }>`
 
 const margin = { top: 100, bottom: 48, crosshair: 72 }
 const timeOptionsHeight = 44
-const crosshairDateOverhang = 80
 
 interface PriceChartProps {
   width: number
@@ -133,28 +132,18 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
   const { priceMap } = useTokenPricesCached(priceData, tokenAddress, 'ETHEREUM', timePeriod)
   const prices = priceMap.get(timePeriod)
 
-  // first price point on the x-axis of the current time period's chart
   const startingPrice = prices?.[0] ?? DATA_EMPTY
-  // last price point on the x-axis of the current time period's chart
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
-
-  // set display price to ending price when prices have changed.
-  useEffect(() => {
-    if (prices) {
-      setDisplayPrice(endingPrice)
-    }
-  }, [prices, endingPrice])
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
-  const graphWidth = width + crosshairDateOverhang
   const graphHeight = height - timeOptionsHeight > 0 ? height - timeOptionsHeight : 0
   const graphInnerHeight = graphHeight - margin.top - margin.bottom > 0 ? graphHeight - margin.top - margin.bottom : 0
 
   // Defining scales
   // x scale
   const timeScale = useMemo(
-    () => scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]).nice(),
+    () => scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]),
     [startingPrice, endingPrice, width]
   )
   // y scale
@@ -167,8 +156,6 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
   )
 
   function tickFormat(
-    startTimestamp: number,
-    endTimestamp: number,
     timePeriod: TimePeriod,
     locale: string
   ): [TickFormatter<NumberValue>, (v: number) => string, NumberValue[]] {
@@ -251,12 +238,7 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
     return null
   }
 
-  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(
-    startingPrice.timestamp,
-    endingPrice.timestamp,
-    timePeriod,
-    locale
-  )
+  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
   const delta = calculateDelta(startingPrice.value, displayPrice.value)
   const formattedDelta = formatDelta(delta)
   const arrow = getDeltaArrow(delta)
@@ -282,7 +264,7 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
         marginTop={margin.top}
         curve={curveCardinal.tension(curveTension)}
         strokeWidth={2}
-        width={graphWidth}
+        width={width}
         height={graphHeight}
       >
         {crosshair !== null ? (
