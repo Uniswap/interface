@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { showFavoritesAtom } from 'components/Tokens/state'
 import { usePrefetchTopTokens, useTopTokens } from 'graphql/data/TopTokens'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode, Suspense } from 'react'
+import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -163,43 +163,45 @@ export default function TokenTable() {
 
   // TODO: consider moving prefetched call into app.tsx and passing it here
   const prefetchedTokens = usePrefetchTopTokens()
-  const { tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
+  const { isFetching, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
   // const filteredTokenProjects = useFilteredTokenProjects(topTokenProjects)
   // const sortedFilteredTokenProjects = useSortedTokenProjects(filteredTokenProjects)
 
   /* loading and error state */
-  if (tokens === null) {
-    return (
-      <NoTokensState
-        message={
-          <>
-            <AlertTriangle size={16} />
-            <Trans>An error occured loading tokens. Please try again.</Trans>
-          </>
-        }
-      />
-    )
+  if (isFetching) {
+    return <LoadingTokenTable />
+  } else {
+    if (!tokens) {
+      return (
+        <NoTokensState
+          message={
+            <>
+              <AlertTriangle size={16} />
+              <Trans>An error occured loading tokens. Please try again.</Trans>
+            </>
+          }
+        />
+      )
+    } else if (tokens?.length === 0) {
+      return showFavorites ? (
+        <NoTokensState message={<Trans>You have no favorited tokens</Trans>} />
+      ) : (
+        <NoTokensState message={<Trans>No tokens found</Trans>} />
+      )
+    } else {
+      return (
+        <>
+          <GridContainer>
+            <HeaderRow />
+            <TokenRowsContainer>
+              {tokens?.map((token, index) => (
+                <LoadedRow key={token?.name} tokenListIndex={index} tokenListLength={tokens.length} token={token} />
+              ))}
+            </TokenRowsContainer>
+          </GridContainer>
+          <button onClick={loadMoreTokens}>load more</button>
+        </>
+      )
+    }
   }
-
-  if (showFavorites && tokens?.length === 0) {
-    return <NoTokensState message={<Trans>You have no favorited tokens</Trans>} />
-  }
-
-  if (!showFavorites && tokens?.length === 0) {
-    return <NoTokensState message={<Trans>No tokens found</Trans>} />
-  }
-
-  return (
-    <Suspense fallback={<LoadingTokenTable />}>
-      <GridContainer>
-        <HeaderRow />
-        <TokenRowsContainer>
-          {tokens?.map((token, index) => (
-            <LoadedRow key={token?.name} tokenListIndex={index} tokenListLength={tokens.length} token={token} />
-          ))}
-        </TokenRowsContainer>
-      </GridContainer>
-      <button onClick={loadMoreTokens}>load more</button>
-    </Suspense>
-  )
 }

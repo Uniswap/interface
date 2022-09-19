@@ -1,10 +1,17 @@
 import graphql from 'babel-plugin-relay/macro'
-import { filterTimeAtom, sortAscendingAtom, sortMethodAtom } from 'components/Tokens/state'
+import {
+  favoritesAtom,
+  filterStringAtom,
+  filterTimeAtom,
+  showFavoritesAtom,
+  sortAscendingAtom,
+  sortMethodAtom,
+} from 'components/Tokens/state'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useLazyLoadQuery } from 'react-relay'
+import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
-import { TopTokens_TokensQuery } from './__generated__/TopTokens_TokensQuery.graphql'
+import { ContractInput, TopTokens_TokensQuery } from './__generated__/TopTokens_TokensQuery.graphql'
 import type { TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { toHistoryDuration, useCurrentChainName } from './util'
 
@@ -53,71 +60,131 @@ export enum TokenSortMethod {
   VOLUME = 'Volume',
 }
 
-function sortTopTokens(
-  tokens: TopTokens100Query['response']['topTokens'],
-  sortMethod: TokenSortMethod,
-  ascending?: boolean
-) {
-  if (!tokens) return []
+export type PrefetchedTopToken = NonNullable<TopTokens100Query['response']['topTokens']>[number]
 
-  let tokenArray = Array.from(tokens)
-  switch (sortMethod) {
-    case TokenSortMethod.PRICE:
-      tokenArray = tokenArray.sort((a, b) => (b?.market?.price?.value ?? 0) - (a?.market?.price?.value ?? 0))
-      break
-    case TokenSortMethod.PERCENT_CHANGE:
-      tokenArray = tokenArray.sort(
-        (a, b) => (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0)
-      )
-      break
-    case TokenSortMethod.TOTAL_VALUE_LOCKED:
-      tokenArray = tokenArray.sort(
-        (a, b) => (b?.market?.totalValueLocked?.value ?? 0) - (a?.market?.totalValueLocked?.value ?? 0)
-      )
-      break
-    case TokenSortMethod.VOLUME:
-      tokenArray = tokenArray.sort((a, b) => (b?.market?.volume?.value ?? 0) - (a?.market?.volume?.value ?? 0))
-      break
-  }
+function useSortedTokens(tokens: TopTokens100Query['response']['topTokens']) {
+  const sortMethod = useAtomValue(sortMethodAtom)
+  const sortAscending = useAtomValue(sortAscendingAtom)
 
-  return ascending ? tokenArray.reverse() : tokenArray
+  return useMemo(() => {
+    if (!tokens) return []
+
+    let tokenArray = Array.from(tokens)
+    switch (sortMethod) {
+      case TokenSortMethod.PRICE:
+        tokenArray = tokenArray.sort((a, b) => (b?.market?.price?.value ?? 0) - (a?.market?.price?.value ?? 0))
+        break
+      case TokenSortMethod.PERCENT_CHANGE:
+        tokenArray = tokenArray.sort(
+          (a, b) => (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0)
+        )
+        break
+      case TokenSortMethod.TOTAL_VALUE_LOCKED:
+        tokenArray = tokenArray.sort(
+          (a, b) => (b?.market?.totalValueLocked?.value ?? 0) - (a?.market?.totalValueLocked?.value ?? 0)
+        )
+        break
+      case TokenSortMethod.VOLUME:
+        tokenArray = tokenArray.sort((a, b) => (b?.market?.volume?.value ?? 0) - (a?.market?.volume?.value ?? 0))
+        break
+    }
+
+    return sortAscending ? tokenArray.reverse() : tokenArray
+  }, [tokens, sortMethod, sortAscending])
+}
+
+function useFilteredTokens(tokens: PrefetchedTopToken[]) {
+  const filterString = useAtomValue(filterStringAtom)
+  const favorites = useAtomValue(favoritesAtom)
+  const showFavorites = useAtomValue(showFavoritesAtom)
+
+  const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
+
+  return useMemo(() => {
+    if (!tokens) {
+      return []
+    }
+
+    let returnTokens = tokens
+    if (showFavorites) {
+      returnTokens = returnTokens?.filter((token) => (token?.address && favorites.includes(token.address)) ?? false)
+    }
+    if (lowercaseFilterString) {
+      returnTokens = returnTokens?.filter((token) => {
+        const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
+        const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
+        const symbolIncludesFilterString = token?.symbol?.toLowerCase().includes(lowercaseFilterString)
+        return (nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString) ?? false
+      })
+    }
+    return returnTokens
+  }, [tokens, showFavorites, lowercaseFilterString, favorites])
 }
 
 const PAGE_SIZE = 20
 //const MAX_COUNT = 100
 
-export type TopToken = NonNullable<TopTokens100Query['response']['topTokens']>[number]
+function toContractInput(token: PrefetchedTopToken) {
+  return {
+    address: token?.address ?? '',
+    chain: token?.chain ?? 'ETHEREUM',
+  }
+}
 
+export type TopToken = NonNullable<TopTokens_TokensQuery['response']['tokens']>[number]
 export function useTopTokens(prefetchedTokens: TopTokens100Query['response']) {
   // TODO: add filtering by favorites and filter string
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
-  const sortMethod = useAtomValue(sortMethodAtom)
-  const sortAscending = useAtomValue(sortAscendingAtom)
-  const chain = useCurrentChainName()
+  const environment = useRelayEnvironment()
+  const [tokens, setTokens] = useState<TopToken[]>()
 
-  const [count, setCount] = useState(PAGE_SIZE)
-  const sortedTop100 = useMemo(
-    () => sortTopTokens(prefetchedTokens.topTokens, sortMethod, sortAscending),
-    [prefetchedTokens, sortMethod, sortAscending]
+  const [page, setPage] = useState(1)
+  const selectedTokens = useFilteredTokens(useSortedTokens(prefetchedTokens.topTokens))
+  const [isFetching, setIsFetching] = useState(true)
+
+  // TopTokens should ideally be fetched with usePaginationFragment. The backend does not current support graphql cursors;
+  // in the meantime, fetchQuery is used, as other relay hooks do not allow the refreshing and lazy loading we need
+  const loadTokens = useCallback(
+    (contracts: ContractInput[], onSuccess: (data: TopTokens_TokensQuery['response'] | undefined) => void) => {
+      fetchQuery<TopTokens_TokensQuery>(
+        environment,
+        tokensQuery,
+        { contracts, duration },
+        { fetchPolicy: 'store-or-network' }
+      )
+        .toPromise()
+        .then(onSuccess)
+    },
+    [duration, environment]
   )
 
-  const contracts = sortedTop100.slice(0, count).map((token) => {
-    return {
-      address: token?.address ?? '',
-      chain,
-    }
-  })
-  const topTokensData = useLazyLoadQuery<TopTokens_TokensQuery>(tokensQuery, { contracts, duration })
-
-  // Function to pass into react.window InfiniteLoader
-  const loadMoreTokens = useCallback(() => setCount(count + PAGE_SIZE), [setCount, count])
+  const loadMoreTokens = () => {
+    const contracts = selectedTokens.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map(toContractInput)
+    loadTokens(contracts, (data) => {
+      if (data?.tokens) {
+        setTokens([...(tokens ?? []), ...data.tokens])
+        setPage(page + 1)
+      }
+    })
+  }
 
   // Reset count when filters are changed
   useEffect(() => {
-    setCount(PAGE_SIZE)
-  }, [sortMethod])
+    setIsFetching(true)
+    setTokens([])
+    const contracts = selectedTokens.slice(0, PAGE_SIZE).map(toContractInput)
+    loadTokens(contracts, (data) => {
+      if (data?.tokens) {
+        console.log('D')
+        setTokens([...data.tokens])
+        setIsFetching(false)
+        setPage(1)
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTokens])
 
-  return { tokens: topTokensData.tokens, loadMoreTokens }
+  return { isFetching, tokens, loadMoreTokens }
 }
 
 export const tokensQuery = graphql`
