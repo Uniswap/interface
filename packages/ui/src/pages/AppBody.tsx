@@ -6,6 +6,9 @@ export const BodyWrapper = styled(Box)`
   position: relative;
   /* max-width: 420px; */
   max-width: 21rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    max-width: 100%;
+  `};
   /* max-width: 38rem; */
   width: 100%;
   /* box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import { isMobile } from 'react-device-detect'
 import { Text, TextProps } from 'rebass'
 import styled, {
   createGlobalStyle,
@@ -259,7 +260,7 @@ html {
   background-size: 61%; */
   box-sizing: border-box;
   // font-size: min(1.56vw, 16px);
-  font-size: calc(12px + 0.33333vw);
+  font-size: ${() => (isMobile ? '12px' : 'calc(12px + 0.33333vw)')};
   ${({ theme }) => theme.mediaWidth.upToSmall`
     // font-size: max(4.15vw, 16px);
     font-size: 4.15vw;

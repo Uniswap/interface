@@ -23,7 +23,7 @@ import {
 // import { CountUp } from 'use-count-up'
 // import { TYPE, ExternalLink } from '../../theme'
 import { YellowCard } from '../Card'
-import ClaimModal from '../claim/ClaimModal'
+// import ClaimModal from '../claim/ClaimModal'
 // import { useToggleSelfClaimModal, useShowClaimPopup } from '../../state/application/hooks'
 // import { useUserHasAvailableClaim } from '../../state/claim/hooks'
 // import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
@@ -167,7 +167,7 @@ const HeaderLinks = styled(Row)`
   border: 1px solid green;
   height: 1.8rem;
   width: unset;
-  border: 1px solid #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 0.4rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     // padding: 1rem 0 1rem 1rem;
@@ -413,7 +413,7 @@ export default function Header() {
 
   return (
     <HeaderFrame>
-      <ClaimModal />
+      {/* <ClaimModal /> */}
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>

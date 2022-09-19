@@ -342,12 +342,13 @@ export default function Pool() {
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody style={{ overflow: 'hidden auto' }}>
                     {/* {v2PairsWithoutStakedAmount.map((v2Pair, index) => (
                       <LiquidityCard
                         key={index}
                         pair={v2Pair}
                         needBgColor={false}
+                        // stakedBalance={stakingInfosWithBalance[index].stakedAmount}
                         border={`1px solid rgba(255, 255, 255, 0.2)!important`}
                         borderRadius={`24px`}
                       ></LiquidityCard>
