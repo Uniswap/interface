@@ -41,13 +41,22 @@ const StatContainer = styled.div`
 `
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
-  border-radius: 0.4rem;
-  height: 5rem;
+  // border-radius: 0.4rem;
+  height: 8.5rem;
   width: 100%;
   overflow: hidden;
   position: relative;
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
+
+  :not(:last-child):after {
+    content: '';
+    background-color: rgba(255, 255, 255, 0.2);
+    height: 1px;
+    position: relative;
+    bottom: 0;
+    left: 0;
+  }
 `
 
 const TopSection = styled.div`
