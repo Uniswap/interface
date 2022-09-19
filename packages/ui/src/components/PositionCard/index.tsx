@@ -480,19 +480,19 @@ export function LiquidityCard({
 
   const backgroundColor = useColor(pair?.token0)
   return (
-    <tr>
-      <td>
+    <>
+      <Box>
         <DoubleCurrencyLogoHorizontal currency0={currency0} currency1={currency1} size={20} />
-      </td>
-      <td>{!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}</td>
-      <td>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</td>
-      <td>xx</td>
+      </Box>
+      <Box>{!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}</Box>
+      <Box>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</Box>
+      <Box>xx</Box>
       {/* <td>xx</td> */}
-      <td style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
         {/* <ButtonPrimary padding={"unset"} width={"5rem"} borderRadius={".3rem"} sx={{ height: "1.3rem", fontSize: ".5rem", color: "#000000" }} as={Link} to="/manager">
           Manage
         </ButtonPrimary> */}
-        <div style={{ display: 'inline-block' }}>
+        <Box style={{ display: 'inline-block' }}>
           <ButtonPrimary
             style={{ display: 'inline-block !important' }}
             padding=".3rem"
@@ -502,8 +502,8 @@ export function LiquidityCard({
           >
             Add
           </ButtonPrimary>
-        </div>
-        <div style={{ display: 'inline-block' }}>
+        </Box>
+        <Box style={{ display: 'inline-block', marginLeft: '1rem' }}>
           <ButtonPrimary
             padding=".3rem"
             borderRadius=".3rem"
@@ -512,8 +512,8 @@ export function LiquidityCard({
           >
             Remove
           </ButtonPrimary>
-        </div>
-      </td>
-    </tr>
+        </Box>
+      </Box>
+    </>
   )
 }

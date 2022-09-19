@@ -1,10 +1,17 @@
-import { Pair } from '@teleswap/sdk'
+// import { JSBI, Pair } from '@teleswap/sdk'
+// import dayjs from 'dayjs'
+import { Pair /* , JSBI */ } from '@teleswap/sdk'
+import { LiquidityCard } from 'components/PositionCard'
+// import { BIG_INT_ZERO } from 'constants/index'
+import gql from 'graphql-tag'
 import useThemedContext from 'hooks/useThemedContext'
 import namor from 'namor'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Box, Text } from 'rebass'
+// import { useStakingInfo } from 'state/stake/hooks'
 import styled from 'styled-components'
+import { client } from 'utils/apolloClient'
 
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
@@ -97,11 +104,11 @@ const EmptyProposals = styled.div`
 
 const YourLiquidityGrid = styled(Box)`
   // border: 1px solid rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(0, 0, 0, 0.2); //test usage
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 24px;
   padding: 48px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: repeat(40px);
   grid-row-gap: 24px;
   grid-auto-flow: row;
@@ -129,7 +136,8 @@ const HeaderItem = styled(Box)`
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
-  line-height: 18px;
+  line-height: 0.8rem;
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.6);
   white-space: nowrap;
 `
@@ -149,6 +157,8 @@ const StyledTableView = styled(Box)`
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 0.8rem;
   box-sizing: border-box;
+  display: grid;
+  grid-
   padding: 1.6rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 1px;
@@ -165,7 +175,7 @@ const StyledTableView = styled(Box)`
       > th {
         overflow: hidden;
         font-weight: 600;
-        font-size: 0.4rem;
+        font-size: 0.8rem;
         color: rgba(255, 255, 255, 0.6);
         flex: 1;
         text-align: left;
@@ -193,11 +203,12 @@ const StyledTableView = styled(Box)`
       display: flex;
       justify-content: center;
       align-items: center;
+      font-size: 0.8rem;
       margin-bottom: 0.6rem;
       > td {
         overflow: hidden;
         font-weight: 500;
-        font-size: 0.5rem;
+        font-size: 0.7rem;
         color: #ffffff;
         flex: 1;
         text-align: left;
@@ -252,18 +263,143 @@ export default function Pool() {
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
   // show liquidity even if its deposited in rewards contract
-  // const stakingInfo = useStakingInfo()
-  // const stakingInfosWithBalance = stakingInfo?.filter((pool) => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
-  // const stakingPairs = usePairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
-
+  /* const stakingInfo = useStakingInfo()
+  const stakingInfosWithBalance = stakingInfo?.filter((pool) => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
+  const stakingPairs = usePairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
+ */
   // remove any pairs that also are included in pairs with stake in mining pool
-  // const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter((v2Pair) => {
-  //   return (
-  //     stakingPairs
-  //       ?.map((stakingPair) => stakingPair[1])
-  //       .filter((stakingPair) => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
-  //   )
-  // })
+  /*   const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter((v2Pair) => {
+    return (
+      stakingPairs
+        ?.map((stakingPair) => stakingPair[1])
+        .filter((stakingPair) => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
+    )
+  }) */
+
+  const [pools, setPools] = useState<any[]>([])
+
+  useEffect(() => {
+    ;(async () => {
+      /*  const getEthPrice = async () => {
+        const utcCurrentTime = dayjs()
+        const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
+
+        let ethPrice = 0
+        let ethPriceOneDay = 0
+        let priceChangeETH = 0
+
+        try {
+          export async function getBlockFromTimestamp(timestamp) {
+            let result = await blockClient.query({
+              query: GET_BLOCK,
+              variables: {
+                timestampFrom: timestamp,
+                timestampTo: timestamp + 600
+              },
+              fetchPolicy: 'cache-first'
+            })
+            return result?.data?.blocks?.[0]?.number
+          }
+
+          let oneDayBlock = await getBlockFromTimestamp(utcOneDayBack)
+          let result = await client.query({
+            query: ETH_PRICE(),
+            fetchPolicy: 'cache-first'
+          })
+          let resultOneDay = await client.query({
+            query: ETH_PRICE(oneDayBlock),
+            fetchPolicy: 'cache-first'
+          })
+          const currentPrice = result?.data?.bundles[0]?.ethPrice
+          const oneDayBackPrice = resultOneDay?.data?.bundles[0]?.ethPrice
+          priceChangeETH = getPercentChange(currentPrice, oneDayBackPrice)
+          ethPrice = currentPrice
+          ethPriceOneDay = oneDayBackPrice
+        } catch (e) {
+          console.log(e)
+        }
+
+        return [ethPrice, ethPriceOneDay, priceChangeETH]
+      } */
+      const PAIRS_CURRENT = gql`
+        query pairs {
+          pairs(first: 200, orderBy: reserveUSD, orderDirection: desc) {
+            id
+          }
+        }
+      `
+      const {
+        data: { pairs }
+      } = await client.query({
+        query: PAIRS_CURRENT,
+        fetchPolicy: 'cache-first'
+      })
+      const {
+        data: { pairs: pairsData }
+      } = await client.query({
+        query: gql`
+          {
+            pairs(first: 50, orderBy: trackedReserveETH, orderDirection: desc) {
+              id
+              trackedReserveETH
+              token0 {
+                id
+                symbol
+                name
+              }
+              token1 {
+                id
+                symbol
+                name
+              }
+              reserve0
+              reserve1
+              reserveUSD
+              totalSupply
+              trackedReserveETH
+              reserveETH
+              volumeUSD
+              untrackedVolumeUSD
+              token0Price
+              token1Price
+              createdAtTimestamp
+            }
+          }
+        `,
+        variables: {
+          allPairs: pairs.map((pair) => {
+            return pair.id
+          })
+        },
+        fetchPolicy: 'cache-first'
+      })
+      setPools(pairsData)
+      /*   fetch('https://graph-goerli.qa.davionlabs.com/subgraphs/name/gop_subgraph', {
+      headers: {
+        accept: 'application/json',
+        'accept-language': 'zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6',
+        'cache-control': 'no-cache',
+        'content-type': 'application/json',
+        pragma: 'no-cache',
+        'sec-ch-ua': '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin'
+      },
+      referrer:
+        'https://graph-goerli.qa.davionlabs.com/subgraphs/name/gop_subgraph/graphql?query=%7B%0A%20%20pairs(first%3A%2050%2C%20orderBy%3A%20trackedReserveETH%2C%20orderDirection%3A%20desc)%20%7B%0A%20%20%20%20id%0A%20%20%20%20trackedReserveETH%0A%20%20%20%20token0%20%7B%0A%20%20%20%20%20%20id%0A%20%20%20%20%20%20symbol%0A%20%20%20%20%20%20name%0A%20%20%20%20%7D%0A%20%20%20%20token1%20%7B%0A%20%20%20%20%20%20id%0A%20%20%20%20%20%20symbol%0A%20%20%20%20%20%20name%0A%20%20%20%20%7D%0A%20%20%20%20reserve0%0A%20%20%20%20reserve1%0A%20%20%20%20reserveUSD%0A%20%20%20%20totalSupply%0A%20%20%20%20trackedReserveETH%0A%20%20%20%20reserveETH%0A%20%20%20%20volumeUSD%0A%20%20%20%20untrackedVolumeUSD%0A%20%20%20%20token0Price%0A%20%20%20%20token1Price%0A%20%20%20%20createdAtTimestamp%0A%20%20%7D%0A%7D',
+      referrerPolicy: 'strict-origin-when-cross-origin',
+      body: '{"query":"{\\n  pairs(first: 50, orderBy: trackedReserveETH, orderDirection: desc) {\\n    id\\n    trackedReserveETH\\n    token0 {\\n      id\\n      symbol\\n      name\\n    }\\n    token1 {\\n      id\\n      symbol\\n      name\\n    }\\n    reserve0\\n    reserve1\\n    reserveUSD\\n    totalSupply\\n    trackedReserveETH\\n    reserveETH\\n    volumeUSD\\n    untrackedVolumeUSD\\n    token0Price\\n    token1Price\\n    createdAtTimestamp\\n  }\\n}","variables":null,"operationName":null}',
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include'
+    }).then((res) => {
+      console.log(res)
+    }) */
+    })()
+  }, [])
 
   return (
     <>
@@ -328,30 +464,23 @@ export default function Pool() {
             ) : allV2PairsWithLiquidity?.length > 0 ? (
               //  || stakingPairs?.length > 0
               <>
-                <StyledTableView>
-                  <thead>
-                    <tr>
-                      <th>Pool</th>
-                      <th>Token</th>
-                      <th>Amount</th>
-                      <th>Value</th>
-                      {/* <th>Unclaimed Earnings</th> */}
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody style={{ overflow: 'hidden auto' }}>
-                    {/* {v2PairsWithoutStakedAmount.map((v2Pair, index) => (
-                      <LiquidityCard
-                        key={index}
-                        pair={v2Pair}
-                        needBgColor={false}
-                        // stakedBalance={stakingInfosWithBalance[index].stakedAmount}
-                        border={`1px solid rgba(255, 255, 255, 0.2)!important`}
-                        borderRadius={`24px`}
-                      ></LiquidityCard>
-                    ))} */}
-                  </tbody>
-                </StyledTableView>
+                <YourLiquidityGrid>
+                  <HeaderItem>Pool</HeaderItem>
+                  <HeaderItem>Token</HeaderItem>
+                  <HeaderItem>Amount</HeaderItem>
+                  <HeaderItem>Value</HeaderItem>
+                  <HeaderItem></HeaderItem>
+                  {allV2PairsWithLiquidity.map((v2Pair, index) => (
+                    <LiquidityCard
+                      key={index}
+                      pair={v2Pair}
+                      needBgColor={false}
+                      // stakedBalance={stakingInfosWithBalance[index].stakedAmount}
+                      border={`1px solid rgba(255, 255, 255, 0.2)!important`}
+                      borderRadius={`24px`}
+                    ></LiquidityCard>
+                  ))}
+                </YourLiquidityGrid>
 
                 {/* <ButtonSecondary>
                   <RowBetween>
@@ -409,12 +538,25 @@ export default function Pool() {
             {/* <TopPoolsStyled>
               <iframe src="https://info.uniswap.org/#/pools" height="600" width="1280" title="xxxx"></iframe>
             </TopPoolsStyled> */}
+            {/*  <HeaderItem>#</HeaderItem>
+              <HeaderItem>Pools</HeaderItem>
+              <HeaderItem>TVL</HeaderItem>
+              <HeaderItem></HeaderItem> */}
             <TopPoolsGrid>
               <HeaderItem>#</HeaderItem>
               <HeaderItem>Pools</HeaderItem>
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem>
-              {}
+              {pools.slice(0, 5).map((v2Pair, index) => {
+                return (
+                  <>
+                    <Box key={`${v2Pair.id}-1`}>{index}</Box>
+                    <Box key={`${v2Pair.id}-2`}></Box>
+                    <Box key={`${v2Pair.id}-3`}>{v2Pair.trackedReserveETH}</Box>
+                    <Box key={`${v2Pair.id}-4`}></Box>
+                  </>
+                )
+              })}
             </TopPoolsGrid>
             <AutoColumn justify={'center'} gap="md">
               <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
