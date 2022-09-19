@@ -744,7 +744,7 @@ export default function FullPositionCard({
           </ButtonEmpty>
         )}
         {tab === 'ALL' && farmStatus === 'FARM_ENDED' && stakedBalance && (
-          <ButtonEmpty width="max-content" style={{ fontSize: '14px' }} padding="0" as={Link} to="/farms?tab=ended">
+          <ButtonEmpty width="max-content" style={{ fontSize: '14px' }} padding="0" as={Link} to="/farms?type=ended">
             <Trans>Go to farm ↗</Trans>
           </ButtonEmpty>
         )}
