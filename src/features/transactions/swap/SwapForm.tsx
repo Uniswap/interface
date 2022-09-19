@@ -41,9 +41,6 @@ interface SwapFormProps {
   derivedSwapInfo: DerivedSwapInfo
 }
 
-export const MIN_INPUT_HEIGHT = 100
-export const MAX_INPUT_HEIGHT = 140
-
 export const ARROW_SIZE = 44
 
 export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
@@ -162,14 +159,9 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
         />
       )}
       <Flex fill grow gap="xs" justifyContent="space-between" onLayout={onLayout}>
-        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="none">
+        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xs">
           <Trace section={SectionName.CurrencyInputPanel}>
-            <Flex
-              fill
-              justifyContent="center"
-              maxHeight={MAX_INPUT_HEIGHT}
-              minHeight={MIN_INPUT_HEIGHT}
-              p="md">
+            <Flex backgroundColor="backgroundContainer" borderRadius="xl" px="md" py="lg">
               <CurrencyInputPanel
                 currency={currencies[CurrencyField.INPUT]}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
@@ -206,19 +198,16 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
           <Trace section={SectionName.CurrencyOutputPanel}>
             <Flex fill gap="none">
               <Flex
-                fill
-                backgroundColor={currencies[CurrencyField.OUTPUT] ? 'backgroundContainer' : 'none'}
+                backgroundColor="backgroundContainer"
                 borderBottomLeftRadius={swapWarning || trade.trade ? 'none' : 'xl'}
                 borderBottomRightRadius={swapWarning || trade.trade ? 'none' : 'xl'}
                 borderTopLeftRadius="xl"
                 borderTopRightRadius="xl"
                 gap="none"
-                justifyContent="center"
-                maxHeight={MAX_INPUT_HEIGHT}
-                minHeight={MIN_INPUT_HEIGHT}
                 overflow="hidden"
-                p="md"
-                position="relative">
+                position="relative"
+                px="md"
+                py="lg">
                 <Box bottom={0} left={0} position="absolute" right={0}>
                   {swapDataRefreshing && !swapWarning ? <LaserLoader /> : null}
                 </Box>

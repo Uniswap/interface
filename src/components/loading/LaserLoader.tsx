@@ -18,9 +18,9 @@ export function LaserLoader() {
   const theme = useAppTheme()
 
   const LASER = {
-    width: 256,
-    height: 1,
-    color: theme.colors.backgroundOutline,
+    width: 30,
+    height: 2,
+    color: theme.colors.accentAction,
     duration: 1200,
   }
 

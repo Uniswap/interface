@@ -1,7 +1,11 @@
 import dayjs from 'dayjs'
 import { BigNumberish } from 'ethers'
 import { useMemo, useState } from 'react'
-import { LayoutChangeEvent } from 'react-native'
+import {
+  LayoutChangeEvent,
+  NativeSyntheticEvent,
+  TextInputContentSizeChangeEventData,
+} from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -263,4 +267,32 @@ export function useShouldCompressView() {
   )
 
   return { onLayout, shouldCompressView }
+}
+
+export function useDynamicFontSizing(maxFontSize: number, minFontSize: number) {
+  const [fontSize, setFontSize] = useState(maxFontSize)
+  const [textInputWidth, setTextInputWidth] = useState<number>(0)
+
+  const onLayout = (event: LayoutChangeEvent) => {
+    if (textInputWidth) return
+
+    const width = event.nativeEvent.layout.width
+    setTextInputWidth(width)
+  }
+
+  const scaleFontSize = (width: number) => {
+    const actualWidth = width + fontSize
+    const scaledSize = fontSize * (textInputWidth / actualWidth)
+    const scaledSizeWithMin = Math.max(scaledSize, minFontSize)
+    const newFontSize = Math.min(maxFontSize, scaledSizeWithMin)
+    setFontSize(newFontSize)
+  }
+
+  const onContentSizeChange = (
+    event: NativeSyntheticEvent<TextInputContentSizeChangeEventData>
+  ) => {
+    scaleFontSize(event.nativeEvent.contentSize.width)
+  }
+
+  return { onContentSizeChange, onLayout, fontSize }
 }

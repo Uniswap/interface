@@ -17,11 +17,7 @@ import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useShouldCompressView } from 'src/features/transactions/hooks'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
-import {
-  ARROW_SIZE,
-  MAX_INPUT_HEIGHT,
-  MIN_INPUT_HEIGHT,
-} from 'src/features/transactions/swap/SwapForm'
+import { ARROW_SIZE } from 'src/features/transactions/swap/SwapForm'
 import {
   CurrencyField,
   transactionStateActions,
@@ -122,16 +118,16 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
         />
       </Suspense>
       <Flex fill grow gap="xs" justifyContent="space-between" onLayout={onLayout}>
-        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="lg">
+        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xs">
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
             <Flex
-              fill
+              backgroundColor="backgroundContainer"
+              borderRadius="xl"
               justifyContent="center"
-              maxHeight={MAX_INPUT_HEIGHT}
-              minHeight={MIN_INPUT_HEIGHT}
-              p="md">
+              px="md"
+              py="lg">
               <CurrencyInputPanel
                 autoFocus
                 currency={currencyIn}
@@ -148,33 +144,30 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
               />
             </Flex>
           )}
+          <Box zIndex="popover">
+            <Box alignItems="center" height={ARROW_SIZE} style={StyleSheet.absoluteFill}>
+              <Box alignItems="center" bottom={ARROW_SIZE / 2} position="absolute">
+                <TransferArrowButton
+                  disabled
+                  bg={recipient ? 'backgroundAction' : 'backgroundSurface'}
+                />
+              </Box>
+            </Box>
+          </Box>
+
           <Flex
-            fill
             backgroundColor={recipient ? 'backgroundContainer' : 'none'}
             borderRadius="xl"
             justifyContent="center"
-            maxHeight={140}
-            minHeight={100}
-            p="md">
-            <Box zIndex="popover">
-              <Box alignItems="center" height={ARROW_SIZE} style={StyleSheet.absoluteFill}>
-                <Box alignItems="center" bottom={ARROW_SIZE / 2} position="absolute">
-                  <TransferArrowButton
-                    disabled
-                    bg={recipient ? 'backgroundAction' : 'backgroundSurface'}
-                  />
-                </Box>
-              </Box>
-            </Box>
+            px="md"
+            py="lg">
             {recipient && (
-              <Flex px="md" py="xl">
-                <Suspense fallback={<Loading type="image" />}>
-                  <RecipientInputPanel
-                    recipientAddress={recipient}
-                    onToggleShowRecipientSelector={onToggleShowRecipientSelector}
-                  />
-                </Suspense>
-              </Flex>
+              <Suspense fallback={<Loading type="image" />}>
+                <RecipientInputPanel
+                  recipientAddress={recipient}
+                  onToggleShowRecipientSelector={onToggleShowRecipientSelector}
+                />
+              </Suspense>
             )}
           </Flex>
         </AnimatedFlex>

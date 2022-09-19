@@ -10,6 +10,7 @@ import { Flex } from 'src/components/layout/Flex'
 import { Warning, WarningLabel } from 'src/components/modals/types'
 import { Text } from 'src/components/Text'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
+import { useDynamicFontSizing } from 'src/features/transactions/hooks'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 
@@ -37,6 +38,9 @@ type CurrentInputPanelProps = {
   onSelectionChange?: (start: number, end: number) => void
   usdValue: CurrencyAmount<Currency> | null
 } & RestyleProps
+
+const MAX_INPUT_FONT_SIZE = 36
+const MIN_INPUT_FONT_SIZE = 18
 
 /** Input panel for a single side of a transfer action. */
 export function CurrencyInputPanel(props: CurrentInputPanelProps) {
@@ -75,6 +79,9 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
 
   const showInsufficientBalanceWarning = insufficientBalanceWarning && !isOutput
 
+  const formattedUSDValue = usdValue ? `${formatUSDPrice(usdValue?.toExact())}` : '$0'
+  const formattedCurrencyAmount = currencyAmount ? formatCurrencyAmount(currencyAmount) : ''
+
   useEffect(() => {
     if (focus) {
       inputRef.current?.focus()
@@ -83,15 +90,21 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     }
   }, [focus, inputRef])
 
+  const { onContentSizeChange, onLayout, fontSize } = useDynamicFontSizing(
+    MAX_INPUT_FONT_SIZE,
+    MIN_INPUT_FONT_SIZE
+  )
+
   return (
-    <Flex gap="xxs" {...transformedProps}>
+    <Flex gap="none" {...transformedProps}>
       <Flex
         row
         alignItems="center"
-        gap="xxs"
-        justifyContent={isBlankOutputState ? 'center' : 'space-between'}>
+        gap="xxxs"
+        justifyContent={isBlankOutputState ? 'center' : 'space-between'}
+        py={isBlankOutputState ? 'sm' : 'none'}>
         {!isBlankOutputState && (
-          <Flex fill grow row>
+          <Flex fill grow row onLayout={onLayout}>
             <AmountInput
               ref={inputRef}
               alignSelf="stretch"
@@ -100,8 +113,8 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
               borderWidth={0}
               dimTextColor={dimTextColor}
               fontFamily={theme.textVariants.headlineLarge.fontFamily}
-              fontSize={36}
-              height={36}
+              fontSize={fontSize}
+              height={MAX_INPUT_FONT_SIZE}
               overflow="visible"
               placeholder="0"
               placeholderTextColor={theme.colors.textSecondary}
@@ -113,6 +126,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
               testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
               value={value}
               onChangeText={(newAmount: string) => onSetAmount(newAmount)}
+              onContentSizeChange={onContentSizeChange}
               onPressIn={onPressIn}
               onSelectionChange={({
                 nativeEvent: {
@@ -122,7 +136,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
             />
           </Flex>
         )}
-        <Flex row alignItems="center" gap="xs" py="xxs">
+        <Flex row alignItems="center" gap="xs">
           {onSetMax && (
             <MaxAmountButton
               currencyAmount={currencyAmount}
@@ -138,24 +152,28 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
         </Flex>
       </Flex>
 
-      <Flex row alignItems="center" gap="xs" justifyContent="space-between">
-        <Text color="textSecondary" variant="caption">
-          {usdValue ? `${formatUSDPrice(usdValue?.toExact())}` : ''}
-        </Text>
-        <Flex alignItems="flex-end" gap="xs" justifyContent="flex-end">
-          {showInsufficientBalanceWarning && (
-            <Text color="accentWarning" variant="caption">
-              {insufficientBalanceWarning.title}
-            </Text>
-          )}
-
-          {currency && !showInsufficientBalanceWarning && (
+      {!isBlankOutputState && (
+        <Flex row alignItems="center" gap="xs" justifyContent="space-between" py="xxs">
+          {currency && (
             <Text color="textSecondary" variant="caption">
-              {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
+              {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
             </Text>
           )}
+          <Flex justifyContent="flex-end">
+            {showInsufficientBalanceWarning && (
+              <Text color="accentWarning" variant="caption">
+                {insufficientBalanceWarning.title}
+              </Text>
+            )}
+
+            {currency && !showInsufficientBalanceWarning && (
+              <Text color="textSecondary" variant="caption">
+                {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
+              </Text>
+            )}
+          </Flex>
         </Flex>
-      </Flex>
+      )}
     </Flex>
   )
 }

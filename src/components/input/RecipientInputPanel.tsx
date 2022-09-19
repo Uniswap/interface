@@ -26,23 +26,15 @@ export function RecipientInputPanel({
   const theme = useAppTheme()
 
   return (
-    <Flex centered gap="sm">
-      <Button
-        bg={recipientAddress ? 'none' : 'accentActive'}
-        borderRadius="lg"
-        name={ElementName.SelectRecipient}
-        p="xs"
-        px="sm"
-        onPress={onToggleShowRecipientSelector}>
-        <Flex gap="xxs">
-          <Flex centered row gap="sm">
-            <AddressDisplay address={recipientAddress} variant="headlineSmall" />
-            <Chevron color={theme.colors.textPrimary} direction="e" />
-          </Flex>
-          {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}
+    <Button name={ElementName.SelectRecipient} p="xs" onPress={onToggleShowRecipientSelector}>
+      <Flex gap="xxxs">
+        <Flex centered row gap="xxs">
+          <AddressDisplay address={recipientAddress} variant="headlineSmall" />
+          <Chevron color={theme.colors.textPrimary} direction="e" />
         </Flex>
-      </Button>
-    </Flex>
+        {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}
+      </Flex>
+    </Button>
   )
 }
 
