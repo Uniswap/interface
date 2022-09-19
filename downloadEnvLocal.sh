@@ -1,4 +1,4 @@
-rm ~/Uniswap/mobile/.env.local
+rm .env.local
 {
   op document get "Mobile Repo .env.local" --output=.env.local 
 } || {
