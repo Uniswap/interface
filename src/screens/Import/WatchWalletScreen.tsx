@@ -46,7 +46,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   // ENS and address parsing.
   const normalizedValue = normalizeTextInput(value ?? '')
   const { address: resolvedAddress, name } = useENS(ChainId.Mainnet, normalizedValue, true)
-  const isAddress = getValidAddress(normalizedValue, true)
+  const isAddress = getValidAddress(normalizedValue, true, false)
 
   // Form validation.
   const walletExists =

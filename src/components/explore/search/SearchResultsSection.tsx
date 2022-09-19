@@ -162,7 +162,9 @@ export function SearchQueryResultsSection({ searchQuery }: SearchResultsSectionP
   } = useENS(ChainId.Mainnet, searchQuery, true)
 
   // TODO: Check if address matches to a token on our token list
-  const etherscanAddress: Address | null = getValidAddress(searchQuery, true) ? searchQuery : null
+  const etherscanAddress: Address | null = getValidAddress(searchQuery, true, false)
+    ? searchQuery
+    : null
 
   const noTokenResults = !tokensLoading && tokens?.length === 0
   const noENSResults = !ensLoading && !ensName && !ensAddress

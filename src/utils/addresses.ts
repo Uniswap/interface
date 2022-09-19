@@ -24,11 +24,13 @@ export function getChecksumAddress(address: string): string {
  *
  * @param address The address to validate and normalize
  * @param withChecksum Whether to perform a checksum on the address
+ * @param log If logging is enabled in case of errors
  * @returns The normalized address or false if the address is invalid
  */
 export function getValidAddress(
   address: NullUndefined<string>,
-  withChecksum = false
+  withChecksum = false,
+  log = true
 ): Nullable<string> {
   if (!address) {
     return null
@@ -38,14 +40,17 @@ export function getValidAddress(
     try {
       return getChecksumAddress(address)
     } catch (error) {
-      logMessage(LogContext.ValidateAddress, `Invalid address at checksum: ${address}`)
+      if (log) {
+        logMessage(LogContext.ValidateAddress, `Invalid address at checksum: ${address}`)
+      }
       return null
     }
   }
 
   if (address.length !== 42 || !address.startsWith('0x')) {
-    logMessage(LogContext.ValidateAddress, `Address has an invalid format. Address: ${address}`)
-
+    if (log) {
+      logMessage(LogContext.ValidateAddress, `Address has an invalid format. Address: ${address}`)
+    }
     return null
   }
 
