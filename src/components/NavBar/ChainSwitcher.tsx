@@ -12,7 +12,7 @@ import { CheckMarkIcon, TokenWarningRedIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { ReactNode, useReducer, useRef } from 'react'
+import { ReactNode, useCallback, useReducer, useRef, useState } from 'react'
 
 import * as styles from './ChainSwitcher.css'
 import { NavDropdown } from './NavDropdown'
@@ -20,9 +20,11 @@ import { NavDropdown } from './NavDropdown'
 const ChainRow = ({
   targetChain,
   onSelectChain,
+  isPending,
 }: {
   targetChain: SupportedChainId
   onSelectChain: (targetChain: number) => void
+  isPending: boolean
 }) => {
   const { chainId } = useWeb3React()
   const active = chainId === targetChain
@@ -42,6 +44,7 @@ const ChainRow = ({
         </ChainDetails>
         {active && <CheckMarkIcon width={20} height={20} color={vars.color.blue400} />}
       </Row>
+      {isPending && 'pending'}
     </Column>
   )
 }
@@ -74,6 +77,18 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
   const selectChain = useSelectChain()
   useSyncChainQuery()
 
+  const [pendingChainId, setPendingChainId] = useState<SupportedChainId | undefined>(undefined)
+
+  const onSelectChain = useCallback(
+    async (targetChainId: SupportedChainId) => {
+      setPendingChainId(targetChainId)
+      await selectChain(targetChainId)
+      setPendingChainId(undefined)
+      toggleOpen()
+    },
+    [selectChain]
+  )
+
   if (!chainId) {
     return null
   }
@@ -85,12 +100,10 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
       <Column marginX="8">
         {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
           <ChainRow
-            onSelectChain={async (targetChainId: SupportedChainId) => {
-              await selectChain(targetChainId)
-              toggleOpen()
-            }}
+            onSelectChain={onSelectChain}
             targetChain={chainId}
             key={chainId}
+            isPending={chainId === pendingChainId}
           />
         ))}
       </Column>
