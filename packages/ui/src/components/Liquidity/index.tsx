@@ -405,6 +405,7 @@ export function BackToMyLiquidity() {
       >
         <img
           src={LeftArrow}
+          alt="left-arrow"
           style={{
             display: 'flex',
             alignItems: 'baseline'
