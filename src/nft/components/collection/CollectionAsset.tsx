@@ -1,10 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import * as Card from 'nft/components/collection/Card'
+import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformHeight } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
 import { MouseEvent, useMemo } from 'react'
+
+import * as Card from './Card'
 
 enum AssetMediaType {
   Image,
@@ -27,6 +29,13 @@ export const CollectionAsset = ({
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
 }: CollectionAssetProps) => {
+  const { addAssetToBag, removeAssetFromBag, bagExpanded, toggleBag } = useBag((state) => ({
+    addAssetToBag: state.addAssetToBag,
+    removeAssetFromBag: state.removeAssetFromBag,
+    bagExpanded: state.bagExpanded,
+    toggleBag: state.toggleBag,
+  }))
+
   const { notForSale, assetMediaType } = useMemo(() => {
     let notForSale = true
     let assetMediaType = AssetMediaType.Image
@@ -85,9 +94,12 @@ export const CollectionAsset = ({
           selectedChildren={'Remove'}
           onClick={(e: MouseEvent) => {
             e.preventDefault()
+            addAssetToBag(asset)
+            !bagExpanded && toggleBag()
           }}
           onSelectedClick={(e: MouseEvent) => {
             e.preventDefault()
+            removeAssetFromBag(asset)
           }}
         >
           {'Buy now'}

@@ -22,6 +22,7 @@ import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTx
 import { sortUpdatedAssets } from 'nft/utils/updatedAssets'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
+import { useLocation } from 'react-router-dom'
 
 import * as styles from './Bag.css'
 
@@ -110,6 +111,7 @@ const Bag = () => {
     uncheckedItemsInBag,
     setItemsInBag,
     removeAssetFromBag,
+    bagExpanded,
     toggleBag,
   } = useBag((state) => ({
     bagStatus: state.bagStatus,
@@ -123,12 +125,15 @@ const Bag = () => {
     uncheckedItemsInBag: state.itemsInBag,
     setItemsInBag: state.setItemsInBag,
     removeAssetFromBag: state.removeAssetFromBag,
+    bagExpanded: state.bagExpanded,
     toggleBag: state.toggleBag,
   }))
 
   const { address, balance: balanceInEth, provider } = useWalletBalance()
   const isConnected = !!provider && !!address
 
+  const { pathname } = useLocation()
+  const isNFTSellPage = pathname.startsWith('/nfts/sell')
   const isMobile = useIsMobile()
 
   const queryClient = useQueryClient()
@@ -304,63 +309,67 @@ const Bag = () => {
   }
 
   return (
-    <Portal>
-      <Column className={styles.bagContainer}>
-        <BagHeader numberOfAssets={itemsInBag.length} toggleBag={toggleBag} resetFlow={reset} />
-        {itemsInBag.length === 0 && bagStatus === BagStatus.ADDING_TO_BAG && <EmptyState />}
-        <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
-        <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
-          <Column display={priceChangedAssets.length > 0 || unavailableAssets.length > 0 ? 'flex' : 'none'}>
-            {unavailableAssets.length > 0 && (
-              <UnavailableAssetsHeaderRow
-                assets={unavailableAssets}
-                clearUnavailableAssets={() => setItemsInBag(availableItems)}
-                didOpenUnavailableAssets={didOpenUnavailableAssets}
-                setDidOpenUnavailableAssets={setDidOpenUnavailableAssets}
-                isMobile={isMobile}
+    <>
+      {bagExpanded && !isNFTSellPage ? (
+        <Portal>
+          <Column className={styles.bagContainer}>
+            <BagHeader numberOfAssets={itemsInBag.length} toggleBag={toggleBag} resetFlow={reset} />
+            {itemsInBag.length === 0 && bagStatus === BagStatus.ADDING_TO_BAG && <EmptyState />}
+            <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
+            <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
+              <Column display={priceChangedAssets.length > 0 || unavailableAssets.length > 0 ? 'flex' : 'none'}>
+                {unavailableAssets.length > 0 && (
+                  <UnavailableAssetsHeaderRow
+                    assets={unavailableAssets}
+                    clearUnavailableAssets={() => setItemsInBag(availableItems)}
+                    didOpenUnavailableAssets={didOpenUnavailableAssets}
+                    setDidOpenUnavailableAssets={setDidOpenUnavailableAssets}
+                    isMobile={isMobile}
+                  />
+                )}
+                {priceChangedAssets.map((asset, index) => (
+                  <PriceChangeBagRow
+                    key={asset.id}
+                    asset={asset}
+                    markAssetAsReviewed={markAssetAsReviewed}
+                    top={index === 0 && unavailableAssets.length === 0}
+                    isMobile={isMobile}
+                  />
+                ))}
+              </Column>
+              <Column gap="8">
+                {unchangedAssets.map((asset) => (
+                  <BagRow
+                    key={asset.id}
+                    asset={asset}
+                    removeAsset={removeAssetFromBag}
+                    showRemove={true}
+                    isMobile={isMobile}
+                  />
+                ))}
+              </Column>
+            </Column>
+            <ScrollingIndicator show={userCanScroll && scrollProgress < 100} />
+            {hasAssetsToShow && (
+              <BagFooter
+                balance={balance}
+                sufficientBalance={sufficientBalance}
+                isConnected={isConnected}
+                totalEthPrice={totalEthPrice}
+                totalUsdPrice={totalUsdPrice}
+                bagStatus={bagStatus}
+                setBagStatus={setBagStatus}
+                fetchReview={() => {
+                  setBagStatus(BagStatus.FETCHING_ROUTE)
+                }}
+                assetsAreInReview={itemsInBag.some((item) => item.status === BagItemStatus.REVIEWING_PRICE_CHANGE)}
               />
             )}
-            {priceChangedAssets.map((asset, index) => (
-              <PriceChangeBagRow
-                key={asset.id}
-                asset={asset}
-                markAssetAsReviewed={markAssetAsReviewed}
-                top={index === 0 && unavailableAssets.length === 0}
-                isMobile={isMobile}
-              />
-            ))}
           </Column>
-          <Column gap="8">
-            {unchangedAssets.map((asset) => (
-              <BagRow
-                key={asset.id}
-                asset={asset}
-                removeAsset={removeAssetFromBag}
-                showRemove={true}
-                isMobile={isMobile}
-              />
-            ))}
-          </Column>
-        </Column>
-        <ScrollingIndicator show={userCanScroll && scrollProgress < 100} />
-        {hasAssetsToShow && (
-          <BagFooter
-            balance={balance}
-            sufficientBalance={sufficientBalance}
-            isConnected={isConnected}
-            totalEthPrice={totalEthPrice}
-            totalUsdPrice={totalUsdPrice}
-            bagStatus={bagStatus}
-            setBagStatus={setBagStatus}
-            fetchReview={() => {
-              setBagStatus(BagStatus.FETCHING_ROUTE)
-            }}
-            assetsAreInReview={itemsInBag.some((item) => item.status === BagItemStatus.REVIEWING_PRICE_CHANGE)}
-          />
-        )}
-      </Column>
-      {isOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />}
-    </Portal>
+          {isOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />}
+        </Portal>
+      ) : null}
+    </>
   )
 }
 
