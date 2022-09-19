@@ -11,32 +11,7 @@
     "nohoist": [
       "**/jest",
       "**/jest/**",
-      "@ethersproject/providers",
-      "@nomicfoundation/hardhat-chai-matchers",
-      "@nomicfoundation/hardhat-network-helpers",
-      "@nomicfoundation/hardhat-toolbox",
-      "@nomiclabs/hardhat-ethers",
-      "@nomiclabs/hardhat-etherscan",
-      "@openzeppelin/hardhat-upgrades",
-      "@typechain/hardhat",
-      "@types/chai",
-      "@types/mocha",
-      "chai",
-      "dotenv",
-      "ethereumjs-util",
-      "ethers",
-      "hardhat",
-      "hardhat-abi-exporter",
-      "hardhat-gas-reporter",
-      "mocha",
-      "ncp",
-      "prettier",
-      "rimraf",
-      "solc",
-      "solidity-coverage",
-      "ts-node",
-      "typechain",
-      "typescript"
+      "**/@teleswap/contracts/**"
     ]
   },
   "scripts": {

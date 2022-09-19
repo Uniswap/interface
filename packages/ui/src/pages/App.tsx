@@ -56,14 +56,15 @@ const BodyWrapper = styled.div<{ mobile?: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 5rem;
+  // padding-top: 5rem;
+  padding-top: calc(3rem + 0.33333vw);
   align-items: center;
   flex: 1;
   z-index: 10;
   ${({ mobile }) => (mobile ? `overflow: auto;` : '')}
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 1rem;
-    padding-top: 2rem;
+    padding-top: 4rem;
   `};
 
   z-index: 1;

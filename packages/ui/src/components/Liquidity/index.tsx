@@ -387,7 +387,16 @@ export function BackToMyLiquidity() {
   const dispatch = useDispatch<AppDispatch>()
 
   return (
-    <Flex height={'22px'} marginBottom={'1.6rem'}>
+    <Flex
+      height={'1.8rem'}
+      marginBottom={'1.6rem'}
+      sx={{
+        'a,img': {
+          height: '1rem',
+          width: '1rem'
+        }
+      }}
+    >
       <Link
         to="/pool"
         onClick={() => {
@@ -396,7 +405,6 @@ export function BackToMyLiquidity() {
       >
         <img
           src={LeftArrow}
-          height={'14px'}
           style={{
             display: 'flex',
             alignItems: 'baseline'
@@ -408,9 +416,9 @@ export function BackToMyLiquidity() {
           fontFamily: 'Poppins',
           fontStyle: 'normal',
           fontWeight: '500',
-          fontSize: '14px',
-          lineHeight: '14px',
-          height: '14px',
+          fontSize: '1rem',
+          lineHeight: '1rem',
+          height: '1rem',
           color: '#FFFFFF'
         }}
       >

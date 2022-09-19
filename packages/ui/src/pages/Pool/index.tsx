@@ -66,8 +66,7 @@ const ButtonRow = styled(RowFixed)`
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  line-height: 1.33rem;
-  border-radius: 0.3rem;
+  line-height: 1.5rem;
   padding: 0.3rem 1.3rem;
   text-align: center;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -75,7 +74,6 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
       font-size: .9rem;
       color: #000000;
       padding: 0;
-      border-radius: .4rem;
       width: 8rem;
       height: 2.3rem
       line-height: 2.3rem;
@@ -134,7 +132,6 @@ const HeaderItem = styled(Box)`
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
-  font-size: 12px;
   line-height: 18px;
   color: rgba(255, 255, 255, 0.6);
   white-space: nowrap;
@@ -311,7 +308,7 @@ export default function Pool() {
                   Create a pair
                 </ResponsiveButtonSecondary> */}
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  <Text className="AddLiquidity" sx={{ fontWeight: 500, fontSize: '.5rem', color: '#000000' }}>
+                  <Text className="AddLiquidity" sx={{ fontWeight: 500, fontSize: '0.8rem', color: '#000000' }}>
                     Add Liquidity
                   </Text>
                 </ResponsiveButtonPrimary>

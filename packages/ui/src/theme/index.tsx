@@ -242,7 +242,6 @@ button {
 }
 
 html {
-  font-size: 16px;
   font-variant: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -260,11 +259,11 @@ html {
   background-size: 61%; */
   box-sizing: border-box;
   // font-size: min(1.56vw, 16px);
-  font-size: ${() => (isMobile ? '12px' : 'calc(12px + 0.33333vw)')};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    // font-size: max(4.15vw, 16px);
-    font-size: 4.15vw;
-  `};
+  font-size: ${() => (isMobile ? '14px' : 'calc(14px + 0.4vw)')};
+  // ${({ theme }) => theme.mediaWidth.upToSmall`
+  //   // font-size: max(4.15vw, 16px);
+  //   font-size: 4.15vw;
+  // `};
 }
 
 body {

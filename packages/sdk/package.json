@@ -27,12 +27,13 @@
     "@ethersproject/solidity": "^5.0.0",
     "@uniswap/sdk-core": "^3.0.0-alpha.3",
     "tiny-invariant": "^1.1.0",
-    "tiny-warning": "^1.0.3"
+    "tiny-warning": "^1.0.3",
+    "web3": "^1.8.0"
   },
   "devDependencies": {
+    "@teleswap/contracts": "1.1.0",
     "@types/big.js": "^4.0.5",
     "@types/jest": "^24.0.25",
-    "@teleswap/contracts": "1.1.0",
     "tsdx": "^0.14.1"
   },
   "engines": {

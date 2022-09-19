@@ -4,3 +4,4 @@ build/
 .github/
 artifacts/
 .vscode/
+*.log
