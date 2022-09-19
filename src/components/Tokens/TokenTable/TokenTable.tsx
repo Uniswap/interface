@@ -161,11 +161,9 @@ export function LoadingTokenTable() {
 export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
 
-  // TODO: consider moving prefetched call into app.tsx and passing it here
+  // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const prefetchedTokens = usePrefetchTopTokens()
   const { isFetching, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
-  // const filteredTokenProjects = useFilteredTokenProjects(topTokenProjects)
-  // const sortedFilteredTokenProjects = useSortedTokenProjects(filteredTokenProjects)
 
   /* loading and error state */
   if (isFetching) {
