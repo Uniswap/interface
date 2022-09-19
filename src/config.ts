@@ -46,23 +46,23 @@ export interface Config {
 
 const _config: Config = {
   activeChains: chainListToStateMap(parseActiveChains(ACTIVE_CHAINS)),
-  amplitudeApiKey: AMPLITUDE_API_KEY,
+  amplitudeApiKey: process.env.AMPLITUDE_API_KEY || AMPLITUDE_API_KEY,
   coingeckoApiUrl: COINGECKO_API_URL,
-  covalentApiKey: COVALENT_API_KEY,
+  covalentApiKey: process.env.COVALENT_API_KEY || COVALENT_API_KEY,
   debug: parseBoolean(DEBUG),
   uniswapApiUrl: UNISWAP_API_URL,
   uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
   uniswapGasServiceUrl: UNISWAP_GAS_SERVICE_URL,
   uniswapAppUrl: UNISWAP_APP_URL,
-  infuraProjectId: INFURA_PROJECT_ID,
+  infuraProjectId: process.env.INFURA_PROJECT_ID || INFURA_PROJECT_ID,
   logBufferSize: parseInt(LOG_BUFFER_SIZE, 10),
-  onesignalAppId: ONESIGNAL_APP_ID,
-  openseaApiKey: OPENSEA_API_KEY,
-  sentryDsn: SENTRY_DSN,
-  shakeClientId: SHAKE_CLIENT_ID,
-  shakeClientSecret: SHAKE_CLIENT_SECRET,
+  onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
+  openseaApiKey: process.env.OPENSEA_API_KEY || OPENSEA_API_KEY,
+  sentryDsn: process.env.SENTRY_DSN || SENTRY_DSN,
+  shakeClientId: process.env.SHAKE_CLIENT_ID || SHAKE_CLIENT_ID,
+  shakeClientSecret: process.env.SHAKE_CLIENT_SECRET || SHAKE_CLIENT_SECRET,
   version: VERSION,
-  zerionApiKey: ZERION_API_KEY,
+  zerionApiKey: process.env.ZERION_API_KEY || ZERION_API_KEY,
 }
 
 function parseBoolean(value: string): boolean {

@@ -20,8 +20,7 @@ Things like API keys must not be checked into GitHub. They should be stored as a
 
 1. The variable is accessed with `process.env.SECRET_VARIABLE` ([example](https://github.com/Uniswap/mobile/blob/main/src/config.ts#L54))
 2. The variable is added to the Fastlane workflow file ([example](https://github.com/Uniswap/mobile/blob/main/.github/workflows/fastlane.yml#L14))
-3. The variable is added to the iOS bundle step of the Fastlane workflow ([example](https://github.com/Uniswap/mobile/blob/main/.github/workflows/fastlane.yml#L115))
-4. Finally you should add them into your own .env.local file and then upload them to 1Password using the command `yarn upload-env-local`.
+3. Finally you should add them into your own .env.local file and then upload them to 1Password using the command `yarn upload-env-local`.
 
 To understand why these steps are needed some additional reading is:
 
