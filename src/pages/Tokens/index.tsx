@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { PageName } from 'analytics/amplitude/constants'
-import { Trace } from 'analytics/amplitude/Trace'
+import { PageName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
 import FavoriteButton from 'components/Tokens/TokenTable/FavoriteButton'
