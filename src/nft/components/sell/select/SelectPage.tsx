@@ -277,6 +277,7 @@ export const SelectPage = () => {
                 isFiltersExpanded={isFiltersExpanded}
                 results={displayAssets.length}
                 onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                collectionCount={0}
               />
               {!isMobile && <SortDropdown dropDownOptions={sortDropDownOptions} />}
               <CollectionSearch searchText={searchText} setSearchText={setSearchText} />

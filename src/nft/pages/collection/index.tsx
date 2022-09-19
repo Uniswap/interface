@@ -1,5 +1,5 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { CollectionNfts, CollectionStats, FilterButton, Filters } from 'nft/components/collection'
+import { CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
 import { useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
@@ -17,7 +17,7 @@ const Collection = () => {
   const { contractAddress } = useParams()
 
   const isMobile = useIsMobile()
-  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
+  const [isFiltersExpanded] = useFiltersExpanded()
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const oldStateRef = useRef<CollectionFilters | null>(null)
 
@@ -70,18 +70,6 @@ const Collection = () => {
             width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
           }}
         >
-          <AnimatedBox position="sticky" top="72" width="full" zIndex="3">
-            <Box backgroundColor="white08" width="full" paddingBottom="8" style={{ backdropFilter: 'blur(24px)' }}>
-              <Row marginTop="12" gap="12">
-                <FilterButton
-                  isMobile={isMobile}
-                  isFiltersExpanded={isFiltersExpanded}
-                  onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-                />
-              </Row>
-            </Box>
-          </AnimatedBox>
-
           {contractAddress && <CollectionNfts contractAddress={contractAddress} />}
         </AnimatedBox>
       </Row>

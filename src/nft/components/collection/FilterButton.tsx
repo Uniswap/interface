@@ -3,7 +3,7 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/FilterButton.css'
 import { Row } from 'nft/components/Flex'
 import { FilterIcon } from 'nft/components/icons'
-import { useCollectionCount, useCollectionFilters, useWalletCollections } from 'nft/hooks'
+import { useCollectionFilters, useWalletCollections } from 'nft/hooks'
 import { putCommas } from 'nft/utils/putCommas'
 import { useLocation } from 'react-router-dom'
 
@@ -12,11 +12,13 @@ export const FilterButton = ({
   isMobile,
   isFiltersExpanded,
   results,
+  collectionCount,
 }: {
   isMobile: boolean
   isFiltersExpanded: boolean
   results?: number
   onClick: () => void
+  collectionCount: number
 }) => {
   const { minPrice, maxPrice, minRarity, maxRarity, traits, markets, buyNow } = useCollectionFilters((state) => ({
     minPrice: state.minPrice,
@@ -30,7 +32,6 @@ export const FilterButton = ({
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const { pathname } = useLocation()
   const isSellPage = pathname.startsWith('/nfts/sell')
-  const collectionCount = useCollectionCount((state) => state.collectionCount)
 
   const showFilterBadge = isSellPage
     ? collectionFilters.length > 0
