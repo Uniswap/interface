@@ -109,6 +109,17 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
     allTokens[isAddressString(pair[0].token1.address)] ||
     new Token(chainId as ChainId, pair[0].token1.address, pair[0].token1.decimals, pair[0].token1.symbol)
 
+  const isToken0WETH = pair[0].token0.address === WETH[chainId as ChainId].address.toLowerCase()
+  const isToken1WETH = pair[0].token1.address === WETH[chainId as ChainId].address.toLowerCase()
+
+  const nativeToken = nativeOnChain(chainId as ChainId)
+
+  const token0Slug = isToken0WETH ? nativeToken.symbol : pair[0].token0.address
+  const token0Symbol = isToken0WETH ? nativeToken.symbol : token0.symbol
+
+  const token1Slug = isToken1WETH ? nativeToken.symbol : pair[0].token1.address
+  const token1Symbol = isToken1WETH ? nativeToken.symbol : token1.symbol
+
   const { data: farms } = useProMMFarms()
 
   const { mixpanelHandler } = useMixpanel()
@@ -120,25 +131,6 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
         const hasLiquidity = pool.address in userPositions
         const hoverable = pair.length > 1 && index === 0
         if (pair.length > 1 && index !== 0 && !isOpen) return null
-
-        const token0Address =
-          pool.token0.address === WETH[chainId as ChainId].address.toLowerCase()
-            ? nativeOnChain(chainId as ChainId).symbol
-            : pool.token0.address
-
-        const token0Symbol =
-          pool.token0.address === WETH[chainId as ChainId].address.toLowerCase()
-            ? nativeOnChain(chainId as ChainId).symbol
-            : token0.symbol
-
-        const token1Address =
-          pool.token1.address === WETH[chainId as ChainId].address.toLowerCase()
-            ? nativeOnChain(chainId as ChainId).symbol
-            : pool.token1.address
-        const token1Symbol =
-          pool.token1.address === WETH[chainId as ChainId].address.toLowerCase()
-            ? nativeOnChain(chainId as ChainId).symbol
-            : token1.symbol
 
         let fairlaunchAddress = ''
         let pid = -1
@@ -167,7 +159,10 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
           >
             {index === 0 ? (
               <DataText>
-                <DoubleCurrencyLogo currency0={token0} currency1={token1} />
+                <DoubleCurrencyLogo
+                  currency0={isToken0WETH ? nativeToken : token0}
+                  currency1={isToken1WETH ? nativeToken : token1}
+                />
                 <Text fontSize={16} marginTop="8px">
                   {token0Symbol} - {token1Symbol}
                 </Text>
@@ -235,7 +230,7 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
                   onClick={(e: React.MouseEvent) => {
                     e.stopPropagation()
 
-                    const url = `/elastic/add/${token0Address}/${token1Address}/${pool.feeTier}`
+                    const url = `/elastic/add/${token0Slug}/${token1Slug}/${pool.feeTier}`
                     mixpanelHandler(MIXPANEL_TYPE.ELASTIC_ADD_LIQUIDITY_IN_LIST_INITIATED, {
                       token_1: token0Symbol,
                       token_2: token1Symbol,

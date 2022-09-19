@@ -78,6 +78,7 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
 
   const allTokens = useAllTokens()
   const { data: farms } = useProMMFarms()
+
   const token0 =
     allTokens[isAddressString(pair[0].token0.address)] ||
     new Token(chainId as ChainId, pair[0].token0.address, pair[0].token0.decimals, pair[0].token0.symbol)
@@ -85,27 +86,26 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
     allTokens[isAddressString(pair[0].token1.address)] ||
     new Token(chainId as ChainId, pair[0].token1.address, pair[0].token1.decimals, pair[0].token1.symbol)
 
-  const token0Address =
-    token0.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
-      ? nativeOnChain(chainId as ChainId).symbol
-      : token0.address
-  const token0Symbol =
-    token0.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
-      ? nativeOnChain(chainId as ChainId).symbol
-      : token0.symbol
-  const token1Address =
-    token1.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
-      ? nativeOnChain(chainId as ChainId).symbol
-      : token1.address
-  const token1Symbol =
-    token1.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
-      ? nativeOnChain(chainId as ChainId).symbol
-      : token1.symbol
+  const nativeToken = nativeOnChain(chainId as ChainId)
+
+  const isToken0WETH = token0.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
+  const isToken1WETH = token1.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
+
+  const token0Slug = isToken0WETH ? nativeToken.symbol : token0.address
+  const token0Symbol = isToken0WETH ? nativeToken.symbol : token0.symbol
+
+  const token1Slug = isToken1WETH ? nativeToken.symbol : token1.address
+  const token1Symbol = isToken1WETH ? nativeToken.symbol : token1.symbol
+
   return (
     <>
       <Flex justifyContent="space-between" marginBottom="20px" marginTop={idx === 0 ? 0 : '20px'}>
         <Flex alignItems="center">
-          <DoubleCurrencyLogo size={24} currency0={token0} currency1={token1} />
+          <DoubleCurrencyLogo
+            size={24}
+            currency0={isToken0WETH ? nativeToken : token0}
+            currency1={isToken1WETH ? nativeToken : token1}
+          />
           <Text fontSize={20} fontWeight="500">
             {token0Symbol} - {token1Symbol}
           </Text>
@@ -225,7 +225,7 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
                 onClick={() => {
                   const url = myLiquidity
                     ? `/myPools?tab=${VERSION.ELASTIC}&search=${pool.address}`
-                    : `/elastic/add/${token0Address}/${token1Address}/${pool.feeTier}`
+                    : `/elastic/add/${token0Slug}/${token1Slug}/${pool.feeTier}`
 
                   if (chainId === ChainId.ETHW) {
                     setUrlOnEthPoWAck(url)
