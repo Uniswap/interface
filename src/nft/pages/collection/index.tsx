@@ -1,7 +1,7 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionNfts, CollectionStats, FilterButton, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
-import { useFiltersExpanded, useIsMobile } from 'nft/hooks'
+import { useBag, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { useQuery } from 'react-query'
@@ -9,12 +9,16 @@ import { useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring/web'
 
 const FILTER_WIDTH = 332
+const BAG_WIDTH = 324
 
 const Collection = () => {
   const { contractAddress } = useParams()
 
   const isMobile = useIsMobile()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
+  const { isBagExpanded } = useBag((state) => ({
+    isBagExpanded: state.bagExpanded,
+  }))
 
   const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
@@ -22,7 +26,13 @@ const Collection = () => {
 
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
-    gridWidthOffset: isFiltersExpanded ? FILTER_WIDTH : 0,
+    gridWidthOffset: isFiltersExpanded
+      ? isBagExpanded
+        ? BAG_WIDTH + FILTER_WIDTH
+        : FILTER_WIDTH
+      : isBagExpanded
+      ? BAG_WIDTH
+      : 0,
   })
 
   return (
