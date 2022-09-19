@@ -8,20 +8,45 @@ import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
-import { Column, Flex, Row } from 'nft/components/Flex'
+import { Column, Row } from 'nft/components/Flex'
 import { CheckMarkIcon, TokenWarningRedIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { ReactNode, useCallback, useReducer, useRef, useState } from 'react'
+import { useCallback, useReducer, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import * as styles from './ChainSwitcher.css'
 import { NavDropdown } from './NavDropdown'
 
+const StyledChainRow = styled.button`
+  display: grid;
+  background: none;
+  grid-template-columns: 1fr 4fr 1fr;
+  align-items: center;
+  text-align: left;
+`
+
+const ChainLogo = styled.img`
+  grid-column: 1;
+  grid-row: 1;
+`
+
+const ChainLabel = styled.div`
+  grid-column: 2;
+  grid-row: 1;
+`
+
+const ChainStatus = styled.div`
+  grid-column: 3;
+  grid-row: 1;
+`
+
 const ApproveText = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   font-size: 12px;
+  grid-column: 2;
+  grid-row: 2;
 `
 
 const ChainRow = ({
@@ -38,28 +63,17 @@ const ChainRow = ({
   const { label, logoUrl } = getChainInfo(targetChain)
 
   return (
-    <Column borderRadius="12">
-      <Flex
-        as="button"
-        background="none"
-        className={`${styles.ChainSwitcherRow} ${subhead}`}
-        onClick={() => onSelectChain(targetChain)}
-      >
-        <ChainDetails>
-          <img src={logoUrl} alt={label} className={styles.Icon} style={{ lineHeight: 24 }} />
-          <Column alignItems="flex-start">
-            {label}
-            {isPending && <ApproveText>Approve in wallet</ApproveText>}
-          </Column>
-        </ChainDetails>
+    <StyledChainRow onClick={() => onSelectChain(targetChain)}>
+      <ChainLogo src={logoUrl} alt={label} className={styles.Icon} />
+      <ChainLabel>{label}</ChainLabel>
+      {isPending && <ApproveText>Approve in wallet</ApproveText>}
+      <ChainStatus>
         {active && <CheckMarkIcon width={20} height={20} color={vars.color.blue400} />}
         {isPending && <Loader />}
-      </Flex>
-    </Column>
+      </ChainStatus>
+    </StyledChainRow>
   )
 }
-
-const ChainDetails = ({ children }: { children: ReactNode }) => <Flex>{children}</Flex>
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.MAINNET,
