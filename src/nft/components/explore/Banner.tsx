@@ -98,58 +98,56 @@ const CollectionDetails = ({
   rank: number
   hovered: boolean
 }) => (
-  <Box as="section" className={styles.section} paddingTop="40">
-    <Column className={styles.collectionDetails} paddingTop="24">
-      <div className={styles.volumeRank}>#{rank} volume in 24hr</div>
-      <Row>
-        <Box as="span" marginTop="16" className={clsx(header1, styles.collectionName)}>
-          {collection.name}
+  <Column className={styles.collectionDetails} paddingTop="40">
+    <div className={styles.volumeRank}>#{rank} volume in 24hr</div>
+    <Row>
+      <Box as="span" marginTop="16" className={clsx(header1, styles.collectionName)}>
+        {collection.name}
+      </Box>
+      {collection.isVerified && (
+        <Box as="span" marginTop="24">
+          <VerifiedIcon height="32" width="32" />
         </Box>
-        {collection.isVerified && (
-          <Box as="span" marginTop="24">
-            <VerifiedIcon height="32" width="32" />
+      )}
+    </Row>
+    <Row className={bodySmall} marginTop="12" color="explicitWhite">
+      <Box>
+        <Box as="span" color="darkGray" marginRight="4">
+          Floor:
+        </Box>
+        {collection.floor ? formatEthPrice(collection.floor.toString()) : '--'} ETH
+      </Box>
+      <Box>
+        {collection.floorChange ? (
+          <Box as="span" color={collection.floorChange > 0 ? 'green200' : 'error'} marginLeft="4">
+            {collection.floorChange > 0 && '+'}
+            {formatChange(collection.floorChange)}%
           </Box>
-        )}
-      </Row>
-      <Row className={bodySmall} marginTop="12" color="explicitWhite">
-        <Box>
-          <Box as="span" color="darkGray" marginRight="4">
-            Floor:
+        ) : null}
+      </Box>
+      <Box marginLeft="24" color="explicitWhite">
+        <Box as="span" color="darkGray" marginRight="4">
+          Volume:
+        </Box>
+        {collection.volume ? putCommas(+toSignificant(collection.volume.toString())) : '--'} ETH
+      </Box>
+      <Box>
+        {collection.volumeChange ? (
+          <Box as="span" color={collection.volumeChange > 0 ? 'green200' : 'error'} marginLeft="4">
+            {collection.volumeChange > 0 && '+'}
+            {formatChange(collection.volumeChange)}%
           </Box>
-          {collection.floor ? formatEthPrice(collection.floor.toString()) : '--'} ETH
-        </Box>
-        <Box>
-          {collection.floorChange ? (
-            <Box as="span" color={collection.floorChange > 0 ? 'green200' : 'error'} marginLeft="4">
-              {collection.floorChange > 0 && '+'}
-              {formatChange(collection.floorChange)}%
-            </Box>
-          ) : null}
-        </Box>
-        <Box marginLeft="24" color="explicitWhite">
-          <Box as="span" color="darkGray" marginRight="4">
-            Volume:
-          </Box>
-          {collection.volume ? putCommas(+toSignificant(collection.volume.toString())) : '--'} ETH
-        </Box>
-        <Box>
-          {collection.volumeChange ? (
-            <Box as="span" color={collection.volumeChange > 0 ? 'green200' : 'error'} marginLeft="4">
-              {collection.volumeChange > 0 && '+'}
-              {formatChange(collection.volumeChange)}%
-            </Box>
-          ) : null}
-        </Box>
-      </Row>
-      <Link
-        className={clsx(buttonMedium, styles.exploreCollection)}
-        to={`/nfts/collection/${collection.address}`}
-        style={{ textDecoration: 'none', backgroundColor: `${hovered ? vars.color.blue400 : vars.color.grey700}` }}
-      >
-        Explore collection
-      </Link>
-    </Column>
-  </Box>
+        ) : null}
+      </Box>
+    </Row>
+    <Link
+      className={clsx(buttonMedium, styles.exploreCollection)}
+      to={`/nfts/collection/${collection.address}`}
+      style={{ textDecoration: 'none', backgroundColor: `${hovered ? vars.color.blue400 : vars.color.grey700}` }}
+    >
+      Explore collection
+    </Link>
+  </Column>
 )
 
 /* Carousel Progress indicators */

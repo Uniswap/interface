@@ -62,8 +62,8 @@ export const collectionDetails = style([
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.sm}px)`]: {
-        //width: '40%',
+      [`(min-width: ${breakpoints.lg}px)`]: {
+        width: '40%',
       },
     },
   },
