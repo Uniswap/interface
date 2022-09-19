@@ -33,10 +33,10 @@ export function initializeAnalytics() {
   )
 }
 
-/** Sends an event to Amplitude production project. */
+/** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
   if (!API_KEY) {
-    console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
+    console.log(`[analytics(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return
   }
 
