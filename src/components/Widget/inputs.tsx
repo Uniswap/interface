@@ -2,13 +2,15 @@ import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
+const EMPTY_AMOUNT = ''
+
 /**
  * Integrates the Widget's inputs.
  * Treats the Widget as a controlled component, using the app's own token selector for selection.
  */
 export function useSyncWidgetInputs(defaultToken?: Currency) {
   const [type, setType] = useState(TradeType.EXACT_INPUT)
-  const [amount, setAmount] = useState('')
+  const [amount, setAmount] = useState(EMPTY_AMOUNT)
   const onAmountChange = useCallback((field: Field, amount: string) => {
     setType(toTradeType(field))
     setAmount(amount)
@@ -22,6 +24,7 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
     setTokens({
       [Field.OUTPUT]: defaultToken,
     })
+    setAmount(EMPTY_AMOUNT)
   }, [defaultToken])
 
   const onSwitchTokens = useCallback(() => {
