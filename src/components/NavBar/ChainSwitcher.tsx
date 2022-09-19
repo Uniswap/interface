@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { StyledChevronDown, StyledChevronUp } from 'components/Icons'
+import Loader from 'components/Loader'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -7,15 +8,21 @@ import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
-import { Column, Row } from 'nft/components/Flex'
+import { Column, Flex, Row } from 'nft/components/Flex'
 import { CheckMarkIcon, TokenWarningRedIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { ReactNode, useCallback, useReducer, useRef, useState } from 'react'
+import styled from 'styled-components/macro'
 
 import * as styles from './ChainSwitcher.css'
 import { NavDropdown } from './NavDropdown'
+
+const ApproveText = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 12px;
+`
 
 const ChainRow = ({
   targetChain,
@@ -32,24 +39,27 @@ const ChainRow = ({
 
   return (
     <Column borderRadius="12">
-      <Row
+      <Flex
         as="button"
         background="none"
         className={`${styles.ChainSwitcherRow} ${subhead}`}
         onClick={() => onSelectChain(targetChain)}
       >
         <ChainDetails>
-          <img src={logoUrl} alt={label} className={styles.Icon} />
-          {label}
+          <img src={logoUrl} alt={label} className={styles.Icon} style={{ lineHeight: 24 }} />
+          <Column alignItems="flex-start">
+            {label}
+            {isPending && <ApproveText>Approve in wallet</ApproveText>}
+          </Column>
         </ChainDetails>
         {active && <CheckMarkIcon width={20} height={20} color={vars.color.blue400} />}
-      </Row>
-      {isPending && 'pending'}
+        {isPending && <Loader />}
+      </Flex>
     </Column>
   )
 }
 
-const ChainDetails = ({ children }: { children: ReactNode }) => <Row>{children}</Row>
+const ChainDetails = ({ children }: { children: ReactNode }) => <Flex>{children}</Flex>
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.MAINNET,

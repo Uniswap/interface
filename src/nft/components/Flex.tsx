@@ -2,6 +2,12 @@ import { ForwardedRef, forwardRef } from 'react'
 
 import { Box, BoxProps } from './Box'
 
+export const Flex = forwardRef((props: BoxProps, ref: ForwardedRef<HTMLElement>) => {
+  return <Box ref={ref} display="flex" {...props} />
+})
+
+Flex.displayName = 'Flex'
+
 export const Row = forwardRef((props: BoxProps, ref: ForwardedRef<HTMLElement>) => {
   return <Box ref={ref} display="flex" flexDirection="row" alignItems="center" {...props} />
 })
