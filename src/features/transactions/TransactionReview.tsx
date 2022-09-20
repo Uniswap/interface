@@ -77,6 +77,7 @@ export function TransactionReview({
               showCurrencySign={isUSDInput}
               showSoftInputOnFocus={false}
               testID="amount-input-in"
+              textAlign="center"
               value={formattedAmountIn}
             />
             <CurrencyLogoWithLabel currency={currencyIn} />
@@ -101,6 +102,7 @@ export function TransactionReview({
                 showCurrencySign={isUSDInput}
                 showSoftInputOnFocus={false}
                 testID="amount-input-out"
+                textAlign="center"
                 value={formattedAmountOut}
               />
               <CurrencyLogoWithLabel currency={currencyOut} />
