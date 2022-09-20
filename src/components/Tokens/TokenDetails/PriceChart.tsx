@@ -304,6 +304,7 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
               tickFormat={tickFormatter}
               tickStroke={theme.backgroundOutline}
               tickLength={4}
+              hideTicks={true}
               tickTransform={'translate(0 -5)'}
               tickValues={ticks}
               top={graphHeight - 1}
