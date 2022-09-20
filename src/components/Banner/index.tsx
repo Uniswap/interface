@@ -128,7 +128,7 @@ function Banner({
         id: 'KyberSwap-Arbitrum-Lido-Farm',
         name: 'KyberSwap Arbitrum Lido Farm',
         start: new Date('2022-09-19T00:00:00.000Z'),
-        end: new Date('2022-10-19T23:59:59.000Z'),
+        end: new Date('2022-09-19T23:59:59.000Z'),
         img: isInModal
           ? KyberSwapArbitrumLidoFarmMobile
           : w > 768
@@ -143,7 +143,7 @@ function Banner({
         id: 'KyberSwap-Optimism-Lido-Farm',
         name: 'KyberSwap Optimism Lido Farm',
         start: new Date('2022-09-19T00:00:00.000Z'),
-        end: new Date('2022-10-19T23:59:59.000Z'),
+        end: new Date('2022-09-19T23:59:59.000Z'),
         img: isInModal
           ? KyberSwapOptimismLidoFarmMobile
           : w > 768
