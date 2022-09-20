@@ -34,6 +34,7 @@ import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 
+// https://stackoverflow.com/a/31617326
 const FULL_BORDER_RADIUS = 9999
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
