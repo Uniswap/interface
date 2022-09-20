@@ -458,11 +458,13 @@ export default function LoadedRow({
   tokenListIndex,
   tokenListLength,
   token,
+  style,
 }: //timePeriod,
 {
   tokenListIndex: number
   tokenListLength: number
   token: TopToken
+  style: CSSProperties
   //timePeriod: TimePeriod
 }) {
   const tokenAddress = token?.address
@@ -494,6 +496,7 @@ export default function LoadedRow({
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
+      style={style}
       to={`/tokens/${tokenAddress}`}
       onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
     >

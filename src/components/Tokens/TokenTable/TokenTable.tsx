@@ -1,24 +1,10 @@
 import { Trans } from '@lingui/macro'
-import {
-  favoritesAtom,
-  filterStringAtom,
-  filterTimeAtom,
-  showFavoritesAtom,
-  sortCategoryAtom,
-  sortDirectionAtom,
-} from 'components/Tokens/state'
-import type { TopTokenQuery as TopTokenQueryType } from 'graphql/data/__generated__/TopTokenQuery.graphql'
-import environment from 'graphql/data/RelayEnvironment'
-import { TimePeriod, TokenData, useTopTokenQuery } from 'graphql/data/TopTokenQuery'
-import { TopTokenQuery as query } from 'graphql/data/TopTokenQuery'
-import { useAtomValue } from 'jotai/utils'
-import { CSSProperties, ReactNode, useCallback, useMemo, useState } from 'react'
 import { showFavoritesAtom } from 'components/Tokens/state'
+import { SingleTokenData } from 'graphql/data/Token'
 import { usePrefetchTopTokens, useTopTokens } from 'graphql/data/TopTokens'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { fetchQuery } from 'react-relay'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
@@ -28,8 +14,6 @@ import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
 
 const MAX_TOKENS_TO_LOAD = 100
-const PAGE_SIZE = 20
-const MAX_PAGE = MAX_TOKENS_TO_LOAD / PAGE_SIZE
 
 const GridContainer = styled.div<{ fixedHeight?: boolean }>`
   display: flex;
@@ -65,164 +49,6 @@ const NoTokenDisplay = styled.div`
   gap: 8px;
 `
 
-const DEFAULT_FILTER_STRING = ''
-const DEFAULT_SHOW_FAVORITES = false
-
-const hasNonDefaultFilters = (filterString: string, showFavorites: boolean) =>
-  filterString !== DEFAULT_FILTER_STRING || showFavorites !== DEFAULT_SHOW_FAVORITES
-
-function useFilteredTokens(
-  tokenData: TokenData[],
-  filterString: string,
-  showFavorites: boolean,
-  nonDefaultFiltersExist: boolean
-) {
-  const favoriteTokenAddresses = useAtomValue(favoritesAtom)
-  const shownTokens =
-    showFavorites && tokenData ? tokenData.filter((token) => favoriteTokenAddresses.includes(token.address)) : tokenData
-
-  return useMemo(
-    () =>
-      nonDefaultFiltersExist
-        ? (shownTokens ?? []).filter((token) => {
-            if (!token.address) {
-              return false
-            }
-            if (!filterString) {
-              return true
-            }
-            const lowercaseFilterString = filterString.toLowerCase()
-            const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
-            const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
-            const symbolIncludesFilterString = token?.symbol?.toLowerCase().includes(lowercaseFilterString)
-            return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
-          })
-        : tokenData,
-    [shownTokens, filterString, tokenData, nonDefaultFiltersExist]
-  )
-}
-
-const DEFAULT_SORT_CATEGORY = Category.marketCap
-const DEFAULT_SORT_DIRECTION = SortDirection.decreasing
-const DEFAULT_TIME_PERIOD = 1
-
-const hasNonDefaultSortingParams = (sortCategory: string, sortDirection: string, timePeriod: number) =>
-  sortCategory !== DEFAULT_SORT_CATEGORY ||
-  sortDirection !== DEFAULT_SORT_DIRECTION ||
-  timePeriod !== DEFAULT_TIME_PERIOD
-
-function useSortedTokens(
-  tokenData: TokenData[],
-  sortCategory: string,
-  sortDirection: string,
-  timePeriod: TimePeriod,
-  nonDefaultSortingParamsExist: boolean
-) {
-  const sortFn = useCallback(
-    (a: any, b: any) => {
-      if (a > b) {
-        return sortDirection === SortDirection.decreasing ? -1 : 1
-      } else if (a < b) {
-        return sortDirection === SortDirection.decreasing ? 1 : -1
-      }
-      return 0
-    },
-    [sortDirection]
-  )
-
-  return useMemo(
-    () =>
-      nonDefaultSortingParamsExist
-        ? tokenData &&
-          tokenData.sort((token1, token2) => {
-            if (!tokenData) {
-              return 0
-            }
-            // fix delta/percent change property
-            if (!token1 || !token2 || !sortDirection || !sortCategory) {
-              return 0
-            }
-            let a: number | null | undefined
-            let b: number | null | undefined
-            switch (sortCategory) {
-              case Category.marketCap:
-                a = token1.marketCap?.value
-                b = token2.marketCap?.value
-                break
-              case Category.price:
-                a = token1.price?.value
-                b = token2.price?.value
-                break
-              case Category.volume:
-                a = token1.volume?.[timePeriod]?.value
-                b = token2.volume?.[timePeriod]?.value
-                break
-              case Category.percentChange:
-                a = token1.percentChange?.[timePeriod]?.value
-                b = token2.percentChange?.[timePeriod]?.value
-                break
-            }
-            return sortFn(a, b)
-          })
-        : tokenData,
-    [tokenData, sortDirection, sortCategory, sortFn, timePeriod, nonDefaultSortingParamsExist]
-  )
-}
-
-function createFetchTokensPromise(
-  page: number,
-  pageSize: number,
-  startIndex: number,
-  setTopTokens: (topTokens: TokenData[]) => void,
-  setError: (error: any) => void,
-  topTokens: TokenData[]
-) {
-  fetchQuery<TopTokenQueryType>(environment, query, {
-    pageSize,
-    page,
-  })
-    .toPromise()
-    .then((data) => {
-      const newPageTopTokens: TokenData[] = !!data?.topTokenProjects
-        ? data.topTokenProjects.map((token) =>
-            token?.tokens?.[0].address
-              ? {
-                  loading: false,
-                  name: token?.name,
-                  address: token?.tokens?.[0].address,
-                  chain: token?.tokens?.[0].chain,
-                  symbol: token?.tokens?.[0].symbol,
-                  price: token?.markets?.[0]?.price,
-                  marketCap: token?.markets?.[0]?.marketCap,
-                  volume: {
-                    [TimePeriod.HOUR]: token?.markets?.[0]?.volume1H,
-                    [TimePeriod.DAY]: token?.markets?.[0]?.volume1D,
-                    [TimePeriod.WEEK]: token?.markets?.[0]?.volume1W,
-                    [TimePeriod.MONTH]: token?.markets?.[0]?.volume1M,
-                    [TimePeriod.YEAR]: token?.markets?.[0]?.volume1Y,
-                    [TimePeriod.ALL]: token?.markets?.[0]?.volumeAll,
-                  },
-                  percentChange: {
-                    [TimePeriod.HOUR]: token?.markets?.[0]?.pricePercentChange1H,
-                    [TimePeriod.DAY]: token?.markets?.[0]?.pricePercentChange24h,
-                    [TimePeriod.WEEK]: token?.markets?.[0]?.pricePercentChange1W,
-                    [TimePeriod.MONTH]: token?.markets?.[0]?.pricePercentChange1M,
-                    [TimePeriod.YEAR]: token?.markets?.[0]?.pricePercentChange1Y,
-                    [TimePeriod.ALL]: token?.markets?.[0]?.pricePercentChangeAll,
-                  },
-                }
-              : ({ loading: false } as TokenData)
-          )
-        : []
-      const currentTopTokens = [...topTokens]
-      newPageTopTokens.forEach((token, i) => {
-        if (currentTopTokens[startIndex + i].loading) currentTopTokens[startIndex + i] = token
-      })
-      setTopTokens(currentTopTokens)
-    })
-    .catch((e) => setError(e))
-}
-
 function NoTokensState({ message }: { message: ReactNode }) {
   return (
     <GridContainer>
@@ -250,134 +76,44 @@ export function LoadingTokenTable() {
 }
 
 interface TokenRowProps {
-  data: TokenData[]
+  data: SingleTokenData[]
   index: number
   style: CSSProperties
 }
 
 export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
-  const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
-  const filterString = useAtomValue(filterStringAtom)
-  const sortCategory = useAtomValue(sortCategoryAtom)
-  const sortDirection = useAtomValue(sortDirectionAtom)
 
-  const [page, setPage] = useState<number>(1)
-  const [topTokens, setTopTokens] = useState<TokenData[]>(
-    Array.from({ length: MAX_TOKENS_TO_LOAD }).map((_) => ({ loading: true } as TokenData))
-  )
-  const [error, setError] = useState<any>(undefined)
+  // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
+  const prefetchedTokens = usePrefetchTopTokens()
+  const { isFetching, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
 
-  const preloadedTopTokens = useTopTokenQuery(MAX_TOKENS_TO_LOAD, 1) ?? []
-  const nonDefaultFiltersExist = hasNonDefaultFilters(filterString, showFavorites)
-  const nonDefaultSortingParamsExist = hasNonDefaultSortingParams(sortCategory, sortDirection, timePeriod)
-  const usePreloadedTokens = nonDefaultFiltersExist || nonDefaultSortingParamsExist
-  const filteredTokens = useFilteredTokens(preloadedTopTokens, filterString, showFavorites, nonDefaultFiltersExist)
-  const sortedFilteredTokens = useSortedTokens(
-    filteredTokens,
-    sortCategory,
-    sortDirection,
-    timePeriod,
-    nonDefaultSortingParamsExist
-  )
-
-  const isItemLoaded = (index: number) => index < topTokens.length && topTokens[index].loading === false
-
-  const loadMoreItems = (startIndex: number, stopIndex: number) => {
-    if (stopIndex >= page * PAGE_SIZE && page < MAX_PAGE) setPage(page + 1)
-    return createFetchTokensPromise(page, PAGE_SIZE, startIndex, setTopTokens, setError, topTokens)
-  }
+  const isItemLoaded = (index: number) => !isFetching && !!tokens && index < tokens.length
 
   const Row = function TokenRow({ data, index, style }: TokenRowProps) {
     const tokenData = data[index]
-    if (!tokenData || (usePreloadedTokens ? sortedFilteredTokens[index].loading : topTokens[index].loading)) {
+    if (!tokenData || !isFetching) {
       return <LoadingRow style={style} key={index} />
     }
     return (
       <LoadedRow
         style={style}
-        key={tokenData.address}
-        tokenAddress={tokenData.address}
+        key={tokenData?.name}
         tokenListIndex={index}
-        tokenListLength={data?.length ?? 0}
-        tokenData={tokenData}
-        timePeriod={timePeriod}
+        tokenListLength={data.length}
+        token={tokenData}
       />
+      // <LoadedRow
+      //   style={style}
+      //   key={tokenData.address}
+      //   tokenAddress={tokenData.address}
+      //   tokenListIndex={index}
+      //   tokenListLength={data?.length ?? 0}
+      //   tokenData={tokenData}
+      //   timePeriod={timePeriod}
+      // />
     )
   }
-
-  /* loading and error state */
-  if (usePreloadedTokens ? !sortedFilteredTokens : error || !topTokens) {
-    return (
-      <NoTokensState
-        message={
-          <>
-            <AlertTriangle size={16} />
-            <Trans>An error occured loading tokens. Please try again.</Trans>
-          </>
-        }
-      />
-    )
-  }
-
-  if (showFavorites && sortedFilteredTokens?.length === 0) {
-    return <NoTokensState message={<Trans>You have no favorited tokens</Trans>} />
-  }
-
-  if (!showFavorites && (usePreloadedTokens ? sortedFilteredTokens?.length === 0 : topTokens?.length === 0)) {
-    return <NoTokensState message={<Trans>No tokens found</Trans>} />
-  }
-
-  return (
-    <GridContainer fixedHeight={true}>
-      <HeaderRow />
-      <TokenDataContainer>
-        <AutoSizer>
-          {({ height, width }) =>
-            usePreloadedTokens ? (
-              <FixedSizeList
-                height={height}
-                width={width}
-                itemCount={MAX_TOKENS_TO_LOAD}
-                itemData={sortedFilteredTokens}
-                itemSize={70}
-              >
-                {Row}
-              </FixedSizeList>
-            ) : (
-              <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={MAX_TOKENS_TO_LOAD} loadMoreItems={loadMoreItems}>
-                {({
-                  onItemsRendered,
-                  ref,
-                }: {
-                  onItemsRendered: (props: ListOnItemsRenderedProps) => any
-                  ref: any
-                }) => (
-                  <FixedSizeList
-                    height={height}
-                    width={width}
-                    itemCount={MAX_TOKENS_TO_LOAD}
-                    itemData={topTokens}
-                    itemSize={70}
-                    onItemsRendered={onItemsRendered}
-                    ref={ref}
-                  >
-                    {Row}
-                  </FixedSizeList>
-                )}
-              </InfiniteLoader>
-            )
-          }
-        </AutoSizer>
-      </TokenDataContainer>
-    </GridContainer>
-  )
-export default function TokenTable() {
-  const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
-
-  // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
-  const prefetchedTokens = usePrefetchTopTokens()
-  const { isFetching, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
 
   /* loading and error state */
   if (isFetching) {
@@ -403,13 +139,39 @@ export default function TokenTable() {
     } else {
       return (
         <>
-          <GridContainer>
+          <GridContainer fixedHeight={true}>
             <HeaderRow />
-            <TokenRowsContainer>
-              {tokens?.map((token, index) => (
-                <LoadedRow key={token?.name} tokenListIndex={index} tokenListLength={tokens.length} token={token} />
-              ))}
-            </TokenRowsContainer>
+            <TokenDataContainer>
+              <AutoSizer>
+                {({ height, width }) => (
+                  <InfiniteLoader
+                    isItemLoaded={isItemLoaded}
+                    itemCount={MAX_TOKENS_TO_LOAD}
+                    loadMoreItems={loadMoreTokens}
+                  >
+                    {({
+                      onItemsRendered,
+                      ref,
+                    }: {
+                      onItemsRendered: (props: ListOnItemsRenderedProps) => any
+                      ref: any
+                    }) => (
+                      <FixedSizeList
+                        height={height}
+                        width={width}
+                        itemCount={MAX_TOKENS_TO_LOAD}
+                        itemData={tokens}
+                        itemSize={70}
+                        onItemsRendered={onItemsRendered}
+                        ref={ref}
+                      >
+                        {Row}
+                      </FixedSizeList>
+                    )}
+                  </InfiniteLoader>
+                )}
+              </AutoSizer>
+            </TokenDataContainer>
           </GridContainer>
           <button onClick={loadMoreTokens}>load more</button>
         </>
