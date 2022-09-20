@@ -9,9 +9,9 @@ import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
-import * as styles from './NavBar.css'
 import { SearchBar } from './SearchBar'
 import { ShoppingBag } from './ShoppingBag'
+import * as styles from './style.css'
 
 interface MenuItemProps {
   href: string
