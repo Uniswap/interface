@@ -66,10 +66,10 @@ export default function TokenTable() {
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const prefetchedTokens = usePrefetchTopTokens()
-  const { isFetching, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
+  const { loading, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
 
   /* loading and error state */
-  if (isFetching) {
+  if (loading) {
     return <LoadingTokenTable />
   } else {
     if (!tokens) {

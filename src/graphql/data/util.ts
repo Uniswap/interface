@@ -45,5 +45,6 @@ export const CHAIN_IDS_TO_BACKEND_NAME: { [key: number]: Chain } = {
 
 export function useCurrentChainName() {
   const { chainId } = useWeb3React()
-  return chainId ? CHAIN_IDS_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
+
+  return chainId && CHAIN_IDS_TO_BACKEND_NAME[chainId] ? CHAIN_IDS_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
 }
