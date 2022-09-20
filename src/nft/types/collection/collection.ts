@@ -48,6 +48,13 @@ export enum ActivityEventType {
   Transfer = 'TRANSFER',
 }
 
+export enum ActivityEventTypeDisplay {
+  'LISTING' = 'Listed',
+  'SALE' = 'Sold',
+  'TRANSFER' = 'Transferred',
+  'CANCEL_LISTING' = 'Cancelled',
+}
+
 export enum OrderStatus {
   VALID = 'VALID',
   EXECUTED = 'EXECUTED',
