@@ -1,5 +1,4 @@
 import { useWeb3React } from '@web3-react/core'
-import { StyledChevronDown, StyledChevronUp } from 'components/Icons'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -13,6 +12,7 @@ import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
+import { ChevronDown, ChevronUp } from 'react-feather'
 import { useTheme } from 'styled-components/macro'
 
 import * as styles from './ChainSelector.css'
@@ -110,7 +110,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
             </Box>
           </>
         )}
-        {isOpen ? <StyledChevronUp {...chevronProps} /> : <StyledChevronDown {...chevronProps} />}
+        {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
       </Row>
       {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
     </Box>
