@@ -37,7 +37,7 @@ function getRarityStatus(id: string, assets?: (GenieAsset | undefined)[]) {
     rarityStatusCache.set(id, hasRarity)
   }
 
-  return true
+  return hasRarity
 }
 
 interface CollectionNftsProps {
