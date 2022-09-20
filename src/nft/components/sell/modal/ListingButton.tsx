@@ -61,7 +61,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       return asset.expirationTime != null && isNaN(asset.expirationTime)
     })
     const overMaxExpiration = sellAssets.some((asset) => {
-      return asset.expirationTime != null && asset.expirationTime - Date.now() > ms`6 months`
+      return asset.expirationTime != null && asset.expirationTime - Date.now() > ms`180 days`
     })
     const listingsMissingPrice: [WalletAsset, Listing][] = []
     const listingsBelowFloor: [WalletAsset, Listing][] = []

@@ -143,7 +143,7 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
   return total ? Math.round(total * 100 + Number.EPSILON) / 100 : 0
 }
 
-export const getListings = (sellAssets: WalletAsset[]) => {
+export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]] => {
   const newCollectionsToApprove: CollectionRow[] = []
 
   const newListings: ListingRow[] = []
