@@ -12,7 +12,7 @@ import { TokenWarningRedIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { useCallback, useReducer, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
@@ -32,12 +32,12 @@ interface ChainSelectorProps {
 
 export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const { chainId } = useWeb3React()
-  const [isOpen, toggleOpen] = useReducer((s) => !s, false)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const isMobile = useIsMobile()
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
-  useOnClickOutside(ref, isOpen ? toggleOpen : undefined, [modalRef])
+  useOnClickOutside(ref, () => setIsOpen(false), [modalRef])
 
   const info = chainId ? getChainInfo(chainId) : undefined
 
@@ -51,11 +51,9 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
       setPendingChainId(targetChainId)
       await selectChain(targetChainId)
       setPendingChainId(undefined)
-      if (isOpen) {
-        toggleOpen()
-      }
+      setIsOpen(false)
     },
-    [selectChain, isOpen]
+    [selectChain, setIsOpen]
   )
 
   if (!chainId) {
@@ -86,7 +84,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
         gap="8"
         className={styles.ChainSelector}
         background={isOpen ? 'accentActiveSoft' : 'none'}
-        onClick={toggleOpen}
+        onClick={() => setIsOpen(!isOpen)}
       >
         {!isSupported ? (
           <>
