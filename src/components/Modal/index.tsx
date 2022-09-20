@@ -5,7 +5,7 @@ import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { animated, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 
@@ -164,3 +164,11 @@ export default function Modal({
     </>
   )
 }
+
+export const ModalCenter = styled(Modal)`
+  ${isMobile &&
+  css`
+    align-self: unset !important;
+    border-radius: 24px !important;
+  `}
+`

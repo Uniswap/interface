@@ -1,6 +1,7 @@
 /**
  * These actions are: Enter Now -> Swap Now -> Claim
  */
+import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { BIG_INT_ZERO } from 'constants/index'
@@ -18,17 +19,15 @@ import {
 } from 'state/campaigns/actions'
 
 type Size = 'small' | 'large'
-export default function CampaignActions({
-  campaign,
-  leaderboard,
-  size = 'large',
-  hideWhenDisabled = false,
-}: {
+
+interface CampaignActionsProps {
   campaign?: CampaignData
   leaderboard?: CampaignLeaderboard
   size?: Size
   hideWhenDisabled?: boolean
-}) {
+}
+
+const CampaignActions = ({ campaign, leaderboard, size = 'large', hideWhenDisabled = false }: CampaignActionsProps) => {
   const { account } = useActiveWeb3React()
 
   const { selectedCampaign, selectedCampaignLeaderboard } = useSelector((state: AppState) => state.campaigns)
@@ -99,3 +98,5 @@ export default function CampaignActions({
 
   return null
 }
+
+export default memo(CampaignActions)

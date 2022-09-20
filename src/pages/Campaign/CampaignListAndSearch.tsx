@@ -11,11 +11,47 @@ import { CampaignData } from 'state/campaigns/actions'
 
 import CampaignItem from './CampaignItem'
 
-export default function CampaignListAndSearch({
-  onSelectCampaign,
-}: {
+const CampaignListAndSearchContainer = styled.div`
+  width: 100%;
+  background: ${({ theme }) => theme.background};
+  border-radius: 20px;
+  padding: 24px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+  overflow: hidden;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    background: ${({ theme }) => theme.tableHeader};
+    border-radius: 0;
+  `}
+`
+
+const CampaignList = styled.div`
+  flex: 1 1 0; // scroll
+  overflow-y: auto;
+  width: calc(100% + 40px);
+  margin: 0 -20px;
+  border-top: 1px solid ${({ theme }) => theme.border};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+   flex: 1;
+  `}
+  &::-webkit-scrollbar {
+    display: block;
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.disableText};
+  }
+`
+
+interface CampaignListAndSearchProps {
   onSelectCampaign: (campaign: CampaignData) => void
-}) {
+}
+
+const CampaignListAndSearch = ({ onSelectCampaign }: CampaignListAndSearchProps) => {
   const [searchCampaign, setSearchCampaign] = useState('')
   const theme = useTheme()
 
@@ -50,37 +86,4 @@ export default function CampaignListAndSearch({
   )
 }
 
-const CampaignListAndSearchContainer = styled.div`
-  width: 100%;
-  background: ${({ theme }) => theme.background};
-  border-radius: 20px;
-  padding: 24px 20px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  height: 100%;
-  overflow: hidden;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    background: ${({ theme }) => theme.tableHeader};
-    border-radius: 0;
-  `}
-`
-
-const CampaignList = styled.div`
-  flex: 1 1 0; // scroll
-  overflow-y: auto;
-  width: calc(100% + 40px);
-  margin: 0 -20px;
-  border-top: 1px solid ${({ theme }) => theme.border};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-   flex: 1;
-  `}
-  &::-webkit-scrollbar {
-    display: block;
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.disableText};
-  }
-`
+export default CampaignListAndSearch

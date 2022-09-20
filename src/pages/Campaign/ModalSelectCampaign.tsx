@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { X } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 
@@ -10,7 +10,7 @@ import { useModalOpen, useSelectCampaignModalToggle } from 'state/application/ho
 import { CampaignData } from 'state/campaigns/actions'
 import { getSlugUrlCampaign } from 'utils/campaign'
 
-export default function ModalSelectCampaign() {
+const ModalSelectCampaign = () => {
   const isSelectCampaignModalOpen = useModalOpen(ApplicationModal.SELECT_CAMPAIGN)
   const toggleSelectCampaignModal = useSelectCampaignModalToggle()
   const theme = useTheme()
@@ -33,3 +33,5 @@ export default function ModalSelectCampaign() {
     </Modal>
   )
 }
+
+export default memo(ModalSelectCampaign)

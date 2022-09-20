@@ -156,3 +156,6 @@ export const setSelectedCampaignLuckyWinnersPageNumber = createAction<number>(
 export const setSelectedCampaignLuckyWinnersLookupAddress = createAction<string>(
   'campaigns/setSelectedCampaignLuckyWinnersLookupAddress',
 )
+
+export const setRecaptchaCampaignId = createAction<number | undefined>('campaigns/setRecaptchaCampaignId')
+export const setRecaptchaCampaignLoading = createAction<boolean>('campaigns/setRecaptchaCampaignLoading')

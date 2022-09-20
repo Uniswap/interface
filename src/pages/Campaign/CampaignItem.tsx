@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { rgba } from 'polished'
+import { memo } from 'react'
 import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
@@ -67,15 +68,13 @@ const Container = styled.div`
   display: flex;
 `
 
-export default function CampaignItem({
-  campaign,
-  onSelectCampaign,
-  isSelected,
-}: {
+interface CampaignItemProps {
   isSelected: boolean
   campaign: CampaignData
   onSelectCampaign: (data: CampaignData) => void
-}) {
+}
+
+const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemProps) => {
   const { account } = useWeb3React()
   const theme = useTheme()
   const isDarkMode = useIsDarkMode()
@@ -174,3 +173,5 @@ export default function CampaignItem({
     </CampaignItemWrapper>
   )
 }
+
+export default memo(CampaignItem)

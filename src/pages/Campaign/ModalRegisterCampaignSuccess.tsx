@@ -1,35 +1,27 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import { isMobile } from 'react-device-detect'
 import { useSelector } from 'react-redux'
 import { Flex, Text } from 'rebass'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import RegisterCampaignBg from 'assets/images/register-campaign-bg.png'
 import { ButtonPrimary } from 'components/Button'
-import Modal from 'components/Modal'
+import { ModalCenter } from 'components/Modal'
 import { AppState } from 'state'
 import { ApplicationModal } from 'state/application/actions'
-import { useModalOpen, useRegisterCampaignModalToggle } from 'state/application/hooks'
+import { useModalOpen, useRegisterCampaignSuccessModalToggle } from 'state/application/hooks'
 import { useSwapNowHandler } from 'state/campaigns/hooks'
 
-const CustomModal = styled(Modal)`
-  ${isMobile &&
-  css`
-    align-self: unset !important;
-  `}
-`
-
-export default function ModalRegisterCampaign() {
-  const isRegisterCampaignModalOpen = useModalOpen(ApplicationModal.REGISTER_CAMPAIGN)
-  const toggleRegisterCampaignModal = useRegisterCampaignModalToggle()
+export default function ModalRegisterCampaignSuccess() {
+  const isRegisterCampaignSuccessModalOpen = useModalOpen(ApplicationModal.REGISTER_CAMPAIGN_SUCCESS)
+  const toggleRegisterCampaignSuccessModal = useRegisterCampaignSuccessModalToggle()
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
   const handleSwapNow = useSwapNowHandler()
 
   return (
-    <CustomModal
-      isOpen={isRegisterCampaignModalOpen}
-      onDismiss={toggleRegisterCampaignModal}
+    <ModalCenter
+      isOpen={isRegisterCampaignSuccessModalOpen}
+      onDismiss={toggleRegisterCampaignSuccessModal}
       maxHeight={70}
       maxWidth="calc(100vw - 32px)"
       width="fit-content"
@@ -46,39 +38,41 @@ export default function ModalRegisterCampaign() {
           </Content>
           <ResponsiveButtonPrimary
             maxWidth="69%"
-            style={{ fontSize: '16px' }}
+            style={{ fontSize: '14px' }}
             onClick={() => {
               if (!selectedCampaign) return
               const firstChainId = Number(selectedCampaign.chainIds.split(',')[0]) as ChainId
               handleSwapNow(firstChainId)
-              toggleRegisterCampaignModal()
+              toggleRegisterCampaignSuccessModal()
             }}
           >
             <Trans>Swap Now</Trans>
           </ResponsiveButtonPrimary>
         </RegisterCampaignBackground>
       </Flex>
-    </CustomModal>
+    </ModalCenter>
   )
 }
 
-const RegisterCampaignBackground = styled.div`
+export const RegisterCampaignBackground = styled.div`
   background-image: url(${RegisterCampaignBg});
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  width: 520px;
-  height: 300px;
-  max-width: calc(100vw - 32px);
-  max-height: calc(50vw - 16px);
+  width: 512px;
+  height: 286.5px;
+  max-width: calc(100vw - 16px);
+  aspect-ratio: 1 / 2;
+  max-height: calc(50vw - 8px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 24px;
+  box-shadow: 0 0 16px 1px #31cb9e;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    gap: 6px;
+    gap: 12px;
   `}
 `
 
@@ -92,7 +86,7 @@ const Title = styled(Text)`
   `}
 `
 
-const Content = styled(Text)`
+export const Content = styled(Text)`
   color: ${({ theme }) => theme.white};
   font-size: 16px;
   max-width: 69%;
@@ -106,8 +100,6 @@ const Content = styled(Text)`
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  color: ${({ theme }) => theme.white};
-
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin-top: 6px;
     padding: 6px;

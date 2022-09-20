@@ -1,64 +1,39 @@
 import { Trans } from '@lingui/macro'
-import axios from 'axios'
-import { useCallback, useState } from 'react'
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
-import { mutate } from 'swr'
+import React from 'react'
 
-import { CAMPAIGN_BASE_URL, SWR_KEYS } from 'constants/index'
-import { useActiveWeb3React } from 'hooks'
+import { Dots } from 'components/swapv2/styleds'
 import { StyledPrimaryButton } from 'pages/Campaign/CampaignButtonWithOptions'
-import { Dots } from 'pages/Pool/styleds'
-import { useRegisterCampaignModalToggle } from 'state/application/hooks'
+import { useRegisterCampaignCaptchaModalToggle } from 'state/application/hooks'
 import { CampaignData } from 'state/campaigns/actions'
+import { useRecaptchaCampaignManager } from 'state/campaigns/hooks'
 
-export default function CampaignButtonEnterNow({
-  size,
-  campaign,
-}: {
+interface CampaignButtonEnterNowProps {
   size: 'small' | 'large'
   campaign?: CampaignData
-}) {
-  const { account } = useActiveWeb3React()
-  const { executeRecaptcha } = useGoogleReCaptcha()
+}
 
-  const [loading, setLoading] = useState(false)
+export default function CampaignButtonEnterNow({ size, campaign }: CampaignButtonEnterNowProps) {
+  const [recaptchaCampaign, updateRecaptchaCampaignId] = useRecaptchaCampaignManager()
+  const toggleRegisterCampaignCaptchaModal = useRegisterCampaignCaptchaModalToggle()
 
-  const toggleRegisterCampaignModal = useRegisterCampaignModalToggle()
+  const isVerifyingToken = campaign && campaign.id === recaptchaCampaign.id && recaptchaCampaign.loading
 
-  // Create an event handler so you can call the verification on button click event or form submit
-  const handleReCaptchaVerify = useCallback(async () => {
-    if (!campaign || !account) return
-    if (!executeRecaptcha) {
-      console.log('Execute recaptcha not yet available')
-      return
-    }
-
-    try {
-      setLoading(true)
-      const token = await executeRecaptcha('enterCampaign')
-      const response = await axios({
-        method: 'POST',
-        url: `${CAMPAIGN_BASE_URL}/${campaign.id}/participants`,
-        data: {
-          token,
-          address: account,
-        },
-      })
-      if (response.status === 200) {
-        await mutate([SWR_KEYS.getListCampaign, account])
-        toggleRegisterCampaignModal()
-      }
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }, [account, executeRecaptcha, campaign, toggleRegisterCampaignModal])
+  if (campaign === undefined) return null
 
   return (
-    <StyledPrimaryButton onClick={handleReCaptchaVerify} disabled={loading} size={size}>
-      <Trans>Enter Now</Trans>
-      {loading && <Dots />}
-    </StyledPrimaryButton>
+    <>
+      <StyledPrimaryButton
+        disabled={isVerifyingToken}
+        size={size}
+        onClick={e => {
+          e.stopPropagation()
+          updateRecaptchaCampaignId(campaign.id)
+          toggleRegisterCampaignCaptchaModal()
+        }}
+      >
+        <Trans>Enter Now</Trans>
+        {isVerifyingToken && <Dots />}
+      </StyledPrimaryButton>
+    </>
   )
 }

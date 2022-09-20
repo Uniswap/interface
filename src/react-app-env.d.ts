@@ -26,6 +26,7 @@ interface Window {
   dataLayer?: any[]
   chrome?: any
   opr?: any
+  recaptchaOptions?: any
 }
 
 declare module 'content-hash' {
