@@ -26,6 +26,7 @@ export interface QuoteResult {
   quoteGasAdjustedDecimals: string
   route: Array<V3PoolInRoute[] | V2PoolInRoute[]>
   routeString: string
+  simulationError?: boolean
 }
 
 export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>

@@ -2,6 +2,7 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { SwapRouter } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, NativeCurrency, Percent, TradeType } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
@@ -18,6 +19,7 @@ import { ContractManager } from 'src/features/contracts/ContractManager'
 import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
+import { useSimulatedGasLimit } from 'src/features/routing/hooks'
 import {
   STABLECOIN_AMOUNT_OUT,
   useUSDCPrice,
@@ -55,19 +57,6 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
 const NUM_CURRENCY_SIG_FIGS = 6
 const NUM_USD_DECIMALS_DISPLAY = 2
-
-// TODO: remove hardcoded values and use gas estimate from trade quote endpoint once
-// it is updated. Until then, using conservative values to ensure swaps succeeed
-const SWAP_GAS_LIMIT_FALLBACKS: Record<ChainId, string> = {
-  [ChainId.Mainnet]: '420000',
-  [ChainId.Goerli]: '420000',
-  [ChainId.Optimism]: '420000',
-  [ChainId.OptimisticKovan]: '420000',
-  [ChainId.Polygon]: '420000',
-  [ChainId.PolygonMumbai]: '420000',
-  [ChainId.ArbitrumOne]: '1200000',
-  [ChainId.ArbitrumRinkeby]: '1200000',
-}
 
 export type DerivedSwapInfo<
   TInput = Currency,
@@ -580,6 +569,10 @@ export function useSwapTransactionRequest(
     chainId,
     trade: { trade },
     wrapType,
+    exactAmountToken,
+    exactCurrencyField,
+    currencies,
+    currencyAmounts,
   } = derivedSwapInfo
   const address = useActiveAccountAddressWithThrow()
   const { data: permitInfo, isLoading: permitInfoLoading } = usePermitSignature(
@@ -587,8 +580,42 @@ export function useSwapTransactionRequest(
     tokenAllowance
   )
 
+  const [exactCurrency, otherCurrency, tradeType] =
+    exactCurrencyField === CurrencyField.INPUT
+      ? [currencies[CurrencyField.INPUT], currencies[CurrencyField.OUTPUT], TradeType.EXACT_INPUT]
+      : [currencies[CurrencyField.OUTPUT], currencies[CurrencyField.INPUT], TradeType.EXACT_OUTPUT]
+
+  const inputAmount =
+    exactAmountToken && exactCurrency
+      ? parseUnits(exactAmountToken, exactCurrency.decimals)
+      : undefined
+
+  // get simulated gasLimit only if token doesn't have enough allowance AND we can't get the allowance
+  // through .permit instead
+  const shouldFetchSimulatedGasLimit =
+    inputAmount &&
+    tokenAllowance &&
+    BigNumber.from(tokenAllowance).lt(inputAmount) &&
+    !permitInfoLoading &&
+    !permitInfo
+
+  const { isLoading: simulatedGasLimitLoading, simulatedGasLimit } = useSimulatedGasLimit(
+    chainId,
+    currencyAmounts[exactCurrencyField],
+    otherCurrency,
+    tradeType,
+    !shouldFetchSimulatedGasLimit
+  )
+
   return useMemo(() => {
-    if (wrapType !== WrapType.NotApplicable) return
+    if (
+      wrapType !== WrapType.NotApplicable ||
+      !tokenAllowance ||
+      (!simulatedGasLimit && simulatedGasLimitLoading) ||
+      permitInfoLoading ||
+      !trade
+    )
+      return
 
     const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId]
     const baseSwapTx = {
@@ -597,9 +624,7 @@ export function useSwapTransactionRequest(
       chainId,
     }
 
-    if (permitInfoLoading) return
-
-    if (trade && permitInfo) {
+    if (permitInfo) {
       const { calldata, value } = SwapRouter.swapCallParameters(trade, {
         slippageTolerance: DEFAULT_SLIPPAGE_TOLERANCE_PERCENT,
         recipient: address,
@@ -609,7 +634,7 @@ export function useSwapTransactionRequest(
       return { ...baseSwapTx, data: calldata, value }
     }
 
-    const methodParameters = trade?.quote?.methodParameters
+    const methodParameters = trade.quote?.methodParameters
     if (!methodParameters) {
       throw new Error('Trade quote methodParameters were not provided by the router endpoint')
     }
@@ -619,13 +644,22 @@ export function useSwapTransactionRequest(
       data: methodParameters.calldata,
       value: methodParameters.value,
 
-      // TODO: use gasLimit from tenderly simulation if token is not approved
-      gasLimit:
-        tokenAllowance && !BigNumber.from(tokenAllowance).eq(0)
-          ? undefined
-          : SWAP_GAS_LIMIT_FALLBACKS[chainId],
+      // if the swap transaction does not require a Tenderly gas limit simulation, submit "undefined" here
+      // so that ethers can calculate the gasLimit later using .estimateGas(tx) instead
+      gasLimit: shouldFetchSimulatedGasLimit ? simulatedGasLimit : undefined,
     }
-  }, [address, chainId, permitInfo, permitInfoLoading, tokenAllowance, trade, wrapType])
+  }, [
+    address,
+    chainId,
+    permitInfo,
+    permitInfoLoading,
+    shouldFetchSimulatedGasLimit,
+    simulatedGasLimit,
+    simulatedGasLimitLoading,
+    tokenAllowance,
+    trade,
+    wrapType,
+  ])
 }
 
 export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo) {

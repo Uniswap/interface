@@ -36,6 +36,7 @@ export const routingApi = createApi({
       {
         amount: string
         deadline?: number
+        fetchSimulatedGasLimit?: boolean
         recipient?: string
         slippageTolerance?: number
         tokenInAddress: string
@@ -48,6 +49,7 @@ export const routingApi = createApi({
       query: ({
         amount,
         deadline = DEFAULT_DEADLINE_S,
+        fetchSimulatedGasLimit,
         recipient,
         slippageTolerance = DEFAULT_SLIPPAGE_TOLERANCE,
         tokenInAddress,
@@ -71,6 +73,7 @@ export const routingApi = createApi({
                 deadline,
               }
             : {}),
+          ...(recipient && fetchSimulatedGasLimit ? { simulateFromAddress: recipient } : {}),
         })}`,
     }),
   }),
