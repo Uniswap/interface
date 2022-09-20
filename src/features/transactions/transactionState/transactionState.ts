@@ -3,21 +3,11 @@ import { shallowEqual } from 'react-redux'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, TradeableAsset } from 'src/entities/assets'
-import { FeeInfo } from 'src/features/gas/types'
-import { TransactionType } from 'src/features/transactions/types'
 
 export enum CurrencyField {
   INPUT = 'input',
   OUTPUT = 'output',
 }
-export interface GasFeeByTransactionType {
-  [TransactionType.Approve]?: FeeInfo | null // null means approve tx not needed (e.g., allowance is sufficient)
-  [TransactionType.Swap]?: FeeInfo
-  [TransactionType.Send]?: FeeInfo
-}
-
-// the string is gasFee (gasPrice * gasLimit) denoted in wei
-export type OptimismL1FeeEstimate = Partial<Record<TransactionType, string>>
 
 export interface TransactionState {
   txId?: string

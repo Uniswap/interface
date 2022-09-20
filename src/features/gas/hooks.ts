@@ -1,21 +1,16 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
-import { useCallback, useMemo, useState } from 'react'
-import { useProvider } from 'src/app/walletContext'
+import { useMemo } from 'react'
 import { ChainId, isL2Chain } from 'src/constants/chains'
-import { GAS_FEE_REFRESH_INTERVAL } from 'src/constants/gas'
 import { PollingInterval } from 'src/constants/misc'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'src/constants/transactions'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'src/features/gas/adjustGasFee'
 import { useGasFeeQuery } from 'src/features/gas/api'
-import { computeGasFee } from 'src/features/gas/computeGasFee'
-import { FeeInfo, FeeType, GasSpeed, TransactionGasFeeInfo } from 'src/features/gas/types'
+import { FeeType, GasSpeed, TransactionGasFeeInfo } from 'src/features/gas/types'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { TransactionDetails } from 'src/features/transactions/types'
-import { logger } from 'src/utils/logger'
-import { useInterval } from 'src/utils/timing'
 
 export function useTransactionGasFee(
   tx: NullUndefined<providers.TransactionRequest>,
@@ -51,41 +46,6 @@ export function useTransactionGasFee(
       params,
     }
   }, [data, speed])
-}
-
-// TODO: deprecate this
-export function useGasFeeInfo(
-  chainId: ChainId | undefined,
-  tx: providers.TransactionRequest | null,
-  fallbackGasEstimate?: string,
-  intervalOverride?: number
-) {
-  const [gasFeeInfo, setGasFeeInfo] = useState<FeeInfo | undefined>(undefined)
-  const provider = useProvider(chainId || ChainId.Mainnet)
-
-  const computeGas = useCallback(async () => {
-    try {
-      if (!provider || !chainId) {
-        throw new Error('Missing params. Query should not be enabled.')
-      }
-
-      if (!tx) return
-
-      computeGasFee(chainId, tx, provider, fallbackGasEstimate)
-        .then((feeInfo) => {
-          setGasFeeInfo(feeInfo)
-        })
-        .catch((error) => {
-          throw error
-        })
-    } catch (error) {
-      logger.error('useGasFee', '', 'Error computing gas fee', error)
-    }
-  }, [chainId, provider, tx, fallbackGasEstimate])
-
-  useInterval(computeGas, intervalOverride ?? GAS_FEE_REFRESH_INTERVAL, true)
-
-  return gasFeeInfo
 }
 
 export function useUSDGasPrice(chainId: ChainId | undefined, gasFee?: string) {
