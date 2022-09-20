@@ -1,18 +1,17 @@
 import { SupportedChainId } from 'constants/chains'
-import { TimePeriod } from 'graphql/data/Token'
+import { TokenSortMethod } from 'graphql/data/TopTokens'
+import { TimePeriod } from 'graphql/data/util'
 import { atom, useAtom } from 'jotai'
 import { atomWithReset, atomWithStorage, useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
-
-import { Category, SortDirection } from './types'
 
 export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
 export const filterStringAtom = atomWithReset<string>('')
 export const filterNetworkAtom = atom<SupportedChainId>(SupportedChainId.MAINNET)
 export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
-export const sortCategoryAtom = atom<Category>(Category.marketCap)
-export const sortDirectionAtom = atom<SortDirection>(SortDirection.decreasing)
+export const sortMethodAtom = atom<TokenSortMethod>(TokenSortMethod.TOTAL_VALUE_LOCKED)
+export const sortAscendingAtom = atom<boolean>(false)
 
 /* for favoriting tokens */
 export function useToggleFavorite(tokenAddress: string | undefined | null) {
@@ -33,20 +32,18 @@ export function useToggleFavorite(tokenAddress: string | undefined | null) {
 }
 
 /* keep track of sort category for token table */
-export function useSetSortCategory(category: Category) {
-  const [sortCategory, setSortCategory] = useAtom(sortCategoryAtom)
-  const [sortDirection, setDirectionCategory] = useAtom(sortDirectionAtom)
+export function useSetSortMethod(newSortMethod: TokenSortMethod) {
+  const [sortMethod, setSortMethod] = useAtom(sortMethodAtom)
+  const [sortAscending, setSortAscending] = useAtom(sortAscendingAtom)
 
   return useCallback(() => {
-    if (category === sortCategory) {
-      const oppositeDirection =
-        sortDirection === SortDirection.increasing ? SortDirection.decreasing : SortDirection.increasing
-      setDirectionCategory(oppositeDirection)
+    if (sortMethod === newSortMethod) {
+      setSortAscending(!sortAscending)
     } else {
-      setSortCategory(category)
-      setDirectionCategory(SortDirection.decreasing)
+      setSortMethod(newSortMethod)
+      setSortAscending(false)
     }
-  }, [category, sortCategory, setSortCategory, sortDirection, setDirectionCategory])
+  }, [sortMethod, setSortMethod, setSortAscending, sortAscending, newSortMethod])
 }
 
 export function useIsFavorited(tokenAddress: string | null | undefined) {
