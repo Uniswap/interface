@@ -144,9 +144,9 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
 }
 
 export const getListings = (sellAssets: WalletAsset[]) => {
-  const newCollectionsToApprove: any = []
+  const newCollectionsToApprove: CollectionRow[] = []
 
-  const newListings: any = []
+  const newListings: ListingRow[] = []
   sellAssets.forEach((asset) => {
     asset.marketplaces?.forEach((marketplace: ListingMarket) => {
       const newListing = {
@@ -156,7 +156,7 @@ export const getListings = (sellAssets: WalletAsset[]) => {
         asset,
         marketplace,
       }
-      newListings.push(newListing as ListingRow)
+      newListings.push(newListing)
       if (
         !newCollectionsToApprove.some(
           (collectionRow: CollectionRow) =>
@@ -171,7 +171,7 @@ export const getListings = (sellAssets: WalletAsset[]) => {
           collectionAddress: asset.asset_contract.address,
           marketplace,
         }
-        newCollectionsToApprove.push(newCollectionRow as CollectionRow)
+        newCollectionsToApprove.push(newCollectionRow)
       }
     })
   })
