@@ -62,6 +62,7 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 
 const Web3StatusConnectButton = styled.button<{ faded?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
   background-color: ${({ theme }) => theme.accentActionSoft};
   border-radius: 12px;
   border: none;
