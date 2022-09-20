@@ -164,7 +164,7 @@ export default function App() {
                   {tokensFlag === TokensVariant.Enabled && (
                     <>
                       <Route
-                        path="/tokens"
+                        path="/tokens/:chainName"
                         element={
                           <Suspense fallback={<LoadingTokens />}>
                             <Tokens />
@@ -172,7 +172,7 @@ export default function App() {
                         }
                       />
                       <Route
-                        path="/tokens/:tokenAddress"
+                        path="/tokens/:chainName/:tokenAddress"
                         element={
                           <Suspense fallback={<LoadingTokenDetails />}>
                             <TokenDetails />

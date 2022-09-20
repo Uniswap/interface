@@ -6,12 +6,12 @@ import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
-import { TimePeriod } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
@@ -24,7 +24,6 @@ import {
 } from '../constants'
 import { LoadingBubble } from '../loading'
 import {
-  filterNetworkAtom,
   filterStringAtom,
   filterTimeAtom,
   sortAscendingAtom,
@@ -470,14 +469,17 @@ export default function LoadedRow({
   const isFavorited = useIsFavorited(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
-  const filterNetwork = useAtomValue(filterNetworkAtom)
-  const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
+
+  const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
+  const filterNetwork = lowercaseChainName.toUpperCase()
+  const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[filterNetwork]).circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
   //const { volume, pricePercentChange } = getDurationDetails(tokenData, timePeriod)
   const delta = token?.market?.pricePercentChange?.value
   const arrow = delta ? getDeltaArrow(delta) : null
   const formattedDelta = delta ? formatDelta(delta) : null
   const sortAscending = useAtomValue(sortAscendingAtom)
+  const { chainName } = useParams<{ chainName?: string }>()
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -492,7 +494,7 @@ export default function LoadedRow({
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
-      to={`/tokens/${tokenAddress}`}
+      to={`/tokens/${chainName}/${tokenAddress}`}
       onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
     >
       <TokenRow

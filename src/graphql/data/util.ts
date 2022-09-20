@@ -47,3 +47,21 @@ export function useCurrentChainName() {
 
   return chainId && CHAIN_IDS_TO_BACKEND_NAME[chainId] ? CHAIN_IDS_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
 }
+
+export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
+  ETHEREUM: SupportedChainId.MAINNET,
+  POLYGON: SupportedChainId.POLYGON,
+  CELO: SupportedChainId.CELO,
+  ARBITRUM: SupportedChainId.ARBITRUM_ONE,
+  OPTIMISM: SupportedChainId.OPTIMISM,
+}
+
+export const BACKEND_CHAIN_NAMES: Chain[] = ['ARBITRUM', 'CELO', 'ETHEREUM', 'OPTIMISM', 'POLYGON']
+
+export function isValidBackendChainName(chainName: string | undefined): chainName is Chain {
+  if (!chainName) return false
+  for (let i = 0; i < BACKEND_CHAIN_NAMES.length; i++) {
+    if (chainName === BACKEND_CHAIN_NAMES[i]) return true
+  }
+  return false
+}
