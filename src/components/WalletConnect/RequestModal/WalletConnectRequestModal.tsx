@@ -107,17 +107,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
       return null
     }
 
-    const { to, from, value, data, nonce, gas } = request.transaction
-
-    return {
-      to,
-      from,
-      value,
-      data,
-      nonce,
-      chainId,
-      gasLimit: gas,
-    }
+    return { ...request.transaction, chainId }
   }, [chainId, request])
 
   const activeAccount = useActiveAccount()
@@ -190,6 +180,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
 
   const currencyAmount =
     isTransactionRequest(request) &&
+    request.transaction.value !== undefined &&
     getTransactionCurrencyAmount(chainId, request.transaction.value)
   const hasCurrencyAmount = currencyAmount && !currencyAmount.equalTo(0)
   const nativeCurrency = chainId && NativeCurrency.onChain(chainId)

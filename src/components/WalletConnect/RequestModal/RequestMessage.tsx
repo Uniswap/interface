@@ -1,5 +1,5 @@
 import { ResponsiveValue } from '@shopify/restyle'
-import { TransactionDescription } from 'no-yolo-signatures'
+import { Transaction, TransactionDescription } from 'no-yolo-signatures'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -120,7 +120,9 @@ function TransactionMessage({
 
   useEffect(() => {
     const parseResult = async () => {
-      return parser.parseAsResult(transaction).then((result) => {
+      // no-yolo-parser library expects these fields to be defined
+      if (!transaction.from || transaction.to || !transaction.value || !transaction.data) return
+      return parser.parseAsResult(transaction as Transaction).then((result) => {
         if (!result.transactionDescription.ok) {
           throw result.transactionDescription.error
         }
@@ -144,12 +146,14 @@ function TransactionMessage({
 
   return (
     <Flex gap="xs">
-      <Flex row alignItems="center" gap="xs">
-        <Text color="textSecondary" variant="bodySmall">
-          To:
-        </Text>
-        <AddressButton address={transaction.to} chainId={chainId} />
-      </Flex>
+      {transaction.to ? (
+        <Flex row alignItems="center" gap="xs">
+          <Text color="textSecondary" variant="bodySmall">
+            To:
+          </Text>
+          <AddressButton address={transaction.to} chainId={chainId} />
+        </Flex>
+      ) : null}
       {isLoading || !parsedData ? (
         <Text color="textTertiary" py="xxs" variant="bodySmall">
           {isLoading ? ' ' : t('Unable to decode this transaction request')}

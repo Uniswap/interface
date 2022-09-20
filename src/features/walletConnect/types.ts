@@ -66,26 +66,26 @@ export interface DappInfo {
 }
 
 export interface EthTransaction {
-  to: string
-  from: string
-  value: string
-  data: string
-  gas: string
-  gasPrice: string
-  nonce: string
+  to?: string
+  from?: string
+  value?: string
+  data?: string
+  gasLimit?: string
+  gasPrice?: string
+  nonce?: string
 }
 
 export interface TransactionRequestEvent {
   account: string
   type: EthTransactionMethod
   transaction: {
-    to: string
-    from: string
-    value: string
-    data: string
-    gas: string
-    gas_price: string
-    nonce: string
+    to: string | null
+    from: string | null
+    value: string | null
+    data: string | null
+    gas: string | null
+    gas_price: string | null
+    nonce: string | null
   }
   request_internal_id: string
   dapp: DappInfo
