@@ -220,7 +220,7 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
         return [
           monthYearFormatter(locale),
           monthYearDayFormatter(locale),
-          timeTicks(startDateWithOffset, endDateWithOffset, 5).map((x) => x.valueOf() / 1000),
+          timeTicks(startDateWithOffset, endDateWithOffset, 6).map((x) => x.valueOf() / 1000),
         ]
     }
   }
