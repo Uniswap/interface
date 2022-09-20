@@ -16,7 +16,7 @@ import { useIsMobile } from 'nft/hooks'
 import { useCallback, useReducer, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
-import * as styles from './ChainSwitcher.css'
+import * as styles from './ChainSelector.css'
 import { NavDropdown } from './NavDropdown'
 
 const StyledChainRow = styled.button`
@@ -83,11 +83,11 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.CELO,
 ]
 
-interface ChainSwitcherProps {
+interface ChainSelectorProps {
   leftAlign?: boolean
 }
 
-export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
+export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const { chainId } = useWeb3React()
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const isMobile = useIsMobile()
@@ -139,7 +139,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
       <Row
         as="button"
         gap="8"
-        className={styles.ChainSwitcher}
+        className={styles.ChainSelector}
         background={isOpen ? 'accentActiveSoft' : 'none'}
         onClick={toggleOpen}
       >

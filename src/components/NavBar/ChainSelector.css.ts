@@ -3,7 +3,7 @@ import { lightGrayOverlayOnHover } from 'nft/css/common.css'
 
 import { breakpoints, sprinkles } from '../../nft/css/sprinkles.css'
 
-export const ChainSwitcher = style([
+export const ChainSelector = style([
   lightGrayOverlayOnHover,
   sprinkles({
     borderRadius: '8',
@@ -16,7 +16,7 @@ export const ChainSwitcher = style([
   }),
 ])
 
-export const ChainSwitcherRow = style([
+export const ChainSelectorRow = style([
   lightGrayOverlayOnHover,
   sprinkles({
     border: 'none',
