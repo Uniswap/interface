@@ -5,6 +5,7 @@ import { EventName } from 'analytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
+import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { getDurationDetails, SingleTokenData, TimePeriod } from 'graphql/data/Token'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
@@ -41,11 +42,17 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `
-const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean; loading?: boolean }>`
+const StyledTokenRow = styled.div<{
+  first?: boolean
+  last?: boolean
+  loading?: boolean
+  favoriteTokensEnabled?: boolean
+}>`
   background-color: transparent;
   display: grid;
   font-size: 15px;
-  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr;
+  grid-template-columns: ${({ favoriteTokensEnabled }) =>
+    favoriteTokensEnabled ? '1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr' : '1fr 7fr 4fr 4fr 4fr 4fr 5fr'};
   height: 60px;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
@@ -394,6 +401,7 @@ export function TokenRow({
   volume: ReactNode
   last?: boolean
 }) {
+  const favoriteTokensEnabled = useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled
   const rowCells = (
     <>
       <ListNumberCell header={header}>{listNumber}</ListNumberCell>
@@ -403,11 +411,15 @@ export function TokenRow({
       <MarketCapCell sortable={header}>{marketCap}</MarketCapCell>
       <VolumeCell sortable={header}>{volume}</VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
-      <FavoriteCell>{favorited}</FavoriteCell>
+      {favoriteTokensEnabled && <FavoriteCell>{favorited}</FavoriteCell>}
     </>
   )
-  if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
-  return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
+  if (header) return <StyledHeaderRow favoriteTokensEnabled={favoriteTokensEnabled}>{rowCells}</StyledHeaderRow>
+  return (
+    <StyledTokenRow favoriteTokensEnabled={favoriteTokensEnabled} {...rest}>
+      {rowCells}
+    </StyledTokenRow>
+  )
 }
 
 /* Header Row: top header row component for table */
