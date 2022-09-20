@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { showFavoritesAtom } from 'components/Tokens/state'
 import { usePrefetchTopTokens, useTopTokens } from 'graphql/data/TopTokens'
 import { useAtomValue } from 'jotai/utils'
-import { CSSProperties, ReactNode } from 'react'
+import { CSSProperties, ReactNode, useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
@@ -88,21 +88,24 @@ export default function TokenTable() {
 
   const isItemLoaded = (index: number) => !loading && !!tokens && index < tokens.length
 
-  const Row = function TokenRow({ index, style }: TokenRowProps) {
-    const token = !!tokens && tokens[index]
-    if (!token || loading) {
-      return <LoadingRow style={style} key={index} />
-    }
-    return (
-      <LoadedRow
-        style={style}
-        key={token?.name}
-        tokenListIndex={index}
-        tokenListLength={tokens?.length ?? 0}
-        token={token}
-      />
-    )
-  }
+  const Row = useCallback(
+    ({ index, style }: TokenRowProps) => {
+      const token = !!tokens && tokens[index]
+      if (!token || loading) {
+        return <LoadingRow style={style} key={index} />
+      }
+      return (
+        <LoadedRow
+          key={token?.name}
+          tokenListIndex={index}
+          tokenListLength={tokens?.length ?? 0}
+          token={token}
+          style={style}
+        />
+      )
+    },
+    [loading, tokens]
+  )
 
   /* loading and error state */
   if (loading) {
@@ -128,7 +131,7 @@ export default function TokenTable() {
     } else {
       return (
         <>
-          <GridContainer fixedHeight={true}>
+          <GridContainer fixedHeight>
             <HeaderRow />
             <TokenDataContainer>
               <AutoSizer>

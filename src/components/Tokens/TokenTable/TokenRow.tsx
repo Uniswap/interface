@@ -430,7 +430,7 @@ export function HeaderRow() {
 }
 
 /* Loading State: row component with loading bubbles */
-export function LoadingRow({ style }: { style?: CSSProperties }) {
+export function LoadingRow(...props: any[]) {
   return (
     <TokenRow
       favorited={null}
@@ -448,7 +448,7 @@ export function LoadingRow({ style }: { style?: CSSProperties }) {
       marketCap={<LoadingBubble />}
       volume={<LoadingBubble />}
       sparkLine={<SparkLineLoadingBubble />}
-      style={style}
+      {...props}
     />
   )
 }
@@ -459,13 +459,11 @@ export default function LoadedRow({
   tokenListLength,
   token,
   style,
-}: //timePeriod,
-{
+}: {
   tokenListIndex: number
   tokenListLength: number
   token: TopToken
-  style: CSSProperties
-  //timePeriod: TimePeriod
+  style?: CSSProperties
 }) {
   const tokenAddress = token?.address
   const currency = useCurrency(tokenAddress)
@@ -496,9 +494,9 @@ export default function LoadedRow({
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
-      style={style}
       to={`/tokens/${tokenAddress}`}
       onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
+      style={style}
     >
       <TokenRow
         header={false}
