@@ -7,6 +7,7 @@ import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
+import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { SingleTokenData } from 'graphql/data/Token'
 import { useCurrency } from 'hooks/Tokens'
 import styled from 'styled-components/macro'
@@ -100,9 +101,11 @@ export default function ChartSection({ token, tokenData }: { token: Token; token
           {tokenName && tokenSymbol && (
             <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} tokenAddress={token.address} />
           )}
-          <ClickFavorited onClick={toggleFavorite}>
-            <FavoriteIcon isFavorited={isFavorited} />
-          </ClickFavorited>
+          {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && (
+            <ClickFavorited onClick={toggleFavorite}>
+              <FavoriteIcon isFavorited={isFavorited} />
+            </ClickFavorited>
+          )}
         </TokenActions>
       </TokenInfoContainer>
       <ChartContainer>

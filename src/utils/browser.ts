@@ -1,4 +1,4 @@
-import { BROWSER } from 'components/AmplitudeAnalytics/constants'
+import { BROWSER } from 'analytics/constants'
 
 // Get browser being used, code comes from: https://developer.mozilla.org/en-US/docs/Web/API/Window/navigator.
 export function getBrowser(): string {
