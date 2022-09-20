@@ -107,14 +107,14 @@ function useFilteredTokens(tokens: PrefetchedTopToken[]) {
 
     let returnTokens = tokens
     if (showFavorites) {
-      returnTokens = returnTokens?.filter((token) => (token?.address && favorites.includes(token.address)) ?? false)
+      returnTokens = returnTokens?.filter((token) => token?.address && favorites.includes(token.address))
     }
     if (lowercaseFilterString) {
       returnTokens = returnTokens?.filter((token) => {
         const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
         const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
         const symbolIncludesFilterString = token?.symbol?.toLowerCase().includes(lowercaseFilterString)
-        return (nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString) ?? false
+        return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
       })
     }
     return returnTokens
@@ -122,7 +122,6 @@ function useFilteredTokens(tokens: PrefetchedTopToken[]) {
 }
 
 const PAGE_SIZE = 20
-//const MAX_COUNT = 100
 
 function toContractInput(token: PrefetchedTopToken) {
   return {
@@ -132,15 +131,14 @@ function toContractInput(token: PrefetchedTopToken) {
 }
 
 export type TopToken = NonNullable<TopTokens_TokensQuery['response']['tokens']>[number]
-export function useTopTokens(prefetchedTokens: TopTokens100Query['response']) {
-  // TODO: add filtering by favorites and filter string
+export function useTopTokens(prefetchedData: TopTokens100Query['response']) {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
   const environment = useRelayEnvironment()
   const [tokens, setTokens] = useState<TopToken[]>()
 
   const [page, setPage] = useState(1)
-  const selectedTokens = useFilteredTokens(useSortedTokens(prefetchedTokens.topTokens))
-  const [isFetching, setIsFetching] = useState(true)
+  const prefetchedSelectedTokens = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
+  const [loading, setLoading] = useState(true)
 
   // TopTokens should ideally be fetched with usePaginationFragment. The backend does not current support graphql cursors;
   // in the meantime, fetchQuery is used, as other relay hooks do not allow the refreshing and lazy loading we need
@@ -158,33 +156,32 @@ export function useTopTokens(prefetchedTokens: TopTokens100Query['response']) {
     [duration, environment]
   )
 
-  const loadMoreTokens = () => {
-    const contracts = selectedTokens.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map(toContractInput)
+  const loadMoreTokens = useCallback(() => {
+    const contracts = prefetchedSelectedTokens.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map(toContractInput)
     loadTokens(contracts, (data) => {
       if (data?.tokens) {
         setTokens([...(tokens ?? []), ...data.tokens])
         setPage(page + 1)
       }
     })
-  }
+  }, [loadTokens, page, prefetchedSelectedTokens, tokens])
 
   // Reset count when filters are changed
   useEffect(() => {
-    setIsFetching(true)
+    setLoading(true)
     setTokens([])
-    const contracts = selectedTokens.slice(0, PAGE_SIZE).map(toContractInput)
+    const contracts = prefetchedSelectedTokens.slice(0, PAGE_SIZE).map(toContractInput)
     loadTokens(contracts, (data) => {
       if (data?.tokens) {
-        console.log('D')
-        setTokens([...data.tokens])
-        setIsFetching(false)
+        // @ts-ignore prevent typescript from complaining about readonly data
+        setTokens(data.tokens)
+        setLoading(false)
         setPage(1)
       }
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTokens])
+  }, [loadTokens, prefetchedSelectedTokens])
 
-  return { isFetching, tokens, loadMoreTokens }
+  return { loading, tokens, loadMoreTokens }
 }
 
 export const tokensQuery = graphql`
