@@ -232,6 +232,14 @@ export default function FeatureFlagModal() {
           label="Token Safety"
         />
       </FeatureFlagGroup>
+      <FeatureFlagGroup name="Phase 0 Follow-ups">
+        <FeatureFlagOption
+          variant={FavoriteTokensVariant}
+          value={useFavoriteTokensFlag()}
+          featureFlag={FeatureFlag.favoriteTokens}
+          label="Favorite Tokens"
+        />
+      </FeatureFlagGroup>
       <FeatureFlagGroup name="Phase 1">
         <FeatureFlagOption variant={NftVariant} value={useNftFlag()} featureFlag={FeatureFlag.nft} label="NFTs" />
       </FeatureFlagGroup>
