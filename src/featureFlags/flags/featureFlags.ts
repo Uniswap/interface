@@ -1,9 +1,9 @@
 export enum FeatureFlag {
+  favoriteTokens = 'favoriteTokens',
   navBar = 'navBar',
   nft = 'nfts',
   redesign = 'redesign',
   tokens = 'tokens',
-  tokensNetworkFilter = 'tokensNetworkFilter',
   tokenSafety = 'tokenSafety',
   traceJsonRpc = 'traceJsonRpc',
 }

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { PageName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
+import { PageName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
 import FavoriteButton from 'components/Tokens/TokenTable/FavoriteButton'
@@ -8,7 +8,7 @@ import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
-import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
+import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -68,7 +68,6 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
-  const tokensNetworkFilterFlag = useTokensNetworkFilterFlag()
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
   useEffect(() => {
@@ -85,16 +84,14 @@ const Tokens = () => {
         </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>
-            <FavoriteButton />
-            {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
-
+            <NetworkFilter />
+            {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
             <TimeSelector />
           </FiltersContainer>
           <SearchContainer>
             <SearchBar />
           </SearchContainer>
         </FiltersWrapper>
-
         <TokenTableContainer>
           <TokenTable />
         </TokenTableContainer>
@@ -104,8 +101,6 @@ const Tokens = () => {
 }
 
 export const LoadingTokens = () => {
-  const tokensNetworkFilterFlag = useTokensNetworkFilterFlag()
-
   return (
     <ExploreContainer>
       <TitleContainer>
@@ -115,8 +110,8 @@ export const LoadingTokens = () => {
       </TitleContainer>
       <FiltersWrapper>
         <FiltersContainer>
-          <FavoriteButton />
-          {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
+          <NetworkFilter />
+          {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
           <TimeSelector />
         </FiltersContainer>
         <SearchContainer>
