@@ -1,6 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
 import { StyledChevronDown, StyledChevronUp } from 'components/Icons'
-import Loader from 'components/Loader'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -9,71 +8,15 @@ import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
-import { CheckMarkIcon, TokenWarningRedIcon } from 'nft/components/icons'
+import { TokenWarningRedIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
-import { themeVars, vars } from 'nft/css/sprinkles.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { useCallback, useReducer, useRef, useState } from 'react'
-import styled from 'styled-components/macro'
 
 import * as styles from './ChainSelector.css'
+import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
-
-const StyledChainRow = styled.button`
-  display: grid;
-  background: none;
-  grid-template-columns: 1fr 4fr 1fr;
-  align-items: center;
-  text-align: left;
-`
-
-const ChainLogo = styled.img`
-  grid-column: 1;
-  grid-row: 1;
-`
-
-const ChainLabel = styled.div`
-  grid-column: 2;
-  grid-row: 1;
-`
-
-const ChainStatus = styled.div`
-  grid-column: 3;
-  grid-row: 1;
-`
-
-const ApproveText = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 12px;
-  grid-column: 2;
-  grid-row: 2;
-`
-
-const ChainRow = ({
-  targetChain,
-  onSelectChain,
-  isPending,
-}: {
-  targetChain: SupportedChainId
-  onSelectChain: (targetChain: number) => void
-  isPending: boolean
-}) => {
-  const { chainId } = useWeb3React()
-  const active = chainId === targetChain
-  const { label, logoUrl } = getChainInfo(targetChain)
-
-  return (
-    <StyledChainRow onClick={() => onSelectChain(targetChain)}>
-      <ChainLogo src={logoUrl} alt={label} className={styles.Icon} />
-      <ChainLabel>{label}</ChainLabel>
-      {isPending && <ApproveText>Approve in wallet</ApproveText>}
-      <ChainStatus>
-        {active && <CheckMarkIcon width={20} height={20} color={vars.color.blue400} />}
-        {isPending && <Loader />}
-      </ChainStatus>
-    </StyledChainRow>
-  )
-}
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.MAINNET,
@@ -123,7 +66,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
       <Column marginX="8">
         {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
-          <ChainRow
+          <ChainSelectorRow
             onSelectChain={onSelectChain}
             targetChain={chainId}
             key={chainId}
