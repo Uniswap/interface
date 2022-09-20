@@ -28,6 +28,12 @@ export interface SellOrder {
   tokenReserves?: number
 }
 
+export interface Listing {
+  price?: string
+  marketplace: ListingMarket
+  overrideFloorPrice?: boolean
+}
+
 export interface WalletAsset {
   id?: string
   image_url: string
@@ -60,11 +66,7 @@ export interface WalletAsset {
   // Used for creating new listings
   expirationTime?: number
   marketAgnosticPrice?: string
-  newListings?: {
-    price?: string
-    marketplace: ListingMarket
-    overrideFloorPrice?: boolean
-  }[]
+  newListings?: Listing[]
   marketplaces?: ListingMarket[]
   listingWarnings?: ListingWarning[]
 }
@@ -88,19 +90,19 @@ export enum ListingStatus {
   SIGNING = 'Signing',
 }
 
-export interface ListingRow {
+export interface AssetRow {
   images: string[]
   name: string
   status: ListingStatus
   callback?: () => Promise<void>
 }
 
-export interface AssetRow extends ListingRow {
+export interface ListingRow extends AssetRow {
   asset: WalletAsset
   marketplace: ListingMarket
 }
 
-export interface CollectionRow extends ListingRow {
+export interface CollectionRow extends AssetRow {
   collectionAddress: string
   marketplace: ListingMarket
 }
