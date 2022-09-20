@@ -463,18 +463,14 @@ export function LoadingRow() {
   )
 }
 
-/* Loaded State: row component with token information */
-export default function LoadedRow({
-  tokenListIndex,
-  tokenListLength,
-  token,
-}: //timePeriod,
-{
+interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
   token: TopToken
-  //timePeriod: TimePeriod
-}) {
+}
+
+/* Loaded State: row component with token information */
+export default function LoadedRow({ tokenListIndex, tokenListLength, token }: LoadedRowProps) {
   const tokenAddress = token?.address
   const currency = useCurrency(tokenAddress)
   const tokenName = token?.name
