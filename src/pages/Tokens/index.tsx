@@ -83,8 +83,8 @@ const Tokens = () => {
         </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>
-            <FavoriteButton />
             <NetworkFilter />
+            <FavoriteButton />
             <TimeSelector />
           </FiltersContainer>
           <SearchContainer>
@@ -109,8 +109,8 @@ export const LoadingTokens = () => {
       </TitleContainer>
       <FiltersWrapper>
         <FiltersContainer>
-          <FavoriteButton />
           <NetworkFilter />
+          <FavoriteButton />
           <TimeSelector />
         </FiltersContainer>
         <SearchContainer>
