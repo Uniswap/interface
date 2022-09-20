@@ -1,9 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { ChainSwitcher } from 'components/NavBar/ChainSwitcher'
-import { MenuDropdown } from 'components/NavBar/MenuDropdown'
-import * as styles from 'components/NavBar/Navbar.css'
-import { SearchBar } from 'components/NavBar/SearchBar'
-import { ShoppingBag } from 'components/NavBar/ShoppingBag'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Box } from 'nft/components/Box'
@@ -11,6 +6,12 @@ import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
+
+import { ChainSelector } from './ChainSelector'
+import { MenuDropdown } from './MenuDropdown'
+import { SearchBar } from './SearchBar'
+import { ShoppingBag } from './ShoppingBag'
+import * as styles from './style.css'
 
 interface MenuItemProps {
   href: string
@@ -76,7 +77,7 @@ const Navbar = () => {
               <UniIcon width="48" height="48" className={styles.logo} />
             </Box>
             <Box display={{ sm: 'flex', lg: 'none' }}>
-              <ChainSwitcher leftAlign={true} />
+              <ChainSelector leftAlign={true} />
             </Box>
             <Row gap="8" display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
@@ -95,7 +96,7 @@ const Navbar = () => {
               </Box>
               {isNftPage && <ShoppingBag />}
               <Box display={{ sm: 'none', lg: 'flex' }}>
-                <ChainSwitcher />
+                <ChainSelector />
               </Box>
 
               <Web3Status />

@@ -11,6 +11,7 @@ import { useLocation } from 'react-router-dom'
 import * as styles from './ListingTag.css'
 
 const CartSellAssetRow = lazy(() => import('./TagAssetRow'))
+const ListingModal = lazy(() => import('./ListingModal'))
 
 const Cart = () => {
   const { pathname } = useLocation()
@@ -44,7 +45,9 @@ const Cart = () => {
           marginLeft="0"
           justifyContent="flex-start"
         >
-          {sellPageState === SellPageStateType.LISTING ? null : (
+          {sellPageState === SellPageStateType.LISTING ? (
+            <ListingModal />
+          ) : (
             <>
               <BagHeader bagQuantity={sellAssets.length} />
               <Column

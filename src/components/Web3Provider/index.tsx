@@ -33,12 +33,12 @@ function Tracer() {
     if (shouldTrace) {
       provider?.on('debug', trace)
       if (provider !== networkProvider) {
-        networkProvider.on('debug', trace)
+        networkProvider?.on('debug', trace)
       }
     }
     return () => {
       provider?.off('debug', trace)
-      networkProvider.off('debug', trace)
+      networkProvider?.off('debug', trace)
     }
   }, [networkProvider, provider, shouldTrace])
 
