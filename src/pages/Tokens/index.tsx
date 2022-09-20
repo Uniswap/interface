@@ -8,6 +8,7 @@ import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
+import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -83,8 +84,8 @@ const Tokens = () => {
         </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>
-            <FavoriteButton />
             <NetworkFilter />
+            {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
             <TimeSelector />
           </FiltersContainer>
           <SearchContainer>
@@ -109,8 +110,8 @@ export const LoadingTokens = () => {
       </TitleContainer>
       <FiltersWrapper>
         <FiltersContainer>
-          <FavoriteButton />
           <NetworkFilter />
+          {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
           <TimeSelector />
         </FiltersContainer>
         <SearchContainer>

@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
@@ -230,6 +231,14 @@ export default function FeatureFlagModal() {
           value={useTokenSafetyFlag()}
           featureFlag={FeatureFlag.tokenSafety}
           label="Token Safety"
+        />
+      </FeatureFlagGroup>
+      <FeatureFlagGroup name="Phase 0 Follow-ups">
+        <FeatureFlagOption
+          variant={FavoriteTokensVariant}
+          value={useFavoriteTokensFlag()}
+          featureFlag={FeatureFlag.favoriteTokens}
+          label="Favorite Tokens"
         />
       </FeatureFlagGroup>
       <FeatureFlagGroup name="Phase 1">
