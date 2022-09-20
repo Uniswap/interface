@@ -68,7 +68,6 @@ const MarketplaceItem = ({
       <Box as="span" fontSize="14" fontWeight="normal">
         {title}{' '}
       </Box>
-      <Box as="input" checked={isCheckboxSelected} onChange={handleCheckbox} type="checkbox" />
       <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
         <Box as="span" color="darkGray" marginLeft="4" paddingRight={'12'}>
           {count}
@@ -79,13 +78,19 @@ const MarketplaceItem = ({
 }
 
 export const MarketplaceSelect = () => {
-  const addMarket = useCollectionFilters((state) => state.addMarket)
-  const removeMarket = useCollectionFilters((state) => state.removeMarket)
+  const {
+    addMarket,
+    removeMarket,
+    markets: selectedMarkets,
+    marketCount,
+  } = useCollectionFilters(({ markets, marketCount, removeMarket, addMarket }) => ({
+    markets,
+    marketCount,
+    removeMarket,
+    addMarket,
+  }))
 
-  const selectedMarkets = useCollectionFilters((state) => state.markets)
-  const marketCount = useCollectionFilters((state) => state.marketCount)
-
-  const [isOpen, setOpen] = useState(Boolean(selectedMarkets.length))
+  const [isOpen, setOpen] = useState(!!selectedMarkets.length)
 
   return (
     <Box

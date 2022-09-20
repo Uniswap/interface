@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
@@ -12,8 +13,6 @@ import { UniformHeight, UniformHeights } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
-
-import useDebounce from '../../../hooks/useDebounce'
 
 interface CollectionNftsProps {
   contractAddress: string

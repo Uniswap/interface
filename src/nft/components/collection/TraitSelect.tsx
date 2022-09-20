@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import useDebounce from 'hooks/useDebounce'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
+import { useMemo } from 'react'
 import { FormEvent, MouseEvent } from 'react'
 import { useEffect, useLayoutEffect, useState } from 'react'
 
@@ -112,11 +113,13 @@ export const TraitSelect = ({ traits, type, search }: { traits: Trait[]; type: s
     })
   )
 
-  const isTypeIncluded = type.includes(debouncedSearch)
-
-  const searchedTraits = traits.filter(
-    (t) => isTypeIncluded || t.trait_value.toString().toLowerCase().includes(debouncedSearch.toLowerCase())
-  )
+  const { isTypeIncluded, searchedTraits } = useMemo(() => {
+    const isTypeIncluded = type.includes(debouncedSearch)
+    const searchedTraits = traits.filter(
+      (t) => isTypeIncluded || t.trait_value.toString().toLowerCase().includes(debouncedSearch.toLowerCase())
+    )
+    return { searchedTraits, isTypeIncluded }
+  }, [debouncedSearch, traits, type])
 
   useLayoutEffect(() => {
     if (debouncedSearch && searchedTraits.length) {
@@ -179,7 +182,7 @@ export const TraitSelect = ({ traits, type, search }: { traits: Trait[]; type: s
 
           return (
             <TraitItem
-              isTraitSelected={Boolean(isTraitSelected)}
+              isTraitSelected={!!isTraitSelected}
               key={trait.trait_value}
               {...{ trait, addTrait, removeTrait }}
             />
