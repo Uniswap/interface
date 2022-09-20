@@ -171,7 +171,7 @@ const StyledConnect = styled.div`
       theme: {
         transition: { duration, timing },
       },
-    }) => `${duration.fast}ms color ${timing.in}`};
+    }) => `${duration.fast} color ${timing.in}`};
   }
 `
 

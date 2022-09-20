@@ -73,7 +73,7 @@ const Proposal = styled(Button)`
 `
 
 const ProposalNumber = styled.span`
-  opacity: 0.6;
+  opacity: ${({ theme }) => theme.opacity.hover};
   flex: 0 0 40px;
 `
 

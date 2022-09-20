@@ -175,13 +175,21 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
 
 export const SkeletonRow = () => {
   return (
-    <Box className={styles.searchBarDropdown}>
-      <Row className={styles.suggestionRow}>
-        <Row>
-          <Box className={styles.imageHolder} />
-          <Box borderRadius="round" height="16" width="160" background="loading" />
-        </Row>
+    <Row className={styles.suggestionRow}>
+      <Row width="full">
+        <Box className={styles.imageHolder} />
+        <Column gap="4" width="full">
+          <Row justifyContent="space-between">
+            <Box borderRadius="round" height="20" background="loading" style={{ width: '180px' }} />
+            <Box borderRadius="round" height="20" width="48" background="loading" />
+          </Row>
+
+          <Row justifyContent="space-between">
+            <Box borderRadius="round" height="16" width="120" background="loading" />
+            <Box borderRadius="round" height="16" width="48" background="loading" />
+          </Row>
+        </Column>
       </Row>
-    </Box>
+    </Row>
   )
 }

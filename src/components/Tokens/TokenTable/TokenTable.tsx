@@ -13,6 +13,10 @@ import { TimePeriod, TokenData, useTopTokenQuery } from 'graphql/data/TopTokenQu
 import { TopTokenQuery as query } from 'graphql/data/TopTokenQuery'
 import { useAtomValue } from 'jotai/utils'
 import { CSSProperties, ReactNode, useCallback, useMemo, useState } from 'react'
+import { showFavoritesAtom } from 'components/Tokens/state'
+import { usePrefetchTopTokens, useTopTokens } from 'graphql/data/TopTokens'
+import { useAtomValue } from 'jotai/utils'
+import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { fetchQuery } from 'react-relay'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -21,7 +25,6 @@ import InfiniteLoader from 'react-window-infinite-loader'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
-import { Category, SortDirection } from '../types'
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
 
 const MAX_TOKENS_TO_LOAD = 100
@@ -369,4 +372,48 @@ export default function TokenTable() {
       </TokenDataContainer>
     </GridContainer>
   )
+export default function TokenTable() {
+  const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
+
+  // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
+  const prefetchedTokens = usePrefetchTopTokens()
+  const { isFetching, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
+
+  /* loading and error state */
+  if (isFetching) {
+    return <LoadingTokenTable />
+  } else {
+    if (!tokens) {
+      return (
+        <NoTokensState
+          message={
+            <>
+              <AlertTriangle size={16} />
+              <Trans>An error occured loading tokens. Please try again.</Trans>
+            </>
+          }
+        />
+      )
+    } else if (tokens?.length === 0) {
+      return showFavorites ? (
+        <NoTokensState message={<Trans>You have no favorited tokens</Trans>} />
+      ) : (
+        <NoTokensState message={<Trans>No tokens found</Trans>} />
+      )
+    } else {
+      return (
+        <>
+          <GridContainer>
+            <HeaderRow />
+            <TokenRowsContainer>
+              {tokens?.map((token, index) => (
+                <LoadedRow key={token?.name} tokenListIndex={index} tokenListLength={tokens.length} token={token} />
+              ))}
+            </TokenRowsContainer>
+          </GridContainer>
+          <button onClick={loadMoreTokens}>load more</button>
+        </>
+      )
+    }
+  }
 }

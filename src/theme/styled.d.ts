@@ -144,9 +144,9 @@ declare module 'styled-components/macro' {
     }
     transition: {
       duration: {
-        slow: number
-        medium: number
-        fast: number
+        slow: string
+        medium: string
+        fast: string
       }
       timing: {
         ease: string
@@ -154,6 +154,10 @@ declare module 'styled-components/macro' {
         out: string
         inOut: string
       }
+    }
+    opacity: {
+      hover: number
+      click: number
     }
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation

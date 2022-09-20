@@ -22,6 +22,7 @@ export const darkTheme: Theme = {
     magicGradient: vars.color.blue400,
     placeholder: vars.color.grey400,
     lightGrayButton: vars.color.grey700,
+    loading: vars.color.grey800,
 
     // Opacities of black and white
     white95: '#0E111AF2',

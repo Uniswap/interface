@@ -43,10 +43,8 @@ export function useNetworkTokenBalances({ address }: useNetworkTokenBalancesArgs
         const waitRandom = (min: number, max: number): Promise<void> =>
           new Promise((resolve) => setTimeout(resolve, min + Math.round(Math.random() * Math.max(0, max - min))))
         try {
-          console.log('useNetworkTokenBalances.fetchNetworkTokenBalances', query)
           setLoading(true)
           setError(null)
-          console.log('useNetworkTokenBalances.fetchNetworkTokenBalances', address)
           await waitRandom(250, 2000)
           if (Math.random() < 0.05) {
             throw new Error('fake error')

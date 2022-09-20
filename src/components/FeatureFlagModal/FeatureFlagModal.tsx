@@ -5,6 +5,7 @@ import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
+import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -240,6 +241,14 @@ export default function FeatureFlagModal() {
       </FeatureFlagGroup>
       <FeatureFlagGroup name="Phase 1">
         <FeatureFlagOption variant={NftVariant} value={useNftFlag()} featureFlag={FeatureFlag.nft} label="NFTs" />
+      </FeatureFlagGroup>
+      <FeatureFlagGroup name="Debug">
+        <FeatureFlagOption
+          variant={TraceJsonRpcVariant}
+          value={useTraceJsonRpcFlag()}
+          featureFlag={FeatureFlag.traceJsonRpc}
+          label="Enables JSON-RPC tracing"
+        />
       </FeatureFlagGroup>
       <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
     </Modal>
