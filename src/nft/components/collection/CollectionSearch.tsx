@@ -1,57 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Trait, SortBy, useCollectionFilters } from '../../hooks/useCollectionFilters'
-import { Box, BoxProps } from '../../components/Box'
-import { FormEvent, useEffect, useState } from 'react'
-import { GenieAsset, GenieCollection, TxResponse, TxStateType, UniformHeight } from '../../types'
-import useDebouncedCallback from '../../../hooks/useDebounce'
+import { FormEvent, useState } from 'react'
 
-interface CollectionProps {
-  setFiltersExpanded: (state: boolean) => void
-  reset: () => void
-  isFiltersExpanded: boolean
-  collectionStats: GenieCollection
-  collectionNfts: GenieAsset[]
-  fetchNextPage: () => void
-  debouncedSearchByName: (v: string) => void
-  searchByNameText: string
-  removeTrait: (trait: Trait) => void
-  traits: Trait[]
-  hasFilters?: boolean
-  hasNextPage: boolean
-  isMobile: boolean
-  cartExpanded: boolean
-  loading: boolean
-  isSweeping: boolean
-  setSweeping: (state: boolean) => void
-  contractAddress: any
-  isReviewingSweep: boolean
-  setReviewingSweep: (state: boolean) => void
-  txState: TxStateType
-  txResponse: TxResponse
-  setTxResponse: (state: TxResponse) => void
-  hasRarity: boolean
-  sortBy: SortBy
-  setSortBy: (sortBy: SortBy) => void
-  markets: string[]
-  removeMarket: (market: string) => void
-  uniformHeight: number
-  setUniformHeight: (uniformHeight: UniformHeight | number) => void
-  isActivityToggled: boolean
-  toggleActivity: () => void
-}
+import { Box } from '../../components/Box'
+import { useCollectionFilters } from '../../hooks/useCollectionFilters'
 
 export const CollectionSearch = () => {
   const [debouncedSearchByNameText, setDebouncedSearchByNameText] = useState('')
-
   const setSearchByNameText = useCollectionFilters((state) => state.setSearch)
-  // const debouncedSearchByName = useDebouncedCallback<[string]>(
-  //   // function
-  //   (value) => {
-  //     setSearchByNameText(value)
-  //   },
-  //   // delay in ms
-  //   1000
-  // )
 
   return (
     <Box

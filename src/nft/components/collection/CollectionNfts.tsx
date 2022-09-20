@@ -1,20 +1,19 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import clsx from 'clsx'
 import { AnimatedBox, Box } from 'nft/components/Box'
+import { CollectionSearch, FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
+import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center } from 'nft/components/Flex'
-import { FilterButton, CollectionSearch } from 'nft/components/collection'
 import { Row } from 'nft/components/Flex'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
-import { useCollectionFilters, SortBy, useIsMobile, useFiltersExpanded } from 'nft/hooks'
+import { SortBy, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieAsset, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
-import { BigNumber } from 'ethers'
-
-import { SortDropdown } from 'nft/components/common/SortDropdown'
 
 import { NonRarityIcon, RarityIcon } from '../../components/icons'
 import { vars } from '../../css/sprinkles.css'
@@ -38,7 +37,7 @@ function getRarityStatus(id: string, assets?: (GenieAsset | undefined)[]) {
     rarityStatusCache.set(id, hasRarity)
   }
 
-  return hasRarity
+  return true
 }
 
 interface CollectionNftsProps {
@@ -142,7 +141,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     return assets
   }, [collectionAssets, AssetsFetchSuccess, sortBy])
 
-  const hasRarity = getRarityStatus(collectionStats?.address!, collectionNfts)
+  const hasRarity = getRarityStatus(collectionStats?.address, collectionNfts)
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
     () =>
@@ -187,7 +186,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
               reverseIndex: 1,
             },
           ],
-    [hasRarity]
+    [hasRarity, setSortBy]
   )
 
   useEffect(() => {
