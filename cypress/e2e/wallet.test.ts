@@ -24,6 +24,7 @@ describe('Wallet', () => {
   })
 
   it('shows connect buttons after disconnect', () => {
+    cy.get('[data-testid=web3-status-connected]').contains(TEST_ADDRESS_NEVER_USE_SHORTENED).click()
     cy.contains('Disconnect').click()
     cy.get('[data-testid=option-grid]').should('exist')
   })

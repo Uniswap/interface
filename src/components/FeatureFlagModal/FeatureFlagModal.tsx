@@ -1,10 +1,10 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
-import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -227,16 +227,18 @@ export default function FeatureFlagModal() {
           label="Tokens"
         />
         <FeatureFlagOption
-          variant={TokensNetworkFilterVariant}
-          value={useTokensNetworkFilterFlag()}
-          featureFlag={FeatureFlag.tokensNetworkFilter}
-          label="Tokens Network Filter"
-        />
-        <FeatureFlagOption
           variant={TokenSafetyVariant}
           value={useTokenSafetyFlag()}
           featureFlag={FeatureFlag.tokenSafety}
           label="Token Safety"
+        />
+      </FeatureFlagGroup>
+      <FeatureFlagGroup name="Phase 0 Follow-ups">
+        <FeatureFlagOption
+          variant={FavoriteTokensVariant}
+          value={useFavoriteTokensFlag()}
+          featureFlag={FeatureFlag.favoriteTokens}
+          label="Favorite Tokens"
         />
       </FeatureFlagGroup>
       <FeatureFlagGroup name="Phase 1">

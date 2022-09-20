@@ -432,7 +432,7 @@ export const SearchBar = () => {
         </Box>
       </Box>
       <NavIcon onClick={toggleOpen}>
-        <NavMagnifyingGlassIcon width={28} height={28} />
+        <NavMagnifyingGlassIcon />
       </NavIcon>
     </Box>
   )
