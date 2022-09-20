@@ -5,30 +5,38 @@ import { SupportedChainId } from 'constants/chains'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components/macro'
 
+const LOGO_SIZE = 20
+
 const Container = styled.button`
   display: grid;
   background: none;
-  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-columns: min-content 1fr min-content;
   align-items: center;
   text-align: left;
   line-height: 24px;
   border: none;
   justify-content: space-between;
-  padding: 10px 16px;
+  padding: 10px 8px;
+  margin: 0 8px;
   cursor: pointer;
   border-radius: 12px;
-  color: white;
+  color: ${({ theme }) => theme.textPrimary};
   width: 240px;
+  transition: ${({ theme }) => theme.transition.duration.medium} ${({ theme }) => theme.transition.timing.ease}
+    background-color;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     width: 100%;
+  }
+
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundOutline};
   }
 `
 
 const Label = styled.div`
   grid-column: 2;
   grid-row: 1;
-  flex-grow: 1;
   font-size: 16px;
 `
 
@@ -37,7 +45,7 @@ const Status = styled.div`
   grid-row: 1;
   display: flex;
   align-items: center;
-  width: fit-content;
+  width: ${LOGO_SIZE}px;
 `
 
 const ApproveText = styled.div`
@@ -48,8 +56,9 @@ const ApproveText = styled.div`
 `
 
 const Logo = styled.img`
-  height: 20px;
-  width: 20px;
+  height: ${LOGO_SIZE}px;
+  width: ${LOGO_SIZE}px;
+  margin-right: 12px;
 `
 
 export default function ChainSelectorRow({
@@ -73,8 +82,8 @@ export default function ChainSelectorRow({
       <Label>{label}</Label>
       {isPending && <ApproveText>Approve in wallet</ApproveText>}
       <Status>
-        {active && <CheckMarkIcon width={20} height={20} color={theme.accentActive} />}
-        {isPending && <Loader />}
+        {active && <CheckMarkIcon width={LOGO_SIZE} height={LOGO_SIZE} color={theme.accentActive} />}
+        {isPending && <Loader width={LOGO_SIZE} height={LOGO_SIZE} />}
       </Status>
     </Container>
   )
