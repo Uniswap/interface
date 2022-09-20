@@ -207,7 +207,6 @@ export function toV2LiquidityToken([tokenA, tokenB, stable]: [Token, Token, bool
 export function useTrackedTokenPairs(): [Token, Token, boolean][] {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
-
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
 
@@ -280,15 +279,18 @@ export function useTrackedTokenPairs(): [Token, Token, boolean][] {
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list
     const keyed = combinedList.reduce<{ [key: string]: [Token, Token, boolean] }>((memo, [tokenA, tokenB, stable]) => {
-      const sorted = tokenA.sortsBefore(tokenB)
-      const key = sorted
-        ? `${tokenA.address}:${tokenB.address}:${stable}`
-        : `${tokenB.address}:${tokenA.address}:${stable}`
-      if (memo[key]) return memo
-      memo[key] = sorted ? [tokenA, tokenB, stable] : [tokenB, tokenA, stable]
+      if (tokenA.chainId === tokenB.chainId && parseInt(`${tokenA.chainId}`) === parseInt(`${chainId}`)) {
+        const sorted = tokenA.sortsBefore(tokenB)
+        const key = sorted
+          ? `${tokenA.address}:${tokenB.address}:${stable}`
+          : `${tokenB.address}:${tokenA.address}:${stable}`
+        if (memo[key]) return memo
+        memo[key] = sorted ? [tokenA, tokenB, stable] : [tokenB, tokenA, stable]
+        return memo
+      }
       return memo
     }, {})
 
     return Object.keys(keyed).map((key) => keyed[key])
-  }, [combinedList])
+  }, [chainId, combinedList])
 }
