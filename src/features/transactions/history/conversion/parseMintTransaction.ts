@@ -2,13 +2,14 @@ import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { ChainId } from 'src/constants/chains'
 import { nativeOnChain } from 'src/constants/tokens'
-import { parseUSDValueFromAssetChange } from 'src/features/transactions/history/conversion/utils'
-import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
+import { parseUSDValueFromAssetChange } from 'src/features/transactions/history/utils'
 import { NFTMintTransactionInfo, TransactionType } from 'src/features/transactions/types'
+import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
+import { UserScreenQueryResponse } from 'src/screens/UserScreen'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 export default function parseNFTMintTransction(
-  transaction: Nullable<TransactionHistoryResponse>
+  transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
 ): NFTMintTransactionInfo | undefined {
   const nativeCurrency = nativeOnChain(ChainId.Mainnet)
   const tokenChange = transaction?.assetChanges.find(

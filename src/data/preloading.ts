@@ -3,6 +3,7 @@ import { ChainId } from 'src/constants/chains'
 import { Screens } from 'src/screens/Screens'
 import { ActivityScreenQuery$variables } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
 import { TokenDetailsScreenQuery$variables } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
+import { UserScreenQuery$variables } from 'src/screens/__generated__/UserScreenQuery.graphql'
 import { toGraphQLChain } from 'src/utils/chainId'
 import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 
@@ -22,6 +23,11 @@ export const preloadMapping = {
     }
   },
   activity: ({ address }: ActivityScreenQuery$variables) => {
+    return {
+      address,
+    }
+  },
+  user: ({ address }: UserScreenQuery$variables) => {
     return {
       address,
     }

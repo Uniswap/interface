@@ -2,6 +2,7 @@ import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
+import { useEagerUserProfileNavigation } from 'src/app/navigation/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
@@ -15,6 +16,7 @@ import { Screens } from 'src/screens/Screens'
 export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () => void }) {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
+  const { preload, navigate } = useEagerUserProfileNavigation()
   const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
   const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])
 
@@ -23,8 +25,9 @@ export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () =>
       return (
         <Button
           onPress={() => {
-            navigation.navigate(Screens.User, { address })
-          }}>
+            navigate(address)
+          }}
+          onPressIn={() => preload(address)}>
           <Box mx="sm">
             <AddressDisplay
               showShortenedEns
@@ -37,7 +40,7 @@ export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () =>
         </Button>
       )
     },
-    [navigation]
+    [navigate, preload]
   )
 
   const hasWatchedWallets = watchedWalletsList.length > 0

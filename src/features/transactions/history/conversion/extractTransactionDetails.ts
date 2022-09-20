@@ -5,13 +5,14 @@ import parseReceiveTransaction from 'src/features/transactions/history/conversio
 import parseSendTransaction from 'src/features/transactions/history/conversion/parseSendTransaction'
 
 import parseTradeTransaction from 'src/features/transactions/history/conversion/parseTradeTransaction'
-import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
+import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
+import { UserScreenQueryResponse } from 'src/screens/UserScreen'
 
 /**
  * Parses txn API response item and identifies known txn type. Helps strictly
@@ -21,7 +22,7 @@ import {
  * @returns Formatted TransactionDetails object.
  */
 export default function extractTransactionDetails(
-  transaction: Nullable<TransactionHistoryResponse>
+  transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
 ): TransactionDetails | null {
   if (!transaction) return null
 

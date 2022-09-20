@@ -21,10 +21,15 @@ import SessionsButton from 'src/components/WalletConnect/SessionsButton'
 import { openModal } from 'src/features/modals/modalSlice'
 import { clearNotificationCount } from 'src/features/notifications/notificationSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
+import { useMergeLocalAndRemoteTransactions } from 'src/features/transactions/hooks'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { Screens } from 'src/screens/Screens'
-import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
+import {
+  ActivityScreenQuery,
+  ActivityScreenQuery$data,
+} from 'src/screens/__generated__/ActivityScreenQuery.graphql'
 
 const MAX_SCROLL_HEIGHT = 180
 
@@ -94,6 +99,10 @@ export const activityScreenQuery = graphql`
   }
 `
 
+export type ActivityScreenQueryResponse = NonNullable<
+  ActivityScreenQuery$data['assetActivities']
+>[0]
+
 export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) {
   const { preloadedQuery } = route.params
   return (
@@ -112,15 +121,17 @@ export function Activity({
   const dispatch = useAppDispatch()
   const navigation = useAppStackNavigation()
   const { t } = useTranslation()
+  const { address } = useActiveAccountWithThrow()
 
-  /**
-   * @TODO: in follow-up PR use this data to populate transaction list
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const data = usePreloadedQuery<ActivityScreenQuery>(activityScreenQuery, preloadedQuery)
-
-  const activeAccount = useActiveAccountWithThrow()
-  const address = activeAccount.address
+  // Parse remote txn data from query and merge with local txn data
+  const transactionData = usePreloadedQuery<ActivityScreenQuery>(
+    activityScreenQuery,
+    preloadedQuery
+  )
+  const formatedTransactions = useMemo(() => {
+    return parseDataResponseToTransactionDetails(transactionData)
+  }, [transactionData])
+  const allTransactions = useMergeLocalAndRemoteTransactions(address, formatedTransactions)
 
   const { sessions } = useWalletConnect(address)
 
@@ -174,7 +185,6 @@ export function Activity({
       )}
       <Flex pb="lg" px="sm">
         <TransactionList
-          address={address}
           emptyStateContent={
             <Flex centered gap="xxl" mt="xl" mx="xl">
               <Flex centered gap="xs">
@@ -198,6 +208,7 @@ export function Activity({
             </Flex>
           }
           readonly={false}
+          transactions={allTransactions}
         />
       </Flex>
     </HeaderScrollScreen>

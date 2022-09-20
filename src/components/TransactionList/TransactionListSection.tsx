@@ -1,14 +1,10 @@
-import React, { Suspense, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
-import { Loading } from 'src/components/loading'
-import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
 import TransactionSummaryRouter from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { TransactionDetails } from 'src/features/transactions/types'
-import { Screens } from 'src/screens/Screens'
 
 const renderItem = (item: ListRenderItemInfo<TransactionDetails>) => {
   return <TransactionSummaryRouter readonly showInlineWarning bg="none" transaction={item.item} />
@@ -16,31 +12,14 @@ const renderItem = (item: ListRenderItemInfo<TransactionDetails>) => {
 
 const key = (info: TransactionDetails) => info.hash
 
-export function TransactionListSection({ owner, count = 3 }: { owner: Address; count?: number }) {
+export function TransactionListSection({
+  transactions,
+  count = 3,
+}: {
+  transactions: TransactionDetails[]
+  count?: number
+}) {
   const { t } = useTranslation()
-
-  return (
-    <BaseCard.Container>
-      <Suspense
-        fallback={
-          <>
-            <BaseCard.Header title={t('Transactions')} />
-            {/* TODO(daniel): replace this with a transaction loader type once it's implemented */}
-            <Loading showSeparator repeat={3} type="token" />
-          </>
-        }>
-        <TransactionListSectionInner count={count} owner={owner} />
-      </Suspense>
-    </BaseCard.Container>
-  )
-}
-
-function TransactionListSectionInner({ owner, count = 3 }: { owner: Address; count?: number }) {
-  const { t } = useTranslation()
-  const navigation = useExploreStackNavigation()
-
-  const { combinedTransactionList: transactions } = useAllFormattedTransactions(owner)
-
   let totalTransactionCount = transactions.length
   const transactionsToDisplay = useMemo(() => transactions.slice(0, count), [transactions, count])
 
@@ -51,27 +30,30 @@ function TransactionListSectionInner({ owner, count = 3 }: { owner: Address; cou
         : t('Transactions'),
     [t, totalTransactionCount]
   )
-
-  return totalTransactionCount === 0 ? (
-    <BaseCard.EmptyState
-      description={t('Any transactions made by this wallet will appear here.')}
-      title={t('No transactions yet')}
-    />
-  ) : (
-    <>
-      <BaseCard.Header
-        title={title}
-        onPress={() => {
-          navigation.navigate(Screens.UserTransactions, { owner })
-        }}
-      />
-      <FlatList
-        ItemSeparatorComponent={() => <Separator px="md" />}
-        data={transactionsToDisplay}
-        keyExtractor={key}
-        listKey="transactions"
-        renderItem={renderItem}
-      />
-    </>
+  return (
+    <BaseCard.Container>
+      {totalTransactionCount === 0 ? (
+        <BaseCard.EmptyState
+          description={t('Any transactions made by this wallet will appear here.')}
+          title={t('No transactions yet')}
+        />
+      ) : (
+        <>
+          <BaseCard.Header
+            title={title}
+            onPress={() => {
+              // TODO: @ian remove this click behavior when we replace with tabs with infinite scroll
+            }}
+          />
+          <FlatList
+            ItemSeparatorComponent={() => <Separator px="md" />}
+            data={transactionsToDisplay}
+            keyExtractor={key}
+            listKey="transactions"
+            renderItem={renderItem}
+          />
+        </>
+      )}
+    </BaseCard.Container>
   )
 }

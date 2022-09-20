@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
+import { useEagerUserProfileNavigation } from 'src/app/navigation/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
@@ -14,7 +14,6 @@ import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
-import { Screens } from 'src/screens/Screens'
 
 function WatchedWalletsItem({
   address,
@@ -28,13 +27,10 @@ function WatchedWalletsItem({
   onUnwatch: () => void
 }) {
   const { t } = useTranslation()
-  const { navigate } = useExploreStackNavigation()
+  const { navigate, preload } = useEagerUserProfileNavigation()
 
   return (
-    <Button
-      onPress={() => {
-        navigate(Screens.User, { address })
-      }}>
+    <Button onPress={() => navigate(address)} onPressIn={() => preload(address)}>
       <Flex alignItems="center" flexDirection="row" mx="lg" my="md">
         <Box flex={1}>
           <AddressDisplay

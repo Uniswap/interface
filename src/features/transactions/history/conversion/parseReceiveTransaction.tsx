@@ -2,12 +2,13 @@ import { AssetType } from 'src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
-} from 'src/features/transactions/history/conversion/utils'
-import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
+} from 'src/features/transactions/history/utils'
 import { ReceiveTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
+import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
+import { UserScreenQueryResponse } from 'src/screens/UserScreen'
 
 export default function parseReceiveTransaction(
-  transaction: Nullable<TransactionHistoryResponse>
+  transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
 ): ReceiveTokenTransactionInfo | undefined {
   const change = transaction?.assetChanges[0]
 

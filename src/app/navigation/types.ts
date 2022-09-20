@@ -13,6 +13,7 @@ import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
+import { UserScreenQuery } from 'src/screens/__generated__/UserScreenQuery.graphql'
 
 type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
   Pick<NFTAsset.Asset, 'token_id'>
@@ -41,7 +42,7 @@ export type ExploreStackParamList = {
   [Screens.ExploreFavorites]: undefined
   [Screens.WatchedWallets]: undefined
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
-  [Screens.User]: { address: string }
+  [Screens.User]: { address: string; preloadedQuery: PreloadedQuery<UserScreenQuery> }
   [Screens.NFTItem]: NFTItem
   [Screens.NFTCollection]: {
     collectionAddress: Address
@@ -49,7 +50,6 @@ export type ExploreStackParamList = {
     owner?: Address
   }
   [Screens.PortfolioTokens]: { owner: Address | undefined }
-  [Screens.UserTransactions]: { owner: Address }
 }
 
 export type AccountStackParamList = {

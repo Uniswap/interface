@@ -1,6 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useMemo } from 'react'
+import { graphql } from 'babel-plugin-relay/macro'
+import React, { Suspense, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList } from 'src/app/navigation/types'
 import EyeOffIcon from 'src/assets/icons/eye-off.svg'
@@ -17,22 +19,116 @@ import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
+import { Loading } from 'src/components/loading'
 import { TransactionListSection } from 'src/components/TransactionList/TransactionListSection'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
+import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
+import {
+  UserScreenQuery,
+  UserScreenQuery$data,
+} from 'src/screens/__generated__/UserScreenQuery.graphql'
 
 type Props = NativeStackScreenProps<ExploreStackParamList, Screens.User>
 
+export const userScreenQuery = graphql`
+  query UserScreenQuery($address: String!) {
+    assetActivities(address: $address, pageSize: 50, page: 1) {
+      timestamp
+      type
+      transaction {
+        hash
+        status
+        to
+        from
+      }
+      assetChanges {
+        __typename
+        ... on TokenTransfer {
+          asset {
+            name
+            symbol
+            address
+            decimals
+            chain
+          }
+          tokenStandard
+          quantity
+          sender
+          recipient
+          direction
+          transactedValue {
+            currency
+            value
+          }
+        }
+        ... on NftTransfer {
+          asset {
+            name
+            nftContract {
+              chain
+              address
+            }
+            tokenId
+            imageUrl
+            collection {
+              name
+            }
+          }
+          nftStandard
+          sender
+          recipient
+          direction
+        }
+        ... on TokenApproval {
+          asset {
+            name
+            symbol
+            decimals
+            address
+            chain
+          }
+          tokenStandard
+          approvedAddress
+          quantity
+        }
+      }
+    }
+  }
+`
+
+export type UserScreenQueryResponse = NonNullable<UserScreenQuery$data['assetActivities']>[0]
+
 export function UserScreen({
   route: {
-    params: { address },
+    params: { address, preloadedQuery },
   },
 }: Props) {
+  return (
+    <Suspense fallback={<Loading />}>
+      <UserScreenInner address={address} preloadedQuery={preloadedQuery} />
+    </Suspense>
+  )
+}
+
+function UserScreenInner({
+  address,
+  preloadedQuery,
+}: {
+  address: string
+  preloadedQuery: PreloadedQuery<UserScreenQuery>
+}) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+
+  const transactionData = usePreloadedQuery<UserScreenQuery>(userScreenQuery, preloadedQuery)
+  const formattedTransactions = useMemo(
+    () => parseDataResponseToTransactionDetails(transactionData),
+    [transactionData]
+  )
 
   const isWatching = useAppSelector(selectWatchedAddressSet).has(address)
 
@@ -113,7 +209,7 @@ export function UserScreen({
               onPress={onWatchPress}
             />
           </Flex>
-          <TransactionListSection owner={address} />
+          <TransactionListSection transactions={formattedTransactions} />
           <PortfolioNFTsSection count={4} owner={address} />
           <PortfolioTokensSection count={3} owner={address} />
         </Flex>

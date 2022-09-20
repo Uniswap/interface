@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import { BigNumberish } from 'ethers'
 import { useMemo, useState } from 'react'
 import {
@@ -10,8 +9,6 @@ import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
-import { useTransactionHistoryForOwner } from 'src/features/transactions/history/transactionHistory'
 import {
   makeSelectAddressTransactions,
   makeSelectTransaction,
@@ -97,8 +94,13 @@ export function useCreateSwapFormState(
   }, [chainId, inputCurrency, outputCurrency, transaction, txId])
 }
 
-export function useAllTransactions(address: Address): TransactionDetails[] {
-  const remoteTransactions = useTransactionHistoryForOwner(address)
+/**
+ * Merge local and remote transactions. If duplicated hash found use data from local store.
+ */
+export function useMergeLocalAndRemoteTransactions(
+  address: string,
+  remoteTransactions: TransactionDetails[]
+) {
   const localTransactions = useSelectAddressTransactions(address)
 
   // Merge local and remote txns into array of single type.
@@ -108,119 +110,25 @@ export function useAllTransactions(address: Address): TransactionDetails[] {
     localTransactions?.map((t) => {
       localHashes.add(t.hash)
     })
-    const formattedRemote = remoteTransactions?.assetActivities
-      ? remoteTransactions.assetActivities.reduce((accum: TransactionDetails[], t) => {
-          const txn = extractTransactionDetails(t)
-          if (txn && !localHashes.has(txn.hash)) accum.push(txn) // dedupe
-          return accum
-        }, [])
-      : []
+    const formattedRemote = remoteTransactions.reduce((accum: TransactionDetails[], txn) => {
+      if (!localHashes.has(txn.hash)) accum.push(txn) // dedupe
+      return accum
+    }, [])
     return (localTransactions ?? [])
       .concat(formattedRemote)
       .sort((a, b) => (a.addedTime > b.addedTime ? -1 : 1))
-  }, [address, localTransactions, remoteTransactions?.assetActivities])
+  }, [address, localTransactions, remoteTransactions])
 
   return combinedTransactionList
 }
 
-export interface AllFormattedTransactions {
-  combinedTransactionList: TransactionDetails[]
-  todayTransactionList: TransactionDetails[]
-  monthTransactionList: TransactionDetails[]
-  yearTransactionList: TransactionDetails[]
-  // Maps year <-> TransactionSummaryInfo[] for all priors years
-  priorByYearTransactionList: Record<string, TransactionDetails[]>
-  pending: TransactionDetails[]
-}
-
-/**
- * @param address Account address for lookup
- * @returns Combined arrays of local and external txns, split into time periods.
- */
-export function useAllFormattedTransactions(address: Address): AllFormattedTransactions {
-  const combinedTransactionList = useAllTransactions(address)
-
-  // Segement by time periods.
-  const [
-    pending,
-    todayTransactionList,
-    monthTransactionList,
-    yearTransactionList,
-    beforeCurrentYear,
-  ] = useMemo(() => {
-    // timestamp in ms for start of time periods
-    const msTimestampCutoffDay = dayjs().startOf('day').unix() * 1000
-    const msTimestampCutoffMonth = dayjs().startOf('month').unix() * 1000
-    const msTimestampCutoffYear = dayjs().startOf('year').unix() * 1000
-
-    const formatted = combinedTransactionList.reduce(
-      (accum: TransactionDetails[][], item) => {
-        if (
-          // Want all incomplete transactions
-          item.status === TransactionStatus.Pending ||
-          item.status === TransactionStatus.Cancelling ||
-          item.status === TransactionStatus.Replacing
-        ) {
-          accum[0].push(item)
-        } else if (item.addedTime > msTimestampCutoffDay) {
-          accum[1].push(item)
-        } else if (item.addedTime > msTimestampCutoffMonth) {
-          accum[2].push(item)
-        } else if (item.addedTime > msTimestampCutoffYear) {
-          accum[3].push(item)
-        } else {
-          accum[4].push(item)
-        }
-        return accum
-      },
-      [[], [], [], [], []]
-    )
-    // sort pending txns based on nonces
-    formatted[0] = formatted[0].sort((a, b) => {
-      const nonceA = a.options?.request?.nonce
-      const nonceB = b.options?.request?.nonce
-      return nonceA && nonceB ? (nonceA < nonceB ? -1 : 1) : -1
-    })
-
-    return formatted
-  }, [combinedTransactionList])
-
-  // For all transaction before current year, group by years
-  const priorByYearTransactionList = useMemo(() => {
-    return beforeCurrentYear.reduce((accum: Record<string, TransactionDetails[]>, item) => {
-      const currentYear = dayjs(item.addedTime).year().toString()
-      const currentYearList = accum[currentYear] ?? []
-      currentYearList.push(item)
-      accum[currentYear] = currentYearList
-      return accum
-    }, {})
-  }, [beforeCurrentYear])
-
-  return useMemo(() => {
-    return {
-      combinedTransactionList,
-      pending,
-      todayTransactionList,
-      monthTransactionList,
-      yearTransactionList,
-      priorByYearTransactionList,
-    }
-  }, [
-    priorByYearTransactionList,
-    combinedTransactionList,
-    monthTransactionList,
-    pending,
-    todayTransactionList,
-    yearTransactionList,
-  ])
-}
-
 export function useLowestPendingNonce() {
   const activeAccountAddress = useActiveAccountAddressWithThrow()
-  const { pending } = useAllFormattedTransactions(activeAccountAddress)
+  const pending = usePendingTransactions(activeAccountAddress)
 
   return useMemo(() => {
     let min: BigNumberish | undefined
+    if (!pending) return
     pending.map((txn) => {
       const currentNonce = txn.options?.request?.nonce
       min = min ? (currentNonce ? (min < currentNonce ? min : currentNonce) : min) : currentNonce
@@ -238,9 +146,9 @@ export function useAllTransactionsBetweenAddresses(
   sender: Address,
   recipient: string | undefined | null
 ): TransactionDetails[] {
-  const txnsToSearch = useAllTransactions(sender)
+  const txnsToSearch = useSelectAddressTransactions(sender)
   return useMemo(() => {
-    if (!sender || !recipient) return EMPTY_ARRAY
+    if (!sender || !recipient || !txnsToSearch) return EMPTY_ARRAY
     const commonTxs = txnsToSearch.filter(
       (tx) => tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient
     )

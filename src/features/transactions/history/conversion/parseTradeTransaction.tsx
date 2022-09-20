@@ -4,8 +4,7 @@ import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
-} from 'src/features/transactions/history/conversion/utils'
-import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
+} from 'src/features/transactions/history/utils'
 import {
   ExactInputSwapTransactionInfo,
   NFTTradeTransactionInfo,
@@ -13,10 +12,12 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'src/features/transactions/types'
+import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
+import { UserScreenQueryResponse } from 'src/screens/UserScreen'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 export default function parseTradeTransaction(
-  transaction: Nullable<TransactionHistoryResponse>
+  transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
 ): ExactInputSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
   // for detectign wraps
   const nativeCurrencyID = buildNativeCurrencyId(ChainId.Mainnet).toLocaleLowerCase()

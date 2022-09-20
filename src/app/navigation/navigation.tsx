@@ -74,7 +74,6 @@ import { SettingsWallet } from 'src/screens/SettingsWallet'
 import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
-import { TransactionsScreen } from 'src/screens/TransactionsScreen'
 import { UserScreen } from 'src/screens/UserScreen'
 import { WatchedWalletsScreen } from 'src/screens/WatchedWalletsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
@@ -302,7 +301,6 @@ export function ExploreStackNavigator() {
       <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
       <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       <ExploreStack.Screen component={WatchedWalletsScreen} name={Screens.WatchedWallets} />
-      <ExploreStack.Screen component={TransactionsScreen} name={Screens.UserTransactions} />
     </ExploreStack.Navigator>
   )
 }

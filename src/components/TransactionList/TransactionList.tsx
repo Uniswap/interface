@@ -1,13 +1,12 @@
 import dayjs from 'dayjs'
 import { TFunction } from 'i18next'
-import React, { ReactElement, Suspense, useMemo } from 'react'
+import React, { ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList, SectionListData } from 'react-native'
 import { Box } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
+import { formatTransactionsByDate } from 'src/features/transactions/history/utils'
 import TransactionSummaryRouter from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 
@@ -18,26 +17,6 @@ const YEAR_TITLE = dayjs().year().toString()
 
 const key = (info: TransactionDetails) => info.hash
 
-export default function TransactionList({
-  address,
-  readonly,
-  emptyStateContent,
-}: {
-  address: Address
-  readonly: boolean
-  emptyStateContent: React.ReactElement | null
-}) {
-  return (
-    <Suspense fallback={<Loading repeat={4} type="box" />}>
-      <TransactionSectionList
-        address={address}
-        emptyStateContent={emptyStateContent}
-        readonly={readonly}
-      />
-    </Suspense>
-  )
-}
-
 const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { title } }) => (
   <Box px="xs" py="md">
     <Text color="textSecondary" variant="smallLabel">
@@ -47,17 +26,18 @@ const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { 
 )
 
 /** Displays historical and pending transactions for a given address. */
-export function TransactionSectionList({
-  address,
+export default function TransactionList({
+  transactions,
   readonly,
   emptyStateContent,
 }: {
-  address: Address
+  transactions: TransactionDetails[]
   readonly: boolean
   emptyStateContent: ReactElement | null
 }) {
   const { t } = useTranslation()
 
+  // Format transactions for section list
   const {
     pending,
     todayTransactionList,
@@ -65,7 +45,7 @@ export function TransactionSectionList({
     yearTransactionList,
     priorByYearTransactionList,
     combinedTransactionList,
-  } = useAllFormattedTransactions(address)
+  } = useMemo(() => formatTransactionsByDate(transactions), [transactions])
 
   const hasTransactions = combinedTransactionList?.length > 0
 
