@@ -1,4 +1,5 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
