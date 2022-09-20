@@ -204,6 +204,12 @@ function Web3StatusInner() {
   const hasSocks = useHasSocks()
   const toggleWallet = navbarFlagEnabled ? toggleWalletDropdown : toggleWalletModal
 
+  const chevronProps = {
+    height: 20,
+    width: 20,
+    color: theme.textSecondary,
+  }
+
   if (!chainId) {
     return null
   } else if (error) {
@@ -232,9 +238,9 @@ function Web3StatusInner() {
             <Text>{ENSName || shortenAddress(account)}</Text>
             {navbarFlagEnabled ? (
               walletIsOpen ? (
-                <StyledChevronUp onClick={toggleWalletDropdown} />
+                <StyledChevronUp {...chevronProps} />
               ) : (
-                <StyledChevronDown onClick={toggleWalletDropdown} />
+                <StyledChevronDown {...chevronProps} />
               )
             ) : null}
           </>
