@@ -93,7 +93,13 @@ const ModalRegisterCampaignCaptcha = () => {
           <Content>
             <Trans>To continue, check the box below to verify and proceed</Trans>
           </Content>
-          <ReCAPTCHA ref={recaptchaRef} size="normal" sitekey={GOOGLE_RECAPTCHA_KEY} onChange={handleReCaptchaVerify} />
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            size="normal"
+            sitekey={GOOGLE_RECAPTCHA_KEY}
+            onChange={handleReCaptchaVerify}
+            style={{ minHeight: '78px' }}
+          />
         </RegisterCampaignBackground>
       </Flex>
     </ModalCenter>
