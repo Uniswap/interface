@@ -48,12 +48,6 @@ const NoTokenDisplay = styled.div`
   padding: 0px 28px;
   gap: 8px;
 `
-<<<<<<< HEAD
-=======
-const TokenRowsContainer = styled.div`
-  width: 100%;
-`
->>>>>>> gql-schema-migration
 
 function NoTokensState({ message }: { message: ReactNode }) {
   return (
