@@ -128,12 +128,13 @@ describe(watchTransaction, () => {
         return null
       }),
     }
+    const cancelRequest = { to: from, from: from, value: '0x0' }
     return expectSaga(watchTransaction, txDetailsPending)
       .provide([
         [call(getProvider, chainId), receiptProvider],
         [call(attemptCancelTransaction, txDetailsPending), true],
       ])
-      .dispatch(cancelTransaction({ chainId, id, address: from }))
+      .dispatch(cancelTransaction({ chainId, id, address: from, cancelRequest }))
       .call(attemptCancelTransaction, txDetailsPending)
       .silentRun()
   })

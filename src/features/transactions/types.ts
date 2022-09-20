@@ -31,6 +31,12 @@ export interface TransactionDetails extends TransactionId {
   receipt?: TransactionReceipt
 
   isFlashbots?: boolean
+
+  // cancelRequest is the txRequest object to be submitted
+  // in attempt to cancel the current transaction
+  // it should contain all the appropriate gas details in order
+  // to get submitted first
+  cancelRequest?: providers.TransactionRequest
 }
 
 export interface FinalizedTransactionDetails extends TransactionDetails {

@@ -1,23 +1,19 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { providers } from 'ethers'
+import { BigNumber, providers } from 'ethers'
 import { useCallback, useMemo, useState } from 'react'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId, isL2Chain } from 'src/constants/chains'
 import { GAS_FEE_REFRESH_INTERVAL } from 'src/constants/gas'
 import { PollingInterval } from 'src/constants/misc'
-import {
-  TRANSACTION_CANCELLATION_GAS_FACTOR,
-  TRANSACTION_MINIMUM_GAS,
-} from 'src/constants/transactions'
-import { getAdjustedGasFeeParams } from 'src/features/gas/adjustGasFee'
+import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'src/constants/transactions'
+import { FeeDetails, getAdjustedGasFeeDetails } from 'src/features/gas/adjustGasFee'
 import { useGasFeeQuery } from 'src/features/gas/api'
 import { computeGasFee } from 'src/features/gas/computeGasFee'
 import { FeeInfo, FeeType, GasSpeed, TransactionGasFeeInfo } from 'src/features/gas/types'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { TransactionDetails } from 'src/features/transactions/types'
-import { useAsyncData } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
 import { useInterval } from 'src/utils/timing'
 
@@ -101,57 +97,55 @@ export function useUSDGasPrice(chainId: ChainId | undefined, gasFee?: string) {
   return useUSDCValue(currencyAmount)?.toExact()
 }
 
-// We want network fee to update instantly in cancelation UI, and dont want to wait full 10s for
-// network conditions to reset based on GAS_FEE_REFRESH_INTERVAL.
-const CANCEL_GAS_FEE_INTERVAL_OVERRIDE = 1000
-
-const createTxRequest = async (transaction: TransactionDetails, provider: providers.Provider) => {
-  try {
-    const { options } = transaction
-    const oldRequest = options.request
-    const currentFeeData = await provider.getFeeData()
-    const feeParams = getAdjustedGasFeeParams(
-      oldRequest,
-      currentFeeData,
-      TRANSACTION_CANCELLATION_GAS_FACTOR
-    )
-    const newTxRequest: providers.TransactionRequest = {
-      to: transaction.from,
-      value: '0x0',
-      gasLimit: TRANSACTION_MINIMUM_GAS,
-      ...feeParams,
-    }
-
-    return newTxRequest
-  } catch (error) {
-    logger.error('useCancelationGasFeeInfo', '', 'Error computing cancelation fee', error)
-  }
+type CancelationGasFeeDetails = {
+  cancelRequest: providers.TransactionRequest
+  cancelationGasFee: string
 }
 
 /**
  * Construct cancelation transaction with increased gas (based on current network conditions),
  * then use it to compute new gas info.
  */
-export function useCancelationGasFeeInfo(transaction: TransactionDetails): {
-  isLoading: boolean
-  feeInfo: FeeInfo | undefined
-} {
-  const provider = useProvider(transaction.chainId)
+export function useCancelationGasFeeInfo(
+  transaction: TransactionDetails
+): CancelationGasFeeDetails | undefined {
+  const cancelationRequest = useMemo(() => {
+    return {
+      chainId: transaction.chainId,
+      from: transaction.from,
+      to: transaction.from,
+      value: '0x0',
+    }
+  }, [transaction])
 
-  const transactionCreator = useCallback(() => {
-    if (!provider) return undefined
+  const baseTxGasFee = useTransactionGasFee(cancelationRequest, GasSpeed.Urgent)
+  return useMemo(() => {
+    if (!baseTxGasFee) return
 
-    return createTxRequest(transaction, provider)
-  }, [transaction, provider])
+    const adjustedFeeDetails = getAdjustedGasFeeDetails(
+      transaction.options.request,
+      baseTxGasFee,
+      TRANSACTION_CANCELLATION_GAS_FACTOR
+    )
 
-  const { data, isLoading } = useAsyncData(transactionCreator)
+    const cancelRequest = {
+      ...cancelationRequest,
+      ...adjustedFeeDetails.params,
+      gasLimit: baseTxGasFee.params.gasLimit,
+    }
 
-  const feeInfo = useGasFeeInfo(
-    transaction.chainId,
-    data ?? null,
-    undefined,
-    CANCEL_GAS_FEE_INTERVAL_OVERRIDE
-  )
+    return {
+      cancelRequest,
+      cancelationGasFee: getCancelationGasFee(adjustedFeeDetails, baseTxGasFee.params.gasLimit),
+    }
+  }, [baseTxGasFee, cancelationRequest, transaction.options.request])
+}
 
-  return { isLoading, feeInfo }
+function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string) {
+  // doing object destructuring here loses ts checks based on FeeDetails.type >:(
+  if (adjustedFeeDetails.type === FeeType.Legacy) {
+    return BigNumber.from(gasLimit).mul(adjustedFeeDetails.params.gasPrice).toString()
+  }
+
+  return BigNumber.from(adjustedFeeDetails.params.maxFeePerGas).mul(gasLimit).toString()
 }

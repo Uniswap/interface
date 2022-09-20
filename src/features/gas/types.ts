@@ -117,12 +117,12 @@ interface GasFeeResponseLegacy extends GasFeeResponseBase {
   }
 }
 
-type TransactionLegacyFeeParams = {
+export type TransactionLegacyFeeParams = {
   gasPrice: string
   gasLimit: string
 }
 
-type TransactionEip1559FeeParams = {
+export type TransactionEip1559FeeParams = {
   maxFeePerGas: string
   maxPriorityFeePerGas: string
   gasLimit: string

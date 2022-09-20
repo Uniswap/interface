@@ -1,4 +1,5 @@
-import { ComponentProps, default as React } from 'react'
+import { providers } from 'ethers'
+import { ComponentProps, default as React, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
@@ -25,16 +26,22 @@ export function CancelConfirmationView({
   transactionDetails,
 }: {
   onBack: () => void
-  onCancel: () => void
+  onCancel: (txRequest: providers.TransactionRequest) => void
   transactionDetails: TransactionDetails
 }) {
   const { t } = useTranslation()
   const accountAddress = useActiveAccount()?.address
 
-  const { feeInfo, isLoading } = useCancelationGasFeeInfo(transactionDetails)
+  const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
   const gasFeeUSD = formatUSDGasPrice(
-    useUSDGasPrice(transactionDetails.chainId, feeInfo?.fee?.fast)
+    useUSDGasPrice(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee)
   )
+
+  const onCancelConfirm = useCallback(() => {
+    if (!cancelationGasFeeInfo?.cancelRequest) return
+
+    onCancel(cancelationGasFeeInfo.cancelRequest)
+  }, [cancelationGasFeeInfo, onCancel])
 
   return (
     <Flex centered grow bg="backgroundSurface" borderRadius="xl" gap="lg" p="lg" pb="xxl">
@@ -57,11 +64,7 @@ export function CancelConfirmationView({
         width="100%">
         <Flex grow row justifyContent="space-between" p="md">
           <Text variant="bodySmall">{t('Network fee')}</Text>
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            gasFeeUSD && <Text variant="bodySmall">{gasFeeUSD}</Text>
-          )}
+          {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="bodySmall">{gasFeeUSD}</Text>}
         </Flex>
         {accountAddress && (
           <Flex grow row justifyContent="space-between" padding="md">
@@ -86,7 +89,7 @@ export function CancelConfirmationView({
             label={t('Confirm')}
             name={ElementName.Cancel}
             textVariant="mediumLabel"
-            onPress={onCancel}
+            onPress={onCancelConfirm}
           />
         </Flex>
       </Flex>

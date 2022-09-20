@@ -141,7 +141,7 @@ export async function waitForReceipt(hash: string, provider: providers.Provider)
 function* waitForCancellation(chainId: ChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof cancelTransaction>>(cancelTransaction.type)
-    if (payload.chainId === chainId && payload.id === id) return true
+    if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) return true
   }
 }
 

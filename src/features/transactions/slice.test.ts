@@ -193,6 +193,7 @@ describe('transaction reducer', () => {
           cancelTransaction({
             address: '0xaddress',
             chainId: ChainId.Goerli,
+            cancelRequest: {},
             id,
           })
         )
@@ -220,7 +221,7 @@ describe('transaction reducer', () => {
           addedTime: Date.now(),
         })
       )
-      store.dispatch(cancelTransaction({ chainId, id, address }))
+      store.dispatch(cancelTransaction({ chainId, id, address, cancelRequest: {} }))
       const tx = store.getState()[address][chainId]?.[id]
       expect(tx?.status).toEqual(TransactionStatus.Cancelling)
     })

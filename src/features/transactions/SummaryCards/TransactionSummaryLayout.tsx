@@ -1,3 +1,4 @@
+import { providers } from 'ethers'
 import { default as React, ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -60,13 +61,14 @@ function TransactionSummaryLayout({
   const isCancelable =
     status === TransactionStatus.Pending && !readonly && Boolean(transaction.options?.request)
 
-  function handleCancel() {
+  function handleCancel(txRequest: providers.TransactionRequest) {
     if (!transaction) return
     dispatch(
       cancelTransaction({
         chainId: transaction.chainId,
         id: transaction.id,
         address: transaction.from,
+        cancelRequest: txRequest,
       })
     )
     setShowCancelModal(false)

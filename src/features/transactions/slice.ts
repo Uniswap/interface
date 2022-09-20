@@ -51,13 +51,18 @@ const slice = createSlice({
     },
     cancelTransaction: (
       state,
-      { payload: { chainId, id, address } }: PayloadAction<TransactionId & { address: string }>
+      {
+        payload: { chainId, id, address, cancelRequest },
+      }: PayloadAction<
+        TransactionId & { address: string; cancelRequest: providers.TransactionRequest }
+      >
     ) => {
       assert(
         state?.[address]?.[chainId]?.[id],
         `cancelTransaction: Attempted to cancel a tx that doesnt exist with id ${id}`
       )
       state[address][chainId]![id].status = TransactionStatus.Cancelling
+      state[address][chainId]![id].cancelRequest = cancelRequest
     },
     replaceTransaction: (
       state,
