@@ -5,6 +5,7 @@ import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
+import { PollingInterval } from 'src/constants/misc'
 import { TotalBalanceQuery } from 'src/features/balances/__generated__/TotalBalanceQuery.graphql'
 import { Theme } from 'src/styles/theme'
 import { formatUSDPrice } from 'src/utils/format'
@@ -38,7 +39,8 @@ function TotalBalanceInner({ owner, showRelativeChange, variant }: TotalBalanceV
         }
       }
     `,
-    { owner }
+    { owner },
+    { networkCacheConfig: { poll: PollingInterval.Fast } }
   )
 
   return (

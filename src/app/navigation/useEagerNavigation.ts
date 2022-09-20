@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/core'
 import { useEffect, useState } from 'react'
 import { GraphQLTaggedNode, useQueryLoader } from 'react-relay'
 import { OperationType } from 'relay-runtime'
+import { PollingInterval } from 'src/constants/misc'
 import { Screens } from 'src/screens/Screens'
 
 /**
@@ -17,7 +18,10 @@ import { Screens } from 'src/screens/Screens'
  *    return <Button onPressIn={onPressIn} onPress={onPress} />
  *  }
  */
-export function useEagerNavigation<Q extends OperationType>(query: GraphQLTaggedNode) {
+export function useEagerNavigation<Q extends OperationType>(
+  query: GraphQLTaggedNode,
+  pollingInterval?: PollingInterval
+) {
   const { navigate } = useNavigation<any>()
 
   const [preloadedQuery, loadQuery] = useQueryLoader<Q>(query)
@@ -27,7 +31,11 @@ export function useEagerNavigation<Q extends OperationType>(query: GraphQLTagged
   const [targetParams, setTargetParams] = useState<Object>({})
 
   function registerNavigationIntent(params: Q['variables']) {
-    loadQuery(params)
+    loadQuery(params, {
+      networkCacheConfig: {
+        poll: pollingInterval,
+      },
+    })
   }
 
   function preloadedNavigate(screen: Screens, params: any) {

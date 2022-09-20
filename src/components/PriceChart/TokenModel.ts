@@ -5,6 +5,7 @@ import { useLazyLoadQuery } from 'react-relay-offline'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
 import { TokenModel_PriceQuery } from 'src/components/PriceChart/__generated__/TokenModel_PriceQuery.graphql'
+import { PollingInterval } from 'src/constants/misc'
 import { toGraphQLChain } from 'src/utils/chainId'
 import { graphQLCurrencyInfo } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
@@ -52,12 +53,16 @@ export function useTokenPriceGraphs(token: Token): NullUndefined<GraphMetadatas>
   const { address, chain } = graphQLCurrencyInfo(token)
   const graphQLChain = toGraphQLChain(chain)
 
-  const { data: priceData } = useLazyLoadQuery<TokenModel_PriceQuery>(priceQuery, {
-    contract: {
-      address,
-      chain: graphQLChain ?? 'ETHEREUM',
+  const { data: priceData } = useLazyLoadQuery<TokenModel_PriceQuery>(
+    priceQuery,
+    {
+      contract: {
+        address,
+        chain: graphQLChain ?? 'ETHEREUM',
+      },
     },
-  })
+    { networkCacheConfig: { poll: PollingInterval.Normal } }
+  )
 
   return useMemo(() => {
     if (!priceData) {

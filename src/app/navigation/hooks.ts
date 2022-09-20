@@ -1,4 +1,5 @@
 import { useEagerNavigation } from 'src/app/navigation/useEagerNavigation'
+import { PollingInterval } from 'src/constants/misc'
 import { preloadMapping } from 'src/data/preloading'
 import { activityScreenQuery } from 'src/screens/ActivityScreen'
 import { Screens } from 'src/screens/Screens'
@@ -8,11 +9,13 @@ import { UserScreenQuery } from 'src/screens/__generated__/UserScreenQuery.graph
 
 /**
  * Utility hook to simplify navigating to Activity screen.
- * Preloads query neede to render transaction list.
+ * Preloads query needed to render transaction list.
  */
 export function useEagerActivityNavigation() {
-  const { registerNavigationIntent, preloadedNavigate } =
-    useEagerNavigation<ActivityScreenQuery>(activityScreenQuery)
+  const { registerNavigationIntent, preloadedNavigate } = useEagerNavigation<ActivityScreenQuery>(
+    activityScreenQuery,
+    PollingInterval.Normal
+  )
 
   const preload = (address: string) => {
     registerNavigationIntent(

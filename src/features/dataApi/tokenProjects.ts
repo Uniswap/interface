@@ -26,7 +26,6 @@ const query = graphql`
  * Fetches token information as CurrencyInfo from currencyIds. When used, wrap component
  * with Suspense.
  */
-
 export function useTokenProjects(currencyIds: CurrencyId[]): CurrencyInfo[] {
   const contracts = currencyIds.map((id) => currencyIdToContractInput(id))
 

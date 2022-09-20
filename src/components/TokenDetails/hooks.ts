@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useEagerNavigation } from 'src/app/navigation/useEagerNavigation'
 import { ChainId } from 'src/constants/chains'
+import { PollingInterval } from 'src/constants/misc'
 import { nativeOnChain } from 'src/constants/tokens'
 import { preloadMapping } from 'src/data/preloading'
 import { useActiveChainIds } from 'src/features/chains/utils'
@@ -75,7 +76,7 @@ export function useCrossChainBalances(currency: Currency) {
 /** Utility hook to simplify navigating to token details screen */
 export function useTokenDetailsNavigation() {
   const { registerNavigationIntent, preloadedNavigate } =
-    useEagerNavigation<TokenDetailsScreenQuery>(tokenDetailsScreenQuery)
+    useEagerNavigation<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, PollingInterval.Fast)
 
   const preload = (currencyId: CurrencyId) => {
     registerNavigationIntent(

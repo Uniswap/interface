@@ -5,6 +5,7 @@ import { useLazyLoadQuery } from 'react-relay-offline'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
 import { PortfolioModel_PortfolioQuery } from 'src/components/PriceChart/__generated__/PortfolioModel_PortfolioQuery.graphql'
+import { PollingInterval } from 'src/constants/misc'
 
 /*
 TODO: Added the tokenBalances fields here because usePortfolioBalances's `balancesQuery'
@@ -62,9 +63,13 @@ const portfolioCharts = graphql`
 `
 
 export function usePortfolioBalanceGraphs(owner: Address): NullUndefined<GraphMetadatas> {
-  const { data: portfolioData } = useLazyLoadQuery<PortfolioModel_PortfolioQuery>(portfolioCharts, {
-    ownerAddress: owner,
-  })
+  const { data: portfolioData } = useLazyLoadQuery<PortfolioModel_PortfolioQuery>(
+    portfolioCharts,
+    {
+      ownerAddress: owner,
+    },
+    { networkCacheConfig: { poll: PollingInterval.Normal } }
+  )
 
   return useMemo(() => {
     if (!portfolioData) {
