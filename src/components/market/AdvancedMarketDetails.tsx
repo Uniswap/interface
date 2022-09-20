@@ -98,7 +98,9 @@ export function AdvancedMarketDetails({
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <TYPE.black textAlign="right" fontSize={14}>
             {trade.tradeType === TradeType.EXACT_INPUT
-              ? `${minimumReceived} ${trade.outputAmount.currency.symbol}`
+              ? `${minimumReceived || trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${
+                  trade.outputAmount.currency.symbol
+                }`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
@@ -115,16 +117,19 @@ export function AdvancedMarketDetails({
           </TextWithLoadingPlaceholder>
         </RowBetween>
       )}
-      <RowBetween>
-        <RowFixed>
-          <TYPE.subHeader color={theme.text1}>Referer:</TYPE.subHeader>
-        </RowFixed>
-        <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-          <TYPE.black textAlign="right" fontSize={14}>
-            {referer ? shortenAddress(referer) : '-'}
-          </TYPE.black>
-        </TextWithLoadingPlaceholder>
-      </RowBetween>
+
+      {referer && (
+        <RowBetween>
+          <RowFixed>
+            <TYPE.subHeader color={theme.text1}>Referer:</TYPE.subHeader>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={syncing} width={70}>
+            <TYPE.black textAlign="right" fontSize={14}>
+              {referer ? shortenAddress(referer) : '-'}
+            </TYPE.black>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+      )}
     </AutoColumn>
   )
 }

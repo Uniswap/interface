@@ -1090,7 +1090,7 @@ export default function Market({ history }: RouteComponentProps) {
                             </ButtonConfirmed>
                             <ButtonError
                               onClick={() => {
-                                if (!isGaslessMode) {
+                                if (false) {
                                   handleSwap()
                                 } else {
                                   setSwapState({
@@ -1122,7 +1122,7 @@ export default function Market({ history }: RouteComponentProps) {
                       ) : (
                         <ButtonError
                           onClick={() => {
-                            if (!isGaslessMode) {
+                            if (false) {
                               handleSwap()
                             } else {
                               setSwapState({
@@ -1607,7 +1607,7 @@ export default function Market({ history }: RouteComponentProps) {
                       </ButtonConfirmed>
                       <ButtonError
                         onClick={() => {
-                          if (!isGaslessMode) {
+                          if (false) {
                             handleSwap()
                           } else {
                             setSwapState({
@@ -1638,7 +1638,7 @@ export default function Market({ history }: RouteComponentProps) {
                 ) : (
                   <ButtonError
                     onClick={() => {
-                      if (!isGaslessMode) {
+                      if (false) {
                         handleSwap()
                       } else {
                         setSwapState({

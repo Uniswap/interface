@@ -111,7 +111,9 @@ export default function MarketModalHeader({
       : paymentFees
     : undefined
 
-  const minimumReceived = fee ? Number(calculateMinimumReceived(allowedSlippage, fee, trade.outputAmount)) : undefined
+  const minimumReceived = fee
+    ? Number(calculateMinimumReceived(allowedSlippage, fee, trade.outputAmount))
+    : +trade.minimumAmountOut(allowedSlippage).toSignificant(6)
 
   const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
 
