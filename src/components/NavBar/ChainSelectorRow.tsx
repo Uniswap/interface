@@ -3,8 +3,7 @@ import Loader from 'components/Loader'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { CheckMarkIcon } from 'nft/components/icons'
-import { vars } from 'nft/css/sprinkles.css'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 const Container = styled.button`
   display: grid;
@@ -15,7 +14,7 @@ const Container = styled.button`
   line-height: 24px;
   border: none;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: 10px 16px;
   cursor: pointer;
   border-radius: 12px;
   color: white;
@@ -30,6 +29,7 @@ const Label = styled.div`
   grid-column: 2;
   grid-row: 1;
   flex-grow: 1;
+  font-size: 16px;
 `
 
 const Status = styled.div`
@@ -65,13 +65,15 @@ export default function ChainSelectorRow({
   const active = chainId === targetChain
   const { label, logoUrl } = getChainInfo(targetChain)
 
+  const theme = useTheme()
+
   return (
     <Container onClick={() => onSelectChain(targetChain)}>
       <Logo src={logoUrl} alt={label} />
       <Label>{label}</Label>
-      {(isPending || targetChain === 1) && <ApproveText>Approve in wallet</ApproveText>}
+      {isPending && <ApproveText>Approve in wallet</ApproveText>}
       <Status>
-        {active && <CheckMarkIcon width={20} height={20} color={vars.color.blue400} />}
+        {active && <CheckMarkIcon width={20} height={20} color={theme.accentActive} />}
         {isPending && <Loader />}
       </Status>
     </Container>
