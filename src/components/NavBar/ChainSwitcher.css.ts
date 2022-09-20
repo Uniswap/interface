@@ -7,8 +7,8 @@ export const ChainSwitcher = style([
   lightGrayOverlayOnHover,
   sprinkles({
     borderRadius: '8',
-    paddingY: '8',
     paddingX: '12',
+    height: '40',
     cursor: 'pointer',
     border: 'none',
     color: 'blackBlue',
