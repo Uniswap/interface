@@ -12,13 +12,13 @@ export const FilterButton = ({
   isMobile,
   isFiltersExpanded,
   results,
-  collectionCount,
+  collectionCount = 0,
 }: {
   isMobile: boolean
   isFiltersExpanded: boolean
   results?: number
   onClick: () => void
-  collectionCount: number
+  collectionCount?: number
 }) => {
   const { minPrice, maxPrice, minRarity, maxRarity, traits, markets, buyNow } = useCollectionFilters((state) => ({
     minPrice: state.minPrice,
