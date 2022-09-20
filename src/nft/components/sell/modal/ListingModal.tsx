@@ -8,6 +8,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useNFTList, useSellAsset } from 'nft/hooks'
 import { logListing, looksRareNonceFetcher } from 'nft/queries'
 import { AssetRow, CollectionRow, ListingRow, ListingStatus } from 'nft/types'
+import { pluralize } from 'nft/utils/roundAndPluralize'
 import { Dispatch, useEffect, useMemo, useRef, useState } from 'react'
 
 import { ListingButton } from './ListingButton'
@@ -169,7 +170,7 @@ const ListingModal = () => {
       <Column overflowX="hidden" overflowY="auto" style={{ maxHeight: '60vh' }}>
         {showSuccessScreen ? (
           <ListingSection
-            sectionTitle={`Listed ${listings.length} item${listings.length === 1 ? '' : 's'} for sale`}
+            sectionTitle={`Listed ${listings.length} item${pluralize(listings.length)} for sale`}
             rows={listings}
             index={0}
             openIndex={openIndex}
@@ -178,16 +179,16 @@ const ListingModal = () => {
         ) : (
           <>
             <ListingSection
-              sectionTitle={`Approve ${collectionsRequiringApproval.length} collection${
-                collectionsRequiringApproval.length === 1 ? '' : 's'
-              }`}
+              sectionTitle={`Approve ${collectionsRequiringApproval.length} collection${pluralize(
+                collectionsRequiringApproval.length
+              )}`}
               title="COLLECTIONS"
               rows={collectionsRequiringApproval}
               index={1}
               openIndex={openIndex}
             />
             <ListingSection
-              sectionTitle={`Confirm ${listings.length} listing${listings.length === 1 ? '' : 's'}`}
+              sectionTitle={`Confirm ${listings.length} listing${pluralize(listings.length)}`}
               caption="Now you can sign to list each item"
               title="NFTS"
               rows={listings}
