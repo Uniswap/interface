@@ -121,7 +121,7 @@ function TransactionMessage({
   useEffect(() => {
     const parseResult = async () => {
       // no-yolo-parser library expects these fields to be defined
-      if (!transaction.from || transaction.to || !transaction.value || !transaction.data) return
+      if (!transaction.from || !transaction.to || !transaction.value || !transaction.data) return
       return parser.parseAsResult(transaction as Transaction).then((result) => {
         if (!result.transactionDescription.ok) {
           throw result.transactionDescription.error
