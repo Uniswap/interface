@@ -173,7 +173,8 @@ export function useTopTokens(prefetchedData: TopTokens100Query['response']) {
     const contracts = prefetchedSelectedTokens.slice(0, PAGE_SIZE).map(toContractInput)
     loadTokens(contracts, (data) => {
       if (data?.tokens) {
-        setTokens([...data.tokens])
+        // @ts-ignore prevent typescript from complaining about readonly data
+        setTokens(data.tokens)
         setLoading(false)
         setPage(1)
       }
