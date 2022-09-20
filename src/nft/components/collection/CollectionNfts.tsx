@@ -20,7 +20,7 @@ import { NonRarityIcon, RarityIcon } from '../../components/icons'
 import { vars } from '../../css/sprinkles.css'
 
 const rarityStatusCache = new Map<string, boolean>()
-function getRarityStatus(id: string, assets?: GenieAsset[]) {
+function getRarityStatus(id: string, assets?: (GenieAsset | undefined)[]) {
   if (rarityStatusCache.has(id)) {
     return rarityStatusCache.get(id)
   }
@@ -142,7 +142,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     return assets
   }, [collectionAssets, AssetsFetchSuccess, sortBy])
 
-  // @ts-ignore
   const hasRarity = getRarityStatus(collectionStats?.address!, collectionNfts)
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
