@@ -249,6 +249,15 @@ html {
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
   
 }
+
+::-webkit-scrollbar {
+  width: 0.618rem;
+  background-color: rgba(0, 0, 0, 0);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 0.25rem;
+}
 `
 
 export const ThemedGlobalStyle = createGlobalStyle`
@@ -259,7 +268,7 @@ html {
   background-size: 61%; */
   box-sizing: border-box;
   // font-size: min(1.56vw, 16px);
-  font-size: ${() => (isMobile ? '14px' : 'calc(14px + 0.4vw)')};
+  font-size: ${() => (isMobile ? '14px' : 'calc(10px + 0.42vw)')};
   // ${({ theme }) => theme.mediaWidth.upToSmall`
   //   // font-size: max(4.15vw, 16px);
   //   font-size: 4.15vw;
