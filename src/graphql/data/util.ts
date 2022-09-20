@@ -1,8 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 
-import { Chain } from './__generated__/TokenQuery.graphql'
-import { HistoryDuration } from './__generated__/TokenTopProjectsQuery.graphql'
+import { Chain, HistoryDuration } from './__generated__/TokenQuery.graphql'
 
 export enum TimePeriod {
   HOUR,
