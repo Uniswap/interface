@@ -51,9 +51,11 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
       setPendingChainId(targetChainId)
       await selectChain(targetChainId)
       setPendingChainId(undefined)
-      toggleOpen()
+      if (isOpen) {
+        toggleOpen()
+      }
     },
-    [selectChain]
+    [selectChain, isOpen]
   )
 
   if (!chainId) {
