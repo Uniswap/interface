@@ -23,8 +23,7 @@ const HigherLogo = styled(CurrencyLogo)`
   z-index: 2;
 `
 const CoveredLogo = styled(CurrencyLogo)<{ sizeraw: number }>`
-  position: absolute;
-  left: ${({ sizeraw }) => '-' + (sizeraw / 2).toString() + 'px'} !important;
+  transform: translateX(-50%);
 `
 
 export default function DoubleCurrencyLogoHorizontal({
@@ -36,7 +35,9 @@ export default function DoubleCurrencyLogoHorizontal({
   return (
     <Wrapper sizeraw={size} margin={margin}>
       {currency0 && <HigherLogo currency={currency0} size={size.toString() + 'px'} />}
-      {currency1 && <CoveredLogo currency={currency1} size={size.toString() + 'px'} sizeraw={size} />}
+      {currency1 && (
+        <CoveredLogo className="coveredIcon" currency={currency1} size={size.toString() + 'px'} sizeraw={size} />
+      )}
     </Wrapper>
   )
 }

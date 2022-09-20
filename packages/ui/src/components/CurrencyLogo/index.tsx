@@ -17,7 +17,6 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   border-radius: 24px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 1.5rem;
-    height: auto;
   `}
 `
 
@@ -29,18 +28,19 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   background-color: ${({ theme }) => theme.white};
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 1.5rem;
-    height: auto;
   `}
 `
 
 export default function CurrencyLogo({
   currency,
   size = '24px',
-  style
+  style,
+  ...props
 }: {
   currency?: Currency
   size?: string
   style?: React.CSSProperties
+  className?: string
 }) {
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
@@ -57,8 +57,8 @@ export default function CurrencyLogo({
   }, [currency, uriLocations])
 
   if (currency === ETHER) {
-    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
+    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...props} />
   }
 
-  return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
+  return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...props} />
 }
