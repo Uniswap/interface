@@ -12,8 +12,6 @@ interface MaxAmountButtonProps {
   style?: StyleProp<ViewStyle>
 }
 
-const MAX_AMOUNT_SIG_FIGS = 6 // default for .toSignificant()
-
 export function MaxAmountButton({
   currencyAmount,
   currencyBalance,
@@ -28,13 +26,12 @@ export function MaxAmountButton({
   const disableMaxButton =
     !maxInputAmount ||
     !maxInputAmount.greaterThan(0) ||
-    currencyAmount?.toSignificant(MAX_AMOUNT_SIG_FIGS) ===
-      maxInputAmount.toSignificant(MAX_AMOUNT_SIG_FIGS)
+    currencyAmount?.toExact() === maxInputAmount.toExact()
 
   const onPress = () => {
     if (disableMaxButton) return
 
-    onSetMax(maxInputAmount.toSignificant(MAX_AMOUNT_SIG_FIGS))
+    onSetMax(maxInputAmount.toExact())
   }
 
   return (
