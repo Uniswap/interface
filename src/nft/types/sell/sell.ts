@@ -28,6 +28,12 @@ export interface SellOrder {
   tokenReserves?: number
 }
 
+export interface Listing {
+  price?: string
+  marketplace: ListingMarket
+  overrideFloorPrice?: boolean
+}
+
 export interface WalletAsset {
   id?: string
   image_url: string
@@ -60,11 +66,7 @@ export interface WalletAsset {
   // Used for creating new listings
   expirationTime?: number
   marketAgnosticPrice?: string
-  newListings?: {
-    price?: string
-    marketplace: ListingMarket
-    overrideFloorPrice?: boolean
-  }[]
+  newListings?: Listing[]
   marketplaces?: ListingMarket[]
   listingWarnings?: ListingWarning[]
 }
