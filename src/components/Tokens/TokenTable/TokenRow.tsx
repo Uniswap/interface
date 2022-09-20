@@ -485,7 +485,6 @@ export default function LoadedRow({
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
-  //const { volume, pricePercentChange } = getDurationDetails(tokenData, timePeriod)
   const delta = token?.market?.pricePercentChange?.value
   const arrow = delta ? getDeltaArrow(delta) : null
   const formattedDelta = delta ? formatDelta(delta) : null
