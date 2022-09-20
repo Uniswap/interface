@@ -1,7 +1,7 @@
 schema {
   query: Query
 }
-​
+
 type Portfolio {
   id: ID!
   ownerAddress: String!
@@ -16,12 +16,12 @@ type Portfolio {
   relativeChange24H: Float @deprecate
   nftBalances: [NftBalance]
 }
-​
+
 input ContractInput {
   chain: Chain!
   address: String
 }
-​
+
 type Query {
   tokens(contracts: [ContractInput!]!): [Token]
   tokenProjects(contracts: [ContractInput!]!): [TokenProject]
@@ -49,12 +49,12 @@ type Query {
     pageSize: Int = 20
   ): [Token]
 }
-​
+
 interface IContract {
   chain: Chain!
   address: String
 }
-​
+
 type Token implements IContract {
   id: ID!
   chain: Chain!
@@ -66,7 +66,7 @@ type Token implements IContract {
   project: TokenProject
   market(currency: Currency = USD): TokenMarket
 }
-​
+
 type TokenMarket {
   id: ID!
   token: Token!
@@ -91,7 +91,7 @@ type TokenMarket {
   """
   priceHistory(duration: HistoryDuration!): [TimestampedAmount]
 }
-​
+
 type TokenProject {
   id: ID!
   name: String
@@ -102,7 +102,7 @@ type TokenProject {
   logoUrl: String
   markets(currencies: [Currency!]! = [USD]): [TokenProjectMarket]
 }
-​
+
 type TokenProjectMarket {
   id: ID!
   tokenProject: TokenProject!
@@ -132,7 +132,7 @@ type TokenProjectMarket {
   pricePercentChange(duration: HistoryDuration!): Amount
   priceHighLow(duration: HistoryDuration!, highLow: HighLow!): Amount
 }
-​
+
 type TokenBalance {
   id: ID!
   blockNumber: Int
@@ -143,14 +143,14 @@ type TokenBalance {
   token: Token
   tokenProjectMarket: TokenProjectMarket
 }
-​
+
 type TimestampedAmount implements IAmount {
   id: ID!
   currency: Currency
   value: Float
   timestamp: Int!
 }
-​
+
 type AssetActivity {
   id: ID!
   timestamp: Int!
@@ -159,7 +159,7 @@ type AssetActivity {
   transaction: Transaction!
   assetChanges: [AssetChange]!
 }
-​
+
 type Transaction {
   id: ID!
   blockNumber: Int!
@@ -171,7 +171,7 @@ type Transaction {
   maxFeePerGas: Float
   status: TransactionStatus!
 }
-​
+
 type TokenTransfer {
   id: ID!
   tokenStandard: TokenStandard!
@@ -182,7 +182,7 @@ type TokenTransfer {
   direction: TransactionDirection!
   transactedValue: Amount
 }
-​
+
 type NftTransfer {
   id: ID!
   nftStandard: NftStandard!
@@ -191,7 +191,7 @@ type NftTransfer {
   recipient: String!
   direction: TransactionDirection!
 }
-​
+
 type TokenApproval {
   id: ID!
   tokenStandard: TokenStandard! # can be erc20 or erc1155
@@ -199,14 +199,14 @@ type TokenApproval {
   approvedAddress: String!
   quantity: String! # raw value for erc20, tokenId for erc721
 }
-​
+
 type NftApproval {
   id: ID!
   nftStandard: NftStandard! # can be erc20 or erc1155
   asset: NftAsset!
   approvedAddress: String!
 }
-​
+
 type NftApproveForAll {
   id: ID!
   nftStandard: NftStandard! # can be erc721 or erc1155
@@ -214,9 +214,9 @@ type NftApproveForAll {
   operatorAddress: String!
   approved: Boolean!
 }
-​
+
 union AssetChange = TokenTransfer | NftTransfer | TokenApproval | NftApproval | NftApproveForAll
-​
+
 type NftContract implements IContract {
   id: ID!
   address: String
@@ -226,7 +226,7 @@ type NftContract implements IContract {
   symbol: String
   totalSupply: Int
 }
-​
+
 type NftAsset {
   id: ID!
   collection: NftCollection
@@ -245,7 +245,7 @@ type NftAsset {
   tokenId: String
   traits: [NftAssetTrait]
 }
-​
+
 type NftCollection {
   id: ID!
   collectionId: String
@@ -269,7 +269,7 @@ type NftCollection {
   isVerified: Boolean
   numAssets: Int
 }
-​
+
 type NftCollectionMarket {
   id: ID!
   floorPrice: Amount
@@ -277,7 +277,7 @@ type NftCollectionMarket {
   volume24h: Amount
   totalVolume: Amount
 }
-​
+
 type NftBalance {
   id: ID!
   ownedAsset: NftAsset
@@ -286,58 +286,58 @@ type NftBalance {
   # quantity: Int
   # nftCollectionMarket: NftCollectionMarket
 }
-​
+
 type NftAssetTrait {
   id: ID!
   name: String
   rarity: Float
   value: String
 }
-​
+
 type NftCollectionTraits {
   id: ID!
   name: String
   values: [String]
 }
-​
+
 enum TokenStandard {
   NATIVE
   ERC20
   ERC1155
 }
-​
+
 enum Currency {
   USD
   ETH
 }
-​
+
 interface IAmount {
   currency: Currency
   value: Float
 }
-​
+
 type Amount implements IAmount {
   id: ID!
   currency: Currency
   value: Float
 }
-​
+
 enum TokenMarketSortableField {
   TOTAL_VALUE_LOCKED
   VOLUME
   PRICE
 }
-​
+
 enum OrderDirection {
   ASC
   DESC
 }
-​
+
 enum HighLow {
   HIGH
   LOW
 }
-​
+
 enum HistoryDuration {
   HOUR
   DAY
@@ -346,12 +346,12 @@ enum HistoryDuration {
   YEAR
   MAX
 }
-​
+
 enum MarketSortableField {
   MARKET_CAP
   VOLUME
 }
-​
+
 enum Chain {
   ARBITRUM
   ETHEREUM
@@ -360,7 +360,7 @@ enum Chain {
   POLYGON
   CELO
 }
-​
+
 enum ActivityType {
   APPROVE
   CANCEL
@@ -370,55 +370,55 @@ enum ActivityType {
   SWAP
   DEPLOYMENT
   UNKNOWN
-​
+
   #  money market
   LEND
   BORROW
   REPAY
   WITHDRAW
-​
+
   #  NFT
   MINT
   BURN
-​
+
   #  Staking
   STAKE
   UNSTAKE
 }
-​
+
 enum TransactionDirection {
   IN
   OUT
   SELF
 }
-​
+
 enum TransactionStatus {
   FAILED
   CONFIRMED
   PENDING
 }
-​
+
 enum NftStandard {
   ERC721
   ERC1155
   NONCOMPLIANT
 }
-​
+
 enum NftMarketSortableField {
   VOLUME
   FLOOR_PRICE
 }
-​
+
 enum NftAssetSortableField {
   PRICE
 }
-​
+
 type Image {
   id: ID!
   url: String
   dimensions: Dimensions
 }
-​
+
 type Dimensions {
   id: ID!
   height: Float
