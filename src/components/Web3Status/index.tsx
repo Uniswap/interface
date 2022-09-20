@@ -34,12 +34,15 @@ import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 
+// https://stackoverflow.com/a/31617326
+const FULL_BORDER_RADIUS = 9999
+
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   align-items: center;
   padding: 0.5rem;
-  border-radius: 14px;
+  border-radius: ${FULL_BORDER_RADIUS}px;
   cursor: pointer;
   user-select: none;
   height: 36px;
@@ -64,7 +67,7 @@ const Web3StatusConnectButton = styled.button<{ faded?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   background-color: ${({ theme }) => theme.accentActionSoft};
-  border-radius: 12px;
+  border-radius: ${FULL_BORDER_RADIUS}px;
   border: none;
   cursor: pointer;
   padding: 0 12px;
