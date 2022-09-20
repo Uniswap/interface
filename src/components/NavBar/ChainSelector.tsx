@@ -7,7 +7,7 @@ import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
-import { Column, Row } from 'nft/components/Flex'
+import { Row } from 'nft/components/Flex'
 import { TokenWarningRedIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
@@ -64,16 +64,14 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
 
   const dropdown = (
     <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
-      <Column marginX="8">
-        {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
-          <ChainSelectorRow
-            onSelectChain={onSelectChain}
-            targetChain={chainId}
-            key={chainId}
-            isPending={chainId === pendingChainId}
-          />
-        ))}
-      </Column>
+      {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
+        <ChainSelectorRow
+          onSelectChain={onSelectChain}
+          targetChain={chainId}
+          key={chainId}
+          isPending={chainId === pendingChainId}
+        />
+      ))}
     </NavDropdown>
   )
 

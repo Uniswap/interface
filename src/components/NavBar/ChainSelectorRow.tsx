@@ -12,16 +12,32 @@ const Container = styled.button`
   grid-template-columns: 1fr 4fr 1fr;
   align-items: center;
   text-align: left;
+  line-height: 24px;
+  border: none;
+  justify-content: space-between;
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 12px;
+  color: white;
+  width: 240px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 100%;
+  }
 `
 
 const Label = styled.div`
   grid-column: 2;
   grid-row: 1;
+  flex-grow: 1;
 `
 
 const Status = styled.div`
   grid-column: 3;
   grid-row: 1;
+  display: flex;
+  align-items: center;
+  width: fit-content;
 `
 
 const ApproveText = styled.div`
@@ -53,7 +69,7 @@ export default function ChainSelectorRow({
     <Container onClick={() => onSelectChain(targetChain)}>
       <Logo src={logoUrl} alt={label} />
       <Label>{label}</Label>
-      {isPending && <ApproveText>Approve in wallet</ApproveText>}
+      {(isPending || targetChain === 1) && <ApproveText>Approve in wallet</ApproveText>}
       <Status>
         {active && <CheckMarkIcon width={20} height={20} color={vars.color.blue400} />}
         {isPending && <Loader />}
