@@ -17,7 +17,6 @@ const Container = styled.button`
   border: none;
   justify-content: space-between;
   padding: 10px 8px;
-  margin: 0 8px;
   cursor: pointer;
   border-radius: 12px;
   color: ${({ theme }) => theme.textPrimary};
