@@ -6,7 +6,7 @@ import { badge, bodySmall, buttonTextSmall, subhead } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { AssetRow, CollectionRow, ListingRow, ListingStatus } from 'nft/types'
 import { formatEthPrice, numberToWei } from 'nft/utils/currency'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import * as styles from './ListingModal.css'
 
@@ -41,6 +41,10 @@ export const ListingSection = ({
     // listings
     else removeAssetMarketplace(row.asset, row.marketplace)
   }
+
+  useEffect(() => {
+    setIsOpen(index === openIndex)
+  }, [index, openIndex])
 
   function getListingRowPrice(row: AssetRow): number | undefined {
     const listingRow = row as ListingRow

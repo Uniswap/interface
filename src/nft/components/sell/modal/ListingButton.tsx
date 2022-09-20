@@ -213,9 +213,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
         border="none"
         backgroundColor="genieBlue"
         cursor={
-          listingStatus === ListingStatus.APPROVED ||
-          listingStatus === ListingStatus.PENDING ||
-          listingStatus === ListingStatus.SIGNING ||
+          [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
           disableListButton
             ? 'default'
             : 'pointer'
@@ -226,9 +224,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
         type="button"
         style={{
           opacity:
-            (listingStatus !== ListingStatus.DEFINED &&
-              listingStatus !== ListingStatus.FAILED &&
-              listingStatus !== ListingStatus.CONTINUE) ||
+            ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
             disableListButton
               ? 0.3
               : 1,
