@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
+import { PollingInterval } from 'src/constants/misc'
 import { useRouterQuote } from 'src/features/routing/hooks'
 import { QuoteResult } from 'src/features/routing/types'
 import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
@@ -41,7 +42,8 @@ export class Trade<
 export function useTrade(
   amountSpecified: CurrencyAmount<Currency> | null | undefined,
   otherCurrency: Currency | null | undefined,
-  tradeType: TradeType
+  tradeType: TradeType,
+  pollingInterval?: PollingInterval
 ) {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
@@ -49,6 +51,7 @@ export function useTrade(
     amountSpecified: debouncedAmountSpecified,
     otherCurrency,
     tradeType,
+    pollingInterval,
   })
 
   const currencyIn =

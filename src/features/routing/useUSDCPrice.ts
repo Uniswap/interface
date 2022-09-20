@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import { USDC, USDC_ARBITRUM, USDC_GOERLI, USDC_OPTIMISM, USDC_POLYGON } from 'src/constants/tokens'
-import { useRouterQuote } from 'src/features/routing/hooks'
+import { useTrade } from 'src/features/transactions/swap/useTrade'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -32,30 +32,23 @@ export function useUSDCPrice(
   const currencyIsStablecoin = Boolean(stablecoin && currency?.wrapped.equals(stablecoin))
   const amountSpecified = currencyIsStablecoin ? undefined : quoteAmount
 
-  const { currentData: data } = useRouterQuote({
-    amountSpecified,
-    otherCurrency: currency,
-    tradeType: TradeType.EXACT_OUTPUT,
-    pollingInterval,
-  })
+  const { trade } = useTrade(amountSpecified, currency, TradeType.EXACT_OUTPUT, pollingInterval)
 
   return useMemo(() => {
-    if (currencyIsStablecoin && stablecoin) {
+    if (!stablecoin) return
+
+    if (currencyIsStablecoin) {
       // handle stablecoin
       return new Price(stablecoin, stablecoin, '1', '1')
     }
 
-    if (!data || !quoteAmount || !currency) {
-      return undefined
+    if (!trade || !trade.routes.length || !quoteAmount || !currency) {
+      return
     }
 
-    // TODO: validate `data.quote` is correct (over `data.amount`)
-    const baseAmount = CurrencyAmount.fromRawAmount(currency, data.quote)
-    return new Price({
-      baseAmount,
-      quoteAmount,
-    })
-  }, [currency, stablecoin, data, currencyIsStablecoin, quoteAmount])
+    const { numerator, denominator } = trade.routes[0].midPrice
+    return new Price(currency, stablecoin, denominator, numerator)
+  }, [currency, stablecoin, currencyIsStablecoin, quoteAmount, trade])
 }
 
 export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
