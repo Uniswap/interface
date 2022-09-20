@@ -1,6 +1,7 @@
 // import { JSBI, Pair } from '@teleswap/sdk'
 // import dayjs from 'dayjs'
-import { Pair /* , JSBI */ } from '@teleswap/sdk'
+import { Pair /* , JSBI */ /*  , Token  */ } from '@teleswap/sdk'
+import DoubleCurrencyLogoHorizontal from 'components/DoubleLogo'
 import { LiquidityCard } from 'components/PositionCard'
 // import { BIG_INT_ZERO } from 'constants/index'
 import gql from 'graphql-tag'
@@ -8,7 +9,7 @@ import useThemedContext from 'hooks/useThemedContext'
 import namor from 'namor'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Box, Text } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 // import { useStakingInfo } from 'state/stake/hooks'
 import styled from 'styled-components'
 import { client } from 'utils/apolloClient'
@@ -123,7 +124,7 @@ const TopPoolsGrid = styled(Box)`
   border-radius: 24px;
   padding: 48px;
   display: grid;
-  grid-template-columns: 1fr 3fr 3fr 3fr;
+  grid-template-columns: 1fr 5fr 3fr 5fr;
   grid-template-rows: repeat(40px);
   grid-row-gap: 24px;
   grid-auto-flow: row;
@@ -550,10 +551,30 @@ export default function Pool() {
               {pools.slice(0, 5).map((v2Pair, index) => {
                 return (
                   <>
-                    <Box key={`${v2Pair.id}-1`}>{index}</Box>
-                    <Box key={`${v2Pair.id}-2`}></Box>
+                    <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>
+                    <Box
+                      key={`${v2Pair.id}-2`}
+                      sx={{ textAlign: 'center', width: '10rem', display: 'flex', justifyContent: 'center' }}
+                    >
+                      <Flex sx={{ gap: '12px', width: '8rem' }}>
+                        <DoubleCurrencyLogoHorizontal currency0={v2Pair.token0} currency1={v2Pair.token1} />
+                        <Text sx={{ whiteSpace: 'nowrap' }}>
+                          {v2Pair.token0?.symbol?.toUpperCase()}-{v2Pair.token1?.symbol?.toUpperCase()}
+                        </Text>
+                      </Flex>
+                    </Box>
                     <Box key={`${v2Pair.id}-3`}>{v2Pair.trackedReserveETH}</Box>
-                    <Box key={`${v2Pair.id}-4`}></Box>
+                    <Box key={`${v2Pair.id}-4`}>
+                      <ButtonPrimary
+                        style={{ display: 'inline-block !important' }}
+                        padding=".3rem"
+                        borderRadius=".3rem"
+                        as={Link}
+                        to={`/add/${v2Pair.token0.id}/${v2Pair.token1.id}`}
+                      >
+                        Provide Liquidity
+                      </ButtonPrimary>
+                    </Box>
                   </>
                 )
               })}

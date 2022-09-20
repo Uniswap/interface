@@ -95,6 +95,9 @@ const HeadLogoView = styled.div`
   .logoImg {
     display: none;
   }
+  .textLogo {
+    width: calc(120px + 7vw);
+  }
   ${({ theme }) => theme.mediaWidth.upToSmall`
       height: 3.5rem;
       padding-left: 1.1rem;
@@ -144,7 +147,7 @@ const HeaderElement = styled.div`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-rows: 1fr 1fr ;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 8fr;
     flex-direction: row-reverse;
     align-items: center;
     padding: 0 1rem;
@@ -517,7 +520,7 @@ export default function Header() {
               display: 'flex',
               justifyContent: 'flex-end',
               alignItems: 'center',
-              height: '2.5rem',
+              height: 'calc(2.5rem - 2px)',
               gridArea: 'a3',
               '*': {
                 fontSize: '1rem!important'
@@ -538,6 +541,7 @@ export default function Header() {
               active={!!account}
               sx={{
                 pointerEvents: 'auto',
+                minWidth: 'fit-content',
                 display: 'flex',
                 '*': { height: '100%', display: 'flex', alignItems: 'center' }
               }}
