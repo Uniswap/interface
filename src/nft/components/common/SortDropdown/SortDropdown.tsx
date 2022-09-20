@@ -7,6 +7,7 @@ import { buttonTextMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { useCollectionFilters } from 'nft/hooks'
 
 import * as styles from './SortDropdown.css'
 
@@ -28,11 +29,15 @@ export const SortDropdown = ({
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const [isReversed, toggleReversed] = useReducer((s) => !s, false)
   const [selectedIndex, setSelectedIndex] = useState(0)
-
+  const sortBy = useCollectionFilters((state) => state.sortBy)
   const [maxWidth, setMaxWidth] = useState(0)
 
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => isOpen && toggleOpen())
+
+  useEffect(() => {
+    setSelectedIndex(sortBy)
+  }, [sortBy, setSelectedIndex])
 
   useEffect(() => setMaxWidth(0), [dropDownOptions])
 

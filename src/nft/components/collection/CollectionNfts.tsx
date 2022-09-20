@@ -47,10 +47,16 @@ interface CollectionNftsProps {
 }
 
 export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionNftsProps) => {
-  const { buyNow, sortBy, setSortBy } = useCollectionFilters(({ buyNow, sortBy, setSortBy }) => ({
+  const {
+    buyNow,
+    search: searchByNameText,
+    sortBy,
+    setSortBy,
+  } = useCollectionFilters(({ buyNow, sortBy, setSortBy, search }) => ({
     buyNow,
     sortBy,
     setSortBy,
+    search,
   }))
 
   const {
@@ -64,6 +70,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
       {
         contractAddress,
         notForSale: !buyNow,
+        sortBy,
+        searchText: searchByNameText,
       },
     ],
     async ({ pageParam = 0 }) => {
@@ -88,6 +96,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
         contractAddress,
         sort: sort ?? undefined,
         notForSale: !buyNow,
+        searchText: searchByNameText,
         pageParam,
       })
     },
@@ -186,11 +195,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     setUniformHeight(UniformHeights.unset)
   }, [contractAddress])
 
-  if (!collectionNfts) {
-    // TODO: collection unavailable page
-    return <div>No CollectionAssets</div>
-  }
-
   return (
     <>
       <AnimatedBox position="sticky" top="72" width="full" zIndex="3">
@@ -202,44 +206,47 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
               onClick={() => setFiltersExpanded(!isFiltersExpanded)}
             />
             <SortDropdown dropDownOptions={sortDropDownOptions} />
-
             <CollectionSearch />
           </Row>
         </Box>
       </AnimatedBox>
-      <InfiniteScroll
-        next={fetchNextPage}
-        hasMore={hasNextPage ?? false}
-        loader={hasNextPage ? <p>Loading from scroll...</p> : null}
-        dataLength={collectionNfts.length}
-        style={{ overflow: 'unset' }}
-      >
-        {collectionNfts.length > 0 ? (
-          <div className={styles.assetList}>
-            {collectionNfts.map((asset) => {
-              return asset ? (
-                <CollectionAsset
-                  key={asset.address + asset.tokenId}
-                  asset={asset}
-                  uniformHeight={uniformHeight}
-                  setUniformHeight={setUniformHeight}
-                  mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-                  setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-                />
-              ) : null
-            })}
-          </div>
-        ) : (
-          <Center width="full" color="darkGray" style={{ height: '60vh' }}>
-            <div style={{ display: 'block', textAlign: 'center' }}>
-              <p className={header2}>No NFTS found</p>
-              <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
-                View full collection
-              </Box>
+      {!collectionNfts ? (
+        <div>No CollectionAssets</div>
+      ) : (
+        <InfiniteScroll
+          next={fetchNextPage}
+          hasMore={hasNextPage ?? false}
+          loader={hasNextPage ? <p>Loading from scroll...</p> : null}
+          dataLength={collectionNfts.length}
+          style={{ overflow: 'unset' }}
+        >
+          {collectionNfts.length > 0 ? (
+            <div className={styles.assetList}>
+              {collectionNfts.map((asset) => {
+                return asset ? (
+                  <CollectionAsset
+                    key={asset.address + asset.tokenId}
+                    asset={asset}
+                    uniformHeight={uniformHeight}
+                    setUniformHeight={setUniformHeight}
+                    mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                    setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                  />
+                ) : null
+              })}
             </div>
-          </Center>
-        )}
-      </InfiniteScroll>
+          ) : (
+            <Center width="full" color="darkGray" style={{ height: '60vh' }}>
+              <div style={{ display: 'block', textAlign: 'center' }}>
+                <p className={header2}>No NFTS found</p>
+                <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
+                  View full collection
+                </Box>
+              </div>
+            </Center>
+          )}
+        </InfiniteScroll>
+      )}
     </>
   )
 }
