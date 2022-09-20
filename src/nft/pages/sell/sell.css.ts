@@ -21,9 +21,12 @@ export const mobileSellWrapper = style([
     top: { sm: '0', md: 'unset' },
     zIndex: { sm: '3', md: 'auto' },
     height: { sm: 'full', md: 'auto' },
-    width: { sm: 'full', md: 'auto' },
+    width: 'full',
     overflowY: 'scroll',
   }),
+  {
+    scrollbarWidth: 'none',
+  },
 ])
 
 export const mobileSellHeader = style([

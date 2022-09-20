@@ -1,12 +1,13 @@
 import clsx from 'clsx'
 import Column from 'components/Column'
 import { Box } from 'nft/components/Box'
+import * as styles from 'nft/components/collection/Card.css'
 import { Row } from 'nft/components/Flex'
-import { MinusIconLarge, PlusIconLarge } from 'nft/components/icons'
+import { MinusIconLarge, PauseButtonIcon, PlayButtonIcon, PlusIconLarge } from 'nft/components/icons'
 import { body, subheadSmall } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset } from 'nft/types'
+import { GenieAsset, UniformHeight, UniformHeights } from 'nft/types'
 import {
   createContext,
   MouseEvent,
@@ -18,8 +19,6 @@ import {
   useRef,
   useState,
 } from 'react'
-
-import * as styles from './Card.css'
 
 /* -------- ASSET CONTEXT -------- */
 export interface CardContextProps {
@@ -89,38 +88,239 @@ const Container = ({ asset, children }: CardProps) => {
 }
 
 /* -------- CARD IMAGE -------- */
-const Image = () => {
+interface ImageProps {
+  uniformHeight: UniformHeight
+  setUniformHeight: (height: UniformHeight) => void
+}
+
+const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
 
+  if (noContent) {
+    return <NoContentContainer uniformHeight={uniformHeight} />
+  }
+
+  return (
+    <Box display="flex" overflow="hidden">
+      <Box
+        as={'img'}
+        alt={asset.name || asset.tokenId}
+        width="full"
+        style={{
+          aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
+          transition: 'transform 0.4s ease 0s',
+        }}
+        src={asset.imageUrl || asset.smallImageUrl}
+        objectFit={'contain'}
+        draggable={false}
+        onError={() => setNoContent(true)}
+        onLoad={(e) => {
+          if (uniformHeight === UniformHeights.unset) {
+            setUniformHeight(e.currentTarget.clientHeight)
+          } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
+            setUniformHeight(UniformHeights.notUniform)
+          }
+          setLoaded(true)
+        }}
+        className={clsx(hovered && styles.cardImageHover, !loaded && styles.loadingBackground)}
+      />
+    </Box>
+  )
+}
+
+interface MediaProps {
+  uniformHeight: UniformHeight
+  setUniformHeight: (u: UniformHeight) => void
+  shouldPlay: boolean
+  setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
+}
+
+const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+  const vidRef = useRef<HTMLVideoElement>(null)
+  const { hovered, asset } = useCardContext()
+  const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const isMobile = useIsMobile()
+
+  if (shouldPlay) {
+    vidRef.current?.play()
+  } else {
+    vidRef.current?.pause()
+  }
+
+  if (noContent) {
+    return <NoContentContainer uniformHeight={UniformHeights.notUniform} />
+  }
+
   return (
     <>
-      {!noContent ? (
-        <Box display="flex" overflow="hidden">
-          <Box
-            as={'img'}
-            alt={asset.name || asset.tokenId}
-            width="full"
-            style={{
-              aspectRatio: 'auto',
-              transition: 'transform 0.4s ease 0s',
-              background: loaded
-                ? 'none'
-                : `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
-            }}
-            src={asset.imageUrl || asset.smallImageUrl}
-            objectFit={'contain'}
-            draggable={false}
-            onError={() => setNoContent(true)}
-            onLoad={() => {
-              setLoaded(true)
-            }}
-            className={clsx(hovered && styles.cardImageHover)}
-          />
-        </Box>
+      <Box display="flex" overflow="hidden">
+        <Box
+          as={'img'}
+          alt={asset.name || asset.tokenId}
+          width="full"
+          style={{
+            aspectRatio: '1',
+            transition: 'transform 0.4s ease 0s',
+            willChange: 'transform',
+          }}
+          src={asset.imageUrl || asset.smallImageUrl}
+          objectFit={'contain'}
+          draggable={false}
+          onError={() => setNoContent(true)}
+          onLoad={() => {
+            if (uniformHeight !== UniformHeights.notUniform) {
+              setUniformHeight(UniformHeights.notUniform)
+            }
+
+            setImageLoaded(true)
+          }}
+          visibility={shouldPlay ? 'hidden' : 'visible'}
+          className={clsx(hovered && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
+        />
+      </Box>
+      {shouldPlay ? (
+        <>
+          <Box className={styles.playbackSwitch}>
+            <PauseButtonIcon
+              width="100%"
+              height="100%"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentTokenPlayingMedia(undefined)
+              }}
+              className="playback-icon"
+            />
+          </Box>
+          <Box position="absolute" left="0" top="0" display="flex">
+            <Box
+              as="video"
+              ref={vidRef}
+              width="full"
+              style={{
+                aspectRatio: '1',
+              }}
+              onEnded={(e) => {
+                e.preventDefault()
+                setCurrentTokenPlayingMedia(undefined)
+              }}
+              loop
+              playsInline
+            >
+              <source src={asset.animationUrl} />
+            </Box>
+          </Box>
+        </>
       ) : (
-        <NoContentContainer />
+        <Box className={styles.playbackSwitch}>
+          {((!isMobile && hovered) || isMobile) && (
+            <PlayButtonIcon
+              width="100%"
+              height="100%"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentTokenPlayingMedia(asset.tokenId)
+              }}
+              className="playback-icon"
+            />
+          )}
+        </Box>
+      )}
+    </>
+  )
+}
+
+const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPlayingMedia }: MediaProps) => {
+  const audRef = useRef<HTMLAudioElement>(null)
+  const { hovered, asset } = useCardContext()
+  const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const isMobile = useIsMobile()
+
+  if (shouldPlay) {
+    audRef.current?.play()
+  } else {
+    audRef.current?.pause()
+  }
+
+  if (noContent) {
+    return <NoContentContainer uniformHeight={uniformHeight} />
+  }
+
+  return (
+    <>
+      <Box display="flex" overflow="hidden">
+        <Box
+          as={'img'}
+          alt={asset.name || asset.tokenId}
+          width="full"
+          style={{
+            aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
+            transition: 'transform 0.4s ease 0s',
+          }}
+          src={asset.imageUrl || asset.smallImageUrl}
+          objectFit={'contain'}
+          draggable={false}
+          onError={() => setNoContent(true)}
+          onLoad={(e) => {
+            if (uniformHeight === UniformHeights.unset) {
+              setUniformHeight(e.currentTarget.clientHeight)
+            } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
+              setUniformHeight(UniformHeights.notUniform)
+            }
+            setImageLoaded(true)
+          }}
+          className={clsx(hovered && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
+        />
+      </Box>
+      {shouldPlay ? (
+        <>
+          <Box className={styles.playbackSwitch}>
+            <PauseButtonIcon
+              width="100%"
+              height="100%"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentTokenPlayingMedia(undefined)
+              }}
+              className="playback-icon"
+            />
+          </Box>
+          <Box position="absolute" left="0" top="0" display="flex">
+            <Box
+              as="audio"
+              ref={audRef}
+              width="full"
+              height="full"
+              onEnded={(e) => {
+                e.preventDefault()
+                setCurrentTokenPlayingMedia(undefined)
+              }}
+            >
+              <source src={asset.animationUrl} />
+            </Box>
+          </Box>
+        </>
+      ) : (
+        <Box className={styles.playbackSwitch}>
+          {((!isMobile && hovered) || isMobile) && (
+            <PlayButtonIcon
+              width="100%"
+              height="100%"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setCurrentTokenPlayingMedia(asset.tokenId)
+              }}
+              className="playback-icon"
+            />
+          )}
+        </Box>
       )}
     </>
   )
@@ -315,33 +515,61 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
   )
 }
 
-const NoContentContainer = () => (
-  <Box
-    position="relative"
-    width="full"
-    style={{
-      paddingTop: '100%',
-      background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
-    }}
-  >
-    <Box
-      position="absolute"
-      textAlign="center"
-      left="1/2"
-      top="1/2"
-      style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-      fontWeight="normal"
-      color="grey500"
-      className={body}
-    >
-      Content not
-      <br />
-      available yet
-    </Box>
-  </Box>
+interface NoContentContainerProps {
+  uniformHeight: UniformHeight
+}
+
+const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
+  <>
+    {uniformHeight !== UniformHeights.unset && uniformHeight !== UniformHeights.notUniform ? (
+      <Box
+        display="flex"
+        width="full"
+        style={{
+          height: `${uniformHeight as number}px`,
+          background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+        }}
+        fontWeight="normal"
+        color="grey500"
+        className={body}
+        justifyContent="center"
+        alignItems="center"
+        textAlign="center"
+      >
+        Content not
+        <br />
+        available yet
+      </Box>
+    ) : (
+      <Box
+        position="relative"
+        width="full"
+        style={{
+          paddingTop: '100%',
+          background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+        }}
+      >
+        <Box
+          position="absolute"
+          textAlign="center"
+          left="1/2"
+          top="1/2"
+          style={{ transform: 'translate3d(-50%, -50%, 0)' }}
+          fontWeight="normal"
+          color="grey500"
+          className={body}
+        >
+          Content not
+          <br />
+          available yet
+        </Box>
+      </Box>
+    )}
+  </>
 )
 
 export {
+  Audio,
   Button,
   Container,
   DetailsContainer,
@@ -355,4 +583,5 @@ export {
   SecondaryInfo,
   SecondaryRow,
   TertiaryInfo,
+  Video,
 }

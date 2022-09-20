@@ -50,7 +50,7 @@ const ToggleWrap = styled.div`
 `
 
 const ToggleLabel = styled.div`
-  opacity: 0.6;
+  opacity: ${({ theme }) => theme.opacity.hover};
   margin-right: 10px;
 `
 

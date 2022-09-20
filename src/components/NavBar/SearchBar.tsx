@@ -7,7 +7,6 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { Overlay } from 'nft/components/modals/Overlay'
 import { magicalGradientOnHover, subheadSmall } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet, useSearchHistory } from 'nft/hooks'
 import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
@@ -96,9 +95,8 @@ interface SearchBarDropdownProps {
 
 export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, isLoading }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
-  const searchHistory = useSearchHistory(
-    (state: { history: (FungibleToken | GenieCollection)[] }) => state.history
-  ).slice(0, 2)
+  const searchHistory = useSearchHistory((state: { history: (FungibleToken | GenieCollection)[] }) => state.history)
+  const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
   const { pathname } = useLocation()
   const isNFTPage = pathname.includes('/nfts')
   const isTokenPage = pathname.includes('/tokens')
@@ -182,7 +180,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
 
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
-    : Math.min(searchHistory.length, 2) +
+    : Math.min(shortenedHistory.length, 2) +
       (isNFTPage || !isTokenPage ? trendingCollections?.length ?? 0 : 0) +
       (isTokenPage || !isNFTPage ? trendingTokens?.length ?? 0 : 0)
 
@@ -234,13 +232,13 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
         ) : (
           // Recent Searches, Trending Tokens, Trending Collections
           <Column gap="20">
-            {searchHistory.length > 0 && (
+            {shortenedHistory.length > 0 && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={0}
                 setHoveredIndex={setHoveredIndex}
                 toggleOpen={toggleOpen}
-                suggestions={searchHistory}
+                suggestions={shortenedHistory}
                 header={<Trans>Recent searches</Trans>}
                 headerIcon={<ClockIcon />}
               />
@@ -248,7 +246,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
             {!isNFTPage && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
-                startingIndex={searchHistory.length}
+                startingIndex={shortenedHistory.length}
                 setHoveredIndex={setHoveredIndex}
                 toggleOpen={toggleOpen}
                 suggestions={trendingTokens}
@@ -260,7 +258,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
             {!isTokenPage && phase1Flag === NftVariant.Enabled && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
-                startingIndex={searchHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
+                startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
                 setHoveredIndex={setHoveredIndex}
                 toggleOpen={toggleOpen}
                 suggestions={trendingCollections as unknown as GenieCollection[]}
@@ -286,7 +284,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     hoveredIndex,
     phase1Flag,
     toggleOpen,
-    searchHistory,
+    shortenedHistory,
     hasInput,
     isNFTPage,
     isTokenPage,
@@ -436,7 +434,6 @@ export const SearchBar = () => {
       <NavIcon onClick={toggleOpen}>
         <NavMagnifyingGlassIcon width={28} height={28} />
       </NavIcon>
-      {isOpen && <Overlay />}
     </Box>
   )
 }

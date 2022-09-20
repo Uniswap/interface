@@ -4,8 +4,7 @@ import { fetchQuery, useFragment, useLazyLoadQuery, useRelayEnvironment } from '
 
 import { Chain, TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
 import { TokenPrices$data, TokenPrices$key } from './__generated__/TokenPrices.graphql'
-import { TokenQuery } from './__generated__/TokenQuery.graphql'
-import { TokenTopProjectsQuery$data } from './__generated__/TokenTopProjectsQuery.graphql'
+import { TokenQuery, TokenQuery$data } from './__generated__/TokenQuery.graphql'
 import { TimePeriod, toHistoryDuration } from './util'
 
 export type PricePoint = { value: number; timestamp: number }
@@ -152,8 +151,13 @@ const tokenPriceQuery = graphql`
   }
 `
 
-function filterPrices(prices: TokenPrices$data['priceHistory'] | undefined) {
+export function filterPrices(prices: TokenPrices$data['priceHistory'] | undefined) {
   return prices?.filter((p): p is PricePoint => Boolean(p && p.value))
+}
+
+export function useTokenPricesFromFragment(key: TokenPrices$key | null | undefined) {
+  const fetchedTokenPrices = useFragment(tokenPricesFragment, key ?? null)?.priceHistory
+  return filterPrices(fetchedTokenPrices)
 }
 
 export function useTokenPricesCached(
@@ -207,39 +211,4 @@ export function useTokenPricesCached(
   return { priceMap }
 }
 
-export type TopTokenProject = NonNullable<TokenTopProjectsQuery$data['topTokenProjects']>[number]
-export function getDurationDetails(data: TopTokenProject, timePeriod: TimePeriod) {
-  let volume = null
-  let pricePercentChange = null
-
-  const markets = data?.markets?.[0]
-  if (markets) {
-    switch (timePeriod) {
-      case TimePeriod.HOUR:
-        pricePercentChange = null
-        break
-      case TimePeriod.DAY:
-        volume = markets.volume1D?.value
-        pricePercentChange = markets.pricePercentChange24h?.value
-        break
-      case TimePeriod.WEEK:
-        volume = markets.volume1W?.value
-        pricePercentChange = markets.pricePercentChange1W?.value
-        break
-      case TimePeriod.MONTH:
-        volume = markets.volume1M?.value
-        pricePercentChange = markets.pricePercentChange1M?.value
-        break
-      case TimePeriod.YEAR:
-        volume = markets.volume1Y?.value
-        pricePercentChange = markets.pricePercentChange1Y?.value
-        break
-      case TimePeriod.ALL:
-        volume = null
-        pricePercentChange = null
-        break
-    }
-  }
-
-  return { volume, pricePercentChange }
-}
+export type SingleTokenData = NonNullable<TokenQuery$data['tokenProjects']>[number]

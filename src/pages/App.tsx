@@ -12,8 +12,8 @@ import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { Z_INDEX } from 'theme'
 import { SpinnerSVG } from 'theme/components'
+import { Z_INDEX } from 'theme/zIndex'
 import { getBrowser } from 'utils/browser'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -23,6 +23,7 @@ import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
 import Navbar from '../components/NavBar'
 import Popups from '../components/Popups'
+import { LoadingTokenDetails } from '../components/Tokens/TokenDetails/LoadingTokenDetails'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
@@ -40,7 +41,6 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import { LoadingTokenDetails } from './TokenDetails'
 import Tokens, { LoadingTokens } from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
@@ -74,7 +74,7 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
   position: fixed;
   top: 0;
-  z-index: ${Z_INDEX.absoluteTop};
+  z-index: ${Z_INDEX.sticky};
 `
 
 const Marginer = styled.div`

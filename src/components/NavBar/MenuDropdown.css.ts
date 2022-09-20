@@ -41,6 +41,7 @@ export const SecondaryText = style([
     paddingY: '8',
     paddingX: '8',
     color: 'darkGray',
+    width: 'full',
   }),
   {
     lineHeight: '20px',

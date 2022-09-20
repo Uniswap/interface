@@ -1,0 +1,103 @@
+import { Trans } from '@lingui/macro'
+import { darken } from 'polished'
+import { useState } from 'react'
+import styled from 'styled-components/macro'
+
+import Resource from './Resource'
+
+const NoInfoAvailable = styled.span`
+  color: ${({ theme }) => theme.textTertiary};
+  font-weight: 400;
+  font-size: 16px;
+`
+const TokenDescriptionContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  max-height: fit-content;
+  padding-top: 16px;
+  line-height: 24px;
+  white-space: pre-wrap;
+`
+
+const TruncateDescriptionButton = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+  font-weight: 400;
+  font-size: 14px;
+  padding-top: 14px;
+
+  &:hover,
+  &:focus {
+    color: ${({ theme }) => darken(0.1, theme.textSecondary)};
+    cursor: pointer;
+  }
+`
+
+const truncateDescription = (desc: string) => {
+  //trim the string to the maximum length
+  let tokenDescriptionTruncated = desc.slice(0, TRUNCATE_CHARACTER_COUNT)
+  //re-trim if we are in the middle of a word
+  tokenDescriptionTruncated = `${tokenDescriptionTruncated.slice(
+    0,
+    Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
+  )}...`
+  return tokenDescriptionTruncated
+}
+
+const TRUNCATE_CHARACTER_COUNT = 400
+
+export const AboutContainer = styled.div`
+  gap: 16px;
+  padding: 24px 0px;
+`
+export const AboutHeader = styled.span`
+  font-size: 28px;
+  line-height: 36px;
+`
+
+export const ResourcesContainer = styled.div`
+  display: flex;
+  padding-top: 12px;
+  gap: 14px;
+`
+
+type AboutSectionProps = {
+  address: string
+  description?: string | null | undefined
+  homepageUrl?: string | null | undefined
+  twitterName?: string | null | undefined
+}
+
+export function AboutSection({ address, description, homepageUrl, twitterName }: AboutSectionProps) {
+  const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
+  const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
+
+  const tokenDescription = shouldTruncate && isDescriptionTruncated ? truncateDescription(description) : description
+
+  return (
+    <AboutContainer>
+      <AboutHeader>
+        <Trans>About</Trans>
+      </AboutHeader>
+      <TokenDescriptionContainer>
+        {!description && (
+          <NoInfoAvailable>
+            <Trans>No token information available</Trans>
+          </NoInfoAvailable>
+        )}
+        {tokenDescription}
+        {shouldTruncate && (
+          <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
+            {isDescriptionTruncated ? <Trans>Read more</Trans> : <Trans>Hide</Trans>}
+          </TruncateDescriptionButton>
+        )}
+      </TokenDescriptionContainer>
+      <ResourcesContainer>
+        <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
+        <Resource name={'Protocol info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+        {homepageUrl && <Resource name={'Website'} link={homepageUrl} />}
+        {twitterName && <Resource name={'Twitter'} link={`https://twitter.com/${twitterName}`} />}
+      </ResourcesContainer>
+    </AboutContainer>
+  )
+}

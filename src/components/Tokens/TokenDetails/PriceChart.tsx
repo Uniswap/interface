@@ -14,7 +14,6 @@ import { useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
-import { OPACITY_HOVER } from 'theme'
 import {
   dayHourFormatter,
   hourFormatter,
@@ -32,7 +31,7 @@ import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
-function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
+export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
   const min = Math.min(...prices)
   const max = Math.max(...prices)
@@ -110,8 +109,9 @@ const TimeButton = styled.button<{ active: boolean }>`
   border: none;
   cursor: pointer;
   color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
   :hover {
-    ${({ active }) => !active && `opacity: ${OPACITY_HOVER};`}
+    ${({ active, theme }) => !active && `opacity: ${theme.opacity.hover};`}
   }
 `
 
@@ -201,7 +201,7 @@ export function PriceChart({ width, height, tokenAddress, priceDataFragmentRef }
         return [
           monthYearFormatter(locale),
           monthYearDayFormatter(locale),
-          timeMonth.range(startDate, endDate, 3).map((x) => x.valueOf() / 1000),
+          timeMonth.range(startDate, endDate, 6).map((x) => x.valueOf() / 1000),
         ]
     }
   }
@@ -255,8 +255,8 @@ export function PriceChart({ width, height, tokenAddress, priceDataFragmentRef }
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
-  /* Default curve doesn't look good for the ALL chart */
-  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : 0.9
+  /* Default curve doesn't look good for the HOUR/ALL chart */
+  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : timePeriod === TimePeriod.HOUR ? 1 : 0.9
 
   return (
     <>

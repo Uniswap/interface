@@ -60,6 +60,7 @@ const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean; loading?: b
     },
   }) => css`background-color ${duration.medium} ${timing.ease}`};
   width: 100%;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   &:hover {
     ${({ loading, theme }) =>
@@ -224,15 +225,12 @@ const SortArrowCell = styled(Cell)`
 `
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
+  ${ClickableStyle}
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
   height: 100%;
   justify-content: flex-end;
   width: 100%;
-
-  &:hover {
-    opacity: 60%;
-  }
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -551,7 +549,17 @@ export default function LoadedRow({
         }
         sparkLine={
           <SparkLine>
-            <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>
+            <ParentSize>
+              {({ width, height }) => (
+                <SparklineChart
+                  width={width}
+                  height={height}
+                  tokenData={token}
+                  pricePercentChange={token?.market?.pricePercentChange?.value}
+                  timePeriod={timePeriod}
+                />
+              )}
+            </ParentSize>
           </SparkLine>
         }
         first={tokenListIndex === 0}
