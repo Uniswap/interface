@@ -15,16 +15,5 @@
   "eslint.debug": true,
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "favorites.resources": [
-    {
-      "filePath": "src/components/Tokens/TokenDetails",
-      "group": "Default"
-    },
-    {
-      "filePath": "src/graphql/data",
-      "group": "Default"
-    }
-  ],
-  "favorites.sortOrder": "ASC"
+  }
 }

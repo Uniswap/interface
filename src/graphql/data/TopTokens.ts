@@ -220,35 +220,3 @@ export const tokensQuery = graphql`
     }
   }
 `
-
-// export function useTopTokenSearch(filter: string) {
-//   const debouncedSearchTerm = useDebounce(filter, ms`0.5s`)
-//   const searchResults = useLazyLoadQuery(TokenSearchQuery, { searchQuery: debouncedSearchTerm })
-//   return searchResults
-// }
-
-// const TokenSearchQuery = graphql`
-//   query TopTokensSearchQuery($searchQuery: String!) {
-//     searchTokens(searchQuery: $searchQuery) {
-//       name
-//       market(currency: USD) {
-//         totalValueLocked {
-//           value
-//           currency
-//         }
-//         price {
-//           value
-//           currency
-//         }
-//         pricePercentChange(duration: $duration) {
-//           currency
-//           value
-//         }
-//         volume(duration: $duration) {
-//           value
-//           currency
-//         }
-//       }
-//     }
-//   }
-// `
