@@ -180,7 +180,7 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
     timePeriod: TimePeriod,
     locale: string
   ): [TickFormatter<NumberValue>, (v: number) => string, NumberValue[]] {
-    const offsetTime = (endingPrice.timestamp.valueOf() - startingPrice.timestamp.valueOf()) / 14
+    const offsetTime = (endingPrice.timestamp.valueOf() - startingPrice.timestamp.valueOf()) / 24
     const startDateWithOffset = new Date((startingPrice.timestamp.valueOf() + offsetTime) * 1000)
     const endDateWithOffset = new Date((endingPrice.timestamp.valueOf() - offsetTime) * 1000)
     switch (timePeriod) {
@@ -220,7 +220,7 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
         return [
           monthYearFormatter(locale),
           monthYearDayFormatter(locale),
-          timeTicks(startDateWithOffset, endDateWithOffset, 6).map((x) => x.valueOf() / 1000),
+          timeTicks(startDateWithOffset, endDateWithOffset, 5).map((x) => x.valueOf() / 1000),
         ]
     }
   }
