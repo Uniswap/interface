@@ -130,12 +130,12 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
   const total = sellAssets.reduce((total, asset: WalletAsset) => {
     if (asset.newListings?.length) {
       const maxListing = asset.newListings.reduce((a, b) =>
-        parseFloat(a.price ?? '') > parseFloat(b.price ?? '') ? a : b
+        parseFloat(a.price ?? '0') > parseFloat(b.price ?? '0') ? a : b
       )
       return (
         total +
-        parseFloat(maxListing.price ?? '') -
-        parseFloat(maxListing.price ?? '') * (maxListing.marketplace.fee / 100 + asset.creatorPercentage)
+        parseFloat(maxListing.price ?? '0') -
+        parseFloat(maxListing.price ?? '0') * (maxListing.marketplace.fee / 100 + asset.creatorPercentage)
       )
     }
     return total
