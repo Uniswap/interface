@@ -1,6 +1,8 @@
 import { Identify, identify, init, track } from '@amplitude/analytics-browser'
 import { isProductionEnv } from 'utils/env'
 
+const API_KEY = isProductionEnv() ? process.env.REACT_APP_AMPLITUDE_KEY : process.env.REACT_APP_AMPLITUDE_TEST_KEY
+
 /**
  * Initializes Amplitude with API key for project.
  *
@@ -8,8 +10,6 @@ import { isProductionEnv } from 'utils/env'
  * member of the organization on Amplitude to view details.
  */
 export function initializeAnalytics() {
-  const API_KEY = isProductionEnv() ? process.env.REACT_APP_AMPLITUDE_KEY : process.env.REACT_APP_AMPLITUDE_TEST_KEY
-
   if (typeof API_KEY === 'undefined') {
     const keyName = isProductionEnv() ? 'REACT_APP_AMPLITUDE_KEY' : 'REACT_APP_AMPLITUDE_TEST_KEY'
     console.error(`${keyName} is undefined, Amplitude analytics will not run.`)
@@ -33,19 +33,12 @@ export function initializeAnalytics() {
   )
 }
 
-/** Sends an approved (finalized) event to Amplitude production project. */
+/** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
-  if (!isProductionEnv()) {
-    console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
+  if (!API_KEY) {
+    console.log(`[analytics(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return
   }
-
-  track(eventName, eventProperties)
-}
-
-/** Sends a draft event to Amplitude test project. */
-export function sendTestAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
-  if (isProductionEnv()) return
 
   track(eventName, eventProperties)
 }

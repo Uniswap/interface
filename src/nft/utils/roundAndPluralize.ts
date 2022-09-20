@@ -3,3 +3,5 @@ export const roundAndPluralize = (i: number, word: string) => {
 
   return `${rounded} ${word}${rounded === 1 ? '' : 's'}`
 }
+
+export const pluralize = (number: number) => (number !== 1 ? 's' : '')

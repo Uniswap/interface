@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import useENSName from 'hooks/useENSName'
 import qs from 'query-string'
@@ -7,22 +8,27 @@ import { useQuery } from 'react-query'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring/web'
 
+import { MouseoverTooltip } from '../../../components/Tooltip/index'
 import { AnimatedBox, Box } from '../../components/Box'
 import { CollectionProfile } from '../../components/details/CollectionProfile'
 import { Details } from '../../components/details/Details'
 import { Traits } from '../../components/details/Traits'
 import { Center, Column, Row } from '../../components/Flex'
-import { CloseDropDownIcon, CornerDownLeftIcon, ShareIcon } from '../../components/icons'
+import { CloseDropDownIcon, CornerDownLeftIcon, Eth2Icon, ShareIcon, SuspiciousIcon } from '../../components/icons'
 import { ExpandableText } from '../../components/layout/ExpandableText'
-import { header2 } from '../../css/common.css'
+import { badge, bodySmall, caption, header2, subhead } from '../../css/common.css'
 import { themeVars } from '../../css/sprinkles.css'
 import { useBag } from '../../hooks'
+import { useTimeout } from '../../hooks/useTimeout'
 import { fetchSingleAsset } from '../../queries'
-import { CollectionInfoForAsset, GenieAsset } from '../../types'
+import { CollectionInfoForAsset, GenieAsset, SellOrder } from '../../types'
 import { shortenAddress } from '../../utils/address'
+import { formatEthPrice } from '../../utils/currency'
+import { isAssetOwnedByUser } from '../../utils/isAssetOwnedByUser'
 import { isAudio } from '../../utils/isAudio'
 import { isVideo } from '../../utils/isVideo'
-import { rarityProviderLogo } from '../../utils/rarity'
+import { fallbackProvider, rarityProviderLogo } from '../../utils/rarity'
+import { toSignificant } from '../../utils/toSignificant'
 import * as styles from './Asset.css'
 
 const AudioPlayer = ({
@@ -46,6 +52,28 @@ const AudioPlayer = ({
         }}
       />
     </Box>
+  )
+}
+
+const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
+
+const CountdownTimer = ({ sellOrder }: { sellOrder: SellOrder }) => {
+  const { date, expires } = useMemo(() => {
+    const date = new Date(sellOrder.orderClosingDate)
+    return {
+      date,
+      expires: formatter.format(date),
+    }
+  }, [sellOrder])
+  const [days, hours, minutes, seconds] = useTimeout(date)
+
+  return (
+    <MouseoverTooltip text={<Box fontSize="12">Expires {expires}</Box>}>
+      <Box as="span" fontWeight="normal" className={caption} color="darkGray">
+        Expires: {days !== 0 ? `${days} days` : ''} {hours !== 0 ? `${hours} hours` : ''} {minutes} minutes {seconds}{' '}
+        seconds
+      </Box>
+    </MouseoverTooltip>
   )
 }
 
@@ -85,6 +113,9 @@ const Asset = () => {
   )
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
+  const addAssetToBag = useBag((state) => state.addAssetToBag)
+  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const [creatorAddress, setCreatorAddress] = useState('')
   const [ownerAddress, setOwnerAddress] = useState('')
@@ -98,13 +129,11 @@ const Asset = () => {
     gridWidthOffset: bagExpanded ? 324 : 0,
   })
   const [showTraits, setShowTraits] = useState(true)
+  const [isSelected, setSelected] = useState(false)
+  const [isOwned, setIsOwned] = useState(false)
+  const { account: address, provider } = useWeb3React()
 
-  useEffect(() => {
-    if (asset.creator) setCreatorAddress(asset.creator.address)
-    if (asset.owner) setOwnerAddress(asset.owner)
-  }, [asset])
-
-  const { rarityProvider } = useMemo(
+  const { rarityProvider, rarityLogo } = useMemo(
     () =>
       asset.rarity
         ? {
@@ -125,6 +154,29 @@ const Asset = () => {
     }
     return MediaType.Image
   }, [asset])
+
+  useEffect(() => {
+    if (asset.creator) setCreatorAddress(asset.creator.address)
+    if (asset.owner) setOwnerAddress(asset.owner)
+  }, [asset])
+
+  useEffect(() => {
+    setSelected(
+      !!itemsInBag.find((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
+    )
+  }, [asset, itemsInBag])
+
+  useEffect(() => {
+    if (provider) {
+      isAssetOwnedByUser({
+        tokenId: asset.tokenId,
+        userAddress: address || '',
+        assetAddress: asset.address,
+        tokenType: asset.tokenType,
+        provider,
+      }).then(setIsOwned)
+    }
+  }, [asset, address, provider])
 
   return (
     <AnimatedBox
@@ -149,15 +201,43 @@ const Asset = () => {
         </Column>
         <Column className={clsx(styles.column, styles.columnRight)} width="full">
           <Column>
-            <Row marginBottom="8" alignItems="center" justifyContent={rarityProvider ? 'space-between' : 'flex-end'}>
+            <Row
+              marginBottom="8"
+              alignItems="center"
+              textAlign="center"
+              justifyContent={rarityProvider ? 'space-between' : 'flex-end'}
+            >
+              {rarityProvider && (
+                <MouseoverTooltip
+                  text={
+                    <Row gap="4">
+                      <img src={rarityLogo} width={16} alt={rarityProvider.provider} />
+                      Ranking by{' '}
+                      {asset.rarity?.primaryProvider === 'Genie' ? fallbackProvider : asset.rarity?.primaryProvider}
+                    </Row>
+                  }
+                >
+                  <Center
+                    paddingLeft="6"
+                    paddingRight="4"
+                    className={badge}
+                    backgroundColor="lightGray"
+                    color="blackBlue"
+                    borderRadius="4"
+                  >
+                    #{rarityProvider.rank} <img src="/nft/svgs/rarity.svg" height={15} width={15} alt="Rarity rank" />
+                  </Center>
+                </MouseoverTooltip>
+              )}
               <Row gap="12">
                 <Center
                   as="button"
                   padding="0"
                   border="none"
                   background="transparent"
+                  cursor="pointer"
                   onClick={async () => {
-                    await navigator.clipboard.writeText(window.location.hostname + pathname)
+                    await navigator.clipboard.writeText(`${window.location.hostname}/#${pathname}`)
                   }}
                 >
                   <ShareIcon />
@@ -173,13 +253,13 @@ const Asset = () => {
                   cursor="pointer"
                   onClick={() => {
                     if (!parsed.origin || parsed.origin === 'collection') {
-                      navigate(`/nft/collection/${asset.address}`, undefined)
+                      navigate(`/nfts/collection/${asset.address}`)
                     } else if (parsed.origin === 'sell') {
-                      navigate('/nft/sell', undefined)
+                      navigate('/nfts/sell', undefined)
                     } else if (parsed.origin === 'explore') {
-                      navigate(`/nft`, undefined)
+                      navigate(`/nfts`, undefined)
                     } else if (parsed.origin === 'activity') {
-                      navigate(`/nft/collection/${asset.address}/activity`, undefined)
+                      navigate(`/nfts/collection/${asset.address}/activity`, undefined)
                     }
                   }}
                 >
@@ -192,6 +272,14 @@ const Asset = () => {
               </Row>
             </Row>
             <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={header2}>
+              {asset.openseaSusFlag && (
+                <Box marginTop="8">
+                  <MouseoverTooltip text={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}>
+                    <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />
+                  </MouseoverTooltip>
+                </Box>
+              )}
+
               {asset.name || `${collection.collectionName} #${asset.tokenId}`}
             </Row>
             {collection.collectionDescription ? (
@@ -252,28 +340,85 @@ const Asset = () => {
                 </a>
               ) : null}
             </Row>
-
-            <Row gap="32" marginBottom="20">
-              <button data-active={showTraits} onClick={() => setShowTraits(true)} className={styles.tab}>
-                Traits
-              </button>
-              <button data-active={!showTraits} onClick={() => setShowTraits(false)} className={styles.tab}>
-                Details
-              </button>
-            </Row>
-            {showTraits ? (
-              <Traits collectionAddress={asset.address} traits={asset.traits ?? []} />
-            ) : (
-              <Details
-                contractAddress={contractAddress}
-                tokenId={tokenId}
-                tokenType={asset.tokenType}
-                blockchain="Ethereum"
-                metadataUrl={asset.externalLink}
-                totalSupply={collection.totalSupply}
-              />
-            )}
           </Column>
+
+          {asset.priceInfo && !isOwned ? (
+            <Row
+              marginTop="8"
+              marginBottom="40"
+              justifyContent="space-between"
+              borderRadius="12"
+              paddingTop="16"
+              paddingBottom="16"
+              paddingLeft="16"
+              paddingRight="24"
+              background="accentActiveSoft"
+            >
+              <Column justifyContent="flex-start" gap="8">
+                <Row gap="12" as="a" target="_blank" rel="norefferer">
+                  <a href={asset.sellorders[0].marketplaceUrl} rel="noreferrer" target="_blank">
+                    <img
+                      className={styles.marketplace}
+                      src={`/nft/svgs/marketplaces/${asset.sellorders[0].marketplace}.svg`}
+                      height={16}
+                      width={16}
+                      alt="Markeplace"
+                    />
+                  </a>
+                  <Row as="span" className={subhead} color="blackBlue">
+                    {formatEthPrice(asset.priceInfo.ETHPrice)} <Eth2Icon />
+                  </Row>
+                  <Box as="span" color="darkGray" className={bodySmall}>
+                    ${toSignificant(asset.priceInfo.USDPrice)}
+                  </Box>
+                </Row>
+                {asset.sellorders?.[0].orderClosingDate ? <CountdownTimer sellOrder={asset.sellorders[0]} /> : null}
+              </Column>
+              <Box
+                as="button"
+                paddingTop="14"
+                paddingBottom="14"
+                fontWeight="medium"
+                textAlign="center"
+                fontSize="14"
+                style={{ width: '244px' }}
+                color={isSelected ? 'genieBlue' : 'explicitWhite'}
+                border="none"
+                borderRadius="12"
+                background={isSelected ? 'explicitWhite' : 'genieBlue'}
+                transition="250"
+                boxShadow={{ hover: 'elevation' }}
+                onClick={() => {
+                  if (isSelected) {
+                    removeAssetFromBag(asset)
+                  } else addAssetToBag(asset)
+                  setSelected((x) => !x)
+                }}
+              >
+                {isSelected ? 'Added to Bag' : 'Buy Now'}
+              </Box>
+            </Row>
+          ) : null}
+          <Row gap="32" marginBottom="20">
+            <button data-active={showTraits} onClick={() => setShowTraits(true)} className={styles.tab}>
+              Traits
+            </button>
+            <button data-active={!showTraits} onClick={() => setShowTraits(false)} className={styles.tab}>
+              Details
+            </button>
+          </Row>
+          {showTraits ? (
+            <Traits collectionAddress={asset.address} traits={asset.traits ?? []} />
+          ) : (
+            <Details
+              contractAddress={contractAddress}
+              tokenId={tokenId}
+              tokenType={asset.tokenType}
+              blockchain="Ethereum"
+              metadataUrl={asset.externalLink}
+              totalSupply={collection.totalSupply}
+            />
+          )}
         </Column>
       </div>
     </AnimatedBox>
