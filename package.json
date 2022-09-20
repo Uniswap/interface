@@ -34,6 +34,7 @@
   "devDependencies": {
     "lerna": "^5.1.8",
     "post-merge-install": "^0.5.1",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "typescript": "4.7.4"
   }
 }
