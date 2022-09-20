@@ -523,9 +523,15 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
               <div>
                 <Flex alignItems="center">
                   <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
-                  <span>
+                  <Link
+                    to={`/add/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
+                      farm.token1?.id,
+                      chainId,
+                    )}/${farm.id}`}
+                    style={{ textDecoration: 'none' }}
+                  >
                     {farm.token0?.symbol} - {farm.token1?.symbol}
-                  </span>
+                  </Link>
 
                   {(tobeExtended || farm.startTime > currentTimestamp) && (
                     <MouseoverTooltip
@@ -661,10 +667,18 @@ const ListItem = ({ farm, setSharedPoolAddress }: ListItemProps) => {
         <>
           <StyledItemCard>
             <Flex alignItems="center">
-              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} margin={true} />
-              <Text fontWeight={500}>
-                {farm.token0?.symbol} - {farm.token1?.symbol}
-              </Text>
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} margin={true} />
+              <Link
+                to={`/add/${currencyIdFromAddress(farm.token0?.id, chainId)}/${currencyIdFromAddress(
+                  farm.token1?.id,
+                  chainId,
+                )}/${farm.id}`}
+              >
+                <Text as="span" fontSize={16} fontWeight={500}>
+                  {farm.token0?.symbol} - {farm.token1?.symbol}
+                </Text>
+              </Link>
+
               {(tobeExtended || farm.startTime > currentTimestamp) && (
                 <MouseoverTooltip
                   text={tobeExtended ? t`To be extended` : farm.time}

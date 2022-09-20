@@ -271,7 +271,7 @@ const Row = ({
           <Flex alignItems="center" marginBottom="20px">
             <DoubleCurrencyLogo currency0={token0} currency1={token1} size={20} />
             <Link to={`/elastic/add/${farm.token0}/${farm.token1}/${farm.feeTier}`}>
-              <Text fontSize={20} fontWeight="500">
+              <Text fontSize={16} fontWeight="500">
                 {token0?.symbol} - {token1?.symbol}
               </Text>
             </Link>
