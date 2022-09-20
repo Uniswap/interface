@@ -3,7 +3,7 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { useCallback, useMemo, useState } from 'react'
 import { useProvider } from 'src/app/walletContext'
-import { ChainId } from 'src/constants/chains'
+import { ChainId, isL2Chain } from 'src/constants/chains'
 import { GAS_FEE_REFRESH_INTERVAL } from 'src/constants/gas'
 import { PollingInterval } from 'src/constants/misc'
 import {
@@ -28,8 +28,9 @@ export function useTransactionGasFee(
   // TODO: Handle error responses from gas endpoint
   const { data } = useGasFeeQuery(tx ?? skipToken, {
     // poll new gas fees around every block time
-    // TODO: use faster speed for Polygon, which has around ~3s block times
-    pollingInterval: PollingInterval.Fast,
+    pollingInterval: isL2Chain(tx?.chainId)
+      ? PollingInterval.LightningMcQueen
+      : PollingInterval.Fast,
   })
 
   return useMemo(() => {

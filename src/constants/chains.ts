@@ -46,12 +46,7 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.PolygonMumbai,
 ]
 
-export const L1_CHAIN_IDS = [
-  ChainId.Mainnet,
-  ChainId.Goerli,
-  ChainId.Polygon,
-  ChainId.PolygonMumbai,
-] as const
+export const L1_CHAIN_IDS = [ChainId.Mainnet, ChainId.Goerli] as const
 
 // Renamed from SupportedL1ChainId in web app
 export type L1ChainId = typeof L1_CHAIN_IDS[number]
@@ -61,6 +56,8 @@ export const L2_CHAIN_IDS = [
   ChainId.ArbitrumRinkeby,
   ChainId.Optimism,
   ChainId.OptimisticKovan,
+  ChainId.Polygon,
+  ChainId.PolygonMumbai,
 ] as const
 
 export const EIP_1559_CHAINS = [
@@ -73,12 +70,8 @@ export const EIP_1559_CHAINS = [
 // Renamed from SupportedL2ChainId in web app
 export type L2ChainId = typeof L2_CHAIN_IDS[number]
 
-export const MAINNET_CHAIN_IDS = [
-  ChainId.Mainnet,
-  ChainId.ArbitrumOne,
-  ChainId.Optimism,
-  ChainId.Polygon,
-]
+export const isL2Chain = (chainId?: ChainId) =>
+  chainId && L2_CHAIN_IDS.includes(chainId as L2ChainId)
 
 export interface L1ChainInfo {
   readonly blockWaitMsBeforeWarning?: number
@@ -98,7 +91,6 @@ export interface L1ChainInfo {
 }
 export interface L2ChainInfo extends L1ChainInfo {
   readonly bridge: string
-  readonly logoUrl?: string
   readonly statusPage?: string
 }
 

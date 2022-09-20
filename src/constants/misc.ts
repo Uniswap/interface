@@ -6,6 +6,7 @@ export enum PollingInterval {
   Slow = 5 * 60 * 1000, // 5 minutes
   Normal = 60 * 1000, // 1 minute
   Fast = 12 * 1000, // 12 seconds, block times for mainnet
+  LightningMcQueen = 3 * 1000, // 3 seconds, approx block times for polygon
 }
 
 // Used when referential equality is required
