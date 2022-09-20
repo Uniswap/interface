@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { showFavoritesAtom } from 'components/Tokens/state'
-import { SingleTokenData } from 'graphql/data/Token'
 import { usePrefetchTopTokens, useTopTokens } from 'graphql/data/TopTokens'
 import { useAtomValue } from 'jotai/utils'
 import { CSSProperties, ReactNode } from 'react'
@@ -76,7 +75,6 @@ export function LoadingTokenTable() {
 }
 
 interface TokenRowProps {
-  data: SingleTokenData[]
   index: number
   style: CSSProperties
 }
@@ -86,37 +84,28 @@ export default function TokenTable() {
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const prefetchedTokens = usePrefetchTopTokens()
-  const { isFetching, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
+  const { loading, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
 
-  const isItemLoaded = (index: number) => !isFetching && !!tokens && index < tokens.length
+  const isItemLoaded = (index: number) => !loading && !!tokens && index < tokens.length
 
-  const Row = function TokenRow({ data, index, style }: TokenRowProps) {
-    const tokenData = data[index]
-    if (!tokenData || !isFetching) {
+  const Row = function TokenRow({ index, style }: TokenRowProps) {
+    const token = !!tokens && tokens[index]
+    if (!token || loading) {
       return <LoadingRow style={style} key={index} />
     }
     return (
       <LoadedRow
         style={style}
-        key={tokenData?.name}
+        key={token?.name}
         tokenListIndex={index}
-        tokenListLength={data.length}
-        token={tokenData}
+        tokenListLength={tokens?.length ?? 0}
+        token={token}
       />
-      // <LoadedRow
-      //   style={style}
-      //   key={tokenData.address}
-      //   tokenAddress={tokenData.address}
-      //   tokenListIndex={index}
-      //   tokenListLength={data?.length ?? 0}
-      //   tokenData={tokenData}
-      //   timePeriod={timePeriod}
-      // />
     )
   }
 
   /* loading and error state */
-  if (isFetching) {
+  if (loading) {
     return <LoadingTokenTable />
   } else {
     if (!tokens) {
@@ -160,7 +149,6 @@ export default function TokenTable() {
                         height={height}
                         width={width}
                         itemCount={MAX_TOKENS_TO_LOAD}
-                        itemData={tokens}
                         itemSize={70}
                         onItemsRendered={onItemsRendered}
                         ref={ref}
@@ -173,7 +161,6 @@ export default function TokenTable() {
               </AutoSizer>
             </TokenDataContainer>
           </GridContainer>
-          <button onClick={loadMoreTokens}>load more</button>
         </>
       )
     }
