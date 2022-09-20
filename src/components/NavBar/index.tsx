@@ -1,9 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { ChainSelector } from 'components/NavBar/ChainSelector'
-import { MenuDropdown } from 'components/NavBar/MenuDropdown'
-import * as styles from 'components/NavBar/NavBar.css'
-import { SearchBar } from 'components/NavBar/SearchBar'
-import { ShoppingBag } from 'components/NavBar/ShoppingBag'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Box } from 'nft/components/Box'
@@ -11,6 +6,12 @@ import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
+
+import { ChainSelector } from './ChainSelector'
+import { MenuDropdown } from './MenuDropdown'
+import * as styles from './NavBar.css'
+import { SearchBar } from './SearchBar'
+import { ShoppingBag } from './ShoppingBag'
 
 interface MenuItemProps {
   href: string
