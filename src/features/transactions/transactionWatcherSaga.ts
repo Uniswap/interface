@@ -1,9 +1,8 @@
-import { BigNumber, providers } from 'ethers'
+import { providers } from 'ethers'
 import { appSelect } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { getProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
-import { TRANSACTION_TIMEOUT_DURATION } from 'src/constants/transactions'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { fetchTransactionStatus } from 'src/features/providers/flashbotsProvider'
@@ -25,7 +24,7 @@ import {
 } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
 import { sleep } from 'src/utils/timing'
-import { call, delay, fork, put, race, take } from 'typed-redux-saga'
+import { call, fork, put, race, take } from 'typed-redux-saga'
 
 const FLASHBOTS_POLLING_INTERVAL = 5000 // 5 seconds
 
@@ -106,25 +105,15 @@ export function* watchFlashbotsTransaction(transaction: TransactionDetails) {
 }
 
 export function* watchTransaction(transaction: TransactionDetails) {
-  const { chainId, id, hash, options, addedTime } = transaction
+  const { chainId, id, hash } = transaction
 
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
 
-  const maxTimeout = options.timeoutMs ?? TRANSACTION_TIMEOUT_DURATION
-  const remainingTimeout = maxTimeout - (Date.now() - addedTime)
-
-  // Before starting race, check to see if tx is old and already (or nearly) timed out
-  if (remainingTimeout <= 5_000 /* 5s */) {
-    yield* call(handleTimedOutTransaction, transaction, provider)
-    return
-  }
-
-  const { receipt, cancel, replace, timeout } = yield* race({
+  const { receipt, cancel, replace } = yield* race({
     receipt: call(waitForReceipt, hash, provider),
     cancel: call(waitForCancellation, chainId, id),
     replace: call(waitForReplacement, chainId, id),
-    timeout: delay(remainingTimeout),
   })
 
   if (cancel) {
@@ -134,12 +123,6 @@ export function* watchTransaction(transaction: TransactionDetails) {
 
   if (replace) {
     yield* call(attemptReplaceTransaction, transaction, replace.newTxParams)
-    return
-  }
-
-  if (timeout || !receipt) {
-    logger.debug('transactionWatcherSaga', 'watchTransaction', 'Tx timed out', hash)
-    yield* call(handleTimedOutTransaction, transaction, provider)
     return
   }
 
@@ -166,40 +149,6 @@ function* waitForReplacement(chainId: ChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof replaceTransaction>>(replaceTransaction.type)
     if (payload.chainId === chainId && payload.id === id) return payload
-  }
-}
-
-function* handleTimedOutTransaction(transaction: TransactionDetails, provider: providers.Provider) {
-  const { hash, from, options } = transaction
-
-  // Backup to ensure wallet doesn't incorrectly report a failed tx
-  const receipt = yield* call([provider, provider.getTransactionReceipt], hash)
-  if (receipt) {
-    yield* call(finalizeTransaction, transaction, receipt)
-    return
-  }
-
-  // TODO blocked by https://github.com/Uniswap/mobile/issues/377
-  // Need a way to query current mempool and look for hash.
-  // Using nonce values as a stopgap solution for now
-  const currentNonce = options.request.nonce
-  const highestPendingNonce = yield* call([provider, provider.getTransactionCount], from, 'pending')
-  const highestMinedNonce = yield* call([provider, provider.getTransactionCount], from)
-
-  // If a higher nonce has finalized, it MUST be true that our txn with lower nonce is mined as well.
-  if (currentNonce && BigNumber.from(highestMinedNonce).gt(currentNonce)) {
-    yield* call(finalizeTransaction, transaction)
-    return
-  }
-
-  // Transaction may still be pending, attempt to cancel.
-  if (
-    currentNonce &&
-    BigNumber.from(highestPendingNonce).gte(currentNonce) &&
-    transaction.status === TransactionStatus.Pending
-  ) {
-    yield* call(attemptCancelTransaction, transaction)
-    return
   }
 }
 
