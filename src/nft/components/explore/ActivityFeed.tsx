@@ -16,13 +16,9 @@ const ActivityFeed = ({ address }: { address: string }) => {
   const [current, setCurrent] = useState(0)
   const [hovered, toggleHover] = useReducer((state) => !state, false)
   const navigate = useNavigate()
-  const { data: collectionActivity } = useQuery(
-    ['collectionActivity', address],
-    () => ActivityFetcher(address as string),
-    {
-      staleTime: 5000,
-    }
-  )
+  const { data: collectionActivity } = useQuery(['collectionActivity', address], () => ActivityFetcher(address), {
+    staleTime: 5000,
+  })
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,13 +47,20 @@ const ActivityFeed = ({ address }: { address: string }) => {
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                navigate(`/nft/asset/${address}/${collectionActivity.events[current].tokenId}?origin=explore`)
+                navigate(`/nfts/asset/${address}/${collectionActivity.events[current].tokenId}?origin=explore`)
               }}
             />
           </Column>
           <Column width="full" position="relative">
             {collectionActivity.events.map((activityEvent: ActivityEvent, index: number) => {
-              return <ActivityRow event={activityEvent} index={index} key={index} current={current} />
+              return (
+                <ActivityRow
+                  event={activityEvent}
+                  index={index}
+                  key={`${activityEvent.eventType}${activityEvent.tokenId}`}
+                  current={current}
+                />
+              )
             })}
           </Column>
         </Box>
