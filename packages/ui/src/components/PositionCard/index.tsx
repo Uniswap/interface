@@ -492,7 +492,16 @@ export function LiquidityCard({
         {/* <ButtonPrimary padding={"unset"} width={"5rem"} borderRadius={".3rem"} sx={{ height: "1.3rem", fontSize: ".5rem", color: "#000000" }} as={Link} to="/manager">
           Manage
         </ButtonPrimary> */}
-        <Box style={{ display: 'inline-block' }}>
+        <ButtonPrimary
+          style={{ display: 'inline-block !important' }}
+          padding=".3rem"
+          borderRadius=".3rem"
+          as={Link}
+          to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}`}
+        >
+          Manage
+        </ButtonPrimary>
+        {/*  <Box style={{ display: 'inline-block' }}>
           <ButtonPrimary
             style={{ display: 'inline-block !important' }}
             padding=".3rem"
@@ -512,7 +521,7 @@ export function LiquidityCard({
           >
             Remove
           </ButtonPrimary>
-        </Box>
+        </Box> */}
       </Box>
     </>
   )
