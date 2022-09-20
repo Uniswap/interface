@@ -1,8 +1,9 @@
 import React from 'react'
-import { TOKEN_SUBHEAD_ROW_HEIGHT } from 'src/components/explore/search/SearchTokenItem'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
+
+const TOKEN_SUBHEAD_ROW_HEIGHT = 20
 
 export function TokenLoader() {
   return (

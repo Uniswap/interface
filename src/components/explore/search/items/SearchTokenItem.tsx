@@ -18,8 +18,6 @@ type SearchTokenItemProps = {
   coin: CoingeckoSearchCoin | CoingeckoMarketCoin | TokenSearchResult
 }
 
-export const TOKEN_SUBHEAD_ROW_HEIGHT = 20
-
 export function SearchTokenItem({ coin }: SearchTokenItemProps) {
   const dispatch = useAppDispatch()
   const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
@@ -56,11 +54,9 @@ export function SearchTokenItem({ coin }: SearchTokenItemProps) {
           <Text color="textPrimary" variant="subhead">
             {name}
           </Text>
-          <Flex row height={TOKEN_SUBHEAD_ROW_HEIGHT}>
-            <Text color="textSecondary" variant="caption">
-              {symbol.toUpperCase() ?? ''}
-            </Text>
-          </Flex>
+          <Text color="textSecondary" variant="caption">
+            {symbol.toUpperCase() ?? ''}
+          </Text>
         </Flex>
       </Flex>
     </Button>

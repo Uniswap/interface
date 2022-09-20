@@ -19,6 +19,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AppStackParamList, TabNavigationProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { FavoriteTokensCard } from 'src/components/explore/FavoriteTokensCard'
+import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { TopTokensCard } from 'src/components/explore/TopTokensCard'
 import { WatchedWalletsCard } from 'src/components/explore/WatchedWalletsCard'
@@ -159,7 +160,11 @@ export function ExploreScreen({ navigation }: Props) {
           <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} px="sm">
             <VirtualizedList onScroll={resultsScrollHandler}>
               <Box height={CONTENT_MAX_SCROLL_Y} mb="sm" />
-              <SearchResultsSection searchQuery={searchQuery} />
+              {searchQuery.length === 0 ? (
+                <SearchEmptySection />
+              ) : (
+                <SearchResultsSection searchQuery={searchQuery} />
+              )}
             </VirtualizedList>
           </AnimatedFlex>
         </KeyboardAvoidingView>
