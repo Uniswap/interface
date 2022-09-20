@@ -35,10 +35,6 @@ export const SortDropdown = ({
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => isOpen && toggleOpen())
 
-  useEffect(() => {
-    setSelectedIndex(sortBy)
-  }, [sortBy, setSelectedIndex])
-
   useEffect(() => setMaxWidth(0), [dropDownOptions])
 
   const reversable = useMemo(
