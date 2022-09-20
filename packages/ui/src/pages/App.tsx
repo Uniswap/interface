@@ -1,5 +1,5 @@
 import bg from 'assets/svg/background.svg'
-import LiquidityDetail from 'components/Liquidity'
+import LiquidityDetail from 'components/LiquidityDetail'
 import React, { Suspense } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Route, Switch } from 'react-router-dom'
