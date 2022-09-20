@@ -67,7 +67,7 @@ export const ListingSection = ({
     >
       {allApproved && <ApprovedCheckmarkIcon style={{ marginRight: '8px' }} />}
       {sectionTitle}
-      {!isSuccessScreen && <ChevronUpIcon className={`${isOpen ? '' : styles.chevronDown} ${styles.chevron}`} />}
+      {!isSuccessScreen && <ChevronUpIcon className={clsx(`${isOpen ? '' : styles.chevronDown} ${styles.chevron}`)} />}
       {(isOpen || isSuccessScreen) && (
         <Column
           gap="12"
