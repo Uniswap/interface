@@ -607,10 +607,12 @@ export function useSwapTransactionRequest(
     !shouldFetchSimulatedGasLimit
   )
 
+  const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   return useMemo(() => {
     if (
       wrapType !== WrapType.NotApplicable ||
-      !tokenAllowance ||
+      !currencyAmountIn ||
+      (!currencyAmountIn.currency.isNative && !tokenAllowance) ||
       (!simulatedGasLimit && simulatedGasLimitLoading) ||
       permitInfoLoading ||
       !trade
@@ -651,6 +653,7 @@ export function useSwapTransactionRequest(
   }, [
     address,
     chainId,
+    currencyAmountIn,
     permitInfo,
     permitInfoLoading,
     shouldFetchSimulatedGasLimit,
