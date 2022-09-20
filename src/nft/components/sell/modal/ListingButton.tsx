@@ -1,10 +1,11 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import ms from 'ms.macro'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { ArrowRightIcon, HazardIcon, LoadingIcon, XMarkIcon } from 'nft/components/icons'
 import { bodySmall } from 'nft/css/common.css'
 import { useNFTList, useSellAsset } from 'nft/hooks'
-import { ListingStatus, WalletAsset } from 'nft/types'
+import { Listing, ListingStatus, WalletAsset } from 'nft/types'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
@@ -54,18 +55,18 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       (asset: WalletAsset) => asset.marketplaces === undefined || asset.marketplaces.length === 0
     )
     const missingExpiration = sellAssets.some((asset) => {
-      return asset.expirationTime != null && asset.expirationTime - Date.now() / 1000 < 60
+      return asset.expirationTime != null && asset.expirationTime - Date.now() < ms`60 seconds`
     })
     const invalidExpiration = sellAssets.some((asset) => {
       return asset.expirationTime != null && isNaN(asset.expirationTime)
     })
     const overMaxExpiration = sellAssets.some((asset) => {
-      return asset.expirationTime != null && asset.expirationTime - Date.now() / 1000 > 60 * 60 * 24 * 31 * 6
+      return asset.expirationTime != null && asset.expirationTime - Date.now() > ms`180 days`
     })
-    const listingsMissingPrice: any[] = []
-    const listingsBelowFloor: any[] = []
-    const listingsAboveSellOrderFloor: any[] = []
-    const invalidPrices: any[] = []
+    const listingsMissingPrice: [WalletAsset, Listing][] = []
+    const listingsBelowFloor: [WalletAsset, Listing][] = []
+    const listingsAboveSellOrderFloor: [WalletAsset, Listing][] = []
+    const invalidPrices: [WalletAsset, Listing][] = []
     for (const asset of sellAssets) {
       if (asset.newListings) {
         for (const listing of asset.newListings) {
@@ -164,7 +165,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
   }
 
   return (
-    <Box style={{ position: 'relative' }} width="full">
+    <Box position="relative" width="full">
       {!showWarningOverride && showWarning && warningMessage.length > 0 && (
         <Row
           className={`${bodySmall} ${styles.warningTooltip}`}
@@ -213,9 +214,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
         border="none"
         backgroundColor="genieBlue"
         cursor={
-          listingStatus === ListingStatus.APPROVED ||
-          listingStatus === ListingStatus.PENDING ||
-          listingStatus === ListingStatus.SIGNING ||
+          [ListingStatus.APPROVED, ListingStatus.PENDING, ListingStatus.SIGNING].includes(listingStatus) ||
           disableListButton
             ? 'default'
             : 'pointer'
@@ -226,9 +225,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
         type="button"
         style={{
           opacity:
-            (listingStatus !== ListingStatus.DEFINED &&
-              listingStatus !== ListingStatus.FAILED &&
-              listingStatus !== ListingStatus.CONTINUE) ||
+            ![ListingStatus.DEFINED, ListingStatus.FAILED, ListingStatus.CONTINUE].includes(listingStatus) ||
             disableListButton
               ? 0.3
               : 1,

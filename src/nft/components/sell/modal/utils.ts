@@ -130,12 +130,12 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
   const total = sellAssets.reduce((total, asset: WalletAsset) => {
     if (asset.newListings?.length) {
       const maxListing = asset.newListings.reduce((a, b) =>
-        parseFloat(a.price ?? '') > parseFloat(b.price ?? '') ? a : b
+        parseFloat(a.price ?? '0') > parseFloat(b.price ?? '0') ? a : b
       )
       return (
         total +
-        parseFloat(maxListing.price ?? '') -
-        parseFloat(maxListing.price ?? '') * (maxListing.marketplace.fee / 100 + asset.creatorPercentage)
+        parseFloat(maxListing.price ?? '0') -
+        parseFloat(maxListing.price ?? '0') * (maxListing.marketplace.fee / 100 + asset.creatorPercentage)
       )
     }
     return total
@@ -143,10 +143,10 @@ export const getTotalEthValue = (sellAssets: WalletAsset[]) => {
   return total ? Math.round(total * 100 + Number.EPSILON) / 100 : 0
 }
 
-export const getListings = (sellAssets: WalletAsset[]) => {
-  const newCollectionsToApprove: any = []
+export const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]] => {
+  const newCollectionsToApprove: CollectionRow[] = []
 
-  const newListings: any = []
+  const newListings: ListingRow[] = []
   sellAssets.forEach((asset) => {
     asset.marketplaces?.forEach((marketplace: ListingMarket) => {
       const newListing = {
@@ -156,7 +156,7 @@ export const getListings = (sellAssets: WalletAsset[]) => {
         asset,
         marketplace,
       }
-      newListings.push(newListing as ListingRow)
+      newListings.push(newListing)
       if (
         !newCollectionsToApprove.some(
           (collectionRow: CollectionRow) =>
@@ -171,7 +171,7 @@ export const getListings = (sellAssets: WalletAsset[]) => {
           collectionAddress: asset.asset_contract.address,
           marketplace,
         }
-        newCollectionsToApprove.push(newCollectionRow as CollectionRow)
+        newCollectionsToApprove.push(newCollectionRow)
       }
     })
   })

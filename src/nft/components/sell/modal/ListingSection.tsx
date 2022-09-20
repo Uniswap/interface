@@ -43,7 +43,7 @@ export const ListingSection = ({
   }
 
   useEffect(() => {
-    setIsOpen(index === openIndex ? true : false)
+    setIsOpen(index === openIndex)
   }, [index, openIndex])
 
   function getListingRowPrice(row: AssetRow): number | undefined {
@@ -54,6 +54,8 @@ export const ListingSection = ({
     )
   }
 
+  const allApproved = !notAllApproved && rows.length > 0 && !isSuccessScreen
+
   return (
     <Row
       flexWrap="wrap"
@@ -61,13 +63,11 @@ export const ListingSection = ({
       marginTop="10"
       marginBottom="10"
       onClick={() => rows.length > 0 && setIsOpen(!isOpen)}
-      color={!notAllApproved && rows.length > 0 && !isSuccessScreen ? 'green' : 'blackBlue'}
+      color={allApproved ? 'green' : 'blackBlue'}
     >
-      {!notAllApproved && rows.length > 0 && !isSuccessScreen && (
-        <ApprovedCheckmarkIcon style={{ marginRight: '8px' }} />
-      )}
+      {allApproved && <ApprovedCheckmarkIcon style={{ marginRight: '8px' }} />}
       {sectionTitle}
-      {!isSuccessScreen && <ChevronUpIcon className={`${isOpen ? '' : styles.chevronDown} ${styles.chevron}`} />}
+      {!isSuccessScreen && <ChevronUpIcon className={clsx(`${isOpen ? '' : styles.chevronDown} ${styles.chevron}`)} />}
       {(isOpen || isSuccessScreen) && (
         <Column
           gap="12"
