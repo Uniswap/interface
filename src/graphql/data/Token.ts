@@ -37,6 +37,12 @@ const tokenQuery = graphql`
         chain
         address
         symbol
+        market {
+          totalValueLocked {
+            value
+            currency
+          }
+        }
       }
       prices: markets(currencies: [USD]) {
         ...TokenPrices

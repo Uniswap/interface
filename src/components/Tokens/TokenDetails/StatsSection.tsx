@@ -43,17 +43,24 @@ function Stat({ value, title }: { value: NumericStat; title: ReactNode }) {
 
 type StatsSectionProps = {
   marketCap?: NumericStat
-  volume24H?: NumericStat
   priceLow52W?: NumericStat
   priceHigh52W?: NumericStat
+  TVL?: NumericStat
+  volume1W?: NumericStat
+  volume24H?: NumericStat
 }
-export default function StatsSection({ marketCap, volume24H, priceLow52W, priceHigh52W }: StatsSectionProps) {
-  if (marketCap || volume24H || priceLow52W || priceHigh52W) {
+export default function StatsSection(props: StatsSectionProps) {
+  const { marketCap, priceLow52W, priceHigh52W, TVL, volume1W, volume24H } = props
+  if (TVL || volume1W || volume24H || priceLow52W || priceHigh52W) {
     return (
       <TokenStatsSection>
         <StatPair>
           <Stat value={marketCap} title={<Trans>Market Cap</Trans>} />
+          <Stat value={TVL} title={<Trans>Total Value Locked</Trans>} />
+        </StatPair>
+        <StatPair>
           <Stat value={volume24H} title={<Trans>24H volume</Trans>} />
+          <Stat value={volume1W} title={<Trans>1W volume</Trans>} />
         </StatPair>
         <StatPair>
           <Stat value={priceLow52W} title={<Trans>52W low</Trans>} />
