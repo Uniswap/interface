@@ -52,7 +52,7 @@ export class Pair {
     return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address][String(stable)]
   }
 
-  public constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount, stable: boolean = true) {
+  public constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount, stable: boolean = false) {
     const tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
       ? [tokenAmountA, tokenAmountB]
       : [tokenAmountB, tokenAmountA]
