@@ -104,7 +104,7 @@ const SetDurationModal = () => {
     setAmount(parseFloat(event.target.value))
     setDuration(displayDuration)
   }
-  const selectDuration = (duration: Duration, index: any) => {
+  const selectDuration = (duration: Duration) => {
     setDuration(duration)
     setDisplayDuration(duration)
   }
@@ -112,19 +112,19 @@ const SetDurationModal = () => {
     () => [
       {
         displayText: 'Hours',
-        onClick: () => selectDuration(Duration.hour, 0),
+        onClick: () => selectDuration(Duration.hour),
       },
       {
         displayText: 'Days',
-        onClick: () => selectDuration(Duration.day, 1),
+        onClick: () => selectDuration(Duration.day),
       },
       {
         displayText: 'Weeks',
-        onClick: () => selectDuration(Duration.week, 2),
+        onClick: () => selectDuration(Duration.week),
       },
       {
         displayText: 'Months',
-        onClick: () => selectDuration(Duration.month, 3),
+        onClick: () => selectDuration(Duration.month),
       },
     ],
     []
