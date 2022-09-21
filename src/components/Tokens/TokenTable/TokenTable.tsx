@@ -9,7 +9,7 @@ import styled from 'styled-components/macro'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { HeaderRow, LoadedRow, LoadingRow, MAX_TOKENS_TO_LOAD } from './TokenRow'
 
-const LOADING_ROWS_COUNT = 5
+const LOADING_ROWS_COUNT = 3
 const ROWS_PER_PAGE_FETCH = 20
 
 const GridContainer = styled.div`
