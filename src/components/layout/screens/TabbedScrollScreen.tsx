@@ -1,17 +1,22 @@
 import React, { ReactElement, Ref, useRef, useState } from 'react'
 import {
-  Animated,
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
   ViewStyle,
 } from 'react-native'
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Route, SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
 import { ScrollEvent } from 'recyclerlistview/dist/reactnative/core/scrollcomponent/BaseScrollView'
 import { useAppTheme } from 'src/app/hooks'
-import { Flex } from 'src/components/layout/Flex'
+import { AnimatedFlex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
@@ -28,9 +33,6 @@ type TabbedScrollScreenProps = {
 
 export type TabViewScrollProps = {
   ref: Ref<any>
-  onMomentumScrollBegin: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
-  onMomentumScrollEnd: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
-  onScrollEndDrag: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   onScroll: (event: NativeSyntheticEvent<NativeScrollEvent> | ScrollEvent) => void
   contentContainerStyle: ViewStyle
 }
@@ -71,78 +73,115 @@ export default function TabbedScrollScreen({
 }: TabbedScrollScreenProps) {
   const theme = useAppTheme()
   const insets = useSafeAreaInsets()
+
   const [headerHeight, setHeaderHeight] = useState(INITIAL_TAB_BAR_HEIGHT) // estimation for initial height, updated on layout
-
-  const [tabIndex, setIndex] = useState(0)
-  const routes = tabs
-
-  const scrollY = useRef(new Animated.Value(0)).current
-  const tabRefs = useRef<{ key: string; value: Ref<any> }[]>([])
+  const animatedScrollY = useSharedValue(0)
   const isListGliding = useRef(false)
 
+  const routes = tabs
+  const [tabIndex, setIndex] = useState(0)
+  const tabRefs = useRef<{ key: string; value: any; lastScrollOffset?: number }[]>([])
+
+  const tabBarAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            animatedScrollY.value,
+            [0, headerHeight],
+            [headerHeight, 0],
+            Extrapolate.CLAMP
+          ),
+        },
+      ],
+    }
+  })
+
   const renderTabBar = (sceneProps: SceneRendererProps) => {
-    const tabBarYPosition = scrollY.interpolate({
-      inputRange: [0, headerHeight],
-      outputRange: [headerHeight, 0],
-      extrapolateRight: 'clamp',
-    })
     return (
-      <Animated.View
-        style={[
-          styles.tabBar,
-          {
-            transform: [{ translateY: tabBarYPosition }],
-          },
-        ]}>
+      <Animated.View style={[styles.tabBar, tabBarAnimatedStyle]}>
         <TabBar
           {...sceneProps}
-          indicatorStyle={[styles.indicator, { backgroundColor: theme.colors.accentBranded }]}
+          indicatorStyle={[styles.indicator, { backgroundColor: theme.colors.userThemeMagenta }]}
           navigationState={{ index: tabIndex, routes }}
           renderLabel={renderLabel}
           style={[styles.tab, { backgroundColor: theme.colors.backgroundBackdrop }]}
-          onTabPress={({ preventDefault }) => {
+          onTabPress={({ preventDefault, route }) => {
             if (isListGliding.current) {
               preventDefault()
             }
-            scrollY.setValue(0) // TODO (Thomas): Implement scroll state updates between tabs
+            animatedScrollY.value = 0
+
+            const found = tabRefs.current.find((e) => e.key === route.key)
+            if (found) {
+              // TODO (Thomas): Figure out smooth scrolling for RecyclerListView
+              found.value.scrollToOffset(0)
+            }
           }}
         />
       </Animated.View>
     )
   }
 
-  const headerY = scrollY.interpolate({
-    inputRange: [0, headerHeight + insets.top],
-    outputRange: [0, -headerHeight - insets.top],
-    extrapolateRight: 'clamp',
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            animatedScrollY.value,
+            [0, headerHeight + insets.top],
+            [0, -headerHeight - insets.top],
+            Extrapolate.CLAMP
+          ),
+        },
+      ],
+    }
   })
-
-  const scrollProps: TabViewScrollProps = {
-    onMomentumScrollBegin: () => {},
-    onMomentumScrollEnd: () => {},
-    onScrollEndDrag: () => {},
-    ref: (ref: Ref<any>) => {
-      const route = routes[tabIndex]
-      if (ref && route) {
-        const found = tabRefs.current.find((e) => e.key === route.key)
-        if (!found) {
-          tabRefs.current.push({ key: route.key, value: ref })
+  const scrollPropsForTab = (routeKey: string) => {
+    return {
+      ref: (ref: Ref<any>) => {
+        if (ref && routeKey) {
+          const found = tabRefs.current.find((e) => e.key === routeKey)
+          if (!found) {
+            tabRefs.current.push({ key: routeKey, value: ref })
+          }
         }
-      }
-    },
-    onScroll: Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
-      useNativeDriver: false, // TODO (Thomas): Implement native driver
-    }),
-    contentContainerStyle: {
-      paddingTop: headerHeight + TAB_BAR_HEIGHT,
-      minHeight: dimensions.fullHeight - TAB_BAR_HEIGHT, // TODO (Thomas): Clean up these values in refactor
-    },
+      },
+      onScroll: (event: { nativeEvent: { contentOffset: { y: number } } }) => {
+        animatedScrollY.value = event.nativeEvent.contentOffset.y
+      },
+      contentContainerStyle: {
+        paddingTop: headerHeight + TAB_BAR_HEIGHT,
+        minHeight: dimensions.fullHeight - TAB_BAR_HEIGHT - headerHeight,
+      },
+    }
   }
 
   const loadingContainerStyle = {
     paddingTop: headerHeight + TAB_BAR_HEIGHT,
   }
 
+  const onTabIndexChange = (index: number) => {
+    // Update with last scroll position
+    const previousTab = routes[tabIndex]
+    const previousTabRef = tabRefs.current.find((e) => e.key === previousTab.key)
+    if (previousTabRef) {
+      previousTabRef.lastScrollOffset = animatedScrollY.value
+    }
+
+    setIndex(index)
+
+    const newTab = routes[index]
+    const newTabRef = tabRefs.current.find((e) => e.key === newTab.key)
+
+    // If we switch tabs and the next tab hasn't scrolled, we want to avoid showing a blank padding space by scrolling to top on new tab.
+    if (newTabRef && !newTabRef?.lastScrollOffset) {
+      newTabRef?.value.scrollToOffset(0)
+      animatedScrollY.value = 0
+    }
+
+    // TODO (Thomas): Handle case where both tabs have scrolled but new tab has scrolled less than the other
+  }
   return (
     <Screen edges={['top', 'left', 'right']}>
       <TabView
@@ -152,19 +191,19 @@ export default function TabbedScrollScreen({
         }}
         lazy={true}
         navigationState={{ index: tabIndex, routes }}
-        renderScene={(props) => renderTab(props.route, scrollProps, loadingContainerStyle)}
+        renderScene={(props) =>
+          renderTab(props.route, scrollPropsForTab(props.route.key), loadingContainerStyle)
+        }
         renderTabBar={renderTabBar}
         style={{ marginHorizontal: theme.spacing.md }}
-        onIndexChange={setIndex}
+        onIndexChange={onTabIndexChange}
       />
 
-      <Animated.View
-        style={[styles.header, { marginTop: insets.top, transform: [{ translateY: headerY }] }]}>
-        <Flex
-          onLayout={(event: LayoutChangeEvent) => setHeaderHeight(event.nativeEvent.layout.height)}>
-          {headerContent}
-        </Flex>
-      </Animated.View>
+      <AnimatedFlex
+        style={[styles.header, headerAnimatedStyle, { marginTop: insets.top }]}
+        onLayout={(event: LayoutChangeEvent) => setHeaderHeight(event.nativeEvent.layout.height)}>
+        {headerContent}
+      </AnimatedFlex>
     </Screen>
   )
 }

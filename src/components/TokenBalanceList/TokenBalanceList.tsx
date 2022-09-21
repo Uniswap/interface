@@ -1,6 +1,6 @@
 import React, { ReactElement, useMemo } from 'react'
-import Animated from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
+import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import {
   TabViewScrollProps,
   TAB_VIEW_SCROLL_THROTTLE,
@@ -35,7 +35,7 @@ export function TokenBalanceList({
   const balances = useSortedPortfolioBalancesList(owner, hideSmallBalances)
   const truncatedBalances = useMemo(() => balances.slice(0, count), [balances, count])
   return (
-    <Animated.FlatList
+    <AnimatedFlatList
       ItemSeparatorComponent={() => <Separator />}
       ListEmptyComponent={empty}
       data={truncatedBalances}

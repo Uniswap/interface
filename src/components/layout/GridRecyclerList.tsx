@@ -46,6 +46,7 @@ export function GridRecyclerList<T>({
      * forceNonDeterministicRendering: updates layout after layout provider, it is ideal to have the best dimensions beforehand for perf reasons
      */
     <RecyclerListView
+      ref={tabViewScrollProps?.ref}
       canChangeSize={false}
       dataProvider={dataProvider.cloneWithRows(data)}
       forceNonDeterministicRendering={true}
