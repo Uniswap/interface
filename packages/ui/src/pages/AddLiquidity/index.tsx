@@ -89,7 +89,7 @@ export default function AddLiquidity({
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useThemedContext()
-  const [pairModeStable, setPairModeStable] = useState(true)
+  const [pairModeStable, setPairModeStable] = useState(false)
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
