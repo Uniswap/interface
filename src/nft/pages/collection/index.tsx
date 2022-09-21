@@ -2,8 +2,10 @@ import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
 import { useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
+import { useIsLoading } from 'nft/hooks/useIsLoading'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
+import { GenieCollection } from 'nft/types'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
@@ -13,6 +15,7 @@ const FILTER_WIDTH = 332
 
 const Collection = () => {
   const { contractAddress } = useParams()
+  const isLoading = useIsLoading((state) => state.isLoading)
 
   const isMobile = useIsMobile()
   const [isFiltersExpanded] = useFiltersExpanded()
@@ -38,20 +41,23 @@ const Collection = () => {
   return (
     <Column width="full">
       <Box width="full" height="160">
-        <Box
-          as="img"
-          maxHeight="full"
-          width="full"
-          src={collectionStats?.bannerImageUrl}
-          className={`${styles.bannerImage}`}
-        />
+        {isLoading ? (
+          <Box height="full" width="full" className={styles.loadingBanner} />
+        ) : (
+          <Box
+            as="img"
+            height="full"
+            width="full"
+            src={collectionStats?.bannerImageUrl}
+            className={isLoading ? styles.loadingBanner : styles.bannerImage}
+            background="none"
+          />
+        )}
       </Box>
 
-      {collectionStats && (
-        <Row paddingLeft="32" paddingRight="32">
-          <CollectionStats stats={collectionStats} isMobile={isMobile} />
-        </Row>
-      )}
+      <Row paddingLeft="32" paddingRight="32">
+        <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
+      </Row>
       <Row alignItems="flex-start" position="relative" paddingX="48">
         <Box position="sticky" top="72" width="0">
           {isFiltersExpanded && (

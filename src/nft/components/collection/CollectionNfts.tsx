@@ -13,6 +13,7 @@ import { UniformHeight, UniformHeights } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
+import { useIsLoading } from 'nft/hooks/useIsLoading'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
 
@@ -28,6 +29,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
   const buyNow = useCollectionFilters((state) => state.buyNow)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
+  const setIsLoading = useIsLoading((state) => state.setIsLoading)
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
@@ -77,6 +79,10 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
       refetchInterval: 5000,
     }
   )
+
+  useEffect(() => {
+    setIsLoading(true)
+  }, [isLoading])
 
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()

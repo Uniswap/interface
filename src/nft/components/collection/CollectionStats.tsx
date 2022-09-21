@@ -10,6 +10,7 @@ import { putCommas } from 'nft/utils/putCommas'
 import { useEffect, useReducer, useRef, useState } from 'react'
 import { ReactNode } from 'react'
 import ReactMarkdown from 'react-markdown'
+import { useIsLoading } from 'nft/hooks/useIsLoading'
 
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
 import * as styles from './CollectionStats.css'
@@ -125,14 +126,13 @@ const CollectionName = ({
   collectionSocialsIsOpen: boolean
   toggleCollectionSocials: () => void
 }) => {
+  const isLoading = useIsLoading((state) => state.isLoading)
+  const nameClass = isLoading ? styles.nameTextLoading : clsx(isMobile ? header2 : header2, styles.nameText)
+
   return (
     <Row justifyContent="space-between">
       <Row minWidth="0">
-        <Box
-          marginRight={!isVerified ? '12' : '0'}
-          className={clsx(isMobile ? header2 : header2, styles.nameText)}
-          style={{ lineHeight: '32px' }}
-        >
+        <Box marginRight={!isVerified ? '12' : '0'} className={nameClass} style={{ lineHeight: '32px' }}>
           {name}
         </Box>
         {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
@@ -197,6 +197,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   const [readMore, toggleReadMore] = useReducer((state) => !state, false)
   const baseRef = useRef<HTMLDivElement>(null)
   const descriptionRef = useRef<HTMLDivElement>(null)
+  const isLoading = useIsLoading((state) => state.isLoading)
 
   useEffect(() => {
     if (
@@ -210,7 +211,12 @@ const CollectionDescription = ({ description }: { description: string }) => {
       setShowReadMore(true)
   }, [descriptionRef, baseRef])
 
-  return (
+  // && !description
+  return isLoading ? (
+    <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}>
+      description
+    </Box>
+  ) : (
     <Box ref={baseRef} marginTop={{ sm: '12', md: '16' }} style={{ maxWidth: '680px' }}>
       <Box
         ref={descriptionRef}
@@ -229,14 +235,18 @@ const CollectionDescription = ({ description }: { description: string }) => {
   )
 }
 
-const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => (
-  <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
-    <Box as="span" className={styles.statsLabel}>
-      {`${label}${isMobile ? ': ' : ''}`}
+const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => {
+  const isLoading = useIsLoading((state) => state.isLoading)
+
+  return (
+    <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
+      <Box as="span" className={isLoading ? styles.statsLabelLoading : styles.statsLabel}>
+        {`${label}${isMobile ? ': ' : ''}`}
+      </Box>
+      <span className={isLoading ? styles.statsValueLoading : styles.statsValue}>{children}</span>
     </Box>
-    <span className={styles.statsValue}>{children}</span>
-  </Box>
-)
+  )
+}
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
   const numOwnersStr = stats.stats ? putCommas(stats.stats.num_owners) : 0
@@ -278,10 +288,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 
 export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; isMobile: boolean }) => {
   const [collectionSocialsIsOpen, toggleCollectionSocials] = useReducer((state) => !state, false)
-
-  if (!stats) {
-    return <div>Loading CollectionStats...</div>
-  }
+  const isLoading = useIsLoading((state) => state.isLoading)
 
   return (
     <Box
@@ -292,11 +299,14 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       flexDirection="column"
       width="full"
     >
+      {isLoading && (
+        <Box as="div" borderRadius="round" position="absolute" className={styles.collectionImageIsLoadingBackground} />
+      )}
       <Box
-        as="img"
+        as={isLoading ? 'div' : 'img'}
         borderRadius="round"
         position="absolute"
-        className={styles.collectionImage}
+        className={isLoading ? styles.collectionImageIsLoading : styles.collectionImage}
         src={stats.isFoundation && !stats.imageUrl ? '/nft/svgs/marketplaces/foundation.svg' : stats.imageUrl}
       />
       <Box className={styles.statsText}>
