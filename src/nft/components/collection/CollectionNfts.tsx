@@ -33,16 +33,8 @@ function getRarityStatus(id: string, assets?: (GenieAsset | undefined)[]) {
   if (rarityStatusCache.has(id)) {
     return rarityStatusCache.get(id)
   }
-  let hasRarity = false
-  assets &&
-    Array.from(assets).forEach((asset) => {
-      if (hasRarity) {
-        return
-      }
-      if (asset?.rarity) {
-        hasRarity = true
-      }
-    })
+  const hasRarity = assets && Array.from(assets).reduce((reducer, asset) => !!(reducer || asset?.rarity), false)
+
   if (hasRarity) {
     rarityStatusCache.set(id, hasRarity)
   }
