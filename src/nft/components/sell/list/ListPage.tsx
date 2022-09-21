@@ -28,7 +28,7 @@ import {
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useBag, useNFTList, useSellAsset, useSellPageState } from 'nft/hooks'
 import { DropDownOption, ListingMarket, ListingStatus, ListingWarning, SellPageStateType, WalletAsset } from 'nft/types'
-import { formatUsdPrice } from 'nft/utils/currency'
+import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { pluralize } from 'nft/utils/roundAndPluralize'
@@ -512,16 +512,6 @@ const PriceTextInput = ({
       </Row>
     </Column>
   )
-}
-
-export const formatEth = (price: number) => {
-  if (price > 1000000) {
-    return `${Math.round(price / 1000000)}M`
-  } else if (price > 1000) {
-    return `${Math.round(price / 1000)}K`
-  } else {
-    return `${Math.round(price * 100 + Number.EPSILON) / 100}`
-  }
 }
 
 const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
