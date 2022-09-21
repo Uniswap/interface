@@ -34,6 +34,7 @@ export const searchBarContainer = style([
     '@media': {
       [`screen and (min-width: ${breakpoints.lg}px)`]: {
         right: `-${DESKTOP_NAVBAR_WIDTH / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
+        top: '-5px',
       },
     },
   },

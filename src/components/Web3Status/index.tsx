@@ -1,9 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
-import { StyledChevronDown, StyledChevronUp } from 'components/Icons'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
@@ -11,7 +10,7 @@ import { Portal } from 'nft/components/common/Portal'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo, useRef } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled, { css, useTheme } from 'styled-components/macro'
@@ -34,12 +33,15 @@ import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 
+// https://stackoverflow.com/a/31617326
+const FULL_BORDER_RADIUS = 9999
+
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   align-items: center;
   padding: 0.5rem;
-  border-radius: 14px;
+  border-radius: ${FULL_BORDER_RADIUS}px;
   cursor: pointer;
   user-select: none;
   height: 36px;
@@ -60,15 +62,15 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   }
 `
 
-const Web3StatusConnectNavbar = styled.button<{ faded?: boolean }>`
-  dispay: flex;
-  align-items: center;
+const Web3StatusConnectButton = styled.button<{ faded?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
   background-color: ${({ theme }) => theme.accentActionSoft};
-  border-radius: 12px;
+  border-radius: ${FULL_BORDER_RADIUS}px;
   border: none;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 0 12px;
+  height: 40px;
 
   :hover,
   :active,
@@ -175,6 +177,11 @@ const StyledConnect = styled.div`
   }
 `
 
+const CHEVRON_PROPS = {
+  height: 20,
+  width: 20,
+}
+
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
   const connectionType = getConnection(connector).type
@@ -216,6 +223,10 @@ function Web3StatusInner() {
       </Web3StatusError>
     )
   } else if (account) {
+    const chevronProps = {
+      ...CHEVRON_PROPS,
+      color: theme.textSecondary,
+    }
     return (
       <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
         {navbarFlagEnabled && !hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
@@ -232,9 +243,9 @@ function Web3StatusInner() {
             <Text>{ENSName || shortenAddress(account)}</Text>
             {navbarFlagEnabled ? (
               walletIsOpen ? (
-                <StyledChevronUp onClick={toggleWalletDropdown} />
+                <ChevronUp {...chevronProps} />
               ) : (
-                <StyledChevronDown onClick={toggleWalletDropdown} />
+                <ChevronDown {...chevronProps} />
               )
             ) : null}
           </>
@@ -243,6 +254,12 @@ function Web3StatusInner() {
       </Web3StatusConnected>
     )
   } else {
+    const chevronProps = {
+      ...CHEVRON_PROPS,
+      color: theme.accentAction,
+      'data-testid': 'navbar-wallet-dropdown',
+      onClick: toggleWalletDropdown,
+    }
     return (
       <TraceEvent
         events={[Event.onClick]}
@@ -251,25 +268,13 @@ function Web3StatusInner() {
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
         {navbarFlagEnabled ? (
-          <Web3StatusConnectNavbar faded={!account}>
+          <Web3StatusConnectButton faded={!account}>
             <StyledConnect data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
               <Trans>Connect</Trans>
             </StyledConnect>
             <VerticalDivider />
-            {walletIsOpen ? (
-              <StyledChevronUp
-                data-testid="navbar-wallet-dropdown"
-                customColor={theme.accentAction}
-                onClick={toggleWalletDropdown}
-              />
-            ) : (
-              <StyledChevronDown
-                data-testid="navbar-wallet-dropdown"
-                customColor={theme.accentAction}
-                onClick={toggleWalletDropdown}
-              />
-            )}
-          </Web3StatusConnectNavbar>
+            {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+          </Web3StatusConnectButton>
         ) : (
           <Web3StatusConnect onClick={toggleWallet} faded={!account}>
             <Text>

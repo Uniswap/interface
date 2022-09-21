@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { formatToDecimal } from 'components/AmplitudeAnalytics/utils'
+import { formatToDecimal } from 'analytics/utils'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'

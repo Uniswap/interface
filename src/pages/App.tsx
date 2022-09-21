@@ -1,6 +1,6 @@
-import { initializeAnalytics, sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
-import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
+import { initializeAnalytics, sendAnalyticsEvent, user } from 'analytics'
+import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
@@ -21,7 +21,7 @@ import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
-import Navbar from '../components/NavBar'
+import NavBar from '../components/NavBar'
 import Popups from '../components/Popups'
 import { LoadingTokenDetails } from '../components/Tokens/TokenDetails/LoadingTokenDetails'
 import { useIsExpertMode } from '../state/user/hooks'
@@ -153,7 +153,7 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <Navbar /> : <Header />}</HeaderWrapper>
+          <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <NavBar /> : <Header />}</HeaderWrapper>
           <BodyWrapper navBarFlag={navBarFlag}>
             <Popups />
             <Polling />

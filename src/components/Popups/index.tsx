@@ -41,7 +41,7 @@ const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.deprecat
 
 const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: boolean }>`
   position: fixed;
-  top: ${({ extraPadding }) => (extraPadding ? '64px' : '56px')};
+  top: ${({ extraPadding }) => (extraPadding ? '72px' : '64px')};
   right: 1rem;
   max-width: 355px !important;
   width: 100%;
@@ -52,7 +52,7 @@ const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: 
   `};
 
   ${StopOverflowQuery} {
-    top: ${({ extraPadding, xlPadding }) => (xlPadding ? '64px' : extraPadding ? '64px' : '56px')};
+    top: ${({ extraPadding, xlPadding }) => (xlPadding ? '72px' : extraPadding ? '72px' : '64px')};
   }
 `
 

@@ -174,7 +174,7 @@ export default function FooterBalanceSummary({
             )}
           </BalanceInfo>
         )}
-        <Link to={`/swap?inputCurrency=${address}`}>
+        <Link to={`/swap?outputCurrency=${address}`}>
           <SwapButton>
             <Trans>Swap</Trans>
           </SwapButton>

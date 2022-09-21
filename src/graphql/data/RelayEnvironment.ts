@@ -31,7 +31,9 @@ const fetchQuery = async function wrappedFetchQuery(params: RequestParameters, v
 // and reusing cached data if its available/fresh.
 const gcReleaseBufferSize = 10
 
-const store = new Store(new RecordSource(), { gcReleaseBufferSize })
+const queryCacheExpirationTime = ms`1m`
+
+const store = new Store(new RecordSource(), { gcReleaseBufferSize, queryCacheExpirationTime })
 const network = Network.create(fetchQuery)
 
 // Export a singleton instance of Relay Environment configured with our network function:
