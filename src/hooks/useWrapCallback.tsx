@@ -70,6 +70,8 @@ export default function useWrapCallback(
   )
   const addTransaction = useTransactionAdder()
 
+  // This allows an async error to propagate within the React lifecycle.
+  // Without rethrowing it here, it would not show up in the UI - only the dev console.
   const [error, setError] = useState<Error>()
   if (error) throw error
 
