@@ -10,7 +10,7 @@ import { TextButton } from 'src/components/buttons/TextButton'
 import { Box, Flex } from 'src/components/layout'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import { biometricAuthenticationSuccessful } from 'src/features/biometrics/hooks'
-import { setRequiredForAppAccess, setRequiredForTransactions } from 'src/features/biometrics/slice'
+import { setRequiredForTransactions } from 'src/features/biometrics/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
@@ -45,7 +45,6 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
     }
 
     if (biometricAuthenticationSuccessful(authStatus)) {
-      dispatch(setRequiredForAppAccess(true))
       dispatch(setRequiredForTransactions(true))
       onPressNext()
     }
