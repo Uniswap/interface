@@ -235,6 +235,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
               ) : null
             })}
           </div>
+        ) : !collectionNfts ? (
+          <div>No CollectionAssets</div>
         ) : (
           <Center width="full" color="darkGray" style={{ height: '60vh' }}>
             <div style={{ display: 'block', textAlign: 'center' }}>
