@@ -1,3 +1,4 @@
+export { ActivitySwitcher } from './ActivitySwitcher'
 export { CollectionNfts } from './CollectionNfts'
 export { CollectionStats } from './CollectionStats'
 export { FilterButton } from './FilterButton'
