@@ -308,24 +308,30 @@ export default function Swap() {
     gatherPermitSignature,
   } = useERC20PermitFromTrade(trade, allowedSlippage, transactionDeadline)
 
+  const [approvalPending, setApprovalPending] = useState<boolean>(false)
   const handleApprove = useCallback(async () => {
-    if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
-      try {
-        await gatherPermitSignature()
-      } catch (error) {
-        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
-        if (error?.code !== 4001) {
-          await approveCallback()
+    setApprovalPending(true)
+    try {
+      if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
+        try {
+          await gatherPermitSignature()
+        } catch (error) {
+          // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
+          if (error?.code !== 4001) {
+            await approveCallback()
+          }
         }
-      }
-    } else {
-      await approveCallback()
+      } else {
+        await approveCallback()
 
-      sendEvent({
-        category: 'Swap',
-        action: 'Approve',
-        label: [TRADE_STRING, trade?.inputAmount?.currency.symbol].join('/'),
-      })
+        sendEvent({
+          category: 'Swap',
+          action: 'Approve',
+          label: [TRADE_STRING, trade?.inputAmount?.currency.symbol].join('/'),
+        })
+      }
+    } finally {
+      setApprovalPending(false)
     }
   }, [signatureState, gatherPermitSignature, approveCallback, trade?.inputAmount?.currency.symbol])
 
@@ -714,7 +720,7 @@ export default function Swap() {
                                   </Trans>
                                 )}
                               </span>
-                              {approvalState === ApprovalState.PENDING ? (
+                              {approvalPending || approvalState === ApprovalState.PENDING ? (
                                 <Loader stroke={theme.white} />
                               ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                                 signatureState === UseERC20PermitState.SIGNED ? (
