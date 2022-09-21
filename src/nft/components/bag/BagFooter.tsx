@@ -45,7 +45,7 @@ export const BagFooter = ({
   const walletModalIsOpen = useModalIsOpen(ApplicationModal.WALLET)
 
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus) || walletModalIsOpen
-  const isDisabled = isPending || !sufficientBalance || assetsAreInReview
+  const isDisabled = isConnected && (isPending || !sufficientBalance || assetsAreInReview)
 
   const showWarning = isConnected && (!sufficientBalance || bagStatus === BagStatus.WARNING)
 

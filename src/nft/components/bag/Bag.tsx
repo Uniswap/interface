@@ -184,10 +184,10 @@ const Bag = () => {
 
   const { balance, sufficientBalance } = useMemo(() => {
     const balance: BigNumber = parseEther(balanceInEth.toString())
-    const sufficientBalance = address ? BigNumber.from(balance).gte(totalEthPrice) : true
+    const sufficientBalance = isConnected ? BigNumber.from(balance).gte(totalEthPrice) : true
 
     return { balance, sufficientBalance }
-  }, [balanceInEth, totalEthPrice, address])
+  }, [balanceInEth, totalEthPrice, isConnected])
 
   useEffect(() => {
     if (routingData && bagStatus === BagStatus.FETCHING_ROUTE) {
