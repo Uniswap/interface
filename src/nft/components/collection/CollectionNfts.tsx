@@ -1,5 +1,5 @@
-import { useRef, useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
+import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
@@ -7,23 +7,24 @@ import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center } from 'nft/components/Flex'
 import { Row } from 'nft/components/Flex'
+import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
-import useDebounce from 'hooks/useDebounce'
+import { vars } from 'nft/css/sprinkles.css'
+import {
+  CollectionFilters,
+  initialCollectionFilterState,
+  useCollectionFilters,
+  useFiltersExpanded,
+  useIsMobile,
+} from 'nft/hooks'
+import { SortBy, SortByPointers, Trait } from 'nft/hooks/useCollectionFilters'
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieAsset, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
+import qs from 'query-string'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
-import qs from 'query-string'
-import {
-  useCollectionFilters,
-  useIsMobile,
-  initialCollectionFilterState,
-  useFiltersExpanded,
-  CollectionFilters,
-} from 'nft/hooks'
-import { Trait, SortBy, SortByPointers } from 'nft/hooks/useCollectionFilters'
-import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
-import { vars } from 'nft/css/sprinkles.css'
+import { useLocation } from 'react-router-dom'
 
 const rarityStatusCache = new Map<string, boolean>()
 function getRarityStatus(id: string, assets?: (GenieAsset | undefined)[]) {
@@ -48,7 +49,7 @@ function getRarityStatus(id: string, assets?: (GenieAsset | undefined)[]) {
 }
 
 const urlParamsUtils = {
-  removeDefaults: (query: object) => {
+  removeDefaults: (query: any) => {
     const clonedQuery: Record<string, any> = { ...query }
 
     // Leveraging default values & not showing them on URL
@@ -66,13 +67,6 @@ const urlParamsUtils = {
       delete clonedQuery['all']
     }
 
-    /*
-      The default value for any price / rarity input is an empty string in our state. If user changes
-      any of their value and then deletes it, it'll get a value of zero.
-      Since 0 !== "", it acts like it's a new value, thus appearing in URL.
-    */
-    ;['minPrice', 'maxPrice', 'minRarity', 'maxRarity'].forEach((key) => {})
-
     const defaultSortByPointer = SortByPointers[initialCollectionFilterState.sortBy]
     if (clonedQuery['sort'] === defaultSortByPointer) {
       delete clonedQuery['sort']
@@ -82,7 +76,7 @@ const urlParamsUtils = {
   },
 
   // Making values in our URL more state-friendly
-  buildQuery: (query: object, collectionStats: GenieCollection) => {
+  buildQuery: (query: any, collectionStats: GenieCollection) => {
     const clonedQuery: Record<string, any> = { ...query }
 
     ;['traits', 'markets'].forEach((key) => {
@@ -147,7 +141,7 @@ const urlParamsUtils = {
         const modifiedTrait = trimTraitStr(queryTrait.replace(/(")/g, ''))
         const [trait_type, trait_value] = modifiedTrait.split(',')
         const traitInStats = collectionStats.traits.find(
-          (item) => item.trait_type === trait_type && item.trait_value == trait_value
+          (item) => item.trait_type === trait_type && item.trait_value === trait_value
         )
 
         /*
@@ -249,19 +243,19 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     }
   )
 
-  const urlFilterItems = [
-    'markets',
-    'maxPrice',
-    'maxRarity',
-    'minPrice',
-    'minRarity',
-    'traits',
-    'all',
-    'search',
-    'sort',
-  ] as const
+  const syncLocalFiltersWithURL = useCallback((state: CollectionFilters) => {
+    const urlFilterItems = [
+      'markets',
+      'maxPrice',
+      'maxRarity',
+      'minPrice',
+      'minRarity',
+      'traits',
+      'all',
+      'search',
+      'sort',
+    ] as const
 
-  const syncLocalFiltersWithURL = (state: CollectionFilters) => {
     const query: Record<string, any> = {}
     urlFilterItems.forEach((key) => {
       switch (key) {
@@ -284,6 +278,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
           break
       }
     })
+
     const modifiedQuery = urlParamsUtils.removeDefaults(query)
 
     // Applying local state changes to URL
@@ -292,8 +287,36 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
 
     // Using pushState on purpose here. router.push() will trigger re-renders & API calls.
     window.history.pushState({}, ``, `${url}${stringifiedQuery && `?${stringifiedQuery}`}`)
-  }
+  }, [])
 
+  const location = useLocation()
+
+  const applyFiltersFromURL = useCallback(() => {
+    if (!location.search) return
+
+    const query = qs.parse(location.search, {
+      arrayFormat: 'comma',
+      parseNumbers: true,
+      parseBooleans: true,
+    }) as {
+      maxPrice: string
+      maxRarity: string
+      minPrice: string
+      minRarity: string
+      search: string
+      sort: string
+      sortBy: number
+      all: boolean
+      buyNow: boolean
+      traits: string[]
+      markets: string[]
+    }
+    const modifiedQuery = urlParamsUtils.buildQuery(query, collectionStats)
+
+    requestAnimationFrame(() => {
+      useCollectionFilters.setState(modifiedQuery as any)
+    })
+  }, [collectionStats, location.search])
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   const oldStateRef = useRef<CollectionFilters | null>(null)
@@ -358,18 +381,18 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     setUniformHeight(UniformHeights.unset)
   }, [contractAddress])
 
+  // Applying filters from URL to local state
   useEffect(() => {
-    const unsub =
-      collectionStats?.traits &&
+    collectionStats?.traits && applyFiltersFromURL()
+
+    collectionStats?.traits &&
       useCollectionFilters.subscribe((state) => {
         if (JSON.stringify(oldStateRef.current) !== JSON.stringify(state)) {
           syncLocalFiltersWithURL(state)
           oldStateRef.current = state
         }
       })
-
-    return unsub
-  }, [collectionStats?.traits])
+  }, [applyFiltersFromURL, collectionStats?.traits, syncLocalFiltersWithURL])
 
   return (
     <>

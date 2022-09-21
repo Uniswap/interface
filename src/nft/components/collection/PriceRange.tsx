@@ -1,13 +1,12 @@
+import { Row } from 'nft/components/Flex'
+import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
-import { useEffect, useState } from 'react'
-import { FocusEventHandler, FormEvent } from 'react'
-import { useLocation } from 'react-router-dom'
-
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { isNumber } from 'nft/utils/numbers'
 import { scrollToTop } from 'nft/utils/scrollToTop'
-import { Row } from 'nft/components/Flex'
-import { NumericInput } from 'nft/components/layout/Input'
+import { useEffect, useState } from 'react'
+import { FocusEventHandler, FormEvent } from 'react'
+import { useLocation } from 'react-router-dom'
 
 export const PriceRange = () => {
   const [placeholderText, setPlaceholderText] = useState('')
