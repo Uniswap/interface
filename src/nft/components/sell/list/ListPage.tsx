@@ -574,12 +574,7 @@ const MarketplaceRow = ({
   const [hovered, setHovered] = useState(false)
   const handleHover = () => setHovered(!hovered)
 
-  const marketplaceFee =
-    selectedMarkets.length > 0
-      ? selectedMarkets.length > 1
-        ? maxMarketFee(selectedMarkets)
-        : selectedMarkets[0].fee
-      : 0
+  const marketplaceFee = selectedMarkets.length > 0 ? maxMarketFee(selectedMarkets) : 0
   const price = showGlobalPrice ? globalPrice : listPrice
   const feeInEth = price && (price * (asset.creatorPercentage * 100 + marketplaceFee)) / 100
   const userReceives = price && feeInEth && price - feeInEth
