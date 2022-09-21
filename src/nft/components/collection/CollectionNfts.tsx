@@ -177,6 +177,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
   const markets = useCollectionFilters((state) => state.markets)
   const sortBy = useCollectionFilters((state) => state.sortBy)
   const searchByNameText = useCollectionFilters((state) => state.search)
+  const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const setSortBy = useCollectionFilters((state) => state.setSortBy)
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
@@ -382,6 +383,15 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
   useEffect(() => {
     setUniformHeight(UniformHeights.unset)
   }, [contractAddress])
+
+  useEffect(() => {
+    const marketCount: any = {}
+    collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
+      marketCount[marketplace] = count
+    })
+    setMarketCount(marketCount)
+    oldStateRef.current = useCollectionFilters.getState()
+  }, [collectionStats?.marketplaceCount, setMarketCount])
 
   // Applying filters from URL to local state
   useEffect(() => {
