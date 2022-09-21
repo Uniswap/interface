@@ -1,13 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
-import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
+import { sendAnalyticsEvent, user } from 'analytics'
+import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'analytics/constants'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
@@ -149,6 +150,8 @@ export default function WalletModal({
 }) {
   const dispatch = useAppDispatch()
   const { connector, account, chainId } = useWeb3React()
+  const previousAccount = usePrevious(account)
+
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
   const redesignFlag = useRedesignFlag()
@@ -173,6 +176,12 @@ export default function WalletModal({
       setWalletView(account ? WALLET_VIEWS.ACCOUNT : WALLET_VIEWS.OPTIONS)
     }
   }, [walletModalOpen, setWalletView, account])
+
+  useEffect(() => {
+    if (account && account !== previousAccount && walletModalOpen) {
+      toggleWalletModal()
+    }
+  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
 
   useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {

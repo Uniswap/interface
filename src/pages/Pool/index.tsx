@@ -1,19 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'components/AmplitudeAnalytics/constants'
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { PageName } from 'analytics/constants'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import TokensBanner from 'components/Tokens/TokensBanner'
 import { isSupportedChain } from 'constants/chains'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
-import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -166,10 +164,8 @@ function WrongNetworkCard() {
   const navBarFlag = useNavBarFlag()
   const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const theme = useTheme()
-  const tokensFlag = useTokensFlag()
   return (
     <>
-      {tokensFlag === TokensVariant.Enabled && <TokensBanner />}
       <PageWrapper navBarFlag={navBarFlagEnabled}>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>

@@ -17,6 +17,7 @@ export const NavIcon = ({ children, isActive, onClick }: NavIconProps) => {
       background={isActive ? 'accentActiveSoft' : 'none'}
       color={isActive ? 'blackBlue' : 'darkGray'}
       onClick={onClick}
+      height="40"
     >
       {children}
     </Box>

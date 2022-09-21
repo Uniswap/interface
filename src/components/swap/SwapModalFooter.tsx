@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
   formatPercentNumber,
@@ -9,7 +9,7 @@ import {
   getDurationFromDateMilliseconds,
   getDurationUntilTimestampSeconds,
   getTokenAddress,
-} from 'components/AmplitudeAnalytics/utils'
+} from 'analytics/utils'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'

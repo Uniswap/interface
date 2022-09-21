@@ -2,28 +2,26 @@ import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
-import { ElementName, Event, EventName, PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { sendAnalyticsEvent } from 'analytics'
+import { ElementName, Event, EventName, PageName, SectionName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
+import { TraceEvent } from 'analytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
   formatToDecimal,
   getDurationFromDateMilliseconds,
   getTokenAddress,
-} from 'components/AmplitudeAnalytics/utils'
+} from 'analytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import TokensBanner from 'components/Tokens/TokensBanner'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
-import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -156,7 +154,6 @@ export default function Swap() {
   const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
-  const tokensFlag = useTokensFlag()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
@@ -505,7 +502,6 @@ export default function Swap() {
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
-        {tokensFlag === TokensVariant.Enabled && <TokensBanner />}
         {redesignFlagEnabled ? (
           <TokenSafetyModal
             isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}

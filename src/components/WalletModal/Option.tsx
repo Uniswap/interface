@@ -1,5 +1,5 @@
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import React from 'react'
 import { Check } from 'react-feather'

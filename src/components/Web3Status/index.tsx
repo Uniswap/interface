@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { StyledChevronDown, StyledChevronUp } from 'components/Icons'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
@@ -34,12 +34,15 @@ import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 
+// https://stackoverflow.com/a/31617326
+const FULL_BORDER_RADIUS = 9999
+
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   align-items: center;
   padding: 0.5rem;
-  border-radius: 14px;
+  border-radius: ${FULL_BORDER_RADIUS}px;
   cursor: pointer;
   user-select: none;
   height: 36px;
@@ -60,15 +63,15 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   }
 `
 
-const Web3StatusConnectNavbar = styled.button<{ faded?: boolean }>`
-  dispay: flex;
-  align-items: center;
+const Web3StatusConnectButton = styled.button<{ faded?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
   background-color: ${({ theme }) => theme.accentActionSoft};
-  border-radius: 12px;
+  border-radius: ${FULL_BORDER_RADIUS}px;
   border: none;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 0 12px;
+  height: 40px;
 
   :hover,
   :active,
@@ -251,7 +254,7 @@ function Web3StatusInner() {
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
         {navbarFlagEnabled ? (
-          <Web3StatusConnectNavbar faded={!account}>
+          <Web3StatusConnectButton faded={!account}>
             <StyledConnect data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
               <Trans>Connect</Trans>
             </StyledConnect>
@@ -269,7 +272,7 @@ function Web3StatusInner() {
                 onClick={toggleWalletDropdown}
               />
             )}
-          </Web3StatusConnectNavbar>
+          </Web3StatusConnectButton>
         ) : (
           <Web3StatusConnect onClick={toggleWallet} faded={!account}>
             <Text>
