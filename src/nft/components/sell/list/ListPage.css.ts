@@ -1,19 +1,23 @@
 import { style } from '@vanilla-extract/css'
-import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
+import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
 
-export const buttonSelected = style({
-  border: `1px solid ${vars.color.genieBlue}`,
-})
+export const buttonSelected = style([
+  sprinkles({
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'genieBlue',
+  }),
+])
 
 export const nftDivider = style([
   sprinkles({
     height: '0',
     width: 'full',
     borderRadius: '20',
+    borderWidth: '0.5px',
+    borderStyle: 'solid',
+    borderColor: 'medGray',
   }),
-  {
-    border: `0.5px solid ${themeVars.colors.medGray}`,
-  },
 ])
 
 export const priceChevron = style([
