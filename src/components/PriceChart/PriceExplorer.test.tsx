@@ -9,11 +9,11 @@ const graphDatapoints = buildGraph(
   [
     {
       timestamp: 0,
-      close: 100,
+      close: 1551331.3403,
     },
     {
       timestamp: 1,
-      close: 200,
+      close: 3102662.6806,
     },
   ],
   3

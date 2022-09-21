@@ -23,7 +23,7 @@ exports[`renders correctly 1`] = `
     <TextInput
       animatedProps={
         Object {
-          "text": "$100",
+          "text": "$1,551,331.34",
         }
       }
       editable={false}
@@ -43,7 +43,7 @@ exports[`renders correctly 1`] = `
         ]
       }
       underlineColorAndroid="transparent"
-      value="$100"
+      value="$1,551,331.34"
     />
     <View
       style={

@@ -14,6 +14,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { Theme } from 'src/styles/theme'
+import { numberToLocaleStringWorklet } from 'src/utils/reanimated'
 
 interface HeaderProps {
   price: SharedValue<number>
@@ -34,7 +35,11 @@ export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
 
   const priceFormatted = useDerivedValue(() => {
     // note. block runs inside a worklet, cannot re-use the existing price formatters as-is
-    return `$${round(price.value, 2).toLocaleString()}`
+    return numberToLocaleStringWorklet(price.value, 'en-US', {
+      maximumFractionDigits: 2,
+      style: 'currency',
+      currency: 'USD',
+    })
   })
 
   const percentChangeFormatted = useDerivedValue(() =>
