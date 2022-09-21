@@ -19,7 +19,7 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 export default function parseTradeTransaction(
   transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
 ): ExactInputSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
-  // for detectign wraps
+  // for detecting wraps
   const nativeCurrencyID = buildNativeCurrencyId(ChainId.Mainnet).toLocaleLowerCase()
   const wrappedCurrencyID = buildCurrencyId(
     ChainId.Mainnet,
@@ -46,7 +46,7 @@ export default function parseTradeTransaction(
     sent.__typename === 'TokenTransfer' && received.__typename === 'TokenTransfer'
   const containsNFT = sent.__typename === 'NftTransfer' || received.__typename === 'NftTransfer'
 
-  // TODO:  Currently no spec for advanced transfer types.
+  // TODO: Currently no spec for advanced transfer types.
   if (!(onlyERC20Tokens || containsNFT)) {
     return undefined
   }

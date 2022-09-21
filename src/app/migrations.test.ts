@@ -14,6 +14,7 @@ import {
   v16Schema,
   v17Schema,
   v18Schema,
+  v19Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -736,5 +737,18 @@ describe('Redux state migrations', () => {
     expect(v19.chains.byChainId[ROPSTEN]).toBeUndefined()
     expect(v19.chains.byChainId[RINKEBY]).toBeUndefined()
     expect(v19.chains.byChainId[KOVAN]).toBeUndefined()
+  })
+
+  it('migrates from v19 to v20', () => {
+    const v19Stub = {
+      ...v19Schema,
+      notifications: {
+        ...v19Schema.notifications,
+        lastTxNotificationUpdate: { [1]: 122342134 },
+      },
+    }
+
+    const v20 = migrations[20](v19Stub)
+    expect(v20.notifications.lastTxNotificationUpdate).toEqual({})
   })
 })

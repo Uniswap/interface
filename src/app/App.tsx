@@ -1,6 +1,6 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
-import React, { StrictMode } from 'react'
+import React, { StrictMode, Suspense } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
@@ -17,13 +17,14 @@ import { config } from 'src/config'
 import { RelayEnvironment } from 'src/data/relay'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
-import { TransactionHistoryUpdater } from 'src/features/dataApi/zerion/updater'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { enableAnalytics } from 'src/features/telemetry'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
+import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
+import { useAccounts } from 'src/features/wallet/hooks'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
 
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
@@ -84,9 +85,18 @@ function App() {
 }
 
 function DataUpdaters() {
+  const accounts = useAccounts()
+  const addresses = Object.keys(accounts)
+  // TODO: Once TransactionHistoryUpdaterQuery can accept an array of addresses,
+  // use `useQueryLoader` to load the query within `InteractionManager.runAfterInteractions`
+  // and pass the query ref to the `TransactionHistoryUpdater` component
   return (
     <>
-      <TransactionHistoryUpdater />
+      {addresses.map((address) => (
+        <Suspense fallback={null}>
+          <TransactionHistoryUpdater address={address} />
+        </Suspense>
+      ))}
       <MulticallUpdaters />
       <TokenListUpdater />
     </>

@@ -290,4 +290,10 @@ export const migrations = {
       transactions: newTransactionState,
     }
   },
+
+  20: (state: any) => {
+    const newState = { ...state }
+    newState.notifications = { ...state?.notifications, lastTxNotificationUpdate: {} }
+    return newState
+  },
 }

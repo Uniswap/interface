@@ -22,24 +22,23 @@ function _NotificationBadge({
 }: Props) {
   return (
     <Box position="relative">
+      {notificationCount ? (
+        <Box alignItems="center" right={-size / 1.5} top={-size / 2} zIndex="popover">
+          <Flex
+            centered
+            backgroundColor={backgroundColor}
+            borderRadius="full"
+            borderWidth={2}
+            height={size}
+            minWidth={size}
+            position="absolute">
+            <Text numberOfLines={1} p="xxs" textAlign="center" variant="badge">
+              {formatNotificationCount(notificationCount)}
+            </Text>
+          </Flex>
+        </Box>
+      ) : null}
       {children}
-      <Flex
-        centered
-        backgroundColor={backgroundColor}
-        borderRadius="full"
-        borderWidth={2}
-        minHeight={size}
-        minWidth={size}
-        position="absolute"
-        px="xxxs"
-        right={-size / 3.5}
-        top={-size / 3.5}>
-        {notificationCount ? (
-          <Text numberOfLines={1} textAlign="center" variant="badge">
-            {formatNotificationCount(notificationCount)}
-          </Text>
-        ) : null}
-      </Flex>
     </Box>
   )
 }

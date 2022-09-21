@@ -8,7 +8,7 @@ import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
 import { UserScreenQueryResponse } from 'src/screens/UserScreen'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
-export default function parseNFTMintTransction(
+export default function parseNFTMintTransaction(
   transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
 ): NFTMintTransactionInfo | undefined {
   const nativeCurrency = nativeOnChain(ChainId.Mainnet)

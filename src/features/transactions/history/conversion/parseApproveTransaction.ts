@@ -6,7 +6,7 @@ import {
 import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
 import { UserScreenQueryResponse } from 'src/screens/UserScreen'
 
-export default function parseAppoveTransaction(
+export default function parseApproveTransaction(
   transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
 ): ApproveTransactionInfo | NFTApproveTransactionInfo | undefined {
   const change = transaction?.assetChanges[0]

@@ -1,13 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { AppNotification } from 'src/features/notifications/types'
 
 interface NotificationState {
   notificationQueue: AppNotification[]
   notificationCount: {
-    [userAddress: Address]: number
+    [userAddress: Address]: number | undefined
   }
-  lastTxNotificationUpdate: { [address: Address]: ChainIdTo<number> }
+  lastTxNotificationUpdate: { [address: Address]: number | undefined }
 }
 
 export const initialNotificationsState: NotificationState = {
@@ -46,11 +45,10 @@ const slice = createSlice({
     },
     setLastTxNotificationUpdate: (
       state,
-      { payload }: PayloadAction<{ address: Address; timestamp: number; chainId: ChainId }>
+      { payload }: PayloadAction<{ address: Address; timestamp: number }>
     ) => {
-      const { address, timestamp, chainId } = payload
-      state.lastTxNotificationUpdate[address] ??= {}
-      state.lastTxNotificationUpdate[address][chainId] = timestamp
+      const { address, timestamp } = payload
+      state.lastTxNotificationUpdate[address] = timestamp
     },
   },
 })

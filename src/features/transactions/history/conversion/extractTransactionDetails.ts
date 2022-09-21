@@ -1,6 +1,6 @@
 import { ChainId } from 'src/constants/chains'
-import parseAppoveTransaction from 'src/features/transactions/history/conversion/parseApproveTransaction'
-import parseNFTMintTransction from 'src/features/transactions/history/conversion/parseMintTransaction'
+import parseApproveTransaction from 'src/features/transactions/history/conversion/parseApproveTransaction'
+import parseNFTMintTransaction from 'src/features/transactions/history/conversion/parseMintTransaction'
 import parseReceiveTransaction from 'src/features/transactions/history/conversion/parseReceiveTransaction'
 import parseSendTransaction from 'src/features/transactions/history/conversion/parseSendTransaction'
 
@@ -29,7 +29,7 @@ export default function extractTransactionDetails(
   let typeInfo: TransactionTypeInfo | undefined
   switch (transaction.type) {
     case 'APPROVE':
-      typeInfo = parseAppoveTransaction(transaction)
+      typeInfo = parseApproveTransaction(transaction)
       break
     case 'SEND':
       typeInfo = parseSendTransaction(transaction)
@@ -41,11 +41,11 @@ export default function extractTransactionDetails(
       typeInfo = parseTradeTransaction(transaction)
       break
     case 'MINT':
-      typeInfo = parseNFTMintTransction(transaction)
+      typeInfo = parseNFTMintTransaction(transaction)
       break
   }
 
-  // No match found, ddefault to unknown.
+  // No match found, default to unknown.
   if (!typeInfo) {
     typeInfo = {
       type: TransactionType.Unknown,
@@ -55,7 +55,7 @@ export default function extractTransactionDetails(
 
   return {
     id: transaction.transaction.hash,
-    // @TODO: update with chainId from txn when backened supports other networks
+    // @TODO: update with chainId from txn when backend supports other networks
     chainId: ChainId.Mainnet,
     hash: transaction.transaction.hash,
     addedTime: transaction.timestamp * 1000, // convert to ms

@@ -128,10 +128,10 @@ export function Activity({
     activityScreenQuery,
     preloadedQuery
   )
-  const formatedTransactions = useMemo(() => {
+  const formattedTransactions = useMemo(() => {
     return parseDataResponseToTransactionDetails(transactionData)
   }, [transactionData])
-  const allTransactions = useMergeLocalAndRemoteTransactions(address, formatedTransactions)
+  const allTransactions = useMergeLocalAndRemoteTransactions(address, formattedTransactions)
 
   const { sessions } = useWalletConnect(address)
 
