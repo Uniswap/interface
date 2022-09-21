@@ -64,7 +64,7 @@ export abstract class Fetcher {
   public static async fetchPairData(
     tokenA: Token,
     tokenB: Token,
-    stable: boolean,
+    stable: boolean = false,
     provider = getDefaultProvider(getNetwork(tokenA.chainId))
   ): Promise<Pair> {
     invariant(tokenA.chainId === tokenB.chainId, 'CHAIN_ID')
