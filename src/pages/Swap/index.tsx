@@ -708,7 +708,7 @@ export default function Swap() {
                               approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                             }
                           >
-                            <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                            <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
                               <span style={{ display: 'flex', alignItems: 'center' }}>
                                 {/* we need to shorten this string on mobile */}
                                 {approvalState === ApprovalState.APPROVED ||

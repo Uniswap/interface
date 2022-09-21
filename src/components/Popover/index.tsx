@@ -16,6 +16,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
 
 const ReferenceElement = styled.div`
   display: inline-block;
+  height: inherit;
 `
 
 const Arrow = styled.div`
