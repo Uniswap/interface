@@ -46,7 +46,7 @@ export function useMintActionHandlers(noLiquidity: boolean | undefined): {
 export function useDerivedMintInfo(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  stable: boolean | undefined
+  stable: boolean | undefined = false
 ): {
   dependentField: Field
   currencies: { [field in Field]?: Currency }
