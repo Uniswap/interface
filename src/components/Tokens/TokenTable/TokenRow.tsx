@@ -10,6 +10,7 @@ import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
 import { TimePeriod } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
+import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, HTMLProps, ReactHTMLElement, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -472,8 +473,8 @@ interface LoadedRowProps extends HTMLProps<ReactHTMLElement<HTMLElement>> {
 }
 
 /* Loaded State: row component with token information */
-export default function LoadedRow(props: LoadedRowProps) {
-  const { tokenListIndex, tokenListLength, token, ...customProps } = props
+export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
+  const { tokenListIndex, tokenListLength, token } = props
   const tokenAddress = token?.address
   const currency = useCurrency(tokenAddress)
   const tokenName = token?.name
@@ -501,81 +502,84 @@ export default function LoadedRow(props: LoadedRowProps) {
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <StyledLink
-      to={`/tokens/${tokenAddress}`}
-      onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
-      style={customProps}
-    >
-      <TokenRow
-        header={false}
-        favorited={
-          <ClickFavorited
-            onClick={(e) => {
-              e.preventDefault()
-              toggleFavorite()
-            }}
-          >
-            <FavoriteIcon isFavorited={isFavorited} />
-          </ClickFavorited>
-        }
-        listNumber={sortAscending ? 100 - tokenListIndex : tokenListIndex + 1}
-        tokenInfo={
-          <ClickableName>
-            <LogoContainer>
-              <CurrencyLogo currency={currency} symbol={tokenSymbol} />
-              <L2NetworkLogo networkUrl={L2Icon} />
-            </LogoContainer>
-            <TokenInfoCell>
-              <TokenName>{tokenName}</TokenName>
-              <TokenSymbol>{tokenSymbol}</TokenSymbol>
-            </TokenInfoCell>
-          </ClickableName>
-        }
-        price={
-          <ClickableContent>
-            <PriceInfoCell>
-              {token?.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
-              <PercentChangeInfoCell>
-                {formattedDelta}
-                {arrow}
-              </PercentChangeInfoCell>
-            </PriceInfoCell>
-          </ClickableContent>
-        }
-        percentChange={
-          <ClickableContent>
-            {formattedDelta ?? '-'}
-            {arrow}
-          </ClickableContent>
-        }
-        marketCap={
-          <ClickableContent>
-            {token?.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
-          </ClickableContent>
-        }
-        volume={
-          <ClickableContent>
-            {token?.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
-          </ClickableContent>
-        }
-        sparkLine={
-          <SparkLine>
-            <ParentSize>
-              {({ width, height }) => (
-                <SparklineChart
-                  width={width}
-                  height={height}
-                  tokenData={token}
-                  pricePercentChange={token?.market?.pricePercentChange?.value}
-                  timePeriod={timePeriod}
-                />
-              )}
-            </ParentSize>
-          </SparkLine>
-        }
-        first={tokenListIndex === 0}
-        last={tokenListIndex === tokenListLength - 1}
-      />
-    </StyledLink>
+    <div ref={ref}>
+      <StyledLink
+        to={`/tokens/${tokenAddress}`}
+        onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
+      >
+        <TokenRow
+          header={false}
+          favorited={
+            <ClickFavorited
+              onClick={(e) => {
+                e.preventDefault()
+                toggleFavorite()
+              }}
+            >
+              <FavoriteIcon isFavorited={isFavorited} />
+            </ClickFavorited>
+          }
+          listNumber={sortAscending ? 100 - tokenListIndex : tokenListIndex + 1}
+          tokenInfo={
+            <ClickableName>
+              <LogoContainer>
+                <CurrencyLogo currency={currency} symbol={tokenSymbol} />
+                <L2NetworkLogo networkUrl={L2Icon} />
+              </LogoContainer>
+              <TokenInfoCell>
+                <TokenName>{tokenName}</TokenName>
+                <TokenSymbol>{tokenSymbol}</TokenSymbol>
+              </TokenInfoCell>
+            </ClickableName>
+          }
+          price={
+            <ClickableContent>
+              <PriceInfoCell>
+                {token?.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
+                <PercentChangeInfoCell>
+                  {formattedDelta}
+                  {arrow}
+                </PercentChangeInfoCell>
+              </PriceInfoCell>
+            </ClickableContent>
+          }
+          percentChange={
+            <ClickableContent>
+              {formattedDelta ?? '-'}
+              {arrow}
+            </ClickableContent>
+          }
+          marketCap={
+            <ClickableContent>
+              {token?.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
+            </ClickableContent>
+          }
+          volume={
+            <ClickableContent>
+              {token?.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
+            </ClickableContent>
+          }
+          sparkLine={
+            <SparkLine>
+              <ParentSize>
+                {({ width, height }) => (
+                  <SparklineChart
+                    width={width}
+                    height={height}
+                    tokenData={token}
+                    pricePercentChange={token?.market?.pricePercentChange?.value}
+                    timePeriod={timePeriod}
+                  />
+                )}
+              </ParentSize>
+            </SparkLine>
+          }
+          first={tokenListIndex === 0}
+          last={tokenListIndex === tokenListLength - 1}
+        />
+      </StyledLink>
+    </div>
   )
-}
+})
+
+LoadedRow.displayName = 'LoadedRow'
