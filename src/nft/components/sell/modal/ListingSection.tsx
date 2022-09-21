@@ -49,9 +49,7 @@ export const ListingSection = ({
   function getListingRowPrice(row: AssetRow): number | undefined {
     const listingRow = row as ListingRow
     const newListings = listingRow.asset.newListings
-    return parseFloat(
-      newListings?.find((listing) => listing.marketplace.name === listingRow.marketplace.name)?.price ?? '0'
-    )
+    return newListings?.find((listing) => listing.marketplace.name === listingRow.marketplace.name)?.price ?? 0
   }
 
   const allApproved = !notAllApproved && rows.length > 0 && !isSuccessScreen

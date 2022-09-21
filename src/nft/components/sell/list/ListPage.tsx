@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import ms from 'ms.macro'
 import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Column, Row } from 'nft/components/Flex'
@@ -26,7 +27,7 @@ import {
 } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useBag, useNFTList, useSellAsset, useSellPageState } from 'nft/hooks'
-import { DropDownOption, ListingMarket, ListingStatus, SellPageStateType, WalletAsset } from 'nft/types'
+import { DropDownOption, ListingMarket, ListingStatus, ListingWarning, SellPageStateType, WalletAsset } from 'nft/types'
 import { formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { ListingMarkets } from 'nft/utils/listNfts'
@@ -37,7 +38,13 @@ import { ListingButton } from '../modal/ListingButton'
 import { getListingState } from '../modal/utils'
 import * as styles from './ListPage.css'
 
-const SelectMarketplacesModal = ({ setSelectedMarkets, selectedMarkets }: any) => {
+const SelectMarketplacesModal = ({
+  setSelectedMarkets,
+  selectedMarkets,
+}: {
+  setSelectedMarkets: Dispatch<ListingMarket[]>
+  selectedMarkets: ListingMarket[]
+}) => {
   return (
     <Column alignSelf="flex-start" paddingRight="40" paddingBottom={{ sm: '20', lg: '0' }}>
       <Row className={headlineSmall}>Select marketplaces</Row>
@@ -53,11 +60,17 @@ const SelectMarketplacesModal = ({ setSelectedMarkets, selectedMarkets }: any) =
   )
 }
 
-const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }: any) => {
+interface GlobalMarketplaceButtonProps {
+  market: ListingMarket
+  setSelectedMarkets: Dispatch<ListingMarket[]>
+  selectedMarkets: ListingMarket[]
+}
+
+const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }: GlobalMarketplaceButtonProps) => {
   const isSelected = selectedMarkets.includes(market)
   const toggleSelected = () => {
     isSelected
-      ? setSelectedMarkets(selectedMarkets.filter((selected: any) => selected !== market))
+      ? setSelectedMarkets(selectedMarkets.filter((selected: ListingMarket) => selected !== market))
       : setSelectedMarkets([...selectedMarkets, market])
   }
   return (
@@ -144,7 +157,7 @@ const SetDurationModal = () => {
       <Row marginTop="14" gap="6" flexWrap="wrap">
         <GlobalDurationButton
           amount={1}
-          duration={'hour'}
+          duration={Duration.hour}
           globalAmount={amount}
           globalDuration={duration}
           setGlobalAmount={setAmount}
@@ -152,7 +165,7 @@ const SetDurationModal = () => {
         />
         <GlobalDurationButton
           amount={7}
-          duration={'day'}
+          duration={Duration.day}
           globalAmount={amount}
           globalDuration={duration}
           setGlobalAmount={setAmount}
@@ -160,7 +173,7 @@ const SetDurationModal = () => {
         />
         <GlobalDurationButton
           amount={6}
-          duration={'month'}
+          duration={Duration.month}
           globalAmount={amount}
           globalDuration={duration}
           setGlobalAmount={setAmount}
@@ -211,9 +224,19 @@ const SetDurationModal = () => {
   )
 }
 
-const convertDurationToExpiration = (amount: any, duration: any) => {
-  const durationFactor = duration === 'hour' ? 1 : duration === 'day' ? 24 : duration === 'week' ? 24 * 7 : 24 * 30
-  return Math.round(Date.now() / 1000 + 60 * 60 * durationFactor * amount)
+const convertDurationToExpiration = (amount: number, duration: Duration) => {
+  const durationFactor =
+    duration === Duration.hour ? 1 : duration === Duration.day ? 24 : duration === Duration.week ? 24 * 7 : 24 * 30
+  return Math.round(Date.now() + ms`1 hour` * durationFactor * amount)
+}
+
+interface GlobalDurationButtonProps {
+  amount: number
+  duration: Duration
+  globalAmount: number
+  globalDuration: Duration
+  setGlobalAmount: Dispatch<number>
+  setGlobalDuration: Dispatch<Duration>
 }
 
 const GlobalDurationButton = ({
@@ -223,7 +246,7 @@ const GlobalDurationButton = ({
   globalDuration,
   setGlobalAmount,
   setGlobalDuration,
-}: any) => {
+}: GlobalDurationButtonProps) => {
   const [isSelected, setIsSelected] = useState(false)
   const setGlobalExpiration = useSellAsset((state) => state.setGlobalExpiration)
   const toggleSelected = () => {
@@ -273,7 +296,7 @@ enum SetPriceMethod {
   PREV_LISTING,
 }
 
-const NFTListingsGrid = ({ selectedMarkets }: any) => {
+const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[] }) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const [globalPriceMethod, setGlobalPriceMethod] = useState<SetPriceMethod>()
   const [globalPrice, setGlobalPrice] = useState<number>()
@@ -357,6 +380,16 @@ enum WarningType {
   NONE = '',
 }
 
+interface PriceTextInputProps {
+  listPrice?: number
+  setListPrice: Dispatch<number | undefined>
+  isGlobalPrice: boolean
+  setGlobalOverride: Dispatch<boolean>
+  globalOverride: boolean
+  warning?: ListingWarning
+  asset: WalletAsset
+}
+
 const PriceTextInput = ({
   listPrice,
   setListPrice,
@@ -365,7 +398,7 @@ const PriceTextInput = ({
   globalOverride,
   warning,
   asset,
-}: any) => {
+}: PriceTextInputProps) => {
   const [focused, setFocused] = useState(false)
   const [warningType, setWarningType] = useState(WarningType.NONE)
   const removeMarketplaceWarning = useSellAsset((state) => state.removeMarketplaceWarning)
@@ -377,7 +410,7 @@ const PriceTextInput = ({
       if (listPrice < asset.floorPrice) setWarningType(WarningType.BELOW_FLOOR)
       else if (asset.floor_sell_order_price && listPrice >= asset.floor_sell_order_price)
         setWarningType(WarningType.ALREADY_LISTED)
-    } else if (warning && !isNaN(listPrice) && listPrice >= 0) removeMarketplaceWarning(asset, warning)
+    } else if (warning && listPrice && listPrice >= 0) removeMarketplaceWarning(asset, warning)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listPrice])
 
@@ -395,7 +428,7 @@ const PriceTextInput = ({
               ? vars.color.orange
               : isGlobalPrice
               ? vars.color.genieBlue
-              : listPrice != null && listPrice !== ''
+              : listPrice != null
               ? themeVars.colors.darkGray
               : vars.color.grey700
           }`,
@@ -416,12 +449,13 @@ const PriceTextInput = ({
           onBlur={() => {
             setFocused(false)
           }}
-          value={listPrice || ''}
+          value={listPrice != null && !isNaN(listPrice) ? listPrice : ''}
           onChange={(v: FormEvent<HTMLInputElement>) => {
-            setListPrice(v.currentTarget.value)
+            const val = parseFloat(v.currentTarget.value)
+            setListPrice(isNaN(val) ? undefined : val)
           }}
         />
-        <Box color={listPrice ? 'blackBlue' : 'darkGray'} marginRight="16">
+        <Box color={listPrice && listPrice >= 0 ? 'blackBlue' : 'darkGray'} marginRight="16">
           &nbsp;ETH
         </Box>
         <Box
@@ -490,8 +524,7 @@ export const formatEth = (price: number) => {
   }
 }
 
-const EthPriceDisplay = ({ ethPrice }: { ethPrice: number }) => {
-  const nanCheckedPrice = isNaN(ethPrice) ? 0 : ethPrice
+const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
   const [ethConversion, setEthConversion] = useState(3000)
   useEffect(() => {
     fetchPrice().then((price) => {
@@ -501,25 +534,17 @@ const EthPriceDisplay = ({ ethPrice }: { ethPrice: number }) => {
   return (
     <Column width="full">
       <Row width="full" justifyContent="flex-end">
-        <Box className={subhead} color={nanCheckedPrice !== 0 ? 'blackBlue' : 'darkGray'} marginLeft="auto">
-          {formatEth(nanCheckedPrice)} ETH
+        <Box className={subhead} color={ethPrice !== 0 ? 'blackBlue' : 'darkGray'} marginLeft="auto">
+          {formatEth(ethPrice)} ETH
         </Box>
-        {nanCheckedPrice !== 0 && (
+        {ethPrice !== 0 && (
           <Box className={body} color="darkGray" marginLeft="12" marginRight="0">
-            {formatUsdPrice(nanCheckedPrice * ethConversion)}
+            {formatUsdPrice(ethPrice * ethConversion)}
           </Box>
         )}
       </Row>
     </Column>
   )
-}
-
-export interface NFTListRowProps {
-  asset: WalletAsset
-  globalPriceMethod?: SetPriceMethod
-  setGlobalPrice: Dispatch<number>
-  globalPrice?: number
-  selectedMarkets: ListingMarket[]
 }
 
 function maxMarketFee(markets: ListingMarket[]): number {
@@ -532,6 +557,16 @@ function maxMarketFee(markets: ListingMarket[]): number {
   return max
 }
 
+interface MarketplaceRowProps {
+  globalPriceMethod?: SetPriceMethod
+  globalPrice?: number
+  setGlobalPrice: Dispatch<number | undefined>
+  selectedMarkets: ListingMarket[]
+  removeMarket?: () => void
+  asset: WalletAsset
+  showMarketplaceLogo: boolean
+}
+
 const MarketplaceRow = ({
   globalPriceMethod,
   globalPrice,
@@ -540,10 +575,10 @@ const MarketplaceRow = ({
   removeMarket = undefined,
   asset,
   showMarketplaceLogo,
-}: any) => {
-  const [listPrice, setListPrice] = useState<string>()
+}: MarketplaceRowProps) => {
+  const [listPrice, setListPrice] = useState<number>()
   const [globalOverride, setGlobalOverride] = useState(false)
-  const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride
+  const showGlobalPrice = globalPriceMethod === SetPriceMethod.SAME_PRICE && !globalOverride && globalPrice
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const [hovered, setHovered] = useState(false)
@@ -555,11 +590,11 @@ const MarketplaceRow = ({
         ? maxMarketFee(selectedMarkets)
         : selectedMarkets[0].fee
       : 0
-  const feeInEth =
-    ((showGlobalPrice ? globalPrice : listPrice) * (asset.creatorPercentage * 100 + marketplaceFee)) / 100
-  const userReceives = (showGlobalPrice ? globalPrice : listPrice) - feeInEth
-  const profit = asset.lastPrice && !isNaN(userReceives) ? userReceives - asset.lastPrice : undefined
-  const profitPercent = Math.round(asset.lastPrice && profit && (profit / asset.lastPrice) * 100)
+  const price = showGlobalPrice ? globalPrice : listPrice
+  const feeInEth = price && (price * (asset.creatorPercentage * 100 + marketplaceFee)) / 100
+  const userReceives = price && feeInEth && price - feeInEth
+  const profit = userReceives && asset.lastPrice && userReceives - asset.lastPrice
+  const profitPercent = profit && asset.lastPrice && Math.round(profit && (profit / asset.lastPrice) * 100)
 
   useEffect(() => {
     if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
@@ -577,13 +612,13 @@ const MarketplaceRow = ({
 
   useEffect(() => {
     if (selectedMarkets.length)
-      for (const marketplace of selectedMarkets) setAssetListPrice(asset, listPrice ?? '', marketplace)
-    else setAssetListPrice(asset, listPrice ?? '')
+      for (const marketplace of selectedMarkets) setAssetListPrice(asset, listPrice, marketplace)
+    else setAssetListPrice(asset, listPrice)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listPrice])
 
   useEffect(() => {
-    let price = ''
+    let price: number | undefined = undefined
     if (globalOverride) {
       if (!listPrice) setListPrice(globalPrice)
       price = listPrice ? listPrice : globalPrice
@@ -604,8 +639,8 @@ const MarketplaceRow = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalPrice])
 
-  let warning = ''
-  if (asset.listingWarnings?.length > 0) {
+  let warning: ListingWarning | undefined = undefined
+  if (asset.listingWarnings && asset.listingWarnings?.length > 0) {
     if (showMarketplaceLogo) {
       for (const listingWarning of asset.listingWarnings) {
         if (listingWarning.marketplace.name === selectedMarkets[0].name) warning = listingWarning
@@ -627,7 +662,7 @@ const MarketplaceRow = ({
           onClick={(e) => {
             e.stopPropagation()
             removeAssetMarketplace(asset, selectedMarkets[0])
-            removeMarket()
+            removeMarket && removeMarket()
           }}
         >
           <Box className={styles.removeMarketplace} visibility={hovered ? 'visible' : 'hidden'} position="absolute">
@@ -681,19 +716,29 @@ const MarketplaceRow = ({
       <Row style={{ flex: '1.5' }} display={{ sm: 'none', md: 'flex' }}>
         <Column width="full">
           <EthPriceDisplay ethPrice={userReceives} />
-          {(showGlobalPrice ? globalPrice && globalPrice !== 0 : listPrice && parseFloat(listPrice) !== 0) && profit && (
+          {(showGlobalPrice ? globalPrice && globalPrice !== 0 : listPrice !== 0) && (
             <Row marginTop="4" width="full" fontSize="12" color="darkGray">
-              <Box marginLeft="auto">Profit: {formatEth(profit)} ETH</Box>
-              <Box marginLeft="8" marginRight="0">
-                ({profitPercent > 0 && '+'}
-                {profitPercent > 1000 ? Math.round(profitPercent / 1000) + 'K' : profitPercent}%)
-              </Box>
+              {profit ? <Box marginLeft="auto">Profit: {formatEth(profit)} ETH</Box> : null}
+              {profitPercent ? (
+                <Box marginLeft="8" marginRight="0">
+                  ({profitPercent > 0 && '+'}
+                  {profitPercent > 1000 ? Math.round(profitPercent / 1000) + 'K' : profitPercent}%)
+                </Box>
+              ) : null}
             </Row>
           )}
         </Column>
       </Row>
     </Row>
   )
+}
+
+export interface NFTListRowProps {
+  asset: WalletAsset
+  globalPriceMethod?: SetPriceMethod
+  setGlobalPrice: Dispatch<number | undefined>
+  globalPrice?: number
+  selectedMarkets: ListingMarket[]
 }
 
 const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, selectedMarkets }: NFTListRowProps) => {
