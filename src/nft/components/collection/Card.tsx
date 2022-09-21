@@ -42,23 +42,24 @@ const baseHref = (asset: GenieAsset) => `/#/nfts/asset/${asset.address}/${asset.
 /* -------- ASSET CARD -------- */
 interface CardProps {
   asset: GenieAsset
+  selected: boolean
   children: ReactNode
 }
 
-const Container = ({ asset, children }: CardProps) => {
+const Container = ({ asset, selected, children }: CardProps) => {
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
   const providerValue = useMemo(
     () => ({
       asset,
-      selected: false,
+      selected,
       hovered,
       toggleHovered,
       href,
       setHref,
     }),
-    [asset, hovered, href]
+    [asset, hovered, selected, href]
   )
 
   const assetRef = useRef<HTMLDivElement>(null)
@@ -412,12 +413,13 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
 
 interface ButtonProps {
   children: ReactNode
+  quantity: number
   selectedChildren: ReactNode
   onClick: (e: MouseEvent) => void
   onSelectedClick: (e: MouseEvent) => void
 }
 
-const Button = ({ children, selectedChildren, onClick, onSelectedClick }: ButtonProps) => {
+const Button = ({ children, quantity, selectedChildren, onClick, onSelectedClick }: ButtonProps) => {
   const [buttonHovered, toggleButtonHovered] = useReducer((s) => !s, false)
   const { asset, selected, setHref } = useCardContext()
   const buttonRef = useRef<HTMLDivElement>(null)
@@ -490,7 +492,7 @@ const Button = ({ children, selectedChildren, onClick, onSelectedClick }: Button
           >
             <MinusIconLarge width="32" height="32" />
           </Column>
-          <Box className={`${styles.erc1155QuantityText} ${subheadSmall}`}></Box>
+          <Box className={`${styles.erc1155QuantityText} ${subheadSmall}`}>{quantity.toString()}</Box>
           <Column
             as="button"
             className={styles.erc1155PlusButton}

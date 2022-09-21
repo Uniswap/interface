@@ -25,6 +25,7 @@ export enum EventName {
   WALLET_CONNECT_TXN_COMPLETED = 'Wallet Connect Transaction Completed',
   WALLET_SELECTED = 'Wallet Selected',
   WEB_VITALS = 'Web Vitals',
+  WRAP_TOKEN_TXN_INVALIDATED = 'Wrap Token Transaction Invalidated',
   WRAP_TOKEN_TXN_SUBMITTED = 'Wrap Token Transaction Submitted',
   // alphabetize additional event names.
 }

@@ -39,6 +39,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
+  const debouncedSearchByNameText = useDebounce(searchByNameText, 500)
 
   const {
     data: collectionAssets,
@@ -57,7 +58,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
         searchByNameText,
         debouncedMinPrice,
         debouncedMaxPrice,
-        searchText: searchByNameText,
+        searchText: debouncedSearchByNameText,
       },
     ],
     async ({ pageParam = 0 }) => {
@@ -83,7 +84,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
         sort,
         markets,
         notForSale: !buyNow,
-        searchText: searchByNameText,
+        searchText: debouncedSearchByNameText,
         pageParam,
         traits,
         price: {
@@ -225,6 +226,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
                 <CollectionAsset
                   key={asset.address + asset.tokenId}
                   asset={asset}
+                  isMobile={isMobile}
                   uniformHeight={uniformHeight}
                   setUniformHeight={setUniformHeight}
                   mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}

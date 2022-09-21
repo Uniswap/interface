@@ -2,6 +2,35 @@
 directive @defer on FIELD
 
 """
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on FIELD_DEFINITION
+
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
+
+"""
 Tells the service which subscriptions will be published to when this mutation is
 called. This directive is deprecated use @aws_susbscribe directive instead.
 """
@@ -13,34 +42,6 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
 directive @aws_cognito_user_pools(
@@ -48,11 +49,10 @@ directive @aws_cognito_user_pools(
   cognito_groups: [String]
 ) on OBJECT | FIELD_DEFINITION
 
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 enum ActivityType {
   APPROVE
@@ -100,6 +100,7 @@ enum Chain {
   ETHEREUM_GOERLI
   OPTIMISM
   POLYGON
+  CELO
 }
 
 input ContractInput {
@@ -110,6 +111,12 @@ input ContractInput {
 enum Currency {
   USD
   ETH
+}
+
+type Dimensions {
+  id: ID!
+  height: Float
+  width: Float
 }
 
 enum HighLow {
@@ -134,6 +141,12 @@ interface IAmount {
 interface IContract {
   chain: Chain!
   address: String
+}
+
+type Image {
+  id: ID!
+  url: String
+  dimensions: Dimensions
 }
 
 enum MarketSortableField {
@@ -168,6 +181,9 @@ type NftAsset {
   thumbnailUrl: String
   animationUrl: String
   smallImageUrl: String
+  image: Image
+  thumbnail: Image
+  smallImage: Image
   name: String
   nftContract: NftContract
 
@@ -204,10 +220,12 @@ type NftCollection {
    assets(page: Int, pageSize: Int, orderBy: NftAssetSortableField): [NftAsset]
   """
   bannerImageUrl: String
+  bannerImage: Image
   description: String
   discordUrl: String
   homepageUrl: String
   imageUrl: String
+  image: Image
   instagramName: String
   markets(currencies: [Currency!]!): [NftCollectionMarket]
   name: String
@@ -285,12 +303,14 @@ type Portfolio {
 type Query {
   tokens(contracts: [ContractInput!]!): [Token]
   tokenProjects(contracts: [ContractInput!]!): [TokenProject]
-  topTokenProjects(orderBy: MarketSortableField, page: Int, pageSize: Int, currency: Currency): [TokenProject]
+  topTokenProjects(orderBy: MarketSortableField!, page: Int!, pageSize: Int!, currency: Currency): [TokenProject]
   searchTokens(searchQuery: String!): [Token]
+  searchTokenProjects(searchQuery: String!): [TokenProject]
   assetActivities(address: String!, page: Int, pageSize: Int): [AssetActivity]
   portfolio(ownerAddress: String!): Portfolio
   portfolios(ownerAddresses: [String!]!): [Portfolio]
   nftCollectionsById(collectionIds: [String]): [NftCollection]
+  topTokens(chain: Chain, page: Int!, pageSize: Int!): [Token]
 }
 
 type TimestampedAmount implements IAmount {
@@ -308,6 +328,8 @@ type Token implements IContract {
   decimals: Int
   name: String
   symbol: String
+  project: TokenProject
+  market(currency: Currency): TokenMarket
 }
 
 type TokenApproval {
@@ -322,11 +344,23 @@ type TokenApproval {
 
 type TokenBalance {
   id: ID!
+  blockNumber: Int
+  blockTimestamp: Int
   quantity: Float
   denominatedValue: Amount
   ownerAddress: String!
   token: Token
   tokenProjectMarket: TokenProjectMarket
+}
+
+type TokenMarket {
+  id: ID!
+  token: Token!
+  price: Amount
+  totalValueLocked: Amount
+  volume(duration: HistoryDuration!): Amount
+  pricePercentChange(duration: HistoryDuration!): Amount
+  priceHistory(duration: HistoryDuration!): [TimestampedAmount]
 }
 
 type TokenProject {

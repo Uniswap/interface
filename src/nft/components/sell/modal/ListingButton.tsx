@@ -71,11 +71,10 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       if (asset.newListings) {
         for (const listing of asset.newListings) {
           if (!listing.price) listingsMissingPrice.push([asset, listing])
-          else if (isNaN(parseFloat(listing.price)) || parseFloat(listing.price) < 0)
-            invalidPrices.push([asset, listing])
-          else if (parseFloat(listing.price) < asset.floorPrice && !listing.overrideFloorPrice)
+          else if (isNaN(listing.price) || listing.price < 0) invalidPrices.push([asset, listing])
+          else if (listing.price < asset.floorPrice && !listing.overrideFloorPrice)
             listingsBelowFloor.push([asset, listing])
-          else if (asset.floor_sell_order_price && parseFloat(listing.price) > asset.floor_sell_order_price)
+          else if (asset.floor_sell_order_price && listing.price > asset.floor_sell_order_price)
             listingsAboveSellOrderFloor.push([asset, listing])
         }
       }

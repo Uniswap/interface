@@ -149,8 +149,9 @@ export default function TokenDetails() {
       })
     : null
 
-  const tokenData = query.tokenProjects?.[0]
-  const tokenDetails = tokenData?.markets?.[0]
+  const tokenProject = query.tokenProjects?.[0]
+  const tokenProjectMarket = tokenProject?.markets?.[0]
+  const tokenMarket = tokenProject?.tokens[0].market
 
   // TODO: Fix this logic to not automatically redirect on refresh, yet still catch invalid addresses
   //const location = useLocation()
@@ -166,18 +167,18 @@ export default function TokenDetails() {
             <BreadcrumbNavLink to="/tokens">
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            <ChartSection token={token} tokenData={tokenData} />
+            <ChartSection token={token} tokenData={tokenProject} />
             <StatsSection
-              marketCap={tokenDetails?.marketCap?.value}
-              volume24H={tokenDetails?.volume1D?.value}
-              priceHigh52W={tokenDetails?.priceHigh52W?.value}
-              priceLow52W={tokenDetails?.priceLow52W?.value}
+              TVL={tokenMarket?.totalValueLocked?.value}
+              volume24H={tokenProjectMarket?.volume1D?.value}
+              priceHigh52W={tokenProjectMarket?.priceHigh52W?.value}
+              priceLow52W={tokenProjectMarket?.priceLow52W?.value}
             />
             <AboutSection
               address={token.address}
-              description={tokenData?.description}
-              homepageUrl={tokenData?.homepageUrl}
-              twitterName={tokenData?.twitterName}
+              description={tokenProject?.description}
+              homepageUrl={tokenProject?.homepageUrl}
+              twitterName={tokenProject?.twitterName}
             />
             <AddressSection address={token.address} />
           </LeftPanel>

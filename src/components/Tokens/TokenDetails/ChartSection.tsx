@@ -111,7 +111,7 @@ export default function ChartSection({ token, tokenData }: { token: Token; token
       <ChartContainer>
         <ParentSize>
           {({ width, height }) => (
-            <PriceChart tokenAddress={token.address} width={width} height={height} priceData={tokenData?.prices?.[0]} />
+            <PriceChart tokenAddress={token.address} width={width} height={height} priceDataFragmentRef={null} />
           )}
         </ParentSize>
       </ChartContainer>
