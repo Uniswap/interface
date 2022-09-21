@@ -94,7 +94,7 @@ interface SearchBarDropdownProps {
 }
 
 export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, isLoading }: SearchBarDropdownProps) => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
+  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(undefined)
   const searchHistory = useSearchHistory((state: { history: (FungibleToken | GenieCollection)[] }) => state.history)
   const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
   const { pathname } = useLocation()
