@@ -755,10 +755,12 @@ export default function Swap({ history }: RouteComponentProps) {
                     </StyledActionButtonSwapForm>
                   }
                 />
-                <MobileTokenInfo
-                  currencies={currencies}
-                  onClick={() => setActiveTab(prev => (prev === TAB.INFO ? TAB.SWAP : TAB.INFO))}
-                />
+                {chainId !== ChainId.ETHW && (
+                  <MobileTokenInfo
+                    currencies={currencies}
+                    onClick={() => setActiveTab(prev => (prev === TAB.INFO ? TAB.SWAP : TAB.INFO))}
+                  />
+                )}
                 <ShareButtonWithModal
                   url={shareUrl}
                   onShared={() => {
@@ -784,13 +786,15 @@ export default function Swap({ history }: RouteComponentProps) {
               </SwapFormActions>
             </RowBetween>
 
-            <RowBetween mb={'16px'}>
-              <PairSuggestion
-                ref={refSuggestPair}
-                onSelectSuggestedPair={onSelectSuggestedPair}
-                setShowModalImportToken={setShowingPairSuggestionImport}
-              />
-            </RowBetween>
+            {chainId !== ChainId.ETHW && (
+              <RowBetween mb={'16px'}>
+                <PairSuggestion
+                  ref={refSuggestPair}
+                  onSelectSuggestedPair={onSelectSuggestedPair}
+                  setShowModalImportToken={setShowingPairSuggestionImport}
+                />
+              </RowBetween>
+            )}
 
             <AppBodyWrapped data-highlight={shouldHighlightSwapBox} id={TutorialIds.SWAP_FORM}>
               {activeTab === TAB.SWAP && (
