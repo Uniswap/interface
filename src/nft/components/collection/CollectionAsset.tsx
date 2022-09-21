@@ -1,9 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import * as Card from 'nft/components/collection/Card'
 import { GenieAsset, Markets, UniformHeight } from 'nft/types'
-import { formatWeiToDecimal } from 'nft/utils/currency'
-import { isAudio } from 'nft/utils/isAudio'
-import { isVideo } from 'nft/utils/isVideo'
+import { formatWeiToDecimal, isAudio, isVideo, rarityProviderLogo } from 'nft/utils'
 import { MouseEvent, useMemo } from 'react'
 
 enum AssetMediaType {
@@ -18,6 +16,7 @@ interface CollectionAssetProps {
   setUniformHeight: (u: UniformHeight) => void
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
+  rarityVerified?: boolean
 }
 
 export const CollectionAsset = ({
@@ -26,6 +25,7 @@ export const CollectionAsset = ({
   setUniformHeight,
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
+  rarityVerified,
 }: CollectionAssetProps) => {
   const { notForSale, assetMediaType } = useMemo(() => {
     let notForSale = true
@@ -41,6 +41,13 @@ export const CollectionAsset = ({
     return {
       notForSale,
       assetMediaType,
+    }
+  }, [asset])
+
+  const { provider, rarityLogo } = useMemo(() => {
+    return {
+      provider: asset.rarity?.providers.find(({ provider: _provider }) => _provider === asset.rarity?.primaryProvider),
+      rarityLogo: rarityProviderLogo[asset.rarity?.primaryProvider ?? 0] ?? '',
     }
   }, [asset])
 
@@ -70,6 +77,14 @@ export const CollectionAsset = ({
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
               {asset.openseaSusFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
+            {asset.rarity && provider && provider.rank && (
+              <Card.Ranking
+                rarity={asset.rarity}
+                provider={provider}
+                rarityVerified={!!rarityVerified}
+                rarityLogo={rarityLogo}
+              />
+            )}
           </Card.PrimaryRow>
           <Card.SecondaryRow>
             <Card.SecondaryDetails>

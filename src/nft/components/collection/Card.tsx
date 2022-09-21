@@ -9,12 +9,14 @@ import {
   PlayButtonIcon,
   PlusIconLarge,
   PoolIcon,
+  RarityVerifiedIcon,
   SuspiciousIcon20,
 } from 'nft/components/icons'
 import { body, subheadSmall } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, UniformHeight, UniformHeights } from 'nft/types'
+import { GenieAsset, Rarity, UniformHeight, UniformHeights } from 'nft/types'
+import { fallbackProvider, putCommas } from 'nft/utils'
 import {
   createContext,
   MouseEvent,
@@ -527,11 +529,51 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
   )
 }
 
+/* -------- RANKING CARD -------- */
+interface RankingProps {
+  rarity: Rarity
+  provider: { url?: string; rank: number }
+  rarityVerified: boolean
+  rarityLogo?: string
+}
+
+const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps) => {
+  const { asset } = useCardContext()
+
+  return (
+    <MouseoverTooltip
+      text={
+        <Row>
+          <Box display="flex" marginRight="4">
+            <img src={rarityLogo} alt="cardLogo" width={16} />
+          </Box>
+          <Box width="full" fontSize="14">
+            {rarityVerified
+              ? `Verified by ${asset.collectionName}`
+              : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
+          </Box>
+        </Row>
+      }
+      placement="top"
+    >
+      <Box className={styles.rarityInfo}>
+        <Box paddingTop="2" paddingBottom="2" display="flex">
+          {putCommas(provider.rank)}
+        </Box>
+
+        <Box display="flex" height="16">
+          {rarityVerified ? <RarityVerifiedIcon /> : null}
+        </Box>
+      </Box>
+    </MouseoverTooltip>
+  )
+}
+
 const Suspicious = () => {
   return (
     <MouseoverTooltip
       text={
-        <Box fontSize="12">
+        <Box fontSize="14">
           Reported for suspicious activity
           <br />
           on Opensea
@@ -549,7 +591,7 @@ const Suspicious = () => {
 const Pool = () => {
   return (
     <MouseoverTooltip
-      text={<Box fontSize="12">This item is part of an NFT liquidity pool. Price increases as supply decreases.</Box>}
+      text={<Box fontSize="14">This item is part of an NFT liquidity pool. Price increases as supply decreases.</Box>}
       placement="top"
     >
       <Box display="flex" flexShrink="0" marginLeft="4" color="darkGray">
@@ -624,6 +666,7 @@ export {
   PrimaryDetails,
   PrimaryInfo,
   PrimaryRow,
+  Ranking,
   SecondaryDetails,
   SecondaryInfo,
   SecondaryRow,
