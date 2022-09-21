@@ -1,6 +1,6 @@
 import { Box } from 'nft/components/Box'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
-import { FormEvent, useState } from 'react'
+import { FormEvent } from 'react'
 
 export const CollectionSearch = () => {
   const setSearchByNameText = useCollectionFilters((state) => state.setSearch)

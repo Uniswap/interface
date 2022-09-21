@@ -12,14 +12,13 @@ import { vars } from 'nft/css/sprinkles.css'
 import {
   CollectionFilters,
   initialCollectionFilterState,
-  useCollectionFilters,
-  useFiltersExpanded,
-  useIsMobile,
   SortBy,
   SortByPointers,
   Trait,
+  useCollectionFilters,
+  useFiltersExpanded,
+  useIsMobile,
 } from 'nft/hooks'
-
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieAsset, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
 import qs from 'query-string'
