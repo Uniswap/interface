@@ -32,7 +32,7 @@ import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { pluralize } from 'nft/utils/roundAndPluralize'
-import { Dispatch, FormEvent, useEffect, useMemo, useState } from 'react'
+import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 
 import { ListingButton } from '../modal/ListingButton'
 import { getListingState } from '../modal/utils'
@@ -405,8 +405,10 @@ const PriceTextInput = ({
   const [warningType, setWarningType] = useState(WarningType.NONE)
   const removeMarketplaceWarning = useSellAsset((state) => state.removeMarketplaceWarning)
   const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
+  const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
 
   useEffect(() => {
+    inputRef.current.value = listPrice !== undefined ? `${listPrice}` : ''
     setWarningType(WarningType.NONE)
     if (!warning && listPrice) {
       if (listPrice < asset.floorPrice) setWarningType(WarningType.BELOW_FLOOR)
@@ -415,7 +417,7 @@ const PriceTextInput = ({
     } else if (warning && listPrice && listPrice >= 0) removeMarketplaceWarning(asset, warning)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listPrice])
-
+  console.log(listPrice)
   return (
     <Column gap="12" position="relative">
       <Row
@@ -445,7 +447,7 @@ const PriceTextInput = ({
           onBlur={() => {
             setFocused(false)
           }}
-          value={listPrice != null && !isNaN(listPrice) ? listPrice : ''}
+          ref={inputRef}
           onChange={(v: FormEvent<HTMLInputElement>) => {
             const val = parseFloat(v.currentTarget.value)
             setListPrice(isNaN(val) ? undefined : val)
