@@ -3,8 +3,8 @@ import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { FormEvent, useState } from 'react'
 
 export const CollectionSearch = () => {
-  const [debouncedSearchByNameText, setDebouncedSearchByNameText] = useState('')
   const setSearchByNameText = useCollectionFilters((state) => state.setSearch)
+  const searchByNameText = useCollectionFilters((state) => state.search)
 
   return (
     <Box
@@ -18,10 +18,9 @@ export const CollectionSearch = () => {
       fontSize="16"
       height="44"
       color={{ placeholder: 'darkGray', default: 'blackBlue' }}
-      value={debouncedSearchByNameText}
+      value={searchByNameText}
       placeholder={'Search by name'}
       onChange={(e: FormEvent<HTMLInputElement>) => {
-        setDebouncedSearchByNameText(e.currentTarget.value)
         setSearchByNameText(e.currentTarget.value)
       }}
     />
