@@ -429,7 +429,13 @@ const PriceTextInput = ({
         borderWidth="1px"
         borderStyle="solid"
         borderColor={
-          warning && !focused ? 'orange' : isGlobalPrice ? 'genieBlue' : listPrice != null ? 'darkGray' : 'grey700'
+          warningType !== WarningType.NONE && !focused
+            ? 'orange'
+            : isGlobalPrice
+            ? 'genieBlue'
+            : listPrice != null
+            ? 'darkGray'
+            : 'grey700'
         }
       >
         <NumericInput
