@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import * as Card from 'nft/components/collection/Card'
-import { GenieAsset, UniformHeight } from 'nft/types'
+import { GenieAsset, Markets, UniformHeight } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
@@ -68,6 +68,7 @@ export const CollectionAsset = ({
           <Card.PrimaryRow>
             <Card.PrimaryDetails>
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
+              {asset.openseaSusFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
           </Card.PrimaryRow>
           <Card.SecondaryRow>
@@ -75,6 +76,7 @@ export const CollectionAsset = ({
               <Card.SecondaryInfo>
                 {notForSale ? '' : `${formatWeiToDecimal(asset.currentEthPrice)} ETH`}
               </Card.SecondaryInfo>
+              {(asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) && <Card.Pool />}
             </Card.SecondaryDetails>
             {asset.tokenType !== 'ERC1155' && asset.marketplace && (
               <Card.MarketplaceIcon marketplace={asset.marketplace} />

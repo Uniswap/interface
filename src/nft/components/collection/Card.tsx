@@ -1,9 +1,16 @@
 import clsx from 'clsx'
 import Column from 'components/Column'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
-import * as styles from 'nft/components/collection/Card.css'
 import { Row } from 'nft/components/Flex'
-import { MinusIconLarge, PauseButtonIcon, PlayButtonIcon, PlusIconLarge } from 'nft/components/icons'
+import {
+  MinusIconLarge,
+  PauseButtonIcon,
+  PlayButtonIcon,
+  PlusIconLarge,
+  PoolIcon,
+  SuspiciousIcon20,
+} from 'nft/components/icons'
 import { body, subheadSmall } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
@@ -19,6 +26,8 @@ import {
   useRef,
   useState,
 } from 'react'
+
+import * as styles from './Card.css'
 
 /* -------- ASSET CONTEXT -------- */
 export interface CardContextProps {
@@ -106,7 +115,6 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
     <Box display="flex" overflow="hidden">
       <Box
         as={'img'}
-        alt={asset.name || asset.tokenId}
         width="full"
         style={{
           aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
@@ -384,7 +392,11 @@ const SecondaryRow = ({ children }: { children: ReactNode }) => (
   </Row>
 )
 
-const SecondaryDetails = ({ children }: { children: ReactNode }) => <Row>{children}</Row>
+const SecondaryDetails = ({ children }: { children: ReactNode }) => (
+  <Row overflow="hidden" whiteSpace="nowrap">
+    {children}
+  </Row>
+)
 
 const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   return (
@@ -515,6 +527,38 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
   )
 }
 
+const Suspicious = () => {
+  return (
+    <MouseoverTooltip
+      text={
+        <Box fontSize="12">
+          Reported for suspicious activity
+          <br />
+          on Opensea
+        </Box>
+      }
+      placement="top"
+    >
+      <Box display="flex" flexShrink="0" marginLeft="2">
+        <SuspiciousIcon20 width="20" height="20" />
+      </Box>
+    </MouseoverTooltip>
+  )
+}
+
+const Pool = () => {
+  return (
+    <MouseoverTooltip
+      text={<Box fontSize="12">This item is part of an NFT liquidity pool. Price increases as supply decreases.</Box>}
+      placement="top"
+    >
+      <Box display="flex" flexShrink="0" marginLeft="4" color="darkGray">
+        <PoolIcon width="20" height="20" />
+      </Box>
+    </MouseoverTooltip>
+  )
+}
+
 interface NoContentContainerProps {
   uniformHeight: UniformHeight
 }
@@ -576,12 +620,14 @@ export {
   Image,
   InfoContainer,
   MarketplaceIcon,
+  Pool,
   PrimaryDetails,
   PrimaryInfo,
   PrimaryRow,
   SecondaryDetails,
   SecondaryInfo,
   SecondaryRow,
+  Suspicious,
   TertiaryInfo,
   Video,
 }
