@@ -9,154 +9,15 @@ import { Center, Row } from 'nft/components/Flex'
 import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
 import { vars } from 'nft/css/sprinkles.css'
-import {
-  CollectionFilters,
-  initialCollectionFilterState,
-  SortBy,
-  SortByPointers,
-  Trait,
-  useCollectionFilters,
-  useFiltersExpanded,
-  useIsMobile,
-} from 'nft/hooks'
+import { CollectionFilters, SortBy, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import { AssetsFetcher } from 'nft/queries'
-import { DropDownOption, GenieAsset, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
-import qs from 'query-string'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { DropDownOption, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
+import { getRarityStatus } from 'nft/utils/asset'
+import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
-
-const rarityStatusCache = new Map<string, boolean>()
-function getRarityStatus(id: string, assets?: (GenieAsset | undefined)[]) {
-  if (rarityStatusCache.has(id)) {
-    return rarityStatusCache.get(id)
-  }
-  const hasRarity = assets && Array.from(assets).reduce((reducer, asset) => !!(reducer || asset?.rarity), false)
-
-  if (hasRarity) {
-    rarityStatusCache.set(id, hasRarity)
-  }
-
-  return hasRarity
-}
-
-const urlParamsUtils = {
-  removeDefaults: (query: any) => {
-    const clonedQuery: Record<string, any> = { ...query }
-
-    // Leveraging default values & not showing them on URL
-    for (const key in clonedQuery) {
-      const valueInQuery = clonedQuery[key]
-      const initialValue = initialCollectionFilterState[key as keyof typeof initialCollectionFilterState]
-
-      if (JSON.stringify(valueInQuery) === JSON.stringify(initialValue)) {
-        delete clonedQuery[key]
-      }
-    }
-
-    // Doing this one manually due to name mismatch - "all" in url, "buyNow" in state
-    if (clonedQuery['all'] !== initialCollectionFilterState.buyNow) {
-      delete clonedQuery['all']
-    }
-
-    const defaultSortByPointer = SortByPointers[initialCollectionFilterState.sortBy]
-    if (clonedQuery['sort'] === defaultSortByPointer) {
-      delete clonedQuery['sort']
-    }
-
-    return clonedQuery
-  },
-
-  // Making values in our URL more state-friendly
-  buildQuery: (query: any, collectionStats: GenieCollection) => {
-    const clonedQuery: Record<string, any> = { ...query }
-
-    ;['traits', 'markets'].forEach((key) => {
-      if (!clonedQuery[key]) {
-        clonedQuery[key] = []
-      }
-
-      /* 
-        query-string package treats arrays with one value as a string.
-        Here we're making sure that we have an array, not a string. Example:
-          const foo = 'hey' // => ['hey']
-      */
-      if (clonedQuery[key] && typeof clonedQuery[key] === 'string') {
-        clonedQuery[key] = [clonedQuery[key]]
-      }
-    })
-
-    try {
-      const { buyNow: initialBuyNow, search: initialSearchText } = initialCollectionFilterState
-
-      Object.entries(SortByPointers).forEach(([key, value]) => {
-        if (value === clonedQuery['sort']) {
-          clonedQuery['sortBy'] = Number(key)
-        }
-      })
-
-      clonedQuery['buyNow'] = !(clonedQuery['all'] === undefined ? !initialBuyNow : clonedQuery['all'])
-      clonedQuery['search'] = clonedQuery['search'] === undefined ? initialSearchText : String(clonedQuery['search'])
-
-      /*
-        Handling an edge case caused by query-string's bad array parsing, when user
-        only selects one trait and reloads the page.
-        Here's the general data-structure for our traits in URL: 
-          `traits=("trait_type","trait_value"),("trait_type","trait_value")`
-
-        Expected behavior: When user selects one trait, there should be an array
-        containing one element.
-
-        Actual behavior: It creates an array with two elements, first element being
-        trait_type & the other trait_value. This causes confusion since we don't know
-        whether user has selected two traits (cause we have two elements in our array)
-        or it's only one.
-
-        Using this block of code, we'll identify if that's the case.
-      */
-
-      if (clonedQuery['traits'].length === 2) {
-        const [trait_type, trait_value] = clonedQuery['traits'] as [string, string]
-        const fullTrait = `${trait_type}${trait_value}`
-        if (!fullTrait.includes(',')) {
-          if (
-            trait_type.startsWith('(') &&
-            !trait_type.endsWith(')') &&
-            trait_value.endsWith(')') &&
-            !trait_value.startsWith('(')
-          )
-            clonedQuery['traits'] = [`${trait_type},${trait_value}`]
-        }
-      }
-
-      clonedQuery['traits'] = clonedQuery['traits'].map((queryTrait: string) => {
-        const modifiedTrait = trimTraitStr(queryTrait.replace(/(")/g, ''))
-        const [trait_type, trait_value] = modifiedTrait.split(',')
-        const traitInStats = collectionStats.traits.find(
-          (item) => item.trait_type === trait_type && item.trait_value === trait_value
-        )
-
-        /*
-          For most cases, `traitInStats` is assigned. In case the trait
-          does not exist in our store, e.g "Number of traits", we have to
-          manually create an object for it.
-        */
-        const trait = traitInStats || { trait_type, trait_value, trait_count: 0 }
-
-        return trait as Trait
-      })
-    } catch (err) {
-      clonedQuery['traits'] = []
-    }
-
-    return clonedQuery
-  },
-}
-
-const trimTraitStr = (trait: string) => {
-  return trait.substring(1, trait.length - 1)
-}
 
 interface CollectionNftsProps {
   contractAddress: string
@@ -198,7 +59,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
       },
     ],
     async ({ pageParam = 0 }) => {
-      let sort = null
+      let sort = undefined
       switch (sortBy) {
         case SortBy.HighToLow: {
           sort = { currentEthPrice: 'desc' }
@@ -217,7 +78,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
 
       return await AssetsFetcher({
         contractAddress,
-        sort: sort ?? undefined,
+        sort,
         markets,
         notForSale: !buyNow,
         searchText: searchByNameText,
@@ -241,80 +102,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     }
   )
 
-  const syncLocalFiltersWithURL = useCallback((state: CollectionFilters) => {
-    const urlFilterItems = [
-      'markets',
-      'maxPrice',
-      'maxRarity',
-      'minPrice',
-      'minRarity',
-      'traits',
-      'all',
-      'search',
-      'sort',
-    ] as const
-
-    const query: Record<string, any> = {}
-    urlFilterItems.forEach((key) => {
-      switch (key) {
-        case 'traits':
-          const traits = state.traits.map(({ trait_type, trait_value }) => `("${trait_type}","${trait_value}")`)
-
-          query['traits'] = traits
-          break
-
-        case 'all':
-          query['all'] = !state.buyNow
-          break
-
-        case 'sort':
-          query['sort'] = SortByPointers[state.sortBy]
-          break
-
-        default:
-          query[key] = state[key]
-          break
-      }
-    })
-
-    const modifiedQuery = urlParamsUtils.removeDefaults(query)
-
-    // Applying local state changes to URL
-    const url = window.location.href.split('?')[0]
-    const stringifiedQuery = qs.stringify(modifiedQuery, { arrayFormat: 'comma' })
-
-    // Using pushState on purpose here. router.push() will trigger re-renders & API calls.
-    window.history.pushState({}, ``, `${url}${stringifiedQuery && `?${stringifiedQuery}`}`)
-  }, [])
-
-  const location = useLocation()
-  const applyFiltersFromURL = useCallback(() => {
-    if (!location.search) return
-
-    const query = qs.parse(location.search, {
-      arrayFormat: 'comma',
-      parseNumbers: true,
-      parseBooleans: true,
-    }) as {
-      maxPrice: string
-      maxRarity: string
-      minPrice: string
-      minRarity: string
-      search: string
-      sort: string
-      sortBy: number
-      all: boolean
-      buyNow: boolean
-      traits: string[]
-      markets: string[]
-    }
-    const modifiedQuery = urlParamsUtils.buildQuery(query, collectionStats)
-
-    requestAnimationFrame(() => {
-      useCollectionFilters.setState(modifiedQuery as any)
-    })
-  }, [collectionStats, location.search])
-
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
@@ -327,7 +114,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     return collectionAssets.pages.flat()
   }, [collectionAssets, AssetsFetchSuccess])
 
-  const hasRarity = getRarityStatus(collectionStats?.address, collectionNfts)
+  const rarityStatusCache = new Map<string, boolean>()
+  const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts)
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
     () =>
@@ -388,18 +176,23 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     oldStateRef.current = useCollectionFilters.getState()
   }, [collectionStats?.marketplaceCount, setMarketCount])
 
+  const location = useLocation()
   // Applying filters from URL to local state
   useEffect(() => {
-    collectionStats?.traits && applyFiltersFromURL()
+    if (collectionStats?.traits) {
+      const modifiedQuery = applyFiltersFromURL(location, collectionStats)
+      requestAnimationFrame(() => {
+        useCollectionFilters.setState(modifiedQuery as any)
+      })
 
-    collectionStats?.traits &&
       useCollectionFilters.subscribe((state) => {
         if (JSON.stringify(oldStateRef.current) !== JSON.stringify(state)) {
           syncLocalFiltersWithURL(state)
           oldStateRef.current = state
         }
       })
-  }, [applyFiltersFromURL, collectionStats?.traits, syncLocalFiltersWithURL])
+    }
+  }, [collectionStats, location])
 
   return (
     <>
