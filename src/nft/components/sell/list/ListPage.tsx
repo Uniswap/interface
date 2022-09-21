@@ -30,6 +30,7 @@ import { DropDownOption, ListingMarket, ListingStatus, SellPageStateType, Wallet
 import { formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { ListingMarkets } from 'nft/utils/listNfts'
+import { pluralize } from 'nft/utils/roundAndPluralize'
 import { Dispatch, FormEvent, useEffect, useMemo, useState } from 'react'
 
 import { ListingButton } from '../modal/ListingButton'
@@ -200,7 +201,7 @@ const SetDurationModal = () => {
             <SortDropdown
               dropDownOptions={durationOptions}
               mini
-              miniPrompt={displayDuration + (amount === 1 && displayDuration === duration ? '' : 's')}
+              miniPrompt={displayDuration + (displayDuration === duration ? pluralize(amount) : 's')}
               left={38}
             />
           </Box>
