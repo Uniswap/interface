@@ -1,9 +1,10 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
-import { useFiltersExpanded, useIsMobile } from 'nft/hooks'
+import { useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
+import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring/web'
@@ -15,6 +16,7 @@ const Collection = () => {
 
   const isMobile = useIsMobile()
   const [isFiltersExpanded] = useFiltersExpanded()
+  const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
 
   const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
@@ -24,6 +26,14 @@ const Collection = () => {
     gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
     gridWidthOffset: isFiltersExpanded ? FILTER_WIDTH : 0,
   })
+
+  useEffect(() => {
+    const marketCount: Record<string, number> = {}
+    collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
+      marketCount[marketplace] = count
+    })
+    setMarketCount(marketCount)
+  }, [collectionStats?.marketplaceCount, setMarketCount])
 
   return (
     <Column width="full">
@@ -44,7 +54,9 @@ const Collection = () => {
       )}
       <Row alignItems="flex-start" position="relative" paddingX="48">
         <Box position="sticky" top="72" width="0">
-          {isFiltersExpanded && <Filters />}
+          {isFiltersExpanded && (
+            <Filters traitsByAmount={collectionStats?.numTraitsByAmount ?? []} traits={collectionStats?.traits ?? []} />
+          )}
         </Box>
 
         {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}

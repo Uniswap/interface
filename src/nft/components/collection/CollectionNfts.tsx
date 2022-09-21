@@ -1,5 +1,4 @@
-import { useRef } from 'react'
-import { BigNumber } from '@ethersproject/bignumber'
+import { useRef, useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
@@ -9,25 +8,22 @@ import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center } from 'nft/components/Flex'
 import { Row } from 'nft/components/Flex'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
-import {
-  SortBy,
-  useCollectionFilters,
-  CollectionFilters,
-  useFiltersExpanded,
-  useIsMobile,
-  SortByPointers,
-  initialCollectionFilterState,
-  Trait,
-} from 'nft/hooks'
+import useDebounce from 'hooks/useDebounce'
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieAsset, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
-import { useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import qs from 'query-string'
-
-import { NonRarityIcon, RarityIcon } from '../../components/icons'
-import { vars } from '../../css/sprinkles.css'
+import {
+  useCollectionFilters,
+  useIsMobile,
+  initialCollectionFilterState,
+  useFiltersExpanded,
+  CollectionFilters,
+} from 'nft/hooks'
+import { Trait, SortBy, SortByPointers } from 'nft/hooks/useCollectionFilters'
+import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
+import { vars } from 'nft/css/sprinkles.css'
 
 const rarityStatusCache = new Map<string, boolean>()
 function getRarityStatus(id: string, assets?: (GenieAsset | undefined)[]) {
@@ -181,18 +177,17 @@ interface CollectionNftsProps {
 }
 
 export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionNftsProps) => {
-  const {
-    buyNow,
-    search: searchByNameText,
-    sortBy,
-    setSortBy,
-  } = useCollectionFilters(({ buyNow, sortBy, setSortBy, search }) => ({
-    buyNow,
-    sortBy,
-    setSortBy,
-    search,
-  }))
+  const traits = useCollectionFilters((state) => state.traits)
+  const minPrice = useCollectionFilters((state) => state.minPrice)
+  const maxPrice = useCollectionFilters((state) => state.maxPrice)
+  const markets = useCollectionFilters((state) => state.markets)
+  const sortBy = useCollectionFilters((state) => state.sortBy)
+  const searchByNameText = useCollectionFilters((state) => state.search)
+  const setSortBy = useCollectionFilters((state) => state.setSortBy)
 
+  const debouncedMinPrice = useDebounce(minPrice, 500)
+  const debouncedMaxPrice = useDebounce(maxPrice, 500)
+  const buyNow = useCollectionFilters((state) => state.buyNow)
   const {
     data: collectionAssets,
     isSuccess: AssetsFetchSuccess,
@@ -202,10 +197,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     [
       'collectionNfts',
       {
+        traits,
         contractAddress,
+        markets,
         notForSale: !buyNow,
         sortBy,
-        searchText: searchByNameText,
+        searchByNameText,
       },
     ],
     async ({ pageParam = 0 }) => {
@@ -229,9 +226,16 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
       return await AssetsFetcher({
         contractAddress,
         sort: sort ?? undefined,
+        markets,
         notForSale: !buyNow,
         searchText: searchByNameText,
         pageParam,
+        traits,
+        price: {
+          low: debouncedMinPrice,
+          high: debouncedMaxPrice,
+          symbol: 'ETH',
+        },
       })
     },
     {
@@ -292,35 +296,15 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
 
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
-  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
-  const isMobile = useIsMobile()
   const oldStateRef = useRef<CollectionFilters | null>(null)
+  const isMobile = useIsMobile()
+  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
 
   const collectionNfts = useMemo(() => {
     if (!collectionAssets || !AssetsFetchSuccess) return undefined
-    const assets = collectionAssets.pages.flat()
 
-    if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh)
-      return assets.sort((a = {} as GenieAsset, b = {} as GenieAsset) => {
-        const bigA = BigNumber.from(a.currentEthPrice ?? -1)
-        const bigB = BigNumber.from(b.currentEthPrice ?? -1)
-        const diff = bigA.sub(bigB)
-
-        if ((bigA.gte(0) || bigB.gte(0)) && (bigA.lt(0) || bigB.lt(0))) {
-          return bigA.gte(0) ? (sortBy === SortBy.LowToHigh ? -1 : 1) : sortBy === SortBy.LowToHigh ? 1 : -1
-        }
-
-        if (diff.gt(0)) {
-          return sortBy === SortBy.LowToHigh ? 1 : -1
-        } else if (diff.lt(0)) {
-          return sortBy === SortBy.LowToHigh ? -1 : 1
-        }
-
-        return 0
-      })
-
-    return assets
-  }, [collectionAssets, AssetsFetchSuccess, sortBy])
+    return collectionAssets.pages.flat()
+  }, [collectionAssets, AssetsFetchSuccess])
 
   const hasRarity = getRarityStatus(collectionStats?.address, collectionNfts)
 
@@ -396,49 +380,46 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
               isMobile={isMobile}
               isFiltersExpanded={isFiltersExpanded}
               onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+              collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
             />
             <SortDropdown dropDownOptions={sortDropDownOptions} />
             <CollectionSearch />
           </Row>
         </Box>
       </AnimatedBox>
-      {!collectionNfts ? (
-        <div>No CollectionAssets</div>
-      ) : (
-        <InfiniteScroll
-          next={fetchNextPage}
-          hasMore={hasNextPage ?? false}
-          loader={hasNextPage ? <p>Loading from scroll...</p> : null}
-          dataLength={collectionNfts.length}
-          style={{ overflow: 'unset' }}
-        >
-          {collectionNfts.length > 0 ? (
-            <div className={styles.assetList}>
-              {collectionNfts.map((asset) => {
-                return asset ? (
-                  <CollectionAsset
-                    key={asset.address + asset.tokenId}
-                    asset={asset}
-                    uniformHeight={uniformHeight}
-                    setUniformHeight={setUniformHeight}
-                    mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-                    setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-                  />
-                ) : null
-              })}
+      <InfiniteScroll
+        next={fetchNextPage}
+        hasMore={hasNextPage ?? false}
+        loader={hasNextPage ? <p>Loading from scroll...</p> : null}
+        dataLength={collectionNfts?.length ?? 0}
+        style={{ overflow: 'unset' }}
+      >
+        {collectionNfts && collectionNfts.length > 0 ? (
+          <div className={styles.assetList}>
+            {collectionNfts.map((asset) => {
+              return asset ? (
+                <CollectionAsset
+                  key={asset.address + asset.tokenId}
+                  asset={asset}
+                  uniformHeight={uniformHeight}
+                  setUniformHeight={setUniformHeight}
+                  mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                  setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                />
+              ) : null
+            })}
+          </div>
+        ) : (
+          <Center width="full" color="darkGray" style={{ height: '60vh' }}>
+            <div style={{ display: 'block', textAlign: 'center' }}>
+              <p className={header2}>No NFTS found</p>
+              <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
+                View full collection
+              </Box>
             </div>
-          ) : (
-            <Center width="full" color="darkGray" style={{ height: '60vh' }}>
-              <div style={{ display: 'block', textAlign: 'center' }}>
-                <p className={header2}>No NFTS found</p>
-                <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
-                  View full collection
-                </Box>
-              </div>
-            </Center>
-          )}
-        </InfiniteScroll>
-      )}
+          </Center>
+        )}
+      </InfiniteScroll>
     </>
   )
 }
