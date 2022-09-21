@@ -7,9 +7,9 @@ import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
-import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
+import { HeaderRow, LoadedRow, LoadingRow, MAX_TOKENS_TO_LOAD } from './TokenRow'
 
-const MAX_TOKENS_TO_LOAD = 100
+const LOADING_ROWS_COUNT = 5
 
 const GridContainer = styled.div`
   display: flex;
@@ -53,6 +53,8 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
+const LoadingRows = Array(LOADING_ROWS_COUNT).fill(<LoadingRow />)
+
 export function LoadingTokenTable() {
   return (
     <GridContainer>
@@ -68,12 +70,11 @@ export default function TokenTable() {
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const prefetchedTokens = usePrefetchTopTokens()
   const { loading, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
-  console.log('loading', loading)
   const hasMore = !tokens || tokens.length < MAX_TOKENS_TO_LOAD
 
   const observer = useRef<IntersectionObserver>()
   const lastTokenRef = useCallback(
-    (node: any) => {
+    (node: HTMLDivElement) => {
       if (loading) return
       if (observer.current) observer.current.disconnect()
       observer.current = new IntersectionObserver((entries) => {
@@ -135,7 +136,7 @@ export default function TokenTable() {
                   )
                 }
               })}
-              {loading && Array(5).fill(<LoadingRow />)}
+              {loading && LoadingRows}
             </TokenDataContainer>
           </GridContainer>
         </>
