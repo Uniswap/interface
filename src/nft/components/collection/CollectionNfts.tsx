@@ -173,10 +173,11 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
   const searchByNameText = useCollectionFilters((state) => state.search)
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const setSortBy = useCollectionFilters((state) => state.setSortBy)
+  const buyNow = useCollectionFilters((state) => state.buyNow)
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
-  const buyNow = useCollectionFilters((state) => state.buyNow)
+
   const {
     data: collectionAssets,
     isSuccess: AssetsFetchSuccess,
@@ -194,6 +195,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
         searchByNameText,
         debouncedMinPrice,
         debouncedMaxPrice,
+        searchText: searchByNameText,
       },
     ],
     async ({ pageParam = 0 }) => {
@@ -287,7 +289,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
   }, [])
 
   const location = useLocation()
-
   const applyFiltersFromURL = useCallback(() => {
     if (!location.search) return
 
@@ -314,11 +315,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
       useCollectionFilters.setState(modifiedQuery as any)
     })
   }, [collectionStats, location.search])
+
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
+  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const oldStateRef = useRef<CollectionFilters | null>(null)
   const isMobile = useIsMobile()
-  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
 
   const collectionNfts = useMemo(() => {
     if (!collectionAssets || !AssetsFetchSuccess) return undefined
