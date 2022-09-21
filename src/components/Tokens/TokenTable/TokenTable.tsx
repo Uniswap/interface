@@ -10,6 +10,7 @@ import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { HeaderRow, LoadedRow, LoadingRow, MAX_TOKENS_TO_LOAD } from './TokenRow'
 
 const LOADING_ROWS_COUNT = 5
+const ROWS_PER_PAGE_FETCH = 20
 
 const GridContainer = styled.div`
   display: flex;
@@ -53,13 +54,14 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
-const LoadingRows = Array(LOADING_ROWS_COUNT).fill(<LoadingRow />)
+const LoadingMoreRows = Array(LOADING_ROWS_COUNT).fill(<LoadingRow />)
+const InitialLoadingRows = Array(ROWS_PER_PAGE_FETCH).fill(<LoadingRow />)
 
 export function LoadingTokenTable() {
   return (
     <GridContainer>
       <HeaderRow />
-      <TokenDataContainer>{Array(20).fill(<LoadingRow />)}</TokenDataContainer>
+      <TokenDataContainer>{InitialLoadingRows}</TokenDataContainer>
     </GridContainer>
   )
 }
@@ -136,7 +138,7 @@ export default function TokenTable() {
                   )
                 }
               })}
-              {loading && LoadingRows}
+              {loading && LoadingMoreRows}
             </TokenDataContainer>
           </GridContainer>
         </>
