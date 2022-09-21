@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Box } from 'nft/components/Box'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { FormEvent, useState } from 'react'
