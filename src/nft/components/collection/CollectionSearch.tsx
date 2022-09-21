@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Box } from 'nft/components/Box'
+import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { FormEvent, useState } from 'react'
-
-import { Box } from '../../components/Box'
-import { useCollectionFilters } from '../../hooks/useCollectionFilters'
 
 export const CollectionSearch = () => {
   const [debouncedSearchByNameText, setDebouncedSearchByNameText] = useState('')

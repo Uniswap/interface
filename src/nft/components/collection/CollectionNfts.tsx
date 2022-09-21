@@ -197,6 +197,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
         notForSale: !buyNow,
         sortBy,
         searchByNameText,
+        debouncedMinPrice,
+        debouncedMaxPrice,
       },
     ],
     async ({ pageParam = 0 }) => {
