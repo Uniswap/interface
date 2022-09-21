@@ -1,6 +1,5 @@
 import { isNumber } from 'nft/utils/numbers'
-import { forwardRef } from 'react'
-import { FormEvent } from 'react'
+import { FormEvent, forwardRef } from 'react'
 
 import { Box, BoxProps } from '../Box'
 

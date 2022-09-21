@@ -12,11 +12,13 @@ export const FilterButton = ({
   isMobile,
   isFiltersExpanded,
   results,
+  collectionCount = 0,
 }: {
   isMobile: boolean
   isFiltersExpanded: boolean
   results?: number
   onClick: () => void
+  collectionCount?: number
 }) => {
   const { minPrice, maxPrice, minRarity, maxRarity, traits, markets, buyNow } = useCollectionFilters((state) => ({
     minPrice: state.minPrice,
@@ -67,7 +69,9 @@ export const FilterButton = ({
               •
             </Box>
           )}
-          <Box paddingLeft={!isFiltersExpanded ? '12' : '2'}>{results ? putCommas(results) : 0} results</Box>
+          <Box paddingLeft={!isFiltersExpanded ? '12' : '2'}>
+            {collectionCount > 0 ? putCommas(collectionCount) : 0} results
+          </Box>
         </Box>
       ) : null}
     </Box>

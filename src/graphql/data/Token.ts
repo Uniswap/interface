@@ -1,110 +1,20 @@
 import graphql from 'babel-plugin-relay/macro'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { fetchQuery, useFragment, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
-import { TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
+import { Chain, TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
 import { TokenPrices$data, TokenPrices$key } from './__generated__/TokenPrices.graphql'
-import { Chain, HistoryDuration, TokenQuery, TokenQuery$data } from './__generated__/TokenQuery.graphql'
-import { TokenTopQuery, TokenTopQuery$data } from './__generated__/TokenTopQuery.graphql'
-
-export enum TimePeriod {
-  HOUR,
-  DAY,
-  WEEK,
-  MONTH,
-  YEAR,
-  ALL,
-}
-
-function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
-  switch (timePeriod) {
-    case TimePeriod.HOUR:
-      return 'HOUR'
-    case TimePeriod.DAY:
-      return 'DAY'
-    case TimePeriod.WEEK:
-      return 'WEEK'
-    case TimePeriod.MONTH:
-      return 'MONTH'
-    case TimePeriod.YEAR:
-      return 'YEAR'
-    case TimePeriod.ALL:
-      return 'MAX'
-  }
-}
+import { TokenQuery, TokenQuery$data } from './__generated__/TokenQuery.graphql'
+import { TimePeriod, toHistoryDuration } from './util'
 
 export type PricePoint = { value: number; timestamp: number }
 
-const topTokensQuery = graphql`
-  query TokenTopQuery($page: Int!, $duration: HistoryDuration!) {
-    topTokenProjects(orderBy: MARKET_CAP, pageSize: 20, currency: USD, page: $page) {
-      description
-      homepageUrl
-      twitterName
-      name
-      tokens {
-        chain
-        address
-        symbol
-      }
-      prices: markets(currencies: [USD]) {
-        ...TokenPrices
-      }
-      markets(currencies: [USD]) {
-        price {
-          value
-          currency
-        }
-        marketCap {
-          value
-          currency
-        }
-        fullyDilutedMarketCap {
-          value
-          currency
-        }
-        volume1D: volume(duration: DAY) {
-          value
-          currency
-        }
-        volume1W: volume(duration: WEEK) {
-          value
-          currency
-        }
-        volume1M: volume(duration: MONTH) {
-          value
-          currency
-        }
-        volume1Y: volume(duration: YEAR) {
-          value
-          currency
-        }
-        pricePercentChange24h {
-          currency
-          value
-        }
-        pricePercentChange1W: pricePercentChange(duration: WEEK) {
-          currency
-          value
-        }
-        pricePercentChange1M: pricePercentChange(duration: MONTH) {
-          currency
-          value
-        }
-        pricePercentChange1Y: pricePercentChange(duration: YEAR) {
-          currency
-          value
-        }
-        priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
-          value
-          currency
-        }
-        priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
-          value
-          currency
-        }
-      }
-    }
+export const projectMetaDataFragment = graphql`
+  fragment Token_TokenProject_Metadata on TokenProject {
+    description
+    homepageUrl
+    twitterName
+    name
   }
 `
 const tokenPricesFragment = graphql`
@@ -115,22 +25,6 @@ const tokenPricesFragment = graphql`
     }
   }
 `
-type CachedTopToken = NonNullable<NonNullable<TokenTopQuery$data>['topTokenProjects']>[number]
-
-let cachedTopTokens: Record<string, CachedTopToken> = {}
-export function useTopTokenQuery(page: number, timePeriod: TimePeriod) {
-  const topTokens = useLazyLoadQuery<TokenTopQuery>(topTokensQuery, { page, duration: toHistoryDuration(timePeriod) })
-
-  cachedTopTokens =
-    topTokens.topTokenProjects?.reduce((acc, current) => {
-      const address = current?.tokens?.[0].address
-      if (address) acc[address] = current
-      return acc
-    }, {} as Record<string, CachedTopToken>) ?? {}
-  console.log(cachedTopTokens)
-
-  return topTokens
-}
 
 const tokenQuery = graphql`
   query TokenQuery($contract: ContractInput!, $duration: HistoryDuration!, $skip: Boolean = false) {
@@ -206,14 +100,14 @@ const tokenQuery = graphql`
 `
 
 export function useTokenQuery(address: string, chain: Chain, timePeriod: TimePeriod) {
-  const cachedTopToken = cachedTopTokens[address]
+  //const cachedTopToken = cachedTopTokens[address]
   const data = useLazyLoadQuery<TokenQuery>(tokenQuery, {
     contract: { address, chain },
     duration: toHistoryDuration(timePeriod),
-    skip: !!cachedTopToken,
+    skip: false,
   })
 
-  return !cachedTopToken ? data : { tokenProjects: [{ ...cachedTopToken }] }
+  return data
 }
 
 const tokenPriceQuery = graphql`
@@ -267,22 +161,25 @@ export function useTokenPricesFromFragment(key: TokenPrices$key | null | undefin
 }
 
 export function useTokenPricesCached(
-  key: TokenPrices$key | null | undefined,
+  priceDataFragmentRef: TokenPrices$key | null | undefined,
   address: string,
   chain: Chain,
   timePeriod: TimePeriod
 ) {
   // Attempt to use token prices already provided by TokenDetails / TopToken queries
   const environment = useRelayEnvironment()
-  const fetchedTokenPrices = useFragment(tokenPricesFragment, key ?? null)?.priceHistory
+  const fetchedTokenPrices = useFragment(tokenPricesFragment, priceDataFragmentRef ?? null)?.priceHistory
 
-  const [priceMap, setPriceMap] = useState(
-    new Map<TimePeriod, PricePoint[] | undefined>([[timePeriod, filterPrices(fetchedTokenPrices)]])
+  const [priceMap, setPriceMap] = useState<Map<TimePeriod, PricePoint[] | undefined>>(
+    new Map([[timePeriod, filterPrices(fetchedTokenPrices)]])
   )
 
-  function updatePrices(key: TimePeriod, data?: PricePoint[]) {
-    setPriceMap(new Map(priceMap.set(key, data)))
-  }
+  const updatePrices = useCallback(
+    (key: TimePeriod, data?: PricePoint[]) => {
+      setPriceMap(new Map(priceMap.set(key, data)))
+    },
+    [priceMap]
+  )
 
   // Fetch the other timePeriods after first render
   useEffect(() => {
@@ -315,38 +212,3 @@ export function useTokenPricesCached(
 }
 
 export type SingleTokenData = NonNullable<TokenQuery$data['tokenProjects']>[number]
-export function getDurationDetails(data: SingleTokenData, timePeriod: TimePeriod) {
-  let volume = null
-  let pricePercentChange = null
-
-  const markets = data?.markets?.[0]
-  if (markets) {
-    switch (timePeriod) {
-      case TimePeriod.HOUR:
-        pricePercentChange = null
-        break
-      case TimePeriod.DAY:
-        volume = markets.volume1D?.value
-        pricePercentChange = markets.pricePercentChange24h?.value
-        break
-      case TimePeriod.WEEK:
-        volume = markets.volume1W?.value
-        pricePercentChange = markets.pricePercentChange1W?.value
-        break
-      case TimePeriod.MONTH:
-        volume = markets.volume1M?.value
-        pricePercentChange = markets.pricePercentChange1M?.value
-        break
-      case TimePeriod.YEAR:
-        volume = markets.volume1Y?.value
-        pricePercentChange = markets.pricePercentChange1Y?.value
-        break
-      case TimePeriod.ALL:
-        volume = null
-        pricePercentChange = null
-        break
-    }
-  }
-
-  return { volume, pricePercentChange }
-}
