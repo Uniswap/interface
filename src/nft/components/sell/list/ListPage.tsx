@@ -261,7 +261,7 @@ const GlobalDurationButton = ({
     >
       <Box className={buttonTextMedium}>
         {amount} {duration}
-        {amount !== 1 && 's'}
+        {pluralize(amount)}
       </Box>
     </Row>
   )
