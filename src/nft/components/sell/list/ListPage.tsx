@@ -88,18 +88,23 @@ const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }
   )
 }
 
+enum Duration {
+  hour = 'hour',
+  day = 'day',
+  week = 'week',
+  month = 'month',
+}
+
 const SetDurationModal = () => {
-  const [duration, setDuration] = useState('day')
-  const [displayDuration, setDisplayDuration] = useState('day')
+  const [duration, setDuration] = useState(Duration.day)
+  const [displayDuration, setDisplayDuration] = useState(Duration.day)
   const [amount, setAmount] = useState(7)
   const setGlobalExpiration = useSellAsset((state) => state.setGlobalExpiration)
-  const setCustomExpiration = (event: any) => {
-    if (!isNaN(event.target.value)) {
-      setAmount(parseFloat(event.target.value))
-      setDuration(displayDuration)
-    }
+  const setCustomExpiration = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(parseFloat(event.target.value))
+    setDuration(displayDuration)
   }
-  const selectDuration = (duration: any, index: any) => {
+  const selectDuration = (duration: Duration, index: any) => {
     setDuration(duration)
     setDisplayDuration(duration)
   }
@@ -107,19 +112,19 @@ const SetDurationModal = () => {
     () => [
       {
         displayText: 'Hours',
-        onClick: () => selectDuration('hour', 0),
+        onClick: () => selectDuration(Duration.hour, 0),
       },
       {
         displayText: 'Days',
-        onClick: () => selectDuration('day', 1),
+        onClick: () => selectDuration(Duration.day, 1),
       },
       {
         displayText: 'Weeks',
-        onClick: () => selectDuration('week', 2),
+        onClick: () => selectDuration(Duration.week, 2),
       },
       {
         displayText: 'Months',
-        onClick: () => selectDuration('month', 3),
+        onClick: () => selectDuration(Duration.month, 3),
       },
     ],
     []
