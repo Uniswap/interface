@@ -170,9 +170,7 @@ export default function TokenDetails() {
             <ChartSection token={token} tokenData={tokenProject} />
             <StatsSection
               TVL={tokenMarket?.totalValueLocked?.value}
-              marketCap={tokenProjectMarket?.marketCap?.value}
               volume24H={tokenProjectMarket?.volume1D?.value}
-              volume1W={tokenProjectMarket?.volume1W?.value}
               priceHigh52W={tokenProjectMarket?.priceHigh52W?.value}
               priceLow52W={tokenProjectMarket?.priceLow52W?.value}
             />
