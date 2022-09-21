@@ -10,7 +10,7 @@ import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
 import { TimePeriod } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
-import { CSSProperties, ReactNode } from 'react'
+import { CSSProperties, HTMLProps, ReactHTMLElement, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
@@ -465,15 +465,15 @@ export function LoadingRow(...props: any[]) {
   )
 }
 
-interface LoadedRowProps {
+interface LoadedRowProps extends HTMLProps<ReactHTMLElement<HTMLElement>> {
   tokenListIndex: number
   tokenListLength: number
   token: TopToken
-  style?: CSSProperties
 }
 
 /* Loaded State: row component with token information */
-export default function LoadedRow({ tokenListIndex, tokenListLength, token, style }: LoadedRowProps) {
+export default function LoadedRow(props: LoadedRowProps) {
+  const { tokenListIndex, tokenListLength, token, ...customProps } = props
   const tokenAddress = token?.address
   const currency = useCurrency(tokenAddress)
   const tokenName = token?.name
@@ -504,7 +504,7 @@ export default function LoadedRow({ tokenListIndex, tokenListLength, token, styl
     <StyledLink
       to={`/tokens/${tokenAddress}`}
       onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
-      style={style}
+      style={customProps}
     >
       <TokenRow
         header={false}
