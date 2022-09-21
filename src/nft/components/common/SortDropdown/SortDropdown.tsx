@@ -28,6 +28,7 @@ export const SortDropdown = ({
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const [isReversed, toggleReversed] = useReducer((s) => !s, false)
   const [selectedIndex, setSelectedIndex] = useState(0)
+
   const [maxWidth, setMaxWidth] = useState(0)
 
   const ref = useRef<HTMLDivElement>(null)
