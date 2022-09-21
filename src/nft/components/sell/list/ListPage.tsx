@@ -417,7 +417,7 @@ const PriceTextInput = ({
     } else if (warning && listPrice && listPrice >= 0) removeMarketplaceWarning(asset, warning)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listPrice])
-  console.log(listPrice)
+
   return (
     <Column gap="12" position="relative">
       <Row
