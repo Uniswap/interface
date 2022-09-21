@@ -89,7 +89,7 @@ export default function AddLiquidity({
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useThemedContext()
-  const [pairModeStable, setPairModeStable] = useState(true)
+  const [pairModeStable, setPairModeStable] = useState(false)
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
@@ -681,19 +681,19 @@ export default function AddLiquidity({
         <Box sx={{ marginTop: '.9rem' }}>
           <Box sx={{ fontWeight: 600, fontSize: '1rem', marginBottom: '.5rem' }}>Pair Mode</Box>
           <Box sx={{ display: 'flex', fontWeight: 400, fontSize: '.5rem', alignItems: 'center' }}>
-            <Flex alignItems={'center'} sx={{ flex: 1 }} onClick={() => setPairModeStable(true)}>
-              <CustomizedRadio type="radio" name="pairMode" id="Stable" checked={pairModeStable} />
-              <label htmlFor="Stable" style={{ fontSize: '0.7rem', margin: '0 0 0 .7rem' }}>
-                Stable
-              </label>
-              <QuestionHelper text="Stable mode, using stable token algorithm curve, mainly designed for 1:1 or approximately equivalent trading pairs, like USDC+DAI or WETH+sETH." />
-            </Flex>
             <Flex alignItems={'center'} sx={{ flex: 1 }} onClick={() => setPairModeStable(false)}>
               <CustomizedRadio type="radio" name="pairMode" id="Volatile" checked={!pairModeStable} />
               <label style={{ fontSize: '0.7rem', margin: '0 0 0 .7rem' }} htmlFor="Volatile">
                 Volatile
               </label>
               <QuestionHelper text="Volatile mode, using non-stable currency algorithm curve, mainly designed for uncorrelated pools, like WETH+USDC or OP+WETH." />
+            </Flex>
+            <Flex alignItems={'center'} sx={{ flex: 1 }} onClick={() => setPairModeStable(true)}>
+              <CustomizedRadio type="radio" name="pairMode" id="Stable" checked={pairModeStable} />
+              <label htmlFor="Stable" style={{ fontSize: '0.7rem', margin: '0 0 0 .7rem' }}>
+                Stable
+              </label>
+              <QuestionHelper text="Stable mode, using stable token algorithm curve, mainly designed for 1:1 or approximately equivalent trading pairs, like USDC+DAI or WETH+sETH." />
             </Flex>
           </Box>
         </Box>
