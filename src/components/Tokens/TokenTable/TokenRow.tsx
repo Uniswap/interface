@@ -6,7 +6,8 @@ import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { getDurationDetails, SingleTokenData, TimePeriod } from 'graphql/data/Token'
+import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
+import { TimePeriod } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
@@ -27,14 +28,13 @@ import {
   filterNetworkAtom,
   filterStringAtom,
   filterTimeAtom,
-  sortCategoryAtom,
-  sortDirectionAtom,
+  sortAscendingAtom,
+  sortMethodAtom,
   useIsFavorited,
-  useSetSortCategory,
+  useSetSortMethod,
   useToggleFavorite,
 } from '../state'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
-import { Category, SortDirection } from '../types'
 import { DISPLAYS } from './TimeSelector'
 
 const Cell = styled.div`
@@ -329,9 +329,10 @@ const LogoContainer = styled.div`
 `
 
 /* formatting for volume with timeframe header display */
-function getHeaderDisplay(category: string, timeframe: TimePeriod): string {
-  if (category === Category.volume || category === Category.percentChange) return `${DISPLAYS[timeframe]} ${category}`
-  return category
+function getHeaderDisplay(method: string, timeframe: TimePeriod): string {
+  if (method === TokenSortMethod.VOLUME || method === TokenSortMethod.PERCENT_CHANGE)
+    return `${DISPLAYS[timeframe]} ${method}`
+  return method
 }
 
 /* Get singular header cell for header row */
@@ -339,20 +340,20 @@ function HeaderCell({
   category,
   sortable,
 }: {
-  category: Category // TODO: change this to make it work for trans
+  category: TokenSortMethod // TODO: change this to make it work for trans
   sortable: boolean
 }) {
   const theme = useTheme()
-  const sortDirection = useAtomValue<SortDirection>(sortDirectionAtom)
-  const handleSortCategory = useSetSortCategory(category)
-  const sortCategory = useAtomValue<Category>(sortCategoryAtom)
-  const timeframe = useAtomValue<TimePeriod>(filterTimeAtom)
+  const sortAscending = useAtomValue(sortAscendingAtom)
+  const handleSortCategory = useSetSortMethod(category)
+  const sortMethod = useAtomValue(sortMethodAtom)
+  const timeframe = useAtomValue(filterTimeAtom)
 
-  if (sortCategory === category) {
+  if (sortMethod === category) {
     return (
       <HeaderCellWrapper onClick={handleSortCategory}>
         <SortArrowCell>
-          {sortDirection === SortDirection.increasing ? (
+          {sortAscending ? (
             <ArrowUp size={14} color={theme.accentActive} />
           ) : (
             <ArrowDown size={14} color={theme.accentActive} />
@@ -430,10 +431,10 @@ export function HeaderRow() {
       favorited={null}
       listNumber="#"
       tokenInfo={<Trans>Token Name</Trans>}
-      price={<HeaderCell category={Category.price} sortable />}
-      percentChange={<HeaderCell category={Category.percentChange} sortable />}
-      marketCap={<HeaderCell category={Category.marketCap} sortable />}
-      volume={<HeaderCell category={Category.volume} sortable />}
+      price={<HeaderCell category={TokenSortMethod.PRICE} sortable />}
+      percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} sortable />}
+      marketCap={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} sortable />}
+      volume={<HeaderCell category={TokenSortMethod.VOLUME} sortable />}
       sparkLine={null}
     />
   )
@@ -462,31 +463,28 @@ export function LoadingRow() {
   )
 }
 
-/* Loaded State: row component with token information */
-export default function LoadedRow({
-  tokenListIndex,
-  tokenListLength,
-  tokenData,
-  timePeriod,
-}: {
+interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
-  tokenData: SingleTokenData
-  timePeriod: TimePeriod
-}) {
-  const tokenAddress = tokenData?.tokens?.[0].address
+  token: TopToken
+}
+
+/* Loaded State: row component with token information */
+export default function LoadedRow({ tokenListIndex, tokenListLength, token }: LoadedRowProps) {
+  const tokenAddress = token?.address
   const currency = useCurrency(tokenAddress)
-  const tokenName = tokenData?.name
-  const tokenSymbol = tokenData?.tokens?.[0].symbol
+  const tokenName = token?.name
+  const tokenSymbol = token?.symbol
   const isFavorited = useIsFavorited(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
-  const tokenDetails = tokenData?.markets?.[0]
-  const { volume, pricePercentChange } = getDurationDetails(tokenData, timePeriod)
-  const arrow = pricePercentChange ? getDeltaArrow(pricePercentChange) : null
-  const formattedDelta = pricePercentChange ? formatDelta(pricePercentChange) : null
+  const timePeriod = useAtomValue(filterTimeAtom)
+  const delta = token?.market?.pricePercentChange?.value
+  const arrow = delta ? getDeltaArrow(delta) : null
+  const formattedDelta = delta ? formatDelta(delta) : null
+  const sortAscending = useAtomValue(sortAscendingAtom)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -516,7 +514,7 @@ export default function LoadedRow({
             <FavoriteIcon isFavorited={isFavorited} />
           </ClickFavorited>
         }
-        listNumber={tokenListIndex + 1}
+        listNumber={sortAscending ? 100 - tokenListIndex : tokenListIndex + 1}
         tokenInfo={
           <ClickableName>
             <LogoContainer>
@@ -532,7 +530,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {tokenDetails?.price?.value ? formatDollarAmount(tokenDetails?.price?.value) : '-'}
+              {token?.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
               <PercentChangeInfoCell>
                 {formattedDelta}
                 {arrow}
@@ -542,16 +540,20 @@ export default function LoadedRow({
         }
         percentChange={
           <ClickableContent>
-            {formattedDelta}
+            {formattedDelta ?? '-'}
             {arrow}
           </ClickableContent>
         }
         marketCap={
           <ClickableContent>
-            {tokenDetails?.marketCap?.value ? formatDollarAmount(tokenDetails?.marketCap?.value) : '-'}
+            {token?.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
           </ClickableContent>
         }
-        volume={<ClickableContent>{volume ? formatDollarAmount(volume ?? undefined) : '-'}</ClickableContent>}
+        volume={
+          <ClickableContent>
+            {token?.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
+          </ClickableContent>
+        }
         sparkLine={
           <SparkLine>
             <ParentSize>
@@ -559,8 +561,8 @@ export default function LoadedRow({
                 <SparklineChart
                   width={width}
                   height={height}
-                  tokenData={tokenData}
-                  pricePercentChange={pricePercentChange}
+                  tokenData={token}
+                  pricePercentChange={token?.market?.pricePercentChange?.value}
                   timePeriod={timePeriod}
                 />
               )}
