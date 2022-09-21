@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
 import { useDerivedSwapInfo, useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
-import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
+import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import {
   CurrencyField,
   initialState as emptyState,
@@ -26,6 +26,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const derivedSwapInfo = useDerivedSwapInfo(state)
   const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
   const { selectingCurrencyField, currencies } = derivedSwapInfo
+  const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
 
   // keep currencies list option as state so that rendered list remains stable through the slide animation
   const [listVariation, setListVariation] = useState<TokenSelectorVariation>(
@@ -54,7 +55,9 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
       derivedInfo={derivedSwapInfo}
       dispatch={dispatch}
       flowName={t('Swap')}
+      setStep={setStep}
       showTokenSelector={!!selectingCurrencyField}
+      step={step}
       tokenSelector={
         <TokenSelector
           otherCurrency={

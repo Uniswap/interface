@@ -1,7 +1,8 @@
+import { providers } from 'ethers'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'src/components/modals/types'
-import { useTransactionGasFee } from 'src/features/gas/hooks'
+import { TransactionGasFeeInfo } from 'src/features/gas/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
@@ -11,16 +12,23 @@ import {
   useTransferNFTCallback,
 } from 'src/features/transactions/transfer/hooks'
 import { TransferDetails } from 'src/features/transactions/transfer/TransferDetails'
-import { useTransferTransactionRequest } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferFormProps {
   derivedTransferInfo: DerivedTransferInfo
+  txRequest?: providers.TransactionRequest
+  gasFeeInfo?: TransactionGasFeeInfo
   onNext: () => void
   onPrev: () => void
 }
 
-export function TransferReview({ derivedTransferInfo, onNext, onPrev }: TransferFormProps) {
+export function TransferReview({
+  derivedTransferInfo,
+  gasFeeInfo,
+  onNext,
+  onPrev,
+  txRequest,
+}: TransferFormProps) {
   const { t } = useTranslation()
 
   const {
@@ -35,13 +43,13 @@ export function TransferReview({ derivedTransferInfo, onNext, onPrev }: Transfer
     txId,
   } = derivedTransferInfo
 
-  const txRequest = useTransferTransactionRequest(derivedTransferInfo)
-  const gasFeeInfo = useTransactionGasFee(txRequest)
   const transferTxWithGasSettings = gasFeeInfo ? { ...txRequest, ...gasFeeInfo.params } : txRequest
 
   // TODO: how should we surface this warning?
   const actionButtonDisabled =
-    warnings.some((warning) => warning.action === WarningAction.DisableReview) || !gasFeeInfo
+    warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
+    !gasFeeInfo ||
+    !txRequest
 
   const transferERC20Callback = useTransferERC20Callback(
     txId,

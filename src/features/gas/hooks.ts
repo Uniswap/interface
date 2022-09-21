@@ -14,10 +14,11 @@ import { TransactionDetails } from 'src/features/transactions/types'
 
 export function useTransactionGasFee(
   tx: NullUndefined<providers.TransactionRequest>,
-  speed: GasSpeed = GasSpeed.Urgent
+  speed: GasSpeed = GasSpeed.Urgent,
+  skip?: boolean
 ): TransactionGasFeeInfo | undefined {
   // TODO: Handle error responses from gas endpoint
-  const { data } = useGasFeeQuery(tx ?? skipToken, {
+  const { data } = useGasFeeQuery((!skip && tx) || skipToken, {
     // poll new gas fees around every block time
     pollingInterval: isL2Chain(tx?.chainId)
       ? PollingInterval.LightningMcQueen

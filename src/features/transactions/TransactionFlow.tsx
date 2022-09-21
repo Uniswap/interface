@@ -1,10 +1,12 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { Dispatch, ReactElement, useCallback, useEffect, useState } from 'react'
+import { providers } from 'ethers'
+import React, { Dispatch, ReactElement, useCallback, useEffect } from 'react'
 import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { TransactionGasFeeInfo } from 'src/features/gas/types'
 import { DerivedSwapInfo, useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
@@ -31,9 +33,16 @@ interface TransactionFlowProps {
   flowName: string
   derivedInfo: DerivedTransferInfo | DerivedSwapInfo
   onClose: () => void
+  txRequest?: providers.TransactionRequest
+  gasFeeInfo?: TransactionGasFeeInfo
+  step: TransactionStep
+  setStep: (newStep: TransactionStep) => void
 }
 
-type InnerContentProps = Pick<TransactionFlowProps, 'derivedInfo' | 'onClose' | 'dispatch'> & {
+type InnerContentProps = Pick<
+  TransactionFlowProps,
+  'derivedInfo' | 'onClose' | 'dispatch' | 'gasFeeInfo' | 'txRequest'
+> & {
   step: number
   setStep: (step: TransactionStep) => void
 }
@@ -51,6 +60,10 @@ export function TransactionFlow({
   tokenSelector,
   recipientSelector,
   derivedInfo,
+  txRequest,
+  gasFeeInfo,
+  step,
+  setStep,
   onClose,
   dispatch,
 }: TransactionFlowProps) {
@@ -72,8 +85,6 @@ export function TransactionFlow({
 
   const { onToggleUSDInput } = useSwapActionHandlers(dispatch)
   const { isUSDInput } = derivedInfo
-
-  const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
 
   return (
     <TouchableWithoutFeedback onPress={onBackgroundPress}>
@@ -101,8 +112,10 @@ export function TransactionFlow({
           <InnerContentRouter
             derivedInfo={derivedInfo}
             dispatch={dispatch}
+            gasFeeInfo={gasFeeInfo}
             setStep={setStep}
             step={step}
+            txRequest={txRequest}
             onClose={onClose}
           />
         </Flex>
@@ -132,6 +145,8 @@ const useGetInnerContent = ({
   onClose,
   dispatch,
   setStep,
+  gasFeeInfo,
+  txRequest,
 }: InnerContentProps): {
   form: ReactElement
   review: ReactElement
@@ -166,6 +181,8 @@ const useGetInnerContent = ({
     review: (
       <TransferReview
         derivedTransferInfo={derivedInfo}
+        gasFeeInfo={gasFeeInfo}
+        txRequest={txRequest}
         onNext={onReviewNext}
         onPrev={onReviewPrev}
       />

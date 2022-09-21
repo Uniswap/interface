@@ -1,10 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useReducer } from 'react'
+import React, { useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
+import { useTransactionGasFee } from 'src/features/gas/hooks'
+import { GasSpeed } from 'src/features/gas/types'
 import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
-import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
+import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import {
   CurrencyField,
   initialState as emptyState,
@@ -12,6 +14,7 @@ import {
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { useDerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
+import { useTransferTransactionRequest } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import {
   createOnSelectRecipient,
   createOnToggleShowRecipientSelector,
@@ -29,12 +32,21 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
   const onSelectRecipient = createOnSelectRecipient(dispatch)
   const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
   const derivedTransferInfo = useDerivedTransferInfo(state)
+  const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
+  const txRequest = useTransferTransactionRequest(derivedTransferInfo)
+  const gasFeeInfo = useTransactionGasFee(
+    txRequest,
+    GasSpeed.Urgent,
+    // stop polling for gas once transaction is submitted
+    step === TransactionStep.SUBMITTED
+  )
 
   return (
     <TransactionFlow
       derivedInfo={derivedTransferInfo}
       dispatch={dispatch}
       flowName={t('Send')}
+      gasFeeInfo={gasFeeInfo}
       recipientSelector={
         <RecipientSelect
           recipient={state.recipient}
@@ -42,8 +54,10 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
           onToggleShowRecipientSelector={onToggleShowRecipientSelector}
         />
       }
+      setStep={setStep}
       showRecipientSelector={state.showRecipientSelector}
       showTokenSelector={!!state.selectingCurrencyField}
+      step={step}
       tokenSelector={
         <TokenSelector
           variation={TokenSelectorVariation.BalancesOnly}
@@ -51,6 +65,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
           onSelectCurrency={(currency: Currency) => onSelectCurrency(CurrencyField.INPUT, currency)}
         />
       }
+      txRequest={txRequest}
       onClose={onClose}
     />
   )

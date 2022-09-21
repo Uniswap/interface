@@ -15,8 +15,8 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
-import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { transferTokenActions } from 'src/features/transactions/transfer/transferTokenSaga'
+import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { getTransferWarnings } from 'src/features/transactions/transfer/validate'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { buildCurrencyId } from 'src/utils/currencyId'
@@ -61,9 +61,12 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
       : undefined
   )
 
-  const currencies = {
-    [CurrencyField.INPUT]: currencyIn ?? nftIn,
-  }
+  const currencies = useMemo(
+    () => ({
+      [CurrencyField.INPUT]: currencyIn ?? nftIn,
+    }),
+    [currencyIn, nftIn]
+  )
 
   const { balance: tokenInBalance } = useTokenBalance(
     currencyIn?.isToken ? currencyIn : undefined,
@@ -79,42 +82,69 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     () => tryParseExactAmount(exactAmountToken, currencyIn),
     [currencyIn, exactAmountToken]
   )
-  const currencyAmounts = {
-    [CurrencyField.INPUT]: amountSpecified,
-  }
-  const currencyBalances = {
-    [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
-  }
+  const currencyAmounts = useMemo(
+    () => ({
+      [CurrencyField.INPUT]: amountSpecified,
+    }),
+    [amountSpecified]
+  )
 
-  const warnings = getTransferWarnings(t, {
-    currencyBalances,
-    currencyAmounts,
-    recipient,
-    currencyIn: currencyIn ?? undefined,
-    nftIn,
-    chainId,
-  })
+  const currencyBalances = useMemo(
+    () => ({
+      [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
+    }),
+    [currencyIn, nativeInBalance, tokenInBalance]
+  )
 
-  // TODO: memoize this return value
-  return {
-    currencies,
-    currencyAmounts,
-    currencyBalances,
-    currencyTypes: { [CurrencyField.INPUT]: tradeableAsset?.type },
-    chainId,
-    currencyIn: currencyIn ?? undefined,
-    nftIn: nftIn ?? undefined,
-    exactAmountUSD,
-    exactAmountToken,
-    exactCurrencyField: CurrencyField.INPUT,
-    formattedAmounts: {
-      [CurrencyField.INPUT]: isUSDInput ? exactAmountUSD || '' : exactAmountToken,
-    },
-    isUSDInput,
-    recipient,
-    warnings,
-    txId,
-  }
+  const warnings = useMemo(
+    () =>
+      getTransferWarnings(t, {
+        currencyBalances,
+        currencyAmounts,
+        recipient,
+        currencyIn: currencyIn ?? undefined,
+        nftIn,
+        chainId,
+      }),
+    [chainId, currencyAmounts, currencyBalances, currencyIn, nftIn, recipient, t]
+  )
+
+  return useMemo(
+    () => ({
+      currencies,
+      currencyAmounts,
+      currencyBalances,
+      currencyTypes: { [CurrencyField.INPUT]: tradeableAsset?.type },
+      chainId,
+      currencyIn: currencyIn ?? undefined,
+      nftIn: nftIn ?? undefined,
+      exactAmountUSD,
+      exactAmountToken,
+      exactCurrencyField: CurrencyField.INPUT,
+      formattedAmounts: {
+        [CurrencyField.INPUT]: isUSDInput ? exactAmountUSD || '' : exactAmountToken,
+      },
+      isUSDInput,
+      recipient,
+      warnings,
+      txId,
+    }),
+    [
+      chainId,
+      currencies,
+      currencyAmounts,
+      currencyBalances,
+      currencyIn,
+      exactAmountToken,
+      exactAmountUSD,
+      isUSDInput,
+      nftIn,
+      recipient,
+      tradeableAsset?.type,
+      txId,
+      warnings,
+    ]
+  )
 }
 
 /** Helper transfer callback for ERC20s */
