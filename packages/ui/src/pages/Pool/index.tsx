@@ -568,7 +568,7 @@ export default function Pool() {
                       <ButtonPrimary
                         style={{ display: 'inline-block !important' }}
                         padding=".3rem"
-                        borderRadius=".3rem"
+                        borderRadius=".5rem"
                         as={Link}
                         to={`/add/${v2Pair.token0.id}/${v2Pair.token1.id}`}
                       >
