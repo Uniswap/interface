@@ -66,6 +66,6 @@ export function usePairs(
   }, [results, tokens])
 }
 
-export function usePair(tokenA?: Currency, tokenB?: Currency, stable: boolean = false): [PairState, Pair | null] {
+export function usePair(tokenA?: Currency, tokenB?: Currency, stable = false): [PairState, Pair | null] {
   return usePairs([[tokenA, tokenB, stable]])[0]
 }

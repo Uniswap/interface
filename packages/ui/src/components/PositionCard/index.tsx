@@ -495,7 +495,7 @@ export function LiquidityCard({
         <ButtonPrimary
           style={{ display: 'inline-block !important' }}
           padding=".3rem"
-          borderRadius=".3rem"
+          borderRadius=".5rem"
           as={Link}
           to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}`}
         >

@@ -724,7 +724,7 @@ export default function RemoveLiquidity({
         </AutoColumn>
       </AppBody>
       {pair ? (
-        <AutoColumn style={{ width: '100%', marginTop: '.8rem', padding: '0 1rem' }}>
+        <AutoColumn style={{ marginTop: '.8rem', width: '24rem' }}>
           <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
         </AutoColumn>
       ) : null}

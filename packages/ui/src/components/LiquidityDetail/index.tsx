@@ -1,4 +1,4 @@
-import { JSBI } from '@teleswap/sdk'
+import { Fraction, JSBI } from '@teleswap/sdk'
 import { ButtonPrimary } from 'components/Button'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogoHorizontal from 'components/DoubleLogo'
@@ -59,6 +59,30 @@ export default function LiquidityDetail({
   const userPoolBalance = useTokenBalance(account ?? undefined, pair?.liquidityToken)
 
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
+
+  const userHoldingPercentage = useMemo(() => {
+    if (userPoolBalance && totalPoolTokens) {
+      return userPoolBalance!.divide(totalPoolTokens!)
+    }
+    return '-'
+  }, [pair?.liquidityToken, totalPoolTokens, userPoolBalance])
+
+  const userToken0AmountInPool = useMemo(() => {
+    if (userHoldingPercentage instanceof Fraction) {
+      return pair?.reserve0.multiply(userHoldingPercentage)
+    } else {
+      return undefined
+    }
+  }, [pair?.reserve0, userHoldingPercentage])
+
+  const userToken1AmountInPool = useMemo(() => {
+    if (userHoldingPercentage instanceof Fraction) {
+      return pair?.reserve1.multiply(userHoldingPercentage)
+    } else {
+      return undefined
+    }
+  }, [pair?.reserve1, userHoldingPercentage])
+
   const [token0Deposited, token1Deposited] = useMemo(() => {
     if (
       !!pair &&
@@ -267,15 +291,26 @@ export default function LiquidityDetail({
               <Text>{currencyA?.symbol?.toUpperCase()}</Text>
             </Flex>
             <Box>Current A Value</Box>
-            <Box>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(12)}</Box>
-            <Box>{poolTokenPercentage?.toSignificant(4)}%</Box>
+            {/* <Box>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(12)}</Box> */}
+            <Box>{userToken0AmountInPool?.toSignificant(12)}</Box>
+            <Box>
+              {userHoldingPercentage instanceof Fraction
+                ? +userHoldingPercentage.toSignificant(4) * 100
+                : userHoldingPercentage}
+              %
+            </Box>
             <Flex sx={{ gap: '0.5rem' }} alignItems="center">
               <CurrencyLogo currency={currencyB} size="1rem" />
               <Text>{currencyB?.symbol?.toUpperCase()}</Text>
             </Flex>
             <Box>Current B Value</Box>
-            <Box>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(12)}</Box>
-            <Box>{poolTokenPercentage?.toSignificant(4)}%</Box>
+            <Box>{userToken1AmountInPool?.toSignificant(12)}</Box>
+            <Box>
+              {userHoldingPercentage instanceof Fraction
+                ? +userHoldingPercentage.toSignificant(4) * 100
+                : userHoldingPercentage}
+              %
+            </Box>
           </Box>
         </BorderVerticalContainer>
         {/* <BorderVerticalContainer>
