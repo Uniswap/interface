@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Column, Row } from 'nft/components/Flex'
@@ -25,8 +26,7 @@ import {
 } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useBag, useNFTList, useSellAsset, useSellPageState } from 'nft/hooks'
-import { ListingMarket, ListingStatus, SellPageStateType, WalletAsset } from 'nft/types'
-import { DropDownOption } from 'nft/types'
+import { DropDownOption, ListingMarket, ListingStatus, SellPageStateType, WalletAsset } from 'nft/types'
 import { formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { ListingMarkets } from 'nft/utils/listNfts'
@@ -65,7 +65,7 @@ const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }
       borderRadius="12"
       backgroundColor="medGray"
       height="44"
-      className={isSelected ? styles.buttonSelected : null}
+      className={clsx(isSelected ? styles.buttonSelected : null)}
       onClick={toggleSelected}
       width="max"
       cursor="pointer"
