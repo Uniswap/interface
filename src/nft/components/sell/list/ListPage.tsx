@@ -25,7 +25,7 @@ import {
   subhead,
   subheadSmall,
 } from 'nft/css/common.css'
-import { themeVars, vars } from 'nft/css/sprinkles.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useNFTList, useSellAsset, useSellPageState } from 'nft/hooks'
 import { DropDownOption, ListingMarket, ListingStatus, ListingWarning, SellPageStateType, WalletAsset } from 'nft/types'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
@@ -186,7 +186,9 @@ const SetDurationModal = () => {
           paddingTop="12"
           paddingBottom="12"
           borderRadius="8"
-          style={{ border: `1px solid ${themeVars.colors.medGray}` }}
+          borderWidth="1px"
+          borderStyle="solid"
+          borderColor="medGray"
           position="relative"
           height="44"
         >
@@ -422,17 +424,11 @@ const PriceTextInput = ({
         width="min"
         padding="4"
         borderRadius="8"
-        style={{
-          border: `1px solid ${
-            warning && !focused
-              ? vars.color.orange
-              : isGlobalPrice
-              ? vars.color.genieBlue
-              : listPrice != null
-              ? themeVars.colors.darkGray
-              : vars.color.grey700
-          }`,
-        }}
+        borderWidth="1px"
+        borderStyle="solid"
+        borderColor={
+          warning && !focused ? 'orange' : isGlobalPrice ? 'genieBlue' : listPrice != null ? 'darkGray' : 'grey700'
+        }
       >
         <NumericInput
           as="input"
