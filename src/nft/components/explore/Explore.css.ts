@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css'
+import { body } from 'nft/css/common.css'
 import { breakpoints, sprinkles } from 'nft/css/sprinkles.css'
 
 export const section = style([
@@ -208,3 +209,104 @@ export const valuePropContent = style([
     },
   },
 ])
+
+/* Base Table Styles  */
+
+export const table = style([
+  {
+    borderCollapse: 'collapse',
+    borderStyle: 'hidden',
+    boxShadow: '0 0 0 1px rgba(153, 161, 189, 0.24)',
+    borderRadius: '12px',
+    borderSpacing: '0px 40px',
+  },
+  sprinkles({
+    width: 'full',
+  }),
+])
+
+export const thead = style({
+  borderBottom: '1px solid rgba(153, 161, 189, 0.24)',
+  marginRight: '12px',
+})
+
+export const th = style([
+  {
+    selectors: {
+      '&:nth-last-child(1)': {
+        paddingRight: '20px',
+      },
+    },
+  },
+  sprinkles({
+    color: { default: 'darkGray', hover: 'blackBlue' },
+    cursor: 'pointer',
+    paddingTop: '12',
+    paddingBottom: '12',
+    fontWeight: 'normal',
+    fontSize: '12',
+  }),
+])
+
+export const tr = sprinkles({ cursor: 'pointer' })
+
+export const rank = style([
+  sprinkles({
+    color: 'darkGray',
+    position: 'absolute',
+    display: { md: 'inline-block', sm: 'none' },
+  }),
+  {
+    left: '24px',
+    top: '20px',
+  },
+])
+
+export const td = style([
+  body,
+  {
+    verticalAlign: 'middle',
+    selectors: {
+      '&:nth-last-child(1)': {
+        paddingRight: '20px',
+      },
+    },
+  },
+  sprinkles({
+    maxWidth: '160',
+    paddingTop: '10',
+    paddingBottom: '10',
+    textAlign: 'right',
+    position: 'relative',
+  }),
+])
+
+export const trendingOptions = style([
+  {
+    border: '2px solid rgba(153, 161, 189, 0.24)',
+  },
+  sprinkles({
+    marginBottom: '32',
+    height: '44',
+    borderRadius: '12',
+  }),
+])
+
+/* Trending Colletion styles */
+export const trendingOption = style([
+  {
+    padding: '14px 16px',
+    marginTop: '-1px',
+    marginLeft: '-1px',
+  },
+  sprinkles({
+    borderRadius: '12',
+    fontSize: '12',
+    display: 'inline-block',
+    cursor: 'pointer',
+  }),
+])
+
+export const trendingOptionActive = sprinkles({
+  backgroundColor: 'grey700',
+})
