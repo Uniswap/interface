@@ -1,5 +1,4 @@
 import { useWeb3React } from '@web3-react/core'
-import { StyledChevronDown, StyledChevronUp } from 'components/Icons'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -13,6 +12,8 @@ import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { useCallback, useRef, useState } from 'react'
+import { ChevronDown, ChevronUp } from 'react-feather'
+import { useTheme } from 'styled-components/macro'
 
 import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
@@ -34,6 +35,8 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const { chainId } = useWeb3React()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const isMobile = useIsMobile()
+
+  const theme = useTheme()
 
   const ref = useRef<HTMLDivElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -77,6 +80,12 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
     </NavDropdown>
   )
 
+  const chevronProps = {
+    height: 20,
+    width: 20,
+    color: theme.textSecondary,
+  }
+
   return (
     <Box position="relative" ref={ref}>
       <Row
@@ -101,7 +110,7 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
             </Box>
           </>
         )}
-        {isOpen ? <StyledChevronUp /> : <StyledChevronDown />}
+        {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
       </Row>
       {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
     </Box>
