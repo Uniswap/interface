@@ -6,7 +6,7 @@ import { EventName } from 'analytics/constants'
 import { formatToDecimal, getTokenAddress } from 'analytics/utils'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { useCurrencyBalance } from '../state/connection/hooks'
@@ -70,6 +70,9 @@ export default function useWrapCallback(
   )
   const addTransaction = useTransactionAdder()
 
+  const [error, setError] = useState<Error>()
+  if (error) throw error
+
   return useMemo(() => {
     if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
@@ -94,6 +97,21 @@ export default function useWrapCallback(
           sufficientBalance && inputAmount
             ? async () => {
                 try {
+                  const network = await wethContract.provider.getNetwork()
+                  if (
+                    network.chainId !== chainId ||
+                    wethContract.address !== WRAPPED_NATIVE_CURRENCY[network.chainId]?.address
+                  ) {
+                    sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_INVALIDATED, {
+                      ...eventProperties,
+                      contract_address: wethContract.address,
+                      contract_chain_id: network.chainId,
+                      type: WrapType.WRAP,
+                    })
+                    const error = new Error('Invalid WETH contract')
+                    setError(error)
+                    throw error
+                  }
                   const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.quotient.toString(16)}` })
                   addTransaction(txReceipt, {
                     type: TransactionType.WRAP,
