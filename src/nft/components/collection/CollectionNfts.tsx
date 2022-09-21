@@ -24,6 +24,8 @@ interface CollectionNftsProps {
   collectionStats: GenieCollection
 }
 
+const rarityStatusCache = new Map<string, boolean>()
+
 export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionNftsProps) => {
   const traits = useCollectionFilters((state) => state.traits)
   const minPrice = useCollectionFilters((state) => state.minPrice)
@@ -114,7 +116,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     return collectionAssets.pages.flat()
   }, [collectionAssets, AssetsFetchSuccess])
 
-  const rarityStatusCache = new Map<string, boolean>()
   const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts)
 
   const sortDropDownOptions: DropDownOption[] = useMemo(

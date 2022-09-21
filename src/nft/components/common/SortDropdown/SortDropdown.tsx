@@ -36,6 +36,8 @@ export const SortDropdown = ({
 
   useEffect(() => setMaxWidth(0), [dropDownOptions])
 
+  console.log(dropDownOptions)
+  console.log(selectedIndex)
   const reversable = useMemo(
     () => dropDownOptions[selectedIndex].reverseOnClick || dropDownOptions[selectedIndex].reverseIndex,
     [selectedIndex, dropDownOptions]
