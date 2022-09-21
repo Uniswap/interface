@@ -715,7 +715,7 @@ export default function Swap() {
                                 )}
                               </span>
                               {approvalState === ApprovalState.PENDING ? (
-                                <Loader stroke="white" />
+                                <Loader stroke={theme.white} />
                               ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                                 signatureState === UseERC20PermitState.SIGNED ? (
                                 <CheckCircle size="20" color={theme.deprecated_green1} />
@@ -728,7 +728,7 @@ export default function Swap() {
                                     </Trans>
                                   }
                                 >
-                                  <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
+                                  <HelpCircle size="20" color={theme.deprecated_white} style={{ marginLeft: '8px' }} />
                                 </MouseoverTooltip>
                               )}
                             </AutoRow>
