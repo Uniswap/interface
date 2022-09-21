@@ -3,9 +3,11 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import { selectionAsync } from 'expo-haptics'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { InteractionManager } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
@@ -25,7 +27,6 @@ import SwapIcon from 'src/assets/icons/swap-action-button.svg'
 import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { GradientButton } from 'src/components/buttons/GradientButton'
-
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -37,7 +38,7 @@ import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreFavoritesScreen } from 'src/screens/ExploreFavoritesScreen'
-import { ExploreScreen } from 'src/screens/ExploreScreen'
+import { ExploreScreen, exploreScreenQuery } from 'src/screens/ExploreScreen'
 import { ExploreTokensScreen } from 'src/screens/ExploreTokensScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
@@ -77,6 +78,7 @@ import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { UserScreen } from 'src/screens/UserScreen'
 import { WatchedWalletsScreen } from 'src/screens/WatchedWalletsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
+import { ExploreScreenQuery } from 'src/screens/__generated__/ExploreScreenQuery.graphql'
 import { dimensions } from 'src/styles/sizing'
 
 const Tab = createBottomTabNavigator<TabParamList>()
@@ -101,6 +103,18 @@ function TabNavigator() {
   const theme = useAppTheme()
 
   const dispatch = useAppDispatch()
+
+  const [exploreScreenQueryRef, loadExploreScreenQuery] =
+    useQueryLoader<ExploreScreenQuery>(exploreScreenQuery)
+
+  useEffect(() => {
+    // Load Explore Screen queries after animations and layout have completed
+    InteractionManager.runAfterInteractions(() => {
+      loadExploreScreenQuery({})
+    })
+  }, [loadExploreScreenQuery])
+
+  if (!exploreScreenQueryRef) return null
 
   return (
     <Tab.Navigator
@@ -160,7 +174,7 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        component={ExploreStackNavigator}
+        children={() => <ExploreStackNavigator queryRef={exploreScreenQueryRef} />}
         name={Tabs.Explore}
         options={{
           tabBarLabel: t('Explore'),
@@ -285,14 +299,22 @@ export function HomeStackNavigator() {
   )
 }
 
-export function ExploreStackNavigator() {
+export function ExploreStackNavigator({
+  queryRef,
+}: {
+  queryRef: PreloadedQuery<ExploreScreenQuery>
+}) {
+  const data = usePreloadedQuery(exploreScreenQuery, queryRef)
   return (
     <ExploreStack.Navigator
       initialRouteName={Screens.Explore}
       screenOptions={{
         ...navOptions.noHeader,
       }}>
-      <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
+      <ExploreStack.Screen
+        children={(props) => <ExploreScreen data={data} {...props} />}
+        name={Screens.Explore}
+      />
       <ExploreStack.Screen component={ExploreTokensScreen} name={Screens.ExploreTokens} />
       <ExploreStack.Screen component={ExploreFavoritesScreen} name={Screens.ExploreFavorites} />
       <ExploreStack.Screen component={UserScreen} name={Screens.User} />

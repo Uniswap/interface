@@ -24,8 +24,8 @@ export function SearchWalletItem({ wallet }: SearchWalletItemProps) {
   }
 
   const onPress = () => {
-    dispatch(addToSearchHistory({ searchResult: wallet }))
     navigate(address)
+    dispatch(addToSearchHistory({ searchResult: wallet }))
   }
 
   return (

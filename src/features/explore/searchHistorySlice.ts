@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/rootReducer'
+import { ChainId } from 'src/constants/chains'
 
 const SEARCH_HISTORY_LENGTH = 5
 
@@ -22,10 +23,11 @@ export interface WalletSearchResult extends SearchResultBase {
 
 export interface TokenSearchResult extends SearchResultBase {
   type: SearchResultType.Token
-  id: string
+  chainId: ChainId
+  address: Address | null
   name: string
   symbol: string
-  image: string
+  logoUrl: string | null
 }
 
 export interface EtherscanSearchResult extends SearchResultBase {
@@ -38,7 +40,9 @@ export type SearchResult = TokenSearchResult | WalletSearchResult | EtherscanSea
 export function searchResultId(searchResult: SearchResult) {
   switch (searchResult.type) {
     case SearchResultType.Token:
-      return `token-${(searchResult as TokenSearchResult).id}`
+      const chainId = (searchResult as TokenSearchResult).chainId
+      const address = (searchResult as TokenSearchResult).address
+      return `token-${chainId}-${address}`
     case SearchResultType.Wallet:
       return `wallet-${(searchResult as WalletSearchResult).address}`
     case SearchResultType.Etherscan:

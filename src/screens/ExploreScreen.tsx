@@ -1,5 +1,6 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { graphql } from 'babel-plugin-relay/macro'
 import { BlurView } from 'expo-blur'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,11 +17,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AppStackParamList, TabNavigationProp } from 'src/app/navigation/types'
+import { ExploreStackParamList, TabNavigationProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { FavoriteTokensCard } from 'src/components/explore/FavoriteTokensCard'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
+import { SearchEmptySection_popularTokens$key } from 'src/components/explore/search/__generated__/SearchEmptySection_popularTokens.graphql'
 import { TopTokensCard } from 'src/components/explore/TopTokensCard'
 import { WatchedWalletsCard } from 'src/components/explore/WatchedWalletsCard'
 import { AppBackground } from 'src/components/gradients/AppBackground'
@@ -30,8 +32,10 @@ import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { ClientSideOrderBy } from 'src/features/dataApi/coingecko/types'
 import { Screens, Tabs } from 'src/screens/Screens'
+import { ExploreScreenQuery$data } from 'src/screens/__generated__/ExploreScreenQuery.graphql'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
+import { useDebounce } from 'src/utils/timing'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
@@ -44,9 +48,20 @@ const HEADER_HEIGHT =
   theme.spacing.xl
 const CONTENT_MAX_SCROLL_Y = SEARCH_BAR_HEIGHT + theme.spacing.md // Scroll distance for pinned search bar state
 
-type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
+export const exploreScreenQuery = graphql`
+  query ExploreScreenQuery {
+    popularTokens: topTokenProjects(orderBy: VOLUME, page: 1, pageSize: 3) {
+      ...SearchEmptySection_popularTokens
+    }
+  }
+`
 
-export function ExploreScreen({ navigation }: Props) {
+type Props = { data: ExploreScreenQuery$data } & NativeStackScreenProps<
+  ExploreStackParamList,
+  Screens.Explore
+>
+
+export function ExploreScreen({ data, navigation }: Props) {
   const { t } = useTranslation()
 
   const listRef = useRef(null)
@@ -56,6 +71,7 @@ export function ExploreScreen({ navigation }: Props) {
   const isDarkMode = useColorScheme() === 'dark'
 
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const debouncedSearchQuery = useDebounce(searchQuery)
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
   const scrollY = useSharedValue(0)
   const textInputRef = useRef<TextInput>(null)
@@ -161,9 +177,15 @@ export function ExploreScreen({ navigation }: Props) {
             <VirtualizedList onScroll={resultsScrollHandler}>
               <Box height={CONTENT_MAX_SCROLL_Y} mb="sm" />
               {searchQuery.length === 0 ? (
-                <SearchEmptySection />
+                <SearchEmptySection
+                  popularTokens={
+                    data.popularTokens
+                      ? (data.popularTokens.filter(Boolean) as SearchEmptySection_popularTokens$key)
+                      : null
+                  }
+                />
               ) : (
-                <SearchResultsSection searchQuery={searchQuery} />
+                <SearchResultsSection searchQuery={debouncedSearchQuery} />
               )}
             </VirtualizedList>
           </AnimatedFlex>

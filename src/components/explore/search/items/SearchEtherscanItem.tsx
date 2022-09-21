@@ -25,16 +25,16 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
   const { address } = etherscanResult
 
   const onPressViewEtherscan = () => {
-    dispatch(
-      addToSearchHistory({
-        searchResult: etherscanResult,
-      })
-    )
     const explorerLink = getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS)
     navigation.navigate(Screens.WebView, {
       headerTitle: shortenAddress(address),
       uriLink: explorerLink,
     })
+    dispatch(
+      addToSearchHistory({
+        searchResult: etherscanResult,
+      })
+    )
   }
 
   return (

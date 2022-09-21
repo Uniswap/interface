@@ -1,35 +1,89 @@
-import { default as React, useMemo } from 'react'
+import { graphql } from 'babel-plugin-relay/macro'
+import { default as React, Suspense, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ListRenderItemInfo } from 'react-native'
+import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useLazyLoadQuery } from 'react-relay-offline'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
+import { SearchResultsSection_searchTokenProjectsQuery } from 'src/components/explore/search/__generated__/SearchResultsSection_searchTokenProjectsQuery.graphql'
 import { AnimatedFlex, Flex } from 'src/components/layout'
-import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { CoingeckoSearchCoin } from 'src/features/dataApi/coingecko/types'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useENS } from 'src/features/ens/useENS'
-import { useTokenSearchResults } from 'src/features/explore/hooks'
-import { SearchResultType } from 'src/features/explore/searchHistorySlice'
+import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
 import { getValidAddress } from 'src/utils/addresses'
+import { fromGraphQLChain } from 'src/utils/chainId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
-const TOKEN_RESULTS_COUNT = 5
+const MAX_TOKEN_RESULTS_COUNT = 5
 
-type SearchResultsSectionProps = {
-  searchQuery: string
+export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <SearchResultsSectionInner searchQuery={searchQuery} />
+    </Suspense>
+  )
 }
 
-export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps) {
+export function SearchResultsSectionInner({ searchQuery }: { searchQuery: string }) {
   const { t } = useTranslation()
 
   // Search for matching tokens
-  const { tokens, isLoading: tokensLoading } = useTokenSearchResults(searchQuery)
+  const { data: tokenResultsData } =
+    useLazyLoadQuery<SearchResultsSection_searchTokenProjectsQuery>(
+      graphql`
+        query SearchResultsSection_searchTokenProjectsQuery(
+          $searchQuery: String!
+          $skip: Boolean!
+        ) {
+          searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {
+            logoUrl
+            tokens {
+              chain
+              address
+              name
+              symbol
+            }
+          }
+        }
+      `,
+      {
+        searchQuery,
+        skip: searchQuery.length === 0,
+      }
+    )
 
-  const topTokenSearchResults = useMemo(() => tokens?.slice(0, TOKEN_RESULTS_COUNT), [tokens])
+  const tokenResults = useMemo(() => {
+    if (!tokenResultsData || !tokenResultsData.searchTokenProjects) return EMPTY_ARRAY
+
+    return tokenResultsData.searchTokenProjects
+      .map((tokenProject) => {
+        if (!tokenProject) return null
+
+        // Only use first chain the token is on
+        const token = tokenProject.tokens[0]
+        const { chain, address, symbol, name } = token
+        const chainId = fromGraphQLChain(chain)
+
+        if (!chainId || !symbol || !name) return null
+
+        return {
+          type: SearchResultType.Token,
+          chainId,
+          address,
+          name,
+          symbol,
+          logoUrl: tokenProject.logoUrl,
+        } as TokenSearchResult
+      })
+      .slice(0, MAX_TOKEN_RESULTS_COUNT)
+      .filter(Boolean) as TokenSearchResult[]
+  }, [tokenResultsData])
 
   // Search for matching ENS
   const {
@@ -38,14 +92,13 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     loading: ensLoading,
   } = useENS(ChainId.Mainnet, searchQuery, true)
 
-  // TODO: Check if address matches to a token on our token list
+  // TODO: Support searching token by address
   const etherscanAddress: Address | null = getValidAddress(searchQuery, true, false)
     ? searchQuery
     : null
 
-  const noTokenResults = !tokensLoading && tokens?.length === 0
   const noENSResults = !ensLoading && !ensName && !ensAddress
-  const noResults = noTokenResults && noENSResults && !etherscanAddress
+  const noResults = tokenResults.length === 0 && noENSResults && !etherscanAddress
 
   if (noResults) {
     return (
@@ -60,31 +113,20 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   }
 
   return (
-    <Flex grow borderRadius="md" gap="xs">
-      {tokensLoading ? (
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs">
-          <Text color="textSecondary" mx="xs" variant="subheadSmall">
-            {t('Tokens')}
-          </Text>
-          <Loading showSeparator repeat={TOKEN_RESULTS_COUNT} type="token" />
-        </AnimatedFlex>
-      ) : (
-        topTokenSearchResults?.length && (
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-            <BaseCard.List
-              ItemSeparatorComponent={() => <Separator mx="xs" />}
-              ListHeaderComponent={
-                <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
-                  {t('Tokens')}
-                </Text>
-              }
-              data={topTokenSearchResults}
-              keyExtractor={coinKey}
-              listKey="tokens"
-              renderItem={renderTokenItem}
-            />
-          </AnimatedFlex>
-        )
+    <Flex grow gap="xs">
+      {tokenResults.length > 0 && (
+        <FlatList
+          ItemSeparatorComponent={() => <Separator mx="xs" />}
+          ListHeaderComponent={
+            <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
+              {t('Tokens')}
+            </Text>
+          }
+          data={tokenResults}
+          keyExtractor={tokenKey}
+          listKey="tokens"
+          renderItem={renderTokenItem}
+        />
       )}
       {(ensLoading || (ensName && ensAddress)) && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
@@ -114,10 +156,28 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
   )
 }
 
-const renderTokenItem = ({ item: coin }: ListRenderItemInfo<CoingeckoSearchCoin>) => (
-  <SearchTokenItem coin={coin} />
+const LoadingState = () => {
+  const { t } = useTranslation()
+  return (
+    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs">
+      <Text color="textSecondary" mx="xs" variant="subheadSmall">
+        {t('Tokens')}
+      </Text>
+      <Loading showSeparator repeat={3} type="token" />
+      <Text color="textSecondary" mx="xs" variant="subheadSmall">
+        {t('Wallets')}
+      </Text>
+      <Loading repeat={1} type="token" />
+    </AnimatedFlex>
+  )
+}
+
+const renderTokenItem = ({ item }: ListRenderItemInfo<TokenSearchResult>) => (
+  <SearchTokenItem token={item} />
 )
 
-function coinKey(coin: CoingeckoSearchCoin) {
-  return coin.id
+const tokenKey = (token: TokenSearchResult) => {
+  return token.address
+    ? buildCurrencyId(token.chainId, token.address)
+    : buildNativeCurrencyId(token.chainId)
 }

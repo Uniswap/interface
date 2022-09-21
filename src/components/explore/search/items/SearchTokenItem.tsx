@@ -5,40 +5,33 @@ import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-import { CoingeckoMarketCoin, CoingeckoSearchCoin } from 'src/features/dataApi/coingecko/types'
 import {
   addToSearchHistory,
   SearchResultType,
   TokenSearchResult,
 } from 'src/features/explore/searchHistorySlice'
 import { ElementName } from 'src/features/telemetry/constants'
-import { useCurrencyIdFromCoingeckoId } from 'src/features/tokens/useCurrency'
+import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 type SearchTokenItemProps = {
-  coin: CoingeckoSearchCoin | CoingeckoMarketCoin | TokenSearchResult
+  token: TokenSearchResult
 }
 
-export function SearchTokenItem({ coin }: SearchTokenItemProps) {
+export function SearchTokenItem({ token }: SearchTokenItemProps) {
   const dispatch = useAppDispatch()
-  const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
 
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  if (!_currencyId) return null
-
-  const { id, name, symbol } = coin
-  const uri =
-    (coin as CoingeckoSearchCoin).large ||
-    (coin as CoingeckoMarketCoin).image ||
-    (coin as TokenSearchResult).image
+  const { chainId, address, name, symbol, logoUrl } = token
+  const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
 
   const onPress = () => {
+    tokenDetailsNavigation.navigate(currencyId)
     dispatch(
       addToSearchHistory({
-        searchResult: { type: SearchResultType.Token, id, name, symbol, image: uri },
+        searchResult: { type: SearchResultType.Token, chainId, address, name, symbol, logoUrl },
       })
     )
-    tokenDetailsNavigation.navigate(_currencyId)
   }
 
   return (
@@ -46,10 +39,11 @@ export function SearchTokenItem({ coin }: SearchTokenItemProps) {
       name={ElementName.SearchTokenItem}
       onPress={onPress}
       onPressIn={() => {
-        tokenDetailsNavigation.preload(_currencyId)
+        tokenDetailsNavigation.preload(currencyId)
       }}>
       <Flex row alignItems="center" gap="xs" px="xs" py="sm">
-        <Image source={{ uri }} style={logoStyle} />
+        {/* TODO: Handle no logoUrl by showing placeholder icon with token symbol */}
+        {logoUrl && <Image source={{ uri: logoUrl }} style={logoStyle} />}
         <Flex gap="none">
           <Text color="textPrimary" variant="subhead">
             {name}
