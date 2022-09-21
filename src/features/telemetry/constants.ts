@@ -159,6 +159,8 @@ export const enum LogContext {
   SecurityConcern = 'SecurityConcern',
   AppBackground = 'AppBackground',
   WrappedTokenInfo = 'WrappedTokenInfo',
+  Experiments = 'Experiments',
+  Analytics = 'Analytics',
 }
 
 /**

@@ -17,11 +17,12 @@ import { config } from 'src/config'
 import { RelayEnvironment } from 'src/data/relay'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
+import { initExperiments } from 'src/features/experiments/experiments'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
-import { enableAnalytics } from 'src/features/telemetry'
+import { initAnalytics } from 'src/features/telemetry'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { useAccounts } from 'src/features/wallet/hooks'
@@ -48,7 +49,8 @@ if (!__DEV__) {
 
 initializeRemoteConfig()
 initOneSignal()
-enableAnalytics()
+initAnalytics()
+initExperiments()
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark'

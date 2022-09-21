@@ -4,12 +4,11 @@ import * as Sentry from '@sentry/react-native'
 import { AMPLITUDE_API_KEY } from 'react-native-dotenv'
 import { LogContext } from 'src/features/telemetry/constants'
 import { logger } from 'src/utils/logger'
-
 type LogTags = {
   [key: string]: Primitive
 }
 
-export async function enableAnalytics() {
+export async function initAnalytics() {
   if (__DEV__) {
     // avoid polluting analytics dashboards with dev data
     // consider re-enabling if validating data prior to launches is useful
@@ -22,6 +21,7 @@ export async function enableAnalytics() {
 
     await firebase.analytics().setAnalyticsCollectionEnabled(true)
   } catch (err) {
+    logException(LogContext.Analytics, err)
     logger.error('telemetry', 'enableAnalytics', 'error from Firebase', err)
   }
 }

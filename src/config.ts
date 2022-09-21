@@ -1,6 +1,7 @@
 import {
   ACTIVE_CHAINS,
   AMPLITUDE_API_KEY,
+  AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY,
   COINGECKO_API_URL,
   COVALENT_API_KEY,
   DEBUG,
@@ -26,6 +27,7 @@ import { parseActiveChains } from 'src/utils/chainId'
 export interface Config {
   activeChains: ChainIdTo<ChainState>
   amplitudeApiKey: string
+  amplitudeExperimentsDeploymentKey: string
   coingeckoApiUrl: string
   covalentApiKey: string
   debug: boolean
@@ -47,6 +49,8 @@ export interface Config {
 const _config: Config = {
   activeChains: chainListToStateMap(parseActiveChains(ACTIVE_CHAINS)),
   amplitudeApiKey: process.env.AMPLITUDE_API_KEY || AMPLITUDE_API_KEY,
+  amplitudeExperimentsDeploymentKey:
+    process.env.AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY || AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY,
   coingeckoApiUrl: COINGECKO_API_URL,
   covalentApiKey: process.env.COVALENT_API_KEY || COVALENT_API_KEY,
   debug: parseBoolean(DEBUG),

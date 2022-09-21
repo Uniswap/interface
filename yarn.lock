@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@amplitude/experiment-react-native-client@^0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@amplitude/experiment-react-native-client/-/experiment-react-native-client-0.7.3.tgz#cf5e24b2fd94e5b975f19a5bc4d3c7acc5a21dc2"
+  integrity sha512-Cy/AYDKheYS6uQ93qQLeIe38mMGJWLOHHp3HPh0h/03VTH6HD5TIyI8CdUz4UxQ6qDzTzA18B82gtNsGQz2Ntw==
+
 "@amplitude/react-native@^2.13.0":
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/@amplitude/react-native/-/react-native-2.13.0.tgz#4d7a87d6c7fd5c7146e01a87fdcfab1499ece9f1"

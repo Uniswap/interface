@@ -343,6 +343,8 @@ PODS:
   - amplitude-react-native (2.13.0):
     - Amplitude (= 8.10.0)
     - React-Core
+  - AmplitudeExperiment (1.7.3):
+    - AnalyticsConnector (~> 1.0.0)
   - AnalyticsConnector (1.0.0)
   - boost (1.76.0)
   - BoringSSL-GRPC (0.0.7):
@@ -368,6 +370,10 @@ PODS:
     - ExpoModulesCore
   - EXLocalAuthentication (12.1.0):
     - ExpoModulesCore
+  - experiment-react-native-client (0.7.3):
+    - Amplitude
+    - AmplitudeExperiment (~> 1.7.2)
+    - React-Core
   - Expo (43.0.5):
     - ExpoModulesCore
   - ExpoModulesCore (0.4.10):
@@ -1006,6 +1012,7 @@ DEPENDENCIES:
   - EXHaptics (from `../node_modules/expo-haptics/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - EXLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
+  - "experiment-react-native-client (from `../node_modules/@amplitude/experiment-react-native-client`)"
   - Expo (from `../node_modules/expo/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
   - EXScreenCapture (from `../node_modules/expo-screen-capture/ios`)
@@ -1082,6 +1089,7 @@ SPEC REPOS:
   trunk:
     - abseil
     - Amplitude
+    - AmplitudeExperiment
     - AnalyticsConnector
     - BoringSSL-GRPC
     - CryptoSwift
@@ -1145,6 +1153,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-linear-gradient/ios"
   EXLocalAuthentication:
     :path: "../node_modules/expo-local-authentication/ios"
+  experiment-react-native-client:
+    :path: "../node_modules/@amplitude/experiment-react-native-client"
   Expo:
     :path: "../node_modules/expo/ios"
   ExpoModulesCore:
@@ -1280,6 +1290,7 @@ SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
   Amplitude: 2904f346250510b9e19a4e2262017bcf1d4368f9
   amplitude-react-native: 985b13211d36cf03131289fb10e0e23bed98a409
+  AmplitudeExperiment: ebcd6fa2743578438f01b642d41a89ded27915b0
   AnalyticsConnector: 4c386d5972ac9da86e22d668564dbbac97558754
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
@@ -1293,6 +1304,7 @@ SPEC CHECKSUMS:
   EXHaptics: f52df335f17192e440d9639c971ebcbb3fb91dec
   EXLinearGradient: 4d727eacb53d19ef25b02dd810e0199b453489ce
   EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
+  experiment-react-native-client: 2639ae028ea40ad7cf0faaa6ab72f385dc6f5415
   Expo: d9588796cd19999da4d440d87bf7eb7ae4dbd608
   ExpoModulesCore: c9438f6add0fb7b04b7c64eb97a833d2752a7834
   EXScreenCapture: cbee2204f313038a1819d31ad99a31e15f8e0f59
