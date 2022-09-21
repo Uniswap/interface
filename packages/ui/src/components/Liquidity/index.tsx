@@ -52,7 +52,11 @@ export default function LiquidityDetail({
     liquidityMinted,
     poolTokenPercentage,
     error
-  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, !!stable ?? undefined)
+  } = useDerivedMintInfo(
+    currencyA ?? undefined,
+    currencyB ?? undefined,
+    `${stable}`.toLowerCase() === 'true' ? true : `${stable}`.toLowerCase() === 'false' ? false : undefined
+  )
   const [tokenA, tokenB] = useMemo(
     () => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)],
     [currencyA, currencyB, chainId]
