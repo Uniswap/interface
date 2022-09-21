@@ -14,7 +14,6 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
-import { getChecksumAddress } from 'src/utils/addresses'
 
 const NFT_COLLECTION_IMAGE_SIZE = dimensions.fullWidth / 3
 interface Props {
@@ -90,7 +89,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
         name={ElementName.NFTCollectionItem}
         onPress={() =>
           navigation.navigate(Screens.NFTCollection, {
-            collectionAddress: getChecksumAddress(collectionAddress),
+            collectionAddress: collectionAddress,
             slug,
             owner,
           })

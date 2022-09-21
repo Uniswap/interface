@@ -21,7 +21,6 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { getChecksumAddress } from 'src/utils/addresses'
 import { openUri } from 'src/utils/linking'
 
 const MAX_NFT_IMAGE_SIZE = 512
@@ -56,11 +55,13 @@ export function NFTItemScreen({
   }, [asset])
 
   // TODO: better handle error / loading states
-  if (!asset) return null
+  if (!asset) {
+    return null
+  }
 
   const onPressCollection = () =>
     navigation.navigate(Screens.NFTCollection, {
-      collectionAddress: getChecksumAddress(asset.asset_contract.address),
+      collectionAddress: asset.asset_contract.address,
       owner,
       slug: asset.collection.slug,
     })
