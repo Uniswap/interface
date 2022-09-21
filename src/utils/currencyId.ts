@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId, isPolygonChain } from 'src/constants/chains'
-import { getChecksumAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'src/utils/addresses'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 export type CurrencyId = string
@@ -66,7 +66,7 @@ export function graphQLCurrencyInfo(currency: Currency): {
 export const isNativeCurrencyAddress = (address: Address) =>
   address === NATIVE_ADDRESS || address === NATIVE_ADDRESS_ALT
 
-// Currency ids are formatted as `chainId-tokenddress`
+// Currency ids are formatted as `chainId-tokenaddress`
 export function currencyIdToAddress(_currencyId: string): Address {
   return _currencyId.split('-')[1]
 }
@@ -76,9 +76,10 @@ export function currencyIdToChain(_currencyId?: string): ChainId | null {
   return toSupportedChainId(_currencyId.split('-')[0])
 }
 
-export function checksumCurrencyId(_currencyId: string) {
-  return buildCurrencyId(
-    currencyIdToChain(_currencyId) ?? ChainId.Mainnet,
-    getChecksumAddress(currencyIdToAddress(_currencyId))
-  )
+export function validateCurrencyId(_currencyId: string): Nullable<string> {
+  const validAddress = getValidAddress(currencyIdToAddress(_currencyId))
+  if (!validAddress) {
+    return null
+  }
+  return buildCurrencyId(currencyIdToChain(_currencyId) ?? ChainId.Mainnet, validAddress)
 }

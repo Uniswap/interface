@@ -158,6 +158,7 @@ export const enum LogContext {
   ProviderManager = 'ProviderManager',
   SecurityConcern = 'SecurityConcern',
   AppBackground = 'AppBackground',
+  WrappedTokenInfo = 'WrappedTokenInfo',
 }
 
 /**

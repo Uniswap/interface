@@ -8,6 +8,13 @@ export enum AddressStringFormat {
   Shortened,
 }
 
+/**
+ * @deprecated use {@link getValidAddress(address, true)} instead
+ *
+ * @param address Address to find the checksum for
+ * @throws if address is not a valid address
+ * @returns Checksum address
+ */
 export function getChecksumAddress(address: string): string {
   return utils.getAddress(address)
 }
@@ -38,7 +45,7 @@ export function getValidAddress(
 
   if (withChecksum) {
     try {
-      return getChecksumAddress(address)
+      return utils.getAddress(address)
     } catch (error) {
       if (log) {
         logMessage(LogContext.ValidateAddress, `Invalid address at checksum: ${address}`)

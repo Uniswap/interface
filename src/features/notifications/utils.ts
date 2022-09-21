@@ -292,12 +292,14 @@ const getUSDValue = (
 export const getCurrencySymbol = (
   currency: NullUndefined<Currency>,
   tokenAddressString: Address | undefined
-) =>
-  currency?.symbol
+) => {
+  return currency?.symbol
     ? currency.symbol
     : tokenAddressString && getValidAddress(tokenAddressString, true)
     ? shortenAddress(tokenAddressString)
     : tokenAddressString
+}
 
-const getShortenedAddressOrEns = (addressOrENS: string) =>
-  getValidAddress(addressOrENS, true) ? shortenAddress(addressOrENS) : addressOrENS
+const getShortenedAddressOrEns = (addressOrENS: string) => {
+  return getValidAddress(addressOrENS) ? shortenAddress(addressOrENS) : addressOrENS
+}

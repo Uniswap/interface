@@ -27,8 +27,7 @@ export default function UnknownSummaryItem({
   })
 
   const caption = useMemo(() => {
-    return transaction.typeInfo.tokenAddress &&
-      getValidAddress(transaction.typeInfo.tokenAddress, true)
+    return transaction.typeInfo.tokenAddress && getValidAddress(transaction.typeInfo.tokenAddress)
       ? shortenAddress(transaction.typeInfo.tokenAddress)
       : undefined
   }, [transaction.typeInfo.tokenAddress])
