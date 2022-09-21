@@ -10,6 +10,7 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 
 const Cart = lazy(() => import('nft/components/sell/modal/ListingTag'))
+const Bag = lazy(() => import('nft/components/bag/Bag'))
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
@@ -28,6 +29,7 @@ export default function TopLevelModals() {
       {useTokensFlag() === TokensVariant.Enabled &&
         (location.pathname.includes('/pool') || location.pathname.includes('/swap')) && <TokensBanner />}
       <Cart />
+      <Bag />
     </>
   )
 }

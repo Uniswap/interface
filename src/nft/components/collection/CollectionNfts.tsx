@@ -122,6 +122,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
                 <CollectionAsset
                   key={asset.address + asset.tokenId}
                   asset={asset}
+                  isMobile={isMobile}
                   uniformHeight={uniformHeight}
                   setUniformHeight={setUniformHeight}
                   mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
