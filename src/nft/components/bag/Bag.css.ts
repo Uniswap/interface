@@ -13,7 +13,7 @@ export const bagContainer = style([
     color: 'blackBlue',
     paddingTop: '20',
     paddingBottom: '24',
-    zIndex: '3',
+    zIndex: { sm: 'offcanvas', md: '3' },
   }),
   {
     '@media': {

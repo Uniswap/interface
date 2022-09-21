@@ -99,41 +99,27 @@ const BagHeader = ({ numberOfAssets, toggleBag, resetFlow }: BagHeaderProps) => 
 
 const Bag = () => {
   const { account } = useWeb3React()
-  const {
-    bagStatus,
-    setBagStatus,
-    markAssetAsReviewed,
-    didOpenUnavailableAssets,
-    setDidOpenUnavailableAssets,
-    bagIsLocked,
-    setLocked,
-    reset,
-    uncheckedItemsInBag,
-    setItemsInBag,
-    removeAssetFromBag,
-    bagExpanded,
-    toggleBag,
-  } = useBag((state) => ({
-    bagStatus: state.bagStatus,
-    setBagStatus: state.setBagStatus,
-    markAssetAsReviewed: state.markAssetAsReviewed,
-    didOpenUnavailableAssets: state.didOpenUnavailableAssets,
-    setDidOpenUnavailableAssets: state.setDidOpenUnavailableAssets,
-    bagIsLocked: state.isLocked,
-    setLocked: state.setLocked,
-    reset: state.reset,
-    uncheckedItemsInBag: state.itemsInBag,
-    setItemsInBag: state.setItemsInBag,
-    removeAssetFromBag: state.removeAssetFromBag,
-    bagExpanded: state.bagExpanded,
-    toggleBag: state.toggleBag,
-  }))
+  const bagStatus = useBag((s) => s.bagStatus)
+  const setBagStatus = useBag((s) => s.setBagStatus)
+  const markAssetAsReviewed = useBag((s) => s.markAssetAsReviewed)
+  const didOpenUnavailableAssets = useBag((s) => s.didOpenUnavailableAssets)
+  const setDidOpenUnavailableAssets = useBag((s) => s.setDidOpenUnavailableAssets)
+  const bagIsLocked = useBag((s) => s.isLocked)
+  const setLocked = useBag((s) => s.setLocked)
+  const reset = useBag((s) => s.reset)
+  const uncheckedItemsInBag = useBag((s) => s.itemsInBag)
+  const setItemsInBag = useBag((s) => s.setItemsInBag)
+  const removeAssetFromBag = useBag((s) => s.removeAssetFromBag)
+  const bagExpanded = useBag((s) => s.bagExpanded)
+  const toggleBag = useBag((s) => s.toggleBag)
 
   const { address, balance: balanceInEth, provider } = useWalletBalance()
   const isConnected = !!provider && !!address
 
   const { pathname } = useLocation()
   const isNFTSellPage = pathname.startsWith('/nfts/sell')
+  const isNFTPage = pathname.startsWith('/nfts')
+  const shouldShowBag = isNFTPage && !isNFTSellPage
   const isMobile = useIsMobile()
 
   const queryClient = useQueryClient()
@@ -191,7 +177,7 @@ const Bag = () => {
           : total,
       BigNumber.from(0)
     )
-    const totalUsdPrice = parseFloat(formatEther(totalEthPrice)) * (fetchedPriceData ?? 1500)
+    const totalUsdPrice = fetchedPriceData ? parseFloat(formatEther(totalEthPrice)) * fetchedPriceData : undefined
 
     return { totalEthPrice, totalUsdPrice }
   }, [itemsInBag, fetchedPriceData])
@@ -295,6 +281,11 @@ const Bag = () => {
     if (bagIsLocked && !isOpen) setModalIsOpen(true)
   }, [bagIsLocked, isOpen])
 
+  useEffect(() => {
+    bagExpanded && toggleBag()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
+
   const hasAssetsToShow = itemsInBag.length > 0 || unavailableAssets.length > 0
 
   const scrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
@@ -307,7 +298,7 @@ const Bag = () => {
 
   return (
     <>
-      {bagExpanded && !isNFTSellPage ? (
+      {bagExpanded && shouldShowBag ? (
         <Portal>
           <Column className={styles.bagContainer}>
             <BagHeader numberOfAssets={itemsInBag.length} toggleBag={toggleBag} resetFlow={reset} />

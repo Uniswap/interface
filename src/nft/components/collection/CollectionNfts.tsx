@@ -4,7 +4,7 @@ import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { Center } from 'nft/components/Flex'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
-import { useCollectionFilters } from 'nft/hooks'
+import { useCollectionFilters, useIsMobile } from 'nft/hooks'
 import { AssetsFetcher } from 'nft/queries'
 import { UniformHeight, UniformHeights } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
@@ -16,6 +16,7 @@ interface CollectionNftsProps {
 }
 
 export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
+  const isMobile = useIsMobile()
   const buyNow = useCollectionFilters((state) => state.buyNow)
   const {
     data: collectionAssets,
@@ -81,6 +82,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
               <CollectionAsset
                 key={asset.address + asset.tokenId}
                 asset={asset}
+                isMobile={isMobile}
                 uniformHeight={uniformHeight}
                 setUniformHeight={setUniformHeight}
                 mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}

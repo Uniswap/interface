@@ -16,6 +16,7 @@ enum AssetMediaType {
 
 interface CollectionAssetProps {
   asset: GenieAsset
+  isMobile: boolean
   uniformHeight: UniformHeight
   setUniformHeight: (u: UniformHeight) => void
   mediaShouldBePlaying: boolean
@@ -24,6 +25,7 @@ interface CollectionAssetProps {
 
 export const CollectionAsset = ({
   asset,
+  isMobile,
   uniformHeight,
   setUniformHeight,
   mediaShouldBePlaying,
@@ -108,7 +110,7 @@ export const CollectionAsset = ({
           onClick={(e: MouseEvent) => {
             e.preventDefault()
             addAssetToBag(asset)
-            !bagExpanded && toggleBag()
+            !bagExpanded && !isMobile && toggleBag()
           }}
           onSelectedClick={(e: MouseEvent) => {
             e.preventDefault()

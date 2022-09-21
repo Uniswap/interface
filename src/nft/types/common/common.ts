@@ -182,7 +182,7 @@ export interface DropDownOption {
   reverseOnClick?: () => void
 }
 
-export enum Origin {
+export enum DetailsOrigin {
   COLLECTION = 'collection',
   SELL = 'sell',
   EXPLORE = 'explore',

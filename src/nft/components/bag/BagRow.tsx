@@ -17,6 +17,7 @@ import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { getAssetHref } from 'nft/utils/asset'
 import { formatWeiToDecimal } from 'nft/utils/currency'
 import { MouseEvent, useEffect, useReducer, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import * as styles from './BagRow.css'
 
@@ -59,69 +60,64 @@ export const BagRow = ({ asset, removeAsset, showRemove, grayscale, isMobile }: 
   if (cardHovered && assetCardRef.current && assetCardRef.current.matches(':hover') === false) setCardHovered(false)
 
   return (
-    <Row
-      as="a"
-      ref={assetCardRef}
-      href={getAssetHref(asset)}
-      className={styles.bagRow}
-      onMouseEnter={handleCardHover}
-      onMouseLeave={handleCardHover}
-    >
-      <Box position="relative" display="flex">
-        <Box
-          display={showRemove ? 'block' : 'none'}
-          className={styles.removeAssetOverlay}
-          onClick={(e: MouseEvent) => {
-            e.preventDefault()
-            e.stopPropagation()
-            removeAsset(asset)
-          }}
-          transition="250"
-          style={{ opacity: cardHovered || isMobile ? '1' : '0' }}
-          zIndex="1"
-        >
-          <CircularCloseIcon />
-        </Box>
-        {!noImageAvailable && (
+    <Link to={getAssetHref(asset)} style={{ textDecoration: 'none' }}>
+      <Row ref={assetCardRef} className={styles.bagRow} onMouseEnter={handleCardHover} onMouseLeave={handleCardHover}>
+        <Box position="relative" display="flex">
           <Box
-            as="img"
-            src={asset.smallImageUrl}
-            alt={asset.name}
-            className={clsx(styles.bagRowImage, grayscale && !cardHovered && styles.grayscaleImage)}
-            onLoad={() => {
-              setImageLoaded(true)
+            display={showRemove ? 'block' : 'none'}
+            className={styles.removeAssetOverlay}
+            onClick={(e: MouseEvent) => {
+              e.preventDefault()
+              e.stopPropagation()
+              removeAsset(asset)
             }}
-            onError={() => {
-              setNoImageAvailable(true)
-            }}
-            visibility={loadedImage ? 'visible' : 'hidden'}
-          />
-        )}
-        {!loadedImage && <Box position="absolute" className={`${styles.bagRowImage} ${loadingBlock}`} />}
-        {noImageAvailable && <NoContentContainer />}
-      </Box>
-      <Column
-        overflow="hidden"
-        height="full"
-        justifyContent="space-between"
-        color={grayscale ? 'darkGray' : 'blackBlue'}
-      >
-        <Column>
-          <Row overflow="hidden" whiteSpace="nowrap" gap="2">
-            <Box className={styles.assetName}>{asset.name || asset.tokenId}</Box>
-          </Row>
-          <Row overflow="hidden" whiteSpace="nowrap" gap="2">
-            <Box className={styles.collectionName}>{asset.collectionName}</Box>
-            {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
+            transition="250"
+            style={{ opacity: cardHovered || isMobile ? '1' : '0' }}
+            zIndex="1"
+          >
+            <CircularCloseIcon />
+          </Box>
+          {!noImageAvailable && (
+            <Box
+              as="img"
+              src={asset.smallImageUrl}
+              alt={asset.name}
+              className={clsx(styles.bagRowImage, grayscale && !cardHovered && styles.grayscaleImage)}
+              onLoad={() => {
+                setImageLoaded(true)
+              }}
+              onError={() => {
+                setNoImageAvailable(true)
+              }}
+              visibility={loadedImage ? 'visible' : 'hidden'}
+            />
+          )}
+          {!loadedImage && <Box position="absolute" className={`${styles.bagRowImage} ${loadingBlock}`} />}
+          {noImageAvailable && <NoContentContainer />}
+        </Box>
+        <Column
+          overflow="hidden"
+          height="full"
+          justifyContent="space-between"
+          color={grayscale ? 'darkGray' : 'blackBlue'}
+        >
+          <Column>
+            <Row overflow="hidden" whiteSpace="nowrap" gap="2">
+              <Box className={styles.assetName}>{asset.name || asset.tokenId}</Box>
+            </Row>
+            <Row overflow="hidden" whiteSpace="nowrap" gap="2">
+              <Box className={styles.collectionName}>{asset.collectionName}</Box>
+              {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
+            </Row>
+          </Column>
+          <Row className={styles.bagRowPrice}>
+            {`${formatWeiToDecimal(
+              asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
+            )} ETH`}
           </Row>
         </Column>
-        <Row className={styles.bagRowPrice}>
-          {`${formatWeiToDecimal(
-            asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
-          )} ETH`}
-        </Row>
-      </Column>
-    </Row>
+      </Row>
+    </Link>
   )
 }
 
@@ -133,19 +129,14 @@ interface PriceChangeBagRowProps {
 }
 
 export const PriceChangeBagRow = ({ asset, markAssetAsReviewed, top, isMobile }: PriceChangeBagRowProps) => {
+  const isPriceIncrease = BigNumber.from(asset.updatedPriceInfo?.ETHPrice).gt(BigNumber.from(asset.priceInfo.ETHPrice))
   return (
     <Column className={styles.priceChangeColumn} borderTopColor={top ? 'medGray' : 'transparent'}>
       <Row className={styles.priceChangeRow}>
-        {BigNumber.from(asset.updatedPriceInfo?.ETHPrice).gt(BigNumber.from(asset.priceInfo.ETHPrice)) ? (
-          <SquareArrowUpIcon />
-        ) : (
-          <SquareArrowDownIcon />
-        )}
-        <Box>{`Price ${
-          BigNumber.from(asset.updatedPriceInfo?.ETHPrice).gt(BigNumber.from(asset.priceInfo.ETHPrice))
-            ? 'increased'
-            : 'decreased'
-        } from ${formatWeiToDecimal(asset.priceInfo.ETHPrice)} ETH`}</Box>
+        {isPriceIncrease ? <SquareArrowUpIcon /> : <SquareArrowDownIcon />}
+        <Box>{`Price ${isPriceIncrease ? 'increased' : 'decreased'} from ${formatWeiToDecimal(
+          asset.priceInfo.ETHPrice
+        )} ETH`}</Box>
       </Row>
       <BagRow asset={asset} removeAsset={() => undefined} isMobile={isMobile} />
       <Row gap="12" justifyContent="space-between">
@@ -186,12 +177,15 @@ interface UnavailableAssetsPreviewProps {
   assets: UpdatedGenieAsset[]
 }
 
+const ASSET_PREVIEW_WIDTH = 32
+const ASSET_PREVIEW_OFFSET = 20
+
 const UnavailableAssetsPreview = ({ assets }: UnavailableAssetsPreviewProps) => (
   <Column
     display="grid"
     style={{
       gridTemplateColumns: `repeat(${assets.length}, 20px)`,
-      width: `${32 + (assets.length - 1) * 20}px`,
+      width: `${ASSET_PREVIEW_WIDTH + (assets.length - 1) * ASSET_PREVIEW_OFFSET}px`,
     }}
   >
     {assets.map((asset, index) => (

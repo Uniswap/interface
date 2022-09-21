@@ -15,6 +15,7 @@ const Circle = styled.circle`
   -webkit-animation: ${dash} linear;
   animation: ${dash} linear;
   animation-duration: 160s;
+  stroke: ${({ theme }) => theme.accentActive};
 `
 export const TimedLoader = () => {
   const stroke = 1.5
@@ -23,7 +24,6 @@ export const TimedLoader = () => {
     <Box display="flex" position="absolute">
       <svg height="18px" width="18px">
         <Circle
-          stroke="#4C82FB"
           strokeWidth={`${stroke}`}
           strokeLinecap="round"
           style={{

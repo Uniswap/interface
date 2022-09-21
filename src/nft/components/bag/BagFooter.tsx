@@ -16,12 +16,19 @@ interface BagFooterProps {
   isConnected: boolean
   sufficientBalance: boolean
   totalEthPrice: BigNumber
-  totalUsdPrice: number
+  totalUsdPrice: number | undefined
   bagStatus: BagStatus
   setBagStatus: (status: BagStatus) => void
   fetchReview: () => void
   assetsAreInReview: boolean
 }
+
+const PENDING_BAG_STATUSES = [
+  BagStatus.FETCHING_ROUTE,
+  BagStatus.CONFIRMING_IN_WALLET,
+  BagStatus.FETCHING_FINAL_ROUTE,
+  BagStatus.PROCESSING_TRANSACTION,
+]
 
 export const BagFooter = ({
   balance,
@@ -37,12 +44,7 @@ export const BagFooter = ({
   const toggleWalletModal = useToggleWalletModal()
   const walletModalIsOpen = useModalIsOpen(ApplicationModal.WALLET)
 
-  const isPending =
-    bagStatus === BagStatus.FETCHING_ROUTE ||
-    bagStatus === BagStatus.FETCHING_FINAL_ROUTE ||
-    bagStatus === BagStatus.CONFIRMING_IN_WALLET ||
-    bagStatus === BagStatus.PROCESSING_TRANSACTION ||
-    walletModalIsOpen
+  const isPending = PENDING_BAG_STATUSES.includes(bagStatus) || walletModalIsOpen
   const isDisabled = isPending || !sufficientBalance || assetsAreInReview
 
   const showWarning = isConnected && (!sufficientBalance || bagStatus === BagStatus.WARNING)
