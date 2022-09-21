@@ -445,7 +445,7 @@ export function HeaderRow() {
 }
 
 /* Loading State: row component with loading bubbles */
-export function LoadingRow(...props: any[]) {
+export function LoadingRow() {
   return (
     <TokenRow
       favorited={null}
@@ -463,7 +463,6 @@ export function LoadingRow(...props: any[]) {
       marketCap={<LoadingBubble />}
       volume={<LoadingBubble />}
       sparkLine={<SparkLineLoadingBubble />}
-      {...props}
     />
   )
 }
