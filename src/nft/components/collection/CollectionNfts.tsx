@@ -19,13 +19,11 @@ interface CollectionNftsProps {
 }
 
 export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
-  const { markets, minPrice, maxPrice, buyNow, traits } = useCollectionFilters((state) => ({
-    markets: state.markets,
-    buyNow: state.buyNow,
-    traits: state.traits,
-    minPrice: state.minPrice,
-    maxPrice: state.maxPrice,
-  }))
+  const traits = useCollectionFilters((state) => state.traits)
+  const minPrice = useCollectionFilters((state) => state.minPrice)
+  const maxPrice = useCollectionFilters((state) => state.maxPrice)
+  const markets = useCollectionFilters((state) => state.markets)
+  const buyNow = useCollectionFilters((state) => state.buyNow)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
 
