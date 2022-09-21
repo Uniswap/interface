@@ -5,8 +5,7 @@ import { CollectionSearch, FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
-import { Center } from 'nft/components/Flex'
-import { Row } from 'nft/components/Flex'
+import { Center, Row } from 'nft/components/Flex'
 import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
 import { vars } from 'nft/css/sprinkles.css'
@@ -16,8 +15,11 @@ import {
   useCollectionFilters,
   useFiltersExpanded,
   useIsMobile,
+  SortBy,
+  SortByPointers,
+  Trait,
 } from 'nft/hooks'
-import { SortBy, SortByPointers, Trait } from 'nft/hooks/useCollectionFilters'
+
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieAsset, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
 import qs from 'query-string'
