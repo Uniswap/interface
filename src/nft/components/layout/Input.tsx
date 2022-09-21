@@ -1,20 +1,7 @@
-import { forwardRef } from 'react'
-import { FormEvent } from 'react'
+import { isNumber } from 'nft/utils/numbers'
+import { FormEvent, forwardRef } from 'react'
 
-import { Atoms } from '../../css/atoms'
-import { isNumber } from '../../utils/numbers'
 import { Box, BoxProps } from '../Box'
-
-export const defaultInputStyle: Atoms = {
-  borderColor: { default: 'medGray', focus: 'darkGray' },
-  borderWidth: '1px',
-  borderStyle: 'solid',
-  borderRadius: '8',
-  padding: '12',
-  fontSize: '14',
-  color: { placeholder: 'darkGray', default: 'blackBlue' },
-  backgroundColor: 'transparent',
-}
 
 export const Input = forwardRef<HTMLInputElement, BoxProps>((props, ref) => (
   <Box
