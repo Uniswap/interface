@@ -25,6 +25,9 @@ const themeContractValues = {
     placeholder: '',
     lightGrayButton: '',
     loading: '',
+    gold: '',
+    green: '',
+    violet: '',
 
     // Opacities of black and white
     white95: '',
@@ -166,8 +169,12 @@ export const vars = createGlobalTheme(':root', {
     pink400: '#FB118E',
     red700: '#530f10',
     red400: '#FA2C38',
+    gold200: '#EEB317',
+    gold400: '#B17900',
     green200: '#5CFE9D',
     green400: '#1A9550',
+    violet200: '#BDB8FA',
+    violet400: '#7A7BEB',
     grey900: '#0E111A',
     grey800: '#141B2B',
     grey700: '#293249',

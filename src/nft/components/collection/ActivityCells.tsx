@@ -1,5 +1,13 @@
-import useBulkEnsResolver from 'nft/hooks/useBulkEnsResolver'
-import { breakpoints } from 'nft/css/sprinkles.css'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { Box } from 'nft/components/Box'
+import { Column, Row } from 'nft/components/Flex'
+import {
+  ActivityExternalLinkIcon,
+  ActivityListingIcon,
+  ActivitySaleIcon,
+  ActivityTransferIcon,
+  RarityVerifiedIcon,
+} from 'nft/components/icons'
 import {
   ActivityEvent,
   ActivityEventType,
@@ -9,19 +17,17 @@ import {
   Markets,
   OrderStatus,
   TokenMetadata,
+  TokenRarity,
 } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { formatEthPrice } from 'nft/utils/currency'
 import { getTimeDifference, isValidDate } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
+import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
 import { MouseEvent, useMemo, useState } from 'react'
-import { Box } from '../Box'
-import { ToolTip } from '../common/ToolTip'
-import { Column, Row } from '../Flex'
-import { ActivityExternalLinkIcon, ActivityListingIcon, ActivitySaleIcon, ActivityTransferIcon } from '../icons'
+
 import * as styles from './Activity.css'
-import { Rarity } from './Rarity'
 
 const formatListingStatus = (status: OrderStatus): string => {
   switch (status) {
@@ -59,13 +65,16 @@ export const BuyCell = ({
   isMobile,
   ethPriceInUSD,
 }: BuyCellProps) => {
-  const asset = useMemo(() => buildActivityAsset(event, collectionName, ethPriceInUSD), [event, collectionName])
+  const asset = useMemo(
+    () => buildActivityAsset(event, collectionName, ethPriceInUSD),
+    [event, collectionName, ethPriceInUSD]
+  )
   const isSelected = useMemo(() => {
     return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
   }, [asset, itemsInBag])
 
   return (
-    <Column display={{ mobile: 'none', tabletL: 'flex' }} height="full" justifyContent="center" marginX="auto">
+    <Column display={{ sm: 'none', md: 'flex' }} height="full" justifyContent="center" marginX="auto">
       {event.eventType === ActivityEventType.Listing && event.orderStatus ? (
         <Box
           as="button"
@@ -90,53 +99,18 @@ export const BuyCell = ({
   )
 }
 
-const ensNameFormatter = (name: string, windowWidth?: number) => {
-  const breakpoint = windowWidth
-    ? windowWidth > breakpoints.desktopXl
-      ? 18
-      : windowWidth > breakpoints.desktopL
-      ? 14
-      : 12
-    : 12
-
-  if (name.length <= breakpoint) return name
-  return `${name.substring(0, breakpoint - 3)}...`
-}
-
-const ENSNameRenderer = ({ ensName, windowWidth }: { ensName: string; windowWidth: number | undefined }) => (
-  <ToolTip
-    toolTipChildren={
-      <>
-        <Box textAlign="left" fontSize="14" fontWeight="normal" color="darkGray">
-          {ensName}
-        </Box>
-      </>
-    }
-    classNames={styles.ensNameContainer}
-  >
-    <Box>{ensNameFormatter(ensName, windowWidth)}</Box>
-  </ToolTip>
-)
-
 interface AddressCellProps {
   address?: string
-  windowWidth: number | undefined
   desktopLBreakpoint?: boolean
 }
 
-export const AddressCell = ({ address, windowWidth, desktopLBreakpoint }: AddressCellProps) => {
-  const ensName = address && useBulkEnsResolver(address)
-
+export const AddressCell = ({ address, desktopLBreakpoint }: AddressCellProps) => {
   return (
     <Column
-      display={{ mobile: 'none', desktopL: 'flex', tabletXl: desktopLBreakpoint ? 'none' : 'flex' }}
+      display={{ sm: 'none', lg: desktopLBreakpoint ? 'none' : 'flex', xl: 'flex' }}
       className={styles.addressCell}
     >
-      {ensName ? (
-        <ENSNameRenderer ensName={ensName} windowWidth={windowWidth} />
-      ) : (
-        <Box>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
-      )}
+      <Box>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
     </Column>
   )
 }
@@ -153,24 +127,23 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: Markets }) => {
 }
 
 const PriceTooltip = ({ price }: { price: string }) => (
-  <ToolTip
-    toolTipChildren={
-      <>
-        <Box textAlign="left" fontSize="14" fontWeight="normal" color="darkGray">
-          {`${price} ETH`}
-        </Box>
-      </>
+  <MouseoverTooltip
+    text={
+      <Box textAlign="left" fontSize="14" fontWeight="normal" color="darkGray">
+        {`${price} ETH`}
+      </Box>
     }
+    placement="top"
   >
     <Box>{`${price.substring(0, 5)}... ETH`}</Box>
-  </ToolTip>
+  </MouseoverTooltip>
 )
 
 export const PriceCell = ({ marketplace, price }: { marketplace?: Markets; price?: string }) => {
   const formattedPrice = useMemo(() => (price ? putCommas(formatEthPrice(price)).toString() : null), [price])
 
   return (
-    <Row display={{ mobile: 'none', tabletL: 'flex' }} gap="8">
+    <Row display={{ sm: 'none', md: 'flex' }} gap="8">
       {marketplace && <MarketplaceIcon marketplace={marketplace} />}
       {formattedPrice ? (
         formattedPrice.length > 6 ? (
@@ -276,6 +249,44 @@ const NoContentContainer = () => (
   </Box>
 )
 
+interface RankingProps {
+  rarity: TokenRarity
+  collectionName: string
+  rarityVerified: boolean
+}
+
+const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
+  const rarityProviderLogo = getRarityProviderLogo(rarity.source)
+
+  return (
+    <MouseoverTooltip
+      text={
+        <Row>
+          <Box display="flex" marginRight="4">
+            <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+          </Box>
+          <Box width="full" fontSize="14">
+            {rarityVerified
+              ? `Verified by ${collectionName}`
+              : `Ranking by ${rarity.source === 'Genie' ? fallbackProvider : rarity.source}`}
+          </Box>
+        </Row>
+      }
+      placement="top"
+    >
+      <Box className={styles.rarityInfo}>
+        <Box paddingTop="2" paddingBottom="2" display="flex">
+          {putCommas(rarity.rank)}
+        </Box>
+
+        <Box display="flex" height="16">
+          {rarityVerified ? <RarityVerifiedIcon /> : null}
+        </Box>
+      </Box>
+    </MouseoverTooltip>
+  )
+}
+
 const getItemImage = (tokenMetadata?: TokenMetadata): string | undefined => {
   if (!tokenMetadata || (!tokenMetadata.smallImageUrl && !tokenMetadata.imageUrl)) return undefined
   return tokenMetadata.smallImageUrl || tokenMetadata.imageUrl
@@ -306,7 +317,7 @@ export const ItemCell = ({ event, rarityVerified, collectionName }: ItemCellProp
       <Column height="full" justifyContent="center" overflow="hidden" whiteSpace="nowrap" marginRight="24">
         <Box className={styles.detailsName}>{event.tokenMetadata?.name || event.tokenId}</Box>
         {event.tokenMetadata?.rarity && (
-          <Rarity
+          <Ranking
             rarity={event.tokenMetadata?.rarity}
             rarityVerified={rarityVerified}
             collectionName={collectionName}

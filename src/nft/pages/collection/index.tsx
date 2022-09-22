@@ -1,5 +1,5 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
+import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
 import { useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import { CollectionStatsFetcher } from 'nft/queries'
@@ -81,7 +81,15 @@ const Collection = () => {
             width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
           }}
         >
-          {contractAddress && <CollectionNfts contractAddress={contractAddress} />}
+          {isActivityToggled
+            ? contractAddress && (
+                <Activity
+                  contractAddress={contractAddress}
+                  rarityVerified={collectionStats?.rarityVerified ?? false}
+                  collectionName={collectionStats?.name ?? ''}
+                />
+              )
+            : contractAddress && <CollectionNfts contractAddress={contractAddress} />}
         </AnimatedBox>
       </Row>
     </Column>

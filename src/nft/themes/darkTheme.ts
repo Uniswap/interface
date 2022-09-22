@@ -23,6 +23,9 @@ export const darkTheme: Theme = {
     placeholder: vars.color.grey400,
     lightGrayButton: vars.color.grey700,
     loading: vars.color.grey800,
+    green: vars.color.green200,
+    gold: vars.color.gold200,
+    violet: vars.color.violet200,
 
     // Opacities of black and white
     white95: '#0E111AF2',

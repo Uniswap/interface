@@ -1,18 +1,18 @@
+import clsx from 'clsx'
+import { Box } from 'nft/components/Box'
+import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
+import { Center, Column, Row } from 'nft/components/Flex'
+import { useBag, useIsMobile } from 'nft/hooks'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEvent, ActivityEventResponse, ActivityEventType } from 'nft/types'
-import { ActivityLoader } from './ActivityLoader'
-import { useInfiniteQuery } from 'react-query'
-import { Box } from '../Box'
-import { Center, Column, Row } from '../Flex'
-import * as styles from './Activity.css'
-import { useBag, useIsMobile } from 'nft/hooks'
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import clsx from 'clsx'
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Loading } from '../Loading'
+import { useInfiniteQuery } from 'react-query'
+
+import * as styles from './Activity.css'
 import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from './ActivityCells'
-import { useWindowSize } from 'hooks/useWindowSize'
+import { ActivityLoader } from './ActivityLoader'
 
 enum ColumnHeaders {
   Item = 'Item',
@@ -28,9 +28,9 @@ export const HeaderRow = () => {
       <Box>{ColumnHeaders.Item}</Box>
       <Box>{ColumnHeaders.Event}</Box>
       <Box display={{ sm: 'none', md: 'block' }}>{ColumnHeaders.Price}</Box>
-      <Box display={{ sm: 'none', md: 'block' }}>{ColumnHeaders.By}</Box>
-      <Box display={{ sm: 'none', md: 'block' }}>{ColumnHeaders.To}</Box>
-      <Box display={{ sm: 'none', md: 'block' }}></Box>
+      <Box display={{ sm: 'none', lg: 'block' }}>{ColumnHeaders.By}</Box>
+      <Box display={{ sm: 'none', xl: 'block' }}>{ColumnHeaders.To}</Box>
+      <Box display={{ sm: 'none', md: 'block' }}>Buy</Box>
     </Box>
   )
 }
@@ -95,7 +95,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
   )
 
   const events = useMemo(
-    () => (isSuccess ? eventsData.pages.map((page) => page.events).flat() : null),
+    () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
     [isSuccess, eventsData]
   )
 
@@ -104,8 +104,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
   const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
   const cartExpanded = useBag((state) => state.bagExpanded)
   const toggleCart = useBag((state) => state.toggleBag)
-  const isMobile = useIsMobile((s) => s.isMobile)
-  const { width: windowWidth } = useWindowSize()
+  const isMobile = useIsMobile()
   const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
 
   useEffect(() => {
@@ -121,7 +120,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
       return (
         <Box
           className={clsx(styles.filter, isActive && styles.activeFilter)}
-          onClick={() => filtersDispatch({ eventType: eventType })}
+          onClick={() => filtersDispatch({ eventType })}
         >
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
         </Box>
@@ -147,7 +146,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
             loader={
               isFetchingNextPage ? (
                 <Center paddingY="20">
-                  <Loading />
+                  <LoadingSparkle />
                 </Center>
               ) : null
             }
@@ -163,8 +162,8 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
                   eventTransactionHash={event.transactionHash}
                 />
                 <PriceCell marketplace={event.marketplace} price={event.price} />
-                <AddressCell address={event.fromAddress} windowWidth={windowWidth} />
-                <AddressCell address={event.toAddress} desktopLBreakpoint windowWidth={windowWidth} />
+                <AddressCell address={event.fromAddress} />
+                <AddressCell address={event.toAddress} desktopLBreakpoint />
                 <BuyCell
                   event={event}
                   collectionName={collectionName}
