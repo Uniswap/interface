@@ -479,7 +479,7 @@ const PriceTextInput = ({
           display={isGlobalPrice || globalOverride ? 'block' : 'none'}
           position="absolute"
           style={{ marginTop: '-36px', marginLeft: '124px' }}
-          backgroundColor="white"
+          backgroundColor="backgroundSurface"
           onClick={() => setGlobalOverride(!globalOverride)}
         >
           {globalOverride ? <AttachPriceIcon /> : <EditPriceIcon />}

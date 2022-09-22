@@ -173,7 +173,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
           color="textSecondary"
           zIndex="3"
           borderRadius="4"
-          backgroundColor="white"
+          backgroundColor="backgroundSurface"
           height={!disableListButton ? '64' : '36'}
           maxWidth="276"
           position="absolute"
@@ -232,7 +232,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       >
         {listingStatus === ListingStatus.SIGNING || listingStatus === ListingStatus.PENDING ? (
           <Row gap="8">
-            <LoadingIcon stroke="white" height="20" width="20" />
+            <LoadingIcon stroke="backgroundSurface" height="20" width="20" />
             {listingStatus === ListingStatus.PENDING ? 'Pending' : 'Proceed in wallet'}
           </Row>
         ) : listingStatus === ListingStatus.APPROVED ? (

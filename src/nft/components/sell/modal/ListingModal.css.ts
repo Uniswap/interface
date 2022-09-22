@@ -48,7 +48,7 @@ export const listingModalIcon = style([
   sprinkles({
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor: 'white',
+    borderColor: 'backgroundSurface',
   }),
   {
     boxSizing: 'border-box',

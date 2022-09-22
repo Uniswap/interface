@@ -100,7 +100,7 @@ export const buttonSmall = style([
     },
     ':disabled': {
       cursor: 'auto',
-      color: themeVars.colors.white,
+      color: themeVars.colors.backgroundSurface,
       backgroundColor: themeVars.colors.backgroundOutline,
     },
   },

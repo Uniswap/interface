@@ -24,7 +24,7 @@ const MobileSocialsIcon = ({ children, href }: { children: ReactNode; href: stri
       height="40"
       width="40"
       borderRadius="round"
-      backgroundColor="white"
+      backgroundColor="backgroundSurface"
     >
       {children}
     </Box>

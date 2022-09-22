@@ -22,8 +22,6 @@ const themeContractValues = {
     textPrimary: '',
     textSecondary: '',
     textTertiary: '',
-
-    white: '',
   },
 
   shadows: {
@@ -151,6 +149,7 @@ export const vars = createGlobalTheme(':root', {
     transculent: '#7F7F7F',
     transparent: 'transparent',
     none: 'none',
+    white: '#FFF',
 
     // new uniswap colors:
     blue400: '#4C82FB',

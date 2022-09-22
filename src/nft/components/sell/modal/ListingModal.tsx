@@ -156,7 +156,7 @@ const ListingModal = () => {
           as="button"
           border="none"
           color="textSecondary"
-          backgroundColor="white"
+          backgroundColor="backgroundSurface"
           marginLeft="auto"
           marginRight="0"
           paddingRight="0"
@@ -220,7 +220,7 @@ const ListingModal = () => {
         <Box
           as="button"
           border="none"
-          backgroundColor="white"
+          backgroundColor="backgroundSurface"
           cursor="pointer"
           color="orange"
           className={styles.button}

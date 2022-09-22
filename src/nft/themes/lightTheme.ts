@@ -9,7 +9,6 @@ export const lightTheme: Theme = {
     backgroundSurface: '#FFFFFF',
     textSecondary: vars.color.grey500,
     backgroundOutline: opacify(24, vars.color.grey500),
-    white: '#FFFFFF',
     stateOverlayHover: opacify(8, vars.color.grey300),
     explicitWhite: '#FFFFFF',
     backgroundAction: vars.color.pink400,

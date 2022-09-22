@@ -9,7 +9,6 @@ export const darkTheme: Theme = {
     backgroundSurface: vars.color.grey900,
     textSecondary: vars.color.grey300,
     backgroundOutline: opacify(24, vars.color.grey300),
-    white: '#000000',
     stateOverlayHover: opacify(8, vars.color.grey300),
     explicitWhite: '#FFFFFF',
     backgroundAction: vars.color.blue400,
