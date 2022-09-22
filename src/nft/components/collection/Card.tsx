@@ -455,7 +455,7 @@ const Button = ({ children, quantity, selectedChildren, onClick, onSelectedClick
               : selected
               ? 'error'
               : asset.notForSale
-              ? 'placeholder'
+              ? 'textTertiary'
               : 'blue400'
           }
           style={{

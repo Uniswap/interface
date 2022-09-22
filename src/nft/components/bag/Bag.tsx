@@ -31,7 +31,7 @@ const EmptyState = () => {
     <Center height="full">
       <Column gap="12">
         <Center>
-          <LargeBagIcon color={themeVars.colors.placeholder} />
+          <LargeBagIcon color={themeVars.colors.textTertiary} />
         </Center>
         <Column gap="16">
           <Center className={subhead} style={{ lineHeight: '24px' }}>

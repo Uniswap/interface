@@ -10,8 +10,6 @@ export const darkTheme: Theme = {
     modalClose: 'rgba(255, 255, 255, 0.08)',
     text: '#fff',
     modalTextSecondary: 'rgba(255, 255, 255, 0.6)',
-
-    // Bryan's colors from Figma that vary dark vs light
     textPrimary: '#FFFFFF',
     backgroundSurface: vars.color.grey900,
     textSecondary: vars.color.grey300,
@@ -19,8 +17,8 @@ export const darkTheme: Theme = {
     white: '#000000',
     backgroundModule: opacify(8, vars.color.grey300),
     explicitWhite: '#FFFFFF',
-    magicGradient: vars.color.blue400,
-    placeholder: vars.color.grey400,
+    backgroundAction: vars.color.blue400,
+    textTertiary: vars.color.grey500,
     backgroundInteractive: vars.color.grey700,
     loading: vars.color.grey800,
 

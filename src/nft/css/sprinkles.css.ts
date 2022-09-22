@@ -20,8 +20,8 @@ const themeContractValues = {
     white: '',
     backgroundModule: '',
     explicitWhite: '',
-    magicGradient: '',
-    placeholder: '',
+    backgroundAction: '',
+    textTertiary: '',
     backgroundInteractive: '',
     loading: '',
 

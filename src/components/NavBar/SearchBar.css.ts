@@ -43,7 +43,7 @@ export const searchBarContainer = style([
 export const searchBar = style([
   baseSearchStyle,
   sprinkles({
-    color: 'placeholder',
+    color: 'textTertiary',
     paddingX: '16',
     cursor: 'pointer',
     background: 'backgroundSurface',
@@ -55,7 +55,7 @@ export const searchBarInput = style([
     padding: '0',
     fontWeight: 'normal',
     fontSize: '16',
-    color: { default: 'textPrimary', placeholder: 'placeholder' },
+    color: { default: 'textPrimary', placeholder: 'textTertiary' },
     border: 'none',
     background: 'none',
   }),

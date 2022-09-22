@@ -50,7 +50,7 @@ export const header = style([
 
 export const clearAll = style([
   sprinkles({
-    color: 'placeholder',
+    color: 'textTertiary',
     cursor: 'pointer',
     fontWeight: 'semibold',
   }),

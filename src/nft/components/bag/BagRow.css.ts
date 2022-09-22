@@ -48,7 +48,7 @@ export const priceChangeColumn = sprinkles({
 
 export const priceChangeRow = style([
   sprinkles({
-    color: 'placeholder',
+    color: 'textTertiary',
     gap: '4',
     fontSize: '14',
     fontWeight: 'normal',
@@ -84,7 +84,7 @@ export const priceChangeButton = style([
   }),
   {
     ':hover': {
-      color: themeVars.colors.placeholder,
+      color: themeVars.colors.textTertiary,
     },
   },
 ])

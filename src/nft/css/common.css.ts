@@ -71,7 +71,7 @@ export const disabled = style([
     textAlign: 'left',
   },
   sprinkles({
-    color: 'placeholder',
+    color: 'textTertiary',
     fontWeight: 'medium',
     background: 'whitesmoke',
     borderRadius: '14',

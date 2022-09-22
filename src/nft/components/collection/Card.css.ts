@@ -113,11 +113,11 @@ export const erc1155Button = sprinkles({
 export const erc1155PlusButton = style([
   erc1155Button,
   sprinkles({
-    color: 'magicGradient',
+    color: 'backgroundSurface',
   }),
   {
     ':hover': {
-      backgroundColor: themeVars.colors.magicGradient,
+      backgroundColor: themeVars.colors.backgroundAction,
       color: themeVars.colors.textPrimary,
     },
   },
