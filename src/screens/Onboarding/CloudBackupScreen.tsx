@@ -80,7 +80,9 @@ export function CloudBackupScreen({
   if (!pin) {
     return (
       <OnboardingScreen
-        subtitle={t('You’ll use this PIN to restore your wallet from iCloud.')}
+        subtitle={t(
+          'Setting a PIN will encrypt your seed phrase, making it harder for an attacker to steal your assets if they gain access to your iCloud.'
+        )}
         title={t('Set your iCloud backup PIN')}>
         <PinInput length={PIN_LENGTH} setValue={setEnteredPin} value={enteredPin} />
         <WarningModal

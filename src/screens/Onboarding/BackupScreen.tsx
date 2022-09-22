@@ -122,8 +122,10 @@ function BackupOptions({
         onPress={() => {
           if (!iCloudAvailable) {
             Alert.alert(
-              t('iCloud Not Available'),
-              t('Please verify you are logged into an Apple ID with iCloud enabled and try again.'),
+              t('iCloud not available'),
+              t(
+                'Please verify that you are logged in to an Apple ID with iCloud enabled on this device and try again.'
+              ),
               [
                 {
                   text: t('OK'),

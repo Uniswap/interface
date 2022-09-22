@@ -188,13 +188,13 @@ export function SettingsCloudBackupScreen({
         </BottomSheetModal>
         <WarningModal
           caption={t(
-            'Your recovery phrase won’t be encrypted, meaning that anyone who gains access to your iCloud will be able to steal your assets.'
+            'Without a PIN, your recovery phrase won’t be encrypted, meaning that anyone who gains access to your iCloud will be able to steal your assets.'
           )}
           closeText={t('Back')}
           confirmText={t('I understand')}
           isVisible={showPinWarningModal}
           modalName={ModalName.ICloudSkipPinWarning}
-          title={t("It's risky to skip setting a PIN")}
+          title={t('Your iCloud backup is at risk')}
           onClose={() => setShowPinWarningModal(false)}
           onConfirm={() => {
             setShowPinWarningModal(false)
@@ -228,10 +228,10 @@ export function SettingsCloudBackupScreen({
         <AnimatedFlex grow alignItems="stretch" entering={SlideInRight} exiting={SlideOutLeft}>
           <BackHeader alignment="center" mb="md" />
           <Flex alignItems="center" justifyContent="space-between" mx="md" pb="sm">
-            <Text variant="headlineSmall">{t('Confirm PIN')}</Text>
+            <Text variant="headlineSmall">{t('Confirm iCloud backup PIN')}</Text>
             {error ? (
               <Text color="accentFailure" pb="md" textAlign="center" variant="bodySmall">
-                {t('Incorrect order. Please try again.')}
+                {t('This PIN doesn’t match the one you set. Please try again.')}
               </Text>
             ) : (
               <Text color="textSecondary" textAlign="center" variant="bodySmall">
