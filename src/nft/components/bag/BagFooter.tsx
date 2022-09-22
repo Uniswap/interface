@@ -84,7 +84,7 @@ export const BagFooter = ({
           onClick={() => {
             if (!isConnected) {
               toggleWalletModal()
-            } else if (bagStatus === BagStatus.ADDING_TO_BAG) {
+            } else {
               fetchAssets()
             }
           }}

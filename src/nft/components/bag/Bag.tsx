@@ -223,25 +223,25 @@ const Bag = () => {
         data.route
       )
 
-      const priceChangedAssets = updatedAssets.filter((asset) => asset.updatedPriceInfo).sort(sortUpdatedAssets)
-      const unavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
-      const unchangedAssets = updatedAssets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
-      const hasReviewedAssets = unchangedAssets.length > 0
-      const hasAssetsInReview = priceChangedAssets.length > 0
-      const hasUnavailableAssets = unavailableAssets.length > 0
+      const fetchedPriceChangedAssets = updatedAssets.filter((asset) => asset.updatedPriceInfo).sort(sortUpdatedAssets)
+      const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
+      const fetchedUnchangedAssets = updatedAssets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
+      const hasReviewedAssets = fetchedUnchangedAssets.length > 0
+      const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
+      const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
       const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
       const shouldReview = hasAssetsInReview || hasUnavailableAssets
 
       setItemsInBag([
-        ...unavailableAssets.map((unavailableAsset) => ({
+        ...fetchedUnavailableAssets.map((unavailableAsset) => ({
           asset: unavailableAsset,
           status: BagItemStatus.UNAVAILABLE,
         })),
-        ...priceChangedAssets.map((changedAsset) => ({
+        ...fetchedPriceChangedAssets.map((changedAsset) => ({
           asset: changedAsset,
           status: BagItemStatus.REVIEWING_PRICE_CHANGE,
         })),
-        ...unchangedAssets.map((unchangedAsset) => ({ asset: unchangedAsset, status: BagItemStatus.REVIEWED })),
+        ...fetchedUnchangedAssets.map((unchangedAsset) => ({ asset: unchangedAsset, status: BagItemStatus.REVIEWED })),
       ])
       setLocked(false)
 
