@@ -1,3 +1,4 @@
+import { selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -46,6 +47,7 @@ export function SendButton({
     disabled || !activeAccount || activeAccount.type === AccountType.Readonly
 
   const onPressSend = useCallback(() => {
+    selectionAsync()
     dispatch(openModal({ name: ModalName.Send, ...(initialState ? { initialState } : {}) }))
   }, [dispatch, initialState])
 
