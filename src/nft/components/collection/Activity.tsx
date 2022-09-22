@@ -28,8 +28,8 @@ export const HeaderRow = () => {
       <Box>{ColumnHeaders.Item}</Box>
       <Box>{ColumnHeaders.Event}</Box>
       <Box display={{ sm: 'none', md: 'block' }}>{ColumnHeaders.Price}</Box>
-      <Box display={{ sm: 'none', lg: 'block' }}>{ColumnHeaders.By}</Box>
-      <Box display={{ sm: 'none', xl: 'block' }}>{ColumnHeaders.To}</Box>
+      <Box display={{ sm: 'none', xl: 'block' }}>{ColumnHeaders.By}</Box>
+      <Box display={{ sm: 'none', xxl: 'block' }}>{ColumnHeaders.To}</Box>
       <Box display={{ sm: 'none', lg: 'block' }}>Buy</Box>
     </Box>
   )

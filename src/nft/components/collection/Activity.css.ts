@@ -16,6 +16,9 @@ export const baseRow = style([
         gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr',
       },
       [`screen and (min-width: ${breakpoints.lg}px)`]: {
+        gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr',
+      },
+      [`screen and (min-width: ${breakpoints.xl}px)`]: {
         gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr 1fr',
       },
     },

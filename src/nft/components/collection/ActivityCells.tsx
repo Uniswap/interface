@@ -107,7 +107,7 @@ interface AddressCellProps {
 export const AddressCell = ({ address, desktopLBreakpoint }: AddressCellProps) => {
   return (
     <Column
-      display={{ sm: 'none', lg: desktopLBreakpoint ? 'none' : 'flex', xl: 'flex' }}
+      display={{ sm: 'none', xl: desktopLBreakpoint ? 'none' : 'flex', xxl: 'flex' }}
       className={styles.addressCell}
     >
       <Box>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
