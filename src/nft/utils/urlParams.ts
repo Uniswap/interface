@@ -122,6 +122,7 @@ const urlParamsUtils = {
 }
 
 export const syncLocalFiltersWithURL = (state: CollectionFilters) => {
+  console.log(state)
   const urlFilterItems = [
     'markets',
     'maxPrice',

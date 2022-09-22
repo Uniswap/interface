@@ -9,7 +9,14 @@ import { Center, Row } from 'nft/components/Flex'
 import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
 import { vars } from 'nft/css/sprinkles.css'
-import { CollectionFilters, SortBy, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
+import {
+  CollectionFilters,
+  initialCollectionFilterState,
+  SortBy,
+  useCollectionFilters,
+  useFiltersExpanded,
+  useIsMobile,
+} from 'nft/hooks'
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
@@ -106,6 +113,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     }
   )
 
+  // Preventing filters leaking into another collection && transaction screen
+  useEffect(() => {
+    return () => {
+      useCollectionFilters.setState(initialCollectionFilterState)
+    }
+  }, [contractAddress])
+
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
@@ -184,6 +198,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
   useEffect(() => {
     if (collectionStats?.traits) {
       const modifiedQuery = applyFiltersFromURL(location, collectionStats)
+      // console.log(modifiedQuery)
       requestAnimationFrame(() => {
         useCollectionFilters.setState(modifiedQuery as any)
       })
