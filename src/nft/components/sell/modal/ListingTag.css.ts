@@ -6,7 +6,7 @@ export const tagContainer = style([
     borderRadius: '20',
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor: 'stateOverlayHover',
+    borderColor: 'backgroundOutline',
   }),
   {
     '@media': {

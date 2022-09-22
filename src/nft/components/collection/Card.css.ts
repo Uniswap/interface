@@ -43,7 +43,7 @@ export const selectedCard = style([
   card,
   sprinkles({
     background: 'lightGrayOverlay',
-    borderColor: 'stateOverlayHover',
+    borderColor: 'backgroundOutline',
   }),
 ])
 

@@ -57,8 +57,8 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
     borderWidth="1px"
     borderStyle="solid"
     borderColor="transparent"
-    borderTopColor={top ? 'transparent' : 'stateOverlayHover'}
-    borderBottomColor={top ? 'stateOverlayHover' : 'transparent'}
+    borderTopColor={top ? 'transparent' : 'backgroundOutline'}
+    borderBottomColor={top ? 'backgroundOutline' : 'transparent'}
     opacity={show ? '1' : '0'}
     transition="250"
   />

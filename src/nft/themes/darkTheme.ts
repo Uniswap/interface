@@ -1,5 +1,4 @@
 import { Theme, vars } from 'nft/css/sprinkles.css'
-import { opacify } from 'theme/utils'
 
 export const darkTheme: Theme = {
   colors: {
@@ -8,8 +7,8 @@ export const darkTheme: Theme = {
     textPrimary: '#FFFFFF',
     backgroundSurface: vars.color.grey900,
     textSecondary: vars.color.grey300,
-    backgroundOutline: opacify(24, vars.color.grey300),
-    stateOverlayHover: opacify(8, vars.color.grey300),
+    backgroundOutline: `rgba(153,161,189,0.24)`,
+    stateOverlayHover: `rgba(153,161,189,0.08)`,
     explicitWhite: '#FFFFFF',
     backgroundAction: vars.color.blue400,
     textTertiary: vars.color.grey500,

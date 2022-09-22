@@ -131,7 +131,7 @@ interface PriceChangeBagRowProps {
 export const PriceChangeBagRow = ({ asset, markAssetAsReviewed, top, isMobile }: PriceChangeBagRowProps) => {
   const isPriceIncrease = BigNumber.from(asset.updatedPriceInfo?.ETHPrice).gt(BigNumber.from(asset.priceInfo.ETHPrice))
   return (
-    <Column className={styles.priceChangeColumn} borderTopColor={top ? 'stateOverlayHover' : 'transparent'}>
+    <Column className={styles.priceChangeColumn} borderTopColor={top ? 'backgroundOutline' : 'transparent'}>
       <Row className={styles.priceChangeRow}>
         {isPriceIncrease ? <SquareArrowUpIcon /> : <SquareArrowDownIcon />}
         <Box>{`Price ${isPriceIncrease ? 'increased' : 'decreased'} from ${formatWeiToDecimal(

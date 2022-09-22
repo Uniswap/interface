@@ -22,7 +22,7 @@ export const sectionDivider = style([
     width: 'full',
     borderWidth: '0.5px',
     borderStyle: 'solid',
-    borderColor: 'stateOverlayHover',
+    borderColor: 'backgroundOutline',
   }),
 ])
 
@@ -72,7 +72,7 @@ export const listingSectionBorder = style([
   sprinkles({
     padding: '8',
     borderRadius: '8',
-    borderColor: 'stateOverlayHover',
+    borderColor: 'backgroundOutline',
     borderStyle: 'solid',
     borderWidth: '1px',
   }),
