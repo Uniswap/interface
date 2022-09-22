@@ -734,7 +734,7 @@ export default function Swap({ history }: RouteComponentProps) {
       />
       <PageWrapper>
         <Banner />
-        <TopTrendingSoonTokensInCurrentNetwork />
+        {chainId !== ChainId.ETHW && <TopTrendingSoonTokensInCurrentNetwork />}
         <Container>
           <SwapFormWrapper isShowTutorial={isShowTutorial}>
             <RowBetween mb={'16px'}>
