@@ -63,7 +63,7 @@ export const PriceRange = () => {
             width: isMobile ? '100%' : '142px',
             border: '2px solid rgba(153, 161, 189, 0.24)',
           }}
-          borderColor={{ default: 'medGray', focus: 'textSecondary' }}
+          borderColor={{ default: 'backgroundModule', focus: 'textSecondary' }}
           borderRadius="12"
           padding="12"
           fontSize="14"

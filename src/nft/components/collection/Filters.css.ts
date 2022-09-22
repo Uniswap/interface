@@ -45,14 +45,14 @@ export const rowHoverOpen = style([
   }),
   {
     ':hover': {
-      background: themeVars.colors.medGray,
+      background: themeVars.colors.backgroundOutline,
     },
   },
 ])
 
 export const subRowHover = style({
   ':hover': {
-    background: themeVars.colors.medGray,
+    background: themeVars.colors.backgroundOutline,
   },
 })
 
@@ -61,13 +61,13 @@ export const detailsOpen = sprinkles({
   overflow: 'hidden',
   borderStyle: 'solid',
   borderWidth: '1px',
-  borderColor: 'medGray',
+  borderColor: 'backgroundModule',
 })
 
 export const summaryOpen = sprinkles({
   borderStyle: 'solid',
   borderWidth: '1px',
-  borderColor: 'medGray',
+  borderColor: 'backgroundModule',
 })
 
 export const filterDropDowns = style([

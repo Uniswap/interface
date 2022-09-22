@@ -16,7 +16,7 @@ export const nftDivider = style([
     borderRadius: '20',
     borderWidth: '0.5px',
     borderStyle: 'solid',
-    borderColor: 'medGray',
+    borderColor: 'backgroundModule',
   }),
 ])
 

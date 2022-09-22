@@ -14,7 +14,7 @@ export const card = style([
     '@media': {
       [`(max-width: ${breakpoints.sm - 1}px)`]: {
         ':hover': {
-          borderColor: themeVars.colors.medGray,
+          borderColor: themeVars.colors.backgroundOutline,
           cursor: 'pointer',
           background: vars.color.lightGrayOverlay,
         },
@@ -24,7 +24,7 @@ export const card = style([
 ])
 
 export const loadingBackground = style({
-  background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+  background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.lightGray} 100%)`,
 })
 
 export const notSelectedCard = style([
@@ -43,7 +43,7 @@ export const selectedCard = style([
   card,
   sprinkles({
     background: 'lightGrayOverlay',
-    borderColor: 'medGray',
+    borderColor: 'backgroundModule',
   }),
 ])
 

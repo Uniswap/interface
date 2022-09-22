@@ -15,7 +15,7 @@ const themeContractValues = {
     // Bryan's colors from Figma that vary dark vs light
     textPrimary: '',
     textSecondary: '',
-    medGray: '',
+    backgroundOutline: '',
     lightGray: '',
     white: '',
     backgroundModule: '',

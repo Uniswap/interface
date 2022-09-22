@@ -55,7 +55,7 @@ export const Separator = style([
   }),
   {
     borderTop: 'solid',
-    borderColor: themeVars.colors.medGray,
+    borderColor: themeVars.colors.backgroundOutline,
     borderWidth: '1px',
   },
 ])

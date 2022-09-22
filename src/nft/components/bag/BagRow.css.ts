@@ -28,8 +28,8 @@ export const unavailableAssetsContainer = sprinkles({
   borderStyle: 'solid',
   borderWidth: '1px',
   borderColor: 'transparent',
-  borderTopColor: 'medGray',
-  borderBottomColor: 'medGray',
+  borderTopColor: 'backgroundModule',
+  borderBottomColor: 'backgroundModule',
   height: 'full',
 })
 
@@ -41,7 +41,7 @@ export const priceChangeColumn = sprinkles({
   borderStyle: 'solid',
   borderWidth: '1px',
   borderColor: 'transparent',
-  borderBottomColor: 'medGray',
+  borderBottomColor: 'backgroundModule',
   height: 'full',
   cursor: 'pointer',
 })

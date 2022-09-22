@@ -615,7 +615,7 @@ const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
         width="full"
         style={{
           height: `${uniformHeight as number}px`,
-          background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+          background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.lightGray} 100%)`,
         }}
         fontWeight="normal"
         color="grey500"
@@ -634,7 +634,7 @@ const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
         width="full"
         style={{
           paddingTop: '100%',
-          background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+          background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.lightGray} 100%)`,
         }}
       >
         <Box

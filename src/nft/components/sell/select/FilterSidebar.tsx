@@ -144,7 +144,7 @@ const CollectionFilterSearch = ({
   return (
     <Box
       as="input"
-      borderColor={{ default: 'medGray', focus: 'genieBlue' }}
+      borderColor={{ default: 'backgroundModule', focus: 'genieBlue' }}
       borderWidth="1px"
       borderStyle="solid"
       borderRadius="8"
@@ -190,7 +190,7 @@ const CollectionItem = ({
       paddingRight="14"
       height="44"
       as="li"
-      background={hovered ? 'medGray' : undefined}
+      background={hovered ? 'backgroundModule' : undefined}
       onMouseEnter={toggleHovered}
       onMouseLeave={toggleHovered}
       onClick={handleCheckbox}
@@ -223,7 +223,7 @@ const ListStatusFilterButtons = ({
         <Row
           key={index}
           borderRadius="12"
-          backgroundColor="medGray"
+          backgroundColor="backgroundModule"
           height="44"
           className={value === listFilter ? styles.buttonSelected : null}
           onClick={() => setListFilter(value)}

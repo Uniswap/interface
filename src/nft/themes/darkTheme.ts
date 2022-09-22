@@ -15,7 +15,7 @@ export const darkTheme: Theme = {
     textPrimary: '#FFFFFF',
     backgroundSurface: vars.color.grey900,
     textSecondary: vars.color.grey300,
-    medGray: `#99A1BD3D`,
+    backgroundOutline: opacify(24, vars.color.grey300),
     lightGray: vars.color.grey900,
     white: '#000000',
     backgroundModule: opacify(8, vars.color.grey300),

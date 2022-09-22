@@ -409,7 +409,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
           borderBottomLeftRadius="20"
           borderBottomRightRadius="20"
           transition="250"
-          backgroundColor={boxHovered ? 'medGray' : 'lightGray'}
+          backgroundColor={boxHovered ? 'backgroundModule' : 'lightGray'}
           paddingY="12"
           paddingX="12"
         >
@@ -498,7 +498,7 @@ const SelectAllButton = () => {
       alignItems="center"
       marginLeft={{ sm: '8', md: 'auto' }}
       borderRadius="12"
-      backgroundColor="medGray"
+      backgroundColor="backgroundModule"
       fontWeight="medium"
       height="44"
       paddingTop="12"
@@ -574,7 +574,7 @@ const CollectionFilterItem = ({
       paddingBottom="4"
       paddingLeft="8"
       borderRadius="12"
-      background="medGray"
+      background="backgroundModule"
       fontSize="14"
     >
       <Box as="img" borderRadius="round" width="20" height="20" src={collection.image} />
@@ -608,7 +608,7 @@ const CollectionSearch = ({
   return (
     <Box
       as="input"
-      borderColor={{ default: 'medGray', focus: 'genieBlue' }}
+      borderColor={{ default: 'backgroundModule', focus: 'genieBlue' }}
       borderWidth="1px"
       borderStyle="solid"
       borderRadius="8"

@@ -6,7 +6,7 @@ const baseNavDropdown = style([
   sprinkles({
     background: 'lightGray',
     borderStyle: 'solid',
-    borderColor: 'medGray',
+    borderColor: 'backgroundModule',
     borderWidth: '1px',
     paddingBottom: '8',
     paddingTop: '8',

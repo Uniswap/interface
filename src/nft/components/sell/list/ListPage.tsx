@@ -77,7 +77,7 @@ const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }
     <Row
       gap="6"
       borderRadius="12"
-      backgroundColor="medGray"
+      backgroundColor="backgroundModule"
       height="44"
       className={clsx(isSelected && styles.buttonSelected)}
       onClick={toggleSelected}
@@ -180,7 +180,7 @@ const SetDurationModal = () => {
           setGlobalDuration={setDuration}
         />
         <Row
-          color="medGray"
+          color="backgroundModule"
           paddingRight="8"
           paddingLeft="12"
           paddingTop="12"
@@ -188,7 +188,7 @@ const SetDurationModal = () => {
           borderRadius="8"
           borderWidth="1px"
           borderStyle="solid"
-          borderColor="medGray"
+          borderColor="backgroundModule"
           position="relative"
           height="44"
         >
@@ -276,7 +276,7 @@ const GlobalDurationButton = ({
   return (
     <Row
       borderRadius="12"
-      backgroundColor="medGray"
+      backgroundColor="backgroundModule"
       height="44"
       className={clsx(isSelected && styles.buttonSelected)}
       onClick={toggleSelected}
@@ -433,7 +433,7 @@ const PriceTextInput = ({
   return (
     <Column gap="12" position="relative">
       <Row
-        color="medGray"
+        color="backgroundModule"
         height="44"
         width="min"
         padding="4"
