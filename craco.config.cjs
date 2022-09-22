@@ -3,7 +3,7 @@ const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { DefinePlugin } = require('webpack')
 
-const commitHash = require('child_process').execSync('git rev-parse --short HEAD')
+const commitHash = require('child_process').execSync('git rev-parse HEAD')
 
 module.exports = {
   babel: {
