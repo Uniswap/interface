@@ -1,6 +1,8 @@
 import React from 'react'
 import { Image } from 'react-native'
 import { SvgUri } from 'react-native-svg'
+import { logMessage } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 import { resizeModeContain } from 'src/styles/image'
 import { uriToHttp } from 'src/utils/uriToHttp'
 
@@ -14,6 +16,11 @@ type Props = {
 
 export function RemoteImage({ backgroundColor, borderRadius, uri, height, width }: Props) {
   const imageHttpUrl = uriToHttp(uri)[0]
+
+  if (!imageHttpUrl) {
+    logMessage(LogContext.ImageUtils, `Could not retrieve and format remote image for uri: ${uri}`)
+    return null
+  }
 
   if (imageHttpUrl.endsWith('.svg')) {
     return (
