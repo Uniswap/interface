@@ -44,7 +44,8 @@ export const Trace = memo(
 
     useEffect(() => {
       if (shouldLogImpression) {
-        sendAnalyticsEvent(name ?? EventName.PAGE_VIEWED, { ...combinedProps, ...properties })
+        const origin = window.location.origin
+        sendAnalyticsEvent(name ?? EventName.PAGE_VIEWED, { ...combinedProps, ...properties, origin })
       }
       // Impressions should only be logged on mount.
       // eslint-disable-next-line react-hooks/exhaustive-deps
