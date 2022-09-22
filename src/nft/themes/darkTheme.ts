@@ -18,10 +18,7 @@ export const darkTheme: Theme = {
     backgroundModule: vars.color.grey800,
 
     // Opacities of black and white
-    white95: '#0E111AF2',
-    white90: '#000000E5',
-    white80: '#000000CC',
-    white08: '#0000000C',
+    accentActionSoft: '#000000E5',
     backgroundFloating: '0000000C',
   },
   shadows: {

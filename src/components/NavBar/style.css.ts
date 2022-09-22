@@ -10,7 +10,7 @@ export const nav = style([
     width: 'full',
     height: '72',
     zIndex: '2',
-    background: 'white08',
+    background: 'backgroundFloating',
   }),
   {
     backdropFilter: 'blur(24px)',

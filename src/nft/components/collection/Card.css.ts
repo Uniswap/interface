@@ -100,7 +100,7 @@ export const erc1155QuantityText = style([
 export const erc1155Button = sprinkles({
   display: 'flex',
   justifyContent: 'center',
-  backgroundColor: 'white90',
+  backgroundColor: 'accentActionSoft',
   textAlign: 'center',
   background: 'none',
   border: 'none',

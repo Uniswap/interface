@@ -4,6 +4,7 @@ import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
 const themeContractValues = {
   colors: {
     accentFailure: '',
+    accentActionSoft: '',
 
     explicitWhite: '',
 
@@ -23,12 +24,6 @@ const themeContractValues = {
     textTertiary: '',
 
     white: '',
-
-    // Opacities of black and white
-    white95: '',
-    white90: '',
-    white80: '',
-    white08: '',
   },
 
   shadows: {

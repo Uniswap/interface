@@ -18,11 +18,8 @@ export const lightTheme: Theme = {
     backgroundModule: vars.color.grey50,
 
     // Opacities of black and white
-    white95: '#EDEFF7F2',
-    white90: '#FFFFFFE5',
-    white80: '#FFFFFFCC',
-    white08: '#00000000',
-    backgroundFloating: '#29324908',
+    accentActionSoft: '#FFFFFFE5',
+    backgroundFloating: '#00000000',
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

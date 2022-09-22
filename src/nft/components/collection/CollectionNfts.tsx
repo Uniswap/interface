@@ -96,7 +96,12 @@ export const CollectionNfts = ({ contractAddress, rarityVerified }: CollectionNf
   return (
     <>
       <AnimatedBox position="sticky" top="72" width="full" zIndex="3">
-        <Box backgroundColor="white08" width="full" paddingBottom="8" style={{ backdropFilter: 'blur(24px)' }}>
+        <Box
+          backgroundColor="backgroundFloating"
+          width="full"
+          paddingBottom="8"
+          style={{ backdropFilter: 'blur(24px)' }}
+        >
           <Row marginTop="12" gap="12">
             <FilterButton
               isMobile={isMobile}
