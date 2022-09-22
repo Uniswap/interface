@@ -279,7 +279,7 @@ export function OnboardingCompleteAnimation({
             <Text color="textSecondary" textAlign="center" variant="body">
               {isNewWallet
                 ? t(
-                    'Transfer tokens to your wallet to make a swap or add assets to your watchlist to save them for later.'
+                    "You've created, nicknamed, and backed up your wallet. Now, you can explore and transact with the sites, tokens, NFTs, and other wallets that make up the world of web3!"
                   )
                 : t(
                     'Check out your tokens and NFTs, watch other wallets, connect to web3 sites, and swap directly in the app.'

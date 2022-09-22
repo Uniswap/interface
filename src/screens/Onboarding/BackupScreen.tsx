@@ -52,7 +52,7 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
   return (
     <OnboardingScreen
       subtitle={t(
-        'Backups let you restore your wallet if you lose your device––we recommend adding both types.'
+        'You can use your recovery phrase to restore your wallet on another app or device. We recommend backing it up both manually and to iCloud.'
       )}
       title={t('Back up your recovery phrase')}>
       <Flex grow>

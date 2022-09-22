@@ -105,7 +105,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
     case View.View:
       return (
         <OnboardingScreen
-          subtitle={t('Remember to record your words in the same order as they are below.')}
+          subtitle={t('Remember to record your words in the same order as they appear below.')}
           title={t('Write down your recovery phrase')}>
           <WarningModal
             caption={t(
