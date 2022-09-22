@@ -62,7 +62,7 @@ export const SortDropdown = ({
         borderBottomLeftRadius={isOpen ? '0' : undefined}
         borderBottomRightRadius={isOpen ? '0' : undefined}
         padding={inFilters ? '12' : mini ? '0' : '8'}
-        color="blackBlue"
+        color="textPrimary"
         whiteSpace="nowrap"
         display="flex"
         justifyContent="space-between"
@@ -99,7 +99,7 @@ export const SortDropdown = ({
           <Box
             marginLeft={reversable ? '4' : '0'}
             marginRight={mini ? '2' : '0'}
-            color="blackBlue"
+            color="textPrimary"
             className={buttonTextMedium}
           >
             {mini ? miniPrompt : isOpen ? 'Sort by' : dropDownOptions[selectedIndex].displayText}
@@ -107,7 +107,7 @@ export const SortDropdown = ({
         </Box>
 
         <ChevronUpIcon
-          secondaryColor={mini ? themeVars.colors.blackBlue : undefined}
+          secondaryColor={mini ? themeVars.colors.textPrimary : undefined}
           secondaryWidth={mini ? '20' : undefined}
           secondaryHeight={mini ? '20' : undefined}
           style={{
@@ -197,7 +197,7 @@ const DropDownItem = ({
         default: 'lightGray',
         hover: 'lightGrayButton',
       }}
-      color="blackBlue"
+      color="textPrimary"
       onClick={onClick}
       cursor="pointer"
     >

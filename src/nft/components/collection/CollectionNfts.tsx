@@ -4,8 +4,7 @@ import { AnimatedBox, Box } from 'nft/components/Box'
 import { FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
-import { Row } from 'nft/components/Flex'
-import { Center } from 'nft/components/Flex'
+import { Center, Row } from 'nft/components/Flex'
 import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
 import { useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import { AssetsFetcher } from 'nft/queries'
@@ -134,7 +133,7 @@ export const CollectionNfts = ({ contractAddress, rarityVerified }: CollectionNf
             })}
           </div>
         ) : (
-          <Center width="full" color="darkGray" style={{ height: '60vh' }}>
+          <Center width="full" color="textSecondary" style={{ height: '60vh' }}>
             <div style={{ display: 'block', textAlign: 'center' }}>
               <p className={header2}>No NFTS found</p>
               <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">

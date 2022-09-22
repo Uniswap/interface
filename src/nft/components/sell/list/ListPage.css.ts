@@ -47,7 +47,7 @@ export const chevronDown = style({
 })
 
 export const dropdown = style({
-  boxShadow: `0px 4px 16px ${themeVars.colors.blackBlue20}`,
+  boxShadow: `0px 4px 16px ${themeVars.colors.backgroundSurface}`,
   marginLeft: '-12px',
 })
 

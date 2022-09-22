@@ -4,7 +4,7 @@ import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const bagRow = style([
   sprinkles({
-    color: 'blackBlue',
+    color: 'textPrimary',
     padding: '4',
     gap: '12',
     cursor: 'pointer',
@@ -15,7 +15,7 @@ export const bagRow = style([
     marginLeft: '-4px',
     marginRight: '-4px',
     ':hover': {
-      background: themeVars.colors.darkGray10,
+      background: themeVars.colors.backgroundModule,
     },
   },
 ])
@@ -23,7 +23,7 @@ export const bagRow = style([
 export const unavailableAssetsContainer = sprinkles({
   background: 'none',
   gap: '12',
-  color: 'blackBlue',
+  color: 'textPrimary',
   paddingY: '16',
   borderStyle: 'solid',
   borderWidth: '1px',
@@ -36,7 +36,7 @@ export const unavailableAssetsContainer = sprinkles({
 export const priceChangeColumn = sprinkles({
   background: 'none',
   gap: '8',
-  color: 'blackBlue',
+  color: 'textPrimary',
   paddingY: '16',
   borderStyle: 'solid',
   borderWidth: '1px',
@@ -61,7 +61,7 @@ export const priceChangeRow = style([
 export const unavailableAssetRow = style([
   sprinkles({
     gap: '12',
-    color: 'blackBlue',
+    color: 'textPrimary',
     paddingX: '12',
     paddingY: '4',
   }),
@@ -190,7 +190,7 @@ export const previewImageGrid = style([
 ])
 
 export const toolTip = sprinkles({
-  color: 'darkGray',
+  color: 'textSecondary',
   display: 'flex',
   flexShrink: '0',
 })

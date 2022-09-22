@@ -55,7 +55,7 @@ export const searchBarInput = style([
     padding: '0',
     fontWeight: 'normal',
     fontSize: '16',
-    color: { default: 'blackBlue', placeholder: 'placeholder' },
+    color: { default: 'textPrimary', placeholder: 'placeholder' },
     border: 'none',
     background: 'none',
   }),
@@ -120,7 +120,7 @@ export const primaryText = style([
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    color: 'blackBlue',
+    color: 'textPrimary',
   }),
   {
     lineHeight: '24px',
@@ -130,7 +130,7 @@ export const primaryText = style([
 export const secondaryText = style([
   buttonTextSmall,
   sprinkles({
-    color: 'darkGray',
+    color: 'textSecondary',
   }),
   {
     lineHeight: '20px',
@@ -153,7 +153,7 @@ export const suggestionIcon = sprinkles({
 export const sectionHeader = style([
   subheadSmall,
   sprinkles({
-    color: 'darkGray',
+    color: 'textSecondary',
   }),
   {
     lineHeight: '20px',

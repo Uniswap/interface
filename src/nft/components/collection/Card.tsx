@@ -379,7 +379,7 @@ const PrimaryInfo = ({ children }: { children: ReactNode }) => {
       overflow="hidden"
       whiteSpace="nowrap"
       textOverflow="ellipsis"
-      color="blackBlue"
+      color="textPrimary"
       fontWeight="medium"
       fontSize="14"
       style={{ lineHeight: '20px' }}
@@ -404,7 +404,7 @@ const SecondaryDetails = ({ children }: { children: ReactNode }) => (
 const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   return (
     <Box
-      color="blackBlue"
+      color="textPrimary"
       overflow="hidden"
       whiteSpace="nowrap"
       textOverflow="ellipsis"
@@ -419,7 +419,7 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
 
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   return (
-    <Box marginTop={'8'} color="darkGray">
+    <Box marginTop={'8'} color="textSecondary">
       {children}
     </Box>
   )
@@ -596,7 +596,7 @@ const Pool = () => {
       text={<Box fontSize="14">This item is part of an NFT liquidity pool. Price increases as supply decreases.</Box>}
       placement="top"
     >
-      <Box display="flex" flexShrink="0" marginLeft="4" color="darkGray">
+      <Box display="flex" flexShrink="0" marginLeft="4" color="textSecondary">
         <PoolIcon width="20" height="20" />
       </Box>
     </MouseoverTooltip>

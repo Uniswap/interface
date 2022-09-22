@@ -390,7 +390,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
       style={{ textDecoration: 'none' }}
     >
       <Column
-        color={'blackBlue'}
+        color={'textPrimary'}
         className={subheadSmall}
         onMouseEnter={toggleBoxHovered}
         onMouseLeave={toggleBoxHovered}
@@ -420,7 +420,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
             {asset.collection?.name}
             {asset.collectionIsVerified ? <VerifiedIcon className={styles.verifiedBadge} /> : null}
           </Box>
-          <Box as="span" fontSize="12" lineHeight="16" color="darkGray" marginTop="8">
+          <Box as="span" fontSize="12" lineHeight="16" color="textSecondary" marginTop="8">
             Last:&nbsp;
             {asset.lastPrice ? (
               <>
@@ -433,7 +433,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
               </Box>
             )}
           </Box>
-          <Box as="span" fontSize="12" lineHeight="16" color="darkGray" marginTop="4">
+          <Box as="span" fontSize="12" lineHeight="16" color="textSecondary" marginTop="4">
             Floor:&nbsp;
             {asset.floorPrice ? (
               <>
@@ -453,7 +453,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
             borderRadius="12"
             paddingY="8"
             transition="250"
-            color={buttonHovered ? 'blackBlue' : isSelected ? 'red400' : 'genieBlue'}
+            color={buttonHovered ? 'textPrimary' : isSelected ? 'red400' : 'genieBlue'}
             backgroundColor={buttonHovered ? (isSelected ? 'red400' : 'genieBlue') : 'lightGray'}
             className={subheadSmall}
             onMouseEnter={toggleButtonHovered}
@@ -506,7 +506,7 @@ const SelectAllButton = () => {
       paddingRight="16"
       paddingLeft="16"
       cursor="pointer"
-      color="blackBlue"
+      color="textPrimary"
       onClick={toggleAllSelected}
       className={clsx(`${subheadSmall} ${isAllSelected ? styles.buttonSelected : null}`)}
     >
@@ -582,7 +582,7 @@ const CollectionFilterItem = ({
         {collection?.name}
       </Box>
       <Box
-        color="darkGray"
+        color="textSecondary"
         background="none"
         height="28"
         width="28"
@@ -615,7 +615,7 @@ const CollectionSearch = ({
       padding="12"
       backgroundColor="white"
       fontSize="14"
-      color={{ placeholder: 'darkGray', default: 'blackBlue' }}
+      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
       placeholder="Search by name"
       value={searchText}
       width="full"

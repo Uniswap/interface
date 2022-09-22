@@ -5,8 +5,7 @@ import { PriceRange } from 'nft/components/collection/PriceRange'
 import { Column, Row } from 'nft/components/Flex'
 import { Radio } from 'nft/components/layout/Radio'
 import { useCollectionFilters } from 'nft/hooks'
-import { FocusEventHandler, FormEvent, useMemo, useState } from 'react'
-import { useReducer } from 'react'
+import { FocusEventHandler, FormEvent, useMemo, useReducer, useState } from 'react'
 
 import { Trait } from '../../hooks/useCollectionFilters'
 import { groupBy } from '../../utils/groupBy'
@@ -60,7 +59,7 @@ export const Filters = ({
   return (
     <Box className={styles.container}>
       <Row width="full" justifyContent="space-between">
-        <Row as="span" fontSize="20" color="blackBlue">
+        <Row as="span" fontSize="20" color="textPrimary">
           Filters
         </Row>
       </Row>

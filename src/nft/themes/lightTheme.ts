@@ -1,4 +1,5 @@
-import { Theme, vars } from '../css/sprinkles.css'
+import { Theme, vars } from 'nft/css/sprinkles.css'
+import { opacify } from 'theme/utils'
 
 export const lightTheme: Theme = {
   colors: {
@@ -11,13 +12,13 @@ export const lightTheme: Theme = {
     modalTextSecondary: 'rgba(60, 66, 82, 0.6)',
 
     // Bryan's colors from Figma that vary dark vs light
-    blackBlue: vars.color.grey900,
-    blackBlue20: `#0E111A33`,
-    darkGray: vars.color.grey500,
+    textPrimary: vars.color.grey900,
+    backgroundSurface: '#FFFFFF',
+    textSecondary: vars.color.grey500,
     medGray: `#5E68873D`,
     lightGray: '#FFFFFF',
     white: '#FFFFFF',
-    darkGray10: `#5E68871A`,
+    backgroundModule: opacify(8, vars.color.grey300),
     explicitWhite: '#FFFFFF',
     magicGradient: vars.color.pink400,
     placeholder: vars.color.grey300,

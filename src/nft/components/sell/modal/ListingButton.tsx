@@ -170,7 +170,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
           className={`${bodySmall} ${styles.warningTooltip}`}
           transition="250"
           onClick={() => setShowWarning(false)}
-          color="darkGray"
+          color="textSecondary"
           zIndex="3"
           borderRadius="4"
           backgroundColor="white"
@@ -189,7 +189,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
           </Box>
           {!!disableListButton ? (
             <Box paddingTop="6">
-              <XMarkIcon fill="darkGray" height="20" width="20" />
+              <XMarkIcon fill="textSecondary" height="20" width="20" />
             </Box>
           ) : (
             <Row

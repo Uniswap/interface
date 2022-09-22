@@ -1,6 +1,5 @@
 import { useIsMobile } from 'nft/hooks'
-import { useEffect, useState } from 'react'
-import { FocusEventHandler, FormEvent } from 'react'
+import { FocusEventHandler, FormEvent, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { useCollectionFilters } from '../../hooks/useCollectionFilters'
@@ -35,7 +34,7 @@ export const PriceRange = () => {
   }
 
   return (
-    <Row gap="12" marginTop="12" color="blackBlue">
+    <Row gap="12" marginTop="12" color="textPrimary">
       <Row position="relative" style={{ flex: 1 }}>
         <NumericInput
           style={{
@@ -45,7 +44,7 @@ export const PriceRange = () => {
           borderRadius="12"
           padding="12"
           fontSize="14"
-          color={{ placeholder: 'darkGray', default: 'blackBlue' }}
+          color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
           backgroundColor="transparent"
           placeholder="Min"
           defaultValue={minPrice}
@@ -64,11 +63,11 @@ export const PriceRange = () => {
             width: isMobile ? '100%' : '142px',
             border: '2px solid rgba(153, 161, 189, 0.24)',
           }}
-          borderColor={{ default: 'medGray', focus: 'darkGray' }}
+          borderColor={{ default: 'medGray', focus: 'textSecondary' }}
           borderRadius="12"
           padding="12"
           fontSize="14"
-          color={{ placeholder: 'darkGray', default: 'blackBlue' }}
+          color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
           backgroundColor="transparent"
           placeholder="Max"
           defaultValue={maxPrice}

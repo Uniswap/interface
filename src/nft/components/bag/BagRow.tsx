@@ -99,7 +99,7 @@ export const BagRow = ({ asset, removeAsset, showRemove, grayscale, isMobile }: 
           overflow="hidden"
           height="full"
           justifyContent="space-between"
-          color={grayscale ? 'darkGray' : 'blackBlue'}
+          color={grayscale ? 'textSecondary' : 'textPrimary'}
         >
           <Column>
             <Row overflow="hidden" whiteSpace="nowrap" gap="2">
@@ -244,7 +244,7 @@ export const UnavailableAssetsHeaderRow = ({
             position="relative"
             width="20"
             height="20"
-            color="blackBlue"
+            color="textPrimary"
             justifyContent="center"
             cursor="pointer"
             onClick={() => clearUnavailableAssets()}
@@ -266,11 +266,11 @@ export const UnavailableAssetsHeaderRow = ({
               toggleOpen()
             }}
           >
-            <Row gap="12" fontSize="14" color="darkGray" fontWeight="normal" style={{ lineHeight: '20px' }}>
+            <Row gap="12" fontSize="14" color="textSecondary" fontWeight="normal" style={{ lineHeight: '20px' }}>
               {!isOpen && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
               {`${assets.length} unavailable NFTs`}
             </Row>
-            <Row color="darkGray">{isOpen ? <ChevronUpBagIcon /> : <ChevronDownBagIcon />}</Row>
+            <Row color="textSecondary">{isOpen ? <ChevronUpBagIcon /> : <ChevronDownBagIcon />}</Row>
           </Row>
           <Column gap="8">
             {isOpen &&

@@ -10,7 +10,7 @@ export const bagContainer = style([
     height: 'full',
     right: '0',
     background: 'lightGray',
-    color: 'blackBlue',
+    color: 'textPrimary',
     paddingTop: '20',
     paddingBottom: '24',
     zIndex: { sm: 'offcanvas', md: '3' },
@@ -40,7 +40,7 @@ export const assetsContainer = style([
 export const header = style([
   subhead,
   sprinkles({
-    color: 'blackBlue',
+    color: 'textPrimary',
     justifyContent: 'space-between',
   }),
   {

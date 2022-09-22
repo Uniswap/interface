@@ -94,7 +94,7 @@ const BagHeader = ({ bagQuantity }: { bagQuantity: number }) => {
         <Box
           as="button"
           border="none"
-          color="darkGray"
+          color="textSecondary"
           background="black"
           className={styles.closeIcon}
           onClick={toggleCart}

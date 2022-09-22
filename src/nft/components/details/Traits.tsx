@@ -15,7 +15,7 @@ const Trait: React.FC<TraitProps> = ({ label, value }: TraitProps) => (
     <Box
       as="span"
       className={badge}
-      color="darkGray"
+      color="textSecondary"
       whiteSpace="nowrap"
       overflow="hidden"
       textOverflow="ellipsis"
@@ -27,7 +27,7 @@ const Trait: React.FC<TraitProps> = ({ label, value }: TraitProps) => (
 
     <Box
       as="span"
-      color="blackBlue"
+      color="textPrimary"
       fontSize="16"
       fontWeight="normal"
       whiteSpace="nowrap"

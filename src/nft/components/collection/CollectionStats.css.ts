@@ -96,7 +96,7 @@ export const statsLabel = style([
   bodySmall,
   sprinkles({
     fontWeight: 'normal',
-    color: 'darkGray',
+    color: 'textSecondary',
     whiteSpace: 'nowrap',
   }),
   {

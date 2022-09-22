@@ -44,7 +44,7 @@ export const FilterSidebar = ({ SortDropdown }: { SortDropdown: () => JSX.Elemen
         width={{ sm: 'full', md: 'auto' }}
       >
         <Row width="full" justifyContent="space-between">
-          <Row as="span" className={headlineSmall} color="blackBlue">
+          <Row as="span" className={headlineSmall} color="textPrimary">
             Filters
           </Row>
           {isMobile && (
@@ -52,10 +52,10 @@ export const FilterSidebar = ({ SortDropdown }: { SortDropdown: () => JSX.Elemen
               as="button"
               border="none"
               backgroundColor="transparent"
-              color="darkGray"
+              color="textSecondary"
               onClick={() => setFiltersExpanded(false)}
             >
-              <XMarkIcon fill={themeVars.colors.blackBlue} />
+              <XMarkIcon fill={themeVars.colors.textPrimary} />
             </Box>
           )}
         </Row>
@@ -153,7 +153,7 @@ const CollectionFilterSearch = ({
       marginBottom="24"
       backgroundColor="white"
       fontSize="14"
-      color={{ placeholder: 'darkGray', default: 'blackBlue' }}
+      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
       placeholder="Search collections"
       value={collectionSearchText}
       onChange={(e: FormEvent<HTMLInputElement>) => setCollectionSearchText(e.currentTarget.value)}
@@ -200,7 +200,7 @@ const CollectionItem = ({
         {collection.name}{' '}
       </Box>
       <Checkbox checked={isChecked(collection.address)} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="darkGray" marginRight="12" marginLeft="auto">
+        <Box as="span" color="textSecondary" marginRight="12" marginLeft="auto">
           {collection.count}
         </Box>
       </Checkbox>

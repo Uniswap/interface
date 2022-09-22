@@ -37,7 +37,7 @@ const EmptyState = () => {
           <Center className={subhead} style={{ lineHeight: '24px' }}>
             Your bag is empty
           </Center>
-          <Center fontSize="12" fontWeight="normal" color="darkGray" style={{ lineHeight: '16px' }}>
+          <Center fontSize="12" fontWeight="normal" color="textSecondary" style={{ lineHeight: '16px' }}>
             Selected NFTs will appear here
           </Center>
         </Column>
@@ -75,12 +75,12 @@ const BagHeader = ({ numberOfAssets, toggleBag, resetFlow }: BagHeaderProps) => 
     <Column gap="4" paddingX="32" marginBottom="20">
       <Row className={styles.header}>
         My bag
-        <Box display="flex" padding="2" color="darkGray" cursor="pointer" onClick={toggleBag}>
+        <Box display="flex" padding="2" color="textSecondary" cursor="pointer" onClick={toggleBag}>
           <BagCloseIcon />
         </Box>
       </Row>
       {numberOfAssets > 0 && (
-        <Box fontSize="14" fontWeight="normal" style={{ lineHeight: '20px' }} color="blackBlue">
+        <Box fontSize="14" fontWeight="normal" style={{ lineHeight: '20px' }} color="textPrimary">
           {roundAndPluralize(numberOfAssets, 'NFT')} ·{' '}
           <Box
             as="span"

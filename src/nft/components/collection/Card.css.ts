@@ -89,7 +89,7 @@ export const erc1155ButtonRow = sprinkles({
 
 export const erc1155QuantityText = style([
   sprinkles({
-    color: 'blackBlue',
+    color: 'textPrimary',
   }),
   {
     lineHeight: '20px',
@@ -118,7 +118,7 @@ export const erc1155PlusButton = style([
   {
     ':hover': {
       backgroundColor: themeVars.colors.magicGradient,
-      color: themeVars.colors.blackBlue,
+      color: themeVars.colors.textPrimary,
     },
   },
 ])
@@ -131,7 +131,7 @@ export const erc1155MinusButton = style([
   {
     ':hover': {
       backgroundColor: themeVars.colors.error,
-      color: themeVars.colors.blackBlue,
+      color: themeVars.colors.textPrimary,
     },
   },
 ])
@@ -141,7 +141,7 @@ export const rarityInfo = style([
     display: 'flex',
     borderRadius: '4',
     height: '16',
-    color: 'blackBlue',
+    color: 'textPrimary',
     background: 'lightGrayButton',
     fontSize: '10',
     fontWeight: 'semibold',

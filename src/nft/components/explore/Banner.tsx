@@ -4,8 +4,7 @@ import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { bodySmall, buttonMedium, header1 } from 'nft/css/common.css'
-import { vars } from 'nft/css/sprinkles.css'
-import { breakpoints } from 'nft/css/sprinkles.css'
+import { breakpoints, vars } from 'nft/css/sprinkles.css'
 import { ActivityFetcher, fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -112,7 +111,7 @@ const CollectionDetails = ({
     </Row>
     <Row className={bodySmall} marginTop="12" color="explicitWhite">
       <Box>
-        <Box as="span" color="darkGray" marginRight="4">
+        <Box as="span" color="textSecondary" marginRight="4">
           Floor:
         </Box>
         {collection.floor ? formatEthPrice(collection.floor.toString()) : '--'} ETH
@@ -126,7 +125,7 @@ const CollectionDetails = ({
         ) : null}
       </Box>
       <Box marginLeft="24" color="explicitWhite">
-        <Box as="span" color="darkGray" marginRight="4">
+        <Box as="span" color="textSecondary" marginRight="4">
           Volume:
         </Box>
         {collection.volume ? putCommas(+toSignificant(collection.volume.toString())) : '--'} ETH

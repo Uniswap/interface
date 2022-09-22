@@ -8,7 +8,7 @@ export const filterButton = sprinkles({
 
 export const filterButtonExpanded = style({
   background: vars.color.lightGrayButton,
-  color: themeVars.colors.blackBlue,
+  color: themeVars.colors.textPrimary,
 })
 
 export const filterBadge = style([
