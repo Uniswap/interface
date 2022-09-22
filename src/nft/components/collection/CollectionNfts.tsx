@@ -31,13 +31,10 @@ interface CollectionNftsProps {
   collectionStats: GenieCollection
   rarityVerified?: boolean
 }
-}
 
 const rarityStatusCache = new Map<string, boolean>()
 
-
-
-export const CollectionNfts = ({ contractAddress, collectionStats , rarityVerified }: CollectionNftsProps) => {
+export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
   const traits = useCollectionFilters((state) => state.traits)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
