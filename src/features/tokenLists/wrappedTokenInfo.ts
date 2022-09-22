@@ -2,9 +2,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { ChainIdTo } from 'src/constants/chains'
-import { logMessage } from 'src/features/telemetry'
-import { LogContext } from 'src/features/telemetry/constants'
-import { getChecksumAddress, getValidAddress } from 'src/utils/addresses'
+import { getChecksumAddress } from 'src/utils/addresses'
 
 type TagDetails = Tags[keyof Tags]
 interface TagInfo extends TagDetails {
@@ -23,7 +21,7 @@ export class WrappedTokenInfo implements Token {
 
   public readonly tokenInfo: TokenInfo
 
-  private _validAddress: Address | null = null
+  private _checksummedAddress: Address | null = null
 
   constructor(tokenInfo: TokenInfo, list: TokenList) {
     this.tokenInfo = tokenInfo
@@ -31,19 +29,10 @@ export class WrappedTokenInfo implements Token {
   }
 
   public get address(): string {
-    if (!this._validAddress) {
-      let validAddress = getValidAddress(this.tokenInfo.address)
-
-      if (!validAddress) {
-        // This should never happen. Will measure how often it does.
-        logMessage(LogContext.WrappedTokenInfo, `Invalid token address: ${this.tokenInfo.address}`)
-        // Falling back to what we had before. Will remove after measuring.
-        validAddress = getChecksumAddress(this.tokenInfo.address)
-      }
-
-      this._validAddress = validAddress
+    if (!this._checksummedAddress) {
+      this._checksummedAddress = getChecksumAddress(this.tokenInfo.address)
     }
-    return this._validAddress
+    return this._checksummedAddress
   }
 
   public get chainId(): number {
