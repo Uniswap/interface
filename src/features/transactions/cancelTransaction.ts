@@ -1,7 +1,6 @@
 import { appSelect } from 'src/app/hooks'
 import { attemptReplaceTransaction } from 'src/features/transactions/replaceTransaction'
 import { makeSelectTransaction } from 'src/features/transactions/selectors'
-import { hexlifyTransaction } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { call } from 'typed-redux-saga'
 
@@ -15,5 +14,5 @@ export function* attemptCancelTransaction(transaction: TransactionDetails) {
   if (!tx?.cancelRequest) {
     throw new Error('attempted to cancel a transaction without cancelRequest set')
   }
-  yield* call(attemptReplaceTransaction, transaction, hexlifyTransaction(tx.cancelRequest), true)
+  yield* call(attemptReplaceTransaction, transaction, tx.cancelRequest, true)
 }
