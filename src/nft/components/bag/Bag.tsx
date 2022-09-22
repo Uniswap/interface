@@ -11,16 +11,16 @@ import { BagCloseIcon, LargeBagIcon } from 'nft/components/icons'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useBag, useIsMobile, useWalletBalance } from 'nft/hooks'
+import { useBag, useIsMobile, useSendTransaction, useTransactionResponse, useWalletBalance } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItemStatus, BagStatus } from 'nft/types'
+import { BagItemStatus, BagStatus, TxStateType } from 'nft/types'
 import { buildSellObject } from 'nft/utils/buildSellObject'
 import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { roundAndPluralize } from 'nft/utils/roundAndPluralize'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { sortUpdatedAssets } from 'nft/utils/updatedAssets'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
@@ -122,6 +122,12 @@ const Bag = () => {
   const shouldShowBag = isNFTPage && !isNFTSellPage
   const isMobile = useIsMobile()
 
+  const sendTransaction = useSendTransaction((state) => state.sendTransaction)
+  const transactionState = useSendTransaction((state) => state.state)
+  const setTransactionState = useSendTransaction((state) => state.setState)
+  const transactionStateRef = useRef(transactionState)
+  const [setTransactionResponse] = useTransactionResponse((state) => [state.setTransactionResponse])
+
   const queryClient = useQueryClient()
 
   const itemsInBag = useMemo(() => {
@@ -165,6 +171,25 @@ const Bag = () => {
     }
   )
 
+  const purchaseAssets = async () => {
+    if (!provider || !routingData) return
+    const purchaseResponse = await sendTransaction(
+      provider?.getSigner(),
+      itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
+      routingData
+    )
+    if (
+      purchaseResponse &&
+      (transactionStateRef.current === TxStateType.Success || transactionStateRef.current === TxStateType.Failed)
+    ) {
+      setLocked(false)
+      setModalIsOpen(false)
+      setTransactionResponse(purchaseResponse)
+      bagExpanded && toggleBag()
+      reset()
+    }
+  }
+
   const { totalEthPrice, totalUsdPrice } = useMemo(() => {
     const totalEthPrice = itemsInBag.reduce(
       (total, item) =>
@@ -188,6 +213,10 @@ const Bag = () => {
 
     return { balance, sufficientBalance }
   }, [balanceInEth, totalEthPrice, isConnected])
+
+  useEffect(() => {
+    useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))
+  }, [])
 
   useEffect(() => {
     if (routingData && bagStatus === BagStatus.FETCHING_ROUTE) {
@@ -220,6 +249,7 @@ const Bag = () => {
 
       if (hasAssets) {
         if (!shouldReview) {
+          purchaseAssets()
           setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
         } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
         else {
@@ -229,6 +259,7 @@ const Bag = () => {
         setBagStatus(BagStatus.ADDING_TO_BAG)
       }
     } else if (routingData && bagStatus === BagStatus.FETCHING_FINAL_ROUTE) {
+      purchaseAssets()
       setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -285,6 +316,19 @@ const Bag = () => {
     bagExpanded && toggleBag()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
+
+  useEffect(() => {
+    if (transactionStateRef.current === TxStateType.Confirming) setBagStatus(BagStatus.PROCESSING_TRANSACTION)
+    if (transactionStateRef.current === TxStateType.Denied || transactionStateRef.current === TxStateType.Invalid) {
+      if (transactionStateRef.current === TxStateType.Invalid) setBagStatus(BagStatus.WARNING)
+      else setBagStatus(BagStatus.CONFIRM_REVIEW)
+      setTransactionState(TxStateType.New)
+
+      setLocked(false)
+      setModalIsOpen(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionStateRef.current])
 
   const hasAssetsToShow = itemsInBag.length > 0 || unavailableAssets.length > 0
 
