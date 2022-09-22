@@ -113,7 +113,6 @@ const tokenQuery = graphql`
 `
 
 export function useTokenQuery(address: string, chain: Chain, timePeriod: TimePeriod) {
-  //const cachedTopToken = cachedTopTokens[address]
   const data = useLazyLoadQuery<TokenQuery>(tokenQuery, {
     contract: { address, chain },
     duration: toHistoryDuration(timePeriod),
