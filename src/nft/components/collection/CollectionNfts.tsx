@@ -29,11 +29,15 @@ import { useLocation } from 'react-router-dom'
 interface CollectionNftsProps {
   contractAddress: string
   collectionStats: GenieCollection
+  rarityVerified?: boolean
+}
 }
 
 const rarityStatusCache = new Map<string, boolean>()
 
-export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionNftsProps) => {
+
+
+export const CollectionNfts = ({ contractAddress, collectionStats , rarityVerified }: CollectionNftsProps) => {
   const traits = useCollectionFilters((state) => state.traits)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
@@ -243,6 +247,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
                   setUniformHeight={setUniformHeight}
                   mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
                   setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                  rarityVerified={rarityVerified}
                 />
               ) : null
             })}

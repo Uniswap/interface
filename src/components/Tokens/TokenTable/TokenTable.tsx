@@ -116,28 +116,15 @@ export default function TokenTable() {
           <GridContainer>
             <HeaderRow />
             <TokenDataContainer>
-              {tokens.map((token, index) => {
-                if (tokens.length === index + 1) {
-                  return (
-                    <LoadedRow
-                      key={token?.name}
-                      tokenListIndex={index}
-                      tokenListLength={tokens?.length ?? 0}
-                      token={token}
-                      ref={lastTokenRef}
-                    />
-                  )
-                } else {
-                  return (
-                    <LoadedRow
-                      key={token?.name}
-                      tokenListIndex={index}
-                      tokenListLength={tokens?.length ?? 0}
-                      token={token}
-                    />
-                  )
-                }
-              })}
+              {tokens.map((token, index) => (
+                <LoadedRow
+                  key={token?.name}
+                  tokenListIndex={index}
+                  tokenListLength={tokens?.length ?? 0}
+                  token={token}
+                  ref={tokens.length === index + 1 ? lastTokenRef : undefined}
+                />
+              ))}
               {loading && LoadingMoreRows}
             </TokenDataContainer>
           </GridContainer>

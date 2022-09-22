@@ -1,13 +1,22 @@
 import clsx from 'clsx'
 import Column from 'components/Column'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
-import * as styles from 'nft/components/collection/Card.css'
 import { Row } from 'nft/components/Flex'
-import { MinusIconLarge, PauseButtonIcon, PlayButtonIcon, PlusIconLarge } from 'nft/components/icons'
+import {
+  MinusIconLarge,
+  PauseButtonIcon,
+  PlayButtonIcon,
+  PlusIconLarge,
+  PoolIcon,
+  RarityVerifiedIcon,
+  SuspiciousIcon20,
+} from 'nft/components/icons'
 import { body, subheadSmall } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, UniformHeight, UniformHeights } from 'nft/types'
+import { GenieAsset, Rarity, UniformHeight, UniformHeights } from 'nft/types'
+import { fallbackProvider, putCommas } from 'nft/utils'
 import {
   createContext,
   MouseEvent,
@@ -19,6 +28,8 @@ import {
   useRef,
   useState,
 } from 'react'
+
+import * as styles from './Card.css'
 
 /* -------- ASSET CONTEXT -------- */
 export interface CardContextProps {
@@ -107,7 +118,6 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
     <Box display="flex" overflow="hidden">
       <Box
         as={'img'}
-        alt={asset.name || asset.tokenId}
         width="full"
         style={{
           aspectRatio: uniformHeight === UniformHeights.notUniform ? '1' : 'auto',
@@ -385,7 +395,11 @@ const SecondaryRow = ({ children }: { children: ReactNode }) => (
   </Row>
 )
 
-const SecondaryDetails = ({ children }: { children: ReactNode }) => <Row>{children}</Row>
+const SecondaryDetails = ({ children }: { children: ReactNode }) => (
+  <Row overflow="hidden" whiteSpace="nowrap">
+    {children}
+  </Row>
+)
 
 const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   return (
@@ -517,6 +531,78 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
   )
 }
 
+/* -------- RANKING CARD -------- */
+interface RankingProps {
+  rarity: Rarity
+  provider: { url?: string; rank: number }
+  rarityVerified: boolean
+  rarityLogo?: string
+}
+
+const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps) => {
+  const { asset } = useCardContext()
+
+  return (
+    <MouseoverTooltip
+      text={
+        <Row>
+          <Box display="flex" marginRight="4">
+            <img src={rarityLogo} alt="cardLogo" width={16} />
+          </Box>
+          <Box width="full" fontSize="14">
+            {rarityVerified
+              ? `Verified by ${asset.collectionName}`
+              : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
+          </Box>
+        </Row>
+      }
+      placement="top"
+    >
+      <Box className={styles.rarityInfo}>
+        <Box paddingTop="2" paddingBottom="2" display="flex">
+          {putCommas(provider.rank)}
+        </Box>
+
+        <Box display="flex" height="16">
+          {rarityVerified ? <RarityVerifiedIcon /> : null}
+        </Box>
+      </Box>
+    </MouseoverTooltip>
+  )
+}
+
+const Suspicious = () => {
+  return (
+    <MouseoverTooltip
+      text={
+        <Box fontSize="14">
+          Reported for suspicious activity
+          <br />
+          on Opensea
+        </Box>
+      }
+      placement="top"
+    >
+      <Box display="flex" flexShrink="0" marginLeft="2">
+        <SuspiciousIcon20 width="20" height="20" />
+      </Box>
+    </MouseoverTooltip>
+  )
+}
+
+const Pool = () => {
+  return (
+    <MouseoverTooltip
+      text={<Box fontSize="14">This item is part of an NFT liquidity pool. Price increases as supply decreases.</Box>}
+      placement="top"
+    >
+      <Box display="flex" flexShrink="0" marginLeft="4" color="darkGray">
+        <PoolIcon width="20" height="20" />
+      </Box>
+    </MouseoverTooltip>
+  )
+}
+
 interface NoContentContainerProps {
   uniformHeight: UniformHeight
 }
@@ -578,12 +664,15 @@ export {
   Image,
   InfoContainer,
   MarketplaceIcon,
+  Pool,
   PrimaryDetails,
   PrimaryInfo,
   PrimaryRow,
+  Ranking,
   SecondaryDetails,
   SecondaryInfo,
   SecondaryRow,
+  Suspicious,
   TertiaryInfo,
   Video,
 }
