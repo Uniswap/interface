@@ -135,21 +135,9 @@ export const CollectionNfts = ({ contractAddress, rarityVerified }: CollectionNf
         className={hasNfts || isLoading ? styles.assetList : undefined}
       >
         {collectionNfts && collectionNfts.length > 0 ? (
-          <div className={styles.assetList}>
-            {collectionNfts.map((asset) => {
-              return asset ? (
-                <CollectionAsset
-                  key={asset.address + asset.tokenId}
-                  asset={asset}
-                  isMobile={isMobile}
-                  uniformHeight={uniformHeight}
-                  setUniformHeight={setUniformHeight}
-                  mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-                  setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-                />
-              ) : null
-            })}
-          </div>
+          Nfts
+        ) : isLoading ? (
+          loadingAssets
         ) : (
           <Center width="full" color="darkGray" style={{ height: '60vh' }}>
             <div style={{ display: 'block', textAlign: 'center' }}>
