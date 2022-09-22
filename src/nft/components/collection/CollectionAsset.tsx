@@ -31,13 +31,11 @@ export const CollectionAsset = ({
   setCurrentTokenPlayingMedia,
   rarityVerified,
 }: CollectionAssetProps) => {
-  const { addAssetToBag, removeAssetFromBag, itemsInBag, bagExpanded, toggleBag } = useBag((state) => ({
-    addAssetToBag: state.addAssetToBag,
-    removeAssetFromBag: state.removeAssetFromBag,
-    itemsInBag: state.itemsInBag,
-    bagExpanded: state.bagExpanded,
-    toggleBag: state.toggleBag,
-  }))
+  const addAssetToBag = useBag((state) => state.addAssetToBag)
+  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const itemsInBag = useBag((state) => state.itemsInBag)
+  const bagExpanded = useBag((state) => state.bagExpanded)
+  const toggleBag = useBag((state) => state.toggleBag)
 
   const { quantity, isSelected } = useMemo(() => {
     return {
