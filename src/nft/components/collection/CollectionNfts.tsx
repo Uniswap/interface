@@ -194,7 +194,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
   useEffect(() => {
     if (collectionStats?.traits) {
       const modifiedQuery = applyFiltersFromURL(location, collectionStats)
-      // console.log(modifiedQuery)
+
       requestAnimationFrame(() => {
         useCollectionFilters.setState(modifiedQuery as any)
       })
