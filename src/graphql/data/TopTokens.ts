@@ -131,14 +131,15 @@ function toContractInput(token: PrefetchedTopToken) {
 }
 
 export type TopToken = NonNullable<TopTokens_TokensQuery['response']['tokens']>[number]
-export function useTopTokens(prefetchedData: TopTokens100Query['response']) {
+export function useTopTokens() {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
+  const prefetchedData = usePrefetchTopTokens()
+  const prefetchedSelectedTokens = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
 
   const environment = useRelayEnvironment()
   const [tokens, setTokens] = useState<TopToken[]>()
 
   const [page, setPage] = useState(1)
-  const prefetchedSelectedTokens = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
   const [loading, setLoading] = useState(true)
 
   // TopTokens should ideally be fetched with usePaginationFragment. The backend does not current support graphql cursors;
