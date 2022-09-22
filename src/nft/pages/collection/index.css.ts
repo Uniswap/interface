@@ -45,3 +45,11 @@ export const selectedActivitySwitcherToggle = style([
     },
   },
 ])
+
+export const noCollectionAssets = style([
+  sprinkles({
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '40',
+  }),
+])
