@@ -12,7 +12,7 @@ const baseSearchStyle = style([
     width: { sm: 'viewWidth' },
     borderStyle: 'solid',
     borderWidth: '1px',
-    borderColor: 'stateOverlayHover',
+    borderColor: 'backgroundOutline',
   }),
   {
     '@media': {
