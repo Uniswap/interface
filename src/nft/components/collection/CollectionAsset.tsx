@@ -1,9 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useBag } from 'nft/hooks'
-import { GenieAsset, UniformHeight } from 'nft/types'
-import { formatWeiToDecimal } from 'nft/utils/currency'
-import { isAudio } from 'nft/utils/isAudio'
-import { isVideo } from 'nft/utils/isVideo'
+import { GenieAsset, Markets, UniformHeight } from 'nft/types'
+import { formatWeiToDecimal, isAudio, isVideo, rarityProviderLogo } from 'nft/utils'
 import { MouseEvent, useMemo } from 'react'
 
 import * as Card from './Card'
@@ -21,6 +19,7 @@ interface CollectionAssetProps {
   setUniformHeight: (u: UniformHeight) => void
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
+  rarityVerified?: boolean
 }
 
 export const CollectionAsset = ({
@@ -30,14 +29,13 @@ export const CollectionAsset = ({
   setUniformHeight,
   mediaShouldBePlaying,
   setCurrentTokenPlayingMedia,
+  rarityVerified,
 }: CollectionAssetProps) => {
-  const { addAssetToBag, removeAssetFromBag, itemsInBag, bagExpanded, toggleBag } = useBag((state) => ({
-    addAssetToBag: state.addAssetToBag,
-    removeAssetFromBag: state.removeAssetFromBag,
-    itemsInBag: state.itemsInBag,
-    bagExpanded: state.bagExpanded,
-    toggleBag: state.toggleBag,
-  }))
+  const addAssetToBag = useBag((state) => state.addAssetToBag)
+  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const itemsInBag = useBag((state) => state.itemsInBag)
+  const bagExpanded = useBag((state) => state.bagExpanded)
+  const toggleBag = useBag((state) => state.toggleBag)
 
   const { quantity, isSelected } = useMemo(() => {
     return {
@@ -67,6 +65,13 @@ export const CollectionAsset = ({
     }
   }, [asset])
 
+  const { provider, rarityLogo } = useMemo(() => {
+    return {
+      provider: asset.rarity?.providers.find(({ provider: _provider }) => _provider === asset.rarity?.primaryProvider),
+      rarityLogo: rarityProviderLogo[asset.rarity?.primaryProvider ?? 0] ?? '',
+    }
+  }, [asset])
+
   return (
     <Card.Container asset={asset} selected={isSelected}>
       {assetMediaType === AssetMediaType.Image ? (
@@ -91,13 +96,23 @@ export const CollectionAsset = ({
           <Card.PrimaryRow>
             <Card.PrimaryDetails>
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
+              {asset.openseaSusFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
+            {asset.rarity && provider && provider.rank && (
+              <Card.Ranking
+                rarity={asset.rarity}
+                provider={provider}
+                rarityVerified={!!rarityVerified}
+                rarityLogo={rarityLogo}
+              />
+            )}
           </Card.PrimaryRow>
           <Card.SecondaryRow>
             <Card.SecondaryDetails>
               <Card.SecondaryInfo>
                 {notForSale ? '' : `${formatWeiToDecimal(asset.currentEthPrice)} ETH`}
               </Card.SecondaryInfo>
+              {(asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) && <Card.Pool />}
             </Card.SecondaryDetails>
             {asset.tokenType !== 'ERC1155' && asset.marketplace && (
               <Card.MarketplaceIcon marketplace={asset.marketplace} />

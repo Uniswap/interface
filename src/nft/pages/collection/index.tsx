@@ -74,7 +74,9 @@ const Collection = () => {
             width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
           }}
         >
-          {contractAddress && <CollectionNfts contractAddress={contractAddress} />}
+          {contractAddress && (
+            <CollectionNfts contractAddress={contractAddress} rarityVerified={collectionStats?.rarityVerified} />
+          )}
         </AnimatedBox>
       </Row>
     </Column>
