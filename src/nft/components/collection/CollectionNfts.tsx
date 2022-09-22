@@ -113,13 +113,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
     }
   )
 
-  // Preventing filters leaking into another collection && transaction screen
-  useEffect(() => {
-    return () => {
-      useCollectionFilters.setState(initialCollectionFilterState)
-    }
-  }, [contractAddress])
-
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
@@ -182,6 +175,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
 
   useEffect(() => {
     setUniformHeight(UniformHeights.unset)
+    return () => {
+      useCollectionFilters.setState(initialCollectionFilterState)
+    }
   }, [contractAddress])
 
   useEffect(() => {
