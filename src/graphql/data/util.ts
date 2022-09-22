@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
+import { useAppSelector } from 'state/hooks'
 
 import { Chain, HistoryDuration } from './__generated__/TokenQuery.graphql'
 
@@ -42,10 +43,26 @@ export const CHAIN_IDS_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: 'OPTIMISM',
 }
 
-export function useCurrentChainName() {
+export function useWalletChainName() {
   const { chainId } = useWeb3React()
-
   return chainId && CHAIN_IDS_TO_BACKEND_NAME[chainId] ? CHAIN_IDS_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
+}
+
+export function useGlobalChainName() {
+  const chainId = useAppSelector((state) => state.application.chainId)
+  return chainId && CHAIN_IDS_TO_BACKEND_NAME[chainId] ? CHAIN_IDS_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
+}
+
+export const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
+  ethereum: 'ETHEREUM',
+  polygon: 'POLYGON',
+  celo: 'CELO',
+  arbitrum: 'ARBITRUM',
+  optimism: 'OPTIMISM',
+}
+
+export function validateUrlChainParam(chainName: string | undefined) {
+  return chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName] ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : 'ETHEREUM'
 }
 
 export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {

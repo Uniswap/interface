@@ -1,3 +1,4 @@
+import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -19,9 +20,13 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
+import { isCelo, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
+import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
 import { useTokenQuery } from 'graphql/data/Token'
+import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedToken, useToken } from 'hooks/Tokens'
+import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
@@ -87,14 +92,40 @@ function NetworkBalances(tokenAddress: string | undefined) {
 }
 
 export default function TokenDetails() {
-  const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const token = useToken(tokenAddress)
+  const { tokenAddress: tokenAddressParam, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[validateUrlChainParam(chainName)]
+  let tokenAddress = tokenAddressParam
+  let nativeCurrency
+  if (tokenAddressParam === 'NATIVE') {
+    nativeCurrency = nativeOnChain(chainId)
+    tokenAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address?.toLowerCase()
+  }
+
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   const isBlockedToken = tokenWarning?.canProceed === false
+
+  const timePeriod = useAtomValue(filterTimeAtom)
+  const currentChainName = validateUrlChainParam(chainName)
+  const token = useTokenQuery(tokenAddress ?? '', currentChainName, timePeriod).tokens?.[0]
+
   const navigate = useNavigate()
+  const switchChains = (newChain: Chain) => {
+    if (tokenAddressParam === 'NATIVE') {
+      navigate(`/tokens/${newChain.toLowerCase()}/NATIVE`)
+    } else {
+      token?.project?.tokens?.forEach((token) => {
+        if (token.chain === newChain && token.address) {
+          navigate(`/tokens/${newChain.toLowerCase()}/${token.address}`)
+        }
+      })
+    }
+  }
+  useOnGlobalChainSwitch(switchChains)
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
-  const shouldShowSpeedbump = !useIsUserAddedToken(token) && tokenWarning !== null
+
+  // TODO: Make useToken() work on non-mainenet chains or replace this logic
+  const shouldShowSpeedbump = !useIsUserAddedToken(useToken(tokenAddress)) && tokenWarning !== null
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
   const onReviewSwap = useCallback(() => {
     return new Promise<boolean>((resolve) => {
@@ -111,7 +142,7 @@ export default function TokenDetails() {
   )
 
   /* network balance handling */
-  const { data: networkData } = NetworkBalances(token?.address)
+  const { data: networkData } = NetworkBalances(tokenAddress)
   const { chainId: connectedChainId } = useWeb3React()
   const totalBalance = 4.3 // dummy data
 
@@ -123,9 +154,6 @@ export default function TokenDetails() {
     }
     return chainIds
   }, [connectedChainId])
-
-  const timePeriod = useAtomValue(filterTimeAtom)
-  const query = useTokenQuery(tokenAddress ?? '', 'ETHEREUM', timePeriod)
 
   const balancesByNetwork = networkData
     ? chainsToList.map((chainId) => {
@@ -140,7 +168,7 @@ export default function TokenDetails() {
             key={chainId}
             logoUrl={chainInfo.logoUrl}
             balance={'1'}
-            tokenSymbol={token?.symbol}
+            tokenSymbol={token.symbol}
             fiatValue={fiatValue.toSignificant(2)}
             label={chainInfo.label}
             networkColor={networkColor}
@@ -149,8 +177,11 @@ export default function TokenDetails() {
       })
     : null
 
-  const tokenData = query.tokenProjects?.[0]
-  const tokenDetails = tokenData?.markets?.[0]
+  const defaultWidgetToken =
+    nativeCurrency ??
+    (token?.address && token.symbol && token.name
+      ? new Token(CHAIN_NAME_TO_CHAIN_ID[currentChainName], token.address, 18, token.symbol, token.name)
+      : undefined)
 
   // TODO: Fix this logic to not automatically redirect on refresh, yet still catch invalid addresses
   //const location = useLocation()
@@ -163,32 +194,32 @@ export default function TokenDetails() {
       {token && (
         <>
           <LeftPanel>
-            <BreadcrumbNavLink to="/tokens">
+            <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            <ChartSection token={token} tokenData={tokenData} />
+            <ChartSection token={token} nativeCurrency={nativeCurrency} />
             <StatsSection
-              marketCap={tokenDetails?.marketCap?.value}
-              volume24H={tokenDetails?.volume1D?.value}
-              priceHigh52W={tokenDetails?.priceHigh52W?.value}
-              priceLow52W={tokenDetails?.priceLow52W?.value}
+              tvl={token.market?.totalValueLocked?.value}
+              volume24H={token.market?.volume24H?.value}
+              // priceHigh52W={token.market?.priceHigh52W?.value}
+              // priceLow52W={token.market?.priceLow52W?.value}
             />
             <AboutSection
-              address={token.address}
-              description={tokenData?.description}
-              homepageUrl={tokenData?.homepageUrl}
-              twitterName={tokenData?.twitterName}
+              address={token.address ?? ''}
+              description={token.project?.description}
+              homepageUrl={token.project?.homepageUrl}
+              twitterName={token.project?.twitterName}
             />
-            <AddressSection address={token.address} />
+            <AddressSection address={token.address ?? ''} />
           </LeftPanel>
           <RightPanel>
-            <Widget defaultToken={token ?? undefined} onReviewSwapClick={onReviewSwap} />
-            {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}
-            <BalanceSummary address={token.address} />
+            <Widget defaultToken={!isCelo(chainId) ? defaultWidgetToken : undefined} onReviewSwapClick={onReviewSwap} />
+            {tokenWarning && <TokenSafetyMessage tokenAddress={token.address ?? ''} warning={tokenWarning} />}
+            <BalanceSummary address={token.address ?? ''} />
           </RightPanel>
           <Footer>
             <FooterBalanceSummary
-              address={token.address}
+              address={token.address ?? ''}
               totalBalance={totalBalance}
               networkBalances={balancesByNetwork}
             />

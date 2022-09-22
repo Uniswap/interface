@@ -11,13 +11,12 @@ import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
-import { ContractInput, TopTokens_TokensQuery } from './__generated__/TopTokens_TokensQuery.graphql'
+import { Chain, ContractInput, TopTokens_TokensQuery } from './__generated__/TopTokens_TokensQuery.graphql'
 import type { TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
-import { toHistoryDuration, useCurrentChainName } from './util'
+import { toHistoryDuration } from './util'
 
-export function usePrefetchTopTokens() {
+export function usePrefetchTopTokens(chain: Chain) {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
-  const chain = useCurrentChainName()
 
   const top100 = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
   return top100
@@ -213,6 +212,9 @@ export const tokensQuery = graphql`
           currency
           value
         }
+      }
+      project {
+        logoUrl
       }
     }
   }

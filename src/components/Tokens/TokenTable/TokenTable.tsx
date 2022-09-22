@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { showFavoritesAtom } from 'components/Tokens/state'
 import { usePrefetchTopTokens, useTopTokens } from 'graphql/data/TopTokens'
+import { isValidBackendChainName } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
@@ -65,7 +67,8 @@ export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
-  const prefetchedTokens = usePrefetchTopTokens()
+  const chainName = useParams<{ chainName?: string }>().chainName?.toUpperCase()
+  const prefetchedTokens = usePrefetchTopTokens(isValidBackendChainName(chainName) ? chainName : 'ETHEREUM')
   const { loading, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
 
   /* loading and error state */
@@ -95,9 +98,12 @@ export default function TokenTable() {
           <GridContainer>
             <HeaderRow />
             <TokenRowsContainer>
-              {tokens?.map((token, index) => (
-                <LoadedRow key={token?.name} tokenListIndex={index} tokenListLength={tokens.length} token={token} />
-              ))}
+              {tokens?.map(
+                (token, index) =>
+                  token && (
+                    <LoadedRow key={token?.name} tokenListIndex={index} tokenListLength={tokens.length} token={token} />
+                  )
+              )}
             </TokenRowsContainer>
           </GridContainer>
           <button onClick={loadMoreTokens}>load more</button>

@@ -27,17 +27,20 @@ export default function CurrencyLogo({
   symbol,
   size = '24px',
   style,
+  src,
   ...rest
 }: {
   currency?: Currency | null
   symbol?: string | null
   size?: string
   style?: React.CSSProperties
+  src?: string | null
 }) {
+  const logoURIs = useCurrencyLogoURIs(currency)
   const props = {
     alt: `${currency?.symbol ?? 'token'} logo`,
     size,
-    srcs: useCurrencyLogoURIs(currency),
+    srcs: src ? [src] : logoURIs,
     symbol: symbol ?? currency?.symbol,
     style,
     ...rest,

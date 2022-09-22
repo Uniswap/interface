@@ -1,6 +1,5 @@
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
-import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
+import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
@@ -11,13 +10,6 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import FilterOption from './FilterOption'
-
-const NETWORKS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-]
 
 const InternalMenuItem = styled.div`
   flex: 1;
@@ -100,7 +92,7 @@ const CheckContainer = styled.div`
 `
 
 // TODO: change this to reflect data pipeline
-export default function NetworkFilter() {
+export default function NetworkFilter({ loaded }: { loaded: boolean }) {
   const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
   const open = useModalIsOpen(ApplicationModal.NETWORK_FILTER)
@@ -108,8 +100,8 @@ export default function NetworkFilter() {
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const navigate = useNavigate()
 
-  const lowercaseChainName = useParams<{ chainName?: string }>().chainName ?? 'ethereum'
-  const currentChainName = lowercaseChainName.toUpperCase()
+  const { chainName } = useParams<{ chainName?: string }>()
+  const currentChainName = validateUrlChainParam(chainName)
 
   const { label, circleLogoUrl, logoUrl } = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
 

@@ -9,9 +9,11 @@ import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
+import { isValidBackendChainName } from 'graphql/data/util'
+import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -74,6 +76,11 @@ const Tokens = () => {
     resetFilterString()
   }, [location, resetFilterString])
 
+  const navigate = useNavigate()
+  useOnGlobalChainSwitch((chain) => {
+    if (isValidBackendChainName(chain)) navigate(`/tokens/${chain.toLowerCase()}`)
+  })
+
   return (
     <Trace page={PageName.TOKENS_PAGE} shouldLogImpression>
       <ExploreContainer>
@@ -84,7 +91,7 @@ const Tokens = () => {
         </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>
-            <NetworkFilter />
+            <NetworkFilter loaded={true} />
             {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
             <TimeSelector />
           </FiltersContainer>
@@ -110,7 +117,7 @@ export const LoadingTokens = () => {
       </TitleContainer>
       <FiltersWrapper>
         <FiltersContainer>
-          <NetworkFilter />
+          <NetworkFilter loaded={false} />
           {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
           <TimeSelector />
         </FiltersContainer>
