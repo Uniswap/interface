@@ -84,6 +84,7 @@ const Collection = () => {
           </Row>
         </>
       ) : (
+        // TODO: Put no collection asset page here
         !isLoading && <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
       )}
     </Column>
