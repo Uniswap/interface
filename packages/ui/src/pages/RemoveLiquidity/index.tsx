@@ -45,7 +45,7 @@ import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '
 import { currencyId } from '../../utils/currencyId'
 import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
-import { MaxButton /*, Wrapper */ } from '../Pool/styleds'
+import { MaxButton /*, Wrapper */ } from '../Liquidity/styles'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1200px;

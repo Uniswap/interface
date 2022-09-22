@@ -40,7 +40,7 @@ import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
-import { Dots } from '../Pool/styleds'
+import { Dots } from '../Liquidity/styles'
 
 const BorderVerticalContainer = styled(Flex)`
   border: 1px solid rgba(255, 255, 255, 0.2);
