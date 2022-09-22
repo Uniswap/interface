@@ -197,7 +197,7 @@ const UnavailableAssetsPreview = ({ assets }: UnavailableAssetsPreviewProps) => 
         height="32"
         borderStyle="solid"
         borderWidth="1px"
-        borderColor="lightGray"
+        borderColor="backgroundSurface"
         borderRadius="4"
         style={{ zIndex: assets.length - index }}
         className={styles.grayscaleImage}

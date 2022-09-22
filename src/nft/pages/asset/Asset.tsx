@@ -221,7 +221,7 @@ const Asset = () => {
                     paddingLeft="6"
                     paddingRight="4"
                     className={badge}
-                    backgroundColor="lightGray"
+                    backgroundColor="backgroundSurface"
                     color="textPrimary"
                     borderRadius="4"
                   >

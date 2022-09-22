@@ -31,7 +31,7 @@ export const rowHover = style([
   }),
   {
     ':hover': {
-      background: themeVars.colors.lightGray,
+      background: themeVars.colors.backgroundSurface,
     },
   },
 ])

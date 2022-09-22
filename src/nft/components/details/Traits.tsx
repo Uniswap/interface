@@ -11,7 +11,7 @@ interface TraitProps {
 }
 
 const Trait: React.FC<TraitProps> = ({ label, value }: TraitProps) => (
-  <Column backgroundColor="lightGray" padding="16" gap="4" borderRadius="12">
+  <Column backgroundColor="backgroundSurface" padding="16" gap="4" borderRadius="12">
     <Box
       as="span"
       className={badge}

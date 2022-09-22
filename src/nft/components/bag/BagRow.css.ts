@@ -67,7 +67,7 @@ export const unavailableAssetRow = style([
   }),
   {
     ':hover': {
-      background: themeVars.colors.lightGrayButton,
+      background: themeVars.colors.backgroundInteractive,
     },
   },
 ])
@@ -104,11 +104,11 @@ export const keepButton = style([
 export const removeButton = style([
   priceChangeButton,
   sprinkles({
-    backgroundColor: 'lightGrayButton',
+    backgroundColor: 'backgroundInteractive',
   }),
   {
     ':hover': {
-      background: `linear-gradient(rgba(76, 130, 251, 0.24), rgba(76, 130, 251, .24)), linear-gradient(${vars.color.lightGrayButton}, ${vars.color.lightGrayButton})`,
+      background: `linear-gradient(rgba(76, 130, 251, 0.24), rgba(76, 130, 251, .24)), linear-gradient(${vars.color.backgroundInteractive}, ${vars.color.backgroundInteractive})`,
     },
   },
 ])

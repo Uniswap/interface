@@ -409,7 +409,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
           borderBottomLeftRadius="20"
           borderBottomRightRadius="20"
           transition="250"
-          backgroundColor={boxHovered ? 'backgroundModule' : 'lightGray'}
+          backgroundColor={boxHovered ? 'backgroundModule' : 'backgroundSurface'}
           paddingY="12"
           paddingX="12"
         >
@@ -454,7 +454,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
             paddingY="8"
             transition="250"
             color={buttonHovered ? 'textPrimary' : isSelected ? 'red400' : 'genieBlue'}
-            backgroundColor={buttonHovered ? (isSelected ? 'red400' : 'genieBlue') : 'lightGray'}
+            backgroundColor={buttonHovered ? (isSelected ? 'red400' : 'genieBlue') : 'backgroundSurface'}
             className={subheadSmall}
             onMouseEnter={toggleButtonHovered}
             onMouseLeave={toggleButtonHovered}

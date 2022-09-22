@@ -85,7 +85,7 @@ export const buttonTextSmall = sprinkles({ fontWeight: 'normal', fontSize: '14' 
 export const buttonSmall = style([
   buttonTextSmall,
   sprinkles({
-    background: 'lightGray',
+    background: 'backgroundSurface',
     borderRadius: '12',
     fontSize: '12',
     color: 'genieBlue',

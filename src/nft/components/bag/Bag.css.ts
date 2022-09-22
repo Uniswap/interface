@@ -9,7 +9,7 @@ export const bagContainer = style([
     width: 'full',
     height: 'full',
     right: '0',
-    background: 'lightGray',
+    background: 'backgroundSurface',
     color: 'textPrimary',
     paddingTop: '20',
     paddingBottom: '24',

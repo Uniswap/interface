@@ -16,13 +16,12 @@ export const lightTheme: Theme = {
     backgroundSurface: '#FFFFFF',
     textSecondary: vars.color.grey500,
     backgroundOutline: opacify(24, vars.color.grey500),
-    lightGray: '#FFFFFF',
     white: '#FFFFFF',
     backgroundModule: opacify(8, vars.color.grey300),
     explicitWhite: '#FFFFFF',
     magicGradient: vars.color.pink400,
     placeholder: vars.color.grey300,
-    lightGrayButton: vars.color.grey100,
+    backgroundInteractive: vars.color.grey100,
     loading: vars.color.grey50,
 
     // Opacities of black and white

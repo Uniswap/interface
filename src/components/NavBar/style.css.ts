@@ -119,6 +119,6 @@ export const mobileBottomBar = style([
     paddingY: '4',
     paddingX: '8',
     height: '56',
-    background: 'lightGray',
+    background: 'backgroundSurface',
   }),
 ])

@@ -46,7 +46,7 @@ export const searchBar = style([
     color: 'placeholder',
     paddingX: '16',
     cursor: 'pointer',
-    background: 'lightGray',
+    background: 'backgroundSurface',
   }),
 ])
 
@@ -69,7 +69,7 @@ export const searchBarDropdown = style([
   sprinkles({
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
-    background: 'lightGray',
+    background: 'backgroundSurface',
     height: { sm: 'viewHeight', md: 'auto' },
   }),
   {

@@ -24,13 +24,13 @@ export const card = style([
 ])
 
 export const loadingBackground = style({
-  background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.lightGray} 100%)`,
+  background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
 })
 
 export const notSelectedCard = style([
   card,
   sprinkles({
-    backgroundColor: 'lightGray',
+    backgroundColor: 'backgroundSurface',
     borderColor: 'transparent',
   }),
 ])
@@ -142,7 +142,7 @@ export const rarityInfo = style([
     borderRadius: '4',
     height: '16',
     color: 'textPrimary',
-    background: 'lightGrayButton',
+    background: 'backgroundInteractive',
     fontSize: '10',
     fontWeight: 'semibold',
     paddingX: '4',

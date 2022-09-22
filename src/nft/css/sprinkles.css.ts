@@ -16,14 +16,13 @@ const themeContractValues = {
     textPrimary: '',
     textSecondary: '',
     backgroundOutline: '',
-    lightGray: '',
+    backgroundSurface: '',
     white: '',
     backgroundModule: '',
-    backgroundSurface: '',
     explicitWhite: '',
     magicGradient: '',
     placeholder: '',
-    lightGrayButton: '',
+    backgroundInteractive: '',
     loading: '',
 
     // Opacities of black and white

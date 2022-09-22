@@ -7,7 +7,7 @@ export const filterButton = sprinkles({
 })
 
 export const filterButtonExpanded = style({
-  background: vars.color.lightGrayButton,
+  background: vars.color.backgroundInteractive,
   color: themeVars.colors.textPrimary,
 })
 

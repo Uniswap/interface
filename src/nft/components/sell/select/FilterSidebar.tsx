@@ -112,7 +112,7 @@ const CollectionSelect = ({
             setCollectionSearchText={setCollectionSearchText}
           />
           <Box
-            background="lightGray"
+            background="backgroundSurface"
             borderRadius="12"
             paddingTop="8"
             paddingBottom="8"
