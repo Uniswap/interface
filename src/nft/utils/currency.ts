@@ -10,6 +10,16 @@ export const formatUsdPrice = (price: number) => {
   }
 }
 
+export const formatEth = (price: number) => {
+  if (price > 1000000) {
+    return `${Math.round(price / 1000000)}M`
+  } else if (price > 1000) {
+    return `${Math.round(price / 1000)}K`
+  } else {
+    return `${Math.round(price * 100 + Number.EPSILON) / 100}`
+  }
+}
+
 export const formatUSDPriceWithCommas = (price: number) => {
   return `$${Math.round(price)
     .toString()

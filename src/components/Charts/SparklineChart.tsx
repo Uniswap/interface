@@ -1,5 +1,7 @@
 import { curveCardinal, scaleLinear } from 'd3'
-import { SingleTokenData, TimePeriod, useTokenPricesFromFragment } from 'graphql/data/Token'
+import { filterPrices } from 'graphql/data/Token'
+import { TopToken } from 'graphql/data/TopTokens'
+import { TimePeriod } from 'graphql/data/util'
 import React from 'react'
 import { useTheme } from 'styled-components/macro'
 
@@ -11,7 +13,7 @@ type PricePoint = { value: number; timestamp: number }
 interface SparklineChartProps {
   width: number
   height: number
-  tokenData: SingleTokenData
+  tokenData: TopToken
   pricePercentChange: number | undefined | null
   timePeriod: TimePeriod
 }
@@ -19,7 +21,7 @@ interface SparklineChartProps {
 function SparklineChart({ width, height, tokenData, pricePercentChange, timePeriod }: SparklineChartProps) {
   const theme = useTheme()
   // for sparkline
-  const pricePoints = useTokenPricesFromFragment(tokenData?.prices?.[0]) ?? []
+  const pricePoints = filterPrices(tokenData?.market?.priceHistory) ?? []
   const hasData = pricePoints.length !== 0
   const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
   const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY

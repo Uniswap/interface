@@ -18,9 +18,10 @@ import { CollectionAssetLoading } from './CollectionAssetLoading'
 
 interface CollectionNftsProps {
   contractAddress: string
+  rarityVerified?: boolean
 }
 
-export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
+export const CollectionNfts = ({ contractAddress, rarityVerified }: CollectionNftsProps) => {
   const traits = useCollectionFilters((state) => state.traits)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
@@ -100,6 +101,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
         <CollectionAsset
           key={asset.address + asset.tokenId}
           asset={asset}
+          isMobile={isMobile}
           uniformHeight={uniformHeight}
           setUniformHeight={setUniformHeight}
           mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
@@ -132,10 +134,22 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
         style={{ overflow: 'unset' }}
         className={hasNfts || isLoading ? styles.assetList : undefined}
       >
-        {isLoading ? (
-          loadingAssets
-        ) : hasNfts ? (
-          Nfts
+        {collectionNfts && collectionNfts.length > 0 ? (
+          <div className={styles.assetList}>
+            {collectionNfts.map((asset) => {
+              return asset ? (
+                <CollectionAsset
+                  key={asset.address + asset.tokenId}
+                  asset={asset}
+                  isMobile={isMobile}
+                  uniformHeight={uniformHeight}
+                  setUniformHeight={setUniformHeight}
+                  mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+                  setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                />
+              ) : null
+            })}
+          </div>
         ) : (
           <Center width="full" color="darkGray" style={{ height: '60vh' }}>
             <div style={{ display: 'block', textAlign: 'center' }}>
