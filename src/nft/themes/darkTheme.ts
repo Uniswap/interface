@@ -3,21 +3,24 @@ import { Theme, vars } from 'nft/css/sprinkles.css'
 export const darkTheme: Theme = {
   colors: {
     accentFailure: vars.color.red300,
-    modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
-    textPrimary: '#FFFFFF',
-    backgroundSurface: vars.color.grey900,
-    textSecondary: vars.color.grey300,
-    backgroundOutline: `rgba(153,161,189,0.24)`,
-    stateOverlayHover: `rgba(153,161,189,0.08)`,
+    accentActionSoft: '#000000E5',
+
     explicitWhite: '#FFFFFF',
+
     backgroundAction: vars.color.blue400,
-    textTertiary: vars.color.grey500,
+    backgroundFloating: '0000000C',
     backgroundInteractive: vars.color.grey700,
     backgroundModule: vars.color.grey800,
+    backgroundOutline: `rgba(153,161,189,0.24)`,
+    backgroundSurface: vars.color.grey900,
 
-    // Opacities of black and white
-    accentActionSoft: '#000000E5',
-    backgroundFloating: '0000000C',
+    modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
+
+    stateOverlayHover: `rgba(153,161,189,0.08)`,
+
+    textPrimary: '#FFFFFF',
+    textSecondary: vars.color.grey300,
+    textTertiary: vars.color.grey500,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',
