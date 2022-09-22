@@ -2,12 +2,15 @@ import { Trans } from '@lingui/macro'
 import { showFavoritesAtom } from 'components/Tokens/state'
 import { usePrefetchTopTokens, useTopTokens } from 'graphql/data/TopTokens'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode } from 'react'
+import { ReactNode, useCallback, useRef } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
-import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
+import { HeaderRow, LoadedRow, LoadingRow, MAX_TOKENS_TO_LOAD } from './TokenRow'
+
+const LOADING_ROWS_COUNT = 3
+const ROWS_PER_PAGE_FETCH = 20
 
 const GridContainer = styled.div`
   display: flex;
@@ -23,6 +26,12 @@ const GridContainer = styled.div`
   align-items: center;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
+
+const TokenDataContainer = styled.div`
+  height: 100%;
+  width: 100%;
+`
+
 const NoTokenDisplay = styled.div`
   display: flex;
   justify-content: center;
@@ -35,9 +44,6 @@ const NoTokenDisplay = styled.div`
   padding: 0px 28px;
   gap: 8px;
 `
-const TokenRowsContainer = styled.div`
-  width: 100%;
-`
 
 function NoTokensState({ message }: { message: ReactNode }) {
   return (
@@ -48,15 +54,14 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
-const LOADING_ROWS = Array.from({ length: 100 })
-  .fill(0)
-  .map((_item, index) => <LoadingRow key={index} />)
+const LoadingMoreRows = Array(LOADING_ROWS_COUNT).fill(<LoadingRow />)
+const InitialLoadingRows = Array(ROWS_PER_PAGE_FETCH).fill(<LoadingRow />)
 
 export function LoadingTokenTable() {
   return (
     <GridContainer>
       <HeaderRow />
-      <TokenRowsContainer>{LOADING_ROWS}</TokenRowsContainer>
+      <TokenDataContainer>{InitialLoadingRows}</TokenDataContainer>
     </GridContainer>
   )
 }
@@ -67,9 +72,25 @@ export default function TokenTable() {
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const prefetchedTokens = usePrefetchTopTokens()
   const { loading, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
+  const hasMore = !tokens || tokens.length < MAX_TOKENS_TO_LOAD
+
+  const observer = useRef<IntersectionObserver>()
+  const lastTokenRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (loading) return
+      if (observer.current) observer.current.disconnect()
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMoreTokens()
+        }
+      })
+      if (node) observer.current.observe(node)
+    },
+    [loading, hasMore, loadMoreTokens]
+  )
 
   /* loading and error state */
-  if (loading) {
+  if (loading && (!tokens || tokens?.length === 0)) {
     return <LoadingTokenTable />
   } else {
     if (!tokens) {
@@ -94,13 +115,32 @@ export default function TokenTable() {
         <>
           <GridContainer>
             <HeaderRow />
-            <TokenRowsContainer>
-              {tokens?.map((token, index) => (
-                <LoadedRow key={token?.name} tokenListIndex={index} tokenListLength={tokens.length} token={token} />
-              ))}
-            </TokenRowsContainer>
+            <TokenDataContainer>
+              {tokens.map((token, index) => {
+                if (tokens.length === index + 1) {
+                  return (
+                    <LoadedRow
+                      key={token?.name}
+                      tokenListIndex={index}
+                      tokenListLength={tokens?.length ?? 0}
+                      token={token}
+                      ref={lastTokenRef}
+                    />
+                  )
+                } else {
+                  return (
+                    <LoadedRow
+                      key={token?.name}
+                      tokenListIndex={index}
+                      tokenListLength={tokens?.length ?? 0}
+                      token={token}
+                    />
+                  )
+                }
+              })}
+              {loading && LoadingMoreRows}
+            </TokenDataContainer>
           </GridContainer>
-          <button onClick={loadMoreTokens}>load more</button>
         </>
       )
     }

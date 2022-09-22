@@ -157,10 +157,12 @@ export function useTopTokens(prefetchedData: TopTokens100Query['response']) {
   )
 
   const loadMoreTokens = useCallback(() => {
+    setLoading(true)
     const contracts = prefetchedSelectedTokens.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map(toContractInput)
     loadTokens(contracts, (data) => {
       if (data?.tokens) {
         setTokens([...(tokens ?? []), ...data.tokens])
+        setLoading(false)
         setPage(page + 1)
       }
     })
