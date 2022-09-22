@@ -1,6 +1,6 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { MaxUint256 } from '@ethersproject/constants'
-import { BigintIsh } from '@uniswap/sdk-core'
+import { BigintIsh, Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { BigNumber, Contract, providers } from 'ethers'
 import { useCallback } from 'react'
 import EIP_2612 from 'src/abis/eip_2612.json'
@@ -8,9 +8,8 @@ import { useProvider, useWalletSigners } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { PERMITTABLE_TOKENS, PermitType } from 'src/features/transactions/permit/permittableTokens'
-import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
+import { ApprovalAction } from 'src/features/transactions/swap/hooks'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
@@ -44,7 +43,6 @@ export interface PermitTokenParams {
   tokenAddress: string
   spender: Address
   txAmount: string
-  allowance: string | null
 }
 
 const EIP712_DOMAIN_TYPE_NO_VERSION = [
@@ -77,46 +75,42 @@ const PERMIT_ALLOWED_TYPE = [
 ]
 
 export function usePermitSignature(
-  derivedSwapInfo: DerivedSwapInfo,
-  tokenAllowance?: string | null
+  chainId: ChainId,
+  currencyInAmount: NullUndefined<CurrencyAmount<Currency>>,
+  wrapType: WrapType,
+  approvalAction?: ApprovalAction
 ) {
-  const {
-    chainId,
-    currencies,
-    trade: { trade },
-    wrapType,
-  } = derivedSwapInfo
   const provider = useProvider(chainId)
   const signerManager = useWalletSigners()
   const account = useActiveAccountWithThrow()
-  const currencyIn = currencies[CurrencyField.INPUT]
+  const currencyIn = currencyInAmount?.currency
 
   const permitFetcher = useCallback(() => {
+    // permit signature not needed
+    if (approvalAction !== ApprovalAction.Permit) return
     // is a wrap or unwrap, skip getting signature
     if (wrapType !== WrapType.NotApplicable) return
     // no approvals/permits necessary for native token usage
     if (!currencyIn || currencyIn.isNative) return
-    // other tx details are still loading
-    if (!provider || !tokenAllowance || !trade?.quote) return
+    if (!provider) return
 
     const params: PermitTokenParams = {
       account,
       chainId,
       tokenAddress: currencyIn.address,
       spender: SWAP_ROUTER_ADDRESSES[chainId],
-      txAmount: trade.quote.amount,
-      allowance: tokenAllowance,
+      txAmount: currencyInAmount.quotient.toString(),
     }
 
     return getPermitSignature(provider, signerManager, params)
   }, [
     account,
+    approvalAction,
     chainId,
     currencyIn,
+    currencyInAmount?.quotient,
     provider,
     signerManager,
-    tokenAllowance,
-    trade?.quote,
     wrapType,
   ])
 
@@ -128,12 +122,11 @@ async function getPermitSignature(
   signerManager: SignerManager,
   params: PermitTokenParams
 ) {
-  const { account, chainId, tokenAddress, spender, allowance, txAmount } = params
+  const { account, chainId, tokenAddress, spender } = params
   const { address } = account
   const permitInfo = PERMITTABLE_TOKENS[chainId]?.[tokenAddress]
 
-  if (!allowance) return null
-  if (!permitInfo || BigNumber.from(allowance).gt(txAmount)) {
+  if (!permitInfo) {
     logger.info('permitSaga', 'signPermitMessage', 'Permit not needed or not possible')
     return null
   }

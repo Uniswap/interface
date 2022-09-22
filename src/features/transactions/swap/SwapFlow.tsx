@@ -2,7 +2,11 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
-import { useDerivedSwapInfo, useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
+import {
+  useDerivedSwapInfo,
+  useSwapActionHandlers,
+  useSwapTxAndGasInfo,
+} from 'src/features/transactions/swap/hooks'
 import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import {
   CurrencyField,
@@ -27,6 +31,10 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
   const { selectingCurrencyField, currencies } = derivedSwapInfo
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
+  const { txRequest, approveTxRequest, totalGasFee } = useSwapTxAndGasInfo(
+    derivedSwapInfo,
+    step === TransactionStep.SUBMITTED
+  )
 
   // keep currencies list option as state so that rendered list remains stable through the slide animation
   const [listVariation, setListVariation] = useState<TokenSelectorVariation>(
@@ -52,6 +60,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
 
   return (
     <TransactionFlow
+      approveTxRequest={approveTxRequest}
       derivedInfo={derivedSwapInfo}
       dispatch={dispatch}
       flowName={t('Swap')}
@@ -71,6 +80,8 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
           onSelectCurrency={onTokenSelectorSelectCurrency}
         />
       }
+      totalGasFee={totalGasFee}
+      txRequest={txRequest}
       onClose={onClose}
     />
   )

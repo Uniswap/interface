@@ -1,3 +1,4 @@
+import { providers } from 'ethers'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction, WarningSeverity } from 'src/components/modals/types'
@@ -7,7 +8,6 @@ import {
   DerivedSwapInfo,
   useAcceptedTrade,
   useSwapCallback,
-  useSwapTxAndGasInfo,
   useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
@@ -25,9 +25,19 @@ interface SwapFormProps {
   onNext: () => void
   onPrev: () => void
   derivedSwapInfo: DerivedSwapInfo
+  approveTxRequest?: providers.TransactionRequest
+  txRequest?: providers.TransactionRequest
+  totalGasFee?: string
 }
 
-export function SwapReview({ onNext, onPrev, derivedSwapInfo }: SwapFormProps) {
+export function SwapReview({
+  onNext,
+  onPrev,
+  derivedSwapInfo,
+  approveTxRequest,
+  txRequest,
+  totalGasFee,
+}: SwapFormProps) {
   const { t } = useTranslation()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
@@ -43,12 +53,7 @@ export function SwapReview({ onNext, onPrev, derivedSwapInfo }: SwapFormProps) {
     warnings,
     txId,
   } = derivedSwapInfo
-  const {
-    txRequest,
-    approveTxRequest,
-    totalGasFee,
-    isLoading: txRequestLoading,
-  } = useSwapTxAndGasInfo(derivedSwapInfo)
+
   // TODO: add gas fee warnings here
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
@@ -106,8 +111,7 @@ export function SwapReview({ onNext, onPrev, derivedSwapInfo }: SwapFormProps) {
   }, [])
 
   const actionButtonProps = {
-    disabled:
-      noValidSwap || blockingWarning || newTradeToAccept || !totalGasFee || txRequestLoading,
+    disabled: noValidSwap || blockingWarning || newTradeToAccept || !totalGasFee || !txRequest,
     label: getActionName(t, wrapType),
     name:
       wrapType === WrapType.Wrap

@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useReducer, useState } from 'react'
+import React, { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
@@ -40,13 +40,15 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
     // stop polling for gas once transaction is submitted
     step === TransactionStep.SUBMITTED
   )
+  const transferTxWithGasSettings = useMemo(() => {
+    return gasFeeInfo ? { ...txRequest, ...gasFeeInfo.params } : txRequest
+  }, [gasFeeInfo, txRequest])
 
   return (
     <TransactionFlow
       derivedInfo={derivedTransferInfo}
       dispatch={dispatch}
       flowName={t('Send')}
-      gasFeeInfo={gasFeeInfo}
       recipientSelector={
         <RecipientSelect
           recipient={state.recipient}
@@ -65,7 +67,8 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
           onSelectCurrency={(currency: Currency) => onSelectCurrency(CurrencyField.INPUT, currency)}
         />
       }
-      txRequest={txRequest}
+      totalGasFee={gasFeeInfo?.gasFee}
+      txRequest={transferTxWithGasSettings}
       onClose={onClose}
     />
   )

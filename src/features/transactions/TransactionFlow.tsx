@@ -6,7 +6,6 @@ import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reani
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { TransactionGasFeeInfo } from 'src/features/gas/types'
 import { DerivedSwapInfo, useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
@@ -33,15 +32,16 @@ interface TransactionFlowProps {
   flowName: string
   derivedInfo: DerivedTransferInfo | DerivedSwapInfo
   onClose: () => void
+  approveTxRequest?: providers.TransactionRequest
   txRequest?: providers.TransactionRequest
-  gasFeeInfo?: TransactionGasFeeInfo
+  totalGasFee?: string
   step: TransactionStep
   setStep: (newStep: TransactionStep) => void
 }
 
 type InnerContentProps = Pick<
   TransactionFlowProps,
-  'derivedInfo' | 'onClose' | 'dispatch' | 'gasFeeInfo' | 'txRequest'
+  'derivedInfo' | 'onClose' | 'dispatch' | 'totalGasFee' | 'txRequest' | 'approveTxRequest'
 > & {
   step: number
   setStep: (step: TransactionStep) => void
@@ -60,8 +60,9 @@ export function TransactionFlow({
   tokenSelector,
   recipientSelector,
   derivedInfo,
+  approveTxRequest,
   txRequest,
-  gasFeeInfo,
+  totalGasFee,
   step,
   setStep,
   onClose,
@@ -110,11 +111,12 @@ export function TransactionFlow({
             </Flex>
           )}
           <InnerContentRouter
+            approveTxRequest={approveTxRequest}
             derivedInfo={derivedInfo}
             dispatch={dispatch}
-            gasFeeInfo={gasFeeInfo}
             setStep={setStep}
             step={step}
+            totalGasFee={totalGasFee}
             txRequest={txRequest}
             onClose={onClose}
           />
@@ -145,7 +147,8 @@ const useGetInnerContent = ({
   onClose,
   dispatch,
   setStep,
-  gasFeeInfo,
+  totalGasFee,
+  approveTxRequest,
   txRequest,
 }: InnerContentProps): {
   form: ReactElement
@@ -162,7 +165,14 @@ const useGetInnerContent = ({
     return {
       form: <SwapForm derivedSwapInfo={derivedInfo} dispatch={dispatch} onNext={onFormNext} />,
       review: (
-        <SwapReview derivedSwapInfo={derivedInfo} onNext={onReviewNext} onPrev={onReviewPrev} />
+        <SwapReview
+          approveTxRequest={approveTxRequest}
+          derivedSwapInfo={derivedInfo}
+          totalGasFee={totalGasFee}
+          txRequest={txRequest}
+          onNext={onReviewNext}
+          onPrev={onReviewPrev}
+        />
       ),
       submitted: (
         <SwapStatus derivedSwapInfo={derivedInfo} onNext={onClose} onTryAgain={onRetrySubmit} />
@@ -181,7 +191,7 @@ const useGetInnerContent = ({
     review: (
       <TransferReview
         derivedTransferInfo={derivedInfo}
-        gasFeeInfo={gasFeeInfo}
+        totalGasFee={totalGasFee}
         txRequest={txRequest}
         onNext={onReviewNext}
         onPrev={onReviewPrev}

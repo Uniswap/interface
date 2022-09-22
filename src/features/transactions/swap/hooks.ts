@@ -1,8 +1,7 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { SwapRouter } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, NativeCurrency, Percent, TradeType } from '@uniswap/sdk-core'
-import { BigNumber, providers } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
+import { providers } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
@@ -17,6 +16,7 @@ import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { useTransactionGasFee } from 'src/features/gas/hooks'
+import { GasSpeed } from 'src/features/gas/types'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { useSimulatedGasLimit } from 'src/features/routing/hooks'
@@ -148,6 +148,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   }, [exactAmountToken, exactCurrency])
 
   const shouldGetQuote = !isWrapAction(wrapType)
+
   const trade = useTrade(
     shouldGetQuote ? amountSpecified : null,
     otherCurrency,
@@ -430,25 +431,52 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
   }
 }
 
+export enum ApprovalAction {
+  // either native token or allowance is sufficient, no approval or permit needed
+  None = 'none',
+
+  // not enough allowance and token cannot be approved through .permit instead
+  Approve = 'approve',
+
+  // not enough allowance but token can be approved through permit signature
+  Permit = 'permit',
+}
+
+type TokenApprovalInfo =
+  | {
+      action: ApprovalAction.None | ApprovalAction.Permit
+      txRequest: null
+    }
+  | {
+      action: ApprovalAction.Approve
+      txRequest: providers.TransactionRequest
+    }
+
 export function useTransactionRequest(
   derivedSwapInfo: DerivedSwapInfo,
   tokenApprovalInfo?: TokenApprovalInfo
 ): providers.TransactionRequest | undefined {
   const wrapTxRequest = useWrapTransactionRequest(derivedSwapInfo)
-  const swapTxRequest = useSwapTransactionRequest(derivedSwapInfo, tokenApprovalInfo?.allowance)
+  const swapTxRequest = useSwapTransactionRequest(derivedSwapInfo, tokenApprovalInfo)
   return derivedSwapInfo.wrapType === WrapType.NotApplicable ? swapTxRequest : wrapTxRequest
 }
 
 function useWrapTransactionRequest(derivedSwapInfo: DerivedSwapInfo) {
   const address = useActiveAccountAddressWithThrow()
-  const { chainId } = derivedSwapInfo
+  const { chainId, wrapType, currencyAmounts } = derivedSwapInfo
   const provider = useProvider(chainId)
 
   const transactionFetcher = useCallback(() => {
-    if (!provider || derivedSwapInfo.wrapType === WrapType.NotApplicable) return
+    if (!provider || wrapType === WrapType.NotApplicable) return
 
-    return getWrapTransactionRequest(provider, chainId, address, derivedSwapInfo)
-  }, [address, chainId, derivedSwapInfo, provider])
+    return getWrapTransactionRequest(
+      provider,
+      chainId,
+      address,
+      wrapType,
+      currencyAmounts[CurrencyField.INPUT]
+    )
+  }, [address, chainId, wrapType, currencyAmounts, provider])
 
   return useAsyncData(transactionFetcher).data
 }
@@ -457,73 +485,61 @@ const getWrapTransactionRequest = async (
   provider: providers.Provider,
   chainId: ChainId,
   address: Address,
-  derivedSwapInfo: DerivedSwapInfo
-): Promise<providers.TransactionRequest> => {
-  const { currencyAmounts } = derivedSwapInfo
-  const inputAmount = currencyAmounts[CurrencyField.INPUT]
-  if (!inputAmount) {
-    throw new Error('inputAmount not defined when getting wrap tx request')
-  }
+  wrapType: WrapType,
+  currencyAmountIn: NullUndefined<CurrencyAmount<Currency>>
+): Promise<providers.TransactionRequest | undefined> => {
+  if (!currencyAmountIn) return
 
   const wethContract = await getWethContract(chainId, provider)
   const wethTx =
-    derivedSwapInfo.wrapType === WrapType.Wrap
+    wrapType === WrapType.Wrap
       ? await wethContract.populateTransaction.deposit({
-          value: `0x${inputAmount.quotient.toString(16)}`,
+          value: `0x${currencyAmountIn.quotient.toString(16)}`,
         })
-      : await wethContract.populateTransaction.withdraw(`0x${inputAmount.quotient.toString(16)}`)
+      : await wethContract.populateTransaction.withdraw(
+          `0x${currencyAmountIn.quotient.toString(16)}`
+        )
 
   return { ...wethTx, from: address, chainId }
 }
 
 const MAX_APPROVE_AMOUNT = MaxUint256
-export function useTokenApprovalInfo(derivedSwapInfo: DerivedSwapInfo): {
-  data: TokenApprovalInfo | undefined
-  isLoading: boolean
-} {
+export function useTokenApprovalInfo(
+  chainId: ChainId,
+  wrapType: WrapType,
+  currencyInAmount: NullUndefined<CurrencyAmount<Currency>>
+): TokenApprovalInfo | undefined {
   const address = useActiveAccountAddressWithThrow()
-  const provider = useProvider(derivedSwapInfo.chainId)
+  const provider = useProvider(chainId)
   const contractManager = useContractManager()
 
   const transactionFetcher = useCallback(() => {
-    if (!provider) return
+    if (!provider || !currencyInAmount) return
 
-    return getTokenApprovalInfo(provider, contractManager, address, derivedSwapInfo)
-  }, [address, contractManager, derivedSwapInfo, provider])
+    return getTokenApprovalInfo(provider, contractManager, address, wrapType, currencyInAmount)
+  }, [address, contractManager, currencyInAmount, provider, wrapType])
 
-  return useAsyncData(transactionFetcher)
+  return useAsyncData(transactionFetcher).data
 }
 
-type TokenApprovalInfo = {
-  txRequest: providers.TransactionRequest | null
-  allowance: string | null
-}
-
-const NO_APPROVAL_REQUIRED = { txRequest: null, allowance: null }
 const getTokenApprovalInfo = async (
   provider: providers.Provider,
   contractManager: ContractManager,
   address: Address,
-  derivedSwapInfo: DerivedSwapInfo
-): Promise<TokenApprovalInfo> => {
-  // wrap/unwraps do not need approval
-  if (derivedSwapInfo.wrapType !== WrapType.NotApplicable) return NO_APPROVAL_REQUIRED
-  const {
-    currencies,
-    trade: { trade },
-    chainId,
-  } = derivedSwapInfo
-  const currencyIn = currencies[CurrencyField.INPUT]
+  wrapType: WrapType,
+  currencyInAmount: CurrencyAmount<Currency>
+): Promise<TokenApprovalInfo | undefined> => {
+  const currencyIn = currencyInAmount?.currency
+  if (!currencyIn) return undefined
 
-  if (!currencyIn || !trade?.quote) {
-    throw new Error(
-      'cannot get transaction request for Swap without currencyIn or completed trade quote'
-    )
-  }
+  // wrap/unwraps do not need approval
+  if (wrapType !== WrapType.NotApplicable) return { action: ApprovalAction.None, txRequest: null }
 
   // native tokens do not need approvals
-  if (currencyIn.isNative) return NO_APPROVAL_REQUIRED
+  if (currencyIn.isNative) return { action: ApprovalAction.None, txRequest: null }
 
+  const currencyInAmountRaw = currencyInAmount.quotient.toString()
+  const chainId = currencyInAmount.currency.chainId
   const spender = SWAP_ROUTER_ADDRESSES[chainId]
   const tokenContract = contractManager.getOrCreateContract<Erc20>(
     chainId,
@@ -532,9 +548,12 @@ const getTokenApprovalInfo = async (
     ERC20_ABI
   )
   const allowance = await tokenContract.callStatic.allowance(address, spender)
-  // tokens that can call `permit` do not need approve
-  if (PERMITTABLE_TOKENS[chainId]?.[currencyIn.address] || allowance.gt(trade.quote.amount)) {
-    return { txRequest: null, allowance: allowance.toString() }
+  if (!allowance.lt(currencyInAmountRaw)) {
+    return { action: ApprovalAction.None, txRequest: null }
+  }
+
+  if (PERMITTABLE_TOKENS[chainId]?.[currencyIn.address]) {
+    return { action: ApprovalAction.Permit, txRequest: null }
   }
 
   let baseTransaction
@@ -546,7 +565,7 @@ const getTokenApprovalInfo = async (
     // above call errors when token restricts max approvals
     baseTransaction = await tokenContract.populateTransaction.approve(
       spender,
-      BigNumber.from(trade.quote.amount),
+      currencyInAmountRaw,
       {
         from: address,
       }
@@ -555,49 +574,38 @@ const getTokenApprovalInfo = async (
 
   return {
     txRequest: { ...baseTransaction, from: address, chainId },
-
-    // cast as string so that downstream hooks can properly memoize based on string value
-    allowance: allowance.toString(),
+    action: ApprovalAction.Approve,
   }
 }
 
 export function useSwapTransactionRequest(
   derivedSwapInfo: DerivedSwapInfo,
-  tokenAllowance?: string | null
+  tokenApprovalInfo?: TokenApprovalInfo
 ): providers.TransactionRequest | undefined {
   const {
     chainId,
     trade: { trade },
     wrapType,
-    exactAmountToken,
     exactCurrencyField,
     currencies,
     currencyAmounts,
   } = derivedSwapInfo
   const address = useActiveAccountAddressWithThrow()
   const { data: permitInfo, isLoading: permitInfoLoading } = usePermitSignature(
-    derivedSwapInfo,
-    tokenAllowance
+    chainId,
+    currencyAmounts[CurrencyField.INPUT],
+    wrapType,
+    tokenApprovalInfo?.action
   )
 
-  const [exactCurrency, otherCurrency, tradeType] =
+  const [otherCurrency, tradeType] =
     exactCurrencyField === CurrencyField.INPUT
-      ? [currencies[CurrencyField.INPUT], currencies[CurrencyField.OUTPUT], TradeType.EXACT_INPUT]
-      : [currencies[CurrencyField.OUTPUT], currencies[CurrencyField.INPUT], TradeType.EXACT_OUTPUT]
-
-  const inputAmount =
-    exactAmountToken && exactCurrency
-      ? parseUnits(exactAmountToken, exactCurrency.decimals)
-      : undefined
+      ? [currencies[CurrencyField.OUTPUT], TradeType.EXACT_INPUT]
+      : [currencies[CurrencyField.INPUT], TradeType.EXACT_OUTPUT]
 
   // get simulated gasLimit only if token doesn't have enough allowance AND we can't get the allowance
   // through .permit instead
-  const shouldFetchSimulatedGasLimit =
-    inputAmount &&
-    tokenAllowance &&
-    BigNumber.from(tokenAllowance).lt(inputAmount) &&
-    !permitInfoLoading &&
-    !permitInfo
+  const shouldFetchSimulatedGasLimit = tokenApprovalInfo?.action === ApprovalAction.Approve
 
   const { isLoading: simulatedGasLimitLoading, simulatedGasLimit } = useSimulatedGasLimit(
     chainId,
@@ -612,12 +620,13 @@ export function useSwapTransactionRequest(
     if (
       wrapType !== WrapType.NotApplicable ||
       !currencyAmountIn ||
-      (!currencyAmountIn.currency.isNative && !tokenAllowance) ||
+      !tokenApprovalInfo ||
       (!simulatedGasLimit && simulatedGasLimitLoading) ||
       permitInfoLoading ||
       !trade
-    )
+    ) {
       return
+    }
 
     const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId]
     const baseSwapTx = {
@@ -659,19 +668,28 @@ export function useSwapTransactionRequest(
     shouldFetchSimulatedGasLimit,
     simulatedGasLimit,
     simulatedGasLimitLoading,
-    tokenAllowance,
+    tokenApprovalInfo,
     trade,
     wrapType,
   ])
 }
 
-export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo) {
-  const { data: tokenApprovalInfo, isLoading: tokenApprovalInfoLoading } =
-    useTokenApprovalInfo(derivedSwapInfo)
+export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo, skipGasFeeQuery: boolean) {
+  const { chainId, wrapType, currencyAmounts } = derivedSwapInfo
+
+  const tokenApprovalInfo = useTokenApprovalInfo(
+    chainId,
+    wrapType,
+    currencyAmounts[CurrencyField.INPUT]
+  )
   const txRequest = useTransactionRequest(derivedSwapInfo, tokenApprovalInfo)
 
-  const approveFeeInfo = useTransactionGasFee(tokenApprovalInfo?.txRequest)
-  const txFeeInfo = useTransactionGasFee(txRequest)
+  const approveFeeInfo = useTransactionGasFee(
+    tokenApprovalInfo?.txRequest,
+    GasSpeed.Urgent,
+    skipGasFeeQuery
+  )
+  const txFeeInfo = useTransactionGasFee(txRequest, GasSpeed.Urgent, skipGasFeeQuery)
   const totalGasFee = sumGasFees(approveFeeInfo?.gasFee, txFeeInfo?.gasFee)
 
   const txWithGasSettings = useMemo(() => {
@@ -681,7 +699,7 @@ export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo) {
   }, [txRequest, txFeeInfo])
 
   const approveLoading =
-    tokenApprovalInfoLoading || Boolean(tokenApprovalInfo?.txRequest && !approveFeeInfo)
+    !tokenApprovalInfo || Boolean(tokenApprovalInfo.txRequest && !approveFeeInfo)
 
   const approveTxWithGasSettings = useMemo(() => {
     if (approveLoading || !tokenApprovalInfo?.txRequest) return
@@ -693,11 +711,7 @@ export function useSwapTxAndGasInfo(derivedSwapInfo: DerivedSwapInfo) {
     txRequest: txWithGasSettings,
     approveTxRequest: approveTxWithGasSettings,
     totalGasFee,
-
-    // TODO: fix tokenApprovalInfo to not recalculate when non-relevant fields from derivedSwapInfo change
-    // for now, only block on first load when no `tokenApprovalInfo` has been found
-    // useTokenApprovalInfo will rerender on new `trade` but could return same info
-    isLoading: !tokenApprovalInfo && approveLoading,
+    isLoading: approveLoading,
   }
 }
 

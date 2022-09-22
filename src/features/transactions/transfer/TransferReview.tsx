@@ -2,7 +2,6 @@ import { providers } from 'ethers'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'src/components/modals/types'
-import { TransactionGasFeeInfo } from 'src/features/gas/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
@@ -17,14 +16,14 @@ import { currencyAddress } from 'src/utils/currencyId'
 interface TransferFormProps {
   derivedTransferInfo: DerivedTransferInfo
   txRequest?: providers.TransactionRequest
-  gasFeeInfo?: TransactionGasFeeInfo
+  totalGasFee?: string
   onNext: () => void
   onPrev: () => void
 }
 
 export function TransferReview({
   derivedTransferInfo,
-  gasFeeInfo,
+  totalGasFee,
   onNext,
   onPrev,
   txRequest,
@@ -43,12 +42,10 @@ export function TransferReview({
     txId,
   } = derivedTransferInfo
 
-  const transferTxWithGasSettings = gasFeeInfo ? { ...txRequest, ...gasFeeInfo.params } : txRequest
-
   // TODO: how should we surface this warning?
   const actionButtonDisabled =
     warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
-    !gasFeeInfo ||
+    !totalGasFee ||
     !txRequest
 
   const transferERC20Callback = useTransferERC20Callback(
@@ -57,7 +54,7 @@ export function TransferReview({
     recipient,
     currencyIn ? currencyAddress(currencyIn) : undefined,
     currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
-    transferTxWithGasSettings,
+    txRequest,
     onNext
   )
   // TODO: if readonly account, not sendable
@@ -67,7 +64,7 @@ export function TransferReview({
     recipient,
     nftIn?.asset_contract.address,
     nftIn?.token_id,
-    transferTxWithGasSettings,
+    txRequest,
     onNext
   )
 
@@ -93,7 +90,7 @@ export function TransferReview({
       isUSDInput={isUSDInput}
       nftIn={nftIn}
       recipient={recipient}
-      transactionDetails={<TransferDetails chainId={chainId} gasFee={gasFeeInfo?.gasFee} />}
+      transactionDetails={<TransferDetails chainId={chainId} gasFee={totalGasFee} />}
       onPrev={onPrev}
     />
   )
