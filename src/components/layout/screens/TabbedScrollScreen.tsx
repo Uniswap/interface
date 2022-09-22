@@ -15,20 +15,21 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Route, SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
 import { ScrollEvent } from 'recyclerlistview/dist/reactnative/core/scrollcomponent/BaseScrollView'
-import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
+import { theme } from 'src/styles/theme'
 
 type TabbedScrollScreenProps = {
-  headerContent: ReactElement
+  headerContent?: ReactElement
   renderTab: (
     route: Route,
     scrollProps: TabViewScrollProps,
     loadingContainerStyle: ViewStyle
   ) => ReactElement | null
   tabs: { key: string; title: string }[]
+  hideTabs?: boolean
 }
 
 export type TabViewScrollProps = {
@@ -70,8 +71,8 @@ export default function TabbedScrollScreen({
   headerContent,
   renderTab,
   tabs,
+  hideTabs,
 }: TabbedScrollScreenProps) {
-  const theme = useAppTheme()
   const insets = useSafeAreaInsets()
 
   const [headerHeight, setHeaderHeight] = useState(INITIAL_TAB_BAR_HEIGHT) // estimation for initial height, updated on layout
@@ -195,10 +196,9 @@ export default function TabbedScrollScreen({
           renderTab(props.route, scrollPropsForTab(props.route.key), loadingContainerStyle)
         }
         renderTabBar={renderTabBar}
-        style={{ marginHorizontal: theme.spacing.md }}
+        style={hideTabs ? TabViewStyles.containerHidden : TabViewStyles.containerVisible}
         onIndexChange={onTabIndexChange}
       />
-
       <AnimatedFlex
         style={[styles.header, headerAnimatedStyle, { marginTop: insets.top }]}
         onLayout={(event: LayoutChangeEvent) => setHeaderHeight(event.nativeEvent.layout.height)}>
@@ -207,3 +207,14 @@ export default function TabbedScrollScreen({
     </Screen>
   )
 }
+
+const TabViewStyles = StyleSheet.create({
+  containerHidden: {
+    display: 'none',
+    marginHorizontal: theme.spacing.md,
+  },
+  containerVisible: {
+    display: 'flex',
+    marginHorizontal: theme.spacing.md,
+  },
+})

@@ -27,7 +27,7 @@ import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 // TODO: Update fixed trending wallets
-const TRENDING_WALLETS: WalletSearchResult[] = [
+export const TRENDING_WALLETS: WalletSearchResult[] = [
   {
     type: SearchResultType.Wallet,
     address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
