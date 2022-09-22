@@ -552,7 +552,6 @@ export default function Liquidity() {
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem>
               {pools.slice(0, 5).map((v2Pair, index) => {
-                console.log(new bn(v2Pair.trackedReserveETH).toFormat(4, bn.ROUND_HALF_UP))
                 return (
                   <>
                     <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>
