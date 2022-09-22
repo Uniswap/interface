@@ -130,6 +130,7 @@ export default function App() {
 
   useEffect(() => {
     sendAnalyticsEvent(EventName.APP_LOADED)
+    user.set(CUSTOM_USER_PROPERTIES.USER_AGENT, navigator.userAgent)
     user.set(CUSTOM_USER_PROPERTIES.BROWSER, getBrowser())
     user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_WIDTH, window.screen.width)

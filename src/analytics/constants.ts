@@ -33,6 +33,7 @@ export enum EventName {
 export enum CUSTOM_USER_PROPERTIES {
   ALL_WALLET_ADDRESSES_CONNECTED = 'all_wallet_addresses_connected',
   ALL_WALLET_CHAIN_IDS = 'all_wallet_chain_ids',
+  USER_AGENT = 'user_agent',
   BROWSER = 'browser',
   DARK_MODE = 'is_dark_mode',
   EXPERT_MODE = 'is_expert_mode',
