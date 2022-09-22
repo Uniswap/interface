@@ -20,9 +20,11 @@ const Collection = () => {
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
 
-  const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
+  const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
   )
+
+  console.log(collectionStats)
 
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
@@ -74,8 +76,10 @@ const Collection = () => {
             width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
           }}
         >
-          {contractAddress && collectionStats && (
+          {collectionStats && contractAddress ? (
             <CollectionNfts collectionStats={collectionStats} contractAddress={contractAddress} />
+          ) : (
+            !isLoading && <div>no nfts</div>
           )}
         </AnimatedBox>
       </Row>
