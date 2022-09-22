@@ -5,10 +5,6 @@ export const darkTheme: Theme = {
   colors: {
     accentFailure: vars.color.red300,
     modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
-    backgroundSecondary: '#23262F',
-    modalClose: 'rgba(255, 255, 255, 0.08)',
-    text: '#fff',
-    modalTextSecondary: 'rgba(255, 255, 255, 0.6)',
     textPrimary: '#FFFFFF',
     backgroundSurface: vars.color.grey900,
     textSecondary: vars.color.grey300,

@@ -5,10 +5,6 @@ export const lightTheme: Theme = {
   colors: {
     accentFailure: vars.color.red400,
     modalBackdrop: 'rgba(0, 0, 0, 0.3)',
-    backgroundSecondary: '#FCFCFD',
-    modalClose: 'rgba(60, 66, 82, 0.06)',
-    text: '#25292E',
-    modalTextSecondary: 'rgba(60, 66, 82, 0.6)',
     textPrimary: vars.color.grey900,
     backgroundSurface: '#FFFFFF',
     textSecondary: vars.color.grey500,

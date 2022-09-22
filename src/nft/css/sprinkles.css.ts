@@ -5,10 +5,6 @@ const themeContractValues = {
   colors: {
     accentFailure: '',
     modalBackdrop: '',
-    backgroundSecondary: '',
-    modalClose: '',
-    text: '',
-    modalTextSecondary: '',
 
     textPrimary: '',
     textSecondary: '',
