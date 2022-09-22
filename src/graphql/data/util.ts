@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { useAppSelector } from 'state/hooks'
 
@@ -41,11 +40,6 @@ export const CHAIN_IDS_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.ARBITRUM_RINKEBY]: 'ARBITRUM',
   [SupportedChainId.OPTIMISM]: 'OPTIMISM',
   [SupportedChainId.OPTIMISTIC_KOVAN]: 'OPTIMISM',
-}
-
-export function useWalletChainName() {
-  const { chainId } = useWeb3React()
-  return chainId && CHAIN_IDS_TO_BACKEND_NAME[chainId] ? CHAIN_IDS_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
 }
 
 export function useGlobalChainName() {
