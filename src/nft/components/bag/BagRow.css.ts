@@ -15,7 +15,7 @@ export const bagRow = style([
     marginLeft: '-4px',
     marginRight: '-4px',
     ':hover': {
-      background: themeVars.colors.backgroundModule,
+      background: themeVars.colors.stateOverlayHover,
     },
   },
 ])
@@ -28,8 +28,8 @@ export const unavailableAssetsContainer = sprinkles({
   borderStyle: 'solid',
   borderWidth: '1px',
   borderColor: 'transparent',
-  borderTopColor: 'backgroundModule',
-  borderBottomColor: 'backgroundModule',
+  borderTopColor: 'stateOverlayHover',
+  borderBottomColor: 'stateOverlayHover',
   height: 'full',
 })
 
@@ -41,7 +41,7 @@ export const priceChangeColumn = sprinkles({
   borderStyle: 'solid',
   borderWidth: '1px',
   borderColor: 'transparent',
-  borderBottomColor: 'backgroundModule',
+  borderBottomColor: 'stateOverlayHover',
   height: 'full',
   cursor: 'pointer',
 })

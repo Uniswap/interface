@@ -4,26 +4,31 @@ import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
 const themeContractValues = {
   colors: {
     accentFailure: '',
+
+    explicitWhite: '',
+
+    backgroundAction: '',
+    backgroundFloating: '',
+    backgroundInteractive: '',
+    backgroundModule: '',
+    backgroundOutline: '',
+    backgroundSurface: '',
+
     modalBackdrop: '',
+
+    stateOverlayHover: '',
 
     textPrimary: '',
     textSecondary: '',
-    backgroundOutline: '',
-    backgroundSurface: '',
-    white: '',
-    backgroundModule: '',
-    explicitWhite: '',
-    backgroundAction: '',
     textTertiary: '',
-    backgroundInteractive: '',
-    loading: '',
+
+    white: '',
 
     // Opacities of black and white
     white95: '',
     white90: '',
     white80: '',
     white08: '',
-    backgroundFloating: '',
   },
 
   shadows: {

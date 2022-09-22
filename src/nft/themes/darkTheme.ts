@@ -10,12 +10,12 @@ export const darkTheme: Theme = {
     textSecondary: vars.color.grey300,
     backgroundOutline: opacify(24, vars.color.grey300),
     white: '#000000',
-    backgroundModule: opacify(8, vars.color.grey300),
+    stateOverlayHover: opacify(8, vars.color.grey300),
     explicitWhite: '#FFFFFF',
     backgroundAction: vars.color.blue400,
     textTertiary: vars.color.grey500,
     backgroundInteractive: vars.color.grey700,
-    loading: vars.color.grey800,
+    backgroundModule: vars.color.grey800,
 
     // Opacities of black and white
     white95: '#0E111AF2',

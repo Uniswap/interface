@@ -57,17 +57,17 @@ export const subRowHover = style({
 })
 
 export const detailsOpen = sprinkles({
-  background: 'backgroundModule',
+  background: 'stateOverlayHover',
   overflow: 'hidden',
   borderStyle: 'solid',
   borderWidth: '1px',
-  borderColor: 'backgroundModule',
+  borderColor: 'stateOverlayHover',
 })
 
 export const summaryOpen = sprinkles({
   borderStyle: 'solid',
   borderWidth: '1px',
-  borderColor: 'backgroundModule',
+  borderColor: 'stateOverlayHover',
 })
 
 export const filterDropDowns = style([

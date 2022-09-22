@@ -7,7 +7,7 @@ export const Input = forwardRef<HTMLInputElement, BoxProps>((props, ref) => (
   <Box
     ref={ref}
     as="input"
-    borderColor={{ default: 'backgroundModule', focus: 'textSecondary' }}
+    borderColor={{ default: 'stateOverlayHover', focus: 'textSecondary' }}
     borderWidth="1px"
     borderStyle="solid"
     borderRadius="12"

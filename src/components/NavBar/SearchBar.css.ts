@@ -12,7 +12,7 @@ const baseSearchStyle = style([
     width: { sm: 'viewWidth' },
     borderStyle: 'solid',
     borderWidth: '1px',
-    borderColor: 'backgroundModule',
+    borderColor: 'stateOverlayHover',
   }),
   {
     '@media': {
@@ -140,7 +140,7 @@ export const secondaryText = style([
 export const imageHolder = style([
   suggestionImage,
   sprinkles({
-    background: 'loading',
+    background: 'backgroundModule',
     flexShrink: '0',
   }),
 ])
