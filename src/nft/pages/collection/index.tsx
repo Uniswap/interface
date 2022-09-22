@@ -1,7 +1,7 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
-import { useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
+import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
@@ -11,6 +11,7 @@ import { useSpring } from 'react-spring/web'
 import * as styles from './index.css'
 
 const FILTER_WIDTH = 332
+const BAG_WIDTH = 324
 
 const Collection = () => {
   const { contractAddress } = useParams()
@@ -21,6 +22,7 @@ const Collection = () => {
   const navigate = useNavigate()
   const isActivityToggled = pathname.includes('/activity')
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
+  const isBagExpanded = useBag((state) => state.bagExpanded)
 
   const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
@@ -28,7 +30,13 @@ const Collection = () => {
 
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
-    gridWidthOffset: isFiltersExpanded ? FILTER_WIDTH : 0,
+    gridWidthOffset: isFiltersExpanded
+      ? isBagExpanded
+        ? BAG_WIDTH + FILTER_WIDTH
+        : FILTER_WIDTH
+      : isBagExpanded
+      ? BAG_WIDTH
+      : 0,
   })
 
   useEffect(() => {
@@ -89,7 +97,9 @@ const Collection = () => {
                   collectionName={collectionStats?.name ?? ''}
                 />
               )
-            : contractAddress && <CollectionNfts contractAddress={contractAddress} />}
+            : contractAddress && (
+                <CollectionNfts contractAddress={contractAddress} rarityVerified={collectionStats?.rarityVerified} />
+              )}
         </AnimatedBox>
       </Row>
     </Column>

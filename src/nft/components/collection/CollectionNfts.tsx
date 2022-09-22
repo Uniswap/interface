@@ -16,9 +16,10 @@ import { useInfiniteQuery } from 'react-query'
 
 interface CollectionNftsProps {
   contractAddress: string
+  rarityVerified?: boolean
 }
 
-export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
+export const CollectionNfts = ({ contractAddress, rarityVerified }: CollectionNftsProps) => {
   const traits = useCollectionFilters((state) => state.traits)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
@@ -122,10 +123,12 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
                 <CollectionAsset
                   key={asset.address + asset.tokenId}
                   asset={asset}
+                  isMobile={isMobile}
                   uniformHeight={uniformHeight}
                   setUniformHeight={setUniformHeight}
                   mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
                   setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+                  rarityVerified={rarityVerified}
                 />
               ) : null
             })}
