@@ -13,7 +13,7 @@ module.exports = {
     plugins: [
       new VanillaExtractPlugin(),
       new webpack.DefinePlugin({
-        'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash),
+        'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash.toString()),
       }),
     ],
     configure: (webpackConfig) => {
