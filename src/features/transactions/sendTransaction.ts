@@ -5,6 +5,7 @@ import { isFlashbotsSupportedChainId } from 'src/features/providers/flashbotsPro
 import { logEvent } from 'src/features/telemetry'
 import { EventName } from 'src/features/telemetry/constants'
 import { transactionActions } from 'src/features/transactions/slice'
+import { formatAsHexString } from 'src/features/transactions/swap/utils'
 import {
   TransactionDetails,
   TransactionOptions,
@@ -69,10 +70,33 @@ export async function signAndSendTransaction(
 ) {
   const signer = await signerManager.getSignerForAccount(account)
   const connectedSigner = signer.connect(provider)
-  const populatedRequest = await connectedSigner.populateTransaction(request)
+  const hexRequest = hexlifyTransaction(request)
+  const populatedRequest = await connectedSigner.populateTransaction(hexRequest)
   const signedTx = await connectedSigner.signTransaction(populatedRequest)
   const transactionResponse = await provider.sendTransaction(signedTx)
   return { transactionResponse, populatedRequest }
+}
+
+// hexlifyTransaction is idemnpotent so it's safe to call more than once on a singular transaction request
+function hexlifyTransaction(transferTxRequest: providers.TransactionRequest) {
+  const { value, nonce, gasLimit, gasPrice, maxPriorityFeePerGas, maxFeePerGas } = transferTxRequest
+  return {
+    ...transferTxRequest,
+    nonce: formatAsHexString(nonce),
+    value: formatAsHexString(value),
+    gasLimit: formatAsHexString(gasLimit),
+
+    // only pass in for legacy chains
+    ...(gasPrice ? { gasPrice: formatAsHexString(gasPrice) } : {}),
+
+    // only pass in for eip1559 tx
+    ...(maxPriorityFeePerGas
+      ? {
+          maxPriorityFeePerGas: formatAsHexString(maxPriorityFeePerGas),
+          maxFeePerGas: formatAsHexString(maxFeePerGas),
+        }
+      : {}),
+  }
 }
 
 function* addTransaction(
