@@ -35,8 +35,6 @@ import {
 import LineChart from '../../Charts/LineChart'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
-// TODO: This should be combined with the logic in TimeSelector.
-
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
 export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {

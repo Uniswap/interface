@@ -91,7 +91,6 @@ const CheckContainer = styled.div`
   flex-direction: flex-end;
 `
 
-// TODO: change this to reflect data pipeline
 export default function NetworkFilter({ loaded }: { loaded: boolean }) {
   const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
