@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const webpack = require('webpack')
+const { DefinePlugin } = require('webpack')
 
 const commitHash = require('child_process').execSync('git rev-parse --short HEAD')
 
@@ -12,7 +12,7 @@ module.exports = {
   webpack: {
     plugins: [
       new VanillaExtractPlugin(),
-      new webpack.DefinePlugin({
+      new DefinePlugin({
         'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash.toString()),
       }),
     ],
