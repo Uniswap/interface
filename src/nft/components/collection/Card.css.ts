@@ -136,6 +136,24 @@ export const erc1155MinusButton = style([
   },
 ])
 
+export const rarityInfo = style([
+  sprinkles({
+    display: 'flex',
+    borderRadius: '4',
+    height: '16',
+    color: 'blackBlue',
+    background: 'lightGrayButton',
+    fontSize: '10',
+    fontWeight: 'semibold',
+    paddingX: '4',
+  }),
+  {
+    lineHeight: '12px',
+    letterSpacing: '0.04em',
+    backdropFilter: 'blur(6px)',
+  },
+])
+
 export const playbackSwitch = style([
   sprinkles({
     position: 'absolute',

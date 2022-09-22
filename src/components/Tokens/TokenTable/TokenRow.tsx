@@ -9,7 +9,8 @@ import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags
 import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode } from 'react'
+import { ForwardedRef, forwardRef } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
@@ -35,6 +36,8 @@ import {
 import { useTokenLogoURI } from '../TokenDetails/ChartSection'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 import { DISPLAYS } from './TimeSelector'
+
+export const MAX_TOKENS_TO_LOAD = 100
 
 const Cell = styled.div`
   display: flex;
@@ -400,6 +403,7 @@ export function TokenRow({
   tokenInfo: ReactNode
   volume: ReactNode
   last?: boolean
+  style?: CSSProperties
 }) {
   const favoriteTokensEnabled = useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled
   const rowCells = (
@@ -469,7 +473,8 @@ interface LoadedRowProps {
 }
 
 /* Loaded State: row component with token information */
-export default function LoadedRow({ tokenListIndex, tokenListLength, token }: LoadedRowProps) {
+export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
+  const { tokenListIndex, tokenListLength, token } = props
   const tokenAddress = token.address
   const tokenName = token.name
   const tokenSymbol = token.symbol
@@ -499,80 +504,84 @@ export default function LoadedRow({ tokenListIndex, tokenListLength, token }: Lo
 
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <StyledLink
-      to={`/tokens/${chainName}/${tokenAddress}`}
-      onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
-    >
-      <TokenRow
-        header={false}
-        favorited={
-          <ClickFavorited
-            onClick={(e) => {
-              e.preventDefault()
-              toggleFavorite()
-            }}
-          >
-            <FavoriteIcon isFavorited={isFavorited} />
-          </ClickFavorited>
-        }
-        listNumber={sortAscending ? 100 - tokenListIndex : tokenListIndex + 1}
-        tokenInfo={
-          <ClickableName>
-            <LogoContainer>
-              <CurrencyLogo src={useTokenLogoURI(token)} symbol={tokenSymbol} />
-              <L2NetworkLogo networkUrl={L2Icon} />
-            </LogoContainer>
-            <TokenInfoCell>
-              <TokenName>{tokenName}</TokenName>
-              <TokenSymbol>{tokenSymbol}</TokenSymbol>
-            </TokenInfoCell>
-          </ClickableName>
-        }
-        price={
-          <ClickableContent>
-            <PriceInfoCell>
-              {token.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
-              <PercentChangeInfoCell>
-                {formattedDelta}
-                {arrow}
-              </PercentChangeInfoCell>
-            </PriceInfoCell>
-          </ClickableContent>
-        }
-        percentChange={
-          <ClickableContent>
-            {formattedDelta ?? '-'}
-            {arrow}
-          </ClickableContent>
-        }
-        marketCap={
-          <ClickableContent>
-            {token.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
-          </ClickableContent>
-        }
-        volume={
-          <ClickableContent>
-            {token.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
-          </ClickableContent>
-        }
-        sparkLine={
-          <SparkLine>
-            <ParentSize>
-              {({ width, height }) => (
-                <SparklineChart
-                  width={width}
-                  height={height}
-                  tokenData={token}
-                  pricePercentChange={token.market?.pricePercentChange?.value}
-                  timePeriod={timePeriod}
-                />
-              )}
-            </ParentSize>
-          </SparkLine>
-        }
-        first={tokenListIndex === 0}
-        last={tokenListIndex === tokenListLength - 1}
-      />
-    </StyledLink>
+    <div ref={ref}>
+      <StyledLink
+        to={`/tokens/${chainName}/${tokenAddress}`}
+        onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
+      >
+        <TokenRow
+          header={false}
+          favorited={
+            <ClickFavorited
+              onClick={(e) => {
+                e.preventDefault()
+                toggleFavorite()
+              }}
+            >
+              <FavoriteIcon isFavorited={isFavorited} />
+            </ClickFavorited>
+          }
+          listNumber={sortAscending ? MAX_TOKENS_TO_LOAD - tokenListIndex : tokenListIndex + 1}
+          tokenInfo={
+            <ClickableName>
+              <LogoContainer>
+                <CurrencyLogo src={useTokenLogoURI(token)} symbol={tokenSymbol} />
+                <L2NetworkLogo networkUrl={L2Icon} />
+              </LogoContainer>
+              <TokenInfoCell>
+                <TokenName>{tokenName}</TokenName>
+                <TokenSymbol>{tokenSymbol}</TokenSymbol>
+              </TokenInfoCell>
+            </ClickableName>
+          }
+          price={
+            <ClickableContent>
+              <PriceInfoCell>
+                {token.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
+                <PercentChangeInfoCell>
+                  {formattedDelta}
+                  {arrow}
+                </PercentChangeInfoCell>
+              </PriceInfoCell>
+            </ClickableContent>
+          }
+          percentChange={
+            <ClickableContent>
+              {formattedDelta ?? '-'}
+              {arrow}
+            </ClickableContent>
+          }
+          marketCap={
+            <ClickableContent>
+              {token.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
+            </ClickableContent>
+          }
+          volume={
+            <ClickableContent>
+              {token.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
+            </ClickableContent>
+          }
+          sparkLine={
+            <SparkLine>
+              <ParentSize>
+                {({ width, height }) => (
+                  <SparklineChart
+                    width={width}
+                    height={height}
+                    tokenData={token}
+                    pricePercentChange={token.market?.pricePercentChange?.value}
+                    timePeriod={timePeriod}
+                  />
+                )}
+              </ParentSize>
+            </SparkLine>
+          }
+          first={tokenListIndex === 0}
+          last={tokenListIndex === tokenListLength - 1}
+        />
+      </StyledLink>
+    </div>
   )
-}
+})
+
+LoadedRow.displayName = 'LoadedRow'

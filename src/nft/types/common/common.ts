@@ -85,7 +85,7 @@ export interface GenieAsset {
   currentUsdPrice: string
   imageUrl: string
   animationUrl: string
-  marketplace: string
+  marketplace: Markets
   name: string
   priceInfo: PriceInfo
   openseaSusFlag: boolean
@@ -180,4 +180,10 @@ export interface DropDownOption {
   onClick: () => void
   reverseIndex?: number
   reverseOnClick?: () => void
+}
+
+export enum DetailsOrigin {
+  COLLECTION = 'collection',
+  SELL = 'sell',
+  EXPLORE = 'explore',
 }

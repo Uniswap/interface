@@ -107,6 +107,7 @@ export default function TokenDetails() {
   const timePeriod = useAtomValue(filterTimeAtom)
   const currentChainName = validateUrlChainParam(chainName)
   const token = useTokenQuery(tokenAddress ?? '', currentChainName, timePeriod).tokens?.[0]
+  console.log(token)
 
   const navigate = useNavigate()
   const switchChains = (newChain: Chain) => {
@@ -199,8 +200,9 @@ export default function TokenDetails() {
             </BreadcrumbNavLink>
             <ChartSection token={token} nativeCurrency={nativeCurrency} />
             <StatsSection
-              tvl={token.market?.totalValueLocked?.value}
+              TVL={token.market?.totalValueLocked?.value}
               volume24H={token.market?.volume24H?.value}
+              // TODO: Reenable these values once they're available in schema
               // priceHigh52W={token.market?.priceHigh52W?.value}
               // priceLow52W={token.market?.priceLow52W?.value}
             />

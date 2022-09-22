@@ -29,7 +29,7 @@ export interface SellOrder {
 }
 
 export interface Listing {
-  price?: string
+  price?: number
   marketplace: ListingMarket
   overrideFloorPrice?: boolean
 }
@@ -65,7 +65,7 @@ export interface WalletAsset {
   floor_sell_order_price: number
   // Used for creating new listings
   expirationTime?: number
-  marketAgnosticPrice?: string
+  marketAgnosticPrice?: number
   newListings?: Listing[]
   marketplaces?: ListingMarket[]
   listingWarnings?: ListingWarning[]
