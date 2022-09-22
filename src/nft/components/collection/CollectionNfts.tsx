@@ -44,6 +44,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
   const {
     data: collectionAssets,
     isSuccess: AssetsFetchSuccess,
+    isLoading,
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(
@@ -235,17 +236,17 @@ export const CollectionNfts = ({ contractAddress, collectionStats }: CollectionN
               ) : null
             })}
           </div>
-        ) : !collectionNfts ? (
-          <div>No CollectionAssets</div>
         ) : (
-          <Center width="full" color="darkGray" style={{ height: '60vh' }}>
-            <div style={{ display: 'block', textAlign: 'center' }}>
-              <p className={header2}>No NFTS found</p>
-              <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
-                View full collection
-              </Box>
-            </div>
-          </Center>
+          !isLoading && (
+            <Center width="full" color="darkGray" style={{ height: '60vh' }}>
+              <div style={{ display: 'block', textAlign: 'center' }}>
+                <p className={header2}>No NFTS found</p>
+                <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
+                  View full collection
+                </Box>
+              </div>
+            </Center>
+          )
         )}
       </InfiniteScroll>
     </>
