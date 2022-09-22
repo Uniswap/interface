@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { WalletConnectRequestModal } from 'src/components/WalletConnect/RequestModal/WalletConnectRequestModal'
 import { WalletConnectModal } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
@@ -23,10 +23,10 @@ export function WalletConnectModals() {
     )
   }
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     dispatch(removePendingSession())
     dispatch(closeModal({ name: ModalName.WalletConnectScan }))
-  }
+  }, [dispatch])
 
   return (
     <>

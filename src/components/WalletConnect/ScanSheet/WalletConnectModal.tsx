@@ -1,10 +1,10 @@
 import { selectionAsync } from 'expo-haptics'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
-import { navigate } from 'src/app/navigation/rootNavigation'
+import { useEagerUserProfileRootNavigation } from 'src/app/navigation/hooks'
 import Scan from 'src/assets/icons/qr-simple.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import { Button } from 'src/components/buttons/Button'
@@ -22,7 +22,6 @@ import { useDisplayName, useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
-import { Screens, Tabs } from 'src/screens/Screens'
 import { getValidAddress } from 'src/utils/addresses'
 
 const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
@@ -47,36 +46,50 @@ export function WalletConnectModal({
     useState<ScannerModalState>(initialScreenState)
   const { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera } =
     useWCTimeoutError(pendingSession, WC_TIMEOUT_DURATION_MS)
+  const { preload, navigate } = useEagerUserProfileRootNavigation()
 
-  const onScanCode = async (uri: string) => {
-    // don't scan any QR codes if there is an error popup open or camera is frozen
-    if (!activeAddress || hasScanError || shouldFreezeCamera) return
-    selectionAsync()
+  const onScanCode = useCallback(
+    async (uri: string) => {
+      // don't scan any QR codes if there is an error popup open or camera is frozen
+      if (!activeAddress || hasScanError || shouldFreezeCamera) return
+      selectionAsync()
 
-    if (getValidAddress(uri, true)) {
-      navigate(Tabs.Explore, { screen: Screens.User, params: { address: uri } })
-      onClose()
-    } else if (await isValidWCUrl(uri.toString())) {
-      setShouldFreezeCamera(true)
-      connectToApp(uri)
-    } else {
-      setHasScanError(true)
-      Alert.alert(
-        t('Invalid QR Code'),
-        t(
-          "Make sure that you're scanning a valid WalletConnect or Ethereum address QR code before trying again."
-        ),
-        [
-          {
-            text: t('Try again'),
-            onPress: () => {
-              setHasScanError(false)
+      if (getValidAddress(uri, true)) {
+        preload(uri)
+        navigate(uri, onClose)
+      } else if (await isValidWCUrl(uri.toString())) {
+        setShouldFreezeCamera(true)
+        connectToApp(uri)
+      } else {
+        setHasScanError(true)
+        Alert.alert(
+          t('Invalid QR Code'),
+          t(
+            "Make sure that you're scanning a valid WalletConnect or Ethereum address QR code before trying again."
+          ),
+          [
+            {
+              text: t('Try again'),
+              onPress: () => {
+                setHasScanError(false)
+              },
             },
-          },
-        ]
-      )
-    }
-  }
+          ]
+        )
+      }
+    },
+    [
+      activeAddress,
+      hasScanError,
+      navigate,
+      onClose,
+      preload,
+      setHasScanError,
+      setShouldFreezeCamera,
+      shouldFreezeCamera,
+      t,
+    ]
+  )
 
   const onPressBottomToggle = () => {
     selectionAsync()

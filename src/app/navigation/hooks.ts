@@ -1,8 +1,9 @@
-import { useEagerNavigation } from 'src/app/navigation/useEagerNavigation'
+import { useCallback } from 'react'
+import { useEagerNavigation, useEagerRootNavigation } from 'src/app/navigation/useEagerNavigation'
 import { PollingInterval } from 'src/constants/misc'
 import { preloadMapping } from 'src/data/preloading'
 import { activityScreenQuery } from 'src/screens/ActivityScreen'
-import { Screens } from 'src/screens/Screens'
+import { Screens, Tabs } from 'src/screens/Screens'
 import { userScreenQuery } from 'src/screens/UserScreen'
 import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
 import { UserScreenQuery } from 'src/screens/__generated__/UserScreenQuery.graphql'
@@ -51,6 +52,33 @@ export function useEagerUserProfileNavigation() {
   const navigate = (address: string) => {
     preloadedNavigate(Screens.User, { address })
   }
+
+  return { preload, navigate }
+}
+
+export function useEagerUserProfileRootNavigation() {
+  const { registerNavigationIntent, preloadedNavigate } = useEagerRootNavigation<UserScreenQuery>(
+    Tabs.Explore,
+    userScreenQuery
+  )
+
+  const preload = useCallback(
+    (address: string) => {
+      registerNavigationIntent(
+        preloadMapping.user({
+          address,
+        })
+      )
+    },
+    [registerNavigationIntent]
+  )
+
+  const navigate = useCallback(
+    (address: string, callback?: () => void) => {
+      preloadedNavigate({ screen: Screens.User, params: { address } }, callback)
+    },
+    [preloadedNavigate]
+  )
 
   return { preload, navigate }
 }
