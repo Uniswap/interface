@@ -9,13 +9,13 @@ export const baseRow = style([
   {
     gridTemplateColumns: '2.5fr 1fr',
     '@media': {
-      [`screen and (min-width: ${breakpoints.md}px)`]: {
-        gridTemplateColumns: '2fr 1.5fr 1fr 1fr',
+      [`screen and (min-width: ${breakpoints.sm}px)`]: {
+        gridTemplateColumns: '2fr 1.5fr 1fr',
       },
-      [`screen and (min-width: ${breakpoints.lg}px)`]: {
+      [`screen and (min-width: ${breakpoints.md}px)`]: {
         gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr',
       },
-      [`screen and (min-width: ${breakpoints.xl}px)`]: {
+      [`screen and (min-width: ${breakpoints.lg}px)`]: {
         gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr 1fr',
       },
     },

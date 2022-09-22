@@ -74,7 +74,7 @@ export const BuyCell = ({
   }, [asset, itemsInBag])
 
   return (
-    <Column display={{ sm: 'none', md: 'flex' }} height="full" justifyContent="center" marginX="auto">
+    <Column display={{ sm: 'none', lg: 'flex' }} height="full" justifyContent="center" marginX="auto">
       {event.eventType === ActivityEventType.Listing && event.orderStatus ? (
         <Box
           as="button"
