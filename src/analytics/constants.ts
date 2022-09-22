@@ -51,6 +51,7 @@ export enum BROWSER {
   EDGE_CHROMIUM = 'Microsoft Edge (Chromium)',
   CHROME = 'Google Chrome or Chromium',
   SAFARI = 'Apple Safari',
+  BRAVE = 'Brave',
   UNKNOWN = 'unknown',
 }
 
