@@ -126,11 +126,11 @@ export const erc1155PlusButton = style([
 export const erc1155MinusButton = style([
   erc1155Button,
   sprinkles({
-    color: 'error',
+    color: 'accentFailure',
   }),
   {
     ':hover': {
-      backgroundColor: themeVars.colors.error,
+      backgroundColor: themeVars.colors.accentFailure,
       color: themeVars.colors.textPrimary,
     },
   },

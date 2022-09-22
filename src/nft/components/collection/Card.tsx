@@ -453,7 +453,7 @@ const Button = ({ children, quantity, selectedChildren, onClick, onSelectedClick
             buttonHovered || isMobile
               ? 'explicitWhite'
               : selected
-              ? 'error'
+              ? 'accentFailure'
               : asset.notForSale
               ? 'textTertiary'
               : 'blue400'
@@ -462,7 +462,7 @@ const Button = ({ children, quantity, selectedChildren, onClick, onSelectedClick
             background: `${
               buttonHovered || isMobile
                 ? selected
-                  ? vars.color.error
+                  ? vars.color.accentFailure
                   : vars.color.blue400
                 : selected
                 ? '#FA2B391F'

@@ -3,16 +3,13 @@ import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
 
 const themeContractValues = {
   colors: {
-    // Pavel's colors, mostly used for the wallet connection. TODO Some may need to be changed / removed
-    error: '',
-    textDisconnect: '',
+    accentFailure: '',
     modalBackdrop: '',
     backgroundSecondary: '',
     modalClose: '',
     text: '',
     modalTextSecondary: '',
 
-    // Bryan's colors from Figma that vary dark vs light
     textPrimary: '',
     textSecondary: '',
     backgroundOutline: '',
@@ -165,6 +162,7 @@ export const vars = createGlobalTheme(':root', {
     pink400: '#FB118E',
     red700: '#530f10',
     red400: '#FA2C38',
+    red300: '#FD766B',
     green200: '#5CFE9D',
     green400: '#1A9550',
     grey900: '#0E111A',

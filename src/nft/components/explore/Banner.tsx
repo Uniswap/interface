@@ -118,7 +118,7 @@ const CollectionDetails = ({
       </Box>
       <Box>
         {collection.floorChange ? (
-          <Box as="span" color={collection.floorChange > 0 ? 'green200' : 'error'} marginLeft="4">
+          <Box as="span" color={collection.floorChange > 0 ? 'green200' : 'accentFailure'} marginLeft="4">
             {collection.floorChange > 0 && '+'}
             {formatChange(collection.floorChange)}%
           </Box>
@@ -132,7 +132,7 @@ const CollectionDetails = ({
       </Box>
       <Box>
         {collection.volumeChange ? (
-          <Box as="span" color={collection.volumeChange > 0 ? 'green200' : 'error'} marginLeft="4">
+          <Box as="span" color={collection.volumeChange > 0 ? 'green200' : 'accentFailure'} marginLeft="4">
             {collection.volumeChange > 0 && '+'}
             {formatChange(collection.volumeChange)}%
           </Box>

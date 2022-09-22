@@ -3,8 +3,7 @@ import { opacify } from 'theme/utils'
 
 export const lightTheme: Theme = {
   colors: {
-    error: '#FF494A',
-    textDisconnect: '#FF494A',
+    accentFailure: vars.color.red400,
     modalBackdrop: 'rgba(0, 0, 0, 0.3)',
     backgroundSecondary: '#FCFCFD',
     modalClose: 'rgba(60, 66, 82, 0.06)',
