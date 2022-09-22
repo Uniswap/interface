@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { showFavoritesAtom } from 'components/Tokens/state'
-import { usePrefetchTopTokens, useTopTokens } from 'graphql/data/TopTokens'
+import { filterTimeAtom } from 'components/Tokens/state'
+import { PAGE_SIZE, usePrefetchTopTokens, useTopTokens } from 'graphql/data/TopTokens'
+import { toHistoryDuration } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useCallback, useRef } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -10,7 +12,6 @@ import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { HeaderRow, LoadedRow, LoadingRow, MAX_TOKENS_TO_LOAD } from './TokenRow'
 
 const LOADING_ROWS_COUNT = 3
-const ROWS_PER_PAGE_FETCH = 20
 
 const GridContainer = styled.div`
   display: flex;
@@ -55,13 +56,13 @@ function NoTokensState({ message }: { message: ReactNode }) {
 }
 
 const LoadingMoreRows = Array(LOADING_ROWS_COUNT).fill(<LoadingRow />)
-const InitialLoadingRows = Array(ROWS_PER_PAGE_FETCH).fill(<LoadingRow />)
+const LoadingRows = (rowCount?: number) => Array(rowCount ?? PAGE_SIZE).fill(<LoadingRow />)
 
-export function LoadingTokenTable() {
+export function LoadingTokenTable({ rowCount }: { rowCount?: number }) {
   return (
     <GridContainer>
       <HeaderRow />
-      <TokenDataContainer>{InitialLoadingRows}</TokenDataContainer>
+      <TokenDataContainer>{LoadingRows(rowCount)}</TokenDataContainer>
     </GridContainer>
   )
 }
@@ -71,7 +72,9 @@ export default function TokenTable() {
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const prefetchedTokens = usePrefetchTopTokens()
-  const { loading, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
+  const { loading, tokens, tokenCount, loadMoreTokens } = useTopTokens(prefetchedTokens)
+  const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
+  console.log('duration', duration)
   const hasMore = !tokens || tokens.length < MAX_TOKENS_TO_LOAD
 
   const observer = useRef<IntersectionObserver>()
@@ -91,7 +94,7 @@ export default function TokenTable() {
 
   /* loading and error state */
   if (loading && (!tokens || tokens?.length === 0)) {
-    return <LoadingTokenTable />
+    return <LoadingTokenTable rowCount={tokenCount} />
   } else {
     if (!tokens) {
       return (
@@ -125,7 +128,7 @@ export default function TokenTable() {
                   ref={tokens.length === index + 1 ? lastTokenRef : undefined}
                 />
               ))}
-              {loading && LoadingMoreRows}
+              {loading && tokenCount > PAGE_SIZE && LoadingMoreRows}
             </TokenDataContainer>
           </GridContainer>
         </>

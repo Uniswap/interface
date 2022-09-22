@@ -18,8 +18,9 @@ import { toHistoryDuration, useCurrentChainName } from './util'
 export function usePrefetchTopTokens() {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
   const chain = useCurrentChainName()
-  const args = useMemo(() => ({ chain, duration }), [chain, duration])
-  return useLazyLoadQuery<TopTokens100Query>(topTokens100Query, args)
+
+  const top100 = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
+  return top100
 }
 
 const topTokens100Query = graphql`
@@ -120,7 +121,7 @@ function useFilteredTokens(tokens: PrefetchedTopToken[]) {
   }, [tokens, showFavorites, lowercaseFilterString, favorites])
 }
 
-const PAGE_SIZE = 20
+export const PAGE_SIZE = 20
 
 function toContractInput(token: PrefetchedTopToken) {
   return {
@@ -130,62 +131,60 @@ function toContractInput(token: PrefetchedTopToken) {
 }
 
 export type TopToken = NonNullable<TopTokens_TokensQuery['response']['tokens']>[number]
-interface UseTopTokensReturnValue {
-  loading: boolean
-  tokens: TopToken[]
-  loadMoreTokens: () => void
-}
-export function useTopTokens(prefetchedData: TopTokens100Query['response']): UseTopTokensReturnValue {
+export function useTopTokens(prefetchedData: TopTokens100Query['response']) {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
+
   const environment = useRelayEnvironment()
-  const [tokens, setTokens] = useState<TopToken[]>([])
+  const [tokens, setTokens] = useState<TopToken[]>()
 
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
+  const prefetchedSelectedTokens = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
   const [loading, setLoading] = useState(true)
-
-  const appendTokens = useCallback(
-    (newTokens: TopToken[]) => {
-      setTokens(
-        Object.values(
-          tokens
-            .concat(newTokens)
-            .reduce((acc, token) => (token?.address ? { ...acc, [token.address]: token } : acc), {})
-        )
-      )
-    },
-    [tokens]
-  )
-  const loadMoreTokens = useCallback(() => setPage(page + 1), [page])
 
   // TopTokens should ideally be fetched with usePaginationFragment. The backend does not current support graphql cursors;
   // in the meantime, fetchQuery is used, as other relay hooks do not allow the refreshing and lazy loading we need
-  const prefetchedSelectedTokens = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
-  const contracts: ContractInput[] = useMemo(
-    () => prefetchedSelectedTokens.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map(toContractInput),
-    [page, prefetchedSelectedTokens]
+  const loadTokens = useCallback(
+    (contracts: ContractInput[], onSuccess: (data: TopTokens_TokensQuery['response'] | undefined) => void) => {
+      fetchQuery<TopTokens_TokensQuery>(
+        environment,
+        tokensQuery,
+        { contracts, duration },
+        { fetchPolicy: 'store-or-network' }
+      )
+        .toPromise()
+        .then(onSuccess)
+    },
+    [duration, environment]
   )
 
-  useEffect(() => {
-    const subscription = fetchQuery<TopTokens_TokensQuery>(
-      environment,
-      tokensQuery,
-      { contracts, duration },
-      { fetchPolicy: 'store-or-network' }
-    ).subscribe({
-      start() {
-        setLoading(true)
-      },
-      complete() {
+  const loadMoreTokens = useCallback(() => {
+    setLoading(true)
+    const contracts = prefetchedSelectedTokens.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map(toContractInput)
+    loadTokens(contracts, (data) => {
+      if (data?.tokens) {
+        setTokens([...(tokens ?? []), ...data.tokens])
         setLoading(false)
-      },
-      next(data) {
-        appendTokens(data.tokens as TopToken[])
-      },
+        setPage(page + 1)
+      }
     })
-    return subscription.unsubscribe
-  }, [appendTokens, contracts, duration, environment])
+  }, [loadTokens, page, prefetchedSelectedTokens, tokens])
 
-  return { loading, tokens: useFilteredTokens(useSortedTokens(tokens)) as TopToken[], loadMoreTokens }
+  // Reset count when filters are changed
+  useEffect(() => {
+    setLoading(true)
+    setTokens([])
+    const contracts = prefetchedSelectedTokens.slice(0, PAGE_SIZE).map(toContractInput)
+    loadTokens(contracts, (data) => {
+      if (data?.tokens) {
+        // @ts-ignore prevent typescript from complaining about readonly data
+        setTokens(data.tokens)
+        setLoading(false)
+        setPage(1)
+      }
+    })
+  }, [loadTokens, prefetchedSelectedTokens])
+
+  return { loading, tokens, tokenCount: prefetchedSelectedTokens.length, loadMoreTokens }
 }
 
 export const tokensQuery = graphql`
