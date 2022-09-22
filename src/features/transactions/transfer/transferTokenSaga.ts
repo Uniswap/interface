@@ -6,6 +6,7 @@ import { Erc1155, Erc20, Erc721 } from 'src/abis/types'
 import { getContractManager, getProvider } from 'src/app/walletContext'
 import { AssetType } from 'src/entities/assets'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
+import { formatAsHexString } from 'src/features/transactions/swap/utils'
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { isNativeCurrencyAddress } from 'src/utils/currencyId'
@@ -27,7 +28,11 @@ export function* transferToken(params: Params) {
     txId,
     chainId,
     account,
-    options: { request: txRequest },
+
+    // TODO: ideally hexlifying the transaction request should happen after
+    // the call to provider.populateTransaction, which fills in nonce info.
+    // move hexlifying to the `sendTransaction` saga and pass in decimal tx requests here instead
+    options: { request: hexlifyTransaction(txRequest) },
     typeInfo,
   })
 
@@ -115,6 +120,27 @@ function getTransferTypeInfo(params: TransferTokenParams) {
   }
 
   return typeInfo
+}
+
+export function hexlifyTransaction(transferTxRequest: providers.TransactionRequest) {
+  const { value, nonce, gasLimit, gasPrice, maxPriorityFeePerGas, maxFeePerGas } = transferTxRequest
+  return {
+    ...transferTxRequest,
+    nonce: formatAsHexString(nonce),
+    value: formatAsHexString(value),
+    gasLimit: formatAsHexString(gasLimit),
+
+    // only pass in for legacy chains
+    ...(gasPrice ? { gasPrice: formatAsHexString(gasPrice) } : {}),
+
+    // only pass in for eip1559 tx
+    ...(maxPriorityFeePerGas
+      ? {
+          maxPriorityFeePerGas: formatAsHexString(maxPriorityFeePerGas),
+          maxFeePerGas: formatAsHexString(maxFeePerGas),
+        }
+      : {}),
+  }
 }
 
 export const {

@@ -3,6 +3,7 @@ import { getProvider } from 'src/app/walletContext'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
+import { hexlifyTransaction } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransactionType, TransactionTypeInfo } from 'src/features/transactions/types'
 import { Account } from 'src/features/wallet/accounts/types'
 import { logger } from 'src/utils/logger'
@@ -38,15 +39,15 @@ export function* approveAndSwap(params: SwapParams) {
       yield* call(sendTransaction, {
         chainId,
         account,
-        options: { request: approveTxRequest },
+        options: { request: hexlifyTransaction(approveTxRequest) },
         typeInfo,
       })
     }
 
-    const request = {
+    const request = hexlifyTransaction({
       ...swapTxRequest,
       nonce: approveTxRequest ? nonce + 1 : undefined,
-    }
+    })
 
     const swapTypeInfo = tradeToTransactionInfo(trade)
     yield* call(sendTransaction, {

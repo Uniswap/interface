@@ -10,6 +10,7 @@ import { ChainId } from 'src/constants/chains'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { sendTransaction, SendTransactionParams } from 'src/features/transactions/sendTransaction'
+import { hexlifyTransaction } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransactionType } from 'src/features/transactions/types'
 import { NativeSigner } from 'src/features/wallet/accounts/NativeSigner'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
@@ -270,7 +271,8 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
         chainId: params.transaction.chainId || ChainId.Mainnet,
         account,
         options: {
-          request: params.transaction,
+          // TODO: hexlify transactions at the `sendTransaction` saga level
+          request: hexlifyTransaction(params.transaction),
         },
         typeInfo: {
           type: TransactionType.WCConfirm,

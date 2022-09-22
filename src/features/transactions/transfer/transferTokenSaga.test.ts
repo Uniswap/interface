@@ -8,7 +8,10 @@ import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
-import { transferToken } from 'src/features/transactions/transfer/transferTokenSaga'
+import {
+  hexlifyTransaction,
+  transferToken,
+} from 'src/features/transactions/transfer/transferTokenSaga'
 import {
   TransferCurrencyParams,
   TransferNFTParams,
@@ -53,15 +56,16 @@ const typeInfo: SendTokenTransactionInfo = {
 
 describe('transferTokenSaga', () => {
   it('Transfers native currency', async () => {
-    const tx = {
+    const rawTx = {
       from: account.address,
       to: nativeTranferParams.toAddress,
       value: nativeTranferParams.amountInWei,
     }
 
+    const tx = hexlifyTransaction(rawTx)
     await expectSaga(transferToken, {
       transferTokenParams: nativeTranferParams,
-      txRequest: tx,
+      txRequest: rawTx,
     })
       .provide([
         [call(getProvider, nativeTranferParams.chainId), mockProvider],
@@ -86,9 +90,10 @@ describe('transferTokenSaga', () => {
       tokenAddress: DAI.address,
     }
 
+    const tx = hexlifyTransaction(txRequest)
     await expectSaga(transferToken, {
       transferTokenParams: params,
-      txRequest,
+      txRequest: tx,
     })
       .provide([
         [call(getProvider, erc20TranferParams.chainId), mockProvider],
@@ -98,14 +103,15 @@ describe('transferTokenSaga', () => {
       .call(sendTransaction, {
         chainId: erc20TranferParams.chainId,
         account: erc20TranferParams.account,
-        options: { request: txRequest },
+        options: { request: tx },
         typeInfo,
         txId: '1',
       })
       .silentRun()
   })
   it('Transfers ERC721', async () => {
-    await expectSaga(transferToken, { transferTokenParams: erc721TransferParams, txRequest })
+    const tx = hexlifyTransaction(txRequest)
+    await expectSaga(transferToken, { transferTokenParams: erc721TransferParams, txRequest: tx })
       .provide([
         [call(getProvider, erc721TransferParams.chainId), mockProvider],
         [call(getContractManager), mockContractManager],
@@ -114,7 +120,7 @@ describe('transferTokenSaga', () => {
       .call(sendTransaction, {
         chainId: erc721TransferParams.chainId,
         account: erc721TransferParams.account,
-        options: { request: txRequest },
+        options: { request: tx },
         typeInfo: {
           assetType: AssetType.ERC721,
           recipient: erc721TransferParams.toAddress,
@@ -127,7 +133,8 @@ describe('transferTokenSaga', () => {
       .silentRun()
   })
   it('Transfers ERC1155', async () => {
-    await expectSaga(transferToken, { transferTokenParams: erc1155TransferParams, txRequest })
+    const tx = hexlifyTransaction(txRequest)
+    await expectSaga(transferToken, { transferTokenParams: erc1155TransferParams, txRequest: tx })
       .provide([
         [call(getProvider, erc1155TransferParams.chainId), mockProvider],
         [call(getContractManager), mockContractManager],
@@ -137,7 +144,7 @@ describe('transferTokenSaga', () => {
         chainId: erc1155TransferParams.chainId,
         account: erc1155TransferParams.account,
         options: {
-          request: txRequest,
+          request: tx,
         },
         typeInfo: {
           assetType: AssetType.ERC1155,
@@ -155,9 +162,10 @@ describe('transferTokenSaga', () => {
       ...mockProvider,
       getBalance: jest.fn(() => BigNumber.from('0')),
     }
+    const tx = hexlifyTransaction(txRequest)
     await expectSaga(transferToken, {
       transferTokenParams: nativeTranferParams,
-      txRequest,
+      txRequest: tx,
     })
       .provide([
         [call(getProvider, nativeTranferParams.chainId), provider],

@@ -4,6 +4,7 @@ import { ChainId } from 'src/constants/chains'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { Params, wrap } from 'src/features/transactions/swap/wrapSaga'
+import { hexlifyTransaction } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransactionType, WrapTransactionInfo } from 'src/features/transactions/types'
 import { account } from 'src/test/fixtures'
 
@@ -44,7 +45,7 @@ describe(wrap, () => {
         chainId: ChainId.Goerli,
         account: params.account,
         typeInfo: wrapTxInfo,
-        options: { request: transaction },
+        options: { request: hexlifyTransaction(transaction) },
       })
       .next()
       .isDone()
@@ -65,7 +66,7 @@ describe(wrap, () => {
         chainId: ChainId.Goerli,
         account: params.account,
         typeInfo: unwrapTxInfo,
-        options: { request: transaction },
+        options: { request: hexlifyTransaction(transaction) },
       })
       .next()
       .isDone()

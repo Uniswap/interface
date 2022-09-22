@@ -11,6 +11,7 @@ import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { approveAndSwap, SwapParams } from 'src/features/transactions/swap/swapSaga'
 import { Trade } from 'src/features/transactions/swap/useTrade'
+import { hexlifyTransaction } from 'src/features/transactions/transfer/transferTokenSaga'
 import { ExactInputSwapTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockProvider } from 'src/test/fixtures'
 import { currencyId } from 'src/utils/currencyId'
@@ -77,7 +78,7 @@ describe(approveAndSwap, () => {
           call(sendTransaction, {
             chainId: mockSwapTxRequest.chainId,
             account: swapParams.account,
-            options: { request: mockSwapTxRequest },
+            options: { request: hexlifyTransaction(mockSwapTxRequest) },
             typeInfo: transactionTypeInfo,
           }),
           undefined,
@@ -103,7 +104,7 @@ describe(approveAndSwap, () => {
           call(sendTransaction, {
             chainId: mockTrade.inputAmount.currency.chainId,
             account: swapParams.account,
-            options: { request: { ...mockSwapTxRequest, nonce: nonce + 1 } },
+            options: { request: hexlifyTransaction({ ...mockSwapTxRequest, nonce: nonce + 1 }) },
             typeInfo: transactionTypeInfo,
           }),
           undefined,
