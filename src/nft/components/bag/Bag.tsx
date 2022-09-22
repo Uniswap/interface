@@ -13,7 +13,7 @@ import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useSendTransaction, useTransactionResponse, useWalletBalance } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItemStatus, BagStatus, TxStateType } from 'nft/types'
+import { BagItemStatus, BagStatus, RouteResponse, TxStateType } from 'nft/types'
 import { buildSellObject } from 'nft/utils/buildSellObject'
 import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
 import { fetchPrice } from 'nft/utils/fetchPrice'
@@ -158,37 +158,6 @@ const Bag = () => {
   }
 
   const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
-  const { data: routingData, refetch } = useQuery(
-    ['assetsRoute'],
-    () =>
-      fetchRoute({
-        toSell: [ethSellObject],
-        toBuy: itemsInBag.map((item) => item.asset),
-        senderAddress: account ?? '',
-      }),
-    {
-      enabled: false,
-    }
-  )
-
-  const purchaseAssets = async () => {
-    if (!provider || !routingData) return
-    const purchaseResponse = await sendTransaction(
-      provider?.getSigner(),
-      itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
-      routingData
-    )
-    if (
-      purchaseResponse &&
-      (transactionStateRef.current === TxStateType.Success || transactionStateRef.current === TxStateType.Failed)
-    ) {
-      setLocked(false)
-      setModalIsOpen(false)
-      setTransactionResponse(purchaseResponse)
-      bagExpanded && toggleBag()
-      reset()
-    }
-  }
 
   const { totalEthPrice, totalUsdPrice } = useMemo(() => {
     const totalEthPrice = itemsInBag.reduce(
@@ -214,15 +183,44 @@ const Bag = () => {
     return { balance, sufficientBalance }
   }, [balanceInEth, totalEthPrice, isConnected])
 
-  useEffect(() => {
-    useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))
-  }, [])
+  const purchaseAssets = async (routingData: RouteResponse) => {
+    if (!provider || !routingData) return
+    const purchaseResponse = await sendTransaction(
+      provider?.getSigner(),
+      itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
+      routingData
+    )
+    if (
+      purchaseResponse &&
+      (transactionStateRef.current === TxStateType.Success || transactionStateRef.current === TxStateType.Failed)
+    ) {
+      setLocked(false)
+      setModalIsOpen(false)
+      setTransactionResponse(purchaseResponse)
+      bagExpanded && toggleBag()
+      reset()
+    }
+  }
 
-  useEffect(() => {
-    if (routingData && bagStatus === BagStatus.FETCHING_ROUTE) {
+  const fetchAssets = async () => {
+    const hasUnavailableAssets = unavailableAssets.length > 0
+
+    hasUnavailableAssets && setItemsInBag(itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE))
+    didOpenUnavailableAssets && setDidOpenUnavailableAssets(false)
+    !bagIsLocked && setLocked(true)
+    setBagStatus(BagStatus.FETCHING_ROUTE)
+    try {
+      const data = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsInBag, account], () =>
+        fetchRoute({
+          toSell: [ethSellObject],
+          toBuy: itemsInBag.map((item) => item.asset),
+          senderAddress: account ?? '',
+        })
+      )
+
       const updatedAssets = combineBuyItemsWithTxRoute(
         itemsInBag.map((item) => item.asset),
-        routingData.route
+        data.route
       )
 
       const priceChangedAssets = updatedAssets.filter((asset) => asset.updatedPriceInfo).sort(sortUpdatedAssets)
@@ -249,7 +247,7 @@ const Bag = () => {
 
       if (hasAssets) {
         if (!shouldReview) {
-          purchaseAssets()
+          purchaseAssets(data)
           setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
         } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
         else {
@@ -258,12 +256,14 @@ const Bag = () => {
       } else {
         setBagStatus(BagStatus.ADDING_TO_BAG)
       }
-    } else if (routingData && bagStatus === BagStatus.FETCHING_FINAL_ROUTE) {
-      purchaseAssets()
-      setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+    } catch (error) {
+      setBagStatus(BagStatus.ADDING_TO_BAG)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routingData])
+  }
+
+  useEffect(() => {
+    useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))
+  }, [])
 
   const { unchangedAssets, priceChangedAssets, unavailableAssets, availableItems } = useMemo(() => {
     const unchangedAssets = itemsInBag
@@ -282,31 +282,13 @@ const Bag = () => {
 
   useEffect(() => {
     const hasAssetsInReview = priceChangedAssets.length > 0
-    const hasUnavailableAssets = unavailableAssets.length > 0
     const hasAssets = itemsInBag.length > 0
 
-    if (bagStatus === BagStatus.ADDING_TO_BAG) {
-      isOpen && setModalIsOpen(false)
-      queryClient.setQueryData('assetsRoute', undefined)
-    }
-    if (bagStatus === BagStatus.FETCHING_ROUTE) {
-      hasUnavailableAssets && setItemsInBag(itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE))
-      setLocked(true)
-      refetch()
-    }
     if (bagStatus === BagStatus.IN_REVIEW && !hasAssetsInReview) {
-      queryClient.setQueryData('assetsRoute', undefined)
       if (hasAssets) setBagStatus(BagStatus.CONFIRM_REVIEW)
       else setBagStatus(BagStatus.ADDING_TO_BAG)
     }
-    if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE) {
-      hasUnavailableAssets && setItemsInBag(itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE))
-      didOpenUnavailableAssets && setDidOpenUnavailableAssets(false)
-      !bagIsLocked && setLocked(true)
-      refetch()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bagStatus, itemsInBag, priceChangedAssets, unavailableAssets])
+  }, [bagStatus, itemsInBag, priceChangedAssets, setBagStatus])
 
   useEffect(() => {
     if (bagIsLocked && !isOpen) setModalIsOpen(true)
@@ -390,10 +372,7 @@ const Bag = () => {
                 totalEthPrice={totalEthPrice}
                 totalUsdPrice={totalUsdPrice}
                 bagStatus={bagStatus}
-                setBagStatus={setBagStatus}
-                fetchReview={() => {
-                  setBagStatus(BagStatus.FETCHING_ROUTE)
-                }}
+                fetchAssets={fetchAssets}
                 assetsAreInReview={itemsInBag.some((item) => item.status === BagItemStatus.REVIEWING_PRICE_CHANGE)}
               />
             )}
