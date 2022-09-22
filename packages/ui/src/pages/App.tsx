@@ -23,7 +23,7 @@ import {
   RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
 import FarmList from './Farm'
-import Pool from './Pool'
+import Liquidity from './Liquidity'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
@@ -110,8 +110,8 @@ export default function App() {
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/find" component={PoolFinder} />
-              <Route exact strict path="/pool" component={Pool} />
-              <Route exact strict path="/manager" component={Pool} />
+              <Route exact strict path="/liquidity" component={Liquidity} />
+              <Route exact strict path="/manager" component={Liquidity} />
               {/* <Route exact strict path="/tele" component={Earn} /> */}
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />

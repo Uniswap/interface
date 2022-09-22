@@ -443,7 +443,7 @@ export function BackToMyLiquidity() {
       }}
     >
       <Link
-        to="/pool"
+        to="/liquidity"
         onClick={() => {
           dispatch(resetMintState())
         }}

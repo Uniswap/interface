@@ -10,6 +10,7 @@ import namor from 'namor'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
+import bn from 'bignumber.js'
 // import { useStakingInfo } from 'state/stake/hooks'
 import styled from 'styled-components'
 import { client } from 'utils/apolloClient'
@@ -230,7 +231,9 @@ const StyledTableView = styled(Box)`
   }
 `
 
-export default function Pool() {
+const numberReg = /[0-9,]+\.\d{0,4}/
+
+export default function Liquidity() {
   const theme = useThemedContext()
   const { account } = useActiveWeb3React()
   // fetch the user's balances of all tracked V2 LP tokens
@@ -549,6 +552,7 @@ export default function Pool() {
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem>
               {pools.slice(0, 5).map((v2Pair, index) => {
+                console.log(new bn(v2Pair.trackedReserveETH).toFormat(4, bn.ROUND_HALF_UP))
                 return (
                   <>
                     <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>
@@ -563,7 +567,9 @@ export default function Pool() {
                         </Text>
                       </Flex>
                     </Box>
-                    <Box key={`${v2Pair.id}-3`}>{v2Pair.trackedReserveETH}</Box>
+                    <Box key={`${v2Pair.id}-3`}>
+                      {new bn(v2Pair.trackedReserveETH).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
+                    </Box>
                     <Box key={`${v2Pair.id}-4`}>
                       <ButtonPrimary
                         style={{ display: 'inline-block !important' }}
