@@ -10,6 +10,7 @@ import {
   ExactOutputSwapTransactionInfo,
   TransactionType,
 } from 'src/features/transactions/types'
+import { areAddressesEqual } from 'src/utils/addresses'
 import { currencyId } from 'src/utils/currencyId'
 import { formatPrice } from 'src/utils/format'
 
@@ -135,4 +136,24 @@ export function sumGasFees(gasFee1?: string | undefined, gasFee2?: string): stri
   if (!gasFee1 || !gasFee2) return gasFee1 || gasFee2
 
   return BigNumber.from(gasFee1).add(gasFee2).toString()
+}
+
+export const clearStaleTrades = (
+  trade: Trade,
+  currencyIn: NullUndefined<Currency>,
+  currencyOut: NullUndefined<Currency>
+): Trade | null => {
+  const currencyInAddress = currencyIn?.wrapped.address
+  const currencyOutAddress = currencyOut?.wrapped.address
+
+  const inputsMatch =
+    !!currencyInAddress &&
+    areAddressesEqual(currencyInAddress, trade?.inputAmount.currency.wrapped.address)
+  const outputsMatch =
+    !!currencyOutAddress &&
+    areAddressesEqual(currencyOutAddress, trade?.outputAmount.currency.wrapped.address)
+
+  // if the addresses entered by the user don't match what is being returned by the quote endpoint
+  // then set `trade` to null
+  return inputsMatch && outputsMatch ? trade : null
 }

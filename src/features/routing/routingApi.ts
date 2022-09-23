@@ -1,9 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { TradeType } from '@uniswap/sdk-core'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
-import { QuoteResult } from 'src/features/routing/types'
+import { QuoteResult, TradeQuoteResult } from 'src/features/routing/types'
+import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
+import { SwapRouterNativeAssets } from 'src/utils/currencyId'
 
 const ROUTING_API_BASE_URL = 'https://api.uniswap.org/v1'
 
@@ -32,7 +35,7 @@ export const routingApi = createApi({
   }),
   endpoints: (build) => ({
     quote: build.query<
-      QuoteResult,
+      TradeQuoteResult,
       {
         amount: string
         deadline?: number
@@ -75,6 +78,25 @@ export const routingApi = createApi({
             : {}),
           ...(recipient && fetchSimulatedGasLimit ? { simulateFromAddress: recipient } : {}),
         })}`,
+      transformResponse: (result: QuoteResult, meta, arg): TradeQuoteResult => {
+        // TODO: we shouldn't rely on any of the request arguments and transform the data with only response data
+        // Must figure out how to determine whether requested assets are native given the router always returns
+        // wrapped token addresses
+        const { tokenInAddress, tokenOutAddress, type } = arg
+        const tradeType = type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
+        const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(
+          tokenInAddress as SwapRouterNativeAssets
+        )
+        const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(
+          tokenOutAddress as SwapRouterNativeAssets
+        )
+        const trade = transformQuoteToTrade(tokenInIsNative, tokenOutIsNative, tradeType, result)
+        return {
+          trade,
+          simulationError: result.simulationError,
+          gasUseEstimate: result.gasUseEstimate,
+        }
+      },
     }),
   }),
 })

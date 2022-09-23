@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Token, TradeType } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { computeRoutes } from 'src/features/transactions/swap/routeUtils'
 
@@ -17,13 +17,13 @@ const amount = (raw: TemplateStringsArray) =>
 
 describe('#useRoute', () => {
   it('handles an undefined payload', () => {
-    const result = computeRoutes(undefined, undefined, TradeType.EXACT_INPUT, undefined)
+    const result = computeRoutes(false, false, undefined)
 
     expect(result).toBeUndefined()
   })
 
   it('handles empty edges and nodes', () => {
-    const result = computeRoutes(USDC, DAI, TradeType.EXACT_INPUT, {
+    const result = computeRoutes(false, false, {
       route: [],
     })
 
@@ -31,7 +31,7 @@ describe('#useRoute', () => {
   })
 
   it('handles a single route trade from DAI to USDC from v3', () => {
-    const result = computeRoutes(DAI, USDC, TradeType.EXACT_INPUT, {
+    const result = computeRoutes(false, false, {
       route: [
         [
           {
@@ -63,7 +63,7 @@ describe('#useRoute', () => {
   })
 
   it('handles a single route trade from DAI to USDC from v2', () => {
-    const result = computeRoutes(DAI, USDC, TradeType.EXACT_INPUT, {
+    const result = computeRoutes(false, false, {
       route: [
         [
           {
@@ -99,7 +99,7 @@ describe('#useRoute', () => {
   })
 
   it('handles a multi-route trade from DAI to USDC', () => {
-    const result = computeRoutes(DAI, USDC, TradeType.EXACT_OUTPUT, {
+    const result = computeRoutes(false, false, {
       route: [
         [
           {
@@ -168,7 +168,7 @@ describe('#useRoute', () => {
   })
 
   it('handles a single route trade with same token pair, different fee tiers', () => {
-    const result = computeRoutes(DAI, USDC, TradeType.EXACT_INPUT, {
+    const result = computeRoutes(false, false, {
       route: [
         [
           {
@@ -213,7 +213,7 @@ describe('#useRoute', () => {
     it('outputs native ETH as input currency', () => {
       const WETH = ETH.wrapped
 
-      const result = computeRoutes(ETH, USDC, TradeType.EXACT_OUTPUT, {
+      const result = computeRoutes(true, false, {
         route: [
           [
             {
@@ -242,7 +242,7 @@ describe('#useRoute', () => {
 
     it('outputs native ETH as output currency', () => {
       const WETH = new Token(1, ETH.wrapped.address, 18, 'WETH')
-      const result = computeRoutes(USDC, ETH, TradeType.EXACT_OUTPUT, {
+      const result = computeRoutes(false, true, {
         route: [
           [
             {
@@ -271,7 +271,7 @@ describe('#useRoute', () => {
     it('outputs native ETH as input currency for v2 routes', () => {
       const WETH = ETH.wrapped
 
-      const result = computeRoutes(ETH, USDC, TradeType.EXACT_OUTPUT, {
+      const result = computeRoutes(true, false, {
         route: [
           [
             {
@@ -304,7 +304,7 @@ describe('#useRoute', () => {
 
     it('outputs native ETH as output currency for v2 routes', () => {
       const WETH = new Token(1, ETH.wrapped.address, 18, 'WETH')
-      const result = computeRoutes(USDC, ETH, TradeType.EXACT_OUTPUT, {
+      const result = computeRoutes(false, true, {
         route: [
           [
             {

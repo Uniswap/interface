@@ -6,6 +6,13 @@ import { toSupportedChainId } from 'src/utils/chainId'
 
 export type CurrencyId = string
 
+// swap router API special cases these strings to represent native currencies
+// all chains have "ETH" as native currency symbol except for polygon
+export enum SwapRouterNativeAssets {
+  MATIC = 'MATIC',
+  ETH = 'ETH',
+}
+
 export function currencyId(currency: Currency): CurrencyId {
   return buildCurrencyId(currency.chainId, currencyAddress(currency))
 }
@@ -21,9 +28,9 @@ export function buildNativeCurrencyId(chainId: ChainId) {
 
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
-    // swap router API special cases these strings to represent native currencies
-    // all chains have "ETH" as native currency symbol except for polygon
-    return isPolygonChain(currency.chainId) ? 'MATIC' : 'ETH'
+    return isPolygonChain(currency.chainId)
+      ? SwapRouterNativeAssets.MATIC
+      : SwapRouterNativeAssets.ETH
   }
 
   return currencyAddress(currency)

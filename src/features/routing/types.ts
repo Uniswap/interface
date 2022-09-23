@@ -1,4 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
+import { Trade } from 'src/features/transactions/swap/useTrade'
 
 export type QuoteParams = {
   amountIn?: string
@@ -27,6 +28,12 @@ export interface QuoteResult {
   route: Array<V3PoolInRoute[] | V2PoolInRoute[]>
   routeString: string
   simulationError?: boolean
+}
+
+export interface TradeQuoteResult {
+  trade: Trade
+  simulationError?: boolean
+  gasUseEstimate: string
 }
 
 export type TokenInRoute = Pick<Token, 'address' | 'chainId' | 'symbol' | 'decimals'>

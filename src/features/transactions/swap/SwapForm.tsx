@@ -88,23 +88,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 
-  const outputNotLoaded = !!(
-    formattedAmounts[CurrencyField.INPUT] &&
-    Number(formattedAmounts[CurrencyField.INPUT]) &&
-    currencies[CurrencyField.OUTPUT] &&
-    !formattedAmounts[CurrencyField.OUTPUT]
-  )
-  const inputNotLoaded = !!(
-    formattedAmounts[CurrencyField.OUTPUT] &&
-    Number(formattedAmounts[CurrencyField.OUTPUT]) &&
-    currencies[CurrencyField.INPUT] &&
-    !formattedAmounts[CurrencyField.INPUT]
-  )
-
-  const otherAmountNotLoaded = outputNotLoaded || inputNotLoaded
-
-  const swapDataRefreshing =
-    !isWrapAction(wrapType) && (trade.isFetching || trade.loading || otherAmountNotLoaded)
+  const swapDataRefreshing = !isWrapAction(wrapType) && (trade.isFetching || trade.loading)
 
   const noValidSwap = !isWrapAction(wrapType) && !trade.trade
   const blockingWarning = warnings.some((warning) => warning.action === WarningAction.DisableReview)
@@ -143,6 +127,11 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
   const [showInverseRate, setShowInverseRate] = useState(false)
   const price = trade.trade?.executionPrice
   const rateUnitPrice = useUSDCPrice(showInverseRate ? price?.quoteCurrency : price?.baseCurrency)
+  const showRate =
+    trade.trade &&
+    !swapWarning &&
+    currencies[CurrencyField.INPUT] &&
+    currencies[CurrencyField.OUTPUT]
 
   return (
     <>
@@ -199,8 +188,8 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
             <Flex fill gap="none">
               <Flex
                 backgroundColor="backgroundContainer"
-                borderBottomLeftRadius={swapWarning || trade.trade ? 'none' : 'xl'}
-                borderBottomRightRadius={swapWarning || trade.trade ? 'none' : 'xl'}
+                borderBottomLeftRadius={swapWarning || showRate ? 'none' : 'xl'}
+                borderBottomRightRadius={swapWarning || showRate ? 'none' : 'xl'}
                 borderTopLeftRadius="xl"
                 borderTopRightRadius="xl"
                 gap="none"
@@ -255,7 +244,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                   </Flex>
                 </Button>
               )}
-              {trade.trade && !swapWarning && (
+              {trade.trade && showRate && (
                 <Button onPress={() => setShowInverseRate(!showInverseRate)}>
                   <Flex
                     row

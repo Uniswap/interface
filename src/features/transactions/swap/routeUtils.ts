@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -7,12 +7,12 @@ import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 
 export function transformQuoteToTrade(
-  currencyIn: Currency | null | undefined,
-  currencyOut: Currency | null | undefined,
+  tokenInIsNative: boolean,
+  tokenOutIsNative: boolean,
   tradeType: TradeType,
   quoteResult: QuoteResult | undefined
 ): Trade {
-  const routes = computeRoutes(currencyIn, currencyOut, tradeType, quoteResult)
+  const routes = computeRoutes(tokenInIsNative, tokenOutIsNative, quoteResult)
 
   return new Trade({
     quote: quoteResult,
@@ -41,22 +41,24 @@ export function transformQuoteToTrade(
  * create a `Trade`.
  */
 export function computeRoutes(
-  currencyIn: Currency | null | undefined,
-  currencyOut: Currency | null | undefined,
-  tradeType: TradeType,
+  tokenInIsNative: boolean,
+  tokenOutIsNative: boolean,
   quoteResult: Pick<QuoteResult, 'route'> | undefined
 ) {
-  if (!quoteResult || !quoteResult.route || !currencyIn || !currencyOut) return undefined
+  if (!quoteResult || !quoteResult.route) return undefined
 
   if (quoteResult.route.length === 0) return EMPTY_ARRAY
 
-  const parsedCurrencyIn = currencyIn.isNative
-    ? NativeCurrency.onChain(currencyIn.chainId)
-    : parseToken(quoteResult.route[0][0].tokenIn)
+  const tokenIn = quoteResult.route[0][0].tokenIn
+  const tokenOut = quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut
 
-  const parsedCurrencyOut = currencyOut.isNative
-    ? NativeCurrency.onChain(currencyOut.chainId)
-    : parseToken(quoteResult.route[0][quoteResult.route[0].length - 1].tokenOut)
+  const parsedCurrencyIn = tokenInIsNative
+    ? NativeCurrency.onChain(tokenIn.chainId)
+    : parseToken(tokenIn)
+
+  const parsedCurrencyOut = tokenOutIsNative
+    ? NativeCurrency.onChain(tokenOut.chainId)
+    : parseToken(tokenOut)
 
   try {
     return quoteResult.route.map((route) => {

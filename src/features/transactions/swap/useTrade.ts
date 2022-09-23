@@ -1,3 +1,5 @@
+import { SerializedError } from '@reduxjs/toolkit'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { Trade as RouterSDKTrade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
@@ -6,7 +8,7 @@ import { useMemo } from 'react'
 import { PollingInterval } from 'src/constants/misc'
 import { useRouterQuote } from 'src/features/routing/hooks'
 import { QuoteResult } from 'src/features/routing/types'
-import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
+import { clearStaleTrades } from 'src/features/transactions/swap/utils'
 import { useDebounceWithStatus } from 'src/utils/timing'
 
 // TODO: use composition instead of inheritance
@@ -39,12 +41,19 @@ export class Trade<
   }
 }
 
+interface TradeWithStatus {
+  loading: boolean
+  error?: FetchBaseQueryError | SerializedError
+  trade: null | Trade<Currency, Currency, TradeType>
+  isFetching?: boolean
+}
+
 export function useTrade(
   amountSpecified: CurrencyAmount<Currency> | null | undefined,
   otherCurrency: Currency | null | undefined,
   tradeType: TradeType,
   pollingInterval?: PollingInterval
-) {
+): TradeWithStatus {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
   const { isLoading, isFetching, error, data } = useRouterQuote({
@@ -54,21 +63,21 @@ export function useTrade(
     pollingInterval,
   })
 
-  const currencyIn =
-    tradeType === TradeType.EXACT_INPUT ? debouncedAmountSpecified?.currency : otherCurrency
-  const currencyOut =
-    tradeType === TradeType.EXACT_OUTPUT ? debouncedAmountSpecified?.currency : otherCurrency
-
   return useMemo(() => {
-    if (!currencyIn || !currencyOut || !data) {
-      return { loading: isLoading, error, trade: null }
-    }
+    if (!data?.trade) return { loading: isLoading, error, trade: null }
+
+    const [currencyIn, currencyOut] =
+      tradeType === TradeType.EXACT_INPUT
+        ? [amountSpecified?.currency, otherCurrency]
+        : [otherCurrency, amountSpecified?.currency]
+
+    const trade = clearStaleTrades(data.trade, currencyIn, currencyOut)
 
     return {
       loading: isDebouncing || isLoading,
       isFetching,
       error,
-      trade: transformQuoteToTrade(currencyIn, currencyOut, tradeType, data),
+      trade,
     }
-  }, [currencyIn, currencyOut, data, isDebouncing, isLoading, error, tradeType, isFetching])
+  }, [data, isDebouncing, isLoading, error, isFetching, tradeType, otherCurrency, amountSpecified])
 }
