@@ -7,7 +7,7 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
 import { Text } from 'src/components/Text'
-import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'src/constants/chains'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { flex } from 'src/styles/flex'
@@ -18,10 +18,6 @@ export function SettingsChainsScreen() {
   const { t } = useTranslation()
 
   const activeChains = useActiveChainIds()
-
-  const onToggleChain = (chainId: ChainId) => {
-    return (isActive: boolean) => dispatch(setChainActiveStatus({ chainId, isActive }))
-  }
 
   return (
     <SheetScreen pt="lg" px="lg">
@@ -41,7 +37,12 @@ export function SettingsChainsScreen() {
                 justifyContent="space-between"
                 mt="lg">
                 <Text variant="body">{CHAIN_INFO[chainId].label}</Text>
-                <Switch value={isActive} onValueChange={() => onToggleChain(chainId)} />
+                <Switch
+                  value={isActive}
+                  onValueChange={(newValue: boolean) => {
+                    dispatch(setChainActiveStatus({ chainId: chainId, isActive: newValue }))
+                  }}
+                />
               </Box>
             )
           })}

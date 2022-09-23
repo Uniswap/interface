@@ -33,6 +33,7 @@ export const enum ModalName {
   Account = 'account-modal',
   AddWallet = 'add-wallet-modal',
   ConnectedDapps = 'connected-dapps',
+  Experiments = 'experiments',
   NetworkSelector = 'network-selector-modal',
   WalletQRCode = 'wallet-qr-code-modal',
   NFTAsset = 'nft-asset',

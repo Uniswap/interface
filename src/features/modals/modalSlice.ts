@@ -17,12 +17,19 @@ type SwapModalParams = { name: ModalName.Swap; initialState?: TransactionState }
 
 type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
 
-type OpenModalParams = WalletConnectModalParams | SwapModalParams | SendModalParams
+type ExperimentsModalParams = { name: ModalName.Experiments; initialState?: undefined }
+
+type OpenModalParams =
+  | WalletConnectModalParams
+  | SwapModalParams
+  | SendModalParams
+  | ExperimentsModalParams
 
 export interface ModalsState {
   [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
   [ModalName.Swap]: AppModalState<TransactionState>
   [ModalName.Send]: AppModalState<TransactionState>
+  [ModalName.Experiments]: AppModalState<TransactionState>
 }
 
 export const initialModalState: ModalsState = {
@@ -35,6 +42,10 @@ export const initialModalState: ModalsState = {
     initialState: undefined,
   },
   [ModalName.Send]: {
+    isOpen: false,
+    initialState: undefined,
+  },
+  [ModalName.Experiments]: {
     isOpen: false,
     initialState: undefined,
   },
@@ -67,6 +78,9 @@ export const selectSendModalState = (state: RootState): AppModalState<Transactio
 }
 export const selectWCModalState = (state: RootState): AppModalState<ScannerModalState> => {
   return state.modals[ModalName.WalletConnectScan]
+}
+export const selectExperimentsState = (state: RootState): AppModalState<any> => {
+  return state.modals[ModalName.Experiments]
 }
 
 export const { openModal, closeModal } = slice.actions

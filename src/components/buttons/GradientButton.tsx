@@ -27,6 +27,7 @@ export function GradientButton({
   textVariant,
   disabled,
   height,
+  ...rest
 }: GradientButtonProps) {
   const theme = useAppTheme()
   return (
@@ -42,7 +43,8 @@ export function GradientButton({
       shadowOffset={SHADOW_OFFSET}
       shadowOpacity={0.1}
       shadowRadius={24}
-      onPress={onPress}>
+      onPress={onPress}
+      {...rest}>
       {icon}
       {label && (
         <Text

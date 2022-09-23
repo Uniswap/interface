@@ -1,6 +1,7 @@
 import { DrawerActions } from '@react-navigation/core'
+import { selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import NotificationIcon from 'src/assets/icons/bell.svg'
@@ -9,8 +10,9 @@ import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
+import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { usePendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
@@ -19,6 +21,7 @@ export function AccountHeader() {
   const theme = useAppTheme()
   const navigation = useAppStackNavigation()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
+  const dispatch = useAppDispatch()
 
   const { preload, navigate } = useEagerActivityNavigation()
 
@@ -52,9 +55,14 @@ export function AccountHeader() {
       testID="account-header">
       <Button
         alignItems="center"
+        flex={1}
         flexDirection="row"
         name={ElementName.Manage}
         testID={ElementName.Manage}
+        onLongPress={() => {
+          selectionAsync()
+          dispatch(openModal({ name: ModalName.Experiments }))
+        }}
         onPress={onPressAccountHeader}>
         {activeAddress && (
           <Flex row gap="xs">

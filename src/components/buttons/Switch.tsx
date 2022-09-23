@@ -1,31 +1,27 @@
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
-import { Switch as BaseSwitch, ViewProps } from 'react-native'
+import { Switch as BaseSwitch, SwitchProps, ViewProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout/Box'
 import { Theme } from 'src/styles/theme'
 
 type RestyleProps = SpacingProps<Theme> & SpacingShorthandProps<Theme>
 
-export type SwitchProps = {
+type Props = {
   value: boolean
   onValueChange: (newValue: boolean) => void
   disabled?: boolean
 } & RestyleProps &
-  ViewProps
+  ViewProps &
+  SwitchProps
 
 // A themed switch toggle
 // TODO may need to replace with a custom switch implementation to match designs
-export function Switch({
-  value,
-  onValueChange,
-  disabled,
-  ...rest
-}: PropsWithChildren<SwitchProps>) {
+export function Switch({ value, onValueChange, disabled, ...rest }: PropsWithChildren<Props>) {
   const theme = useAppTheme()
 
   return (
-    <Box {...rest}>
+    <Box>
       <BaseSwitch
         ios_backgroundColor={theme.colors.backgroundAction}
         thumbColor={value ? theme.colors.accentActive : theme.colors.textSecondary}
@@ -35,6 +31,7 @@ export function Switch({
         }}
         value={value}
         onValueChange={disabled ? undefined : onValueChange}
+        {...rest}
       />
     </Box>
   )

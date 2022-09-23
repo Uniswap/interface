@@ -16,6 +16,7 @@ import {
   v18Schema,
   v19Schema,
   v1Schema,
+  v20Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -33,6 +34,7 @@ import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { BlockState, initialBlockState } from 'src/features/blocks/blocksSlice'
 import { ChainsState, initialChainsState } from 'src/features/chains/chainsSlice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
+import { initialExperimentsState } from 'src/features/experiments/slice'
 import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
 import { initialFavoritesState } from 'src/features/favorites/slice'
 import { initialModalState } from 'src/features/modals/modalSlice'
@@ -94,6 +96,7 @@ describe('Redux state migrations', () => {
       chains: initialChainsState,
       cloudBackup: initialCloudBackupState,
       ens: { ensForAddress: {} },
+      experiments: initialExperimentsState,
       favorites: initialFavoritesState,
       modals: initialModalState,
       notifications: initialNotificationsState,
@@ -750,5 +753,14 @@ describe('Redux state migrations', () => {
 
     const v20 = migrations[20](v19Stub)
     expect(v20.notifications.lastTxNotificationUpdate).toEqual({})
+  })
+
+  it('migrates from v20 to v21', () => {
+    const v20Stub = {
+      ...v20Schema,
+    }
+
+    const v21 = migrations[21](v20Stub)
+    expect(v21.experiments).toBeDefined()
   })
 })

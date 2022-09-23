@@ -6,6 +6,7 @@ import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
 import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
 import { ensApi } from 'src/features/ens/api'
+import { experimentsReducer } from 'src/features/experiments/slice'
 import { searchHistoryReducer } from 'src/features/explore/searchHistorySlice'
 import { favoritesReducer } from 'src/features/favorites/slice'
 import { gasApi } from 'src/features/gas/api'
@@ -42,6 +43,7 @@ export const rootReducer = combineReducers({
   wallet: walletReducer,
   walletConnect: walletConnectReducer,
   cloudBackup: cloudBackupReducer,
+  experiments: experimentsReducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>

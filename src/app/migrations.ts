@@ -296,4 +296,13 @@ export const migrations = {
     newState.notifications = { ...state?.notifications, lastTxNotificationUpdate: {} }
     return newState
   },
+
+  21: (state: any) => {
+    const newState = { ...state }
+    // newState.experiments = { experiments: {}, featureFlags: {} }
+    return {
+      ...newState,
+      experiments: { experiments: {}, featureFlags: {} },
+    }
+  },
 }

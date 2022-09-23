@@ -1,4 +1,5 @@
 import React from 'react'
+import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { SwapModal } from 'src/app/modals/SwapModal'
 import { TransferTokenModal } from 'src/app/modals/TransferTokenModal'
 import { WalletConnectModals } from 'src/components/WalletConnect/WalletConnectModals'
@@ -11,6 +12,7 @@ export function AppModals() {
       <SwapModal />
       <LockScreenModal />
       <TransferTokenModal />
+      <ExperimentsModal />
     </>
   )
 }
