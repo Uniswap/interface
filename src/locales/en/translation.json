@@ -290,7 +290,7 @@
   "Your recovery phrase will only be stored locally on your device.": "Your recovery phrase will only be stored locally on your device.",
   "Enter your recovery phrase": "Enter your recovery phrase",
   "recovery phrase": "recovery phrase",
-  "There are several wallet addresses associated with your recovery phrase.": "There are several wallet addresses associated with your recovery phrase.",
+  "You can import any of your wallet addresses that are associated with your recovery phrase.": "You can import any of your wallet addresses that are associated with your recovery phrase.",
   "Select addresses to import": "Select addresses to import",
   "This address is already imported": "This address is already imported",
   "Address does not exist": "Address does not exist",
@@ -426,5 +426,6 @@
   "Enter value": "Enter value",
   "Invalid word: {{word}}": "Invalid word: {{word}}",
   "Recovery phrases must be 12-24 words": "Recovery phrases must be 12-24 words",
+  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
   "Invalid phrase": "Invalid phrase"
 }

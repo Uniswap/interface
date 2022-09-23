@@ -49,7 +49,9 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
 
   return (
     <OnboardingScreen
-      subtitle={t('There are several wallet addresses associated with your recovery phrase.')}
+      subtitle={t(
+        'You can import any of your wallet addresses that are associated with your recovery phrase.'
+      )}
       title={t('Select addresses to import')}>
       <Suspense fallback={<ActivityIndicator />}>
         <WalletPreviewList addresses={addresses} navigation={navigation} params={params} />

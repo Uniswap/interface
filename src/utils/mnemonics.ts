@@ -58,7 +58,7 @@ export function isValidMnemonic(
   if (split.length < MNEMONIC_LENGTH_MIN || split.length > MNEMONIC_LENGTH_MAX)
     return {
       valid: false,
-      errorText: t('Recovery phrases must be 12-24 words'),
+      errorText: t('Recovery phrase must be 12-24 words'),
     }
 
   if (!utils.isValidMnemonic(formatted)) {
