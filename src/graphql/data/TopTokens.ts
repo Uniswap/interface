@@ -18,9 +18,7 @@ import { useCurrentChainName } from './util'
 
 export function usePrefetchTopTokens(duration: HistoryDuration) {
   const chain = useCurrentChainName()
-
-  const top100 = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
-  return top100
+  return useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
 }
 
 const topTokens100Query = graphql`
@@ -186,7 +184,7 @@ export function useTopTokens(): UseTopTokensReturnValue {
       contracts: ContractInput[]
       appendingTokens: boolean
       page: number
-      tokens: TopToken[]
+      tokens?: TopToken[]
     }) => {
       fetchQuery<TopTokens_TokensQuery>(
         environment,
@@ -197,11 +195,10 @@ export function useTopTokens(): UseTopTokensReturnValue {
         .toPromise()
         .then((data) => {
           if (data?.tokens) {
-            data.tokens.forEach((token) =>
+            data.tokens.map((token) =>
               !!token ? (tokensWithPriceHistoryCache[`${token.chain}${token.address}`] = token) : null
             )
-            // @ts-ignore prevent typescript from complaining about readonly data
-            appendingTokens ? setTokens([...(tokens ?? []), ...data.tokens]) : setTokens(data.tokens)
+            appendingTokens ? setTokens([...(tokens ?? []), ...data.tokens]) : setTokens([...data.tokens])
             setLoading(false)
             setPage(page + 1)
           }
@@ -215,21 +212,21 @@ export function useTopTokens(): UseTopTokensReturnValue {
     const contracts = prefetchedSelectedTokensWithoutPriceHistory
       .slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
       .map(toContractInput)
-    loadTokensWithPriceHistory({ contracts, appendingTokens: true, page, tokens: tokens ?? [] })
+    loadTokensWithPriceHistory({ contracts, appendingTokens: true, page, tokens })
   }, [prefetchedSelectedTokensWithoutPriceHistory, page, loadTokensWithPriceHistory, tokens])
 
   // Reset count when filters are changed
   useLayoutEffect(() => {
     const { everyTokenInCache, cachedTokens } = checkIfAllTokensCached(prefetchedSelectedTokensWithoutPriceHistory)
     if (everyTokenInCache) {
-      setTokens([...cachedTokens])
+      setTokens(cachedTokens)
       setLoading(false)
       return
     } else {
       setLoading(true)
       setTokens([])
       const contracts = prefetchedSelectedTokensWithoutPriceHistory.slice(0, PAGE_SIZE).map(toContractInput)
-      loadTokensWithPriceHistory({ contracts, appendingTokens: false, page: 0, tokens: [] })
+      loadTokensWithPriceHistory({ contracts, appendingTokens: false, page: 0 })
     }
   }, [loadTokensWithPriceHistory, prefetchedSelectedTokensWithoutPriceHistory])
 
