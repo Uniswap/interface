@@ -15,6 +15,7 @@ import {
   setEncryptionParam,
   setEncryptionProverKey,
   setEncryptionVerifierData,
+  setProgress,
   setVdfParam,
   setVdfSnarkParam,
   VdfParam,
@@ -173,11 +174,15 @@ export default function useSendSwapTransaction(
 
         console.log(sig)
 
+        dispatch(setProgress({ newParam: 1 }))
+
         sigHandler()
 
         const vdfData = await getVdfProof(parameters.vdfParam || vdfParam, parameters.vdfSnarkParam || vdfSnarkParam)
 
         console.log(vdfData)
+
+        dispatch(setProgress({ newParam: 2 }))
 
         const encryptData = await poseidonEncrypt(
           parameters.encryptionParam || encryptionParam,
@@ -190,6 +195,8 @@ export default function useSendSwapTransaction(
         )
 
         console.log(encryptData)
+
+        dispatch(setProgress({ newParam: 3 }))
 
         const txId = solidityKeccak256(
           ['address', 'uint256', 'uint256', 'address[]', 'address', 'uint256'],
