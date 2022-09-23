@@ -1,7 +1,7 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
-import { useIsLoading, useIsMobile, useFiltersExpanded, useCollectionFilters, useBag } from 'nft/hooks'
+import { useBag, useCollectionFilters, useFiltersExpanded, useIsLoading, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { useEffect } from 'react'

@@ -1,10 +1,9 @@
+import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
+import * as styles from 'nft/components/collection/CollectionSearch.css'
 import { useIsLoading } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { FormEvent } from 'react'
-import clsx from 'clsx'
-
-import * as styles from 'nft/components/collection/CollectionSearch.css'
 
 export const CollectionSearch = () => {
   const setSearchByNameText = useCollectionFilters((state) => state.setSearch)

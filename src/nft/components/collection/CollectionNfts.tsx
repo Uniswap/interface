@@ -17,6 +17,7 @@ import {
   useFiltersExpanded,
   useIsMobile,
 } from 'nft/hooks'
+import { useIsLoading } from 'nft/hooks/useIsLoading'
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
@@ -24,7 +25,6 @@ import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParam
 import { useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
-import { useIsLoading } from 'nft/hooks/useIsLoading'
 import { useLocation } from 'react-router-dom'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
@@ -119,7 +119,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   useEffect(() => {
     setIsLoading(true)
-  }, [isLoading])
+  }, [isLoading, setIsLoading])
 
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()

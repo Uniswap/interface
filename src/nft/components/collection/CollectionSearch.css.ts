@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
-import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 import { loadingAsset } from 'nft/css/loading.css'
+import { sprinkles } from 'nft/css/sprinkles.css'
 
 export const filterButtonLoading = style([
   loadingAsset,

@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
+
 import { sprinkles, vars } from '../../css/sprinkles.css'
 
 export const bannerContainerNoBanner = style({ height: '0', marginTop: '0px' })
