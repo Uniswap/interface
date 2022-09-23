@@ -8,7 +8,7 @@ import { FormEvent } from 'react'
 export const CollectionSearch = () => {
   const setSearchByNameText = useCollectionFilters((state) => state.setSearch)
   const searchByNameText = useCollectionFilters((state) => state.search)
-  const isLoading = useCollectionIsLoading((state) => state.collectionIsLoading)
+  const isCollectionLoading = useCollectionIsLoading((state) => state.isCollectionLoading)
 
   return (
     <Box
@@ -23,8 +23,8 @@ export const CollectionSearch = () => {
       height="44"
       color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
       value={searchByNameText}
-      placeholder={isLoading ? '' : 'Search by name'}
-      className={clsx(isLoading && styles.filterButtonLoading)}
+      placeholder={isCollectionLoading ? '' : 'Search by name'}
+      className={clsx(isCollectionLoading && styles.filterButtonLoading)}
       onChange={(e: FormEvent<HTMLInputElement>) => {
         setSearchByNameText(e.currentTarget.value)
       }}

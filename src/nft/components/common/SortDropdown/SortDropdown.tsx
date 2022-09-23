@@ -29,7 +29,7 @@ export const SortDropdown = ({
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const [isReversed, toggleReversed] = useReducer((s) => !s, false)
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const isLoading = useCollectionIsLoading((state) => state.collectionIsLoading)
+  const isCollectionLoading = useCollectionIsLoading((state) => state.isCollectionLoading)
 
   const [maxWidth, setMaxWidth] = useState(0)
 
@@ -72,9 +72,9 @@ export const SortDropdown = ({
         width={inFilters ? 'full' : 'inherit'}
         onClick={toggleOpen}
         cursor="pointer"
-        className={isLoading ? styles.isLoadingDropdown : clsx(isOpen && !mini && styles.activeDropdown)}
+        className={isCollectionLoading ? styles.isLoadingDropdown : clsx(isOpen && !mini && styles.activeDropdown)}
       >
-        {!isLoading && (
+        {!isCollectionLoading && (
           <>
             <Box display="flex" alignItems="center">
               {!isOpen && reversable && (

@@ -1,7 +1,7 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
-import { useBag, useCollectionFilters, useFiltersExpanded, useCollectionIsLoading, useIsMobile } from 'nft/hooks'
+import { useBag, useCollectionFilters, useCollectionIsLoading, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { useEffect } from 'react'
@@ -14,7 +14,7 @@ const BAG_WIDTH = 324
 
 const Collection = () => {
   const { contractAddress } = useParams()
-  const isLoading = useCollectionIsLoading((state) => state.collectionIsLoading)
+  const isCollectionLoading = useCollectionIsLoading((state) => state.isCollectionLoading)
 
   const isMobile = useIsMobile()
   const [isFiltersExpanded] = useFiltersExpanded()
@@ -74,7 +74,7 @@ const Collection = () => {
           {' '}
           <Box width="full" height="160">
             <Box width="full" height="160">
-              {isLoading ? (
+              {isCollectionLoading ? (
                 <Box height="full" width="full" className={styles.loadingBanner} />
               ) : (
                 <Box
@@ -82,7 +82,7 @@ const Collection = () => {
                   height="full"
                   width="full"
                   src={collectionStats?.bannerImageUrl}
-                  className={isLoading ? styles.loadingBanner : styles.bannerImage}
+                  className={isCollectionLoading ? styles.loadingBanner : styles.bannerImage}
                   background="none"
                 />
               )}
@@ -120,7 +120,9 @@ const Collection = () => {
         </>
       ) : (
         // TODO: Put no collection asset page here
-        !isLoading && <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
+        !isCollectionLoading && (
+          <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
+        )
       )}
     </Column>
   )
