@@ -17,7 +17,8 @@ import {
 } from 'd3'
 import { TokenPrices$key } from 'graphql/data/__generated__/TokenPrices.graphql'
 import { useTokenPricesCached } from 'graphql/data/Token'
-import { PricePoint, TimePeriod } from 'graphql/data/Token'
+import { PricePoint } from 'graphql/data/Token'
+import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -131,15 +132,15 @@ interface PriceChartProps {
   width: number
   height: number
   tokenAddress: string
-  priceData?: TokenPrices$key | null
+  priceDataFragmentRef?: TokenPrices$key | null
 }
 
-export function PriceChart({ width, height, tokenAddress, priceData }: PriceChartProps) {
+export function PriceChart({ width, height, tokenAddress, priceDataFragmentRef }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
 
-  const { priceMap } = useTokenPricesCached(priceData, tokenAddress, 'ETHEREUM', timePeriod)
+  const { priceMap } = useTokenPricesCached(priceDataFragmentRef, tokenAddress, 'ETHEREUM', timePeriod)
   const prices = priceMap.get(timePeriod)
 
   // first price point on the x-axis of the current time period's chart

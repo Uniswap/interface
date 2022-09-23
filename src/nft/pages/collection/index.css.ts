@@ -53,3 +53,9 @@ export const loadingBanner = style([
     height: 100,
   },
 ])
+
+export const noCollectionAssets = sprinkles({
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '40',
+})

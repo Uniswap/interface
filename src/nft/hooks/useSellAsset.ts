@@ -10,7 +10,7 @@ interface SellAssetState {
   removeSellAsset: (asset: WalletAsset) => void
   reset: () => void
   setGlobalExpiration: (expirationTime: number) => void
-  setAssetListPrice: (asset: WalletAsset, price: string, marketplace?: ListingMarket) => void
+  setAssetListPrice: (asset: WalletAsset, price?: number, marketplace?: ListingMarket) => void
   setGlobalMarketplaces: (marketplaces: ListingMarket[]) => void
   removeAssetMarketplace: (asset: WalletAsset, marketplace: ListingMarket) => void
   addMarketplaceWarning: (asset: WalletAsset, warning: ListingWarning) => void

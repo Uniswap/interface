@@ -15,6 +15,8 @@ export function getBrowser(): string {
     // "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 OPR/57.0.3098.106"
   } else if (sUsrAg.indexOf('Trident') > -1) {
     return BROWSER.INTERNET_EXPLORER
+  } else if (sUsrAg.indexOf('Brave') > -1) {
+    return BROWSER.BRAVE
     // "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; Zoom 3.6.0; wbx 1.0.0; rv:11.0) like Gecko"
   } else if (sUsrAg.indexOf('Edge') > -1) {
     return BROWSER.EDGE
