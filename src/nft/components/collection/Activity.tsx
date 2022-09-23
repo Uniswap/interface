@@ -142,7 +142,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
           <HeaderRow />
           <InfiniteScroll
             next={fetchNextPage}
-            hasMore={hasNextPage ?? false}
+            hasMore={!!hasNextPage}
             loader={
               isFetchingNextPage ? (
                 <Center paddingY="20">
@@ -150,7 +150,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
                 </Center>
               ) : null
             }
-            dataLength={events ? events.length : 0}
+            dataLength={events?.length ?? 0}
             style={{ overflow: 'unset' }}
           >
             {events.map((event, i) => (

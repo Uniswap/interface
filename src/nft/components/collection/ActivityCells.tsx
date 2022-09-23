@@ -288,8 +288,7 @@ const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
 }
 
 const getItemImage = (tokenMetadata?: TokenMetadata): string | undefined => {
-  if (!tokenMetadata || (!tokenMetadata.smallImageUrl && !tokenMetadata.imageUrl)) return undefined
-  return tokenMetadata.smallImageUrl || tokenMetadata.imageUrl
+  return tokenMetadata?.smallImageUrl || tokenMetadata?.imageUrl
 }
 
 export const ItemCell = ({ event, rarityVerified, collectionName }: ItemCellProps) => {
