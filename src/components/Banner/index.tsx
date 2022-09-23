@@ -6,15 +6,18 @@ import styled from 'styled-components'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 
+import TradingCampaignBnbDesktop from 'assets/banners/Trading-campaign-Bnb-desktop.png'
+import TradingCampaignBnbMobile from 'assets/banners/Trading-campaign-Bnb-mobile.png'
+import TradingCampaignBnbTablet from 'assets/banners/Trading-campaign-Bnb-tablet.png'
+import TradingCampaignLidoDesktop from 'assets/banners/Trading-campaign-Lido-desktop.png'
+import TradingCampaignLidoMobile from 'assets/banners/Trading-campaign-Lido-mobile.png'
+import TradingCampaignLidoTablet from 'assets/banners/Trading-campaign-Lido-tablet.png'
 import KyberSwapArbitrumLidoFarmDesktop from 'assets/banners/[Arbitrum]LidoFarm_on_site_desktop.png'
 import KyberSwapArbitrumLidoFarmMobile from 'assets/banners/[Arbitrum]LidoFarm_on_site_mobile.png'
 import KyberSwapArbitrumLidoFarmTablet from 'assets/banners/[Arbitrum]LidoFarm_on_site_tablet.png'
 import KyberSwapOptimismLidoFarmDesktop from 'assets/banners/[Optimism]LidoFarm_on_site_desktop.png'
 import KyberSwapOptimismLidoFarmMobile from 'assets/banners/[Optimism]LidoFarm_on_site_mobile.png'
 import KyberSwapOptimismLidoFarmTablet from 'assets/banners/[Optimism]LidoFarm_on_site_tablet.png'
-import KyberSwapTradingCampaignDesktop from 'assets/banners/kyberswap-trading-campaign-Lido-desktop.png'
-import KyberSwapTradingCampaignMobile from 'assets/banners/kyberswap-trading-campaign-Lido-mobile.png'
-import KyberSwapTradingCampaignTablet from 'assets/banners/kyberswap-trading-campaign-Lido-tablet.png'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
@@ -112,16 +115,31 @@ function Banner({
         // KyberSwap Trading Campaign Lido
         id: 'kyberSwap-trading-campaign-Lido',
         name: 'KyberSwap Trading Campaign Lido',
-        start: new Date('2022-09-15T11:03:00.000Z'),
+        start: new Date('2022-09-15T00:00:00.000Z'),
         end: new Date('2022-10-09T03:00:00.000Z'),
         img: isInModal
-          ? KyberSwapTradingCampaignMobile
+          ? TradingCampaignLidoMobile
           : w > 768
-          ? KyberSwapTradingCampaignDesktop
+          ? TradingCampaignLidoDesktop
           : w > 500
-          ? KyberSwapTradingCampaignTablet
-          : KyberSwapTradingCampaignMobile,
+          ? TradingCampaignLidoTablet
+          : TradingCampaignLidoMobile,
         link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-lido-finance-8?networkId=137&utm_source=kyberswap&utm_medium=banner&utm_campaign=lidotradingcontest&utm_content=lidotrading_onsite',
+      },
+      {
+        // KyberSwap Trading Campaign BNB
+        id: 'kyberSwap-trading-campaign-BNB',
+        name: 'KyberSwap Trading Campaign BNB',
+        start: new Date('2022-09-22T00:00:00.000Z'),
+        end: new Date('2022-10-12T03:00:00.000Z'),
+        img: isInModal
+          ? TradingCampaignBnbMobile
+          : w > 768
+          ? TradingCampaignBnbDesktop
+          : w > 500
+          ? TradingCampaignBnbTablet
+          : TradingCampaignBnbMobile,
+        link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-bnb-chain-9?networkId=56&utm_source=kyberswap&utm_medium=banner&utm_campaign=bnbtradingcontest&utm_content=on-site',
       },
       {
         // KyberSwap Arbitrum Lido Farm
