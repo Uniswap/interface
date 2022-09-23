@@ -48,7 +48,7 @@ const SelectMarketplacesModal = ({
   return (
     <Column alignSelf="flex-start" paddingRight="40" paddingBottom={{ sm: '20', lg: '0' }}>
       <Row className={headlineSmall}>Select marketplaces</Row>
-      <Row className={caption} color="darkGray" marginTop="4">
+      <Row className={caption} color="textSecondary" marginTop="4">
         Increase the visibility of your listings by selecting multiple marketplaces.
       </Row>
       <Row marginTop="14" gap="8" flexWrap="wrap">
@@ -77,7 +77,7 @@ const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }
     <Row
       gap="6"
       borderRadius="12"
-      backgroundColor="medGray"
+      backgroundColor="backgroundOutline"
       height="44"
       className={clsx(isSelected && styles.buttonSelected)}
       onClick={toggleSelected}
@@ -95,7 +95,7 @@ const GlobalMarketplaceButton = ({ market, setSelectedMarkets, selectedMarkets }
         src={isSelected ? '/nft/svgs/checkmark.svg' : market.icon}
       />
       <Box className={buttonTextMedium}>{market.name}</Box>
-      <Box color="darkGray" className={caption} marginRight="12">
+      <Box color="textSecondary" className={caption} marginRight="12">
         {market.fee}% fee
       </Box>
     </Row>
@@ -151,7 +151,7 @@ const SetDurationModal = () => {
   return (
     <Column marginLeft={{ sm: '0', lg: 'auto' }} marginRight="auto" alignSelf="flex-start">
       <Row className={headlineSmall}>Set duration</Row>
-      <Row className={caption} color="darkGray" marginTop="4">
+      <Row className={caption} color="textSecondary" marginTop="4">
         Select the amount of time your listings are available for purchase. Max 6 months.
       </Row>
       <Row marginTop="14" gap="6" flexWrap="wrap">
@@ -180,7 +180,7 @@ const SetDurationModal = () => {
           setGlobalDuration={setDuration}
         />
         <Row
-          color="medGray"
+          color="backgroundOutline"
           paddingRight="8"
           paddingLeft="12"
           paddingTop="12"
@@ -188,7 +188,7 @@ const SetDurationModal = () => {
           borderRadius="8"
           borderWidth="1px"
           borderStyle="solid"
-          borderColor="medGray"
+          borderColor="backgroundOutline"
           position="relative"
           height="44"
         >
@@ -196,7 +196,7 @@ const SetDurationModal = () => {
             as="input"
             borderStyle="none"
             className={bodySmall}
-            color={{ placeholder: 'darkGray', default: 'blackBlue' }}
+            color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
             placeholder="Set"
             width="32"
             marginRight="4"
@@ -209,7 +209,7 @@ const SetDurationModal = () => {
             display="flex"
             justifyContent="flex-end"
             className={buttonTextMedium}
-            color="blackBlue"
+            color="textPrimary"
             marginTop="24"
             style={{ width: '80px' }}
           >
@@ -276,7 +276,7 @@ const GlobalDurationButton = ({
   return (
     <Row
       borderRadius="12"
-      backgroundColor="medGray"
+      backgroundColor="backgroundOutline"
       height="44"
       className={clsx(isSelected && styles.buttonSelected)}
       onClick={toggleSelected}
@@ -332,7 +332,7 @@ const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[]
           marginLeft={selectedMarkets.length > 1 ? '36' : '0'}
           transition="500"
           className={badge}
-          color="darkGray"
+          color="textSecondary"
           flex="2"
         >
           YOUR NFTS
@@ -341,15 +341,27 @@ const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingMarket[]
           <Column className={subheadSmall} style={{ flex: '1.5' }}>
             <SortDropdown dropDownOptions={priceDropdownOptions} mini miniPrompt="Set price by" />
           </Column>
-          <Column className={badge} color="darkGray" flex="1" display={{ sm: 'none', md: 'flex' }} textAlign="right">
+          <Column
+            className={badge}
+            color="textSecondary"
+            flex="1"
+            display={{ sm: 'none', md: 'flex' }}
+            textAlign="right"
+          >
             MARKETPLACE FEE
           </Column>
-          <Column className={badge} color="darkGray" flex="1" display={{ sm: 'none', md: 'flex' }} textAlign="right">
+          <Column
+            className={badge}
+            color="textSecondary"
+            flex="1"
+            display={{ sm: 'none', md: 'flex' }}
+            textAlign="right"
+          >
             ROYALTIES
           </Column>
           <Column
             className={badge}
-            color="darkGray"
+            color="textSecondary"
             style={{ flex: '1.5' }}
             display={{ sm: 'none', md: 'flex' }}
             textAlign="right"
@@ -421,7 +433,7 @@ const PriceTextInput = ({
   return (
     <Column gap="12" position="relative">
       <Row
-        color="medGray"
+        color="backgroundOutline"
         height="44"
         width="min"
         padding="4"
@@ -434,7 +446,7 @@ const PriceTextInput = ({
             : isGlobalPrice
             ? 'genieBlue'
             : listPrice != null
-            ? 'darkGray'
+            ? 'textSecondary'
             : 'grey700'
         }
       >
@@ -443,7 +455,7 @@ const PriceTextInput = ({
           pattern="[0-9]"
           borderStyle="none"
           className={body}
-          color={{ placeholder: 'darkGray', default: 'blackBlue' }}
+          color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
           placeholder="Set"
           marginRight="0"
           marginLeft="14"
@@ -459,7 +471,7 @@ const PriceTextInput = ({
             setListPrice(isNaN(val) ? undefined : val)
           }}
         />
-        <Box color={listPrice && listPrice >= 0 ? 'blackBlue' : 'darkGray'} marginRight="16">
+        <Box color={listPrice && listPrice >= 0 ? 'textPrimary' : 'textSecondary'} marginRight="16">
           &nbsp;ETH
         </Box>
         <Box
@@ -467,7 +479,7 @@ const PriceTextInput = ({
           display={isGlobalPrice || globalOverride ? 'block' : 'none'}
           position="absolute"
           style={{ marginTop: '-36px', marginLeft: '124px' }}
-          backgroundColor="white"
+          backgroundColor="backgroundSurface"
           onClick={() => setGlobalOverride(!globalOverride)}
         >
           {globalOverride ? <AttachPriceIcon /> : <EditPriceIcon />}
@@ -477,7 +489,7 @@ const PriceTextInput = ({
         top="52"
         width="max"
         className={badge}
-        color={warningType === WarningType.BELOW_FLOOR && !focused ? 'orange' : 'darkGray'}
+        color={warningType === WarningType.BELOW_FLOOR && !focused ? 'orange' : 'textSecondary'}
         position="absolute"
       >
         {focused ? (
@@ -528,11 +540,11 @@ const EthPriceDisplay = ({ ethPrice = 0 }: { ethPrice?: number }) => {
   return (
     <Column width="full">
       <Row width="full" justifyContent="flex-end">
-        <Box className={subhead} color={ethPrice !== 0 ? 'blackBlue' : 'darkGray'} marginLeft="auto">
+        <Box className={subhead} color={ethPrice !== 0 ? 'textPrimary' : 'textSecondary'} marginLeft="auto">
           {formatEth(ethPrice)} ETH
         </Box>
         {ethPrice !== 0 && (
-          <Box className={body} color="darkGray" marginLeft="12" marginRight="0">
+          <Box className={body} color="textSecondary" marginLeft="12" marginRight="0">
             {formatUsdPrice(ethPrice * ethConversion)}
           </Box>
         )}
@@ -693,12 +705,12 @@ const MarketplaceRow = ({
         )}
       </Column>
       <Row flex="1" display={{ sm: 'none', md: 'flex' }}>
-        <Box className={body} color="darkGray" width="full" textAlign="right">
+        <Box className={body} color="textSecondary" width="full" textAlign="right">
           {marketplaceFee > 0 ? marketplaceFee + (selectedMarkets.length > 1 ? '% MAX' : '%') : '--%'}
         </Box>
       </Row>
       <Row flex="1" display={{ sm: 'none', md: 'flex' }}>
-        <Box className={body} color="darkGray" width="full" textAlign="right">
+        <Box className={body} color="textSecondary" width="full" textAlign="right">
           {(asset.creatorPercentage * 100).toFixed(1)}%
         </Box>
       </Row>
@@ -706,7 +718,7 @@ const MarketplaceRow = ({
         <Column width="full">
           <EthPriceDisplay ethPrice={userReceives} />
           {(showGlobalPrice ? globalPrice && globalPrice !== 0 : listPrice !== 0) && (
-            <Row marginTop="4" width="full" fontSize="12" color="darkGray">
+            <Row marginTop="4" width="full" fontSize="12" color="textSecondary">
               {profit ? <Box marginLeft="auto">Profit: {formatEth(profit)} ETH</Box> : null}
               {profitPercent ? (
                 <Box marginLeft="8" marginRight="0">
@@ -863,7 +875,7 @@ export const ListPage = () => {
           cursor="pointer"
           width="min"
         >
-          <BackArrowIcon fill={themeVars.colors.darkGray} />
+          <BackArrowIcon fill={themeVars.colors.textSecondary} />
         </Box>
       </Column>
       <Column as="section" gap="48" paddingLeft="18" paddingRight="48" width="full">

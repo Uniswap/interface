@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-09 20:05\n"
+"PO-Revision-Date: 2022-09-21 21:05\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -59,6 +59,10 @@ msgstr "- Odstrani prejemnika"
 msgid "0 UNI / week"
 msgstr "0 UNI / teden"
 
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume"
+msgstr "24H prostornina"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
 msgstr "25 %"
@@ -66,6 +70,14 @@ msgstr "25 %"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
 msgstr "50 %"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W high"
+msgstr "52W visoka"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W low"
+msgstr "52 W nizka"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
@@ -121,7 +133,7 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Menjava te velikosti ima lahko velik vpliv na ceno glede na trenutno likvidnost v skladu. Med vrednostjo vašega vhodnega žetona in vrednostjo, ki jo boste prejeli v izhodnem žetonu, je lahko velika razlika."
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "O Uniswapu"
 
@@ -588,7 +600,7 @@ msgstr "Povezano z"
 msgid "Connecting..."
 msgstr "Povezovanje ..."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
 msgstr "Naslov pogodbe"
 
@@ -976,7 +988,7 @@ msgid "Help center"
 msgstr "Center pomoči"
 
 #: src/components/FeeSelector/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
 msgstr "Skrij"
 
@@ -1178,10 +1190,6 @@ msgstr "Upravljanje seznamov žetonov"
 msgid "Manage this pool."
 msgstr "Upravljaj s tem skladom."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "Market cap"
-msgstr "Tržna kapitalizacija"
-
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1266,11 +1274,11 @@ msgstr "Več"
 msgid "NFT Collections"
 msgstr "Zbirke NFT"
 
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "NFTs"
 msgstr "NFT-ji"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Name not found"
 msgstr "Ime ni bilo mogoče najti"
 
@@ -1323,7 +1331,7 @@ msgstr "Ni predlogov."
 msgid "No results found."
 msgstr "Ni rezultatov."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "No token information available"
 msgstr "Informacije o žetonu niso na voljo"
 
@@ -1423,7 +1431,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "Skladi"
 
@@ -1569,7 +1577,7 @@ msgstr "Čakalna vrsta"
 msgid "Rates"
 msgstr "Tečaji"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Read more"
 msgstr "Preberi več"
 
@@ -1797,7 +1805,7 @@ msgstr "Polog {0} {1} in {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1836,7 +1844,7 @@ msgstr "Zamenjava"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Menjava {0} {1} za {2} {3}"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "Simbola ni mogoče najti"
 
@@ -2025,8 +2033,8 @@ msgid "Token not supported"
 msgstr "Žeton ni podprt"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
 #: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Žetoni"
@@ -2038,6 +2046,10 @@ msgstr "Žetoni z neaktivnih seznamov. Specifične žetone lahko uvozite spodaj 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Glavni skladi"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Total Value Locked"
+msgstr "Skupna vrednost je zaklenjena"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"

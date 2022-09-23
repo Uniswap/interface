@@ -9,8 +9,8 @@ export const footerContainer = sprinkles({
 
 export const footer = style([
   sprinkles({
-    background: 'lightGray',
-    color: 'blackBlue',
+    background: 'backgroundSurface',
+    color: 'textPrimary',
     paddingX: '16',
     paddingY: '12',
     borderBottomLeftRadius: '12',
@@ -38,7 +38,7 @@ export const payButton = style([
   body,
   sprinkles({
     background: 'blue400',
-    color: 'blackBlue',
+    color: 'textPrimary',
     border: 'none',
     borderRadius: '12',
     paddingY: '12',
@@ -57,7 +57,7 @@ export const payButton = style([
 
 export const ethPill = style([
   sprinkles({
-    background: 'lightGray',
+    background: 'backgroundSurface',
     gap: '8',
     paddingY: '4',
     paddingLeft: '4',

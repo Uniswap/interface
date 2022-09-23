@@ -6,7 +6,7 @@ export const bagQuantity = style([
     position: 'absolute',
     top: '4',
     right: '4',
-    backgroundColor: 'magicGradient',
+    backgroundColor: 'backgroundAction',
     borderRadius: 'round',
     color: 'explicitWhite',
     textAlign: 'center',

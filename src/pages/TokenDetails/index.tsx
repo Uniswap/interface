@@ -1,5 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { formatToDecimal } from 'analytics/utils'
 import {
   LARGE_MEDIA_BREAKPOINT,
   MAX_WIDTH_MEDIA_BREAKPOINT,
@@ -28,7 +29,9 @@ import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useAtomValue } from 'jotai/utils'
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -144,8 +147,13 @@ export default function TokenDetails() {
 
   /* network balance handling */
   const { data: networkData } = NetworkBalances(tokenAddress)
-  const { chainId: connectedChainId } = useWeb3React()
-  const totalBalance = 4.3 // dummy data
+  const { chainId: connectedChainId, account } = useWeb3React()
+
+  // TODO: consider updating useTokenBalance to work with just address/chain to avoid using Token data structure here
+  const balanceValue = useTokenBalance(account, new Token(chainId, tokenAddress ?? '', 18))
+  const balance = balanceValue ? formatToDecimal(balanceValue, Math.min(balanceValue.currency.decimals, 6)) : undefined
+  const balanceUsdValue = useStablecoinValue(balanceValue)?.toFixed(2)
+  const balanceUsd = balanceUsdValue ? parseFloat(balanceUsdValue) : undefined
 
   const chainsToList = useMemo(() => {
     let chainIds = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
@@ -217,13 +225,14 @@ export default function TokenDetails() {
           <RightPanel>
             <Widget defaultToken={!isCelo(chainId) ? defaultWidgetToken : undefined} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address ?? ''} warning={tokenWarning} />}
-            <BalanceSummary address={token.address ?? ''} />
+            <BalanceSummary address={token.address ?? ''} balance={balance} balanceUsd={balanceUsd} />
           </RightPanel>
           <Footer>
             <FooterBalanceSummary
               address={token.address ?? ''}
-              totalBalance={totalBalance}
               networkBalances={balancesByNetwork}
+              balance={balance}
+              balanceUsd={balanceUsd}
             />
           </Footer>
           <TokenSafetyModal

@@ -31,7 +31,7 @@ export const rowHover = style([
   }),
   {
     ':hover': {
-      background: themeVars.colors.lightGray,
+      background: themeVars.colors.backgroundSurface,
     },
   },
 ])
@@ -45,29 +45,29 @@ export const rowHoverOpen = style([
   }),
   {
     ':hover': {
-      background: themeVars.colors.medGray,
+      background: themeVars.colors.backgroundOutline,
     },
   },
 ])
 
 export const subRowHover = style({
   ':hover': {
-    background: themeVars.colors.medGray,
+    background: themeVars.colors.backgroundOutline,
   },
 })
 
 export const detailsOpen = sprinkles({
-  background: 'darkGray10',
+  background: 'backgroundModule',
   overflow: 'hidden',
   borderStyle: 'solid',
   borderWidth: '1px',
-  borderColor: 'medGray',
+  borderColor: 'backgroundOutline',
 })
 
 export const summaryOpen = sprinkles({
   borderStyle: 'solid',
   borderWidth: '1px',
-  borderColor: 'medGray',
+  borderColor: 'backgroundOutline',
 })
 
 export const filterDropDowns = style([

@@ -1,10 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
-import { formatToDecimal } from 'analytics/utils'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -49,17 +45,19 @@ const TotalBalanceItem = styled.div`
   display: flex;
 `
 
-export default function BalanceSummary({ address }: { address: string }) {
+export default function BalanceSummary({
+  address,
+  balance,
+  balanceUsd,
+}: {
+  address: string
+  balance?: number
+  balanceUsd?: number
+}) {
   const token = useToken(address)
   const { loading, error } = useNetworkTokenBalances({ address })
 
-  const { account } = useWeb3React()
-  const balance = useTokenBalance(account, token ?? undefined)
-  const balanceNumber = balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 6)) : undefined
-  const balanceUsd = useStablecoinValue(balance)?.toFixed(2)
-  const balanceUsdNumber = balanceUsd ? parseFloat(balanceUsd) : undefined
-
-  if (loading || (!error && !balanceNumber && !balanceUsdNumber)) return null
+  if (loading || (!error && !balance && !balanceUsd)) return null
   return (
     <BalancesCard>
       {error ? (
@@ -74,8 +72,8 @@ export default function BalanceSummary({ address }: { address: string }) {
           <TotalBalanceSection>
             Your balance
             <TotalBalance>
-              <TotalBalanceItem>{`${balanceNumber} ${token?.symbol}`}</TotalBalanceItem>
-              <TotalBalanceItem>{`$${balanceUsdNumber}`}</TotalBalanceItem>
+              <TotalBalanceItem>{`${balance} ${token?.symbol}`}</TotalBalanceItem>
+              <TotalBalanceItem>{`$${balanceUsd}`}</TotalBalanceItem>
             </TotalBalance>
           </TotalBalanceSection>
         </>

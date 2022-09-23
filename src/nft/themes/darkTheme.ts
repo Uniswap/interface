@@ -1,35 +1,26 @@
-import { Theme, vars } from '../css/sprinkles.css'
+import { Theme, vars } from 'nft/css/sprinkles.css'
 
 export const darkTheme: Theme = {
   colors: {
-    error: '#FF494A',
-    textDisconnect: '#FF494A',
-    modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
-    backgroundSecondary: '#23262F',
-    modalClose: 'rgba(255, 255, 255, 0.08)',
-    text: '#fff',
-    modalTextSecondary: 'rgba(255, 255, 255, 0.6)',
+    accentFailure: vars.color.red300,
+    accentActionSoft: '#000000E5',
 
-    // Bryan's colors from Figma that vary dark vs light
-    blackBlue: '#FFFFFF',
-    blackBlue20: '#FFFFFF20',
-    darkGray: vars.color.grey300,
-    medGray: `#99A1BD3D`,
-    lightGray: vars.color.grey900,
-    white: '#000000',
-    darkGray10: `#99A1BD1A`,
     explicitWhite: '#FFFFFF',
-    magicGradient: vars.color.blue400,
-    placeholder: vars.color.grey400,
-    lightGrayButton: vars.color.grey700,
-    loading: vars.color.grey800,
 
-    // Opacities of black and white
-    white95: '#0E111AF2',
-    white90: '#000000E5',
-    white80: '#000000CC',
-    white08: '#0000000C',
+    backgroundAction: vars.color.blue400,
     backgroundFloating: '0000000C',
+    backgroundInteractive: vars.color.grey700,
+    backgroundModule: vars.color.grey800,
+    backgroundOutline: `rgba(153,161,189,0.24)`,
+    backgroundSurface: vars.color.grey900,
+
+    modalBackdrop: 'linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7))',
+
+    stateOverlayHover: `rgba(153,161,189,0.08)`,
+
+    textPrimary: '#FFFFFF',
+    textSecondary: vars.color.grey300,
+    textTertiary: vars.color.grey500,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

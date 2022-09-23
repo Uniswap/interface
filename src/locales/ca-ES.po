@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-09 20:05\n"
+"PO-Revision-Date: 2022-09-21 21:05\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -59,6 +59,10 @@ msgstr "- Elimina el destinatari"
 msgid "0 UNI / week"
 msgstr "0 UNI / setmana"
 
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume"
+msgstr "Volum 24 h"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
 msgstr "25%"
@@ -66,6 +70,14 @@ msgstr "25%"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
 msgstr "50%"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W high"
+msgstr "52W d'alçada"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W low"
+msgstr "52W baix"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
@@ -121,7 +133,7 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Un swap d'aquesta mida pot tenir un alt impacte en els preus, donada la liquiditat actual del pool. Pot haver-hi una gran diferència entre la quantitat del testimoni d'entrada i el que rebrà al testimoni de sortida"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "Sobre"
 
@@ -588,7 +600,7 @@ msgstr "Connectat amb"
 msgid "Connecting..."
 msgstr "Connectant..."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
 msgstr "Adreça del contracte"
 
@@ -976,7 +988,7 @@ msgid "Help center"
 msgstr "Centre d'ajuda"
 
 #: src/components/FeeSelector/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
 msgstr "Amaga"
 
@@ -1178,10 +1190,6 @@ msgstr "Gestiona les llistes de fitxes"
 msgid "Manage this pool."
 msgstr "Gestioneu aquest fons."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "Market cap"
-msgstr "Capitalització de mercat"
-
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1266,11 +1274,11 @@ msgstr "Més"
 msgid "NFT Collections"
 msgstr "Col·leccions NFT"
 
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "NFTs"
 msgstr "NFT"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Name not found"
 msgstr "No s'ha trobat el nom"
 
@@ -1323,7 +1331,7 @@ msgstr "No s'ha trobat cap proposta."
 msgid "No results found."
 msgstr "Sense resultats."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "No token information available"
 msgstr "No hi ha informació de testimoni disponible"
 
@@ -1423,7 +1431,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "Grup"
 
@@ -1569,7 +1577,7 @@ msgstr "Fent cua"
 msgid "Rates"
 msgstr "Tarifes"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Read more"
 msgstr "Llegeix més"
 
@@ -1797,7 +1805,7 @@ msgstr "Subministrant {0} {1} i {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1836,7 +1844,7 @@ msgstr "Canvi"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Intercanvi de {0} {1} per {2} {3}"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "No s'ha trobat el símbol"
 
@@ -2025,8 +2033,8 @@ msgid "Token not supported"
 msgstr "El testimoni no és compatible"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
 #: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Fitxes"
@@ -2038,6 +2046,10 @@ msgstr "Fitxes de llistes inactives. Importeu fitxes específiques a continuaci�
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Grups principals"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Total Value Locked"
+msgstr "Valor total bloquejat"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"

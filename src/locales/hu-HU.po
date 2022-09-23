@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-09 20:05\n"
+"PO-Revision-Date: 2022-09-21 21:05\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -59,6 +59,10 @@ msgstr "- Távolítsa el a címzettet"
 msgid "0 UNI / week"
 msgstr "0 UNI / hét"
 
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume"
+msgstr "24 órás hangerő"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
 msgstr "25%"
@@ -66,6 +70,14 @@ msgstr "25%"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
 msgstr "50%"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W high"
+msgstr "52W magas"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W low"
+msgstr "52W alacsony"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
@@ -121,7 +133,7 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Egy ekkora swapnak nagy árhatása lehet, tekintettel a pool jelenlegi likviditására. Nagy eltérés lehet a bemeneti token mennyisége és a kimeneti tokenben kapott mennyiség között"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "Körülbelül"
 
@@ -588,7 +600,7 @@ msgstr "Kapcsolatban"
 msgid "Connecting..."
 msgstr "Csatlakozás..."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
 msgstr "Szerződés címe"
 
@@ -977,7 +989,7 @@ msgid "Help center"
 msgstr "Segítség Központ"
 
 #: src/components/FeeSelector/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
 msgstr "Elrejt"
 
@@ -1179,10 +1191,6 @@ msgstr "Tokenlisták kezelése"
 msgid "Manage this pool."
 msgstr "Kezelje ezt a Poolt."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "Market cap"
-msgstr "Piac sapka"
-
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1267,11 +1275,11 @@ msgstr "Több"
 msgid "NFT Collections"
 msgstr "NFT gyűjtemények"
 
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "NFTs"
 msgstr "NFT-k"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Name not found"
 msgstr "A név nem található"
 
@@ -1324,7 +1332,7 @@ msgstr "Nem található javaslat."
 msgid "No results found."
 msgstr "Nincs találat."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "No token information available"
 msgstr "Nem áll rendelkezésre token információ"
 
@@ -1424,7 +1432,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "Pool"
 
@@ -1570,7 +1578,7 @@ msgstr "Sorban állás"
 msgid "Rates"
 msgstr "Árfolyamok"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Read more"
 msgstr "Olvass tovább"
 
@@ -1798,7 +1806,7 @@ msgstr "{0} {1} és {2} {3} kínálása"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1837,7 +1845,7 @@ msgstr "Csere"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} cseréje a következőre {2} {3}"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "A szimbólum nem található"
 
@@ -2026,8 +2034,8 @@ msgid "Token not supported"
 msgstr "A token nem támogatott"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
 #: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Tokenek"
@@ -2039,6 +2047,10 @@ msgstr "Tokenek az inaktív listákról. Importáljon konkrét tokeneket az alá
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Legjobb poolok"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Total Value Locked"
+msgstr "Teljes érték zárolva"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"

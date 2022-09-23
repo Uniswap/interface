@@ -1,17 +1,15 @@
 import clsx from 'clsx'
 import useDebounce from 'hooks/useDebounce'
+import { Box } from 'nft/components/Box'
+import { Column, Row } from 'nft/components/Flex'
+import { ChevronUpIcon } from 'nft/components/icons'
+import { Checkbox } from 'nft/components/layout/Checkbox'
+import { subheadSmall } from 'nft/css/common.css'
+import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
-import { useMemo } from 'react'
-import { FormEvent, MouseEvent } from 'react'
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { FormEvent, MouseEvent, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
-import { subheadSmall } from '../../css/common.css'
-import { Trait, useCollectionFilters } from '../../hooks/useCollectionFilters'
-import { Box } from '../Box'
-import { Column, Row } from '../Flex'
-import { ChevronUpIcon } from '../icons'
-import { Checkbox } from '../layout/Checkbox'
 import * as styles from './Filters.css'
 
 const TraitItem = ({
@@ -90,7 +88,7 @@ const TraitItem = ({
           : trait.trait_value}
       </Box>
       <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="darkGray" minWidth={'8'} paddingTop={'2'} paddingRight={'12'} position={'relative'}>
+        <Box as="span" color="textSecondary" minWidth={'8'} paddingTop={'2'} paddingRight={'12'} position={'relative'}>
           {!showFullTraitName && trait.trait_count}
         </Box>
       </Checkbox>
@@ -156,11 +154,11 @@ export const TraitSelect = ({ traits, type, search }: { traits: Trait[]; type: s
       >
         {type}
         <Box display="flex" alignItems="center">
-          <Box color="darkGray" display="inline-block" marginRight="12">
+          <Box color="textSecondary" display="inline-block" marginRight="12">
             {searchedTraits.length}
           </Box>
           <Box
-            color="darkGray"
+            color="textSecondary"
             display="inline-block"
             transition="250"
             height="28"

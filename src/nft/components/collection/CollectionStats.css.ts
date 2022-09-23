@@ -27,7 +27,7 @@ export const baseCollectionImage = sprinkles({
   left: '0',
   borderStyle: 'solid',
   borderWidth: '4px',
-  borderColor: 'white',
+  borderColor: 'backgroundSurface',
 })
 
 export const collectionImage = style([
@@ -96,7 +96,7 @@ export const statsLabel = style([
   bodySmall,
   sprinkles({
     fontWeight: 'normal',
-    color: 'darkGray',
+    color: 'textSecondary',
     whiteSpace: 'nowrap',
   }),
   {
