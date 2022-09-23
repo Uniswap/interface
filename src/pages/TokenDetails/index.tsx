@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import { formatToDecimal } from 'analytics/utils'
 import {
   LARGE_MEDIA_BREAKPOINT,
   MAX_WIDTH_MEDIA_BREAKPOINT,
@@ -23,7 +24,9 @@ import { checkWarning } from 'constants/tokenSafety'
 import { useTokenQuery } from 'graphql/data/Token'
 import { useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useAtomValue } from 'jotai/utils'
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -112,8 +115,12 @@ export default function TokenDetails() {
 
   /* network balance handling */
   const { data: networkData } = NetworkBalances(token?.address)
-  const { chainId: connectedChainId } = useWeb3React()
-  const totalBalance = 4.3 // dummy data
+  const { chainId: connectedChainId, account } = useWeb3React()
+
+  const balance = useTokenBalance(account, token ?? undefined)
+  const balanceNumber = balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 6)) : undefined
+  const balanceUsd = useStablecoinValue(balance)?.toFixed(2)
+  const balanceUsdNumber = balanceUsd ? parseFloat(balanceUsd) : undefined
 
   const chainsToList = useMemo(() => {
     let chainIds = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
@@ -185,13 +192,14 @@ export default function TokenDetails() {
           <RightPanel>
             <Widget defaultToken={token ?? undefined} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}
-            <BalanceSummary address={token.address} />
+            <BalanceSummary address={token.address} balanceNumber={balanceNumber} balanceUsdNumber={balanceUsdNumber} />
           </RightPanel>
           <Footer>
             <FooterBalanceSummary
               address={token.address}
-              totalBalance={totalBalance}
               networkBalances={balancesByNetwork}
+              balanceNumber={balanceNumber}
+              balanceUsdNumber={balanceUsdNumber}
             />
           </Footer>
           <TokenSafetyModal

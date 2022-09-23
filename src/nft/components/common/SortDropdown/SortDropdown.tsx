@@ -56,7 +56,7 @@ export const SortDropdown = ({
         fontSize="14"
         borderRadius="12"
         borderStyle={isOpen && !mini ? 'solid' : 'none'}
-        background={mini ? 'none' : 'backgroundSurface'}
+        background={mini ? 'none' : 'backgroundModule'}
         borderColor="backgroundOutline"
         borderWidth="1px"
         borderBottomLeftRadius={isOpen ? '0' : undefined}
@@ -122,7 +122,7 @@ export const SortDropdown = ({
         right={inFilters ? '16' : 'auto'}
         paddingBottom="8"
         fontSize="14"
-        background="backgroundSurface"
+        background="backgroundModule"
         borderStyle="solid"
         borderColor="backgroundOutline"
         borderWidth="1px"
@@ -194,7 +194,7 @@ const DropDownItem = ({
       paddingRight={mini ? '20' : '0'}
       width="full"
       background={{
-        default: 'backgroundSurface',
+        default: 'backgroundModule',
         hover: 'backgroundInteractive',
       }}
       color="textPrimary"
