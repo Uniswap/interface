@@ -110,7 +110,6 @@ export default function TokenDetails() {
   const timePeriod = useAtomValue(filterTimeAtom)
   const currentChainName = validateUrlChainParam(chainName)
   const token = useTokenQuery(tokenAddress ?? '', currentChainName, timePeriod).tokens?.[0]
-  console.log(token)
 
   const navigate = useNavigate()
   const switchChains = (newChain: Chain) => {
