@@ -120,7 +120,7 @@ export const RecentlyViewedCharts = () => {
                                             <TYPE.small>
                                                 <span>{item?.token?.symbol} </span>
                                                 <br />
-                                                <span> {item?.token?.name}</span>
+                                                <p style={{margin:0, width: 100, overflow:'hidden', whiteSpace:'nowrap', textOverflow: 'ellipsis'}}> {item?.token?.name}</p>
                                             </TYPE.small>
                                         </div>
                                         <TYPE.black alignItems="center">

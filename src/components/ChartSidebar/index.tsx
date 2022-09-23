@@ -2,6 +2,8 @@
 import 'react-pro-sidebar/dist/css/styles.css';
 import '@coreui/coreui/dist/css/coreui.css'
 
+import * as ethers from 'ethers'
+
 import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, RefreshCcw, RefreshCw, Repeat, Search, ToggleLeft, ToggleRight, TrendingDown, TrendingUp, Twitter } from 'react-feather'
 import Badge, { BadgeVariant } from 'components/Badge';
 import { BurntKiba, abbreviateNumber } from 'components/BurntKiba';
@@ -171,13 +173,26 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
     // Memos
     const totalSupplyInt = React.useMemo(() => {
-        if (tokenInfo && tokenInfo?.totalSupply && tokenInfo.totalSupply.valueOf() && _.isNumber(tokenInfo?.totalSupply))
-            return parseFloat(tokenInfo?.totalSupply?.toFixed(0));
+        let multiplier = 1
+        if (chainId == 56) {
+            multiplier = 10 ** +token.decimals
+
+        }
+        console.log(`TOTALSUPPLY`, tokenInfo, totalSupply)
+
+        if (tokenInfo && tokenInfo?.totalSupply && tokenInfo.totalSupply.valueOf() && _.isNumber(tokenInfo?.totalSupply)) {
+            const result =(+tokenInfo?.totalSupply / multiplier)  
+            return parseFloat(result.toFixed(0))
+        }
         if (totalSupply) {
-            return parseFloat(totalSupply.toFixed(0))
+            let result =totalSupply.toFixed(2)
+            if (token.symbol.toLowerCase() == 'kiba' && chainId == 56 ) {
+                result = +result / 10 ** 9 
+            }
+            return parseFloat(result)
         }
         return 0
-    }, [tokenInfo?.totalSupply, totalSupply])
+    }, [tokenInfo?.totalSupply, chainId, totalSupply])
 
     const formattedPrice = React.useMemo(() => {
         if (screenerToken && screenerToken?.priceUsd) return parseFloat(screenerToken?.priceUsd)?.toFixed(18)
@@ -206,7 +221,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const hasData = React.useMemo(() => (!!tokenData || !!screenerToken) && !!token && !!token.name && !!token.address && !!token.symbol, [tokenData, screenerToken, token])
 
     const marketCap = React.useMemo(() => {
-
+        if (screenerToken?.fdv) return Number(parseFloat(screenerToken.fdv.toString()).toFixed(2))
         if (!totalSupplyInt || totalSupplyInt === 0) return ''
         const hasTokenData = !!tokenData?.priceUSD || !!screenerToken?.priceUsd
         const hasTokenInfo = !!tokenInfo?.price && !!tokenInfo?.price?.rate
@@ -380,7 +395,8 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                 <MenuItem>
                                                     <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
                                                     <TYPE.black>${abbreviateNumber(Number(parseFloat(parseFloat(screenerToken?.priceUsd ? screenerToken?.priceUsd : tokenData?.priceUSD)?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
-                                                </MenuItem></>}
+                                                </MenuItem></>
+                                        }
 
                                         {!tokenData?.priceUSD && !!tokenInfo && !!tokenInfo.price && !!tokenInfo?.price?.rate && _.isNumber(tokenInfo.price.rate) && <>
                                             <MenuItem>

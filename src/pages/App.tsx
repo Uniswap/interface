@@ -190,8 +190,8 @@ export default function App() {
                       {/* Chart Pages Routes */}
 
                       {/* Entry page routes, this will show the search / select and recently viewed. All uses same component */}
-                      <Route exact strict path="/selective-charting" component={SelectiveChart} />
-                      <Route exact strict path="/selective-charts" component={SelectiveChart} />
+                      <Route exact strict path="/selective-charting" component={SelectiveChartWithPair} />
+                      <Route exact strict path="/selective-charts" component={SelectiveChartWithPair} />
 
                       {/* Longer routes, with more parameters, kind of bad for users to have to share. Working on removing these */}
                       <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />

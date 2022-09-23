@@ -544,10 +544,6 @@ export const SelectiveChart = () => {
     return pairAddress
   }, [screenerToken, _pairs, pairs, params.pairAddress])
 
-  if (chainId && chainId == 56) {
-    return <SelectiveChartBsc />
-  }
-
   return (
     <React.Suspense fallback={<BarChartLoaderSVG />}>
       {pairAddress && <Redirect to={`/selective-charts/${screenerToken?.chainId ? screenerToken?.chainId : 'ethereum'}/${pairAddress}`} />}

@@ -120,7 +120,6 @@ export const SelectiveChartWithPair = () => {
     const ref = React.useRef<any>();
     const { account, chainId } = useWeb3React();
     const history = useHistory();
-    const lastChainId = useLast(chainId)
     const [copied, copy] = useCopyClipboard()
     const params = useParams<{
         pairAddress?: string;
@@ -141,7 +140,7 @@ export const SelectiveChartWithPair = () => {
     )
     const prebuiltCurrency = React.useMemo(
         () => mainnetCurrency,
-        [mainnetCurrency, chainId]
+        [mainnetCurrency]
     );
     const tokenAddressSupplied = React.useMemo(
         () =>

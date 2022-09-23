@@ -245,12 +245,12 @@ const areRowsEqual = (rowProps: any, newRowProps: any) => {
 
 const Row = React.memo((props: _RowProps) => {
     const { isMobile, index, item, highlightedColor, account, chainLabel, tokenSymbol } = props;
-    const isItemSale = ['wbnb', 'bnb', 'weth', 'eth'].includes(item.token0Symbol.toLowerCase())
+    const isItemSale = ['wbnb', 'bnb', 'weth', 'eth'].includes(item?.token0Symbol?.toLowerCase())
     if (index <= 2) {
 
         return (
             <CSSTransition
-                key={`row_${index}_${item.transaction.id}`}
+                key={`row_${index}_${item?.transaction?.id}`}
                 in={true}
                 classNames={"alert"}
                 timeout={600}
