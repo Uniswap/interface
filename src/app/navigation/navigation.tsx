@@ -162,7 +162,11 @@ function TabNavigator() {
                 height="100%"
                 icon={
                   <Flex centered mx="xs" px="xl" py="sm">
-                    <SwapIcon color={theme.colors.accentTextLightPrimary} height={24} />
+                    <SwapIcon
+                      color={theme.colors.accentTextLightPrimary}
+                      height={24}
+                      style={{ transform: [{ rotate: '135deg' }] }}
+                    />
                   </Flex>
                 }
                 onPress={() => {

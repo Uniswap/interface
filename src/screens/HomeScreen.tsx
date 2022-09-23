@@ -124,7 +124,15 @@ function QuickActions() {
       <PrimaryButton
         borderRadius="md"
         flex={1}
-        icon={<SwapIcon color={theme.colors.textPrimary} height={20} strokeWidth={2} width={20} />}
+        icon={
+          <SwapIcon
+            color={theme.colors.textPrimary}
+            height={20}
+            strokeWidth={2}
+            style={{ transform: [{ rotate: '135deg' }] }}
+            width={20}
+          />
+        }
         label={t('Swap')}
         name={ElementName.NavigateSwap}
         py="sm"
