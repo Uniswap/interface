@@ -923,7 +923,9 @@ export default function Swap({ history }: RouteComponentProps) {
 
                     <TradeTypeSelection />
 
-                    <TrendingSoonTokenBanner currencies={currencies} style={{ marginTop: '24px' }} />
+                    {chainId !== ChainId.ETHW && (
+                      <TrendingSoonTokenBanner currencies={currencies} style={{ marginTop: '24px' }} />
+                    )}
 
                     {trade?.priceImpact === -1 ? (
                       <PriceImpactHigh>
