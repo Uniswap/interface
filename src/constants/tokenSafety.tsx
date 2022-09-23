@@ -15,8 +15,8 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
     description = null
   if (warning) {
     if (warning.canProceed) {
-      heading = <Plural value={plural ? 2 : 1} _1="This token isn't verified" other="These tokens aren't verified" />
-      description = <Trans>{'Please do your own research before trading.'}</Trans>
+      heading = <Plural value={plural ? 2 : 1} _1="This token isn't verified." other="These tokens aren't verified." />
+      description = <Trans>Please do your own research before trading.</Trans>
     } else {
       description = (
         <Plural
