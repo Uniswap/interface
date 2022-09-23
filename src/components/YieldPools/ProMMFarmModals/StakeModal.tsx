@@ -38,6 +38,34 @@ const generateCommonCSS = (isUnstake: boolean) => {
   `
 }
 
+const ScrollContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  /* width */
+  ::-webkit-scrollbar {
+    display: unset;
+    width: 8px;
+    border-radius: 999px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 999px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.disableText};
+    border-radius: 999px;
+  }
+`
+
 const StakeTableHeader = styled(TableHeader)<{ isUnstake: boolean }>`
   ${({ isUnstake }) => generateCommonCSS(isUnstake)}
 `
@@ -351,20 +379,23 @@ function StakeModal({
               )}
             </StakeTableHeader>
 
-            {eligibleNfts.map((pos: any) => (
-              <PositionRow
-                type={type}
-                selected={selectedNFTs.map(item => item.tokenId.toString()).includes(pos.tokenId.toString())}
-                key={pos.tokenId.toString()}
-                position={pos}
-                onChange={(selected: boolean) => {
-                  if (selected) setSeletedNFTs(prev => [...prev, pos])
-                  else {
-                    setSeletedNFTs(prev => prev.filter(item => item.tokenId.toString() !== pos.tokenId.toString()))
-                  }
-                }}
-              />
-            ))}
+            <ScrollContainer>
+              {eligibleNfts.map((pos: any) => (
+                <PositionRow
+                  type={type}
+                  selected={selectedNFTs.map(item => item.tokenId.toString()).includes(pos.tokenId.toString())}
+                  key={pos.tokenId.toString()}
+                  position={pos}
+                  onChange={(selected: boolean) => {
+                    if (selected) setSeletedNFTs(prev => [...prev, pos])
+                    else {
+                      setSeletedNFTs(prev => prev.filter(item => item.tokenId.toString() !== pos.tokenId.toString()))
+                    }
+                  }}
+                />
+              ))}
+            </ScrollContainer>
+
             <Flex justifyContent="space-between" marginTop="24px">
               <div></div>
               <ButtonPrimary
