@@ -52,6 +52,20 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
+  if (chainId == SupportedChainId.BINANCE) {
+      switch (type) {
+        case ExplorerDataType.TRANSACTION:
+          return `https://bscscan.com/tx/${data}`
+        case ExplorerDataType.ADDRESS:
+        case ExplorerDataType.TOKEN:
+          return `https://bscscan.com/address/${data}`
+        case ExplorerDataType.BLOCK:
+          return `https://bscscan.com/block/${data}`
+        default:
+          return `https://bscscan.com/`
+      }
+  }
+
   const prefix = `https://${ETHERSCAN_PREFIXES[chainId] ?? ''}etherscan.io`
 
   switch (type) {

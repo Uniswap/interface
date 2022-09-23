@@ -18,6 +18,7 @@ import {
   updateUserFrontRunProtection,
   updateUserGasPreferences,
   updateUserLocale,
+  updateUserSearchPreferences,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
 } from './actions'
@@ -28,6 +29,7 @@ import { AppState } from '../index'
 import JSBI from 'jsbi'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
+import { SearchPreferenceState } from './reducer'
 import { SupportedLocale } from 'constants/locales'
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import flatMap from 'lodash.flatmap'
@@ -75,6 +77,16 @@ export function useUserLocale(): SupportedLocale | null {
   return useAppSelector((state) => state.user.userLocale)
 }
 
+export function useUserSearchPrefManager(): [SearchPreferenceState, (newState: SearchPreferenceState) => void] {
+  const dispatch = useAppDispatch()
+  const prefs = useAppSelector((state ) => state.user.searchPreferences || [])
+
+  const updatePrefs = useCallback((newPrefs: SearchPreferenceState) => {
+    dispatch(updateUserSearchPreferences({ newPreferences: newPrefs }))
+  }, [prefs, dispatch])
+
+  return [prefs, updatePrefs]
+}
 
 export function useUserChartHistoryManager(): [any[], (payload: any[]) => void] {
   const dispatch = useAppDispatch()

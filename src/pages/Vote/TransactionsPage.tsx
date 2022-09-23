@@ -54,7 +54,7 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
             newTxn.timestamp = swap?.timestamp ? swap?.timestamp : swap.transaction.timestamp
             newTxn.type = 'swap'
             newTxn.amountUSD = swap.amountUSD;
-            newTxn.isTransfer = swap.to.toLowerCase() !== account?.toLowerCase() && !["0x10ed43c718714eb63d5aa57b78b54704e256024e".toLowerCase(), "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D".toLowerCase()].includes(swap.to);
+            // = swap.to.toLowerCase() !== account?.toLowerCase() && !["0x10ed43c718714eb63d5aa57b78b54704e256024e".toLowerCase(), "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D".toLowerCase()].includes(swap.to);
             newTxn.account = ["0x10ed43c718714eb63d5aa57b78b54704e256024e".toLowerCase(), "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D".toLowerCase()].includes(swap.to) ? swap.sender : swap.to
             newTxn.buy = swap.to
             newTxn.amount0In = swap.amount0In;
@@ -160,7 +160,7 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                             <tr key={`${item.timestamp}${item.hash}${index}`}>
                                 <td style={{ fontSize: 12 }}>{moment(item.timestamp * 1000).toDate().toLocaleString()}</td>
                                 <td style={{color: item.token0Symbol === `W${chainLabel}` ? 'red' : item.isTransfer ? 'yellow' : 'green' }}>
-                                    { item.token0Symbol === `W${chainLabel}` ? 'Sell' : 'Buy'} {item.isTransfer && 'Transfer'}
+                                    { item.token0Symbol === `W${chainLabel}` ? 'Sell' : 'Buy'} 
                                 </td>
                                 {[item.token0Symbol, item.token1Symbol].includes(`W${chainLabel}`) && <td>{item.token0Symbol === `W${chainLabel}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
                                     {item.token1Symbol === `W${chainLabel}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}

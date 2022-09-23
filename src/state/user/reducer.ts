@@ -17,6 +17,7 @@ import {
   updateUserFrontRunProtection,
   updateUserGasPreferences,
   updateUserLocale,
+  updateUserSearchPreferences,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
 } from './actions'
@@ -79,10 +80,19 @@ export interface UserState {
     custom?: any
   }
   chartHistory?: any[] 
+  searchPreferences: SearchPreferenceState
 }
 
 function pairKey(token0Address: string, token1Address: string) {
   return `${token0Address};${token1Address}`
+}
+
+export type SearchPreferenceState = {
+  networks: Array<{
+    chainId: number;
+    network:string;
+    includeInResults: boolean
+  }>;
 }
 
 export const initialState: UserState = {
@@ -111,22 +121,32 @@ export const initialState: UserState = {
     useOnce:false,
     custom: 0
   },
-  chartHistory: []
+  chartHistory: [],
+  searchPreferences: {
+    networks: [
+      {chainId: 1, network: 'ethereum', includeInResults: true}, 
+      {chainId: 56, network :'bsc', includeInResults: true}
+    ]
+  }
 }
 
 export default createReducer(initialState, (builder) =>
   builder
+    .addCase(updateUserSearchPreferences, (state, action) => {
+      state.searchPreferences = action.payload.newPreferences;
+    })
     .addCase(updateUserChartHistory, (state, action) => {
       state.chartHistory = _.orderBy(
           _.uniqBy(
             [
               ...(state.chartHistory ?? []),
               ...action.payload.chartHistory
-            ], item => item.token.address?.toLowerCase()
+            ], 
+            item => item.token.address?.toLowerCase()
           ), 
           item => item.time,
           'asc'
-        ).reverse().slice(0,4)
+        ).reverse().slice(0, 20)
         state.timestamp = currentTimestamp()
     })
     .addCase(updateUserFrontRunProtection, (state, action) => {

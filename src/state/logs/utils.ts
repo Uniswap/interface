@@ -497,6 +497,22 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
   return data
 }
 
+/**
+ * Updates the document with the passed in title
+ * @param title Title to set the document
+ */
+export const useSetTitle = ( 
+  title: string 
+) => {
+  React.useEffect(() => {
+    const prevTitle = document.title
+    document.title = title
+    return () => {
+      document.title = prevTitle
+    }
+  }, [title])
+}
+
 
 export function useTokenTransactions(tokenAddress: string, allPairsFormatted?:any[], interval: null | number = null) {
   const { chainId } = useWeb3React()
@@ -504,7 +520,7 @@ export function useTokenTransactions(tokenAddress: string, allPairsFormatted?:an
     variables: {
       allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted?.[0]?.id?.toLowerCase()] : []
     },
-    pollInterval: interval || 10000
+    pollInterval: interval || 5000
   });
   const data = React.useMemo(() => tokenTxns, [tokenTxns.data, tokenTxns.previousData])
   return { data: data.data, lastFetched: new Date(), loading: tokenTxns.loading };
@@ -1110,7 +1126,7 @@ export const useTopPairData = function () {
   return { data, loading, error }
 }
 
-const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: timestamp, orderDirection: desc, where: { to: "0x7a250d5630b4cf539739df2c5dacb4c659f2488d", from: $user }) {
+const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: timestamp, orderDirection: desc, where: { to_in: ["0x7a250d5630b4cf539739df2c5dacb4c659f2488d", "0x25553828f22bdd19a20e4f12f052903cb474a335"], from: $user }) {
   id
   transaction {
     id

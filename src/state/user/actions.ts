@@ -1,3 +1,4 @@
+import { SearchPreferenceState } from './reducer'
 import { SupportedLocale } from 'constants/locales'
 import { createAction } from '@reduxjs/toolkit'
 
@@ -24,6 +25,7 @@ export const updateUserFrontRunProtection = createAction<{ useFrontrunProtection
 export const updateUserGasPreferences = createAction<{high?: boolean; low?:boolean; medium?:boolean; custom?: number;}>('user/updateCustomGasSettings')
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
+export const updateUserSearchPreferences = createAction<{newPreferences: SearchPreferenceState}>('user/updateSearchPreferences')
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')
 export const updateUserDetectRenouncedOwnership = createAction<{ detectRenouncedOwnership: boolean }>('user/updatedDetectRenouncedOwnership')
 export const updateUserSingleHopOnly = createAction<{ userSingleHopOnly: boolean }>('user/updateUserSingleHopOnly')

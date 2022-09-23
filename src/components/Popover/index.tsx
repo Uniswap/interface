@@ -7,7 +7,7 @@ import { transparentize } from 'polished'
 import useInterval from '../../hooks/useInterval'
 import { usePopper } from 'react-popper'
 
-const PopoverContainer = styled.div<{ show: boolean }>`
+const PopoverContainer = styled.div<{ show: boolean, width?:number }>`
   z-index: 9999;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
@@ -77,10 +77,11 @@ export interface PopoverProps {
   content: React.ReactNode
   show: boolean
   children: React.ReactNode
+  width?:number
   placement?: Placement
 }
 
-export default function Popover({ content, show, children, placement = 'auto' }: PopoverProps) {
+export default function Popover({ content, show, children, placement = 'auto', width }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
@@ -101,7 +102,7 @@ export default function Popover({ content, show, children, placement = 'auto' }:
     <>
       <ReferenceElement ref={setReferenceElement as any}>{children}</ReferenceElement>
       <Portal>
-        <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
+        <PopoverContainer width={width} show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
           {content}
           <Arrow
             className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}

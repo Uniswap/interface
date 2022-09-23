@@ -1,6 +1,6 @@
 import * as ethers from 'ethers'
 
-import { ArrowUpRight, CheckCircle, TrendingDown, TrendingUp } from 'react-feather'
+import { ArrowUpRight, CheckCircle, Settings, TrendingDown, TrendingUp, X } from 'react-feather'
 
 import { AutoColumn } from 'components/Column'
 import { BlueCard } from 'components/Card'
@@ -10,6 +10,8 @@ import { LoadingSkeleton } from 'pages/Pool/styleds'
 import { MenuItem } from 'components/SearchModal/styleds'
 import React from 'react'
 import { TYPE } from 'theme'
+import Toggle from '../../components/Toggle'
+import Tooltip from 'components/Tooltip'
 import axios from 'axios'
 import { darken } from 'polished'
 import { lighten } from 'polished'
@@ -19,6 +21,7 @@ import useDebounce from 'hooks/useDebounce'
 import { useHistory } from 'react-router'
 import { useIsMobile } from 'pages/Swap/SelectiveCharting'
 import useTheme from 'hooks/useTheme'
+import { useUserSearchPrefManager } from 'state/user/hooks'
 
 type PluralProps = {
   one?: React.ReactNode;
@@ -27,8 +30,8 @@ type PluralProps = {
 }
 
 /* eslint-disable */
-const Plural: React.FC<PluralProps>  = React.memo((props: PluralProps) => {
-  const {one,other,value} = props;
+const Plural: React.FC<PluralProps> = React.memo((props: PluralProps) => {
+  const { one, other, value } = props;
   if (!value) return null;
   if (!one || !other) return null;
   const renderer = <React.Fragment>{Boolean(value > 1) ? other : one}</React.Fragment>
@@ -37,9 +40,9 @@ const Plural: React.FC<PluralProps>  = React.memo((props: PluralProps) => {
 
 Plural.displayName = "PluralComponent"
 
-export const useWeb3Endpoint = (chainId?:number | undefined) => {
+export const useWeb3Endpoint = (chainId?: number | undefined) => {
   const { chainId: chain } = useActiveWeb3React()
-  if (!chainId && chain) 
+  if (!chainId && chain)
     chainId = chain
   const WEB3_ENDPOINT = chainId == 1 ? 'https://cloudflare-eth.com' : chainId == 56 ? 'https://bsc-dataseed1.defibit.io' : 'https://cloudflare-eth.com'
   return WEB3_ENDPOINT
@@ -57,6 +60,8 @@ export interface Pair {
   };
   quoteToken: {
     symbol: string;
+    address: string;
+    name: string;
   };
   priceNative: string;
   priceUsd?: string;
@@ -116,7 +121,7 @@ const Input = styled.input`
         border: 1px solid lightgreen !important;
     }
 `
-const MenuFlyout = styled.span<{isMobile?:boolean}>`
+const MenuFlyout = styled.span<{ isMobile?: boolean }>`
 min-width: 20.125rem;
 background-color: ${({ theme }) => theme.bg1};
 border: 1px solid ${({ theme }) => theme.bg3};
@@ -184,6 +189,7 @@ export const PairSearch = (props: Props) => {
   const handleError = (e: any) => console.error(e)
   const [routing, setRouting] = React.useState(false)
   const WEB3_ENDPOINT = useWeb3Endpoint()
+  const [searchSettings, setSearchSettings] = useUserSearchPrefManager()
   const chainMap: Record<number, string> = {
     1: 'ethereum',
     56: 'bsc'
@@ -207,9 +213,9 @@ export const PairSearch = (props: Props) => {
     // ]);
     // const humanReadable = ethers.BigNumber.from(decimals).toNumber()
     onPairSelect && onPairSelect(pair)
-   // history.push(`/selective-charts/${pair.baseToken.address}/${pair.baseToken.symbol}/${pair.baseToken.name}/${humanReadable}/${pair.pairAddress}`)
-   history.push(`/selective-charts/${pair.chainId}/${pair.pairAddress}`) 
-   setSearchTerm('')
+    // history.push(`/selective-charts/${pair.baseToken.address}/${pair.baseToken.symbol}/${pair.baseToken.name}/${humanReadable}/${pair.pairAddress}`)
+    history.push(`/selective-charts/${pair.chainId}/${pair.pairAddress}`)
+    setSearchTerm('')
     setRouting(false)
   }, [onPairSelect])
 
@@ -220,10 +226,11 @@ export const PairSearch = (props: Props) => {
       'bsc'
     ] : ['ethereum']
     setFetching(true)
+    const settings = searchSettings.networks.filter(a => a.includeInResults).map(a => a.network);
     const term = searchTermDebounced || searchTerm
     const query = `https://api.dexscreener.com/latest/dex/search/?q=${term}`
     axios.get(query)
-      .then((response) => setResults(response.data?.pairs?.filter((pair: any) => mapId.includes(pair.chainId))))
+      .then((response) => setResults(response.data?.pairs?.filter((pair: Pair) => settings.includes(pair.chainId))))
       .finally(() => setFetching(false))
   }
 
@@ -238,6 +245,19 @@ export const PairSearch = (props: Props) => {
   const setWbtc = () => setSearchTerm(`WBTC`)
   const setWeth = () => setSearchTerm(`WETH`)
   const setETHusd = () => setSearchTerm(`ETH USD`)
+
+  const toggleNetwork = (network: { chainId: number, network: string, includeInResults: boolean }) => {
+    const newInclude = !network.includeInResults
+    const updated = {
+      ...network,
+      includeInResults: newInclude
+    }
+    setSearchSettings({ ...searchSettings, networks: (searchSettings.networks || defaultNetworks).map((setting) => setting.network === network.network ? updated : setting) })
+  }
+  const defaultNetworks = [
+    { chainId: 1, network: 'ethereum', includeInResults: true },
+    { chainId: 56, network: 'bsc', includeInResults: true }
+  ]
   const theme = useTheme()
   const TipMemo = (
     <TipCard style={{ display: 'flex', flexFlow: 'row', alignItems: 'center' }}>
@@ -251,24 +271,54 @@ export const PairSearch = (props: Props) => {
     </TipCard>
   )
 
+  const [settingsShow, settingsShowSet] = React.useState(false)
+  const showSettings = () => settingsShowSet(true)
+  const closeSettings = () => settingsShowSet(false)
+
+  const ToggleElement = (
+    <AutoColumn style={{ width: 'fit-content', position: 'relative', alignItems: 'center', justifyContent: 'start' }} gap="md">
+      <div style={{ width:'100%', gap: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <TYPE.small>Search Settings</TYPE.small>
+         <X style={{cursor:'pointer'}} fontSize={16} onClick={closeSettings} />
+      </div>
+      <AutoColumn gap="sm">
+        {(searchSettings?.networks || defaultNetworks).map((network) => (
+          <div key={network.network} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <TYPE.black fontSize={11}> <img src={(chainImageMap as any)[network.network]} style={{ height: 20, width: 20, borderRadius: 60 }} /></TYPE.black>
+            <Toggle isActive={network.includeInResults} toggle={() => toggleNetwork(network)} />
+          </div>
+        ))}
+      </AutoColumn>
+    </AutoColumn>
+  )
+
+  const isValidPair = (pair: Pair) => (searchSettings.networks || defaultNetworks).filter((network) => network.includeInResults).map(a => a.network).includes(pair.chainId)
+
   return (
     <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
+
       <div style={{ position: 'relative', width: '100%', padding: '1rem' }}>
         {/* Label and search input */}
-        {Boolean(results && results?.length > 0) && (
-          <TYPE.small textAlign="center" style={{width:'fit-content', background:theme.success, borderRadius:5 , padding:'0.15rem'}} color={theme.white}>Found 
-              <Plural value={results?.length} other={<>&nbsp;{results?.length} match{(results?.length || 0) > 1 ? 'es' : ''}&nbsp;</>} one={<>&nbsp;1 match&nbsp;</>}  /> 
-            for &quot;{searchTermDebounced}&quot;
-          </TYPE.small>
-        )}
+
+        <div style={{ display: 'flex', justifyContent: Boolean(results && results?.length > 0) ? 'space-between' : 'flex-end', alignItems: 'center' }}>
+          {Boolean(results && results?.length > 0) && (
+            <TYPE.small textAlign="center" style={{ width: 'fit-content', background: theme.success, borderRadius: 5, padding: '0.15rem' }} color={theme.white}>Found
+              <Plural value={results?.length} other={<>&nbsp;{results?.length} match{(results?.length || 0) > 1 ? 'es' : ''}&nbsp;</>} one={<>&nbsp;1 match&nbsp;</>} />
+              for &quot;{searchTermDebounced}&quot;
+            </TYPE.small>
+          )}
+          <Tooltip width={160} text={ToggleElement} show={settingsShow} placement="bottom-start" >
+            <Settings fontSize={14} style={{ cursor: 'pointer' }} onClick={showSettings} />
+          </Tooltip>
+        </div>
         <TYPE.small marginBottom="5px" color={theme.text1}>{labelToDisplay}</TYPE.small>
         <SearchInput autoFocus placeholder={"Search by name or address"} type="search" value={searchTerm} onChange={onTermChanged} />
-        
+
         {/* Tip: Try Searching message */}
         {!Boolean(searchTermDebounced) && (
           <AutoColumn gap="1rem">{TipMemo}</AutoColumn>
         )}
-        
+
         <MenuFlyout isMobile={isMobile}>
           {/* Loading */}
           {Boolean(fetching) && (
@@ -276,14 +326,14 @@ export const PairSearch = (props: Props) => {
           )}
 
           {/* No Result */}
-          {Boolean(searchTermDebounced) && 
-          !Boolean(fetching) && 
-          !Boolean(routing) && 
-          Boolean(results?.length == 0) && (
+          {Boolean(searchTermDebounced) &&
+            !Boolean(fetching) &&
+            !Boolean(routing) &&
+            Boolean(results?.length == 0) && (
               <MenuItemStyled style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
                 No Results Found
               </MenuItemStyled>
-          )}
+            )}
 
           {/* Render Rows */}
           {!Boolean(fetching) && Boolean(results?.length) && (
@@ -296,29 +346,29 @@ export const PairSearch = (props: Props) => {
               )}
 
               {/* Render results */}
-              {!routing && results?.map((result) => (
-                <div style={{ alignItems:'center', cursor: 'pointer' }} key={result.pairAddress} onClick={() => onPairClick(result)}>
+              {!routing && results?.filter(isValidPair).map((result) => (
+                <div style={{ alignItems: 'center', cursor: 'pointer' }} key={result.pairAddress} onClick={() => onPairClick(result)}>
                   <MenuItemStyled style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <img src={(chainImageMap as any)[result.chainId] as string} style={{ marginRight: 10, width: 20, background: 'transparent', borderRadius: 25, border: "1px solid #444" }} />
-                      <span>    
-                        {result?.baseToken?.name} 
-                          <br />
-                         ({result?.baseToken?.symbol}/{result?.quoteToken?.symbol})
-                        </span>
+                      <span>
+                        {result?.baseToken?.name}
+                        <br />
+                        ({result?.baseToken?.symbol}/{result?.quoteToken?.symbol})
+                      </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
-                      <span style={{display:'flex', flexFlow:'row wrap', gap: 10, alignItems:'center'}}>
-                          <ArrowUpRight />
-                        </span>
+                      <span style={{ display: 'flex', flexFlow: 'row wrap', gap: 10, alignItems: 'center' }}>
+                        <ArrowUpRight />
+                      </span>
                     </div>
                   </MenuItemStyled>
                 </div>
               ))}
             </React.Fragment>
-            )}
-          </MenuFlyout>
+          )}
+        </MenuFlyout>
       </div>
     </div>
   )

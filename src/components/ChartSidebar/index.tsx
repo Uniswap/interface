@@ -9,6 +9,7 @@ import { Currency, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core';
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import { ExternalLink, StyledInternalLink, TYPE, } from 'theme';
 import { Menu, MenuItem, ProSidebar, SidebarContent, SidebarFooter, SidebarHeader, SubMenu } from 'react-pro-sidebar';
+import { Pair, PairSearch } from 'pages/Charts/PairSearch';
 import { RowBetween, RowFixed } from 'components/Row';
 import { darken, lighten } from 'polished'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
@@ -24,7 +25,6 @@ import CurrencyLogo from 'components/CurrencyLogo';
 import { FiatValue } from '../../components/CurrencyInputPanel/FiatValue'
 import { Link } from 'react-router-dom';
 import { LoadingSkeleton } from 'pages/Pool/styleds';
-import { PairSearch } from 'pages/Charts/PairSearch';
 import React from 'react';
 import { SwapTokenForToken } from 'pages/Swap/SwapTokenForToken';
 import { Trans } from '@lingui/macro'
@@ -139,7 +139,7 @@ type ChartSidebarProps = {
     onCollapse: (collapsed: boolean) => void
     collapsed: boolean;
     loading: boolean;
-    screenerToken?: any
+    screenerToken?: Pair
     tokenInfo?: any
     buySellTax?:any
 }
@@ -180,6 +180,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     }, [tokenInfo?.totalSupply, totalSupply])
 
     const formattedPrice = React.useMemo(() => {
+        if (screenerToken && screenerToken?.priceUsd) return parseFloat(screenerToken?.priceUsd)?.toFixed(18)
         //console.log(`trying to get price--`, tokenInfo?.price, tokenData?.priceUSD)
         if (tokenData && tokenData.priceUSD) {
             //console.info(`Using uniswap v2 price -- its always much more up - to - date`, tokenData)
@@ -191,24 +192,26 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         }
 
         return `-`
-    }, [tokenInfo?.price, token, tokenData])
+    }, [tokenInfo?.price, screenerToken, token, tokenData])
 
     const totalLiquidity = React.useMemo(() => {
+        if (screenerToken && screenerToken?.liquidity && screenerToken?.liquidity?.usd) return screenerToken?.liquidity?.usd
         return tokenData && tokenData?.totalLiquidityUSD ? Number(tokenData?.totalLiquidityUSD * 2) : undefined
-    }, [tokenData])
+    }, [tokenData, screenerToken])
 
     const transactionCount = React.useMemo(() => {
         return tokenData && tokenData?.txCount ? tokenData?.txCount : undefined
     }, [tokenData])
 
-    const hasData = React.useMemo(() => !!tokenData && !!token && !!token.name && !!token.address && !!token.symbol, [tokenData, token])
+    const hasData = React.useMemo(() => (!!tokenData || !!screenerToken) && !!token && !!token.name && !!token.address && !!token.symbol, [tokenData, screenerToken, token])
 
     const marketCap = React.useMemo(() => {
+
         if (!totalSupplyInt || totalSupplyInt === 0) return ''
-        const hasTokenData = !!tokenData?.priceUSD
+        const hasTokenData = !!tokenData?.priceUSD || !!screenerToken?.priceUsd
         const hasTokenInfo = !!tokenInfo?.price && !!tokenInfo?.price?.rate
         if (!hasTokenInfo && !hasTokenData) return ''
-        let price = tokenData && tokenData.priceUSD ? tokenData?.priceUSD : tokenInfo && tokenInfo.price ? tokenInfo.price.rate : '';
+        let price = screenerToken?.priceUsd ? screenerToken?.priceUsd : tokenData && tokenData.priceUSD ? tokenData?.priceUSD : tokenInfo && tokenInfo.price ? tokenInfo.price.rate : '';
         if (price == '') return '';
         let excludingBurntValue = totalSupplyInt;
         if (amountBurnt) excludingBurntValue -= parseFloat(amountBurnt.toFixed(0))
@@ -219,7 +222,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
             price = parseFloat(price)
             
         return Number(parseFloat((price?.toFixed(18))) * excludingBurntValue)
-    }, [totalSupplyInt, token?.name, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
+    }, [totalSupplyInt, screenerToken, token?.name, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
 
     const theme = useTheme()
     const color = theme.chartSidebar

@@ -1,3 +1,4 @@
+/*eslint-disable*/
 /*tslint-disable*/
 import "./transitions.css";
 
@@ -20,6 +21,7 @@ import styled, { useTheme } from "styled-components/macro";
 import {
     toChecksum,
     useEthPrice,
+    useSetTitle,
     useTokenData,
     useTokenTransactions,
 } from "state/logs/utils";
@@ -35,6 +37,7 @@ import { ChartComponent } from "./ChartComponent";
 import { ChartSearchModal } from "pages/Charts/ChartSearchModal";
 import { ChartSidebar } from "components/ChartSidebar";
 import { LoadingSkeleton } from "pages/Pool/styleds";
+import { PageMeta } from "./PageMeta";
 import ReactGA from "react-ga";
 import { RecentlyViewedCharts } from "./RecentViewedCharts";
 import { Redirect } from "./redirects";
@@ -131,7 +134,7 @@ export const SelectiveChartWithPair = () => {
         screenerPair?.baseToken?.address
     );
     const bscTransactionData = useBscTokenTransactions(
-        params?.network == 'bsc' ? screenerPair?.baseToken?.address : '',
+        params?.network == 'bsc' ? screenerPair?.baseToken?.address || '' : '',
         network,
         5000,
         params?.network == 'bsc' ? params?.pairAddress : ''
@@ -192,6 +195,7 @@ export const SelectiveChartWithPair = () => {
     const [userChartHistory, updateUserChartHistory] =
         useUserChartHistoryManager();
 
+
     React.useEffect(() => {
         if (Object.keys(params).every((key) => !Boolean((params as any)[key]))) {
             setSelectedCurrency({ payload: undefined, type: "update" });
@@ -233,10 +237,14 @@ export const SelectiveChartWithPair = () => {
 
     const pair = React.useMemo(
         function () {
-            if (!Boolean(Array.isArray(pairs) && pairs.length) && !screenerToken) return undefined
+            if (screenerPair && screenerPair.quoteToken && screenerPair.quoteToken.address)
+                return screenerPair.quoteToken.address
 
             if (screenerToken && screenerToken.quoteToken && screenerToken.quoteToken.address)
                 return screenerToken.quoteToken.address
+
+            if (!Boolean(Array.isArray(pairs) && pairs.length) && !screenerPair && !screenerToken)
+                return undefined
 
             return `${pairs?.[0]?.token0?.symbol?.toLowerCase() ===
                 token?.symbol?.toLowerCase()
@@ -244,10 +252,57 @@ export const SelectiveChartWithPair = () => {
                 : pairs?.[0]?.token0?.id
                 }`;
         },
-        [tokenData, screenerToken, pairs, token]
+        [tokenData, params?.pairAddress, screenerToken, pairs, token]
     );
-
     const pairCurrency = useCurrency(pair ?? undefined);
+
+    const title = React.useMemo(function () {
+        let price = tokenData?.priceUSD
+        if (!price) {
+            if (screenerToken && screenerToken.priceUsd) {
+                price = screenerToken?.priceUsd
+            } else if (screenerPair && screenerPair.priceUsd) {
+                price = screenerPair.priceUsd
+            }
+        }
+
+        if (price) {
+            price = parseFloat(price).toFixed(6)
+        }
+        if (screenerToken && screenerToken.baseToken && screenerToken.quoteToken) {
+            return `Kiba Charts | ${screenerToken?.baseToken?.symbol}/${screenerToken?.quoteToken?.symbol} Chart ${price ? `| $${price}` : ''}`;
+        }
+        if (screenerPair && screenerPair.baseToken && screenerPair.quoteToken) {
+            return `Kiba Charts | ${screenerPair?.baseToken?.symbol}/${screenerPair?.quoteToken?.symbol} Chart ${price ? `| $${price}` : ''}`;
+        }
+
+        if (mainnetCurrency && pairCurrency) {
+            return `Kiba Charts | ${mainnetCurrency?.symbol}/${pairCurrency?.symbol} Chart ${price ? `| $${price}` : ''}`
+        }
+
+        return `Kiba Charts | (${token?.symbol || ''}) ${token?.name || ''} Chart ${price ? `| $${price}` : ''}`;
+    }, [tokenData?.priceUSD, screenerPair?.priceUsd, screenerToken?.priceUsd, mainnetCurrency, pairCurrency, token])
+
+    React.useEffect(() => {
+        ReactGA.pageview(window.location.pathname, undefined, document.title)
+    }, [])
+
+
+    const pageMeta = React.useMemo(function(){
+        const data = screenerToken ? screenerToken : screenerPair
+        return {
+        title,
+        description: `Swap ${data?.baseToken?.symbol}/${data?.quoteToken?.symbol} and view ${data?.baseToken?.symbol}/${data?.quoteToken?.symbol} Chart and Transaction Data on KibaCharts`,
+        canonical: window.location.href,
+        meta: {
+            charset: 'utf-8',
+
+            name: {
+                keywords: 'swap,charts,react,meta,document,html,tags,kiba,kibaswap,kibacharts,erc20,bep20,tokens'
+            }
+        }
+    }
+}, [screenerToken, title, screenerPair])
 
     const holdings = {
         token,
@@ -328,7 +383,7 @@ export const SelectiveChartWithPair = () => {
     }, [])
 
     const prices = useBnbPrices()
-        /* Memoized function to render the Double Currency Logo for the current chart */
+    /* Memoized function to render the Double Currency Logo for the current chart */
     const LogoMemo = React.useMemo(() => {
         return Boolean(!!hasSelectedData) ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, justifyContent: 'space-between' }}>
@@ -494,6 +549,7 @@ export const SelectiveChartWithPair = () => {
 
     return (
         <React.Suspense fallback={<BarChartLoaderSVG />}>
+            <PageMeta metadata={pageMeta} />
             <ChartSearchModal isOpen={showSearch} onDismiss={toggleShowSearchOff} />
             <SelectiveChartEmbedModal title={`${token?.symbol}/${pairCurrency?.symbol} Chart`} chartLink={window.location.href} isOpen={showEmbedChartModal} onDismiss={dismissEmbedModal} />
             <WrapperCard

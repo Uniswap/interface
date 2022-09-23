@@ -112,7 +112,8 @@ export default function SwapVolume() {
     volumeInEth,
     volumeInEthBn,
     volumeInUsd,
-    volumeInUsdFormatted
+    volumeInUsdFormatted,
+    refreshing
   } = useTotalSwapVolume()
 
   const {
@@ -121,6 +122,7 @@ export default function SwapVolume() {
   const ethPrices = useEthPrice()
   const bnbPrices = useBnbPrices()
   const prices = (chainId && chainId == 1 || !chainId) ? ethPrices : bnbPrices
+  const [RefreshingVolume, SetRefreshingVolume] =React.useState(false)
   const [swapVolumeInBUSD, setSwapVolumeInBusd] = useTotalSwapVolumeBnbToUsd()
   const ethPrice = React.useMemo(() => chainId && chainId === 56 ?
     (bnbPrices as BnbPrices).current :
@@ -157,7 +159,10 @@ export default function SwapVolume() {
                   {chainId && chainId === 56 && <>${bnbPrices?.current !== undefined && !isNaN(bnbPrices?.current) ? `${parseFloat(bnbPrices?.current?.toString()).toFixed(2)} USD` : 'Loading..'}</>}
                   {(!chainId || (chainId && chainId === 1))  && <>&nbsp;{`$${parseFloat(ethPrices[0] as string).toFixed(2)} USD`}</>}
                 </StyledPollingNumber>
-                <StyledPollingDot>{volumeInEthBn == 0 && <Spinner />}</StyledPollingDot>
+                <StyledPollingDot>
+                  {refreshing || volumeInEthBn == 0 && <Spinner />}
+                  
+                  </StyledPollingDot>
               </>
             )}
           </StyledEthPolling>

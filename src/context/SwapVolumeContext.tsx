@@ -9,10 +9,11 @@ import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2RouterContract } from 'hooks/useContract'
 import { utils } from 'ethers'
 
-const SwapVolumeContext = React.createContext<{ volumeInEth?: string, volumeInEthBn?: number, volumeInUsd?: number, volumeInUsdFormatted?: string }>({ volumeInEth: '', volumeInEthBn: 0, volumeInUsd: 0 })
+const SwapVolumeContext = React.createContext<{ refreshing: boolean, volumeInEth?: string, volumeInEthBn?: number, volumeInUsd?: number, volumeInUsdFormatted?: string }>({ refreshing:false,volumeInEth: '', volumeInEthBn: 0, volumeInUsd: 0 })
 
 export const SwapVolumeContextProvider = ({ children, chainId }: { children: any, chainId: number | undefined }) => {
     const relayer = useV2RouterContract(chainId)
+    const [refreshing, setRefreshing] = React.useState(false)
     const trackingMap = React.useRef<Map<any, any>>(new Map())
     const defaultState = { formatted: '0', value: 0 };
     const [ethRelayed, setEthRelayed] = React.useReducer(function (state: any, action: { type: any, payload: any }) {
@@ -31,9 +32,14 @@ export const SwapVolumeContextProvider = ({ children, chainId }: { children: any
             async (isIntervalledCallback: boolean) => {
                 console.log('interval function->totalSwapVolume->', ethRelayed.formatted)
                 if (relayer) {
+                    setRefreshing(true)
                     relayer.totalEthRelayed().then((response: any) => {
                         const formattedEth = parseFloat(utils.formatEther(response)).toFixed(6);
                         setEthRelayed({ type: "UPDATE", payload: { formatted: formattedEth, value: response } });
+                        setRefreshing(false)
+                    }).catch((e: unknown) => {
+                        console.error(`[useSwapVolume]`, e)
+                        setRefreshing(false)
                     })
                 }
             }, [relayer, ethRelayed])
@@ -79,7 +85,8 @@ export const SwapVolumeContextProvider = ({ children, chainId }: { children: any
         volumeInEth: ethRelayed.formatted,
         volumeInEthBn: ethRelayed.value,
         volumeInUsd: parseFloat(formattedUsdcValue),
-        volumeInUsdFormatted: parseFloat(formattedUsdcValue).toLocaleString()
+        volumeInUsdFormatted: parseFloat(formattedUsdcValue).toLocaleString(),
+        refreshing
     }
     return (<SwapVolumeContext.Provider value={value}>
         {children}

@@ -4,15 +4,14 @@ import Badge, { BadgeVariant } from 'components/Badge';
 import { BarChart, ChevronDown, ChevronRight, ChevronUp, Filter, Percent, X } from 'react-feather';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { fetchBscHolders, fetchBscTokenData, useBnbPrices, useBscPoocoinTransactions, useBscTokenData, useBscTokenTransactions } from 'state/logs/bscUtils';
-import { getTokenData, useEthPrice, usePairs, useTokenData, useTokenDataHook, useTokenTransactions } from 'state/logs/utils';
+import { getTokenData, toChecksum, useEthPrice, usePairs, useTokenData, useTokenDataHook, useTokenTransactions } from 'state/logs/utils';
 import { useBscToken, useToken } from 'hooks/Tokens';
 import { useConvertTokenAmountToUsdString, useKiba } from 'pages/Vote/VotePage';
 
 import BarChartLoaderSVG from './BarChartLoader';
 import { ChartSidebar } from 'components/ChartSidebar';
 import { Dots } from './styleds';
-import { Flash_OrderBy } from 'state/data/generated';
-import { LoadingRows } from 'pages/Pool/styleds';
+import { Pair } from 'pages/Charts/PairSearch';
 import React from 'react';
 import ReactGA from 'react-ga'
 import { StyledInternalLink } from 'theme';
@@ -39,16 +38,16 @@ const StyledA = styled.a`
     font-family:'Inter var', sans-serif !important;
     color: ${({ theme }) => theme.primary1};
 `
-export const useTokenHolderCount = (address: string, chainId?:number) => {
+export const useTokenHolderCount = (address: string, chainId?: number) => {
     const [data, setData] = React.useState<any | undefined>()
     function intervalCallback() {
         if (!address) return;
         if (chainId && chainId === 1 || !chainId)
-        fetch(`https://api.ethplorer.io/getTokenInfo/${address}?apiKey=EK-htz4u-dfTvjqu-7YmJq`, { method: 'get' })
-            .then(res => res.json())
-            .then(setData);
-        else if (chainId && chainId === 56 ) 
-            fetchBscHolders(address).then((response) => setData({holdersCount: response}));
+            fetch(`https://api.ethplorer.io/getTokenInfo/${address}?apiKey=EK-htz4u-dfTvjqu-7YmJq`, { method: 'get' })
+                .then(res => res.json())
+                .then(setData);
+        else if (chainId && chainId === 56)
+            fetchBscHolders(address).then((response) => setData({ holdersCount: response }));
     }
     React.useEffect(() => {
         intervalCallback()
@@ -59,26 +58,26 @@ export const useTokenHolderCount = (address: string, chainId?:number) => {
 }
 
 type EtherscanTokenInfo = {
-    contractAddress:string
-    tokenName:string
+    contractAddress: string
+    tokenName: string
     symbol: string
     divisor: string
     tokenType: string
     totalSupply: string
     blueCheckmark: string
     description?: string
-    website?:string
-    email?:string
-    blog?:string
-    reddit?:string
-    facebook?:string
-    twitter?:string
-    github?:string
-    telegram?:string
-    wechat?:string
-    linkedin?:string
-    discord?:string
-    tokenPriceUSD?:string
+    website?: string
+    email?: string
+    blog?: string
+    reddit?: string
+    facebook?: string
+    twitter?: string
+    github?: string
+    telegram?: string
+    wechat?: string
+    linkedin?: string
+    discord?: string
+    tokenPriceUSD?: string
 }
 
 export type TokenInfo =
@@ -137,26 +136,36 @@ export const fetchTokenInfo = async (chainId: number | undefined, tokenAddress: 
     }
 }
 
-export const useDexscreenerToken = (address?:string) => {
-    const [data,setData] = React.useState<any>()
+export const useDexscreenerToken = (address?: string) => {
+    const [data, setData] = React.useState<any>()
 
     React.useEffect(() => {
+        let Interval: NodeJS.Timeout;
         if (address) {
             console.log(`[useDexscreenerToken] - fetching`)
-            axios.get(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
+            Interval = setInterval(() => axios.get(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
                 .then((response) => {
                     console.log(`[useDexscreenerToken] - setting state`, response.data)
-                    setData(response.data?.pairs?.[0])
+                    const dataSet = response?.data?.pair ? response?.data?.pair : response?.data?.pairs?.[0]
+                    console.log(`[useDexscreenerToken]:response`, dataSet)
+                    setData(dataSet)
                 })
+                , 60000 * 2)
+        }
+
+        return () => {
+            if (Interval) {
+                clearInterval(Interval)
+            }
         }
     }, [address])
 
-    if (!address) return 
+    if (!address) return
     return data
 }
 
 export const useDexscreenerPair = (pairAddress: string, chainId?: number) => {
-    const [data,setData] = React.useState<any>()
+    const [data, setData] = React.useState<Pair>()
 
     React.useEffect(() => {
         if (pairAddress) {
@@ -169,9 +178,9 @@ export const useDexscreenerPair = (pairAddress: string, chainId?: number) => {
                     setData(response.data?.pairs?.[0])
                 })
         }
-    }, [pairAddress,chainId])
+    }, [pairAddress, chainId])
 
-    if (!pairAddress) return 
+    if (!pairAddress) return
     return data
 }
 
@@ -179,11 +188,11 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
     const [tokenInfo, setTokenInfo] = React.useState<TokenInfo>()
     const [etherscanTokeninfo, setEtherscanTokeninfo] = React.useState<any>({})
     const [loading, updateLoading] = React.useState(false)
-    const handleE = (e:any) => console.error(`[useTokenInfo]`, e) 
+    const handleE = (e: any) => console.error(`[useTokenInfo]`, e)
     const intervalCallback = React.useCallback(function () {
         if (loading) return;
         updateLoading(true)
-            axios.get(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
+        axios.get(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
             .then(response => {
                 console.log(`[useTokenInfo]: token info response`, response.data);
                 setTokenInfo(response.data)
@@ -194,19 +203,21 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
 
     React.useEffect(() => {
         const asyncFunc = async () => {
-            const contract = getBep20Contract(tokenAddress as string)
-            const [name,symbol,decimals] = await Promise.all(
+            const contract = getBep20Contract(toChecksum(tokenAddress) as string)
+            const [name, symbol, decimals] = await Promise.all(
                 [
-                 contract.name(),
-                 contract.symbol(),
-                 contract.decimals()   
+                    contract.name().catch((e:unknown)=>console.error(`[useTokenInfo]`, e)),
+                    contract.symbol().catch((e:unknown)=>console.error(`[useTokenInfo]`, e)),
+                    contract.decimals().catch((e:unknown)=>console.error(`[useTokenInfo]`, e))
                 ]
             )
 
             const model = {
+                chainId: 56,
                 name,
                 symbol,
-                decimals: ethers.BigNumber.from(decimals).toNumber()
+                decimals: ethers.BigNumber.from(decimals).toNumber(),
+                address: tokenAddress
             }
             setTokenInfo(model as any)
         }
@@ -220,14 +231,14 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
         }
     }, [chainId, tokenAddress])
 
-    
+
     if (!tokenAddress) return
-    return { ...tokenInfo, ...etherscanTokeninfo}
+    return { ...tokenInfo, ...etherscanTokeninfo }
 }
 
 export const useHolderCount = (chainId: any) => {
     const [holdersCount, setHoldersCount] = React.useState<any | undefined>()
-    function handleError (error: unknown) { console.error(`[useHolderCount]: Error`, error);}
+    function handleError(error: unknown) { console.error(`[useHolderCount]: Error`, error); }
     function intervalCallback() {
         if (chainId === 1 || !chainId)
             fetch('https://api.ethplorer.io/getTokenInfo/0x005d1123878fc55fbd56b54c73963b234a64af3c?apiKey=EK-htz4u-dfTvjqu-7YmJq', { method: 'get' })
@@ -248,13 +259,13 @@ export const useHolderCount = (chainId: any) => {
 
 const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { lastFetched: any, transactions: any, tokenData: any, chainId?: number }) => {
     const [filterAddress, setFilterAddress] = React.useState<string | undefined>()
-    
+
     const windowInnerWidth = window.innerWidth
 
-    const isMobile = React.useMemo(() => windowInnerWidth <= 768 , [windowInnerWidth])
+    const isMobile = React.useMemo(() => windowInnerWidth <= 768, [windowInnerWidth])
     const chainLabel = (!chainId || chainId && chainId === 1) ? `ETH` : chainId && chainId === 56 ? 'BNB' : 'ETH';
     const lastUpdated = React.useMemo(() => moment(lastFetched).fromNow(), [moment(lastFetched).fromNow()])
-    
+
 
     const formattedTransactions = React.useMemo(() => transactions?.swaps?.map((swap: any) => {
         const netToken0 = swap.amount0In - swap.amount0Out
@@ -315,10 +326,10 @@ const TransactionList = ({ lastFetched, transactions, tokenData, chainId }: { la
         (tokenData && tokenData?.totalTransactions) ? tokenData?.totalTransactions
             : undefined, [tokenData])
     const clearRemoveFilter = () => setFilterAddress(undefined);
-    const filterAccountClick = (item:any ) => {
+    const filterAccountClick = (item: any) => {
         setFilterAddress(item.account)
     }
-    const hideRemoveFilter=() => setShowRemoveFilter(undefined);
+    const hideRemoveFilter = () => setShowRemoveFilter(undefined);
     const clearTooltipShown = () => setTooltipShown(undefined);
     React.useEffect(() => {
         // log selected wallet
@@ -502,14 +513,14 @@ overflow-y:auto;
 export const Chart = () => {
     const windowInnerWidth = window.innerWidth
 
-    const isMobile = React.useMemo(() => windowInnerWidth <= 768 , [windowInnerWidth])
+    const isMobile = React.useMemo(() => windowInnerWidth <= 768, [windowInnerWidth])
     const { chainId, account } = useWeb3React();
     const kibaBalance = useKiba(account)
     const [ethPrice, ethPriceOld] = useEthPrice()
     const pairs = usePairs('0x005d1123878fc55fbd56b54c73963b234a64af3c')
     const transactionData = useTokenTransactions('0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase(), pairs, 60000)
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
-    const binanceTransactionData = useBscTokenTransactions('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5'.toLowerCase(), chainId == 56 ? 'bsc' : 'ethereum',60000)
+    const binanceTransactionData = useBscTokenTransactions('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5'.toLowerCase(), chainId == 56 ? 'bsc' : 'ethereum', 60000)
     const prices = useBnbPrices()
     const hasAccess = useHasAccess()
     const accessDenied = !hasAccess
@@ -556,19 +567,19 @@ export const Chart = () => {
                 gridTemplateColumns: gridTemplateStyle,
                 columnGap: gridColumnGap
             }}>
-                <ChartSidebar 
-                holdings={holdings}
-                loading={!tokenData}
-                token={{
-                    address: tokenDataAddress,
-                    decimals: '18',
-                    name: 'Kiba Inu',
-                    symbol: 'KIBA'
-                }} 
-                tokenData={tokenData} 
-                chainId={chainId} 
-                collapsed={collapsed} 
-                onCollapse={(collapsed) => setCollapsed(collapsed)} />
+                <ChartSidebar
+                    holdings={holdings}
+                    loading={!tokenData}
+                    token={{
+                        address: tokenDataAddress,
+                        decimals: '18',
+                        name: 'Kiba Inu',
+                        symbol: 'KIBA'
+                    }}
+                    tokenData={tokenData}
+                    chainId={chainId}
+                    collapsed={collapsed}
+                    onCollapse={(collapsed) => setCollapsed(collapsed)} />
                 <div style={{
                     display: 'block',
                     marginBottom: 5,
@@ -670,67 +681,67 @@ export const Chart = () => {
                     {view === 'chart' && accessDenied === false && <>
                         {/* Chart Component */}
                         <div style={{ width: '100%', marginTop: '0.5rem', marginBottom: '0.25rem', height: isBinance ? 700 : 500 }}>
-                            {!isBinance && <TradingViewWidget  hide_side_toolbar={false} locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
+                            {!isBinance && <TradingViewWidget hide_side_toolbar={false} locale={locale} theme={'Dark'} symbol={frameURL} autosize />}
                             {/* Add back in the idefined Iframe chart until trading view gets there shit back together*/}
                             {!!isBinance && <iframe src={'https://www.defined.fi/bsc/0x6499b4f8263fc3be2d4577fffcee87c972a07be9'} style={{ height: 700, borderRadius: 10, width: '100%', border: '1px solid red', background: 'transparent' }} />}
                         </div>
                     </>}
 
-                        {accessDenied === false && view === 'chart' && (
-                <div style={{ display: 'grid', gridTemplateColumns: '100%' }}>
-                    {/* Loading Transaction data for either chain */}
-                    {(!isBinance && transactionData?.loading) ||
-                        (isBinance && binanceTransactionData.loading) && (
-                            <div style={{ background: 'linear-gradient(#181C27, #131722)', padding: '9px 14px', display: 'flex', alignItems: 'center' }}><BarChartLoaderSVG /></div>
-                        )}
+                    {accessDenied === false && view === 'chart' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: '100%' }}>
+                            {/* Loading Transaction data for either chain */}
+                            {(!isBinance && transactionData?.loading) ||
+                                (isBinance && binanceTransactionData.loading) && (
+                                    <div style={{ background: 'linear-gradient(#181C27, #131722)', padding: '9px 14px', display: 'flex', alignItems: 'center' }}><BarChartLoaderSVG /></div>
+                                )}
 
-                    {/* ETH Transaction List */}
-                    {!isBinance &&
-                        transactionData?.data?.swaps?.length &&
-                        tokenData &&
-                        tokenData?.priceUSD &&
-                        <div style={{
-                            width: '100%',
-                            overflowY: 'auto',
-                            padding: '9px 14px',
-                            background: 'rgb(22, 22, 22)',
-                            color: '#fff',
-                            borderRadius: 6,
-                            flexFlow: 'column wrap',
-                        }}>
-                            <TransactionList chainId={chainId}
-                                lastFetched={transactionData.lastFetched}
-                                transactions={transactionData.data}
-                                tokenData={tokenData} />
-                        </div>
-                    }
-                    {/* Binance Smart Chain Transaction List */}
-                    {isBinance && binanceTransactionData?.data?.swaps?.length > 0 && (
-                        <div style={{
-                            width: '100%',
-                            overflowY: 'auto',
-                            padding: '9px 14px',
-                            background: 'rgb(22, 22, 22)',
-                            color: '#fff',
-                            borderRadius: 6,
-                            flexFlow: 'column wrap',
-                            gridColumnGap: 50
-                        }}>
-                            <TransactionList chainId={chainId}
-                                lastFetched={binanceTransactionData.lastFetched}
-                                transactions={binanceTransactionData.data}
-                                tokenData={tokenData} />
+                            {/* ETH Transaction List */}
+                            {!isBinance &&
+                                transactionData?.data?.swaps?.length &&
+                                tokenData &&
+                                tokenData?.priceUSD &&
+                                <div style={{
+                                    width: '100%',
+                                    overflowY: 'auto',
+                                    padding: '9px 14px',
+                                    background: 'rgb(22, 22, 22)',
+                                    color: '#fff',
+                                    borderRadius: 6,
+                                    flexFlow: 'column wrap',
+                                }}>
+                                    <TransactionList chainId={chainId}
+                                        lastFetched={transactionData.lastFetched}
+                                        transactions={transactionData.data}
+                                        tokenData={tokenData} />
+                                </div>
+                            }
+                            {/* Binance Smart Chain Transaction List */}
+                            {isBinance && binanceTransactionData?.data?.swaps?.length > 0 && (
+                                <div style={{
+                                    width: '100%',
+                                    overflowY: 'auto',
+                                    padding: '9px 14px',
+                                    background: 'rgb(22, 22, 22)',
+                                    color: '#fff',
+                                    borderRadius: 6,
+                                    flexFlow: 'column wrap',
+                                    gridColumnGap: 50
+                                }}>
+                                    <TransactionList chainId={chainId}
+                                        lastFetched={binanceTransactionData.lastFetched}
+                                        transactions={binanceTransactionData.data}
+                                        tokenData={tokenData} />
+                                </div>
+                            )}
                         </div>
                     )}
-                </div>
-            )}
-                    {accessDenied === false && view==='market' &&                 <div style={{ display: 'grid', gridTemplateColumns: '100%' }}>
+                    {accessDenied === false && view === 'market' && <div style={{ display: 'grid', gridTemplateColumns: '100%' }}>
 
-<iframe src='https://www.tradingview-widget.com/embed-widget/crypto-mkt-screener/?locale=en#%7B%22width%22%3A1000%2C%22height%22%3A490%2C%22defaultColumn%22%3A%22overview%22%2C%22screener_type%22%3A%22crypto_mkt%22%2C%22displayCurrency%22%3A%22USD%22%2C%22colorTheme%22%3A%22dark%22%2C%22market%22%3A%22crypto%22%2C%22enableScrolling%22%3Atrue%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22cryptomktscreener%22%7D' style={{ border: '1px solid linear-gradient(#181C27, #131722)', marginTop: 10, borderRadius: 30, height: 500, width: '100%' }} />
-</div>    }
+                        <iframe src='https://www.tradingview-widget.com/embed-widget/crypto-mkt-screener/?locale=en#%7B%22width%22%3A1000%2C%22height%22%3A490%2C%22defaultColumn%22%3A%22overview%22%2C%22screener_type%22%3A%22crypto_mkt%22%2C%22displayCurrency%22%3A%22USD%22%2C%22colorTheme%22%3A%22dark%22%2C%22market%22%3A%22crypto%22%2C%22enableScrolling%22%3Atrue%2C%22utm_source%22%3A%22www.tradingview.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22cryptomktscreener%22%7D' style={{ border: '1px solid linear-gradient(#181C27, #131722)', marginTop: 10, borderRadius: 30, height: 500, width: '100%' }} />
+                    </div>}
                 </div>
             </div>
-           
+
         </FrameWrapper>
     )
 }
