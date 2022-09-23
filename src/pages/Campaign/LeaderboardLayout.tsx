@@ -160,8 +160,10 @@ export default function LeaderboardLayout({
 
   if (selectedCampaign === undefined || selectedCampaign.status === CampaignStatus.UPCOMING)
     return (
-      <Flex justifyContent="center" alignItems="center" height="100%">
-        <Trans>This campaign does not have a leaderboard yet.</Trans>
+      <Flex justifyContent="center" alignItems="center" height="100%" p="16px">
+        <Text as="span" textAlign="center">
+          <Trans>This campaign does not have a leaderboard yet.</Trans>
+        </Text>
       </Flex>
     )
 

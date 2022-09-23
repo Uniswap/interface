@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -28,7 +29,7 @@ export default function ProgressBar({
   value,
 }: {
   title: string
-  value: string
+  value: ReactNode
   percent: number
   color?: string
   valueTextColor?: string

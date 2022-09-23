@@ -1,10 +1,12 @@
 import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { rgba } from 'polished'
 import { memo } from 'react'
+import { Check } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
@@ -80,6 +82,7 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
   const isDarkMode = useIsDarkMode()
   const isRewardInUSD = campaign.rewardDistribution[0]?.rewardInUSD
   let totalRewardAmount: Fraction = new Fraction(0)
+  let percentTradingVolume = 0
   const {
     tradingNumberRequired,
     tradingVolumeRequired,
@@ -97,7 +100,15 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
         ),
       )
     }, new Fraction(0))
-  } catch (error) {}
+    if (tradingVolumeRequired) {
+      percentTradingVolume = BigNumber.from(tradingVolume)
+        .mul(BigNumber.from(100))
+        .div(BigNumber.from(tradingVolumeRequired))
+        .toNumber()
+    }
+  } catch (error) {
+    console.log(error)
+  }
 
   const isOngoing = campaign.status === CampaignStatus.ONGOING
   const rCampaignName = campaign.name
@@ -120,8 +131,13 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
     : `${totalRewardAmountString} ${tokenSymbol}`
 
   const isShowProgressBar = isOngoing && account && campaign?.userInfo?.status === CampaignUserInfoStatus.Eligible
-  const percentVolume = !tradingVolumeRequired ? 0 : (tradingVolume / tradingVolumeRequired) * 100
-  const percentTradingNumber = !tradingNumberRequired ? 0 : (tradingNumber / tradingNumberRequired) * 100
+  const percentTradingNumber = !tradingNumberRequired ? 0 : Math.floor((tradingNumber / tradingNumberRequired) * 100)
+  const isPassedVolume = percentTradingVolume >= 100
+  const isPassedNumberOfTrade = percentTradingNumber >= 100
+  const isQualified =
+    (isPassedVolume && isPassedNumberOfTrade) ||
+    (isPassedVolume && !tradingNumberRequired) ||
+    (isPassedNumberOfTrade && !tradingVolumeRequired)
 
   return (
     <CampaignItemWrapper onClick={() => onSelectCampaign(campaign)} selected={isSelected}>
@@ -142,28 +158,42 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
         </Text>
       </Container>
 
-      {isShowProgressBar && (
+      {isQualified ? (
+        <CampaignStatusText
+          status={CampaignStatus.ONGOING}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            alignSelf: 'flex-end',
+            padding: '2px 7px',
+          }}
+        >
+          <Check width={17} height={17} />
+          <Trans>Qualified</Trans>
+        </CampaignStatusText>
+      ) : isShowProgressBar ? (
         <Flex style={{ gap: 10 }} flexDirection="column">
           {tradingVolumeRequired > 0 && (
             <ProgressBar
               title={t`Your Trading Volume`}
-              percent={percentVolume}
-              value={`${tradingVolume}/${tradingVolumeRequired}$`}
+              percent={percentTradingVolume}
+              value={isPassedVolume ? <Check width={17} height={17} /> : `${percentTradingVolume}%`}
               valueTextColor={theme.primary}
-              color={percentVolume >= 100 ? theme.primary : theme.warning}
+              color={isPassedVolume ? theme.primary : theme.warning}
             />
           )}
           {tradingNumberRequired > 1 && (
             <ProgressBar
               title={t`Your Number of Trades`}
               percent={percentTradingNumber}
-              value={`${tradingNumber}/${tradingNumberRequired}`}
+              value={isPassedNumberOfTrade ? <Check width={17} height={17} /> : `${percentTradingNumber}%`}
               valueTextColor={theme.primary}
-              color={percentTradingNumber >= 100 ? theme.primary : theme.warning}
+              color={isPassedNumberOfTrade ? theme.primary : theme.warning}
             />
           )}
         </Flex>
-      )}
+      ) : null}
 
       {!isShowProgressBar && (
         <div>

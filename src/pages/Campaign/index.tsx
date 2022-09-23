@@ -1,6 +1,7 @@
 import { Trans, t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import dayjs from 'dayjs'
+import { BigNumber } from 'ethers'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { BarChart, ChevronDown, Clock, Share2, Star, Users } from 'react-feather'
@@ -85,10 +86,20 @@ function RankDetail({ campaign }: { campaign: CampaignData | undefined }) {
     tradingNumberRequired,
     userInfo: { tradingNumber, tradingVolume, status: UserStatus } = { tradingNumber: 0, tradingVolume: 0 },
   } = campaign
-  const percentVolume = !tradingVolumeRequired ? 0 : (tradingVolume / tradingVolumeRequired) * 100
-  const percentTradingNumber = !tradingNumberRequired ? 0 : (tradingNumber / tradingNumberRequired) * 100
 
-  const isPassedVolume = percentVolume >= 100
+  const percentTradingNumber = !tradingNumberRequired ? 0 : Math.floor((tradingNumber / tradingNumberRequired) * 100)
+
+  let percentTradingVolume = 0
+  try {
+    if (tradingVolumeRequired) {
+      percentTradingVolume = BigNumber.from(tradingVolume)
+        .mul(BigNumber.from(100))
+        .div(BigNumber.from(tradingVolumeRequired))
+        .toNumber()
+    }
+  } catch (error) {}
+
+  const isPassedVolume = percentTradingVolume >= 100
   const isPassedNumberOfTrade = percentTradingNumber >= 100
 
   if (
@@ -114,9 +125,9 @@ function RankDetail({ campaign }: { campaign: CampaignData | undefined }) {
           <Flex style={{ gap: 10 }} flexDirection="column">
             {tradingVolumeRequired > 0 && (
               <ProgressBar
-                percent={percentVolume}
+                percent={percentTradingVolume}
                 title={t`Trading Volume`}
-                value={`${tradingVolume}/${tradingVolumeRequired}$`}
+                value={`${percentTradingVolume}%`}
                 color={isPassedVolume ? theme.primary : theme.warning}
               />
             )}
@@ -124,7 +135,7 @@ function RankDetail({ campaign }: { campaign: CampaignData | undefined }) {
               <ProgressBar
                 percent={percentTradingNumber}
                 title={t`Number of Trades`}
-                value={`${tradingNumber}/${tradingNumberRequired}`}
+                value={`${percentTradingNumber}%`}
                 color={isPassedNumberOfTrade ? theme.primary : theme.warning}
               />
             )}
