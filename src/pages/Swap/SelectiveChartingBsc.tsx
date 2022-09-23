@@ -482,6 +482,13 @@ export const SelectiveChartBsc = () => {
     [selectedCurrency, hasSelectedData, isMobile, params.tokenAddress, collapsed]
   );
 
+
+  const priceChange = React.useMemo(() => {
+    
+    if (!screenerToken) return {} as any
+    if (screenerToken && screenerToken.priceChange) return screenerToken.priceChange
+    return {} as any
+  }, [screenerToken])
   return (
     <React.Suspense fallback={<BarChartLoaderSVG />}>
       <ChartSearchModal isOpen={showSearch} onDismiss={toggleShowSearchOff} />
@@ -612,19 +619,19 @@ export const SelectiveChartBsc = () => {
                         gap: 15,
                       }}
                     >
-                      {Object.keys(screenerToken.priceChange).map((key) => (
+                      {Object.keys(priceChange).map((key) => (
                         <div
                           key={key}
                           style={{
                             paddingRight:
                               _.last(
-                                Object.keys(screenerToken.priceChange)
+                                Object.keys(priceChange)
                               ) == key
                                 ? 0
                                 : 10,
                             borderRight:
                               _.last(
-                                Object.keys(screenerToken.priceChange)
+                                Object.keys(priceChange)
                               ) == key
                                 ? "none"
                                 : "1px solid #444",
@@ -634,12 +641,12 @@ export const SelectiveChartBsc = () => {
                             {formatPriceLabel(key)}
                           </TYPE.small>
                           <TYPE.black>
-                            {screenerToken?.priceChange?.[key] < 0 ? (
+                            {priceChange?.[key] < 0 ? (
                               <TrendingDown style={{ marginRight:2, color: "red" }} />
                             ) : (
                               <TrendingUp style={{marginRight:2, color: "green" }} />
                             )}
-                            {screenerToken?.priceChange?.[key]}%
+                            {priceChange?.[key]}%
                           </TYPE.black>
                         </div>
                       ))}

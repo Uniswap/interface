@@ -137,13 +137,13 @@ export const fetchTokenInfo = async (chainId: number | undefined, tokenAddress: 
 }
 
 export const useDexscreenerToken = (address?: string) => {
-    const [data, setData] = React.useState<any>()
+    const [data, setData] = React.useState<Pair>()
 
     React.useEffect(() => {
         let Interval: NodeJS.Timeout;
         if (address) {
             console.log(`[useDexscreenerToken] - fetching`)
-            Interval = setInterval(() => axios.get(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
+            Interval = setInterval(() => axios.get<{pairs?: Pair[], pair?: Pair}>(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
                 .then((response) => {
                     console.log(`[useDexscreenerToken] - setting state`, response.data)
                     const dataSet = response?.data?.pair ? response?.data?.pair : response?.data?.pairs?.[0]

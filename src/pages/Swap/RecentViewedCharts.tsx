@@ -70,7 +70,7 @@ export const RecentlyViewedCharts = () => {
             </TYPE.black>
         </div>
 
-        <Marquee gradientWidth={7} gradient={false} pauseOnHover>
+        <Marquee speed={22} gradientWidth={7} gradient={false} pauseOnHover>
             <FixedContainer style={{ marginBottom: 15}}>
                 <ScrollableRow style={{ paddingBottom:15, paddingTop: 15, display: 'flex', gap: 30, alignItems: 'center' }}>
 

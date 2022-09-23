@@ -202,9 +202,8 @@ export const SelectiveChartWithPair = () => {
             ref.current = undefined;
         } else if (
             params.pairAddress &&
-            mainnetCurrency || screenerPair?.baseToken &&
-            !userChartHistory.some((toke) => toke?.token?.symbol == screenerPair.baseToken.symbol && screenerPair.pairAddress !== toke?.pairAddress)
-        ) {
+            mainnetCurrency || screenerPair?.baseToken
+            ) {
             // send event to analytics
             ReactGA.event({
                 category: "Charts",
@@ -458,7 +457,12 @@ export const SelectiveChartWithPair = () => {
             </>
         ) : null;
     }, [mainnetCurrency, embedModel.embedMode, hasSelectedData, isMobile, chainId]);
-
+    const priceChange = React.useMemo(() => {
+        if (!screenerToken && !screenerPair) return {}
+        if (screenerPair?.priceChange) return screenerPair?.priceChange
+        if (screenerToken && screenerToken.priceChange) return screenerToken.priceChange
+        return {}
+      }, [screenerToken, screenerPair])
     const getRetVal = React.useMemo(
         function () {
             let retVal = "", pairSymbol = "";
@@ -594,8 +598,8 @@ export const SelectiveChartWithPair = () => {
                                 )?.wrapped?.address,
                         }}
                         tokenData={tokenData}
-                        screenerToken={screenerToken}
-                        chainId={chainId}
+                        screenerToken={screenerToken ? screenerToken : screenerPair}
+                        chainId={screenerPairChainId}
                     />
                 </div>
                 )}
@@ -658,8 +662,7 @@ export const SelectiveChartWithPair = () => {
                             {!hasSelectedData || loadingNewData || isMobile
                                 ? null
                                 : Boolean(
-                                    screenerToken &&
-                                    (screenerToken?.priceChange || screenerToken.volume)
+                                    priceChange
                                 ) && (
                                     <div style={{ paddingLeft: 0 }}>
                                         <div
@@ -672,19 +675,19 @@ export const SelectiveChartWithPair = () => {
                                                 gap: 15,
                                             }}
                                         >
-                                            {Object.keys(screenerToken.priceChange).map((key) => (
+                                            {Object.keys(priceChange).map((key) => (
                                                 <div
                                                     key={key}
                                                     style={{
                                                         paddingRight:
                                                             _.last(
-                                                                Object.keys(screenerToken.priceChange)
+                                                                Object.keys(priceChange)
                                                             ) == key
                                                                 ? 0
                                                                 : 10,
                                                         borderRight:
                                                             _.last(
-                                                                Object.keys(screenerToken.priceChange)
+                                                                Object.keys(priceChange)
                                                             ) == key
                                                                 ? "none"
                                                                 : "1px solid #444",
@@ -694,12 +697,12 @@ export const SelectiveChartWithPair = () => {
                                                         {formatPriceLabel(key)}
                                                     </TYPE.small>
                                                     <TYPE.black>
-                                                        {screenerToken?.priceChange?.[key] < 0 ? (
+                                                        {(priceChange as any)?.[key] < 0 ? (
                                                             <TrendingDown style={{ marginRight: 2, color: "red" }} />
                                                         ) : (
                                                             <TrendingUp style={{ marginRight: 2, color: "green" }} />
                                                         )}
-                                                        {screenerToken?.priceChange?.[key]}%
+                                                        {(priceChange as any)?.[key]}%
                                                     </TYPE.black>
                                                 </div>
                                             ))}

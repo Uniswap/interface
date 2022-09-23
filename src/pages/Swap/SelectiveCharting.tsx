@@ -671,19 +671,19 @@ export const SelectiveChart = () => {
                         gap: 15,
                       }}
                     >
-                      {Object.keys(screenerToken.priceChange).map((key) => (
+                      {Object.keys(screenerToken?.priceChange || {}).map((key) => (
                         <div
                           key={key}
                           style={{
                             paddingRight:
                               _.last(
-                                Object.keys(screenerToken.priceChange)
+                                Object.keys(screenerToken?.priceChange || {})
                               ) == key
                                 ? 0
                                 : 10,
                             borderRight:
                               _.last(
-                                Object.keys(screenerToken.priceChange)
+                                Object.keys(screenerToken?.priceChange|| {})
                               ) == key
                                 ? "none"
                                 : "1px solid #444",
@@ -693,12 +693,12 @@ export const SelectiveChart = () => {
                             {formatPriceLabel(key)}
                           </TYPE.small>
                           <TYPE.black>
-                            {screenerToken?.priceChange?.[key] < 0 ? (
+                            {(screenerToken?.priceChange as any)?.[key] < 0 ? (
                               <TrendingDown style={{ marginRight: 2, color: "red" }} />
                             ) : (
                               <TrendingUp style={{ marginRight: 2, color: "green" }} />
                             )}
-                            {screenerToken?.priceChange?.[key]}%
+                            {(screenerToken?.priceChange as any)?.[key]}%
                           </TYPE.black>
                         </div>
                       ))}

@@ -141,7 +141,7 @@ type ChartSidebarProps = {
     loading: boolean;
     screenerToken?: Pair
     tokenInfo?: any
-    buySellTax?:any
+    buySellTax?: any
 }
 const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const { token, holdings, buySellTax, tokenCurrency: _tokenCurrency, screenerToken, tokenData, chainId, collapsed, onCollapse, loading, tokenInfo } = props
@@ -211,16 +211,16 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         const hasTokenData = !!tokenData?.priceUSD || !!screenerToken?.priceUsd
         const hasTokenInfo = !!tokenInfo?.price && !!tokenInfo?.price?.rate
         if (!hasTokenInfo && !hasTokenData) return ''
-        let price = screenerToken?.priceUsd ? screenerToken?.priceUsd : tokenData && tokenData.priceUSD ? tokenData?.priceUSD : tokenInfo && tokenInfo.price ? tokenInfo.price.rate : '';
+        let price = screenerToken?.priceUsd ? (screenerToken?.priceUsd) : tokenData && tokenData.priceUSD ? tokenData?.priceUSD : tokenInfo && tokenInfo.price ? tokenInfo.price.rate : '';
         if (price == '') return '';
         let excludingBurntValue = totalSupplyInt;
         if (amountBurnt) excludingBurntValue -= parseFloat(amountBurnt.toFixed(0))
         else if (!amountBurnt && token?.name?.toLowerCase().includes('kiba') && deadKiba)
             excludingBurntValue -= parseFloat(deadKiba.toFixed(0))
 
-        if (typeof price == 'string') 
+        if (typeof price == 'string')
             price = parseFloat(price)
-            
+
         return Number(parseFloat((price?.toFixed(18))) * excludingBurntValue)
     }, [totalSupplyInt, screenerToken, token?.name, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
 
@@ -362,19 +362,25 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                             </MenuItem>)}
                                         </SidebarHeader>
 
-                                        {!!tokenData && !!tokenData?.priceUSD && Boolean(Number(tokenData?.priceUSD)) && <> <MenuItem>
-                                            <TYPE.subHeader>Price</TYPE.subHeader>
-                                            <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{formattedPrice}</TYPE.black>
-                                        </MenuItem>
-                                            {!!marketCap &&
+                                        {(
+                                            Boolean(tokenData && !!tokenData?.priceUSD)
+                                            ||
+                                            Boolean(screenerToken && screenerToken.priceUsd)
+                                            ||
+                                            Boolean(formattedPrice)) &&
+                                            <> <MenuItem>
+                                                <TYPE.subHeader>Price</TYPE.subHeader>
+                                                <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{formattedPrice}</TYPE.black>
+                                            </MenuItem>
+                                                {!!marketCap &&
+                                                    <MenuItem>
+                                                        <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
+                                                        <TYPE.black>${abbreviateNumber(marketCap)}</TYPE.black>
+                                                    </MenuItem>}
                                                 <MenuItem>
-                                                    <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
-                                                    <TYPE.black>${abbreviateNumber(marketCap)}</TYPE.black>
-                                                </MenuItem>}
-                                            <MenuItem>
-                                                <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
-                                                <TYPE.black>${abbreviateNumber(Number(parseFloat(parseFloat(tokenData?.priceUSD)?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
-                                            </MenuItem></>}
+                                                    <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
+                                                    <TYPE.black>${abbreviateNumber(Number(parseFloat(parseFloat(screenerToken?.priceUsd ? screenerToken?.priceUsd : tokenData?.priceUSD)?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
+                                                </MenuItem></>}
 
                                         {!tokenData?.priceUSD && !!tokenInfo && !!tokenInfo.price && !!tokenInfo?.price?.rate && _.isNumber(tokenInfo.price.rate) && <>
                                             <MenuItem>

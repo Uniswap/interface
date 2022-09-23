@@ -32,11 +32,11 @@ export const SwapTokenForTokenComponent = () => {
 
     const [inputCurrency, outputCurrency] = [
         useCurrency(item?.screenerToken?.quoteToken?.address || 'ETH'),
-        useCurrency(item?.screenerToken?.baseToken?.address || outputCurrencyAddress)
+        useCurrency(item?.screenerToken?.baseToken?.address || outputCurrencyAddress || '')
     ]
     const theme = useTheme()
 
-    const buySellTax = useBuySellTax(item?.screenerToken?.baseToken?.address as string, item?.screenerToken?.chainId)
+    const buySellTax = useBuySellTax(item?.screenerToken?.baseToken?.address as string, item?.screenerToken?.chainId || 'ethereum')
     if (!embedModel.embedMode || !outputCurrencyAddress) return null;
 
     return (
