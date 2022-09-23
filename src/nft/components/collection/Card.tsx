@@ -379,7 +379,7 @@ const PrimaryInfo = ({ children }: { children: ReactNode }) => {
       overflow="hidden"
       whiteSpace="nowrap"
       textOverflow="ellipsis"
-      color="blackBlue"
+      color="textPrimary"
       fontWeight="medium"
       fontSize="14"
       style={{ lineHeight: '20px' }}
@@ -404,7 +404,7 @@ const SecondaryDetails = ({ children }: { children: ReactNode }) => (
 const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   return (
     <Box
-      color="blackBlue"
+      color="textPrimary"
       overflow="hidden"
       whiteSpace="nowrap"
       textOverflow="ellipsis"
@@ -419,7 +419,7 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
 
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   return (
-    <Box marginTop={'8'} color="darkGray">
+    <Box marginTop={'8'} color="textSecondary">
       {children}
     </Box>
   )
@@ -453,16 +453,16 @@ const Button = ({ children, quantity, selectedChildren, onClick, onSelectedClick
             buttonHovered || isMobile
               ? 'explicitWhite'
               : selected
-              ? 'error'
+              ? 'accentFailure'
               : asset.notForSale
-              ? 'placeholder'
+              ? 'textTertiary'
               : 'blue400'
           }
           style={{
             background: `${
               buttonHovered || isMobile
                 ? selected
-                  ? vars.color.error
+                  ? vars.color.accentFailure
                   : vars.color.blue400
                 : selected
                 ? '#FA2B391F'
@@ -596,7 +596,7 @@ const Pool = () => {
       text={<Box fontSize="14">This item is part of an NFT liquidity pool. Price increases as supply decreases.</Box>}
       placement="top"
     >
-      <Box display="flex" flexShrink="0" marginLeft="4" color="darkGray">
+      <Box display="flex" flexShrink="0" marginLeft="4" color="textSecondary">
         <PoolIcon width="20" height="20" />
       </Box>
     </MouseoverTooltip>
@@ -615,7 +615,7 @@ const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
         width="full"
         style={{
           height: `${uniformHeight as number}px`,
-          background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+          background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
         }}
         fontWeight="normal"
         color="grey500"
@@ -634,7 +634,7 @@ const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
         width="full"
         style={{
           paddingTop: '100%',
-          background: `linear-gradient(270deg, ${themeVars.colors.medGray} 0%, ${themeVars.colors.lightGray} 100%)`,
+          background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
         }}
       >
         <Box

@@ -4,8 +4,7 @@ import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { bodySmall, buttonMedium, header1 } from 'nft/css/common.css'
-import { vars } from 'nft/css/sprinkles.css'
-import { breakpoints } from 'nft/css/sprinkles.css'
+import { breakpoints, vars } from 'nft/css/sprinkles.css'
 import { ActivityFetcher, fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -112,28 +111,28 @@ const CollectionDetails = ({
     </Row>
     <Row className={bodySmall} marginTop="12" color="explicitWhite">
       <Box>
-        <Box as="span" color="darkGray" marginRight="4">
+        <Box as="span" color="textSecondary" marginRight="4">
           Floor:
         </Box>
         {collection.floor ? formatEthPrice(collection.floor.toString()) : '--'} ETH
       </Box>
       <Box>
         {collection.floorChange ? (
-          <Box as="span" color={collection.floorChange > 0 ? 'green200' : 'error'} marginLeft="4">
+          <Box as="span" color={collection.floorChange > 0 ? 'green200' : 'accentFailure'} marginLeft="4">
             {collection.floorChange > 0 && '+'}
             {formatChange(collection.floorChange)}%
           </Box>
         ) : null}
       </Box>
       <Box marginLeft="24" color="explicitWhite">
-        <Box as="span" color="darkGray" marginRight="4">
+        <Box as="span" color="textSecondary" marginRight="4">
           Volume:
         </Box>
         {collection.volume ? putCommas(+toSignificant(collection.volume.toString())) : '--'} ETH
       </Box>
       <Box>
         {collection.volumeChange ? (
-          <Box as="span" color={collection.volumeChange > 0 ? 'green200' : 'error'} marginLeft="4">
+          <Box as="span" color={collection.volumeChange > 0 ? 'green200' : 'accentFailure'} marginLeft="4">
             {collection.volumeChange > 0 && '+'}
             {formatChange(collection.volumeChange)}%
           </Box>

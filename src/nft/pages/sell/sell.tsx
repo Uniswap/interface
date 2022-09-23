@@ -59,7 +59,7 @@ const Sell = () => {
           {sellPageState === SellPageStateType.SELECTING ? 'Select NFTs' : 'Create Listing'}
         </Box>
         <Box cursor="pointer" marginLeft="auto" marginRight="0" onClick={exitSellFlow}>
-          <XMarkIcon height={28} width={28} fill={themeVars.colors.blackBlue} />
+          <XMarkIcon height={28} width={28} fill={themeVars.colors.textPrimary} />
         </Box>
       </Row>
       {account != null ? (
@@ -70,7 +70,7 @@ const Sell = () => {
         <Column as="section" gap="60" className={styles.section}>
           <div style={{ minHeight: '70vh' }}>
             <Center className={styles.notConnected} flexDirection="column">
-              <Box as="span" className={header2} color="darkGray" marginBottom="24" display="block">
+              <Box as="span" className={header2} color="textSecondary" marginBottom="24" display="block">
                 No items to display
               </Box>
               <Box as="button" className={buttonMedium} onClick={toggleWalletModal}>

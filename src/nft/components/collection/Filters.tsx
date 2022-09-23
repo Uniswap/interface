@@ -60,7 +60,7 @@ export const Filters = ({
   return (
     <Box className={styles.container}>
       <Row width="full" justifyContent="space-between">
-        <Row as="span" fontSize="20" color="blackBlue">
+        <Row as="span" fontSize="20" color="textPrimary">
           Filters
         </Row>
       </Row>
