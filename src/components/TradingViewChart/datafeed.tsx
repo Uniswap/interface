@@ -47,6 +47,8 @@ const getNetworkString = (chainId: ChainId | undefined) => {
       return 'chain-oasis'
     case ChainId.OPTIMISM:
       return 'chain-optimism'
+    case ChainId.ETHW:
+      return 'chain-ethw'
     default:
       return ''
   }

@@ -442,17 +442,19 @@ export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string
     address = WETH[chainId].address
   }
 
-  if (address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
-    return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNC.svg'
-  }
+  if (chainId !== ChainId.ETHW) {
+    if (address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
+      return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNC.svg'
+    }
 
-  if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
-    return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNCL.png'
-  }
+    if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
+      return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNCL.png'
+    }
 
-  // WBTC
-  if (address.toLowerCase() === '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f') {
-    return 'https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png?1548822744'
+    // WBTC
+    if (address.toLowerCase() === '0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f') {
+      return 'https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png?1548822744'
+    }
   }
 
   let imageURL
@@ -462,6 +464,7 @@ export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string
     .lists.byUrl[NETWORKS_INFO[chainId || ChainId.MAINNET].tokenListUrl].current?.tokens.find(
       item => item.address.toLowerCase() === address.toLowerCase(),
     )?.logoURI
+
   if (imageURL) return imageURL
 
   switch (chainId) {
@@ -502,6 +505,10 @@ export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string
     case ChainId.ARBITRUM:
       imageURL = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/${address}/logo.png`
       break
+    case ChainId.ETHW: {
+      imageURL = ''
+      break
+    }
     default:
       imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
         address,
