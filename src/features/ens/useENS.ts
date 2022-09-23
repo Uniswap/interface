@@ -20,7 +20,7 @@ export function useENS(
 } {
   const debouncedNameOrAddress = useDebounce(nameOrAddress)
 
-  const validated = getValidAddress(debouncedNameOrAddress)
+  const validated = getValidAddress(debouncedNameOrAddress, false, false)
   const { data: name, isLoading: nameLoading } = useENSName(validated ?? undefined, chainId)
   const { data: address, isLoading: addressLoading } = useAddressFromEns(
     autocompleteDomain ? getCompletedENSName(nameOrAddress) : nameOrAddress,

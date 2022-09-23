@@ -198,7 +198,7 @@ function validateForm(t: TFunction) {
 
 function validateInput(input: string, resolvedAddress: string | null, t: TFunction) {
   if (!input) return false
-  if (getValidAddress(input, true)) return ImportAccountInputType.Address
+  if (getValidAddress(input, true, false)) return ImportAccountInputType.Address
   if (isValidEnsName(input) && resolvedAddress) return ImportAccountInputType.ENS
   if (isValidMnemonic(input, t)) return ImportAccountInputType.Mnemonic
   return false
