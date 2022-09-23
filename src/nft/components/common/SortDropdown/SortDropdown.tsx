@@ -5,7 +5,7 @@ import { Row } from 'nft/components/Flex'
 import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useIsLoading } from 'nft/hooks'
+import { useCollectionIsLoading } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
 
@@ -29,7 +29,7 @@ export const SortDropdown = ({
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const [isReversed, toggleReversed] = useReducer((s) => !s, false)
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const isLoading = useIsLoading((state) => state.isLoading)
+  const isLoading = useCollectionIsLoading((state) => state.collectionIsLoading)
 
   const [maxWidth, setMaxWidth] = useState(0)
 

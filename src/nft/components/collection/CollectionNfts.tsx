@@ -17,7 +17,7 @@ import {
   useFiltersExpanded,
   useIsMobile,
 } from 'nft/hooks'
-import { useIsLoading } from 'nft/hooks/useIsLoading'
+import { useCollectionIsLoading } from 'nft/hooks/useCollectionIsLoading'
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
@@ -47,7 +47,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const setSortBy = useCollectionFilters((state) => state.setSortBy)
   const buyNow = useCollectionFilters((state) => state.buyNow)
-  const setIsLoading = useIsLoading((state) => state.setIsLoading)
+  const setCollectionIsLoading = useCollectionIsLoading((state) => state.setCollectionIsLoading)
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
@@ -118,8 +118,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   )
 
   useEffect(() => {
-    setIsLoading(true)
-  }, [isLoading, setIsLoading])
+    setCollectionIsLoading(isLoading)
+  }, [isLoading, setCollectionIsLoading])
 
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
