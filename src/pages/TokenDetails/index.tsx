@@ -117,10 +117,10 @@ export default function TokenDetails() {
   const { data: networkData } = NetworkBalances(token?.address)
   const { chainId: connectedChainId, account } = useWeb3React()
 
-  const balance = useTokenBalance(account, token ?? undefined)
-  const balanceNumber = balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 6)) : undefined
-  const balanceUsd = useStablecoinValue(balance)?.toFixed(2)
-  const balanceUsdNumber = balanceUsd ? parseFloat(balanceUsd) : undefined
+  const balanceValue = useTokenBalance(account, token ?? undefined)
+  const balance = balanceValue ? formatToDecimal(balanceValue, Math.min(balanceValue.currency.decimals, 6)) : undefined
+  const balanceUsdValue = useStablecoinValue(balanceValue)?.toFixed(2)
+  const balanceUsd = balanceUsdValue ? parseFloat(balanceUsdValue) : undefined
 
   const chainsToList = useMemo(() => {
     let chainIds = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
@@ -192,14 +192,14 @@ export default function TokenDetails() {
           <RightPanel>
             <Widget defaultToken={token ?? undefined} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}
-            <BalanceSummary address={token.address} balanceNumber={balanceNumber} balanceUsdNumber={balanceUsdNumber} />
+            <BalanceSummary address={token.address} balance={balance} balanceUsd={balanceUsd} />
           </RightPanel>
           <Footer>
             <FooterBalanceSummary
               address={token.address}
               networkBalances={balancesByNetwork}
-              balanceNumber={balanceNumber}
-              balanceUsdNumber={balanceUsdNumber}
+              balance={balance}
+              balanceUsd={balanceUsd}
             />
           </Footer>
           <TokenSafetyModal
