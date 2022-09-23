@@ -31,7 +31,12 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(
         ref,
         color: !value || dimTextColor ? 'textTertiary' : 'textPrimary',
         keyboardType: 'numeric' as KeyboardTypeOptions,
-        value: formattedValue,
+
+        // Use defaultValue here to make TextInput technically an uncontrolled element
+        // Since RN v0.54 TextInputs with 'value' has severely degraded performance
+        // and a workaround to fix performance is to "fake" it being uncontrolled
+        // https://github.com/facebook/react-native/issues/20119#issuecomment-714545951
+        defaultValue: formattedValue,
         onChangeText: handleChange,
 
         ...rest,
