@@ -145,7 +145,7 @@ export const descriptionLoading = style([
 export const collectionImageIsLoadingBackground = style([
   collectionImage,
   sprinkles({
-    backgroundColor: 'white',
+    backgroundColor: 'backgroundSurface',
   }),
 ])
 
