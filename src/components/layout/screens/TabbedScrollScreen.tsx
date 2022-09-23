@@ -15,11 +15,12 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Route, SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
 import { ScrollEvent } from 'recyclerlistview/dist/reactnative/core/scrollcomponent/BaseScrollView'
+import { useAppTheme } from 'src/app/hooks'
 import { AnimatedFlex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
-import { theme } from 'src/styles/theme'
+import { theme as FixedTheme } from 'src/styles/theme'
 
 type TabbedScrollScreenProps = {
   headerContent?: ReactElement
@@ -74,6 +75,7 @@ export default function TabbedScrollScreen({
   hideTabs,
 }: TabbedScrollScreenProps) {
   const insets = useSafeAreaInsets()
+  const theme = useAppTheme()
 
   const [headerHeight, setHeaderHeight] = useState(INITIAL_TAB_BAR_HEIGHT) // estimation for initial height, updated on layout
   const animatedScrollY = useSharedValue(0)
@@ -211,10 +213,10 @@ export default function TabbedScrollScreen({
 const TabViewStyles = StyleSheet.create({
   containerHidden: {
     display: 'none',
-    marginHorizontal: theme.spacing.md,
+    marginHorizontal: FixedTheme.spacing.md,
   },
   containerVisible: {
     display: 'flex',
-    marginHorizontal: theme.spacing.md,
+    marginHorizontal: FixedTheme.spacing.md,
   },
 })
