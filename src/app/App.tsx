@@ -95,7 +95,7 @@ function DataUpdaters() {
   return (
     <>
       {addresses.map((address) => (
-        <Suspense fallback={null}>
+        <Suspense key={address} fallback={null}>
           <TransactionHistoryUpdater address={address} />
         </Suspense>
       ))}

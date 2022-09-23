@@ -96,6 +96,7 @@ export function ExperimentsModal() {
           {Object.keys(featureFlags).map((name) => {
             return (
               <FeatureFlagRow
+                key={name}
                 localFeatureFlags={featureFlags}
                 name={name}
                 remoteFeatureFlags={remoteFeatureFlags}
@@ -115,6 +116,7 @@ export function ExperimentsModal() {
           {Object.keys(experiments).map((name) => {
             return (
               <ExperimentRow
+                key={name}
                 localExperiments={experiments}
                 name={name}
                 remoteExperiments={remoteExperiments}
