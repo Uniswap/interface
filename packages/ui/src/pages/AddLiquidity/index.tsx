@@ -3,6 +3,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@teleswap/sdk'
 import { ROUTER_ADDRESS } from '@teleswap/sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
+import bn from 'bignumber.js'
 import { BackToMyLiquidity } from 'components/LiquidityDetail'
 import QuestionHelper from 'components/QuestionHelper'
 import Settings from 'components/Settings'
@@ -722,7 +723,8 @@ export default function AddLiquidity({
                 lineHeight: '24px'
               }}
             >
-              999,999.999
+              {/* {new bn(v2Pair.trackedReserveETH).decimalPlaces(4, bn.ROUND_HALF_UP).toString()} */}
+              {pair && new bn(pair?.reserve0.toExact()).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
             </Text>
             <Text
               sx={{
@@ -734,7 +736,7 @@ export default function AddLiquidity({
                 color: 'rgba(255, 255, 255, 0.6)'
               }}
             >
-              USDT
+              {pair?.token0.symbol?.toUpperCase()}
             </Text>
           </Flex>
           <Flex flex={1} flexDirection={'column'}>
@@ -747,7 +749,7 @@ export default function AddLiquidity({
                 lineHeight: '24px'
               }}
             >
-              999,999.999
+              {pair && new bn(pair?.reserve1.toExact()).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
             </Text>
             <Text
               sx={{
@@ -759,7 +761,7 @@ export default function AddLiquidity({
                 color: 'rgba(255, 255, 255, 0.6)'
               }}
             >
-              DAI
+              {pair?.token1.symbol?.toUpperCase()}
             </Text>
           </Flex>
         </Flex>
