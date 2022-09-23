@@ -115,7 +115,7 @@ export const RecentlyViewedCharts = () => {
                                                 alignItems: "center",
                                             }}
                                         >
-                                            <small style={{ padding: 5, border: `0.01px solid ${theme.text1}`, background: theme.backgroundInteractive }}>#{index + 1}</small>
+                                            <small style={{ padding: 2.5, border: `0.01px solid ${theme.text1}`, background: theme.backgroundInteractive }}>#{index + 1}</small>
                                             <CurrencyLogo currency={item?.token} />
                                             <TYPE.small>
                                                 <span>{item?.token?.symbol} </span>
@@ -132,7 +132,7 @@ export const RecentlyViewedCharts = () => {
                                                     alignItems: "center",
                                                 }}
                                             >
-                                                <span>
+                                                <span style={{display:'flex', alignItems:'center',fontSize:11}}>
                                                     View Chart <ArrowUpRight /> 
                                                     {!Boolean(item?.network) && Boolean(item.chainId) &&
                                                         <img src={(chainImgMap as any)[(chainMap as any)[item?.chainId]]} style={{ width: 20, height: 20, borderRadius: 60 }} />
