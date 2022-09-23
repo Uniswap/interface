@@ -204,7 +204,6 @@ export default function AccountDetails({
   openOptions,
 }: AccountDetailsProps) {
   const { chainId, account, connector, provider } = useWeb3React()
-  provider?.getSigner().signMessage('bob')
   const connectionType = getConnection(connector).type
 
   const theme = useTheme()
