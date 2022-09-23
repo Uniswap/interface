@@ -160,7 +160,7 @@ export function useTopTokens() {
 
   // TopTokens should ideally be fetched with usePaginationFragment. The backend does not current support graphql cursors;
   // in the meantime, fetchQuery is used, as other relay hooks do not allow the refreshing and lazy loading we need
-  const loadTokens = useCallback(
+  const loadTokensWithPriceHistory = useCallback(
     (contracts: ContractInput[], onSuccess: (data: TopTokens_TokensQuery['response'] | undefined) => void) => {
       fetchQuery<TopTokens_TokensQuery>(
         environment,
@@ -179,7 +179,7 @@ export function useTopTokens() {
     const contracts = prefetchedSelectedTokensWithoutPriceHistory
       .slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
       .map(toContractInput)
-    loadTokens(contracts, (data) => {
+    loadTokensWithPriceHistory(contracts, (data) => {
       if (data?.tokens) {
         data.tokens.forEach((token) =>
           !!token ? (tokensWithPriceHistoryCache[`${token.chain.toString()}${token.address}`] = token) : null
@@ -189,7 +189,7 @@ export function useTopTokens() {
         setPage(page + 1)
       }
     })
-  }, [prefetchedSelectedTokensWithoutPriceHistory, page, loadTokens, tokens])
+  }, [prefetchedSelectedTokensWithoutPriceHistory, page, loadTokensWithPriceHistory, tokens])
 
   // Reset count when filters are changed
   useLayoutEffect(() => {
@@ -204,7 +204,7 @@ export function useTopTokens() {
       setLoading(true)
       setTokens([])
       const contracts = prefetchedSelectedTokensWithoutPriceHistory.slice(0, PAGE_SIZE).map(toContractInput)
-      loadTokens(contracts, (data) => {
+      loadTokensWithPriceHistory(contracts, (data) => {
         if (data?.tokens) {
           data.tokens.forEach((token) =>
             !!token ? (tokensWithPriceHistoryCache[`${token.chain.toString()}${token.address}`] = token) : null
@@ -216,9 +216,15 @@ export function useTopTokens() {
         }
       })
     }
-  }, [loadTokens, prefetchedSelectedTokensWithoutPriceHistory])
+  }, [loadTokensWithPriceHistory, prefetchedSelectedTokensWithoutPriceHistory])
 
-  return { loading, tokens, hasMore, tokenCount: prefetchedSelectedTokensWithoutPriceHistory.length, loadMoreTokens }
+  return {
+    loading,
+    tokens,
+    hasMore,
+    tokensWithoutPriceHistoryCount: prefetchedSelectedTokensWithoutPriceHistory.length,
+    loadMoreTokens,
+  }
 }
 
 export const tokensQuery = graphql`

@@ -69,7 +69,7 @@ export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
-  const { loading, tokens, tokenCount, hasMore, loadMoreTokens } = useTopTokens()
+  const { loading, tokens, tokensWithoutPriceHistoryCount, hasMore, loadMoreTokens } = useTopTokens()
 
   const observer = useRef<IntersectionObserver>()
   const lastTokenRef = useCallback(
@@ -88,7 +88,7 @@ export default function TokenTable() {
 
   /* loading and error state */
   if (loading && (!tokens || tokens?.length === 0)) {
-    return <LoadingTokenTable rowCount={Math.min(tokenCount, PAGE_SIZE)} />
+    return <LoadingTokenTable rowCount={Math.min(tokensWithoutPriceHistoryCount, PAGE_SIZE)} />
   } else {
     if (!tokens) {
       return (
@@ -122,7 +122,7 @@ export default function TokenTable() {
                   ref={index + 1 === tokens.length ? lastTokenRef : undefined}
                 />
               ))}
-              {loading && tokenCount > PAGE_SIZE && LoadingMoreRows}
+              {loading && hasMore && LoadingMoreRows}
             </TokenDataContainer>
           </GridContainer>
         </>
