@@ -130,6 +130,21 @@ function toContractInput(token: PrefetchedTopToken) {
   }
 }
 
+// Map of key: ${chain} + ${address} and value: TopToken object.
+// Acts as a local cache.
+const tokensWithPriceHistoryCache: Record<string, TopToken> = {}
+
+const checkIfAllTokensCached = (prefetchedSelectedTokens: PrefetchedTopToken[]) => {
+  let everyTokenHasBeenPreloaded = true
+  const preloadedSelectedTokens: TopToken[] = []
+  prefetchedSelectedTokens.map((token) =>
+    !!token && `${token.chain.toString()}${token.address}` in tokensWithPriceHistoryCache
+      ? preloadedSelectedTokens.push(tokensWithPriceHistoryCache[`${token.chain.toString()}${token.address}`])
+      : (everyTokenHasBeenPreloaded = false)
+  )
+  return { everyTokenHasBeenPreloaded, preloadedSelectedTokens }
+}
+
 export type TopToken = NonNullable<TopTokens_TokensQuery['response']['tokens']>[number]
 export function useTopTokens() {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
@@ -137,7 +152,10 @@ export function useTopTokens() {
   const [tokens, setTokens] = useState<TopToken[]>()
   const [page, setPage] = useState(0)
   const prefetchedData = usePrefetchTopTokens(duration)
-  const prefetchedSelectedTokens = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
+  const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
+
+  const hasMore = !tokens || tokens.length < prefetchedSelectedTokensWithoutPriceHistory.length
+
   const environment = useRelayEnvironment()
 
   // TopTokens should ideally be fetched with usePaginationFragment. The backend does not current support graphql cursors;
@@ -158,32 +176,49 @@ export function useTopTokens() {
 
   const loadMoreTokens = useCallback(() => {
     setLoading(true)
-    const contracts = prefetchedSelectedTokens.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map(toContractInput)
+    const contracts = prefetchedSelectedTokensWithoutPriceHistory
+      .slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
+      .map(toContractInput)
     loadTokens(contracts, (data) => {
       if (data?.tokens) {
+        data.tokens.forEach((token) =>
+          !!token ? (tokensWithPriceHistoryCache[`${token.chain.toString()}${token.address}`] = token) : null
+        )
         setTokens([...(tokens ?? []), ...data.tokens])
         setLoading(false)
         setPage(page + 1)
       }
     })
-  }, [loadTokens, page, prefetchedSelectedTokens, tokens])
+  }, [prefetchedSelectedTokensWithoutPriceHistory, page, loadTokens, tokens])
 
   // Reset count when filters are changed
   useLayoutEffect(() => {
-    setLoading(true)
-    setTokens([])
-    const contracts = prefetchedSelectedTokens.slice(0, PAGE_SIZE).map(toContractInput)
-    loadTokens(contracts, (data) => {
-      if (data?.tokens) {
-        // @ts-ignore prevent typescript from complaining about readonly data
-        setTokens(data.tokens)
-        setLoading(false)
-        setPage(1)
-      }
-    })
-  }, [loadTokens, prefetchedSelectedTokens])
+    const { everyTokenHasBeenPreloaded, preloadedSelectedTokens } = checkIfAllTokensCached(
+      prefetchedSelectedTokensWithoutPriceHistory
+    )
+    if (everyTokenHasBeenPreloaded) {
+      setTokens([...preloadedSelectedTokens])
+      setLoading(false)
+      return
+    } else {
+      setLoading(true)
+      setTokens([])
+      const contracts = prefetchedSelectedTokensWithoutPriceHistory.slice(0, PAGE_SIZE).map(toContractInput)
+      loadTokens(contracts, (data) => {
+        if (data?.tokens) {
+          data.tokens.forEach((token) =>
+            !!token ? (tokensWithPriceHistoryCache[`${token.chain.toString()}${token.address}`] = token) : null
+          )
+          // @ts-ignore prevent typescript from complaining about readonly data
+          setTokens(data.tokens)
+          setLoading(false)
+          setPage(1)
+        }
+      })
+    }
+  }, [loadTokens, prefetchedSelectedTokensWithoutPriceHistory])
 
-  return { loading, tokens, tokenCount: prefetchedSelectedTokens.length, loadMoreTokens }
+  return { loading, tokens, hasMore, tokenCount: prefetchedSelectedTokensWithoutPriceHistory.length, loadMoreTokens }
 }
 
 export const tokensQuery = graphql`

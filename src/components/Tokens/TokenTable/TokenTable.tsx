@@ -7,7 +7,7 @@ import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
-import { HeaderRow, LoadedRow, LoadingRow, MAX_TOKENS_TO_LOAD } from './TokenRow'
+import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
 
 const LOADING_ROWS_COUNT = 3
 
@@ -69,8 +69,7 @@ export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
-  const { loading, tokens, tokenCount, loadMoreTokens } = useTopTokens()
-  const hasMore = !tokens || tokens.length < MAX_TOKENS_TO_LOAD
+  const { loading, tokens, tokenCount, hasMore, loadMoreTokens } = useTopTokens()
 
   const observer = useRef<IntersectionObserver>()
   const lastTokenRef = useCallback(
@@ -120,7 +119,7 @@ export default function TokenTable() {
                   tokenListIndex={index}
                   tokenListLength={tokens?.length ?? 0}
                   token={token}
-                  ref={tokens.length === index + 1 ? lastTokenRef : undefined}
+                  ref={index + 1 === tokens.length ? lastTokenRef : undefined}
                 />
               ))}
               {loading && tokenCount > PAGE_SIZE && LoadingMoreRows}
