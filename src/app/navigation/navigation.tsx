@@ -80,6 +80,7 @@ import { WatchedWalletsScreen } from 'src/screens/WatchedWalletsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { ExploreScreenQuery } from 'src/screens/__generated__/ExploreScreenQuery.graphql'
 import { dimensions } from 'src/styles/sizing'
+import { darkTheme } from 'src/styles/theme'
 
 const Tab = createBottomTabNavigator<TabParamList>()
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
@@ -240,7 +241,6 @@ function ProfileStackGroup() {
 }
 
 export function DrawerNavigator() {
-  const theme = useAppTheme()
   return (
     <Drawer.Navigator
       // useLegacyImplementation seems to fix a bug with the drawer sometimes opening or
@@ -253,7 +253,7 @@ export function DrawerNavigator() {
           width: SIDEBAR_WIDTH,
         },
         headerShown: false,
-        overlayColor: theme.colors.backgroundScrim,
+        overlayColor: darkTheme.colors.backgroundScrim,
       }}>
       <Drawer.Screen
         component={AppStackNavigator}
@@ -448,4 +448,4 @@ const DRAWER_ENABLED_SCREENS = [
   Tabs.Explore.valueOf(),
 ]
 const SIDEBAR_WIDTH = Math.min(dimensions.fullWidth * 0.8, 320)
-const SWIPE_WIDTH = dimensions.fullWidth * 0.5
+const SWIPE_WIDTH = dimensions.fullWidth * 0.125
