@@ -73,13 +73,20 @@ const Collection = () => {
         <>
           {' '}
           <Box width="full" height="160">
-            <Box
-              as="img"
-              maxHeight="full"
-              width="full"
-              src={collectionStats?.bannerImageUrl}
-              className={`${styles.bannerImage}`}
-            />
+            <Box width="full" height="160">
+              {isLoading ? (
+                <Box height="full" width="full" className={styles.loadingBanner} />
+              ) : (
+                <Box
+                  as="img"
+                  height="full"
+                  width="full"
+                  src={collectionStats?.bannerImageUrl}
+                  className={isLoading ? styles.loadingBanner : styles.bannerImage}
+                  background="none"
+                />
+              )}
+            </Box>
           </Box>
           {collectionStats && (
             <Row paddingLeft="32" paddingRight="32">
