@@ -112,6 +112,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
               backgroundColor="none"
               borderWidth={0}
               dimTextColor={dimTextColor}
+              flex={1}
               fontFamily={theme.textVariants.headlineLarge.fontFamily}
               fontSize={fontSize}
               height={MAX_INPUT_FONT_SIZE}
