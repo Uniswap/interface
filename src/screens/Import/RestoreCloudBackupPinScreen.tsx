@@ -61,7 +61,7 @@ export function RestoreCloudBackupPinScreen({ navigation, route: { params } }: P
   useEffect(() => {
     if (isTemporaryDisabled) {
       setErrorMessage(
-        t('You’ve entered the incorrect PIN too many times. Please try again in 2 minutes')
+        t('You’ve entered the incorrect PIN too many times. Please try again in 2 minutes.')
       )
       setTimeout(() => {
         setWrongAttemptCount(0)
@@ -74,10 +74,12 @@ export function RestoreCloudBackupPinScreen({ navigation, route: { params } }: P
     <OnboardingScreen
       subtitle={
         !isTemporaryDisabled
-          ? t('This PIN is required to recover your backed up recovery phrase from iCloud.')
+          ? t('This PIN is required to recover your recovery phrase backup from iCloud.')
           : undefined
       }
-      title={isTemporaryDisabled ? t('Attempts disabled') : t('Enter your iCloud backup PIN')}>
+      title={
+        isTemporaryDisabled ? t('Attempts temporarily disabled') : t('Enter your iCloud backup PIN')
+      }>
       <Box minHeight={30}>
         {errorMessage && (
           <Text color="accentFailure" textAlign="center" variant="body">
