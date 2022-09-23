@@ -9,15 +9,15 @@ export const CollectionSearch = () => {
   return (
     <Box
       as="input"
-      borderColor={{ default: 'medGray', focus: 'genieBlue' }}
+      borderColor={{ default: 'backgroundOutline', focus: 'genieBlue' }}
       borderWidth="1px"
       borderStyle="solid"
       borderRadius="12"
       padding="12"
-      backgroundColor="white"
+      backgroundColor="backgroundSurface"
       fontSize="16"
       height="44"
-      color={{ placeholder: 'darkGray', default: 'blackBlue' }}
+      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
       value={searchByNameText}
       placeholder={'Search by name'}
       onChange={(e: FormEvent<HTMLInputElement>) => {

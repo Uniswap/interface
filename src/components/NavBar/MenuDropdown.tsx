@@ -100,7 +100,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
         rel={href ? 'noopener noreferrer' : undefined}
         display="flex"
         flexDirection="column"
-        color="blackBlue"
+        color="textPrimary"
         background="none"
         border="none"
         justifyContent="center"
@@ -190,13 +190,28 @@ export const MenuDropdown = () => {
               </Box>
               <IconRow>
                 <Icon href="https://discord.com/invite/FCfyBSbCU5">
-                  <DiscordIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.darkGray} />
+                  <DiscordIconMenu
+                    className={styles.hover}
+                    width={24}
+                    height={24}
+                    color={themeVars.colors.textSecondary}
+                  />
                 </Icon>
                 <Icon href="https://twitter.com/Uniswap">
-                  <TwitterIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.darkGray} />
+                  <TwitterIconMenu
+                    className={styles.hover}
+                    width={24}
+                    height={24}
+                    color={themeVars.colors.textSecondary}
+                  />
                 </Icon>
                 <Icon href="https://github.com/Uniswap">
-                  <GithubIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.darkGray} />
+                  <GithubIconMenu
+                    className={styles.hover}
+                    width={24}
+                    height={24}
+                    color={themeVars.colors.textSecondary}
+                  />
                 </Icon>
               </IconRow>
             </Column>

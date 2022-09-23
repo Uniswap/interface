@@ -11,7 +11,7 @@ const RevealButton = (props: BoxProps) => (
     fontWeight="bold"
     border="none"
     fontSize="14"
-    color="darkGray"
+    color="textSecondary"
     padding="0"
     background="transparent"
     {...props}
@@ -28,7 +28,7 @@ export const ExpandableText = ({ children, ...props }: BoxProps) => {
       alignItems={isExpanded ? 'flex-start' : 'flex-end'}
       justifyContent="flex-start"
       fontSize="14"
-      color="darkGray"
+      color="textSecondary"
       marginTop="0"
       marginBottom="20"
       {...props}

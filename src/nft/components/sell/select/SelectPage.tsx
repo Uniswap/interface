@@ -390,7 +390,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
       style={{ textDecoration: 'none' }}
     >
       <Column
-        color={'blackBlue'}
+        color={'textPrimary'}
         className={subheadSmall}
         onMouseEnter={toggleBoxHovered}
         onMouseLeave={toggleBoxHovered}
@@ -409,7 +409,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
           borderBottomLeftRadius="20"
           borderBottomRightRadius="20"
           transition="250"
-          backgroundColor={boxHovered ? 'medGray' : 'lightGray'}
+          backgroundColor={boxHovered ? 'backgroundOutline' : 'backgroundSurface'}
           paddingY="12"
           paddingX="12"
         >
@@ -420,7 +420,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
             {asset.collection?.name}
             {asset.collectionIsVerified ? <VerifiedIcon className={styles.verifiedBadge} /> : null}
           </Box>
-          <Box as="span" fontSize="12" lineHeight="16" color="darkGray" marginTop="8">
+          <Box as="span" fontSize="12" lineHeight="16" color="textSecondary" marginTop="8">
             Last:&nbsp;
             {asset.lastPrice ? (
               <>
@@ -433,7 +433,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
               </Box>
             )}
           </Box>
-          <Box as="span" fontSize="12" lineHeight="16" color="darkGray" marginTop="4">
+          <Box as="span" fontSize="12" lineHeight="16" color="textSecondary" marginTop="4">
             Floor:&nbsp;
             {asset.floorPrice ? (
               <>
@@ -453,8 +453,8 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
             borderRadius="12"
             paddingY="8"
             transition="250"
-            color={buttonHovered ? 'blackBlue' : isSelected ? 'red400' : 'genieBlue'}
-            backgroundColor={buttonHovered ? (isSelected ? 'red400' : 'genieBlue') : 'lightGray'}
+            color={buttonHovered ? 'textPrimary' : isSelected ? 'red400' : 'genieBlue'}
+            backgroundColor={buttonHovered ? (isSelected ? 'red400' : 'genieBlue') : 'backgroundSurface'}
             className={subheadSmall}
             onMouseEnter={toggleButtonHovered}
             onMouseLeave={toggleButtonHovered}
@@ -498,7 +498,7 @@ const SelectAllButton = () => {
       alignItems="center"
       marginLeft={{ sm: '8', md: 'auto' }}
       borderRadius="12"
-      backgroundColor="medGray"
+      backgroundColor="backgroundOutline"
       fontWeight="medium"
       height="44"
       paddingTop="12"
@@ -506,7 +506,7 @@ const SelectAllButton = () => {
       paddingRight="16"
       paddingLeft="16"
       cursor="pointer"
-      color="blackBlue"
+      color="textPrimary"
       onClick={toggleAllSelected}
       className={clsx(`${subheadSmall} ${isAllSelected ? styles.buttonSelected : null}`)}
     >
@@ -574,7 +574,7 @@ const CollectionFilterItem = ({
       paddingBottom="4"
       paddingLeft="8"
       borderRadius="12"
-      background="medGray"
+      background="backgroundOutline"
       fontSize="14"
     >
       <Box as="img" borderRadius="round" width="20" height="20" src={collection.image} />
@@ -582,7 +582,7 @@ const CollectionFilterItem = ({
         {collection?.name}
       </Box>
       <Box
-        color="darkGray"
+        color="textSecondary"
         background="none"
         height="28"
         width="28"
@@ -608,14 +608,14 @@ const CollectionSearch = ({
   return (
     <Box
       as="input"
-      borderColor={{ default: 'medGray', focus: 'genieBlue' }}
+      borderColor={{ default: 'backgroundOutline', focus: 'genieBlue' }}
       borderWidth="1px"
       borderStyle="solid"
       borderRadius="8"
       padding="12"
-      backgroundColor="white"
+      backgroundColor="backgroundSurface"
       fontSize="14"
-      color={{ placeholder: 'darkGray', default: 'blackBlue' }}
+      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
       placeholder="Search by name"
       value={searchText}
       width="full"

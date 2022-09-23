@@ -44,7 +44,7 @@ export const FilterSidebar = ({ SortDropdown }: { SortDropdown: () => JSX.Elemen
         width={{ sm: 'full', md: 'auto' }}
       >
         <Row width="full" justifyContent="space-between">
-          <Row as="span" className={headlineSmall} color="blackBlue">
+          <Row as="span" className={headlineSmall} color="textPrimary">
             Filters
           </Row>
           {isMobile && (
@@ -52,10 +52,10 @@ export const FilterSidebar = ({ SortDropdown }: { SortDropdown: () => JSX.Elemen
               as="button"
               border="none"
               backgroundColor="transparent"
-              color="darkGray"
+              color="textSecondary"
               onClick={() => setFiltersExpanded(false)}
             >
-              <XMarkIcon fill={themeVars.colors.blackBlue} />
+              <XMarkIcon fill={themeVars.colors.textPrimary} />
             </Box>
           )}
         </Row>
@@ -112,7 +112,7 @@ const CollectionSelect = ({
             setCollectionSearchText={setCollectionSearchText}
           />
           <Box
-            background="lightGray"
+            background="backgroundSurface"
             borderRadius="12"
             paddingTop="8"
             paddingBottom="8"
@@ -144,16 +144,16 @@ const CollectionFilterSearch = ({
   return (
     <Box
       as="input"
-      borderColor={{ default: 'medGray', focus: 'genieBlue' }}
+      borderColor={{ default: 'backgroundOutline', focus: 'genieBlue' }}
       borderWidth="1px"
       borderStyle="solid"
       borderRadius="8"
       padding="12"
       marginLeft="0"
       marginBottom="24"
-      backgroundColor="white"
+      backgroundColor="backgroundSurface"
       fontSize="14"
-      color={{ placeholder: 'darkGray', default: 'blackBlue' }}
+      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
       placeholder="Search collections"
       value={collectionSearchText}
       onChange={(e: FormEvent<HTMLInputElement>) => setCollectionSearchText(e.currentTarget.value)}
@@ -190,7 +190,7 @@ const CollectionItem = ({
       paddingRight="14"
       height="44"
       as="li"
-      background={hovered ? 'medGray' : undefined}
+      background={hovered ? 'backgroundOutline' : undefined}
       onMouseEnter={toggleHovered}
       onMouseLeave={toggleHovered}
       onClick={handleCheckbox}
@@ -200,7 +200,7 @@ const CollectionItem = ({
         {collection.name}{' '}
       </Box>
       <Checkbox checked={isChecked(collection.address)} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="darkGray" marginRight="12" marginLeft="auto">
+        <Box as="span" color="textSecondary" marginRight="12" marginLeft="auto">
           {collection.count}
         </Box>
       </Checkbox>
@@ -223,7 +223,7 @@ const ListStatusFilterButtons = ({
         <Row
           key={index}
           borderRadius="12"
-          backgroundColor="medGray"
+          backgroundColor="backgroundOutline"
           height="44"
           className={value === listFilter ? styles.buttonSelected : null}
           onClick={() => setListFilter(value)}

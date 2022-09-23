@@ -7,8 +7,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
-import { useEffect, useReducer, useRef, useState } from 'react'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
@@ -25,7 +24,7 @@ const MobileSocialsIcon = ({ children, href }: { children: ReactNode; href: stri
       height="40"
       width="40"
       borderRadius="round"
-      backgroundColor="white"
+      backgroundColor="backgroundSurface"
     >
       {children}
     </Box>
@@ -45,9 +44,9 @@ const MobileSocialsPopover = ({
     <>
       <Row marginLeft="4" onClick={() => toggleCollectionSocials()}>
         {collectionSocialsIsOpen ? (
-          <XMarkIcon width="28" height="28" fill={themeVars.colors.darkGray} />
+          <XMarkIcon width="28" height="28" fill={themeVars.colors.textSecondary} />
         ) : (
-          <EllipsisIcon width="28" height="28" fill={themeVars.colors.darkGray} />
+          <EllipsisIcon width="28" height="28" fill={themeVars.colors.textSecondary} />
         )}
       </Row>
       {collectionSocialsIsOpen && (
@@ -64,7 +63,7 @@ const MobileSocialsPopover = ({
           {collectionStats.discordUrl ? (
             <MobileSocialsIcon href={collectionStats.discordUrl}>
               <Box margin="auto" paddingTop="4">
-                <DiscordIcon width={28} height={28} color={themeVars.colors.darkGray} />
+                <DiscordIcon width={28} height={28} color={themeVars.colors.textSecondary} />
               </Box>
             </MobileSocialsIcon>
           ) : null}
@@ -72,8 +71,8 @@ const MobileSocialsPopover = ({
             <MobileSocialsIcon href={'https://twitter.com/' + collectionStats.twitter}>
               <Box margin="auto" paddingTop="6">
                 <TwitterIcon
-                  fill={themeVars.colors.darkGray}
-                  color={themeVars.colors.darkGray}
+                  fill={themeVars.colors.textSecondary}
+                  color={themeVars.colors.textSecondary}
                   width="28px"
                   height="28px"
                 />
@@ -84,7 +83,7 @@ const MobileSocialsPopover = ({
           {collectionStats.instagram ? (
             <MobileSocialsIcon href={'https://instagram.com/' + collectionStats.instagram}>
               <Box margin="auto" paddingLeft="2" paddingTop="4">
-                <InstagramIcon fill={themeVars.colors.darkGray} width="28px" height="28px" />
+                <InstagramIcon fill={themeVars.colors.textSecondary} width="28px" height="28px" />
               </Box>
             </MobileSocialsIcon>
           ) : null}
@@ -92,7 +91,7 @@ const MobileSocialsPopover = ({
           {collectionStats.externalUrl ? (
             <MobileSocialsIcon href={collectionStats.externalUrl}>
               <Box margin="auto" paddingTop="4">
-                <ExternalIcon fill={themeVars.colors.darkGray} width="28px" height="28px" />
+                <ExternalIcon fill={themeVars.colors.textSecondary} width="28px" height="28px" />
               </Box>
             </MobileSocialsIcon>
           ) : null}
@@ -147,8 +146,8 @@ const CollectionName = ({
           {collectionStats.discordUrl ? (
             <SocialsIcon href={collectionStats.discordUrl}>
               <DiscordIcon
-                fill={themeVars.colors.darkGray}
-                color={themeVars.colors.darkGray}
+                fill={themeVars.colors.textSecondary}
+                color={themeVars.colors.textSecondary}
                 width="26px"
                 height="26px"
               />
@@ -157,8 +156,8 @@ const CollectionName = ({
           {collectionStats.twitter ? (
             <SocialsIcon href={'https://twitter.com/' + collectionStats.twitter}>
               <TwitterIcon
-                fill={themeVars.colors.darkGray}
-                color={themeVars.colors.darkGray}
+                fill={themeVars.colors.textSecondary}
+                color={themeVars.colors.textSecondary}
                 width="26px"
                 height="26px"
               />
@@ -167,12 +166,12 @@ const CollectionName = ({
 
           {collectionStats.instagram ? (
             <SocialsIcon href={'https://instagram.com/' + collectionStats.instagram}>
-              <InstagramIcon fill={themeVars.colors.darkGray} width="26px" height="26px" />
+              <InstagramIcon fill={themeVars.colors.textSecondary} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
           {collectionStats.externalUrl ? (
             <SocialsIcon href={collectionStats.externalUrl}>
-              <ExternalIcon fill={themeVars.colors.darkGray} width="26px" height="26px" />
+              <ExternalIcon fill={themeVars.colors.textSecondary} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
         </Row>

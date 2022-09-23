@@ -69,7 +69,7 @@ const MarketplaceItem = ({
         {title}{' '}
       </Box>
       <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="darkGray" marginLeft="4" paddingRight={'12'}>
+        <Box as="span" color="textSecondary" marginLeft="4" paddingRight={'12'}>
           {count}
         </Box>
       </Checkbox>
@@ -118,7 +118,7 @@ export const MarketplaceSelect = () => {
       >
         Marketplaces
         <Box
-          color="darkGray"
+          color="textSecondary"
           transition="250"
           height="28"
           width="28"

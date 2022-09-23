@@ -93,7 +93,7 @@ export const BagFooter = ({
             }
           }}
         >
-          {isPending && <Loader size="20px" stroke="white" />}
+          {isPending && <Loader size="20px" stroke="backgroundSurface" />}
           {!isConnected || walletModalIsOpen
             ? 'Connect wallet'
             : bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET

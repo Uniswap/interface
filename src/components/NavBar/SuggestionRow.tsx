@@ -180,13 +180,13 @@ export const SkeletonRow = () => {
         <Box className={styles.imageHolder} />
         <Column gap="4" width="full">
           <Row justifyContent="space-between">
-            <Box borderRadius="round" height="20" background="loading" style={{ width: '180px' }} />
-            <Box borderRadius="round" height="20" width="48" background="loading" />
+            <Box borderRadius="round" height="20" background="backgroundModule" style={{ width: '180px' }} />
+            <Box borderRadius="round" height="20" width="48" background="backgroundModule" />
           </Row>
 
           <Row justifyContent="space-between">
-            <Box borderRadius="round" height="16" width="120" background="loading" />
-            <Box borderRadius="round" height="16" width="48" background="loading" />
+            <Box borderRadius="round" height="16" width="120" background="backgroundModule" />
+            <Box borderRadius="round" height="16" width="48" background="backgroundModule" />
           </Row>
         </Column>
       </Row>

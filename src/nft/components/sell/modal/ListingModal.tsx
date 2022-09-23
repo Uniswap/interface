@@ -155,8 +155,8 @@ const ListingModal = () => {
         <Box
           as="button"
           border="none"
-          color="darkGray"
-          backgroundColor="white"
+          color="textSecondary"
+          backgroundColor="backgroundSurface"
           marginLeft="auto"
           marginRight="0"
           paddingRight="0"
@@ -164,7 +164,7 @@ const ListingModal = () => {
           cursor="pointer"
           onClick={toggleCart}
         >
-          <XMarkIcon height={28} width={28} fill={themeVars.colors.blackBlue} />
+          <XMarkIcon height={28} width={28} fill={themeVars.colors.textPrimary} />
         </Box>
       </Row>
       <Column overflowX="hidden" overflowY="auto" style={{ maxHeight: '60vh' }}>
@@ -207,7 +207,7 @@ const ListingModal = () => {
         </Row>
       </Row>
       {showSuccessScreen ? (
-        <Box as="span" className={caption} color="darkGray">
+        <Box as="span" className={caption} color="textSecondary">
           Status:{' '}
           <Box as="span" color="green200">
             Confirmed
@@ -220,7 +220,7 @@ const ListingModal = () => {
         <Box
           as="button"
           border="none"
-          backgroundColor="white"
+          backgroundColor="backgroundSurface"
           cursor="pointer"
           color="orange"
           className={styles.button}

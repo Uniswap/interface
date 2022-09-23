@@ -70,7 +70,7 @@ export const removeIcon = style([
 export const tagAssetInfo = style([
   sprinkles({
     fontSize: '14',
-    color: 'blackBlue',
+    color: 'textPrimary',
     display: 'flex',
     flexWrap: 'wrap',
     width: 'full',

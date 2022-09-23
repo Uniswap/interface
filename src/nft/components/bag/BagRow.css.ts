@@ -4,7 +4,7 @@ import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const bagRow = style([
   sprinkles({
-    color: 'blackBlue',
+    color: 'textPrimary',
     padding: '4',
     gap: '12',
     cursor: 'pointer',
@@ -15,7 +15,7 @@ export const bagRow = style([
     marginLeft: '-4px',
     marginRight: '-4px',
     ':hover': {
-      background: themeVars.colors.darkGray10,
+      background: themeVars.colors.backgroundOutline,
     },
   },
 ])
@@ -23,32 +23,32 @@ export const bagRow = style([
 export const unavailableAssetsContainer = sprinkles({
   background: 'none',
   gap: '12',
-  color: 'blackBlue',
+  color: 'textPrimary',
   paddingY: '16',
   borderStyle: 'solid',
   borderWidth: '1px',
   borderColor: 'transparent',
-  borderTopColor: 'medGray',
-  borderBottomColor: 'medGray',
+  borderTopColor: 'backgroundOutline',
+  borderBottomColor: 'backgroundOutline',
   height: 'full',
 })
 
 export const priceChangeColumn = sprinkles({
   background: 'none',
   gap: '8',
-  color: 'blackBlue',
+  color: 'textPrimary',
   paddingY: '16',
   borderStyle: 'solid',
   borderWidth: '1px',
   borderColor: 'transparent',
-  borderBottomColor: 'medGray',
+  borderBottomColor: 'backgroundOutline',
   height: 'full',
   cursor: 'pointer',
 })
 
 export const priceChangeRow = style([
   sprinkles({
-    color: 'placeholder',
+    color: 'textTertiary',
     gap: '4',
     fontSize: '14',
     fontWeight: 'normal',
@@ -61,13 +61,13 @@ export const priceChangeRow = style([
 export const unavailableAssetRow = style([
   sprinkles({
     gap: '12',
-    color: 'blackBlue',
+    color: 'textPrimary',
     paddingX: '12',
     paddingY: '4',
   }),
   {
     ':hover': {
-      background: themeVars.colors.lightGrayButton,
+      background: themeVars.colors.backgroundInteractive,
     },
   },
 ])
@@ -84,7 +84,7 @@ export const priceChangeButton = style([
   }),
   {
     ':hover': {
-      color: themeVars.colors.placeholder,
+      color: themeVars.colors.textTertiary,
     },
   },
 ])
@@ -104,11 +104,11 @@ export const keepButton = style([
 export const removeButton = style([
   priceChangeButton,
   sprinkles({
-    backgroundColor: 'lightGrayButton',
+    backgroundColor: 'backgroundInteractive',
   }),
   {
     ':hover': {
-      background: `linear-gradient(rgba(76, 130, 251, 0.24), rgba(76, 130, 251, .24)), linear-gradient(${vars.color.lightGrayButton}, ${vars.color.lightGrayButton})`,
+      background: `linear-gradient(rgba(76, 130, 251, 0.24), rgba(76, 130, 251, .24)), linear-gradient(${vars.color.backgroundInteractive}, ${vars.color.backgroundInteractive})`,
     },
   },
 ])
@@ -190,7 +190,7 @@ export const previewImageGrid = style([
 ])
 
 export const toolTip = sprinkles({
-  color: 'darkGray',
+  color: 'textSecondary',
   display: 'flex',
   flexShrink: '0',
 })
