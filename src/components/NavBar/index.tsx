@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { useGlobalChainName } from 'graphql/data/util'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
@@ -36,6 +37,7 @@ const MenuItem = ({ href, id, isActive, children }: MenuItemProps) => {
 const PageTabs = () => {
   const { pathname } = useLocation()
   const nftFlag = useNftFlag()
+  const chainName = useGlobalChainName()
 
   const isPoolActive =
     pathname.startsWith('/pool') ||
@@ -49,7 +51,7 @@ const PageTabs = () => {
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
         <Trans>Swap</Trans>
       </MenuItem>
-      <MenuItem href="/tokens" isActive={pathname.startsWith('/tokens')}>
+      <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
         <Trans>Tokens</Trans>
       </MenuItem>
       {nftFlag === NftVariant.Enabled && (

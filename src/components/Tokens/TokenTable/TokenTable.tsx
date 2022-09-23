@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { showFavoritesAtom } from 'components/Tokens/state'
 import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
+import { validateUrlChainParam } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useCallback, useRef } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
@@ -69,7 +71,8 @@ export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
-  const { loading, tokens, tokensWithoutPriceHistoryCount, hasMore, loadMoreTokens } = useTopTokens()
+  const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
+  const { loading, tokens, tokensWithoutPriceHistoryCount, hasMore, loadMoreTokens } = useTopTokens(chainName)
   const showMoreLoadingRows = Boolean(loading && hasMore)
 
   const observer = useRef<IntersectionObserver>()
@@ -114,15 +117,18 @@ export default function TokenTable() {
           <GridContainer>
             <HeaderRow />
             <TokenDataContainer>
-              {tokens.map((token, index) => (
-                <LoadedRow
-                  key={token?.address}
-                  tokenListIndex={index}
-                  tokenListLength={tokens?.length ?? 0}
-                  token={token}
-                  ref={index + 1 === tokens.length ? lastTokenRef : undefined}
-                />
-              ))}
+              {tokens.map(
+                (token, index) =>
+                  token && (
+                    <LoadedRow
+                      key={token?.address}
+                      tokenListIndex={index}
+                      tokenListLength={tokens?.length ?? 0}
+                      token={token}
+                      ref={index + 1 === tokens.length ? lastTokenRef : undefined}
+                    />
+                  )
+              )}
               {showMoreLoadingRows && LoadingMoreRows}
             </TokenDataContainer>
           </GridContainer>
