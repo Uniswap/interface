@@ -118,7 +118,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   )
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(isLoading)
   }, [isLoading])
 
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)

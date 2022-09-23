@@ -104,9 +104,20 @@ const MobileSocialsPopover = ({
 }
 
 const SocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
+  const isLoading = useIsLoading((state) => state.isLoading)
+
   return (
-    <Column as="a" target="_blank" rel="noreferrer" href={href} height="full" justifyContent="center">
-      {children}
+    <Column
+      className={isLoading ? styles.iconsLoading : undefined}
+      as="a"
+      target="_blank"
+      rel="noreferrer"
+      href={href}
+      height="full"
+      justifyContent="center"
+      color="backgroundSecondary"
+    >
+      {!isLoading && children}
     </Column>
   )
 }
@@ -135,7 +146,7 @@ const CollectionName = ({
         <Box marginRight={!isVerified ? '12' : '0'} className={nameClass} style={{ lineHeight: '32px' }}>
           {name}
         </Box>
-        {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
+        {isVerified && !isLoading && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
         <Row
           display={{ sm: 'none', md: 'flex' }}
           alignItems="center"
