@@ -47,7 +47,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const setSortBy = useCollectionFilters((state) => state.setSortBy)
   const buyNow = useCollectionFilters((state) => state.buyNow)
-  const setCollectionIsLoading = useIsCollectionLoading((state) => state.setCollectionIsLoading)
+  const setIsCollectionLoading = useIsCollectionLoading((state) => state.setIsCollectionLoading)
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
@@ -118,8 +118,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   )
 
   useEffect(() => {
-    setCollectionIsLoading(isLoading)
-  }, [isLoading, setCollectionIsLoading])
+    setIsCollectionLoading(isLoading)
+  }, [isLoading, setIsCollectionLoading])
 
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
