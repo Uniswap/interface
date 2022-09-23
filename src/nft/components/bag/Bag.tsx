@@ -134,19 +134,6 @@ const Bag = () => {
     return recalculateBagUsingPooledAssets(uncheckedItemsInBag)
   }, [uncheckedItemsInBag])
 
-  const ethSellObject = useMemo(
-    () =>
-      buildSellObject(
-        itemsInBag
-          .reduce(
-            (ethTotal, bagItem) => ethTotal.add(BigNumber.from(bagItem.asset.priceInfo.ETHPrice)),
-            BigNumber.from(0)
-          )
-          .toString()
-      ),
-    [itemsInBag]
-  )
-
   const [isOpen, setModalIsOpen] = useState(false)
   const [userCanScroll, setUserCanScroll] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
@@ -203,25 +190,26 @@ const Bag = () => {
   }
 
   const fetchAssets = async () => {
-    const hasUnavailableAssets = unavailableAssets.length > 0
+    const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
+    const ethSellObject = buildSellObject(
+      itemsToBuy
+        .reduce((ethTotal, asset) => ethTotal.add(BigNumber.from(asset.priceInfo.ETHPrice)), BigNumber.from(0))
+        .toString()
+    )
 
-    hasUnavailableAssets && setItemsInBag(itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE))
     didOpenUnavailableAssets && setDidOpenUnavailableAssets(false)
     !bagIsLocked && setLocked(true)
     setBagStatus(BagStatus.FETCHING_ROUTE)
     try {
-      const data = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsInBag, account], () =>
+      const data = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
         fetchRoute({
           toSell: [ethSellObject],
-          toBuy: itemsInBag.map((item) => item.asset),
+          toBuy: itemsToBuy,
           senderAddress: account ?? '',
         })
       )
 
-      const updatedAssets = combineBuyItemsWithTxRoute(
-        itemsInBag.map((item) => item.asset),
-        data.route
-      )
+      const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, data.route)
 
       const fetchedPriceChangedAssets = updatedAssets.filter((asset) => asset.updatedPriceInfo).sort(sortUpdatedAssets)
       const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
