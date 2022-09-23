@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-09 20:05\n"
+"PO-Revision-Date: 2022-09-21 21:05\n"
 "Last-Translator: \n"
 "Language: fr_FR\n"
 "Language-Team: French\n"
@@ -59,6 +59,10 @@ msgstr "- Supprimer le destinataire"
 msgid "0 UNI / week"
 msgstr "0 UNI / semaine"
 
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume"
+msgstr "Volume 24h"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
 msgstr "25%"
@@ -66,6 +70,14 @@ msgstr "25%"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
 msgstr "50%"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W high"
+msgstr "52W de haut"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W low"
+msgstr "52W bas"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
@@ -121,7 +133,7 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Un swap de cette taille peut avoir un impact élevé sur les prix, compte tenu de la liquidité actuelle du pool. Il peut y avoir une grande différence entre le montant de votre jeton d'entrée et ce que vous recevrez dans le jeton de sortie"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "À propos"
 
@@ -588,7 +600,7 @@ msgstr "Connecté avec"
 msgid "Connecting..."
 msgstr "De liaison..."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
 msgstr "Adresse du contrat"
 
@@ -976,7 +988,7 @@ msgid "Help center"
 msgstr "Centre d'aide"
 
 #: src/components/FeeSelector/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
 msgstr "Cacher"
 
@@ -1178,10 +1190,6 @@ msgstr "Gérer les listes de jetons"
 msgid "Manage this pool."
 msgstr "Gérer ce pool."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "Market cap"
-msgstr "Capitalisation boursière"
-
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1266,11 +1274,11 @@ msgstr "En savoir plus"
 msgid "NFT Collections"
 msgstr "Collections NFT"
 
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "NFTs"
 msgstr "NFT"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Name not found"
 msgstr "Nom introuvable"
 
@@ -1323,7 +1331,7 @@ msgstr "Aucune proposition trouvée."
 msgid "No results found."
 msgstr "Aucun résultat trouvé."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "No token information available"
 msgstr "Aucune information de jeton disponible"
 
@@ -1423,7 +1431,7 @@ msgstr "Balayage polygonal"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "Pool"
 
@@ -1569,7 +1577,7 @@ msgstr "File d'attente"
 msgid "Rates"
 msgstr "Tarifs"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Read more"
 msgstr "Lire la suite"
 
@@ -1797,7 +1805,7 @@ msgstr "Approvisionnement {0} {1} et {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1836,7 +1844,7 @@ msgstr "Échange"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Échange de {0} {1} contre {2} {3}"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "Symbole introuvable"
 
@@ -2025,8 +2033,8 @@ msgid "Token not supported"
 msgstr "Jeton non pris en charge"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
 #: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Jetons"
@@ -2038,6 +2046,10 @@ msgstr "Jetons de listes inactives. Importez des jetons spécifiques ci-dessous 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Pools du haut"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Total Value Locked"
+msgstr "Valeur totale verrouillée"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
