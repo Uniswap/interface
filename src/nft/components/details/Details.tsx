@@ -3,9 +3,11 @@ import { shortenAddress } from '../../utils/address'
 import { Box, BoxProps } from '../Box'
 import { Column, Row } from '../Flex'
 
-const DetailItemLabel = (props: BoxProps) => <Box as="span" fontSize="14" color="darkGray" {...props} />
+const DetailItemLabel = (props: BoxProps) => <Box as="span" fontSize="14" color="textSecondary" {...props} />
 
-const DetailItemValue = (props: BoxProps) => <Box as="span" fontSize="14" marginLeft="4" color="blackBlue" {...props} />
+const DetailItemValue = (props: BoxProps) => (
+  <Box as="span" fontSize="14" marginLeft="4" color="textPrimary" {...props} />
+)
 
 const Detail = (props: BoxProps) => (
   <Row justifyContent="space-between" width="full" style={{ minWidth: '224px' }} {...props} />

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-09 20:05\n"
+"PO-Revision-Date: 2022-09-21 21:05\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -59,6 +59,10 @@ msgstr "- ลบผู้รับ"
 msgid "0 UNI / week"
 msgstr "0 UNI / สัปดาห์"
 
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume"
+msgstr "ปริมาณ 24H"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
 msgstr "25%"
@@ -66,6 +70,14 @@ msgstr "25%"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
 msgstr "50%"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W high"
+msgstr "สูง 52W"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W low"
+msgstr "ต่ำ 52W"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
@@ -121,7 +133,7 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "การแลกเปลี่ยนขนาดนี้อาจมีผลกระทบต่อราคาสูง เมื่อพิจารณาจากสภาพคล่องในปัจจุบันในกลุ่ม อาจมีความแตกต่างกันมากระหว่างจำนวนโทเค็นอินพุตของคุณกับสิ่งที่คุณจะได้รับในโทเค็นเอาต์พุต"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "เกี่ยวกับ"
 
@@ -588,7 +600,7 @@ msgstr "เชื่อมต่อกับ"
 msgid "Connecting..."
 msgstr "กำลังเชื่อมต่อ..."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
 msgstr "ที่อยู่สัญญา"
 
@@ -976,7 +988,7 @@ msgid "Help center"
 msgstr "ศูนย์ช่วยเหลือ"
 
 #: src/components/FeeSelector/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
 msgstr "ซ่อน"
 
@@ -1178,10 +1190,6 @@ msgstr "จัดการรายการโทเค็น"
 msgid "Manage this pool."
 msgstr "จัดการพูลนี้"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "Market cap"
-msgstr "มูลค่าตลาด"
-
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1266,11 +1274,11 @@ msgstr "มากกว่า"
 msgid "NFT Collections"
 msgstr "คอลเลกชัน NFT"
 
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "NFTs"
 msgstr "NFTs"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Name not found"
 msgstr "ไม่พบชื่อ"
 
@@ -1323,7 +1331,7 @@ msgstr "ไม่พบข้อเสนอ"
 msgid "No results found."
 msgstr "ไม่พบผลลัพธ์."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "No token information available"
 msgstr "ไม่มีข้อมูลโทเค็น"
 
@@ -1423,7 +1431,7 @@ msgstr "รูปหลายเหลี่ยม"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "สระน้ำ"
 
@@ -1569,7 +1577,7 @@ msgstr "เข้าคิว"
 msgid "Rates"
 msgstr "ราคา"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Read more"
 msgstr "อ่านเพิ่มเติม"
 
@@ -1797,7 +1805,7 @@ msgstr "การจัดหา {0} {1} และ {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1836,7 +1844,7 @@ msgstr "การแลกเปลี่ยน"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "สลับ {0} {1} เป็น {2} {3}"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "ไม่พบสัญลักษณ์"
 
@@ -2025,8 +2033,8 @@ msgid "Token not supported"
 msgstr "ไม่รองรับโทเค็น"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
 #: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "โทเค็น"
@@ -2038,6 +2046,10 @@ msgstr "โทเค็นจากรายการที่ไม่ใช้
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "สระว่ายน้ำยอดนิยม"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Total Value Locked"
+msgstr "มูลค่ารวมที่ถูกล็อค"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"

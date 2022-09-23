@@ -400,7 +400,7 @@ export const SearchBar = () => {
             <Box display={{ sm: 'none', md: 'flex' }}>
               <MagnifyingGlassIcon />
             </Box>
-            <Box display={{ sm: 'flex', md: 'none' }} color="placeholder" onClick={toggleOpen}>
+            <Box display={{ sm: 'flex', md: 'none' }} color="textTertiary" onClick={toggleOpen}>
               <ChevronLeftIcon />
             </Box>
           </Box>

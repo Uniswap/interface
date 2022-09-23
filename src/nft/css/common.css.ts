@@ -71,7 +71,7 @@ export const disabled = style([
     textAlign: 'left',
   },
   sprinkles({
-    color: 'placeholder',
+    color: 'textTertiary',
     fontWeight: 'medium',
     background: 'whitesmoke',
     borderRadius: '14',
@@ -85,7 +85,7 @@ export const buttonTextSmall = sprinkles({ fontWeight: 'normal', fontSize: '14' 
 export const buttonSmall = style([
   buttonTextSmall,
   sprinkles({
-    background: 'lightGray',
+    background: 'backgroundSurface',
     borderRadius: '12',
     fontSize: '12',
     color: 'genieBlue',
@@ -100,8 +100,8 @@ export const buttonSmall = style([
     },
     ':disabled': {
       cursor: 'auto',
-      color: themeVars.colors.white,
-      backgroundColor: themeVars.colors.medGray,
+      color: themeVars.colors.backgroundSurface,
+      backgroundColor: themeVars.colors.backgroundOutline,
     },
   },
 ])

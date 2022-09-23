@@ -4,9 +4,9 @@ import { sprinkles } from '../../nft/css/sprinkles.css'
 
 const baseNavDropdown = style([
   sprinkles({
-    background: 'lightGray',
+    background: 'backgroundSurface',
     borderStyle: 'solid',
-    borderColor: 'medGray',
+    borderColor: 'backgroundOutline',
     borderWidth: '1px',
     paddingBottom: '8',
     paddingTop: '8',

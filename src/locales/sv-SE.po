@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-09 20:05\n"
+"PO-Revision-Date: 2022-09-21 21:05\n"
 "Last-Translator: \n"
 "Language: sv_SE\n"
 "Language-Team: Swedish\n"
@@ -59,6 +59,10 @@ msgstr "- Ta bort mottagaren"
 msgid "0 UNI / week"
 msgstr "0 UNI/vecka"
 
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume"
+msgstr "24H volym"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
 msgstr "25 %"
@@ -66,6 +70,14 @@ msgstr "25 %"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
 msgstr "50 %"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W high"
+msgstr "52W hög"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W low"
+msgstr "52W låg"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
@@ -121,7 +133,7 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "En swap av denna storlek kan ha en hög prispåverkan, givet den nuvarande likviditeten i poolen. Det kan vara en stor skillnad mellan mängden av din inmatningstoken och vad du kommer att få i utdatatoken"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "Omkring"
 
@@ -588,7 +600,7 @@ msgstr "Ansluten till"
 msgid "Connecting..."
 msgstr "Ansluter..."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
 msgstr "Avtalsadress"
 
@@ -976,7 +988,7 @@ msgid "Help center"
 msgstr "Hjälpcenter"
 
 #: src/components/FeeSelector/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
 msgstr "Dölj"
 
@@ -1178,10 +1190,6 @@ msgstr "Hantera tokenlistor"
 msgid "Manage this pool."
 msgstr "Hantera den här poolen."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "Market cap"
-msgstr "Börsvärde"
-
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1266,11 +1274,11 @@ msgstr "Mer"
 msgid "NFT Collections"
 msgstr "NFT-samlingar"
 
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "NFTs"
 msgstr "NFTs"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Name not found"
 msgstr "Namnet hittades inte"
 
@@ -1323,7 +1331,7 @@ msgstr "Inga förslag hittades."
 msgid "No results found."
 msgstr "Inga resultat hittades."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "No token information available"
 msgstr "Ingen tokeninformation tillgänglig"
 
@@ -1423,7 +1431,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "Pool"
 
@@ -1569,7 +1577,7 @@ msgstr "Köa"
 msgid "Rates"
 msgstr "Kurser"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Read more"
 msgstr "Läs mer"
 
@@ -1797,7 +1805,7 @@ msgstr "Levererar {0} {1} och {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1836,7 +1844,7 @@ msgstr "Byte"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Byter ut {0} {1} mot {2} {3}"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "Symbolen hittades inte"
 
@@ -2025,8 +2033,8 @@ msgid "Token not supported"
 msgstr "Token stöds inte"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
 #: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Tokens"
@@ -2038,6 +2046,10 @@ msgstr "Tokens från inaktiva listor. Importera specifika tokens nedan eller kli
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "De bästa poolerna"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Total Value Locked"
+msgstr "Totalt värde låst"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"

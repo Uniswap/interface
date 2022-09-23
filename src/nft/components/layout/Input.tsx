@@ -7,13 +7,13 @@ export const Input = forwardRef<HTMLInputElement, BoxProps>((props, ref) => (
   <Box
     ref={ref}
     as="input"
-    borderColor={{ default: 'medGray', focus: 'darkGray' }}
+    borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}
     borderWidth="1px"
     borderStyle="solid"
     borderRadius="12"
     padding="12"
     fontSize="14"
-    color={{ placeholder: 'darkGray', default: 'blackBlue' }}
+    color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
     backgroundColor="transparent"
     {...props}
   />

@@ -201,6 +201,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           setUniformHeight={setUniformHeight}
           mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
           setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+          rarityVerified={rarityVerified}
         />
       ) : null
     )
@@ -238,7 +239,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   return (
     <>
       <AnimatedBox position="sticky" top="72" width="full" zIndex="3">
-        <Box backgroundColor="white08" width="full" paddingBottom="8" style={{ backdropFilter: 'blur(24px)' }}>
+        <Box
+          backgroundColor="backgroundFloating"
+          width="full"
+          paddingBottom="8"
+          style={{ backdropFilter: 'blur(24px)' }}
+        >
           <Row marginTop="12" gap="12">
             <FilterButton
               isMobile={isMobile}
@@ -264,7 +270,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           : isLoading
           ? loadingAssets
           : !isLoading && (
-              <Center width="full" color="darkGray" style={{ height: '60vh' }}>
+              <Center width="full" color="textSecondary" style={{ height: '60vh' }}>
                 <div style={{ display: 'block', textAlign: 'center' }}>
                   <p className={header2}>No NFTS found</p>
                   <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
