@@ -146,7 +146,14 @@ const checkIfAllTokensCached = (prefetchedSelectedTokens: PrefetchedTopToken[]) 
 }
 
 export type TopToken = NonNullable<TopTokens_TokensQuery['response']['tokens']>[number]
-export function useTopTokens() {
+interface UseTopTokensReturnValue {
+  loading: boolean
+  tokens: TopToken[] | undefined
+  tokensWithoutPriceHistoryCount: number
+  hasMore: boolean
+  loadMoreTokens: () => void
+}
+export function useTopTokens(): UseTopTokensReturnValue {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
   const [loading, setLoading] = useState(true)
   const [tokens, setTokens] = useState<TopToken[]>()
