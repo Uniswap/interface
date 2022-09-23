@@ -123,7 +123,7 @@ export default function TokenTable() {
                 (token, index) =>
                   token && (
                     <LoadedRow
-                      key={token?.name}
+                      key={token.address}
                       tokenListIndex={index}
                       tokenListLength={tokens?.length ?? 0}
                       token={token}
