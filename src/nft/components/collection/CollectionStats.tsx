@@ -4,7 +4,7 @@ import { Column, Row } from 'nft/components/Flex'
 import { Marquee } from 'nft/components/layout/Marquee'
 import { header2 } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useCollectionIsLoading } from 'nft/hooks/useCollectionIsLoading'
+import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
@@ -103,7 +103,7 @@ const MobileSocialsPopover = ({
 }
 
 const SocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
-  const isCollectionLoading = useCollectionIsLoading((state) => state.isCollectionLoading)
+  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
 
   return (
     <Column
@@ -135,7 +135,7 @@ const CollectionName = ({
   collectionSocialsIsOpen: boolean
   toggleCollectionSocials: () => void
 }) => {
-  const isCollectionLoading = useCollectionIsLoading((state) => state.isCollectionLoading)
+  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
   const nameClass = isCollectionLoading ? styles.nameTextLoading : clsx(isMobile ? header2 : header2, styles.nameText)
 
   return (
@@ -206,7 +206,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   const [readMore, toggleReadMore] = useReducer((state) => !state, false)
   const baseRef = useRef<HTMLDivElement>(null)
   const descriptionRef = useRef<HTMLDivElement>(null)
-  const isCollectionLoading = useCollectionIsLoading((state) => state.isCollectionLoading)
+  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
 
   useEffect(() => {
     if (
@@ -245,7 +245,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
 }
 
 const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => {
-  const isCollectionLoading = useCollectionIsLoading((state) => state.isCollectionLoading)
+  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
 
   return (
     <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
@@ -297,7 +297,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 
 export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; isMobile: boolean }) => {
   const [collectionSocialsIsOpen, toggleCollectionSocials] = useReducer((state) => !state, false)
-  const isCollectionLoading = useCollectionIsLoading((state) => state.isCollectionLoading)
+  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
 
   return (
     <Box

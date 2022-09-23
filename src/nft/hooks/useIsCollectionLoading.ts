@@ -6,7 +6,7 @@ interface State {
   setCollectionIsLoading: (isLoading: boolean) => void
 }
 
-export const useCollectionIsLoading = create<State>()(
+export const useIsCollectionLoading = create<State>()(
   devtools(
     (set) => ({
       isCollectionLoading: false,
@@ -15,6 +15,6 @@ export const useCollectionIsLoading = create<State>()(
           return { isCollectionLoading }
         }),
     }),
-    { name: 'useCollectionIsLoading' }
+    { name: 'useIsCollectionLoading' }
   )
 )

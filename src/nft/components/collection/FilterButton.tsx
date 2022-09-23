@@ -3,7 +3,7 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/FilterButton.css'
 import { Row } from 'nft/components/Flex'
 import { FilterIcon } from 'nft/components/icons'
-import { useCollectionFilters, useCollectionIsLoading, useWalletCollections } from 'nft/hooks'
+import { useCollectionFilters, useIsCollectionLoading, useWalletCollections } from 'nft/hooks'
 import { putCommas } from 'nft/utils/putCommas'
 import { useLocation } from 'react-router-dom'
 
@@ -32,7 +32,7 @@ export const FilterButton = ({
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const { pathname } = useLocation()
   const isSellPage = pathname.startsWith('/nfts/sell')
-  const isLoading = useCollectionIsLoading((state) => state.collectionIsLoading)
+  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
 
   const showFilterBadge = isSellPage
     ? collectionFilters.length > 0
@@ -40,7 +40,7 @@ export const FilterButton = ({
   return (
     <Box
       className={
-        isLoading
+        isCollectionLoading
           ? styles.filterButtonLoading
           : clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)
       }
@@ -57,7 +57,7 @@ export const FilterButton = ({
       height="44"
       whiteSpace="nowrap"
     >
-      {!isLoading && (
+      {!isCollectionLoading && (
         <>
           {showFilterBadge && (
             <Row className={styles.filterBadge} color={isFiltersExpanded ? 'grey700' : 'blue400'}>

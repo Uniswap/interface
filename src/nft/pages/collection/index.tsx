@@ -1,7 +1,7 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
-import { useBag, useCollectionFilters, useCollectionIsLoading, useFiltersExpanded, useIsMobile } from 'nft/hooks'
+import { useBag, useCollectionFilters, useFiltersExpanded, useIsCollectionLoading, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { useEffect } from 'react'
@@ -14,7 +14,7 @@ const BAG_WIDTH = 324
 
 const Collection = () => {
   const { contractAddress } = useParams()
-  const isCollectionLoading = useCollectionIsLoading((state) => state.isCollectionLoading)
+  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
 
   const isMobile = useIsMobile()
   const [isFiltersExpanded] = useFiltersExpanded()
