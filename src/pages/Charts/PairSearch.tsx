@@ -226,7 +226,7 @@ export const PairSearch = (props: Props) => {
       'bsc'
     ] : ['ethereum']
     setFetching(true)
-    const settings = searchSettings.networks.filter(a => a.includeInResults).map(a => a.network);
+    const settings = (searchSettings.networks || defaultNetworks).filter(a => a.includeInResults).map(a => a.network);
     const term = searchTermDebounced || searchTerm
     const query = `https://api.dexscreener.com/latest/dex/search/?q=${term}`
     axios.get(query)

@@ -768,7 +768,9 @@ export const SelectiveChartWithPair = () => {
                                 </React.Fragment>
 
                             )}
-                        {embedModel.embedMode == false && isMobile == false && (
+                        {hasSelectedData && 
+                            embedModel.embedMode == false && 
+                            isMobile == false && (
                             <TYPE.link style={{
                                 fontSize: 12,
                                 alignItems: 'center',
