@@ -158,7 +158,7 @@ export default function TokenDetails() {
 
   const tokenProject = query.tokenProjects?.[0]
   const tokenProjectMarket = tokenProject?.markets?.[0]
-  const tokenMarket = tokenProject?.tokens[0].market
+  const tokenMarket = tokenProject?.tokens?.[0]?.market
 
   // TODO: Fix this logic to not automatically redirect on refresh, yet still catch invalid addresses
   //const location = useLocation()

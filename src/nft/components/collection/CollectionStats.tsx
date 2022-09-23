@@ -114,7 +114,6 @@ const SocialsIcon = ({ children, href }: { children: ReactNode; href: string }) 
       href={href}
       height="full"
       justifyContent="center"
-      color="backgroundSecondary"
     >
       {!isLoading && children}
     </Column>

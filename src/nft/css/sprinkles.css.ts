@@ -14,6 +14,7 @@ const themeContractValues = {
     backgroundModule: '',
     backgroundOutline: '',
     backgroundSurface: '',
+    lightGray: '',
 
     modalBackdrop: '',
 
