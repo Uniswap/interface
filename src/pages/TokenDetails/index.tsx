@@ -25,7 +25,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
 import { useTokenQuery } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
-import { useIsUserAddedToken, useToken } from 'hooks/Tokens'
+import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useAtomValue } from 'jotai/utils'
@@ -126,7 +126,7 @@ export default function TokenDetails() {
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
   // TODO: Make useToken() work on non-mainenet chains or replace this logic
-  const shouldShowSpeedbump = !useIsUserAddedToken(useToken(tokenAddress)) && tokenWarning !== null
+  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(tokenAddress, chainId) && tokenWarning !== null
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
   const onReviewSwap = useCallback(() => {
     return new Promise<boolean>((resolve) => {

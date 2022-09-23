@@ -91,7 +91,7 @@ const Tokens = () => {
         </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>
-            <NetworkFilter loaded={true} />
+            <NetworkFilter />
             {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
             <TimeSelector />
           </FiltersContainer>
@@ -117,7 +117,7 @@ export const LoadingTokens = () => {
       </TitleContainer>
       <FiltersWrapper>
         <FiltersContainer>
-          <NetworkFilter loaded={false} />
+          <NetworkFilter />
           {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
           <TimeSelector />
         </FiltersContainer>

@@ -91,7 +91,7 @@ const CheckContainer = styled.div`
   flex-direction: flex-end;
 `
 
-export default function NetworkFilter({ loaded }: { loaded: boolean }) {
+export default function NetworkFilter() {
   const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
   const open = useModalIsOpen(ApplicationModal.NETWORK_FILTER)
