@@ -59,10 +59,14 @@ const SearchInput = styled.input`
 `
 
 export default function SearchBar() {
-  const currentFilterString = useAtomValue(filterStringAtom)
-  const [localFilterString, setLocalFilterString] = useState(currentFilterString ?? '')
+  const currentString = useAtomValue(filterStringAtom)
+  const [localFilterString, setLocalFilterString] = useState(currentString)
   const setFilterString = useUpdateAtom(filterStringAtom)
   const debouncedLocalFilterString = useDebounce(localFilterString, 300)
+
+  useEffect(() => {
+    setLocalFilterString(currentString)
+  }, [currentString])
 
   useEffect(() => {
     setFilterString(debouncedLocalFilterString)

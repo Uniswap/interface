@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { showFavoritesAtom } from 'components/Tokens/state'
-import { filterTimeAtom } from 'components/Tokens/state'
 import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
-import { toHistoryDuration } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useCallback, useRef } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -72,8 +70,6 @@ export default function TokenTable() {
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const { loading, tokens, tokenCount, loadMoreTokens } = useTopTokens()
-  const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
-  console.log('duration', duration)
   const hasMore = !tokens || tokens.length < MAX_TOKENS_TO_LOAD
 
   const observer = useRef<IntersectionObserver>()
@@ -120,7 +116,7 @@ export default function TokenTable() {
             <TokenDataContainer>
               {tokens.map((token, index) => (
                 <LoadedRow
-                  key={token?.name}
+                  key={token?.address}
                   tokenListIndex={index}
                   tokenListLength={tokens?.length ?? 0}
                   token={token}

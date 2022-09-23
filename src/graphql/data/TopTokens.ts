@@ -8,15 +8,15 @@ import {
   sortMethodAtom,
 } from 'components/Tokens/state'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
-import { ContractInput, TopTokens_TokensQuery } from './__generated__/TopTokens_TokensQuery.graphql'
+import { ContractInput, HistoryDuration, TopTokens_TokensQuery } from './__generated__/TopTokens_TokensQuery.graphql'
 import type { TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
-import { toHistoryDuration, useCurrentChainName } from './util'
+import { toHistoryDuration } from './util'
+import { useCurrentChainName } from './util'
 
-export function usePrefetchTopTokens() {
-  const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
+export function usePrefetchTopTokens(duration: HistoryDuration) {
   const chain = useCurrentChainName()
 
   const top100 = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
@@ -133,14 +133,12 @@ function toContractInput(token: PrefetchedTopToken) {
 export type TopToken = NonNullable<TopTokens_TokensQuery['response']['tokens']>[number]
 export function useTopTokens() {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
-  const prefetchedData = usePrefetchTopTokens()
-  const prefetchedSelectedTokens = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
-
-  const environment = useRelayEnvironment()
-  const [tokens, setTokens] = useState<TopToken[]>()
-
-  const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [tokens, setTokens] = useState<TopToken[]>()
+  const [page, setPage] = useState(0)
+  const prefetchedData = usePrefetchTopTokens(duration)
+  const prefetchedSelectedTokens = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
+  const environment = useRelayEnvironment()
 
   // TopTokens should ideally be fetched with usePaginationFragment. The backend does not current support graphql cursors;
   // in the meantime, fetchQuery is used, as other relay hooks do not allow the refreshing and lazy loading we need
@@ -171,7 +169,7 @@ export function useTopTokens() {
   }, [loadTokens, page, prefetchedSelectedTokens, tokens])
 
   // Reset count when filters are changed
-  useEffect(() => {
+  useLayoutEffect(() => {
     setLoading(true)
     setTokens([])
     const contracts = prefetchedSelectedTokens.slice(0, PAGE_SIZE).map(toContractInput)
