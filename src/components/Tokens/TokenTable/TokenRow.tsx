@@ -38,8 +38,6 @@ import {
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 import { DISPLAYS } from './TimeSelector'
 
-export const MAX_TOKENS_TO_LOAD = 100
-
 const Cell = styled.div`
   display: flex;
   align-items: center;
@@ -520,7 +518,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
           }
-          listNumber={sortAscending ? MAX_TOKENS_TO_LOAD - tokenListIndex : tokenListIndex + 1}
+          listNumber={sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1}
           tokenInfo={
             <ClickableName>
               <LogoContainer>
