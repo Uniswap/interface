@@ -203,7 +203,7 @@ export default function AccountDetails({
   ENSName,
   openOptions,
 }: AccountDetailsProps) {
-  const { chainId, account, connector, provider } = useWeb3React()
+  const { chainId, account, connector } = useWeb3React()
   const connectionType = getConnection(connector).type
 
   const theme = useTheme()
