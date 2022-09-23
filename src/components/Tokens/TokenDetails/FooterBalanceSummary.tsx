@@ -132,13 +132,13 @@ const ErrorText = styled.span`
 export default function FooterBalanceSummary({
   address,
   networkBalances,
-  balanceNumber,
-  balanceUsdNumber,
+  balance,
+  balanceUsd,
 }: {
   address: string
   networkBalances: (JSX.Element | null)[] | null
-  balanceNumber?: number
-  balanceUsdNumber?: number
+  balance?: number
+  balanceUsd?: number
 }) {
   const tokenSymbol = useToken(address)?.symbol
   const [showMultipleBalances, setShowMultipleBalances] = useState(false)
@@ -161,15 +161,15 @@ export default function FooterBalanceSummary({
             </ErrorText>
           </ErrorState>
         ) : (
-          !!balanceNumber &&
-          !!balanceUsdNumber && (
+          !!balance &&
+          !!balanceUsd && (
             <BalanceInfo>
               {multipleBalances ? 'Balance on all networks' : `Your balance on ${networkNameIfOneBalance}`}
               <BalanceTotal>
                 <BalanceValue>
-                  {balanceNumber} {tokenSymbol}
+                  {balance} {tokenSymbol}
                 </BalanceValue>
-                <FiatValue>{`$${balanceUsdNumber}`}</FiatValue>
+                <FiatValue>{`$${balanceUsd}`}</FiatValue>
               </BalanceTotal>
               {multipleBalances && (
                 <ViewAll onClick={() => setShowMultipleBalances(!showMultipleBalances)}>

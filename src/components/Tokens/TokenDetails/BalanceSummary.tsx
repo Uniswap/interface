@@ -47,17 +47,17 @@ const TotalBalanceItem = styled.div`
 
 export default function BalanceSummary({
   address,
-  balanceNumber,
-  balanceUsdNumber,
+  balance,
+  balanceUsd,
 }: {
   address: string
-  balanceNumber?: number
-  balanceUsdNumber?: number
+  balance?: number
+  balanceUsd?: number
 }) {
   const token = useToken(address)
   const { loading, error } = useNetworkTokenBalances({ address })
 
-  if (loading || (!error && !balanceNumber && !balanceUsdNumber)) return null
+  if (loading || (!error && !balance && !balanceUsd)) return null
   return (
     <BalancesCard>
       {error ? (
@@ -72,8 +72,8 @@ export default function BalanceSummary({
           <TotalBalanceSection>
             Your balance
             <TotalBalance>
-              <TotalBalanceItem>{`${balanceNumber} ${token?.symbol}`}</TotalBalanceItem>
-              <TotalBalanceItem>{`$${balanceUsdNumber}`}</TotalBalanceItem>
+              <TotalBalanceItem>{`${balance} ${token?.symbol}`}</TotalBalanceItem>
+              <TotalBalanceItem>{`$${balanceUsd}`}</TotalBalanceItem>
             </TotalBalance>
           </TotalBalanceSection>
         </>
