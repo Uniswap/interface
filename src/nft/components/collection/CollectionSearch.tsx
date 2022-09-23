@@ -1,10 +1,14 @@
 import { Box } from 'nft/components/Box'
+import { useIsLoading } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { FormEvent } from 'react'
+
+import * as styles from 'nft/components/collection/CollectionSearch'
 
 export const CollectionSearch = () => {
   const setSearchByNameText = useCollectionFilters((state) => state.setSearch)
   const searchByNameText = useCollectionFilters((state) => state.search)
+  const isLoading = useIsLoading((state) => state.isLoading)
 
   return (
     <Box

@@ -5,6 +5,7 @@ import { Row } from 'nft/components/Flex'
 import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
+import { useIsLoading } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
 
@@ -28,6 +29,7 @@ export const SortDropdown = ({
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const [isReversed, toggleReversed] = useReducer((s) => !s, false)
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const isLoading = useIsLoading((state) => state.isLoading)
 
   const [maxWidth, setMaxWidth] = useState(0)
 
@@ -70,50 +72,55 @@ export const SortDropdown = ({
         width={inFilters ? 'full' : 'inherit'}
         onClick={toggleOpen}
         cursor="pointer"
-        className={clsx(isOpen && !mini && styles.activeDropdown)}
+        className={isLoading ? styles.isLoadingDropdown : clsx(isOpen && !mini && styles.activeDropdown)}
       >
-        <Box display="flex" alignItems="center">
-          {!isOpen && reversable && (
-            <Row
-              onClick={(e) => {
-                e.stopPropagation()
+        {!isLoading && (
+          <>
+            <Box display="flex" alignItems="center">
+              {!isOpen && reversable && (
+                <Row
+                  onClick={(e) => {
+                    e.stopPropagation()
 
-                if (dropDownOptions[selectedIndex].reverseOnClick) {
-                  dropDownOptions[selectedIndex].reverseOnClick?.()
-                  toggleReversed()
-                } else {
-                  dropDownOptions[dropDownOptions[selectedIndex].reverseIndex ?? 1 - 1].onClick()
-                  setSelectedIndex(dropDownOptions[selectedIndex].reverseIndex ?? 1 - 1)
-                }
+                    if (dropDownOptions[selectedIndex].reverseOnClick) {
+                      dropDownOptions[selectedIndex].reverseOnClick?.()
+                      toggleReversed()
+                    } else {
+                      dropDownOptions[dropDownOptions[selectedIndex].reverseIndex ?? 1 - 1].onClick()
+                      setSelectedIndex(dropDownOptions[selectedIndex].reverseIndex ?? 1 - 1)
+                    }
+                  }}
+                >
+                  {dropDownOptions[selectedIndex].reverseOnClick &&
+                    (isReversed ? <ArrowsIcon /> : <ReversedArrowsIcon />)}
+                  {dropDownOptions[selectedIndex].reverseIndex &&
+                    (selectedIndex > (dropDownOptions[selectedIndex].reverseIndex ?? 1) - 1 ? (
+                      <ArrowsIcon />
+                    ) : (
+                      <ReversedArrowsIcon />
+                    ))}
+                </Row>
+              )}
+
+              <Box
+                marginLeft={reversable ? '4' : '0'}
+                marginRight={mini ? '2' : '0'}
+                color="blackBlue"
+                className={buttonTextMedium}
+              >
+                {mini ? miniPrompt : isOpen ? 'Sort by' : dropDownOptions[selectedIndex].displayText}
+              </Box>
+            </Box>
+            <ChevronUpIcon
+              secondaryColor={mini ? themeVars.colors.blackBlue : undefined}
+              secondaryWidth={mini ? '20' : undefined}
+              secondaryHeight={mini ? '20' : undefined}
+              style={{
+                transform: isOpen ? '' : 'rotate(180deg)',
               }}
-            >
-              {dropDownOptions[selectedIndex].reverseOnClick && (isReversed ? <ArrowsIcon /> : <ReversedArrowsIcon />)}
-              {dropDownOptions[selectedIndex].reverseIndex &&
-                (selectedIndex > (dropDownOptions[selectedIndex].reverseIndex ?? 1) - 1 ? (
-                  <ArrowsIcon />
-                ) : (
-                  <ReversedArrowsIcon />
-                ))}
-            </Row>
-          )}
-          <Box
-            marginLeft={reversable ? '4' : '0'}
-            marginRight={mini ? '2' : '0'}
-            color="blackBlue"
-            className={buttonTextMedium}
-          >
-            {mini ? miniPrompt : isOpen ? 'Sort by' : dropDownOptions[selectedIndex].displayText}
-          </Box>
-        </Box>
-
-        <ChevronUpIcon
-          secondaryColor={mini ? themeVars.colors.blackBlue : undefined}
-          secondaryWidth={mini ? '20' : undefined}
-          secondaryHeight={mini ? '20' : undefined}
-          style={{
-            transform: isOpen ? '' : 'rotate(180deg)',
-          }}
-        />
+            />
+          </>
+        )}
       </Box>
       <Box
         position="absolute"
