@@ -20,7 +20,7 @@ const Collection = () => {
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
 
-  const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
+  const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
   )
 
@@ -45,40 +45,52 @@ const Collection = () => {
 
   return (
     <Column width="full">
-      <Box width="full" height="160">
-        <Box
-          as="img"
-          maxHeight="full"
-          width="full"
-          src={collectionStats?.bannerImageUrl}
-          className={`${styles.bannerImage}`}
-        />
-      </Box>
+      {collectionStats && contractAddress ? (
+        <>
+          {' '}
+          <Box width="full" height="160">
+            <Box
+              as="img"
+              maxHeight="full"
+              width="full"
+              src={collectionStats?.bannerImageUrl}
+              className={`${styles.bannerImage}`}
+            />
+          </Box>
+          {collectionStats && (
+            <Row paddingLeft="32" paddingRight="32">
+              <CollectionStats stats={collectionStats} isMobile={isMobile} />
+            </Row>
+          )}
+          <Row alignItems="flex-start" position="relative" paddingX="48">
+            <Box position="sticky" top="72" width="0">
+              {isFiltersExpanded && (
+                <Filters
+                  traitsByAmount={collectionStats?.numTraitsByAmount ?? []}
+                  traits={collectionStats?.traits ?? []}
+                />
+              )}
+            </Box>
 
-      {collectionStats && (
-        <Row paddingLeft="32" paddingRight="32">
-          <CollectionStats stats={collectionStats} isMobile={isMobile} />
-        </Row>
+            {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
+            <AnimatedBox
+              style={{
+                transform: gridX.interpolate((x) => `translate(${x as number}px)`),
+                width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
+              }}
+            >
+              <CollectionNfts
+                collectionStats={collectionStats}
+                contractAddress={contractAddress}
+                rarityVerified={collectionStats?.rarityVerified}
+              />
+            </AnimatedBox>
+          </Row>
+        </>
+      ) : (
+        // TODO: Put no collection asset page here
+        !isLoading && <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
       )}
-      <Row alignItems="flex-start" position="relative" paddingX="48">
-        <Box position="sticky" top="72" width="0">
-          {isFiltersExpanded && (
-            <Filters traitsByAmount={collectionStats?.numTraitsByAmount ?? []} traits={collectionStats?.traits ?? []} />
-          )}
-        </Box>
-
-        {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-        <AnimatedBox
-          style={{
-            transform: gridX.interpolate((x) => `translate(${x as number}px)`),
-            width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
-          }}
-        >
-          {contractAddress && (
-            <CollectionNfts contractAddress={contractAddress} rarityVerified={collectionStats?.rarityVerified} />
-          )}
-        </AnimatedBox>
-      </Row>
     </Column>
   )
 }

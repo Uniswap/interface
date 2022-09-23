@@ -5,11 +5,11 @@ import { PriceRange } from 'nft/components/collection/PriceRange'
 import { Column, Row } from 'nft/components/Flex'
 import { Radio } from 'nft/components/layout/Radio'
 import { useCollectionFilters } from 'nft/hooks'
+import { Trait } from 'nft/hooks/useCollectionFilters'
+import { groupBy } from 'nft/utils/groupBy'
 import { FocusEventHandler, FormEvent, useMemo, useState } from 'react'
 import { useReducer } from 'react'
 
-import { Trait } from '../../hooks/useCollectionFilters'
-import { groupBy } from '../../utils/groupBy'
 import { Input } from '../layout/Input'
 import { TraitSelect } from './TraitSelect'
 
