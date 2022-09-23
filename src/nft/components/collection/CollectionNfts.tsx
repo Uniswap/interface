@@ -66,7 +66,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         markets,
         notForSale: !buyNow,
         sortBy,
-        searchByNameText,
         debouncedMinPrice,
         debouncedMaxPrice,
         searchText: debouncedSearchByNameText,
