@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-09 20:05\n"
+"PO-Revision-Date: 2022-09-21 21:05\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -59,6 +59,10 @@ msgstr "- Alıcıyı kaldır"
 msgid "0 UNI / week"
 msgstr "0 UNI / hafta"
 
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume"
+msgstr "24 saat hacim"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
 msgstr "%25"
@@ -66,6 +70,14 @@ msgstr "%25"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
 msgstr "%50"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W high"
+msgstr "52W yüksek"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W low"
+msgstr "52W düşük"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
@@ -121,7 +133,7 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Havuzdaki mevcut likidite göz önüne alındığında, bu boyuttaki bir takasın yüksek bir fiyat etkisi olabilir. Girdi jetonunuzun miktarı ile çıktı jetonunuzda alacağınız miktar arasında büyük bir fark olabilir."
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "Hakkında"
 
@@ -588,7 +600,7 @@ msgstr "ile bağlantılı"
 msgid "Connecting..."
 msgstr "Bağlanıyor..."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
 msgstr "Sözleşme adresi"
 
@@ -976,7 +988,7 @@ msgid "Help center"
 msgstr "Yardım Merkezi"
 
 #: src/components/FeeSelector/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
 msgstr "Saklamak"
 
@@ -1178,10 +1190,6 @@ msgstr "Jeton Listelerini Yönetin"
 msgid "Manage this pool."
 msgstr "Bu havuzu yönetin."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "Market cap"
-msgstr "Piyasa değeri"
-
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1266,11 +1274,11 @@ msgstr "Daha fazla"
 msgid "NFT Collections"
 msgstr "NFT Koleksiyonları"
 
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "NFTs"
 msgstr "NFT'ler"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Name not found"
 msgstr "Ad bulunamadı"
 
@@ -1323,7 +1331,7 @@ msgstr "Teklif bulunamadı."
 msgid "No results found."
 msgstr "Sonuç bulunamadı."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "No token information available"
 msgstr "Belirteç bilgisi yok"
 
@@ -1423,7 +1431,7 @@ msgstr "poligon taraması"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "Havuz"
 
@@ -1569,7 +1577,7 @@ msgstr "Kuyruk"
 msgid "Rates"
 msgstr "Oranlar"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Read more"
 msgstr "Devamını oku"
 
@@ -1797,7 +1805,7 @@ msgstr "{0} {1} ve {2} {3} temini"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1836,7 +1844,7 @@ msgstr "takas"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{2} {3} yerine {0} {1} swap ediliyor"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "Sembol bulunamadı"
 
@@ -2025,8 +2033,8 @@ msgid "Token not supported"
 msgstr "Jeton desteklenmiyor"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/Navbar.tsx
 #: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Jetonlar"
@@ -2038,6 +2046,10 @@ msgstr "Aktif olmayan listelerden gelen jetonlar. Aşağıdan belirli jetonları
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "En iyi havuzlar"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Total Value Locked"
+msgstr "Toplam Değer Kilitli"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
