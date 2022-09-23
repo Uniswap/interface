@@ -70,6 +70,7 @@ export default function TokenTable() {
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const { loading, tokens, tokensWithoutPriceHistoryCount, hasMore, loadMoreTokens } = useTopTokens()
+  const showMoreLoadingRows = Boolean(loading && hasMore)
 
   const observer = useRef<IntersectionObserver>()
   const lastTokenRef = useCallback(
@@ -122,7 +123,7 @@ export default function TokenTable() {
                   ref={index + 1 === tokens.length ? lastTokenRef : undefined}
                 />
               ))}
-              {loading && hasMore && LoadingMoreRows}
+              {showMoreLoadingRows && LoadingMoreRows}
             </TokenDataContainer>
           </GridContainer>
         </>
