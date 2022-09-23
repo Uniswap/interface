@@ -162,6 +162,7 @@ interface UseTopTokensReturnValue {
   tokensWithoutPriceHistoryCount: number
   hasMore: boolean
   loadMoreTokens: () => void
+  maxFetchable: number
 }
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
@@ -170,6 +171,10 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const [page, setPage] = useState(0)
   const prefetchedData = usePrefetchTopTokens(duration, chain)
   const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
+  const maxFetchable = useMemo(
+    () => prefetchedSelectedTokensWithoutPriceHistory.length,
+    [prefetchedSelectedTokensWithoutPriceHistory]
+  )
 
   const hasMore = !tokens || tokens.length < prefetchedSelectedTokensWithoutPriceHistory.length
 
@@ -239,6 +244,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     hasMore,
     tokensWithoutPriceHistoryCount: prefetchedSelectedTokensWithoutPriceHistory.length,
     loadMoreTokens,
+    maxFetchable,
   }
 }
 
