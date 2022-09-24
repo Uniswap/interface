@@ -2,6 +2,7 @@ import * as ethers from 'ethers'
 
 import Badge, { BadgeVariant } from 'components/Badge';
 import { BarChart, ChevronDown, ChevronRight, ChevronUp, Filter, Percent, X } from 'react-feather';
+import React, { useCallback, useEffect, useRef } from 'react';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { fetchBscHolders, fetchBscTokenData, useBnbPrices, useBscPoocoinTransactions, useBscTokenData, useBscTokenTransactions } from 'state/logs/bscUtils';
 import { getTokenData, toChecksum, useEthPrice, usePairs, useTokenData, useTokenDataHook, useTokenTransactions } from 'state/logs/utils';
@@ -12,7 +13,6 @@ import BarChartLoaderSVG from './BarChartLoader';
 import { ChartSidebar } from 'components/ChartSidebar';
 import { Dots } from './styleds';
 import { Pair } from 'pages/Charts/PairSearch';
-import React from 'react';
 import ReactGA from 'react-ga'
 import { StyledInternalLink } from 'theme';
 import Tooltip from 'components/Tooltip';
@@ -135,35 +135,39 @@ export const fetchTokenInfo = async (chainId: number | undefined, tokenAddress: 
         })
     }
 }
-
+const useIntervalAsync = (fn: () => Promise<unknown>, ms: number) => {
+    const timeout = useRef<number>();
+    const mountedRef = useRef(false);
+    const run = useCallback(async () => {
+      await fn();
+      if (mountedRef.current) {
+        timeout.current = window.setTimeout(run, ms);
+      }
+    }, [fn, ms]);
+    useEffect(() => {
+      mountedRef.current = true;
+      run();
+    return () => {
+        mountedRef.current = false;
+        window.clearTimeout(timeout.current);
+      };
+    }, [run]);
+  };
 export const useDexscreenerToken = (address?: string) => {
     const [data, setData] = React.useState<Pair>()
-    let Interval: NodeJS.Timeout;
 
-    React.useEffect(() => {
+    const getData = useCallback(async () => {
         if (address) {
-            
-            if (Interval) {
-                clearInterval(Interval)
-            }
+            const response = await axios.get<{ pairs?: Pair[], pair?: Pair }>(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
 
-            console.log(`[useDexscreenerToken] - fetching`)
-            Interval = setInterval(() => axios.get<{pairs?: Pair[], pair?: Pair}>(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
-                .then((response) => {
-                    console.log(`[useDexscreenerToken] - setting state`, response.data)
-                    const dataSet = response?.data?.pair ? response?.data?.pair : response?.data?.pairs?.[0]
-                    console.log(`[useDexscreenerToken]:response`, dataSet)
-                    setData(dataSet)
-                })
-                , 60000 * 2)
-        }
-
-        return () => {
-            if (Interval) {
-                clearInterval(Interval)
-            }
+            console.log(`[useDexscreenerToken] - setting state`, response.data)
+            const dataSet = response?.data?.pair ? response?.data?.pair : response?.data?.pairs?.[0]
+            console.log(`[useDexscreenerToken]:response`, dataSet)
+            setData(dataSet)
         }
     }, [address])
+    
+    useIntervalAsync(getData, 15000)
 
     if (!address) return
     return data
@@ -211,9 +215,9 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
             const contract = getBep20Contract(toChecksum(tokenAddress) as string)
             const [name, symbol, decimals] = await Promise.all(
                 [
-                    contract.name().catch((e:unknown)=>console.error(`[useTokenInfo]`, e)),
-                    contract.symbol().catch((e:unknown)=>console.error(`[useTokenInfo]`, e)),
-                    contract.decimals().catch((e:unknown)=>console.error(`[useTokenInfo]`, e))
+                    contract.name().catch((e: unknown) => console.error(`[useTokenInfo]`, e)),
+                    contract.symbol().catch((e: unknown) => console.error(`[useTokenInfo]`, e)),
+                    contract.decimals().catch((e: unknown) => console.error(`[useTokenInfo]`, e))
                 ]
             )
 

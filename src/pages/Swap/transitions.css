@@ -2,12 +2,19 @@
   opacity: 0;
   transform:translateX(-100%);
   transition: 500ms all ease-in;
+  filter: hue-rotate(45deg);
 }
 .alert-enter-active {
-  opacity: 1;
+  opacity: 0.85;
   transform:translateX(0%);
   transition:  opacity 500ms  ease-in, 
                transform 250ms ease-in;
+}
+
+.alert-enter-done {
+  opacity: 1;
+  transition: 500ms all ease-in  ;
+  filter:blur(0px);
 }
 .alert-exit {
   opacity: 1;

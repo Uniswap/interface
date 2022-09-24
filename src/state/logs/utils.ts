@@ -515,14 +515,15 @@ export const useSetTitle = (
 
 
 export function useTokenTransactions(tokenAddress: string, allPairsFormatted?:any[], interval: null | number = null) {
-  const { chainId } = useWeb3React()
   const tokenTxns = useQuery(FILTERED_TRANSACTIONS, {
     variables: {
       allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted?.[0]?.id?.toLowerCase()] : []
     },
-    pollInterval: interval || 5000
+    pollInterval: interval || 5000,
+    client: client,
+
   });
-  const data = React.useMemo(() => tokenTxns, [tokenTxns.data, tokenTxns.previousData])
+  const data = React.useMemo(() => tokenTxns, [tokenTxns.data,  tokenTxns.called, tokenTxns.previousData])
   return { data: data.data, lastFetched: new Date(), loading: tokenTxns.loading };
 }
 
@@ -1500,7 +1501,7 @@ export const FILTERED_TRANSACTIONS = gql`
       amount1
       amountUSD
     }
-    swaps(first: 280, orderBy: timestamp, orderDirection: desc, where: { pair_in: $allPairs }) {
+    swaps(first: 350, orderBy: timestamp, orderDirection: desc, where: { pair_in: $allPairs }) {
       id
       transaction {
         id

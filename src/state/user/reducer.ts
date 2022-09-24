@@ -139,8 +139,8 @@ export default createReducer(initialState, (builder) =>
       state.chartHistory = _.orderBy(
           _.uniqBy(
             [
-              ...(state.chartHistory ?? []),
-              ...action.payload.chartHistory
+              ...action.payload.chartHistory,
+              ...(state.chartHistory ?? [])
             ], 
             item => item.token.address?.toLowerCase()
           ), 

@@ -165,7 +165,7 @@ export const SelectiveChartWithPair = () => {
     const tokenBalance = useTokenBalance(account ?? undefined, token as any);
     const [ethPrice] = useEthPrice()
     const screenerToken = useDexscreenerToken(address);
-    const transactionData = useTokenTransactions(address, pairs, 3000);
+    const transactionData = useTokenTransactions(address, pairs, 1500);
     const buySellTax = useBuySellTax(address, network)
     const [selectedCurrency, setSelectedCurrency] = React.useReducer(
         function (
@@ -223,16 +223,6 @@ export const SelectiveChartWithPair = () => {
         }
     }, [screenerPair?.baseToken]);
 
-    const usdcAndEthFormatted = useConvertTokenAmountToUsdString(
-        token as Token,
-        parseFloat(tokenBalance?.toFixed(2) as string),
-        pairs?.[0],
-        React.useMemo(() => transactionData?.data?.swaps?.map((swap: any) => ({
-            ...swap,
-            timestamp: swap.transaction.timestamp,
-        })), [transactionData.data])
-    );
-
     const pair = React.useMemo(
         function () {
             if (screenerPair && screenerPair.quoteToken && screenerPair.quoteToken.address)
@@ -252,6 +242,17 @@ export const SelectiveChartWithPair = () => {
         },
         [tokenData, params?.pairAddress, screenerToken, pairs, token]
     );
+    
+    const usdcAndEthFormatted = useConvertTokenAmountToUsdString(
+        React.useMemo(() => token ? token as Token : mainnetCurrency as Token, [token, mainnetCurrency]),
+        parseFloat(tokenBalance?.toFixed(2) as string),
+        React.useMemo(() => pairs?.[0] ? pairs?.[0] : {token0: { id: address }, token1: { id: pair }}, [pairs, pair, address]),
+        React.useMemo(() => transactionData?.data?.swaps?.map((swap: any) => ({
+            ...swap,
+            timestamp: swap.transaction.timestamp,
+        })), [transactionData.data])
+    );
+
     const pairCurrency = useCurrency(pair ?? undefined);
 
     const title = React.useMemo(function () {
@@ -285,6 +286,7 @@ export const SelectiveChartWithPair = () => {
         ReactGA.pageview(window.location.pathname, undefined, document.title)
     }, [])
 
+    useSetTitle(title)
 
     const pageMeta = React.useMemo(function(){
         const data = screenerToken ? screenerToken : screenerPair

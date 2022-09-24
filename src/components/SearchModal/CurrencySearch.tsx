@@ -90,7 +90,7 @@ const useSearchForToken = (address?: string, chainId?: number) => {
       console.log(`token log`, Token)
       setToken(token)
     }
-    if (address && checksummedAddress) {
+    if ((!token || token?.address?.toLowerCase() !== address?.toLowerCase()) && address && checksummedAddress) {
       try {
         getToken().finally(() => console.log(`Token finally loaded. `, token))
       } catch (ex: any) {

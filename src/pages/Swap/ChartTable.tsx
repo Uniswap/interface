@@ -1,3 +1,5 @@
+import '../Swap/transitions.css'
+
 import {
     CSSTransition,
     TransitionGroup as ReactCSSTransitionGroup,
@@ -239,8 +241,9 @@ type _RowProps = {
     index: any; highlightedColor: any; account: any; chainLabel: any; tokenSymbol: any;
 }
 
-const areRowsEqual = (rowProps: any, newRowProps: any) => {
-    return rowProps?.item?.hash === newRowProps?.item?.hash?.toLowerCase()
+const areRowsEqual = (rowProps: _RowProps, newRowProps: _RowProps) => {
+    return rowProps?.highlightedColor?.toLowerCase() === newRowProps.highlightedColor.toLowerCase () && 
+           rowProps?.item?.hash?.toLowerCase() === newRowProps?.item?.hash?.toLowerCase()
 }
 
 const Row = React.memo((props: _RowProps) => {
