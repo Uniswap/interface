@@ -1,6 +1,6 @@
 import * as ethers from 'ethers'
 
-import { ApolloClient, useQuery } from '@apollo/client'
+import { ApolloClient, ApolloError, useQuery } from '@apollo/client'
 import React, { useCallback } from 'react'
 import { Token, WETH9 } from '@uniswap/sdk-core'
 import { fetchBscTokenData, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices } from './bscUtils'
@@ -138,6 +138,40 @@ const TokenFields = `
     decimals
   } 
 `
+
+export const TOKENS_BY_PAIR_ADDRESS = (pairAddress: string) => {
+  const queryString = `
+  {
+		pairs(where:{id_in:["${pairAddress.toLowerCase()}"]}, first: 50, orderBy:reserveUSD, orderDirection:desc) {
+      id
+      token0 {
+        symbol
+        id
+        totalSupply
+        name
+        decimals
+        tradeVolume
+        tradeVolumeUSD
+        txCount
+        totalLiquidity
+        derivedETH
+      }
+      token1 {
+        symbol
+        id
+        totalSupply
+        name
+        decimals
+        tradeVolume
+        tradeVolumeUSD
+        txCount
+        totalLiquidity
+        derivedETH
+      }
+    }
+  }`
+  return gql(queryString)
+}
 export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) => {
   tokenAddress = tokenAddress.toLowerCase()
   const queryString = `
@@ -166,6 +200,7 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
         token1 {
           id
           symbol
+          totalSupply
         }
       }
     }
@@ -238,6 +273,39 @@ export const BSC_TOKEN_DATA_BY_BLOCK_TWO = (tokenAddress: string, block: string)
       }
     }`
   return gql(queryString)
+}
+
+type PairedToken = {
+  symbol: string
+  id: string
+  totalSupply: string
+  name: string
+  decimals: string
+  tradeVolume: string
+  tradeVolumeUSD: string
+  txCount: string
+  totalLiquidity: string
+  derivedETH: string
+}
+
+type PairWithTokens = {
+  id: string
+  token0: PairedToken
+  token1: PairedToken
+}
+
+export const useTokensFromPairAddress = (pairAddress: string): { data?: PairWithTokens, loading: boolean, error?: ApolloError } => {
+
+  const query = useQuery<{pairs: PairWithTokens[]}>(TOKENS_BY_PAIR_ADDRESS(pairAddress), {
+    fetchPolicy:"cache-first",
+    
+  })
+  return {
+    data: query.data?.pairs?.[0],
+    loading: query.loading,
+    error: query.error
+  }
+
 }
 
 export const get2DayPercentChange = (valueNow: any, value24HoursAgo: any, value48HoursAgo: any) => {
@@ -320,17 +388,17 @@ export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceO
   return tokenData
 }
 
-const mapTokenData = (result: { tokens: any[],pairs0?:any[], pairs1?:any[] }, oneDayResult: { tokens: any[] }, twoDayResult: { tokens: any[] }, ethPrice: string, ethPriceOld: string | number) => {
+const mapTokenData = (result: { tokens: any[], pairs0?: any[], pairs1?: any[] }, oneDayResult: { tokens: any[] }, twoDayResult: { tokens: any[] }, ethPrice: string, ethPriceOld: string | number) => {
   const data: any = result?.tokens?.[0], oneDayData: any = oneDayResult?.tokens?.[0], twoDayData: any = twoDayResult?.tokens?.[0]
-  let pairs:any[] = []
+  let pairs: any[] = []
   if (result?.pairs0) {
-    if(result?.pairs1) {
+    if (result?.pairs1) {
       pairs = _.concat(result.pairs0, result.pairs1)
     } else {
       pairs = result.pairs0
     }
-  } else if (result?.pairs1){
-    if(result?.pairs0) {
+  } else if (result?.pairs1) {
+    if (result?.pairs0) {
       pairs = _.concat(result.pairs0, result.pairs1)
     } else {
       pairs = result.pairs1
@@ -392,7 +460,7 @@ const mapTokenData = (result: { tokens: any[],pairs0?:any[], pairs1?:any[] }, on
     }
   }
 
-  return {pairs, ...data}
+  return { pairs, ...data }
 }
 
 export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any, blockOne?: number, blockTwo?: number) => {
@@ -501,8 +569,8 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
  * Updates the document with the passed in title
  * @param title Title to set the document
  */
-export const useSetTitle = ( 
-  title: string 
+export const useSetTitle = (
+  title: string
 ) => {
   React.useEffect(() => {
     const prevTitle = document.title
@@ -514,7 +582,7 @@ export const useSetTitle = (
 }
 
 
-export function useTokenTransactions(tokenAddress: string, allPairsFormatted?:any[], interval: null | number = null) {
+export function useTokenTransactions(tokenAddress: string, allPairsFormatted?: any[], interval: null | number = null) {
   const tokenTxns = useQuery(FILTERED_TRANSACTIONS, {
     variables: {
       allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted?.[0]?.id?.toLowerCase()] : []
@@ -523,7 +591,7 @@ export function useTokenTransactions(tokenAddress: string, allPairsFormatted?:an
     client: client,
 
   });
-  const data = React.useMemo(() => tokenTxns, [tokenTxns.data,  tokenTxns.called, tokenTxns.previousData])
+  const data = React.useMemo(() => tokenTxns, [tokenTxns.data, tokenTxns.called, tokenTxns.previousData])
   return { data: data.data, lastFetched: new Date(), loading: tokenTxns.loading };
 }
 
@@ -644,12 +712,12 @@ const getEthPrice = async () => {
 export function useTokenData(tokenAddress: string, interval: null | number = null) {
   const [ethPrice, ethPriceOld, ethPricePercent] = useEthPrice()
   const [t24h, t48h] = getDeltaTimestamps()
-  const blocks = useBlocksFromTimestamps([ t24h, t48h])
-  const tokenDataQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(),null), {
+  const blocks = useBlocksFromTimestamps([t24h, t48h])
+  const tokenDataQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), null), {
     fetchPolicy: 'cache-and-network',
     pollInterval: interval || 30000
   })
- 
+
   const token1DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[0]), { fetchPolicy: 'cache-and-network' })
   const token2DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[1]), { fetchPolicy: 'cache-and-network' })
 

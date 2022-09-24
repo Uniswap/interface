@@ -142,7 +142,7 @@ export default createReducer(initialState, (builder) =>
               ...action.payload.chartHistory,
               ...(state.chartHistory ?? [])
             ], 
-            item => item.token.address?.toLowerCase()
+            item => item?.token?.address?.toLowerCase()
           ), 
           item => item.time,
           'asc'

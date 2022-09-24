@@ -408,7 +408,7 @@ const _ChartSidebar = (props: ChartSidebarProps)  => {
                                                         <TYPE.black>${abbreviateNumber(marketCap)}</TYPE.black>
                                                     </MenuItem>
                                                 )}
-                                                {!!totalSupplyInt && (
+                                                {!!totalSupplyInt && !!tokenPrice && (
                                                     <MenuItem>
                                                         <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
                                                         <TYPE.black>${abbreviateNumber(Number(tokenPrice) * totalSupplyInt)}</TYPE.black>

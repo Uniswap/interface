@@ -24,6 +24,7 @@ import {
     useSetTitle,
     useTokenData,
     useTokenTransactions,
+    useTokensFromPairAddress,
 } from "state/logs/utils";
 import { useBnbPrices, useBscTokenTransactions } from "state/logs/bscUtils";
 import { useCurrency, useToken } from "hooks/Tokens";
@@ -125,13 +126,27 @@ export const SelectiveChartWithPair = () => {
         pairAddress?: string;
         network: string;
     }>();
+    const pairedTokens = useTokensFromPairAddress(params?.pairAddress || '')
     const network = params?.network;
     const screenerPairChainId = network == 'bsc' ? 56 : network == 'ethereum' ? 1 : 1
     const screenerPair = useDexscreenerPair(toChecksum(params?.pairAddress) || '', screenerPairChainId)
     const isMobile = useIsMobile()
-    const mainnetCurrency = useCurrency(
-        screenerPair?.baseToken?.address
-    );
+    const fallbackFromPair = React.useMemo(() => ({
+        name: pairedTokens?.data?.token0?.name,
+        symbol: pairedTokens?.data?.token0?.symbol,
+        decimals: parseInt(pairedTokens?.data?.token0?.decimals || '18'),
+        address: pairedTokens?.data?.token0?.id,
+        chainId: screenerPairChainId,
+        isToken: true
+    } as Token), [pairedTokens?.data?.token0])
+    const theAddress = React.useMemo(() => {
+        return screenerPair?.baseToken?.address ?
+        screenerPair?.baseToken?.address :
+        fallbackFromPair?.address
+    }, [screenerPair, fallbackFromPair])
+    const mainnetCurrency = useCurrency (
+         theAddress
+    ) 
     const bscTransactionData = useBscTokenTransactions(
         params?.network == 'bsc' ? screenerPair?.baseToken?.address || '' : '',
         network,
@@ -139,8 +154,8 @@ export const SelectiveChartWithPair = () => {
         params?.network == 'bsc' ? params?.pairAddress : ''
     )
     const prebuiltCurrency = React.useMemo(
-        () => mainnetCurrency,
-        [mainnetCurrency]
+        () => mainnetCurrency ? mainnetCurrency : fallbackFromPair,
+        [mainnetCurrency,fallbackFromPair]
     );
     const tokenAddressSupplied = React.useMemo(
         () =>
@@ -201,8 +216,9 @@ export const SelectiveChartWithPair = () => {
             ref.current = undefined;
         } else if (
             params.pairAddress &&
-            mainnetCurrency || screenerPair?.baseToken
-            ) {
+            (mainnetCurrency || screenerPair?.baseToken)
+            && (screenerPair?.pairAddress === params.pairAddress)
+        ) {
             // send event to analytics
             ReactGA.event({
                 category: "Charts",
@@ -213,7 +229,11 @@ export const SelectiveChartWithPair = () => {
                 {
                     time: new Date().getTime(),
                     data: [],
-                    token: { ...screenerPair?.baseToken, ...mainnetCurrency, wrapped: undefined },
+                    token: {
+                        ...screenerPair?.baseToken,
+                        ...mainnetCurrency,
+                        wrapped: undefined
+                    },
                     summary: `Viewing ${screenerPair?.baseToken?.name} token chart`,
                     chainId,
                     network: screenerPair?.chainId,
@@ -221,7 +241,7 @@ export const SelectiveChartWithPair = () => {
                 },
             ]);
         }
-    }, [screenerPair?.baseToken]);
+    }, [screenerPair?.pairAddress, screenerPair?.baseToken]);
 
     const pair = React.useMemo(
         function () {
@@ -242,11 +262,11 @@ export const SelectiveChartWithPair = () => {
         },
         [tokenData, params?.pairAddress, screenerToken, pairs, token]
     );
-    
+
     const usdcAndEthFormatted = useConvertTokenAmountToUsdString(
         React.useMemo(() => token ? token as Token : mainnetCurrency as Token, [token, mainnetCurrency]),
         parseFloat(tokenBalance?.toFixed(2) as string),
-        React.useMemo(() => pairs?.[0] ? pairs?.[0] : {token0: { id: address }, token1: { id: pair }}, [pairs, pair, address]),
+        React.useMemo(() => pairs?.[0] ? pairs?.[0] : { token0: { id: address }, token1: { id: pair } }, [pairs, pair, address]),
         React.useMemo(() => transactionData?.data?.swaps?.map((swap: any) => ({
             ...swap,
             timestamp: swap.transaction.timestamp,
@@ -279,7 +299,7 @@ export const SelectiveChartWithPair = () => {
             return `Kiba Charts | ${mainnetCurrency?.symbol}/${pairCurrency?.symbol} Chart ${price ? `| $${price}` : ''}`
         }
 
-        return `Kiba Charts | (${token?.symbol || ''}) ${token?.name || ''} Chart ${price ? `| $${price}` : ''}`;
+        return `Kiba Charts | View ETH and BSC Token Charts, Transactions, Holders, etc`;
     }, [tokenData?.priceUSD, screenerPair?.priceUsd, screenerToken?.priceUsd, mainnetCurrency, pairCurrency, token])
 
     React.useEffect(() => {
@@ -288,21 +308,21 @@ export const SelectiveChartWithPair = () => {
 
     useSetTitle(title)
 
-    const pageMeta = React.useMemo(function(){
+    const pageMeta = React.useMemo(function () {
         const data = screenerToken ? screenerToken : screenerPair
         return {
-        title,
-        description: `Swap ${data?.baseToken?.symbol}/${data?.quoteToken?.symbol} and view ${data?.baseToken?.symbol}/${data?.quoteToken?.symbol} Chart and Transaction Data on KibaCharts`,
-        canonical: window.location.href,
-        meta: {
-            charset: 'utf-8',
+            title,
+            description: `Swap ${data?.baseToken?.symbol}/${data?.quoteToken?.symbol} and view ${data?.baseToken?.symbol}/${data?.quoteToken?.symbol} Chart and Transaction Data on KibaCharts`,
+            canonical: window.location.href,
+            meta: {
+                charset: 'utf-8',
 
-            name: {
-                keywords: 'swap,charts,react,meta,document,html,tags,kiba,kibaswap,kibacharts,erc20,bep20,tokens'
+                name: {
+                    keywords: 'swap,charts,react,meta,document,html,tags,kiba,kibaswap,kibacharts,erc20,bep20,tokens'
+                }
             }
         }
-    }
-}, [screenerToken, title, screenerPair])
+    }, [screenerToken, title, screenerPair])
 
     const holdings = {
         token,
@@ -387,8 +407,16 @@ export const SelectiveChartWithPair = () => {
     const LogoMemo = React.useMemo(() => {
         return Boolean(!!hasSelectedData) ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, justifyContent: 'space-between' }}>
-                {network == 'ethereum' && ethPrice && <TYPE.small fontSize={12}>ETH <Badge>${parseFloat(parseFloat(ethPrice.toString()).toFixed(2)).toLocaleString()}</Badge> </TYPE.small>}
-                {network === 'bsc' && prices && prices.current && <TYPE.small fontSize={12}>BNB <Badge>${parseFloat(parseFloat(prices?.current.toString()).toFixed(2)).toLocaleString()}</Badge></TYPE.small>}
+                {network == 'ethereum' && ethPrice && 
+                    <TYPE.small fontSize={12}>
+                        <Badge>ETH ${parseFloat(parseFloat(ethPrice.toString()).toFixed(2)).toLocaleString()}</Badge> 
+                    </TYPE.small>
+                }
+                {network === 'bsc' && prices && prices.current && 
+                    <TYPE.small fontSize={12}>
+                        <Badge>BNB ${parseFloat(parseFloat(prices?.current.toString()).toFixed(2)).toLocaleString()}</Badge>
+                    </TYPE.small>
+                }
                 <span
                     style={{
                         display: "flex",
@@ -405,16 +433,20 @@ export const SelectiveChartWithPair = () => {
                             }}
                             size={30}
                             margin
-                            currency0={mainnetCurrency as any}
-                            currency1={pairCurrency as any}
+                            currency0={pairCurrency as any}
+                            currency1={mainnetCurrency ? mainnetCurrency : fallbackFromPair}
                         />
                     )}
-                    {network === 'bsc' && <Badge style={{ marginLeft: 3, marginRight: 3 }}><TYPE.italic>{screenerPair?.baseToken?.symbol}/{screenerPair?.quoteToken?.symbol}</TYPE.italic></Badge>}
+                    {network === 'bsc' && 
+                        <Badge style={{ marginLeft: 3, marginRight: 3 }}>
+                            <TYPE.italic>{screenerPair?.baseToken?.symbol}/{screenerPair?.quoteToken?.symbol}</TYPE.italic>
+                        </Badge>
+                    }
                     on KibaCharts
                 </span>
             </div>
         ) : null;
-    }, [mainnetCurrency, prices, network, Object.keys(screenerPair || {}), chainId, ethPrice, pairCurrency, hasSelectedData]);
+    }, [mainnetCurrency, fallbackFromPair, screenerPair?.baseToken, prices?.current, network, ethPrice, pairCurrency, hasSelectedData]);
     /* memoized function to render the currency input select that represents the current viewed chart's token */
     const PanelMemo = React.useMemo(() => {
         return embedModel.embedMode ? null : !Boolean(chainId) || Boolean(chainId) ? (
@@ -463,7 +495,7 @@ export const SelectiveChartWithPair = () => {
         if (screenerPair?.priceChange) return screenerPair?.priceChange
         if (screenerToken && screenerToken.priceChange) return screenerToken.priceChange
         return {}
-      }, [screenerToken, screenerPair])
+    }, [screenerToken, screenerPair])
     const getRetVal = React.useMemo(
         function () {
             let retVal = "", pairSymbol = "";
@@ -770,19 +802,19 @@ export const SelectiveChartWithPair = () => {
                                 </React.Fragment>
 
                             )}
-                        {hasSelectedData && 
-                            embedModel.embedMode == false && 
+                        {hasSelectedData &&
+                            embedModel.embedMode == false &&
                             isMobile == false && (
-                            <TYPE.link style={{
-                                fontSize: 12,
-                                alignItems: 'center',
-                                display: 'flex',
-                                justifyContent: 'flex-end',
-                                cursor: 'pointer'
-                            }} onClick={embedClick}>
-                                <Code style={{ fontSize: 12 }} /> &nbsp; Embed this chart
-                            </TYPE.link>
-                        )}
+                                <TYPE.link style={{
+                                    fontSize: 12,
+                                    alignItems: 'center',
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                    cursor: 'pointer'
+                                }} onClick={embedClick}>
+                                    <Code style={{ fontSize: 12 }} /> &nbsp; Embed this chart
+                                </TYPE.link>
+                            )}
 
                     </CardSection>
                 </div>

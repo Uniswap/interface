@@ -70,15 +70,15 @@ export const RecentlyViewedCharts = () => {
             </TYPE.black>
         </div>
 
-        <Marquee speed={22} gradientWidth={7} gradient={false} pauseOnHover>
+        <Marquee direction="right" speed={50} gradientWidth={7} gradient={false} pauseOnHover>
             <FixedContainer style={{ marginBottom: 15}}>
                 <ScrollableRow style={{ paddingBottom:15, paddingTop: 15, display: 'flex', gap: 30, alignItems: 'center' }}>
 
 
                     {_.orderBy(
                         _.uniqBy(
-                            userChartHistory, (a) =>
-                            a?.token?.address?.toLowerCase()
+                            userChartHistory, 
+                            (a) => (a?.pair ? a?.pair?.toLowerCase() : a?.token?.address?.toLowerCase())
                         ).filter((item) => item?.chainId === chainId),
                         (a) => a?.time
                     )

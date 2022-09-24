@@ -4,6 +4,16 @@
   transition: 500ms all ease-in;
   filter: hue-rotate(45deg);
 }
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .alert-enter-active {
   opacity: 0.85;
   transform:translateX(0%);
@@ -15,6 +25,7 @@
   opacity: 1;
   transition: 500ms all ease-in  ;
   filter:blur(0px);
+  animation: fadeInAnimation 1s linear;
 }
 .alert-exit {
   opacity: 1;

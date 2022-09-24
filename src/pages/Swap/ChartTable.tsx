@@ -604,7 +604,7 @@ export const TableInstance = ({ network, tableData, tokenSymbol, headerSymbol }:
     const isMobile = useIsMobile()
     return (
         <div style={{
-            height: 500,
+            height: isMobile ? 500 : 600,
             overflowX: `scroll`,
             overflowY: `scroll`,
             width: '100%',

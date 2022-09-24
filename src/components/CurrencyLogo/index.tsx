@@ -8,6 +8,7 @@ import { ImageProps } from 'rebass'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import _ from 'lodash'
 import styled from 'styled-components/macro'
+import { toChecksum } from 'state/logs/utils'
 import trending from '../../trending.json'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { useWeb3React } from '@web3-react/core'
@@ -115,7 +116,7 @@ const CurrencyLogo = React.memo(({
         tokenAddress = currencyObject?.address?.toLowerCase()
       }
 
-      const tokenAddressChecksummed = ethers.utils.getAddress(tokenAddress)
+      const tokenAddressChecksummed = toChecksum(tokenAddress)
       const defaultURLs = [getTokenLogoURL(tokenAddressChecksummed)];
       const defaultUrls = chainId === 56 ?
         [
@@ -144,10 +145,11 @@ const CurrencyLogo = React.memo(({
     const trender = trending.find((token) => token?.address?.toLowerCase() === currency?.address?.toLowerCase());
     if (trender) return <StyledLogo symbol={trender?.symbol} size={size} srcs={[trender?.image]} alt={`${trender.name} Logo`} style={style} {...rest} />
   }
-  
+
   return <StyledLogo symbol={currency?.symbol} size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
-}, (oldProps, newProps) => {
-  return oldProps.currency?.name?.toLowerCase() === newProps?.currency?.name?.toLowerCase() &&
+}, (oldProps, newProps) => {  
+  return oldProps?.currency?.wrapped?.address === newProps?.currency?.wrapped?.address?.toLowerCase() &&
+    oldProps.currency?.name?.toLowerCase() === newProps?.currency?.name?.toLowerCase() &&
     oldProps?.currency?.symbol?.toLowerCase() === newProps?.currency?.symbol?.toLowerCase()
 });
 

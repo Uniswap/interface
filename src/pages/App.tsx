@@ -203,6 +203,8 @@ export default function App() {
                       {/* Simpler route, takes only the pair address, the rest is computed from that */}
                       <Route exact strict path="/selective-charting/:network/:pairAddress" component={SelectiveChartWithPair} />
                       <Route exact strict path="/selective-charts/:network/:pairAddress" component={SelectiveChartWithPair} />
+                      <Route exact strict path="/charts/:network/:pairAddress" component={SelectiveChartWithPair} />
+                      <Route exact strict path="/charts" component={SelectiveChartWithPair} />
 
                       {/* End Chart Pages Routes */}
 
@@ -303,7 +305,7 @@ export default function App() {
                                   style: {}
                                 }].map((sponsor) => (
                                   <CardWrapper title={sponsor.text} key={sponsor.title} href={sponsor.link}>
-                                    <DarkGreyCard style={{ padding: 3 }}>
+                                    <DarkGreyCard style={{height:90,  backgroundColor: !darkMode ? '#eee' : '', padding: 3 }}>
                                       <Flex flexDirection="column" alignItems={'center'} justifyContent={'center'}>
                                         <Flex alignItems={'center'} flexDirection={'row'}>
 
