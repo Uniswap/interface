@@ -31,11 +31,11 @@ export const bannerWrap = style([
 
 export const bannerOverlay = style([
   {
-    opacity: '0.7',
     height: '386px',
   },
   sprinkles({
     position: 'absolute',
+    opacity: '0.7',
     width: 'full',
     backgroundColor: 'grey900',
     left: '0',
@@ -217,11 +217,11 @@ export const table = style([
     borderCollapse: 'collapse',
     borderStyle: 'hidden',
     boxShadow: '0 0 0 1px rgba(153, 161, 189, 0.24)',
-    borderRadius: '12px',
     borderSpacing: '0px 40px',
   },
   sprinkles({
     width: 'full',
+    borderRadius: '12',
   }),
 ])
 
@@ -307,6 +307,4 @@ export const trendingOption = style([
   }),
 ])
 
-export const trendingOptionActive = sprinkles({
-  backgroundColor: 'grey700',
-})
+export const trendingOptionActive = sprinkles({ backgroundColor: 'grey700' })
