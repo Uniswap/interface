@@ -8,7 +8,7 @@ export const logo = sprinkles({ borderRadius: '12' })
 export const title = style([
   body,
   sprinkles({
-    color: 'blackBlue',
+    color: 'textPrimary',
     textAlign: 'left',
     overflow: 'hidden',
     whiteSpace: 'nowrap',

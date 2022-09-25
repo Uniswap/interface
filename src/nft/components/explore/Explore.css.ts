@@ -239,7 +239,7 @@ export const th = style([
     },
   },
   sprinkles({
-    color: { default: 'darkGray', hover: 'blackBlue' },
+    color: { default: 'textSecondary', hover: 'textPrimary' },
     cursor: 'pointer',
     paddingTop: '12',
     paddingBottom: '12',
@@ -252,7 +252,7 @@ export const tr = sprinkles({ cursor: 'pointer' })
 
 export const rank = style([
   sprinkles({
-    color: 'darkGray',
+    color: 'textSecondary',
     position: 'absolute',
     display: { md: 'inline-block', sm: 'none' },
   }),

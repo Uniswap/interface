@@ -40,13 +40,13 @@ export const CollectionTitleCell = ({ value }: CellProps) => {
 export const WithCommaCell = ({ value }: CellProps) => <span>{value.value ? putCommas(value.value) : '-'}</span>
 
 export const EthCell = ({ value }: { value: number }) => (
-  <Row justifyContent="flex-end" color="blackBlue">
+  <Row justifyContent="flex-end" color="textPrimary">
     {value ? <>{formatWeiToDecimal(value.toString())} ETH</> : '-'}
   </Row>
 )
 
 export const VolumeCell = ({ value }: CellProps) => (
-  <Row justifyContent="flex-end" color="blackBlue">
+  <Row justifyContent="flex-end" color="textPrimary">
     {value.value ? <>{ethNumberStandardFormatter(value.value.toString())} ETH</> : '-'}
   </Row>
 )
@@ -55,7 +55,13 @@ export const EthWithDayChange = ({ value }: CellProps) => (
   <Column gap="4">
     <VolumeCell value={{ value: value.value }} />
     {value.change ? (
-      <Box as="span" color={value.change > 0 ? 'green' : 'error'} fontWeight="normal" fontSize="12" position="relative">
+      <Box
+        as="span"
+        color={value.change > 0 ? 'accentSuccess' : 'accentFailure'}
+        fontWeight="normal"
+        fontSize="12"
+        position="relative"
+      >
         {value.change > 0 && '+'}
         {formatChange(value.change)}%
       </Box>
@@ -65,11 +71,17 @@ export const EthWithDayChange = ({ value }: CellProps) => (
 
 export const WeiWithDayChange = ({ value }: CellProps) => (
   <Column gap="4">
-    <Row justifyContent="flex-end" color="blackBlue">
+    <Row justifyContent="flex-end" color="textPrimary">
       {value && value.value ? <>{formatWeiToDecimal(value.value.toString())} ETH</> : '-'}
     </Row>
     {value.change ? (
-      <Box as="span" color={value.change > 0 ? 'green' : 'error'} fontWeight="normal" fontSize="12" position="relative">
+      <Box
+        as="span"
+        color={value.change > 0 ? 'accentSuccess' : 'accentFailure'}
+        fontWeight="normal"
+        fontSize="12"
+        position="relative"
+      >
         {value.change > 0 && '+'}
         {formatChange(value.change)}%
       </Box>
@@ -81,7 +93,13 @@ export const CommaWithDayChange = ({ value }: CellProps) => (
   <Column gap="4">
     <WithCommaCell value={value} />
     {value.change ? (
-      <Box as="span" color={value.change > 0 ? 'green' : 'error'} fontWeight="normal" fontSize="12" position="relative">
+      <Box
+        as="span"
+        color={value.change > 0 ? 'accentSuccess' : 'accentFailure'}
+        fontWeight="normal"
+        fontSize="12"
+        position="relative"
+      >
         {value.change > 0 && '+'}
         {formatChange(value.change)}%
       </Box>

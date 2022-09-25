@@ -4,6 +4,7 @@ import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
 const themeContractValues = {
   colors: {
     accentFailure: '',
+    accentSuccess: '',
     accentActionSoft: '',
 
     explicitWhite: '',
@@ -158,7 +159,8 @@ export const vars = createGlobalTheme(':root', {
     red700: '#530f10',
     red400: '#FA2C38',
     red300: '#FD766B',
-    green200: '#5CFE9D',
+    green200: '#76D191',
+    green300: '#40B66B',
     green400: '#1A9550',
     grey900: '#0E111A',
     grey800: '#141B2B',
