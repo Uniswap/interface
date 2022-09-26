@@ -240,7 +240,9 @@ const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
   const numOwnersStr = stats.stats ? putCommas(stats.stats.num_owners) : 0
   const totalSupplyStr = stats.stats ? putCommas(stats.stats.total_supply) : 0
-  const totalListingsStr = stats.stats ? putCommas(stats.stats.total_listings) : 0
+  const listedPercentageStr = stats.stats
+    ? ((stats.stats.total_listings / stats.stats.total_supply) * 100).toFixed(1)
+    : 0
 
   // round daily volume & floorPrice to 3 decimals or less
   const totalVolumeStr = ethNumberStandardFormatter(stats.stats?.total_volume)
@@ -267,8 +269,8 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
         </StatsItem>
       ) : null}
       {stats.stats?.total_listings ? (
-        <StatsItem label="Listings" isMobile={isMobile ?? false}>
-          {totalListingsStr}
+        <StatsItem label="Listed" isMobile={isMobile ?? false}>
+          {listedPercentageStr} %
         </StatsItem>
       ) : null}
     </Row>
