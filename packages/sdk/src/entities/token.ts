@@ -1,6 +1,6 @@
 import invariant from 'tiny-invariant'
-import { ChainId, WETH_ADDRESS } from '../constants'
 import { validateAndParseAddress } from '../utils'
+import { ChainId, CONTRACT_ADDRESS, DEFAULT_TOKEN_NAME } from '../constants'
 import { Currency } from './currency'
 
 /**
@@ -80,5 +80,11 @@ export const WETH = {
   ),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'),
-  [ChainId.OP_GOERLI]: new Token(ChainId.OP_GOERLI, WETH_ADDRESS, 18, 'WETH', 'Wrapped Ether'),
+  [ChainId.OP_GOERLI]: new Token(
+    ChainId.OP_GOERLI,
+    CONTRACT_ADDRESS[ChainId.OP_GOERLI]?.defaultTokens[DEFAULT_TOKEN_NAME.WETH]! /* WETH_ADDRESS */,
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
 }

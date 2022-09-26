@@ -1,14 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@teleswap/sdk'
-import { ROUTER_ADDRESS } from '@teleswap/sdk'
-import CurrencyLogo from 'components/CurrencyLogo'
 import bn from 'bignumber.js'
+import CurrencyLogo from 'components/CurrencyLogo'
 import { BackToMyLiquidity } from 'components/LiquidityDetail'
 import QuestionHelper from 'components/QuestionHelper'
 import Settings from 'components/Settings'
 // import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
+import { usePresetPeripheryAddress } from 'hooks/usePresetContractAddress'
 import useThemedContext from 'hooks/useThemedContext'
 import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -159,6 +159,7 @@ export default function AddLiquidity({
     },
     {}
   )
+  const { ROUTER: ROUTER_ADDRESS } = usePresetPeripheryAddress()
 
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)

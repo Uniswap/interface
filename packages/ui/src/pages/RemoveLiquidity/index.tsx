@@ -3,8 +3,8 @@ import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, Percent, WETH } from '@teleswap/sdk'
-import { ROUTER_ADDRESS } from '@teleswap/sdk'
 import { BackToMyLiquidity } from 'components/LiquidityDetail'
+import { usePresetPeripheryAddress } from 'hooks/usePresetContractAddress'
 import AppBody from 'pages/AppBody'
 import { rgba } from 'polished'
 import React, { useCallback, useMemo, useState } from 'react'
@@ -108,6 +108,8 @@ export default function RemoveLiquidity({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
+
+  const { ROUTER: ROUTER_ADDRESS } = usePresetPeripheryAddress()
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
 
   const isArgentWallet = useIsArgentWallet()

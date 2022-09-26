@@ -1,6 +1,7 @@
 import { Currency, ETHER, Token } from '@teleswap/sdk'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { usePresetTokens } from 'hooks/usePresetTokens'
 import useThemedContext from 'hooks/useThemedContext'
 import useToggle from 'hooks/useToggle'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -172,6 +173,8 @@ export function CurrencySearch({
   const inactiveTokens = useFoundOnInactiveList(debouncedQuery)
   const filteredInactiveTokens: Token[] = useSortedTokensByQuery(inactiveTokens, debouncedQuery)
 
+  const DEFAULT_TOKENS = usePresetTokens()
+
   return (
     <ContentWrapper>
       <PaddedColumn gap="1rem">
@@ -209,9 +212,9 @@ export function CurrencySearch({
               <CurrencyList
                 height={height}
                 showETH={showETH}
-                currencies={
+                currencies={DEFAULT_TOKENS.concat(
                   filteredInactiveTokens ? filteredSortedTokens.concat(filteredInactiveTokens) : filteredSortedTokens
-                }
+                )}
                 breakIndex={inactiveTokens && filteredSortedTokens ? filteredSortedTokens.length : undefined}
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}
