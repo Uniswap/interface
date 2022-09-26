@@ -34,6 +34,9 @@ jobs:
           key: ${{ runner.os }}-yarn-v1-${{ hashFiles('**/package.json') }}
           restore-keys: ${{ runner.os }}-yarn-v1
 
+      - name: Yarn Install
+        run: yarn --no-audit --prefer-offline
+
       - name: Update GraphQL Schema
         run: yarn relay:schema
 
