@@ -18,7 +18,7 @@ export const bagContainer = style([
   {
     '@media': {
       [`(min-width: ${breakpoints.md}px)`]: {
-        width: '316px',
+        width: '360px',
         height: 'calc(100vh - 72px)',
       },
     },
@@ -27,7 +27,7 @@ export const bagContainer = style([
 
 export const assetsContainer = style([
   sprinkles({
-    paddingX: '32',
+    paddingX: '16',
     maxHeight: 'full',
     overflowY: 'scroll',
   }),
