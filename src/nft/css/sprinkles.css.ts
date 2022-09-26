@@ -4,11 +4,12 @@ import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
 const themeContractValues = {
   colors: {
     accentFailure: '',
+    accentFailureSoft: '',
+    accentAction: '',
     accentActionSoft: '',
 
     explicitWhite: '',
 
-    backgroundAction: '',
     backgroundFloating: '',
     backgroundInteractive: '',
     backgroundModule: '',
@@ -169,7 +170,6 @@ export const vars = createGlobalTheme(':root', {
     grey200: '#B7BED4',
     grey100: '#DDE3F7',
     grey50: '#EDEFF7',
-    accentActionSoft: 'rgba(76, 130, 251, 0.24)',
     accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
     outline: 'rgba(153, 161, 189, 0.24)',
     lightGrayOverlay: '#99A1BD14',

@@ -117,7 +117,7 @@ export const erc1155PlusButton = style([
   }),
   {
     ':hover': {
-      backgroundColor: themeVars.colors.backgroundAction,
+      backgroundColor: themeVars.colors.accentAction,
       color: themeVars.colors.textPrimary,
     },
   },
