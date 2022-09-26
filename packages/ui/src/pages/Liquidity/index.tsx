@@ -1,6 +1,7 @@
 // import { JSBI, Pair } from '@teleswap/sdk'
 // import dayjs from 'dayjs'
 import { Pair /* , JSBI */ /*  , Token  */ } from '@teleswap/sdk'
+import bn from 'bignumber.js'
 import DoubleCurrencyLogoHorizontal from 'components/DoubleLogo'
 import { LiquidityCard } from 'components/PositionCard'
 // import { BIG_INT_ZERO } from 'constants/index'
@@ -8,9 +9,9 @@ import gql from 'graphql-tag'
 import useThemedContext from 'hooks/useThemedContext'
 import namor from 'namor'
 import React, { useEffect, useMemo, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { Link } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
-import bn from 'bignumber.js'
 // import { useStakingInfo } from 'state/stake/hooks'
 import styled from 'styled-components'
 import { client } from 'utils/apolloClient'
@@ -107,12 +108,13 @@ const EmptyProposals = styled.div`
 const YourLiquidityGrid = styled(Box)`
   // border: 1px solid rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 24px;
-  padding: 48px;
+  border-radius: 1rem;
+  padding: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: repeat(40px);
-  grid-row-gap: 24px;
+  grid-row-gap: 1rem;
+  grid-column-gap: ${() => (isMobile ? '30px' : '1rem')};
   grid-auto-flow: row;
   justify-items: center;
   align-items: center;
@@ -122,12 +124,13 @@ const YourLiquidityGrid = styled(Box)`
 const TopPoolsGrid = styled(Box)`
   // border: 1px solid rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 24px;
-  padding: 48px;
+  border-radius: 1rem;
+  padding: 2rem;
   display: grid;
   grid-template-columns: 1fr 5fr 3fr 5fr;
   grid-template-rows: repeat(40px);
-  grid-row-gap: 24px;
+  grid-row-gap: 1rem;
+  grid-column-gap: ${() => (isMobile ? '0px' : '1rem')};
   grid-auto-flow: row;
   justify-items: center;
   align-items: center;
@@ -559,9 +562,18 @@ export default function Liquidity() {
                       key={`${v2Pair.id}-2`}
                       sx={{ textAlign: 'center', width: '10rem', display: 'flex', justifyContent: 'center' }}
                     >
-                      <Flex sx={{ gap: '12px', width: '8rem' }}>
+                      <Flex sx={{ gap: isMobile ? '0.25rem' : '1rem', width: '8rem' }}>
                         <DoubleCurrencyLogoHorizontal currency0={v2Pair.token0} currency1={v2Pair.token1} />
-                        <Text sx={{ whiteSpace: 'nowrap' }}>
+                        <Text
+                          sx={{
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            width: 'min-content',
+                            minWidth: isMobile ? '7rem' : 'min-content',
+                            textAlign: 'left'
+                          }}
+                        >
                           {v2Pair.token0?.symbol?.toUpperCase()}-{v2Pair.token1?.symbol?.toUpperCase()}
                         </Text>
                       </Flex>
@@ -571,7 +583,7 @@ export default function Liquidity() {
                     </Box>
                     <Box key={`${v2Pair.id}-4`}>
                       <ButtonPrimary
-                        style={{ display: 'inline-block !important' }}
+                        style={{ display: 'inline-block !important', whiteSpace: 'nowrap' }}
                         padding=".3rem"
                         borderRadius=".5rem"
                         as={Link}

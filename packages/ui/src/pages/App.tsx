@@ -60,7 +60,7 @@ const BodyWrapper = styled.div<{ mobile?: boolean }>`
   align-items: center;
   flex: 1;
   z-index: 10;
-  ${({ mobile }) => (mobile ? `overflow: auto;` : '')}
+  ${({ mobile }) => (mobile ? `overflow: hidden auto;` : '')}
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 1rem;
     padding-top: 4rem;

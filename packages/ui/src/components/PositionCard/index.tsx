@@ -2,6 +2,7 @@ import { JSBI, Pair, Percent, TokenAmount } from '@teleswap/sdk'
 import { darken } from 'polished'
 import { transparentize } from 'polished'
 import React, { useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Box, Text } from 'rebass'
@@ -484,7 +485,18 @@ export function LiquidityCard({
       <Box>
         <DoubleCurrencyLogoHorizontal currency0={currency0} currency1={currency1} size={20} />
       </Box>
-      <Box>{!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}</Box>
+      <Box
+        sx={{
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          width: 'min-content',
+          textAlign: 'left',
+          ...(isMobile && { maxWidth: '3.5rem' })
+        }}
+      >
+        {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
+      </Box>
       <Box>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</Box>
       <Box>xx</Box>
       {/* <td>xx</td> */}
