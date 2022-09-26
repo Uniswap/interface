@@ -2,6 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import TokensBanner from 'components/Tokens/TokensBanner'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { lazy } from 'react'
@@ -31,7 +32,7 @@ export default function TopLevelModals() {
         (location.pathname.includes('/pool') || location.pathname.includes('/swap')) && <TokensBanner />}
       <Cart />
       <Bag />
-      <TransactionCompleteModal />
+      {useNftFlag() === NftVariant.Enabled && <TransactionCompleteModal />}
     </>
   )
 }
