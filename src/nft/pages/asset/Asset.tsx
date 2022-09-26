@@ -16,7 +16,7 @@ import { Traits } from '../../components/details/Traits'
 import { Center, Column, Row } from '../../components/Flex'
 import { CloseDropDownIcon, CornerDownLeftIcon, Eth2Icon, ShareIcon, SuspiciousIcon } from '../../components/icons'
 import { ExpandableText } from '../../components/layout/ExpandableText'
-import { badge, bodySmall, caption, header2, subhead } from '../../css/common.css'
+import { badge, bodySmall, caption, headlineMedium, subhead } from '../../css/common.css'
 import { themeVars } from '../../css/sprinkles.css'
 import { useBag } from '../../hooks'
 import { useTimeout } from '../../hooks/useTimeout'
@@ -271,7 +271,7 @@ const Asset = () => {
                 </Center>
               </Row>
             </Row>
-            <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={header2}>
+            <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={headlineMedium}>
               {asset.openseaSusFlag && (
                 <Box marginTop="8">
                   <MouseoverTooltip text={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}>
