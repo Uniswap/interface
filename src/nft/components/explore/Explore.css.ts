@@ -205,7 +205,7 @@ export const valuePropContent = style([
         width: '58%',
         lineHeight: '36px',
       },
-      [`(min-width: ${breakpoints.lg}px)`]: { width: '50%' },
+      [`(min-width: ${breakpoints.lg - 1}px)`]: { width: '50%' },
     },
   },
 ])

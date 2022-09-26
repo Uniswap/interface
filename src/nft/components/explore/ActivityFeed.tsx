@@ -53,14 +53,7 @@ const ActivityFeed = ({ address }: { address: string }) => {
           </Column>
           <Column width="full" position="relative">
             {collectionActivity.events.map((activityEvent: ActivityEvent, index: number) => {
-              return (
-                <ActivityRow
-                  event={activityEvent}
-                  index={index}
-                  key={`${activityEvent.eventType}${activityEvent.tokenId}`}
-                  current={current}
-                />
-              )
+              return <ActivityRow event={activityEvent} index={index} key={index} current={current} />
             })}
           </Column>
         </Box>
