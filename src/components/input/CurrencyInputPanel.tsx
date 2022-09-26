@@ -97,6 +97,11 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
 
   return (
     <Flex gap="none" {...transformedProps}>
+      {currency && isOutput && (
+        <Text color="textSecondary" pb="xs" variant="caption">
+          {t("You'll receive")}
+        </Text>
+      )}
       <Flex
         row
         alignItems="center"
