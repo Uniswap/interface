@@ -4,7 +4,7 @@ import { useQuery } from 'react-query'
 
 import { Box } from '../../components/Box'
 import { Column, Row } from '../../components/Flex'
-import { header2 } from '../../css/common.css'
+import { headlineMedium } from '../../css/common.css'
 import { fetchTrendingCollections } from '../../queries'
 import { CollectionTableColumn, TimePeriod, VolumeType } from '../../types'
 import CollectionTable from './CollectionTable'
@@ -66,7 +66,7 @@ const TrendingCollections = () => {
     <Box width="full" className={styles.section}>
       <Column width="full">
         <Row>
-          <Box as="h2" className={header2} fontSize="36" marginTop="88">
+          <Box as="h2" className={headlineMedium} fontSize="36" marginTop="88">
             Trending Collections
           </Box>
         </Row>
