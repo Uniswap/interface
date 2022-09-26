@@ -93,8 +93,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
   useEffect(() => {
     if (!data) return
 
-    // qr code scanning returns string here
-    onScanCode(data as string)
+    onScanCode(data.toString())
   }, [data, onScanCode])
 
   const frameProcessor = useFrameProcessor((frame) => {

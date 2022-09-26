@@ -17,12 +17,12 @@ import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
 import { PendingConnection } from 'src/components/WalletConnect/ScanSheet/PendingConnection'
+import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useDisplayName, useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
-import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
-import { getValidAddress } from 'src/utils/addresses'
+import { connectToApp } from 'src/features/walletConnect/WalletConnect'
 
 const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
 
@@ -54,13 +54,8 @@ export function WalletConnectModal({
       if (!activeAddress || hasScanError || shouldFreezeCamera) return
       selectionAsync()
 
-      if (getValidAddress(uri, true)) {
-        preload(uri)
-        navigate(uri, onClose)
-      } else if (await isValidWCUrl(uri.toString())) {
-        setShouldFreezeCamera(true)
-        connectToApp(uri)
-      } else {
+      const supportedURI = await getSupportedURI(uri)
+      if (!supportedURI) {
         setHasScanError(true)
         Alert.alert(
           t('Invalid QR Code'),
@@ -76,6 +71,19 @@ export function WalletConnectModal({
             },
           ]
         )
+
+        return
+      }
+
+      if (supportedURI.type === URIType.Address) {
+        preload(supportedURI.value)
+        navigate(supportedURI.value, onClose)
+        return
+      }
+
+      if (supportedURI.type === URIType.WalletConnectURL) {
+        setShouldFreezeCamera(true)
+        connectToApp(uri)
       }
     },
     [

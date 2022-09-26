@@ -14,10 +14,10 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import { Text } from 'src/components/Text'
+import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
-import { getValidAddress } from 'src/utils/addresses'
 
 type Props = {
   isVisible: boolean
@@ -40,10 +40,10 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
     // don't scan any QR codes if there is an error popup open or camera is frozen
     if (hasScanError || shouldFreezeCamera) return
     selectionAsync()
-
-    if (getValidAddress(uri)) {
+    const supportedURI = await getSupportedURI(uri)
+    if (supportedURI?.type === URIType.Address) {
       setShouldFreezeCamera(true)
-      onSelectRecipient(uri)
+      onSelectRecipient(supportedURI.value)
       onClose()
     } else {
       Alert.alert(
