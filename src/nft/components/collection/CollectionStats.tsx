@@ -155,8 +155,8 @@ const CollectionName = ({
           gap="8"
           height="32"
         >
-          {collectionStats.discordUrl ? (
-            <SocialsIcon href={collectionStats.discordUrl}>
+          {collectionStats.discordUrl || isCollectionStatsLoading ? (
+            <SocialsIcon href={collectionStats.discordUrl ?? ''}>
               <DiscordIcon
                 fill={themeVars.colors.textSecondary}
                 color={themeVars.colors.textSecondary}
@@ -165,7 +165,7 @@ const CollectionName = ({
               />
             </SocialsIcon>
           ) : null}
-          {collectionStats.twitter ? (
+          {collectionStats.twitter || isCollectionStatsLoading ? (
             <SocialsIcon href={'https://twitter.com/' + collectionStats.twitter}>
               <TwitterIcon
                 fill={themeVars.colors.textSecondary}
@@ -176,13 +176,13 @@ const CollectionName = ({
             </SocialsIcon>
           ) : null}
 
-          {collectionStats.instagram ? (
-            <SocialsIcon href={'https://instagram.com/' + collectionStats.instagram}>
+          {collectionStats.instagram || isCollectionStatsLoading ? (
+            <SocialsIcon href={'https ://instagram.com/' + collectionStats.instagram}>
               <InstagramIcon fill={themeVars.colors.textSecondary} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
-          {collectionStats.externalUrl ? (
-            <SocialsIcon href={collectionStats.externalUrl}>
+          {collectionStats.externalUrl || isCollectionStatsLoading ? (
+            <SocialsIcon href={collectionStats.externalUrl ?? ''}>
               <ExternalIcon fill={themeVars.colors.textSecondary} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
