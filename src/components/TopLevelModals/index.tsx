@@ -11,6 +11,7 @@ import { ApplicationModal } from 'state/application/reducer'
 
 const Cart = lazy(() => import('nft/components/sell/modal/ListingTag'))
 const Bag = lazy(() => import('nft/components/bag/Bag'))
+const TransactionCompleteModal = lazy(() => import('nft/components/collection/TransactionCompleteModal'))
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
@@ -30,6 +31,7 @@ export default function TopLevelModals() {
         (location.pathname.includes('/pool') || location.pathname.includes('/swap')) && <TokensBanner />}
       <Cart />
       <Bag />
+      <TransactionCompleteModal />
     </>
   )
 }
