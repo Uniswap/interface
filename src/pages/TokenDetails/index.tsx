@@ -112,29 +112,31 @@ export default function TokenDetails() {
   const token = useTokenQuery(tokenAddress ?? '', currentChainName, timePeriod).tokens?.[0]
 
   const navigate = useNavigate()
-  const switchChains = (newChain: Chain) => {
-    if (tokenAddressParam === 'NATIVE') {
-      navigate(`/tokens/${newChain.toLowerCase()}/NATIVE`)
-    } else {
-      token?.project?.tokens?.forEach((token) => {
-        if (token.chain === newChain && token.address) {
-          navigate(`/tokens/${newChain.toLowerCase()}/${token.address}`)
-        }
-      })
-    }
-  }
+  const switchChains = useCallback(
+    (newChain: Chain) => {
+      const chainSegment = newChain.toLowerCase()
+      if (tokenAddressParam === 'NATIVE') {
+        navigate(`/tokens/${chainSegment}/NATIVE`)
+      } else {
+        token?.project?.tokens?.forEach((token) => {
+          if (token.chain === newChain && token.address) {
+            navigate(`/tokens/${chainSegment}/${token.address}`)
+          }
+        })
+      }
+    },
+    [navigate, token?.project?.tokens, tokenAddressParam]
+  )
   useOnGlobalChainSwitch(switchChains)
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
-  // TODO: Make useToken() work on non-mainenet chains or replace this logic
   const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(tokenAddress, chainId) && tokenWarning !== null
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
-  const onReviewSwap = useCallback(() => {
-    return new Promise<boolean>((resolve) => {
-      shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true)
-    })
-  }, [shouldShowSpeedbump])
+  const onReviewSwap = useCallback(
+    () => new Promise<boolean>((resolve) => (shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true))),
+    [shouldShowSpeedbump]
+  )
 
   const onResolveSwap = useCallback(
     (value: boolean) => {
@@ -190,12 +192,6 @@ export default function TokenDetails() {
     (token?.address && token.symbol && token.name
       ? new Token(CHAIN_NAME_TO_CHAIN_ID[currentChainName], token.address, 18, token.symbol, token.name)
       : undefined)
-
-  // TODO: Fix this logic to not automatically redirect on refresh, yet still catch invalid addresses
-  //const location = useLocation()
-  //if (token === undefined) {
-  //  return <Navigate to={{ ...location, pathname: '/tokens' }} replace />
-  //}
 
   return (
     <TokenDetailsLayout>
