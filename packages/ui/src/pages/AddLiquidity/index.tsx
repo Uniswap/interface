@@ -543,7 +543,6 @@ export default function AddLiquidity() {
   }, [onFieldAInput, txHash])
 
   const addIsUnsupported = useIsTransactionUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
-
   return (
     <>
       <Flex alignItems={'flex-start'} width="21rem">
@@ -722,7 +721,7 @@ export default function AddLiquidity() {
               }}
             >
               {/* {new bn(v2Pair.trackedReserveETH).decimalPlaces(4, bn.ROUND_HALF_UP).toString()} */}
-              {pair && new bn(pair?.reserve0.toExact()).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
+              {pair && new bn(pair?.reserve0.toFixed(18)).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
             </Text>
             <Text
               sx={{
@@ -747,7 +746,7 @@ export default function AddLiquidity() {
                 lineHeight: '24px'
               }}
             >
-              {pair && new bn(pair?.reserve1.toExact()).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
+              {pair && new bn(pair?.reserve1.toFixed(18)).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
             </Text>
             <Text
               sx={{
