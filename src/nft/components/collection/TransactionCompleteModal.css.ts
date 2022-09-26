@@ -17,9 +17,9 @@ export const modalContainer = style([
     width: { sm: 'full', md: 'min' },
     left: { sm: '0', md: '1/2' },
     top: '0',
+    zIndex: 'modal',
   }),
   {
-    zIndex: 20,
     alignContent: 'center',
     '@media': {
       'screen and (min-width: 656px)': {
