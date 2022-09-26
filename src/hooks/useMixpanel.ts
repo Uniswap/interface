@@ -135,6 +135,8 @@ export enum MIXPANEL_TYPE {
 
   BANNER_CLICK,
   CLOSE_BANNER_CLICK,
+
+  FARM_UNDER_EARN_TAB_CLICK,
 }
 
 export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES = [
@@ -697,6 +699,10 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
         }
         case MIXPANEL_TYPE.CLOSE_BANNER_CLICK: {
           mixpanel.track('User click close "Banner" at swap page')
+          break
+        }
+        case MIXPANEL_TYPE.FARM_UNDER_EARN_TAB_CLICK: {
+          mixpanel.track('Farms Page Viewed - under Earn tab')
           break
         }
       }
