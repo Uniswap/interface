@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import RegisterCampaignBg from 'assets/images/register-campaign-bg.png'
 import { ButtonPrimary } from 'components/Button'
 import { ModalCenter } from 'components/Modal'
+import { useActiveWeb3React } from 'hooks'
 import { AppState } from 'state'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useRegisterCampaignSuccessModalToggle } from 'state/application/hooks'
@@ -17,6 +18,7 @@ export default function ModalRegisterCampaignSuccess() {
   const toggleRegisterCampaignSuccessModal = useRegisterCampaignSuccessModalToggle()
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
   const handleSwapNow = useSwapNowHandler()
+  const { chainId } = useActiveWeb3React()
 
   return (
     <ModalCenter
@@ -40,9 +42,9 @@ export default function ModalRegisterCampaignSuccess() {
             maxWidth="69%"
             style={{ fontSize: '14px' }}
             onClick={() => {
-              if (!selectedCampaign) return
-              const firstChainId = Number(selectedCampaign.chainIds.split(',')[0]) as ChainId
-              handleSwapNow(firstChainId)
+              if (!selectedCampaign || !chainId) return
+              const listChain: ChainId[] = selectedCampaign.chainIds.split(',').map(Number)
+              handleSwapNow(listChain.includes(chainId) ? chainId : listChain[0])
               toggleRegisterCampaignSuccessModal()
             }}
           >
