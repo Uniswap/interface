@@ -1,12 +1,14 @@
-import { Fraction, JSBI } from '@teleswap/sdk'
+import { Fraction, JSBI, Pair } from '@teleswap/sdk'
+import Bn from 'bignumber.js'
 import { ButtonPrimary } from 'components/Button'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogoHorizontal from 'components/DoubleLogo'
-// import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { useTotalSupply } from 'data/TotalSupply'
+// import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import gql from 'graphql-tag'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useMemo } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useDispatch } from 'react-redux'
@@ -16,6 +18,7 @@ import { AppDispatch } from 'state'
 import { Field, resetMintState } from 'state/mint/actions'
 import { useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components'
+import { client } from 'utils/apolloClient'
 import { currencyId } from 'utils/currencyId'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 
@@ -63,7 +66,7 @@ export default function LiquidityDetail() {
 
   const userHoldingPercentage = useMemo(() => {
     if (userPoolBalance && totalPoolTokens) {
-      return userPoolBalance!.divide(totalPoolTokens!)
+      return userPoolBalance?.divide(totalPoolTokens!)
     }
     return '-'
   }, [pair?.liquidityToken, totalPoolTokens, userPoolBalance])
@@ -176,6 +179,82 @@ export default function LiquidityDetail() {
     )
   }, [claim, currencyA, currencyB, parsedAmounts])
 
+  const [ethPrice, setEthPrice] = useState<Bn>()
+
+  const [fullInfoPair, setFullInfoPair] = useState<any>()
+  // const backgroundColor = useColor(pair?.token0)
+  useEffect(() => {
+    ;(async () => {
+      if (!pair || !pair.token0 || !pair.token1 || ethPrice || fullInfoPair) {
+        return
+      }
+      const pairAddress = Pair.getAddress(pair.token0, pair.token1).toLowerCase()
+      const [
+        {
+          data: {
+            bundles: [{ ethPrice: ep }]
+          }
+        },
+        {
+          data: {
+            pairs: [fullPair]
+          }
+        }
+      ] = await Promise.all([
+        client.query({
+          query: gql`
+            {
+              bundles(first: 1) {
+                id
+                ethPrice
+              }
+            }
+          `,
+          fetchPolicy: 'cache-first'
+        }),
+        client.query({
+          query: gql`
+          {
+            pairs(where: { id: "${pairAddress}" }) {
+              id
+              trackedReserveETH
+              token0 {
+                id
+                symbol
+                name
+                derivedETH
+              }
+              token1 {
+                id
+                symbol
+                name
+                derivedETH
+              }
+              reserve0
+              reserve1
+              reserveUSD
+              totalSupply
+              trackedReserveETH
+              reserveETH
+              volumeUSD
+              untrackedVolumeUSD
+              token0Price
+              token1Price
+              createdAtTimestamp
+            }
+          }
+          `
+          /* variables: {
+            pairAddress
+          }, */
+          // fetchPolicy: 'cache-first'
+        })
+      ])
+      setFullInfoPair(fullPair)
+      setEthPrice(new Bn(ep))
+    })()
+  }, [ethPrice, fullInfoPair, pair])
+
   return (
     <>
       <Flex width="40rem" alignItems={'flex-start'} maxWidth="90vw">
@@ -275,7 +354,17 @@ export default function LiquidityDetail() {
         </Flex>
         <BorderVerticalContainer>
           <Text sx={{ fontSize: '1.2rem' }}>Total Value</Text>
-          <Text sx={{ fontSize: '1.2rem' }}>$&nbsp;18</Text>
+          <Text sx={{ fontSize: '1.2rem' }}>
+            $&nbsp;
+            {userHoldingPercentage !== '-' &&
+              fullInfoPair &&
+              ethPrice &&
+              new Bn(userHoldingPercentage.toSignificant(18))
+                .multipliedBy(fullInfoPair.trackedReserveETH)
+                .multipliedBy(ethPrice)
+                .decimalPlaces(4, Bn.ROUND_HALF_UP)
+                .toString()}
+          </Text>
           <Box
             sx={{
               width: '100%',
@@ -322,7 +411,16 @@ export default function LiquidityDetail() {
                 textOverflow: 'ellipsis'
               }}
             >
-              Current A Value
+              {userHoldingPercentage !== '-' &&
+                fullInfoPair &&
+                ethPrice &&
+                new Bn(userHoldingPercentage.toSignificant(18))
+                  .multipliedBy(fullInfoPair.trackedReserveETH)
+                  .multipliedBy(ethPrice)
+                  .dividedBy(2)
+                  .decimalPlaces(4, Bn.ROUND_HALF_UP)
+                  .toString()}
+              &nbsp;$
             </Box>
             {/* <Box>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(12)}</Box> */}
             <Box
@@ -359,7 +457,16 @@ export default function LiquidityDetail() {
                 textOverflow: 'ellipsis'
               }}
             >
-              Current B Value
+              {userHoldingPercentage !== '-' &&
+                fullInfoPair &&
+                ethPrice &&
+                new Bn(userHoldingPercentage.toSignificant(18))
+                  .multipliedBy(fullInfoPair.trackedReserveETH)
+                  .multipliedBy(ethPrice)
+                  .dividedBy(2)
+                  .decimalPlaces(4, Bn.ROUND_HALF_UP)
+                  .toString()}
+              &nbsp;$
             </Box>
             <Box
               sx={{

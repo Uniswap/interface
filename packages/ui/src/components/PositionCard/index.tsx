@@ -1,12 +1,15 @@
 import { JSBI, Pair, Percent, TokenAmount } from '@teleswap/sdk'
+import Bn from 'bignumber.js'
+import { gql } from 'graphql-tag'
 import { darken } from 'polished'
 import { transparentize } from 'polished'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Box, Text } from 'rebass'
 import styled from 'styled-components'
+import { client } from 'utils/apolloClient'
 
 import { BIG_INT_ZERO } from '../../constants'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -448,8 +451,9 @@ export function LiquidityCard({
   border,
   borderRadius,
   stakedBalance,
-  needBgColor = true
-}: { needBgColor?: boolean } & ViewProps[0] & PositionCardProps) {
+  needBgColor = true,
+  ethPrice
+}: { needBgColor?: boolean; ethPrice: Bn } & ViewProps[0] & PositionCardProps) {
   const { account } = useActiveWeb3React()
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
@@ -479,7 +483,61 @@ export function LiquidityCard({
         ]
       : [undefined, undefined]
 
-  const backgroundColor = useColor(pair?.token0)
+  const [fullInfoPair, setFullInfoPair] = useState<any>()
+  // const backgroundColor = useColor(pair?.token0)
+  useEffect(() => {
+    if (ethPrice) {
+      ;(async () => {
+        const pairAddress = Pair.getAddress(pair.token0, pair.token1).toLowerCase()
+        try {
+          const {
+            data: {
+              pairs: [fullPair]
+            }
+          } = await client.query({
+            query: gql`
+            {
+              pairs(where: { id: "${pairAddress}" }) {
+                id
+                trackedReserveETH
+                token0 {
+                  id
+                  symbol
+                  name
+                  derivedETH
+                }
+                token1 {
+                  id
+                  symbol
+                  name
+                  derivedETH
+                }
+                reserve0
+                reserve1
+                reserveUSD
+                totalSupply
+                trackedReserveETH
+                reserveETH
+                volumeUSD
+                untrackedVolumeUSD
+                token0Price
+                token1Price
+                createdAtTimestamp
+              }
+            }
+            `
+            /* variables: {
+              pairAddress
+            }, */
+            // fetchPolicy: 'cache-first'
+          })
+          setFullInfoPair(fullPair)
+        } catch (err) {
+          console.error(err)
+        }
+      })()
+    }
+  }, [ethPrice, pair.token0, pair.token1])
   return (
     <>
       <Box>
@@ -498,7 +556,12 @@ export function LiquidityCard({
         {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
       </Box>
       <Box>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</Box>
-      <Box>xx</Box>
+      <Box>
+        {fullInfoPair
+          ? new Bn(fullInfoPair.trackedReserveETH).multipliedBy(ethPrice).decimalPlaces(4, Bn.ROUND_HALF_UP).toString()
+          : '-'}
+        &nbsp;$
+      </Box>
       {/* <td>xx</td> */}
       <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
         {/* <ButtonPrimary padding={"unset"} width={"5rem"} borderRadius={".3rem"} sx={{ height: "1.3rem", fontSize: ".5rem", color: "#000000" }} as={Link} to="/manager">

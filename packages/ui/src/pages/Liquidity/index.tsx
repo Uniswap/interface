@@ -1,7 +1,7 @@
 // import { JSBI, Pair } from '@teleswap/sdk'
 // import dayjs from 'dayjs'
 import { Pair /* , JSBI */ /*  , Token  */ } from '@teleswap/sdk'
-import bn from 'bignumber.js'
+import Bn from 'bignumber.js'
 import DoubleCurrencyLogoHorizontal from 'components/DoubleLogo'
 import { LiquidityCard } from 'components/PositionCard'
 // import { BIG_INT_ZERO } from 'constants/index'
@@ -269,95 +269,46 @@ export default function Liquidity() {
 
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
-  // show liquidity even if its deposited in rewards contract
-  /* const stakingInfo = useStakingInfo()
-  const stakingInfosWithBalance = stakingInfo?.filter((pool) => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
-  const stakingPairs = usePairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
- */
-  // remove any pairs that also are included in pairs with stake in mining pool
-  /*   const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter((v2Pair) => {
-    return (
-      stakingPairs
-        ?.map((stakingPair) => stakingPair[1])
-        .filter((stakingPair) => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
-    )
-  }) */
-
   const [pools, setPools] = useState<any[]>([])
+  const [ethPrice, setEthPrice] = useState<Bn>()
 
   useEffect(() => {
     ;(async () => {
-      /*  const getEthPrice = async () => {
-        const utcCurrentTime = dayjs()
-        const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
-
-        let ethPrice = 0
-        let ethPriceOneDay = 0
-        let priceChangeETH = 0
-
-        try {
-          export async function getBlockFromTimestamp(timestamp) {
-            let result = await blockClient.query({
-              query: GET_BLOCK,
-              variables: {
-                timestampFrom: timestamp,
-                timestampTo: timestamp + 600
-              },
-              fetchPolicy: 'cache-first'
-            })
-            return result?.data?.blocks?.[0]?.number
-          }
-
-          let oneDayBlock = await getBlockFromTimestamp(utcOneDayBack)
-          let result = await client.query({
-            query: ETH_PRICE(),
-            fetchPolicy: 'cache-first'
-          })
-          let resultOneDay = await client.query({
-            query: ETH_PRICE(oneDayBlock),
-            fetchPolicy: 'cache-first'
-          })
-          const currentPrice = result?.data?.bundles[0]?.ethPrice
-          const oneDayBackPrice = resultOneDay?.data?.bundles[0]?.ethPrice
-          priceChangeETH = getPercentChange(currentPrice, oneDayBackPrice)
-          ethPrice = currentPrice
-          ethPriceOneDay = oneDayBackPrice
-        } catch (e) {
-          console.log(e)
-        }
-
-        return [ethPrice, ethPriceOneDay, priceChangeETH]
-      } */
-      const PAIRS_CURRENT = gql`
-        query pairs {
-          pairs(first: 200, orderBy: reserveUSD, orderDirection: desc) {
-            id
-          }
-        }
-      `
       const {
-        data: { pairs }
+        data: {
+          bundles: [{ ethPrice }]
+        }
       } = await client.query({
-        query: PAIRS_CURRENT,
+        query: gql`
+          {
+            bundles(first: 1) {
+              id
+              ethPrice
+            }
+          }
+        `,
         fetchPolicy: 'cache-first'
       })
+      setEthPrice(new Bn(ethPrice))
       const {
         data: { pairs: pairsData }
       } = await client.query({
         query: gql`
           {
-            pairs(first: 50, orderBy: trackedReserveETH, orderDirection: desc) {
+            pairs(first: 5, orderBy: trackedReserveETH, orderDirection: desc) {
               id
               trackedReserveETH
               token0 {
                 id
                 symbol
                 name
+                derivedETH
               }
               token1 {
                 id
                 symbol
                 name
+                derivedETH
               }
               reserve0
               reserve1
@@ -373,11 +324,11 @@ export default function Liquidity() {
             }
           }
         `,
-        variables: {
+        /*  variables: {
           allPairs: pairs.map((pair) => {
             return pair.id
           })
-        },
+        }, */
         fetchPolicy: 'cache-first'
       })
       setPools(pairsData)
@@ -462,13 +413,13 @@ export default function Liquidity() {
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
               </Card>
-            ) : v2IsLoading ? (
+            ) : v2IsLoading || !ethPrice ? (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </EmptyProposals>
-            ) : allV2PairsWithLiquidity?.length > 0 ? (
+            ) : allV2PairsWithLiquidity?.length > 0 && ethPrice !== undefined ? (
               //  || stakingPairs?.length > 0
               <>
                 <YourLiquidityGrid>
@@ -485,6 +436,7 @@ export default function Liquidity() {
                       // stakedBalance={stakingInfosWithBalance[index].stakedAmount}
                       border={`1px solid rgba(255, 255, 255, 0.2)!important`}
                       borderRadius={`24px`}
+                      ethPrice={ethPrice}
                     ></LiquidityCard>
                   ))}
                 </YourLiquidityGrid>
@@ -554,7 +506,7 @@ export default function Liquidity() {
               <HeaderItem>Pools</HeaderItem>
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem>
-              {pools.slice(0, 5).map((v2Pair, index) => {
+              {pools.map((v2Pair, index) => {
                 return (
                   <>
                     <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>
@@ -579,7 +531,13 @@ export default function Liquidity() {
                       </Flex>
                     </Box>
                     <Box key={`${v2Pair.id}-3`}>
-                      {new bn(v2Pair.trackedReserveETH).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
+                      {ethPrice
+                        ? new Bn(v2Pair.trackedReserveETH)
+                            .multipliedBy(ethPrice)
+                            .decimalPlaces(4, Bn.ROUND_HALF_UP)
+                            .toString()
+                        : '-'}
+                      &nbsp; $
                     </Box>
                     <Box key={`${v2Pair.id}-4`}>
                       <ButtonPrimary

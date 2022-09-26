@@ -5,8 +5,6 @@ import { Flex, Text } from 'rebass'
 
 export function WrongNetworkProtector({ children }: PropsWithChildren) {
   const { error, chainId, library, active, account } = useActiveWeb3React()
-  console.log(error, chainId, active, account)
-  library?.getNetwork().then(console.log)
   return (
     <>
       {error instanceof UnsupportedChainIdError || !account ? (
