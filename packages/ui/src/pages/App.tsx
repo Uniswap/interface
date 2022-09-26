@@ -1,5 +1,6 @@
 import bg from 'assets/svg/background.svg'
 import LiquidityDetail from 'components/LiquidityDetail'
+import { WrongNetworkProtector } from 'components/WrongNetworkProtector'
 import React, { Suspense } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Route, Switch } from 'react-router-dom'
@@ -60,7 +61,7 @@ const BodyWrapper = styled.div<{ mobile?: boolean }>`
   align-items: center;
   flex: 1;
   z-index: 10;
-  ${({ mobile }) => (mobile ? `overflow: auto;` : '')}
+  ${({ mobile }) => (mobile ? `overflow: hidden auto;` : '')}
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 1rem;
     padding-top: 4rem;
@@ -110,22 +111,83 @@ export default function App() {
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/find" component={PoolFinder} />
-              <Route exact strict path="/liquidity" component={Liquidity} />
-              <Route exact strict path="/manager" component={Liquidity} />
+              <Route
+                exact
+                strict
+                path="/liquidity"
+                component={() => (
+                  <WrongNetworkProtector>
+                    <Liquidity />
+                  </WrongNetworkProtector>
+                )}
+              />
+              <Route
+                exact
+                strict
+                path="/manager"
+                component={() => (
+                  <WrongNetworkProtector>
+                    <Liquidity />
+                  </WrongNetworkProtector>
+                )}
+              />
               {/* <Route exact strict path="/tele" component={Earn} /> */}
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-              <Route exact path="/add" component={AddLiquidity} />
+              <Route
+                exact
+                path="/add"
+                component={() => (
+                  <WrongNetworkProtector>
+                    <AddLiquidity />
+                  </WrongNetworkProtector>
+                )}
+              />
               <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
               <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact path="/create" component={AddLiquidity} />
+              <Route
+                exact
+                path="/create"
+                component={() => (
+                  <WrongNetworkProtector>
+                    <AddLiquidity />
+                  </WrongNetworkProtector>
+                )}
+              />
               <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
               <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
               {/* <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} /> */}
               <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
-              <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-              <Route exact strict path="/liquidity/:currencyIdA/:currencyIdB" component={LiquidityDetail} />
-              <Route exact strict path="/liquidity/:currencyIdA/:currencyIdB/:stable" component={LiquidityDetail} />
+              <Route
+                exact
+                strict
+                path="/remove/:currencyIdA/:currencyIdB"
+                component={() => (
+                  <WrongNetworkProtector>
+                    <RemoveLiquidity />
+                  </WrongNetworkProtector>
+                )}
+              />
+              <Route
+                exact
+                strict
+                path="/liquidity/:currencyIdA/:currencyIdB"
+                component={() => (
+                  <WrongNetworkProtector>
+                    <LiquidityDetail />
+                  </WrongNetworkProtector>
+                )}
+              />
+              <Route
+                exact
+                strict
+                path="/liquidity/:currencyIdA/:currencyIdB/:stable"
+                component={() => (
+                  <WrongNetworkProtector>
+                    <LiquidityDetail />
+                  </WrongNetworkProtector>
+                )}
+              />
               {/*    <Route exact strict path="/migrate/v1" component={MigrateV1} />
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} /> */}
               <Route exact strict path="/vote/:id" component={VotePage} />

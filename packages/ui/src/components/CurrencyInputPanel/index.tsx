@@ -219,7 +219,7 @@ export default function CurrencyInputPanel({
                   onClick={onMax}
                   color={theme.text2}
                   fontWeight={500}
-                  style={{ display: 'inline', cursor: 'pointer', fontSize: '.6rem' }}
+                  style={{ display: 'inline', cursor: 'pointer', fontSize: '.6rem', textAlign: 'right' }}
                 >
                   <span style={{ color: '#6E747B', marginRight: '.1rem' }}>Balance: </span>
                   {!hideBalance && !!currency && selectedCurrencyBalance ? (
