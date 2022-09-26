@@ -5,7 +5,8 @@ import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 export const bagRow = style([
   sprinkles({
     color: 'textPrimary',
-    padding: '4',
+    paddingX: '12',
+    paddingY: '8',
     gap: '12',
     cursor: 'pointer',
     height: 'full',
@@ -15,7 +16,7 @@ export const bagRow = style([
     marginLeft: '-4px',
     marginRight: '-4px',
     ':hover': {
-      background: themeVars.colors.backgroundOutline,
+      background: themeVars.colors.backgroundModule,
     },
   },
 ])
@@ -47,15 +48,11 @@ export const priceChangeColumn = sprinkles({
 })
 
 export const priceChangeRow = style([
+  bodySmall,
   sprinkles({
-    color: 'textTertiary',
+    color: 'gold',
     gap: '4',
-    fontSize: '14',
-    fontWeight: 'normal',
   }),
-  {
-    lineHeight: '20px',
-  },
 ])
 
 export const unavailableAssetRow = style([
@@ -113,9 +110,20 @@ export const removeButton = style([
   },
 ])
 
+export const removeBagRowButton = style([
+  buttonTextSmall,
+  sprinkles({
+    background: 'backgroundInteractive',
+    color: 'textPrimary',
+    paddingX: '14',
+    paddingY: '12',
+    borderRadius: '12',
+  }),
+])
+
 export const bagRowImage = sprinkles({
-  width: '72',
-  height: '72',
+  width: '56',
+  height: '56',
   borderRadius: '8',
 })
 
@@ -132,19 +140,12 @@ export const unavailableImage = style([
   }),
 ])
 
-export const removeAssetOverlay = style([
-  sprinkles({
-    position: 'absolute',
-    right: '4',
-    top: '4',
-  }),
-])
-
 export const bagRowPrice = style([
   sprinkles({
     gap: '4',
     fontSize: '16',
-    fontWeight: 'normal',
+    fontWeight: 'semibold',
+    flexShrink: '0',
   }),
   {
     lineHeight: '24px',
@@ -153,23 +154,25 @@ export const bagRowPrice = style([
 
 export const assetName = style([
   sprinkles({
-    fontSize: '14',
-    fontWeight: 'semibold',
+    fontSize: '16',
+    fontWeight: 'medium',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   }),
   {
-    lineHeight: '20px',
+    lineHeight: '24px',
   },
 ])
 
 export const collectionName = style([
-  buttonTextSmall,
   sprinkles({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
+    fontWeight: 'normal',
+    fontSize: '14',
+    color: 'textSecondary',
   }),
   {
     lineHeight: '20px',

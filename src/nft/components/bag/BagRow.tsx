@@ -6,7 +6,6 @@ import { Column, Row } from 'nft/components/Flex'
 import {
   ChevronDownBagIcon,
   ChevronUpBagIcon,
-  CircularCloseIcon,
   CloseTimerIcon,
   SquareArrowDownIcon,
   SquareArrowUpIcon,
@@ -63,20 +62,6 @@ export const BagRow = ({ asset, removeAsset, showRemove, grayscale, isMobile }: 
     <Link to={getAssetHref(asset)} style={{ textDecoration: 'none' }}>
       <Row ref={assetCardRef} className={styles.bagRow} onMouseEnter={handleCardHover} onMouseLeave={handleCardHover}>
         <Box position="relative" display="flex">
-          <Box
-            display={showRemove ? 'block' : 'none'}
-            className={styles.removeAssetOverlay}
-            onClick={(e: MouseEvent) => {
-              e.preventDefault()
-              e.stopPropagation()
-              removeAsset(asset)
-            }}
-            transition="250"
-            style={{ opacity: cardHovered || isMobile ? '1' : '0' }}
-            zIndex="1"
-          >
-            <CircularCloseIcon />
-          </Box>
           {!noImageAvailable && (
             <Box
               as="img"
@@ -95,27 +80,35 @@ export const BagRow = ({ asset, removeAsset, showRemove, grayscale, isMobile }: 
           {!loadedImage && <Box position="absolute" className={`${styles.bagRowImage} ${loadingBlock}`} />}
           {noImageAvailable && <NoContentContainer />}
         </Box>
-        <Column
-          overflow="hidden"
-          height="full"
-          justifyContent="space-between"
-          color={grayscale ? 'textSecondary' : 'textPrimary'}
-        >
-          <Column>
-            <Row overflow="hidden" whiteSpace="nowrap" gap="2">
-              <Box className={styles.assetName}>{asset.name || asset.tokenId}</Box>
-            </Row>
-            <Row overflow="hidden" whiteSpace="nowrap" gap="2">
-              <Box className={styles.collectionName}>{asset.collectionName}</Box>
-              {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
-            </Row>
-          </Column>
-          <Row className={styles.bagRowPrice}>
-            {`${formatWeiToDecimal(
-              asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
-            )} ETH`}
+        <Column overflow="hidden" width="full" color={grayscale ? 'textSecondary' : 'textPrimary'}>
+          <Row overflow="hidden" width="full" justifyContent="space-between" whiteSpace="nowrap" gap="16">
+            <Box className={styles.assetName}>{asset.name || asset.tokenId}</Box>
+            {(!cardHovered || !showRemove) && (
+              <Box className={styles.bagRowPrice}>
+                {`${formatWeiToDecimal(
+                  asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
+                )} ETH`}
+              </Box>
+            )}
+          </Row>
+          <Row overflow="hidden" whiteSpace="nowrap" gap="2">
+            <Box className={styles.collectionName}>{asset.collectionName}</Box>
+            {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
           </Row>
         </Column>
+        {cardHovered && showRemove && (
+          <Box
+            marginLeft="16"
+            className={styles.removeBagRowButton}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              removeAsset(asset)
+            }}
+          >
+            Remove
+          </Box>
+        )}
       </Row>
     </Link>
   )
@@ -199,7 +192,7 @@ const UnavailableAssetsPreview = ({ assets }: UnavailableAssetsPreviewProps) => 
         borderWidth="1px"
         borderColor="backgroundSurface"
         borderRadius="4"
-        style={{ zIndex: assets.length - index }}
+        style={{ zIndex: index }}
         className={styles.grayscaleImage}
       />
     ))}
@@ -237,23 +230,6 @@ export const UnavailableAssetsHeaderRow = ({
 
   return (
     <Column className={styles.unavailableAssetsContainer}>
-      <Row className={styles.priceChangeRow} justifyContent="space-between">
-        No longer available for sale
-        {!didOpenUnavailableAssets && (
-          <Row
-            position="relative"
-            width="20"
-            height="20"
-            color="textPrimary"
-            justifyContent="center"
-            cursor="pointer"
-            onClick={() => clearUnavailableAssets()}
-          >
-            <TimedLoader />
-            <CloseTimerIcon />
-          </Row>
-        )}
-      </Row>
       {assets.length === 1 && <BagRow asset={assets[0]} removeAsset={() => undefined} grayscale isMobile={isMobile} />}
       {assets.length > 1 && (
         <Column>
@@ -266,11 +242,25 @@ export const UnavailableAssetsHeaderRow = ({
               toggleOpen()
             }}
           >
-            <Row gap="12" fontSize="14" color="textSecondary" fontWeight="normal" style={{ lineHeight: '20px' }}>
+            <Row gap="12" fontSize="14" color="textPrimary" fontWeight="normal" style={{ lineHeight: '20px' }}>
               {!isOpen && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
-              {`${assets.length} unavailable NFTs`}
+              No longer available
             </Row>
             <Row color="textSecondary">{isOpen ? <ChevronUpBagIcon /> : <ChevronDownBagIcon />}</Row>
+            {!didOpenUnavailableAssets && (
+              <Row
+                position="relative"
+                width="20"
+                height="20"
+                color="textPrimary"
+                justifyContent="center"
+                cursor="pointer"
+                onClick={() => clearUnavailableAssets()}
+              >
+                <TimedLoader />
+                <CloseTimerIcon />
+              </Row>
+            )}
           </Row>
           <Column gap="8">
             {isOpen &&
