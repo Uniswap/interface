@@ -48,7 +48,6 @@ import {
 } from 'components/Icons'
 import AntiSnippingAttack from 'components/Icons/AntiSnippingAttack'
 import Loader from 'components/Loader'
-import { dexListConfig } from 'constants/dexes'
 import { MAINNET_NETWORKS } from 'constants/networks'
 import { VERSION } from 'constants/v2'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -137,7 +136,7 @@ export const KSStatistic = () => {
 
           <ForTraderInfoCell>
             <Text fontWeight="600" fontSize="24px">
-              {Object.keys(dexListConfig).length - 1}+{/* DMM and KyberSwap are one */}
+              70+
             </Text>
             <Text color={theme.subText} marginTop="4px" fontSize="14px">
               <Trans>DEXs</Trans>
@@ -150,7 +149,7 @@ export const KSStatistic = () => {
         <ForTraderInfoRow>
           <ForTraderInfoCell>
             <Text fontWeight="600" fontSize="24px">
-              {MAINNET_NETWORKS.length}
+              {MAINNET_NETWORKS.length - 1}+
             </Text>
             <Text color={theme.subText} marginTop="4px" fontSize="14px">
               <Trans>Chains</Trans>

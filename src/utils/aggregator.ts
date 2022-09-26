@@ -12,33 +12,12 @@ import { captureException } from '@sentry/react'
 import JSBI from 'jsbi'
 import invariant from 'tiny-invariant'
 
-import { DEX_TO_COMPARE, DexConfig, dexIds, dexListConfig, dexTypes } from 'constants/dexes'
+import { DEX_TO_COMPARE } from 'constants/dexes'
 import { ETHER_ADDRESS, KYBERSWAP_SOURCE, sentryRequestId } from 'constants/index'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 import { AggregationComparer } from 'state/swap/types'
 
 import fetchWaiting from './fetchWaiting'
-
-type ExchangeConfig = { id: number; type: number } & DexConfig
-
-export const getExchangeConfig = (exchange: string, chainId: ChainId): ExchangeConfig => {
-  if (!exchange) {
-    return {} as ExchangeConfig
-  }
-  const getKeyValue =
-    <T extends Record<string, unknown>, U extends keyof T>(obj: T) =>
-    (key: U) =>
-      obj[key]
-  const ids = (chainId && dexIds[chainId]) || {}
-  const types = (chainId && dexTypes[chainId]) || {}
-  const allIds = Object.assign({}, dexIds.all || {}, ids)
-  const allTypes = Object.assign({}, dexTypes.all || {}, types)
-  return {
-    ...(getKeyValue(dexListConfig)(exchange) || {}),
-    id: getKeyValue(allIds)(exchange) ?? 1,
-    type: getKeyValue(allTypes)(exchange) ?? 0,
-  }
-}
 
 /**
  */
