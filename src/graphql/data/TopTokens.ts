@@ -11,13 +11,16 @@ import { useAtomValue } from 'jotai/utils'
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
-import { ContractInput, HistoryDuration, TopTokens_TokensQuery } from './__generated__/TopTokens_TokensQuery.graphql'
+import {
+  Chain,
+  ContractInput,
+  HistoryDuration,
+  TopTokens_TokensQuery,
+} from './__generated__/TopTokens_TokensQuery.graphql'
 import type { TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { toHistoryDuration } from './util'
-import { useCurrentChainName } from './util'
 
-export function usePrefetchTopTokens(duration: HistoryDuration) {
-  const chain = useCurrentChainName()
+export function usePrefetchTopTokens(duration: HistoryDuration, chain: Chain) {
   return useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
 }
 
@@ -159,14 +162,19 @@ interface UseTopTokensReturnValue {
   tokensWithoutPriceHistoryCount: number
   hasMore: boolean
   loadMoreTokens: () => void
+  maxFetchable: number
 }
-export function useTopTokens(): UseTopTokensReturnValue {
+export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
   const [loading, setLoading] = useState(true)
   const [tokens, setTokens] = useState<TopToken[]>()
   const [page, setPage] = useState(0)
-  const prefetchedData = usePrefetchTopTokens(duration)
+  const prefetchedData = usePrefetchTopTokens(duration, chain)
   const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
+  const maxFetchable = useMemo(
+    () => prefetchedSelectedTokensWithoutPriceHistory.length,
+    [prefetchedSelectedTokensWithoutPriceHistory]
+  )
 
   const hasMore = !tokens || tokens.length < prefetchedSelectedTokensWithoutPriceHistory.length
 
@@ -236,6 +244,7 @@ export function useTopTokens(): UseTopTokensReturnValue {
     hasMore,
     tokensWithoutPriceHistoryCount: prefetchedSelectedTokensWithoutPriceHistory.length,
     loadMoreTokens,
+    maxFetchable,
   }
 }
 
@@ -268,6 +277,9 @@ export const tokensQuery = graphql`
           currency
           value
         }
+      }
+      project {
+        logoUrl
       }
     }
   }

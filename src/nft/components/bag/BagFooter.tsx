@@ -18,8 +18,7 @@ interface BagFooterProps {
   totalEthPrice: BigNumber
   totalUsdPrice: number | undefined
   bagStatus: BagStatus
-  setBagStatus: (status: BagStatus) => void
-  fetchReview: () => void
+  fetchAssets: () => void
   assetsAreInReview: boolean
 }
 
@@ -37,8 +36,7 @@ export const BagFooter = ({
   totalEthPrice,
   totalUsdPrice,
   bagStatus,
-  setBagStatus,
-  fetchReview,
+  fetchAssets,
   assetsAreInReview,
 }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
@@ -86,10 +84,8 @@ export const BagFooter = ({
           onClick={() => {
             if (!isConnected) {
               toggleWalletModal()
-            } else if (bagStatus === BagStatus.ADDING_TO_BAG) {
-              fetchReview()
-            } else if (bagStatus === BagStatus.CONFIRM_REVIEW || bagStatus === BagStatus.WARNING) {
-              setBagStatus(BagStatus.FETCHING_FINAL_ROUTE)
+            } else {
+              fetchAssets()
             }
           }}
         >

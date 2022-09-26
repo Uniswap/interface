@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { useGlobalChainName } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -128,7 +129,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
 
   return (
     <Link
-      to={`/tokens/${token.address}`}
+      to={`/tokens/${useGlobalChainName().toLowerCase()}/${token.address}`}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
