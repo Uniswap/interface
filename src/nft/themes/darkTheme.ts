@@ -6,6 +6,9 @@ export const darkTheme: Theme = {
     accentActionSoft: '#000000E5',
 
     explicitWhite: '#FFFFFF',
+    green: vars.color.green200,
+    gold: vars.color.gold200,
+    violet: vars.color.violet200,
 
     backgroundAction: vars.color.blue400,
     backgroundFloating: '0000000C',
