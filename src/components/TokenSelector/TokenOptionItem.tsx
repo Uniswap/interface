@@ -1,9 +1,11 @@
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
+import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyInfoLogo } from 'src/components/CurrencyLogo/CurrencyInfoLogo'
 import { Box, Flex } from 'src/components/layout'
+import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
@@ -19,14 +21,21 @@ import { formatNumberBalance, formatUSDPrice } from 'src/utils/format'
 
 interface OptionProps {
   option: TokenOption
+  showNetworkPill: boolean
   onPress: () => void
   tokenWarningLevelMap: TokenWarningLevelMap
 }
 
-export function TokenOptionItem({ option, onPress, tokenWarningLevelMap }: OptionProps) {
+export function TokenOptionItem({
+  option,
+  showNetworkPill,
+  onPress,
+  tokenWarningLevelMap,
+}: OptionProps) {
   const { currencyInfo, quantity, balanceUSD } = option
   const { currency } = currencyInfo
 
+  const theme = useAppTheme()
   const { t } = useTranslation()
 
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -70,12 +79,17 @@ export function TokenOptionItem({ option, onPress, tokenWarningLevelMap }: Optio
                     {currency.name}
                   </Text>
                 </Flex>
-                <WarningIcon tokenWarningLevel={tokenWarningLevel} />
+                <WarningIcon
+                  height={theme.iconSizes.sm}
+                  tokenWarningLevel={tokenWarningLevel}
+                  width={theme.iconSizes.sm}
+                />
               </Flex>
-              <Flex row>
+              <Flex centered row gap="xs">
                 <Text color="textPrimary" numberOfLines={1} variant="caption">
                   {currency.symbol}
                 </Text>
+                {showNetworkPill && <InlineNetworkPill chainId={currency.chainId} height={20} />}
               </Flex>
             </Flex>
           </Flex>

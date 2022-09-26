@@ -226,12 +226,13 @@ function _TokenSearchResultList({
       return (
         <TokenOptionItem
           option={item}
+          showNetworkPill={!chainFilter && item.currencyInfo.currency.chainId !== ChainId.Mainnet}
           tokenWarningLevelMap={tokenWarningLevelMap}
           onPress={() => onSelectCurrency?.(item.currencyInfo.currency)}
         />
       )
     },
-    [onSelectCurrency, tokenWarningLevelMap]
+    [onSelectCurrency, tokenWarningLevelMap, chainFilter]
   )
 
   useEffect(() => {
