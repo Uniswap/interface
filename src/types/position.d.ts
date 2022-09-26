@@ -9,8 +9,10 @@ export interface PositionDetails {
   tickUpper: number
   liquidity: BigNumber
   feeGrowthInsideLast: BigNumber
+  stakedLiquidity?: BigNumber
   rTokenOwed: BigNumber
   token0: string
   token1: string
   fee: number
+  endTime?: number
 }

@@ -2,6 +2,7 @@ import { ChainId, CurrencyAmount, Price, Token } from '@kyberswap/ks-sdk-core'
 import { Position } from '@kyberswap/ks-sdk-elastic'
 import { Trans, t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { stringify } from 'qs'
 import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
@@ -140,6 +141,7 @@ function PositionListItem({ stakedLayout, farmAvailable, positionDetails, refe }
     liquidity,
     tickLower,
     tickUpper,
+    stakedLiquidity,
   } = positionDetails
 
   const token0 = useToken(token0Address)
@@ -194,6 +196,8 @@ function PositionListItem({ stakedLayout, farmAvailable, positionDetails, refe }
   const { mixpanelHandler } = useMixpanel()
 
   const [activeTab, setActiveTab] = useState(0)
+  const now = Date.now() / 1000
+
   return position && priceLower && priceUpper ? (
     <StyledPositionCard>
       <>
@@ -267,6 +271,7 @@ function PositionListItem({ stakedLayout, farmAvailable, positionDetails, refe }
                 tokenId={positionDetails.tokenId}
                 layout={1}
                 farmAvailable={farmAvailable}
+                disableCollectFee={!!stakedLiquidity}
               />
             )}
           </>
@@ -279,13 +284,17 @@ function PositionListItem({ stakedLayout, farmAvailable, positionDetails, refe }
               style={{ marginBottom: '20px', textDecoration: 'none', color: theme.textReverse, fontSize: '14px' }}
               padding="8px"
               as={StyledInternalLink}
-              to="/farms"
+              to={`/farms?${stringify({
+                tab: 'elastic',
+                type: positionDetails.endTime ? (positionDetails.endTime > now ? 'active' : 'ended') : 'active',
+                search: positionDetails.poolId,
+              })}`}
             >
               <Trans>Go to Farm</Trans>
             </ButtonPrimary>
           ) : (
             <ButtonGroup>
-              {removed ? (
+              {removed || !!stakedLiquidity ? (
                 <ButtonOutlined disabled padding="8px" style={{ flex: 1 }}>
                   <Text width="max-content" fontSize="14px">
                     <Trans>Remove Liquidity</Trans>
