@@ -155,7 +155,7 @@ export const collectionImageIsLoading = style([
   sprinkles({
     borderStyle: 'solid',
     borderWidth: '4px',
-    borderColor: 'lightGray',
+    borderColor: 'backgroundSurface',
   }),
 ])
 
