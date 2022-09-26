@@ -1,4 +1,5 @@
-import { BuyItem, GenieAsset, PriceInfo, RoutingItem, UpdatedGenieAsset } from '../../types'
+import { BuyItem, GenieAsset, PriceInfo, RoutingItem, UpdatedGenieAsset } from 'nft/types'
+import { formatWeiToDecimal } from 'nft/utils/currency'
 
 const isTheSame = (item: GenieAsset, routeAsset: BuyItem | PriceInfo) => {
   // if route asset has id, match by id
@@ -13,7 +14,14 @@ const isTheSame = (item: GenieAsset, routeAsset: BuyItem | PriceInfo) => {
   }
 }
 
-export const combineBuyItemsWithTxRoute = (items: GenieAsset[], txRoute?: RoutingItem[]): UpdatedGenieAsset[] => {
+const isPriceDiff = (oldPrice: string, newPrice: string) => {
+  return formatWeiToDecimal(oldPrice) !== formatWeiToDecimal(newPrice)
+}
+
+export const combineBuyItemsWithTxRoute = (
+  items: UpdatedGenieAsset[],
+  txRoute?: RoutingItem[]
+): UpdatedGenieAsset[] => {
   return items.map((item) => {
     const route = txRoute && txRoute.find((r) => r.action === 'Buy' && isTheSame(item, r.assetOut))
 
@@ -25,8 +33,14 @@ export const combineBuyItemsWithTxRoute = (items: GenieAsset[], txRoute?: Routin
       }
     }
 
+    const newPriceInfo = item.updatedPriceInfo ? item.updatedPriceInfo : item.priceInfo
+
     // if the price changed
-    if (route && 'priceInfo' in route.assetOut && item.priceInfo.basePrice !== route.assetOut.priceInfo.basePrice) {
+    if (
+      route &&
+      'priceInfo' in route.assetOut &&
+      isPriceDiff(newPriceInfo.basePrice, route.assetOut.priceInfo.basePrice)
+    ) {
       return {
         ...item,
         updatedPriceInfo: route.assetOut.priceInfo,
@@ -35,6 +49,8 @@ export const combineBuyItemsWithTxRoute = (items: GenieAsset[], txRoute?: Routin
 
     return {
       ...item,
+      priceInfo: newPriceInfo,
+      updatedPriceInfo: undefined,
       orderSource: route && 'orderSource' in route.assetOut ? route.assetOut.orderSource : undefined,
     }
   })
