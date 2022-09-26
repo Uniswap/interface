@@ -39,7 +39,7 @@ export const CHAIN_IDS_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.ARBITRUM_ONE]: 'ARBITRUM',
   [SupportedChainId.ARBITRUM_RINKEBY]: 'ARBITRUM',
   [SupportedChainId.OPTIMISM]: 'OPTIMISM',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: 'OPTIMISM',
+  [SupportedChainId.OPTIMISM_GOERLI]: 'OPTIMISM',
 }
 
 export function useGlobalChainName() {
