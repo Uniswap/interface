@@ -2,16 +2,15 @@ import { Trans } from '@lingui/macro'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { filterStringAtom } from 'components/Tokens/state'
 import FavoriteButton from 'components/Tokens/TokenTable/FavoriteButton'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { useResetAtom } from 'jotai/utils'
-import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { isValidBackendChainName } from 'graphql/data/util'
+import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -68,11 +67,10 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
-  const resetFilterString = useResetAtom(filterStringAtom)
-  const location = useLocation()
-  useEffect(() => {
-    resetFilterString()
-  }, [location, resetFilterString])
+  const navigate = useNavigate()
+  useOnGlobalChainSwitch((chain) => {
+    if (isValidBackendChainName(chain)) navigate(`/tokens/${chain.toLowerCase()}`)
+  })
 
   return (
     <Trace page={PageName.TOKENS_PAGE} shouldLogImpression>

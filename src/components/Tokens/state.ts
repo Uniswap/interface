@@ -1,4 +1,3 @@
-import { SupportedChainId } from 'constants/chains'
 import { TokenSortMethod } from 'graphql/data/TopTokens'
 import { TimePeriod } from 'graphql/data/util'
 import { atom, useAtom } from 'jotai'
@@ -8,7 +7,6 @@ import { useCallback, useMemo } from 'react'
 export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
 export const filterStringAtom = atomWithReset<string>('')
-export const filterNetworkAtom = atom<SupportedChainId>(SupportedChainId.MAINNET)
 export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
 export const sortMethodAtom = atom<TokenSortMethod>(TokenSortMethod.TOTAL_VALUE_LOCKED)
 export const sortAscendingAtom = atom<boolean>(false)

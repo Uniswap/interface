@@ -1,19 +1,20 @@
 import { Trans } from '@lingui/macro'
-import { Token } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
-import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
-import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { SingleTokenData } from 'graphql/data/Token'
-import { useCurrency } from 'hooks/Tokens'
+import { SingleTokenData, useTokenPricesCached } from 'graphql/data/Token'
+import { TopToken } from 'graphql/data/TopTokens'
+import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
+import useCurrencyLogoURIs, { getTokenLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import styled from 'styled-components/macro'
+import { isAddress } from 'utils'
 
 import { useIsFavorited, useToggleFavorite } from '../state'
-import { ClickFavorited, FavoriteIcon } from '../TokenTable/TokenRow'
+import { ClickFavorited, FavoriteIcon, L2NetworkLogo, LogoContainer } from '../TokenTable/TokenRow'
 import PriceChart from './PriceChart'
 import ShareButton from './ShareButton'
 
@@ -51,55 +52,52 @@ const TokenActions = styled.div`
   gap: 16px;
   color: ${({ theme }) => theme.textSecondary};
 `
-const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
-  border-radius: 5px;
-  padding: 4px 8px;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 12px;
-  color: ${({ theme, networkColor }) => networkColor ?? theme.textPrimary};
-  background-color: ${({ theme, backgroundColor }) => backgroundColor ?? theme.backgroundSurface};
-`
 
-export default function ChartSection({ token, tokenData }: { token: Token; tokenData: SingleTokenData | undefined }) {
-  const { chainId: connectedChainId } = useWeb3React()
+export function useTokenLogoURI(
+  token: NonNullable<SingleTokenData> | NonNullable<TopToken>,
+  nativeCurrency?: Token | NativeCurrency
+) {
+  const checksummedAddress = isAddress(token.address)
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
+  return (
+    useCurrencyLogoURIs(nativeCurrency)[0] ??
+    (checksummedAddress && getTokenLogoURI(checksummedAddress, chainId)) ??
+    token.project?.logoUrl
+  )
+}
+
+export default function ChartSection({
+  token,
+  nativeCurrency,
+}: {
+  token: NonNullable<SingleTokenData>
+  nativeCurrency?: Token | NativeCurrency
+}) {
   const isFavorited = useIsFavorited(token.address)
   const toggleFavorite = useToggleFavorite(token.address)
-  const chainInfo = getChainInfo(token?.chainId)
-  const networkLabel = chainInfo?.label
-  const networkBadgebackgroundColor = chainInfo?.backgroundColor
-  const warning = checkWarning(token.address)
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
+  const L2Icon = getChainInfo(chainId).circleLogoUrl
+  const warning = checkWarning(token.address ?? '')
 
-  let currency = useCurrency(token.address)
+  const { prices } = useTokenPricesCached(token)
 
-  if (connectedChainId) {
-    const wrappedNativeCurrency = WRAPPED_NATIVE_CURRENCY[connectedChainId]
-    const isWrappedNativeToken = wrappedNativeCurrency?.address === token?.address
-    if (isWrappedNativeToken) {
-      currency = nativeOnChain(connectedChainId)
-    }
-  }
-
-  const tokenName = tokenData?.name ?? token?.name
-  const tokenSymbol = tokenData?.tokens?.[0]?.symbol ?? token?.symbol
+  const logoSrc = useTokenLogoURI(token, nativeCurrency)
 
   return (
     <ChartHeader>
       <TokenInfoContainer>
         <TokenNameCell>
-          <CurrencyLogo currency={currency} size={'32px'} symbol={tokenSymbol} />
-          {tokenName ?? <Trans>Name not found</Trans>}
-          <TokenSymbol>{tokenSymbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+          <LogoContainer>
+            <CurrencyLogo src={logoSrc} size={'32px'} symbol={nativeCurrency?.symbol ?? token.symbol} />
+            <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
+          </LogoContainer>
+          {nativeCurrency?.name ?? token.name ?? <Trans>Name not found</Trans>}
+          <TokenSymbol>{nativeCurrency?.symbol ?? token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
           {!warning && <VerifiedIcon size="20px" />}
-          {networkBadgebackgroundColor && (
-            <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
-              {networkLabel}
-            </NetworkBadge>
-          )}
         </TokenNameCell>
         <TokenActions>
-          {tokenName && tokenSymbol && (
-            <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} tokenAddress={token.address} />
+          {token.name && token.symbol && token.address && (
+            <ShareButton tokenName={token.name} tokenSymbol={token.symbol} tokenAddress={token.address} />
           )}
           {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && (
             <ClickFavorited onClick={toggleFavorite}>
@@ -110,9 +108,7 @@ export default function ChartSection({ token, tokenData }: { token: Token; token
       </TokenInfoContainer>
       <ChartContainer>
         <ParentSize>
-          {({ width, height }) => (
-            <PriceChart tokenAddress={token.address} width={width} height={height} priceDataFragmentRef={null} />
-          )}
+          {({ width, height }) => prices && <PriceChart prices={prices} width={width} height={height} />}
         </ParentSize>
       </ChartContainer>
     </ChartHeader>

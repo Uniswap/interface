@@ -1,16 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { showFavoritesAtom } from 'components/Tokens/state'
-import { usePrefetchTopTokens, useTopTokens } from 'graphql/data/TopTokens'
+import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
+import { validateUrlChainParam } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useCallback, useRef } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
-import { HeaderRow, LoadedRow, LoadingRow, MAX_TOKENS_TO_LOAD } from './TokenRow'
+import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
 
 const LOADING_ROWS_COUNT = 3
-const ROWS_PER_PAGE_FETCH = 20
 
 const GridContainer = styled.div`
   display: flex;
@@ -55,13 +56,13 @@ function NoTokensState({ message }: { message: ReactNode }) {
 }
 
 const LoadingMoreRows = Array(LOADING_ROWS_COUNT).fill(<LoadingRow />)
-const InitialLoadingRows = Array(ROWS_PER_PAGE_FETCH).fill(<LoadingRow />)
+const LoadingRows = (rowCount?: number) => Array(rowCount ?? PAGE_SIZE).fill(<LoadingRow />)
 
-export function LoadingTokenTable() {
+export function LoadingTokenTable({ rowCount }: { rowCount?: number }) {
   return (
     <GridContainer>
       <HeaderRow />
-      <TokenDataContainer>{InitialLoadingRows}</TokenDataContainer>
+      <TokenDataContainer>{LoadingRows(rowCount)}</TokenDataContainer>
     </GridContainer>
   )
 }
@@ -70,9 +71,10 @@ export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
-  const prefetchedTokens = usePrefetchTopTokens()
-  const { loading, tokens, loadMoreTokens } = useTopTokens(prefetchedTokens)
-  const hasMore = !tokens || tokens.length < MAX_TOKENS_TO_LOAD
+  const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
+  const { loading, tokens, tokensWithoutPriceHistoryCount, hasMore, loadMoreTokens, maxFetchable } =
+    useTopTokens(chainName)
+  const showMoreLoadingRows = Boolean(loading && hasMore)
 
   const observer = useRef<IntersectionObserver>()
   const lastTokenRef = useCallback(
@@ -91,7 +93,7 @@ export default function TokenTable() {
 
   /* loading and error state */
   if (loading && (!tokens || tokens?.length === 0)) {
-    return <LoadingTokenTable />
+    return <LoadingTokenTable rowCount={Math.min(tokensWithoutPriceHistoryCount, PAGE_SIZE)} />
   } else {
     if (!tokens) {
       return (
@@ -116,16 +118,19 @@ export default function TokenTable() {
           <GridContainer>
             <HeaderRow />
             <TokenDataContainer>
-              {tokens.map((token, index) => (
-                <LoadedRow
-                  key={token?.name}
-                  tokenListIndex={index}
-                  tokenListLength={tokens?.length ?? 0}
-                  token={token}
-                  ref={tokens.length === index + 1 ? lastTokenRef : undefined}
-                />
-              ))}
-              {loading && LoadingMoreRows}
+              {tokens.map(
+                (token, index) =>
+                  token && (
+                    <LoadedRow
+                      key={token?.address}
+                      tokenListIndex={index}
+                      tokenListLength={maxFetchable}
+                      token={token}
+                      ref={index + 1 === tokens.length ? lastTokenRef : undefined}
+                    />
+                  )
+              )}
+              {showMoreLoadingRows && LoadingMoreRows}
             </TokenDataContainer>
           </GridContainer>
         </>
