@@ -3,38 +3,28 @@ import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
 
 const themeContractValues = {
   colors: {
-    // Pavel's colors, mostly used for the wallet connection. TODO Some may need to be changed / removed
-    error: '',
-    textDisconnect: '',
-    modalBackdrop: '',
-    backgroundSecondary: '',
-    modalClose: '',
-    text: '',
-    modalTextSecondary: '',
+    accentFailure: '',
+    accentActionSoft: '',
 
-    // Bryan's colors from Figma that vary dark vs light
-    blackBlue: '',
-    darkGray: '',
-    medGray: '',
-    lightGray: '',
-    white: '',
-    darkGray10: '',
-    blackBlue20: '',
     explicitWhite: '',
-    magicGradient: '',
-    placeholder: '',
-    lightGrayButton: '',
-    loading: '',
     gold: '',
     green: '',
     violet: '',
 
-    // Opacities of black and white
-    white95: '',
-    white90: '',
-    white80: '',
-    white08: '',
+    backgroundAction: '',
     backgroundFloating: '',
+    backgroundInteractive: '',
+    backgroundModule: '',
+    backgroundOutline: '',
+    backgroundSurface: '',
+
+    modalBackdrop: '',
+
+    stateOverlayHover: '',
+
+    textPrimary: '',
+    textSecondary: '',
+    textTertiary: '',
   },
 
   shadows: {
@@ -158,11 +148,11 @@ export const vars = createGlobalTheme(':root', {
     black: 'black',
     whitesmoke: '#F5F5F5',
     blue: '#4C82FB',
-    explicitBlackBlue: '#0E111A',
     gray: '#CBCEDC',
     transculent: '#7F7F7F',
     transparent: 'transparent',
     none: 'none',
+    white: '#FFF',
 
     // new uniswap colors:
     blue400: '#4C82FB',
@@ -170,6 +160,7 @@ export const vars = createGlobalTheme(':root', {
     pink400: '#FB118E',
     red700: '#530f10',
     red400: '#FA2C38',
+    red300: '#FD766B',
     gold200: '#EEB317',
     gold400: '#B17900',
     green200: '#5CFE9D',
@@ -226,6 +217,18 @@ export const vars = createGlobalTheme(':root', {
     '48': '48px',
     '60': '60px',
     '96': '96px',
+  },
+  lineHeight: {
+    auto: 'auto',
+    '1': '1px',
+    '12': '12px',
+    '14': '14px',
+    '16': '16px',
+    '20': '20px',
+    '24': '24px',
+    '28': '28px',
+    '36': '36px',
+    '44': '44px',
   },
   fontWeight: {
     normal: '400',
@@ -393,7 +396,7 @@ const unresponsiveProperties = defineProperties({
     overflowX: overflow,
     overflowY: overflow,
     boxShadow: { ...themeVars.shadows, none: 'none', dropShadow: vars.color.dropShadow },
-    lineHeight: { '1': '1', auto: 'auto', '16': '16px', '20': '20px', '28': '28px', '36': '36px' },
+    lineHeight: vars.lineHeight,
     transition: vars.time,
     transitionDuration: vars.time,
     animationDuration: vars.time,

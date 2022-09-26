@@ -3,7 +3,7 @@ import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import Loader from 'components/Loader'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { bodySmall, header2, subheadSmall } from 'nft/css/common.css'
+import { bodySmall, headlineMedium, subheadSmall } from 'nft/css/common.css'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils/currency'
 import { useModalIsOpen, useToggleWalletModal } from 'state/application/hooks'
@@ -18,8 +18,7 @@ interface BagFooterProps {
   totalEthPrice: BigNumber
   totalUsdPrice: number | undefined
   bagStatus: BagStatus
-  setBagStatus: (status: BagStatus) => void
-  fetchReview: () => void
+  fetchAssets: () => void
   assetsAreInReview: boolean
 }
 
@@ -37,8 +36,7 @@ export const BagFooter = ({
   totalEthPrice,
   totalUsdPrice,
   bagStatus,
-  setBagStatus,
-  fetchReview,
+  fetchAssets,
   assetsAreInReview,
 }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
@@ -68,7 +66,7 @@ export const BagFooter = ({
         </Box>
         <Column marginBottom="16">
           <Row justifyContent="space-between">
-            <Box className={header2}>{`${formatWeiToDecimal(totalEthPrice.toString())}`}</Box>
+            <Box className={headlineMedium}>{`${formatWeiToDecimal(totalEthPrice.toString())}`}</Box>
             <Row className={styles.ethPill}>
               <Box as="img" src={ethereumLogoUrl} alt="Ethereum" width="24" height="24" />
               ETH
@@ -86,14 +84,12 @@ export const BagFooter = ({
           onClick={() => {
             if (!isConnected) {
               toggleWalletModal()
-            } else if (bagStatus === BagStatus.ADDING_TO_BAG) {
-              fetchReview()
-            } else if (bagStatus === BagStatus.CONFIRM_REVIEW || bagStatus === BagStatus.WARNING) {
-              setBagStatus(BagStatus.FETCHING_FINAL_ROUTE)
+            } else {
+              fetchAssets()
             }
           }}
         >
-          {isPending && <Loader size="20px" stroke="white" />}
+          {isPending && <Loader size="20px" stroke="backgroundSurface" />}
           {!isConnected || walletModalIsOpen
             ? 'Connect wallet'
             : bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET

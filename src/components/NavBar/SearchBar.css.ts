@@ -12,7 +12,7 @@ const baseSearchStyle = style([
     width: { sm: 'viewWidth' },
     borderStyle: 'solid',
     borderWidth: '1px',
-    borderColor: 'medGray',
+    borderColor: 'backgroundOutline',
   }),
   {
     '@media': {
@@ -43,10 +43,10 @@ export const searchBarContainer = style([
 export const searchBar = style([
   baseSearchStyle,
   sprinkles({
-    color: 'placeholder',
+    color: 'textTertiary',
     paddingX: '16',
     cursor: 'pointer',
-    background: 'lightGray',
+    background: 'backgroundSurface',
   }),
 ])
 
@@ -55,7 +55,7 @@ export const searchBarInput = style([
     padding: '0',
     fontWeight: 'normal',
     fontSize: '16',
-    color: { default: 'blackBlue', placeholder: 'placeholder' },
+    color: { default: 'textPrimary', placeholder: 'textTertiary' },
     border: 'none',
     background: 'none',
   }),
@@ -69,7 +69,7 @@ export const searchBarDropdown = style([
   sprinkles({
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
-    background: 'lightGray',
+    background: 'backgroundSurface',
     height: { sm: 'viewHeight', md: 'auto' },
   }),
   {
@@ -120,7 +120,7 @@ export const primaryText = style([
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    color: 'blackBlue',
+    color: 'textPrimary',
   }),
   {
     lineHeight: '24px',
@@ -130,7 +130,7 @@ export const primaryText = style([
 export const secondaryText = style([
   buttonTextSmall,
   sprinkles({
-    color: 'darkGray',
+    color: 'textSecondary',
   }),
   {
     lineHeight: '20px',
@@ -140,7 +140,7 @@ export const secondaryText = style([
 export const imageHolder = style([
   suggestionImage,
   sprinkles({
-    background: 'loading',
+    background: 'backgroundModule',
     flexShrink: '0',
   }),
 ])
@@ -153,7 +153,7 @@ export const suggestionIcon = sprinkles({
 export const sectionHeader = style([
   subheadSmall,
   sprinkles({
-    color: 'darkGray',
+    color: 'textSecondary',
   }),
   {
     lineHeight: '20px',

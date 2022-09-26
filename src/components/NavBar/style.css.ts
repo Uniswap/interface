@@ -10,7 +10,7 @@ export const nav = style([
     width: 'full',
     height: '72',
     zIndex: '2',
-    background: 'white08',
+    background: 'backgroundFloating',
   }),
   {
     backdropFilter: 'blur(24px)',
@@ -28,7 +28,7 @@ export const logoContainer = style([
 export const logo = style([
   sprinkles({
     display: 'block',
-    color: 'blackBlue',
+    color: 'textPrimary',
   }),
 ])
 
@@ -96,14 +96,14 @@ const baseMenuItem = style([
 export const menuItem = style([
   baseMenuItem,
   sprinkles({
-    color: 'darkGray',
+    color: 'textSecondary',
   }),
 ])
 
 export const activeMenuItem = style([
   baseMenuItem,
   sprinkles({
-    color: 'blackBlue',
+    color: 'textPrimary',
     background: 'backgroundFloating',
   }),
 ])
@@ -119,6 +119,6 @@ export const mobileBottomBar = style([
     paddingY: '4',
     paddingX: '8',
     height: '56',
-    background: 'lightGray',
+    background: 'backgroundSurface',
   }),
 ])

@@ -61,7 +61,7 @@ export const ListingSection = ({
       marginTop="10"
       marginBottom="10"
       onClick={() => rows.length > 0 && setIsOpen(!isOpen)}
-      color={allApproved ? 'green' : 'blackBlue'}
+      color={allApproved ? 'green' : 'textPrimary'}
     >
       {allApproved && <ApprovedCheckmarkIcon style={{ marginRight: '8px' }} />}
       {sectionTitle}
@@ -74,12 +74,12 @@ export const ListingSection = ({
           className={clsx(!isSuccessScreen && styles.listingSectionBorder)}
         >
           {caption && (
-            <Box color="blackBlue" fontWeight="normal" className={caption}>
+            <Box color="textPrimary" fontWeight="normal" className={caption}>
               {caption}
             </Box>
           )}
           {title && (
-            <Box color="darkGray" className={badge}>
+            <Box color="textSecondary" className={badge}>
               {title}
             </Box>
           )}
@@ -107,7 +107,7 @@ export const ListingSection = ({
                       marginLeft="8"
                       marginRight="auto"
                       fontWeight="normal"
-                      color="blackBlue"
+                      color="textPrimary"
                       textOverflow="ellipsis"
                       overflow="hidden"
                       maxWidth={{
@@ -126,7 +126,7 @@ export const ListingSection = ({
                       <ApprovedCheckmarkIcon height="20" width="20" />
                     ) : row.status === ListingStatus.FAILED || row.status === ListingStatus.REJECTED ? (
                       <Row gap="4">
-                        <Box fontWeight="normal" fontSize="14" color="darkGray">
+                        <Box fontWeight="normal" fontSize="14" color="textSecondary">
                           {row.status}
                         </Box>
                         <FailedListingIcon />

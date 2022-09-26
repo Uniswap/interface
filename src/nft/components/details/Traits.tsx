@@ -11,11 +11,11 @@ interface TraitProps {
 }
 
 const Trait: React.FC<TraitProps> = ({ label, value }: TraitProps) => (
-  <Column backgroundColor="lightGray" padding="16" gap="4" borderRadius="12">
+  <Column backgroundColor="backgroundSurface" padding="16" gap="4" borderRadius="12">
     <Box
       as="span"
       className={badge}
-      color="darkGray"
+      color="textSecondary"
       whiteSpace="nowrap"
       overflow="hidden"
       textOverflow="ellipsis"
@@ -27,7 +27,7 @@ const Trait: React.FC<TraitProps> = ({ label, value }: TraitProps) => (
 
     <Box
       as="span"
-      color="blackBlue"
+      color="textPrimary"
       fontSize="16"
       fontWeight="normal"
       whiteSpace="nowrap"

@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { useGlobalChainName } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -128,7 +129,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
 
   return (
     <Link
-      to={`/tokens/${token.address}`}
+      to={`/tokens/${useGlobalChainName().toLowerCase()}/${token.address}`}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
@@ -180,13 +181,13 @@ export const SkeletonRow = () => {
         <Box className={styles.imageHolder} />
         <Column gap="4" width="full">
           <Row justifyContent="space-between">
-            <Box borderRadius="round" height="20" background="loading" style={{ width: '180px' }} />
-            <Box borderRadius="round" height="20" width="48" background="loading" />
+            <Box borderRadius="round" height="20" background="backgroundModule" style={{ width: '180px' }} />
+            <Box borderRadius="round" height="20" width="48" background="backgroundModule" />
           </Row>
 
           <Row justifyContent="space-between">
-            <Box borderRadius="round" height="16" width="120" background="loading" />
-            <Box borderRadius="round" height="16" width="48" background="loading" />
+            <Box borderRadius="round" height="16" width="120" background="backgroundModule" />
+            <Box borderRadius="round" height="16" width="48" background="backgroundModule" />
           </Row>
         </Column>
       </Row>

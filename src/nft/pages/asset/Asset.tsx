@@ -16,7 +16,7 @@ import { Traits } from '../../components/details/Traits'
 import { Center, Column, Row } from '../../components/Flex'
 import { CloseDropDownIcon, CornerDownLeftIcon, Eth2Icon, ShareIcon, SuspiciousIcon } from '../../components/icons'
 import { ExpandableText } from '../../components/layout/ExpandableText'
-import { badge, bodySmall, caption, header2, subhead } from '../../css/common.css'
+import { badge, bodySmall, caption, headlineMedium, subhead } from '../../css/common.css'
 import { themeVars } from '../../css/sprinkles.css'
 import { useBag } from '../../hooks'
 import { useTimeout } from '../../hooks/useTimeout'
@@ -69,7 +69,7 @@ const CountdownTimer = ({ sellOrder }: { sellOrder: SellOrder }) => {
 
   return (
     <MouseoverTooltip text={<Box fontSize="12">Expires {expires}</Box>}>
-      <Box as="span" fontWeight="normal" className={caption} color="darkGray">
+      <Box as="span" fontWeight="normal" className={caption} color="textSecondary">
         Expires: {days !== 0 ? `${days} days` : ''} {hours !== 0 ? `${hours} hours` : ''} {minutes} minutes {seconds}{' '}
         seconds
       </Box>
@@ -221,8 +221,8 @@ const Asset = () => {
                     paddingLeft="6"
                     paddingRight="4"
                     className={badge}
-                    backgroundColor="lightGray"
-                    color="blackBlue"
+                    backgroundColor="backgroundSurface"
+                    color="textPrimary"
                     borderRadius="4"
                   >
                     #{rarityProvider.rank} <img src="/nft/svgs/rarity.svg" height={15} width={15} alt="Rarity rank" />
@@ -266,12 +266,12 @@ const Asset = () => {
                   {parsed.origin ? (
                     <CornerDownLeftIcon width="28" height="28" />
                   ) : (
-                    <CloseDropDownIcon color={themeVars.colors.darkGray} />
+                    <CloseDropDownIcon color={themeVars.colors.textSecondary} />
                   )}
                 </Center>
               </Row>
             </Row>
-            <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={header2}>
+            <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={headlineMedium}>
               {asset.openseaSusFlag && (
                 <Box marginTop="8">
                   <MouseoverTooltip text={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}>
@@ -365,10 +365,10 @@ const Asset = () => {
                       alt="Markeplace"
                     />
                   </a>
-                  <Row as="span" className={subhead} color="blackBlue">
+                  <Row as="span" className={subhead} color="textPrimary">
                     {formatEthPrice(asset.priceInfo.ETHPrice)} <Eth2Icon />
                   </Row>
-                  <Box as="span" color="darkGray" className={bodySmall}>
+                  <Box as="span" color="textSecondary" className={bodySmall}>
                     ${toSignificant(asset.priceInfo.USDPrice)}
                   </Box>
                 </Row>

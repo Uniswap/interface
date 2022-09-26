@@ -30,17 +30,17 @@ export const eventRow = style([
   sprinkles({
     paddingY: '12',
     paddingX: '16',
-    color: 'blackBlue',
+    color: 'textPrimary',
     cursor: 'pointer',
     borderWidth: '1px',
     borderStyle: 'solid',
     borderColor: 'transparent',
-    borderBottomColor: 'medGray',
+    borderBottomColor: 'backgroundOutline',
   }),
   {
     height: '84px',
     ':hover': {
-      background: themeVars.colors.lightGray,
+      background: themeVars.colors.backgroundSurface,
     },
   },
 ])
@@ -49,7 +49,7 @@ export const headerRow = style([
   baseRow,
   sprinkles({
     paddingBottom: '8',
-    color: 'darkGray',
+    color: 'textSecondary',
     fontSize: '12',
     fontWeight: 'semibold',
     paddingX: '16',
@@ -93,7 +93,7 @@ export const eventDetail = style([
 export const eventTime = style([
   subheadSmall,
   sprinkles({
-    color: 'darkGray',
+    color: 'textSecondary',
   }),
   {
     lineHeight: '20px',
@@ -103,7 +103,7 @@ export const eventTime = style([
 export const addressCell = style([
   subhead,
   sprinkles({
-    color: 'blackBlue',
+    color: 'textPrimary',
     height: 'full',
     justifyContent: 'center',
   }),
@@ -137,7 +137,7 @@ export const buyCell = style([
         color: vars.color.blue400,
       },
       '&:disabled': {
-        color: themeVars.colors.placeholder,
+        color: themeVars.colors.textTertiary,
       },
       '&:hover&:enabled': {
         background: vars.color.blue400,
@@ -150,12 +150,12 @@ export const buyCell = style([
 export const removeCell = style([
   baseBuyCell,
   sprinkles({
-    color: 'error',
+    color: 'accentFailure',
     cursor: 'pointer',
   }),
   {
     ':hover': {
-      background: vars.color.error,
+      background: vars.color.accentFailure,
       color: themeVars.colors.explicitWhite,
     },
   },
@@ -164,8 +164,8 @@ export const removeCell = style([
 export const filter = style([
   subheadSmall,
   sprinkles({
-    background: 'lightGrayButton',
-    color: 'blackBlue',
+    background: 'backgroundInteractive',
+    color: 'textPrimary',
     paddingY: '12',
     paddingX: '16',
     borderRadius: '12',
@@ -204,8 +204,8 @@ export const rarityInfo = style([
     borderRadius: '4',
     height: '16',
     width: 'min',
-    color: 'blackBlue',
-    background: 'lightGrayButton',
+    color: 'textPrimary',
+    background: 'backgroundInteractive',
     fontSize: '10',
     fontWeight: 'semibold',
     paddingX: '4',

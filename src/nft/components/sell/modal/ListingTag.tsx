@@ -41,7 +41,7 @@ const Cart = () => {
           className={styles.tagContainer}
           width={{ sm: 'full', md: '288' }}
           height={{ sm: 'full', md: 'auto' }}
-          backgroundColor="white"
+          backgroundColor="backgroundSurface"
           marginLeft="0"
           justifyContent="flex-start"
         >
@@ -94,7 +94,7 @@ const BagHeader = ({ bagQuantity }: { bagQuantity: number }) => {
         <Box
           as="button"
           border="none"
-          color="darkGray"
+          color="textSecondary"
           background="black"
           className={styles.closeIcon}
           onClick={toggleCart}

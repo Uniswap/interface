@@ -129,7 +129,7 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: Markets }) => {
 const PriceTooltip = ({ price }: { price: string }) => (
   <MouseoverTooltip
     text={
-      <Box textAlign="left" fontSize="14" fontWeight="normal" color="darkGray">
+      <Box textAlign="left" fontSize="14" fontWeight="normal" color="textSecondary">
         {`${price} ETH`}
       </Box>
     }
@@ -196,7 +196,7 @@ const eventColors = (eventType: ActivityEventType) => {
     [ActivityEventType.CancelListing]: 'error',
   }
 
-  return activityEvents[eventType] as 'gold' | 'green' | 'violet' | 'error'
+  return activityEvents[eventType] as 'gold' | 'green' | 'violet' | 'accentFailure'
 }
 
 export const EventCell = ({ eventType, eventTimestamp, eventTransactionHash }: EventCellProps) => {

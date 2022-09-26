@@ -10,7 +10,7 @@ export const assetInnerStyle = style([
     cursor: 'pointer',
   }),
   {
-    border: `4px solid ${vars.color.white}`,
+    border: `4px solid ${vars.color.backgroundSurface}`,
   },
 ])
 
@@ -34,12 +34,12 @@ export const buy = style([
     left: '50%',
     transform: 'translateX(-50%)',
   },
-  sprinkles({ color: 'white', position: 'absolute', borderRadius: 'round' }),
+  sprinkles({ color: 'backgroundSurface', position: 'absolute', borderRadius: 'round' }),
 ])
 
 export const tokenQuantityHovered = style([
   {
-    border: `4px solid ${vars.color.white}`,
+    border: `4px solid ${vars.color.backgroundSurface}`,
     display: 'flex',
     justifyContent: 'space-between',
   },
@@ -52,11 +52,11 @@ export const tokenQuantityHovered = style([
 export const tokenQuantity = style([
   {
     padding: '10px 17px',
-    border: `4px solid ${vars.color.white}`,
+    border: `4px solid ${vars.color.backgroundSurface}`,
   },
   sprinkles({
     color: 'genieBlue',
-    backgroundColor: 'white',
+    backgroundColor: 'backgroundSurface',
     borderRadius: 'round',
     textAlign: 'center',
   }),
@@ -65,7 +65,7 @@ export const tokenQuantity = style([
 export const plusIcon = style([
   {
     padding: '10px',
-    border: `4px solid ${vars.color.white}`,
+    border: `4px solid ${vars.color.backgroundSurface}`,
   },
   sprinkles({
     width: '28',
@@ -81,7 +81,7 @@ export const bagIcon = style([
   },
   sprinkles({
     borderRadius: 'round',
-    backgroundColor: 'white',
+    backgroundColor: 'backgroundSurface',
   }),
 ])
 

@@ -24,7 +24,7 @@ const Collection = () => {
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
 
-  const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
+  const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
   )
 
@@ -55,53 +55,67 @@ const Collection = () => {
 
   return (
     <Column width="full">
-      <Box width="full" height="160">
-        <Box
-          as="img"
-          maxHeight="full"
-          width="full"
-          src={collectionStats?.bannerImageUrl}
-          className={`${styles.bannerImage}`}
-        />
-      </Box>
-
-      <Column paddingX="32">
-        {collectionStats && <CollectionStats stats={collectionStats} isMobile={isMobile} />}
-        <ActivitySwitcher
-          showActivity={isActivityToggled}
-          toggleActivity={() => {
-            isFiltersExpanded && setFiltersExpanded(false)
-            toggleActivity()
-          }}
-        />
-      </Column>
-      <Row alignItems="flex-start" position="relative" paddingX="48">
-        <Box position="sticky" top="72" width="0">
-          {isFiltersExpanded && (
-            <Filters traitsByAmount={collectionStats?.numTraitsByAmount ?? []} traits={collectionStats?.traits ?? []} />
-          )}
-        </Box>
-
-        {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-        <AnimatedBox
-          style={{
-            transform: gridX.interpolate((x) => `translate(${x as number}px)`),
-            width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
-          }}
-        >
-          {isActivityToggled
-            ? contractAddress && (
-                <Activity
-                  contractAddress={contractAddress}
-                  rarityVerified={collectionStats?.rarityVerified ?? false}
-                  collectionName={collectionStats?.name ?? ''}
+      {collectionStats && contractAddress ? (
+        <>
+          {' '}
+          <Box width="full" height="160">
+            <Box
+              as="img"
+              maxHeight="full"
+              width="full"
+              src={collectionStats?.bannerImageUrl}
+              className={`${styles.bannerImage}`}
+            />
+          </Box>
+          <Column paddingX="32">
+            {collectionStats && <CollectionStats stats={collectionStats} isMobile={isMobile} />}
+            <ActivitySwitcher
+              showActivity={isActivityToggled}
+              toggleActivity={() => {
+                isFiltersExpanded && setFiltersExpanded(false)
+                toggleActivity()
+              }}
+            />
+          </Column>
+          <Row alignItems="flex-start" position="relative" paddingX="48">
+            <Box position="sticky" top="72" width="0">
+              {isFiltersExpanded && (
+                <Filters
+                  traitsByAmount={collectionStats?.numTraitsByAmount ?? []}
+                  traits={collectionStats?.traits ?? []}
                 />
-              )
-            : contractAddress && (
-                <CollectionNfts contractAddress={contractAddress} rarityVerified={collectionStats?.rarityVerified} />
               )}
-        </AnimatedBox>
-      </Row>
+            </Box>
+
+            {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
+            <AnimatedBox
+              style={{
+                transform: gridX.interpolate((x) => `translate(${x as number}px)`),
+                width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
+              }}
+            >
+              {isActivityToggled
+                ? contractAddress && (
+                    <Activity
+                      contractAddress={contractAddress}
+                      rarityVerified={collectionStats?.rarityVerified ?? false}
+                      collectionName={collectionStats?.name ?? ''}
+                    />
+                  )
+                : contractAddress && (
+                    <CollectionNfts
+                      contractAddress={contractAddress}
+                      collectionStats={collectionStats}
+                      rarityVerified={collectionStats?.rarityVerified}
+                    />
+                  )}
+            </AnimatedBox>
+          </Row>
+        </>
+      ) : (
+        // TODO: Put no collection asset page here
+        !isLoading && <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
+      )}
     </Column>
   )
 }

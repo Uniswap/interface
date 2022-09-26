@@ -22,7 +22,7 @@ export const sectionDivider = style([
     width: 'full',
     borderWidth: '0.5px',
     borderStyle: 'solid',
-    borderColor: 'medGray',
+    borderColor: 'backgroundOutline',
   }),
 ])
 
@@ -48,7 +48,7 @@ export const listingModalIcon = style([
   sprinkles({
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor: 'white',
+    borderColor: 'backgroundSurface',
   }),
   {
     boxSizing: 'border-box',
@@ -72,7 +72,7 @@ export const listingSectionBorder = style([
   sprinkles({
     padding: '8',
     borderRadius: '8',
-    borderColor: 'medGray',
+    borderColor: 'backgroundOutline',
     borderStyle: 'solid',
     borderWidth: '1px',
   }),

@@ -132,11 +132,13 @@ const ErrorText = styled.span`
 export default function FooterBalanceSummary({
   address,
   networkBalances,
-  totalBalance,
+  balance,
+  balanceUsd,
 }: {
   address: string
   networkBalances: (JSX.Element | null)[] | null
-  totalBalance: number
+  balance?: number
+  balanceUsd?: number
 }) {
   const tokenSymbol = useToken(address)?.symbol
   const [showMultipleBalances, setShowMultipleBalances] = useState(false)
@@ -159,20 +161,23 @@ export default function FooterBalanceSummary({
             </ErrorText>
           </ErrorState>
         ) : (
-          <BalanceInfo>
-            {multipleBalances ? 'Balance on all networks' : `Your balance on ${networkNameIfOneBalance}`}
-            <BalanceTotal>
-              <BalanceValue>
-                {totalBalance} {tokenSymbol}
-              </BalanceValue>
-              <FiatValue>($107, 610.04)</FiatValue>
-            </BalanceTotal>
-            {multipleBalances && (
-              <ViewAll onClick={() => setShowMultipleBalances(!showMultipleBalances)}>
-                <Trans>{showMultipleBalances ? 'Hide' : 'View'} all balances</Trans>
-              </ViewAll>
-            )}
-          </BalanceInfo>
+          !!balance &&
+          !!balanceUsd && (
+            <BalanceInfo>
+              {multipleBalances ? 'Balance on all networks' : `Your balance on ${networkNameIfOneBalance}`}
+              <BalanceTotal>
+                <BalanceValue>
+                  {balance} {tokenSymbol}
+                </BalanceValue>
+                <FiatValue>{`$${balanceUsd}`}</FiatValue>
+              </BalanceTotal>
+              {multipleBalances && (
+                <ViewAll onClick={() => setShowMultipleBalances(!showMultipleBalances)}>
+                  <Trans>{showMultipleBalances ? 'Hide' : 'View'} all balances</Trans>
+                </ViewAll>
+              )}
+            </BalanceInfo>
+          )
         )}
         <Link to={`/swap?outputCurrency=${address}`}>
           <SwapButton>

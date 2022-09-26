@@ -9,8 +9,8 @@ export const bagContainer = style([
     width: 'full',
     height: 'full',
     right: '0',
-    background: 'lightGray',
-    color: 'blackBlue',
+    background: 'backgroundSurface',
+    color: 'textPrimary',
     paddingTop: '20',
     paddingBottom: '24',
     zIndex: { sm: 'offcanvas', md: '3' },
@@ -40,7 +40,7 @@ export const assetsContainer = style([
 export const header = style([
   subhead,
   sprinkles({
-    color: 'blackBlue',
+    color: 'textPrimary',
     justifyContent: 'space-between',
   }),
   {
@@ -50,7 +50,7 @@ export const header = style([
 
 export const clearAll = style([
   sprinkles({
-    color: 'placeholder',
+    color: 'textTertiary',
     cursor: 'pointer',
     fontWeight: 'semibold',
   }),

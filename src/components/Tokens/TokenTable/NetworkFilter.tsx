@@ -1,23 +1,15 @@
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
+import { BACKEND_CHAIN_NAMES, CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useAtom } from 'jotai'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
-import { filterNetworkAtom } from '../state'
 import FilterOption from './FilterOption'
-
-const NETWORKS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-]
 
 const InternalMenuItem = styled.div`
   flex: 1;
@@ -99,15 +91,18 @@ const CheckContainer = styled.div`
   flex-direction: flex-end;
 `
 
-// TODO: change this to reflect data pipeline
 export default function NetworkFilter() {
   const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
   const open = useModalIsOpen(ApplicationModal.NETWORK_FILTER)
   const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   useOnClickOutside(node, open ? toggleMenu : undefined)
-  const [activeNetwork, setNetwork] = useAtom(filterNetworkAtom)
-  const { label, circleLogoUrl, logoUrl } = getChainInfo(activeNetwork)
+  const navigate = useNavigate()
+
+  const { chainName } = useParams<{ chainName?: string }>()
+  const currentChainName = validateUrlChainParam(chainName)
+
+  const { label, circleLogoUrl, logoUrl } = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
 
   return (
     <StyledMenu ref={node}>
@@ -127,25 +122,28 @@ export default function NetworkFilter() {
       </FilterOption>
       {open && (
         <MenuTimeFlyout>
-          {NETWORKS.map((network) => (
-            <InternalLinkMenuItem
-              key={network}
-              onClick={() => {
-                setNetwork(network)
-                toggleMenu()
-              }}
-            >
-              <NetworkLabel>
-                <Logo src={getChainInfo(network).circleLogoUrl ?? getChainInfo(network).logoUrl} />
-                {getChainInfo(network).label}
-              </NetworkLabel>
-              {network === activeNetwork && (
-                <CheckContainer>
-                  <Check size={16} color={theme.accentAction} />
-                </CheckContainer>
-              )}
-            </InternalLinkMenuItem>
-          ))}
+          {BACKEND_CHAIN_NAMES.map((network) => {
+            const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[network])
+            return (
+              <InternalLinkMenuItem
+                key={network}
+                onClick={() => {
+                  navigate(`/tokens/${network.toLowerCase()}`)
+                  toggleMenu()
+                }}
+              >
+                <NetworkLabel>
+                  <Logo src={chainInfo.circleLogoUrl ?? chainInfo.logoUrl} />
+                  {chainInfo.label}
+                </NetworkLabel>
+                {network === currentChainName && (
+                  <CheckContainer>
+                    <Check size={16} color={theme.accentAction} />
+                  </CheckContainer>
+                )}
+              </InternalLinkMenuItem>
+            )
+          })}
         </MenuTimeFlyout>
       )}
     </StyledMenu>

@@ -23,10 +23,10 @@ export const CollectionProfile = ({
         <Box role="img" background="fallbackGradient" height="36" width="36" marginRight="12" borderRadius="round" />
       )}
       <div>
-        <Box as="span" color="darkGray" style={{ textTransform: 'uppercase' }} className={badge}>
+        <Box as="span" color="textSecondary" style={{ textTransform: 'uppercase' }} className={badge}>
           {label}
         </Box>
-        <Row marginTop="4" className={subheadSmall} color="blackBlue">
+        <Row marginTop="4" className={subheadSmall} color="textPrimary">
           {name} {isVerified && <VerifiedIcon />}
         </Row>
       </div>
