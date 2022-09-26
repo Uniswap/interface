@@ -4,6 +4,7 @@ import { Column, Row } from 'nft/components/Flex'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsCollectionLoading, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
+import { GenieCollection } from 'nft/types'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
@@ -21,15 +22,13 @@ const Collection = () => {
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
 
-  const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
+  const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
   )
 
-  const isLoading = true
-
   useEffect(() => {
-    setIsCollectionStatsLoading(true)
-  }, [isLoading])
+    setIsCollectionStatsLoading(isLoading)
+  }, [isLoading, setIsCollectionStatsLoading])
 
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
@@ -52,7 +51,7 @@ const Collection = () => {
 
   return (
     <Column width="full">
-      {collectionStats && contractAddress ? (
+      {contractAddress ? (
         <>
           {' '}
           <Box width="full" height="160">
@@ -72,7 +71,7 @@ const Collection = () => {
             </Box>
           </Box>
           <Row paddingLeft="32" paddingRight="32">
-            <CollectionStats stats={collectionStats} isMobile={isMobile} />
+            <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
           </Row>
           <Row alignItems="flex-start" position="relative" paddingX="48">
             <Box position="sticky" top="72" width="0">
@@ -92,7 +91,7 @@ const Collection = () => {
               }}
             >
               <CollectionNfts
-                collectionStats={collectionStats}
+                collectionStats={collectionStats || ({} as GenieCollection)}
                 contractAddress={contractAddress}
                 rarityVerified={collectionStats?.rarityVerified}
               />

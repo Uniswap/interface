@@ -263,6 +263,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const numOwnersStr = stats.stats ? putCommas(stats.stats.num_owners) : 0
   const totalSupplyStr = stats.stats ? putCommas(stats.stats.total_supply) : 0
   const totalListingsStr = stats.stats ? putCommas(stats.stats.total_listings) : 0
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   // round daily volume & floorPrice to 3 decimals or less
   const totalVolumeStr = ethNumberStandardFormatter(stats.stats?.total_volume)
@@ -273,22 +274,22 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
       <StatsItem label="Items" isMobile={isMobile ?? false}>
         {totalSupplyStr}
       </StatsItem>
-      {numOwnersStr ? (
+      {numOwnersStr || totalListingsStr || isCollectionStatsLoading ? (
         <StatsItem label="Owners" isMobile={isMobile ?? false}>
           {numOwnersStr}
         </StatsItem>
       ) : null}
-      {stats.floorPrice ? (
+      {stats.floorPrice || totalListingsStr || isCollectionStatsLoading ? (
         <StatsItem label="Floor Price" isMobile={isMobile ?? false}>
           {floorPriceStr} ETH
         </StatsItem>
       ) : null}
-      {stats.stats?.total_volume ? (
+      {stats.stats?.total_volume || totalListingsStr || isCollectionStatsLoading ? (
         <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
           {totalVolumeStr} ETH
         </StatsItem>
       ) : null}
-      {stats.stats?.total_listings ? (
+      {stats.stats?.total_listings || totalListingsStr || isCollectionStatsLoading ? (
         <StatsItem label="Listings" isMobile={isMobile ?? false}>
           {totalListingsStr}
         </StatsItem>
@@ -331,7 +332,8 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
         />
         {!isMobile && (
           <>
-            {stats.description && <CollectionDescription description={stats.description} />}
+            {stats.description ||
+              (isCollectionStatsLoading && <CollectionDescription description={stats.description} />)}
             <StatsRow stats={stats} marginTop="20" />
           </>
         )}
