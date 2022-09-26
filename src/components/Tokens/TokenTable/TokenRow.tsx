@@ -7,13 +7,12 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
-import { TimePeriod } from 'graphql/data/util'
-import { useCurrency } from 'hooks/Tokens'
+import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
-import { CSSProperties, HTMLProps, ReactHTMLElement, ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
@@ -26,7 +25,6 @@ import {
 } from '../constants'
 import { LoadingBubble } from '../loading'
 import {
-  filterNetworkAtom,
   filterStringAtom,
   filterTimeAtom,
   sortAscendingAtom,
@@ -35,6 +33,7 @@ import {
   useSetSortMethod,
   useToggleFavorite,
 } from '../state'
+import { useTokenLogoURI } from '../TokenDetails/ChartSection'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 import { DISPLAYS } from './TimeSelector'
 
@@ -312,18 +311,18 @@ const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
-const L2NetworkLogo = styled.div<{ networkUrl?: string }>`
-  height: 12px;
-  width: 12px;
+export const L2NetworkLogo = styled.div<{ networkUrl?: string; size?: string }>`
+  height: ${({ size }) => size ?? '12px'};
+  width: ${({ size }) => size ?? '12px'};
   position: absolute;
   left: 50%;
   top: 50%;
   background: url(${({ networkUrl }) => networkUrl});
   background-repeat: no-repeat;
-  background-size: 12px 12px;
+  background-size: ${({ size }) => (size ? `${size} ${size}` : '12px 12px')};
   display: ${({ networkUrl }) => !networkUrl && 'none'};
 `
-const LogoContainer = styled.div`
+export const LogoContainer = styled.div`
   position: relative;
   align-items: center;
   display: flex;
@@ -465,29 +464,31 @@ export function LoadingRow() {
   )
 }
 
-interface LoadedRowProps extends HTMLProps<ReactHTMLElement<HTMLElement>> {
+interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
-  token: TopToken
+  token: NonNullable<TopToken>
 }
 
 /* Loaded State: row component with token information */
 export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { tokenListIndex, tokenListLength, token } = props
-  const tokenAddress = token?.address
-  const currency = useCurrency(tokenAddress)
-  const tokenName = token?.name
-  const tokenSymbol = token?.symbol
+  const tokenAddress = token.address
+  const tokenName = token.name
+  const tokenSymbol = token.symbol
   const isFavorited = useIsFavorited(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
-  const filterNetwork = useAtomValue(filterNetworkAtom)
-  const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
+
+  const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
+  const filterNetwork = lowercaseChainName.toUpperCase()
+  const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[filterNetwork]).circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
-  const delta = token?.market?.pricePercentChange?.value
+  const delta = token.market?.pricePercentChange?.value
   const arrow = delta ? getDeltaArrow(delta) : null
   const formattedDelta = delta ? formatDelta(delta) : null
   const sortAscending = useAtomValue(sortAscendingAtom)
+  const { chainName } = useParams<{ chainName?: string }>()
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -503,7 +504,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   return (
     <div ref={ref}>
       <StyledLink
-        to={`/tokens/${tokenAddress}`}
+        to={`/tokens/${chainName}/${tokenAddress}`}
         onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
       >
         <TokenRow
@@ -522,7 +523,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           tokenInfo={
             <ClickableName>
               <LogoContainer>
-                <CurrencyLogo currency={currency} symbol={tokenSymbol} />
+                <CurrencyLogo src={useTokenLogoURI(token)} symbol={tokenSymbol} />
                 <L2NetworkLogo networkUrl={L2Icon} />
               </LogoContainer>
               <TokenInfoCell>
@@ -534,7 +535,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {token?.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
+                {token.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
                 <PercentChangeInfoCell>
                   {formattedDelta}
                   {arrow}
@@ -550,12 +551,12 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           marketCap={
             <ClickableContent>
-              {token?.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
+              {token.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
             </ClickableContent>
           }
           volume={
             <ClickableContent>
-              {token?.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
+              {token.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
             </ClickableContent>
           }
           sparkLine={
@@ -566,7 +567,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                     width={width}
                     height={height}
                     tokenData={token}
-                    pricePercentChange={token?.market?.pricePercentChange?.value}
+                    pricePercentChange={token.market?.pricePercentChange?.value}
                     timePeriod={timePeriod}
                   />
                 )}

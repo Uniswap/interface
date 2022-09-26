@@ -1,4 +1,6 @@
 import graphql from 'babel-plugin-relay/macro'
+import { filterTimeAtom } from 'components/Tokens/state'
+import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { fetchQuery, useFragment, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
@@ -34,78 +36,39 @@ The difference between Token and TokenProject:
     TokenProjectMarket is aggregated market data (aggregated over multiple dexes and centralized exchanges) that we get from coingecko.
 */
 const tokenQuery = graphql`
-  query TokenQuery($contract: ContractInput!, $duration: HistoryDuration!, $skip: Boolean = false) {
-    tokenProjects(contracts: [$contract]) @skip(if: $skip) {
-      description
-      homepageUrl
-      twitterName
+  query TokenQuery($contract: ContractInput!, $duration: HistoryDuration!) {
+    tokens(contracts: [$contract]) {
+      id
       name
-      tokens {
-        chain
-        address
-        symbol
-        market {
-          totalValueLocked {
-            value
-            currency
-          }
+      chain
+      address
+      symbol
+      market(currency: USD) {
+        totalValueLocked {
+          value
+          currency
         }
-      }
-      prices: markets(currencies: [USD]) {
-        ...TokenPrices
-      }
-      markets(currencies: [USD]) {
+        priceHistory(duration: $duration) {
+          timestamp
+          value
+        }
         price {
           value
           currency
         }
-        marketCap {
+        volume24H: volume(duration: DAY) {
           value
           currency
         }
-        fullyDilutedMarketCap {
-          value
-          currency
-        }
-        volume1D: volume(duration: DAY) {
-          value
-          currency
-        }
-        volume1W: volume(duration: WEEK) {
-          value
-          currency
-        }
-        volume1M: volume(duration: MONTH) {
-          value
-          currency
-        }
-        volume1Y: volume(duration: YEAR) {
-          value
-          currency
-        }
-        pricePercentChange24h {
-          currency
-          value
-        }
-        pricePercentChange1W: pricePercentChange(duration: WEEK) {
-          currency
-          value
-        }
-        pricePercentChange1M: pricePercentChange(duration: MONTH) {
-          currency
-          value
-        }
-        pricePercentChange1Y: pricePercentChange(duration: YEAR) {
-          currency
-          value
-        }
-        priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
-          value
-          currency
-        }
-        priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
-          value
-          currency
+      }
+      project {
+        description
+        homepageUrl
+        twitterName
+        logoUrl
+        tokens {
+          chain
+          address
         }
       }
     }
@@ -114,9 +77,8 @@ const tokenQuery = graphql`
 
 export function useTokenQuery(address: string, chain: Chain, timePeriod: TimePeriod) {
   const data = useLazyLoadQuery<TokenQuery>(tokenQuery, {
-    contract: { address, chain },
+    contract: { address: address.toLowerCase(), chain },
     duration: toHistoryDuration(timePeriod),
-    skip: false,
   })
 
   return data
@@ -132,8 +94,8 @@ const tokenPriceQuery = graphql`
     $skip1Y: Boolean!
     $skipMax: Boolean!
   ) {
-    tokenProjects(contracts: [$contract]) {
-      markets(currencies: [USD]) {
+    tokens(contracts: [$contract]) {
+      market(currency: USD) {
         priceHistory1H: priceHistory(duration: HOUR) @skip(if: $skip1H) {
           timestamp
           value
@@ -172,19 +134,12 @@ export function useTokenPricesFromFragment(key: TokenPrices$key | null | undefin
   return filterPrices(fetchedTokenPrices)
 }
 
-export function useTokenPricesCached(
-  priceDataFragmentRef: TokenPrices$key | null | undefined,
-  address: string,
-  chain: Chain,
-  timePeriod: TimePeriod
-) {
+export function useTokenPricesCached(token: SingleTokenData) {
   // Attempt to use token prices already provided by TokenDetails / TopToken queries
   const environment = useRelayEnvironment()
-  const fetchedTokenPrices = useFragment(tokenPricesFragment, priceDataFragmentRef ?? null)?.priceHistory
+  const timePeriod = useAtomValue(filterTimeAtom)
 
-  const [priceMap, setPriceMap] = useState<Map<TimePeriod, PricePoint[] | undefined>>(
-    new Map([[timePeriod, filterPrices(fetchedTokenPrices)]])
-  )
+  const [priceMap, setPriceMap] = useState<Map<TimePeriod, PricePoint[] | undefined>>(new Map())
 
   const updatePrices = useCallback(
     (key: TimePeriod, data?: PricePoint[]) => {
@@ -195,32 +150,36 @@ export function useTokenPricesCached(
 
   // Fetch the other timePeriods after first render
   useEffect(() => {
+    const fetchedTokenPrices = token?.market?.priceHistory
+    updatePrices(timePeriod, filterPrices(fetchedTokenPrices))
     // Fetch all time periods except the one already populated
-    fetchQuery<TokenPriceQuery>(environment, tokenPriceQuery, {
-      contract: { address, chain },
-      skip1H: timePeriod === TimePeriod.HOUR && !!fetchedTokenPrices,
-      skip1D: timePeriod === TimePeriod.DAY && !!fetchedTokenPrices,
-      skip1W: timePeriod === TimePeriod.WEEK && !!fetchedTokenPrices,
-      skip1M: timePeriod === TimePeriod.MONTH && !!fetchedTokenPrices,
-      skip1Y: timePeriod === TimePeriod.YEAR && !!fetchedTokenPrices,
-      skipMax: timePeriod === TimePeriod.ALL && !!fetchedTokenPrices,
-    }).subscribe({
-      next: (data) => {
-        const markets = data.tokenProjects?.[0]?.markets?.[0]
-        if (markets) {
-          markets.priceHistory1H && updatePrices(TimePeriod.HOUR, filterPrices(markets.priceHistory1H))
-          markets.priceHistory1D && updatePrices(TimePeriod.DAY, filterPrices(markets.priceHistory1D))
-          markets.priceHistory1W && updatePrices(TimePeriod.WEEK, filterPrices(markets.priceHistory1W))
-          markets.priceHistory1M && updatePrices(TimePeriod.MONTH, filterPrices(markets.priceHistory1M))
-          markets.priceHistory1Y && updatePrices(TimePeriod.YEAR, filterPrices(markets.priceHistory1Y))
-          markets.priceHistoryMAX && updatePrices(TimePeriod.ALL, filterPrices(markets.priceHistoryMAX))
-        }
-      },
-    })
+    if (token?.chain && token?.address) {
+      fetchQuery<TokenPriceQuery>(environment, tokenPriceQuery, {
+        contract: { address: token.address, chain: token.chain },
+        skip1H: timePeriod === TimePeriod.HOUR && !!fetchedTokenPrices,
+        skip1D: timePeriod === TimePeriod.DAY && !!fetchedTokenPrices,
+        skip1W: timePeriod === TimePeriod.WEEK && !!fetchedTokenPrices,
+        skip1M: timePeriod === TimePeriod.MONTH && !!fetchedTokenPrices,
+        skip1Y: timePeriod === TimePeriod.YEAR && !!fetchedTokenPrices,
+        skipMax: timePeriod === TimePeriod.ALL && !!fetchedTokenPrices,
+      }).subscribe({
+        next: (data) => {
+          const market = data.tokens?.[0]?.market
+          if (market) {
+            market.priceHistory1H && updatePrices(TimePeriod.HOUR, filterPrices(market.priceHistory1H))
+            market.priceHistory1D && updatePrices(TimePeriod.DAY, filterPrices(market.priceHistory1D))
+            market.priceHistory1W && updatePrices(TimePeriod.WEEK, filterPrices(market.priceHistory1W))
+            market.priceHistory1M && updatePrices(TimePeriod.MONTH, filterPrices(market.priceHistory1M))
+            market.priceHistory1Y && updatePrices(TimePeriod.YEAR, filterPrices(market.priceHistory1Y))
+            market.priceHistoryMAX && updatePrices(TimePeriod.ALL, filterPrices(market.priceHistoryMAX))
+          }
+        },
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [token?.chain, token?.address])
 
-  return { priceMap }
+  return { prices: priceMap.get(timePeriod) }
 }
 
-export type SingleTokenData = NonNullable<TokenQuery$data['tokenProjects']>[number]
+export type SingleTokenData = NonNullable<TokenQuery$data['tokens']>[number]

@@ -15,8 +15,6 @@ import {
   timeMonth,
   timeTicks,
 } from 'd3'
-import { TokenPrices$key } from 'graphql/data/__generated__/TokenPrices.graphql'
-import { useTokenPricesCached } from 'graphql/data/Token'
 import { PricePoint } from 'graphql/data/Token'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -36,8 +34,6 @@ import {
 
 import LineChart from '../../Charts/LineChart'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
-
-// TODO: This should be combined with the logic in TimeSelector.
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -131,17 +127,13 @@ const timeOptionsHeight = 44
 interface PriceChartProps {
   width: number
   height: number
-  tokenAddress: string
-  priceDataFragmentRef?: TokenPrices$key | null
+  prices: PricePoint[] | undefined
 }
 
-export function PriceChart({ width, height, tokenAddress, priceDataFragmentRef }: PriceChartProps) {
+export function PriceChart({ width, height, prices }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
-
-  const { priceMap } = useTokenPricesCached(priceDataFragmentRef, tokenAddress, 'ETHEREUM', timePeriod)
-  const prices = priceMap.get(timePeriod)
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = prices?.[0] ?? DATA_EMPTY
