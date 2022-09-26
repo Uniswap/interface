@@ -44,7 +44,7 @@ export function useSpotPrice(currency: NullUndefined<Currency>, skip?: boolean) 
       ],
       skip: Boolean(skip),
     },
-    { networkCacheConfig: { poll: PollingInterval.Slow } }
+    { networkCacheConfig: { poll: PollingInterval.Normal } }
   )
 
   return data?.tokenProjects?.[0]?.markets?.[0]

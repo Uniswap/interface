@@ -38,8 +38,10 @@ export function useEagerActivityNavigation() {
  * Preloads query neede to render transaction list.
  */
 export function useEagerUserProfileNavigation() {
-  const { registerNavigationIntent, preloadedNavigate } =
-    useEagerNavigation<UserScreenQuery>(userScreenQuery)
+  const { registerNavigationIntent, preloadedNavigate } = useEagerNavigation<UserScreenQuery>(
+    userScreenQuery,
+    PollingInterval.Normal
+  )
 
   const preload = (address: string) => {
     registerNavigationIntent(
