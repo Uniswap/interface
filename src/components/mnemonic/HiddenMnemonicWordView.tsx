@@ -31,7 +31,7 @@ function HiddenWordViewColumn({ indexes }: { indexes: number[] }) {
       {indexes.map((value) => (
         <Flex key={value} row alignItems="center" justifyContent="space-between" px="sm" py="md">
           <Text color="textSecondary">{value}</Text>
-          <Box bg="textSecondary" borderRadius="xl" flex={1} height={8} />
+          <Box bg="textTertiary" borderRadius="xl" flex={1} height={9} />
         </Flex>
       ))}
     </>
