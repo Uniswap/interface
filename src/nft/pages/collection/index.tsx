@@ -21,9 +21,11 @@ const Collection = () => {
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
 
-  const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
+  const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
   )
+
+  const isLoading = true
 
   useEffect(() => {
     setIsCollectionStatsLoading(true)

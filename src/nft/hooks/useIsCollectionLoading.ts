@@ -2,19 +2,19 @@ import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 interface State {
-  isCollectionLoading: boolean
-  setIsCollectionLoading: (isCollectionLoading: boolean) => void
+  isCollectionNftsLoading: boolean
+  setIsCollectionNftsLoading: (isCollectionNftsLoading: boolean) => void
   isCollectionStatsLoading: boolean
-  setIsCollectionStatsLoading: (isCollectionLoading: boolean) => void
+  setIsCollectionStatsLoading: (isCollectionStatsLoading: boolean) => void
 }
 
 export const useIsCollectionLoading = create<State>()(
   devtools(
     (set) => ({
-      isCollectionLoading: false,
-      setIsCollectionLoading: (isCollectionLoading) =>
+      isCollectionNftsLoading: false,
+      setIsCollectionNftsLoading: (isCollectionNftsLoading) =>
         set(() => {
-          return { isCollectionLoading }
+          return { isCollectionNftsLoading }
         }),
       isCollectionStatsLoading: false,
       setIsCollectionStatsLoading: (isCollectionStatsLoading) =>

@@ -29,7 +29,7 @@ export const SortDropdown = ({
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const [isReversed, toggleReversed] = useReducer((s) => !s, false)
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
+  const isCollectionNftsLoading = useIsCollectionLoading((state) => state.isCollectionNftsLoading)
 
   const [maxWidth, setMaxWidth] = useState(0)
 
@@ -72,9 +72,9 @@ export const SortDropdown = ({
         width={inFilters ? 'full' : 'inherit'}
         onClick={toggleOpen}
         cursor="pointer"
-        className={isCollectionLoading ? styles.isLoadingDropdown : clsx(isOpen && !mini && styles.activeDropdown)}
+        className={isCollectionNftsLoading ? styles.isLoadingDropdown : clsx(isOpen && !mini && styles.activeDropdown)}
       >
-        {!isCollectionLoading && (
+        {!isCollectionNftsLoading && (
           <>
             <Box display="flex" alignItems="center">
               {!isOpen && reversable && (

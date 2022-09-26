@@ -32,7 +32,7 @@ export const FilterButton = ({
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const { pathname } = useLocation()
   const isSellPage = pathname.startsWith('/nfts/sell')
-  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
+  const isCollectionNftsLoading = useIsCollectionLoading((state) => state.isCollectionNftsLoading)
 
   const showFilterBadge = isSellPage
     ? collectionFilters.length > 0
@@ -40,7 +40,7 @@ export const FilterButton = ({
   return (
     <Box
       className={
-        isCollectionLoading
+        isCollectionNftsLoading
           ? styles.filterButtonLoading
           : clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)
       }
@@ -57,7 +57,7 @@ export const FilterButton = ({
       height="44"
       whiteSpace="nowrap"
     >
-      {!isCollectionLoading && (
+      {!isCollectionNftsLoading && (
         <>
           {showFilterBadge && (
             <Row className={styles.filterBadge} color={isFiltersExpanded ? 'grey700' : 'blue400'}>
