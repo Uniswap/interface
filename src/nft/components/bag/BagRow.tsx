@@ -131,7 +131,9 @@ export const PriceChangeBagRow = ({ asset, markAssetAsReviewed, top, isMobile }:
           asset.priceInfo.ETHPrice
         )} ETH`}</Box>
       </Row>
-      <BagRow asset={asset} removeAsset={() => undefined} isMobile={isMobile} />
+      <Box style={{ marginLeft: '-8px', marginRight: '-8px' }}>
+        <BagRow asset={asset} removeAsset={() => undefined} isMobile={isMobile} />
+      </Box>
       <Row gap="12" justifyContent="space-between">
         <Box
           className={styles.removeButton}
@@ -262,7 +264,7 @@ export const UnavailableAssetsHeaderRow = ({
               </Row>
             )}
           </Row>
-          <Column gap="8">
+          <Column gap="8" style={{ marginLeft: '-8px', marginRight: '-8px' }}>
             {isOpen &&
               assets.map((asset) => (
                 <BagRow key={asset.id} asset={asset} removeAsset={() => undefined} grayscale isMobile={isMobile} />
