@@ -107,6 +107,7 @@ export const enum ElementName {
   OnboardingImportWatchedAccount = 'onboarding-import-watched-account',
   OpenSettingsButton = 'open-settings-button',
   QRCodeModalToggle = 'qr-code-modal-toggle',
+  Receive = 'receive',
   Remove = 'remove',
   Rename = 'rename',
   Reset = 'reset',

@@ -5,12 +5,12 @@ import { ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
-import SwapIcon from 'src/assets/icons/swap-action-button.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SendButton } from 'src/components/buttons/SendButton'
 import { NFTCollectionsTab } from 'src/components/home/NFTCollectionsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
+import { Arrow } from 'src/components/icons/Arrow'
 import { Flex } from 'src/components/layout'
 import TabbedScrollScreen, {
   TabViewScrollProps,
@@ -87,9 +87,11 @@ function QuickActions() {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
-  const onPressSwap = () => {
+  const onPressReceive = () => {
     selectionAsync()
-    dispatch(openModal({ name: ModalName.Swap }))
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+    )
   }
 
   // TODO: remove when buy flow ready
@@ -124,21 +126,13 @@ function QuickActions() {
       <PrimaryButton
         borderRadius="md"
         flex={1}
-        icon={
-          <SwapIcon
-            color={theme.colors.textPrimary}
-            height={20}
-            strokeWidth={2}
-            style={{ transform: [{ rotate: '135deg' }] }}
-            width={20}
-          />
-        }
-        label={t('Swap')}
-        name={ElementName.NavigateSwap}
+        icon={<Arrow color={theme.colors.textPrimary} direction="s" size={theme.iconSizes.md} />}
+        label={t('Receive')}
+        name={ElementName.Receive}
         py="sm"
-        testID={ElementName.NavigateSwap}
+        testID={ElementName.Receive}
         variant="transparent"
-        onPress={onPressSwap}
+        onPress={onPressReceive}
       />
     </Flex>
   )
