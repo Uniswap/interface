@@ -4,6 +4,8 @@ import { devtools } from 'zustand/middleware'
 interface State {
   isCollectionLoading: boolean
   setIsCollectionLoading: (isCollectionLoading: boolean) => void
+  isCollectionStatsLoading: boolean
+  setIsCollectionStatsLoading: (isCollectionLoading: boolean) => void
 }
 
 export const useIsCollectionLoading = create<State>()(
@@ -13,6 +15,11 @@ export const useIsCollectionLoading = create<State>()(
       setIsCollectionLoading: (isCollectionLoading) =>
         set(() => {
           return { isCollectionLoading }
+        }),
+      isCollectionStatsLoading: false,
+      setIsCollectionStatsLoading: (isCollectionStatsLoading) =>
+        set(() => {
+          return { isCollectionStatsLoading }
         }),
     }),
     { name: 'useIsCollectionLoading' }

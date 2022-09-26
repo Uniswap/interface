@@ -103,11 +103,11 @@ const MobileSocialsPopover = ({
 }
 
 const SocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
-  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   return (
     <Column
-      className={isCollectionLoading ? styles.iconsLoading : undefined}
+      className={isCollectionStatsLoading ? styles.iconsLoading : undefined}
       as="a"
       target="_blank"
       rel="noreferrer"
@@ -115,7 +115,7 @@ const SocialsIcon = ({ children, href }: { children: ReactNode; href: string }) 
       height="full"
       justifyContent="center"
     >
-      {!isCollectionLoading && children}
+      {!isCollectionStatsLoading && children}
     </Column>
   )
 }
@@ -135,8 +135,10 @@ const CollectionName = ({
   collectionSocialsIsOpen: boolean
   toggleCollectionSocials: () => void
 }) => {
-  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
-  const nameClass = isCollectionLoading ? styles.nameTextLoading : clsx(isMobile ? header2 : header2, styles.nameText)
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
+  const nameClass = isCollectionStatsLoading
+    ? styles.nameTextLoading
+    : clsx(isMobile ? header2 : header2, styles.nameText)
 
   return (
     <Row justifyContent="space-between">
@@ -144,7 +146,7 @@ const CollectionName = ({
         <Box marginRight={!isVerified ? '12' : '0'} className={nameClass} style={{ lineHeight: '32px' }}>
           {name}
         </Box>
-        {isVerified && !isCollectionLoading && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
+        {isVerified && !isCollectionStatsLoading && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
         <Row
           display={{ sm: 'none', md: 'flex' }}
           alignItems="center"
@@ -206,7 +208,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   const [readMore, toggleReadMore] = useReducer((state) => !state, false)
   const baseRef = useRef<HTMLDivElement>(null)
   const descriptionRef = useRef<HTMLDivElement>(null)
-  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   useEffect(() => {
     if (
@@ -221,7 +223,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   }, [descriptionRef, baseRef])
 
   // && !description
-  return isCollectionLoading ? (
+  return isCollectionStatsLoading ? (
     <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}>
       description
     </Box>
@@ -245,14 +247,14 @@ const CollectionDescription = ({ description }: { description: string }) => {
 }
 
 const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => {
-  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   return (
     <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
-      <Box as="span" className={isCollectionLoading ? styles.statsLabelLoading : styles.statsLabel}>
+      <Box as="span" className={isCollectionStatsLoading ? styles.statsLabelLoading : styles.statsLabel}>
         {`${label}${isMobile ? ': ' : ''}`}
       </Box>
-      <span className={isCollectionLoading ? styles.statsValueLoading : styles.statsValue}>{children}</span>
+      <span className={isCollectionStatsLoading ? styles.statsValueLoading : styles.statsValue}>{children}</span>
     </Box>
   )
 }
@@ -297,7 +299,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 
 export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; isMobile: boolean }) => {
   const [collectionSocialsIsOpen, toggleCollectionSocials] = useReducer((state) => !state, false)
-  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   return (
     <Box
@@ -308,14 +310,14 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       flexDirection="column"
       width="full"
     >
-      {isCollectionLoading && (
+      {isCollectionStatsLoading && (
         <Box as="div" borderRadius="round" position="absolute" className={styles.collectionImageIsLoadingBackground} />
       )}
       <Box
-        as={isCollectionLoading ? 'div' : 'img'}
+        as={isCollectionStatsLoading ? 'div' : 'img'}
         borderRadius="round"
         position="absolute"
-        className={isCollectionLoading ? styles.collectionImageIsLoading : styles.collectionImage}
+        className={isCollectionStatsLoading ? styles.collectionImageIsLoading : styles.collectionImage}
         src={stats.isFoundation && !stats.imageUrl ? '/nft/svgs/marketplaces/foundation.svg' : stats.imageUrl}
       />
       <Box className={styles.statsText}>

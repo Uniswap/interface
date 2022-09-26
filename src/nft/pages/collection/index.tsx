@@ -14,16 +14,20 @@ const BAG_WIDTH = 324
 
 const Collection = () => {
   const { contractAddress } = useParams()
-  const isCollectionLoading = useIsCollectionLoading((state) => state.isCollectionLoading)
+  const setIsCollectionStatsLoading = useIsCollectionLoading((state) => state.setIsCollectionStatsLoading)
 
   const isMobile = useIsMobile()
   const [isFiltersExpanded] = useFiltersExpanded()
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
 
-  const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
+  const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
   )
+
+  useEffect(() => {
+    setIsCollectionStatsLoading(true)
+  }, [isLoading])
 
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded ? FILTER_WIDTH : 0,
@@ -51,7 +55,7 @@ const Collection = () => {
           {' '}
           <Box width="full" height="160">
             <Box width="full" height="160">
-              {isCollectionLoading ? (
+              {isLoading ? (
                 <Box height="full" width="full" className={styles.loadingBanner} />
               ) : (
                 <Box
@@ -59,17 +63,15 @@ const Collection = () => {
                   height="full"
                   width="full"
                   src={collectionStats?.bannerImageUrl}
-                  className={isCollectionLoading ? styles.loadingBanner : styles.bannerImage}
+                  className={isLoading ? styles.loadingBanner : styles.bannerImage}
                   background="none"
                 />
               )}
             </Box>
           </Box>
-          {collectionStats && (
-            <Row paddingLeft="32" paddingRight="32">
-              <CollectionStats stats={collectionStats} isMobile={isMobile} />
-            </Row>
-          )}
+          <Row paddingLeft="32" paddingRight="32">
+            <CollectionStats stats={collectionStats} isMobile={isMobile} />
+          </Row>
           <Row alignItems="flex-start" position="relative" paddingX="48">
             <Box position="sticky" top="72" width="0">
               {isFiltersExpanded && (
@@ -97,9 +99,7 @@ const Collection = () => {
         </>
       ) : (
         // TODO: Put no collection asset page here
-        !isCollectionLoading && (
-          <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
-        )
+        !isLoading && <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
       )}
     </Column>
   )
