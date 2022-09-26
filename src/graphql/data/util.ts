@@ -77,11 +77,13 @@ export function isValidBackendChainName(chainName: string | undefined): chainNam
   return false
 }
 
-export function getTokenDetailsURL(address: string, chainName: Chain) {
-  return `/tokens/${chainName.toLowerCase()}/${address}`
-}
-
-export function getTokenDetailsURLWithId(address: string, chainId: number) {
-  const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
-  return chainName ? getTokenDetailsURL(address, chainName) : ''
+export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?: number) {
+  if (chainName) {
+    return `/tokens/${chainName.toLowerCase()}/${address}`
+  } else if (chainId) {
+    const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
+    return chainName ? `/tokens/${chainName.toLowerCase()}/${address}` : ''
+  } else {
+    return ''
+  }
 }

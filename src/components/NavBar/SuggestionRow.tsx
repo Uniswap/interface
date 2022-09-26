@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { getTokenDetailsURLWithId } from 'graphql/data/util'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -112,7 +112,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
     toggleOpen()
   }, [addToSearchHistory, toggleOpen, token])
 
-  const tokenDetailsPath = getTokenDetailsURLWithId(token.address, token.chainId)
+  const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
