@@ -44,29 +44,6 @@ const Collection = () => {
     setMarketCount(marketCount)
   }, [collectionStats?.marketplaceCount, setMarketCount])
 
-  //   <Box width="full" height="160">
-  //   {isLoading ? (
-  //     <Box height="full" width="full" className={styles.loadingBanner} />
-  //   ) : (
-  //     <Box
-  //       as="img"
-  //       height="full"
-  //       width="full"
-  //       src={collectionStats?.bannerImageUrl}
-  //       className={isLoading ? styles.loadingBanner : styles.bannerImage}
-  //       background="none"
-  //     />
-  //   )}
-  // </Box>
-
-  // <Row paddingLeft="32" paddingRight="32">
-  //   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
-  // </Row>
-  // <Row alignItems="flex-start" position="relative" paddingX="48">
-  //   <Box position="sticky" top="72" width="0">
-  //     {isFiltersExpanded && (
-  //       <Filters traitsByAmount={collectionStats?.numTraitsByAmount ?? []} traits={collectionStats?.traits ?? []} />
-
   return (
     <Column width="full">
       {collectionStats && contractAddress ? (
