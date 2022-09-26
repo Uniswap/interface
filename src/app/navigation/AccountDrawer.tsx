@@ -1,4 +1,5 @@
 import { DrawerContentComponentProps } from '@react-navigation/drawer'
+import { selectionAsync } from 'expo-haptics'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-gesture-handler'
@@ -105,6 +106,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
 
   const onPressAccount = useCallback(
     (address: Address) => {
+      selectionAsync()
       navigation.closeDrawer()
       dispatch(activateAccount(address))
     },
