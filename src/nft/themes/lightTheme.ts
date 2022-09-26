@@ -17,6 +17,9 @@ export const lightTheme: Theme = {
     modalBackdrop: 'rgba(0, 0, 0, 0.3)',
 
     stateOverlayHover: `rgba(153,161,189,0.08)`,
+    green: vars.color.green400,
+    gold: vars.color.gold400,
+    violet: vars.color.violet400,
 
     textPrimary: vars.color.grey900,
     textSecondary: vars.color.grey500,

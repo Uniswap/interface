@@ -232,10 +232,11 @@ export default function App() {
 
                   {nftFlag === NftVariant.Enabled && (
                     <>
-                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
                       <Route path="/nfts" element={<NftExplore />} />
                       <Route path="/nfts/sell" element={<Sell />} />
                       <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
+                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
+                      <Route path="/nfts/collection/:contractAddress/activity" element={<Collection />} />
                     </>
                   )}
                 </Routes>
