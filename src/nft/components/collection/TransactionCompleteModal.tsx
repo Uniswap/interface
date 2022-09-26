@@ -1,5 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
@@ -8,23 +6,20 @@ import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, UniIcon } from 'nft/co
 import { Overlay, stopPropagation } from 'nft/components/modals/Overlay'
 import { vars } from 'nft/css/sprinkles.css'
 import { useIsMobile, useSendTransaction, useTransactionResponse } from 'nft/hooks'
-import { TxResponse, TxStateType, UpdatedGenieAsset } from 'nft/types'
-import { fetchPrice, formatEthPrice, formatUsdPrice, formatUSDPriceWithCommas, shortenTxHash } from 'nft/utils'
+import { TxResponse, TxStateType } from 'nft/types'
+import {
+  fetchPrice,
+  formatEthPrice,
+  formatUsdPrice,
+  formatUSDPriceWithCommas,
+  getSuccessfulImageSize,
+  parseTransactionResponse,
+  shortenTxHash,
+} from 'nft/utils'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import * as styles from './TransactionCompleteModal.css'
-
-const getTotalNftValue = (nfts: UpdatedGenieAsset[]): BigNumber => {
-  return (
-    nfts &&
-    nfts.reduce(
-      (ethTotal, nft) =>
-        ethTotal.add(BigNumber.from(nft.updatedPriceInfo ? nft.updatedPriceInfo.ETHPrice : nft.priceInfo.ETHPrice)),
-      BigNumber.from(0)
-    )
-  )
-}
 
 const TxCompleteModal = () => {
   const [ethPrice, setEthPrice] = useState(3000)
@@ -48,42 +43,7 @@ const TxCompleteModal = () => {
     totalUSDRefund,
     txFeeFiat,
   } = useMemo(() => {
-    let nftsPurchased: UpdatedGenieAsset[] = []
-    let nftsNotPurchased: UpdatedGenieAsset[] = []
-    let showPurchasedModal = false
-    let showRefundModal = false
-    let totalPurchaseValue = BigNumber.from(0)
-    let totalRefundValue = BigNumber.from(0)
-    let totalUSDRefund = 0
-    let txFeeFiat = 0
-
-    if (transactionResponse !== undefined) {
-      const { nftsPurchased: purchasedNfts, nftsNotPurchased: notPurchasedNfts, txReceipt } = transactionResponse
-      if (nftsPurchased && nftsNotPurchased && txReceipt) {
-        nftsPurchased = purchasedNfts
-        nftsNotPurchased = notPurchasedNfts
-        showPurchasedModal = nftsPurchased.length >= 1
-        showRefundModal = nftsNotPurchased.length >= 1
-        totalPurchaseValue = getTotalNftValue(nftsPurchased)
-        totalRefundValue = getTotalNftValue(nftsNotPurchased)
-        totalUSDRefund = totalRefundValue && parseFloat(formatEther(totalRefundValue)) * ethPrice
-        const txFee = BigNumber.from(txReceipt ? txReceipt.gasUsed : 0).mul(
-          BigNumber.from(txReceipt ? txReceipt.effectiveGasPrice : 0)
-        )
-        txFeeFiat = parseFloat(formatEther(txFee)) * ethPrice
-      }
-    }
-
-    return {
-      nftsPurchased,
-      nftsNotPurchased,
-      showPurchasedModal,
-      showRefundModal,
-      totalPurchaseValue,
-      totalRefundValue,
-      totalUSDRefund,
-      txFeeFiat,
-    }
+    return parseTransactionResponse(transactionResponse, ethPrice)
   }, [transactionResponse, ethPrice])
 
   const toggleShowUnavailable = () => {
@@ -93,22 +53,6 @@ const TxCompleteModal = () => {
   function closeTxCompleteScreen() {
     setTransactionResponse({} as TxResponse)
     setTxState(TxStateType.New)
-  }
-
-  // Given the length of the array of successfully purchased NFTs, returns the maxHeight and maxWidth of each asset preview
-  const getSuccessfulImageSize = (numSuccessful: number) => {
-    const sizeModifier = isMobile ? 2 : 1
-    if (numSuccessful === 1) {
-      return 574 / sizeModifier
-    } else if (numSuccessful === 2) {
-      return 280 / sizeModifier
-    } else if (numSuccessful === 3 || (numSuccessful >= 5 && numSuccessful < 7)) {
-      return 184 / sizeModifier
-    } else if (numSuccessful === 4 || (numSuccessful >= 7 && numSuccessful < 13)) {
-      return 136 / sizeModifier
-    } else if (numSuccessful >= 13 && numSuccessful < 21) {
-      return 108 / sizeModifier
-    } else return isMobile ? 39 : 64
   }
 
   useEffect(() => {
@@ -148,8 +92,8 @@ const TxCompleteModal = () => {
                         nftsPurchased.length > 1 && styles.successAssetImageGrid
                       )}
                       style={{
-                        maxHeight: `${getSuccessfulImageSize(nftsPurchased.length)}px`,
-                        maxWidth: `${getSuccessfulImageSize(nftsPurchased.length)}px`,
+                        maxHeight: `${getSuccessfulImageSize(nftsPurchased.length, isMobile)}px`,
+                        maxWidth: `${getSuccessfulImageSize(nftsPurchased.length, isMobile)}px`,
                       }}
                       src={nft.imageUrl}
                       alt={nft.name}
@@ -344,7 +288,7 @@ const TxCompleteModal = () => {
                     border="none"
                     backgroundColor="genieBlue"
                     cursor="pointer"
-                    className={`${styles.returnButton}`}
+                    className={styles.returnButton}
                     type="button"
                     onClick={() => closeTxCompleteScreen()}
                   >

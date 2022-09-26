@@ -414,7 +414,7 @@ export const refundOverflowFade = style([
 
 export const fullRefundModal = style([
   sprinkles({
-    background: 'white',
+    background: 'backgroundSurface',
     borderRadius: '20',
     display: 'flex',
     flexWrap: 'wrap',
