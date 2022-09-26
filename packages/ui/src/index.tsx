@@ -4,10 +4,10 @@ import './i18n'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import React, { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'
-import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
+import { createRoot } from 'react-dom/client'
 
 import Blocklist from './components/Blocklist'
 import { NetworkContextName } from './constants'
@@ -63,7 +63,10 @@ function Updaters() {
   )
 }
 
-ReactDOM.render(
+const container = document.getElementById('root') as HTMLElement
+
+createRoot(container).render(
+  // ReactDOM.render(
   <StrictMode>
     <FixedGlobalStyle />
     <Web3ReactProvider getLibrary={getLibrary}>
@@ -81,8 +84,8 @@ ReactDOM.render(
         </Blocklist>
       </Web3ProviderNetwork>
     </Web3ReactProvider>
-  </StrictMode>,
-  document.getElementById('root')
+  </StrictMode>
+  // document.getElementById('root')
 )
 
 serviceWorkerRegistration.unregister()
