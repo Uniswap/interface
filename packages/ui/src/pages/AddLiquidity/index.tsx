@@ -13,7 +13,7 @@ import useThemedContext from 'hooks/useThemedContext'
 import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import getRoutePairMode from 'utils/getRoutePairMode'
@@ -82,12 +82,9 @@ const CustomizedRadio = styled.input`
   }
 `
 
-export default function AddLiquidity({
-  match: {
-    params: { currencyIdA, currencyIdB }
-  },
-  history
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
+export default function AddLiquidity() {
+  const history = useHistory()
+  const { currencyIdA, currencyIdB, stable } = useParams<{ currencyIdA: string; currencyIdB: string; stable: string }>()
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useThemedContext()
   const [pairModeStable, setPairModeStable] = useState(false)

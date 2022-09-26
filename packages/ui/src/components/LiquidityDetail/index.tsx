@@ -10,7 +10,7 @@ import React, { useCallback, useState } from 'react'
 import { useMemo } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useDispatch } from 'react-redux'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import { AppDispatch } from 'state'
 import { Field, resetMintState } from 'state/mint/actions'
@@ -32,12 +32,8 @@ const BorderVerticalContainer = styled(Flex)`
   gap: 24px;
 `
 
-export default function LiquidityDetail({
-  history,
-  match: {
-    params: { currencyIdA, currencyIdB, stable }
-  }
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; stable: string }>) {
+export default function LiquidityDetail() {
+  const { currencyIdA, currencyIdB, stable } = useParams<{ currencyIdA: string; currencyIdB: string; stable: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
   const {
