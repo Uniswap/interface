@@ -38,10 +38,10 @@ The difference between Token and TokenProject:
 const tokenQuery = graphql`
   query TokenQuery($contract: ContractInput!, $duration: HistoryDuration!) {
     tokens(contracts: [$contract]) {
-      id
+      id @required(action: LOG)
       name
-      chain
-      address
+      chain @required(action: LOG)
+      address @required(action: LOG)
       symbol
       market(currency: USD) {
         totalValueLocked {
