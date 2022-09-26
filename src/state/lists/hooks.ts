@@ -4,7 +4,6 @@ import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
 
 import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
-import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/unsupported.tokenlist.json'
 import { AppState } from '../index'
 import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 
@@ -44,7 +43,7 @@ export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): Token
 }
 
 // merge tokens contained within lists from urls
-function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
+export function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useAllLists()
   return useMemo(() => {
     if (!urls) return {}
@@ -94,17 +93,11 @@ export function useUnsupportedTokenList(): TokenAddressMap {
   // get hard-coded broken tokens
   const brokenListMap = useMemo(() => tokensToChainTokenMap(BROKEN_LIST), [])
 
-  // get hard-coded list of unsupported tokens
-  const localUnsupportedListMap = useMemo(() => tokensToChainTokenMap(UNSUPPORTED_TOKEN_LIST), [])
-
   // get dynamic list of unsupported tokens
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 
   // format into one token address map
-  return useMemo(
-    () => combineMaps(brokenListMap, combineMaps(localUnsupportedListMap, loadedUnsupportedListMap)),
-    [brokenListMap, localUnsupportedListMap, loadedUnsupportedListMap]
-  )
+  return useMemo(() => combineMaps(brokenListMap, loadedUnsupportedListMap), [brokenListMap, loadedUnsupportedListMap])
 }
 export function useIsListActive(url: string): boolean {
   const activeListUrls = useActiveListUrls()
