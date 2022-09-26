@@ -7,7 +7,7 @@ import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center, Row } from 'nft/components/Flex'
 import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
-import { bodySmall, buttonTextMedium, header2 } from 'nft/css/common.css'
+import { bodySmall, buttonTextMedium, headlineMedium } from 'nft/css/common.css'
 import { vars } from 'nft/css/sprinkles.css'
 import {
   CollectionFilters,
@@ -258,7 +258,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           !isLoading && (
             <Center width="full" color="textSecondary" style={{ height: '60vh' }}>
               <div style={{ display: 'block', textAlign: 'center' }}>
-                <p className={header2}>No NFTS found</p>
+                <p className={headlineMedium}>No NFTS found</p>
                 <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
                   View full collection
                 </Box>

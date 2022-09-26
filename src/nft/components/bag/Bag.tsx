@@ -11,16 +11,16 @@ import { BagCloseIcon, LargeBagIcon } from 'nft/components/icons'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useBag, useIsMobile, useWalletBalance } from 'nft/hooks'
+import { useBag, useIsMobile, useSendTransaction, useTransactionResponse, useWalletBalance } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItemStatus, BagStatus } from 'nft/types'
+import { BagItemStatus, BagStatus, RouteResponse, TxStateType } from 'nft/types'
 import { buildSellObject } from 'nft/utils/buildSellObject'
 import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { roundAndPluralize } from 'nft/utils/roundAndPluralize'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { sortUpdatedAssets } from 'nft/utils/updatedAssets'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
@@ -122,24 +122,17 @@ const Bag = () => {
   const shouldShowBag = isNFTPage && !isNFTSellPage
   const isMobile = useIsMobile()
 
+  const sendTransaction = useSendTransaction((state) => state.sendTransaction)
+  const transactionState = useSendTransaction((state) => state.state)
+  const setTransactionState = useSendTransaction((state) => state.setState)
+  const transactionStateRef = useRef(transactionState)
+  const [setTransactionResponse] = useTransactionResponse((state) => [state.setTransactionResponse])
+
   const queryClient = useQueryClient()
 
   const itemsInBag = useMemo(() => {
     return recalculateBagUsingPooledAssets(uncheckedItemsInBag)
   }, [uncheckedItemsInBag])
-
-  const ethSellObject = useMemo(
-    () =>
-      buildSellObject(
-        itemsInBag
-          .reduce(
-            (ethTotal, bagItem) => ethTotal.add(BigNumber.from(bagItem.asset.priceInfo.ETHPrice)),
-            BigNumber.from(0)
-          )
-          .toString()
-      ),
-    [itemsInBag]
-  )
 
   const [isOpen, setModalIsOpen] = useState(false)
   const [userCanScroll, setUserCanScroll] = useState(false)
@@ -152,18 +145,6 @@ const Bag = () => {
   }
 
   const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
-  const { data: routingData, refetch } = useQuery(
-    ['assetsRoute'],
-    () =>
-      fetchRoute({
-        toSell: [ethSellObject],
-        toBuy: itemsInBag.map((item) => item.asset),
-        senderAddress: account ?? '',
-      }),
-    {
-      enabled: false,
-    }
-  )
 
   const { totalEthPrice, totalUsdPrice } = useMemo(() => {
     const totalEthPrice = itemsInBag.reduce(
@@ -189,37 +170,72 @@ const Bag = () => {
     return { balance, sufficientBalance }
   }, [balanceInEth, totalEthPrice, isConnected])
 
-  useEffect(() => {
-    if (routingData && bagStatus === BagStatus.FETCHING_ROUTE) {
-      const updatedAssets = combineBuyItemsWithTxRoute(
-        itemsInBag.map((item) => item.asset),
-        routingData.route
+  const purchaseAssets = async (routingData: RouteResponse) => {
+    if (!provider || !routingData) return
+    const purchaseResponse = await sendTransaction(
+      provider?.getSigner(),
+      itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset),
+      routingData
+    )
+    if (
+      purchaseResponse &&
+      (transactionStateRef.current === TxStateType.Success || transactionStateRef.current === TxStateType.Failed)
+    ) {
+      setLocked(false)
+      setModalIsOpen(false)
+      setTransactionResponse(purchaseResponse)
+      bagExpanded && toggleBag()
+      reset()
+    }
+  }
+
+  const fetchAssets = async () => {
+    const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
+    const ethSellObject = buildSellObject(
+      itemsToBuy
+        .reduce((ethTotal, asset) => ethTotal.add(BigNumber.from(asset.priceInfo.ETHPrice)), BigNumber.from(0))
+        .toString()
+    )
+
+    didOpenUnavailableAssets && setDidOpenUnavailableAssets(false)
+    !bagIsLocked && setLocked(true)
+    setBagStatus(BagStatus.FETCHING_ROUTE)
+    try {
+      const data = await queryClient.fetchQuery(['assetsRoute', ethSellObject, itemsToBuy, account], () =>
+        fetchRoute({
+          toSell: [ethSellObject],
+          toBuy: itemsToBuy,
+          senderAddress: account ?? '',
+        })
       )
 
-      const priceChangedAssets = updatedAssets.filter((asset) => asset.updatedPriceInfo).sort(sortUpdatedAssets)
-      const unavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
-      const unchangedAssets = updatedAssets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
-      const hasReviewedAssets = unchangedAssets.length > 0
-      const hasAssetsInReview = priceChangedAssets.length > 0
-      const hasUnavailableAssets = unavailableAssets.length > 0
+      const updatedAssets = combineBuyItemsWithTxRoute(itemsToBuy, data.route)
+
+      const fetchedPriceChangedAssets = updatedAssets.filter((asset) => asset.updatedPriceInfo).sort(sortUpdatedAssets)
+      const fetchedUnavailableAssets = updatedAssets.filter((asset) => asset.isUnavailable)
+      const fetchedUnchangedAssets = updatedAssets.filter((asset) => !asset.updatedPriceInfo && !asset.isUnavailable)
+      const hasReviewedAssets = fetchedUnchangedAssets.length > 0
+      const hasAssetsInReview = fetchedPriceChangedAssets.length > 0
+      const hasUnavailableAssets = fetchedUnavailableAssets.length > 0
       const hasAssets = hasReviewedAssets || hasAssetsInReview || hasUnavailableAssets
       const shouldReview = hasAssetsInReview || hasUnavailableAssets
 
       setItemsInBag([
-        ...unavailableAssets.map((unavailableAsset) => ({
+        ...fetchedUnavailableAssets.map((unavailableAsset) => ({
           asset: unavailableAsset,
           status: BagItemStatus.UNAVAILABLE,
         })),
-        ...priceChangedAssets.map((changedAsset) => ({
+        ...fetchedPriceChangedAssets.map((changedAsset) => ({
           asset: changedAsset,
           status: BagItemStatus.REVIEWING_PRICE_CHANGE,
         })),
-        ...unchangedAssets.map((unchangedAsset) => ({ asset: unchangedAsset, status: BagItemStatus.REVIEWED })),
+        ...fetchedUnchangedAssets.map((unchangedAsset) => ({ asset: unchangedAsset, status: BagItemStatus.REVIEWED })),
       ])
       setLocked(false)
 
       if (hasAssets) {
         if (!shouldReview) {
+          purchaseAssets(data)
           setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
         } else if (!hasAssetsInReview) setBagStatus(BagStatus.CONFIRM_REVIEW)
         else {
@@ -228,11 +244,14 @@ const Bag = () => {
       } else {
         setBagStatus(BagStatus.ADDING_TO_BAG)
       }
-    } else if (routingData && bagStatus === BagStatus.FETCHING_FINAL_ROUTE) {
-      setBagStatus(BagStatus.CONFIRMING_IN_WALLET)
+    } catch (error) {
+      setBagStatus(BagStatus.ADDING_TO_BAG)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routingData])
+  }
+
+  useEffect(() => {
+    useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))
+  }, [])
 
   const { unchangedAssets, priceChangedAssets, unavailableAssets, availableItems } = useMemo(() => {
     const unchangedAssets = itemsInBag
@@ -251,31 +270,13 @@ const Bag = () => {
 
   useEffect(() => {
     const hasAssetsInReview = priceChangedAssets.length > 0
-    const hasUnavailableAssets = unavailableAssets.length > 0
     const hasAssets = itemsInBag.length > 0
 
-    if (bagStatus === BagStatus.ADDING_TO_BAG) {
-      isOpen && setModalIsOpen(false)
-      queryClient.setQueryData('assetsRoute', undefined)
-    }
-    if (bagStatus === BagStatus.FETCHING_ROUTE) {
-      hasUnavailableAssets && setItemsInBag(itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE))
-      setLocked(true)
-      refetch()
-    }
     if (bagStatus === BagStatus.IN_REVIEW && !hasAssetsInReview) {
-      queryClient.setQueryData('assetsRoute', undefined)
       if (hasAssets) setBagStatus(BagStatus.CONFIRM_REVIEW)
       else setBagStatus(BagStatus.ADDING_TO_BAG)
     }
-    if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE) {
-      hasUnavailableAssets && setItemsInBag(itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE))
-      didOpenUnavailableAssets && setDidOpenUnavailableAssets(false)
-      !bagIsLocked && setLocked(true)
-      refetch()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bagStatus, itemsInBag, priceChangedAssets, unavailableAssets])
+  }, [bagStatus, itemsInBag, priceChangedAssets, setBagStatus])
 
   useEffect(() => {
     if (bagIsLocked && !isOpen) setModalIsOpen(true)
@@ -285,6 +286,19 @@ const Bag = () => {
     bagExpanded && toggleBag()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
+
+  useEffect(() => {
+    if (transactionStateRef.current === TxStateType.Confirming) setBagStatus(BagStatus.PROCESSING_TRANSACTION)
+    if (transactionStateRef.current === TxStateType.Denied || transactionStateRef.current === TxStateType.Invalid) {
+      if (transactionStateRef.current === TxStateType.Invalid) setBagStatus(BagStatus.WARNING)
+      else setBagStatus(BagStatus.CONFIRM_REVIEW)
+      setTransactionState(TxStateType.New)
+
+      setLocked(false)
+      setModalIsOpen(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionStateRef.current])
 
   const hasAssetsToShow = itemsInBag.length > 0 || unavailableAssets.length > 0
 
@@ -346,10 +360,7 @@ const Bag = () => {
                 totalEthPrice={totalEthPrice}
                 totalUsdPrice={totalUsdPrice}
                 bagStatus={bagStatus}
-                setBagStatus={setBagStatus}
-                fetchReview={() => {
-                  setBagStatus(BagStatus.FETCHING_ROUTE)
-                }}
+                fetchAssets={fetchAssets}
                 assetsAreInReview={itemsInBag.some((item) => item.status === BagItemStatus.REVIEWING_PRICE_CHANGE)}
               />
             )}
