@@ -145,8 +145,11 @@ export function PriceChart({ width, height, tokenAddress, priceDataFragmentRef }
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = prices?.[0] ?? DATA_EMPTY
+  console.log('starting time', new Date(startingPrice.timestamp.valueOf() * 1000).toLocaleDateString(locale))
   // last price point on the x-axis of the current time period's chart
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
+  console.log('ending time', new Date(endingPrice.timestamp.valueOf() * 1000).toLocaleDateString(locale))
+
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
 
   // set display price to ending price when prices have changed.
