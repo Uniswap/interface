@@ -6,12 +6,6 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
   color: #6E727D;
 }
 
-.c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
 .c4 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -29,6 +23,12 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
 .c5 {
   display: grid;
   grid-auto-rows: auto;
+}
+
+.c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
 }
 
 .c1 {
