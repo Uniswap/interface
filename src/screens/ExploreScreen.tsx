@@ -12,7 +12,6 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 import { ExploreStackParamList, TabNavigationProp } from 'src/app/navigation/types'
-import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { SearchEmptySection_popularTokens$key } from 'src/components/explore/search/__generated__/SearchEmptySection_popularTokens.graphql'
@@ -125,9 +124,6 @@ export function ExploreScreen({ data, navigation }: Props) {
     <TabbedScrollScreen
       headerContent={
         <Box bg="backgroundBackdrop">
-          <Flex height={isSearchMode ? 0 : 'auto'} opacity={isSearchMode ? 0 : 1}>
-            <AccountHeader />
-          </Flex>
           <Flex m="sm">
             <SearchTextInput
               ref={textInputRef}
