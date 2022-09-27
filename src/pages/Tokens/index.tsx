@@ -81,12 +81,6 @@ const Tokens = () => {
     if (isValidBackendChainName(chain)) navigate(`/tokens/${chain.toLowerCase()}`)
   })
 
-  const resetFilterString = useResetAtom(filterStringAtom)
-  const location = useLocation()
-  useEffect(() => {
-    resetFilterString()
-  }, [location, resetFilterString])
-
   return (
     <Trace page={PageName.TOKENS_PAGE} shouldLogImpression>
       <ExploreContainer>
