@@ -7,7 +7,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
@@ -488,7 +488,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const arrow = delta ? getDeltaArrow(delta) : null
   const formattedDelta = delta ? formatDelta(delta) : null
   const sortAscending = useAtomValue(sortAscendingAtom)
-  const { chainName } = useParams<{ chainName?: string }>()
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -504,7 +503,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   return (
     <div ref={ref}>
       <StyledLink
-        to={`/tokens/${chainName}/${tokenAddress}`}
+        to={getTokenDetailsURL(token.address, token.chain)}
         onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
       >
         <TokenRow
