@@ -111,7 +111,7 @@ const YourLiquidityGrid = styled(Box)`
   border-radius: 1rem;
   padding: 2rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: repeat(40px);
   grid-row-gap: 1rem;
   grid-column-gap: ${() => (isMobile ? '30px' : '1rem')};
@@ -268,7 +268,6 @@ export default function Liquidity() {
     fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some((V2Pair) => !V2Pair)
 
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
-
   const [pools, setPools] = useState<any[]>([])
   const [ethPrice, setEthPrice] = useState<Bn>()
 
@@ -424,6 +423,7 @@ export default function Liquidity() {
               <>
                 <YourLiquidityGrid>
                   <HeaderItem>Pool</HeaderItem>
+                  <HeaderItem>Pair Mode</HeaderItem>
                   <HeaderItem>Token</HeaderItem>
                   <HeaderItem>Amount</HeaderItem>
                   <HeaderItem>Value</HeaderItem>
