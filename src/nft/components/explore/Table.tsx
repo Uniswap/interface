@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { useNavigate } from 'react-router-dom'
 import { Column, IdType, Row, useSortBy, useTable } from 'react-table'
 
 import { Box } from '../../components/Box'
@@ -42,6 +43,8 @@ export function Table<D extends Record<string, unknown>>({
     },
     useSortBy
   )
+
+  const navigate = useNavigate()
 
   /*
   useEffect(() => {
@@ -94,7 +97,13 @@ export function Table<D extends Record<string, unknown>>({
           prepareRow(row)
 
           return (
-            <tr className={styles.tr} {...row.getRowProps()} {...getTrProps(row)} key={i}>
+            <tr
+              className={styles.tr}
+              {...row.getRowProps()}
+              {...getTrProps(row)}
+              key={i}
+              onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
+            >
               {row.cells.map((cell, cellIndex) => {
                 return (
                   <td className={clsx(styles.td, classNames?.td)} {...cell.getCellProps()} key={cellIndex}>

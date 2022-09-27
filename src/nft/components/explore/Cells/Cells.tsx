@@ -1,5 +1,3 @@
-import { useWindowSize } from 'hooks/useWindowSize'
-
 import { ethNumberStandardFormatter, formatWeiToDecimal } from '../../../utils/currency'
 import { putCommas } from '../../../utils/putCommas'
 import { formatChange } from '../../../utils/toSignificant'
@@ -20,20 +18,16 @@ interface CellProps {
 }
 
 export const CollectionTitleCell = ({ value }: CellProps) => {
-  const { width } = useWindowSize()
-  console.log(width)
   return (
-    <a href={`#/nft/collection/${value.address}`} style={{ textDecoration: 'none' }}>
-      <Row as="span" style={{ marginLeft: '52px' }}>
-        <img className={styles.logo} src={value.logo} alt={`${value.name} logo`} height={44} width={44} />
-        <span className={styles.title}>{value.name}</span>
-        {value.isVerified && (
-          <span className={styles.verifiedBadge}>
-            <VerifiedIcon />
-          </span>
-        )}
-      </Row>
-    </a>
+    <Row as="span" style={{ marginLeft: '52px' }}>
+      <img className={styles.logo} src={value.logo} alt={`${value.name} logo`} height={44} width={44} />
+      <span className={styles.title}>{value.name}</span>
+      {value.isVerified && (
+        <span className={styles.verifiedBadge}>
+          <VerifiedIcon />
+        </span>
+      )}
+    </Row>
   )
 }
 
