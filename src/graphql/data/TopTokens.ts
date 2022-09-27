@@ -27,10 +27,10 @@ export function usePrefetchTopTokens(duration: HistoryDuration, chain: Chain) {
 const topTokens100Query = graphql`
   query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
     topTokens(pageSize: 100, page: 1, chain: $chain) {
-      id
+      id @required(action: LOG)
       name
-      chain
-      address
+      chain @required(action: LOG)
+      address @required(action: LOG)
       symbol
       market(currency: USD) {
         totalValueLocked {
@@ -251,10 +251,10 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 export const tokensQuery = graphql`
   query TopTokens_TokensQuery($contracts: [ContractInput!]!, $duration: HistoryDuration!) {
     tokens(contracts: $contracts) {
-      id
+      id @required(action: LOG)
       name
-      chain
-      address
+      chain @required(action: LOG)
+      address @required(action: LOG)
       symbol
       market(currency: USD) {
         totalValueLocked {

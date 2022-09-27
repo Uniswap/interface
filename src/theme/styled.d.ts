@@ -48,7 +48,7 @@ export interface ThemeColors {
   chain_10: Color
   chain_137: Color
   chain_42: Color
-  chain_69: Color
+  chain_420: Color
   chain_42161: Color
   chain_421611: Color
   chain_80001: Color
