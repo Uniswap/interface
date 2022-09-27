@@ -53,14 +53,7 @@ const ActivityFeed = ({ address }: { address: string }) => {
           </Column>
           <Column width="full" position="relative">
             {collectionActivity.events.map((activityEvent: ActivityEvent, index: number) => {
-              return (
-                <ActivityRow
-                  event={activityEvent}
-                  index={index}
-                  key={`${activityEvent.eventType}${activityEvent.tokenId}`}
-                  current={current}
-                />
-              )
+              return <ActivityRow event={activityEvent} index={index} key={index} current={current} />
             })}
           </Column>
         </Box>
@@ -99,7 +92,7 @@ const ActivityRow = ({ event, index, current }: { event: ActivityEvent; index: n
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        navigate(`/nft/asset/${event.collectionAddress}/${event.tokenId}?origin=explore`)
+        navigate(`/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=explore`)
       }}
     >
       <Box as="img" src={event.tokenMetadata?.imageUrl} borderRadius="12" marginRight="8" width="40" height="40" />

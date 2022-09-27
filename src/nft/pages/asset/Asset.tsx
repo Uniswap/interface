@@ -314,7 +314,7 @@ const Asset = () => {
                 </a>
               )}
 
-              <Link to={`/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
+              <Link to={`/nfts/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
                 <CollectionProfile
                   label="Collection"
                   avatarUrl={collection.collectionImageUrl}
