@@ -1,4 +1,4 @@
-import { useCombinedTokenMapFromUrls } from 'state/lists/hooks'
+import { TokenInfo } from '@uniswap/token-lists'
 
 import store from '../state'
 import { UNI_EXTENDED_LIST, UNI_LIST, UNSUPPORTED_LIST_URLS } from './lists'
@@ -17,34 +17,29 @@ class TokenSafetyLookupTable {
 
   createMap() {
     const dict: { [key: string]: TOKEN_LIST_TYPES } = {}
-    let uniDefaultTokens = store.getState().lists.byUrl[UNI_LIST].current?.tokens
-    let uniExtendedTokens = store.getState().lists.byUrl[UNI_EXTENDED_LIST].current?.tokens
-    const brokenTokens = brokenTokenList.tokens
-    const unsupportTokens = UNSUPPORTED_LIST_URLS.map(
-      (url) => store.getState().lists.byUrl[url].current?.tokens
-    ).reduce((prev, current) => {
-      return prev?.concat()
-    }, [])
 
-    if (!uniDefaultTokens) {
-      uniDefaultTokens = []
-    }
-    if (!uniExtendedTokens) {
-      uniExtendedTokens = []
-    }
-    brokenTokens.forEach((token) => {
-      dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BROKEN
-    })
-    unsupportTokens.forEach((token) => {
-      dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BLOCKED
-    })
-    uniExtendedTokens.forEach((token) => {
+    // Initialize extended tokens first
+    store.getState().lists.byUrl[UNI_EXTENDED_LIST].current?.tokens.forEach((token) => {
       dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_EXTENDED
     })
-    uniDefaultTokens.forEach((token) => {
+
+    // Initialize default tokens second, so that any tokens on both default and extended will display as default (no warning)
+    store.getState().lists.byUrl[UNI_LIST].current?.tokens.forEach((token) => {
       dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_DEFAULT
     })
 
+    // TODO: Figure out if this list is still relevant
+    brokenTokenList.tokens.forEach((token) => {
+      dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BROKEN
+    })
+
+    // Initialize blocked tokens from all urls included
+    UNSUPPORTED_LIST_URLS.map((url) => store.getState().lists.byUrl[url].current?.tokens)
+      .filter((x): x is TokenInfo[] => !!x)
+      .flat(1)
+      .forEach((token) => {
+        dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BLOCKED
+      })
     return dict
   }
 
@@ -54,20 +49,6 @@ class TokenSafetyLookupTable {
     }
     return this.dict[address] ?? TOKEN_LIST_TYPES.UNKNOWN
   }
-}
-
-const NAME_TO_SAFETY_TYPE: { [key: string]: TOKEN_LIST_TYPES } = {
-  'Uniswap Labs Default': TOKEN_LIST_TYPES.UNI_DEFAULT,
-  'Uniswap Labs Extended': TOKEN_LIST_TYPES.UNI_EXTENDED,
-  'Unsupported Tokens': TOKEN_LIST_TYPES.UNI_EXTENDED,
-  none: TOKEN_LIST_TYPES.UNKNOWN,
-}
-
-export function useTokenSafety(chainId: number, address: string) {
-  const tokenMap = useCombinedTokenMapFromUrls([...UNSUPPORTED_LIST_URLS, UNI_LIST, UNI_EXTENDED_LIST])
-
-  const listName = tokenMap[chainId][address].list?.name ?? 'none'
-  return NAME_TO_SAFETY_TYPE[listName] ?? TOKEN_LIST_TYPES.UNKNOWN
 }
 
 export default new TokenSafetyLookupTable()

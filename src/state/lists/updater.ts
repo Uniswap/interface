@@ -25,9 +25,11 @@ export default function Updater(): null {
   const fetchList = useFetchListCallback()
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
-    Object.keys(lists).forEach((url) =>
-      fetchList(url).catch((error) => console.debug('interval list fetching error', error))
-    )
+    Object.keys(lists).forEach((url) => {
+      fetchList(url, false, url in UNSUPPORTED_LIST_URLS).catch((error) =>
+        console.debug('interval list fetching error', error)
+      )
+    })
   }, [fetchList, isWindowVisible, lists])
 
   useEffect(() => {
