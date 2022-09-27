@@ -4,7 +4,7 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { headlineSmall } from 'nft/css/common.css'
 import { BagStatus } from 'nft/types'
-import { formatWeiToDecimal } from 'nft/utils/currency'
+import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { useModalIsOpen, useToggleWalletModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 
@@ -60,14 +60,25 @@ export const BagFooter = ({
         borderTopRightRadius={showWarning ? '0' : '12'}
         className={styles.footer}
       >
-        <Row justifyContent="space-between" paddingTop="8" paddingBottom="20">
-          <Box fontWeight="semibold" className={headlineSmall}>
-            Total
-          </Box>
-          <Box fontWeight="semibold" className={headlineSmall}>{`${formatWeiToDecimal(
-            totalEthPrice.toString()
-          )} ETH`}</Box>
-        </Row>
+        <Column gap="4" paddingTop="8" paddingBottom="20">
+          <Row justifyContent="space-between">
+            <Box fontWeight="semibold" className={headlineSmall}>
+              Total
+            </Box>
+            <Box fontWeight="semibold" className={headlineSmall}>
+              {`${formatWeiToDecimal(totalEthPrice.toString())} ETH`}
+            </Box>
+          </Row>
+          <Row
+            justifyContent="flex-end"
+            fontWeight="normal"
+            fontSize="14"
+            color="textSecondary"
+            style={{ lineHeight: '20px' }}
+          >
+            {`${ethNumberStandardFormatter(totalUsdPrice, true)}`}
+          </Row>
+        </Column>
         <Row
           as="button"
           color="explicitWhite"
