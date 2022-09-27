@@ -215,13 +215,13 @@ export const valuePropContent = style([
 export const table = style([
   {
     borderCollapse: 'collapse',
-    borderStyle: 'hidden',
     boxShadow: '0 0 0 1px rgba(153, 161, 189, 0.24)',
     borderSpacing: '0px 40px',
   },
   sprinkles({
     width: 'full',
     borderRadius: '12',
+    borderStyle: 'none',
   }),
 ])
 
