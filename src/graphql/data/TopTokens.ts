@@ -134,7 +134,7 @@ function toContractInput(token: PrefetchedTopToken) {
 
 // Map of key: ${chain} + ${address} and value: TopToken object.
 // Acts as a local cache.
-const tokensWithPriceHistoryCache: Record<string, TopToken> = {}
+const tokensWithPriceHistoryCache: Record<string, Record<string, TopToken>> = {}
 
 const checkIfAllTokensCached = (tokens: PrefetchedTopToken[]) => {
   let everyTokenInCache = true
