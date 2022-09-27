@@ -217,8 +217,6 @@ export default function CurrencyList({
   onCurrencySelect,
   otherCurrency,
   fixedListRef,
-  showImportView,
-  setImportToken,
   showCurrencyAmount,
   isLoading,
   searchQuery,
@@ -231,8 +229,6 @@ export default function CurrencyList({
   onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherCurrency?: Currency | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
-  showImportView: () => void
-  setImportToken: (token: Token) => void
   showCurrencyAmount?: boolean
   isLoading: boolean
   searchQuery: string

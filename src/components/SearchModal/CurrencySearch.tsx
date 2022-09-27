@@ -57,8 +57,6 @@ interface CurrencySearchProps {
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
   showManageView: () => void
-  showImportView: () => void
-  setImportToken: (token: Token) => void
 }
 
 export function CurrencySearch({
@@ -71,8 +69,6 @@ export function CurrencySearch({
   onDismiss,
   isOpen,
   showManageView,
-  showImportView,
-  setImportToken,
 }: CurrencySearchProps) {
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
@@ -257,8 +253,6 @@ export function CurrencySearch({
                   otherCurrency={otherSelectedCurrency}
                   selectedCurrency={selectedCurrency}
                   fixedListRef={fixedList}
-                  showImportView={showImportView}
-                  setImportToken={setImportToken}
                   showCurrencyAmount={showCurrencyAmount}
                   isLoading={balancesIsLoading && !tokenLoaderTimerElapsed}
                   searchQuery={searchQuery}
