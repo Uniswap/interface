@@ -290,11 +290,12 @@ export const trendingOptions = sprinkles({
 /* Trending Colletion styles */
 export const trendingOption = style([
   {
-    padding: '14px 16px',
     marginTop: '-1px',
     marginLeft: '-1px',
   },
   sprinkles({
+    paddingY: '14',
+    paddingX: '16',
     borderRadius: '12',
     fontSize: '12',
     display: 'inline-block',
@@ -302,4 +303,4 @@ export const trendingOption = style([
   }),
 ])
 
-export const trendingOptionActive = sprinkles({ backgroundColor: 'grey700' })
+export const trendingOptionActive = sprinkles({ backgroundColor: 'accentActiveSoft' })
