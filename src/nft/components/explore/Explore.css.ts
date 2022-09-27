@@ -251,17 +251,13 @@ export const th = style([
 
 export const tr = sprinkles({ cursor: 'pointer' })
 
-export const rank = style([
-  sprinkles({
-    color: 'textSecondary',
-    position: 'absolute',
-    display: { md: 'inline-block', sm: 'none' },
-  }),
-  {
-    left: '24px',
-    top: '20px',
-  },
-])
+export const rank = sprinkles({
+  color: 'textSecondary',
+  position: 'absolute',
+  display: { md: 'inline-block', sm: 'none' },
+  left: '24',
+  top: '20',
+})
 
 export const td = style([
   body,
