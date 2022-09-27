@@ -8,7 +8,6 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import FilterOption from './FilterOption'
 
 const InternalMenuItem = styled.div`
@@ -58,10 +57,6 @@ const StyledMenu = styled.div`
   position: relative;
   border: none;
   text-align: left;
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    flex: 1;
-  }
 `
 const StyledMenuContent = styled.div`
   display: flex;
