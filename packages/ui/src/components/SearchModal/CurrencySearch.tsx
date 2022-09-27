@@ -205,7 +205,7 @@ export function CurrencySearch({
         <Column style={{ padding: '20px 0', height: '100%' }}>
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Column>
-      ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
+      ) : DEFAULT_TOKENS.length > 0 || filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
         <AutoSizerWrap style={{ flex: '1' }}>
           <AutoSizer disableWidth>
             {({ height }) => (
