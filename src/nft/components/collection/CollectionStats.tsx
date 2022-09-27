@@ -331,8 +331,9 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
         />
         {!isMobile && (
           <>
-            {stats.description ||
-              (isCollectionStatsLoading && <CollectionDescription description={stats.description} />)}
+            {(stats.description || isCollectionStatsLoading) && (
+              <CollectionDescription description={stats.description} />
+            )}
             <StatsRow stats={stats} marginTop="20" />
           </>
         )}
