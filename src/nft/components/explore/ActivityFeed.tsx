@@ -99,7 +99,7 @@ const ActivityRow = ({ event, index, current }: { event: ActivityEvent; index: n
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        navigate(`/nft/asset/${event.collectionAddress}/${event.tokenId}?origin=explore`)
+        navigate(`/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=explore`)
       }}
     >
       <Box as="img" src={event.tokenMetadata?.imageUrl} borderRadius="12" marginRight="8" width="40" height="40" />
