@@ -26,8 +26,8 @@ import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
+import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
-import ImportRow from './ImportRow'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
 const ContentWrapper = styled(Column)<{ redesignFlag?: boolean }>`
@@ -230,7 +230,20 @@ export function CurrencySearch({
         <Separator redesignFlag={redesignFlagEnabled} />
         {searchToken && !searchTokenIsAdded ? (
           <Column style={{ padding: '20px 0', height: '100%' }}>
-            <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
+            <CurrencyRow
+              currency={searchToken}
+              isSelected={Boolean(searchToken && selectedCurrency && selectedCurrency.equals(searchToken))}
+              onSelect={(hasWarning: boolean) => searchToken && handleCurrencySelect(searchToken, hasWarning)}
+              otherSelected={Boolean(searchToken && otherSelectedCurrency && otherSelectedCurrency.equals(searchToken))}
+              showCurrencyAmount={showCurrencyAmount}
+              eventProperties={formatAnalyticsEventProperties(
+                searchToken,
+                0,
+                [searchToken],
+                searchQuery,
+                isAddressSearch
+              )}
+            />
           </Column>
         ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
           <div style={{ flex: '1' }}>
