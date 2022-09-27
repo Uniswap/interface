@@ -82,8 +82,9 @@ export const SortDropdown = ({
                   dropDownOptions[selectedIndex].reverseOnClick?.()
                   toggleReversed()
                 } else {
-                  dropDownOptions[dropDownOptions[selectedIndex].reverseIndex ?? 1 - 1].onClick()
-                  setSelectedIndex(dropDownOptions[selectedIndex].reverseIndex ?? 1 - 1)
+                  const dropdownIndex = dropDownOptions[selectedIndex].reverseIndex ?? 1
+                  dropDownOptions[dropdownIndex - 1].onClick()
+                  setSelectedIndex(dropdownIndex - 1)
                 }
               }}
             >

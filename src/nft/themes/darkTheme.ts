@@ -3,6 +3,8 @@ import { Theme, vars } from 'nft/css/sprinkles.css'
 export const darkTheme: Theme = {
   colors: {
     accentFailure: vars.color.red300,
+    accentFailureSoft: 'rgba(253, 118, 107, 0.12)',
+    accentAction: vars.color.blue400,
     accentActionSoft: '#000000E5',
 
     explicitWhite: '#FFFFFF',
@@ -10,7 +12,6 @@ export const darkTheme: Theme = {
     gold: vars.color.gold200,
     violet: vars.color.violet200,
 
-    backgroundAction: vars.color.blue400,
     backgroundFloating: '0000000C',
     backgroundInteractive: vars.color.grey700,
     backgroundModule: vars.color.grey800,

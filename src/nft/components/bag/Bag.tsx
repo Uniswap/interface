@@ -314,7 +314,7 @@ const Bag = () => {
     <>
       {bagExpanded && shouldShowBag ? (
         <Portal>
-          <Column className={styles.bagContainer}>
+          <Column zIndex={isMobile || isOpen ? 'modal' : '3'} className={styles.bagContainer}>
             <BagHeader numberOfAssets={itemsInBag.length} toggleBag={toggleBag} resetFlow={reset} />
             {itemsInBag.length === 0 && bagStatus === BagStatus.ADDING_TO_BAG && <EmptyState />}
             <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
