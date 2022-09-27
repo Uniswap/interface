@@ -13,7 +13,7 @@ import {
   SuspiciousIcon20,
 } from 'nft/components/icons'
 import { body, subheadSmall } from 'nft/css/common.css'
-import { themeVars, vars } from 'nft/css/sprinkles.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, UniformHeight, UniformHeights } from 'nft/types'
 import { fallbackProvider, putCommas } from 'nft/utils'
@@ -456,19 +456,21 @@ const Button = ({ children, quantity, selectedChildren, onClick, onSelectedClick
               ? 'accentFailure'
               : asset.notForSale
               ? 'textTertiary'
-              : 'blue400'
+              : 'accentAction'
           }
-          style={{
-            background: `${
-              buttonHovered || isMobile
-                ? selected
-                  ? vars.color.accentFailure
-                  : vars.color.blue400
+          background={
+            buttonHovered || isMobile
+              ? asset.notForSale
+                ? 'backgroundInteractive'
                 : selected
-                ? '#FA2B391F'
-                : '#4C82FB1F'
-            }`,
-          }}
+                ? 'accentFailure'
+                : 'accentAction'
+              : asset.notForSale
+              ? 'backgroundModule'
+              : selected
+              ? 'accentFailureSoft'
+              : 'accentActionSoft'
+          }
           className={clsx(styles.button, subheadSmall)}
           onClick={(e) =>
             selected
