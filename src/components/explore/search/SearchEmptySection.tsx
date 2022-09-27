@@ -1,18 +1,17 @@
-import { graphql } from 'babel-plugin-relay/macro'
-import React, { useMemo } from 'react'
+import React, { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useFragment } from 'react-relay-offline'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
-import { SearchEmptySection_popularTokens$key } from 'src/components/explore/search/__generated__/SearchEmptySection_popularTokens.graphql'
+import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { CloseIcon } from 'src/components/icons/CloseIcon'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import {
   clearSearchHistory,
@@ -23,8 +22,6 @@ import {
   TokenSearchResult,
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
-import { fromGraphQLChain } from 'src/utils/chainId'
-import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 // TODO: Update fixed trending wallets
 export const TRENDING_WALLETS: WalletSearchResult[] = [
@@ -45,52 +42,10 @@ export const TRENDING_WALLETS: WalletSearchResult[] = [
   },
 ]
 
-const searchEmptySectionTopTokensFragment = graphql`
-  fragment SearchEmptySection_popularTokens on TokenProject @relay(plural: true) {
-    logoUrl
-    tokens {
-      chain
-      address
-      name
-      symbol
-    }
-  }
-`
-
-type SearchEmptySectionProps = {
-  popularTokens: SearchEmptySection_popularTokens$key | null
-}
-
-export function SearchEmptySection({ popularTokens }: SearchEmptySectionProps) {
+export function SearchEmptySection() {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const searchHistory = useAppSelector(selectSearchHistory)
-  // Load popular tokens by top trading volume
-  const popularTokensData = useFragment(searchEmptySectionTopTokensFragment, popularTokens ?? [])
-
-  const popularTokenResults = useMemo(() => {
-    return popularTokensData
-      .map((tokenProject) => {
-        if (!tokenProject) return null
-
-        // Only use first chain the token is on
-        const token = tokenProject.tokens[0]
-        const { chain, address, symbol, name } = token
-        const chainId = fromGraphQLChain(chain)
-
-        if (!chainId || !symbol || !name) return null
-
-        return {
-          type: SearchResultType.Token,
-          chainId,
-          address,
-          name,
-          symbol,
-          logoUrl: tokenProject.logoUrl,
-        } as TokenSearchResult
-      })
-      .filter(Boolean) as TokenSearchResult[]
-  }, [popularTokensData])
 
   const onPressClearSearchHistory = () => {
     dispatch(clearSearchHistory())
@@ -123,20 +78,14 @@ export function SearchEmptySection({ popularTokens }: SearchEmptySectionProps) {
           />
         </AnimatedFlex>
       )}
-      {popularTokenResults.length > 0 && (
-        <FlatList
-          ItemSeparatorComponent={() => <Separator mx="xs" />}
-          ListHeaderComponent={
-            <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
-              {t('Popular Tokens')}
-            </Text>
-          }
-          data={popularTokenResults}
-          keyExtractor={tokenKey}
-          listKey="tokens"
-          renderItem={renderTokenItem}
-        />
-      )}
+      <Flex gap="xxs">
+        <Text color="textSecondary" mx="xs" variant="subheadSmall">
+          {t('Popular Tokens')}
+        </Text>
+        <Suspense fallback={<Loading repeat={3} type="token" />}>
+          <SearchPopularTokens />
+        </Suspense>
+      </Flex>
       <FlatList
         ItemSeparatorComponent={() => <Separator mx="xs" />}
         ListHeaderComponent={
@@ -163,19 +112,9 @@ const renderSearchHistoryItem = ({ item: searchResult }: ListRenderItemInfo<Sear
   }
 }
 
-const renderTokenItem = ({ item }: ListRenderItemInfo<TokenSearchResult>) => (
-  <SearchTokenItem token={item} />
-)
-
 const renderWalletItem = ({ item }: ListRenderItemInfo<WalletSearchResult>) => (
   <SearchWalletItem wallet={item} />
 )
-
-const tokenKey = (token: TokenSearchResult) => {
-  return token.address
-    ? buildCurrencyId(token.chainId, token.address)
-    : buildNativeCurrencyId(token.chainId)
-}
 
 const walletKey = (wallet: WalletSearchResult) => {
   return wallet.address

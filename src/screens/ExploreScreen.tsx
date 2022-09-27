@@ -1,6 +1,5 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, Route, TextInput, ViewStyle } from 'react-native'
@@ -14,7 +13,6 @@ import {
 import { ExploreStackParamList, TabNavigationProp } from 'src/app/navigation/types'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
-import { SearchEmptySection_popularTokens$key } from 'src/components/explore/search/__generated__/SearchEmptySection_popularTokens.graphql'
 import ExploreTokensTab from 'src/components/explore/tabs/ExploreTokensTab'
 import ExploreWalletsTab from 'src/components/explore/tabs/ExploreWalletsTab'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
@@ -24,7 +22,6 @@ import TabbedScrollScreen, {
 } from 'src/components/layout/screens/TabbedScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Screens, Tabs } from 'src/screens/Screens'
-import { ExploreScreenQuery$data } from 'src/screens/__generated__/ExploreScreenQuery.graphql'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 import { useDebounce } from 'src/utils/timing'
@@ -36,20 +33,9 @@ const WALLETS_KEY = 'wallets'
 const SEARCH_BAR_HEIGHT = 66
 const CONTENT_MAX_SCROLL_Y = SEARCH_BAR_HEIGHT + theme.spacing.md // Scroll distance for pinned search bar state
 
-export const exploreScreenQuery = graphql`
-  query ExploreScreenQuery {
-    popularTokens: topTokenProjects(orderBy: VOLUME, page: 1, pageSize: 3) {
-      ...SearchEmptySection_popularTokens
-    }
-  }
-`
+type Props = NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
 
-type Props = { data: ExploreScreenQuery$data } & NativeStackScreenProps<
-  ExploreStackParamList,
-  Screens.Explore
->
-
-export function ExploreScreen({ data, navigation }: Props) {
+export function ExploreScreen({ navigation }: Props) {
   const { t } = useTranslation()
 
   const listRef = useRef(null)
@@ -145,15 +131,7 @@ export function ExploreScreen({ data, navigation }: Props) {
                 <VirtualizedList onScroll={resultsScrollHandler}>
                   <Box p="xs" />
                   {searchQuery.length === 0 ? (
-                    <SearchEmptySection
-                      popularTokens={
-                        data.popularTokens
-                          ? (data.popularTokens.filter(
-                              Boolean
-                            ) as SearchEmptySection_popularTokens$key)
-                          : null
-                      }
-                    />
+                    <SearchEmptySection />
                   ) : (
                     <SearchResultsSection searchQuery={debouncedSearchQuery} />
                   )}
