@@ -133,7 +133,6 @@ export const TraitSelect = ({ traits, type, search }: { traits: Trait[]; type: s
     <Box
       as="details"
       className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
-      borderRadius="12"
       open={isOpen}
     >
       <Box

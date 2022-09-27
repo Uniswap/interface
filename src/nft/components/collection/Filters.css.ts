@@ -37,12 +37,6 @@ export const rowHover = style([
 ])
 
 export const rowHoverOpen = style([
-  sprinkles({
-    borderTopLeftRadius: '12',
-    borderTopRightRadius: '12',
-    borderBottomLeftRadius: '0',
-    borderBottomRightRadius: '0',
-  }),
   {
     ':hover': {
       background: themeVars.colors.backgroundOutline,
@@ -57,18 +51,19 @@ export const subRowHover = style({
 })
 
 export const detailsOpen = sprinkles({
-  background: 'backgroundModule',
   overflow: 'hidden',
-  borderStyle: 'solid',
-  borderWidth: '1px',
-  borderColor: 'backgroundOutline',
 })
 
-export const summaryOpen = sprinkles({
-  borderStyle: 'solid',
-  borderWidth: '1px',
-  borderColor: 'backgroundOutline',
-})
+export const summaryOpen = style([
+  sprinkles({
+    // borderStyle: 'solid',
+    // borderColor: 'backgroundOutline',
+  }),
+
+  {
+    borderTop: '1px solid black',
+  },
+])
 
 export const filterDropDowns = style([
   sprinkles({
