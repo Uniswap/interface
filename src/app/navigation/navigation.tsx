@@ -57,7 +57,6 @@ import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
-import { PortfolioNFTsScreen } from 'src/screens/PortfolioNFTsScreen'
 import { PortfolioTokensScreen } from 'src/screens/PortfolioTokensScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
@@ -224,7 +223,6 @@ function ProfileStackGroup() {
         gestureEnabled: false,
       }}>
       <ProfileStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
-      <ProfileStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
     </ProfileStack.Navigator>
   )
 }
@@ -281,7 +279,6 @@ export function HomeStackNavigator() {
       <HomeStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
 
       {/* NFTS */}
-      <HomeStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
       <HomeStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
       <HomeStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
     </HomeStack.Navigator>
@@ -302,7 +299,6 @@ export function ExploreStackNavigator() {
       <ExploreStack.Screen component={ExploreTokensScreen} name={Screens.ExploreTokens} />
       <ExploreStack.Screen component={ExploreFavoritesScreen} name={Screens.ExploreFavorites} />
       <ExploreStack.Screen component={UserScreen} name={Screens.User} />
-      <ExploreStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
       <ExploreStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
       <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
       <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />

@@ -75,7 +75,9 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
           <BaseCard.Header
             borderBottomWidth={0}
             title={t('NFTs ({{totalCount}})', { totalCount })}
-            onPress={() => navigation.navigate(Screens.PortfolioNFTs, { owner })}
+            onPress={() => {
+              // TODO: @Thomas remove this click behavior when we replace with tabs for external profile
+            }}
           />
           <Masonry
             data={nftItems}
