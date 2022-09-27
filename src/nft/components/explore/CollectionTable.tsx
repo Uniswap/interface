@@ -1,5 +1,4 @@
-import { useNavigate } from 'react-router-dom'
-import { CellProps, Column, Row } from 'react-table'
+import { CellProps, Column } from 'react-table'
 
 import { CollectionTableColumn } from '../../types'
 import {
@@ -72,18 +71,11 @@ const columns: Column<CollectionTableColumn>[] = [
 ]
 
 const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
-  const navigate = useNavigate()
-
   return (
     <>
       <Table
         hiddenColumns={[ColumnHeaders.Volume, ColumnHeaders.Owners, ColumnHeaders.Items, ColumnHeaders.Sales]}
         {...{ data, columns }}
-        getTrProps={(row: Row<CollectionTableColumn>) => ({
-          onClick: () => {
-            navigate(`/nft/collection/${row.original.collection.address}`)
-          },
-        })}
       />
     </>
   )

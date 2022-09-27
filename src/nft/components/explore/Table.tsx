@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { useNavigate } from 'react-router-dom'
-import { Column, IdType, Row, useSortBy, useTable } from 'react-table'
+import { Column, IdType, useSortBy, useTable } from 'react-table'
 
 import { Box } from '../../components/Box'
 import { CollectionTableColumn } from '../../types'
@@ -15,7 +15,6 @@ interface TableProps<D extends Record<string, unknown>> {
   classNames?: {
     td: string
   }
-  getTrProps: (row: Row<CollectionTableColumn>) => Record<string, unknown>
 }
 
 export function Table<D extends Record<string, unknown>>({
@@ -23,7 +22,6 @@ export function Table<D extends Record<string, unknown>>({
   data,
   hiddenColumns,
   classNames,
-  getTrProps,
   ...props
 }: TableProps<D>) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
@@ -38,7 +36,6 @@ export function Table<D extends Record<string, unknown>>({
           },
         ],
       },
-      getTrProps,
       ...props,
     },
     useSortBy
@@ -100,7 +97,6 @@ export function Table<D extends Record<string, unknown>>({
             <tr
               className={styles.tr}
               {...row.getRowProps()}
-              {...getTrProps(row)}
               key={i}
               onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
             >
