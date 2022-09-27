@@ -92,7 +92,10 @@ const ArrowCell = styled.div`
 `
 export const TimeOptionsWrapper = styled.div`
   display: flex;
-  justify-content: flex-end;
+
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    justify-content: flex-end;
+  }
 `
 export const TimeOptionsContainer = styled.div`
   display: flex;
