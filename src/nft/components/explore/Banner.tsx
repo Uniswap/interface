@@ -3,7 +3,7 @@ import { useWindowSize } from 'hooks/useWindowSize'
 import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
-import { bodySmall, buttonMedium, header1 } from 'nft/css/common.css'
+import { bodySmall, buttonMedium, headlineLarge } from 'nft/css/common.css'
 import { breakpoints, vars } from 'nft/css/sprinkles.css'
 import { ActivityFetcher, fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod, TrendingCollection } from 'nft/types'
@@ -100,7 +100,7 @@ const CollectionDetails = ({
   <Column className={styles.collectionDetails} paddingTop="40">
     <div className={styles.volumeRank}>#{rank} volume in 24hr</div>
     <Row>
-      <Box as="span" marginTop="16" className={clsx(header1, styles.collectionName)}>
+      <Box as="span" marginTop="16" className={clsx(headlineLarge, styles.collectionName)}>
         {collection.name}
       </Box>
       {collection.isVerified && (

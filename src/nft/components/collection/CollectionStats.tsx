@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Marquee } from 'nft/components/layout/Marquee'
-import { header2 } from 'nft/css/common.css'
+import { headlineMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
@@ -129,7 +129,7 @@ const CollectionName = ({
       <Row minWidth="0">
         <Box
           marginRight={!isVerified ? '12' : '0'}
-          className={clsx(isMobile ? header2 : header2, styles.nameText)}
+          className={clsx(isMobile ? headlineMedium : headlineMedium, styles.nameText)}
           style={{ lineHeight: '32px' }}
         >
           {name}

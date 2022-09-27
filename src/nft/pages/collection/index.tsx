@@ -1,13 +1,14 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
+import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
-import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
-import { useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring/web'
+
+import * as styles from './index.css'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
@@ -16,7 +17,10 @@ const Collection = () => {
   const { contractAddress } = useParams()
 
   const isMobile = useIsMobile()
-  const [isFiltersExpanded] = useFiltersExpanded()
+  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const isActivityToggled = pathname.includes('/activity')
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
 
@@ -43,6 +47,12 @@ const Collection = () => {
     setMarketCount(marketCount)
   }, [collectionStats?.marketplaceCount, setMarketCount])
 
+  const toggleActivity = () => {
+    isActivityToggled
+      ? navigate(`/nfts/collection/${contractAddress}`)
+      : navigate(`/nfts/collection/${contractAddress}/activity`)
+  }
+
   return (
     <Column width="full">
       {collectionStats && contractAddress ? (
@@ -57,11 +67,16 @@ const Collection = () => {
               className={`${styles.bannerImage}`}
             />
           </Box>
-          {collectionStats && (
-            <Row paddingLeft="32" paddingRight="32">
-              <CollectionStats stats={collectionStats} isMobile={isMobile} />
-            </Row>
-          )}
+          <Column paddingX="32">
+            {collectionStats && <CollectionStats stats={collectionStats} isMobile={isMobile} />}
+            <ActivitySwitcher
+              showActivity={isActivityToggled}
+              toggleActivity={() => {
+                isFiltersExpanded && setFiltersExpanded(false)
+                toggleActivity()
+              }}
+            />
+          </Column>
           <Row alignItems="flex-start" position="relative" paddingX="48">
             <Box position="sticky" top="72" width="0">
               {isFiltersExpanded && (
@@ -79,11 +94,21 @@ const Collection = () => {
                 width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
               }}
             >
-              <CollectionNfts
-                collectionStats={collectionStats}
-                contractAddress={contractAddress}
-                rarityVerified={collectionStats?.rarityVerified}
-              />
+              {isActivityToggled
+                ? contractAddress && (
+                    <Activity
+                      contractAddress={contractAddress}
+                      rarityVerified={collectionStats?.rarityVerified ?? false}
+                      collectionName={collectionStats?.name ?? ''}
+                    />
+                  )
+                : contractAddress && (
+                    <CollectionNfts
+                      contractAddress={contractAddress}
+                      collectionStats={collectionStats}
+                      rarityVerified={collectionStats?.rarityVerified}
+                    />
+                  )}
             </AnimatedBox>
           </Row>
         </>
