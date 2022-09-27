@@ -29,7 +29,7 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   }
 }
 
-export const CHAIN_IDS_TO_BACKEND_NAME: { [key: number]: Chain } = {
+export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.MAINNET]: 'ETHEREUM',
   [SupportedChainId.GOERLI]: 'ETHEREUM_GOERLI',
   [SupportedChainId.POLYGON]: 'POLYGON',
@@ -44,7 +44,7 @@ export const CHAIN_IDS_TO_BACKEND_NAME: { [key: number]: Chain } = {
 
 export function useGlobalChainName() {
   const chainId = useAppSelector((state) => state.application.chainId)
-  return chainId && CHAIN_IDS_TO_BACKEND_NAME[chainId] ? CHAIN_IDS_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
+  return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId] ? CHAIN_ID_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
 }
 
 export const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
@@ -75,4 +75,15 @@ export function isValidBackendChainName(chainName: string | undefined): chainNam
     if (chainName === BACKEND_CHAIN_NAMES[i]) return true
   }
   return false
+}
+
+export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?: number) {
+  if (chainName) {
+    return `/tokens/${chainName.toLowerCase()}/${address}`
+  } else if (chainId) {
+    const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
+    return chainName ? `/tokens/${chainName.toLowerCase()}/${address}` : ''
+  } else {
+    return ''
+  }
 }

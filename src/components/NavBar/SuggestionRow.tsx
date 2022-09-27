@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useGlobalChainName } from 'graphql/data/util'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -112,12 +112,13 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
     toggleOpen()
   }, [addToSearchHistory, toggleOpen, token])
 
+  const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'Enter' && isHovered) {
         event.preventDefault()
-        navigate(`/tokens/${token.address}`)
+        navigate(tokenDetailsPath)
         handleClick()
       }
     }
@@ -125,11 +126,11 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
     return () => {
       document.removeEventListener('keydown', keyDownHandler)
     }
-  }, [toggleOpen, isHovered, token, navigate, handleClick])
+  }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
   return (
     <Link
-      to={`/tokens/${useGlobalChainName().toLowerCase()}/${token.address}`}
+      to={tokenDetailsPath}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}

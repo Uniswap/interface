@@ -1,7 +1,6 @@
+import { TxResponse } from 'nft/types'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
-
-import { TxResponse } from '../types'
 
 type TransactionResponseValue = TxResponse | undefined
 

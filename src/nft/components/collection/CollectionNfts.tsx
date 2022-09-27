@@ -26,6 +26,8 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
+import { CollectionAssetLoading } from './CollectionAssetLoading'
+
 interface CollectionNftsProps {
   contractAddress: string
   collectionStats: GenieCollection
@@ -64,7 +66,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         markets,
         notForSale: !buyNow,
         sortBy,
-        searchByNameText,
         debouncedMinPrice,
         debouncedMaxPrice,
         searchText: debouncedSearchByNameText,
@@ -126,6 +127,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     return collectionAssets.pages.flat()
   }, [collectionAssets, AssetsFetchSuccess])
 
+  const loadingAssets = useMemo(() => <>{new Array(25).fill(<CollectionAssetLoading />)}</>, [])
   const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts)
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
@@ -181,6 +183,25 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     }
   }, [contractAddress])
 
+  const Nfts =
+    collectionNfts &&
+    collectionNfts.map((asset) =>
+      asset ? (
+        <CollectionAsset
+          key={asset.address + asset.tokenId}
+          asset={asset}
+          isMobile={isMobile}
+          uniformHeight={uniformHeight}
+          setUniformHeight={setUniformHeight}
+          mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
+          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+          rarityVerified={rarityVerified}
+        />
+      ) : null
+    )
+
+  const hasNfts = collectionNfts && collectionNfts.length > 0
+
   useEffect(() => {
     const marketCount: any = {}
     collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
@@ -233,39 +254,25 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       <InfiniteScroll
         next={fetchNextPage}
         hasMore={hasNextPage ?? false}
-        loader={hasNextPage ? <p>Loading from scroll...</p> : null}
+        loader={hasNextPage ? loadingAssets : null}
         dataLength={collectionNfts?.length ?? 0}
         style={{ overflow: 'unset' }}
+        className={hasNfts || isLoading ? styles.assetList : undefined}
       >
-        {collectionNfts && collectionNfts.length > 0 ? (
-          <div className={styles.assetList}>
-            {collectionNfts.map((asset) => {
-              return asset ? (
-                <CollectionAsset
-                  key={asset.address + asset.tokenId}
-                  asset={asset}
-                  isMobile={isMobile}
-                  uniformHeight={uniformHeight}
-                  setUniformHeight={setUniformHeight}
-                  mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
-                  setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-                  rarityVerified={rarityVerified}
-                />
-              ) : null
-            })}
-          </div>
-        ) : (
-          !isLoading && (
-            <Center width="full" color="textSecondary" style={{ height: '60vh' }}>
-              <div style={{ display: 'block', textAlign: 'center' }}>
-                <p className={headlineMedium}>No NFTS found</p>
-                <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
-                  View full collection
-                </Box>
-              </div>
-            </Center>
-          )
-        )}
+        {hasNfts
+          ? Nfts
+          : isLoading
+          ? loadingAssets
+          : !isLoading && (
+              <Center width="full" color="textSecondary" style={{ height: '60vh' }}>
+                <div style={{ display: 'block', textAlign: 'center' }}>
+                  <p className={headlineMedium}>No NFTS found</p>
+                  <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
+                    View full collection
+                  </Box>
+                </div>
+              </Center>
+            )}
       </InfiniteScroll>
     </>
   )
