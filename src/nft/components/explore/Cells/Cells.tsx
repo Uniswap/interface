@@ -51,7 +51,7 @@ export const EthWithDayChange = ({ value }: CellProps) => (
     {value.change ? (
       <Box
         as="span"
-        color={value.change > 0 ? 'accentSuccess' : 'accentFailure'}
+        color={value.change > 0 ? 'green' : 'accentFailure'}
         fontWeight="normal"
         fontSize="12"
         position="relative"
@@ -71,7 +71,7 @@ export const WeiWithDayChange = ({ value }: CellProps) => (
     {value.change ? (
       <Box
         as="span"
-        color={value.change > 0 ? 'accentSuccess' : 'accentFailure'}
+        color={value.change > 0 ? 'green' : 'accentFailure'}
         fontWeight="normal"
         fontSize="12"
         position="relative"
@@ -89,7 +89,7 @@ export const CommaWithDayChange = ({ value }: CellProps) => (
     {value.change ? (
       <Box
         as="span"
-        color={value.change > 0 ? 'accentSuccess' : 'accentFailure'}
+        color={value.change > 0 ? 'green' : 'accentFailure'}
         fontWeight="normal"
         fontSize="12"
         position="relative"

@@ -1,8 +1,8 @@
-import { SupportedChainId } from '@uniswap/widgets'
 import { useWeb3React, Web3ReactHooks, Web3ReactProvider } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { Connection } from 'connection'
 import { getConnectionName } from 'connection/utils'
+import { isSupportedChain } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import useEagerlyConnect from 'hooks/useEagerlyConnect'
@@ -26,7 +26,7 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 
 function Tracer() {
   const { chainId, provider } = useWeb3React()
-  const networkProvider = RPC_PROVIDERS[(chainId || SupportedChainId.MAINNET) as SupportedChainId]
+  const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
   const shouldTrace = useTraceJsonRpcFlag() === TraceJsonRpcVariant.Enabled
 
   useEffect(() => {

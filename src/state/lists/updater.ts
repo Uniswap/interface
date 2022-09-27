@@ -31,7 +31,7 @@ export default function Updater(): null {
   }, [fetchList, isWindowVisible, lists])
 
   useEffect(() => {
-    if (chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)) {
+    if (chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISM_GOERLI].includes(chainId)) {
       dispatch(enableList(OPTIMISM_LIST))
     }
     if (chainId && [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)) {
