@@ -347,8 +347,8 @@ export default function SwapCurrencyInputPanel({
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
                   <ThemedText.DeprecatedBody
-                    color={theme.deprecated_text3}
-                    fontWeight={500}
+                    color={redesignFlag ? theme.textSecondary : theme.deprecated_text3}
+                    fontWeight={redesignFlag ? 400 : 500}
                     fontSize={14}
                     style={{ display: 'inline' }}
                   >
