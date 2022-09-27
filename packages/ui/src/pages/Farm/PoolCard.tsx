@@ -1,4 +1,4 @@
-import { JSBI, Token, TokenAmount } from '@teleswap/sdk'
+import { Token, TokenAmount } from '@teleswap/sdk'
 import { ReactComponent as AddIcon } from 'assets/svg/action/add.svg'
 import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 import { ButtonPrimary } from 'components/Button'
@@ -225,9 +225,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>APR</StakingColumnTitle>
-          <TYPE.white fontSize={16}>
-            {calculatedApr ? JSBI.multiply(calculatedApr, JSBI.BigInt(100)).toString() : '--.--'}%
-          </TYPE.white>
+          <TYPE.white fontSize={16}>{calculatedApr ? calculatedApr : '--.--'}%</TYPE.white>
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>Liquidity TVL</StakingColumnTitle>
