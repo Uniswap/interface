@@ -139,7 +139,6 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   const startingPrice = prices?.[0] ?? DATA_EMPTY
   // last price point on the x-axis of the current time period's chart
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
-
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
 
   // set display price to ending price when prices have changed.
@@ -169,8 +168,6 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   )
 
   function tickFormat(
-    startTimestamp: number,
-    endTimestamp: number,
     timePeriod: TimePeriod,
     locale: string
   ): [TickFormatter<NumberValue>, (v: number) => string, NumberValue[]] {
@@ -256,12 +253,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
     return null
   }
 
-  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(
-    startingPrice.timestamp,
-    endingPrice.timestamp,
-    timePeriod,
-    locale
-  )
+  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
   const delta = calculateDelta(startingPrice.value, displayPrice.value)
   const formattedDelta = formatDelta(delta)
   const arrow = getDeltaArrow(delta)
