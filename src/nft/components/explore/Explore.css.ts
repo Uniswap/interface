@@ -278,16 +278,14 @@ export const td = style([
   }),
 ])
 
-export const trendingOptions = style([
-  {
-    border: '2px solid rgba(153, 161, 189, 0.24)',
-  },
-  sprinkles({
-    marginBottom: '32',
-    height: '44',
-    borderRadius: '12',
-  }),
-])
+export const trendingOptions = sprinkles({
+  marginBottom: '32',
+  height: '44',
+  borderRadius: '12',
+  borderWidth: '2px',
+  borderStyle: 'solid',
+  borderColor: 'outline',
+})
 
 /* Trending Colletion styles */
 export const trendingOption = style([
