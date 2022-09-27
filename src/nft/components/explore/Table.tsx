@@ -1,4 +1,7 @@
 import clsx from 'clsx'
+import { useWindowSize } from 'hooks/useWindowSize'
+import { breakpoints } from 'nft/css/sprinkles.css'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, IdType, useSortBy, useTable } from 'react-table'
 
@@ -24,7 +27,7 @@ export function Table<D extends Record<string, unknown>>({
   classNames,
   ...props
 }: TableProps<D>) {
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
     {
       columns,
       data,
@@ -42,16 +45,15 @@ export function Table<D extends Record<string, unknown>>({
   )
 
   const navigate = useNavigate()
+  const { width: windowWidth } = useWindowSize()
 
-  /*
   useEffect(() => {
-    if (hiddenColumns && isMobile) {
+    if (hiddenColumns && windowWidth && windowWidth < breakpoints.sm) {
       setHiddenColumns(hiddenColumns)
     } else {
       setHiddenColumns([])
     }
-  }, [isMobile, hiddenColumns, setHiddenColumns])
-  */
+  }, [hiddenColumns, setHiddenColumns, windowWidth])
 
   return (
     <table {...getTableProps()} className={styles.table}>
@@ -69,7 +71,7 @@ export function Table<D extends Record<string, unknown>>({
                   }}
                   key={index}
                 >
-                  <Box as="span" color="blue400" position="relative">
+                  <Box as="span" color="backgroundAction" position="relative">
                     {column.isSorted ? (
                       column.isSortedDesc ? (
                         <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />

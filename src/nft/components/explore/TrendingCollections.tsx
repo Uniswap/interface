@@ -29,7 +29,7 @@ const TrendingCollections = () => {
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
-      // refetchInterval: 5000,
+      refetchInterval: 5000,
     }
   )
 
@@ -66,7 +66,7 @@ const TrendingCollections = () => {
     <Box width="full" className={styles.section}>
       <Column width="full">
         <Row>
-          <Box as="h2" className={headlineMedium} fontSize="36" marginTop="88">
+          <Box as="h2" className={headlineMedium} marginTop="88">
             Trending Collections
           </Box>
         </Row>
