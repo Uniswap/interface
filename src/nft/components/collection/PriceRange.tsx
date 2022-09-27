@@ -1,4 +1,3 @@
-import { style } from 'd3'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
@@ -18,6 +17,7 @@ export const PriceRange = () => {
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
   const isMobile = useIsMobile()
+  const [minMax, setMinMax] = useState([0, 100])
 
   const location = useLocation()
 
@@ -88,14 +88,12 @@ export const PriceRange = () => {
       <Row>
         <ReactSlider
           defaultValue={[0, 100]}
-          renderThumb={(props, state) => (
-            <div style={{ backgroundColor: 'pink', width: 10, height: 10 }} className={styles.tracker} {...props}>
-              {state.valueNow}
-            </div>
-          )}
-          pearling
           className={styles.slider}
+          trackClassName={styles.tracker}
           thumbClassName={styles.thumb}
+          onAfterChange={(props) => {
+            setMinMax(props)
+          }}
         />
       </Row>
     </>

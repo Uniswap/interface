@@ -282,6 +282,8 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
     return <div>Loading CollectionStats...</div>
   }
 
+  console.log(stats)
+
   return (
     <Box
       display="flex"
