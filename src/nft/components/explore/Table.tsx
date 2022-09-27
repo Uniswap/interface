@@ -71,7 +71,7 @@ export function Table<D extends Record<string, unknown>>({
                   }}
                   key={index}
                 >
-                  <Box as="span" color="backgroundAction" position="relative">
+                  <Box as="span" color="accentAction" position="relative">
                     {column.isSorted ? (
                       column.isSortedDesc ? (
                         <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />
