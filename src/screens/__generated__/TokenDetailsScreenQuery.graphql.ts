@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e4be7ad57f8a7a6d3972dec556602f4b>>
+ * @generated SignedSource<<458d6c4464042035b8ab8ea230a9ce42>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type TokenDetailsScreenQuery$variables = {
 };
 export type TokenDetailsScreenQuery$data = {
   readonly tokenProjects: ReadonlyArray<{
-    readonly " $fragmentSpreads": FragmentRefs<"TokenDetailsStats_tokenProject">;
+    readonly " $fragmentSpreads": FragmentRefs<"TokenDetailsScreen_headerPriceLabel" | "TokenDetailsStats_tokenProject">;
   } | null> | null;
 };
 export type TokenDetailsScreenQuery = {
@@ -97,6 +97,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "TokenDetailsStats_tokenProject"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "TokenDetailsScreen_headerPriceLabel"
           }
         ],
         "storageKey": null
@@ -294,16 +299,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0679849a201c2f860cf331cdf42b3e60",
+    "cacheID": "2ccd47cdf54f2051be73fb25c1bc4265",
     "id": null,
     "metadata": {},
     "name": "TokenDetailsScreenQuery",
     "operationKind": "query",
-    "text": "query TokenDetailsScreenQuery(\n  $contract: ContractInput!\n) {\n  tokenProjects(contracts: [$contract]) {\n    ...TokenDetailsStats_tokenProject\n    id\n  }\n}\n\nfragment TokenDetailsStats_tokenProject on TokenProject {\n  description\n  homepageUrl\n  twitterName\n  name\n  markets(currencies: [USD]) {\n    price {\n      value\n      currency\n      id\n    }\n    marketCap {\n      value\n      currency\n      id\n    }\n    fullyDilutedMarketCap {\n      value\n      currency\n      id\n    }\n    volume24h: volume(duration: DAY) {\n      value\n      currency\n      id\n    }\n    priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {\n      value\n      currency\n      id\n    }\n    priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {\n      value\n      currency\n      id\n    }\n    id\n  }\n  tokens {\n    chain\n    address\n    symbol\n    decimals\n    id\n  }\n}\n"
+    "text": "query TokenDetailsScreenQuery(\n  $contract: ContractInput!\n) {\n  tokenProjects(contracts: [$contract]) {\n    ...TokenDetailsStats_tokenProject\n    ...TokenDetailsScreen_headerPriceLabel\n    id\n  }\n}\n\nfragment TokenDetailsScreen_headerPriceLabel on TokenProject {\n  markets(currencies: [USD]) {\n    price {\n      value\n      id\n    }\n    id\n  }\n}\n\nfragment TokenDetailsStats_tokenProject on TokenProject {\n  description\n  homepageUrl\n  twitterName\n  name\n  markets(currencies: [USD]) {\n    price {\n      value\n      currency\n      id\n    }\n    marketCap {\n      value\n      currency\n      id\n    }\n    fullyDilutedMarketCap {\n      value\n      currency\n      id\n    }\n    volume24h: volume(duration: DAY) {\n      value\n      currency\n      id\n    }\n    priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {\n      value\n      currency\n      id\n    }\n    priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {\n      value\n      currency\n      id\n    }\n    id\n  }\n  tokens {\n    chain\n    address\n    symbol\n    decimals\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0c50ff4963884b50067d71fedfe95920";
+(node as any).hash = "256a81dcaa452a0633d7c5a22a37121e";
 
 export default node;

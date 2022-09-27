@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
+import { PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { IconButton } from 'src/components/buttons/IconButton'
@@ -24,7 +24,6 @@ import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats
 import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import { AssetType } from 'src/entities/assets'
-import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -37,6 +36,7 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
+import { TokenDetailsScreen_headerPriceLabel$key } from 'src/screens/__generated__/TokenDetailsScreen_headerPriceLabel.graphql'
 import { currencyAddress, currencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
@@ -44,6 +44,7 @@ export const tokenDetailsScreenQuery = graphql`
   query TokenDetailsScreenQuery($contract: ContractInput!) {
     tokenProjects(contracts: [$contract]) {
       ...TokenDetailsStats_tokenProject
+      ...TokenDetailsScreen_headerPriceLabel
     }
   }
 `
@@ -89,18 +90,38 @@ function TokenDetailsHeader({ currency, initialSendState }: TokenDetailsHeaderPr
   )
 }
 
-function HeaderPriceLabel({ currency }: Pick<TokenDetailsHeaderProps, 'currency'>) {
+function HeaderPriceLabel({
+  tokenProject,
+}: {
+  tokenProject: TokenDetailsScreen_headerPriceLabel$key
+}) {
   const { t } = useTranslation()
-  const spotPrice = useSpotPrice(currency)
+  const spotPrice = useFragment(
+    graphql`
+      fragment TokenDetailsScreen_headerPriceLabel on TokenProject {
+        markets(currencies: [USD]) {
+          price {
+            value
+          }
+        }
+      }
+    `,
+    tokenProject
+  )
 
   return (
     <Text color="textSecondary" variant="caption">
-      {formatUSDPrice(spotPrice?.price?.value) ?? t('Unknown token')}
+      {formatUSDPrice(spotPrice?.markets?.[0]?.price?.value) ?? t('Unknown token')}
     </Text>
   )
 }
 
-function HeaderTitleElement({ currency }: Pick<TokenDetailsHeaderProps, 'currency'>) {
+function HeaderTitleElement({
+  currency,
+  tokenProject,
+}: Pick<TokenDetailsHeaderProps, 'currency'> & {
+  tokenProject: TokenDetailsScreen_headerPriceLabel$key | null | undefined
+}) {
   const { t } = useTranslation()
 
   return (
@@ -109,9 +130,11 @@ function HeaderTitleElement({ currency }: Pick<TokenDetailsHeaderProps, 'currenc
         <CurrencyLogo currency={currency} size={16} />
         <Text variant="subhead">{currency.name ?? t('Unknown token')}</Text>
       </Flex>
-      <Suspense fallback={<Loading />}>
-        <HeaderPriceLabel currency={currency} />
-      </Suspense>
+      {tokenProject && (
+        <Suspense fallback={null}>
+          <HeaderPriceLabel tokenProject={tokenProject} />
+        </Suspense>
+      )}
     </Flex>
   )
 }
@@ -229,7 +252,7 @@ function TokenDetails({
         }
         fixedHeader={
           <BackHeader>
-            <HeaderTitleElement currency={currency} />
+            <HeaderTitleElement currency={currency} tokenProject={data.tokenProjects?.[0]} />
           </BackHeader>
         }>
         <Flex gap="md" mb="xxl" mt="lg" pb="xxl">
