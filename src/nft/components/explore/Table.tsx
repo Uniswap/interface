@@ -1,9 +1,8 @@
 import clsx from 'clsx'
-import { useWindowSize } from 'hooks/useWindowSize'
-import { breakpoints } from 'nft/css/sprinkles.css'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, IdType, useSortBy, useTable } from 'react-table'
+import { isMobile } from 'utils/userAgent'
 
 import { Box } from '../../components/Box'
 import { CollectionTableColumn } from '../../types'
@@ -45,15 +44,14 @@ export function Table<D extends Record<string, unknown>>({
   )
 
   const navigate = useNavigate()
-  const { width: windowWidth } = useWindowSize()
 
   useEffect(() => {
-    if (hiddenColumns && windowWidth && windowWidth < breakpoints.sm) {
+    if (hiddenColumns && isMobile) {
       setHiddenColumns(hiddenColumns)
     } else {
       setHiddenColumns([])
     }
-  }, [hiddenColumns, setHiddenColumns, windowWidth])
+  }, [hiddenColumns, setHiddenColumns])
 
   return (
     <table {...getTableProps()} className={styles.table}>
