@@ -568,7 +568,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                     tokenData={token}
                     pricePercentChange={token.market?.pricePercentChange?.value}
                     timePeriod={timePeriod}
-                    marginTop={5}
                   />
                 )}
               </ParentSize>

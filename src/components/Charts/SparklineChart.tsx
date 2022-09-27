@@ -16,10 +16,9 @@ interface SparklineChartProps {
   tokenData: TopToken
   pricePercentChange: number | undefined | null
   timePeriod: TimePeriod
-  marginTop?: number
 }
 
-function SparklineChart({ width, height, tokenData, pricePercentChange, timePeriod, marginTop }: SparklineChartProps) {
+function SparklineChart({ width, height, tokenData, pricePercentChange, timePeriod }: SparklineChartProps) {
   const theme = useTheme()
   // for sparkline
   const pricePoints = filterPrices(tokenData?.market?.priceHistory) ?? []
@@ -38,7 +37,7 @@ function SparklineChart({ width, height, tokenData, pricePercentChange, timePeri
       getX={(p: PricePoint) => widthScale(p.timestamp)}
       getY={(p: PricePoint) => rdScale(p.value)}
       curve={curveCardinal.tension(curveTension)}
-      marginTop={marginTop}
+      marginTop={5}
       color={pricePercentChange && pricePercentChange < 0 ? theme.accentFailure : theme.accentSuccess}
       strokeWidth={1.5}
       width={width}
