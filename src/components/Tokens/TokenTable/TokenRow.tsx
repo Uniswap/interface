@@ -564,7 +564,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
                 {({ width, height }) => (
                   <SparklineChart
                     width={width}
-                    height={height + 20}
+                    height={height}
                     tokenData={token}
                     pricePercentChange={token.market?.pricePercentChange?.value}
                     timePeriod={timePeriod}
