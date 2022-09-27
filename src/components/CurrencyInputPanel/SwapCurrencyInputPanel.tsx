@@ -129,10 +129,10 @@ const InputRow = styled.div<{ selected: boolean; redesignFlag: boolean }>`
     redesignFlag ? '0px' : selected ? ' 1rem 1rem 0.75rem 1rem' : '1rem 1rem 1rem 1rem'};
 `
 
-const LabelRow = styled.div`
+const LabelRow = styled.div<{ redesignFlag: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.textSecondary : theme.deprecated_text1)};
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0 1rem 1rem;
