@@ -1,3 +1,4 @@
+import { style } from 'd3'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
@@ -7,6 +8,8 @@ import { scrollToTop } from 'nft/utils/scrollToTop'
 import { useEffect, useState } from 'react'
 import { FocusEventHandler, FormEvent } from 'react'
 import { useLocation } from 'react-router-dom'
+import ReactSlider from 'react-slider'
+import * as styles from './PriceRange.css'
 
 export const PriceRange = () => {
   const [placeholderText, setPlaceholderText] = useState('')
@@ -34,52 +37,67 @@ export const PriceRange = () => {
   }
 
   return (
-    <Row gap="12" marginTop="12" color="textPrimary">
-      <Row position="relative" style={{ flex: 1 }}>
-        <NumericInput
-          style={{
-            width: isMobile ? '100%' : '142px',
-            border: '2px solid rgba(153, 161, 189, 0.24)',
-          }}
-          borderRadius="12"
-          padding="12"
-          fontSize="14"
-          color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
-          backgroundColor="transparent"
-          placeholder="Min"
-          defaultValue={minPrice}
-          onChange={(v: FormEvent<HTMLInputElement>) => {
-            scrollToTop()
-            setMinPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
-          }}
-          onFocus={handleFocus}
-          value={minPrice}
-          onBlur={handleBlur}
+    <>
+      <Row gap="12" marginTop="12" color="textPrimary">
+        <Row position="relative" style={{ flex: 1 }}>
+          <NumericInput
+            style={{
+              width: isMobile ? '100%' : '142px',
+              border: '2px solid rgba(153, 161, 189, 0.24)',
+            }}
+            borderRadius="12"
+            padding="12"
+            fontSize="14"
+            color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+            backgroundColor="transparent"
+            placeholder="Min"
+            defaultValue={minPrice}
+            onChange={(v: FormEvent<HTMLInputElement>) => {
+              scrollToTop()
+              setMinPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
+            }}
+            onFocus={handleFocus}
+            value={minPrice}
+            onBlur={handleBlur}
+          />
+        </Row>
+        <Row position="relative" style={{ flex: 1 }}>
+          <NumericInput
+            style={{
+              width: isMobile ? '100%' : '142px',
+              border: '2px solid rgba(153, 161, 189, 0.24)',
+            }}
+            borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}
+            borderRadius="12"
+            padding="12"
+            fontSize="14"
+            color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+            backgroundColor="transparent"
+            placeholder="Max"
+            defaultValue={maxPrice}
+            value={maxPrice}
+            onChange={(v: FormEvent<HTMLInputElement>) => {
+              scrollToTop()
+              setMaxPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        </Row>
+      </Row>
+      <Row>
+        <ReactSlider
+          defaultValue={[0, 100]}
+          renderThumb={(props, state) => (
+            <div style={{ backgroundColor: 'pink', width: 10, height: 10 }} className={styles.tracker} {...props}>
+              {state.valueNow}
+            </div>
+          )}
+          pearling
+          className={styles.slider}
+          thumbClassName={styles.thumb}
         />
       </Row>
-      <Row position="relative" style={{ flex: 1 }}>
-        <NumericInput
-          style={{
-            width: isMobile ? '100%' : '142px',
-            border: '2px solid rgba(153, 161, 189, 0.24)',
-          }}
-          borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}
-          borderRadius="12"
-          padding="12"
-          fontSize="14"
-          color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
-          backgroundColor="transparent"
-          placeholder="Max"
-          defaultValue={maxPrice}
-          value={maxPrice}
-          onChange={(v: FormEvent<HTMLInputElement>) => {
-            scrollToTop()
-            setMaxPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
-          }}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-      </Row>
-    </Row>
+    </>
   )
 }
