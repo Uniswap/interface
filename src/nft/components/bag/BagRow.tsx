@@ -12,6 +12,7 @@ import {
   SquareArrowUpIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
+import { bodySmall } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
 import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal, getAssetHref } from 'nft/utils'
@@ -262,7 +263,7 @@ export const UnavailableAssetsHeaderRow = ({
               toggleOpen()
             }}
           >
-            <Row gap="12" fontSize="14" color="textPrimary" fontWeight="normal" style={{ lineHeight: '20px' }}>
+            <Row gap="12" color="textPrimary" className={bodySmall}>
               {!isOpen && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
               No longer available
             </Row>

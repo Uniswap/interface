@@ -168,17 +168,13 @@ export const assetName = style([
 ])
 
 export const collectionName = style([
+  bodySmall,
   sprinkles({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    fontWeight: 'normal',
-    fontSize: '14',
     color: 'textSecondary',
   }),
-  {
-    lineHeight: '20px',
-  },
 ])
 
 export const icon = sprinkles({
