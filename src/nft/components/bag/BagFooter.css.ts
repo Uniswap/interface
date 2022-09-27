@@ -38,7 +38,6 @@ export const payButton = style([
   body,
   sprinkles({
     background: 'blue400',
-    color: 'textPrimary',
     border: 'none',
     borderRadius: '12',
     paddingY: '12',
