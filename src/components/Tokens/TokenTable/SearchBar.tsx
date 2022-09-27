@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import useDebounce from 'hooks/useDebounce'
-import { useResetAtom, useUpdateAtom } from 'jotai/utils'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -59,17 +59,18 @@ const SearchInput = styled.input`
 `
 
 export default function SearchBar() {
-  const [localFilterString, setLocalFilterString] = useState('')
+  const currentString = useAtomValue(filterStringAtom)
+  const [localFilterString, setLocalFilterString] = useState(currentString)
   const setFilterString = useUpdateAtom(filterStringAtom)
-  const resetFilterString = useResetAtom(filterStringAtom)
   const debouncedLocalFilterString = useDebounce(localFilterString, 300)
 
   useEffect(() => {
+    setLocalFilterString(currentString)
+  }, [currentString])
+
+  useEffect(() => {
     setFilterString(debouncedLocalFilterString)
-    return () => {
-      resetFilterString()
-    }
-  }, [debouncedLocalFilterString, setFilterString, resetFilterString])
+  }, [debouncedLocalFilterString, setFilterString])
 
   return (
     <SearchBarContainer>
