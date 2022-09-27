@@ -13,35 +13,12 @@ import { useReducer } from 'react'
 import { Input } from '../layout/Input'
 import { TraitSelect } from './TraitSelect'
 
-export const Filters = ({
-  traits,
-  traitsByAmount,
-}: {
-  traits: Trait[]
-  traitsByAmount: {
-    traitCount: number
-    numWithTrait: number
-  }[]
-}) => {
+export const Filters = ({ traits }: { traits: Trait[] }) => {
   const { buyNow, setBuyNow } = useCollectionFilters((state) => ({
     buyNow: state.buyNow,
     setBuyNow: state.setBuyNow,
   }))
-  const traitsByGroup: Record<string, Trait[]> = useMemo(() => {
-    if (traits) {
-      let groupedTraits = groupBy(traits, 'trait_type')
-      groupedTraits['Number of traits'] = []
-      for (let i = 0; i < traitsByAmount.length; i++) {
-        groupedTraits['Number of traits'].push({
-          trait_type: 'Number of traits',
-          trait_value: traitsByAmount[i].traitCount,
-          trait_count: traitsByAmount[i].numWithTrait,
-        })
-      }
-      groupedTraits = Object.assign({ 'Number of traits': null }, groupedTraits)
-      return groupedTraits
-    } else return {}
-  }, [traits, traitsByAmount])
+  const traitsByGroup: Record<string, Trait[]> = useMemo(() => (traits ? groupBy(traits, 'trait_type') : {}), [traits])
 
   const [buyNowHovered, toggleBuyNowHover] = useReducer((state) => !state, false)
   const [search, setSearch] = useState('')
