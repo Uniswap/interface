@@ -70,6 +70,12 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
+  const resetFilterString = useResetAtom(filterStringAtom)
+  const location = useLocation()
+  useEffect(() => {
+    resetFilterString()
+  }, [location, resetFilterString])
+
   const navigate = useNavigate()
   useOnGlobalChainSwitch((chain) => {
     if (isValidBackendChainName(chain)) navigate(`/tokens/${chain.toLowerCase()}`)
