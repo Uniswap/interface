@@ -168,8 +168,6 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   )
 
   function tickFormat(
-    startTimestamp: number,
-    endTimestamp: number,
     timePeriod: TimePeriod,
     locale: string
   ): [TickFormatter<NumberValue>, (v: number) => string, NumberValue[]] {
@@ -255,12 +253,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
     return null
   }
 
-  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(
-    startingPrice.timestamp,
-    endingPrice.timestamp,
-    timePeriod,
-    locale
-  )
+  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
   const delta = calculateDelta(startingPrice.value, displayPrice.value)
   const formattedDelta = formatDelta(delta)
   const arrow = getDeltaArrow(delta)
