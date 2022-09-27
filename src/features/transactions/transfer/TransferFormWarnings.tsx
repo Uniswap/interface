@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { WarningSeverity } from 'src/components/modals/types'
@@ -11,7 +11,11 @@ import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/ho
 import { clearRecipient } from 'src/features/transactions/transactionState/transactionState'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { TransferWarning } from 'src/features/transactions/transfer/TransferTokenForm'
-import { useActiveAccountAddressWithThrow, useDisplayName } from 'src/features/wallet/hooks'
+import {
+  useActiveAccountAddressWithThrow,
+  useDisplayName,
+  useSignerAccounts,
+} from 'src/features/wallet/hooks'
 
 interface TransferFormWarningProps {
   dispatch: React.Dispatch<AnyAction>
@@ -36,6 +40,11 @@ export function TransferFormWarnings({
 
   const activeAddress = useActiveAccountAddressWithThrow()
   const isNewRecipient = useAllTransactionsBetweenAddresses(activeAddress, recipient).length === 0
+  const currentSignerAccounts = useSignerAccounts()
+  const isSignerRecipient = useMemo(
+    () => currentSignerAccounts.some((a) => a.address === recipient),
+    [currentSignerAccounts, recipient]
+  )
 
   const { isSmartContractAddress, loading: addressLoading } = useIsSmartContractAddress(
     recipient,
@@ -44,10 +53,16 @@ export function TransferFormWarnings({
 
   useEffect(() => {
     setTransferWarning({
-      hasWarning: isNewRecipient || isSmartContractAddress,
+      hasWarning: (isNewRecipient || isSmartContractAddress) && !isSignerRecipient,
       loading: addressLoading,
     })
-  }, [setTransferWarning, isNewRecipient, isSmartContractAddress, addressLoading])
+  }, [
+    setTransferWarning,
+    isNewRecipient,
+    isSmartContractAddress,
+    addressLoading,
+    isSignerRecipient,
+  ])
 
   const onCloseSmartContractWarning = useCallback(() => {
     dispatch(clearRecipient())
@@ -63,7 +78,7 @@ export function TransferFormWarnings({
 
   return (
     <>
-      {showWarningModal && isSmartContractAddress && (
+      {showWarningModal && !isSignerRecipient && isSmartContractAddress && (
         <WarningModal
           isVisible
           caption={t(
@@ -77,7 +92,7 @@ export function TransferFormWarnings({
           onConfirm={onCloseSmartContractWarning}
         />
       )}
-      {showWarningModal && !isSmartContractAddress && isNewRecipient && (
+      {showWarningModal && !isSmartContractAddress && !isSignerRecipient && isNewRecipient && (
         <WarningModal
           isVisible
           caption={t(
