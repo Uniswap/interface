@@ -73,6 +73,7 @@ const RankDetailWrapper = styled.div`
   gap: 10px;
   display: flex;
   flex-direction: column;
+  padding: 5px 3px 10px 3px;
 `
 
 function RankDetail({ campaign }: { campaign: CampaignData | undefined }) {
@@ -116,7 +117,7 @@ function RankDetail({ campaign }: { campaign: CampaignData | undefined }) {
       width="300px"
       text={
         <RankDetailWrapper>
-          <Text color={theme.white} fontSize={16}>
+          <Text color={theme.text} fontSize={16}>
             <Trans>Requirements</Trans>
           </Text>
           <Text lineHeight={'20px'}>
