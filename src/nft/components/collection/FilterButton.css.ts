@@ -27,8 +27,6 @@ export const filterButtonLoading = style([
   loadingAsset,
   sprinkles({
     height: '44',
+    width: '100',
   }),
-  {
-    width: 95,
-  },
 ])

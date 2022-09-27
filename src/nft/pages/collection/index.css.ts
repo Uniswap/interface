@@ -49,10 +49,10 @@ export const selectedActivitySwitcherToggle = style([
 
 export const loadingBanner = style([
   loadingBlock,
-  {
-    width: '100%',
-    height: 100,
-  },
+  sprinkles({
+    width: 'full',
+    height: '100',
+  }),
 ])
 
 export const noCollectionAssets = sprinkles({
