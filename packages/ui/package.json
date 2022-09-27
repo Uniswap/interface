@@ -120,6 +120,8 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@mui/material": "5.5.2",
     "@uniswap/default-token-list": "^2.0.0",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",

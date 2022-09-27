@@ -1,18 +1,19 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@teleswap/sdk'
-import { ROUTER_ADDRESS } from '@teleswap/sdk'
+import bn from 'bignumber.js'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { BackToMyLiquidity } from 'components/LiquidityDetail'
 import QuestionHelper from 'components/QuestionHelper'
 import Settings from 'components/Settings'
 // import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
+import { usePresetPeripheryAddress } from 'hooks/usePresetContractAddress'
 import useThemedContext from 'hooks/useThemedContext'
 import React, { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import getRoutePairMode from 'utils/getRoutePairMode'
@@ -81,12 +82,9 @@ const CustomizedRadio = styled.input`
   }
 `
 
-export default function AddLiquidity({
-  match: {
-    params: { currencyIdA, currencyIdB }
-  },
-  history
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
+export default function AddLiquidity() {
+  const history = useHistory()
+  const { currencyIdA, currencyIdB, stable } = useParams<{ currencyIdA: string; currencyIdB: string; stable: string }>()
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useThemedContext()
   const [pairModeStable, setPairModeStable] = useState(false)
@@ -158,6 +156,7 @@ export default function AddLiquidity({
     },
     {}
   )
+  const { ROUTER: ROUTER_ADDRESS } = usePresetPeripheryAddress()
 
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
@@ -544,7 +543,6 @@ export default function AddLiquidity({
   }, [onFieldAInput, txHash])
 
   const addIsUnsupported = useIsTransactionUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
-
   return (
     <>
       <Flex alignItems={'flex-start'} width="21rem">
@@ -722,7 +720,8 @@ export default function AddLiquidity({
                 lineHeight: '24px'
               }}
             >
-              999,999.999
+              {/* {new bn(v2Pair.trackedReserveETH).decimalPlaces(4, bn.ROUND_HALF_UP).toString()} */}
+              {pair && new bn(pair?.reserve0.toFixed(18)).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
             </Text>
             <Text
               sx={{
@@ -734,7 +733,7 @@ export default function AddLiquidity({
                 color: 'rgba(255, 255, 255, 0.6)'
               }}
             >
-              USDT
+              {pair?.token0.symbol?.toUpperCase()}
             </Text>
           </Flex>
           <Flex flex={1} flexDirection={'column'}>
@@ -747,7 +746,7 @@ export default function AddLiquidity({
                 lineHeight: '24px'
               }}
             >
-              999,999.999
+              {pair && new bn(pair?.reserve1.toFixed(18)).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
             </Text>
             <Text
               sx={{
@@ -759,7 +758,7 @@ export default function AddLiquidity({
                 color: 'rgba(255, 255, 255, 0.6)'
               }}
             >
-              DAI
+              {pair?.token1.symbol?.toUpperCase()}
             </Text>
           </Flex>
         </Flex>

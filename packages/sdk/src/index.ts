@@ -4,12 +4,12 @@ export { JSBI }
 export {
   BigintIsh,
   ChainId,
+  PERIPHERY_NAME,
+  DEFAULT_TOKEN_NAME,
   TradeType,
   Rounding,
-  FACTORY_ADDRESS,
   INIT_CODE_HASH,
-  ROUTER_ADDRESS,
-  WETH_ADDRESS,
+  CONTRACT_ADDRESS,
   MINIMUM_LIQUIDITY,
 } from './constants'
 
