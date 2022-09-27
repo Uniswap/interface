@@ -1,38 +1,22 @@
-import { JSBI, Pair, TokenAmount } from '@teleswap/sdk'
+import { CurrencyAmount, JSBI, Pair, Price, TokenAmount } from '@teleswap/sdk'
 import { useTotalSupply } from 'data/TotalSupply'
 import useUSDCPrice from 'utils/useUSDCPrice'
 
-/**
- * calculate the total USD value of a pair
- * for a single token, please use `useUSDCPrice`
- * @param pair the pair object
- * @param liquidity the liquidity to need to estimate USD value with
- * @returns the USD(C) value that represent given `liquidity` of the given `pair`
- */
-export function usePairUSDValue(pair: Pair | null, liquidity?: TokenAmount) {
-  const totalSupplyOfLPToken = useTotalSupply(pair?.liquidityToken)
-  const usdPriceOfToken0 = useUSDCPrice(pair?.token0)
-  const usdPriceOfToken1 = useUSDCPrice(pair?.token1)
-  if (!pair) return '--.--'
+export function calculateUSDValueForLiquidity(
+  pair: Pair | null,
+  liquidity?: TokenAmount,
+  totalSupplyOfLPToken?: TokenAmount,
+  usdPriceOfToken0?: Price,
+  usdPriceOfToken1?: Price
+): CurrencyAmount | undefined {
+  if (!pair) return undefined
   const whichTokenThatHaveUSDPrice = usdPriceOfToken0 ? pair?.token0 : usdPriceOfToken1 ? pair?.token1 : undefined
   const whichPrice = !whichTokenThatHaveUSDPrice
     ? undefined
     : whichTokenThatHaveUSDPrice.equals(pair.token0)
     ? usdPriceOfToken0
     : usdPriceOfToken1
-  console.debug('usePairUSDValue:state', {
-    pair,
-    totalSupplyOfLPToken
-  })
 
-  console.debug(
-    'usePairUSDValue',
-    {
-      totalSupplyOfLPToken,
-      liquidity
-    },
-    pair
-  )
   if (whichTokenThatHaveUSDPrice) {
     let valueOfTotalStakedAmountInToken: TokenAmount | undefined
     if (totalSupplyOfLPToken && pair) {
@@ -58,12 +42,34 @@ export function usePairUSDValue(pair: Pair | null, liquidity?: TokenAmount) {
     // get the USD value of staked whichTokenThatHaveUSDPrice
     const valueOfTotalStakedAmountInUSDC =
       valueOfTotalStakedAmountInToken && whichPrice?.quote(valueOfTotalStakedAmountInToken)
-    console.debug('valueOfTotalStakedAmountInUSDC', valueOfTotalStakedAmountInUSDC)
-    return `$ ${valueOfTotalStakedAmountInUSDC?.toSignificant(6)}`
+    return valueOfTotalStakedAmountInUSDC
   }
 
-  return '--.--'
+  return undefined
 }
+
+/**
+ * calculate the total USD value of a pair
+ * for a single token, please use `useUSDCPrice`
+ * @param pair the pair object
+ * @param liquidity the liquidity to need to estimate USD value with
+ * @returns the USD(C) value that represent given `liquidity` of the given `pair`
+ */
+export function usePairUSDValue(pair: Pair | null, liquidity?: TokenAmount): CurrencyAmount | undefined {
+  const totalSupplyOfLPToken = useTotalSupply(pair?.liquidityToken)
+  const usdPriceOfToken0 = useUSDCPrice(pair?.token0)
+  const usdPriceOfToken1 = useUSDCPrice(pair?.token1)
+  return calculateUSDValueForLiquidity(pair, liquidity, totalSupplyOfLPToken, usdPriceOfToken0, usdPriceOfToken1)
+}
+
+// export function usePairsUSDValue(
+//   pairs: { pair: Pair | null; liquidity?: TokenAmount }[]
+// ): (CurrencyAmount | undefined)[] {
+//   const totalSupplies = useTotalSupplies(pairs.map(({ pair }) => (pair ? pair.liquidityToken : undefined)))
+//   return pairs.map(({ pair, liquidity }, idx) => {
+//     return pair ? calculateUSDValueForLiquidity(pair, liquidity, totalSupplies[idx], usdPrices0, usdPrice1) : undefined
+//   })
+// }
 
 export function usePairSidesValueEstimate(
   pair: Pair | null,

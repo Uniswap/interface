@@ -28,8 +28,8 @@ interface AdditionalStakingInfo {
     pendingReward: string
   }
 
-  stakedAmount: CurrencyAmount
-  pendingReward: CurrencyAmount
+  stakedAmount: TokenAmount
+  pendingReward: TokenAmount
   rewardDebt: CurrencyAmount
   rewardToken: Token
 }
@@ -87,8 +87,8 @@ export function useChefStakingInfo(): (ChefStakingInfo | undefined)[] {
       stakingPair: pairs[idx],
       parsedData,
       rewardToken,
-      stakedAmount: CurrencyAmount.fromRawAmount(stakingToken, position.amount.toBigInt()),
-      pendingReward: CurrencyAmount.fromRawAmount(stakingToken, position.pendingSushi.toBigInt()),
+      stakedAmount: new TokenAmount(stakingToken, position.amount.toBigInt()),
+      pendingReward: new TokenAmount(stakingToken, position.pendingSushi.toBigInt()),
       rewardDebt: CurrencyAmount.fromRawAmount(rewardToken, position.rewardDebt.toBigInt())
     }
   })

@@ -1,4 +1,4 @@
-import { Token, TokenAmount } from '@teleswap/sdk'
+import { JSBI, Token, TokenAmount } from '@teleswap/sdk'
 import { ReactComponent as AddIcon } from 'assets/svg/action/add.svg'
 import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 import { ButtonPrimary } from 'components/Button'
@@ -10,18 +10,20 @@ import ClaimRewardModal from 'components/masterchef/ClaimRewardModal'
 // import { RowBetween } from 'components/Row'
 import StakingModal from 'components/masterchef/StakingModal'
 import UnstakingModal from 'components/masterchef/UnstakingModal'
-import { Chef } from 'constants/farm/chef.enum'
+// import { Chef } from 'constants/farm/chef.enum'
 // import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG, LiquidityAsset } from 'constants/farming.config'
 import { UNI } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
-import { useChefContract } from 'hooks/farm/useChefContract'
-import { useChefPositions } from 'hooks/farm/useChefPositions'
+// import { useChefContract } from 'hooks/farm/useChefContract'
+// import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+import { useChefPoolAPR } from 'hooks/farm/useFarmAPR'
 import { usePairSidesValueEstimate, usePairUSDValue } from 'hooks/usePairValue'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import useUSDCPrice from 'utils/useUSDCPrice'
 
 // import { currencyId } from '../../utils/currencyId'
 // import { unwrappedToken } from '../../utils/wrappedCurrency'
@@ -101,9 +103,9 @@ const StakingColumnTitle = ({ children }: { children: React.ReactNode }) => (
 export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInfo: ChefStakingInfo }) {
   const { chainId } = useActiveWeb3React()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
-  const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
+  // const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
   // const masterChef = useMasterChef(Chef.MINICHEF)
-  const positions = useChefPositions(mchefContract, undefined, chainId)
+  // const positions = useChefPositions(mchefContract, undefined, chainId)
   const history = useHistory()
   // const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
   // const token0 = stakingInfo.tokens[0]
@@ -158,9 +160,9 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
 
   const isStaking = true
   const rewardToken = UNI[chainId || 420]
-
+  const priceOfRewardToken = useUSDCPrice(rewardToken)
   const totalValueLockedInUSD = usePairUSDValue(stakingTokenPair, stakingInfo.tvl)
-
+  const calculatedApr = useChefPoolAPR(stakingInfo, stakingTokenPair, stakingInfo.stakedAmount, priceOfRewardToken)
   const { liquidityValueOfToken0, liquidityValueOfToken1 } = usePairSidesValueEstimate(
     stakingTokenPair,
     new TokenAmount(stakingInfo.stakingToken, stakingInfo.stakedAmount.raw || '0')
@@ -223,11 +225,15 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>APR</StakingColumnTitle>
-          <TYPE.white fontSize={16}>--.--%</TYPE.white>
+          <TYPE.white fontSize={16}>
+            {calculatedApr ? JSBI.multiply(calculatedApr, JSBI.BigInt(100)).toString() : '--.--'}%
+          </TYPE.white>
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>Liquidity TVL</StakingColumnTitle>
-          <TYPE.white fontSize={16}>{totalValueLockedInUSD}</TYPE.white>
+          <TYPE.white fontSize={16}>
+            {totalValueLockedInUSD ? totalValueLockedInUSD.toSignificant(6) : '--.--'}
+          </TYPE.white>
         </StakingColumn>
       </StatContainer>
 
