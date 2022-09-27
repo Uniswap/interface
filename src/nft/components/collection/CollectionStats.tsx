@@ -222,7 +222,6 @@ const CollectionDescription = ({ description }: { description: string }) => {
       setShowReadMore(true)
   }, [descriptionRef, baseRef])
 
-  // && !description
   return isCollectionStatsLoading ? (
     <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}>
       description
@@ -274,17 +273,17 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
       <StatsItem label="Items" isMobile={isMobile ?? false}>
         {totalSupplyStr}
       </StatsItem>
-      {numOwnersStr || totalListingsStr || isCollectionStatsLoading ? (
+      {numOwnersStr || isCollectionStatsLoading ? (
         <StatsItem label="Owners" isMobile={isMobile ?? false}>
           {numOwnersStr}
         </StatsItem>
       ) : null}
-      {stats.floorPrice || totalListingsStr || isCollectionStatsLoading ? (
+      {stats.floorPrice || isCollectionStatsLoading ? (
         <StatsItem label="Floor Price" isMobile={isMobile ?? false}>
           {floorPriceStr} ETH
         </StatsItem>
       ) : null}
-      {stats.stats?.total_volume || totalListingsStr || isCollectionStatsLoading ? (
+      {stats.stats?.total_volume || isCollectionStatsLoading ? (
         <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
           {totalVolumeStr} ETH
         </StatsItem>
