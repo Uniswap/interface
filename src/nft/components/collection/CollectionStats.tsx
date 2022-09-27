@@ -107,7 +107,7 @@ const SocialsIcon = ({ children, href }: { children: ReactNode; href: string }) 
 
   return (
     <Column
-      className={isCollectionStatsLoading ? styles.iconsLoading : undefined}
+      className={isCollectionStatsLoading && styles.iconsLoading}
       as="a"
       target="_blank"
       rel="noreferrer"
@@ -146,7 +146,7 @@ const CollectionName = ({
         <Box marginRight={!isVerified ? '12' : '0'} className={nameClass} style={{ lineHeight: '32px' }}>
           {name}
         </Box>
-        {isVerified && !isCollectionStatsLoading && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
+        {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
         <Row
           display={{ sm: 'none', md: 'flex' }}
           alignItems="center"
@@ -177,7 +177,7 @@ const CollectionName = ({
           ) : null}
 
           {collectionStats.instagram || isCollectionStatsLoading ? (
-            <SocialsIcon href={'https ://instagram.com/' + collectionStats.instagram}>
+            <SocialsIcon href={'https://instagram.com/' + collectionStats.instagram}>
               <InstagramIcon fill={themeVars.colors.textSecondary} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
@@ -288,7 +288,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           {totalVolumeStr} ETH
         </StatsItem>
       ) : null}
-      {stats.stats?.total_listings || totalListingsStr || isCollectionStatsLoading ? (
+      {stats.stats?.total_listings || isCollectionStatsLoading ? (
         <StatsItem label="Listings" isMobile={isMobile ?? false}>
           {totalListingsStr}
         </StatsItem>
