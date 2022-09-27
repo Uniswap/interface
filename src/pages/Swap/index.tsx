@@ -85,14 +85,13 @@ const ArrowUpWrapper = styled.div`
 `
 
 const InputWrapper = styled.div<{ redesignFlag: boolean }>`
-  padding: ${({ redesignFlag }) => redesignFlag && '12px'};
   visibility: ${({ redesignFlag }) => !redesignFlag && 'none'};
   ${({ redesignFlag }) =>
     redesignFlag &&
     css`
       background-color: ${({ theme }) => theme.backgroundModule};
       border-radius: 12px;
-      padding: 12px;
+      padding: 16px;
       color: ${({ theme }) => theme.textSecondary};
       font-size: 14px;
       line-height: 20px;
