@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Marquee } from 'nft/components/layout/Marquee'
-import { header2 } from 'nft/css/common.css'
+import { headlineMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection } from 'nft/types'
@@ -138,7 +138,7 @@ const CollectionName = ({
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
   const nameClass = isCollectionStatsLoading
     ? styles.nameTextLoading
-    : clsx(isMobile ? header2 : header2, styles.nameText)
+    : clsx(isMobile ? headlineMedium : headlineMedium, styles.nameText)
 
   return (
     <Row justifyContent="space-between">

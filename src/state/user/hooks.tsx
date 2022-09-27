@@ -245,8 +245,7 @@ export function useRemoveUserAddedToken(): (chainId: number, address: string) =>
   )
 }
 
-export function useUserAddedTokens(): Token[] {
-  const { chainId } = useWeb3React()
+export function useUserAddedTokensOnChain(chainId: number | undefined | null): Token[] {
   const serializedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
 
   return useMemo(() => {
@@ -256,6 +255,10 @@ export function useUserAddedTokens(): Token[] {
       : []
     return tokenMap
   }, [serializedTokensMap, chainId])
+}
+
+export function useUserAddedTokens(): Token[] {
+  return useUserAddedTokensOnChain(useWeb3React().chainId)
 }
 
 function serializePair(pair: Pair): SerializedPair {

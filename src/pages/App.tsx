@@ -165,7 +165,7 @@ export default function App() {
                   {tokensFlag === TokensVariant.Enabled && (
                     <>
                       <Route
-                        path="/tokens"
+                        path="/tokens/:chainName"
                         element={
                           <Suspense fallback={<LoadingTokens />}>
                             <Tokens />
@@ -173,7 +173,7 @@ export default function App() {
                         }
                       />
                       <Route
-                        path="/tokens/:tokenAddress"
+                        path="/tokens/:chainName/:tokenAddress"
                         element={
                           <Suspense fallback={<LoadingTokenDetails />}>
                             <TokenDetails />
@@ -232,10 +232,11 @@ export default function App() {
 
                   {nftFlag === NftVariant.Enabled && (
                     <>
-                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
                       <Route path="/nfts" element={<NftExplore />} />
                       <Route path="/nfts/sell" element={<Sell />} />
                       <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
+                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
+                      <Route path="/nfts/collection/:contractAddress/activity" element={<Collection />} />
                     </>
                   )}
                 </Routes>

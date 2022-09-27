@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
 
 import Logo from '../Logo'
@@ -27,17 +27,21 @@ export default function CurrencyLogo({
   symbol,
   size = '24px',
   style,
+  src,
   ...rest
 }: {
   currency?: Currency | null
   symbol?: string | null
   size?: string
   style?: React.CSSProperties
+  src?: string | null
 }) {
+  const logoURIs = useCurrencyLogoURIs(currency)
+  const srcs = useMemo(() => (src ? [src] : logoURIs), [src, logoURIs])
   const props = {
     alt: `${currency?.symbol ?? 'token'} logo`,
     size,
-    srcs: useCurrencyLogoURIs(currency),
+    srcs,
     symbol: symbol ?? currency?.symbol,
     style,
     ...rest,

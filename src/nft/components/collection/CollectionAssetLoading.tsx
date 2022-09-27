@@ -1,6 +1,6 @@
 import { loadingAsset } from 'nft/css/loading.css'
 
-import SizingImage from '../../../assets/images/sizing-image.png'
+import SizingImage from '../../../assets/images/sizingImage.png'
 import { Box } from '../../components/Box'
 import { Row } from '../Flex'
 import * as styles from './CollectionAssetLoading.css'
@@ -10,7 +10,7 @@ export const CollectionAssetLoading = () => {
     <Box as="div" className={styles.collectionAssetLoading}>
       <Box as="div" position="relative" width="full">
         <Box as="div" className={styles.collectionAssetsImageLoading} />
-        <Box as={'img'} width="full" opacity="0" src={SizingImage} draggable={false} />
+        <Box as="img" width="full" opacity="0" src={SizingImage} draggable={false} />
       </Box>
       <Row justifyContent="space-between" marginTop="12" paddingLeft="12" paddingRight="12">
         <Box as="div" className={loadingAsset} height="12" width="120"></Box>
