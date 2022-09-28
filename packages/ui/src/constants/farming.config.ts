@@ -1,5 +1,5 @@
 import { ChainId, Token, WETH } from '@teleswap/sdk'
-import { USDC, USDT } from 'constants/index'
+import { UNI, USDC, USDT } from 'constants/index'
 
 import { Chef } from './farm/chef.enum'
 
@@ -111,6 +111,30 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
           isStable: true,
           tokenA: USDC,
           tokenB: USDT
+        }
+      },
+      {
+        // pid 5
+        stakingAsset: {
+          name: 'USDC-USDT sLP',
+          decimal: 18,
+          symbol: 'SLP',
+          isLpToken: true,
+          isStable: true,
+          tokenA: USDC,
+          tokenB: USDT
+        }
+      },
+      {
+        // pid 6
+        stakingAsset: {
+          name: 'USDC-SUSHI vLP',
+          decimal: 18,
+          symbol: 'SLP',
+          isLpToken: true,
+          isStable: false,
+          tokenA: USDC,
+          tokenB: UNI[420]
         }
       }
     ]
