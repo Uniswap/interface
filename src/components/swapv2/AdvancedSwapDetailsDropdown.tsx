@@ -12,7 +12,7 @@ const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   border-radius: 16px;
   color: ${({ theme }) => theme.text2};
   background-color: ${({ theme }) => theme.background};
-  z-index: -1;
+  z-index: 1;
   border: solid 1px ${({ theme }) => theme.border};
   transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(calc(-100% - 50px))')};
   max-height: ${({ show }) => (show ? 'auto' : '0')};
