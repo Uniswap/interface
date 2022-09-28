@@ -57,7 +57,7 @@ export const ethNumberStandardFormatter = (
     .toFixed(2)
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  return conditionalDollarSign + removeZeroes ? formattedPrice.replace(/.00/g, '') : formattedPrice
+  return conditionalDollarSign + (removeZeroes ? formattedPrice.replace(/.00/g, '') : formattedPrice)
 }
 
 export const formatWeiToDecimal = (amount: string, removeZeroes = false) => {
