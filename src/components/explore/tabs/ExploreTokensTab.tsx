@@ -1,55 +1,106 @@
+import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo, ViewStyle } from 'react-native'
+import { FlatList, ListRenderItemInfo } from 'react-native'
+import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { FavoriteTokensCard } from 'src/components/explore/FavoriteTokensCard'
 import { SortingGroup } from 'src/components/explore/FilterGroup'
 import { useOrderByModal } from 'src/components/explore/Modals'
-import { TokenItem } from 'src/components/explore/TokenItem'
-import { Box, Flex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
-import { Text } from 'src/components/Text'
-import { ClientSideOrderBy, CoingeckoMarketCoin } from 'src/features/dataApi/coingecko/types'
-import { useMarketTokens, useTokenMetadataDisplayType } from 'src/features/explore/hooks'
-import { getOrderByValues } from 'src/features/explore/utils'
+import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
+import { TokenItemData, TokenProjectItem } from 'src/components/explore/TokenProjectItem'
+import { Flex } from 'src/components/layout'
 
-export default function ExploreTokensTab({
-  loadingContainerStyle,
-  listRef,
-}: {
-  loadingContainerStyle?: ViewStyle
+import { Text } from 'src/components/Text'
+import { EMPTY_ARRAY } from 'src/constants/misc'
+import { ClientSideOrderBy } from 'src/features/dataApi/coingecko/types'
+import { useTokenMetadataDisplayType } from 'src/features/explore/hooks'
+import { fromGraphQLChain } from 'src/utils/chainId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
+
+export const exploreTokensTabQuery = graphql`
+  query ExploreTokensTabQuery($topTokensOrderBy: MarketSortableField!) {
+    topTokenProjects(orderBy: $topTokensOrderBy, page: 1, pageSize: 100) {
+      name
+      logoUrl
+      tokens {
+        chain
+        address
+        symbol
+      }
+      markets(currencies: USD) {
+        price {
+          currency
+          value
+        }
+        marketCap {
+          currency
+          value
+        }
+        pricePercentChange24h {
+          currency
+          value
+        }
+      }
+    }
+  }
+`
+
+type ExploreTokensTabProps = {
+  queryRef: PreloadedQuery<ExploreTokensTabQuery>
   listRef?: React.MutableRefObject<null>
-}) {
+}
+
+export default function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
   const { t } = useTranslation()
 
+  const data = usePreloadedQuery(exploreTokensTabQuery, queryRef)
+
   // Sorting and filtering
-  const { orderBy, setOrderByModalIsVisible, orderByModal } = useOrderByModal()
+  const { setOrderByModalIsVisible, orderByModal } = useOrderByModal()
   const [tokenMetadataDisplayType, cycleTokenMetadataDisplayType] = useTokenMetadataDisplayType()
 
-  // Token Data
-  const { tokens: topTokens, isLoading } = useMarketTokens(
-    useMemo(() => getOrderByValues(orderBy), [orderBy])
-  )
+  // TODO: Support client side search (% change).
+  const topTokenItems = useMemo(() => {
+    if (!data || !data.topTokenProjects) return EMPTY_ARRAY
+
+    return data.topTokenProjects
+      .map((tokenProject) => {
+        if (!tokenProject) return null
+
+        const { name, logoUrl, tokens, markets } = tokenProject
+
+        // Only use first chain the token is on
+        const token = tokens[0]
+        const { chain, address, symbol } = token
+        const chainId = fromGraphQLChain(chain)
+
+        if (!name || !logoUrl || !symbol || !chainId) return null
+
+        return {
+          chainId,
+          address,
+          name,
+          symbol,
+          logoUrl,
+          price: markets?.[0]?.price?.value ?? undefined,
+          marketCap: markets?.[0]?.marketCap?.value ?? undefined,
+          pricePercentChange24h: markets?.[0]?.pricePercentChange24h?.value ?? undefined,
+        } as TokenItemData
+      })
+      .filter(Boolean)
+  }, [data])
 
   const renderItem = useCallback(
-    ({ item: coin, index }: ListRenderItemInfo<CoingeckoMarketCoin>) => (
-      <TokenItem
-        coin={coin}
-        gesturesEnabled={false}
+    ({ item, index }: ListRenderItemInfo<TokenItemData>) => (
+      <TokenProjectItem
         index={index}
         metadataDisplayType={tokenMetadataDisplayType}
+        tokenItemData={item}
         onCycleMetadata={cycleTokenMetadataDisplayType}
       />
     ),
     [cycleTokenMetadataDisplayType, tokenMetadataDisplayType]
   )
-
-  if (isLoading) {
-    return (
-      <Box my="sm" style={loadingContainerStyle}>
-        <Loading />
-      </Box>
-    )
-  }
 
   return (
     <FlatList
@@ -69,11 +120,17 @@ export default function ExploreTokensTab({
           {orderByModal}
         </Flex>
       }
-      data={topTokens}
-      keyExtractor={({ id }) => id}
+      data={topTokenItems}
+      keyExtractor={tokenKey}
       renderItem={renderItem}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
     />
   )
+}
+
+const tokenKey = (token: TokenItemData) => {
+  return token.address
+    ? buildCurrencyId(token.chainId, token.address)
+    : buildNativeCurrencyId(token.chainId)
 }

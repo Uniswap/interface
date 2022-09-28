@@ -3,9 +3,12 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import { selectionAsync } from 'expo-haptics'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { InteractionManager } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { PreloadedQuery, useQueryLoader } from 'react-relay'
+
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
@@ -25,6 +28,8 @@ import SwapIcon from 'src/assets/icons/swap-action-button.svg'
 import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { GradientButton } from 'src/components/buttons/GradientButton'
+import { exploreTokensTabQuery } from 'src/components/explore/tabs/ExploreTokensTab'
+import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -101,6 +106,17 @@ function TabNavigator() {
 
   const dispatch = useAppDispatch()
 
+  const [exploreTokensTabQueryRef, loadExploreTokensTabQuery] =
+    useQueryLoader<ExploreTokensTabQuery>(exploreTokensTabQuery)
+
+  // Preload query for Explore Screen's Tokens Tab after interactions have completed
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      // TODO: Support orderBy token sorting and deprecate CoingeckoOrderBy types
+      loadExploreTokensTabQuery({ topTokensOrderBy: 'MARKET_CAP' })
+    })
+  }, [loadExploreTokensTabQuery])
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -163,7 +179,9 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        children={() => <ExploreStackNavigator />}
+        children={() => (
+          <ExploreStackNavigator exploreTokensTabQueryRef={exploreTokensTabQueryRef} />
+        )}
         name={Tabs.Explore}
         options={{
           tabBarLabel: t('Explore'),
@@ -285,7 +303,11 @@ export function HomeStackNavigator() {
   )
 }
 
-export function ExploreStackNavigator() {
+export function ExploreStackNavigator({
+  exploreTokensTabQueryRef,
+}: {
+  exploreTokensTabQueryRef: PreloadedQuery<ExploreTokensTabQuery> | null | undefined
+}) {
   return (
     <ExploreStack.Navigator
       initialRouteName={Screens.Explore}
@@ -293,7 +315,9 @@ export function ExploreStackNavigator() {
         ...navOptions.noHeader,
       }}>
       <ExploreStack.Screen
-        children={(props) => <ExploreScreen {...props} />}
+        children={(props) => (
+          <ExploreScreen exploreTokensTabQueryRef={exploreTokensTabQueryRef} {...props} />
+        )}
         name={Screens.Explore}
       />
       <ExploreStack.Screen component={ExploreTokensScreen} name={Screens.ExploreTokens} />

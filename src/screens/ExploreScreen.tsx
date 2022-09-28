@@ -1,21 +1,24 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, Route, TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
+import { PreloadedQuery } from 'react-relay'
 import { useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList, TabNavigationProp } from 'src/app/navigation/types'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import ExploreTokensTab from 'src/components/explore/tabs/ExploreTokensTab'
 import ExploreWalletsTab from 'src/components/explore/tabs/ExploreWalletsTab'
+import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { renderTabLabel, TabStyles } from 'src/components/layout/screens/TabbedScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
+import { Loading } from 'src/components/loading'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { useDebounce } from 'src/utils/timing'
@@ -23,9 +26,11 @@ import { useDebounce } from 'src/utils/timing'
 const TOKENS_KEY = 'tokens'
 const WALLETS_KEY = 'wallets'
 
-type Props = NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
+type Props = {
+  exploreTokensTabQueryRef: PreloadedQuery<ExploreTokensTabQuery> | null | undefined
+} & NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
 
-export function ExploreScreen({ navigation }: Props) {
+export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -70,7 +75,19 @@ export function ExploreScreen({ navigation }: Props) {
   const renderTab = (route: Route) => {
     switch (route?.key) {
       case TOKENS_KEY:
-        return <ExploreTokensTab listRef={listRef} />
+        // TODO: Improve Suspense loading state to closer match ExploreTokensTab content
+        return (
+          <Suspense
+            fallback={
+              <Flex my="sm">
+                <Loading repeat={4} type="token" />
+              </Flex>
+            }>
+            {exploreTokensTabQueryRef && (
+              <ExploreTokensTab listRef={listRef} queryRef={exploreTokensTabQueryRef} />
+            )}
+          </Suspense>
+        )
       case WALLETS_KEY:
         return <ExploreWalletsTab onSearchWallets={() => textInputRef.current?.focus()} />
     }
