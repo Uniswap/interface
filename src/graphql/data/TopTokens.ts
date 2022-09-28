@@ -134,9 +134,18 @@ function toContractInput(token: PrefetchedTopToken) {
 
 // Map of key: ${HistoryDuration} and value: another Map, of key:${chain} + ${address} and value: TopToken object.
 // Acts as a local cache.
-const tokensWithPriceHistoryCache: Record<string, Record<string, TopToken>> = {}
 
-const checkIfAllTokensCached = (duration: string, tokens: PrefetchedTopToken[]) => {
+const tokensWithPriceHistoryCache: Record<HistoryDuration, Record<string, TopToken>> = {
+  DAY: {},
+  HOUR: {},
+  MAX: {},
+  MONTH: {},
+  WEEK: {},
+  YEAR: {},
+  '%future added value': {},
+}
+
+const checkIfAllTokensCached = (duration: HistoryDuration, tokens: PrefetchedTopToken[]) => {
   let everyTokenInCache = true
   const cachedTokens: TopToken[] = []
 
