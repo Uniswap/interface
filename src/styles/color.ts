@@ -146,6 +146,17 @@ export interface GlobalPalette {
   slate700: string
   slate800: string
   slate900: string
+  purple50: string
+  purple100: string
+  purple200: string
+  purple300: string
+  purple400: string
+  purple500: string
+  purple600: string
+  purple700: string
+  purple800: string
+  purple900: string
+  purpleVibrant: string
   slateVibrant: string
   networkEthereum: string
   networkEthereumSoft: string
@@ -170,7 +181,7 @@ export const colors: GlobalPalette = {
   gray700: '#293249',
   gray800: '#141B2B',
   gray900: '#0E111A',
-  pink50: '#F9ECF1',
+  pink50: '#fff2f7',
   pink100: '#FFD9E4',
   pink200: '#FBA4C0',
   pink300: '#FF6FA3',
@@ -181,7 +192,7 @@ export const colors: GlobalPalette = {
   pink800: '#39061B',
   pink900: '#2B000B',
   pinkVibrant: '#F51A70',
-  red50: '#FAECEA',
+  red50: '#fef0ee',
   red100: '#FED5CF',
   red200: '#FEA79B',
   red300: '#FD766B',
@@ -192,7 +203,7 @@ export const colors: GlobalPalette = {
   red800: '#380A03',
   red900: '#240800',
   redVibrant: '#F14544',
-  yellow50: '#F6F2D5',
+  yellow50: '#fef8c4',
   yellow100: '#F0E49A',
   yellow200: '#DBBC19',
   yellow300: '#BB9F13',
@@ -203,7 +214,7 @@ export const colors: GlobalPalette = {
   yellow800: '#231902',
   yellow900: '#180F02',
   yellowVibrant: '#FAF40A',
-  gold50: '#F7EDE0',
+  gold50: '#fff5e8',
   gold100: '#F8DEB6',
   gold200: '#EEB317',
   gold300: '#DB900B',
@@ -214,7 +225,7 @@ export const colors: GlobalPalette = {
   gold800: '#29160F',
   gold900: '#161007',
   goldVibrant: '#FEB239',
-  green50: '#E3F3E6',
+  green50: '#edfdf0',
   green100: '#BFEECA',
   green200: '#76D191',
   green300: '#40B66B',
@@ -225,7 +236,7 @@ export const colors: GlobalPalette = {
   green800: '#091F10',
   green900: '#09130B',
   greenVibrant: '#5CFE9D',
-  blue50: '#EDEFF8',
+  blue50: '#f3f5fe',
   blue100: '#DEE1FF',
   blue200: '#ADBCFF',
   blue300: '#869EFF',
@@ -236,7 +247,7 @@ export const colors: GlobalPalette = {
   blue800: '#0B193F',
   blue900: '#040E34',
   blueVibrant: '#587BFF',
-  lime50: '#F2FEDB',
+  lime50: '#f2fedb',
   lime100: '#D3EBA3',
   lime200: '#9BCD46',
   lime300: '#7BB10C',
@@ -247,7 +258,7 @@ export const colors: GlobalPalette = {
   lime800: '#171D00',
   lime900: '#0E1300',
   limeVibrant: '#B1F13C',
-  orange50: '#FEEDE5',
+  orange50: '#feede5',
   orange100: '#FCD9C8',
   orange200: '#FBAA7F',
   orange300: '#F67E3E',
@@ -258,7 +269,7 @@ export const colors: GlobalPalette = {
   orange800: '#2A1505',
   orange900: '#1C0E03',
   orangeVibrant: '#FF6F1E',
-  magenta50: '#F9EBF8',
+  magenta50: '#fff1fe',
   magenta100: '#FAD8F8',
   magenta200: '#F5A1F5',
   magenta300: '#F06DF3',
@@ -269,7 +280,7 @@ export const colors: GlobalPalette = {
   magenta800: '#330733',
   magenta900: '#250225',
   magentaVibrant: '#FC72FF',
-  violet50: '#F0EEFD',
+  violet50: '#f1effe',
   violet100: '#E2DEFD',
   violet200: '#BDB8FA',
   violet300: '#9D99F5',
@@ -280,7 +291,7 @@ export const colors: GlobalPalette = {
   violet800: '#0B193F',
   violet900: '#0E0D30',
   violetVibrant: '#5065FD',
-  cyan50: '#D5F4FD',
+  cyan50: '#d6f5fe',
   cyan100: '#B0EDFE',
   cyan200: '#63CDE8',
   cyan300: '#2FB0CC',
@@ -291,7 +302,7 @@ export const colors: GlobalPalette = {
   cyan800: '#011E26',
   cyan900: '#011418',
   cyanVibrant: '#36DBFF',
-  slate50: '#E7F2E5',
+  slate50: '#f1fcef',
   slate100: '#DAE6D8',
   slate200: '#B8C3B7',
   slate300: '#9AA498',
@@ -302,12 +313,23 @@ export const colors: GlobalPalette = {
   slate800: '#181B18',
   slate900: '#0F120E',
   slateVibrant: '#7E887D',
-  networkEthereum: '#627EEA',
-  networkEthereumSoft: opacify(12, '#627EEA'),
-  networkOptimism: '#FF0420',
-  networkOptimismSoft: opacify(12, '#FF0420'),
-  networkPolygon: '#A457FF',
-  networkPolygonSoft: opacify(12, '#A457FF'),
+  purple50: '#f8f1ff',
+  purple100: '#ecddfe',
+  purple200: '#d0b2f3',
+  purple300: '#b98ef4',
+  purple400: '#a26af3',
+  purple500: '#8440f2',
+  purple600: '#5213c2',
+  purple700: '#3a0a8f',
+  purple800: '#22055b',
+  purple900: '#1c0337',
+  purpleVibrant: '#6100ff',
+  networkEthereum: '#515EDC',
+  networkEthereumSoft: opacify(12, '#515EDC'),
+  networkOptimism: '#FA2B39',
+  networkOptimismSoft: opacify(12, '#FA2B39'),
+  networkPolygon: '#a26af3',
+  networkPolygonSoft: opacify(12, '#a26af3'),
   networkArbitrum: '#28A0F0',
   networkArbitrumSoft: opacify(12, '#28A0F0'),
 }
