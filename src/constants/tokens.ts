@@ -335,6 +335,13 @@ export const CEUR_CELO_ALFAJORES = new Token(
   'CEUR',
   'Celo Euro Stablecoin'
 )
+export const GYEN_MAINNET = new Token(
+  SupportedChainId.MAINNET,
+  '0xC08512927D12348F6620a698105e1BAac6EcD911',
+  6,
+  'GYEN',
+  'GMO Japanese YEN'
+)
 
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
