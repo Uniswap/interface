@@ -44,7 +44,7 @@ export const PriceRange = () => {
     <Box
       as="details"
       className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
-      borderRadius="12"
+      style={{ borderTop: '1px solid #99A1BD3D' }}
       open={isOpen}
     >
       <Box
@@ -55,10 +55,10 @@ export const PriceRange = () => {
         cursor="pointer"
         alignItems="center"
         fontSize="14"
-        paddingTop="12"
+        paddingTop="8"
         paddingLeft="12"
         paddingRight="12"
-        paddingBottom={isOpen ? '8' : '12'}
+        paddingBottom="8"
         onClick={(e) => {
           e.preventDefault()
           setOpen(!isOpen)

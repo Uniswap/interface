@@ -37,9 +37,9 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           justifyContent="space-between"
           className={styles.rowHover}
           gap="2"
-          paddingTop="12"
+          paddingTop="8"
           paddingRight="16"
-          paddingBottom="12"
+          paddingBottom="8"
           paddingLeft="12"
           cursor="pointer"
           onClick={(e) => {
@@ -48,6 +48,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           }}
           onMouseEnter={toggleBuyNowHover}
           onMouseLeave={toggleBuyNowHover}
+          style={{ borderTop: '1px solid #99A1BD3D' }}
         >
           <Box fontSize="14" fontWeight="medium" as="summary">
             Buy now
@@ -55,14 +56,11 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           <Radio hovered={buyNowHovered} checked={buyNow} onClick={handleBuyNowToggle} />
         </Row>
         <MarketplaceSelect />
-
         <PriceRange />
-
         <Box marginTop="12">
           <Box as="span" color="textSecondary" className={badge}>
             Traits
           </Box>
-
           <Column marginTop="12" marginBottom="60">
             {Object.entries(traitsByGroup).map(([type, traits]) => (
               <TraitSelect key={type} {...{ type, traits }} />
