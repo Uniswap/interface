@@ -55,6 +55,7 @@ export const ethNumberStandardFormatter = (amount: string | number | undefined, 
       .toFixed(2)
       .toString()
       .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      .replace(/.00/g, '')
   )
 }
 
