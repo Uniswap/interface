@@ -6,6 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
@@ -56,7 +57,7 @@ const AppWrapper = styled.div`
   align-items: flex-start;
 `
 
-const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
+const BodyWrapper = styled.div<{ redesignFlagEnabled: boolean; navBarFlag: NavBarVariant }>`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -66,6 +67,8 @@ const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding: 52px 0px 16px 0px;
   `};
+  font-feature-settings: ${({ redesignFlagEnabled }) =>
+    redesignFlagEnabled ? "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on" : "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on"};
 `
 
 const HeaderWrapper = styled.div`
@@ -115,6 +118,7 @@ export default function App() {
   const tokensFlag = useTokensFlag()
   const navBarFlag = useNavBarFlag()
   const nftFlag = useNftFlag()
+  const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -134,10 +138,10 @@ export default function App() {
     user.set(CUSTOM_USER_PROPERTIES.BROWSER, getBrowser())
     user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_WIDTH, window.screen.width)
-    getCLS(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
-    getFCP(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
-    getFID(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
-    getLCP(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { largest_contentful_paint_ms: delta }))
+    getCLS(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
+    getFCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
+    getFID(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
+    getLCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { largest_contentful_paint_ms: delta }))
   }, [])
 
   useEffect(() => {
@@ -155,7 +159,7 @@ export default function App() {
       <AppWrapper>
         <Trace page={currentPage}>
           <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <NavBar /> : <Header />}</HeaderWrapper>
-          <BodyWrapper navBarFlag={navBarFlag}>
+          <BodyWrapper navBarFlag={navBarFlag} redesignFlagEnabled={redesignFlagEnabled}>
             <Popups />
             <Polling />
             <TopLevelModals />
