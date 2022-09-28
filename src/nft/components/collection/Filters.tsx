@@ -28,7 +28,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
   return (
     <Box className={styles.container}>
       <Row width="full" justifyContent="space-between">
-        <Row as="span" fontSize="20" color="textPrimary">
+        <Row as="span" color="textSecondary" className={badge}>
           Filters
         </Row>
       </Row>
@@ -55,12 +55,9 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           <Radio hovered={buyNowHovered} checked={buyNow} onClick={handleBuyNowToggle} />
         </Row>
         <MarketplaceSelect />
-        <Box marginTop="12" marginBottom="12">
-          <Box as="span" fontSize="20">
-            Price
-          </Box>
-          <PriceRange />
-        </Box>
+
+        <PriceRange />
+
         <Box marginTop="12">
           <Box as="span" color="textSecondary" className={badge}>
             Traits
