@@ -43,6 +43,8 @@ export const SortDropdown = ({
     [selectedIndex, dropDownOptions]
   )
 
+  const width = inFilters ? 'full' : mini ? 'min' : maxWidth ? maxWidth : '300px'
+
   return (
     <Box
       ref={ref}
@@ -51,7 +53,7 @@ export const SortDropdown = ({
       borderBottomLeftRadius={isOpen ? '0' : undefined}
       borderBottomRightRadius={isOpen ? '0' : undefined}
       height="44"
-      style={{ width: inFilters ? 'full' : mini ? 'min' : maxWidth ? maxWidth : '300px' }}
+      style={{ width: isCollectionNftsLoading ? 220 : width }}
     >
       <Box
         as="button"
