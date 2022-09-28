@@ -372,7 +372,6 @@ export const SearchBar = () => {
 
   const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
   const isMobileOrTablet = isMobile || isTablet
-  const showCenteredSearchContent = !isOpen && phase1Flag !== NftVariant.Enabled && !isMobileOrTablet
 
   return (
     <Box position="relative">
@@ -396,7 +395,7 @@ export const SearchBar = () => {
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
-          <Box className={showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign}>
+          <Box>
             <Box display={{ sm: 'none', md: 'flex' }}>
               <MagnifyingGlassIcon />
             </Box>
@@ -411,9 +410,7 @@ export const SearchBar = () => {
               !isOpen && toggleOpen()
               setSearchValue(event.target.value)
             }}
-            className={`${styles.searchBarInput} ${
-              showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
-            }`}
+            className={`${styles.searchBarInput}`}
             value={searchValue}
             ref={inputRef}
             width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}

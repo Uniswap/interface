@@ -194,23 +194,3 @@ export const visible = style([
     transitionTimingFunction: 'ease-out',
   },
 ])
-
-export const searchContentCentered = style({
-  '@media': {
-    [`screen and (min-width: ${breakpoints.lg}px)`]: {
-      transform: `translateX(${DESKTOP_NAVBAR_WIDTH / 4}px)`,
-      transition: `transform ${vars.time[125]}`,
-      transitionTimingFunction: 'ease-out',
-    },
-  },
-})
-
-export const searchContentLeftAlign = style({
-  '@media': {
-    [`screen and (min-width: ${breakpoints.lg}px)`]: {
-      transform: 'translateX(0)',
-      transition: `transform ${vars.time[125]}`,
-      transitionTimingFunction: 'ease-in',
-    },
-  },
-})
