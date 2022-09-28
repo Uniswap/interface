@@ -114,11 +114,6 @@ export default function StakingModal({ isOpen, onDismiss, pid, stakingInfo }: St
     if (maxAmountInput) onUserInput(maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  // async function onAttemptToApprove() {
-  //   // @todo: approve stake token to masterchef
-  //   approve()
-  // }
-
   if (!stakingCurrency) return <p>Loading...</p>
 
   return (
@@ -140,17 +135,6 @@ export default function StakingModal({ isOpen, onDismiss, pid, stakingInfo }: St
             disableCurrencySelect={true}
             id="stake-liquidity-token"
           />
-
-          {/* <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
-            <div>
-              <TYPE.black fontWeight={600}>Weekly Rewards</TYPE.black>
-            </div>
-
-            <TYPE.black>
-              {hypotheticalRewardRate.multiply((60 * 60 * 24 * 7).toString()).toSignificant(4, { groupSeparator: ',' })}{' '}
-              UNI / week
-            </TYPE.black>
-          </HypotheticalRewardRate> */}
 
           <RowBetween>
             {approval !== ApprovalState.APPROVED && (

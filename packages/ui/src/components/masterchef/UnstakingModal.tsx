@@ -1,9 +1,9 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { JSBI, TokenAmount } from '@teleswap/sdk'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { UNI } from 'constants/index'
 import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+import { UNI } from 'constants/index'
 import { BigNumber, utils } from 'ethers'
 import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
@@ -114,11 +114,6 @@ export default function UnstakingModal({ isOpen, onDismiss, pid, stakingInfo }: 
     if (maxAmountInput) onUserInput(maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  // async function onAttemptToApprove() {
-  //   // @todo: approve stake token to masterchef
-  //   approve()
-  // }
-
   if (!stakingCurrency) return <p>Loading...</p>
 
   return (
@@ -141,17 +136,6 @@ export default function UnstakingModal({ isOpen, onDismiss, pid, stakingInfo }: 
             disableCurrencySelect={true}
             id="stake-liquidity-token"
           />
-
-          {/* <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
-            <div>
-              <TYPE.black fontWeight={600}>Weekly Rewards</TYPE.black>
-            </div>
-
-            <TYPE.black>
-              {hypotheticalRewardRate.multiply((60 * 60 * 24 * 7).toString()).toSignificant(4, { groupSeparator: ',' })}{' '}
-              UNI / week
-            </TYPE.black>
-          </HypotheticalRewardRate> */}
 
           <TYPE.subHeader style={{ textAlign: 'center' }}>
             * Reward will be claimed automatically once you unstake any amount of LP tokens.
