@@ -195,3 +195,11 @@ export const toolTip = sprinkles({
   display: 'flex',
   flexShrink: '0',
 })
+
+export const removeAssetOverlay = style([
+  sprinkles({
+    position: 'absolute',
+    right: '4',
+    top: '4',
+  }),
+])

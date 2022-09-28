@@ -7,6 +7,7 @@ import { Column, Row } from 'nft/components/Flex'
 import {
   ChevronDownBagIcon,
   ChevronUpBagIcon,
+  CircularCloseIcon,
   CloseTimerIcon,
   SquareArrowDownIcon,
   SquareArrowUpIcon,
@@ -64,6 +65,20 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
     <Link to={getAssetHref(asset)} style={{ textDecoration: 'none' }}>
       <Row ref={assetCardRef} className={styles.bagRow} onMouseEnter={handleCardHover} onMouseLeave={handleCardHover}>
         <Box position="relative" display="flex">
+          <Box
+            display={showRemove ? 'block' : 'none'}
+            className={styles.removeAssetOverlay}
+            onClick={(e: MouseEvent) => {
+              e.preventDefault()
+              e.stopPropagation()
+              removeAsset(asset)
+            }}
+            transition="250"
+            style={{ opacity: isMobile ? '1' : '0' }}
+            zIndex="1"
+          >
+            <CircularCloseIcon />
+          </Box>
           {!noImageAvailable && (
             <Box
               as="img"
@@ -91,7 +106,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
           </Row>
         </Column>
-        {cardHovered && showRemove && (
+        {cardHovered && showRemove && !isMobile && (
           <Box
             marginLeft="16"
             className={styles.removeBagRowButton}
@@ -104,7 +119,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             Remove
           </Box>
         )}
-        {(!cardHovered || !showRemove) && (
+        {(!cardHovered || !showRemove || isMobile) && (
           <Column flexShrink="0">
             <Box className={styles.bagRowPrice}>
               {`${formatWeiToDecimal(
