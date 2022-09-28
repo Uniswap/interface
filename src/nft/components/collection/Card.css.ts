@@ -20,6 +20,9 @@ export const card = style([
         },
       },
     },
+    ':hover': {
+      boxShadow: themeVars.shadows.deep,
+    },
   },
 ])
 

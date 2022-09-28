@@ -1,7 +1,8 @@
+import { TokenInfo } from '@uniswap/token-lists'
+
 import store from '../state'
-import { UNI_EXTENDED_LIST, UNI_LIST } from './lists'
+import { UNI_EXTENDED_LIST, UNI_LIST, UNSUPPORTED_LIST_URLS } from './lists'
 import brokenTokenList from './tokenLists/broken.tokenlist.json'
-import unsupportedTokenList from './tokenLists/unsupported.tokenlist.json'
 
 export enum TOKEN_LIST_TYPES {
   UNI_DEFAULT = 1,
@@ -16,30 +17,29 @@ class TokenSafetyLookupTable {
 
   createMap() {
     const dict: { [key: string]: TOKEN_LIST_TYPES } = {}
-    let uniDefaultTokens = store.getState().lists.byUrl[UNI_LIST].current?.tokens
-    let uniExtendedTokens = store.getState().lists.byUrl[UNI_EXTENDED_LIST].current?.tokens
-    const brokenTokens = brokenTokenList.tokens
-    const unsupportTokens = unsupportedTokenList.tokens
 
-    if (!uniDefaultTokens) {
-      uniDefaultTokens = []
-    }
-    if (!uniExtendedTokens) {
-      uniExtendedTokens = []
-    }
-    brokenTokens.forEach((token) => {
-      dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BROKEN
-    })
-    unsupportTokens.forEach((token) => {
-      dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BLOCKED
-    })
-    uniExtendedTokens.forEach((token) => {
+    // Initialize extended tokens first
+    store.getState().lists.byUrl[UNI_EXTENDED_LIST].current?.tokens.forEach((token) => {
       dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_EXTENDED
     })
-    uniDefaultTokens.forEach((token) => {
+
+    // Initialize default tokens second, so that any tokens on both default and extended will display as default (no warning)
+    store.getState().lists.byUrl[UNI_LIST].current?.tokens.forEach((token) => {
       dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_DEFAULT
     })
 
+    // TODO: Figure out if this list is still relevant
+    brokenTokenList.tokens.forEach((token) => {
+      dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BROKEN
+    })
+
+    // Initialize blocked tokens from all urls included
+    UNSUPPORTED_LIST_URLS.map((url) => store.getState().lists.byUrl[url].current?.tokens)
+      .filter((x): x is TokenInfo[] => !!x)
+      .flat(1)
+      .forEach((token) => {
+        dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BLOCKED
+      })
     return dict
   }
 

@@ -373,11 +373,10 @@ export default function SwapCurrencyInputPanel({
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
                   <ThemedText.DeprecatedBody
-                    onClick={onMax}
                     color={theme.deprecated_text3}
                     fontWeight={500}
                     fontSize={14}
-                    style={{ display: 'inline', cursor: 'pointer' }}
+                    style={{ display: 'inline' }}
                   >
                     {!hideBalance && currency && selectedCurrencyBalance ? (
                       renderBalance ? (
