@@ -1,9 +1,10 @@
 import React from 'react'
-import { CheckCircle, Copy } from 'react-feather'
+import { CheckCircle } from 'react-feather'
 import styled from 'styled-components'
 
 import useCopyClipboard from '../../hooks/useCopyClipboard'
 import { LinkStyledButton } from '../../theme'
+import CopyIconSvg from 'assets/svg/copy.svg'
 
 const CopyIcon = styled(LinkStyledButton)`
   color: ${({ theme }) => theme.text3};
@@ -32,12 +33,13 @@ export default function CopyHelper(props: { toCopy: string; children?: React.Rea
     <CopyIcon onClick={() => setCopied(props.toCopy)}>
       {isCopied ? (
         <TransactionStatusText>
-          <CheckCircle size={'16'} />
+          <CheckCircle size={'1rem'} />
           <TransactionStatusText>Copied</TransactionStatusText>
         </TransactionStatusText>
       ) : (
         <TransactionStatusText>
-          <Copy size={'16'} />
+          {/* <Copy size={'16'} /> */}
+          <img src={CopyIconSvg} alt="copy-icon" style={{ width: '1rem', height: '1rem' }} />
         </TransactionStatusText>
       )}
       {isCopied ? '' : props.children}

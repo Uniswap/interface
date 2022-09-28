@@ -27,7 +27,7 @@ import { usePairs } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { StyledInternalLink, TYPE } from '../../theme'
+import { /* StyledInternalLink, */ TYPE } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1132px;
@@ -76,6 +76,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   line-height: 1.5rem;
   padding: 0.3rem 1.3rem;
   text-align: center;
+  border-radius: 0.5rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
       font-weight: 500;
       font-size: .9rem;
@@ -96,7 +97,7 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
 
 const EmptyProposals = styled.div`
   // border: 1px solid ${({ theme }) => theme.text4};
-  border: 1px solid rgba(255, 255, 255, 0.4); //test usage
+  background-color: rgba(25, 36, 47, 1);
   padding: 16px 12px;
   border-radius: 12px;
   display: flex;
@@ -107,32 +108,37 @@ const EmptyProposals = styled.div`
 
 const YourLiquidityGrid = styled(Box)`
   // border: 1px solid rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 1rem;
-  padding: 2rem;
+  background-color: rgba(25, 36, 47, 1);
+  padding: 1.5rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 0.7fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: repeat(40px);
   grid-row-gap: 1rem;
   grid-column-gap: ${() => (isMobile ? '30px' : '1rem')};
   grid-auto-flow: row;
-  justify-items: center;
+  justify-items: flex-start;
   align-items: center;
   place-content: center center;
+  font-size: 0.8rem;
+  > div {
+    width: max-content;
+  }
 `
 
 const TopPoolsGrid = styled(Box)`
   // border: 1px solid rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 1rem;
-  padding: 2rem;
+  font-size: 0.8rem;
+  background-color: rgba(25, 36, 47, 1);
+  padding: 1.5rem;
   display: grid;
   grid-template-columns: 1fr 5fr 3fr 5fr;
   grid-template-rows: repeat(40px);
   grid-row-gap: 1rem;
   grid-column-gap: ${() => (isMobile ? '0px' : '1rem')};
   grid-auto-flow: row;
-  justify-items: center;
+  justify-items: flex-start;
   align-items: center;
   place-content: center center;
 `
@@ -140,7 +146,7 @@ const TopPoolsGrid = styled(Box)`
 const HeaderItem = styled(Box)`
   font-family: 'Poppins';
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 0.8rem;
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.6);
@@ -234,8 +240,14 @@ const StyledTableView = styled(Box)`
   }
 `
 
-const numberReg = /[0-9,]+\.\d{0,4}/
-
+const StyledLink = styled(ButtonPrimary)`
+  & {
+    display: inline-block !important;
+    padding: 0.3rem;
+    border-radius: 0.7rem !important;
+    color: #000000;
+  }
+`
 export default function Liquidity() {
   const theme = useThemedContext()
   const { account } = useActiveWeb3React()
@@ -360,7 +372,16 @@ export default function Liquidity() {
 
   return (
     <>
-      <PageWrapper>
+      <PageWrapper
+        sx={{
+          button: {
+            fontWeight: '600'
+          },
+          a: {
+            fontWeight: '600'
+          }
+        }}
+      >
         <SwapPoolTabs active={'pool'} />
         {/*   <VoteCard>
           <CardBGImage />
@@ -399,7 +420,7 @@ export default function Liquidity() {
                   Create a pair
                 </ResponsiveButtonSecondary> */}
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  <Text className="AddLiquidity" sx={{ fontWeight: 500, fontSize: '0.8rem', color: '#000000' }}>
+                  <Text className="AddLiquidity" sx={{ fontWeight: 600, fontSize: '0.8rem', color: '#000000' }}>
                     Add Liquidity
                   </Text>
                 </ResponsiveButtonPrimary>
@@ -476,7 +497,7 @@ export default function Liquidity() {
             ) : (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
-                  No liquidity found.
+                  No liquidity found
                 </TYPE.body>
               </EmptyProposals>
             )}
@@ -512,7 +533,7 @@ export default function Liquidity() {
                     <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>
                     <Box
                       key={`${v2Pair.id}-2`}
-                      sx={{ textAlign: 'center', width: '10rem', display: 'flex', justifyContent: 'center' }}
+                      sx={{ textAlign: 'center', width: '10rem', display: 'flex', justifyContent: 'flex-start' }}
                     >
                       <Flex sx={{ gap: isMobile ? '0.25rem' : '1rem', width: '8rem' }}>
                         <DoubleCurrencyLogoHorizontal currency0={v2Pair.token0} currency1={v2Pair.token1} />
@@ -539,7 +560,10 @@ export default function Liquidity() {
                         : '-'}
                       &nbsp; $
                     </Box>
-                    <Box key={`${v2Pair.id}-4`}>
+                    <Box
+                      key={`${v2Pair.id}-4`}
+                      sx={{ display: 'flex', justifyContent: 'flex-end', width: 'max-content', justifySelf: 'end' }}
+                    >
                       <ButtonPrimary
                         style={{ display: 'inline-block !important', whiteSpace: 'nowrap' }}
                         padding=".3rem"
@@ -554,14 +578,14 @@ export default function Liquidity() {
                 )
               })}
             </TopPoolsGrid>
-            <AutoColumn justify={'center'} gap="md">
+            {/*  <AutoColumn justify={'center'} gap="md">
               <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
                 {`Don't see a pool you joined?`}&nbsp;
                 <StyledInternalLink id="import-pool-link" to="/find">
                   Import it.
                 </StyledInternalLink>
               </Text>
-            </AutoColumn>
+            </AutoColumn> */}
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>

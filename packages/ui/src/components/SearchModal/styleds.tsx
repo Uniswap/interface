@@ -66,7 +66,9 @@ export const PaddedColumn = styled(AutoColumn)`
 `
 
 export const MenuItem = styled(RowBetween)`
-  padding: 4px 20px;
+  padding: 4px 7px;
+  margin: 0 7px;
+  width: calc(100% - 14px) !important;
   height: 56px;
   display: grid;
   grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
@@ -75,10 +77,11 @@ export const MenuItem = styled(RowBetween)`
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
     /* background-color: ${({ theme, disabled }) => !disabled && theme.bg2}; */
-    background-color: rgba(57, 225, 186, 0.1);
-    border-radius: 0.4rem;
+    background-color: rgba(33, 48, 62, 1);
   }
-  opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
+  border-radius: 0.8rem;
+  background-color: ${({ disabled }) => disabled && `rgba(57, 225, 186, 0.1)`};
+  // opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
 
 export const SearchInput = styled.input`
@@ -95,9 +98,14 @@ export const SearchInput = styled.input`
   color: ${({ theme }) => theme.text1};
   border-style: solid;
   border: 1px solid ${({ theme }) => theme.bg3};
+  caret-color: rgb(57, 225, 186);
+  :focus,
+  :active {
+    border: 2px solid rgb(57 225 186 / 20%);
+  }
   -webkit-appearance: none;
 
-  font-size: 0.5rem;
+  font-size: 1rem;
 
   ::placeholder {
     color: ${({ theme }) => theme.text3};

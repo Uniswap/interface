@@ -4,13 +4,14 @@ import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
-import swapArrowIcon from '../../assets/images/tele/swapArrow.png'
-import swapArrowChangeIcon from '../../assets/images/tele/swapArrowChange.png'
+import swapDownArrow from 'assets/svg/swapdownarrow.svg'
+import swapExchange from 'assets/svg/swapexchange.svg'
 import { AutoColumn } from '../Column'
 
 export const Wrapper = styled.div`
   position: relative;
-  padding: 1rem;
+  padding: 1.3rem;
+  padding-bottom: 1.2rem;
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
@@ -21,7 +22,6 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
       ? css`
           :hover {
             cursor: pointer;
-            opacity: 0.8;
           }
         `
       : null}
@@ -29,13 +29,13 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
 
 export const StyledSwapArrow = styled.span`
   display: inline-block;
-  width: 2rem;
-  height: 2rem;
-  background: url(${swapArrowIcon}) no-repeat;
-  background-size: 2rem 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: url(${swapDownArrow}) no-repeat;
+  background-size: 2.5rem 2.5rem;
   :hover {
-    background: url(${swapArrowChangeIcon}) no-repeat;
-    background-size: 2rem 2rem;
+    background: url(${swapExchange}) no-repeat;
+    background-size: 2.5rem 2.5rem;
   }
 `
 
@@ -46,12 +46,18 @@ export const SectionBreak = styled.div`
 `
 
 export const BottomGrouping = styled.div`
-  margin-top: 2rem;
-  position: absolute;
+  // margin-top: 2rem;
+  // position: absolute;
   /* bottom: -6rem; */
   width: 100%;
   left: 0;
   /* background: ${({ theme }) => theme.primary1}; */
+  button {
+    height: 3rem;
+    border-radius: 1rem;
+    border: 0;
+    padding: 0;
+  }
 `
 
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`

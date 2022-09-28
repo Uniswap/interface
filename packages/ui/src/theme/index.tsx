@@ -43,8 +43,8 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: darkMode ? '#D7DCE0' : '#D7DCE0',
-    text2: darkMode ? '#D7DCE0' : '#D7DCE0',
+    text1: darkMode ? '#FFFFFF' : '#FFFFFF',
+    text2: darkMode ? '#FFFFFF' : '#FFFFFF',
     text3: darkMode ? '#6C7284' : '#6C7284',
     text4: darkMode ? '#565A69' : '#565A69',
     text5: darkMode ? '#2C2F36' : '#2C2F36',
@@ -206,12 +206,18 @@ html, input, textarea, button {
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
-    font-family: 'Inter var', sans-serif;
+    font-family: 'Poppins';
   }
 }
 
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/font-poppins-regular.ttf');
+}
 html,
 body {
+  font-family: 'Poppins';
   margin: 0;
   padding: 0;
   height: 100%;
@@ -223,6 +229,7 @@ body {
 *:before,
 *:after {
   box-sizing: border-box;
+  font-family: 'Poppins';
 }
 
 iframe {
@@ -230,7 +237,7 @@ iframe {
 }
 
 a {
-   color: ${colors(false).blue1}; 
+  color: ${colors(false).blue1}; 
 }
 
 * {
@@ -251,12 +258,13 @@ html {
 }
 
 ::-webkit-scrollbar {
-  width: 0.618rem;
+  width: 0.4rem;
+  height: 8px;
   background-color: rgba(0, 0, 0, 0);
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
-  border-radius: 0.25rem;
+  border-radius: 1rem;
 }
 `
 
@@ -268,11 +276,12 @@ html {
   background-size: 61%; */
   box-sizing: border-box;
   // font-size: min(1.56vw, 16px);
-  font-size: ${() => (isMobile ? '14px' : 'calc(10px + 0.42vw)')};
+  font-size: ${() => (isMobile ? '14px' : 'min(calc(10px + 0.45vw),18px)')};
   // ${({ theme }) => theme.mediaWidth.upToSmall`
   //   // font-size: max(4.15vw, 16px);
   //   font-size: 4.15vw;
   // `};
+
 }
 
 body {

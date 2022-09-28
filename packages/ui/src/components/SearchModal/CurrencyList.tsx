@@ -127,17 +127,21 @@ function CurrencyRow({
       disabled={isSelected}
       selected={otherSelected}
     >
-      <CurrencyLogo currency={currency} size={'1.2rem'} />
+      <CurrencyLogo currency={currency} size={'1.8rem'} />
       <Column>
-        <Text title={currency.name} fontWeight={500} style={{ fontSize: '.8rem', marginBottom: '.2rem' }}>
+        <Text
+          title={currency.name}
+          fontWeight={500}
+          style={{ fontSize: '0.8rem', marginBottom: '.2rem', fontFamily: 'Poppins' }}
+        >
           {currency.symbol}
         </Text>
-        <TYPE.darkGray ml="0px" fontSize={'.5rem'} fontWeight={300}>
+        <TYPE.darkGray ml="0px" fontSize={'.5rem'} fontWeight={300} fontFamily="Poppins">
           {currency.name} {!isOnSelectedList && customAdded && '• Added by user'}
         </TYPE.darkGray>
       </Column>
       <TokenTags currency={currency} />
-      <RowFixed style={{ justifySelf: 'flex-end' }}>
+      <RowFixed style={{ justifySelf: 'flex-end', fontFamily: 'Poppins' }}>
         {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
       </RowFixed>
     </MenuItem>
@@ -168,10 +172,21 @@ export default function CurrencyList({
   breakIndex: number | undefined
 }) {
   const itemData: (Currency | undefined)[] = useMemo(() => {
-    let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
-    if (breakIndex !== undefined) {
-      formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
+    const formatted: (Currency | undefined)[] = currencies
+    if (
+      showETH &&
+      !currencies.some((e) => {
+        return (
+          Currency.ETHER.name === e.name && Currency.ETHER.symbol === e.symbol && Currency.ETHER.decimals === e.decimals
+        )
+      })
+    ) {
+      console.log(Currency.ETHER)
+      formatted.unshift(Currency.ETHER)
     }
+    /*  if (breakIndex !== undefined) {
+      formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
+    } */
     return formatted
   }, [breakIndex, currencies, showETH])
 
@@ -193,7 +208,7 @@ export default function CurrencyList({
 
       const showImport = inactiveTokens && token && Object.keys(inactiveTokens).includes(token.address)
 
-      if (index === breakIndex || !data) {
+      if (false /* index === breakIndex || !data */) {
         return (
           <FixedContentRow style={style}>
             <LightGreyCard padding="8px 12px" borderRadius="8px">
@@ -221,7 +236,7 @@ export default function CurrencyList({
             dim={true}
           />
         )
-      } else {
+      } else if (currency) {
         return (
           <CurrencyRow
             style={style}
@@ -231,6 +246,8 @@ export default function CurrencyList({
             otherSelected={otherSelected}
           />
         )
+      } else {
+        return null
       }
     },
     [
