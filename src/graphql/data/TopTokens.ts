@@ -151,7 +151,7 @@ const checkIfAllTokensCached = (duration: HistoryDuration, tokens: PrefetchedTop
 
   const checkCache = (token: PrefetchedTopToken) => {
     const tokenCacheKey = !!token ? `${token.chain}${token.address}` : ''
-    if (duration in tokensWithPriceHistoryCache && tokenCacheKey in tokensWithPriceHistoryCache[duration]) {
+    if (tokenCacheKey in tokensWithPriceHistoryCache[duration]) {
       cachedTokens.push(tokensWithPriceHistoryCache[duration][tokenCacheKey])
       return true
     } else {
@@ -212,7 +212,6 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
         .toPromise()
         .then((data) => {
           if (data?.tokens) {
-            if (!(duration in tokensWithPriceHistoryCache)) tokensWithPriceHistoryCache[duration] = {}
             const priceHistoryCacheForCurrentDuration = tokensWithPriceHistoryCache[duration]
             data.tokens.map((token) =>
               !!token ? (priceHistoryCacheForCurrentDuration[`${token.chain}${token.address}`] = token) : null
