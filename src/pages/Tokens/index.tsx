@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { filterStringAtom } from 'components/Tokens/state'
 import FavoriteButton from 'components/Tokens/TokenTable/FavoriteButton'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
@@ -10,7 +11,9 @@ import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/Toke
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { isValidBackendChainName } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useNavigate } from 'react-router-dom'
+import { useResetAtom } from 'jotai/utils'
+import { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -67,6 +70,12 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
+  const resetFilterString = useResetAtom(filterStringAtom)
+  const location = useLocation()
+  useEffect(() => {
+    resetFilterString()
+  }, [location, resetFilterString])
+
   const navigate = useNavigate()
   useOnGlobalChainSwitch((chain) => {
     if (isValidBackendChainName(chain)) navigate(`/tokens/${chain.toLowerCase()}`)
