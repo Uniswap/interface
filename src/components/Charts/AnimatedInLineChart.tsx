@@ -13,6 +13,8 @@ const config = {
   easing: easeCubicInOut,
 }
 
+// code reference: https://airbnb.io/visx/lineradial
+
 function LineChart<T>({
   data,
   getX,
