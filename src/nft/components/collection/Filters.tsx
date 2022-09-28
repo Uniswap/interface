@@ -62,9 +62,11 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
             Traits
           </Box>
           <Column marginTop="12" marginBottom="60">
-            {Object.entries(traitsByGroup).map(([type, traits]) => (
-              <TraitSelect key={type} {...{ type, traits }} />
-            ))}
+            {Object.entries(traitsByGroup).map(([type, traits], index) => {
+              const showBorderBottom = index === Object.keys(traitsByGroup).length - 1
+
+              return <TraitSelect key={type} {...{ type, traits }} showBorderBottom={showBorderBottom} />
+            })}
           </Column>
         </Box>
       </Column>

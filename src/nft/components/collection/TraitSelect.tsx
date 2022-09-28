@@ -1,14 +1,13 @@
-import clsx from 'clsx'
 import useDebounce from 'hooks/useDebounce'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { ChevronUpIcon } from 'nft/components/icons'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { subheadSmall } from 'nft/css/common.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
-import { FormEvent, MouseEvent, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { FormEvent, MouseEvent, useEffect, useMemo, useState } from 'react'
+import { TraitsHeader } from './TraitsHeader'
 
 import { Input } from '../layout/Input'
 import * as styles from './Filters.css'
@@ -97,13 +96,20 @@ const TraitItem = ({
   )
 }
 
-export const TraitSelect = ({ traits, type }: { traits: Trait[]; type: string }) => {
+export const TraitSelect = ({
+  showBorderBottom,
+  traits,
+  type,
+}: {
+  showBorderBottom?: boolean
+  traits: Trait[]
+  type: string
+}) => {
   const addTrait = useCollectionFilters((state) => state.addTrait)
   const removeTrait = useCollectionFilters((state) => state.removeTrait)
   const selectedTraits = useCollectionFilters((state) => state.traits)
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
-  const [isOpen, setOpen] = useState(false)
 
   const searchedTraits = useMemo(
     () => traits.filter((t) => t.trait_value.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
@@ -111,47 +117,7 @@ export const TraitSelect = ({ traits, type }: { traits: Trait[]; type: string })
   )
 
   return traits.length ? (
-    <Box
-      as="details"
-      className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
-      style={{ borderTop: '1px solid #99A1BD3D' }}
-      open={isOpen}
-    >
-      <Box
-        as="summary"
-        className={clsx(isOpen && styles.summaryOpen, isOpen ? styles.rowHoverOpen : styles.rowHover)}
-        display="flex"
-        paddingTop="8"
-        paddingRight="12"
-        paddingBottom="8"
-        paddingLeft="12"
-        justifyContent="space-between"
-        cursor="pointer"
-        alignItems="center"
-        onClick={(e) => {
-          e.preventDefault()
-          setOpen(!isOpen)
-        }}
-      >
-        {type}
-        <Box display="flex" alignItems="center">
-          <Box color="textSecondary" display="inline-block" marginRight="12">
-            {searchedTraits.length}
-          </Box>
-          <Box
-            color="textSecondary"
-            display="inline-block"
-            transition="250"
-            height="28"
-            width="28"
-            style={{
-              transform: `rotate(${isOpen ? 0 : 180}deg)`,
-            }}
-          >
-            <ChevronUpIcon />
-          </Box>
-        </Box>
-      </Box>
+    <TraitsHeader title={type} showBorderBottom={showBorderBottom}>
       <Column className={styles.filterDropDowns} paddingLeft="0">
         <Input
           value={search}
@@ -176,6 +142,6 @@ export const TraitSelect = ({ traits, type }: { traits: Trait[]; type: string })
           )
         })}
       </Column>
-    </Box>
+    </TraitsHeader>
   ) : null
 }
