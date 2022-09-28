@@ -410,7 +410,7 @@ export const SearchBar = () => {
               !isOpen && toggleOpen()
               setSearchValue(event.target.value)
             }}
-            className={`${styles.searchBarInput}`}
+            className={styles.searchBarInput}
             value={searchValue}
             ref={inputRef}
             width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}
