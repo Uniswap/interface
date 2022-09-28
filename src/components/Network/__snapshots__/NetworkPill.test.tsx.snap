@@ -48,7 +48,7 @@ exports[`renders a NetworkPill with border 1`] = `
       style={
         Array [
           Object {
-            "backgroundColor": "#DDE3F7",
+            "backgroundColor": "#e8ecfb",
             "resizeMode": "contain",
           },
           Object {
@@ -141,7 +141,7 @@ exports[`renders a NetworkPill without image 1`] = `
       style={
         Array [
           Object {
-            "backgroundColor": "#DDE3F7",
+            "backgroundColor": "#e8ecfb",
             "resizeMode": "contain",
           },
           Object {

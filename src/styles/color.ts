@@ -160,9 +160,9 @@ export interface GlobalPalette {
 export const colors: GlobalPalette = {
   white: '#FFFFFF',
   black: '#000000',
-  gray50: '#F8F9FF',
-  gray100: '#DDE3F7',
-  gray200: '#B7BED4',
+  gray50: '#f5f6fc',
+  gray100: '#e8ecfb',
+  gray200: '#c9d0e7',
   gray300: '#99A1BD',
   gray400: '#7C85A2',
   gray500: '#5E6887',
@@ -390,7 +390,7 @@ export const colorsLight: Palette = {
   backgroundAction: colors.gray100,
   backgroundInteractive: colors.gray100,
   backgroundOutline: opacify(24, colors.gray500),
-  backgroundScrim: opacify(72, colors.white),
+  backgroundScrim: opacify(60, colors.gray900),
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray500,
@@ -398,16 +398,16 @@ export const colorsLight: Palette = {
 
   accentAction: colors.pink400,
   accentActive: colors.blue400,
-  accentSuccess: colors.green400,
+  accentSuccess: colors.green300,
   accentWarning: colors.gold400,
   accentFailure: colors.red400,
   accentBranded: colors.pink200,
 
-  accentActionSoft: opacify(24, colors.pink400),
+  accentActionSoft: opacify(12, colors.pink400),
   accentActiveSoft: opacify(24, colors.blue400),
-  accentSuccessSoft: opacify(24, colors.green400),
+  accentSuccessSoft: opacify(24, colors.green300),
   accentWarningSoft: opacify(24, colors.gold200),
-  accentFailureSoft: opacify(24, colors.red400),
+  accentFailureSoft: opacify(12, colors.red400),
 
   accentTextDarkPrimary: opacify(80, colors.gray900),
   accentTextDarkSecondary: opacify(60, colors.gray900),
@@ -445,11 +445,11 @@ export const colorsDark: Palette = {
 
   backgroundBackdrop: colors.black,
   backgroundSurface: colors.gray900,
-  backgroundContainer: opacify(8, colors.gray300),
+  backgroundContainer: colors.gray800,
   backgroundAction: colors.gray700,
   backgroundInteractive: colors.gray700,
   backgroundOutline: opacify(24, colors.gray300),
-  backgroundScrim: opacify(72, colors.black),
+  backgroundScrim: opacify(72, colors.gray900),
 
   textPrimary: colors.white,
   textSecondary: colors.gray300,
@@ -466,7 +466,7 @@ export const colorsDark: Palette = {
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green400),
   accentWarningSoft: opacify(24, colors.gold200),
-  accentFailureSoft: opacify(24, colors.red400),
+  accentFailureSoft: opacify(12, colors.red400),
 
   accentTextDarkPrimary: opacify(80, colors.gray900),
   accentTextDarkSecondary: opacify(60, colors.gray900),
