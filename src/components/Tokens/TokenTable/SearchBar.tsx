@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import useDebounce from 'hooks/useDebounce'
@@ -76,14 +78,20 @@ export default function SearchBar() {
     <SearchBarContainer>
       <Trans
         render={({ translation }) => (
-          <SearchInput
-            type="search"
-            placeholder={`${translation}`}
-            id="searchBar"
-            autoComplete="off"
-            value={localFilterString}
-            onChange={({ target: { value } }) => setLocalFilterString(value)}
-          />
+          <TraceEvent
+            events={[Event.onSelect]}
+            name={EventName.EXPLORE_SEARCH_SELECTED}
+            element={ElementName.EXPLORE_SEARCH_INPUT}
+          >
+            <SearchInput
+              type="search"
+              placeholder={`${translation}`}
+              id="searchBar"
+              autoComplete="off"
+              value={localFilterString}
+              onChange={({ target: { value } }) => setLocalFilterString(value)}
+            />
+          </TraceEvent>
         )}
       >
         Filter tokens
