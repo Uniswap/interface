@@ -75,7 +75,8 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
         }
       },
       {
-        // pid 2
+        isHidden: true,
+        // pid 2 -- ABANDONED for changing the swap contract
         stakingAsset: {
           name: 'USDT-ETH vLP (Bad Evaluation)',
           decimal: 18,
@@ -87,7 +88,8 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
         }
       },
       {
-        // pid 3
+        isHidden: true,
+        // pid 3 -- ABANDONED for changing the swap contract
         stakingAsset: {
           name: 'USDC-ETH vLP',
           decimal: 18,
@@ -99,7 +101,8 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
         }
       },
       {
-        // pid 4
+        isHidden: true,
+        // pid 4 -- ABANDONED for changing the swap contract
         stakingAsset: {
           name: 'USDC-USDT sLP',
           decimal: 18,
