@@ -3,8 +3,10 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
+import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
@@ -109,6 +111,7 @@ export function CurrencyRow({
   style,
   showCurrencyAmount,
   eventProperties,
+  dim,
 }: {
   currency: Currency
   onSelect: (hasWarning: boolean) => void
@@ -117,6 +120,7 @@ export function CurrencyRow({
   style?: CSSProperties
   showCurrencyAmount?: boolean
   eventProperties: Record<string, unknown>
+  dim?: boolean
 }) {
   const { account } = useWeb3React()
   const key = currencyKey(currency)
@@ -125,8 +129,8 @@ export function CurrencyRow({
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+  const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
+  const tokenSafetyFlagEnabled = useTokenSafetyFlag() === TokenSafetyVariant.Enabled
 
   // only show add or remove buttons if not on selected list
   return (
@@ -145,13 +149,15 @@ export function CurrencyRow({
         onClick={() => (isSelected ? null : onSelect(!!warning))}
         disabled={isSelected}
         selected={otherSelected}
+        dim={dim}
       >
         <Column>
-          <CurrencyLogo currency={currency} size={'36px'} />
+          <CurrencyLogo currency={currency} size={'36px'} style={{ opacity: dim ? '0.6' : '1' }} />
         </Column>
-        <AutoColumn>
+        <AutoColumn style={{ opacity: dim ? '0.6' : '1' }}>
           <Row>
             <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
+            {tokenSafetyFlagEnabled && <TokenSafetyIcon warning={warning} />}
           </Row>
           <ThemedText.DeprecatedDarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
             {!currency.isNative && !isOnSelectedList && customAdded ? (
@@ -252,6 +258,7 @@ export default function CurrencyList({
       const handleSelect = (hasWarning: boolean) => currency && onCurrencySelect(currency, hasWarning)
 
       const token = currency?.wrapped
+      const warning = currency.isNative ? null : checkWarning(currency.address)
 
       if (isLoading) {
         return (
@@ -271,6 +278,7 @@ export default function CurrencyList({
             otherSelected={otherSelected}
             showCurrencyAmount={showCurrencyAmount}
             eventProperties={formatAnalyticsEventProperties(token, index, data, searchQuery, isAddressSearch)}
+            dim={!!warning && !warning.canProceed}
           />
         )
       } else {
