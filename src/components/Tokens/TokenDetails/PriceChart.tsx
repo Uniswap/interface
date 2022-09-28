@@ -69,8 +69,6 @@ export function formatDelta(delta: number | null | undefined) {
   // Null-check not including zero
   if (delta === null || delta === undefined) {
     return '-'
-  } else if ((delta < 0.01 && delta > 0) || (delta > -0.01 && delta < 0)) {
-    return '0.00%'
   }
   let formattedDelta = delta.toFixed(2) + '%'
   if (Math.sign(delta) > 0) {
