@@ -153,14 +153,16 @@ export default function StakingModal({ isOpen, onDismiss, pid, stakingInfo }: St
           </HypotheticalRewardRate> */}
 
           <RowBetween>
-            <ButtonConfirmed
-              mr="0.5rem"
-              onClick={approve}
-              confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-              disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
-            >
-              {t('approve')}
-            </ButtonConfirmed>
+            {approval !== ApprovalState.APPROVED && (
+              <ButtonConfirmed
+                mr="0.5rem"
+                onClick={approve}
+                confirmed={signatureData !== null}
+                disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
+              >
+                {t('approve')}
+              </ButtonConfirmed>
+            )}
             <ButtonError
               disabled={signatureData === null && approval !== ApprovalState.APPROVED}
               // error={!!&& !!parsedAmount}

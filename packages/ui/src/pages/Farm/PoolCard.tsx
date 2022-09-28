@@ -15,6 +15,7 @@ import UnstakingModal from 'components/masterchef/UnstakingModal'
 import { CHAINID_TO_FARMING_CONFIG, LiquidityAsset } from 'constants/farming.config'
 import { UNI } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
+import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
 // import { useChefContract } from 'hooks/farm/useChefContract'
 // import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
@@ -122,7 +123,7 @@ const StakingColumnTitle = ({ children }: { children: React.ReactNode }) => (
 export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInfo: ChefStakingInfo }) {
   const { chainId } = useActiveWeb3React()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
-  // const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
+  const mchefContract = useChefContractForCurrentChain()
   // const masterChef = useMasterChef(Chef.MINICHEF)
   // const positions = useChefPositions(mchefContract, undefined, chainId)
   const history = useHistory()
@@ -182,6 +183,10 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const priceOfRewardToken = useUSDCPrice(rewardToken)
   const totalValueLockedInUSD = usePairUSDValue(stakingTokenPair, stakingInfo.tvl)
   const calculatedApr = useChefPoolAPR(stakingInfo, stakingTokenPair, stakingInfo.stakedAmount, priceOfRewardToken)
+  // const [approval, approve] = useApproveCallback(
+  //   CurrencyAmount.fromRawAmount(stakingInfo.stakingToken, '1'),
+  //   mchefContract?.address
+  // )
   const { liquidityValueOfToken0, liquidityValueOfToken1 } = usePairSidesValueEstimate(
     stakingTokenPair,
     new TokenAmount(stakingInfo.stakingToken, stakingInfo.stakedAmount.raw || '0')
@@ -213,10 +218,23 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
             Staked {farmingConfig?.pools[pid].stakingAsset.isLpToken ? 'LP' : 'Token'}
           </StakingColumnTitle>
           <TYPE.white fontSize={16}>{stakingInfo.stakedAmount.toSignificant(6)}</TYPE.white>
+          {/* {approval === ApprovalState.APPROVED ? ( */}
           <div className="actions">
             <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
             <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
           </div>
+          {/* ) : (
+            <ButtonPrimary
+              height={28}
+              width="auto"
+              fontSize={12}
+              padding="0.166rem 0.4rem"
+              borderRadius="0.133rem"
+              onClick={approve}
+            >
+              Approve
+            </ButtonPrimary>
+          )} */}
           {stakingInfo.stakingAsset.isLpToken && (
             <div className="estimated-staked-lp-value">
               {liquidityValueOfToken0?.toSignificant(4)} {liquidityValueOfToken0?.token.symbol} +{' '}
