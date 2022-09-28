@@ -5,7 +5,7 @@ import styled from 'styled-components'
 export const BodyWrapper = styled(Box)`
   position: relative;
   /* max-width: 420px; */
-  max-width: 21rem;
+  max-width: 25rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     max-width: 100%;
   `};
@@ -16,9 +16,10 @@ export const BodyWrapper = styled(Box)`
   /* border-radius: 30px; */
   /* padding: 1rem; */
   border-radius: 1.6rem;
-  background: rgba(31, 31, 31, 0.55);
+  // background: rgba(31, 31, 31, 0.55);
+  background: linear-gradient(180deg, #2b4854 0%, #293f53 100%);
   backdrop-filter: blur(36.9183px);
-  box-shadow: 0px -2px 0px #39e1ba;
+  // box-shadow: 0px -2px 0px #39e1ba;
 `
 
 /**
