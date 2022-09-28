@@ -3,7 +3,7 @@ import { ReactComponent as AddIcon } from 'assets/svg/action/add.svg'
 import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 import { ButtonPrimary } from 'components/Button'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
-import { AutoColumn } from 'components/Column'
+// import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ClaimRewardModal from 'components/masterchef/ClaimRewardModal'
 // import { Break } from 'components/earn/styled'
@@ -36,29 +36,48 @@ import { TYPE } from '../../theme'
 
 const StatContainer = styled.div`
   display: flex;
+  width: 100%;
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.4rem;
 };
 `
 
-const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   // border-radius: 0.4rem;
-  height: 8.5rem;
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
-  overflow: hidden;
-  position: relative;
-  opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
+  // overflow: hidden;
+  // position: relative;
+  // opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
 
-  :not(:last-child):after {
-    content: '';
-    background-color: rgba(255, 255, 255, 0.2);
-    height: 1px;
-    position: relative;
-    bottom: 0;
-    left: 0;
+  :not(:last-child) {
+    padding-bottom: 1rem;
+    &:after {
+      content: '';
+      background-color: rgba(255, 255, 255, 0.2);
+      height: 1px;
+      width: 100%;
+      position: relative;
+      bottom: 0;
+      left: 0;
+
+      margin-top: 1rem;
+    }
   }
+  // :not(:last-child):after {
+  //   content: '';
+  //   background-color: rgba(255, 255, 255, 0.2);
+  //   height: 1px;
+  //   width: 100%;
+  //   position: relative;
+  //   bottom: 0;
+  //   left: 0;
+
+  //   margin-top: 1rem;
+  // }
 `
 
 const TopSection = styled.div`
@@ -70,7 +89,7 @@ const TopSection = styled.div`
 `
 
 const StakingColumn = styled.div`
-  max-width: 13rem;
+  max-width: 14rem;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -200,8 +219,8 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
           </div>
           {stakingInfo.stakingAsset.isLpToken && (
             <div className="estimated-staked-lp-value">
-              {liquidityValueOfToken0?.toSignificant(6)} {liquidityValueOfToken0?.token.symbol} +{' '}
-              {liquidityValueOfToken1?.toSignificant(6)} {liquidityValueOfToken1?.token.symbol}
+              {liquidityValueOfToken0?.toSignificant(4)} {liquidityValueOfToken0?.token.symbol} +{' '}
+              {liquidityValueOfToken1?.toSignificant(4)} {liquidityValueOfToken1?.token.symbol}
             </div>
           )}
         </StakingColumn>

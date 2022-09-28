@@ -77,7 +77,7 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
       {
         // pid 2
         stakingAsset: {
-          name: 'USDT-ETH vLP (Evaluation here for now is: USDT => ETH => USDC)',
+          name: 'USDT-ETH vLP (Bad Evaluation)',
           decimal: 18,
           symbol: 'VLP',
           isLpToken: true,
