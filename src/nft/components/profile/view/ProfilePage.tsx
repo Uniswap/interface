@@ -34,6 +34,7 @@ import { useInfiniteQuery, useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import { useSpring } from 'react-spring/web'
 
+import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
 
 enum SortBy {
@@ -245,14 +246,14 @@ export const ProfilePage = () => {
   const SortWalletAssetsDropdown = () => <SortDropdown dropDownOptions={sortDropDownOptions} />
 
   return (
-    <Column width="full">
-      <Row
-        alignItems="flex-start"
-        position="relative"
-        paddingLeft={{ sm: '16', md: '52' }}
-        paddingRight={{ sm: '0', md: '72' }}
-        paddingTop={{ sm: '16', md: '40' }}
-      >
+    <Column
+      width="full"
+      paddingLeft={{ sm: '16', md: '52' }}
+      paddingRight={{ sm: '0', md: '72' }}
+      paddingTop={{ sm: '16', md: '40' }}
+    >
+      <ProfileAccountDetails />
+      <Row alignItems="flex-start" position="relative">
         <FilterSidebar SortDropdown={SortWalletAssetsDropdown} />
 
         {(!isMobile || !isFiltersExpanded) && (
