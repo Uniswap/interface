@@ -79,6 +79,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
             dappName: req.dapp.name,
             imageUrl: req.dapp.icon,
             chainId: req.dapp.chain_id,
+            hideDelay: 3000,
           })
         )
         registerWcPushNotifications({
@@ -103,6 +104,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
           dappName: req.dapp.name,
           imageUrl: req.dapp.icon,
           chainId: req.dapp.chain_id,
+          hideDelay: 2000,
         })
       )
     }
@@ -117,6 +119,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
           event: WalletConnectEvent.Disconnected,
           imageUrl: req.dapp.icon,
           chainId: req.dapp.chain_id,
+          hideDelay: 3000,
         })
       )
       deregisterWcPushNotifications({

@@ -17,6 +17,7 @@ export enum AppNotificationType {
 interface AppNotificationBase {
   type: AppNotificationType
   address?: Address
+  hideDelay?: number
 }
 
 export interface AppNotificationDefault extends AppNotificationBase {

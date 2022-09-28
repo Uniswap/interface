@@ -827,6 +827,8 @@ export function useShowSwapNetworkNotification(chainId?: ChainId) {
     // don't fire notification toast for first network selection
     if (!prevChainId || !chainId || prevChainId === chainId) return
 
-    appDispatch(pushNotification({ type: AppNotificationType.SwapNetwork, chainId }))
+    appDispatch(
+      pushNotification({ type: AppNotificationType.SwapNetwork, chainId, hideDelay: 2000 })
+    )
   }, [chainId, prevChainId, appDispatch])
 }

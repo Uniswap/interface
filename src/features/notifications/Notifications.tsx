@@ -23,6 +23,7 @@ import {
   AppErrorNotification,
   AppNotificationDefault,
   ApproveTxNotification,
+  CopyNotification,
   FavoriteNotification as FavoriteNotificationType,
   SwapNetworkNotification as SwapNetworkNotificationType,
   SwapTxNotification,
@@ -72,7 +73,7 @@ const useNavigateToProfileTab = (address: string | undefined) => {
 }
 
 export function WCNotification({ notification }: { notification: WalletConnectNotification }) {
-  const { imageUrl, chainId, address, event } = notification
+  const { imageUrl, chainId, address, event, hideDelay } = notification
   const dispatch = useAppDispatch()
   const validChainId = toSupportedChainId(chainId)
   const title = formWCNotificationTitle(notification)
@@ -105,6 +106,7 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
   return (
     <NotificationToast
       address={address}
+      hideDelay={hideDelay}
       icon={icon}
       title={title}
       useSmallDisplay={useSmallDisplay}
@@ -114,7 +116,7 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
 }
 
 export function ApproveNotification({
-  notification: { address, chainId, tokenAddress, spender, txStatus, txType },
+  notification: { address, chainId, tokenAddress, spender, txStatus, txType, hideDelay },
 }: {
   notification: ApproveTxNotification
 }) {
@@ -135,6 +137,7 @@ export function ApproveNotification({
   return (
     <NotificationToast
       address={address}
+      hideDelay={hideDelay}
       icon={icon}
       title={title}
       onPress={onPress}
@@ -155,6 +158,7 @@ export function SwapNotification({
     outputCurrencyAmountRaw,
     tradeType,
     address,
+    hideDelay,
   },
 }: {
   notification: SwapTxNotification
@@ -209,6 +213,7 @@ export function SwapNotification({
           transactionType={txType}
         />
       }
+      hideDelay={hideDelay}
       icon={icon}
       title={title}
       onPress={onPress}
@@ -222,8 +227,16 @@ export function TransferCurrencyNotification({
 }: {
   notification: TransferCurrencyTxNotification
 }) {
-  const { address, assetType, chainId, tokenAddress, currencyAmountRaw, txType, txStatus } =
-    notification
+  const {
+    address,
+    assetType,
+    chainId,
+    tokenAddress,
+    currencyAmountRaw,
+    txType,
+    txStatus,
+    hideDelay,
+  } = notification
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
   const { name: ensName } = useENS(chainId, senderOrRecipient)
@@ -261,6 +274,7 @@ export function TransferCurrencyNotification({
           transactionType={txType}
         />
       }
+      hideDelay={hideDelay}
       icon={icon}
       title={title}
       onPress={onPress}
@@ -274,7 +288,8 @@ export function TransferNFTNotification({
 }: {
   notification: TransferNFTTxNotification
 }) {
-  const { address, assetType, chainId, tokenAddress, tokenId, txType, txStatus } = notification
+  const { address, assetType, chainId, tokenAddress, tokenId, txType, txStatus, hideDelay } =
+    notification
   const userAddress = useAppSelector(selectActiveAccountAddress) || ''
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
@@ -305,6 +320,7 @@ export function TransferNFTNotification({
   return (
     <NotificationToast
       address={address}
+      hideDelay={hideDelay}
       icon={icon}
       title={title}
       onPress={onPress}
@@ -314,7 +330,7 @@ export function TransferNFTNotification({
 }
 
 export function UnknownTxNotification({
-  notification: { address, chainId, tokenAddress, txStatus, txType },
+  notification: { address, chainId, tokenAddress, txStatus, txType, hideDelay },
 }: {
   notification: TransactionNotificationBase
 }) {
@@ -336,6 +352,7 @@ export function UnknownTxNotification({
   return (
     <NotificationToast
       address={address}
+      hideDelay={hideDelay}
       icon={icon}
       title={title}
       onPress={onPress}
@@ -345,23 +362,23 @@ export function UnknownTxNotification({
 }
 
 export function ErrorNotification({
-  notification: { address, errorMessage },
+  notification: { address, errorMessage, hideDelay },
 }: {
   notification: AppErrorNotification
 }) {
-  return <NotificationToast address={address} title={errorMessage} />
+  return <NotificationToast address={address} hideDelay={hideDelay} title={errorMessage} />
 }
 
 export function DefaultNotification({
-  notification: { address, title },
+  notification: { address, title, hideDelay },
 }: {
   notification: AppNotificationDefault
 }) {
-  return <NotificationToast address={address} title={title} />
+  return <NotificationToast address={address} hideDelay={hideDelay} title={title} />
 }
 
 export function FavoriteNotification({
-  notification: { currencyId, isAddition },
+  notification: { currencyId, isAddition, hideDelay },
 }: {
   notification: FavoriteNotificationType
 }) {
@@ -372,6 +389,7 @@ export function FavoriteNotification({
   return (
     <NotificationToast
       useSmallDisplay
+      hideDelay={hideDelay}
       icon={icon}
       title={title}
       // TODO: re-enable when press on toasts are supported
@@ -380,13 +398,18 @@ export function FavoriteNotification({
   )
 }
 
-export function CopiedNotification() {
+export function CopiedNotification({
+  notification: { hideDelay = 2000 },
+}: {
+  notification: CopyNotification
+}) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
   return (
     <NotificationToast
       useSmallDisplay
+      hideDelay={hideDelay}
       icon={<CheckCircle color={theme.colors.accentSuccess} height={20} width={20} />}
       title={t('Copied to clipboard')}
     />
@@ -394,7 +417,7 @@ export function CopiedNotification() {
 }
 
 export function SwapNetworkNotification({
-  notification: { chainId },
+  notification: { chainId, hideDelay },
 }: {
   notification: SwapNetworkNotificationType
 }) {
@@ -404,6 +427,7 @@ export function SwapNetworkNotification({
   return (
     <NotificationToast
       useSmallDisplay
+      hideDelay={hideDelay}
       icon={<NetworkLogo chainId={chainId} size={NOTIFICATION_ICON_SIZE} />}
       title={t('Swapping on {{ network }}', { network })}
     />

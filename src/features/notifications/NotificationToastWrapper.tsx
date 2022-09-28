@@ -40,7 +40,7 @@ export function NotificationToastRouter({ notification }: { notification: AppNot
     case AppNotificationType.Favorites:
       return <FavoriteNotification notification={notification} />
     case AppNotificationType.Copied:
-      return <CopiedNotification />
+      return <CopiedNotification notification={notification} />
     case AppNotificationType.SwapNetwork:
       return <SwapNetworkNotification notification={notification} />
     case AppNotificationType.Transaction:

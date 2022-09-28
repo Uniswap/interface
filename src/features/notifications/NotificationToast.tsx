@@ -60,7 +60,7 @@ export function NotificationToast({
 
   useEffect(() => {
     if (currentNotification) {
-      bannerOffset.value = withDelay(500, withSpring(showOffset, SPRING_ANIMATION))
+      bannerOffset.value = withDelay(100, withSpring(showOffset, SPRING_ANIMATION))
     }
   }, [showOffset, bannerOffset, currentNotification])
 
@@ -72,7 +72,7 @@ export function NotificationToast({
     bannerOffset.value = withSpring(HIDE_OFFSET_Y, SPRING_ANIMATION)
     setTimeout(() => dispatch(popNotification({ address })), 500)
     if (notifications.length > 1) {
-      bannerOffset.value = withDelay(500, withSpring(showOffset, SPRING_ANIMATION))
+      bannerOffset.value = withDelay(100, withSpring(showOffset, SPRING_ANIMATION))
     }
   }, [dispatch, bannerOffset, notifications, showOffset, address])
 
