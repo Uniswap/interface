@@ -75,13 +75,13 @@ export default function SearchBar() {
 
   return (
     <SearchBarContainer>
-      <TraceEvent
-        events={[Event.onSelect]}
-        name={EventName.EXPLORE_SEARCH_SELECTED}
-        element={ElementName.EXPLORE_SEARCH_INPUT}
-      >
-        <Trans
-          render={({ translation }) => (
+      <Trans
+        render={({ translation }) => (
+          <TraceEvent
+            events={[Event.onSelect]}
+            name={EventName.EXPLORE_SEARCH_SELECTED}
+            element={ElementName.EXPLORE_SEARCH_INPUT}
+          >
             <SearchInput
               type="search"
               placeholder={`${translation}`}
@@ -90,11 +90,11 @@ export default function SearchBar() {
               value={localFilterString}
               onChange={({ target: { value } }) => setLocalFilterString(value)}
             />
-          )}
-        >
-          Filter tokens
-        </Trans>
-      </TraceEvent>
+          </TraceEvent>
+        )}
+      >
+        Filter tokens
+      </Trans>
     </SearchBarContainer>
   )
 }
