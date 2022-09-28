@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import HoverInlineText from 'components/HoverInlineText'
 import { useMemo } from 'react'
 import { useTheme } from 'styled-components/macro'
 
@@ -32,17 +31,7 @@ export function FiatValue({
 
   return (
     <ThemedText.DeprecatedBody fontSize={14} color={fiatValue ? theme.deprecated_text3 : theme.deprecated_text4}>
-      {fiatValue ? (
-        <Trans>
-          $
-          <HoverInlineText
-            text={fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}
-            textColor={fiatValue ? theme.deprecated_text3 : theme.deprecated_text4}
-          />
-        </Trans>
-      ) : (
-        ''
-      )}
+      {fiatValue && <>${fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}</>}
       {priceImpact ? (
         <span style={{ color: priceImpactColor }}>
           {' '}
