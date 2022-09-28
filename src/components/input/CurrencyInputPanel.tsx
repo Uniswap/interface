@@ -71,7 +71,6 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   const { t } = useTranslation()
   const transformedProps = useRestyle(restyleFunctions, rest)
   const inputRef = useRef<TextInput>(null)
-  const isBlankOutputState = isOutput && !currency
 
   const insufficientBalanceWarning = warnings.find(
     (warning) => warning.type === WarningLabel.InsufficientFunds
@@ -106,9 +105,9 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
         row
         alignItems="center"
         gap="xxxs"
-        justifyContent={isBlankOutputState ? 'center' : 'space-between'}
-        py={isBlankOutputState ? 'sm' : 'none'}>
-        {!isBlankOutputState && (
+        justifyContent={!currency ? 'center' : 'space-between'}
+        py={!currency ? 'sm' : 'none'}>
+        {!!currency && (
           <Flex fill grow row onLayout={onLayout}>
             <AmountInput
               ref={inputRef}
@@ -143,7 +142,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           </Flex>
         )}
         <Flex row alignItems="center" gap="xs">
-          {onSetMax && (
+          {currency && onSetMax && (
             <MaxAmountButton
               currencyAmount={currencyAmount}
               currencyBalance={currencyBalance}
@@ -158,7 +157,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
         </Flex>
       </Flex>
 
-      {!isBlankOutputState && (
+      {!!currency && (
         <Flex row alignItems="center" gap="xs" justifyContent="space-between" py="xxs">
           {currency && (
             <Text color="textSecondary" variant="caption">
