@@ -4,14 +4,22 @@ import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components/macro'
-import { Z_INDEX } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { AutoColumn } from '../Column'
 
-export const PageWrapper = styled.div<{ redesignFlag: boolean }>`
-  padding: 0 8px;
+export const PageWrapper = styled.div<{ redesignFlag: boolean; navBarFlag: boolean }>`
+  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px 8px')};
   max-width: ${({ redesignFlag }) => (redesignFlag ? '420px' : '480px')};
   width: 100%;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '48px' : '0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
@@ -154,7 +162,7 @@ export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: st
   padding: 1rem;
   width: ${({ width }) => width ?? 'auto'};
 
-  ${({ theme, origin }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme, origin }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
     transform: scale(0.8);
     transform-origin: ${origin ?? 'top left'};
   `}

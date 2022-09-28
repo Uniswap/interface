@@ -5,12 +5,20 @@ import * as styles from './NavIcon.css'
 
 interface NavIconProps {
   children: ReactNode
+  isActive?: boolean
   onClick: () => void
 }
 
-export const NavIcon = ({ children, onClick }: NavIconProps) => {
+export const NavIcon = ({ children, isActive, onClick }: NavIconProps) => {
   return (
-    <Box as="button" className={styles.navIcon} onClick={onClick}>
+    <Box
+      as="button"
+      className={styles.navIcon}
+      background={isActive ? 'accentActiveSoft' : 'none'}
+      color={isActive ? 'textPrimary' : 'textSecondary'}
+      onClick={onClick}
+      height="40"
+    >
       {children}
     </Box>
   )

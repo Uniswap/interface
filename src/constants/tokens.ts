@@ -46,9 +46,9 @@ export const USDC_OPTIMISM = new Token(
   'USDC',
   'USD//C'
 )
-export const USDC_OPTIMISTIC_KOVAN = new Token(
-  SupportedChainId.OPTIMISTIC_KOVAN,
-  '0x3b8e53b3ab8e01fb57d0c9e893bc4d655aa67d84',
+export const USDC_OPTIMISM_GOERLI = new Token(
+  SupportedChainId.OPTIMISM_GOERLI,
+  '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
   6,
   'USDC',
   'USD//C'
@@ -128,7 +128,7 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM,
   [SupportedChainId.OPTIMISM]: USDC_OPTIMISM,
   [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY,
-  [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN,
+  [SupportedChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI,
   [SupportedChainId.POLYGON]: USDC_POLYGON,
   [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI,
   [SupportedChainId.CELO]: PORTAL_USDC_CELO,
@@ -353,8 +353,8 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WETH',
     'Wrapped Ether'
   ),
-  [SupportedChainId.OPTIMISTIC_KOVAN]: new Token(
-    SupportedChainId.OPTIMISTIC_KOVAN,
+  [SupportedChainId.OPTIMISM_GOERLI]: new Token(
+    SupportedChainId.OPTIMISM_GOERLI,
     '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
@@ -387,6 +387,20 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WMATIC',
     'Wrapped MATIC'
+  ),
+  [SupportedChainId.CELO]: new Token(
+    SupportedChainId.CELO,
+    '0x471ece3750da237f93b8e339c536989b8978a438',
+    18,
+    'CELO',
+    'Celo native asset'
+  ),
+  [SupportedChainId.CELO_ALFAJORES]: new Token(
+    SupportedChainId.CELO_ALFAJORES,
+    '0xf194afdf50b03e69bd7d057c1aa9e10c9954e4c9',
+    18,
+    'CELO',
+    'Celo native asset'
   ),
 }
 
@@ -461,7 +475,7 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.ARBITRUM_ONE]: USDC_ARBITRUM.address,
     [SupportedChainId.OPTIMISM]: USDC_OPTIMISM.address,
     [SupportedChainId.ARBITRUM_RINKEBY]: USDC_ARBITRUM_RINKEBY.address,
-    [SupportedChainId.OPTIMISTIC_KOVAN]: USDC_OPTIMISTIC_KOVAN.address,
+    [SupportedChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI.address,
     [SupportedChainId.POLYGON]: USDC_POLYGON.address,
     [SupportedChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
     [SupportedChainId.CELO]: PORTAL_USDC_CELO.address,

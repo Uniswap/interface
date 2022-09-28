@@ -2,8 +2,7 @@ import { Plural, Trans } from '@lingui/macro'
 
 import WarningCache, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
 
-// TODO: Replace this with Steph's article when it is available.
-export const TOKEN_SAFETY_ARTICLE = 'https://help.uniswap.org/en/'
+export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
 
 export enum WARNING_LEVEL {
   MEDIUM,
@@ -16,8 +15,8 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
     description = null
   if (warning) {
     if (warning.canProceed) {
-      heading = <Plural value={plural ? 2 : 1} _1="This token isn't verified" other="These tokens aren't verified" />
-      description = <Trans>{'Please do your own research before trading.'}</Trans>
+      heading = <Plural value={plural ? 2 : 1} _1="This token isn't verified." other="These tokens aren't verified." />
+      description = <Trans>Please do your own research before trading.</Trans>
     } else {
       description = (
         <Plural

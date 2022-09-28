@@ -1,7 +1,7 @@
 import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { parseEther } from '@ethersproject/units'
 import { addressesByNetwork, MakerOrder, signMakerOrder, SupportedChainId } from '@looksrare/sdk'
 import { Seaport } from '@opensea/seaport-js'
@@ -15,12 +15,9 @@ import {
 } from 'nft/queries/openSea'
 
 import ERC721 from '../../abis/erc721.json'
-import { PostOpenSeaSellOrder } from '../queries'
-import { createLooksRareOrder } from '../queries'
-import { newX2Y2Order } from '../queries'
+import { createLooksRareOrder, newX2Y2Order, PostOpenSeaSellOrder } from '../queries'
 import { INVERSE_BASIS_POINTS, OPENSEA_DEFAULT_FEE, OPENSEA_FEE_ADDRESS } from '../queries/openSea'
-import { ListingMarket, WalletAsset } from '../types'
-import { ListingStatus } from '../types'
+import { ListingMarket, ListingStatus, WalletAsset } from '../types'
 import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
 
 export const ListingMarkets: ListingMarket[] = [
@@ -128,7 +125,7 @@ export async function signListing(
   switch (marketplace.name) {
     case 'OpenSea':
       try {
-        const listingInWei = parseEther(listingPrice)
+        const listingInWei = parseEther(`${listingPrice}`)
         const { sellerFee, openseaFee, creatorFee } = getConsiderationItems(asset, listingInWei, signerAddress)
         const considerationItems = [sellerFee, openseaFee, creatorFee].filter(
           (item): item is ConsiderationInputItem => item !== undefined

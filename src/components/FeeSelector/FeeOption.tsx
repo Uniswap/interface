@@ -15,7 +15,7 @@ const ResponsiveText = styled(ThemedText.DeprecatedLabel)`
   line-height: 16px;
   font-size: 14px;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     font-size: 12px;
     line-height: 12px;
   `};

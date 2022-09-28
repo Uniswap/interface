@@ -1,7 +1,9 @@
+import { Trans } from '@lingui/macro'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useState } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
@@ -82,7 +84,7 @@ const SwapButton = styled.button`
   display: flex;
   align-items: center;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.accentTextLightPrimary};
   padding: 12px 16px;
   width: 120px;
   height: 44px;
@@ -130,11 +132,13 @@ const ErrorText = styled.span`
 export default function FooterBalanceSummary({
   address,
   networkBalances,
-  totalBalance,
+  balance,
+  balanceUsd,
 }: {
   address: string
   networkBalances: (JSX.Element | null)[] | null
-  totalBalance: number
+  balance?: number
+  balanceUsd?: number
 }) {
   const tokenSymbol = useToken(address)?.symbol
   const [showMultipleBalances, setShowMultipleBalances] = useState(false)
@@ -152,29 +156,41 @@ export default function FooterBalanceSummary({
         ) : error ? (
           <ErrorState>
             <AlertTriangle size={17} />
-            <ErrorText>There was an error fetching your balance</ErrorText>
+            <ErrorText>
+              <Trans>There was an error fetching your balance</Trans>
+            </ErrorText>
           </ErrorState>
         ) : (
-          <BalanceInfo>
-            {multipleBalances ? 'Balance on all networks' : `Your balance on ${networkNameIfOneBalance}`}
-            <BalanceTotal>
-              <BalanceValue>
-                {totalBalance} {tokenSymbol}
-              </BalanceValue>
-              <FiatValue>($107, 610.04)</FiatValue>
-            </BalanceTotal>
-            {multipleBalances && (
-              <ViewAll onClick={() => setShowMultipleBalances(!showMultipleBalances)}>
-                {showMultipleBalances ? 'Hide' : 'View'} all balances
-              </ViewAll>
-            )}
-          </BalanceInfo>
+          !!balance &&
+          !!balanceUsd && (
+            <BalanceInfo>
+              {multipleBalances ? 'Balance on all networks' : `Your balance on ${networkNameIfOneBalance}`}
+              <BalanceTotal>
+                <BalanceValue>
+                  {balance} {tokenSymbol}
+                </BalanceValue>
+                <FiatValue>{`$${balanceUsd}`}</FiatValue>
+              </BalanceTotal>
+              {multipleBalances && (
+                <ViewAll onClick={() => setShowMultipleBalances(!showMultipleBalances)}>
+                  <Trans>{showMultipleBalances ? 'Hide' : 'View'} all balances</Trans>
+                </ViewAll>
+              )}
+            </BalanceInfo>
+          )
         )}
-        <SwapButton onClick={() => (window.location.href = 'https://app.uniswap.org/#/swap')}>Swap</SwapButton>
+        <Link to={`/swap?outputCurrency=${address}`}>
+          <SwapButton>
+            <Trans>Swap</Trans>
+          </SwapButton>
+        </Link>
       </TotalBalancesSection>
       {showMultipleBalances && (
         <NetworkBalancesSection>
-          <NetworkBalancesLabel>Your balances by network</NetworkBalancesLabel> {networkBalances}
+          <NetworkBalancesLabel>
+            <Trans>Your balances by network</Trans>
+          </NetworkBalancesLabel>
+          {networkBalances}
         </NetworkBalancesSection>
       )}
       <FakeFooterNavBar>**leaving space for updated nav footer**</FakeFooterNavBar>

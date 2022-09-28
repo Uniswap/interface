@@ -7,7 +7,7 @@ import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import ms from 'ms.macro'
 import { darken } from 'polished'
 import { useState } from 'react'
-import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'
@@ -64,6 +64,10 @@ const Input = styled.input<{ redesignFlag: boolean }>`
   }
   color: ${({ theme, color }) => (color === 'red' ? theme.deprecated_red1 : theme.deprecated_text1)};
   text-align: right;
+
+  ::placeholder {
+    color: ${({ theme, redesignFlag }) => redesignFlag && theme.textTertiary};
+  }
 `
 
 const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean; redesignFlag: boolean }>`
@@ -91,7 +95,7 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean; 
 
 const SlippageEmojiContainer = styled.span`
   color: #f3841e;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `}
 `
@@ -108,8 +112,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
-  const userSlippageTolerance = useUserSlippageTolerance()
-  const setUserSlippageTolerance = useSetUserSlippageTolerance()
+  const [userSlippageTolerance, setUserSlippageTolerance] = useUserSlippageTolerance()
 
   const [deadline, setDeadline] = useUserTransactionTTL()
 

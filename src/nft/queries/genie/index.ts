@@ -1,3 +1,4 @@
+export * from './ActivityFetcher'
 export * from './AssetsFetcher'
 export * from './CollectionPreviewFetcher'
 export * from './CollectionStatsFetcher'

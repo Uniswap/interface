@@ -48,16 +48,17 @@ export interface ThemeColors {
   chain_10: Color
   chain_137: Color
   chain_42: Color
-  chain_69: Color
+  chain_420: Color
   chain_42161: Color
   chain_421611: Color
   chain_80001: Color
 
-  blue200: Color
   shallowShadow: Color
   deepShadow: Color
   hoverState: Color
   hoverDefault: Color
+  stateOverlayHover: Color
+  stateOverlayPressed: Color
 }
 
 export interface Colors {
@@ -127,13 +128,38 @@ declare module 'styled-components/macro' {
     shadow1: Color
 
     // media queries
-    mediaWidth: {
-      upToExtraSmall: ThemedCssFunction<DefaultTheme>
-      upToSmall: ThemedCssFunction<DefaultTheme>
-      upToMedium: ThemedCssFunction<DefaultTheme>
-      upToLarge: ThemedCssFunction<DefaultTheme>
+    deprecated_mediaWidth: {
+      deprecated_upToExtraSmall: ThemedCssFunction<DefaultTheme>
+      deprecated_upToSmall: ThemedCssFunction<DefaultTheme>
+      deprecated_upToMedium: ThemedCssFunction<DefaultTheme>
+      deprecated_upToLarge: ThemedCssFunction<DefaultTheme>
     }
 
+    breakpoint: {
+      sm: number
+      md: number
+      lg: number
+      xl: number
+      xxl: number
+      xxxl: number
+    }
+    transition: {
+      duration: {
+        slow: string
+        medium: string
+        fast: string
+      }
+      timing: {
+        ease: string
+        in: string
+        out: string
+        inOut: string
+      }
+    }
+    opacity: {
+      hover: number
+      click: number
+    }
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation
     flexRowNoWrap: FlattenSimpleInterpolation

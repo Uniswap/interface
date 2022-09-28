@@ -20,10 +20,14 @@ const ConnectButton = styled(ButtonPrimary)`
   font-size: 16px;
   margin-left: auto;
   margin-right: auto;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 100%;
+  }
 `
 
 const Divider = styled.div`
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   margin-top: 16px;
   margin-bottom: 16px;
 `
@@ -35,18 +39,23 @@ const ToggleMenuItem = styled.button`
   cursor: pointer;
   display: flex;
   flex: 1;
+  border-radius: 12px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   font-size: 14px;
   font-weight: 400;
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 8px;
   color: ${({ theme }) => theme.textSecondary};
   :hover {
     color: ${({ theme }) => theme.textPrimary};
     background-color: ${({ theme }) => theme.backgroundModule};
-    transition: 250ms all ease;
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast} all ${timing.in}`};
   }
 `
 
@@ -73,6 +82,7 @@ const IconWrap = styled.span`
 const DefaultMenuWrap = styled.div`
   width: 100%;
   height: 100%;
+  padding: 0 8px;
 `
 
 const DefaultText = styled.span`
@@ -104,11 +114,13 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
       {isAuthenticated ? (
         <AuthenticatedHeader />
       ) : (
-        <ConnectButton onClick={toggleWalletModal}>Connect wallet</ConnectButton>
+        <ConnectButton data-testid="wallet-connect-wallet" onClick={toggleWalletModal}>
+          Connect wallet
+        </ConnectButton>
       )}
       <Divider />
       {isAuthenticated && (
-        <ToggleMenuItem onClick={() => setMenu(MenuState.TRANSACTIONS)}>
+        <ToggleMenuItem data-testid="wallet-transactions" onClick={() => setMenu(MenuState.TRANSACTIONS)}>
           <DefaultText>
             <Trans>Transactions</Trans>{' '}
             {pendingTransactions.length > 0 && (
@@ -122,7 +134,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
           </IconWrap>
         </ToggleMenuItem>
       )}
-      <ToggleMenuItem onClick={() => setMenu(MenuState.LANGUAGE)}>
+      <ToggleMenuItem data-testid="wallet-select-language" onClick={() => setMenu(MenuState.LANGUAGE)}>
         <DefaultText>
           <Trans>Language</Trans>
         </DefaultText>
@@ -135,7 +147,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
           </IconWrap>
         </FlexContainer>
       </ToggleMenuItem>
-      <ToggleMenuItem onClick={toggleDarkMode}>
+      <ToggleMenuItem data-testid="wallet-select-theme" onClick={toggleDarkMode}>
         <DefaultText>{darkMode ? <Trans> Light theme</Trans> : <Trans>Dark theme</Trans>}</DefaultText>
         <IconWrap>{darkMode ? <Sun size={16} /> : <Moon size={16} />}</IconWrap>
       </ToggleMenuItem>

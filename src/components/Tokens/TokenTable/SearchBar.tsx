@@ -1,6 +1,9 @@
+import { Trans } from '@lingui/macro'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
-import { useAtom } from 'jotai'
+import useDebounce from 'hooks/useDebounce'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
@@ -16,17 +19,18 @@ const SearchInput = styled.input`
   background-image: url(${searchIcon});
   background-size: 20px 20px;
   background-position: 12px center;
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.backgroundModule};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
-  width: min(300px, 100%);
+  width: min(200px, 100%);
   font-size: 16px;
   padding-left: 40px;
   color: ${({ theme }) => theme.textSecondary};
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   :hover {
-    background-color: ${({ theme }) => theme.backgroundModule};
+    background-color: ${({ theme }) => theme.backgroundSurface};
   }
 
   :focus {
@@ -55,17 +59,35 @@ const SearchInput = styled.input`
 `
 
 export default function SearchBar() {
-  const [filterString, setFilterString] = useAtom(filterStringAtom)
+  const currentString = useAtomValue(filterStringAtom)
+  const [localFilterString, setLocalFilterString] = useState(currentString)
+  const setFilterString = useUpdateAtom(filterStringAtom)
+  const debouncedLocalFilterString = useDebounce(localFilterString, 300)
+
+  useEffect(() => {
+    setLocalFilterString(currentString)
+  }, [currentString])
+
+  useEffect(() => {
+    setFilterString(debouncedLocalFilterString)
+  }, [debouncedLocalFilterString, setFilterString])
+
   return (
     <SearchBarContainer>
-      <SearchInput
-        type="search"
-        placeholder="Search tokens"
-        id="searchBar"
-        autoComplete="off"
-        value={filterString}
-        onChange={({ target: { value } }) => setFilterString(value)}
-      />
+      <Trans
+        render={({ translation }) => (
+          <SearchInput
+            type="search"
+            placeholder={`${translation}`}
+            id="searchBar"
+            autoComplete="off"
+            value={localFilterString}
+            onChange={({ target: { value } }) => setLocalFilterString(value)}
+          />
+        )}
+      >
+        Filter tokens
+      </Trans>
     </SearchBarContainer>
   )
 }

@@ -9,6 +9,7 @@ import { SupportedChainId } from 'constants/chains'
 
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 import { RPC_URLS } from '../constants/networks'
+import { RPC_PROVIDERS } from '../constants/providers'
 
 export enum ConnectionType {
   INJECTED = 'INJECTED',
@@ -29,7 +30,7 @@ function onError(error: Error) {
 }
 
 const [web3Network, web3NetworkHooks] = initializeConnector<Network>(
-  (actions) => new Network({ actions, urlMap: RPC_URLS, defaultChainId: 1 })
+  (actions) => new Network({ actions, urlMap: RPC_PROVIDERS, defaultChainId: 1 })
 )
 export const networkConnection: Connection = {
   connector: web3Network,
@@ -73,7 +74,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: RPC_URLS[SupportedChainId.MAINNET],
+        url: RPC_URLS[SupportedChainId.MAINNET][0],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO_URL,
         reloadOnDisconnect: false,

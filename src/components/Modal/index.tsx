@@ -4,6 +4,7 @@ import React from 'react'
 import { animated, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 import styled, { css } from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { isMobile } from '../../utils/userAgent'
 
@@ -11,7 +12,7 @@ const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ redesignFlag?: boolean }>`
   &[data-reach-dialog-overlay] {
-    z-index: 2;
+    z-index: ${Z_INDEX.modalBackdrop};
     background-color: transparent;
     overflow: hidden;
 
@@ -59,11 +60,11 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, rede
       `}
     display: flex;
     border-radius: 20px;
-    ${({ theme }) => theme.mediaWidth.upToMedium`
+    ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
       width: 65vw;
       margin: 0;
     `}
-    ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
+    ${({ theme, mobile }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
       width:  85vw;
       ${
         mobile &&

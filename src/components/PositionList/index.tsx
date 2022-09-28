@@ -12,7 +12,7 @@ const DesktopHeader = styled.div`
   font-weight: 500;
   padding: 8px;
 
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     align-items: center;
     display: flex;
     justify-content: space-between;
@@ -32,11 +32,11 @@ const MobileHeader = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     display: none;
   }
 
-  @media screen and (max-width: ${MEDIA_WIDTHS.upToExtraSmall}px) {
+  @media screen and (max-width: ${MEDIA_WIDTHS.deprecated_upToExtraSmall}px) {
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -50,12 +50,12 @@ const ToggleWrap = styled.div`
 `
 
 const ToggleLabel = styled.div`
-  opacity: 0.6;
+  opacity: ${({ theme }) => theme.opacity.hover};
   margin-right: 10px;
 `
 
 const MobileTogglePosition = styled.div`
-  @media screen and (max-width: ${MEDIA_WIDTHS.upToExtraSmall}px) {
+  @media screen and (max-width: ${MEDIA_WIDTHS.deprecated_upToExtraSmall}px) {
     position: absolute;
     right: 20px;
   }

@@ -59,7 +59,6 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
         })
 
       provider.on('block', onBlock)
-
       return () => {
         stale = true
         provider.removeListener('block', onBlock)
@@ -69,11 +68,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     return void 0
   }, [activeChainId, provider, onBlock, setChainBlock, windowVisible])
 
-  const value = useMemo(
-    () => ({
-      value: chainId === activeChainId ? block : undefined,
-    }),
-    [activeChainId, block, chainId]
-  )
+  const blockValue = useMemo(() => (chainId === activeChainId ? block : undefined), [activeChainId, block, chainId])
+  const value = useMemo(() => ({ value: blockValue }), [blockValue])
   return <BlockNumberContext.Provider value={value}>{children}</BlockNumberContext.Provider>
 }

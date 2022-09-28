@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'components/AmplitudeAnalytics/constants'
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { PageName } from 'analytics/constants'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -11,6 +11,7 @@ import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -24,22 +25,30 @@ import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
-const PageWrapper = styled(AutoColumn)`
+const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
+  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
   max-width: 870px;
   width: 100%;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     max-width: 800px;
-    padding: 0px 8px;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     max-width: 500px;
   `};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '48px' : '0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
 `
 const TitleRow = styled(RowBetween)`
   color: ${({ theme }) => theme.deprecated_text2};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-wrap: wrap;
     gap: 12px;
     width: 100%;
@@ -50,7 +59,7 @@ const ButtonRow = styled(RowFixed)`
     margin-left: 8px;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
@@ -59,7 +68,7 @@ const ButtonRow = styled(RowFixed)`
 `
 const Menu = styled(NewMenu)`
   margin-left: 0;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex: 1 1 auto;
     width: 49%;
     right: 0px;
@@ -118,7 +127,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
   width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex: 1 1 auto;
     width: 100%;
   `};
@@ -152,13 +161,15 @@ function PositionsLoadingPlaceholder() {
 }
 
 function WrongNetworkCard() {
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const theme = useTheme()
   return (
     <>
-      <PageWrapper>
+      <PageWrapper navBarFlag={navBarFlagEnabled}>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
-            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+            <TitleRow padding={'0'}>
               <ThemedText.LargeHeader>
                 <Trans>Pools</Trans>
               </ThemedText.LargeHeader>
@@ -183,6 +194,8 @@ function WrongNetworkCard() {
 }
 
 export default function Pool() {
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const { account, chainId } = useWeb3React()
   const toggleWalletModal = useToggleWalletModal()
 
@@ -253,10 +266,10 @@ export default function Pool() {
   return (
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
-        <PageWrapper>
+        <PageWrapper navBarFlag={navBarFlagEnabled}>
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="lg" style={{ width: '100%' }}>
-              <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <TitleRow padding={'0'}>
                 <ThemedText.LargeHeader>
                   <Trans>Pools</Trans>
                 </ThemedText.LargeHeader>

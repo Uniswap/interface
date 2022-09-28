@@ -19,7 +19,7 @@ export const MaxButton = styled.button<{ width: string }>`
   border: 1px solid ${({ theme }) => theme.deprecated_primary5};
   border-radius: 0.5rem;
   font-size: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding: 0.25rem 0.5rem;
   `};
   font-weight: 500;
@@ -58,6 +58,7 @@ export const Dots = styled.span`
 `
 
 export const LoadingRows = styled(BaseLoadingRows)`
+  padding-top: 48px;
   min-width: 75%;
   max-width: 960px;
   grid-column-gap: 0.5em;

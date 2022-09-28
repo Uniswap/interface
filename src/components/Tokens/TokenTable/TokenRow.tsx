@@ -1,19 +1,20 @@
 import { Trans } from '@lingui/macro'
 import { ParentSize } from '@visx/responsive'
-import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
-import { EventName } from 'components/AmplitudeAnalytics/constants'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName } from 'analytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
-import { useCurrency, useToken } from 'hooks/Tokens'
-import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
-import { useAtom } from 'jotai'
+import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
+import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
+import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode } from 'react'
+import { ForwardedRef, forwardRef } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
-import { Link } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import { Link, useParams } from 'react-router-dom'
+import styled, { css, useTheme } from 'styled-components/macro'
+import { ClickableStyle } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -24,17 +25,16 @@ import {
 } from '../constants'
 import { LoadingBubble } from '../loading'
 import {
-  favoritesAtom,
-  filterNetworkAtom,
   filterStringAtom,
   filterTimeAtom,
-  sortCategoryAtom,
-  sortDirectionAtom,
-  useSetSortCategory,
+  sortAscendingAtom,
+  sortMethodAtom,
+  useIsFavorited,
+  useSetSortMethod,
   useToggleFavorite,
 } from '../state'
-import { DATA_EMPTY, getDelta, PricePoint } from '../TokenDetails/PriceChart'
-import { Category, SortDirection } from '../types'
+import { useTokenLogoURI } from '../TokenDetails/ChartSection'
+import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 import { DISPLAYS } from './TimeSelector'
 
 const Cell = styled.div`
@@ -42,24 +42,44 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `
-const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean }>`
-  width: 100%;
-  height: 60px;
+const StyledTokenRow = styled.div<{
+  first?: boolean
+  last?: boolean
+  loading?: boolean
+  favoriteTokensEnabled?: boolean
+}>`
+  background-color: transparent;
   display: grid;
-  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr;
   font-size: 15px;
+  grid-template-columns: ${({ favoriteTokensEnabled }) =>
+    favoriteTokensEnabled ? '1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr' : '1fr 7fr 4fr 4fr 4fr 4fr 5fr'};
+  height: 60px;
   line-height: 24px;
-
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
   padding-top: ${({ first }) => (first ? '4px' : '0px')};
   padding-bottom: ${({ last }) => (last ? '4px' : '0px')};
   padding-left: 12px;
   padding-right: 12px;
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => css`background-color ${duration.medium} ${timing.ease}`};
+  width: 100%;
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
 
   &:hover {
-    background-color: ${({ theme }) => theme.accentActionSoft};
-    ${({ last }) => last && 'border-radius: 0px 0px 8px 8px;'}
+    ${({ loading, theme }) =>
+      !loading &&
+      css`
+        background-color: ${theme.hoverDefault};
+      `}
+    ${({ last }) =>
+      last &&
+      css`
+        border-radius: 0px 0px 8px 8px;
+      `}
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
@@ -97,6 +117,14 @@ export const ClickFavorited = styled.span`
   }
 `
 
+export const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
+  ${ClickableStyle}
+  height: 22px;
+  width: 24px;
+  color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
+  fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : 'transparent')};
+`
+
 const ClickableContent = styled.div`
   display: flex;
   text-decoration: none;
@@ -127,6 +155,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   line-height: 16px;
   padding: 0px 12px;
   width: 100%;
+  justify-content: center;
 
   &:hover {
     background-color: transparent;
@@ -136,9 +165,11 @@ const StyledHeaderRow = styled(StyledTokenRow)`
     justify-content: space-between;
   }
 `
-const ListNumberCell = styled(Cell)`
+
+const ListNumberCell = styled(Cell)<{ header: boolean }>`
   color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
+  height: ${({ header }) => (header ? '48px' : '60px')};
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
@@ -149,10 +180,11 @@ const DataCell = styled(Cell)<{ sortable: boolean }>`
   min-width: 80px;
   user-select: ${({ sortable }) => (sortable ? 'none' : 'unset')};
 
-  &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.white};
-    background-color: ${({ theme, sortable }) => sortable && theme.accentActionSoft};
-  }
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => css`background-color ${duration.medium} ${timing.ease}`};
 `
 const MarketCapCell = styled(DataCell)`
   padding-right: 8px;
@@ -200,6 +232,7 @@ const SortArrowCell = styled(Cell)`
 `
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
+  ${ClickableStyle}
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
   height: 100%;
@@ -246,6 +279,7 @@ const TokenName = styled.div`
 `
 const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.textTertiary};
+  text-transform: uppercase;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     font-size: 12px;
@@ -277,27 +311,28 @@ const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
-const L2NetworkLogo = styled.div<{ networkUrl?: string }>`
-  height: 12px;
-  width: 12px;
+export const L2NetworkLogo = styled.div<{ networkUrl?: string; size?: string }>`
+  height: ${({ size }) => size ?? '12px'};
+  width: ${({ size }) => size ?? '12px'};
   position: absolute;
   left: 50%;
   top: 50%;
   background: url(${({ networkUrl }) => networkUrl});
   background-repeat: no-repeat;
-  background-size: 12px 12px;
+  background-size: ${({ size }) => (size ? `${size} ${size}` : '12px 12px')};
   display: ${({ networkUrl }) => !networkUrl && 'none'};
 `
-const LogoContainer = styled.div`
+export const LogoContainer = styled.div`
   position: relative;
   align-items: center;
   display: flex;
 `
 
 /* formatting for volume with timeframe header display */
-function getHeaderDisplay(category: string, timeframe: TimePeriod): string {
-  if (category === Category.volume) return `${DISPLAYS[timeframe]} ${category}`
-  return category
+function getHeaderDisplay(method: string, timeframe: TimePeriod): string {
+  if (method === TokenSortMethod.VOLUME || method === TokenSortMethod.PERCENT_CHANGE)
+    return `${DISPLAYS[timeframe]} ${method}`
+  return method
 }
 
 /* Get singular header cell for header row */
@@ -305,20 +340,20 @@ function HeaderCell({
   category,
   sortable,
 }: {
-  category: Category // TODO: change this to make it work for trans
+  category: TokenSortMethod // TODO: change this to make it work for trans
   sortable: boolean
 }) {
   const theme = useTheme()
-  const sortDirection = useAtomValue<SortDirection>(sortDirectionAtom)
-  const handleSortCategory = useSetSortCategory(category)
-  const sortCategory = useAtomValue<Category>(sortCategoryAtom)
-  const timeframe = useAtomValue<TimePeriod>(filterTimeAtom)
+  const sortAscending = useAtomValue(sortAscendingAtom)
+  const handleSortCategory = useSetSortMethod(category)
+  const sortMethod = useAtomValue(sortMethodAtom)
+  const timeframe = useAtomValue(filterTimeAtom)
 
-  if (sortCategory === category) {
+  if (sortMethod === category) {
     return (
       <HeaderCellWrapper onClick={handleSortCategory}>
         <SortArrowCell>
-          {sortDirection === SortDirection.increasing ? (
+          {sortAscending ? (
             <ArrowUp size={14} color={theme.accentActive} />
           ) : (
             <ArrowDown size={14} color={theme.accentActive} />
@@ -343,9 +378,8 @@ function HeaderCell({
 
 /* Token Row: skeleton row component */
 export function TokenRow({
-  address,
-  header,
   favorited,
+  header,
   listNumber,
   tokenInfo,
   price,
@@ -353,37 +387,38 @@ export function TokenRow({
   marketCap,
   volume,
   sparkLine,
-  first,
-  last,
+  ...rest
 }: {
-  address: ReactNode
-  header: boolean
   favorited: ReactNode
+  first?: boolean
+  header: boolean
   listNumber: ReactNode
-  tokenInfo: ReactNode
+  loading?: boolean
+  marketCap: ReactNode
   price: ReactNode
   percentChange: ReactNode
-  marketCap: ReactNode
-  volume: ReactNode
   sparkLine: ReactNode
-  first?: boolean
+  tokenInfo: ReactNode
+  volume: ReactNode
   last?: boolean
+  style?: CSSProperties
 }) {
+  const favoriteTokensEnabled = useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled
   const rowCells = (
     <>
-      <ListNumberCell>{listNumber}</ListNumberCell>
+      <ListNumberCell header={header}>{listNumber}</ListNumberCell>
       <NameCell>{tokenInfo}</NameCell>
       <PriceCell sortable={header}>{price}</PriceCell>
       <PercentChangeCell sortable={header}>{percentChange}</PercentChangeCell>
       <MarketCapCell sortable={header}>{marketCap}</MarketCapCell>
       <VolumeCell sortable={header}>{volume}</VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
-      <FavoriteCell>{favorited}</FavoriteCell>
+      {favoriteTokensEnabled && <FavoriteCell>{favorited}</FavoriteCell>}
     </>
   )
-  if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
+  if (header) return <StyledHeaderRow favoriteTokensEnabled={favoriteTokensEnabled}>{rowCells}</StyledHeaderRow>
   return (
-    <StyledTokenRow first={first} last={last}>
+    <StyledTokenRow favoriteTokensEnabled={favoriteTokensEnabled} {...rest}>
       {rowCells}
     </StyledTokenRow>
   )
@@ -393,15 +428,14 @@ export function TokenRow({
 export function HeaderRow() {
   return (
     <TokenRow
-      address={null}
       header={true}
       favorited={null}
       listNumber="#"
       tokenInfo={<Trans>Token Name</Trans>}
-      price={<HeaderCell category={Category.price} sortable />}
-      percentChange={<HeaderCell category={Category.percentChange} sortable />}
-      marketCap={<HeaderCell category={Category.marketCap} sortable />}
-      volume={<HeaderCell category={Category.volume} sortable />}
+      price={<HeaderCell category={TokenSortMethod.PRICE} sortable />}
+      percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} sortable />}
+      marketCap={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} sortable />}
+      volume={<HeaderCell category={TokenSortMethod.VOLUME} sortable />}
       sparkLine={null}
     />
   )
@@ -411,10 +445,10 @@ export function HeaderRow() {
 export function LoadingRow() {
   return (
     <TokenRow
-      address={null}
-      header={false}
       favorited={null}
+      header={false}
       listNumber={<SmallLoadingBubble />}
+      loading
       tokenInfo={
         <>
           <IconLoadingBubble />
@@ -430,123 +464,121 @@ export function LoadingRow() {
   )
 }
 
-/* Loaded State: row component with token information */
-export default function LoadedRow({
-  tokenAddress,
-  tokenListIndex,
-  tokenListLength,
-  tokenData,
-  timePeriod,
-}: {
-  tokenAddress: string
+interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
-  tokenData: TokenData
-  timePeriod: TimePeriod
-}) {
-  const token = useToken(tokenAddress)
-  const currency = useCurrency(tokenAddress)
-  const tokenName = token?.name ?? ''
-  const tokenSymbol = token?.symbol ?? ''
-  const theme = useTheme()
-  const [favoriteTokens] = useAtom(favoritesAtom)
-  const isFavorited = favoriteTokens.includes(tokenAddress)
+  token: NonNullable<TopToken>
+}
+
+/* Loaded State: row component with token information */
+export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HTMLDivElement>) => {
+  const { tokenListIndex, tokenListLength, token } = props
+  const tokenAddress = token.address
+  const tokenName = token.name
+  const tokenSymbol = token.symbol
+  const isFavorited = useIsFavorited(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
-  const filterNetwork = useAtomValue(filterNetworkAtom)
-  const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
 
-  // TODO: make delta shareable and fix based on future changes
-  const pricePoints: PricePoint[] = useTokenPriceQuery(tokenAddress, timePeriod, 'ETHEREUM').filter(
-    (p): p is PricePoint => Boolean(p && p.value)
-  )
-  const hasData = pricePoints.length !== 0
-
-  /* TODO: Implement API calls & cache to use here */
-  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
-  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
-  const [delta, arrow] = getDelta(startingPrice.value, endingPrice.value)
+  const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
+  const filterNetwork = lowercaseChainName.toUpperCase()
+  const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[filterNetwork]).circleLogoUrl
+  const timePeriod = useAtomValue(filterTimeAtom)
+  const delta = token.market?.pricePercentChange?.value
+  const arrow = delta ? getDeltaArrow(delta) : null
+  const formattedDelta = delta ? formatDelta(delta) : null
+  const sortAscending = useAtomValue(sortAscendingAtom)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
     token_address: tokenAddress,
-    token_symbol: token?.symbol,
+    token_symbol: tokenSymbol,
     token_list_index: tokenListIndex,
     token_list_length: tokenListLength,
     time_frame: timePeriod,
     search_token_address_input: filterString,
   }
 
-  const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <StyledLink
-      to={`/tokens/${tokenAddress}`}
-      onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
-    >
-      <TokenRow
-        address={tokenAddress}
-        header={false}
-        favorited={
-          <ClickFavorited
-            onClick={(e) => {
-              e.preventDefault()
-              toggleFavorite()
-            }}
-          >
-            <Heart size={18} color={heartColor} fill={heartColor} />
-          </ClickFavorited>
-        }
-        listNumber={tokenListIndex + 1}
-        tokenInfo={
-          <ClickableName>
-            <LogoContainer>
-              <CurrencyLogo currency={currency} />
-              <L2NetworkLogo networkUrl={L2Icon} />
-            </LogoContainer>
-            <TokenInfoCell>
-              <TokenName>{tokenName}</TokenName>
-              <TokenSymbol>{tokenSymbol}</TokenSymbol>
-            </TokenInfoCell>
-          </ClickableName>
-        }
-        price={
-          <ClickableContent>
-            <PriceInfoCell>
-              {tokenData.price?.value ? formatDollarAmount(tokenData.price?.value) : '-'}
-              <PercentChangeInfoCell>
-                {delta}
-                {arrow}
-              </PercentChangeInfoCell>
-            </PriceInfoCell>
-          </ClickableContent>
-        }
-        percentChange={
-          <ClickableContent>
-            {delta}
-            {arrow}
-          </ClickableContent>
-        }
-        marketCap={
-          <ClickableContent>
-            {tokenData.marketCap?.value ? formatDollarAmount(tokenData.marketCap?.value) : '-'}
-          </ClickableContent>
-        }
-        volume={
-          <ClickableContent>
-            {tokenData.volume?.[timePeriod]?.value
-              ? formatDollarAmount(tokenData.volume?.[timePeriod]?.value ?? undefined)
-              : '-'}
-          </ClickableContent>
-        }
-        sparkLine={
-          <SparkLine>
-            <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>
-          </SparkLine>
-        }
-        first={tokenListIndex === 0}
-        last={tokenListIndex === tokenListLength - 1}
-      />
-    </StyledLink>
+    <div ref={ref}>
+      <StyledLink
+        to={getTokenDetailsURL(token.address, token.chain)}
+        onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
+      >
+        <TokenRow
+          header={false}
+          favorited={
+            <ClickFavorited
+              onClick={(e) => {
+                e.preventDefault()
+                toggleFavorite()
+              }}
+            >
+              <FavoriteIcon isFavorited={isFavorited} />
+            </ClickFavorited>
+          }
+          listNumber={sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1}
+          tokenInfo={
+            <ClickableName>
+              <LogoContainer>
+                <CurrencyLogo src={useTokenLogoURI(token)} symbol={tokenSymbol} />
+                <L2NetworkLogo networkUrl={L2Icon} />
+              </LogoContainer>
+              <TokenInfoCell>
+                <TokenName>{tokenName}</TokenName>
+                <TokenSymbol>{tokenSymbol}</TokenSymbol>
+              </TokenInfoCell>
+            </ClickableName>
+          }
+          price={
+            <ClickableContent>
+              <PriceInfoCell>
+                {token.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
+                <PercentChangeInfoCell>
+                  {formattedDelta}
+                  {arrow}
+                </PercentChangeInfoCell>
+              </PriceInfoCell>
+            </ClickableContent>
+          }
+          percentChange={
+            <ClickableContent>
+              {formattedDelta ?? '-'}
+              {arrow}
+            </ClickableContent>
+          }
+          marketCap={
+            <ClickableContent>
+              {token.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
+            </ClickableContent>
+          }
+          volume={
+            <ClickableContent>
+              {token.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
+            </ClickableContent>
+          }
+          sparkLine={
+            <SparkLine>
+              <ParentSize>
+                {({ width, height }) => (
+                  <SparklineChart
+                    width={width}
+                    height={height}
+                    tokenData={token}
+                    pricePercentChange={token.market?.pricePercentChange?.value}
+                    timePeriod={timePeriod}
+                  />
+                )}
+              </ParentSize>
+            </SparkLine>
+          }
+          first={tokenListIndex === 0}
+          last={tokenListIndex === tokenListLength - 1}
+        />
+      </StyledLink>
+    </div>
   )
-}
+})
+
+LoadedRow.displayName = 'LoadedRow'

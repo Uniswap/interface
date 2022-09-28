@@ -26,10 +26,6 @@ declare module 'multihashes' {
   declare function toB58String(hash: Uint8Array): string
 }
 
-declare module 'd3-curve-circlecorners' {
-  declare function radius(r: number): d3.CurveFactory
-}
-
 declare module 'babel-plugin-relay/macro' {
   export { graphql as default } from 'react-relay'
 }

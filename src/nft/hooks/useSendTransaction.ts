@@ -2,7 +2,7 @@ import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexStripZeros } from '@ethersproject/bytes'
 import { ContractReceipt } from '@ethersproject/contracts'
-import { JsonRpcSigner } from '@ethersproject/providers'
+import type { JsonRpcSigner } from '@ethersproject/providers'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -11,14 +11,6 @@ import ERC1155 from '../../abis/erc1155.json'
 import CryptoPunksMarket from '../abis/CryptoPunksMarket.json'
 import { GenieAsset, RouteResponse, RoutingItem, TxResponse, TxStateType, UpdatedGenieAsset } from '../types'
 import { combineBuyItemsWithTxRoute } from '../utils/txRoute/combineItemsWithTxRoute'
-
-// Shortens a given txHash. With standard charsToShorten var of 4, a hash will become 0x1234...1234
-export const shortenTxHash = (txHash: string, charsToShorten = 4, addCharsToBack = 0): string => {
-  return `${txHash.substring(0, charsToShorten + 2)}...${txHash.substring(
-    txHash.length - charsToShorten,
-    txHash.length - (charsToShorten + addCharsToBack)
-  )}`
-}
 
 interface TxState {
   state: TxStateType

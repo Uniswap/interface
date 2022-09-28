@@ -1,6 +1,9 @@
+import { useWeb3React } from '@web3-react/core'
+import { UNI_ADDRESS } from 'constants/addresses'
 import { TransactionInfo, TransactionType } from 'state/transactions/types'
 import styled, { css } from 'styled-components/macro'
 
+import { nativeOnChain } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import CurrencyLogo from '../CurrencyLogo'
 
@@ -32,22 +35,38 @@ interface CurrencyPair {
   currencyId1: string | undefined
 }
 
-const getCurrency = ({ info }: { info: TransactionInfo }): CurrencyPair => {
+const getCurrency = ({ info, chainId }: { info: TransactionInfo; chainId: number | undefined }): CurrencyPair => {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
     case TransactionType.REMOVE_LIQUIDITY_V3:
+    case TransactionType.CREATE_V3_POOL:
       const { baseCurrencyId, quoteCurrencyId } = info
       return { currencyId0: baseCurrencyId, currencyId1: quoteCurrencyId }
     case TransactionType.SWAP:
       const { inputCurrencyId, outputCurrencyId } = info
       return { currencyId0: inputCurrencyId, currencyId1: outputCurrencyId }
+    case TransactionType.WRAP:
+      const { unwrapped } = info
+      const native = info.chainId ? nativeOnChain(info.chainId) : undefined
+      const base = 'ETH'
+      const wrappedCurrency = native?.wrapped.address ?? 'WETH'
+      return { currencyId0: unwrapped ? wrappedCurrency : base, currencyId1: unwrapped ? base : wrappedCurrency }
+    case TransactionType.COLLECT_FEES:
+      const { currencyId0, currencyId1 } = info
+      return { currencyId0, currencyId1 }
+    case TransactionType.APPROVAL:
+      return { currencyId0: info.tokenAddress, currencyId1: undefined }
+    case TransactionType.CLAIM:
+      const uniAddress = chainId ? UNI_ADDRESS[chainId] : undefined
+      return { currencyId0: uniAddress, currencyId1: undefined }
     default:
       return { currencyId0: undefined, currencyId1: undefined }
   }
 }
 
 const LogoView = ({ info }: { info: TransactionInfo }) => {
-  const { currencyId0, currencyId1 } = getCurrency({ info })
+  const { chainId } = useWeb3React()
+  const { currencyId0, currencyId1 } = getCurrency({ info, chainId })
   const currency0 = useCurrency(currencyId0)
   const currency1 = useCurrency(currencyId1)
   const isCentered = !(currency0 && currency1)

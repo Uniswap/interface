@@ -5,7 +5,24 @@ const Menu = styled.div`
   width: 100%;
   height: 100%;
   font-size: 16px;
-  overflow-y: scroll;
+  overflow: auto;
+
+  // Firefox scrollbar styling
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
+
+  // safari and chrome scrollbar styling
+  ::-webkit-scrollbar {
+    background: transparent;
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    margin-top: 40px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.backgroundOutline};
+    border-radius: 8px;
+  }
 `
 
 const Header = styled.span`
@@ -25,8 +42,12 @@ const ClearAll = styled.div`
   margin-bottom: auto;
 
   :hover {
-    opacity: 0.6;
-    transition: 250ms opacity ease;
+    opacity: ${({ theme }) => theme.opacity.hover};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast} opacity ${timing.in}`};
   }
 `
 
@@ -35,19 +56,24 @@ const StyledChevron = styled(ChevronLeft)`
 
   &:hover {
     color: ${({ theme }) => theme.textPrimary};
-    transition: 250ms color ease;
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast} color ${timing.in}`};
   }
 `
 
 const BackSection = styled.div`
   position: absolute;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  width: 100%;
+  width: 99%;
   padding: 0 16px 16px 16px;
   color: ${({ theme }) => theme.textSecondary};
   cursor: default;
   display: flex;
   justify-content: space-between;
+  z-index: 1;
 `
 
 const BackSectionContainer = styled.div`
@@ -75,8 +101,8 @@ export const SlideOutMenu = ({
   <Menu>
     <BackSection>
       <BackSectionContainer>
-        <StyledChevron onClick={onClose} size={24} />
-        <Header>{title}</Header>
+        <StyledChevron data-testid="wallet-back" onClick={onClose} size={24} />
+        <Header data-testid="wallet-header">{title}</Header>
         {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
       </BackSectionContainer>
     </BackSection>

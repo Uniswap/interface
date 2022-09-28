@@ -1,10 +1,10 @@
 import { Group } from '@visx/group'
 import { LinePath } from '@visx/shape'
 import { CurveFactory } from 'd3'
-import { radius } from 'd3-curve-circlecorners'
 import React from 'react'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring/web'
+import { useTheme } from 'styled-components'
 import { Color } from 'theme/styled'
 
 interface LineChartProps<T> {
@@ -12,7 +12,7 @@ interface LineChartProps<T> {
   getX: (t: T) => number
   getY: (t: T) => number
   marginTop?: number
-  curve?: CurveFactory
+  curve: CurveFactory
   color?: Color
   strokeWidth: number
   children?: ReactNode
@@ -54,10 +54,19 @@ function LineChart<T>({
     }
   }, [effectDependency])
 
+  const theme = useTheme()
+
   return (
     <svg width={width} height={height} onClick={() => setShouldAnimate(true)}>
       <Group top={marginTop}>
-        <LinePath curve={curve ?? radius(0.25)} x={getX} y={getY}>
+        <LinePath
+          curve={curve}
+          stroke={color ?? theme.accentAction}
+          strokeWidth={strokeWidth}
+          data={data}
+          x={getX}
+          y={getY}
+        >
           {({ path }) => {
             const d = path(data) || ''
             return (

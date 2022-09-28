@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { useModalIsOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -17,7 +18,16 @@ const WalletWrapper = styled.div`
   top: 60px;
   right: 70px;
   background-color: ${({ theme }) => theme.backgroundSurface};
+  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  box-shadow: ${({ theme }) => theme.deepShadow};
   padding: 16px 0;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 100%;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    box-shadow: unset;
+  }
 `
 
 export enum MenuState {
@@ -27,17 +37,16 @@ export enum MenuState {
 }
 
 const WalletDropdownWrapper = styled.div`
-  position: absolute;
+  position: fixed;
+  top: 72px;
+  right: 20px;
+  z-index: ${Z_INDEX.dropdown};
 
-  @media only screen and (min-width: 1280px) {
-    top: 65px;
-    right: 20px;
-  }
-
-  @media only screen and (max-width: 1280px) {
-    left: 50%;
-    bottom: 45px;
-    transform: translateX(-50%);
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    top: unset;
+    left: 0;
+    right: 0;
+    bottom: 56px;
   }
 `
 

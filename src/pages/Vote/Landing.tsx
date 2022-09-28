@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
+import { PageName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
@@ -13,6 +13,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
 import { useState } from 'react'
@@ -32,10 +33,16 @@ import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
 
-const PageWrapper = styled(AutoColumn)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0px 8px;
-  `};
+const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
+  padding-top: ${({ navBarFlag }) => (navBarFlag ? '68px' : '0px')};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
 `
 
 const TopSection = styled(AutoColumn)`
@@ -66,7 +73,7 @@ const Proposal = styled(Button)`
 `
 
 const ProposalNumber = styled.span`
-  opacity: 0.6;
+  opacity: ${({ theme }) => theme.opacity.hover};
   flex: 0 0 40px;
 `
 
@@ -86,7 +93,7 @@ const VoteCard = styled(DataCard)`
 
 const WrapSmall = styled(RowBetween)`
   margin-bottom: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-wrap: wrap;
   `};
 `
@@ -113,6 +120,8 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export default function Landing() {
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const theme = useTheme()
   const { account, chainId } = useWeb3React()
 
@@ -140,7 +149,7 @@ export default function Landing() {
   return (
     <>
       <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
-        <PageWrapper gap="lg" justify="center">
+        <PageWrapper gap="lg" justify="center" navBarFlag={navBarFlagEnabled}>
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}

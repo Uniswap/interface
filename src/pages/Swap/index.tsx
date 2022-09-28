@@ -2,16 +2,16 @@ import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
-import { ElementName, Event, EventName, PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { sendAnalyticsEvent } from 'analytics'
+import { ElementName, Event, EventName, PageName, SectionName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
+import { TraceEvent } from 'analytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
   formatToDecimal,
   getDurationFromDateMilliseconds,
   getTokenAddress,
-} from 'components/AmplitudeAnalytics/utils'
+} from 'analytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
@@ -20,6 +20,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -38,8 +39,7 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import CurrencyLogo from '../../components/CurrencyLogo'
+import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import Loader from '../../components/Loader'
 import { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -150,6 +150,8 @@ const TRADE_STRING = 'SwapRouter'
 
 export default function Swap() {
   const navigate = useNavigate()
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const { account, chainId } = useWeb3React()
@@ -238,11 +240,8 @@ export default function Swap() {
     [trade, tradeState]
   )
 
-  // show price estimates based on wrap trade
-  const inputValue = showWrap ? parsedAmount : trade?.inputAmount
-  const outputValue = showWrap ? parsedAmount : trade?.outputAmount
-  const fiatValueInput = useStablecoinValue(inputValue)
-  const fiatValueOutput = useStablecoinValue(outputValue)
+  const fiatValueInput = useStablecoinValue(parsedAmounts[Field.INPUT])
+  const fiatValueOutput = useStablecoinValue(parsedAmounts[Field.OUTPUT])
   const stablecoinPriceImpact = useMemo(
     () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
@@ -510,6 +509,7 @@ export default function Swap() {
             secondTokenAddress={importTokensNotInDefault[1]?.address}
             onContinue={handleConfirmTokenWarning}
             onCancel={handleDismissTokenWarning}
+            showCancel={true}
           />
         ) : (
           <TokenWarningModal
@@ -519,7 +519,7 @@ export default function Swap() {
             onDismiss={handleDismissTokenWarning}
           />
         )}
-        <PageWrapper redesignFlag={redesignFlagEnabled}>
+        <PageWrapper redesignFlag={redesignFlagEnabled} navBarFlag={navBarFlagEnabled}>
           <SwapWrapper id="swap-page" redesignFlag={redesignFlagEnabled}>
             <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
@@ -535,13 +535,15 @@ export default function Swap() {
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
               swapQuoteReceivedDate={swapQuoteReceivedDate}
+              fiatValueInput={fiatValueInput}
+              fiatValueOutput={fiatValueOutput}
             />
 
             <AutoColumn gap={'0px'}>
               <div style={{ display: 'relative' }}>
                 <TopInputWrapper redesignFlag={redesignFlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
-                    <CurrencyInputPanel
+                    <SwapCurrencyInputPanel
                       label={
                         independentField === Field.OUTPUT && !showWrap ? (
                           <Trans>From (at most)</Trans>
@@ -606,7 +608,7 @@ export default function Swap() {
                 <AutoColumn gap={redesignFlagEnabled ? '0px' : '8px'}>
                   <BottomInputWrapper redesignFlag={redesignFlagEnabled}>
                     <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
-                      <CurrencyInputPanel
+                      <SwapCurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
                         onUserInput={handleTypeOutput}
                         label={
@@ -702,11 +704,6 @@ export default function Swap() {
                           >
                             <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
                               <span style={{ display: 'flex', alignItems: 'center' }}>
-                                <CurrencyLogo
-                                  currency={currencies[Field.INPUT]}
-                                  size={'20px'}
-                                  style={{ marginRight: '8px', flexShrink: 0 }}
-                                />
                                 {/* we need to shorten this string on mobile */}
                                 {approvalState === ApprovalState.APPROVED ||
                                 signatureState === UseERC20PermitState.SIGNED ? (

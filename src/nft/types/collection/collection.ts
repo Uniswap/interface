@@ -34,16 +34,25 @@ export type CollectionSort = Record<
   'asc' | 'desc' | 1 | -1 | { $gte?: string | number; $lte?: string | number } | string | number
 >
 
-export enum UniformHeight {
+export enum UniformHeights {
   unset,
   notUniform,
 }
+
+export type UniformHeight = UniformHeights | number
 
 export enum ActivityEventType {
   Listing = 'LISTING',
   Sale = 'SALE',
   CancelListing = 'CANCEL_LISTING',
   Transfer = 'TRANSFER',
+}
+
+export enum ActivityEventTypeDisplay {
+  'LISTING' = 'Listed',
+  'SALE' = 'Sold',
+  'TRANSFER' = 'Transferred',
+  'CANCEL_LISTING' = 'Cancelled',
 }
 
 export enum OrderStatus {

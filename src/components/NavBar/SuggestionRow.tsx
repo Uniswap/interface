@@ -1,17 +1,17 @@
 import clsx from 'clsx'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { vars } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
-// import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
 import { FungibleToken, GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { TokenWarningRedIcon, VerifiedIcon } from '../../nft/components/icons'
+import { VerifiedIcon } from '../../nft/components/icons'
 import * as styles from './SearchBar.css'
 
 interface CollectionRowProps {
@@ -79,14 +79,14 @@ export const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOp
           <Box className={styles.secondaryText}>{putCommas(collection.stats.total_supply)} items</Box>
         </Column>
       </Row>
-      {collection.floorPrice && (
+      {collection.floorPrice ? (
         <Column className={styles.suggestionSecondaryContainer}>
           <Row gap="4">
             <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.floorPrice)} ETH</Box>
           </Row>
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>
-      )}
+      ) : null}
     </Link>
   )
 }
@@ -112,12 +112,13 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
     toggleOpen()
   }, [addToSearchHistory, toggleOpen, token])
 
+  const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'Enter' && isHovered) {
         event.preventDefault()
-        navigate(`/tokens/${token.address}`)
+        navigate(tokenDetailsPath)
         handleClick()
       }
     }
@@ -125,11 +126,11 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
     return () => {
       document.removeEventListener('keydown', keyDownHandler)
     }
-  }, [toggleOpen, isHovered, token, navigate, handleClick])
+  }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
 
   return (
     <Link
-      to={`/tokens/${token.address}`}
+      to={tokenDetailsPath}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
@@ -152,11 +153,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            {token.onDefaultList ? (
-              <VerifiedIcon className={styles.suggestionIcon} />
-            ) : (
-              <TokenWarningRedIcon className={styles.suggestionIcon} />
-            )}
+            {token.onDefaultList && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>
@@ -180,13 +177,21 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
 
 export const SkeletonRow = () => {
   return (
-    <Box className={styles.searchBarDropdown}>
-      <Row className={styles.suggestionRow}>
-        <Row>
-          <Box className={styles.imageHolder} />
-          <Box borderRadius="round" height="16" width="160" background="loading" />
-        </Row>
+    <Row className={styles.suggestionRow}>
+      <Row width="full">
+        <Box className={styles.imageHolder} />
+        <Column gap="4" width="full">
+          <Row justifyContent="space-between">
+            <Box borderRadius="round" height="20" background="backgroundModule" style={{ width: '180px' }} />
+            <Box borderRadius="round" height="20" width="48" background="backgroundModule" />
+          </Row>
+
+          <Row justifyContent="space-between">
+            <Box borderRadius="round" height="16" width="120" background="backgroundModule" />
+            <Box borderRadius="round" height="16" width="48" background="backgroundModule" />
+          </Row>
+        </Column>
       </Row>
-    </Box>
+    </Row>
   )
 }

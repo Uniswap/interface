@@ -1,13 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { TransactionResponse } from '@ethersproject/providers'
+import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -78,6 +80,8 @@ import {
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function AddLiquidity() {
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const navigate = useNavigate()
   const {
     currencyIdA,
@@ -87,6 +91,9 @@ export default function AddLiquidity() {
   } = useParams<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>()
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+
   const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
@@ -159,6 +166,7 @@ export default function AddLiquidity() {
 
   useEffect(() => {
     if (
+      parsedQs.minPrice &&
       typeof parsedQs.minPrice === 'string' &&
       parsedQs.minPrice !== leftRangeTypedValue &&
       !isNaN(parsedQs.minPrice as any)
@@ -167,6 +175,7 @@ export default function AddLiquidity() {
     }
 
     if (
+      parsedQs.maxPrice &&
       typeof parsedQs.maxPrice === 'string' &&
       parsedQs.maxPrice !== rightRangeTypedValue &&
       !isNaN(parsedQs.maxPrice as any)
@@ -505,7 +514,7 @@ export default function AddLiquidity() {
 
   return (
     <>
-      <ScrollablePage>
+      <ScrollablePage navBarFlag={navBarFlagEnabled}>
         <TransactionConfirmationModal
           isOpen={showConfirm}
           onDismiss={handleDismissConfirmation}
@@ -875,6 +884,7 @@ export default function AddLiquidity() {
                                     marginRight="8px"
                                     $borderRadius="8px"
                                     width="auto"
+                                    redesignFlag={redesignFlagEnabled}
                                     onClick={() => {
                                       setShowCapitalEfficiencyWarning(false)
                                       getSetFullRange()

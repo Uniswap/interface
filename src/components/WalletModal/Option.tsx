@@ -1,5 +1,5 @@
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import React from 'react'
 import { Check } from 'react-feather'
@@ -30,7 +30,7 @@ const CheckIcon = styled(Check)`
   align-items: center;
   justify-content: center;
   color: ${({ theme }) => theme.accentAction};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     align-items: flex-end;
   `};
 `
@@ -112,7 +112,7 @@ const IconWrapperDeprecated = styled.div<{ size?: number | null }>`
     height: ${({ size }) => (size ? size + 'px' : '24px')};
     width: ${({ size }) => (size ? size + 'px' : '24px')};
   }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     align-items: flex-end;
   `};
 `
@@ -127,7 +127,7 @@ const IconWrapper = styled.div<{ size?: number | null }>`
     height: ${({ size }) => (size ? size + 'px' : '28px')};
     width: ${({ size }) => (size ? size + 'px' : '28px')};
   }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     align-items: flex-end;
   `};
 `

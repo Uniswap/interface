@@ -1,23 +1,28 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { Portal } from 'nft/components/common/Portal'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo, useRef } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
-import styled, { css } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useModalIsOpen, useToggleWalletDropdown, useToggleWalletModal } from '../../state/application/hooks'
-import { useCloseModal } from '../../state/application/hooks'
+import {
+  useCloseModal,
+  useModalIsOpen,
+  useToggleWalletDropdown,
+  useToggleWalletModal,
+} from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
@@ -28,12 +33,15 @@ import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 
+// https://stackoverflow.com/a/31617326
+const FULL_BORDER_RADIUS = 9999
+
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   align-items: center;
   padding: 0.5rem;
-  border-radius: 14px;
+  border-radius: ${FULL_BORDER_RADIUS}px;
   cursor: pointer;
   user-select: none;
   height: 36px;
@@ -54,10 +62,26 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   }
 `
 
+const Web3StatusConnectButton = styled.button<{ faded?: boolean }>`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  background-color: ${({ theme }) => theme.accentActionSoft};
+  border-radius: ${FULL_BORDER_RADIUS}px;
+  border: none;
+  cursor: pointer;
+  padding: 0 12px;
+  height: 40px;
+
+  :hover,
+  :active,
+  :focus {
+    border: none;
+  }
+`
+
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   background-color: ${({ theme }) => theme.deprecated_primary4};
   border: none;
-
   color: ${({ theme }) => theme.deprecated_primaryText1};
   font-weight: 500;
 
@@ -130,6 +154,34 @@ function Sock() {
   )
 }
 
+const VerticalDivider = styled.div`
+  height: 20px;
+  margin: 0px 4px;
+  width: 1px;
+  background-color: ${({ theme }) => theme.accentAction};
+`
+
+const StyledConnect = styled.div`
+  color: ${({ theme }) => theme.accentAction};
+  font-weight: 600;
+  font-size: 16px;
+  margin-right: 8px;
+
+  &:hover {
+    color: ${({ theme }) => theme.accentActionSoft};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast} color ${timing.in}`};
+  }
+`
+
+const CHEVRON_PROPS = {
+  height: 20,
+  width: 20,
+}
+
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
   const connectionType = getConnection(connector).type
@@ -138,9 +190,11 @@ function Web3StatusInner() {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
-  const navbarFlag = useNavBarFlag()
+  const navbarFlagEnabled = useNavBarFlag() === NavBarVariant.Enabled
+  const theme = useTheme()
   const toggleWalletDropdown = useToggleWalletDropdown()
   const toggleWalletModal = useToggleWalletModal()
+  const walletIsOpen = useIsOpen()
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
@@ -155,7 +209,7 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const toggleWallet = navbarFlag === NavBarVariant.Enabled ? toggleWalletDropdown : toggleWalletModal
+  const toggleWallet = navbarFlagEnabled ? toggleWalletDropdown : toggleWalletModal
 
   if (!chainId) {
     return null
@@ -169,8 +223,13 @@ function Web3StatusInner() {
       </Web3StatusError>
     )
   } else if (account) {
+    const chevronProps = {
+      ...CHEVRON_PROPS,
+      color: theme.textSecondary,
+    }
     return (
       <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
+        {navbarFlagEnabled && !hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -180,14 +239,27 @@ function Web3StatusInner() {
           </RowBetween>
         ) : (
           <>
-            {hasSocks ? <Sock /> : null}
+            {hasSocks && !navbarFlagEnabled ? <Sock /> : null}
             <Text>{ENSName || shortenAddress(account)}</Text>
+            {navbarFlagEnabled ? (
+              walletIsOpen ? (
+                <ChevronUp {...chevronProps} />
+              ) : (
+                <ChevronDown {...chevronProps} />
+              )
+            ) : null}
           </>
         )}
-        {!hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
+        {!navbarFlagEnabled && !hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
       </Web3StatusConnected>
     )
   } else {
+    const chevronProps = {
+      ...CHEVRON_PROPS,
+      color: theme.accentAction,
+      'data-testid': 'navbar-wallet-dropdown',
+      onClick: toggleWalletDropdown,
+    }
     return (
       <TraceEvent
         events={[Event.onClick]}
@@ -195,11 +267,21 @@ function Web3StatusInner() {
         properties={{ received_swap_quote: validSwapQuote }}
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
-        <Web3StatusConnect onClick={toggleWallet} faded={!account}>
-          <Text>
-            <Trans>Connect Wallet</Trans>
-          </Text>
-        </Web3StatusConnect>
+        {navbarFlagEnabled ? (
+          <Web3StatusConnectButton faded={!account}>
+            <StyledConnect data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
+              <Trans>Connect</Trans>
+            </StyledConnect>
+            <VerticalDivider />
+            {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+          </Web3StatusConnectButton>
+        ) : (
+          <Web3StatusConnect onClick={toggleWallet} faded={!account}>
+            <Text>
+              <Trans>Connect Wallet</Trans>
+            </Text>
+          </Web3StatusConnect>
+        )}
       </TraceEvent>
     )
   }
@@ -217,10 +299,11 @@ export default function Web3Status() {
 
   const allTransactions = useAllTransactions()
   const ref = useRef<HTMLDivElement>(null)
+  const walletRef = useRef<HTMLDivElement>(null)
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
   const isOpen = useIsOpen()
 
-  useOnClickOutside(ref, isOpen ? closeModal : undefined)
+  useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
@@ -234,7 +317,11 @@ export default function Web3Status() {
     <span ref={ref}>
       <Web3StatusInner />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
-      <WalletDropdown />
+      <Portal>
+        <span ref={walletRef}>
+          <WalletDropdown />
+        </span>
+      </Portal>
     </span>
   )
 }

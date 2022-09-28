@@ -23,14 +23,14 @@ export const baseActivitySwitcherToggle = style([
 export const activitySwitcherToggle = style([
   baseActivitySwitcherToggle,
   sprinkles({
-    color: 'darkGray',
+    color: 'textSecondary',
   }),
 ])
 
 export const selectedActivitySwitcherToggle = style([
   baseActivitySwitcherToggle,
   sprinkles({
-    color: 'blackBlue',
+    color: 'textPrimary',
   }),
   {
     ':after': {
@@ -45,3 +45,9 @@ export const selectedActivitySwitcherToggle = style([
     },
   },
 ])
+
+export const noCollectionAssets = sprinkles({
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '40',
+})

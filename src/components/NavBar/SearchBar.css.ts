@@ -3,20 +3,38 @@ import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
-const DESKTOP_NAVBAR_WIDTH = '360px'
+const DESKTOP_NAVBAR_WIDTH = 360
+const MAGNIFYING_GLASS_ICON_WIDTH = 28
 
 const baseSearchStyle = style([
   sprinkles({
     paddingY: '12',
-    width: { mobile: 'viewWidth' },
+    width: { sm: 'viewWidth' },
     borderStyle: 'solid',
     borderWidth: '1px',
-    borderColor: 'medGray',
+    borderColor: 'backgroundOutline',
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.tabletSm}px)`]: {
-        width: DESKTOP_NAVBAR_WIDTH,
+      [`screen and (min-width: ${breakpoints.sm}px)`]: {
+        width: `${DESKTOP_NAVBAR_WIDTH}px`,
+      },
+    },
+  },
+])
+
+export const searchBarContainer = style([
+  sprinkles({
+    right: '0',
+    top: '0',
+    zIndex: '3',
+    display: 'inline-block',
+  }),
+  {
+    '@media': {
+      [`screen and (min-width: ${breakpoints.lg}px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
+        top: '-5px',
       },
     },
   },
@@ -25,11 +43,10 @@ const baseSearchStyle = style([
 export const searchBar = style([
   baseSearchStyle,
   sprinkles({
-    height: 'full',
-    color: 'placeholder',
+    color: 'textTertiary',
     paddingX: '16',
     cursor: 'pointer',
-    background: 'lightGray',
+    background: 'backgroundSurface',
   }),
 ])
 
@@ -38,22 +55,22 @@ export const searchBarInput = style([
     padding: '0',
     fontWeight: 'normal',
     fontSize: '16',
-    color: { default: 'blackBlue', placeholder: 'placeholder' },
+    color: { default: 'textPrimary', placeholder: 'textTertiary' },
     border: 'none',
     background: 'none',
   }),
-  { lineHeight: '24px' },
+  {
+    lineHeight: '24px',
+  },
 ])
 
 export const searchBarDropdown = style([
   baseSearchStyle,
   sprinkles({
-    position: 'absolute',
-    left: '0',
-    top: '48',
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
-    background: 'lightGray',
+    background: 'backgroundSurface',
+    height: { sm: 'viewHeight', md: 'auto' },
   }),
   {
     borderTop: 'none',
@@ -68,7 +85,6 @@ export const suggestionRow = style([
     justifyContent: 'space-between',
     paddingY: '8',
     paddingX: '16',
-    transition: '250',
   }),
   {
     ':hover': {
@@ -104,7 +120,7 @@ export const primaryText = style([
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    color: 'blackBlue',
+    color: 'textPrimary',
   }),
   {
     lineHeight: '24px',
@@ -114,7 +130,7 @@ export const primaryText = style([
 export const secondaryText = style([
   buttonTextSmall,
   sprinkles({
-    color: 'darkGray',
+    color: 'textSecondary',
   }),
   {
     lineHeight: '20px',
@@ -124,7 +140,7 @@ export const secondaryText = style([
 export const imageHolder = style([
   suggestionImage,
   sprinkles({
-    background: 'loading',
+    background: 'backgroundModule',
     flexShrink: '0',
   }),
 ])
@@ -134,18 +150,10 @@ export const suggestionIcon = sprinkles({
   flexShrink: '0',
 })
 
-export const magnifyingGlassIcon = style([
-  sprinkles({
-    width: '20',
-    height: '20',
-    marginRight: '12',
-  }),
-])
-
 export const sectionHeader = style([
   subheadSmall,
   sprinkles({
-    color: 'darkGray',
+    color: 'textSecondary',
   }),
   {
     lineHeight: '20px',
@@ -157,6 +165,52 @@ export const notFoundContainer = style([
   sprinkles({
     paddingY: '4',
     paddingLeft: '16',
-    marginTop: '20',
   }),
 ])
+
+const visibilityTransition = `visibility ${vars.time[125]}, opacity ${vars.time[125]}`
+const delayedTransitionProperties = `padding 0s ${vars.time[125]}, height 0s ${vars.time[125]}`
+
+export const hidden = style([
+  sprinkles({
+    visibility: 'hidden',
+    opacity: '0',
+    padding: '0',
+    height: '0',
+  }),
+  {
+    transition: `${visibilityTransition}, ${delayedTransitionProperties}`,
+    transitionTimingFunction: 'ease-in',
+  },
+])
+export const visible = style([
+  sprinkles({
+    visibility: 'visible',
+    opacity: '1',
+    height: 'full',
+  }),
+  {
+    transition: `${visibilityTransition}`,
+    transitionTimingFunction: 'ease-out',
+  },
+])
+
+export const searchContentCentered = style({
+  '@media': {
+    [`screen and (min-width: ${breakpoints.lg}px)`]: {
+      transform: `translateX(${DESKTOP_NAVBAR_WIDTH / 4}px)`,
+      transition: `transform ${vars.time[125]}`,
+      transitionTimingFunction: 'ease-out',
+    },
+  },
+})
+
+export const searchContentLeftAlign = style({
+  '@media': {
+    [`screen and (min-width: ${breakpoints.lg}px)`]: {
+      transform: 'translateX(0)',
+      transition: `transform ${vars.time[125]}`,
+      transitionTimingFunction: 'ease-in',
+    },
+  },
+})

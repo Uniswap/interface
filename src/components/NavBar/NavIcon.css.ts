@@ -7,13 +7,11 @@ export const navIcon = style([
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    color: 'blackBlue',
-    background: 'none',
     border: 'none',
     justifyContent: 'center',
     textAlign: 'center',
     cursor: 'pointer',
-    padding: '8',
+    padding: '10',
     borderRadius: '8',
     transition: '250',
   }),
@@ -21,6 +19,6 @@ export const navIcon = style([
     ':hover': {
       background: vars.color.lightGrayOverlay,
     },
-    zIndex: 2,
+    zIndex: 1,
   },
 ])

@@ -9,7 +9,8 @@ import Modal from 'components/Modal'
 import { AutoRow, RowBetween } from 'components/Row'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
-import { CloseIcon, ExternalLink, ThemedText, Z_INDEX } from 'theme'
+import { CloseIcon, ExternalLink, ThemedText } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -40,7 +41,7 @@ const StyledButtonEmpty = styled(ButtonEmpty)`
 const AddressText = styled(ThemedText.DeprecatedBlue)`
   font-size: 12px;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     font-size: 10px;
 `}
 `

@@ -3,10 +3,12 @@ import { TokenList } from '@uniswap/token-lists'
 import TokenSafety from 'components/TokenSafety'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import usePrevious from 'hooks/usePrevious'
-import { useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { useUserAddedTokens } from 'state/user/hooks'
 
 import useLast from '../../hooks/useLast'
+import { useWindowSize } from '../../hooks/useWindowSize'
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
 import { ImportList } from './ImportList'
@@ -29,9 +31,10 @@ export enum CurrencyModalView {
   manage,
   importToken,
   importList,
+  tokenSafety,
 }
 
-export default function CurrencySearchModal({
+export default memo(function CurrencySearchModal({
   isOpen,
   onDismiss,
   onCurrencySelect,
@@ -43,6 +46,7 @@ export default function CurrencySearchModal({
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
+  const userAddedTokens = useUserAddedTokens()
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
@@ -50,12 +54,28 @@ export default function CurrencySearchModal({
     }
   }, [isOpen, lastOpen])
 
+  const showTokenSafetySpeedbump = (token: Token) => {
+    setWarningToken(token)
+    setModalView(CurrencyModalView.tokenSafety)
+  }
+
+  const tokenSafetyFlag = useTokenSafetyFlag()
+
   const handleCurrencySelect = useCallback(
-    (currency: Currency) => {
-      onCurrencySelect(currency)
-      onDismiss()
+    (currency: Currency, hasWarning?: boolean) => {
+      if (
+        tokenSafetyFlag === TokenSafetyVariant.Enabled &&
+        hasWarning &&
+        currency.isToken &&
+        !userAddedTokens.find((token) => token.equals(currency))
+      ) {
+        showTokenSafetySpeedbump(currency)
+      } else {
+        onCurrencySelect(currency)
+        onDismiss()
+      }
     },
-    [onDismiss, onCurrencySelect]
+    [onDismiss, onCurrencySelect, tokenSafetyFlag, userAddedTokens]
   )
 
   // for token import view
@@ -68,20 +88,25 @@ export default function CurrencySearchModal({
   const [importList, setImportList] = useState<TokenList | undefined>()
   const [listURL, setListUrl] = useState<string | undefined>()
 
-  const showImportView = useCallback(() => setModalView(CurrencyModalView.importToken), [setModalView])
+  // used for token safety
+  const [warningToken, setWarningToken] = useState<Token | undefined>()
+
   const showManageView = useCallback(() => setModalView(CurrencyModalView.manage), [setModalView])
   const handleBackImport = useCallback(
     () => setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search),
     [setModalView, prevView]
   )
 
-  const tokenSafetyFlag = useTokenSafetyFlag()
-
+  const { height: windowHeight } = useWindowSize()
   // change min height if not searching
-  let minHeight: number | undefined = 80
+  let modalHeight: number | undefined = 80
   let content = null
   switch (modalView) {
     case CurrencyModalView.search:
+      if (windowHeight) {
+        // Converts pixel units to vh for Modal component
+        modalHeight = Math.min(Math.round((680 / windowHeight) * 100), 80)
+      }
       content = (
         <CurrencySearch
           isOpen={isOpen}
@@ -92,35 +117,42 @@ export default function CurrencySearchModal({
           showCommonBases={showCommonBases}
           showCurrencyAmount={showCurrencyAmount}
           disableNonToken={disableNonToken}
-          showImportView={showImportView}
-          setImportToken={setImportToken}
           showManageView={showManageView}
         />
       )
       break
+    case CurrencyModalView.tokenSafety:
+      modalHeight = undefined
+      if (tokenSafetyFlag === TokenSafetyVariant.Enabled && warningToken) {
+        content = (
+          <TokenSafety
+            tokenAddress={warningToken.address}
+            onContinue={() => handleCurrencySelect(warningToken)}
+            onCancel={() => setModalView(CurrencyModalView.search)}
+            showCancel={true}
+          />
+        )
+      }
+      break
     case CurrencyModalView.importToken:
       if (importToken) {
-        minHeight = undefined
-        content =
-          tokenSafetyFlag === TokenSafetyVariant.Enabled ? (
-            <TokenSafety
-              tokenAddress={importToken.address}
-              onContinue={() => handleCurrencySelect(importToken)}
-              onCancel={handleBackImport}
-            />
-          ) : (
-            <ImportToken
-              tokens={[importToken]}
-              onDismiss={onDismiss}
-              list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
-              onBack={handleBackImport}
-              handleCurrencySelect={handleCurrencySelect}
-            />
-          )
+        modalHeight = undefined
+        if (tokenSafetyFlag === TokenSafetyVariant.Enabled) {
+          showTokenSafetySpeedbump(importToken)
+        }
+        content = (
+          <ImportToken
+            tokens={[importToken]}
+            onDismiss={onDismiss}
+            list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
+            onBack={handleBackImport}
+            handleCurrencySelect={handleCurrencySelect}
+          />
+        )
       }
       break
     case CurrencyModalView.importList:
-      minHeight = 40
+      modalHeight = 40
       if (importList && listURL) {
         content = <ImportList list={importList} listURL={listURL} onDismiss={onDismiss} setModalView={setModalView} />
       }
@@ -138,8 +170,8 @@ export default function CurrencySearchModal({
       break
   }
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={modalHeight} minHeight={modalHeight}>
       {content}
     </Modal>
   )
-}
+})

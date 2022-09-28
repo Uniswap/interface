@@ -5,12 +5,12 @@ import { breakpoints, sprinkles } from '../../css/sprinkles.css'
 
 export const statsText = style([
   sprinkles({
-    marginTop: { mobile: '8', tabletSm: '40' },
-    marginBottom: { mobile: '0', tabletSm: '28' },
+    marginTop: { sm: '8', md: '40' },
+    marginBottom: { sm: '0', md: '28' },
   }),
   {
     '@media': {
-      [`(max-width: ${breakpoints.tabletSm - 1}px)`]: {
+      [`(max-width: ${breakpoints.sm - 1}px)`]: {
         marginLeft: '68px',
       },
     },
@@ -27,7 +27,7 @@ export const baseCollectionImage = sprinkles({
   left: '0',
   borderStyle: 'solid',
   borderWidth: '4px',
-  borderColor: 'white',
+  borderColor: 'backgroundSurface',
 })
 
 export const collectionImage = style([
@@ -38,7 +38,7 @@ export const collectionImage = style([
     verticalAlign: 'top',
     top: '-118px',
     '@media': {
-      [`(max-width: ${breakpoints.tabletSm - 1}px)`]: {
+      [`(max-width: ${breakpoints.sm - 1}px)`]: {
         width: '60px',
         height: '60px',
         borderWidth: '2px',
@@ -96,7 +96,7 @@ export const statsLabel = style([
   bodySmall,
   sprinkles({
     fontWeight: 'normal',
-    color: 'darkGray',
+    color: 'textSecondary',
     whiteSpace: 'nowrap',
   }),
   {

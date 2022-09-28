@@ -51,11 +51,12 @@ export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarn
       </TitleRow>
 
       <DetailsRow>
-        {heading && [heading, '. ']}
+        {heading}
+        {Boolean(heading) && ' '}
         {description}
+        {Boolean(description) && ' '}
         {tokenAddress && (
           <ExternalLink href={TOKEN_SAFETY_ARTICLE}>
-            {' '}
             <Trans>Learn more</Trans>
           </ExternalLink>
         )}

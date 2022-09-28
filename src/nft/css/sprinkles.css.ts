@@ -1,37 +1,31 @@
-import { createGlobalTheme } from '@vanilla-extract/css'
-import { createGlobalThemeContract } from '@vanilla-extract/css'
+import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css'
 import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
 
 const themeContractValues = {
   colors: {
-    // Pavel's colors, mostly used for the wallet connection. TODO Some may need to be changed / removed
-    error: '',
-    textDisconnect: '',
-    modalBackdrop: '',
-    backgroundSecondary: '',
-    modalClose: '',
-    text: '',
-    modalTextSecondary: '',
+    accentFailure: '',
+    accentFailureSoft: '',
+    accentAction: '',
+    accentActionSoft: '',
 
-    // Bryan's colors from Figma that vary dark vs light
-    blackBlue: '',
-    darkGray: '',
-    medGray: '',
-    lightGray: '',
-    white: '',
-    darkGray10: '',
-    blackBlue20: '',
     explicitWhite: '',
-    magicGradient: '',
-    placeholder: '',
-    lightGrayButton: '',
+    gold: '',
+    green: '',
+    violet: '',
 
-    // Opacities of black and white
-    white95: '',
-    white90: '',
-    white80: '',
-    white08: '',
     backgroundFloating: '',
+    backgroundInteractive: '',
+    backgroundModule: '',
+    backgroundOutline: '',
+    backgroundSurface: '',
+
+    modalBackdrop: '',
+
+    stateOverlayHover: '',
+
+    textPrimary: '',
+    textSecondary: '',
+    textTertiary: '',
   },
 
   shadows: {
@@ -56,6 +50,7 @@ const dimensions = {
   '2': '2',
   '4': '4px',
   '8': '8px',
+  '12': '12px',
   '16': '16px',
   '18': '18px',
   '20': '20px',
@@ -74,6 +69,7 @@ const dimensions = {
   '60': '60px',
   '64': '64px',
   '72': '72px',
+  '80': '80px',
   '100': '100px',
   '120': '120px',
   '160': '160px',
@@ -112,6 +108,7 @@ const spacing = {
   '48': '48px',
   '50': '50px',
   '52': '52px',
+  '56': '56px',
   '60': '60px',
   '64': '64px',
   '82': '82px',
@@ -126,32 +123,54 @@ const spacing = {
   unset: 'unset',
 }
 
+const zIndices = {
+  auto: 'auto',
+  '1': '1',
+  '2': '2',
+  '3': '3',
+  dropdown: '1000',
+  sticky: '1020',
+  fixed: '1030',
+  modalBackdrop: '1040',
+  offcanvas: '1050',
+  modal: '1060',
+  popover: '1070',
+  tooltip: '1080',
+}
+
 export const vars = createGlobalTheme(':root', {
   color: {
     ...themeVars.colors,
     genieBlue: '#4C82FB',
     fallbackGradient: 'linear-gradient(270deg, #D1D5DB 0%, #F6F6F6 100%)',
+    loadingBackground: '#24272e',
     dropShadow: '0px 4px 16px rgba(70, 115, 250, 0.4)',
     green: '#209853',
     orange: '#FA2C38',
     black: 'black',
     whitesmoke: '#F5F5F5',
     blue: '#4C82FB',
-    explicitBlackBlue: '#0E111A',
     gray: '#CBCEDC',
     transculent: '#7F7F7F',
     transparent: 'transparent',
     none: 'none',
-    loading: '#7C85A24D',
+    white: '#FFF',
 
     // new uniswap colors:
     blue400: '#4C82FB',
+    blue200: '#ADBCFF30',
     pink400: '#FB118E',
     red700: '#530f10',
     red400: '#FA2C38',
+    red300: '#FD766B',
+    gold200: '#EEB317',
+    gold400: '#B17900',
     green200: '#5CFE9D',
     green400: '#1A9550',
+    violet200: '#BDB8FA',
+    violet400: '#7A7BEB',
     grey900: '#0E111A',
+    grey800: '#141B2B',
     grey700: '#293249',
     grey500: '#5E6887',
     grey400: '#7C85A2',
@@ -159,9 +178,10 @@ export const vars = createGlobalTheme(':root', {
     grey200: '#B7BED4',
     grey100: '#DDE3F7',
     grey50: '#EDEFF7',
-    accentActionSoft: 'rgba(76, 130, 251, 0.24)',
     accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
+    outline: 'rgba(153, 161, 189, 0.24)',
     lightGrayOverlay: '#99A1BD14',
+    accentActiveSoft: '#4c82fb3d',
   },
   border: {
     transculent: '1.5px solid rgba(0, 0, 0, 0.1)',
@@ -199,6 +219,18 @@ export const vars = createGlobalTheme(':root', {
     '60': '60px',
     '96': '96px',
   },
+  lineHeight: {
+    auto: 'auto',
+    '1': '1px',
+    '12': '12px',
+    '14': '14px',
+    '16': '16px',
+    '20': '20px',
+    '24': '24px',
+    '28': '28px',
+    '36': '36px',
+    '44': '44px',
+  },
   fontWeight: {
     normal: '400',
     medium: '500',
@@ -207,6 +239,7 @@ export const vars = createGlobalTheme(':root', {
     black: '900',
   },
   time: {
+    '125': '125ms',
     '250': '250ms',
     '500': '500ms',
   },
@@ -228,32 +261,39 @@ const flexAlignment = [
 
 const overflow = ['hidden', 'inherit', 'scroll', 'visible', 'auto'] as const
 
-const borderWidth = ['1px', '1.5px', '2px', '4px']
+const borderWidth = ['0px', '0.5px', '1px', '1.5px', '2px', '4px']
 
 const borderStyle = ['none', 'solid'] as const
 
+// TODO: remove when code is done being ported over
+// I'm leaving this here as a reference of the old breakpoints while we port over the new code
+// tabletSm: 656,
+// tablet: 708,
+// tabletL: 784,
+// tabletXl: 830,
+// desktop: 948,
+// desktopL: 1030,
+// desktopXl: 1260,
+
 export const breakpoints = {
-  tabletSm: 656,
-  tablet: 708,
-  tabletL: 784,
-  tabletXl: 830,
-  desktop: 948,
-  desktopL: 1030,
-  desktopXl: 1260,
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  xxl: 1536,
+  xxxl: 1920,
 }
 
 const layoutStyles = defineProperties({
   conditions: {
-    mobile: {},
-    tabletSm: { '@media': `screen and (min-width: ${breakpoints.tabletSm}px)` },
-    tablet: { '@media': `screen and (min-width: ${breakpoints.tablet})` },
-    tabletL: { '@media': `screen and (min-width: ${breakpoints.tabletL}px)` },
-    tabletXl: { '@media': `screen and (min-width: ${breakpoints.tabletXl}px)` },
-    desktop: { '@media': `screen and (min-width: ${breakpoints.desktop}px)` },
-    desktopL: { '@media': `screen and (min-width: ${breakpoints.desktopL}px)` },
-    desktopXl: { '@media': `screen and (min-width: ${breakpoints.desktopXl}px)` },
+    sm: {},
+    md: { '@media': `screen and (min-width: ${breakpoints.sm}px)` },
+    lg: { '@media': `screen and (min-width: ${breakpoints.md}px)` },
+    xl: { '@media': `screen and (min-width: ${breakpoints.lg}px)` },
+    xxl: { '@media': `screen and (min-width: ${breakpoints.xl}px)` },
+    xxxl: { '@media': `screen and (min-width: ${breakpoints.xxl}px)` },
   },
-  defaultCondition: 'mobile',
+  defaultCondition: 'sm',
   properties: {
     alignItems: flexAlignment,
     alignSelf: flexAlignment,
@@ -283,7 +323,7 @@ const layoutStyles = defineProperties({
     right: spacing,
     top: spacing,
     margin: spacing,
-    zIndex: ['auto', '0', '1', '2', '3'],
+    zIndex: zIndices,
     gap: spacing,
     flexShrink: spacing,
     flex: ['1', '2', '3'],
@@ -298,6 +338,7 @@ const layoutStyles = defineProperties({
     position: ['absolute', 'fixed', 'relative', 'sticky', 'static'],
     objectFit: ['contain', 'cover'],
     order: [0, 1],
+    opacity: ['auto', '0', '0.1', '0.3', '0.5', '0.7', '1'],
   } as const,
   shorthands: {
     paddingX: ['paddingLeft', 'paddingRight'],
@@ -356,7 +397,7 @@ const unresponsiveProperties = defineProperties({
     overflowX: overflow,
     overflowY: overflow,
     boxShadow: { ...themeVars.shadows, none: 'none', dropShadow: vars.color.dropShadow },
-    lineHeight: ['1', 'auto'],
+    lineHeight: vars.lineHeight,
     transition: vars.time,
     transitionDuration: vars.time,
     animationDuration: vars.time,

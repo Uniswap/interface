@@ -10,7 +10,7 @@ export const PageWrapper = styled(BodyWrapper)<{ wide: boolean }>`
 
   padding: ${({ wide }) => (wide ? '10px' : '0')};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     max-width: 480px;
   `};
 `
@@ -20,24 +20,33 @@ export const Wrapper = styled.div`
   padding: 26px 16px;
   min-width: 480px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     min-width: 400px;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
   min-width: 340px;
 `};
 `
 
-export const ScrollablePage = styled.div`
+export const ScrollablePage = styled.div<{ navBarFlag: boolean }>`
+  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
   position: relative;
   display: flex;
   flex-direction: column;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     max-width: 480px;
     margin: 0 auto;
-    padding: 0px 8px;
   `};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
 `
 
 export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
@@ -69,7 +78,7 @@ export const ResponsiveTwoColumns = styled.div<{ wide: boolean }>`
 
   border-top: 1px solid ${({ theme }) => theme.deprecated_bg2};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     grid-template-columns: 1fr;
 
     margin-top: 0;
@@ -81,7 +90,7 @@ export const RightContainer = styled(AutoColumn)`
   grid-column: 2;
   height: fit-content;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
   grid-row: 2 / 3;
   grid-column: 1;
   `};
@@ -99,7 +108,7 @@ export const StackedItem = styled.div<{ zIndex?: number }>`
 `
 
 export const MediumOnly = styled.div`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     display: none;
   `};
 `
@@ -107,7 +116,7 @@ export const MediumOnly = styled.div`
 export const HideMedium = styled.div`
   display: none;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     display: block;
   `};
 `

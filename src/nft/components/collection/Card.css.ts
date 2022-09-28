@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css'
+import { calc } from '@vanilla-extract/css-utils'
 import { breakpoints, sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const card = style([
@@ -11,9 +12,9 @@ export const card = style([
     boxSizing: 'border-box',
     WebkitBoxSizing: 'border-box',
     '@media': {
-      [`(max-width: ${breakpoints.tabletSm - 1}px)`]: {
+      [`(max-width: ${breakpoints.sm - 1}px)`]: {
         ':hover': {
-          borderColor: themeVars.colors.medGray,
+          borderColor: themeVars.colors.backgroundOutline,
           cursor: 'pointer',
           background: vars.color.lightGrayOverlay,
         },
@@ -22,10 +23,14 @@ export const card = style([
   },
 ])
 
+export const loadingBackground = style({
+  background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
+})
+
 export const notSelectedCard = style([
   card,
   sprinkles({
-    backgroundColor: 'lightGray',
+    backgroundColor: 'backgroundSurface',
     borderColor: 'transparent',
   }),
 ])
@@ -38,7 +43,7 @@ export const selectedCard = style([
   card,
   sprinkles({
     background: 'lightGrayOverlay',
-    borderColor: 'medGray',
+    borderColor: 'backgroundOutline',
   }),
 ])
 
@@ -48,7 +53,7 @@ export const button = style([
     width: 'full',
     position: 'relative',
     paddingY: '8',
-    marginTop: { mobile: '8', tabletSm: '10' },
+    marginTop: { sm: '8', md: '10' },
     marginBottom: '12',
     borderRadius: '12',
     border: 'none',
@@ -78,13 +83,13 @@ export const marketplaceIcon = style([
 export const erc1155ButtonRow = sprinkles({
   flexShrink: '0',
   gap: '12',
-  marginTop: { mobile: '8', tabletSm: '10' },
+  marginTop: { sm: '8', md: '10' },
   marginBottom: '12',
 })
 
 export const erc1155QuantityText = style([
   sprinkles({
-    color: 'blackBlue',
+    color: 'textPrimary',
   }),
   {
     lineHeight: '20px',
@@ -95,7 +100,7 @@ export const erc1155QuantityText = style([
 export const erc1155Button = sprinkles({
   display: 'flex',
   justifyContent: 'center',
-  backgroundColor: 'white90',
+  backgroundColor: 'accentActionSoft',
   textAlign: 'center',
   background: 'none',
   border: 'none',
@@ -108,12 +113,12 @@ export const erc1155Button = sprinkles({
 export const erc1155PlusButton = style([
   erc1155Button,
   sprinkles({
-    color: 'magicGradient',
+    color: 'backgroundSurface',
   }),
   {
     ':hover': {
-      backgroundColor: themeVars.colors.magicGradient,
-      color: themeVars.colors.blackBlue,
+      backgroundColor: themeVars.colors.accentAction,
+      color: themeVars.colors.textPrimary,
     },
   },
 ])
@@ -121,12 +126,43 @@ export const erc1155PlusButton = style([
 export const erc1155MinusButton = style([
   erc1155Button,
   sprinkles({
-    color: 'error',
+    color: 'accentFailure',
   }),
   {
     ':hover': {
-      backgroundColor: themeVars.colors.error,
-      color: themeVars.colors.blackBlue,
+      backgroundColor: themeVars.colors.accentFailure,
+      color: themeVars.colors.textPrimary,
     },
+  },
+])
+
+export const rarityInfo = style([
+  sprinkles({
+    display: 'flex',
+    borderRadius: '4',
+    height: '16',
+    color: 'textPrimary',
+    background: 'backgroundInteractive',
+    fontSize: '10',
+    fontWeight: 'semibold',
+    paddingX: '4',
+  }),
+  {
+    lineHeight: '12px',
+    letterSpacing: '0.04em',
+    backdropFilter: 'blur(6px)',
+  },
+])
+
+export const playbackSwitch = style([
+  sprinkles({
+    position: 'absolute',
+    width: '40',
+    height: '40',
+    zIndex: '1',
+  }),
+  {
+    marginLeft: calc.subtract('100%', '50px'),
+    transform: 'translateY(-56px)',
   },
 ])

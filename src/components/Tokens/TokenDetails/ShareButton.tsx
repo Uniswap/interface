@@ -1,12 +1,14 @@
+import { Trans } from '@lingui/macro'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
-import { ClickableStyle, CopyHelperRefType, OPACITY_CLICK, Z_INDEX } from 'theme'
+import { ClickableStyle, CopyHelperRefType } from 'theme'
 import { colors } from 'theme/colors'
 import { opacify } from 'theme/utils'
+import { Z_INDEX } from 'theme/zIndex'
 
 import { ReactComponent as ShareIcon } from '../../../assets/svg/share.svg'
 import { CopyHelper } from '../../../theme'
@@ -24,7 +26,7 @@ const Share = styled(ShareIcon)<{ open: boolean }>`
   height: 24px;
   width: 24px;
   ${ClickableStyle}
-  ${({ open }) => open && `opacity: ${OPACITY_CLICK} !important`};
+  ${({ open, theme }) => open && `opacity: ${theme.opacity.click} !important`};
 `
 
 const ShareActions = styled.div`
@@ -62,6 +64,7 @@ const ShareAction = styled.div`
 interface TokenInfo {
   tokenName: string
   tokenSymbol: string
+  tokenAddress: string
 }
 
 export default function ShareButton(tokenInfo: TokenInfo) {
@@ -76,7 +79,7 @@ export default function ShareButton(tokenInfo: TokenInfo) {
   const shareTweet = () => {
     toggleShare()
     window.open(
-      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenInfo.tokenName}%20(${tokenInfo.tokenSymbol})%20https://app.uniswap.org/%23/tokens/${tokenInfo.tokenSymbol}%20via%20@uniswap`,
+      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenInfo.tokenName}%20(${tokenInfo.tokenSymbol})%20https://app.uniswap.org/%23/tokens/${tokenInfo.tokenAddress}%20via%20@uniswap`,
       'newwindow',
       `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
     )
@@ -97,13 +100,13 @@ export default function ShareButton(tokenInfo: TokenInfo) {
               toCopy={window.location.href}
               ref={copyHelperRef}
             >
-              Copy Link
+              <Trans>Copy Link</Trans>
             </CopyHelper>
           </ShareAction>
 
           <ShareAction onClick={shareTweet}>
             <Twitter color={theme.textPrimary} size={20} strokeWidth={1.5} />
-            Share to Twitter
+            <Trans>Share to Twitter</Trans>
           </ShareAction>
         </ShareActions>
       )}

@@ -21,38 +21,50 @@ export * from './components'
 type TextProps = Omit<TextPropsOriginal, 'css'>
 
 export const MEDIA_WIDTHS = {
-  upToExtraSmall: 500,
-  upToSmall: 720,
-  upToMedium: 960,
-  upToLarge: 1280,
+  deprecated_upToExtraSmall: 500,
+  deprecated_upToSmall: 720,
+  deprecated_upToMedium: 960,
+  deprecated_upToLarge: 1280,
 }
 
-// Migrating to a standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
-// Please avoid using deprecated numbers
-export enum Z_INDEX {
-  deprecated_zero = 0,
-  deprecated_content = 1,
-  dropdown = 1000,
-  sticky = 1020,
-  fixed = 1030,
-  modalBackdrop = 1040,
-  offcanvas = 1050,
-  modal = 1060,
-  popover = 1070,
-  tooltip = 1080,
+const BREAKPOINTS = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  xxl: 1536,
+  xxxl: 1920,
 }
 
-const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
-  (accumulator, size) => {
-    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
-      @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
-        ${css(a, b, c)}
-      }
-    `
-    return accumulator
+const transitions = {
+  duration: {
+    slow: '500ms',
+    medium: '250ms',
+    fast: '125ms',
   },
-  {}
-) as any
+  timing: {
+    ease: 'ease',
+    in: 'ease-in',
+    out: 'ease-out',
+    inOut: 'ease-in-out',
+  },
+}
+
+const opacities = {
+  hover: 0.6,
+  click: 0.4,
+}
+
+const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
+  MEDIA_WIDTHS
+).reduce((accumulator, size) => {
+  ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
+      ${css(a, b, c)}
+    }
+  `
+  return accumulator
+}, {}) as any
 
 const deprecated_white = ColorsPalette.white
 const deprecated_black = ColorsPalette.black
@@ -104,16 +116,17 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     chain_10: colorsDark.chain_10,
     chain_137: colorsDark.chain_137,
     chain_42: colorsDark.chain_42,
-    chain_69: colorsDark.chain_69,
+    chain_420: colorsDark.chain_420,
     chain_42161: colorsDark.chain_42161,
     chain_421611: colorsDark.chain_421611,
     chain_80001: colorsDark.chain_80001,
 
-    blue200: ColorsPalette.blue200,
     shallowShadow: darkMode ? colorsDark.shallowShadow : colorsLight.shallowShadow,
     deepShadow: darkMode ? colorsDark.deepShadow : colorsLight.deepShadow,
     hoverState: opacify(24, ColorsPalette.blue200),
     hoverDefault: opacify(8, ColorsPalette.gray200),
+    stateOverlayHover: darkMode ? colorsDark.stateOverlayHover : colorsLight.stateOverlayHover,
+    stateOverlayPressed: darkMode ? colorsDark.stateOverlayPressed : colorsLight.stateOverlayPressed,
   }
 }
 
@@ -257,7 +270,14 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
     shadow1: darkMode ? '#000' : '#2F80ED',
 
     // media queries
-    mediaWidth: mediaWidthTemplates,
+    deprecated_mediaWidth: deprecated_mediaWidthTemplates,
+
+    //breakpoints
+    breakpoint: BREAKPOINTS,
+
+    transition: transitions,
+
+    opacity: opacities,
 
     // css snippets
     flexColumnNoWrap: css`

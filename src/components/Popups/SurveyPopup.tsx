@@ -7,7 +7,8 @@ import { useEffect } from 'react'
 import { MessageCircle, X } from 'react-feather'
 import { useShowSurveyPopup } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { ExternalLink, ThemedText, Z_INDEX } from 'theme'
+import { ExternalLink, ThemedText } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
 import BGImage from '../../assets/images/survey-orb.svg'
 
@@ -21,7 +22,7 @@ const Wrapper = styled(AutoColumn)`
   color: ${({ theme }) => theme.deprecated_text1};
   overflow: hidden;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     max-width: 100%;
   `}
 `

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-23 20:04\n"
+"PO-Revision-Date: 2022-09-21 21:05\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -59,6 +59,10 @@ msgstr "- Odstrani prejemnika"
 msgid "0 UNI / week"
 msgstr "0 UNI / teden"
 
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume"
+msgstr "24H prostornina"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
 msgstr "25 %"
@@ -66,6 +70,14 @@ msgstr "25 %"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
 msgstr "50 %"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W high"
+msgstr "52W visoka"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "52W low"
+msgstr "52 W nizka"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
@@ -121,7 +133,7 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Menjava te velikosti ima lahko velik vpliv na ceno glede na trenutno likvidnost v skladu. Med vrednostjo vašega vhodnega žetona in vrednostjo, ki jo boste prejeli v izhodnem žetonu, je lahko velika razlika."
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "About"
 msgstr "O Uniswapu"
 
@@ -227,10 +239,15 @@ msgstr "Dovoljeno"
 msgid "Amount"
 msgstr "Znesek"
 
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occured loading tokens. Please try again."
+msgstr "Pri nalaganju žetonov je prišlo do napake. Prosim poskusite ponovno."
+
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Pri poskusu izvedbe te zamenjave je prišlo do napake. Morda boste morali povečati toleranco do zdrsa. Če to ne deluje, je morda težava v nezdružljivosti z žetonom, s katerim trgujete. Pozor: žetoni s provizijami ob prenosu in uravnavani (rebase) žetoni niso združljivi z Uniswap V3."
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -248,10 +265,12 @@ msgstr "Odobri žeton"
 msgid "Approve {0}"
 msgstr "Odobri {0}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "Odobreno"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -305,6 +324,7 @@ msgstr "Na voljo za polog: {0}"
 msgid "Back to wallet selection"
 msgstr "Nazaj na izbiro denarnice"
 
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
 msgstr "Dobroimetje: {0}"
@@ -382,6 +402,7 @@ msgstr "Stanje omrežja preverite"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Oglejte si naše vodnike za V3-likvidnost in navodila za migracijo."
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -417,6 +438,7 @@ msgstr "Prevzemi provizije"
 msgid "Claim your UNI tokens"
 msgstr "Prevzemite svoje žetone UNI"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "Prevzeto"
@@ -430,6 +452,7 @@ msgstr "UNI pridobljeni!"
 msgid "Claimed!"
 msgstr "Prevzeto!"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
@@ -464,6 +487,7 @@ msgstr "Zapri"
 msgid "Closed"
 msgstr "Zaprto"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Prevzemi"
@@ -481,10 +505,12 @@ msgstr "Prevzemi provizije"
 msgid "Collect {0}/{1} fees"
 msgstr "Prevzemi provizije {0}/{1}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
 msgstr "Prevzeto"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
 msgstr "Prevzem v teku"
@@ -530,6 +556,10 @@ msgid "Confirm transaction in wallet"
 msgstr "V denarnici potrdite transakcijo"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Povežite se"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -570,6 +600,10 @@ msgstr "Povezano z"
 msgid "Connecting..."
 msgstr "Povezovanje ..."
 
+#: src/components/Tokens/TokenDetails/AddressSection.tsx
+msgid "Contract address"
+msgstr "Naslov pogodbe"
+
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
@@ -582,6 +616,10 @@ msgstr "Kopirati"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Kopiraj naslov"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "Kopiraj povezavo"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
@@ -735,6 +773,10 @@ msgstr "Opusti"
 msgid "Docs"
 msgstr "Dokumentacija"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Dokumentacija"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Ne vidite katerega od svojih pologov V2? <0>Uvozite ga.</0>"
@@ -872,6 +914,7 @@ msgid "Explore"
 msgstr "Raziščite"
 
 #: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
 msgid "Explore Tokens"
 msgstr "Raziščite žetone"
 
@@ -882,6 +925,14 @@ msgstr "Raziščite Uniswap Analytics."
 #: src/components/Popups/FailedNetworkSwitchPopup.tsx
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Zamenjava omrežij iz Uniswapovega vmesnika ni uspela. Če želite uporabiti Uniswap na {0}, morate zamenjati omrežje v svoji denarnici."
+
+#: src/components/Tokens/TokenTable/FavoriteButton.tsx
+msgid "Favorites"
+msgstr "Priljubljene"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Zastavice funkcij"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -894,6 +945,10 @@ msgstr "Stopnja provizije"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Pridobivam najboljšo ceno ..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Filtrirajte žetone"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -928,8 +983,12 @@ msgstr "Poiščite podporo na Discordu"
 msgid "Help Center"
 msgstr "Center za pomoč"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
+msgstr "Center pomoči"
+
 #: src/components/FeeSelector/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Hide"
 msgstr "Skrij"
 
@@ -1058,6 +1117,7 @@ msgid "Learn more"
 msgstr "Več o tem"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Pravna obvestila in zasebnost"
@@ -1105,6 +1165,10 @@ msgstr "Naloženo"
 msgid "Loading"
 msgstr "Nalagam"
 
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAX"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1126,7 +1190,7 @@ msgstr "Upravljanje seznamov žetonov"
 msgid "Manage this pool."
 msgstr "Upravljaj s tem skladom."
 
-#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Največ"
@@ -1206,7 +1270,15 @@ msgstr "Manjkajoče odvisnosti"
 msgid "More"
 msgstr "Več"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "Zbirke NFT"
+
+#: src/components/NavBar/index.tsx
+msgid "NFTs"
+msgstr "NFT-ji"
+
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Name not found"
 msgstr "Ime ni bilo mogoče najti"
 
@@ -1259,13 +1331,17 @@ msgstr "Ni predlogov."
 msgid "No results found."
 msgstr "Ni rezultatov."
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "No stats available"
-msgstr "Statistika ni na voljo"
-
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "No token information available"
 msgstr "Informacije o žetonu niso na voljo"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "Ni najdenih žetonov"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "Ni najdenih žetonov."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1355,6 +1431,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "Skladi"
 
@@ -1390,6 +1467,14 @@ msgstr "{0} v skladu:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "Bazeni"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "Priljubljene zbirke NFT"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "Priljubljeni žetoni"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1492,7 +1577,7 @@ msgstr "Čakalna vrsta"
 msgid "Rates"
 msgstr "Tečaji"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/About.tsx
 msgid "Read more"
 msgstr "Preberi več"
 
@@ -1515,6 +1600,10 @@ msgstr "Preberite več o nepodprtih sredstvih"
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
 msgstr "Zadnje transakcije"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "Nedavna iskanja"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
@@ -1582,10 +1671,19 @@ msgstr "Nazaj"
 msgid "Search name or paste address"
 msgstr "Poiščite ime ali prilepite naslov"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Iskanje žetonov"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Iskanje žetonov in zbirk NFT"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Izberite par"
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1605,7 +1703,7 @@ msgstr "Izberite {0} omrežje"
 msgid "Select an action"
 msgstr "Izberite dejanje"
 
-#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 msgid "Select token"
 msgstr "Izberite žeton"
 
@@ -1620,6 +1718,10 @@ msgstr "Sebi"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "Samozastopanje"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "Prodaja NFT-jev"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1638,6 +1740,10 @@ msgstr "Delež v skladu"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "Delež sklada:"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "Delite na Twitterju"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
@@ -1699,6 +1805,8 @@ msgstr "Polog {0} {1} in {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/index.tsx
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1736,7 +1844,7 @@ msgstr "Zamenjava"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Menjava {0} {1} za {2} {3}"
 
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "Simbola ni mogoče najti"
 
@@ -1813,6 +1921,7 @@ msgstr "Vpliv vaše trgovine na tržno ceno tega bazena."
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Vhodnega žetona ni mogoče prenesti. Morda je gre za težavo z vhodnim žetonom."
 
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Tržna cena je izven območja, ki ste ga izbrali. Položite lahko le eno od obeh sredstev."
@@ -1853,9 +1962,13 @@ msgstr "Transakcije ni bilo mogoče poslati, ker je rok potekel. Preverite, ali 
 msgid "There is no liquidity data."
 msgstr "Podatkov o likvidnosti ni."
 
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "There was an error fetching your balance"
+msgstr "Pri pridobivanju stanja je prišlo do napake"
+
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {tokenSymbol} balance"
-msgstr "Pri nalaganju vašega stanja {tokenSymbol} je prišlo do napake"
+msgid "There was an error loading your {0} balance"
+msgstr "Pri nalaganju vašega stanja {0} je prišlo do napake"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -1920,6 +2033,8 @@ msgid "Token not supported"
 msgstr "Žeton ni podprt"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Žetoni"
@@ -1931,6 +2046,10 @@ msgstr "Žetoni z neaktivnih seznamov. Specifične žetone lahko uvozite spodaj 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Glavni skladi"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Total Value Locked"
+msgstr "Skupna vrednost je zaklenjena"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -2094,6 +2213,7 @@ msgstr "Nepodprta sredstva"
 msgid "Untitled"
 msgstr "Brez naslova"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Odvij"
@@ -2101,6 +2221,14 @@ msgstr "Odvij"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Odvijte <0/> v {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Unwrapped"
+msgstr "Odvito"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Unwrapping"
+msgstr "Odvijanje"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2150,6 +2278,10 @@ msgstr "Prikaži na Etherscanu"
 msgid "View on Explorer"
 msgstr "Prikaži v raziskovalcu"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "Oglejte si analitiko žetonov"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2196,6 +2328,10 @@ msgstr "Glasuj za pobudo {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "Glasuj za pobudo {proposalKey} z razlogom \"{0}\""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Glasujte pri upravljanju"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -2283,6 +2419,7 @@ msgstr "Dvigujem {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "UNI-V2 dvignjen!"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Ovij"
@@ -2290,6 +2427,14 @@ msgstr "Ovij"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "Ovijte <0/> v {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Wrapped"
+msgstr "Zavito"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Wrapping"
+msgstr "Zavijanje"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
@@ -2322,6 +2467,10 @@ msgstr "Nimate dovolj glasov za predložitev pobude."
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
 msgstr "V tem skladu še nimate likvidnosti."
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "You have no favorited tokens"
+msgstr "Nimate priljubljenih žetonov"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
@@ -2367,6 +2516,10 @@ msgstr "Vaša likvidnost V2"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Tukaj bodo prikazane vaše aktivne likvidnostne pozicije na V3."
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "Your balances by network"
+msgstr "Vaša stanja po omrežju"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2461,6 +2614,7 @@ msgstr "po zdrsu"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "and"
 msgstr "in"
 
@@ -2476,6 +2630,11 @@ msgstr "potrdi"
 msgid "failed"
 msgstr "ni uspelo"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "fees"
+msgstr "pristojbine"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "for"
 msgstr "za"
@@ -2508,6 +2667,10 @@ msgstr "minut"
 msgid "reward"
 msgstr "nagrada"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "to"
+msgstr "do"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "preko {0}"
@@ -2531,7 +2694,6 @@ msgstr "{0, plural, =1 {S tem žetonom ne morete trgovati v aplikaciji Uniswap.}
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/Settings/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "{0}"
 msgstr "{0}"
 
@@ -2595,6 +2757,10 @@ msgstr "Na voljo {0} žetonov LP UNI-V2"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} glasov"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "{0} all balances"
+msgstr "{0} vsa stanja"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx

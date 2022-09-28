@@ -1,6 +1,6 @@
-import { initializeAnalytics, sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
-import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
+import { initializeAnalytics, sendAnalyticsEvent, user } from 'analytics'
+import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
@@ -13,6 +13,7 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
+import { Z_INDEX } from 'theme/zIndex'
 import { getBrowser } from 'utils/browser'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -20,8 +21,9 @@ import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
-import Navbar from '../components/NavBar'
+import NavBar from '../components/NavBar'
 import Popups from '../components/Popups'
+import { LoadingTokenDetails } from '../components/Tokens/TokenDetails/LoadingTokenDetails'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
@@ -39,7 +41,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import Tokens from './Tokens'
+import Tokens, { LoadingTokens } from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
@@ -61,7 +63,7 @@ const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
   padding: ${({ navBarFlag }) => (navBarFlag === NavBarVariant.Enabled ? `72px 0px 0px 0px` : `120px 0px 0px 0px`)};
   align-items: center;
   flex: 1;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding: 52px 0px 16px 0px;
   `};
 `
@@ -72,7 +74,7 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
   position: fixed;
   top: 0;
-  z-index: 2;
+  z-index: ${Z_INDEX.sticky};
 `
 
 const Marginer = styled.div`
@@ -128,6 +130,7 @@ export default function App() {
 
   useEffect(() => {
     sendAnalyticsEvent(EventName.APP_LOADED)
+    user.set(CUSTOM_USER_PROPERTIES.USER_AGENT, navigator.userAgent)
     user.set(CUSTOM_USER_PROPERTIES.BROWSER, getBrowser())
     user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_WIDTH, window.screen.width)
@@ -151,7 +154,7 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <Navbar /> : <Header />}</HeaderWrapper>
+          <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <NavBar /> : <Header />}</HeaderWrapper>
           <BodyWrapper navBarFlag={navBarFlag}>
             <Popups />
             <Polling />
@@ -161,8 +164,22 @@ export default function App() {
                 <Routes>
                   {tokensFlag === TokensVariant.Enabled && (
                     <>
-                      <Route path="/tokens" element={<Tokens />} />
-                      <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />
+                      <Route
+                        path="/tokens/:chainName"
+                        element={
+                          <Suspense fallback={<LoadingTokens />}>
+                            <Tokens />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="/tokens/:chainName/:tokenAddress"
+                        element={
+                          <Suspense fallback={<LoadingTokenDetails />}>
+                            <TokenDetails />
+                          </Suspense>
+                        }
+                      />
                     </>
                   )}
                   <Route
@@ -215,10 +232,11 @@ export default function App() {
 
                   {nftFlag === NftVariant.Enabled && (
                     <>
-                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
                       <Route path="/nfts" element={<NftExplore />} />
-                      <Route path="/nft/sell" element={<Sell />} />
-                      <Route path="/nft/asset/:contractAddress/:tokenId" element={<Asset />} />
+                      <Route path="/nfts/sell" element={<Sell />} />
+                      <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
+                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
+                      <Route path="/nfts/collection/:contractAddress/activity" element={<Collection />} />
                     </>
                   )}
                 </Routes>

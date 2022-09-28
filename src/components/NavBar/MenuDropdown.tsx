@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
@@ -99,7 +100,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
         rel={href ? 'noopener noreferrer' : undefined}
         display="flex"
         flexDirection="column"
-        color="blackBlue"
+        color="textPrimary"
         background="none"
         border="none"
         justifyContent="center"
@@ -124,58 +125,93 @@ export const MenuDropdown = () => {
   return (
     <>
       <Box position="relative" ref={ref}>
-        <NavIcon onClick={toggleOpen}>
-          <EllipsisIcon width={28} height={28} />
+        <NavIcon isActive={isOpen} onClick={toggleOpen}>
+          <EllipsisIcon width={20} height={20} />
         </NavIcon>
 
         {isOpen && (
-          <NavDropdown top={60}>
-            <Column gap="12">
-              <Column paddingX="16" gap="4">
+          <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '56', lg: 'unset' }} right="0">
+            <Column gap="16">
+              <Column paddingX="8" gap="4">
                 {nftFlag === NftVariant.Enabled && (
-                  <PrimaryMenuRow to="/nft/sell" close={toggleOpen}>
+                  <PrimaryMenuRow to="/nfts/sell" close={toggleOpen}>
                     <Icon>
                       <ThinTagIcon width={24} height={24} />
                     </Icon>
-                    <PrimaryMenuRow.Text>Sell NFTs</PrimaryMenuRow.Text>
+                    <PrimaryMenuRow.Text>
+                      <Trans>Sell NFTs</Trans>
+                    </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 )}
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
                     <GovernanceIcon width={24} height={24} />
                   </Icon>
-                  <PrimaryMenuRow.Text>Vote in governance</PrimaryMenuRow.Text>
+                  <PrimaryMenuRow.Text>
+                    <Trans>Vote in governance</Trans>
+                  </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
                 <PrimaryMenuRow href="https://info.uniswap.org/#/">
                   <Icon>
                     <BarChartIcon width={24} height={24} />
                   </Icon>
-                  <PrimaryMenuRow.Text>View token analytics ↗</PrimaryMenuRow.Text>
+                  <PrimaryMenuRow.Text>
+                    <Trans>View token analytics</Trans>
+                  </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
               </Column>
               <Separator />
-              <Column paddingX="16" gap="4">
-                <SecondaryLinkedText href="https://help.uniswap.org/en/">Help center ↗</SecondaryLinkedText>
-                <SecondaryLinkedText href="https://docs.uniswap.org/">Documentation ↗</SecondaryLinkedText>
+              <Box
+                display="flex"
+                flexDirection={{ sm: 'row', md: 'column' }}
+                flexWrap="wrap"
+                alignItems={{ sm: 'center', md: 'flex-start' }}
+                paddingX="8"
+              >
+                <SecondaryLinkedText href="https://help.uniswap.org/en/">
+                  <Trans>Help center</Trans> ↗
+                </SecondaryLinkedText>
+                <SecondaryLinkedText href="https://docs.uniswap.org/">
+                  <Trans>Documentation</Trans> ↗
+                </SecondaryLinkedText>
                 <SecondaryLinkedText
                   onClick={() => {
                     toggleOpen()
                     togglePrivacyPolicy()
                   }}
-                >{`Legal & Privacy`}</SecondaryLinkedText>
+                >
+                  <Trans>Legal & Privacy</Trans> ↗
+                </SecondaryLinkedText>
                 {(isDevelopmentEnv() || isStagingEnv()) && (
-                  <SecondaryLinkedText onClick={openFeatureFlagsModal}>{`Feature Flags`}</SecondaryLinkedText>
+                  <SecondaryLinkedText onClick={openFeatureFlagsModal}>
+                    <Trans>Feature Flags</Trans>
+                  </SecondaryLinkedText>
                 )}
-              </Column>
+              </Box>
               <IconRow>
                 <Icon href="https://discord.com/invite/FCfyBSbCU5">
-                  <DiscordIconMenu width={24} height={24} color={themeVars.colors.darkGray} />
+                  <DiscordIconMenu
+                    className={styles.hover}
+                    width={24}
+                    height={24}
+                    color={themeVars.colors.textSecondary}
+                  />
                 </Icon>
                 <Icon href="https://twitter.com/Uniswap">
-                  <TwitterIconMenu width={24} height={24} color={themeVars.colors.darkGray} />
+                  <TwitterIconMenu
+                    className={styles.hover}
+                    width={24}
+                    height={24}
+                    color={themeVars.colors.textSecondary}
+                  />
                 </Icon>
                 <Icon href="https://github.com/Uniswap">
-                  <GithubIconMenu width={24} height={24} color={themeVars.colors.darkGray} />
+                  <GithubIconMenu
+                    className={styles.hover}
+                    width={24}
+                    height={24}
+                    color={themeVars.colors.textSecondary}
+                  />
                 </Icon>
               </IconRow>
             </Column>
