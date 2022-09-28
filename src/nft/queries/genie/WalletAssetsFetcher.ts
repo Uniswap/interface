@@ -38,10 +38,10 @@ export const fetchWalletAssets = async ({
     return {
       ...asset,
       collectionIsVerified: asset.asset_contract.isVerified,
-      lastPrice: asset.last_sale && formatEther(asset.last_sale.total_price),
+      lastPrice: asset.lastSale && formatEther(asset.lastSale.total_price),
       floorPrice: asset.collection?.floorPrice,
       creatorPercentage: parseFloat(asset.asset_contract.dev_seller_fee_basis_points) / 10000,
-      date_acquired: asset.last_sale ? asset.last_sale.event_timestamp : asset.asset_contract.created_date,
+      date_acquired: asset.lastSale ? asset.lastSale.event_timestamp : asset.asset_contract.created_date,
       listing_date: asset.sellOrders.length
         ? Math.max
             .apply(

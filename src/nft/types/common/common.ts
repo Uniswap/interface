@@ -21,7 +21,7 @@ export interface OpenSeaAsset {
   image_preview_url?: string
   name?: string
   token_id?: string
-  last_sale?: {
+  lastSale?: {
     total_price: string
   }
   asset_contract?: {
