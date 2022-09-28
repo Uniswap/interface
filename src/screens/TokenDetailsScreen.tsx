@@ -37,6 +37,7 @@ import {
 import { Screens } from 'src/screens/Screens'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 import { TokenDetailsScreen_headerPriceLabel$key } from 'src/screens/__generated__/TokenDetailsScreen_headerPriceLabel.graphql'
+import { flex } from 'src/styles/flex'
 import { currencyAddress, currencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
@@ -62,11 +63,13 @@ function TokenDetailsHeader({ currency, initialSendState }: TokenDetailsHeaderPr
 
   return (
     <Flex row justifyContent="space-between" mx="md">
-      <Flex centered row gap="xs">
+      <Flex centered row flexShrink={1} gap="xs">
         <CurrencyLogo currency={currency} size={36} />
-        <Box>
-          <Text variant="headlineSmall">{currency.name ?? t('Unknown token')}</Text>
-          <Text color="textTertiary" variant="caption">
+        <Box flexShrink={1}>
+          <Text numberOfLines={1} style={flex.shrink} variant="headlineSmall">
+            {currency.name ?? t('Unknown token')}
+          </Text>
+          <Text color="textTertiary" numberOfLines={1} style={flex.shrink} variant="caption">
             {currency.symbol ?? t('Unknown token')}
           </Text>
         </Box>
