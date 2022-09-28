@@ -7,11 +7,10 @@ import { Radio } from 'nft/components/layout/Radio'
 import { useCollectionFilters } from 'nft/hooks'
 import { Trait } from 'nft/hooks/useCollectionFilters'
 import { groupBy } from 'nft/utils/groupBy'
-import { FocusEventHandler, FormEvent, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useReducer } from 'react'
 import { badge } from 'nft/css/common.css'
 
-import { Input } from '../layout/Input'
 import { TraitSelect } from './TraitSelect'
 
 export const Filters = ({ traits }: { traits: Trait[] }) => {
@@ -20,19 +19,10 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
     setBuyNow: state.setBuyNow,
   }))
   const traitsByGroup: Record<string, Trait[]> = useMemo(() => (traits ? groupBy(traits, 'trait_type') : {}), [traits])
-
   const [buyNowHovered, toggleBuyNowHover] = useReducer((state) => !state, false)
-  const [search, setSearch] = useState('')
 
   const handleBuyNowToggle = () => {
     setBuyNow(!buyNow)
-  }
-
-  const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
-    e.currentTarget.placeholder = ''
-  }
-  const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
-    e.currentTarget.placeholder = 'Search traits'
   }
 
   return (
@@ -77,20 +67,8 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           </Box>
 
           <Column marginTop="12" marginBottom="60">
-            {/* <Input
-              display={!traits?.length ? 'none' : undefined}
-              value={search}
-              onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
-              width="full"
-              marginBottom="8"
-              placeholder="Search traits"
-              autoComplete="off"
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              style={{ border: '2px solid rgba(153, 161, 189, 0.24)', maxWidth: '300px' }}
-            /> */}
             {Object.entries(traitsByGroup).map(([type, traits]) => (
-              <TraitSelect key={type} {...{ type, traits, search }} />
+              <TraitSelect key={type} {...{ type, traits }} />
             ))}
           </Column>
         </Box>

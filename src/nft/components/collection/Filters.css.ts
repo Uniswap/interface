@@ -51,16 +51,7 @@ export const detailsOpen = sprinkles({
   overflow: 'hidden',
 })
 
-export const summaryOpen = style([
-  sprinkles({
-    // borderStyle: 'solid',
-    // borderColor: 'backgroundOutline',
-  }),
-
-  {
-    borderTop: '1px solid black',
-  },
-])
+export const summaryOpen = style([])
 
 export const filterDropDowns = style([
   sprinkles({

@@ -103,16 +103,12 @@ export const TraitSelect = ({ traits, type }: { traits: Trait[]; type: string })
   const selectedTraits = useCollectionFilters((state) => state.traits)
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
-
   const [isOpen, setOpen] = useState(false)
 
-  const { searchedTraits } = useMemo(() => {
-    const isTypeIncluded = type.includes(debouncedSearch)
-    const searchedTraits = traits.filter(
-      (t) => isTypeIncluded || t.trait_value.toString().toLowerCase().includes(debouncedSearch.toLowerCase())
-    )
-    return { searchedTraits }
-  }, [debouncedSearch, traits, type])
+  const searchedTraits = useMemo(
+    () => traits.filter((t) => t.trait_value.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
+    [debouncedSearch, traits, type]
+  )
 
   return traits.length ? (
     <Box
@@ -142,19 +138,6 @@ export const TraitSelect = ({ traits, type }: { traits: Trait[]; type: string })
           <Box color="textSecondary" display="inline-block" marginRight="12">
             {searchedTraits.length}
           </Box>
-          {/* <Input
-              display={!traits?.length ? 'none' : undefined}
-              value={search}
-              onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
-              width="full"
-              marginBottom="8"
-              placeholder="Search traits"
-              autoComplete="off"
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              style={{ border: '2px solid rgba(153, 161, 189, 0.24)', maxWidth: '300px' }}
-            /> */}
-
           <Box
             color="textSecondary"
             display="inline-block"
@@ -176,6 +159,7 @@ export const TraitSelect = ({ traits, type }: { traits: Trait[]; type: string })
           placeholder="Search"
           marginTop="8"
           marginBottom="8"
+          autoComplete="off"
         />
         {searchedTraits.map((trait) => {
           const isTraitSelected = selectedTraits.find(
