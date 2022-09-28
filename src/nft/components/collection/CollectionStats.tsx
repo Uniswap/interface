@@ -103,19 +103,9 @@ const MobileSocialsPopover = ({
 }
 
 const SocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
-  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-
   return (
-    <Column
-      className={isCollectionStatsLoading && styles.iconsLoading}
-      as="a"
-      target="_blank"
-      rel="noreferrer"
-      href={href}
-      height="full"
-      justifyContent="center"
-    >
-      {!isCollectionStatsLoading && children}
+    <Column as="a" target="_blank" rel="noreferrer" href={href} height="full" justifyContent="center">
+      {children}
     </Column>
   )
 }
@@ -136,14 +126,13 @@ const CollectionName = ({
   toggleCollectionSocials: () => void
 }) => {
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-  const nameClass = isCollectionStatsLoading
-    ? styles.nameTextLoading
-    : clsx(isMobile ? headlineMedium : headlineMedium, styles.nameText)
+  const nameClass = isCollectionStatsLoading ? styles.nameTextLoading : clsx(headlineMedium, styles.nameText)
+  const collectionStatsLoadingIcons = new Array(4).fill(<div className={styles.iconsLoading} />)
 
   return (
     <Row justifyContent="space-between">
       <Row minWidth="0">
-        <Box marginRight={!isVerified ? '12' : '0'} className={nameClass} style={{ lineHeight: '32px' }}>
+        <Box marginRight={!isVerified ? '12' : '0'} className={nameClass}>
           {name}
         </Box>
         {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
@@ -155,7 +144,8 @@ const CollectionName = ({
           gap="8"
           height="32"
         >
-          {collectionStats.discordUrl || isCollectionStatsLoading ? (
+          {isCollectionStatsLoading && collectionStatsLoadingIcons}
+          {collectionStats.discordUrl ? (
             <SocialsIcon href={collectionStats.discordUrl ?? ''}>
               <DiscordIcon
                 fill={themeVars.colors.textSecondary}
@@ -165,7 +155,7 @@ const CollectionName = ({
               />
             </SocialsIcon>
           ) : null}
-          {collectionStats.twitter || isCollectionStatsLoading ? (
+          {collectionStats.twitter ? (
             <SocialsIcon href={'https://twitter.com/' + collectionStats.twitter}>
               <TwitterIcon
                 fill={themeVars.colors.textSecondary}
@@ -176,12 +166,12 @@ const CollectionName = ({
             </SocialsIcon>
           ) : null}
 
-          {collectionStats.instagram || isCollectionStatsLoading ? (
+          {collectionStats.instagram ? (
             <SocialsIcon href={'https://instagram.com/' + collectionStats.instagram}>
               <InstagramIcon fill={themeVars.colors.textSecondary} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
-          {collectionStats.externalUrl || isCollectionStatsLoading ? (
+          {collectionStats.externalUrl ? (
             <SocialsIcon href={collectionStats.externalUrl ?? ''}>
               <ExternalIcon fill={themeVars.colors.textSecondary} width="26px" height="26px" />
             </SocialsIcon>
@@ -223,9 +213,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   }, [descriptionRef, baseRef])
 
   return isCollectionStatsLoading ? (
-    <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}>
-      description
-    </Box>
+    <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}></Box>
   ) : (
     <Box ref={baseRef} marginTop={{ sm: '12', md: '16' }} style={{ maxWidth: '680px' }}>
       <Box

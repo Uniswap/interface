@@ -80,7 +80,10 @@ const Collection = () => {
             </Box>
           </Box>
           <Column paddingX="32">
-            <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
+            {(isLoading || collectionStats !== undefined) && (
+              <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
+            )}
+
             <ActivitySwitcher
               showActivity={isActivityToggled}
               toggleActivity={() => {
@@ -114,7 +117,8 @@ const Collection = () => {
                       collectionName={collectionStats?.name ?? ''}
                     />
                   )
-                : contractAddress && (
+                : contractAddress &&
+                  (isLoading || collectionStats !== undefined) && (
                     <CollectionNfts
                       collectionStats={collectionStats || ({} as GenieCollection)}
                       contractAddress={contractAddress}
