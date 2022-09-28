@@ -94,38 +94,6 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
   const phase1Flag = useNftFlag()
   const [resultsState, setResultsState] = useState<ReactNode>()
 
-  const tokenSearchResults =
-    tokens.length > 0 ? (
-      <SearchBarDropdownSection
-        hoveredIndex={hoveredIndex}
-        startingIndex={isNFTPage ? collections.length : 0}
-        setHoveredIndex={setHoveredIndex}
-        toggleOpen={toggleOpen}
-        suggestions={tokens}
-        header={<Trans>Tokens</Trans>}
-      />
-    ) : (
-      <Box className={styles.notFoundContainer}>
-        <Trans>No tokens found.</Trans>
-      </Box>
-    )
-
-  const collectionSearchResults =
-    phase1Flag === NftVariant.Enabled ? (
-      collections.length > 0 ? (
-        <SearchBarDropdownSection
-          hoveredIndex={hoveredIndex}
-          startingIndex={isNFTPage ? 0 : tokens.length}
-          setHoveredIndex={setHoveredIndex}
-          toggleOpen={toggleOpen}
-          suggestions={collections}
-          header={<Trans>NFT Collections</Trans>}
-        />
-      ) : (
-        <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
-      )
-    ) : null
-
   const { data: trendingCollectionResults, isLoading: trendingCollectionsAreLoading } = useQuery(
     ['trendingCollections', 'eth', 'twenty_four_hours'],
     () => fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 })
@@ -204,6 +172,38 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
 
   useEffect(() => {
     if (!isLoading) {
+      const tokenSearchResults =
+        tokens.length > 0 ? (
+          <SearchBarDropdownSection
+            hoveredIndex={hoveredIndex}
+            startingIndex={isNFTPage ? collections.length : 0}
+            setHoveredIndex={setHoveredIndex}
+            toggleOpen={toggleOpen}
+            suggestions={tokens}
+            header={<Trans>Tokens</Trans>}
+          />
+        ) : (
+          <Box className={styles.notFoundContainer}>
+            <Trans>No tokens found.</Trans>
+          </Box>
+        )
+
+      const collectionSearchResults =
+        phase1Flag === NftVariant.Enabled ? (
+          collections.length > 0 ? (
+            <SearchBarDropdownSection
+              hoveredIndex={hoveredIndex}
+              startingIndex={isNFTPage ? 0 : tokens.length}
+              setHoveredIndex={setHoveredIndex}
+              toggleOpen={toggleOpen}
+              suggestions={collections}
+              header={<Trans>NFT Collections</Trans>}
+            />
+          ) : (
+            <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
+          )
+        ) : null
+
       const currentState = () =>
         hasInput ? (
           // Empty or Up to 8 combined tokens and nfts
@@ -263,7 +263,6 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
 
       setResultsState(currentState)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isLoading,
     tokens,
