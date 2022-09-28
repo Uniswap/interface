@@ -23,14 +23,13 @@ import { dimensions } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
 
 type TabbedScrollScreenProps = {
-  headerContent?: ReactElement
   renderTab: (
     route: Route,
     scrollProps: TabViewScrollProps,
     loadingContainerStyle: ViewStyle
   ) => ReactElement | null
   tabs: { key: string; title: string }[]
-  hideTabs?: boolean
+  headerContent?: ReactElement
 }
 
 export type TabViewScrollProps = {
@@ -43,14 +42,14 @@ export const TAB_VIEW_SCROLL_THROTTLE = 16
 const TAB_BAR_HEIGHT = 48
 const INITIAL_TAB_BAR_HEIGHT = 100
 
-const styles = StyleSheet.create({
+export const TabStyles = StyleSheet.create({
   header: {
     marginBottom: 0,
     paddingBottom: 0,
     position: 'absolute',
     width: '100%',
   },
-  indicator: { height: 2 },
+  indicator: { backgroundColor: FixedTheme.colors.userThemeMagenta, height: 2 },
   tab: { margin: 0, padding: 0, top: 0 },
   tabBar: {
     position: 'absolute',
@@ -58,9 +57,12 @@ const styles = StyleSheet.create({
     width: '100%',
     zIndex: 1,
   },
+  tabView: {
+    marginHorizontal: FixedTheme.spacing.md,
+  },
 })
 
-const renderLabel = ({ route, focused }: { route: Route; focused: boolean }) => {
+export const renderTabLabel = ({ route, focused }: { route: Route; focused: boolean }) => {
   return (
     <Text color={focused ? 'textPrimary' : 'textTertiary'} variant="mediumLabel">
       {route.title}
@@ -69,10 +71,9 @@ const renderLabel = ({ route, focused }: { route: Route; focused: boolean }) => 
 }
 
 export default function TabbedScrollScreen({
-  headerContent,
   renderTab,
   tabs,
-  hideTabs,
+  headerContent,
 }: TabbedScrollScreenProps) {
   const insets = useSafeAreaInsets()
   const theme = useAppTheme()
@@ -102,13 +103,13 @@ export default function TabbedScrollScreen({
 
   const renderTabBar = (sceneProps: SceneRendererProps) => {
     return (
-      <Animated.View style={[styles.tabBar, tabBarAnimatedStyle]}>
+      <Animated.View style={[TabStyles.tabBar, tabBarAnimatedStyle]}>
         <TabBar
           {...sceneProps}
-          indicatorStyle={[styles.indicator, { backgroundColor: theme.colors.userThemeMagenta }]}
+          indicatorStyle={[TabStyles.indicator]}
           navigationState={{ index: tabIndex, routes }}
-          renderLabel={renderLabel}
-          style={[styles.tab, { backgroundColor: theme.colors.backgroundBackdrop }]}
+          renderLabel={renderTabLabel}
+          style={[TabStyles.tab, { backgroundColor: theme.colors.backgroundBackdrop }]}
           onTabPress={({ preventDefault, route }) => {
             if (isListGliding.current) {
               preventDefault()
@@ -198,25 +199,14 @@ export default function TabbedScrollScreen({
           renderTab(props.route, scrollPropsForTab(props.route.key), loadingContainerStyle)
         }
         renderTabBar={renderTabBar}
-        style={hideTabs ? TabViewStyles.containerHidden : TabViewStyles.containerVisible}
+        style={TabStyles.tabView}
         onIndexChange={onTabIndexChange}
       />
       <AnimatedFlex
-        style={[styles.header, headerAnimatedStyle, { marginTop: insets.top }]}
+        style={[TabStyles.header, headerAnimatedStyle, { marginTop: insets.top }]}
         onLayout={(event: LayoutChangeEvent) => setHeaderHeight(event.nativeEvent.layout.height)}>
         {headerContent}
       </AnimatedFlex>
     </Screen>
   )
 }
-
-const TabViewStyles = StyleSheet.create({
-  containerHidden: {
-    display: 'none',
-    marginHorizontal: FixedTheme.spacing.md,
-  },
-  containerVisible: {
-    display: 'flex',
-    marginHorizontal: FixedTheme.spacing.md,
-  },
-})

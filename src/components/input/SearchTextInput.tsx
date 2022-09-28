@@ -75,8 +75,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
   }
 
   const onTextInputFocus = () => {
-    isFocus.value = true
     onFocus?.()
+    isFocus.value = true
   }
 
   const onTextInputSubmitEditing = () => {

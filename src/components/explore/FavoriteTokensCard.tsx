@@ -1,7 +1,7 @@
 import { default as React, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { FadeInUp } from 'react-native-reanimated'
+import { FadeIn } from 'react-native-reanimated'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { ExploreTokenCardEmptyState } from 'src/components/explore/ExploreTokenCardEmptyState'
 import { BaseTokensCardProps, GenericTokensCard } from 'src/components/explore/GenericTokensCard'
@@ -37,7 +37,7 @@ export function FavoriteTokensCard(props: BaseTokensCardProps) {
   const hasFavoriteTokens = favorites?.length > 0
 
   return hasFavoriteTokens ? (
-    <AnimatedBox entering={FadeInUp}>
+    <AnimatedBox entering={FadeIn}>
       <GenericTokensCard
         {...props}
         displayFavorites
