@@ -91,7 +91,7 @@ const FarmingPoolsMarquee = ({ tab }: { tab: string }) => {
     dispatch(setFarmsData({}))
   }, [dispatch, chainId])
 
-  const increaseRef = useMarquee(uniqueAndActiveFarms)
+  const increaseRef = useMarquee(tab === VERSION.ELASTIC ? activePrommFarm : uniqueAndActiveFarms)
 
   if (tab === VERSION.CLASSIC && uniqueAndActiveFarms.length === 0) return null
   if (tab === VERSION.ELASTIC && activePrommFarm.length === 0) return null
@@ -179,7 +179,7 @@ const MarqueeSection = styled.div`
 `
 
 const MarqueeWrapper = styled.div`
-  overflow: auto;
+  overflow: scroll;
   width: 100%;
 
   ::-webkit-scrollbar {
@@ -188,7 +188,7 @@ const MarqueeWrapper = styled.div`
 `
 
 const Marquee = styled.div`
-  min-width: fit-content;
+  min-width: max-content;
   overflow: hidden;
   display: flex;
   gap: 12px;

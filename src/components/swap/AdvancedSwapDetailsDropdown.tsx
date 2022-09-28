@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 
 import { useLastTruthy } from '../../hooks/useLast'
@@ -13,7 +12,7 @@ const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   border-radius: 8px;
   color: ${({ theme }) => theme.text2};
   background-color: ${({ theme }) => theme.advancedBG};
-  z-index: -1;
+  z-index: 1;
   border: dashed 1px ${({ theme }) => theme.advancedBorder};
   transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(calc(-100% - 50px))')};
   transition: transform 300ms ease-in-out;
