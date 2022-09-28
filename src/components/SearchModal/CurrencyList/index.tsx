@@ -137,6 +137,7 @@ export function CurrencyRow({
   const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
   const tokenSafetyFlagEnabled = useTokenSafetyFlag() === TokenSafetyVariant.Enabled
   const isBlockedToken = !!warning && !warning.canProceed
+  const blockedTokenOpacity = '0.6'
 
   // only show add or remove buttons if not on selected list
   return (
@@ -158,9 +159,13 @@ export function CurrencyRow({
         dim={isBlockedToken}
       >
         <Column>
-          <CurrencyLogo currency={currency} size={'36px'} style={{ opacity: isBlockedToken ? '0.6' : '1' }} />
+          <CurrencyLogo
+            currency={currency}
+            size={'36px'}
+            style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
+          />
         </Column>
-        <AutoColumn style={{ opacity: isBlockedToken ? '0.6' : '1' }}>
+        <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}>
           <Row>
             <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
             {tokenSafetyFlagEnabled && <TokenSafetyIcon warning={warning} />}

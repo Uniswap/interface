@@ -34,7 +34,7 @@ export const MenuItem = styled(RowBetween)<{ redesignFlag?: boolean; dim?: boole
     background-color: ${({ theme, disabled, redesignFlag }) =>
       (redesignFlag && theme.hoverDefault) || (!disabled && theme.deprecated_bg2)};
   }
-  opacity: ${({ disabled, selected, dim }) => (dim ? 0.4 : disabled || selected ? 0.5 : 1)};
+  opacity: ${({ disabled, selected, dim }) => (dim || disabled || selected ? 0.4 : 1)};
 `
 
 export const SearchInput = styled.input<{ redesignFlag?: boolean }>`
