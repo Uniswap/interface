@@ -303,24 +303,30 @@ export default function Swap() {
     gatherPermitSignature,
   } = useERC20PermitFromTrade(trade, allowedSlippage, transactionDeadline)
 
+  const [approvalPending, setApprovalPending] = useState<boolean>(false)
   const handleApprove = useCallback(async () => {
-    if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
-      try {
-        await gatherPermitSignature()
-      } catch (error) {
-        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
-        if (error?.code !== 4001) {
-          await approveCallback()
+    setApprovalPending(true)
+    try {
+      if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
+        try {
+          await gatherPermitSignature()
+        } catch (error) {
+          // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
+          if (error?.code !== 4001) {
+            await approveCallback()
+          }
         }
-      }
-    } else {
-      await approveCallback()
+      } else {
+        await approveCallback()
 
-      sendEvent({
-        category: 'Swap',
-        action: 'Approve',
-        label: [TRADE_STRING, trade?.inputAmount?.currency.symbol].join('/'),
-      })
+        sendEvent({
+          category: 'Swap',
+          action: 'Approve',
+          label: [TRADE_STRING, trade?.inputAmount?.currency.symbol].join('/'),
+        })
+      }
+    } finally {
+      setApprovalPending(false)
     }
   }, [signatureState, gatherPermitSignature, approveCallback, trade?.inputAmount?.currency.symbol])
 
@@ -696,7 +702,7 @@ export default function Swap() {
                               approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                             }
                           >
-                            <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                            <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
                               <span style={{ display: 'flex', alignItems: 'center' }}>
                                 {/* we need to shorten this string on mobile */}
                                 {approvalState === ApprovalState.APPROVED ||
@@ -708,8 +714,8 @@ export default function Swap() {
                                   </Trans>
                                 )}
                               </span>
-                              {approvalState === ApprovalState.PENDING ? (
-                                <Loader stroke="white" />
+                              {approvalPending || approvalState === ApprovalState.PENDING ? (
+                                <Loader stroke={theme.white} />
                               ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                                 signatureState === UseERC20PermitState.SIGNED ? (
                                 <CheckCircle size="20" color={theme.deprecated_green1} />
@@ -722,7 +728,7 @@ export default function Swap() {
                                     </Trans>
                                   }
                                 >
-                                  <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
+                                  <HelpCircle size="20" color={theme.deprecated_white} style={{ marginLeft: '8px' }} />
                                 </MouseoverTooltip>
                               )}
                             </AutoRow>
