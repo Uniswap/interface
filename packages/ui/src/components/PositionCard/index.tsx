@@ -543,7 +543,7 @@ export function LiquidityCard({
       <Box>
         <DoubleCurrencyLogoHorizontal currency0={currency0} currency1={currency1} size={20} />
       </Box>
-      <Box>{pair.stable ? "Stable" : "Volatile"}</Box>
+      <Box>{pair.stable ? 'Stable' : 'Volatile'}</Box>
       <Box
         sx={{
           whiteSpace: 'nowrap',
