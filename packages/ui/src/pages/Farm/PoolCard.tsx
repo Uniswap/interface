@@ -269,7 +269,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         <StakingColumn>
           <StakingColumnTitle>Liquidity TVL</StakingColumnTitle>
           <TYPE.white fontSize={16}>
-            {totalValueLockedInUSD ? totalValueLockedInUSD.toSignificant(6) : '--.--'}
+            $ {totalValueLockedInUSD ? totalValueLockedInUSD.toSignificant(6) : '--.--'}
           </TYPE.white>
         </StakingColumn>
       </StatContainer>
