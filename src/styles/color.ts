@@ -399,7 +399,7 @@ export const colorsLight: Palette = {
   accentAction: colors.pink400,
   accentActive: colors.blue400,
   accentSuccess: colors.green400,
-  accentWarning: colors.gold200,
+  accentWarning: colors.gold400,
   accentFailure: colors.red400,
   accentBranded: colors.pink200,
 
