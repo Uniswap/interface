@@ -57,6 +57,7 @@
   "addLiquidity": "Add Liquidity",
   "deposit": "Deposit",
   "stakeLpToken": "Stake LP Token",
+  "unstakeLpToken": "Unstake LP",
   "currentPoolSize": "Current Pool Size",
   "yourPoolShare": "Your Pool Share",
   "noZero": "Amount cannot be zero.",
