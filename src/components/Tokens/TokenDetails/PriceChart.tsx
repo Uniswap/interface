@@ -59,8 +59,7 @@ export function getDeltaArrow(delta: number | null | undefined) {
   // Null-check not including zero
   if (delta === null || delta === undefined) {
     return null
-  }
-  if (Math.sign(delta) < 0) {
+  } else if (Math.sign(delta) < 0) {
     return <StyledDownArrow size={16} key="arrow-down" />
   }
   return <StyledUpArrow size={16} key="arrow-up" />
