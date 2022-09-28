@@ -72,7 +72,7 @@ export const routingApi = createApi({
             const chainName = CHAIN_INFO[chainId].label
             const query = qs.stringify({
               ...DEFAULT_QUERY_PARAMS,
-              blockChainName: chainName,
+              blockchainName: chainName,
               chainId,
               inputTokenAddress: tokenInAddress,
               outputTokenAddress: tokenOutAddress,

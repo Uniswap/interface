@@ -1561,11 +1561,6 @@ msgstr "<0/>을 정확히 <1/>로 바꿉니다."
 #~ msgid "Swap Anyway"
 #~ msgstr "스왑 진행하기"
 
-#: src/pages/Swap/index.tsx
-#: src/pages/Swap/index.tsx
-#~ msgid "Warning : reduce trade amount or accept price impact"
-#~ msgstr "경고 : 거래 금액을 줄이거나 가격 충격을 감수하십시오."
-
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
 msgstr "<1/>에 대해 정확히 <0/> 스왑"
@@ -2042,6 +2037,11 @@ msgstr "<0/> 에서 {0}풀기"
 #: src/components/AddressInputPanel/index.tsx
 #~ msgid "Wallet Address or ENS name"
 #~ msgstr "지갑 주소 또는 ENS 이름"
+
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
+#~ msgid "Warning : reduce trade amount or accept price impact"
+#~ msgstr "경고 : 거래 금액을 줄이거나 가격 충격을 감수하십시오."
 
 #: src/components/earn/StakingModal.tsx
 #~ msgid "Weekly Rewards"
