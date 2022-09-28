@@ -595,7 +595,11 @@ const Suspicious = () => {
 const Pool = () => {
   return (
     <MouseoverTooltip
-      text={<Box fontSize="14">This item is part of an NFT liquidity pool. Price increases as supply decreases.</Box>}
+      text={
+        <Box fontSize="14">
+          This NFT is part of a liquidity pool. Buying this will increase the price of the remaining pooled NFTs.
+        </Box>
+      }
       placement="top"
     >
       <Box display="flex" flexShrink="0" marginLeft="4" color="textSecondary">
