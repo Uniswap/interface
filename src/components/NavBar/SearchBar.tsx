@@ -89,7 +89,8 @@ export const SearchBar = () => {
 
   const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
   const isMobileOrTablet = isMobile || isTablet
-  const showCenteredSearchContent = !isOpen && phase1Flag !== NftVariant.Enabled && !isMobileOrTablet
+  const showCenteredSearchContent =
+    !isOpen && phase1Flag !== NftVariant.Enabled && !isMobileOrTablet && searchValue.length === 0
 
   return (
     <Box position="relative">
