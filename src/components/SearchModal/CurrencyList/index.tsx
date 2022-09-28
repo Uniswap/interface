@@ -3,14 +3,19 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
+import { LightGreyCard } from 'components/Card'
+import QuestionHelper from 'components/QuestionHelper'
+import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
+import TokenListLogo from '../../../assets/svg/tokenlist.svg'
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { useCombinedActiveList } from '../../../state/lists/hooks'
@@ -20,8 +25,9 @@ import { isTokenOnList } from '../../../utils'
 import Column, { AutoColumn } from '../../Column'
 import CurrencyLogo from '../../CurrencyLogo'
 import Loader from '../../Loader'
-import Row, { RowFixed } from '../../Row'
+import Row, { RowBetween, RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
+import ImportRow from '../ImportRow'
 import { LoadingRows, MenuItem } from '../styleds'
 
 function currencyKey(currency: Currency): string {
@@ -63,6 +69,13 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
+const FixedContentRow = styled.div`
+  padding: 4px 20px;
+  height: 56px;
+  display: grid;
+  grid-gap: 16px;
+  align-items: center;
+`
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
   return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
 }
@@ -70,6 +83,10 @@ function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
 const TagContainer = styled.div`
   display: flex;
   justify-content: flex-end;
+`
+
+const TokenListLogoWrapper = styled.img`
+  height: 20px;
 `
 
 function TokenTags({ currency }: { currency: Currency }) {
@@ -101,7 +118,7 @@ function TokenTags({ currency }: { currency: Currency }) {
   )
 }
 
-export function CurrencyRow({
+function CurrencyRow({
   currency,
   onSelect,
   isSelected,
@@ -114,7 +131,7 @@ export function CurrencyRow({
   onSelect: (hasWarning: boolean) => void
   isSelected: boolean
   otherSelected: boolean
-  style?: CSSProperties
+  style: CSSProperties
   showCurrencyAmount?: boolean
   eventProperties: Record<string, unknown>
 }) {
@@ -127,6 +144,7 @@ export function CurrencyRow({
   const warning = currency.isNative ? null : checkWarning(currency.address)
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+  const tokenSafetyFlag = useTokenSafetyFlag()
 
   // only show add or remove buttons if not on selected list
   return (
@@ -152,6 +170,8 @@ export function CurrencyRow({
         <AutoColumn>
           <Row>
             <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
+
+            {tokenSafetyFlag === TokenSafetyVariant.Enabled && <TokenSafetyIcon warning={warning} />}
           </Row>
           <ThemedText.DeprecatedDarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
             {!currency.isNative && !isOnSelectedList && customAdded ? (
@@ -184,13 +204,44 @@ export function CurrencyRow({
   )
 }
 
+const BREAK_LINE = 'BREAK'
+type BreakLine = typeof BREAK_LINE
+function isBreakLine(x: unknown): x is BreakLine {
+  return x === BREAK_LINE
+}
+
+function BreakLineComponent({ style }: { style: CSSProperties }) {
+  const theme = useTheme()
+  return (
+    <FixedContentRow style={style}>
+      <LightGreyCard padding="8px 12px" $borderRadius="8px">
+        <RowBetween>
+          <RowFixed>
+            <TokenListLogoWrapper src={TokenListLogo} />
+            <ThemedText.DeprecatedMain ml="6px" fontSize="12px" color={theme.deprecated_text1}>
+              <Trans>Expanded results from inactive Token Lists</Trans>
+            </ThemedText.DeprecatedMain>
+          </RowFixed>
+          <QuestionHelper
+            text={
+              <Trans>
+                Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists.
+              </Trans>
+            }
+          />
+        </RowBetween>
+      </LightGreyCard>
+    </FixedContentRow>
+  )
+}
+
 interface TokenRowProps {
-  data: Array<Currency>
+  data: Array<Currency | BreakLine>
   index: number
   style: CSSProperties
 }
 
-export const formatAnalyticsEventProperties = (
+const formatAnalyticsEventProperties = (
   token: Token,
   index: number,
   data: any[],
@@ -217,6 +268,8 @@ export default function CurrencyList({
   onCurrencySelect,
   otherCurrency,
   fixedListRef,
+  showImportView,
+  setImportToken,
   showCurrencyAmount,
   isLoading,
   searchQuery,
@@ -229,21 +282,27 @@ export default function CurrencyList({
   onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherCurrency?: Currency | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
+  showImportView: () => void
+  setImportToken: (token: Token) => void
   showCurrencyAmount?: boolean
   isLoading: boolean
   searchQuery: string
   isAddressSearch: string | false
 }) {
-  const itemData: Currency[] = useMemo(() => {
+  const itemData: (Currency | BreakLine)[] = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
-      return [...currencies, ...otherListTokens]
+      return [...currencies, BREAK_LINE, ...otherListTokens]
     }
     return currencies
   }, [currencies, otherListTokens])
 
   const Row = useCallback(
     function TokenRow({ data, index, style }: TokenRowProps) {
-      const row: Currency = data[index]
+      const row: Currency | BreakLine = data[index]
+
+      if (isBreakLine(row)) {
+        return <BreakLineComponent style={style} />
+      }
 
       const currency = row
 
@@ -253,6 +312,8 @@ export default function CurrencyList({
 
       const token = currency?.wrapped
 
+      const showImport = index > currencies.length
+
       if (isLoading) {
         return (
           <LoadingRows>
@@ -260,6 +321,10 @@ export default function CurrencyList({
             <div />
             <div />
           </LoadingRows>
+        )
+      } else if (showImport && token) {
+        return (
+          <ImportRow style={style} token={token} showImportView={showImportView} setImportToken={setImportToken} dim />
         )
       } else if (currency) {
         return (
@@ -277,11 +342,23 @@ export default function CurrencyList({
         return null
       }
     },
-    [onCurrencySelect, otherCurrency, selectedCurrency, showCurrencyAmount, isLoading, isAddressSearch, searchQuery]
+    [
+      currencies.length,
+      onCurrencySelect,
+      otherCurrency,
+      selectedCurrency,
+      setImportToken,
+      showImportView,
+      showCurrencyAmount,
+      isLoading,
+      isAddressSearch,
+      searchQuery,
+    ]
   )
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {
     const currency = data[index]
+    if (isBreakLine(currency)) return BREAK_LINE
     return currencyKey(currency)
   }, [])
 
