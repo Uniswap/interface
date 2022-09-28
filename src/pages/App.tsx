@@ -51,13 +51,15 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Sell = lazy(() => import('nft/pages/sell/sell'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
-const AppWrapper = styled.div`
+const AppWrapper = styled.div<{ redesignFlagEnabled: boolean }>`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
+  font-feature-settings: ${({ redesignFlagEnabled }) =>
+    redesignFlagEnabled ? "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on" : "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on"};
 `
 
-const BodyWrapper = styled.div<{ redesignFlagEnabled: boolean; navBarFlag: NavBarVariant }>`
+const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -67,8 +69,6 @@ const BodyWrapper = styled.div<{ redesignFlagEnabled: boolean; navBarFlag: NavBa
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding: 52px 0px 16px 0px;
   `};
-  font-feature-settings: ${({ redesignFlagEnabled }) =>
-    redesignFlagEnabled ? "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on" : "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on"};
 `
 
 const HeaderWrapper = styled.div`
@@ -156,10 +156,10 @@ export default function App() {
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
-      <AppWrapper>
+      <AppWrapper redesignFlagEnabled={redesignFlagEnabled}>
         <Trace page={currentPage}>
           <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <NavBar /> : <Header />}</HeaderWrapper>
-          <BodyWrapper navBarFlag={navBarFlag} redesignFlagEnabled={redesignFlagEnabled}>
+          <BodyWrapper navBarFlag={navBarFlag}>
             <Popups />
             <Polling />
             <TopLevelModals />
