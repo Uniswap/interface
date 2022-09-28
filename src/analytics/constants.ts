@@ -126,6 +126,7 @@ export enum ElementName {
  */
 export enum Event {
   onClick = 'onClick',
+  onFocus = 'onFocus',
   onKeyPress = 'onKeyPress',
   onSelect = 'onSelect',
   // alphabetize additional events.
