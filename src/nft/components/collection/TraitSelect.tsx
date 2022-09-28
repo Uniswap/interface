@@ -10,6 +10,7 @@ import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { FormEvent, MouseEvent, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
+import { Input } from '../layout/Input'
 import * as styles from './Filters.css'
 
 const TraitItem = ({
@@ -96,43 +97,28 @@ const TraitItem = ({
   )
 }
 
-export const TraitSelect = ({ traits, type, search }: { traits: Trait[]; type: string; search: string }) => {
-  const debouncedSearch = useDebounce(search, 300)
-
+export const TraitSelect = ({ traits, type }: { traits: Trait[]; type: string }) => {
   const addTrait = useCollectionFilters((state) => state.addTrait)
   const removeTrait = useCollectionFilters((state) => state.removeTrait)
   const selectedTraits = useCollectionFilters((state) => state.traits)
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
 
-  const [isOpen, setOpen] = useState(
-    traits.some(({ trait_type, trait_value }) => {
-      return selectedTraits.some((selectedTrait) => {
-        return selectedTrait.trait_type === trait_type && selectedTrait.trait_value === String(trait_value)
-      })
-    })
-  )
+  const [isOpen, setOpen] = useState(false)
 
-  const { isTypeIncluded, searchedTraits } = useMemo(() => {
+  const { searchedTraits } = useMemo(() => {
     const isTypeIncluded = type.includes(debouncedSearch)
     const searchedTraits = traits.filter(
       (t) => isTypeIncluded || t.trait_value.toString().toLowerCase().includes(debouncedSearch.toLowerCase())
     )
-    return { searchedTraits, isTypeIncluded }
+    return { searchedTraits }
   }, [debouncedSearch, traits, type])
 
-  useLayoutEffect(() => {
-    if (debouncedSearch && searchedTraits.length) {
-      setOpen(true)
-      return () => {
-        setOpen(false)
-      }
-    }
-    return
-  }, [searchedTraits, debouncedSearch, setOpen])
-
-  return searchedTraits.length || isTypeIncluded ? (
+  return traits.length ? (
     <Box
       as="details"
       className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
+      style={{ borderTop: '1px solid #99A1BD3D' }}
       open={isOpen}
     >
       <Box
@@ -156,6 +142,19 @@ export const TraitSelect = ({ traits, type, search }: { traits: Trait[]; type: s
           <Box color="textSecondary" display="inline-block" marginRight="12">
             {searchedTraits.length}
           </Box>
+          {/* <Input
+              display={!traits?.length ? 'none' : undefined}
+              value={search}
+              onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
+              width="full"
+              marginBottom="8"
+              placeholder="Search traits"
+              autoComplete="off"
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              style={{ border: '2px solid rgba(153, 161, 189, 0.24)', maxWidth: '300px' }}
+            /> */}
+
           <Box
             color="textSecondary"
             display="inline-block"
@@ -171,6 +170,13 @@ export const TraitSelect = ({ traits, type, search }: { traits: Trait[]; type: s
         </Box>
       </Box>
       <Column className={styles.filterDropDowns} paddingLeft="0">
+        <Input
+          value={search}
+          onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
+          placeholder="Search"
+          marginTop="8"
+          marginBottom="8"
+        />
         {searchedTraits.map((trait) => {
           const isTraitSelected = selectedTraits.find(
             ({ trait_type, trait_value }) =>

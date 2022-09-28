@@ -26,9 +26,6 @@ export const container = style([
 ])
 
 export const rowHover = style([
-  sprinkles({
-    borderRadius: '12',
-  }),
   {
     ':hover': {
       background: themeVars.colors.backgroundSurface,

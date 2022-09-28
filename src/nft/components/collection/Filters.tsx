@@ -9,6 +9,7 @@ import { Trait } from 'nft/hooks/useCollectionFilters'
 import { groupBy } from 'nft/utils/groupBy'
 import { FocusEventHandler, FormEvent, useMemo, useState } from 'react'
 import { useReducer } from 'react'
+import { badge } from 'nft/css/common.css'
 
 import { Input } from '../layout/Input'
 import { TraitSelect } from './TraitSelect'
@@ -71,12 +72,12 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           <PriceRange />
         </Box>
         <Box marginTop="12">
-          <Box as="span" fontSize="20">
+          <Box as="span" color="textSecondary" className={badge}>
             Traits
           </Box>
 
-          <Column marginTop="12" marginBottom="60" gap={{ sm: '4' }}>
-            <Input
+          <Column marginTop="12" marginBottom="60">
+            {/* <Input
               display={!traits?.length ? 'none' : undefined}
               value={search}
               onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
@@ -87,7 +88,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
               onFocus={handleFocus}
               onBlur={handleBlur}
               style={{ border: '2px solid rgba(153, 161, 189, 0.24)', maxWidth: '300px' }}
-            />
+            /> */}
             {Object.entries(traitsByGroup).map(([type, traits]) => (
               <TraitSelect key={type} {...{ type, traits, search }} />
             ))}
