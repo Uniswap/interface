@@ -1,23 +1,11 @@
 import { Environment, RecordSource, Store } from 'react-relay-offline'
-import { Network, RequestParameters, Variables } from 'relay-runtime'
-import { config } from 'src/config'
+import { Network } from 'relay-runtime'
+import { fetchWithObservables } from 'src/data/fetch'
 
-async function fetchRelay(params: RequestParameters, variables: Variables) {
-  const response = await fetch(config.uniswapApiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-API-KEY': config.uniswapApiKey,
-      // TODO: remove once API gateway supports mobile origin URL
-      Origin: config.uniswapAppUrl,
-    },
-    body: JSON.stringify({
-      query: params.text,
-      variables,
-    }),
-  })
-  return await response.json()
-}
+export const RelayEnvironment = new Environment({
+  network: Network.create(fetchWithObservables),
+  store: new Store(new RecordSource()),
+})
 
 if (__DEV__) {
   // We need to add the plugin in this file. See discussion here:
@@ -25,8 +13,3 @@ if (__DEV__) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   require('react-native-flipper-relay-devtools').addPlugin()
 }
-
-export const RelayEnvironment = new Environment({
-  network: Network.create(fetchRelay),
-  store: new Store(new RecordSource()),
-})
