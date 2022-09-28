@@ -83,25 +83,20 @@ const ArrowUpWrapper = styled.div`
   margin-left: 56%;
   margin-top: -18%;
 `
-const BottomWrapper = styled.div<{ redesignFlag: boolean }>`
+
+const InputWrapper = styled.div<{ redesignFlag: boolean }>`
+  visibility: ${({ redesignFlag }) => !redesignFlag && 'none'};
   ${({ redesignFlag }) =>
     redesignFlag &&
     css`
       background-color: ${({ theme }) => theme.backgroundModule};
       border-radius: 12px;
-      padding: 8px 12px 10px;
+      padding: 16px;
       color: ${({ theme }) => theme.textSecondary};
       font-size: 14px;
       line-height: 20px;
       font-weight: 500;
     `}
-`
-const TopInputWrapper = styled.div<{ redesignFlag: boolean }>`
-  padding: ${({ redesignFlag }) => redesignFlag && '0px 12px'};
-  visibility: ${({ redesignFlag }) => !redesignFlag && 'none'};
-`
-const BottomInputWrapper = styled.div<{ redesignFlag: boolean }>`
-  padding: ${({ redesignFlag }) => redesignFlag && '8px 0px'};
 `
 
 export function getIsValidSwapQuote(
@@ -541,7 +536,7 @@ export default function Swap() {
 
             <AutoColumn gap={'0px'}>
               <div style={{ display: 'relative' }}>
-                <TopInputWrapper redesignFlag={redesignFlagEnabled}>
+                <InputWrapper redesignFlag={redesignFlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
                     <SwapCurrencyInputPanel
                       label={
@@ -564,7 +559,7 @@ export default function Swap() {
                       loading={independentField === Field.OUTPUT && routeIsSyncing}
                     />
                   </Trace>
-                </TopInputWrapper>
+                </InputWrapper>
                 <ArrowWrapper clickable={isSupportedChain(chainId)} redesignFlag={redesignFlagEnabled}>
                   <TraceEvent
                     events={[Event.onClick]}
@@ -603,10 +598,9 @@ export default function Swap() {
                   </TraceEvent>
                 </ArrowWrapper>
               </div>
-              <BottomWrapper redesignFlag={redesignFlagEnabled}>
-                {redesignFlagEnabled && 'For'}
-                <AutoColumn gap={redesignFlagEnabled ? '0px' : '8px'}>
-                  <BottomInputWrapper redesignFlag={redesignFlagEnabled}>
+              <div>
+                <AutoColumn gap={redesignFlagEnabled ? '12px' : '8px'}>
+                  <InputWrapper redesignFlag={redesignFlagEnabled}>
                     <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                       <SwapCurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
@@ -655,7 +649,7 @@ export default function Swap() {
                       />
                     )}
                     {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
-                  </BottomInputWrapper>
+                  </InputWrapper>
                   <div>
                     {swapIsUnsupported ? (
                       <ButtonPrimary disabled={true}>
@@ -810,7 +804,7 @@ export default function Swap() {
                     {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                   </div>
                 </AutoColumn>
-              </BottomWrapper>
+              </div>
             </AutoColumn>
           </SwapWrapper>
           <NetworkAlert />

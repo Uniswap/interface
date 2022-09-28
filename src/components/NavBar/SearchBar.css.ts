@@ -45,7 +45,6 @@ export const searchBar = style([
   sprinkles({
     color: 'textTertiary',
     paddingX: '16',
-    cursor: 'pointer',
     background: 'backgroundSurface',
   }),
 ])
@@ -85,10 +84,10 @@ export const suggestionRow = style([
     justifyContent: 'space-between',
     paddingY: '8',
     paddingX: '16',
+    cursor: 'pointer',
   }),
   {
     ':hover': {
-      cursor: 'pointer',
       background: vars.color.lightGrayOverlay,
     },
     textDecoration: 'none',
