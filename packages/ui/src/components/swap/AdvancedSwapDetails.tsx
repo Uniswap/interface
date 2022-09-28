@@ -19,7 +19,7 @@ import LineVIcon from 'assets/images/tele/lineV.png'
 import TeleRouteIcon from 'assets/svg/teleRoute.svg'
 import arrowShowRoute from 'assets/svg/arrowShowRoute.svg'
 import BigNumber from "bignumber.js";
-const axios = require('axios').default;
+const axios = require('axios');
 
 const InfoLink = styled(ExternalLink)`
   width: 100%;
@@ -164,14 +164,13 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const [showRouterDetail, setShowRouterDetail] = useState(false)
   const [allowedSlippage] = useUserSlippageTolerance()
   const [routeData, setRouteData]: any = useState(null)
-  const showRoute = Boolean(trade && trade.route.path.length > 2)
+  // const showRoute = Boolean(trade && trade.route.path.length > 2)
+  const showRoute = Boolean(trade && trade.route.path.length >= 2)
   let tradeTemp: any = trade || { route: {} }
   let amountString = tradeTemp?.inputAmount?.toExact() || tradeTemp?.inputAmount?.toSignificant(6) || ''
-  window['axiosClient'] = axios
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let url = 'https://teleport-routing.qa.davionlabs.com/quote'
         if (!tradeTemp || !tradeTemp.hasOwnProperty('inputAmount') || !tradeTemp.hasOwnProperty('route')) {
           console.log('tradeTemp lack key', tradeTemp)
           return
@@ -188,145 +187,25 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           type: "exactIn",
           protocols: "v2",
         }
-        // let res2 = await axios.post(url, params)
-        // console.log(res2)
-        let res: any = {
-          "blockNumber": "1466190",
-          "amount": "2000000000000000000000",
-          "amountDecimals": "2000000000000000",
-          "quote": "1014077544487071087",
-          "quoteDecimals": "1.014077544487071087",
-          "quoteGasAdjusted": "1014077544486936087",
-          "quoteGasAdjustedDecimals": "1.014077544486936087",
-          "gasUseEstimateQuote": "135000",
-          "gasUseEstimateQuoteDecimals": "0.000000000000135",
-          "gasUseEstimate": "135000",
-          "gasUseEstimateUSD": "0.00000000016943367",
-          "gasPriceWei": "1",
-          "route": [
-            [
-              {
-                "type": "v2-pool",
-                "address": "0xE809D2aFa8eA065af826BE321937bf89a72cd9DE",
-                "tokenIn": {
-                  "chainId": 420,
-                  "decimals": "6",
-                  "address": "0x5986C8FfADCA9cee5C28A85cC3d4F335aab5Dc90",
-                  "symbol": "USDT"
-                },
-                "tokenOut": {
-                  "chainId": 420,
-                  "decimals": "18",
-                  "address": "0x4200000000000000000000000000000000000006",
-                  "symbol": "WETH"
-                },
-                "reserve0": {
-                  "token": {
-                    "chainId": 420,
-                    "decimals": "18",
-                    "address": "0x4200000000000000000000000000000000000006",
-                    "symbol": "WETH"
-                  },
-                  "quotient": "3035000000000000000"
-                },
-                "reserve1": {
-                  "token": {
-                    "chainId": 420,
-                    "decimals": "6",
-                    "address": "0x5986C8FfADCA9cee5C28A85cC3d4F335aab5Dc90",
-                    "symbol": "USDT"
-                  },
-                  "quotient": "3973778335000057662621"
-                },
-                "amountIn": "2000000000000000000000",
-                "amountOut": "2000000000000000000000",
-                "stable": false
-              },
-              {
-                "type": "v2-pool",
-                "address": "0xE809D2aFa8eA065af826BE321937bf89a72cd9DE",
-                "tokenIn": {
-                  "chainId": 420,
-                  "decimals": "6",
-                  "address": "0x5986C8FfADCA9cee5C28A85cC3d4F335aab5Dc90",
-                  "symbol": "WETH"
-                },
-                "tokenOut": {
-                  "chainId": 420,
-                  "decimals": "18",
-                  "address": "0x4200000000000000000000000000000000000006",
-                  "symbol": "USDC"
-                },
-                "reserve0": {
-                  "token": {
-                    "chainId": 420,
-                    "decimals": "18",
-                    "address": "0x4200000000000000000000000000000000000006",
-                    "symbol": "WETH"
-                  },
-                  "quotient": "3035000000000000000"
-                },
-                "reserve1": {
-                  "token": {
-                    "chainId": 420,
-                    "decimals": "6",
-                    "address": "0x5986C8FfADCA9cee5C28A85cC3d4F335aab5Dc90",
-                    "symbol": "USDC"
-                  },
-                  "quotient": "3973778335000057662621"
-                },
-                "amountIn": "2000000000000000000000",
-                "amountOut": "2000000000000000000000",
-                "stable": false
-              }
-            ],
-            [
-              {
-                "type": "v2-pool",
-                "address": "0xE809D2aFa8eA065af826BE321937bf89a72cd9DE",
-                "tokenIn": {
-                  "chainId": 420,
-                  "decimals": "6",
-                  "address": "0x5986C8FfADCA9cee5C28A85cC3d4F335aab5Dc90",
-                  "symbol": "USDT"
-                },
-                "tokenOut": {
-                  "chainId": 420,
-                  "decimals": "18",
-                  "address": "0x4200000000000000000000000000000000000006",
-                  "symbol": "WETH"
-                },
-                "reserve0": {
-                  "token": {
-                    "chainId": 420,
-                    "decimals": "18",
-                    "address": "0x4200000000000000000000000000000000000006",
-                    "symbol": "WETH"
-                  },
-                  "quotient": "3035000000000000000"
-                },
-                "reserve1": {
-                  "token": {
-                    "chainId": 420,
-                    "decimals": "6",
-                    "address": "0x5986C8FfADCA9cee5C28A85cC3d4F335aab5Dc90",
-                    "symbol": "USDT"
-                  },
-                  "quotient": "3973778335000057662621"
-                },
-                "amountIn": "2000000000000000000000",
-                "amountOut": "2000000000000000000000",
-                "stable": false
-              }
-            ]
-          ],
-          "percents": [
-            20,
-            80
-          ],
-          "quoteId": ""
-        }
-        setRouteData(res)
+        var data = JSON.stringify(params);
+        let url = 'https://teleport-routing.qa.davionlabs.com/quote'
+        var config = {
+          method: 'post',
+          url,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: data
+        };
+
+        axios(config)
+          .then(function (response) {
+            setRouteData(response.data)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        
       } catch (error) {
         console.log('AdvancedSwapDetails error', error)
       }
