@@ -11,7 +11,6 @@ import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
-import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -78,7 +77,7 @@ const CurrencySelect = styled(ButtonGray)<{
   background-color: ${({ selected, theme, redesignFlag }) =>
     redesignFlag
       ? selected
-        ? theme.backgroundSurface
+        ? theme.stateOverlayPressed
         : theme.accentAction
       : selected
       ? theme.deprecated_bg2
@@ -100,29 +99,26 @@ const CurrencySelect = styled(ButtonGray)<{
   gap: ${({ redesignFlag }) => (redesignFlag ? '8px' : '0px')};
   justify-content: space-between;
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
-  :focus,
-  :hover {
+
+  &:hover {
     background-color: ${({ selected, theme, redesignFlag }) =>
-      selected
-        ? redesignFlag
-          ? theme.backgroundSurface
-          : theme.deprecated_bg3
-        : darken(0.05, theme.deprecated_primary1)};
+      redesignFlag
+        ? theme.stateOverlayHover
+        : selected
+        ? darken(0.05, theme.deprecated_primary1)
+        : theme.deprecated_bg3};
   }
+
+  &:active {
+    background-color: ${({ selected, theme, redesignFlag }) =>
+      redesignFlag
+        ? theme.stateOverlayPressed
+        : selected
+        ? darken(0.05, theme.deprecated_primary1)
+        : theme.deprecated_bg3};
+  }
+
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
-`
-const InputCurrencySelect = styled(CurrencySelect)<{ redesignFlag: boolean }>`
-  background-color: ${({ theme, selected, redesignFlag }) =>
-    redesignFlag && (selected ? theme.backgroundModule : theme.accentAction)};
-  :focus,
-  :hover {
-    background-color: ${({ selected, theme, redesignFlag }) =>
-      selected
-        ? redesignFlag
-          ? theme.backgroundInteractive
-          : theme.deprecated_bg3
-        : darken(0.05, theme.deprecated_primary1)};
-  }
 `
 
 const InputRow = styled.div<{ selected: boolean; redesignFlag: boolean }>`
@@ -133,10 +129,10 @@ const InputRow = styled.div<{ selected: boolean; redesignFlag: boolean }>`
     redesignFlag ? '0px' : selected ? ' 1rem 1rem 0.75rem 1rem' : '1rem 1rem 1rem 1rem'};
 `
 
-const LabelRow = styled.div`
+const LabelRow = styled.div<{ redesignFlag: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.textSecondary : theme.deprecated_text1)};
   font-size: 0.75rem;
   line-height: 1rem;
   padding: 0 1rem 1rem;
@@ -152,18 +148,6 @@ const FiatRow = styled(LabelRow)<{ redesignFlag: boolean }>`
   min-height: ${({ redesignFlag }) => redesignFlag && '32px'};
   padding: ${({ redesignFlag }) => redesignFlag && '8px 0px'};
   height: ${({ redesignFlag }) => !redesignFlag && '24px'};
-`
-
-const NoBalanceState = styled.div`
-  color: ${({ theme }) => theme.textTertiary};
-  font-weight: 400;
-  justify-content: space-between;
-  padding: 0px 4px 1px 4px;
-`
-const NoBalanceDash = styled.span`
-  color: ${({ theme }) => theme.textTertiary};
-  font-variant: small-caps;
-  font-feature-settings: 'pnum' on, 'lnum' on;
 `
 
 const Aligner = styled.span`
@@ -217,6 +201,8 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean; redesignFlag: boole
 const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean; redesignFlag: boolean }>`
   ${loadingOpacityMixin};
   text-align: left;
+  font-size: ${({ redesignFlag }) => redesignFlag && '36px'};
+  line-height: ${({ redesignFlag }) => redesignFlag && '44px'};
   font-variant: ${({ redesignFlag }) => redesignFlag && 'small-caps'};
   font-feature-settings: ${({ redesignFlag }) => redesignFlag && 'pnum on, lnum on'};
 `
@@ -272,8 +258,6 @@ export default function SwapCurrencyInputPanel({
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
-  const { pathname } = useLocation()
-  const isAddLiquidityPage = pathname.includes('/add') && !pathname.includes('/add/v2')
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -310,7 +294,7 @@ export default function SwapCurrencyInputPanel({
             />
           )}
 
-          <InputCurrencySelect
+          <CurrencySelect
             disabled={!chainAllowed}
             visible={currency !== undefined}
             selected={!!currency}
@@ -352,18 +336,8 @@ export default function SwapCurrencyInputPanel({
               </RowFixed>
               {onCurrencySelect && <StyledDropDown selected={!!currency} redesignFlag={redesignFlagEnabled} />}
             </Aligner>
-          </InputCurrencySelect>
+          </CurrencySelect>
         </InputRow>
-        {redesignFlagEnabled && !currency && !isAddLiquidityPage && (
-          <NoBalanceState>
-            <FiatRow redesignFlag={redesignFlagEnabled}>
-              <RowBetween>
-                <NoBalanceDash>-</NoBalanceDash>
-                <NoBalanceDash>-</NoBalanceDash>
-              </RowBetween>
-            </FiatRow>
-          </NoBalanceState>
-        )}
         {!hideInput && !hideBalance && currency && (
           <FiatRow redesignFlag={redesignFlagEnabled}>
             <RowBetween>
@@ -373,8 +347,8 @@ export default function SwapCurrencyInputPanel({
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
                   <ThemedText.DeprecatedBody
-                    color={theme.deprecated_text3}
-                    fontWeight={500}
+                    color={redesignFlag ? theme.textSecondary : theme.deprecated_text3}
+                    fontWeight={redesignFlag ? 400 : 500}
                     fontSize={14}
                     style={{ display: 'inline' }}
                   >
