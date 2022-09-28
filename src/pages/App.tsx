@@ -56,7 +56,7 @@ const AppWrapper = styled.div<{ redesignFlagEnabled: boolean }>`
   flex-flow: column;
   align-items: flex-start;
   font-feature-settings: ${({ redesignFlagEnabled }) =>
-    redesignFlagEnabled ? "'ss01' on, 'ss02' on" : "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on"};
+    redesignFlagEnabled ? "'ss01' on, 'ss02' off, 'cv01' on, 'cv03' on" : "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on"};
 `
 
 const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
