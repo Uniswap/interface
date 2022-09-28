@@ -33,6 +33,7 @@ import {
 } from 'utils/formatChartTimes'
 
 import LineChart from '../../Charts/LineChart'
+import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
@@ -104,8 +105,15 @@ export const TimeOptionsContainer = styled.div`
   height: 40px;
   padding: 4px;
   width: fit-content;
+
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    width: 100%;
+    justify-content: space-between;
+    border: none;
+  }
 `
 const TimeButton = styled.button<{ active: boolean }>`
+  flex: 1;
   display: flex;
   align-items: center;
   background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
