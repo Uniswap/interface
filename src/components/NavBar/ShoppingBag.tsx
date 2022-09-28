@@ -23,11 +23,11 @@ export const ShoppingBag = () => {
     setSellQuantity(sellAssets.length)
   }, [sellAssets])
 
-  const isSell = location.pathname === '/nfts/sell'
+  const isProfilePage = location.pathname === '/profile'
 
   return (
     <NavIcon onClick={toggleBag}>
-      {isSell ? (
+      {isProfilePage ? (
         <>
           <TagIcon width={20} height={20} />
           {sellQuantity ? (

@@ -184,6 +184,6 @@ export interface DropDownOption {
 
 export enum DetailsOrigin {
   COLLECTION = 'collection',
-  SELL = 'sell',
+  PROFILE = 'profile',
   EXPLORE = 'explore',
 }

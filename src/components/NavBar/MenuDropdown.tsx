@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
-import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -11,7 +10,6 @@ import {
   EllipsisIcon,
   GithubIconMenu,
   GovernanceIcon,
-  ThinTagIcon,
   TwitterIconMenu,
 } from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
@@ -117,7 +115,6 @@ export const MenuDropdown = () => {
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
-  const nftFlag = useNftFlag()
 
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
@@ -133,16 +130,6 @@ export const MenuDropdown = () => {
           <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '56', lg: 'unset' }} right="0">
             <Column gap="16">
               <Column paddingX="8" gap="4">
-                {nftFlag === NftVariant.Enabled && (
-                  <PrimaryMenuRow to="/nfts/sell" close={toggleOpen}>
-                    <Icon>
-                      <ThinTagIcon width={24} height={24} />
-                    </Icon>
-                    <PrimaryMenuRow.Text>
-                      <Trans>Sell NFTs</Trans>
-                    </PrimaryMenuRow.Text>
-                  </PrimaryMenuRow>
-                )}
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
                     <GovernanceIcon width={24} height={24} />
