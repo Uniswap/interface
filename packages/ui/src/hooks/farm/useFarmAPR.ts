@@ -20,7 +20,7 @@ export function calculateFarmPoolAPR(
     estimatedYearlyEarningForThisPoolInUSD: estimatedYearlyEarningForThisPoolInUSD.raw.toString(),
     totalStakedAmountInUSD: totalStakedAmountInUSD.raw.toString()
   })
-  return ((Number(estimatedYearlyEarningForThisPoolInUSD.raw) / Number(totalStakedAmountInUSD.raw)) * 100).toFixed(2)
+  return (Number(estimatedYearlyEarningForThisPoolInUSD.raw) / Number(totalStakedAmountInUSD.raw)) * 100
 }
 
 export function useMasterChefMiscData() {

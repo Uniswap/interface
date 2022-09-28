@@ -262,7 +262,9 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>APR</StakingColumnTitle>
-          <TYPE.white fontSize={16}>{calculatedApr ? calculatedApr : '--.--'}%</TYPE.white>
+          <TYPE.white fontSize={16}>
+            {calculatedApr && calculatedApr !== Infinity ? calculatedApr.toFixed(2) : '--.--'}%
+          </TYPE.white>
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>Liquidity TVL</StakingColumnTitle>
