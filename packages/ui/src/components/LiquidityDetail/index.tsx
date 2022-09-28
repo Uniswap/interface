@@ -1,20 +1,24 @@
-import { Fraction, JSBI } from '@teleswap/sdk'
+import { Fraction, JSBI, Pair } from '@teleswap/sdk'
+import Bn from 'bignumber.js'
 import { ButtonPrimary } from 'components/Button'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogoHorizontal from 'components/DoubleLogo'
-// import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { useTotalSupply } from 'data/TotalSupply'
+// import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import gql from 'graphql-tag'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useMemo } from 'react'
+import { isMobile } from 'react-device-detect'
 import { useDispatch } from 'react-redux'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import { AppDispatch } from 'state'
 import { Field, resetMintState } from 'state/mint/actions'
 import { useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components'
+import { client } from 'utils/apolloClient'
 import { currencyId } from 'utils/currencyId'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 
@@ -31,12 +35,8 @@ const BorderVerticalContainer = styled(Flex)`
   gap: 24px;
 `
 
-export default function LiquidityDetail({
-  history,
-  match: {
-    params: { currencyIdA, currencyIdB, stable }
-  }
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; stable: string }>) {
+export default function LiquidityDetail() {
+  const { currencyIdA, currencyIdB, stable } = useParams<{ currencyIdA: string; currencyIdB: string; stable: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
   const {
@@ -66,7 +66,7 @@ export default function LiquidityDetail({
 
   const userHoldingPercentage = useMemo(() => {
     if (userPoolBalance && totalPoolTokens) {
-      return userPoolBalance!.divide(totalPoolTokens!)
+      return userPoolBalance?.divide(totalPoolTokens!)
     }
     return '-'
   }, [pair?.liquidityToken, totalPoolTokens, userPoolBalance])
@@ -179,9 +179,85 @@ export default function LiquidityDetail({
     )
   }, [claim, currencyA, currencyB, parsedAmounts])
 
+  const [ethPrice, setEthPrice] = useState<Bn>()
+
+  const [fullInfoPair, setFullInfoPair] = useState<any>()
+  // const backgroundColor = useColor(pair?.token0)
+  useEffect(() => {
+    ;(async () => {
+      if (!pair || !pair.token0 || !pair.token1 || ethPrice || fullInfoPair) {
+        return
+      }
+      const pairAddress = Pair.getAddress(pair.token0, pair.token1).toLowerCase()
+      const [
+        {
+          data: {
+            bundles: [{ ethPrice: ep }]
+          }
+        },
+        {
+          data: {
+            pairs: [fullPair]
+          }
+        }
+      ] = await Promise.all([
+        client.query({
+          query: gql`
+            {
+              bundles(first: 1) {
+                id
+                ethPrice
+              }
+            }
+          `,
+          fetchPolicy: 'cache-first'
+        }),
+        client.query({
+          query: gql`
+          {
+            pairs(where: { id: "${pairAddress}" }) {
+              id
+              trackedReserveETH
+              token0 {
+                id
+                symbol
+                name
+                derivedETH
+              }
+              token1 {
+                id
+                symbol
+                name
+                derivedETH
+              }
+              reserve0
+              reserve1
+              reserveUSD
+              totalSupply
+              trackedReserveETH
+              reserveETH
+              volumeUSD
+              untrackedVolumeUSD
+              token0Price
+              token1Price
+              createdAtTimestamp
+            }
+          }
+          `
+          /* variables: {
+            pairAddress
+          }, */
+          // fetchPolicy: 'cache-first'
+        })
+      ])
+      setFullInfoPair(fullPair)
+      setEthPrice(new Bn(ep))
+    })()
+  }, [ethPrice, fullInfoPair, pair])
+
   return (
     <>
-      <Flex width="40rem" alignItems={'flex-start'}>
+      <Flex width="40rem" alignItems={'flex-start'} maxWidth="90vw">
         <BackToMyLiquidity />
       </Flex>
       {/*   <TransactionConfirmationModal
@@ -204,17 +280,30 @@ export default function LiquidityDetail({
       <Flex
         flexDirection={'column'}
         width="40rem"
+        maxWidth={'90vw'}
         sx={{
           maxHeight: '100%',
           display: 'grid',
           gridAutoRows: 'auto',
           gridRowGap: '1rem',
+          gridColumnGap: '1rem',
           overflow: 'hidden auto'
         }}
       >
         <Flex justifyContent={'space-between'} marginBottom="2rem">
-          <Flex sx={{ gap: '12px', alignItems: 'center' }}>
-            <DoubleCurrencyLogoHorizontal currency0={currencyA} currency1={currencyB} size={'1.2rem'} />
+          <Flex
+            sx={{
+              gap: '0.5rem',
+              alignItems: isMobile ? 'flex-start' : 'center',
+              justifyContent: isMobile ? 'space-evenly' : 'center',
+              flexDirection: isMobile ? 'column' : 'row'
+            }}
+          >
+            <DoubleCurrencyLogoHorizontal
+              currency0={currencyA}
+              currency1={currencyB}
+              size={isMobile ? '2rem' : '1.2rem'}
+            />
             <Text
               sx={{
                 fontFamily: 'Dela Gothic One',
@@ -222,13 +311,15 @@ export default function LiquidityDetail({
                 fontWeight: '400',
                 fontSize: '1.2rem',
                 alignItems: 'flex-end',
-                color: '#FFFFFF'
+                color: '#FFFFFF',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis'
               }}
             >
               {currencyA?.symbol?.toUpperCase()}-{currencyB?.symbol?.toUpperCase()}
             </Text>
           </Flex>
-          <Flex sx={{ gap: '0.8rem', a: { height: '2rem' } }}>
+          <Flex sx={{ flexDirection: isMobile ? 'column' : 'row', gap: '0.8rem', a: { height: '2rem' } }}>
             <ButtonPrimary
               sx={{
                 maxWidth: 'max-content',
@@ -263,7 +354,17 @@ export default function LiquidityDetail({
         </Flex>
         <BorderVerticalContainer>
           <Text sx={{ fontSize: '1.2rem' }}>Total Value</Text>
-          <Text sx={{ fontSize: '1.2rem' }}>$&nbsp;18</Text>
+          <Text sx={{ fontSize: '1.2rem' }}>
+            $&nbsp;
+            {userHoldingPercentage !== '-' &&
+              fullInfoPair &&
+              ethPrice &&
+              new Bn(userHoldingPercentage.toSignificant(18))
+                .multipliedBy(fullInfoPair.trackedReserveETH)
+                .multipliedBy(ethPrice)
+                .decimalPlaces(4, Bn.ROUND_HALF_UP)
+                .toString()}
+          </Text>
           <Box
             sx={{
               width: '100%',
@@ -277,13 +378,14 @@ export default function LiquidityDetail({
               display: 'grid',
               gridTemplateColumns: '1fr 1fr 1fr 1fr',
               gridTemplateRows: 'repeat(3, 1fr)',
-              gridRowGap: '24px',
+              gridRowGap: '1rem',
               gridAutoFlow: 'row',
               fontFamily: 'Poppins',
               fontStyle: 'normal',
               fontWeight: '500',
               fontSize: '1rem',
-              color: '#FFFFFF'
+              color: '#FFFFFF',
+              ...(isMobile && { gridColumnGap: '1rem' })
             }}
           >
             <HeaderText>Token</HeaderText>
@@ -291,12 +393,45 @@ export default function LiquidityDetail({
             <HeaderText>Amount</HeaderText>
             <HeaderText>Percent</HeaderText>
             <Flex sx={{ gap: '0.5rem' }} alignItems="center">
-              <CurrencyLogo currency={currencyA} size="1rem" />
-              <Text>{currencyA?.symbol?.toUpperCase()}</Text>
+              <CurrencyLogo currency={currencyA} size={isMobile ? '1.1rem' : '1rem'} />
+              <Text
+                sx={{
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {currencyA?.symbol?.toUpperCase()}
+              </Text>
             </Flex>
-            <Box>Current A Value</Box>
+            <Box
+              sx={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {userHoldingPercentage !== '-' &&
+                fullInfoPair &&
+                ethPrice &&
+                new Bn(userHoldingPercentage.toSignificant(18))
+                  .multipliedBy(fullInfoPair.trackedReserveETH)
+                  .multipliedBy(ethPrice)
+                  .dividedBy(2)
+                  .decimalPlaces(4, Bn.ROUND_HALF_UP)
+                  .toString()}
+              &nbsp;$
+            </Box>
             {/* <Box>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(12)}</Box> */}
-            <Box>{userToken0AmountInPool?.toSignificant(12)}</Box>
+            <Box
+              sx={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {userToken0AmountInPool?.toSignificant(12)}
+            </Box>
             <Box>
               {userHoldingPercentage instanceof Fraction
                 ? +userHoldingPercentage.toSignificant(4) * 100
@@ -305,10 +440,43 @@ export default function LiquidityDetail({
             </Box>
             <Flex sx={{ gap: '0.5rem' }} alignItems="center">
               <CurrencyLogo currency={currencyB} size="1rem" />
-              <Text>{currencyB?.symbol?.toUpperCase()}</Text>
+              <Text
+                sx={{
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {currencyB?.symbol?.toUpperCase()}
+              </Text>
             </Flex>
-            <Box>Current B Value</Box>
-            <Box>{userToken1AmountInPool?.toSignificant(12)}</Box>
+            <Box
+              sx={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {userHoldingPercentage !== '-' &&
+                fullInfoPair &&
+                ethPrice &&
+                new Bn(userHoldingPercentage.toSignificant(18))
+                  .multipliedBy(fullInfoPair.trackedReserveETH)
+                  .multipliedBy(ethPrice)
+                  .dividedBy(2)
+                  .decimalPlaces(4, Bn.ROUND_HALF_UP)
+                  .toString()}
+              &nbsp;$
+            </Box>
+            <Box
+              sx={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {userToken1AmountInPool?.toSignificant(12)}
+            </Box>
             <Box>
               {userHoldingPercentage instanceof Fraction
                 ? +userHoldingPercentage.toSignificant(4) * 100

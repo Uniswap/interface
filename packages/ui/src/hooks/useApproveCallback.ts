@@ -1,7 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { CurrencyAmount, ETHER, TokenAmount, Trade } from '@teleswap/sdk'
-import { ROUTER_ADDRESS } from '@teleswap/sdk'
 import { useCallback, useMemo } from 'react'
 
 import { useTokenAllowance } from '../data/Allowances'
@@ -11,6 +10,7 @@ import { calculateGasMargin } from '../utils'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { useActiveWeb3React } from './index'
 import { useTokenContract } from './useContract'
+import { usePresetPeripheryAddress } from './usePresetContractAddress'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -104,5 +104,6 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage]
   )
+  const { ROUTER: ROUTER_ADDRESS } = usePresetPeripheryAddress()
   return useApproveCallback(amountToApprove, ROUTER_ADDRESS)
 }
