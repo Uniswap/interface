@@ -13,7 +13,6 @@ import { ApplicationModal } from 'state/application/reducer'
 const Cart = lazy(() => import('nft/components/sell/modal/ListingTag'))
 const Bag = lazy(() => import('nft/components/bag/Bag'))
 const TransactionCompleteModal = lazy(() => import('nft/components/collection/TransactionCompleteModal'))
-const MobileHoverBag = lazy(() => import('nft/components/bag/MobileHoverBag'))
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
@@ -34,7 +33,6 @@ export default function TopLevelModals() {
       <Cart />
       <Bag />
       {useNftFlag() === NftVariant.Enabled && <TransactionCompleteModal />}
-      {useNftFlag() === NftVariant.Enabled && <MobileHoverBag />}
     </>
   )
 }
