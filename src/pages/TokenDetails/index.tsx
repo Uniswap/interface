@@ -45,7 +45,7 @@ export const Footer = styled.div`
 `
 export const TokenDetailsLayout = styled.div`
   display: flex;
-  gap: 80px;
+  gap: 60px;
   padding: 68px 20px;
   width: 100%;
   justify-content: center;
@@ -77,7 +77,7 @@ export const TokenDetailsLayout = styled.div`
   }
 `
 export const LeftPanel = styled.div`
-  max-width: 832px;
+  max-width: 780px;
   overflow: hidden;
 `
 export const RightPanel = styled.div`
