@@ -225,7 +225,6 @@ export default function Swap({ history }: RouteComponentProps) {
     feeConfig,
     [Field.INPUT]: INPUT,
     [Field.OUTPUT]: OUTPUT,
-    trade: storeTrade,
   } = useSwapState()
 
   const {
@@ -249,7 +248,7 @@ export default function Swap({ history }: RouteComponentProps) {
     inputError: wrapInputError,
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  const trade = showWrap ? undefined : v2Trade || storeTrade
+  const trade = showWrap ? undefined : v2Trade
 
   const parsedAmounts = showWrap
     ? {
