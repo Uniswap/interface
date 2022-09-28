@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
+import { textFadeIn } from 'theme/animations'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 export const StatWrapper = styled.div`
@@ -16,6 +17,7 @@ export const StatWrapper = styled.div`
 export const TokenStatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
+  ${textFadeIn}
 `
 export const StatPair = styled.div`
   display: flex;
