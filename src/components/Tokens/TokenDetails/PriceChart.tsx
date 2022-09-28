@@ -114,6 +114,8 @@ export const TimeOptionsContainer = styled.div`
 `
 const TimeButton = styled.button<{ active: boolean }>`
   flex: 1;
+  display: flex;
+  align-items: center;
   background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
   font-weight: 600;
   font-size: 16px;
