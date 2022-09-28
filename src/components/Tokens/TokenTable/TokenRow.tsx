@@ -485,8 +485,8 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[filterNetwork]).circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
-  const arrow = delta ? getDeltaArrow(delta) : null
-  const formattedDelta = delta ? formatDelta(delta) : null
+  const arrow = getDeltaArrow(delta)
+  const formattedDelta = formatDelta(delta)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
   const exploreTokenSelectedEventProperties = {
@@ -544,7 +544,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           percentChange={
             <ClickableContent>
-              {formattedDelta ?? '-'}
+              {formattedDelta}
               {arrow}
             </ClickableContent>
           }
