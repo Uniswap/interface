@@ -20,6 +20,7 @@ import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
 // import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 import { useChefPoolAPR } from 'hooks/farm/useFarmAPR'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { usePairSidesValueEstimate, usePairUSDValue } from 'hooks/usePairValue'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -183,10 +184,10 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const priceOfRewardToken = useUSDCPrice(rewardToken)
   const totalValueLockedInUSD = usePairUSDValue(stakingTokenPair, stakingInfo.tvl)
   const calculatedApr = useChefPoolAPR(stakingInfo, stakingTokenPair, stakingInfo.stakedAmount, priceOfRewardToken)
-  // const [approval, approve] = useApproveCallback(
-  //   CurrencyAmount.fromRawAmount(stakingInfo.stakingToken, '1'),
-  //   mchefContract?.address
-  // )
+  const [approval, approve] = useApproveCallback(new TokenAmount(stakingInfo.stakingToken, '1'), mchefContract?.address)
+  useEffect(() => {
+    console.debug(`approval status for ${stakingInfo.stakingAsset.name} is now: ${approval}`)
+  }, [stakingInfo, approval])
   const { liquidityValueOfToken0, liquidityValueOfToken1 } = usePairSidesValueEstimate(
     stakingTokenPair,
     new TokenAmount(stakingInfo.stakingToken, stakingInfo.stakedAmount.raw || '0')
@@ -217,13 +218,15 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
           <StakingColumnTitle>
             Staked {farmingConfig?.pools[pid].stakingAsset.isLpToken ? 'LP' : 'Token'}
           </StakingColumnTitle>
-          <TYPE.white fontSize={16}>{stakingInfo.stakedAmount.toSignificant(6)}</TYPE.white>
-          {/* {approval === ApprovalState.APPROVED ? ( */}
-          <div className="actions">
-            <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
-            <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
-          </div>
-          {/* ) : (
+          <TYPE.white fontSize={16} marginRight="1.5rem">
+            {stakingInfo.stakedAmount.toSignificant(6)}
+          </TYPE.white>
+          {approval !== ApprovalState.NOT_APPROVED ? (
+            <div className="actions">
+              <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
+              <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
+            </div>
+          ) : (
             <ButtonPrimary
               height={28}
               width="auto"
@@ -234,7 +237,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
             >
               Approve
             </ButtonPrimary>
-          )} */}
+          )}
           {stakingInfo.stakingAsset.isLpToken && (
             <div className="estimated-staked-lp-value">
               {liquidityValueOfToken0?.toSignificant(4)} {liquidityValueOfToken0?.token.symbol} +{' '}
