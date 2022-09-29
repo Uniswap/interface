@@ -6,6 +6,9 @@ const { DefinePlugin } = require('webpack')
 const commitHash = require('child_process').execSync('git rev-parse HEAD')
 
 module.exports = {
+  devServer: {
+    port: 53413,
+  },
   babel: {
     plugins: ['@vanilla-extract/babel-plugin'],
   },
