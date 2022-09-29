@@ -13,7 +13,6 @@ import ReactGA from 'react-ga'
 import { useHistory, useParams } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import getRoutePairMode from 'utils/getRoutePairMode'
 
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { LightCard } from '../../components/Card'
@@ -70,7 +69,13 @@ export default function RemoveLiquidity() {
 
   // burn state
   const { independentField, typedValue } = useBurnState()
-  const { pair, parsedAmounts, error } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined)
+  const stableBoolean = stable && stable.toLowerCase() === 'true' ? true : false
+  const { pair, parsedAmounts, error } = useDerivedBurnInfo(
+    currencyA ?? undefined,
+    currencyB ?? undefined,
+    stableBoolean
+  )
+  parsedAmounts['pairMode'] = stable
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
   const isValid = !error
 
@@ -102,7 +107,6 @@ export default function RemoveLiquidity() {
 
   // pair contract
   const pairContract: Contract | null = usePairContract(pair?.liquidityToken?.address)
-
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
 
@@ -221,6 +225,7 @@ export default function RemoveLiquidity() {
     const currencyBIsETH = currencyB === ETHER
     const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
 
+    const pairStable = parsedAmounts['pairMode'] && parsedAmounts['pairMode'].toLowerCase() === 'true' ? true : false
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
     let methodNames: string[]
@@ -232,7 +237,12 @@ export default function RemoveLiquidity() {
       if (oneCurrencyIsETH) {
         methodNames = ['removeLiquidityETH', 'removeLiquidityETHSupportingFeeOnTransferTokens']
         args = [
-          currencyBIsETH ? tokenA.address : tokenB.address,
+          // currencyBIsETH ? tokenA.address : tokenB.address,
+          [
+            currencyBIsETH ? tokenA.address : tokenB.address,
+            currencyBIsETH ? tokenB.address : tokenA.address,
+            pairStable
+          ],
           liquidityAmount.raw.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
@@ -244,7 +254,7 @@ export default function RemoveLiquidity() {
       else {
         methodNames = ['removeLiquidity']
         args = [
-          [tokenA.address, tokenB.address, getRoutePairMode()],
+          [tokenA.address, tokenB.address, pairStable],
           liquidityAmount.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
@@ -262,7 +272,7 @@ export default function RemoveLiquidity() {
           [
             currencyBIsETH ? tokenA.address : tokenB.address,
             currencyBIsETH ? tokenB.address : tokenA.address,
-            getRoutePairMode()
+            pairStable
           ],
           liquidityAmount.raw.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
@@ -277,7 +287,7 @@ export default function RemoveLiquidity() {
       else {
         methodNames = ['removeLiquidityWithPermit']
         args = [
-          [tokenA.address, tokenB.address, getRoutePairMode()],
+          [tokenA.address, tokenB.address, pairStable],
           liquidityAmount.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),

@@ -457,7 +457,7 @@ export function LiquidityCard({
   const { account } = useActiveWeb3React()
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
-
+  const pairStable = pair.stable
   const [showMore, setShowMore] = useState(false)
 
   const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
@@ -573,7 +573,7 @@ export function LiquidityCard({
           padding=".3rem"
           borderRadius=".5rem"
           as={Link}
-          to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}`}
+          to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}/${pairStable}`}
         >
           Manage
         </ButtonPrimary>

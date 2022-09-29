@@ -56,6 +56,7 @@ export default function LiquidityDetail() {
     currencyB ?? undefined,
     `${stable}`.toLowerCase() === 'true' ? true : `${stable}`.toLowerCase() === 'false' ? false : undefined
   )
+  const pairModeStable = stable?.toLowerCase() === 'true' ? true : false
   const [tokenA, tokenB] = useMemo(
     () => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)],
     [currencyA, currencyB, chainId]
@@ -331,13 +332,13 @@ export default function LiquidityDetail() {
                 color: '#000000'
               }}
               as={Link}
-              to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}`}
+              to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}/${pairModeStable}`}
             >
               Increase
             </ButtonPrimary>
             <ButtonPrimary
               as={Link}
-              to={`/remove/${currencyId(currencyA!)}/${currencyId(currencyB!)}`}
+              to={`/remove/${currencyId(currencyA!)}/${currencyId(currencyB!)}/${pairModeStable}`}
               sx={{
                 maxWidth: 'max-content',
                 fontFamily: 'Poppins',

@@ -10,13 +10,12 @@ import Settings from 'components/Settings'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import { usePresetPeripheryAddress } from 'hooks/usePresetContractAddress'
 import useThemedContext from 'hooks/useThemedContext'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useHistory, useParams } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import getRoutePairMode from 'utils/getRoutePairMode'
 
 import AddIcon from '../../assets/svg/add.svg'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -97,6 +96,11 @@ export default function AddLiquidity() {
         (currencyB && currencyEquals(currencyB, WETH[chainId])))
   )
 
+  useEffect(() => {
+    const pairM = stable && stable.toLowerCase() === 'true' ? true : false
+    setPairModeStable(pairM)
+  }, [stable])
+
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode()
@@ -116,7 +120,6 @@ export default function AddLiquidity() {
     poolTokenPercentage,
     error
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, pairModeStable)
-
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
   const isValid = useMemo(() => !error, [error])
@@ -176,7 +179,6 @@ export default function AddLiquidity() {
       [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
-
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<
@@ -200,7 +202,7 @@ export default function AddLiquidity() {
           tokenBIsETH
             ? wrappedCurrency(currencyB, chainId)?.address ?? ''
             : wrappedCurrency(currencyA, chainId)?.address ?? '',
-          getRoutePairMode()
+          pairModeStable
         ],
         (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
