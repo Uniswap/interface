@@ -28,8 +28,8 @@ interface AdditionalStakingInfo {
     pendingReward: string
   }
 
-  stakedAmount: CurrencyAmount
-  pendingReward: CurrencyAmount
+  stakedAmount: TokenAmount
+  pendingReward: TokenAmount
   rewardDebt: CurrencyAmount
   rewardToken: Token
 }
@@ -48,12 +48,13 @@ export function useChefStakingInfo(): (ChefStakingInfo | undefined)[] {
 
   const stakingTokens = useMemo(() => {
     return poolInfos.map((poolInfo, idx) => {
+      const poolPreset: FarmingPool | undefined = poolPresets[idx]
       return new Token(
         chainId || 420,
         poolInfo.lpToken,
-        poolPresets[idx].stakingAsset.decimal || 18,
-        poolPresets[idx].stakingAsset.symbol,
-        poolPresets[idx].stakingAsset.name
+        poolPreset?.stakingAsset.decimal || 18,
+        poolPreset?.stakingAsset.symbol,
+        poolPreset?.stakingAsset.name
       )
     })
   }, [chainId, poolInfos, poolPresets])
@@ -68,9 +69,10 @@ export function useChefStakingInfo(): (ChefStakingInfo | undefined)[] {
   const tvls = useTokenBalances(mchefContract?.address, stakingTokens)
 
   return poolInfos.map((info, idx) => {
-    if (!poolPresets[idx]) return undefined
+    const poolPreset: FarmingPool | undefined = poolPresets[idx]
+    if (!poolPreset) return undefined
 
-    const pool = poolPresets[idx]
+    const pool = poolPreset
     const stakingToken = stakingTokens[idx]
     const tvl = tvls[stakingToken.address]
     const position = positions[idx]
@@ -87,8 +89,8 @@ export function useChefStakingInfo(): (ChefStakingInfo | undefined)[] {
       stakingPair: pairs[idx],
       parsedData,
       rewardToken,
-      stakedAmount: CurrencyAmount.fromRawAmount(stakingToken, position.amount.toBigInt()),
-      pendingReward: CurrencyAmount.fromRawAmount(stakingToken, position.pendingSushi.toBigInt()),
+      stakedAmount: new TokenAmount(stakingToken, position.amount.toBigInt()),
+      pendingReward: new TokenAmount(stakingToken, position.pendingSushi.toBigInt()),
       rewardDebt: CurrencyAmount.fromRawAmount(rewardToken, position.rewardDebt.toBigInt())
     }
   })

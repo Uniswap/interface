@@ -27,21 +27,19 @@ const PageWrapper = styled(AutoColumn)`
 `
 
 const PoolSection = styled.div`
-  border: 1px solid rgba(255, 255, 255, 0.4); //test usage
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   height: 60vh;
   overflow-y: auto;
-  border-radius: 24px;
-  grid-template-columns: 1fr;
-  row-gap: 24px;
-  width: 100%;
-  justify-self: center;
-  background: #000;
-  padding: 48px;
-  color: #39e1ba;
-
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 24px;
+  grid-template-columns: 1fr;
+  // row-gap: 24px;
+  width: 100%;
+  justify-self: center;
+  background: rgba(25, 36, 47, 1);
+  padding: 3.5vw
+  color: #39e1ba;
 `
 
 const DataRow = styled(RowBetween)`

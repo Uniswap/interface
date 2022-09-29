@@ -1,4 +1,4 @@
-import { Currency, Pair } from '@teleswap/sdk'
+import { Currency, CurrencyAmount, Pair } from '@teleswap/sdk'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { darken } from 'polished'
 import React, { useCallback, useState } from 'react'
@@ -236,6 +236,143 @@ export default function CurrencyInputPanel({
                 >
                   <span style={{ color: '#6E747B', marginRight: '.1rem' }}>Balance: </span>
                   {!hideBalance && !!currency && selectedCurrencyBalance ? (
+                    <span style={{ color: '#ffffff' }}>{selectedCurrencyBalance?.toSignificant(6)}</span>
+                  ) : (
+                    ' -'
+                  )}
+                </TYPE.body>
+              )}
+            </RowBetween>
+          </LabelRow>
+        )}
+        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
+          {!hideInput && (
+            <>
+              <NumericalInput
+                className="token-amount-input"
+                value={value}
+                onUserInput={(val) => {
+                  onUserInput(val)
+                }}
+              />
+              {account && currency && showMaxButton && label !== 'To' && (
+                <StyledBalanceMax onClick={onMax}>Max</StyledBalanceMax>
+              )}
+            </>
+          )}
+        </InputRow>
+      </Container>
+      {!disableCurrencySelect && onCurrencySelect && (
+        <CurrencySearchModal
+          isOpen={modalOpen}
+          onDismiss={handleDismissSearch}
+          onCurrencySelect={onCurrencySelect}
+          selectedCurrency={currency}
+          otherSelectedCurrency={otherCurrency}
+          showCommonBases={showCommonBases}
+        />
+      )}
+    </InputPanel>
+  )
+}
+
+interface FarmingWithdrawInputPanelProps {
+  value: string
+  onUserInput: (value: string) => void
+  onMax?: () => void
+  showMaxButton: boolean
+  label?: string
+  onCurrencySelect?: (currency: Currency) => void
+  currency?: Currency | null
+  disableCurrencySelect?: boolean
+  selectedCurrencyBalance?: CurrencyAmount
+  pair?: Pair | null
+  hideInput?: boolean
+  otherCurrency?: Currency | null
+  id: string
+  showCommonBases?: boolean
+  customBalanceText?: string
+}
+/**
+ * Customized for Farming withdraw
+ */
+export function FarmingWithdrawInputPanel({
+  value,
+  onUserInput,
+  onMax,
+  showMaxButton,
+  label = 'Input',
+  onCurrencySelect,
+  currency,
+  disableCurrencySelect = false,
+  selectedCurrencyBalance,
+  pair = null, // used for double token logo
+  hideInput = false,
+  otherCurrency,
+  id,
+  showCommonBases,
+  customBalanceText,
+  ...boxProps
+}: FarmingWithdrawInputPanelProps & BoxProps) {
+  const { t } = useTranslation()
+
+  const [modalOpen, setModalOpen] = useState(false)
+  const { account } = useActiveWeb3React()
+  const theme = useThemedContext()
+
+  const handleDismissSearch = useCallback(() => {
+    setModalOpen(false)
+  }, [setModalOpen])
+
+  return (
+    <InputPanel id={id} {...boxProps}>
+      <Container hideInput={hideInput}>
+        {!hideInput && (
+          <LabelRow>
+            <RowBetween>
+              {/* <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                {label}
+              </TYPE.body> */}
+              <CurrencySelect
+                selected={!!currency}
+                className="open-currency-select-button"
+                onClick={() => {
+                  if (!disableCurrencySelect) {
+                    setModalOpen(true)
+                  }
+                }}
+              >
+                <Aligner>
+                  {pair ? (
+                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                  ) : currency ? (
+                    <CurrencyLogo currency={currency} size={'24px'} />
+                  ) : null}
+                  {pair ? (
+                    <StyledTokenName className="pair-name-container">
+                      {pair?.token0.symbol}:{pair?.token1.symbol}
+                    </StyledTokenName>
+                  ) : (
+                    <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                      {(currency && currency.symbol && currency.symbol.length > 20
+                        ? currency.symbol.slice(0, 4) +
+                          '...' +
+                          currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                        : currency?.symbol) || t('selectToken')}
+                    </StyledTokenName>
+                  )}
+                  {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+                </Aligner>
+              </CurrencySelect>
+              {account && (
+                <TYPE.body
+                  onClick={onMax}
+                  color={theme.text2}
+                  fontWeight={500}
+                  style={{ display: 'inline', cursor: 'pointer', fontSize: '.6rem', textAlign: 'right' }}
+                >
+                  <span style={{ color: '#6E747B', marginRight: '.1rem' }}>Balance: </span>
+                  {!!currency && selectedCurrencyBalance ? (
                     <span style={{ color: '#ffffff' }}>{selectedCurrencyBalance?.toSignificant(6)}</span>
                   ) : (
                     ' -'

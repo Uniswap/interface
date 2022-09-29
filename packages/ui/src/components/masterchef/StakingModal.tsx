@@ -114,11 +114,6 @@ export default function StakingModal({ isOpen, onDismiss, pid, stakingInfo }: St
     if (maxAmountInput) onUserInput(maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  // async function onAttemptToApprove() {
-  //   // @todo: approve stake token to masterchef
-  //   approve()
-  // }
-
   if (!stakingCurrency) return <p>Loading...</p>
 
   return (
@@ -141,26 +136,17 @@ export default function StakingModal({ isOpen, onDismiss, pid, stakingInfo }: St
             id="stake-liquidity-token"
           />
 
-          {/* <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
-            <div>
-              <TYPE.black fontWeight={600}>Weekly Rewards</TYPE.black>
-            </div>
-
-            <TYPE.black>
-              {hypotheticalRewardRate.multiply((60 * 60 * 24 * 7).toString()).toSignificant(4, { groupSeparator: ',' })}{' '}
-              UNI / week
-            </TYPE.black>
-          </HypotheticalRewardRate> */}
-
           <RowBetween>
-            <ButtonConfirmed
-              mr="0.5rem"
-              onClick={approve}
-              confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-              disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
-            >
-              {t('approve')}
-            </ButtonConfirmed>
+            {approval !== ApprovalState.APPROVED && (
+              <ButtonConfirmed
+                mr="0.5rem"
+                onClick={approve}
+                confirmed={signatureData !== null}
+                disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
+              >
+                {t('approve')}
+              </ButtonConfirmed>
+            )}
             <ButtonError
               disabled={signatureData === null && approval !== ApprovalState.APPROVED}
               // error={!!&& !!parsedAmount}

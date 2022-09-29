@@ -3,25 +3,29 @@ import { ReactComponent as AddIcon } from 'assets/svg/action/add.svg'
 import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 import { ButtonPrimary } from 'components/Button'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
-import { AutoColumn } from 'components/Column'
+// import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ClaimRewardModal from 'components/masterchef/ClaimRewardModal'
 // import { Break } from 'components/earn/styled'
 // import { RowBetween } from 'components/Row'
 import StakingModal from 'components/masterchef/StakingModal'
 import UnstakingModal from 'components/masterchef/UnstakingModal'
-import { Chef } from 'constants/farm/chef.enum'
+// import { Chef } from 'constants/farm/chef.enum'
 // import { Chef } from 'constants/farm/chef.enum'
 import { CHAINID_TO_FARMING_CONFIG, LiquidityAsset } from 'constants/farming.config'
 import { UNI } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
-import { useChefContract } from 'hooks/farm/useChefContract'
-import { useChefPositions } from 'hooks/farm/useChefPositions'
+import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
+// import { useChefContract } from 'hooks/farm/useChefContract'
+// import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+import { useChefPoolAPR } from 'hooks/farm/useFarmAPR'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { usePairSidesValueEstimate, usePairUSDValue } from 'hooks/usePairValue'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
+import useUSDCPrice from 'utils/useUSDCPrice'
 
 // import { currencyId } from '../../utils/currencyId'
 // import { unwrappedToken } from '../../utils/wrappedCurrency'
@@ -34,29 +38,48 @@ import { TYPE } from '../../theme'
 
 const StatContainer = styled.div`
   display: flex;
+  width: 100%;
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.4rem;
 };
 `
 
-const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
+const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   // border-radius: 0.4rem;
-  height: 8.5rem;
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
-  overflow: hidden;
-  position: relative;
-  opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
+  // overflow: hidden;
+  // position: relative;
+  // opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
 
-  :not(:last-child):after {
-    content: '';
-    background-color: rgba(255, 255, 255, 0.2);
-    height: 1px;
-    position: relative;
-    bottom: 0;
-    left: 0;
+  :not(:last-child) {
+    padding-bottom: 1rem;
+    &:after {
+      content: '';
+      background-color: rgba(255, 255, 255, 0.2);
+      height: 1px;
+      width: 100%;
+      position: relative;
+      bottom: 0;
+      left: 0;
+
+      margin-top: 1rem;
+    }
   }
+  // :not(:last-child):after {
+  //   content: '';
+  //   background-color: rgba(255, 255, 255, 0.2);
+  //   height: 1px;
+  //   width: 100%;
+  //   position: relative;
+  //   bottom: 0;
+  //   left: 0;
+
+  //   margin-top: 1rem;
+  // }
 `
 
 const TopSection = styled.div`
@@ -68,7 +91,7 @@ const TopSection = styled.div`
 `
 
 const StakingColumn = styled.div`
-  max-width: 13rem;
+  max-width: 14rem;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -101,9 +124,9 @@ const StakingColumnTitle = ({ children }: { children: React.ReactNode }) => (
 export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInfo: ChefStakingInfo }) {
   const { chainId } = useActiveWeb3React()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
-  const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
+  const mchefContract = useChefContractForCurrentChain()
   // const masterChef = useMasterChef(Chef.MINICHEF)
-  const positions = useChefPositions(mchefContract, undefined, chainId)
+  // const positions = useChefPositions(mchefContract, undefined, chainId)
   const history = useHistory()
   // const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
   // const token0 = stakingInfo.tokens[0]
@@ -158,9 +181,13 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
 
   const isStaking = true
   const rewardToken = UNI[chainId || 420]
-
+  const priceOfRewardToken = useUSDCPrice(rewardToken)
   const totalValueLockedInUSD = usePairUSDValue(stakingTokenPair, stakingInfo.tvl)
-
+  const calculatedApr = useChefPoolAPR(stakingInfo, stakingTokenPair, stakingInfo.stakedAmount, priceOfRewardToken)
+  const [approval, approve] = useApproveCallback(new TokenAmount(stakingInfo.stakingToken, '1'), mchefContract?.address)
+  useEffect(() => {
+    console.debug(`approval status for ${stakingInfo.stakingAsset.name} is now: ${approval}`)
+  }, [stakingInfo, approval])
   const { liquidityValueOfToken0, liquidityValueOfToken1 } = usePairSidesValueEstimate(
     stakingTokenPair,
     new TokenAmount(stakingInfo.stakingToken, stakingInfo.stakedAmount.raw || '0')
@@ -191,15 +218,30 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
           <StakingColumnTitle>
             Staked {farmingConfig?.pools[pid].stakingAsset.isLpToken ? 'LP' : 'Token'}
           </StakingColumnTitle>
-          <TYPE.white fontSize={16}>{stakingInfo.stakedAmount.toSignificant(6)}</TYPE.white>
-          <div className="actions">
-            <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
-            <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
-          </div>
+          <TYPE.white fontSize={16} marginRight="1.5rem">
+            {stakingInfo.stakedAmount.toSignificant(6)}
+          </TYPE.white>
+          {approval !== ApprovalState.NOT_APPROVED ? (
+            <div className="actions">
+              <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
+              <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
+            </div>
+          ) : (
+            <ButtonPrimary
+              height={28}
+              width="auto"
+              fontSize={12}
+              padding="0.166rem 0.4rem"
+              borderRadius="0.133rem"
+              onClick={approve}
+            >
+              Approve
+            </ButtonPrimary>
+          )}
           {stakingInfo.stakingAsset.isLpToken && (
             <div className="estimated-staked-lp-value">
-              {liquidityValueOfToken0?.toSignificant(6)} {liquidityValueOfToken0?.token.symbol} +{' '}
-              {liquidityValueOfToken1?.toSignificant(6)} {liquidityValueOfToken1?.token.symbol}
+              {liquidityValueOfToken0?.toSignificant(4)} {liquidityValueOfToken0?.token.symbol} +{' '}
+              {liquidityValueOfToken1?.toSignificant(4)} {liquidityValueOfToken1?.token.symbol}
             </div>
           )}
         </StakingColumn>
@@ -223,11 +265,15 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>APR</StakingColumnTitle>
-          <TYPE.white fontSize={16}>--.--%</TYPE.white>
+          <TYPE.white fontSize={16}>
+            {calculatedApr && calculatedApr !== Infinity ? calculatedApr.toFixed(2) : '--.--'}%
+          </TYPE.white>
         </StakingColumn>
         <StakingColumn>
           <StakingColumnTitle>Liquidity TVL</StakingColumnTitle>
-          <TYPE.white fontSize={16}>{totalValueLockedInUSD}</TYPE.white>
+          <TYPE.white fontSize={16}>
+            $ {totalValueLockedInUSD ? totalValueLockedInUSD.toSignificant(6) : '--.--'}
+          </TYPE.white>
         </StakingColumn>
       </StatContainer>
 
