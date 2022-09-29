@@ -112,7 +112,7 @@ const Text = styled.p`
   margin: 0 0.5rem 0 0.25rem;
   width: fit-content;
   font-weight: 500;
-  font-size: 0.8rem;
+  // font-size: 0.8rem;
   line-height: 1rem;
   /* color: #000000; */
   color: #ffffff; ;
@@ -231,7 +231,6 @@ function Web3StatusInner() {
           fontFamily: 'Poppins',
           fontStyle: 'normal',
           fontWeight: '600!important',
-          fontSize: '24px',
           lineHeight: '32px',
           alignItems: 'flex-end',
           display: 'flex',

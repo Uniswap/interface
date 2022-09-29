@@ -43,6 +43,7 @@ const StyledLink = styled(ButtonPrimary)`
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 600;
+    padding: 0.5rem;
     height: 2rem !important;
     font-size: 0.8rem;
     border-radius: 0.5rem !important;
@@ -318,14 +319,14 @@ export default function LiquidityDetail() {
             <DoubleCurrencyLogoHorizontal
               currency0={currencyA}
               currency1={currencyB}
-              size={isMobile ? '2rem' : '1.2rem'}
+              size={isMobile ? '2rem' : '2.2rem'}
             />
             <Text
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '400',
-                fontSize: '1.2rem',
+                fontSize: '2rem',
                 alignItems: 'flex-end',
                 color: '#FFFFFF',
                 whiteSpace: 'nowrap',
@@ -334,7 +335,12 @@ export default function LiquidityDetail() {
             >
               {currencyA?.symbol?.toUpperCase()}-{currencyB?.symbol?.toUpperCase()}
             </Text>
-          </Flex>
+          {/* commented because of merge conflict - By Frank 0929 PR44 */}
+          {/* </Flex>
+!<!<<<<<< HEAD
+          <Flex sx={{ flexDirection: isMobile ? 'column' : 'row', gap: '0.8rem', a: { height: '1.5rem' } }}>
+            <StyledLink as={Link} to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}`}>
+!======= */}
           <Flex sx={{ flexDirection: isMobile ? 'column' : 'row', gap: '0.8rem', a: { height: '2rem' } }}>
             <ButtonPrimary
               sx={{
@@ -369,8 +375,8 @@ export default function LiquidityDetail() {
           </Flex>
         </Flex>
         <BorderVerticalContainer>
-          <Text sx={{ fontSize: '1rem' }}>Total Value</Text>
-          <Text sx={{ fontSize: '1rem' }}>
+          <Text className="secondary-title">Total Value</Text>
+          <Text className="title">
             $&nbsp;
             {userHoldingPercentage !== '-' &&
               fullInfoPair &&
@@ -390,6 +396,7 @@ export default function LiquidityDetail() {
             }}
           ></Box>
           <Box
+            className="text-emphasize"
             sx={{
               display: 'grid',
               gridTemplateColumns: '1fr 1fr 1fr 1fr',
@@ -399,7 +406,6 @@ export default function LiquidityDetail() {
               fontFamily: 'Poppins',
               fontStyle: 'normal',
               fontWeight: '500',
-              fontSize: '0.8rem',
               color: '#FFFFFF',
               ...(isMobile && { gridColumnGap: '1rem' })
             }}
@@ -573,11 +579,11 @@ export default function LiquidityDetail() {
           ></Box>
           <Flex justifyContent={'space-between'}>
             <Text
+              className="secondary-title"
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '1rem',
                 lineHeight: '28px',
                 color: '#FFFFFF'
               }}
@@ -586,11 +592,11 @@ export default function LiquidityDetail() {
             </Text>
             <Flex flexDirection={'column'} textAlign="right">
               <Text
+                className="text"
                 sx={{
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
-                  fontWeight: '500',
-                  fontSize: '16px',
+                  fontWeight: '400',
                   lineHeight: '24px',
                   color: 'white'
                 }}
@@ -598,11 +604,11 @@ export default function LiquidityDetail() {
                 {token0Deposited?.divide(token1Deposited).toSignificant(4)}
               </Text>
               <Text
+                className="text-detail"
                 sx={{
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
-                  fontWeight: '400',
-                  fontSize: '12px',
+                  fontWeight: '200',
                   lineHeight: '18px',
                   color: '#999999'
                 }}
@@ -627,8 +633,8 @@ export function BackToMyLiquidity({ showText = true, ...flexProps }: { showText?
       marginBottom={'1rem'}
       sx={{
         'a,img': {
-          height: '1rem',
-          width: '1rem',
+          height: '0.875rem',
+          width: '0.875rem',
           marginRight: '1rem'
         }
       }}
@@ -651,11 +657,11 @@ export function BackToMyLiquidity({ showText = true, ...flexProps }: { showText?
       </Link>
       {showText && (
         <Text
+          className="text-small"
           sx={{
             fontFamily: 'Poppins',
             fontStyle: 'normal',
-            fontWeight: '500',
-            fontSize: '1rem',
+            fontWeight: '200',
             lineHeight: '1rem',
             height: '1rem',
             color: '#FFFFFF'
@@ -668,7 +674,16 @@ export function BackToMyLiquidity({ showText = true, ...flexProps }: { showText?
   )
 }
 
-const HeaderText = styled(Text)`
+const HeaderText = styled(Text).attrs((props) => {
+  return {
+    ...props,
+    className: Array.isArray(props.className)
+      ? [...props.className, 'text-small']
+      : props.className
+      ? [props.className, 'text-small']
+      : ['text-small']
+  }
+})`
   color: #cccccc;
   font-family: 'Poppins';
   font-style: normal;

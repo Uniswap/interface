@@ -348,10 +348,10 @@ export default function Swap({ history }: RouteComponentProps) {
           />
           <AutoRow justify="space-between" style={{ marginBottom: '.9rem' }}>
             <span
+              className={'primary-button-text'}
               style={{
                 fontFamily: 'Poppins',
                 fontWeight: 400,
-                fontSize: '1.2rem',
                 color: '#FFFFFF'
               }}
             >
@@ -443,7 +443,9 @@ export default function Swap({ history }: RouteComponentProps) {
                 <AutoColumn gap="8px" style={{ padding: '0 1rem' }}>
                   {Boolean(trade) && (
                     <RowBetween align="center">
-                      <Text>Price</Text>
+                      <Text className="text" fontWeight={400} color="white">
+                        Price
+                      </Text>
                       <TradePrice
                         price={trade?.executionPrice}
                         showInverted={showInverted}
@@ -453,8 +455,12 @@ export default function Swap({ history }: RouteComponentProps) {
                   )}
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
                     <RowBetween align="center">
-                      <ClickableText onClick={toggleSettings}>Slippage Tolerance</ClickableText>
-                      <ClickableText onClick={toggleSettings}>{allowedSlippage / 100}%</ClickableText>
+                      <ClickableText className="text-detail" onClick={toggleSettings}>
+                        Slippage Tolerance
+                      </ClickableText>
+                      <ClickableText className="text-detail" onClick={toggleSettings}>
+                        {allowedSlippage / 100}%
+                      </ClickableText>
                     </RowBetween>
                   )}
                 </AutoColumn>
@@ -467,11 +473,12 @@ export default function Swap({ history }: RouteComponentProps) {
             )}
             <BottomGrouping>
               {swapIsUnsupported ? (
-                <ButtonPrimary disabled={true}>
+                <ButtonPrimary className="title" disabled={true}>
                   <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
                 </ButtonPrimary>
               ) : !account ? (
                 <ButtonLight
+                  className="title"
                   sx={{
                     fontSize: '1.1rem',
                     backgroundColor: '#39E1BA!important',
@@ -483,18 +490,25 @@ export default function Swap({ history }: RouteComponentProps) {
                   Connect Wallet
                 </ButtonLight>
               ) : showWrap ? (
-                <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                <ButtonPrimary className="title" disabled={Boolean(wrapInputError)} onClick={onWrap}>
                   {wrapInputError ??
                     (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
                 </ButtonPrimary>
               ) : noRoute && userHasSpecifiedInputOutput ? (
                 <GreyCard style={{ textAlign: 'center' }}>
-                  <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-                  {singleHopOnly && <TYPE.main mb="4px">Try enabling multi-hop trades.</TYPE.main>}
+                  <TYPE.main className="title" mb="4px">
+                    Insufficient liquidity for this trade.
+                  </TYPE.main>
+                  {singleHopOnly && (
+                    <TYPE.main className="title" mb="4px">
+                      Try enabling multi-hop trades.
+                    </TYPE.main>
+                  )}
                 </GreyCard>
               ) : showApproveFlow ? (
                 <RowBetween>
                   <ButtonConfirmed
+                    className="title"
                     onClick={approveCallback}
                     disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
                     width="48%"
@@ -512,6 +526,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     )}
                   </ButtonConfirmed>
                   <ButtonError
+                    className="title"
                     onClick={() => {
                       if (isExpertMode) {
                         handleSwap()
@@ -532,7 +547,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     }
                     error={isValid && priceImpactSeverity > 2}
                   >
-                    <Text fontSize={16} fontWeight={500}>
+                    <Text fontWeight={500}>
                       {priceImpactSeverity > 3 && !isExpertMode
                         ? `Price Impact High`
                         : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
@@ -558,7 +573,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
                   error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 >
-                  <Text fontSize={20} fontWeight={500}>
+                  <Text className="title" fontWeight={500}>
                     {swapInputError
                       ? swapInputError
                       : priceImpactSeverity > 3 && !isExpertMode

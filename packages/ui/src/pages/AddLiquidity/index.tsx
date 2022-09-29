@@ -5,7 +5,7 @@ import bn from 'bignumber.js'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { BackToMyLiquidity } from 'components/LiquidityDetail'
 import QuestionHelper from 'components/QuestionHelper'
-import Settings from 'components/Settings'
+// import Settings from 'components/Settings'
 // import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import { usePresetPeripheryAddress } from 'hooks/usePresetContractAddress'
@@ -45,7 +45,7 @@ import { Dots } from '../Liquidity/styles'
 const BorderVerticalContainer = styled(Flex)`
   border: 1px solid rgba(255, 255, 255, 0.2);
   width: 100%;
-  padding: 32px 24px;
+  padding: 2rem 1.8rem;
   border-radius: 24px;
   flex-direction: column;
   color: white;
@@ -285,7 +285,7 @@ export default function AddLiquidity() {
 
   const modalHeader = useCallback(() => {
     return (
-      <Flex flexDirection={'column'} sx={{ gap: '24px', marginTop: '24px' }}>
+      <Flex flexDirection={'column'} sx={{ gap: '0.8rem', marginTop: '24px' }}>
         {/* <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
           </Text> */}
@@ -297,14 +297,14 @@ export default function AddLiquidity() {
           /> */}
         <BorderVerticalContainer>
           <Flex justifyContent={'space-between'} alignItems="center">
-            <CurrencyLogo currency={currencies[Field.CURRENCY_A]} size={'36px'} />
-            <Flex flexDirection={'column'} justifyContent="space-between" padding="0 16px">
+            <CurrencyLogo currency={currencies[Field.CURRENCY_A]} size={'2rem'} />
+            <Flex flexDirection={'column'} justifyContent="space-between" padding="0 1rem" sx={{ gap: '0.5rem' }}>
               <Text
+                className="text"
                 sx={{
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
                   fontWeight: '600',
-                  fontSize: '.6rem',
                   lineHeight: '.8rem',
                   color: '#FFFFFF'
                 }}
@@ -312,26 +312,26 @@ export default function AddLiquidity() {
                 {currencies[Field.CURRENCY_A]?.symbol}
               </Text>
               <Text
+                className="text-detail"
                 sx={{
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
-                  fontWeight: '400',
-                  fontSize: '.4rem',
+                  fontWeight: '200',
                   lineHeight: '.6rem',
-                  color: '#CCCCCC'
+                  color: 'rgba(255,255,255,0.6)'
                 }}
               >
                 {currencies[Field.CURRENCY_A]?.name}
               </Text>
             </Flex>
             <Text
+              className="text"
               sx={{
                 flex: 1,
                 textAlign: 'right',
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '.6rem',
                 lineHeight: '.8rem',
                 color: '#FFFFFF'
               }}
@@ -340,14 +340,14 @@ export default function AddLiquidity() {
             </Text>
           </Flex>
           <Flex justifyContent={'space-between'} alignItems="center">
-            <CurrencyLogo currency={currencies[Field.CURRENCY_B]} size={'36px'} />
-            <Flex flexDirection={'column'} justifyContent="space-between" padding="0 16px">
+            <CurrencyLogo currency={currencies[Field.CURRENCY_B]} size={'2rem'} />
+            <Flex flexDirection={'column'} justifyContent="space-between" padding="0 1rem" sx={{ gap: '0.5rem' }}>
               <Text
+                className="text"
                 sx={{
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
                   fontWeight: '600',
-                  fontSize: '.6rem',
                   lineHeight: '.8rem',
                   color: '#FFFFFF'
                 }}
@@ -355,26 +355,26 @@ export default function AddLiquidity() {
                 {currencies[Field.CURRENCY_B]?.symbol}
               </Text>
               <Text
+                className="text-detail"
                 sx={{
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
-                  fontWeight: '400',
-                  fontSize: '.4rem',
+                  fontWeight: '200',
                   lineHeight: '.6rem',
-                  color: '#CCCCCC'
+                  color: 'rgba(255,255,255,0.6)'
                 }}
               >
                 {currencies[Field.CURRENCY_B]?.name}
               </Text>
             </Flex>
             <Text
+              className="text"
               sx={{
                 flex: 1,
                 textAlign: 'right',
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '.6rem',
                 lineHeight: '.8rem',
                 color: '#FFFFFF'
               }}
@@ -382,29 +382,27 @@ export default function AddLiquidity() {
               {parsedAmounts[Field.CURRENCY_B]?.toSignificant(4)}
             </Text>
           </Flex>
-          <Box
-            sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', margin: '24px 0' }}
-          ></Box>
+          <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0' }}></Box>
           <Flex justifyContent={'space-between'} alignItems="center">
             <Text
+              className="text"
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '.5rem',
                 lineHeight: '.8rem',
                 textAlign: 'center',
-                color: '#999999'
+                color: 'rgba(255,255,255,0.6)'
               }}
             >
               Trading fee
             </Text>
             <Text
+              className="text"
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '.5rem',
                 lineHeight: '.8rem',
                 textAlign: 'center',
                 color: '#999999'
@@ -417,11 +415,11 @@ export default function AddLiquidity() {
         <BorderVerticalContainer>
           <Flex justifyContent={'space-between'}>
             <Text
+              className="text-emphasize"
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
-                fontWeight: '500',
-                fontSize: '.7rem',
+                fontWeight: '400',
                 lineHeight: '.9rem',
                 color: '#FFFFFF'
               }}
@@ -429,11 +427,11 @@ export default function AddLiquidity() {
               Pool Share
             </Text>
             <Text
+              className="text"
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
-                fontWeight: '500',
-                fontSize: '.7rem',
+                fontWeight: '400',
                 lineHeight: '.9rem',
                 color: '#FFFFFF',
                 textAlign: 'right'
@@ -446,24 +444,24 @@ export default function AddLiquidity() {
         <BorderVerticalContainer>
           <Flex justifyContent={'space-between'}>
             <Text
+              className="text-emphasize"
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
-                fontWeight: '500',
-                fontSize: '.7rem',
+                fontWeight: '400',
                 lineHeight: '.9rem',
                 color: '#FFFFFF'
               }}
             >
               Price
             </Text>
-            <Flex flexDirection="column" textAlign={'right'}>
+            <Flex flexDirection="column" textAlign={'right'} sx={{ gap: '0.5rem' }}>
               <Text
+                className="text"
                 sx={{
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
-                  fontWeight: '500',
-                  fontSize: '.5rem',
+                  fontWeight: '400',
                   lineHeight: '.8rem',
                   color: '#FFFFFF'
                 }}
@@ -471,13 +469,13 @@ export default function AddLiquidity() {
                 {price?.toFixed(2)}
               </Text>
               <Text
+                className="text-detail"
                 sx={{
                   fontFamily: 'Poppins',
                   fontStyle: 'normal',
-                  fontWeight: '500',
-                  fontSize: '.4rem',
+                  fontWeight: '400',
                   lineHeight: '.6rem',
-                  color: '#999999'
+                  color: 'rgba(255,255,255,0.6)'
                 }}
               >
                 {currencies[Field.CURRENCY_A]?.symbol} to {currencies[Field.CURRENCY_B]?.symbol}
@@ -487,11 +485,11 @@ export default function AddLiquidity() {
         </BorderVerticalContainer>
         <ButtonPrimary style={{ margin: '20px 0 0 0', color: 'black' }} onClick={onAdd}>
           <Text
+            className="text-emphasize"
             sx={{
               fontFamily: 'Poppins',
               fontStyle: 'normal',
               fontWeight: '500',
-              fontSize: '.8rem',
               lineHeight: '1rem',
               textAlign: 'center',
               color: '#05050E'
@@ -554,8 +552,8 @@ export default function AddLiquidity() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          padding: '1.2rem .9rem',
-          width: '21rem'
+          padding: '1.8rem',
+          width: '30rem'
           // maxWidth: '420px',
           // maxHeight: '638px',
           // height: 'fit-content',
@@ -583,10 +581,11 @@ export default function AddLiquidity() {
             showText={false}
             sx={{ alignItems: 'center', width: 'fit-content', marginBottom: '0!important' }}
           />
-          <span style={{ fontFamily: 'Poppins', fontWeight: 400, fontSize: '1.2rem', color: '#FFFFFF' }}>
+          <span style={{ fontFamily: 'Poppins', fontWeight: 400, color: '#FFFFFF' }} className={'title'}>
             Add Liquidity
           </span>
-          <Settings />
+          {/* <Settings /> */}
+          <Box width={24}></Box>
         </AutoRow>
         <AutoColumn gap=".4rem">
           {/* {noLiquidity ||
@@ -687,13 +686,16 @@ export default function AddLiquidity() {
             </>
           )} */}
         </AutoColumn>
-        <Box sx={{ marginTop: '1.1rem' }}>
-          <Box sx={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '.5rem' }}>Pair Mode</Box>
+        <Box sx={{ marginTop: '1.5rem' }}>
+          <Box sx={{ fontWeight: 400, marginBottom: '.5rem' }} className={'secondary-title'}>
+            Pair Mode
+          </Box>
           <Box sx={{ display: 'flex', fontWeight: 100, fontSize: '.5rem', alignItems: 'center' }}>
             <Flex alignItems={'center'} sx={{ flex: 1 }} onClick={() => setPairModeStable(false)}>
               <CustomizedRadio type="radio" name="pairMode" id="Volatile" checked={!pairModeStable} />
               <label
-                style={{ fontSize: '0.7rem', margin: '0 0 0 .7rem', fontWeight: !pairModeStable ? '600' : '400' }}
+                className={'text-small'}
+                style={{ margin: '0 0 0 .7rem', fontWeight: !pairModeStable ? '400' : '200' }}
                 htmlFor="Volatile"
               >
                 Volatile
@@ -704,7 +706,8 @@ export default function AddLiquidity() {
               <CustomizedRadio type="radio" name="pairMode" id="Stable" checked={pairModeStable} />
               <label
                 htmlFor="Stable"
-                style={{ fontSize: '0.7rem', margin: '0 0 0 .7rem', fontWeight: pairModeStable ? '600' : '400' }}
+                className={'text-small'}
+                style={{ margin: '0 0 0 .7rem', fontWeight: pairModeStable ? '400' : '200' }}
               >
                 Stable
               </label>
@@ -712,16 +715,16 @@ export default function AddLiquidity() {
             </Flex>
           </Box>
         </Box>
-        <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', margin: '.7rem 0' }}></Box>
+        <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', margin: '1rem 0' }}></Box>
         <Box
           sx={{
             marginBottom: '.4rem',
             fontFamily: 'Poppins',
             fontStyle: 'normal',
-            fontWeight: 600,
-            fontSize: '0.9rem',
+            fontWeight: 400,
             lineHeight: '28px'
           }}
+          className={'secondary-title'}
         >
           Pair Liquidity Info
         </Box>
@@ -731,10 +734,10 @@ export default function AddLiquidity() {
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
-                fontWeight: 500,
-                fontSize: '0.7rem',
+                fontWeight: 200,
                 lineHeight: '18px'
               }}
+              className={'text'}
             >
               {pair ? new bn(pair?.reserve0.toFixed(18)).decimalPlaces(4, bn.ROUND_HALF_UP).toString() : '0'}
             </Text>
@@ -742,11 +745,11 @@ export default function AddLiquidity() {
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
-                fontWeight: 400,
-                fontSize: '0.5rem',
+                fontWeight: 200,
                 lineHeight: '18px',
                 color: 'rgba(255, 255, 255, 0.6)'
               }}
+              className={'text-detail'}
             >
               {pair ? pair?.token0.symbol?.toUpperCase() : '--'}
             </Text>
@@ -756,10 +759,10 @@ export default function AddLiquidity() {
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
-                fontWeight: 500,
-                fontSize: '0.7rem',
+                fontWeight: 400,
                 lineHeight: '18px'
               }}
+              className={'text'}
             >
               {pair ? new bn(pair?.reserve1.toFixed(18)).decimalPlaces(4, bn.ROUND_HALF_UP).toString() : '0'}
             </Text>
@@ -767,11 +770,11 @@ export default function AddLiquidity() {
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
-                fontWeight: 400,
-                fontSize: '0.6rem',
+                fontWeight: 200,
                 lineHeight: '18px',
                 color: 'rgba(255, 255, 255, 0.6)'
               }}
+              className={'text-detail'}
             >
               {pair ? pair?.token1.symbol?.toUpperCase() : '--'}
             </Text>
@@ -808,25 +811,30 @@ export default function AddLiquidity() {
         <Box
           sx={{
             button: {
-              maxHeight: '3rem',
-              fontSize: '1.1rem'
+              maxHeight: '3.5rem',
+              fontWeight: 400
             },
             a: {
-              maxHeight: '3rem',
-              fontSize: '1.1rem'
+              maxHeight: '3.5rem',
+              fontWeight: 400
+            },
+            '*': {
+              maxHeight: '3.5rem',
+              fontWeight: 400
             }
           }}
         >
           {addIsUnsupported ? (
             <AutoColumn style={{ marginTop: '1rem' }}>
-              <ButtonPrimary disabled={true}>
+              <ButtonPrimary className="title" sx={{ fontWeight: '400!important' }} disabled={true}>
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
             </AutoColumn>
           ) : !account ? (
             <AutoColumn style={{ marginTop: '1rem' }}>
               <ButtonLight
-                sx={{ fontSize: '1.1rem', backgroundColor: '#39E1BA', color: '#05050e', fontWeight: '600!important' }}
+                className="title"
+                sx={{ backgroundColor: '#39E1BA', color: '#05050e', fontWeight: '400!important' }}
                 onClick={toggleWalletModal}
               >
                 Connect Wallet
@@ -842,8 +850,10 @@ export default function AddLiquidity() {
                   <RowBetween>
                     {approvalA !== ApprovalState.APPROVED && (
                       <ButtonPrimary
+                        className="title"
                         style={{
-                          marginBottom: '0.5rem'
+                          marginBottom: '0.5rem',
+                          fontWeight: '400!important'
                         }}
                         onClick={approveACallback}
                         disabled={approvalA === ApprovalState.PENDING}
@@ -858,8 +868,10 @@ export default function AddLiquidity() {
                     )}
                     {approvalB !== ApprovalState.APPROVED && (
                       <ButtonPrimary
+                        className="title"
                         style={{
-                          marginBottom: '0.5rem'
+                          marginBottom: '0.5rem',
+                          fontWeight: '400!important'
                         }}
                         onClick={approveBCallback}
                         disabled={approvalB === ApprovalState.PENDING}
@@ -875,16 +887,15 @@ export default function AddLiquidity() {
                   </RowBetween>
                 )}
               <ButtonError
-                sx={{ backgroundColor: '#CCCCCC!important', border: 'unset!important' }}
+                className="title"
+                sx={{ backgroundColor: '#CCCCCC!important', border: 'unset!important', fontWeight: '400!important' }}
                 onClick={() => {
                   expertMode ? onAdd() : setShowConfirm(true)
                 }}
                 disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
                 error={!!error || (!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B])}
               >
-                <Text fontSize={'1.1rem'} fontWeight={500}>
-                  {error ?? 'Supply'}
-                </Text>
+                <Text fontWeight={500}>{error ?? 'Supply'}</Text>
               </ButtonError>
             </AutoColumn>
           )}
@@ -909,10 +920,10 @@ export default function AddLiquidity() {
           fontFamily: 'Poppins',
           zIndex: -1,
           color: 'rgba(255,255,255,0.6)',
-          maxWidth: '21rem',
+          maxWidth: '30rem',
           fontSize: '0.6rem',
           position: 'relative',
-          width: '21rem',
+          width: '30rem',
           fontWeight: 200,
           padding: '1.2rem .9rem',
           paddingTop: '4rem',

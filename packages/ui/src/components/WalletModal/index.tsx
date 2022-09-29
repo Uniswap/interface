@@ -112,7 +112,6 @@ const OptionGrid = styled.div`
 `
 
 const HoverText = styled.div`
-  font-size: 1.2rem;
   :hover {
     cursor: pointer;
   }
@@ -335,6 +334,7 @@ export default function WalletModal({
         {walletView !== WALLET_VIEWS.ACCOUNT ? (
           <HeaderRow color="blue">
             <HoverText
+              className={'secondary-title'}
               onClick={() => {
                 setPendingError(false)
                 setWalletView(WALLET_VIEWS.ACCOUNT)
@@ -345,7 +345,7 @@ export default function WalletModal({
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText>connect your wallet</HoverText>
+            <HoverText className={'secondary-title'}>connect your wallet</HoverText>
           </HeaderRow>
         )}
         <ContentWrapper>

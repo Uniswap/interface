@@ -12,17 +12,25 @@ export const ClickableText = styled(Text)`
   }
   color: ${({ theme }) => theme.primary1};
 `
-export const MaxButton = styled.button<{ width: string }>`
+export const MaxButton = styled.button.attrs((props) => {
+  return {
+    ...props,
+    className: Array.isArray(props.className)
+      ? [...props.className, 'text-detail']
+      : props.className
+      ? [props.className, 'text-detail']
+      : ['text-detail']
+  }
+})<{ width: string }>`
   padding: 0.2rem 0.8rem;
   background-color: rgba(255, 255, 255, 0.1);
   // border: 1px solid ${({ theme }) => theme.common3};
   border: 0;
   border-radius: 0.5rem;
-  font-size: 0.4rem;
+  font-weight: 200;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0.15rem 0.5rem;
   `};
-  font-weight: 500;
   cursor: pointer;
   margin-right: 0.4rem;
   overflow: hidden;
@@ -36,6 +44,7 @@ export const MaxButton = styled.button<{ width: string }>`
     outline: none;
     background-color: ${({ theme }) => theme.primary1};
     color: ${({ theme }) => theme.common1};
+    font-weight: 400;
   }
 `
 
