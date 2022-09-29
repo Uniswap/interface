@@ -53,11 +53,10 @@ export const ethNumberStandardFormatter = (
 
   if (amountInDecimals < 0.0001) return `< ${conditionalDollarSign}0.00001`
   if (amountInDecimals < 1) return `${conditionalDollarSign}${amountInDecimals.toFixed(3)}`
-  const formattedPrice = amountInDecimals
-    .toFixed(2)
+  const formattedPrice = (removeZeroes ? parseFloat(amountInDecimals.toFixed(2)) : amountInDecimals.toFixed(2))
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  return conditionalDollarSign + (removeZeroes ? formattedPrice.replace(/.00/g, '') : formattedPrice)
+  return conditionalDollarSign + formattedPrice
 }
 
 export const formatWeiToDecimal = (amount: string, removeZeroes = false) => {
