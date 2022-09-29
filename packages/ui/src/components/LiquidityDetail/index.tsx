@@ -335,43 +335,15 @@ export default function LiquidityDetail() {
             >
               {currencyA?.symbol?.toUpperCase()}-{currencyB?.symbol?.toUpperCase()}
             </Text>
-          {/* commented because of merge conflict - By Frank 0929 PR44 */}
-          {/* </Flex>
-!<!<<<<<< HEAD
+            {/* commented because of merge conflict - By Frank 0929 PR44 */}
+          </Flex>
           <Flex sx={{ flexDirection: isMobile ? 'column' : 'row', gap: '0.8rem', a: { height: '1.5rem' } }}>
-            <StyledLink as={Link} to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}`}>
-!======= */}
-          <Flex sx={{ flexDirection: isMobile ? 'column' : 'row', gap: '0.8rem', a: { height: '2rem' } }}>
-            <ButtonPrimary
-              sx={{
-                maxWidth: 'max-content',
-                fontFamily: 'Poppins',
-                fontStyle: 'normal',
-                fontWeight: '500',
-                height: '2rem!important',
-                fontSize: '0.8rem',
-                color: '#000000'
-              }}
-              as={Link}
-              to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}/${pairModeStable}`}
-            >
+            <StyledLink as={Link} to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}/${pairModeStable}`}>
               Increase
-            </ButtonPrimary>
-            <ButtonPrimary
-              as={Link}
-              to={`/remove/${currencyId(currencyA!)}/${currencyId(currencyB!)}/${pairModeStable}`}
-              sx={{
-                maxWidth: 'max-content',
-                fontFamily: 'Poppins',
-                fontStyle: 'normal',
-                fontWeight: '500',
-                height: '2rem!important',
-                fontSize: '0.8rem',
-                color: '#000000'
-              }}
-            >
+            </StyledLink>
+            <StyledLink as={Link} to={`/remove/${currencyId(currencyA!)}/${currencyId(currencyB!)}/${pairModeStable}`}>
               Remove
-            </ButtonPrimary>
+            </StyledLink>
           </Flex>
         </Flex>
         <BorderVerticalContainer>
