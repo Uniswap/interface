@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
+import { OfflineLoadQuery, usePreloadedQuery } from 'react-relay-offline'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList } from 'src/app/navigation/types'
 import EyeOffIcon from 'src/assets/icons/eye-off.svg'
@@ -118,15 +118,15 @@ function UserScreenInner({
   preloadedQuery,
 }: {
   address: string
-  preloadedQuery: PreloadedQuery<UserScreenQuery>
+  preloadedQuery: OfflineLoadQuery
 }) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
-  const transactionData = usePreloadedQuery<UserScreenQuery>(userScreenQuery, preloadedQuery)
+  const { data: transactionData } = usePreloadedQuery<UserScreenQuery>(preloadedQuery)
   const formattedTransactions = useMemo(
-    () => parseDataResponseToTransactionDetails(transactionData),
+    () => (transactionData ? parseDataResponseToTransactionDetails(transactionData) : []),
     [transactionData]
   )
 

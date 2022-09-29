@@ -1,10 +1,11 @@
 import { useNavigation } from '@react-navigation/core'
-import { useCallback, useEffect, useState } from 'react'
-import { GraphQLTaggedNode, useQueryLoader } from 'react-relay'
+import { useCallback } from 'react'
+import { GraphQLTaggedNode } from 'react-relay'
 import { OperationType } from 'relay-runtime'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { RootParamList } from 'src/app/navigation/types'
 import { PollingInterval } from 'src/constants/misc'
+import { useQueryLoader } from 'src/data/preloading'
 import { Screens } from 'src/screens/Screens'
 
 /**
@@ -26,38 +27,28 @@ export function useEagerNavigation<Q extends OperationType>(
 ) {
   const { navigate } = useNavigation<any>()
 
-  const [preloadedQuery, loadQuery] = useQueryLoader<Q>(query)
+  const { preloadedQuery, load } = useQueryLoader<Q>(query)
 
-  // Stores params for the next navigation action
-  const [targetScreen, setTargetScreen] = useState<Screens | null>(null)
-  const [targetParams, setTargetParams] = useState<Object>({})
+  const registerNavigationIntent = useCallback(
+    (params: Q['variables']) => {
+      load(params, {
+        networkCacheConfig: {
+          poll: pollingInterval,
+        },
+      })
+    },
+    [load, pollingInterval]
+  )
 
-  function registerNavigationIntent(params: Q['variables']) {
-    loadQuery(params, {
-      networkCacheConfig: {
-        poll: pollingInterval,
-      },
-    })
-  }
-
-  function preloadedNavigate(screen: Screens, params: any) {
-    setTargetScreen(screen)
-    setTargetParams(params)
-  }
-
-  // HACK: `preloadedQuery` will be `null` for a few cycles after calling `loadQuery` which
-  // means we cannot yet navigate to that screen as it won't get updates.
-  // Other possible solutions: store preloadedQuery outside of this hook (redux?)
-  useEffect(() => {
-    if (!preloadedQuery || !targetScreen) return
-
-    navigate(targetScreen, {
-      ...targetParams,
-      preloadedQuery,
-    })
-
-    setTargetScreen(null)
-  }, [navigate, preloadedQuery, targetParams, targetScreen])
+  const preloadedNavigate = useCallback(
+    (screen: Screens, params: any) => {
+      navigate(screen, {
+        ...params,
+        preloadedQuery,
+      })
+    },
+    [navigate, preloadedQuery]
+  )
 
   return { registerNavigationIntent, preloadedNavigate }
 }
@@ -69,44 +60,28 @@ export function useEagerRootNavigation<Q extends OperationType>(
   query: GraphQLTaggedNode,
   pollingInterval?: PollingInterval
 ) {
-  const [preloadedQuery, loadQuery] = useQueryLoader<Q>(query)
-
-  // Stores params for the next navigation action
-  const [targetArgs, setTargetArgs] = useState<RootParamList[keyof RootParamList] | undefined>(
-    undefined
-  )
-  const [callback, setCallback] = useState<(() => void) | undefined>(undefined)
+  const { preloadedQuery, load } = useQueryLoader<Q>(query)
 
   const registerNavigationIntent = useCallback(
     (params: Q['variables']) => {
-      loadQuery(params, {
+      load(params, {
         networkCacheConfig: {
           poll: pollingInterval,
         },
       })
     },
-    [loadQuery, pollingInterval]
+    [load, pollingInterval]
   )
 
   const preloadedNavigate = useCallback(
     (args: any, cb?: () => void) => {
-      setTargetArgs(args)
-      setCallback(cb)
+      // @ts-ignore is ok if targetArgs.params is undefined
+      const params = { ...(args.params ?? {}), preloadedQuery }
+      rootNavigate(screen, { ...args, params: params })
+      cb?.()
     },
-    [setTargetArgs]
+    [preloadedQuery, screen]
   )
-
-  // HACK: `preloadedQuery` will be `null` for a few cycles after calling `loadQuery` which
-  // means we cannot yet navigate to that screen as it won't get updates.
-  // Other possible solutions: store preloadedQuery outside of this hook (redux?)
-  useEffect(() => {
-    if (!preloadedQuery || !screen || !targetArgs) return
-
-    // @ts-ignore is ok if targetArgs.params is undefined
-    const params = { ...(targetArgs.params ?? {}), preloadedQuery }
-    rootNavigate(screen, { ...targetArgs, params: params })
-    callback?.()
-  }, [preloadedQuery, targetArgs, screen, callback])
 
   return { registerNavigationIntent, preloadedNavigate }
 }

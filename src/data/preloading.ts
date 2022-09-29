@@ -1,3 +1,7 @@
+import { useEffect, useMemo } from 'react'
+import { useRelayEnvironment } from 'react-relay'
+import { loadQuery, QueryOptionsOffline } from 'react-relay-offline'
+import { GraphQLTaggedNode, OperationType } from 'relay-runtime'
 import { AppStackParamList } from 'src/app/navigation/types'
 import { ChainId } from 'src/constants/chains'
 import { Screens } from 'src/screens/Screens'
@@ -32,4 +36,27 @@ export const preloadMapping = {
       address,
     }
   },
+}
+
+export function useQueryLoader<Q extends OperationType>(query: GraphQLTaggedNode) {
+  const environment = useRelayEnvironment()
+
+  const { preloadedQuery, load, dispose } = useMemo(() => {
+    const _preloadedQuery = loadQuery<Q>()
+
+    return {
+      preloadedQuery: _preloadedQuery,
+      load: (variables: Q['variables'], options: QueryOptionsOffline) =>
+        _preloadedQuery.next(environment, query, variables, options),
+      dispose: () => _preloadedQuery.dispose(),
+    }
+  }, [environment, query])
+
+  useEffect(() => {
+    return () => {
+      dispose()
+    }
+  })
+
+  return { preloadedQuery, load }
 }

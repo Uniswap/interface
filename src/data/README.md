@@ -40,12 +40,18 @@ type Query {
 | [react-relay-offline](https://github.com/morrys/react-relay-offline) | [relay.ts](./relay.ts) | automatic persistence and rehydration of the store |
 | Navigation with preloaded data | [useEagerNavigation](../app/navigation/useEagerNavigation.ts) | Utility hook
 
+### Persisted cache / offline support
+
+Persisting cache data across sessions improves app start up time (or at least perceived time). There's no use case for true offline support at the moment.
+
+`relay-offline` is one of (the?) only published libary for offline relay support that works with relay modern. It requires us to use [relay-hooks](https://github.com/relay-tools/relay-hooks) over official relay hooks (which are experiment - suspense).
+
 **Typical flow (top to bottom)**
 
-1. our screens define top level data they need
-2. we create nav utils that let you preload that query and send the data through route params
-3. our screens can reference this data using `usePreloadedQuery` and the ref
-4. they can pass query/fragment refs down to sub-components
+1. screens define top level queries
+2. using navigation utils, preload queries on navigation intent, and route query ref through route params
+3. screens can reference this data using `usePreloadedQuery` and the ref
+4. screens pass query/fragment refs down to sub-components
 5. those sub-components can define fragments for the data they need, and grab it using `useFragment` and the key they accept
 
 ### Navigation with preloaded data
@@ -100,7 +106,7 @@ Fragments **cannot be fetched by themselves**, they must be included in a query.
 
 ```tsx
 type Props = {
-  queryRef: PreloadedQuery<TokenDetailsQuery>
+  queryRef: OfflineQuery
 }
 
 function TokenDetailsScreen() {

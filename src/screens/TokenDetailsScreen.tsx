@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
+import { OfflineLoadQuery, useFragment, usePreloadedQuery } from 'react-relay-offline'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { IconButton } from 'src/components/buttons/IconButton'
@@ -168,14 +168,14 @@ function TokenDetails({
   preloadedQuery,
 }: {
   currency: Currency
-  preloadedQuery: PreloadedQuery<TokenDetailsScreenQuery>
+  preloadedQuery: OfflineLoadQuery
 }) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
 
-  const data = usePreloadedQuery<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, preloadedQuery)
+  const { data } = usePreloadedQuery<TokenDetailsScreenQuery>(preloadedQuery)
 
   const { tokenWarningLevel, tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(
     currency.wrapped
@@ -255,7 +255,7 @@ function TokenDetails({
         }
         fixedHeader={
           <BackHeader>
-            <HeaderTitleElement currency={currency} tokenProject={data.tokenProjects?.[0]} />
+            <HeaderTitleElement currency={currency} tokenProject={data?.tokenProjects?.[0]} />
           </BackHeader>
         }>
         <Flex gap="md" mb="xxl" mt="lg" pb="xxl">
@@ -266,7 +266,7 @@ function TokenDetails({
             otherChainBalances={otherChainBalances}
           />
           <Flex gap="lg" p="md">
-            <TokenDetailsStats currency={currency} tokenProject={data.tokenProjects?.[0]} />
+            <TokenDetailsStats currency={currency} tokenProject={data?.tokenProjects?.[0]} />
             {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
               <TokenWarningCard
                 tokenWarningLevel={tokenWarningLevel}

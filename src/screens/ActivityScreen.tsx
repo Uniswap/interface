@@ -2,7 +2,7 @@ import { graphql } from 'babel-plugin-relay/macro'
 import { selectionAsync } from 'expo-haptics'
 import React, { Suspense, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
+import { OfflineLoadQuery, usePreloadedQuery } from 'react-relay-offline'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
@@ -112,11 +112,7 @@ export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) 
   )
 }
 
-export function Activity({
-  preloadedQuery,
-}: {
-  preloadedQuery: PreloadedQuery<ActivityScreenQuery>
-}) {
+export function Activity({ preloadedQuery }: { preloadedQuery: OfflineLoadQuery }) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const navigation = useAppStackNavigation()
@@ -124,13 +120,12 @@ export function Activity({
   const { address } = useActiveAccountWithThrow()
 
   // Parse remote txn data from query and merge with local txn data
-  const transactionData = usePreloadedQuery<ActivityScreenQuery>(
-    activityScreenQuery,
-    preloadedQuery
+  const { data: transactionData } = usePreloadedQuery<ActivityScreenQuery>(preloadedQuery)
+
+  const formattedTransactions = useMemo(
+    () => (transactionData ? parseDataResponseToTransactionDetails(transactionData) : []),
+    [transactionData]
   )
-  const formattedTransactions = useMemo(() => {
-    return parseDataResponseToTransactionDetails(transactionData)
-  }, [transactionData])
   const allTransactions = useMergeLocalAndRemoteTransactions(address, formattedTransactions)
 
   const { sessions } = useWalletConnect(address)
