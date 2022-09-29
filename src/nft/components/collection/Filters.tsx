@@ -1,16 +1,16 @@
+import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { MarketplaceSelect } from 'nft/components/collection/MarketplaceSelect'
 import { PriceRange } from 'nft/components/collection/PriceRange'
 import { Column, Row } from 'nft/components/Flex'
 import { Radio } from 'nft/components/layout/Radio'
+import { badge } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks'
 import { Trait } from 'nft/hooks/useCollectionFilters'
 import { groupBy } from 'nft/utils/groupBy'
 import { useMemo } from 'react'
 import { useReducer } from 'react'
-import { badge } from 'nft/css/common.css'
-import clsx from 'clsx'
 
 import { TraitSelect } from './TraitSelect'
 

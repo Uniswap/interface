@@ -1,9 +1,9 @@
-import { useState, ReactNode } from 'react'
-import * as styles from 'nft/components/collection/Filters.css'
-import { subheadSmall } from 'nft/css/common.css'
-import { Box } from 'nft/components/Box'
 import clsx from 'clsx'
+import { Box } from 'nft/components/Box'
+import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
+import { subheadSmall } from 'nft/css/common.css'
+import { ReactNode, useState } from 'react'
 
 interface TraitsHeaderProps {
   title: string

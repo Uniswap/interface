@@ -7,10 +7,10 @@ import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { FormEvent, MouseEvent, useEffect, useMemo, useState } from 'react'
-import { TraitsHeader } from './TraitsHeader'
 
 import { Input } from '../layout/Input'
 import * as styles from './Filters.css'
+import { TraitsHeader } from './TraitsHeader'
 
 const TraitItem = ({
   trait,
@@ -114,7 +114,7 @@ export const TraitSelect = ({
 
   const searchedTraits = useMemo(
     () => traits.filter((t) => t.trait_value.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
-    [debouncedSearch, traits, type]
+    [debouncedSearch, traits]
   )
 
   return traits.length ? (

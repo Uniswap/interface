@@ -1,12 +1,13 @@
-import { useIsMobile } from 'nft/hooks'
-import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
-import { useEffect, useState, FormEvent } from 'react'
-import { FocusEventHandler } from 'react'
-import { useLocation } from 'react-router-dom'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
+import { useIsMobile } from 'nft/hooks'
+import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { isNumber } from 'nft/utils/numbers'
 import { scrollToTop } from 'nft/utils/scrollToTop'
+import { FormEvent, useEffect, useState } from 'react'
+import { FocusEventHandler } from 'react'
+import { useLocation } from 'react-router-dom'
+
 import { TraitsHeader } from './TraitsHeader'
 
 export const PriceRange = () => {
