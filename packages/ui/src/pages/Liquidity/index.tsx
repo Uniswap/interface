@@ -31,7 +31,7 @@ import { /* StyledInternalLink, */ TYPE } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1132px;
-  width: 37.3rem;
+  width: 40rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
   `};
@@ -39,7 +39,6 @@ const PageWrapper = styled(AutoColumn)`
     justify-self: flex-start;
     font-family: 'Dela Gothic One';
     font-weight: '400';
-    font-size: '.8rem';
     color: '#FFFFFF';
     ${({ theme }) => theme.mediaWidth.upToSmall`
       font-size: .9rem;
@@ -120,7 +119,6 @@ const YourLiquidityGrid = styled(Box)`
   justify-items: flex-start;
   align-items: center;
   place-content: center center;
-  font-size: 0.8rem;
   > div {
     width: max-content;
   }
@@ -143,7 +141,16 @@ const TopPoolsGrid = styled(Box)`
   place-content: center center;
 `
 
-const HeaderItem = styled(Box)`
+const HeaderItem = styled(Box).attrs((props) => {
+  return {
+    ...props,
+    className: Array.isArray(props.className)
+      ? [...props.className, 'text-detail']
+      : props.className
+      ? [props.className, 'text-detail']
+      : ['text-detail']
+  }
+})`
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
@@ -413,14 +420,14 @@ export default function Liquidity() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               {/* <HideSmall> */}
-              <TYPE.mediumHeader className="YourLiquidityText">Your liquidity</TYPE.mediumHeader>
+              <TYPE.mediumHeader className="YourLiquidityText title">Your liquidity</TYPE.mediumHeader>
               {/* </HideSmall> */}
               <ButtonRow>
                 {/* <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
                   Create a pair
                 </ResponsiveButtonSecondary> */}
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  <Text className="AddLiquidity" sx={{ fontWeight: 600, fontSize: '0.8rem', color: '#000000' }}>
+                  <Text className="AddLiquidity text-small" sx={{ fontWeight: 600, color: '#000000' }}>
                     Add Liquidity
                   </Text>
                 </ResponsiveButtonPrimary>
@@ -442,7 +449,7 @@ export default function Liquidity() {
             ) : allV2PairsWithLiquidity?.length > 0 && ethPrice !== undefined ? (
               //  || stakingPairs?.length > 0
               <>
-                <YourLiquidityGrid>
+                <YourLiquidityGrid className="text">
                   <HeaderItem>Pool</HeaderItem>
                   <HeaderItem>Pair Mode</HeaderItem>
                   <HeaderItem>Token</HeaderItem>
@@ -504,10 +511,10 @@ export default function Liquidity() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               {/* <HideSmall> */}
               <TYPE.mediumHeader
+                className="title"
                 style={{
                   justifySelf: 'flex-start',
                   fontFamily: 'Dela Gothic One',
-                  fontSize: '.8rem',
                   color: '#FFFFFF'
                 }}
               >
@@ -522,7 +529,7 @@ export default function Liquidity() {
               <HeaderItem>Pools</HeaderItem>
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem> */}
-            <TopPoolsGrid>
+            <TopPoolsGrid className="text">
               <HeaderItem>#</HeaderItem>
               <HeaderItem>Pools</HeaderItem>
               <HeaderItem>TVL</HeaderItem>
@@ -565,6 +572,7 @@ export default function Liquidity() {
                       sx={{ display: 'flex', justifyContent: 'flex-end', width: 'max-content', justifySelf: 'end' }}
                     >
                       <ButtonPrimary
+                        className="text-small"
                         style={{ display: 'inline-block !important', whiteSpace: 'nowrap' }}
                         padding=".3rem"
                         borderRadius=".5rem"

@@ -57,7 +57,7 @@ const BodyWrapper = styled.div<{ mobile?: boolean }>`
   flex-direction: column;
   width: 100%;
   // padding-top: 5rem;
-  padding-top: calc(2rem + 0.33333vw);
+  padding-top: calc(3rem + 2vw);
   align-items: center;
   flex: 1;
   button,
@@ -66,7 +66,7 @@ const BodyWrapper = styled.div<{ mobile?: boolean }>`
   }
   z-index: 10;
   ${({ mobile }) => (mobile ? `overflow: hidden auto;` : '')}
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
     padding-top: 4rem;
   `};

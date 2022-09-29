@@ -50,7 +50,7 @@ const HeaderFrame = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     // grid-template-columns: 1fr;
     // padding: 0 1rem;
-    width: calc(100%);
+    width: 100%;
     position: relative;
   `};
 
@@ -144,7 +144,7 @@ const HeaderElement = styled.div`
     margin-left: 8px;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-rows: 1fr 1fr ;
     display: grid;
     grid-template-columns: 1fr 1fr 8fr;
@@ -196,7 +196,7 @@ const HeaderLinks = styled(Row)`
 `
 
 const AccountElement = styled(Box)<{ active: boolean }>`
-  width: "11.5rem"
+  width: 11.5rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -244,7 +244,6 @@ const HideSmall = styled.span`
 const NetworkCard = styled(YellowCard)`
   border-radius: 12px;
   padding: 8px 12px;
-  font-size: 0.6rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0;
     margin-right: 0.5rem;
@@ -284,9 +283,15 @@ const UniIcon = styled.div`
 
 const activeClassName = 'ACTIVE'
 
-const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
-})`
+const StyledNavLink = styled(NavLink).attrs((props) => ({
+  ...props,
+  activeClassName,
+  className: Array.isArray(props.className)
+    ? [...props.className, 'text-emphasize']
+    : props.className
+    ? [props.className, 'text-emphasize']
+    : ['text-emphasize']
+}))`
   &:first-child {
     position: relative;
     left: -1px;
@@ -305,7 +310,6 @@ const StyledNavLink = styled(NavLink).attrs({
   cursor: pointer;
   text-decoration: none;
   // color: ${({ theme }) => theme.text2};
-  font-size: 1rem;
   width: max-content;
   margin: 0;
   font-weight: 600;
@@ -526,9 +530,6 @@ export default function Header() {
               alignItems: 'center',
               height: 'calc(2.5rem - 2px)',
               gridArea: 'a3',
-              '*': {
-                fontSize: '1rem!important'
-              },
               '&>*': {
                 display: 'flex',
                 alignItems: 'center',
@@ -538,10 +539,13 @@ export default function Header() {
           >
             <HideSmall>
               {chainId && NETWORK_LABELS[chainId] && (
-                <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
+                <NetworkCard className="secondary-title" title={NETWORK_LABELS[chainId]}>
+                  {NETWORK_LABELS[chainId]}
+                </NetworkCard>
               )}
             </HideSmall>
             <AccountElement
+              className="secondary-title"
               active={!!account}
               sx={{
                 pointerEvents: 'auto',
@@ -551,12 +555,7 @@ export default function Header() {
               }}
             >
               {account && userEthBalance ? (
-                <BalanceText
-                  style={{ flexShrink: 0, fontSize: '.6rem', color: theme.common2 }}
-                  pl="0.75rem"
-                  pr="0.5rem"
-                  fontWeight={500}
-                >
+                <BalanceText style={{ flexShrink: 0, color: theme.common2 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
                   {userEthBalance?.toSignificant(4)} TELE
                 </BalanceText>
               ) : null}

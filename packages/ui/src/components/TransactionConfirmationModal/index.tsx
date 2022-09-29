@@ -25,14 +25,14 @@ const Section = styled(AutoColumn)`
 `
 
 const BottomSection = styled(Section)`
-  background-color: rgba(5, 5, 14, 0.8);
+  // background-color: rgba(5, 5, 14, 0.8);
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   padding-top: 0;
 `
 
 const ConfirmedIcon = styled(ColumnCenter)`
-  padding: 60px 0;
+  padding: 3rem 0;
 `
 
 const StyledLogo = styled.img`
@@ -49,19 +49,21 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
           <div />
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-        <ConfirmedIcon>
-          <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
-        </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={20}>
+        <AutoColumn gap="1rem" justify={'center'}>
+          <Text className="secondary-title" fontWeight={600}>
             Waiting For Confirmation
           </Text>
-          <AutoColumn gap="12px" justify={'center'}>
-            <Text fontWeight={600} fontSize={14} color="" textAlign="center">
+        </AutoColumn>
+        <ConfirmedIcon>
+          <CustomLightSpinner src={Circle} alt="loader" size={'4rem'} />
+        </ConfirmedIcon>
+        <AutoColumn gap="1rem" justify={'center'}>
+          <AutoColumn gap="1rem" justify={'center'}>
+            <Text className="text-emphasize" fontWeight={400} color="" textAlign="center">
               {pendingText}
             </Text>
           </AutoColumn>
-          <Text fontSize={12} color="#565A69" textAlign="center">
+          <Text className="text-detail" color="#565A69" textAlign="center">
             Confirm this transaction in your wallet
           </Text>
         </AutoColumn>
@@ -94,22 +96,32 @@ function TransactionSubmittedContent({
           <div />
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-        <ConfirmedIcon>
-          <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
-        </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
-          <Text fontWeight={500} fontSize={20}>
+        <AutoColumn gap="1rem" justify={'center'}>
+          <Text className="secondary-title" fontWeight={600}>
             Transaction Submitted
           </Text>
+        </AutoColumn>
+        <ConfirmedIcon>
+          <ArrowUpCircle strokeWidth={0.5} size={'4rem'} color={theme.primary1} />
+        </ConfirmedIcon>
+        <AutoColumn gap="0.8rem" justify={'center'}>
           {chainId && hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
-              <Text fontWeight={500} fontSize={14} color={theme.primary1}>
+              <Text className="text-emphasize" fontWeight={400} fontFamily="Poppins" color={theme.primary1}>
                 View on Blockchain Exploerer
               </Text>
             </ExternalLink>
           )}
           {currencyToAdd && library?.provider?.isMetaMask && (
-            <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
+            <ButtonLight
+              className="text-emphasize"
+              fontWeight={400}
+              fontFamily="Poppins"
+              mt="12px"
+              padding="6px 12px"
+              width="fit-content"
+              onClick={addToken}
+            >
               {!success ? (
                 <RowFixed>
                   Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
@@ -122,8 +134,8 @@ function TransactionSubmittedContent({
               )}
             </ButtonLight>
           )}
-          <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
-            <Text fontWeight={500} fontSize={20}>
+          <ButtonPrimary onClick={onDismiss} style={{ margin: '1rem 0 0 0', maxHeight: '4rem' }}>
+            <Text className="title" fontWeight={400} fontFamily="Poppins">
               Close
             </Text>
           </ButtonPrimary>
@@ -152,7 +164,7 @@ export function AddLiquidityConfirmationModalContent({
     <Wrapper>
       <Section>
         <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
+          <Text className="title" fontWeight={600}>
             {'Add Liquidity'}
           </Text>
           <CloseIcon onClick={onDismiss} />
@@ -181,10 +193,10 @@ export function ConfirmationModalContent({
         <RowBetween>
           <Text
             color={'#FFFFFF'}
-            fontFamily="Dela Gothic One"
+            fontFamily="Poppins"
             fontStyle="normal"
-            fontWeight={400}
-            fontSize=".9rem"
+            fontWeight={600}
+            className="title"
             lineHeight="1.2rem"
           >
             {title}
@@ -193,7 +205,7 @@ export function ConfirmationModalContent({
         </RowBetween>
         {topContent()}
       </Section>
-      {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
+      {bottomContent && <BottomSection gap="1rem">{bottomContent()}</BottomSection>}
     </Wrapper>
   )
 }

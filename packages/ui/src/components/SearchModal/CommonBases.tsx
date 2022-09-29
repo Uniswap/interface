@@ -36,7 +36,7 @@ export default function CommonBases({
   return (
     <AutoColumn gap="md">
       <AutoRow>
-        <Text fontWeight={500} fontSize={14}>
+        <Text fontWeight={400} className="secondary-title">
           {/* Common bases */}
           Most searched
         </Text>
@@ -52,7 +52,7 @@ export default function CommonBases({
           disable={selectedCurrency === ETHER}
         >
           <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
-          <Text fontWeight={500} style={{ fontSize: '0.6rem' }}>
+          <Text fontWeight={400} className="text">
             ETH
           </Text>
         </BaseWrapper>
@@ -61,7 +61,7 @@ export default function CommonBases({
           return (
             <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
               <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
-              <Text fontWeight={500} style={{ fontSize: '0.6rem' }}>
+              <Text fontWeight={400} className="text">
                 {token.symbol}
               </Text>
             </BaseWrapper>

@@ -28,9 +28,7 @@ import { CardNoise } from '../earn/styled'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 
-export const FixedHeightRow = styled(RowBetween)`
-  height: 24px;
-`
+export const FixedHeightRow = styled(RowBetween)``
 
 export const HoverCard = styled(Card)`
   border: 1px solid transparent;
@@ -97,7 +95,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, ...boxProps }
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
-                <Text fontWeight={600} fontSize={'1rem'}>
+                <Text fontWeight={400} className={'secondary-title'}>
                   Your position
                 </Text>
               </RowFixed>
@@ -108,14 +106,14 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, ...boxProps }
                   currency0={currency0}
                   currency1={currency1}
                   margin={false}
-                  size={'1.2rem'}
+                  size={'1.25rem'}
                 />
-                <Text fontWeight={400} fontSize={'.7rem'}>
+                <Text className="text-emphasize" fontWeight={400}>
                   {currency0.symbol}/{currency1.symbol}
                 </Text>
               </RowFixed>
               <RowFixed>
-                <Text fontWeight={500} fontSize={'0.8rem'}>
+                <Text className="text-emphasize" fontWeight={400}>
                   {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
                 </Text>
               </RowFixed>
@@ -129,25 +127,30 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, ...boxProps }
                 marginBottom: '.8rem'
               }}
             ></div>
-            <AutoColumn gap="4px">
-              <FixedHeightRow>
-                <Text fontSize={'1rem'} fontWeight={600} style={{ marginBottom: '1rem' }}>
+            <AutoColumn gap="0.7rem">
+              <FixedHeightRow minHeight="fit-content">
+                <Text className={'secondary-title'} fontWeight={400}>
                   Pooled assets
                 </Text>
                 {/* <Text fontSize={".6rem"} fontWeight={600}>
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
                 </Text> */}
               </FixedHeightRow>
-              <FixedHeightRow>
+              <FixedHeightRow minHeight="fit-content">
                 <Box display={'flex'} alignItems="center" sx={{ gap: '0.5rem' }}>
-                  <CurrencyLogo currency={currency0} size={'1.2rem'} />
-                  <Text fontSize={'0.6rem'} fontWeight={400}>
-                    {currency0.symbol}
-                  </Text>
+                  <CurrencyLogo currency={currency0} size={'2rem'} />
+                  <Box display="flex" flexDirection={'column'}>
+                    <Text className="text-emphasize" fontWeight={400}>
+                      {currency0.symbol}
+                    </Text>
+                    <Text className="text-small" fontWeight={200} color="#CCCCCC">
+                      {currency0.name}
+                    </Text>
+                  </Box>
                 </Box>
                 {token0Deposited ? (
                   <RowFixed>
-                    <Text fontSize={'0.8rem'} fontWeight={500} marginLeft={'6px'} opacity={0.8}>
+                    <Text className="text-emphasize" fontWeight={400} marginLeft={'6px'} opacity={0.8}>
                       {token0Deposited?.toSignificant(6)}
                     </Text>
                   </RowFixed>
@@ -155,16 +158,21 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, ...boxProps }
                   '-'
                 )}
               </FixedHeightRow>
-              <FixedHeightRow>
+              <FixedHeightRow minHeight="fit-content">
                 <Box display={'flex'} alignItems="center" sx={{ gap: '0.5rem' }}>
-                  <CurrencyLogo currency={currency1} size={'1.2rem'} />
-                  <Text fontSize={'0.6rem'} fontWeight={400}>
-                    {currency1.symbol}
-                  </Text>
+                  <CurrencyLogo currency={currency1} size={'2rem'} />
+                  <Box display="flex" flexDirection={'column'}>
+                    <Text className="text-emphasize" fontWeight={400}>
+                      {currency1.symbol}
+                    </Text>
+                    <Text className="text-small" fontWeight={200} color="#CCCCCC">
+                      {currency1.name}
+                    </Text>
+                  </Box>
                 </Box>
                 {token1Deposited ? (
                   <RowFixed>
-                    <Text fontSize={'0.8rem'} fontWeight={500} marginLeft={'6px'} opacity={0.8}>
+                    <Text className="text-emphasize" fontWeight={400} marginLeft={'6px'} opacity={0.8}>
                       {token1Deposited?.toSignificant(6)}
                     </Text>
                   </RowFixed>
@@ -607,7 +615,11 @@ export function LiquidityCard({
         {/* <ButtonPrimary padding={"unset"} width={"5rem"} borderRadius={".3rem"} sx={{ height: "1.3rem", fontSize: ".5rem", color: "#000000" }} as={Link} to="/manager">
           Manage
         </ButtonPrimary> */}
-        <StyledLink as={Link} to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}`}>
+        <StyledLink
+          className="text-small"
+          as={Link}
+          to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}`}
+        >
           Manage
         </StyledLink>
         {/*  <Box style={{ display: 'inline-block' }}>

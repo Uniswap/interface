@@ -130,13 +130,20 @@ function CurrencyRow({
       <CurrencyLogo currency={currency} size={'1.8rem'} />
       <Column>
         <Text
+          fontWeight={400}
+          className="text"
           title={currency.name}
-          fontWeight={500}
-          style={{ fontSize: '0.8rem', marginBottom: '.2rem', fontFamily: 'Poppins' }}
+          style={{ marginBottom: '.2rem', fontFamily: 'Poppins' }}
         >
           {currency.symbol}
         </Text>
-        <TYPE.darkGray ml="0px" fontSize={'.5rem'} fontWeight={300} fontFamily="Poppins">
+        <TYPE.darkGray
+          ml="0px"
+          fontWeight={300}
+          className="text-detail"
+          fontFamily="Poppins"
+          style={{ fontWeight: 400 }}
+        >
           {currency.name} {!isOnSelectedList && customAdded && '• Added by user'}
         </TYPE.darkGray>
       </Column>

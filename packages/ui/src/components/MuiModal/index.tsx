@@ -37,7 +37,7 @@ export const StyledModalContent = styled(({ width, maxWidth, minWidth, maxHeight
   overflow: hidden;
   align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
   width: 50vw;
-  max-width: 28rem;
+  max-width: 32rem;
   ${({ maxWidth }) => `max-width: ${maxWidth};`}
   ${({ maxHeight }) =>
     maxHeight &&

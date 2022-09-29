@@ -10,7 +10,6 @@ import { AutoColumn } from '../Column'
 
 export const Wrapper = styled.div`
   position: relative;
-  padding: 1.3rem;
   padding-bottom: 1.2rem;
 `
 
@@ -46,17 +45,20 @@ export const SectionBreak = styled.div`
 `
 
 export const BottomGrouping = styled.div`
-  // margin-top: 2rem;
+  margin-top: 1rem;
   // position: absolute;
   /* bottom: -6rem; */
   width: 100%;
   left: 0;
   /* background: ${({ theme }) => theme.primary1}; */
   button {
-    height: 3rem;
+    height: 3.5rem;
     border-radius: 1rem;
     border: 0;
     padding: 0;
+  }
+  * {
+    font-size: unset;
   }
 `
 
