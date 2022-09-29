@@ -23,6 +23,7 @@ import { useChefPoolAPR } from 'hooks/farm/useFarmAPR'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { usePairSidesValueEstimate, usePairUSDValue } from 'hooks/usePairValue'
 import React, { useEffect, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import useUSDCPrice from 'utils/useUSDCPrice'
@@ -50,6 +51,7 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  align-items: center;
   // overflow: hidden;
   // position: relative;
   // opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
@@ -85,17 +87,18 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
 const TopSection = styled.div`
   display: flex;
   align-items: center;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    grid-template-columns: 48px 1fr 96px;
-  `};
+  // ${({ theme }) => theme.mediaWidth.upToSmall`
+  //   grid-template-columns: 48px 1fr 96px;
+  // `};
 `
 
-const StakingColumn = styled.div`
+const StakingColumn = styled.div<{ isHide?: boolean }>`
   max-width: 14rem;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  display: ${({ isHide }) => (isHide ? 'none' : 'block')};
   .stakingColTitle {
     margin-bottom: 0.46rem;
   }
@@ -192,32 +195,29 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
     stakingTokenPair,
     new TokenAmount(stakingInfo.stakingToken, stakingInfo.stakedAmount.raw || '0')
   )
+  const poolInfo = farmingConfig?.pools[pid]
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <TopSection>
         <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
         <TYPE.white fontWeight={600} fontSize={18} style={{ marginLeft: '0.26rem' }}>
-          {farmingConfig?.pools[pid].stakingAsset.name}
+          {poolInfo?.stakingAsset.name}
         </TYPE.white>
-
-        {farmingConfig?.pools[pid].stakingAsset.isLpToken && (
-          <TYPE.green01
-            marginLeft={32}
-            fontSize={14}
-            onClick={() => history.push(`/add/${currency0?.address}/${currency1?.address}`)}
-            style={{ cursor: 'pointer' }}
-          >
-            Get {farmingConfig?.pools[pid].stakingAsset.name}
-          </TYPE.green01>
-        )}
       </TopSection>
-
+      {poolInfo?.stakingAsset.isLpToken && (
+        <TYPE.green01
+          marginLeft={isMobile ? 'auto' : 32}
+          fontSize={14}
+          onClick={() => history.push(`/add/${currency0?.address}/${currency1?.address}`)}
+          style={{ cursor: 'pointer' }}
+        >
+          Get {poolInfo?.stakingAsset.name}
+        </TYPE.green01>
+      )}
       <StatContainer>
-        <StakingColumn>
-          <StakingColumnTitle>
-            Staked {farmingConfig?.pools[pid].stakingAsset.isLpToken ? 'LP' : 'Token'}
-          </StakingColumnTitle>
+        <StakingColumn isHide={isMobile}>
+          <StakingColumnTitle>Staked {poolInfo?.stakingAsset.isLpToken ? 'LP' : 'Token'}</StakingColumnTitle>
           <TYPE.white fontSize={16} marginRight="1.5rem">
             {stakingInfo.stakedAmount.toSignificant(6)}
           </TYPE.white>
@@ -245,7 +245,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
             </div>
           )}
         </StakingColumn>
-        <StakingColumn>
+        <StakingColumn isHide={isMobile}>
           <StakingColumnTitle>Earned Rewards</StakingColumnTitle>
           <TYPE.white fontSize={16}>
             {stakingInfo.pendingReward.toSignificant(6)} {rewardToken.symbol}
