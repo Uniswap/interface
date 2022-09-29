@@ -23,6 +23,7 @@ import { clearNotificationCount } from 'src/features/notifications/notificationS
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
 import { useMergeLocalAndRemoteTransactions } from 'src/features/transactions/hooks'
+import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { Screens } from 'src/screens/Screens'
@@ -117,7 +118,8 @@ export function Activity({ preloadedQuery }: { preloadedQuery: OfflineLoadQuery 
   const dispatch = useAppDispatch()
   const navigation = useAppStackNavigation()
   const { t } = useTranslation()
-  const { address } = useActiveAccountWithThrow()
+  const { address, type } = useActiveAccountWithThrow()
+  const readonly = type === AccountType.Readonly
 
   // Parse remote txn data from query and merge with local txn data
   const { data: transactionData } = usePreloadedQuery<ActivityScreenQuery>(preloadedQuery)
@@ -202,7 +204,7 @@ export function Activity({ preloadedQuery }: { preloadedQuery: OfflineLoadQuery 
               </Flex>
             </Flex>
           }
-          readonly={false}
+          readonly={readonly}
           transactions={allTransactions}
         />
       </Flex>

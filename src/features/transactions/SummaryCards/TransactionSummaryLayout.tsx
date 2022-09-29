@@ -74,9 +74,17 @@ function TransactionSummaryLayout({
     setShowCancelModal(false)
   }
 
+  const onPress = () => {
+    if (readonly) {
+      openTransactionLink(hash, chainId)
+    } else {
+      setShowActionsModal(true)
+    }
+  }
+
   return (
     <>
-      <Button overflow="hidden" onPress={() => setShowActionsModal(true)} {...rest}>
+      <Button overflow="hidden" onPress={onPress} {...rest}>
         {(canceled || cancelling || failedCancel) && !showInlineWarning && (
           <AlertBanner status={status} />
         )}
