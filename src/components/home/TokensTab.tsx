@@ -1,7 +1,7 @@
 import { selectionAsync } from 'expo-haptics'
 import React, { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View, ViewStyle } from 'react-native'
+import { StyleSheet, View, ViewStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
@@ -12,6 +12,7 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
+import { theme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
 
 export function TokensTab({
@@ -44,8 +45,14 @@ export function TokensTab({
     )
   }
 
+  const styles = StyleSheet.create({
+    tabContentStyle: {
+      paddingHorizontal: theme.spacing.sm,
+    },
+  })
+
   return (
-    <View>
+    <View style={styles.tabContentStyle}>
       <Suspense
         fallback={
           <View style={loadingContainerStyle}>

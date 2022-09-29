@@ -52,11 +52,13 @@ export const TabStyles = StyleSheet.create({
   indicator: { backgroundColor: FixedTheme.colors.userThemeMagenta, height: 2 },
   tab: { margin: 0, padding: 0, top: 0 },
   tabBar: {
+    paddingHorizontal: FixedTheme.spacing.lg,
     position: 'absolute',
     top: 0,
     width: '100%',
     zIndex: 1,
   },
+  // eslint-disable-next-line react-native/no-unused-styles
   tabView: {
     marginHorizontal: FixedTheme.spacing.md,
   },
@@ -103,7 +105,12 @@ export default function TabbedScrollScreen({
 
   const renderTabBar = (sceneProps: SceneRendererProps) => {
     return (
-      <Animated.View style={[TabStyles.tabBar, tabBarAnimatedStyle]}>
+      <Animated.View
+        style={[
+          TabStyles.tabBar,
+          tabBarAnimatedStyle,
+          { backgroundColor: theme.colors.backgroundBackdrop },
+        ]}>
         <TabBar
           {...sceneProps}
           indicatorStyle={[TabStyles.indicator]}
@@ -199,7 +206,6 @@ export default function TabbedScrollScreen({
           renderTab(props.route, scrollPropsForTab(props.route.key), loadingContainerStyle)
         }
         renderTabBar={renderTabBar}
-        style={TabStyles.tabView}
         onIndexChange={onTabIndexChange}
       />
       <AnimatedFlex
