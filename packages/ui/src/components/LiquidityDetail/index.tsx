@@ -338,10 +338,10 @@ export default function LiquidityDetail() {
             {/* commented because of merge conflict - By Frank 0929 PR44 */}
           </Flex>
           <Flex sx={{ flexDirection: isMobile ? 'column' : 'row', gap: '0.8rem', a: { height: '1.5rem' } }}>
-            <StyledLink as={Link} to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}`}>
+            <StyledLink as={Link} to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}/${pairModeStable}`}>
               Increase
             </StyledLink>
-            <StyledLink as={Link} to={`/remove/${currencyId(currencyA!)}/${currencyId(currencyB!)}`}>
+            <StyledLink as={Link} to={`/remove/${currencyId(currencyA!)}/${currencyId(currencyB!)}/${pairModeStable}`}>
               Remove
             </StyledLink>
           </Flex>
