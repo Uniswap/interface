@@ -106,9 +106,8 @@ export default function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTab
     <FlatList
       ref={listRef}
       ListHeaderComponent={
-        <Flex gap="md" mt="md">
+        <Flex mt="sm">
           <FavoriteTokensCard
-            fixedCount={5}
             metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
           />
           <Flex row alignItems="center" justifyContent="space-between" mx="sm">

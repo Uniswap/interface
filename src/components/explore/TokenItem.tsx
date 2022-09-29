@@ -2,8 +2,9 @@ import React, { ComponentProps, forwardRef, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType, Image, ImageStyle, Pressable } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { AnimatedButton, Button, ButtonProps } from 'src/components/buttons/Button'
 import { FavoriteButton } from 'src/components/explore/FavoriteButton'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
@@ -13,6 +14,7 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { CoingeckoMarketCoin, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
+import { removeFavoriteToken } from 'src/features/favorites/slice'
 import { useCurrencyIdFromCoingeckoId } from 'src/features/tokens/useCurrency'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
@@ -175,11 +177,19 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
 
 export const TOKEN_ITEM_BOX_MINWIDTH = 137
 
-export function TokenItemBox({ coin }: TokenItemProps) {
+export function TokenItemBox({ coin, isEditing }: TokenItemProps & { isEditing?: boolean }) {
   const theme = useAppTheme()
+  const dispatch = useAppDispatch()
   const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
   const tokenDetailsNavigation = useTokenDetailsNavigation()
+
+  const onRemove = useCallback(() => {
+    if (!_currencyId) return
+    dispatch(removeFavoriteToken({ currencyId: _currencyId }))
+  }, [_currencyId, dispatch])
+
   if (!_currencyId) return null
+
   return (
     <Pressable
       testID={`token-box-${coin.symbol}`}
@@ -194,6 +204,9 @@ export function TokenItemBox({ coin }: TokenItemProps) {
         borderRadius="md"
         justifyContent="space-between"
         minWidth={TOKEN_ITEM_BOX_MINWIDTH}>
+        {isEditing ? (
+          <RemoveFavoriteTokenButton position="absolute" right={-8} top={-8} onPress={onRemove} />
+        ) : null}
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
             <Text variant="subhead">{coin.symbol.toUpperCase() ?? ''}</Text>
@@ -220,6 +233,27 @@ export function TokenItemBox({ coin }: TokenItemProps) {
         </Flex>
       </Box>
     </Pressable>
+  )
+}
+
+function RemoveFavoriteTokenButton(props: ButtonProps) {
+  const theme = useAppTheme()
+  return (
+    <AnimatedButton
+      {...props}
+      alignItems="center"
+      backgroundColor="backgroundBackdrop"
+      borderColor="backgroundOutline"
+      borderRadius="full"
+      borderWidth={1}
+      entering={FadeIn}
+      exiting={FadeOut}
+      height={theme.imageSizes.lg}
+      justifyContent="center"
+      width={theme.imageSizes.lg}
+      zIndex="tooltip">
+      <Box backgroundColor="accentAction" borderRadius="md" height={2} width={12} />
+    </AnimatedButton>
   )
 }
 

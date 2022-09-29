@@ -136,7 +136,6 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
           </KeyboardAvoidingView>
         ) : (
           <TabView
-            lazy={true}
             navigationState={{ index: tabIndex, routes: tabs }}
             renderScene={(props) => renderTab(props.route)}
             renderTabBar={renderTabBar}

@@ -35,7 +35,9 @@ export const slice = createSlice({
       state,
       { payload: { currencyId } }: PayloadAction<{ currencyId: string }>
     ) => {
-      const newTokens = state.tokens.filter((c) => c !== currencyId)
+      const newTokens = state.tokens.filter((c) => {
+        return c.toLocaleLowerCase() !== currencyId.toLocaleLowerCase()
+      })
 
       if (newTokens.length === state.tokens.length) {
         logger.warn(

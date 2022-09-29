@@ -1,6 +1,5 @@
 import { ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode } from 'react'
-import { FlatList, FlatListProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -129,22 +128,8 @@ function EmptyState({
   )
 }
 
-// List
-type ListProps = FlatListProps<any>
-
-function List(props: ListProps) {
-  return (
-    <FlatList
-      {...props}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-    />
-  )
-}
-
 export const BaseCard = {
   Container,
   EmptyState,
   Header,
-  List,
 }
