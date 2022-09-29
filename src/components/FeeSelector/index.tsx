@@ -156,8 +156,10 @@ function FeeSelector({
     setShow(false)
   })
 
+  const now = Date.now() / 1000
   const farmingPoolAddress = Object.values(farms)
     .flat()
+    .filter(farm => farm.endTime >= now)
     .map(farm => farm.poolAddress)
 
   const poolAddresses = useProAmmPoolInfos(currencyA, currencyB, FEE_AMOUNTS)
