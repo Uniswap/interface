@@ -1,4 +1,5 @@
-import React, { ReactElement, Ref, useRef, useState } from 'react'
+import { DrawerActions } from '@react-navigation/core'
+import React, { ReactElement, Ref, useCallback, useMemo, useRef, useState } from 'react'
 import {
   LayoutChangeEvent,
   NativeScrollEvent,
@@ -6,9 +7,11 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolate,
   interpolate,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
@@ -16,11 +19,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Route, SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
 import { ScrollEvent } from 'recyclerlistview/dist/reactnative/core/scrollcomponent/BaseScrollView'
 import { useAppTheme } from 'src/app/hooks'
+import { useAppStackNavigation } from 'src/app/navigation/types'
 import { AnimatedFlex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
+
+const LEFT_EDGE = (dimensions.fullWidth * 1) / 8
 
 type TabbedScrollScreenProps = {
   renderTab: (
@@ -41,6 +47,7 @@ export type TabViewScrollProps = {
 export const TAB_VIEW_SCROLL_THROTTLE = 16
 const TAB_BAR_HEIGHT = 48
 const INITIAL_TAB_BAR_HEIGHT = 100
+const SWIPE_THRESHOLD = 5
 
 export const TabStyles = StyleSheet.create({
   header: {
@@ -79,6 +86,7 @@ export default function TabbedScrollScreen({
 }: TabbedScrollScreenProps) {
   const insets = useSafeAreaInsets()
   const theme = useAppTheme()
+  const navigation = useAppStackNavigation()
 
   const [headerHeight, setHeaderHeight] = useState(INITIAL_TAB_BAR_HEIGHT) // estimation for initial height, updated on layout
   const animatedScrollY = useSharedValue(0)
@@ -87,6 +95,58 @@ export default function TabbedScrollScreen({
   const routes = tabs
   const [tabIndex, setIndex] = useState(0)
   const tabRefs = useRef<{ key: string; value: any; lastScrollOffset?: number }[]>([])
+
+  const openSidebar = useCallback(() => {
+    navigation.dispatch(DrawerActions.openDrawer())
+  }, [navigation])
+
+  const panTabViewGesture = useMemo(
+    () =>
+      Gesture.Pan().onStart(({ translationX, absoluteX }) => {
+        // only register as a side swipe above a certain threshold
+        if (Math.abs(translationX) < SWIPE_THRESHOLD) {
+          return
+        }
+
+        const startingPoint = absoluteX - translationX
+
+        // Left -> Right swipe
+        if (translationX > 0) {
+          if (tabIndex === 0) {
+            runOnJS(openSidebar)()
+          } else {
+            if (startingPoint < LEFT_EDGE) {
+              // Open the sidebar if swiping on the left 1/8 of the screen
+              runOnJS(openSidebar)()
+            } else {
+              // Switch tabs
+              runOnJS(setIndex)(tabIndex - 1)
+            }
+          }
+
+          return
+        }
+
+        // Right -> Left Swipe
+        if (tabIndex < tabs.length - 1) {
+          runOnJS(setIndex)(tabIndex + 1)
+        }
+      }),
+    [openSidebar, tabIndex, tabs]
+  )
+
+  const panHeaderGesture = useMemo(
+    () =>
+      Gesture.Pan().onStart(({ translationX }) => {
+        // only register as a side swipe above a certain threshold
+        if (Math.abs(translationX) < SWIPE_THRESHOLD || translationX < 0) {
+          return
+        }
+
+        runOnJS(openSidebar)()
+      }),
+    [openSidebar]
+  )
 
   const tabBarAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -195,24 +255,29 @@ export default function TabbedScrollScreen({
   }
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <TabView
-        initialLayout={{
-          height: 0,
-          width: dimensions.fullWidth,
-        }}
-        lazy={true}
-        navigationState={{ index: tabIndex, routes }}
-        renderScene={(props) =>
-          renderTab(props.route, scrollPropsForTab(props.route.key), loadingContainerStyle)
-        }
-        renderTabBar={renderTabBar}
-        onIndexChange={onTabIndexChange}
-      />
-      <AnimatedFlex
-        style={[TabStyles.header, headerAnimatedStyle, { marginTop: insets.top }]}
-        onLayout={(event: LayoutChangeEvent) => setHeaderHeight(event.nativeEvent.layout.height)}>
-        {headerContent}
-      </AnimatedFlex>
+      <GestureDetector gesture={panTabViewGesture}>
+        <TabView
+          lazy
+          initialLayout={{
+            height: 0,
+            width: dimensions.fullWidth,
+          }}
+          navigationState={{ index: tabIndex, routes }}
+          renderScene={(props) =>
+            renderTab(props.route, scrollPropsForTab(props.route.key), loadingContainerStyle)
+          }
+          renderTabBar={renderTabBar}
+          swipeEnabled={false}
+          onIndexChange={onTabIndexChange}
+        />
+      </GestureDetector>
+      <GestureDetector gesture={panHeaderGesture}>
+        <AnimatedFlex
+          style={[TabStyles.header, headerAnimatedStyle, { marginTop: insets.top }]}
+          onLayout={(event: LayoutChangeEvent) => setHeaderHeight(event.nativeEvent.layout.height)}>
+          {headerContent}
+        </AnimatedFlex>
+      </GestureDetector>
     </Screen>
   )
 }
