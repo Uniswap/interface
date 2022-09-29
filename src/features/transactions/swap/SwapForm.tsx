@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { Dispatch, useState } from 'react'
+import React, { Dispatch, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
@@ -109,20 +109,23 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     onUpdateExactCurrencyField(currencyField, newExactAmount)
   }
 
-  const [inputSelection, setInputSelection] = React.useState<TextInputProps['selection']>()
-  const [outputSelection, setOutputSelection] = React.useState<TextInputProps['selection']>()
-  const selection = React.useMemo(
+  const [inputSelection, setInputSelection] = useState<TextInputProps['selection']>()
+  const [outputSelection, setOutputSelection] = useState<TextInputProps['selection']>()
+  const selection = useMemo(
     () => ({
       [CurrencyField.INPUT]: inputSelection,
       [CurrencyField.OUTPUT]: outputSelection,
     }),
     [inputSelection, outputSelection]
   )
-  const resetSelection = (start: number, end?: number) => {
-    const reset =
-      exactCurrencyField === CurrencyField.INPUT ? setInputSelection : setOutputSelection
-    reset({ start, end })
-  }
+  const resetSelection = useCallback(
+    (start: number, end?: number) => {
+      const reset =
+        exactCurrencyField === CurrencyField.INPUT ? setInputSelection : setOutputSelection
+      reset({ start, end: end ?? start })
+    },
+    [exactCurrencyField]
+  )
 
   const [showInverseRate, setShowInverseRate] = useState(false)
   const price = trade.trade?.executionPrice
@@ -280,6 +283,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
         <AnimatedFlex exiting={FadeOutDown} gap="xs">
           {!shouldCompressView && (
             <DecimalPad
+              hasCurrencyPrefix={isUSDInput}
               resetSelection={resetSelection}
               selection={selection[exactCurrencyField]}
               setValue={(value: string) => onSetAmount(exactCurrencyField, value, isUSDInput)}
