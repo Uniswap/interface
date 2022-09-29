@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from 'nft/types'
 import { v4 as uuidv4 } from 'uuid'
 import create from 'zustand'
@@ -8,6 +9,10 @@ interface BagState {
   setBagStatus: (state: BagStatus) => void
   itemsInBag: BagItem[]
   setItemsInBag: (items: BagItem[]) => void
+  totalEthPrice: BigNumber
+  setTotalEthPrice: (totalEthPrice: BigNumber) => void
+  totalUsdPrice: number | undefined
+  setTotalUsdPrice: (totalUsdPrice: number | undefined) => void
   addAssetToBag: (asset: UpdatedGenieAsset) => void
   removeAssetFromBag: (asset: UpdatedGenieAsset) => void
   markAssetAsReviewed: (asset: UpdatedGenieAsset, toKeep: boolean) => void
@@ -60,6 +65,16 @@ export const useBag = create<BagState>()(
       setItemsInBag: (items) =>
         set(() => ({
           itemsInBag: items,
+        })),
+      totalEthPrice: BigNumber.from(0),
+      setTotalEthPrice: (totalEthPrice) =>
+        set(() => ({
+          totalEthPrice,
+        })),
+      totalUsdPrice: undefined,
+      setTotalUsdPrice: (totalUsdPrice) =>
+        set(() => ({
+          totalUsdPrice,
         })),
       addAssetToBag: (asset) =>
         set(({ itemsInBag }) => {

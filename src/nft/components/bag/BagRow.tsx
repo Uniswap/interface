@@ -58,6 +58,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
   const [noImageAvailable, setNoImageAvailable] = useState(!asset.smallImageUrl)
   const handleCardHover = () => setCardHovered(!cardHovered)
   const assetCardRef = useRef<HTMLDivElement>(null)
+  const showRemoveButton = showRemove && cardHovered
 
   if (cardHovered && assetCardRef.current && assetCardRef.current.matches(':hover') === false) setCardHovered(false)
 
@@ -66,7 +67,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
       <Row ref={assetCardRef} className={styles.bagRow} onMouseEnter={handleCardHover} onMouseLeave={handleCardHover}>
         <Box position="relative" display="flex">
           <Box
-            display={showRemove ? 'block' : 'none'}
+            display={showRemove && isMobile ? 'block' : 'none'}
             className={styles.removeAssetOverlay}
             onClick={(e: MouseEvent) => {
               e.preventDefault()
@@ -74,7 +75,6 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
               removeAsset(asset)
             }}
             transition="250"
-            style={{ opacity: isMobile ? '1' : '0' }}
             zIndex="1"
           >
             <CircularCloseIcon />
@@ -106,7 +106,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
           </Row>
         </Column>
-        {cardHovered && showRemove && !isMobile && (
+        {showRemoveButton && !isMobile && (
           <Box
             marginLeft="16"
             className={styles.removeBagRowButton}
@@ -119,7 +119,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             Remove
           </Box>
         )}
-        {(!cardHovered || !showRemove || isMobile) && (
+        {(!showRemoveButton || isMobile) && (
           <Column flexShrink="0">
             <Box className={styles.bagRowPrice}>
               {`${formatWeiToDecimal(
