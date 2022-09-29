@@ -493,7 +493,7 @@ export function LiquidityCard({
   const { account } = useActiveWeb3React()
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
-
+  const pairStable = pair.stable
   const [showMore, setShowMore] = useState(false)
 
   const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
@@ -615,13 +615,22 @@ export function LiquidityCard({
         {/* <ButtonPrimary padding={"unset"} width={"5rem"} borderRadius={".3rem"} sx={{ height: "1.3rem", fontSize: ".5rem", color: "#000000" }} as={Link} to="/manager">
           Manage
         </ButtonPrimary> */}
+        {/* commented because of merge conflict - By Frank 0929 PR44 */}
+        {/* !<<<<<<< HEAD
         <StyledLink
           className="text-small"
           as={Link}
           to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}`}
+!======= */}
+        <ButtonPrimary
+          style={{ display: 'inline-block !important' }}
+          padding=".3rem"
+          borderRadius=".5rem"
+          as={Link}
+          to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}/${pairStable}`}
         >
           Manage
-        </StyledLink>
+        </ButtonPrimary>
         {/*  <Box style={{ display: 'inline-block' }}>
           <ButtonPrimary
             style={{ display: 'inline-block !important' }}

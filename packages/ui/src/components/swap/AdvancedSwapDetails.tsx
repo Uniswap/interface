@@ -206,7 +206,6 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           },
           data
         }
-        debugger
         axios(config)
           .then(function (response) {
             setRouteData(response.data)
