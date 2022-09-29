@@ -10,6 +10,7 @@ import { groupBy } from 'nft/utils/groupBy'
 import { useMemo } from 'react'
 import { useReducer } from 'react'
 import { badge } from 'nft/css/common.css'
+import clsx from 'clsx'
 
 import { TraitSelect } from './TraitSelect'
 
@@ -35,7 +36,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
       <Column marginTop="8">
         <Row
           justifyContent="space-between"
-          className={styles.rowHover}
+          className={clsx(styles.rowHover, styles.borderTop)}
           gap="2"
           paddingTop="8"
           paddingRight="16"
@@ -48,7 +49,6 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           }}
           onMouseEnter={toggleBuyNowHover}
           onMouseLeave={toggleBuyNowHover}
-          style={{ borderTop: '1px solid #99A1BD3D' }}
         >
           <Box fontSize="14" fontWeight="medium" as="summary">
             Buy now

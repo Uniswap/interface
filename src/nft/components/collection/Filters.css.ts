@@ -51,8 +51,6 @@ export const detailsOpen = sprinkles({
   overflow: 'hidden',
 })
 
-export const summaryOpen = style([])
-
 export const filterDropDowns = style([
   sprinkles({
     overflowY: 'scroll',
@@ -63,3 +61,11 @@ export const filterDropDowns = style([
     scrollbarWidth: 'none',
   },
 ])
+
+export const borderTop = style({
+  borderTop: `1px solid ${themeVars.colors.backgroundOutline}`,
+})
+
+export const showBorderBottom = style({
+  borderBottom: `1px solid ${themeVars.colors.backgroundOutline}`,
+})

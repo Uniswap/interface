@@ -95,13 +95,12 @@ export const MarketplaceSelect = () => {
   return (
     <Box
       as="details"
-      className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
+      className={clsx(subheadSmall, !isOpen && styles.rowHover, styles.borderTop, isOpen && styles.detailsOpen)}
       open={isOpen}
-      style={{ borderTop: '1px solid #99A1BD3D' }}
     >
       <Box
         as="summary"
-        className={clsx(isOpen && styles.summaryOpen, isOpen ? styles.rowHoverOpen : styles.rowHover)}
+        className={clsx(isOpen ? styles.rowHoverOpen : styles.rowHover)}
         display="flex"
         justifyContent="space-between"
         cursor="pointer"

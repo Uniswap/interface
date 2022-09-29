@@ -18,13 +18,18 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
   return (
     <Box
       as="details"
-      className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
-      style={{ borderTop: '1px solid #99A1BD3D', borderBottom: showBorderBottom ? '1px solid #99A1BD3D' : 'none' }}
+      className={clsx(
+        subheadSmall,
+        showBorderBottom && styles.showBorderBottom,
+        styles.borderTop,
+        !isOpen && styles.rowHover,
+        isOpen && styles.detailsOpen
+      )}
       open={isOpen}
     >
       <Box
         as="summary"
-        className={clsx(isOpen && styles.summaryOpen, isOpen ? styles.rowHoverOpen : styles.rowHover)}
+        className={clsx(isOpen ? styles.rowHoverOpen : styles.rowHover)}
         display="flex"
         justifyContent="space-between"
         cursor="pointer"
