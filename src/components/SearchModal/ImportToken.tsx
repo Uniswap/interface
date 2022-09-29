@@ -1,25 +1,26 @@
 import { Currency, Token } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import { rgba, transparentize } from 'polished'
-import { useCallback, useEffect } from 'react'
-import { AlertCircle, ArrowLeft, CornerDownLeft } from 'react-feather'
+import { transparentize } from 'polished'
+import { useCallback, useEffect, useState } from 'react'
+import { AlertTriangle, ArrowLeft } from 'react-feather'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ButtonPrimary } from 'components/Button'
 import Card from 'components/Card'
+import Checkbox from 'components/CheckBox'
 import { AutoColumn } from 'components/Column'
+import CopyHelper from 'components/Copy'
 import CurrencyLogo from 'components/CurrencyLogo'
-import ListLogo from 'components/ListLogo'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SectionBreak } from 'components/swap/styleds'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
-import { LiteTokenList } from 'state/lists/wrappedTokenInfo'
 import { useAddUserToken } from 'state/user/hooks'
 import { CloseIcon, TYPE } from 'theme'
-import { getEtherscanLink } from 'utils'
+import { getEtherscanLink, shortenAddress } from 'utils'
 
-import { ExternalLink } from '../../theme/components'
+import { ExternalLinkIcon } from '../../theme/components'
 import { PaddedColumn } from './styleds'
 
 const Wrapper = styled.div`
@@ -34,42 +35,30 @@ const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
   width: fit-content;
 `
 
-const AddressText = styled(TYPE.blue)`
+const AddressText = styled.div`
   font-size: 12px;
-
   ${({ theme }) => theme.mediaWidth.upToSmall`
     font-size: 10px;
 `}
 `
 
-const IconEnterWrapper = styled.div`
-  position: absolute;
-  background-color: ${({ theme }) => rgba(theme.background, 0.45)};
-  border-radius: 20px;
-  padding: 6px 15px 4px 15px;
-  right: 13px;
+const DescText = styled.p`
+  font-size: 14px;
 `
 
 interface ImportProps {
   enterToImport?: boolean
   tokens: Token[]
   onBack?: () => void
-  list?: LiteTokenList
   onDismiss?: () => void
   handleCurrencySelect?: (currency: Currency) => void
 }
 
-export function ImportToken({
-  enterToImport = false,
-  tokens,
-  onBack,
-  onDismiss,
-  handleCurrencySelect,
-  list,
-}: ImportProps) {
+export function ImportToken({ enterToImport = false, tokens, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
   const theme = useTheme()
 
   const { chainId } = useActiveWeb3React()
+  const [agree, setAgree] = useState(false)
 
   const addToken = useAddUserToken()
   const onClickImport = useCallback(() => {
@@ -100,83 +89,77 @@ export function ImportToken({
       </PaddedColumn>
       <SectionBreak />
       <AutoColumn gap="md" style={{ marginBottom: '1rem', padding: '1rem' }}>
-        <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
-          <AlertCircle size={48} stroke={theme.text2} strokeWidth={1} />
-          <TYPE.body fontWeight={400} fontSize={16}>
-            {tokens.length > 1 ? (
-              <Trans>
-                These tokens don&apos;t appear on the active token list(s). Make sure these are the tokens that you want
-                to trade.
-              </Trans>
-            ) : (
-              <Trans>
-                This token doesn&apos;t appear on the active token list(s). Make sure this is the token that you want to
-                trade.
-              </Trans>
-            )}
-          </TYPE.body>
-        </AutoColumn>
         {tokens.map(token => {
           return (
-            <Card
-              backgroundColor={theme.buttonBlack}
-              key={'import' + token.address}
-              className=".token-warning-container"
-              padding="2rem"
-            >
-              <AutoColumn gap="10px" justify="center">
-                <CurrencyLogo currency={token} size={'32px'} />
-
-                <AutoColumn gap="4px" justify="center">
-                  <TYPE.body ml="8px" mr="8px" fontWeight={500} fontSize={20}>
+            <Card backgroundColor={theme.buttonBlack} key={token.address} padding="2rem">
+              <Flex style={{ gap: 10 }}>
+                <CurrencyLogo currency={token} size={'44px'} />
+                <AutoColumn gap="4px">
+                  <TYPE.body fontWeight={500} fontSize={20}>
                     {token.symbol}
                   </TYPE.body>
-                  <TYPE.darkGray fontWeight={400} fontSize={14}>
+                  <Text color={theme.subText} fontWeight={400} fontSize={14}>
                     {token.name}
-                  </TYPE.darkGray>
+                  </Text>
+                  {chainId && (
+                    <Flex alignItems={'center'} color={theme.text} style={{ gap: 5 }}>
+                      <AddressText>
+                        <Trans>Address</Trans>: {shortenAddress(token.address, 7)}
+                      </AddressText>
+                      <CopyHelper toCopy={token.address} style={{ color: theme.subText }} />
+                      <ExternalLinkIcon
+                        color={theme.subText}
+                        size={16}
+                        href={getEtherscanLink(chainId, token.address, 'address')}
+                      />
+                    </Flex>
+                  )}
                 </AutoColumn>
-                {chainId && (
-                  <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
-                    <AddressText fontSize={12}>{token.address}</AddressText>
-                  </ExternalLink>
-                )}
-                {list !== undefined ? (
-                  <RowFixed>
-                    {list.logoURI && <ListLogo logoURI={list.logoURI} size="16px" />}
-                    <TYPE.small ml="6px" fontSize={14} color={theme.text3}>
-                      <Trans>via {list.name} token list</Trans>
-                    </TYPE.small>
-                  </RowFixed>
-                ) : (
-                  <WarningWrapper borderRadius="4px" padding="4px" highWarning={true}>
-                    <RowFixed>
-                      <AlertCircle stroke={theme.red1} size="10px" />
-                      <TYPE.body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
-                        <Trans>Unknown Source</Trans>
-                      </TYPE.body>
-                    </RowFixed>
-                  </WarningWrapper>
-                )}
-              </AutoColumn>
+              </Flex>
             </Card>
           )
         })}
 
+        <WarningWrapper borderRadius="20px" padding="15px" highWarning={true}>
+          <RowFixed>
+            <AlertTriangle stroke={theme.red1} size="20px" />
+            <TYPE.body color={theme.red1} ml="8px" fontSize="20px">
+              <Trans>Trade at your own risk!</Trans>
+            </TYPE.body>
+          </RowFixed>
+          <DescText>
+            <Trans>
+              Anyone can create a token, including creating fake versions of existing tokens that claim to represent
+              projects
+            </Trans>
+          </DescText>
+          <DescText>
+            <Trans>If you purchase this token, you may not be able to sell it back</Trans>
+          </DescText>
+
+          <Flex fontSize={14} alignItems="center" style={{ gap: 10 }}>
+            <Checkbox
+              id="checkboxImported"
+              type="checkbox"
+              checked={agree}
+              onChange={e => {
+                setAgree(e.target.checked)
+              }}
+            />
+            <label htmlFor="checkboxImported">
+              <Trans>I understand</Trans>
+            </label>
+          </Flex>
+        </WarningWrapper>
         <ButtonPrimary
-          altDisabledStyle={true}
+          disabled={!agree}
           borderRadius="20px"
           padding="10px 1rem"
-          margin="16px 0 0"
+          margin="10px 0 0"
           onClick={onClickImport}
-          className=".token-dismiss-button"
           style={{ position: 'relative' }}
         >
           <Trans>Import</Trans>
-          {enterToImport && (
-            <IconEnterWrapper>
-              <CornerDownLeft size={14} color={theme.primary} />
-            </IconEnterWrapper>
-          )}
         </ButtonPrimary>
       </AutoColumn>
     </Wrapper>

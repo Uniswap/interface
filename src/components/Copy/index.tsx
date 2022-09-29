@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 import { CheckCircle, Copy } from 'react-feather'
 import styled from 'styled-components'
 
@@ -28,10 +28,12 @@ const TransactionStatusText = styled.span`
 export default function CopyHelper({
   toCopy,
   margin,
+  style = {},
 }: {
   toCopy: string
   children?: React.ReactNode
   margin?: string
+  style?: CSSProperties
 }) {
   const [isCopied, setCopied] = useCopyClipboard()
 
@@ -41,7 +43,7 @@ export default function CopyHelper({
   }
 
   return (
-    <CopyIcon onClick={onCopy} margin={margin}>
+    <CopyIcon onClick={onCopy} margin={margin} style={style}>
       {isCopied ? (
         <TransactionStatusText>
           <CheckCircle size={'14'} />

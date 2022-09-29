@@ -25,7 +25,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ zindex: string | num
 const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 const StyledDialogContent = styled(
-  ({ borderRadius, minHeight, maxHeight, maxWidth, width, height, bgColor, mobile, isOpen, ...rest }) => (
+  ({ borderRadius, minHeight, maxHeight, maxWidth, width, height, bgColor, mobile, isOpen, margin, ...rest }) => (
     <AnimatedDialogContent {...rest} />
   ),
 ).attrs({
@@ -34,7 +34,7 @@ const StyledDialogContent = styled(
   overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
 
   &[data-reach-dialog-content] {
-    margin: 0 0 2rem 0;
+    margin: ${({ margin }) => margin || '0 0 2rem 0'};
     background-color: ${({ theme, bgColor }) => bgColor || theme.tableHeader};
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
     padding: 0;
@@ -90,6 +90,7 @@ export interface ModalProps {
   height?: string
   bgColor?: string
   zindex?: number | string
+  margin?: string
   enableInitialFocusInput?: boolean
   className?: string
   children?: React.ReactNode
@@ -100,6 +101,7 @@ export default function Modal({
   isOpen,
   onDismiss,
   minHeight = false,
+  margin = '',
   maxHeight = 90,
   maxWidth = 420,
   width,
@@ -147,6 +149,7 @@ export default function Modal({
                 minHeight={minHeight}
                 maxHeight={maxHeight}
                 maxWidth={maxWidth}
+                margin={margin}
                 width={width}
                 height={height}
                 bgColor={bgColor}

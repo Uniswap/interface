@@ -1,7 +1,6 @@
 import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { rgba } from 'polished'
@@ -101,10 +100,7 @@ const CampaignItem = ({ campaign, onSelectCampaign, isSelected }: CampaignItemPr
       )
     }, new Fraction(0))
     if (tradingVolumeRequired) {
-      percentTradingVolume = BigNumber.from(tradingVolume)
-        .mul(BigNumber.from(100))
-        .div(BigNumber.from(tradingVolumeRequired))
-        .toNumber()
+      percentTradingVolume = Math.floor((tradingVolume / tradingVolumeRequired) * 100)
     }
   } catch (error) {
     console.log(error)

@@ -1,37 +1,22 @@
 import { Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
-import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
-import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
-import { Star } from 'react-feather'
-import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
+import React, { CSSProperties, useCallback, useMemo } from 'react'
+import { Star, Trash } from 'react-feather'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import TokenListLogo from 'assets/svg/tokenlist.svg'
-import { ButtonEmpty } from 'components/Button'
-import { LightGreyCard } from 'components/Card'
-import QuestionHelper from 'components/QuestionHelper'
 import { useActiveWeb3React } from 'hooks'
-import { useIsUserAddedToken } from 'hooks/Tokens'
-import useTheme from 'hooks/useTheme'
-import { useCombinedActiveList } from 'state/lists/hooks'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
-import { useUserFavoriteTokens } from 'state/user/hooks'
+import { useUserAddedTokens, useUserFavoriteTokens } from 'state/user/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
-import { TYPE } from 'theme'
-import { isAddress, isTokenOnList } from 'utils'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 import Column from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import Loader from '../Loader'
 import { RowBetween, RowFixed } from '../Row'
-import { MouseoverTooltip } from '../Tooltip'
+import { TokenResponse } from './CurrencySearch'
 import ImportRow from './ImportRow'
-
-function currencyKey(currency: Currency): string {
-  return currency?.isNative ? 'ETHER' : currency?.address || ''
-}
 
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
@@ -40,27 +25,10 @@ const StyledBalanceText = styled(Text)`
   text-overflow: ellipsis;
 `
 
-const FavoriteButton = styled(ButtonEmpty)`
-  width: 32px;
-  height: 100%;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-
-  padding: 0px;
-
-  background: transparent;
-  border-radius: 8px;
-
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: none;
-
-  appearance: none;
-  user-select: none;
-
-  color: ${({ theme }) => theme.text};
+const FavoriteButton = styled(Star)`
+  width: 20px;
+  height: 20px;
+  color: ${({ theme }) => theme.subText};
 
   :hover {
     color: ${({ theme }) => theme.primary};
@@ -68,18 +36,24 @@ const FavoriteButton = styled(ButtonEmpty)`
 
   &[data-active='true'] {
     color: ${({ theme }) => theme.primary};
-    svg {
-      fill: currentColor;
-    }
+    fill: currentColor;
+  }
+`
+const DeleteButton = styled(Trash)`
+  width: 16px;
+  height: 20px;
+  fill: currentColor;
+  color: ${({ theme }) => theme.subText};
+  :hover {
+    color: ${({ theme }) => theme.text};
   }
 `
 
 const CurrencyRowWrapper = styled(RowBetween)`
   padding: 4px 20px;
   height: 56px;
-  display: grid;
-  grid-template-columns: 24px auto minmax(auto, 1fr) auto minmax(0, 72px);
-  grid-gap: 16px;
+  display: flex;
+  gap: 16px;
   cursor: pointer;
 
   &[data-selected='true'] {
@@ -93,97 +67,53 @@ const CurrencyRowWrapper = styled(RowBetween)`
   }
 `
 
-const Tag = styled.div`
-  background-color: ${({ theme }) => theme.bg3};
-  color: ${({ theme }) => theme.text2};
-  font-size: 14px;
-  border-radius: 4px;
-  padding: 0.25rem 0.3rem 0.25rem 0.3rem;
-  max-width: 6rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  justify-self: flex-end;
-  margin-right: 4px;
-`
-
-const FixedContentRow = styled.div`
-  padding: 4px 20px;
-  height: 56px;
-  display: grid;
-  grid-gap: 16px;
-  align-items: center;
-`
-
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
   return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(10)}</StyledBalanceText>
 }
 
-const TagContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
+const DescText = styled.div`
+  margin-left: 0;
+  font-size: 12px;
+  font-weight: 300;
+  color: ${({ theme }) => theme.subText};
 `
-
-const TokenListLogoWrapper = styled.img`
-  height: 20px;
-`
-
-function TokenTags({ currency }: { currency: Currency }) {
-  if (!(currency instanceof WrappedTokenInfo)) {
-    return <span />
+export const getDisplayTokenInfo = (currency: any) => {
+  return {
+    symbol: currency.isNative ? currency.symbol : currency.wrapped.symbol,
   }
-
-  const tags = currency.tags
-  if (!tags || tags.length === 0) return <span />
-
-  const tag = tags[0]
-
-  return (
-    <TagContainer>
-      <MouseoverTooltip text={tag.description}>
-        <Tag key={tag.id}>{tag.name}</Tag>
-      </MouseoverTooltip>
-      {tags.length > 1 ? (
-        <MouseoverTooltip
-          text={tags
-            .slice(1)
-            .map(({ name, description }) => `${name}: ${description}`)
-            .join('; \n')}
-        >
-          <Tag>...</Tag>
-        </MouseoverTooltip>
-      ) : null}
-    </TagContainer>
-  )
 }
-
 function CurrencyRow({
   currency,
+  isImportedTab,
   currencyBalance,
   onSelect,
   isSelected,
   otherSelected,
   style,
+  handleClickFavorite,
+  removeImportedToken,
 }: {
+  isImportedTab: boolean
   currency: Currency
   currencyBalance: CurrencyAmount<Currency>
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
   style: CSSProperties
+  handleClickFavorite: (e: React.MouseEvent, currency: Currency) => void
+  removeImportedToken: (token: Token) => void
 }) {
   const { chainId, account } = useActiveWeb3React()
-  const selectedTokenList = useCombinedActiveList()
-  const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
-  const customAdded = useIsUserAddedToken(currency)
-  // const balance = useCurrencyBalance(account ?? undefined, currency)
   const balance = currencyBalance
 
-  // const showCurrency = currency === ETHER && !!chainId && [137, 800001].includes(chainId) ? WETH[chainId] : currency
   const nativeCurrency = useCurrencyConvertedToNative(currency || undefined)
   // only show add or remove buttons if not on selected list
 
-  const { favoriteTokens, toggleFavoriteToken } = useUserFavoriteTokens(chainId)
+  const { favoriteTokens } = useUserFavoriteTokens(chainId)
+  const onClickRemove = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    removeImportedToken(currency as Token)
+  }
 
   const isFavorite = (() => {
     if (!chainId || !favoriteTokens) {
@@ -201,135 +131,80 @@ function CurrencyRow({
 
     return false
   })()
-
-  const handleClickFavorite = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-
-    if (!chainId) {
-      return
-    }
-
-    if (currency.isNative) {
-      toggleFavoriteToken({
-        chainId,
-        isNative: true,
-      })
-      return
-    }
-
-    if (currency.isToken) {
-      toggleFavoriteToken({
-        chainId,
-        address: (currency as Token).address,
-      })
-    }
-  }
-
+  const balanceComponent = balance ? <Balance balance={balance} /> : account ? <Loader /> : null
+  const { symbol } = getDisplayTokenInfo(currency)
   return (
     <CurrencyRowWrapper style={style} onClick={() => onSelect()} data-selected={isSelected || otherSelected}>
-      <FavoriteButton onClick={handleClickFavorite} data-active={isFavorite}>
-        <Star width={'18px'} height="18px" />
-      </FavoriteButton>
-      <CurrencyLogo currency={currency} size={'24px'} />
-      <Column>
-        <Text title={currency.name} fontWeight={500}>
-          {nativeCurrency?.symbol}
-        </Text>
-        <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300}>
-          {nativeCurrency?.name} {!isOnSelectedList && customAdded && t`• Added by user`}
-        </TYPE.darkGray>
-      </Column>
-      <TokenTags currency={currency} />
-      <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+      <Flex alignItems="center" style={{ gap: 8 }}>
+        <CurrencyLogo currency={currency} size={'24px'} />
+        <Column>
+          <Text title={currency.name} fontWeight={500}>
+            {symbol}
+          </Text>
+          <DescText>{isImportedTab ? balanceComponent : nativeCurrency?.name}</DescText>
+        </Column>
+      </Flex>
+      <RowFixed style={{ justifySelf: 'flex-end', gap: 15 }}>
+        {isImportedTab ? <DeleteButton onClick={onClickRemove} /> : balanceComponent}
+        <FavoriteButton onClick={e => handleClickFavorite(e, currency)} data-active={isFavorite} />
       </RowFixed>
     </CurrencyRowWrapper>
   )
 }
 
 interface TokenRowProps {
-  data: {
-    currencies: Array<Currency | Token | undefined>
-    currencyBalances: Array<CurrencyAmount<Currency>>
-  }
+  currency: Currency | undefined
+  currencyBalance: CurrencyAmount<Currency>
   index: number
   style: CSSProperties
 }
 
 export default function CurrencyList({
-  height,
   currencies,
-  inactiveTokens,
   selectedCurrency,
+  isImportedTab,
   onCurrencySelect,
   otherCurrency,
-  fixedListRef,
   showImportView,
   setImportToken,
-  breakIndex,
+  handleClickFavorite,
+  removeImportedToken,
+  loadMoreRows,
+  totalItems,
 }: {
-  height: number
+  isImportedTab: boolean
   currencies: Currency[]
-  inactiveTokens: Token[]
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
   otherCurrency?: Currency | null
-  fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showImportView: () => void
   setImportToken: (token: Token) => void
-  breakIndex: number | undefined
+  handleClickFavorite: (e: React.MouseEvent, currency: Currency) => void
+  removeImportedToken: (token: Token) => void
+  loadMoreRows: () => Promise<void>
+  totalItems: number
 }) {
   const { account } = useActiveWeb3React()
-  const itemCurrencies: (Currency | undefined)[] = useMemo(() => {
-    let formatted: (Currency | undefined)[] = currencies
-    if (breakIndex !== undefined) {
-      formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
-    }
-    return formatted
-  }, [breakIndex, currencies])
+  const itemCurrencies: (Currency | undefined)[] = currencies
   const itemCurrencyBalances = useCurrencyBalances(account || undefined, itemCurrencies)
   const itemData = useMemo(
     () => ({ currencies: itemCurrencies, currencyBalances: itemCurrencyBalances }),
     [itemCurrencies, itemCurrencyBalances],
   )
-
-  const theme = useTheme()
-
-  // TODO(viet-nv): check typescript for this
   const Row: any = useCallback(
-    function TokenRow({ data, index, style }: TokenRowProps) {
-      const currency: Currency | undefined = data.currencies[index]
-      const currencyBalance: CurrencyAmount<Currency> = data.currencyBalances[index]
+    function TokenRow({ style, currency, currencyBalance }: TokenRowProps) {
       const isSelected = Boolean(selectedCurrency && currency && selectedCurrency.equals(currency))
       const otherSelected = Boolean(otherCurrency && currency && otherCurrency.equals(currency))
       const handleSelect = () => currency && onCurrencySelect(currency)
 
       const token = currency?.wrapped
-
+      const extendCurrency = currency as TokenResponse
+      const tokenImports = useUserAddedTokens()
       const showImport =
-        inactiveTokens.length &&
         token &&
-        inactiveTokens.map(inactiveToken => inactiveToken.address).includes(isAddress(token.address) || token.address)
-
-      if (index === breakIndex || !data) {
-        return (
-          <FixedContentRow style={style}>
-            <LightGreyCard padding="8px 12px" borderRadius="8px">
-              <RowBetween>
-                <RowFixed>
-                  <TokenListLogoWrapper src={TokenListLogo} />
-                  <TYPE.main ml="6px" fontSize="12px" color={theme.text}>
-                    <Trans>Expanded results from inactive Token Lists</Trans>
-                  </TYPE.main>
-                </RowFixed>
-                <QuestionHelper
-                  text={t`Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists`}
-                />
-              </RowBetween>
-            </LightGreyCard>
-          </FixedContentRow>
-        )
-      }
+        !extendCurrency?.isWhitelisted &&
+        !tokenImports.find(importedToken => importedToken.address === token.address) &&
+        !currency.isNative
 
       if (showImport && token) {
         return (
@@ -344,8 +219,12 @@ export default function CurrencyList({
       }
 
       if (currency) {
+        // whitelist
         return (
           <CurrencyRow
+            isImportedTab={isImportedTab}
+            handleClickFavorite={handleClickFavorite}
+            removeImportedToken={removeImportedToken}
             style={style}
             currency={currency}
             currencyBalance={currencyBalance}
@@ -359,30 +238,35 @@ export default function CurrencyList({
       return null
     },
     [
-      inactiveTokens,
       onCurrencySelect,
       otherCurrency,
       selectedCurrency,
       setImportToken,
       showImportView,
-      breakIndex,
-      theme.text,
+      handleClickFavorite,
+      isImportedTab,
+      removeImportedToken,
     ],
   )
-
-  const itemKey = useCallback((index: number, data: any) => currencyKey(data.currencies[index]), [])
-
+  if (currencies.length === 1 && currencies[0].isNative) return null
   return (
-    <FixedSizeList
-      height={height}
-      ref={fixedListRef as any}
-      width="100%"
-      itemData={itemData}
-      itemCount={itemData.currencies.length}
-      itemSize={56}
-      itemKey={itemKey}
+    <InfiniteScroll
+      dataLength={currencies.length}
+      next={loadMoreRows}
+      hasMore={currencies.length < totalItems}
+      height={'auto'}
+      loader={<h4>Loading...</h4>}
+      scrollableTarget="scrollableDiv"
     >
-      {Row}
-    </FixedSizeList>
+      {itemData.currencies.map((item, index) => (
+        <Row
+          key={index}
+          index={index}
+          currency={item}
+          currencyBalance={itemData.currencyBalances[index]}
+          style={{ height: 56 }}
+        />
+      ))}
+    </InfiniteScroll>
   )
 }

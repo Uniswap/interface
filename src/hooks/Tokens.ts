@@ -9,12 +9,10 @@ import { ZERO_ADDRESS } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks/index'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
-import { ListType, TokenAddressMap, useAllLists, useCombinedActiveList, useInactiveListUrls } from 'state/lists/hooks'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { TokenAddressMap, useCombinedActiveList } from 'state/lists/hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData, useSingleCallResult } from 'state/multicall/hooks'
 import { useUserAddedTokens } from 'state/user/hooks'
 import { isAddress } from 'utils'
-import { createTokenFilterFunction } from 'utils/filtering'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(
@@ -222,51 +220,4 @@ export function useCurrency(currencyId: string | undefined): Currency | null | u
   )
   const token = useToken(isETH ? undefined : currencyId)
   return useMemo(() => (isETH ? nativeOnChain(chainId as ChainId) : token), [chainId, isETH, token])
-}
-
-export function searchInactiveTokenLists({
-  search,
-  minResults = 10,
-  activeTokens,
-  chainId,
-  inactiveUrls,
-  activeList,
-}: {
-  search: string | undefined
-  minResults: number
-  activeTokens: AllTokenType
-  chainId: ChainId | undefined
-  inactiveUrls: string[]
-  activeList: ListType
-}): WrappedTokenInfo[] {
-  if (!search || search.trim().length === 0) return []
-  const tokenFilter = createTokenFilterFunction(search)
-  const result: WrappedTokenInfo[] = []
-  const addressSet: { [address: string]: true } = {}
-  for (const url of inactiveUrls) {
-    const list = activeList[url].current
-    if (!list) continue
-    for (const tokenInfo of list.tokens) {
-      if (isAddress(tokenInfo.address) && tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {
-        const wrapped: WrappedTokenInfo = new WrappedTokenInfo(tokenInfo, list)
-        if (!activeTokens[wrapped.address] && !addressSet[wrapped.address]) {
-          addressSet[wrapped.address] = true
-          result.push(wrapped)
-          if (result.length >= minResults) return result
-        }
-      }
-    }
-  }
-  return result
-}
-
-export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {
-  const activeList = useAllLists()
-  const inactiveUrls = useInactiveListUrls()
-  const { chainId } = useActiveWeb3React()
-  const activeTokens = useAllTokens()
-
-  return useMemo(() => {
-    return searchInactiveTokenLists({ activeTokens, chainId, inactiveUrls, activeList, minResults, search })
-  }, [activeTokens, chainId, inactiveUrls, activeList, minResults, search])
 }

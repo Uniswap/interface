@@ -1,4 +1,4 @@
-import { ChainId, NativeCurrency, Token } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, NativeCurrency, Token } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
 import { debounce } from 'lodash'
 import { stringify } from 'qs'
@@ -43,11 +43,7 @@ export const Container = styled.div`
 export const MAX_FAVORITE_PAIRS = 3
 
 type Props = {
-  onSelectSuggestedPair: (
-    fromToken: NativeCurrency | Token | undefined | null,
-    toToken: NativeCurrency | Token | undefined | null,
-    amount: string,
-  ) => void
+  onSelectSuggestedPair: (fromToken: Currency | undefined, toToken: Currency | undefined, amount: string) => void
   setShowModalImportToken: (val: boolean) => void
 }
 
@@ -235,7 +231,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
     onConfirmImportToken() {
       setIsShowListPair(false)
       if (suggestedAmount) {
-        onSelectSuggestedPair(null, null, suggestedAmount) // fill input amount
+        onSelectSuggestedPair(undefined, undefined, suggestedAmount) // fill input amount
       }
     },
   }))

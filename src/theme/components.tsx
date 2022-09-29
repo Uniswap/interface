@@ -162,11 +162,10 @@ const LinkIconWrapper = styled.a`
   }
 `
 
-export const LinkIcon = styled(LinkIconFeather)`
+export const LinkIcon = styled(LinkIconFeather)<{ color?: string }>`
   height: 16px;
   width: 18px;
-  margin-left: 10px;
-  stroke: ${({ theme }) => theme.blue1};
+  stroke: ${({ theme, color }) => color || theme.primary};
 `
 
 export const TrashIcon = styled(Trash)`
@@ -213,8 +212,9 @@ export function ExternalLinkIcon({
   target = '_blank',
   href,
   rel = 'noopener noreferrer',
+  color,
   ...rest
-}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
+}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string; color?: string }) {
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
@@ -230,7 +230,7 @@ export function ExternalLinkIcon({
   )
   return (
     <LinkIconWrapper target={target} rel={rel} href={href} onClick={handleClick} {...rest}>
-      <LinkIcon />
+      <LinkIcon color={color} />
     </LinkIconWrapper>
   )
 }

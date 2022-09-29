@@ -4,7 +4,7 @@ import { ArrowLeft } from 'react-feather'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import { Checkbox } from 'components/YieldPools/ProMMFarmModals/styled'
+import Checkbox from 'components/CheckBox'
 import { kyberswapDexes } from 'constants/dexes'
 import { ELASTIC_NOT_SUPPORTED } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'

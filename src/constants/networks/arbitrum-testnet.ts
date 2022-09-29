@@ -20,7 +20,9 @@ const arbitrumTestnetInfo: NetworkInfo = {
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/arbitrum-rinkeby-blocks'),
   etherscanUrl: 'https://testnet.arbiscan.io',
   etherscanName: 'Arbiscan',
-  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainId=${ChainId.ARBITRUM_TESTNET}`,
+  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainIds=${
+    ChainId.ARBITRUM_TESTNET
+  }&pageSize=${100}&isWhitelisted=${true}`,
   bridgeURL: 'https://bridge.arbitrum.io',
   nativeToken: {
     symbol: 'ETH',

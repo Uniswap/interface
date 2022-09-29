@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { RowFixed } from '../Row'
 
 export const FilterWrapper = styled(RowFixed)`
-  padding: 8px;
+  padding: 8px 8px 2px 8px;
   color: ${({ theme }) => theme.text};
   border-radius: 8px;
   user-select: none;
@@ -26,7 +26,7 @@ export default function SortButton({
 }) {
   return (
     <FilterWrapper onClick={toggleSortOrder}>
-      <Text fontSize={14} fontWeight={500}>
+      <Text fontSize={17} fontWeight={500}>
         {ascending ? '↑' : '↓'}
       </Text>
     </FilterWrapper>

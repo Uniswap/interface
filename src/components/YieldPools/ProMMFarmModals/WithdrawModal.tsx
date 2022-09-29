@@ -8,6 +8,7 @@ import { Flex, Text } from 'rebass'
 
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
+import Checkbox from 'components/CheckBox'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverDropdown from 'components/HoverDropdown'
@@ -27,7 +28,6 @@ import { formatDollarAmount } from 'utils/numbers'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
 import {
-  Checkbox,
   DropdownIcon,
   ModalContentWrapper,
   Select,

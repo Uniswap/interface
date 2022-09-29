@@ -298,13 +298,7 @@ export const USDT: { [chainId in ChainId]: Token } = {
   [ChainId.BTTC]: new Token(ChainId.BTTC, '0x9B5F27f6ea9bBD753ce3793a07CbA3C74644330d', 18, 'USDT_b', 'Tether USD_BSC'),
   [ChainId.AURORA]: new Token(ChainId.AURORA, '0x4988a896b1227218e4A686fdE5EabdcAbd91571f', 6, 'USDT', 'Tether USD'),
   [ChainId.VELAS]: new Token(ChainId.VELAS, '0x01445C31581c354b7338AC35693AB2001B50b9aE', 6, 'USDT', 'Multichain USDT'),
-  [ChainId.OASIS]: new Token(
-    ChainId.OASIS,
-    '0xdC19A122e268128B5eE20366299fc7b5b199C8e3',
-    6,
-    'USDT',
-    'Tether USD (Wormhole)',
-  ),
+  [ChainId.OASIS]: new Token(ChainId.OASIS, '0x6Cb9750a92643382e020eA9a170AbB83Df05F30B', 6, 'USDT', 'Tether USD'),
   [ChainId.OPTIMISM]: new Token(
     ChainId.OPTIMISM,
     '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
@@ -557,7 +551,6 @@ export const SUGGESTED_BASES: ChainTokenList = {
     DAI[ChainId.MATIC],
     USDC[ChainId.MATIC],
     USDT[ChainId.MATIC],
-
     new Token(ChainId.MATIC, '0xa3Fa99A148fA48D14Ed51d610c367C61876997F1', 18, 'MAI', 'MAI'),
   ],
   [ChainId.BSCMAINNET]: [
@@ -569,18 +562,21 @@ export const SUGGESTED_BASES: ChainTokenList = {
   ],
   [ChainId.AVAXMAINNET]: [
     ...WETH_ONLY[ChainId.AVAXMAINNET],
-    // DAI[ChainId.AVAXMAINNET],
     USDC[ChainId.AVAXMAINNET],
     USDT[ChainId.AVAXMAINNET],
-    // new Token(ChainId.AVAXMAINNET, '0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB', 18, 'WETH.e', 'Wrapped Ether'),
-
     new Token(ChainId.AVAXMAINNET, '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7', 6, 'USDt', 'TetherToken'),
     new Token(ChainId.AVAXMAINNET, '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E', 6, 'USDC', 'USD Coin'),
   ],
 
   [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]],
   [ChainId.CRONOS]: [...WETH_ONLY[ChainId.CRONOS], DAI[ChainId.CRONOS], USDC[ChainId.CRONOS], USDT[ChainId.CRONOS]],
-  [ChainId.AURORA]: [...WETH_ONLY[ChainId.AURORA], DAI[ChainId.AURORA], USDC[ChainId.AURORA], USDT[ChainId.AURORA]],
+  [ChainId.AURORA]: [
+    ...WETH_ONLY[ChainId.AURORA],
+    DAI[ChainId.AURORA],
+    USDC[ChainId.AURORA],
+    USDT[ChainId.AURORA],
+    new Token(ChainId.AURORA, '0x8BEc47865aDe3B172A928df8f990Bc7f2A3b9f79', 18, 'Aurora', 'Aurora'),
+  ],
   [ChainId.ARBITRUM_TESTNET]: [
     ...WETH_ONLY[ChainId.ARBITRUM_TESTNET],
     DAI[ChainId.ARBITRUM_TESTNET],
@@ -600,6 +596,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.OPTIMISM]: [
     ...WETH_ONLY[ChainId.OPTIMISM],
     USDC[ChainId.OPTIMISM],
+    new Token(ChainId.OPTIMISM, '0x4200000000000000000000000000000000000042', 18, 'OP', 'Optimism'),
     USDT[ChainId.OPTIMISM],
     DAI[ChainId.OPTIMISM],
   ],

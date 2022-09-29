@@ -9,6 +9,7 @@ import styled, { css } from 'styled-components'
 
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
+import Checkbox from 'components/CheckBox'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverDropdown from 'components/HoverDropdown'
@@ -25,7 +26,7 @@ import { StyledInternalLink } from 'theme'
 import { formatDollarAmount } from 'utils/numbers'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
-import { Checkbox, ModalContentWrapper, TableHeader, TableRow, Title } from './styled'
+import { ModalContentWrapper, TableHeader, TableRow, Title } from './styled'
 
 const generateCommonCSS = (isUnstake: boolean) => {
   return css`

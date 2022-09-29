@@ -20,7 +20,9 @@ const rinkebyInfo: NetworkInfo = {
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/billjhlee/rinkeby-blocks'),
   etherscanUrl: 'https://rinkeby.etherscan.io',
   etherscanName: 'Rinkeby Explorer',
-  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainId=${ChainId.RINKEBY}`,
+  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainIds=${
+    ChainId.RINKEBY
+  }&pageSize=${100}&isWhitelisted=${true}`,
   bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'ETH',

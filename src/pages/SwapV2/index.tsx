@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, NativeCurrency, Token } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import JSBI from 'jsbi'
 import { stringify } from 'qs'
@@ -543,7 +543,10 @@ export default function Swap({ history }: RouteComponentProps) {
     const { fromCurrency, network } = getUrlMatchParams()
     if (!fromCurrency || !network) return
 
-    const findChainId = SUPPORTED_NETWORKS.find(chainId => NETWORKS_INFO[chainId].route === network) || ChainId.MAINNET
+    const findChainId = SUPPORTED_NETWORKS.find(chainId => NETWORKS_INFO[chainId].route === network)
+    if (!findChainId) {
+      return navigate('/swap')
+    }
     if (findChainId !== chainId) {
       changeNetwork(
         findChainId,
@@ -571,11 +574,7 @@ export default function Swap({ history }: RouteComponentProps) {
   )
 
   const onSelectSuggestedPair = useCallback(
-    (
-      fromToken: NativeCurrency | Token | undefined | null,
-      toToken: NativeCurrency | Token | undefined | null,
-      amount: string,
-    ) => {
+    (fromToken: Currency | undefined, toToken: Currency | undefined, amount: string) => {
       if (fromToken) onCurrencySelection(Field.INPUT, fromToken)
       if (toToken) onCurrencySelection(Field.OUTPUT, toToken)
       if (amount) handleTypeInput(amount)

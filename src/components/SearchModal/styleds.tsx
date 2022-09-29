@@ -1,3 +1,4 @@
+import { Search } from 'react-feather'
 import styled from 'styled-components'
 
 import { AutoColumn } from '../Column'
@@ -36,10 +37,21 @@ export const PaddedColumn = styled(AutoColumn)`
   padding-bottom: 12px;
 `
 
-export const SearchInput = styled.input`
+export const SearchWrapper = styled.div`
   position: relative;
+  height: 45px;
+`
+
+export const SearchIcon = styled(Search)`
+  position: absolute;
+  right: 12px;
+  top: 12px;
+`
+
+export const SearchInput = styled.input`
+  position: absolute;
   display: flex;
-  padding: 12px 16px;
+  padding: 10px 30px 13px 16px;
   align-items: center;
   width: 100%;
   white-space: nowrap;
@@ -53,10 +65,14 @@ export const SearchInput = styled.input`
   background: ${({ theme }) => theme.buttonBlack};
   -webkit-appearance: none;
 
-  font-size: 18px;
+  font-size: 17px;
 
   ::placeholder {
     color: ${({ theme }) => theme.border};
+    font-size: 13.5px;
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+      font-size: 12.5px;
+    `};
   }
   transition: border 100ms;
   :focus {
