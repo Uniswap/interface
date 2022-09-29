@@ -3,11 +3,11 @@ import Bn from 'bignumber.js'
 import { gql } from 'graphql-tag'
 import { darken } from 'polished'
 import { transparentize } from 'polished'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { Box, Text } from 'rebass'
+import { Box, BoxProps, Text } from 'rebass'
 import styled from 'styled-components'
 import { client } from 'utils/apolloClient'
 
@@ -62,7 +62,7 @@ const YourPisitonCard = styled(Box)`
   font-size: 0.7rem;
   color: #ffffff;
 `
-export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
+export function MinimalPositionCard({ pair, showUnwrapped = false, ...boxProps }: PositionCardProps & BoxProps) {
   const { account } = useActiveWeb3React()
 
   const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0)
@@ -93,32 +93,45 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   return (
     <>
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.raw, JSBI.BigInt(0)) ? (
-        <YourPisitonCard>
+        <YourPisitonCard {...boxProps}>
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
-                <Text fontWeight={600} fontSize={'.7rem'}>
+                <Text fontWeight={600} fontSize={'1rem'}>
                   Your position
                 </Text>
               </RowFixed>
             </FixedHeightRow>
             <FixedHeightRow onClick={() => setShowMore(!showMore)}>
               <RowFixed>
-                <DoubleCurrencyLogoHorizontal currency0={currency0} currency1={currency1} margin={true} size={20} />
+                <DoubleCurrencyLogoHorizontal
+                  currency0={currency0}
+                  currency1={currency1}
+                  margin={false}
+                  size={'1.2rem'}
+                />
                 <Text fontWeight={400} fontSize={'.7rem'}>
                   {currency0.symbol}/{currency1.symbol}
                 </Text>
               </RowFixed>
               <RowFixed>
-                <Text fontWeight={500} fontSize={'.73rem'}>
+                <Text fontWeight={500} fontSize={'0.8rem'}>
                   {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
                 </Text>
               </RowFixed>
             </FixedHeightRow>
-            <div style={{ height: '1px', backgroundColor: `#37373e`, margin: '1rem 0' }}></div>
+            <div
+              style={{
+                width: '100%',
+                height: '0px',
+                borderBottom: `1px solid rgba(255, 255, 255, 0.2)`,
+                marginTop: '0.3rem',
+                marginBottom: '.8rem'
+              }}
+            ></div>
             <AutoColumn gap="4px">
               <FixedHeightRow>
-                <Text fontSize={'.7rem'} fontWeight={600} style={{ marginBottom: '1rem' }}>
+                <Text fontSize={'1rem'} fontWeight={600} style={{ marginBottom: '1rem' }}>
                   Pooled assets
                 </Text>
                 {/* <Text fontSize={".6rem"} fontWeight={600}>
@@ -126,12 +139,15 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                 </Text> */}
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={'.6rem'} fontWeight={600}>
-                  {currency0.symbol}:
-                </Text>
+                <Box display={'flex'} alignItems="center" sx={{ gap: '0.5rem' }}>
+                  <CurrencyLogo currency={currency0} size={'1.2rem'} />
+                  <Text fontSize={'0.6rem'} fontWeight={400}>
+                    {currency0.symbol}
+                  </Text>
+                </Box>
                 {token0Deposited ? (
                   <RowFixed>
-                    <Text fontSize={'.6rem'} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={'0.8rem'} fontWeight={500} marginLeft={'6px'} opacity={0.8}>
                       {token0Deposited?.toSignificant(6)}
                     </Text>
                   </RowFixed>
@@ -140,12 +156,15 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                 )}
               </FixedHeightRow>
               <FixedHeightRow>
-                <Text fontSize={'.6rem'} fontWeight={600}>
-                  {currency1.symbol}:
-                </Text>
+                <Box display={'flex'} alignItems="center" sx={{ gap: '0.5rem' }}>
+                  <CurrencyLogo currency={currency1} size={'1.2rem'} />
+                  <Text fontSize={'0.6rem'} fontWeight={400}>
+                    {currency1.symbol}
+                  </Text>
+                </Box>
                 {token1Deposited ? (
                   <RowFixed>
-                    <Text fontSize={'.6rem'} fontWeight={500} marginLeft={'6px'}>
+                    <Text fontSize={'0.8rem'} fontWeight={500} marginLeft={'6px'} opacity={0.8}>
                       {token1Deposited?.toSignificant(6)}
                     </Text>
                   </RowFixed>
@@ -446,6 +465,15 @@ export default function FullPositionCard({
   )
 }
 
+const StyledLink = styled(ButtonPrimary)`
+  & {
+    display: inline-block !important;
+    padding: 0.3rem;
+    border-radius: 0.5rem !important;
+    color: #000000;
+  }
+`
+
 export function LiquidityCard({
   pair,
   border,
@@ -470,6 +498,13 @@ export function LiquidityCard({
     !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
       : undefined
+
+  const userHoldingPercentage = useMemo(() => {
+    if (userPoolBalance && totalPoolTokens) {
+      return userPoolBalance?.divide(totalPoolTokens!)
+    }
+    return '-'
+  }, [pair?.liquidityToken, totalPoolTokens, userPoolBalance])
 
   const [token0Deposited, token1Deposited] =
     !!pair &&
@@ -558,13 +593,17 @@ export function LiquidityCard({
       </Box>
       <Box>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</Box>
       <Box>
-        {fullInfoPair
-          ? new Bn(fullInfoPair.trackedReserveETH).multipliedBy(ethPrice).decimalPlaces(4, Bn.ROUND_HALF_UP).toString()
+        {fullInfoPair && userHoldingPercentage && userHoldingPercentage !== '-'
+          ? new Bn(fullInfoPair.trackedReserveETH)
+              .multipliedBy(ethPrice)
+              .multipliedBy(userHoldingPercentage?.toFixed(18))
+              .decimalPlaces(4, Bn.ROUND_HALF_UP)
+              .toString()
           : '-'}
         &nbsp;$
       </Box>
       {/* <td>xx</td> */}
-      <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box style={{ display: 'flex', justifyContent: 'space-between', justifySelf: 'end' }}>
         {/* <ButtonPrimary padding={"unset"} width={"5rem"} borderRadius={".3rem"} sx={{ height: "1.3rem", fontSize: ".5rem", color: "#000000" }} as={Link} to="/manager">
           Manage
         </ButtonPrimary> */}

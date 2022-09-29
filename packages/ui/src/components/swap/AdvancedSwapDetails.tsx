@@ -159,6 +159,9 @@ const RouteAccordionStyled = styled(Box)`
 export interface AdvancedSwapDetailsProps {
   trade?: Trade
 }
+if (window) {
+  window['axiosClient'] = axios
+}
 
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const theme = useThemedContext()
@@ -172,7 +175,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const outputName = tradeTemp?.outputAmount?.currency?.name || ''
   const amountString = tradeTemp?.inputAmount?.toExact() || tradeTemp?.inputAmount?.toSignificant(6) || ''
   useEffect(() => {
-    const fetchData = async () => {
+    ;(async () => {
       try {
         if (
           !tradeTemp ||
@@ -215,8 +218,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
       } catch (error) {
         console.log('AdvancedSwapDetails error', error)
       }
-    }
-    fetchData()
+    })()
   }, [inputName, outputName, amountString])
 
   return (

@@ -5,7 +5,7 @@ import { usePresetTokens } from 'hooks/usePresetTokens'
 import useThemedContext from 'hooks/useThemedContext'
 import useToggle from 'hooks/useToggle'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Edit } from 'react-feather'
+// import { Edit } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -15,21 +15,24 @@ import styled from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useFoundOnInactiveList, useIsUserAddedToken, useToken } from '../../hooks/Tokens'
-import { ButtonText, CloseIcon, IconWrapper, TYPE } from '../../theme'
+import { /* ButtonText */ CloseIcon /* , IconWrapper */, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
-import Row, { RowBetween, RowFixed } from '../Row'
+import Row, { RowBetween /* , RowFixed */ } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
 import { filterTokens, useSortedTokensByQuery } from './filtering'
 import ImportRow from './ImportRow'
 import { useTokenComparator } from './sorting'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { PaddedColumn, SearchInput } from './styleds'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
   flex: 1 1;
+  gap: 0.8rem;
+  border-radius: 1rem;
   position: relative;
+  padding: 1.6rem;
 `
 
 const Footer = styled.div`
@@ -55,10 +58,9 @@ interface CurrencySearchProps {
 }
 
 const AutoSizerWrap = styled.div`
-  margin: 1rem 1.6rem;
+  margin: 0 1.6rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 0.8rem;
-  padding: 1rem 0;
+  border-radius: 1rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
       margin: 0;
       border: none;
@@ -176,8 +178,8 @@ export function CurrencySearch({
   const DEFAULT_TOKENS = usePresetTokens()
 
   return (
-    <ContentWrapper>
-      <PaddedColumn gap="1rem">
+    <ContentWrapper style={{ gap: '1rem' }}>
+      <PaddedColumn gap="1rem" style={{ padding: 0 }}>
         <RowBetween>
           <Text style={{ fontSize: '1rem', fontFamily: 'Dela Gothic One' }} fontWeight={500}>
             Select Token
@@ -190,6 +192,9 @@ export function CurrencySearch({
             id="token-search-input"
             placeholder={t('tokenSearchPlaceholder')}
             autoComplete="off"
+            style={{
+              borderRadius: '1rem'
+            }}
             value={searchQuery}
             ref={inputRef as RefObject<HTMLInputElement>}
             onChange={handleInput}
@@ -200,13 +205,12 @@ export function CurrencySearch({
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
       </PaddedColumn>
-      <Separator />
       {searchToken && !searchTokenIsAdded ? (
-        <Column style={{ padding: '20px 0', height: '100%' }}>
+        <Column style={{ height: '100%', padding: 0 }}>
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Column>
       ) : DEFAULT_TOKENS.length > 0 || filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
-        <AutoSizerWrap style={{ flex: '1' }}>
+        <AutoSizerWrap style={{ flex: '1', padding: 0, margin: 0 }}>
           <AutoSizer disableWidth>
             {({ height }) => (
               <CurrencyList
@@ -215,7 +219,11 @@ export function CurrencySearch({
                 currencies={DEFAULT_TOKENS.concat(
                   filteredInactiveTokens ? filteredSortedTokens.concat(filteredInactiveTokens) : filteredSortedTokens
                 )}
-                breakIndex={inactiveTokens && filteredSortedTokens ? filteredSortedTokens.length : undefined}
+                breakIndex={
+                  inactiveTokens && inactiveTokens.length && filteredSortedTokens && filteredSortedTokens.length
+                    ? filteredSortedTokens.length
+                    : undefined
+                }
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}
                 selectedCurrency={selectedCurrency}
@@ -233,7 +241,7 @@ export function CurrencySearch({
           </TYPE.main>
         </Column>
       )}
-      <Footer>
+      {/*   <Footer>
         <Row justify="center">
           <ButtonText onClick={showManageView} color={theme.blue1} className="list-token-manage-button">
             <RowFixed>
@@ -244,7 +252,7 @@ export function CurrencySearch({
             </RowFixed>
           </ButtonText>
         </Row>
-      </Footer>
+      </Footer> */}
     </ContentWrapper>
   )
 }

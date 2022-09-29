@@ -15,7 +15,7 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
-import { ExternalLink } from '../../theme'
+// import { ExternalLink } from '../../theme'
 import AccountDetails from '../AccountDetails'
 import Modal from '../Modal'
 import Option from './Option'
@@ -40,8 +40,11 @@ const CloseColor = styled(Close)`
 const Wrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
   margin: 0;
-  padding: 0;
+  padding: 1rem;
   width: 100%;
+  * {
+    background: #19242f !important;
+  }
 `
 
 const HeaderRow = styled.div`
@@ -62,7 +65,7 @@ const HeaderRow = styled.div`
 
 const ContentWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg2};
-  padding: 1rem 1.6rem;
+  padding: 1rem 2rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
@@ -103,14 +106,13 @@ const Blurb = styled.div`
 
 const OptionGrid = styled.div`
   display: grid;
-  grid-gap: 10px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
-    grid-gap: 10px;
   `};
 `
 
 const HoverText = styled.div`
+  font-size: 1.2rem;
   :hover {
     cursor: pointer;
   }
@@ -357,12 +359,12 @@ export default function WalletModal({
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
-          {walletView !== WALLET_VIEWS.PENDING && (
-            <Blurb>
+          <Blurb>
+            {/*   {walletView !== WALLET_VIEWS.PENDING && (
               <span>New to Tele? &nbsp;</span>{' '}
               <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
-            </Blurb>
-          )}
+            )} */}
+          </Blurb>
         </ContentWrapper>
       </UpperSection>
     )

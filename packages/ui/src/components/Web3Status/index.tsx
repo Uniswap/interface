@@ -72,6 +72,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   :focus {
     color: ${({ theme }) => theme.textHover};
     background-color: ${({ theme }) => theme.primary1Hover};
+    border: 1px solid transparent;
   }
 
   ${({ faded }) =>
@@ -229,13 +230,13 @@ function Web3StatusInner() {
         sx={{
           fontFamily: 'Poppins',
           fontStyle: 'normal',
-          fontWeight: '500',
+          fontWeight: '600!important',
           fontSize: '24px',
           lineHeight: '32px',
           alignItems: 'flex-end',
           display: 'flex',
           color: '#000000',
-          padding: '0 0.3rem',
+          padding: '0 1rem',
           borderRadius: '0.8rem!important',
           height: '2.5rem'
         }}

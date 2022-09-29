@@ -8,10 +8,12 @@ import { ExternalLink } from '../../theme'
 import { getEtherscanLink } from '../../utils'
 import Loader from '../Loader'
 import { RowFixed } from '../Row'
+import ExternalLinkIconSvg from 'assets/svg/external-link-green.svg'
+import { Box } from 'rebass'
 
 const TransactionWrapper = styled.div``
 
-const TransactionStatusText = styled.div`
+const TransactionStatusText = styled(Box)`
   margin-right: 0.5rem;
   display: flex;
   align-items: center;
@@ -51,7 +53,10 @@ export default function Transaction({ hash }: { hash: string }) {
     <TransactionWrapper>
       <TransactionState href={getEtherscanLink(chainId, hash, 'transaction')} pending={pending} success={success}>
         <RowFixed>
-          <TransactionStatusText>{summary ?? hash} ↗</TransactionStatusText>
+          <TransactionStatusText>
+            {summary ?? hash}&nbsp;
+            <img src={ExternalLinkIconSvg} alt="copy-icon" style={{ width: '1rem', height: '1rem' }} />
+          </TransactionStatusText>
         </RowFixed>
         <IconWrapper pending={pending} success={success}>
           {pending ? <Loader /> : success ? <CheckCircle size="16" /> : <Triangle size="16" />}

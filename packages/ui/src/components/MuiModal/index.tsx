@@ -7,6 +7,7 @@ import styled, { css } from 'styled-components'
 
 export const StyledModalOverlay = styled(Flex)`
   z-index: 2;
+  backdrop-filter: blur(10px);
   background-color: transparent;
   overflow: hidden;
   display: flex;
@@ -36,7 +37,7 @@ export const StyledModalContent = styled(({ width, maxWidth, minWidth, maxHeight
   overflow: hidden;
   align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
   width: 50vw;
-  max-width: 22rem;
+  max-width: 28rem;
   ${({ maxWidth }) => `max-width: ${maxWidth};`}
   ${({ maxHeight }) =>
     maxHeight &&
@@ -72,10 +73,9 @@ export const StyledModalContent = styled(({ width, maxWidth, minWidth, maxHeight
 `
 
 const ModalContentWrapper = styled(Flex)`
-  background-color: black;
-  border-radius: 1rem;
+  background-color: #19242f;
+  border-radius: 1.6rem;
   display: flex;
-  border: 1px solid rgba(255, 255, 255, 0.6);
   flex: 1;
   position: relative;
   width: 100%;

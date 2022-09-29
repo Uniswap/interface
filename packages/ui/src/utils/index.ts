@@ -34,7 +34,7 @@ const SCAN_PREFIXES: { [chainId in ChainId]: string } = {
   4: 'rinkeby.etherscan.io',
   5: 'goerli.etherscan.io',
   42: 'kovan.etherscan.io',
-  420: 'blockscout.com/optimism/goerli'
+  420: 'goerli-optimism.etherscan.io'
 }
 
 export function getEtherscanLink(

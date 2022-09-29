@@ -1,3 +1,4 @@
+import { Box } from 'rebass'
 import styled from 'styled-components'
 
 const Column = styled.div`
@@ -10,7 +11,7 @@ export const ColumnCenter = styled(Column)`
   align-items: center;
 `
 
-export const AutoColumn = styled.div<{
+export const AutoColumn = styled(Box)<{
   gap?: 'sm' | 'md' | 'lg' | string
   justify?: 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'space-between'
 }>`

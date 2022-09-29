@@ -1,6 +1,6 @@
 import useThemedContext from 'hooks/useThemedContext'
 import React, { useCallback } from 'react'
-import { ExternalLink as LinkIcon } from 'react-feather'
+// import { ExternalLink as LinkIcon } from 'react-feather'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 
@@ -22,11 +22,14 @@ import Identicon from '../Identicon'
 import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
+import ExternalLinkIconSvg from 'assets/svg/external-link.svg'
+import { Box } from 'rebass'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1.2rem;
   color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
@@ -96,7 +99,7 @@ const YourAccount = styled.div`
 
 const LowerSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  padding: 1.5rem;
+  padding: 1rem;
   flex-grow: 1;
   overflow: auto;
   background-color: ${({ theme }) => theme.bg2};
@@ -110,7 +113,7 @@ const LowerSection = styled.div`
   }
 `
 
-const AccountControl = styled.div`
+const AccountControl = styled(Box)`
   display: flex;
   justify-content: space-between;
   min-width: 0;
@@ -314,7 +317,12 @@ export default function AccountDetails({
                     </WalletAction>
                   )}
                   <WalletAction
-                    style={{ fontSize: '.825rem', fontWeight: 400 }}
+                    style={{
+                      fontSize: '.825rem',
+                      fontWeight: 400,
+                      border: `1px solid rgba(57,225,186,0.4)`,
+                      padding: '0.4rem 0.8rem'
+                    }}
                     onClick={() => {
                       openOptions()
                     }}
@@ -341,53 +349,35 @@ export default function AccountDetails({
                     </>
                   )}
                 </AccountControl>
-              </AccountGroupingRow>
-              <AccountGroupingRow>
-                {ENSName ? (
-                  <>
-                    <AccountControl>
-                      <div>
-                        {account && (
-                          <Copy toCopy={account}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
-                          </Copy>
-                        )}
-                        {chainId && account && (
-                          <AddressLink
-                            hasENS={!!ENSName}
-                            isENS={true}
-                            href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
-                          >
-                            <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Blockchain Exploerer</span>
-                          </AddressLink>
-                        )}
-                      </div>
-                    </AccountControl>
-                  </>
-                ) : (
-                  <>
-                    <AccountControl>
-                      <div>
-                        {account && (
-                          <Copy toCopy={account}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
-                          </Copy>
-                        )}
-                        {chainId && account && (
-                          <AddressLink
-                            hasENS={!!ENSName}
-                            isENS={false}
-                            href={getEtherscanLink(chainId, account, 'address')}
-                          >
-                            <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Blockchain Exploerer</span>
-                          </AddressLink>
-                        )}
-                      </div>
-                    </AccountControl>
-                  </>
-                )}
+                <AccountControl
+                  sx={{
+                    justifyContent: 'end',
+                    'img:hover': {
+                      opacity: 0.7
+                    }
+                  }}
+                >
+                  <div>
+                    {account && (
+                      <Copy toCopy={account}>{/* <span style={{ marginLeft: '4px' }}>Copy Address</span> */}</Copy>
+                    )}
+                    {chainId && account && (
+                      <AddressLink
+                        hasENS={!!ENSName}
+                        isENS={!!ENSName}
+                        href={
+                          !!ENSName
+                            ? chainId && getEtherscanLink(chainId, ENSName, 'address')
+                            : getEtherscanLink(chainId, account, 'address')
+                        }
+                      >
+                        {/* <LinkIcon size={16} /> */}
+                        <img src={ExternalLinkIconSvg} alt="copy-icon" style={{ width: '1rem', height: '1rem' }} />
+                        {/* <span style={{ marginLeft: '4px' }}>View on Blockchain Exploerer</span> */}
+                      </AddressLink>
+                    )}
+                  </div>
+                </AccountControl>
               </AccountGroupingRow>
             </InfoCard>
           </YourAccount>
@@ -404,7 +394,9 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
+          <TYPE.body color={theme.text1} fontSize="0.7rem" opacity={0.6} fontWeight={200}>
+            Your transactions will appear here...
+          </TYPE.body>
         </LowerSection>
       )}
     </>

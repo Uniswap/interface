@@ -36,7 +36,7 @@ import Web3Status from '../Web3Status'
 import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div`
-  padding-top: 2rem;
+  padding-top: 0.5rem;
   display: grid;
   grid-template-columns: 1fr;
   justify-content: space-between;
@@ -181,8 +181,10 @@ const HeaderLinks = styled(Row)`
   justify-content: center;
   height: 2.5rem;
   width: unset;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 0.8rem;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'Poppins';
+  border-radius: 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     // padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
@@ -199,7 +201,7 @@ const AccountElement = styled(Box)<{ active: boolean }>`
   flex-direction: row;
   align-items: center;
   background-color: ${({ theme, active }) => (!active ? theme.common1 : theme.common1)};
-  border-radius: 12px;
+  border-radius: 1rem;
   white-space: nowrap;
   cursor: pointer;
   :focus {
@@ -306,9 +308,9 @@ const StyledNavLink = styled(NavLink).attrs({
   font-size: 1rem;
   width: max-content;
   margin: 0;
-  font-weight: 500;
+  font-weight: 600;
   border-radius: 0.8rem;
-  font-family: 'Dela Gothic One';
+  font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
   // font-size: 0.7rem;
@@ -320,9 +322,11 @@ const StyledNavLink = styled(NavLink).attrs({
     border: none;
     line-height: .9rem; */
   }
-  &.${activeClassName},:focus {
-    background: ${({ theme }) => theme.primary1};
-    color: #000000;
+  &.${activeClassName} {
+    background: rgba(57, 225, 186, 0.1);
+    font-weight: 800;
+    color: rgb(57, 225, 186);
+    // background: ${({ theme }) => theme.primary1};
   }
   ${({ theme }) => theme.mediaWidth.upToSmall`
      padding: .6rem 1.2rem;

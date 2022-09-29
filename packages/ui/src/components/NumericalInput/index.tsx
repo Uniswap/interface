@@ -1,23 +1,29 @@
 import React from 'react'
 import styled from 'styled-components'
+import inputClear from 'assets/svg/inputclear.svg'
 
 import { escapeRegExp } from '../../utils'
 
 const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
   color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
   width: 0;
+  font-family: 'Poppins';
   position: relative;
+  user-select: none;
   font-weight: 500;
   outline: none;
   border: none;
   flex: 1 1 auto;
+  caret-color: #39e1ba;
+  height: 2rem;
   background-color: ${({ theme }) => theme.colorTransparent};
-  font-size: ${({ fontSize }) => fontSize ?? '24px'};
+  font-size: ${({ fontSize }) => fontSize ?? '2rem'};
   text-align: ${({ align }) => align && align};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0px;
+  padding-right: 30px;
   -webkit-appearance: textfield;
 
   ::-webkit-search-decoration {
@@ -31,6 +37,16 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   ::-webkit-outer-spin-button,
   ::-webkit-inner-spin-button {
     -webkit-appearance: none;
+  }
+
+  ::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    position: relative;
+    background-image: url(${inputClear});
+    right: -11px;
+    // background-color: red;
   }
 
   ::placeholder {
@@ -72,7 +88,7 @@ export const Input = React.memo(function InnerInput({
       autoComplete="off"
       autoCorrect="off"
       // text-specific options
-      type="text"
+      type="search"
       pattern="^[0-9]*[.,]?[0-9]*$"
       placeholder={placeholder || '0.0'}
       minLength={1}

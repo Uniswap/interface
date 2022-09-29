@@ -56,7 +56,6 @@ const StyledMenuButton = styled.button`
   padding: 0;
   height: 35px;
 
-  padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
 
   :hover,
@@ -69,8 +68,8 @@ const StyledMenuButton = styled.button`
     margin-top: 2px;
   }
   .setIcon {
-    width: 1rem;
-    height: auto;
+    width: 1.2rem;
+    height: 1.2rem;
     margin-top: 0.4rem;
   }
 `
@@ -93,20 +92,19 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span`
   width: 21.3rem;
-  background-color: ${({ theme }) => theme.common1};
+  background-color: #325466;
   /* box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01); */
   display: flex;
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 3rem;
-  right: -1rem;
+  top: 2rem;
+  right: 0;
   z-index: 100;
 
-  border: 1px solid rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(8px);
-  border-radius: 1.6rem;
+  border-radius: 1rem;
 
   font-weight: 500;
   font-size: 0.4rem;
@@ -204,7 +202,7 @@ export default function SettingsTab() {
       {open && (
         <MenuFlyout>
           <AutoColumn gap="1.2rem" style={{ padding: '1.6rem' }}>
-            <Text fontWeight={400} fontSize={'.9rem'} color="#FFFFFF" sx={{ fontFamily: 'Dela Gothic One' }}>
+            <Text fontWeight={600} fontSize={'.9rem'} color="#FFFFFF" sx={{ fontFamily: 'Poppins' }}>
               Swap Settings
             </Text>
             <TransactionSettings

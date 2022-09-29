@@ -17,7 +17,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import AddIcon from '../../assets/svg/add.svg'
+import LiquidityPlusIcon from 'assets/svg/liquidityPlusIcon.svg'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -547,9 +547,8 @@ export default function AddLiquidity() {
   const addIsUnsupported = useIsTransactionUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
   return (
     <>
-      <Flex alignItems={'flex-start'} width="21rem">
-        <BackToMyLiquidity />
-      </Flex>
+      {/* <Flex alignItems={'flex-start'} width="21rem">
+      </Flex> */}
       <AppBody
         sx={{
           display: 'flex',
@@ -580,7 +579,11 @@ export default function AddLiquidity() {
           currencyToAdd={pair?.liquidityToken}
         />
         <AutoRow justify="space-between" style={{ marginBottom: '.9rem' }}>
-          <span style={{ fontFamily: 'Dela Gothic One', fontWeight: 400, fontSize: '0.7rem', color: '#FFFFFF' }}>
+          <BackToMyLiquidity
+            showText={false}
+            sx={{ alignItems: 'center', width: 'fit-content', marginBottom: '0!important' }}
+          />
+          <span style={{ fontFamily: 'Poppins', fontWeight: 400, fontSize: '1.2rem', color: '#FFFFFF' }}>
             Add Liquidity
           </span>
           <Settings />
@@ -636,9 +639,15 @@ export default function AddLiquidity() {
           <ColumnCenter style={{ position: 'relative' }}>
             {/* <Plus size="16" color={theme.text2} /> */}
             <img
-              src={AddIcon}
+              src={LiquidityPlusIcon}
               alt={'add-icon'}
-              style={{ position: 'absolute', transform: 'translateY(-50%)', width: '56px', height: '56px' }}
+              style={{
+                zIndex: 2,
+                position: 'absolute',
+                transform: 'translateY(-50%)',
+                width: '2.5rem',
+                height: '2.5rem'
+              }}
             />
           </ColumnCenter>
           <CurrencyInputPanel
@@ -678,34 +687,39 @@ export default function AddLiquidity() {
             </>
           )} */}
         </AutoColumn>
-        <Box sx={{ marginTop: '.9rem' }}>
-          <Box sx={{ fontWeight: 600, fontSize: '1rem', marginBottom: '.5rem' }}>Pair Mode</Box>
-          <Box sx={{ display: 'flex', fontWeight: 400, fontSize: '.5rem', alignItems: 'center' }}>
+        <Box sx={{ marginTop: '1.1rem' }}>
+          <Box sx={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '.5rem' }}>Pair Mode</Box>
+          <Box sx={{ display: 'flex', fontWeight: 100, fontSize: '.5rem', alignItems: 'center' }}>
             <Flex alignItems={'center'} sx={{ flex: 1 }} onClick={() => setPairModeStable(false)}>
               <CustomizedRadio type="radio" name="pairMode" id="Volatile" checked={!pairModeStable} />
-              <label style={{ fontSize: '0.7rem', margin: '0 0 0 .7rem' }} htmlFor="Volatile">
+              <label
+                style={{ fontSize: '0.7rem', margin: '0 0 0 .7rem', fontWeight: !pairModeStable ? '600' : '400' }}
+                htmlFor="Volatile"
+              >
                 Volatile
               </label>
               <QuestionHelper text="Volatile mode, using non-stable currency algorithm curve, mainly designed for uncorrelated pools, like WETH+USDC or OP+WETH." />
             </Flex>
             <Flex alignItems={'center'} sx={{ flex: 1 }} onClick={() => setPairModeStable(true)}>
               <CustomizedRadio type="radio" name="pairMode" id="Stable" checked={pairModeStable} />
-              <label htmlFor="Stable" style={{ fontSize: '0.7rem', margin: '0 0 0 .7rem' }}>
+              <label
+                htmlFor="Stable"
+                style={{ fontSize: '0.7rem', margin: '0 0 0 .7rem', fontWeight: pairModeStable ? '600' : '400' }}
+              >
                 Stable
               </label>
               <QuestionHelper text="Stable mode, using stable token algorithm curve, mainly designed for 1:1 or approximately equivalent trading pairs, like USDC+DAI or WETH+sETH." />
             </Flex>
           </Box>
         </Box>
-        <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', margin: '.9rem 0' }}></Box>
-
+        <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', margin: '.7rem 0' }}></Box>
         <Box
           sx={{
-            marginBottom: '.5rem',
+            marginBottom: '.4rem',
             fontFamily: 'Poppins',
             fontStyle: 'normal',
             fontWeight: 600,
-            fontSize: '1rem',
+            fontSize: '0.9rem',
             lineHeight: '28px'
           }}
         >
@@ -718,24 +732,23 @@ export default function AddLiquidity() {
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: 500,
-                fontSize: '0.8rem',
-                lineHeight: '24px'
+                fontSize: '0.7rem',
+                lineHeight: '18px'
               }}
             >
-              {/* {new bn(v2Pair.trackedReserveETH).decimalPlaces(4, bn.ROUND_HALF_UP).toString()} */}
-              {pair && new bn(pair?.reserve0.toFixed(18)).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
+              {pair ? new bn(pair?.reserve0.toFixed(18)).decimalPlaces(4, bn.ROUND_HALF_UP).toString() : '0'}
             </Text>
             <Text
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: 400,
-                fontSize: '0.8rem',
+                fontSize: '0.5rem',
                 lineHeight: '18px',
                 color: 'rgba(255, 255, 255, 0.6)'
               }}
             >
-              {pair?.token0.symbol?.toUpperCase()}
+              {pair ? pair?.token0.symbol?.toUpperCase() : '--'}
             </Text>
           </Flex>
           <Flex flex={1} flexDirection={'column'}>
@@ -744,23 +757,23 @@ export default function AddLiquidity() {
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: 500,
-                fontSize: '0.8rem',
-                lineHeight: '24px'
+                fontSize: '0.7rem',
+                lineHeight: '18px'
               }}
             >
-              {pair && new bn(pair?.reserve1.toFixed(18)).decimalPlaces(4, bn.ROUND_HALF_UP).toString()}
+              {pair ? new bn(pair?.reserve1.toFixed(18)).decimalPlaces(4, bn.ROUND_HALF_UP).toString() : '0'}
             </Text>
             <Text
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: 400,
-                fontSize: '0.8rem',
+                fontSize: '0.6rem',
                 lineHeight: '18px',
                 color: 'rgba(255, 255, 255, 0.6)'
               }}
             >
-              {pair?.token1.symbol?.toUpperCase()}
+              {pair ? pair?.token1.symbol?.toUpperCase() : '--'}
             </Text>
           </Flex>
         </Flex>
@@ -795,7 +808,12 @@ export default function AddLiquidity() {
         <Box
           sx={{
             button: {
-              maxHeight: '3rem'
+              maxHeight: '3rem',
+              fontSize: '1.1rem'
+            },
+            a: {
+              maxHeight: '3rem',
+              fontSize: '1.1rem'
             }
           }}
         >
@@ -807,7 +825,12 @@ export default function AddLiquidity() {
             </AutoColumn>
           ) : !account ? (
             <AutoColumn style={{ marginTop: '1rem' }}>
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+              <ButtonLight
+                sx={{ fontSize: '1.1rem', backgroundColor: '#39E1BA', color: '#05050e', fontWeight: '600!important' }}
+                onClick={toggleWalletModal}
+              >
+                Connect Wallet
+              </ButtonLight>
             </AutoColumn>
           ) : (
             <AutoColumn style={{ marginTop: '1rem' }}>
@@ -852,13 +875,14 @@ export default function AddLiquidity() {
                   </RowBetween>
                 )}
               <ButtonError
+                sx={{ backgroundColor: '#CCCCCC!important', border: 'unset!important' }}
                 onClick={() => {
                   expertMode ? onAdd() : setShowConfirm(true)
                 }}
                 disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
                 error={!!error || (!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B])}
               >
-                <Text fontSize={20} fontWeight={500}>
+                <Text fontSize={'1.1rem'} fontWeight={500}>
                   {error ?? 'Supply'}
                 </Text>
               </ButtonError>
@@ -880,12 +904,16 @@ export default function AddLiquidity() {
       </AppBody>
       <Box
         sx={{
-          background: 'rgba(51, 51, 51, 0.3)',
+          background: 'rgba(28, 41, 53, 0.7)',
           transform: 'translateY(-3rem)',
+          fontFamily: 'Poppins',
           zIndex: -1,
+          color: 'rgba(255,255,255,0.6)',
           maxWidth: '21rem',
+          fontSize: '0.6rem',
           position: 'relative',
           width: '21rem',
+          fontWeight: 200,
           padding: '1.2rem .9rem',
           paddingTop: '4rem',
           borderRadius: '1.6rem',

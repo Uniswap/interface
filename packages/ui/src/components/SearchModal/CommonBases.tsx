@@ -11,17 +11,17 @@ import { AutoRow } from '../Row'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
-  border-radius: 1rem;
+  border-radius: 1.5rem;
   display: flex;
-  padding: 0.4rem;
+  padding: 0.6rem;
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.bg2};
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
-  background-color: ${({ theme, disable }) => disable && theme.bg3};
-  opacity: ${({ disable }) => disable && '0.4'};
+  background-color: ${({ theme, disable }) => disable && `rgba(57, 225, 186, 0.1)`};
+  // opacity: ${({ disable }) => disable && '0.4'};
 `
 
 export default function CommonBases({

@@ -13,7 +13,7 @@ import { useMemo } from 'react'
 import { isMobile } from 'react-device-detect'
 import { useDispatch } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { Box, Flex, Text } from 'rebass'
+import { Box, Flex, FlexProps, Text } from 'rebass'
 import { AppDispatch } from 'state'
 import { Field, resetMintState } from 'state/mint/actions'
 import { useTokenBalance } from 'state/wallet/hooks'
@@ -22,17 +22,32 @@ import { client } from 'utils/apolloClient'
 import { currencyId } from 'utils/currencyId'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 
-import LeftArrow from '../../assets/svg/LeftArrow.svg'
+import GoBack from 'assets/svg/goBack.svg'
+import BoBackBolder from 'assets/svg/goBackBolder.svg'
+
 import { useDerivedMintInfo, useMintActionHandlers } from '../../state/mint/hooks'
 
 const BorderVerticalContainer = styled(Flex)`
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(25, 36, 47, 1);
   width: 100%;
   padding: 2rem;
   border-radius: 24px;
   flex-direction: column;
   color: white;
-  gap: 24px;
+  gap: 0.8rem;
+`
+
+const StyledLink = styled(ButtonPrimary)`
+  & {
+    max-width: max-content;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    height: 2rem !important;
+    font-size: 0.8rem;
+    border-radius: 0.5rem !important;
+    color: #000000;
+  }
 `
 
 export default function LiquidityDetail() {
@@ -291,7 +306,7 @@ export default function LiquidityDetail() {
           overflow: 'hidden auto'
         }}
       >
-        <Flex justifyContent={'space-between'} marginBottom="2rem">
+        <Flex justifyContent={'space-between'} marginBottom="1rem">
           <Flex
             sx={{
               gap: '0.5rem',
@@ -307,7 +322,7 @@ export default function LiquidityDetail() {
             />
             <Text
               sx={{
-                fontFamily: 'Dela Gothic One',
+                fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '400',
                 fontSize: '1.2rem',
@@ -354,8 +369,8 @@ export default function LiquidityDetail() {
           </Flex>
         </Flex>
         <BorderVerticalContainer>
-          <Text sx={{ fontSize: '1.2rem' }}>Total Value</Text>
-          <Text sx={{ fontSize: '1.2rem' }}>
+          <Text sx={{ fontSize: '1rem' }}>Total Value</Text>
+          <Text sx={{ fontSize: '1rem' }}>
             $&nbsp;
             {userHoldingPercentage !== '-' &&
               fullInfoPair &&
@@ -371,7 +386,7 @@ export default function LiquidityDetail() {
               width: '100%',
               borderTop: '1px solid rgba(255,255,255,0.2)',
               height: '0',
-              margin: '24px 0'
+              margin: '0.5rem 0'
             }}
           ></Box>
           <Box
@@ -384,7 +399,7 @@ export default function LiquidityDetail() {
               fontFamily: 'Poppins',
               fontStyle: 'normal',
               fontWeight: '500',
-              fontSize: '1rem',
+              fontSize: '0.8rem',
               color: '#FFFFFF',
               ...(isMobile && { gridColumnGap: '1rem' })
             }}
@@ -392,7 +407,7 @@ export default function LiquidityDetail() {
             <HeaderText>Token</HeaderText>
             <HeaderText>Value</HeaderText>
             <HeaderText>Amount</HeaderText>
-            <HeaderText>Percent</HeaderText>
+            <HeaderText sx={{ justifySelf: 'end' }}>Percent</HeaderText>
             <Flex sx={{ gap: '0.5rem' }} alignItems="center">
               <CurrencyLogo currency={currencyA} size={isMobile ? '1.1rem' : '1rem'} />
               <Text
@@ -433,7 +448,7 @@ export default function LiquidityDetail() {
             >
               {userToken0AmountInPool?.toSignificant(12)}
             </Box>
-            <Box>
+            <Box sx={{ justifySelf: 'end' }}>
               {userHoldingPercentage instanceof Fraction
                 ? +userHoldingPercentage.toSignificant(4) * 100
                 : userHoldingPercentage}
@@ -478,15 +493,14 @@ export default function LiquidityDetail() {
             >
               {userToken1AmountInPool?.toSignificant(12)}
             </Box>
-            <Box>
+            <Box sx={{ justifySelf: 'end' }}>
               {userHoldingPercentage instanceof Fraction
                 ? +userHoldingPercentage.toSignificant(4) * 100
                 : userHoldingPercentage}
               %
             </Box>
           </Box>
-        </BorderVerticalContainer>
-        {/* <BorderVerticalContainer>
+          {/* <BorderVerticalContainer>
           <Flex justifyContent={'space-between'}>
             <Text
               sx={{
@@ -549,21 +563,28 @@ export default function LiquidityDetail() {
             <Box>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(12)}</Box>
           </Box>
         </BorderVerticalContainer> */}
-        <BorderVerticalContainer>
+          <Box
+            sx={{
+              width: '100%',
+              borderTop: '1px solid rgba(255,255,255,0.2)',
+              height: '0',
+              margin: '0.5rem 0'
+            }}
+          ></Box>
           <Flex justifyContent={'space-between'}>
             <Text
               sx={{
                 fontFamily: 'Poppins',
                 fontStyle: 'normal',
                 fontWeight: '500',
-                fontSize: '20px',
+                fontSize: '1rem',
                 lineHeight: '28px',
                 color: '#FFFFFF'
               }}
             >
               Price
             </Text>
-            <Flex flexDirection={'column'}>
+            <Flex flexDirection={'column'} textAlign="right">
               <Text
                 sx={{
                   fontFamily: 'Poppins',
@@ -596,20 +617,22 @@ export default function LiquidityDetail() {
   )
 }
 
-export function BackToMyLiquidity() {
+export function BackToMyLiquidity({ showText = true, ...flexProps }: { showText?: boolean } & FlexProps) {
   // reset states on back
   const dispatch = useDispatch<AppDispatch>()
 
   return (
     <Flex
       height={'1.8rem'}
-      marginBottom={'1.6rem'}
+      marginBottom={'1rem'}
       sx={{
         'a,img': {
           height: '1rem',
-          width: '1rem'
+          width: '1rem',
+          marginRight: '1rem'
         }
       }}
+      {...flexProps}
     >
       <Link
         to="/liquidity"
@@ -618,7 +641,7 @@ export function BackToMyLiquidity() {
         }}
       >
         <img
-          src={LeftArrow}
+          src={showText ? BoBackBolder : GoBack}
           alt="left-arrow"
           style={{
             display: 'flex',
@@ -626,27 +649,32 @@ export function BackToMyLiquidity() {
           }}
         />
       </Link>
-      <Text
-        sx={{
-          fontFamily: 'Poppins',
-          fontStyle: 'normal',
-          fontWeight: '500',
-          fontSize: '1rem',
-          lineHeight: '1rem',
-          height: '1rem',
-          color: '#FFFFFF'
-        }}
-      >
-        Back to My Liquidity
-      </Text>
+      {showText && (
+        <Text
+          sx={{
+            fontFamily: 'Poppins',
+            fontStyle: 'normal',
+            fontWeight: '500',
+            fontSize: '1rem',
+            lineHeight: '1rem',
+            height: '1rem',
+            color: '#FFFFFF'
+          }}
+        >
+          Back to My Liquidity
+        </Text>
+      )}
     </Flex>
   )
 }
 
 const HeaderText = styled(Text)`
+  color: #cccccc;
   font-family: 'Poppins';
   font-style: normal;
-  font-weight: 500;
-  font-size: 1rem;
-  color: #cccccc;
+  font-weight: 400;
+  line-height: 0.8rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
 `

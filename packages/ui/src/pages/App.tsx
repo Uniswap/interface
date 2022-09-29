@@ -1,4 +1,4 @@
-import bg from 'assets/svg/background.svg'
+import bg from 'assets/svg/background-new.svg'
 import LiquidityDetail from 'components/LiquidityDetail'
 import { WrongNetworkProtector } from 'components/WrongNetworkProtector'
 import React, { Suspense } from 'react'
@@ -57,9 +57,13 @@ const BodyWrapper = styled.div<{ mobile?: boolean }>`
   flex-direction: column;
   width: 100%;
   // padding-top: 5rem;
-  padding-top: calc(3rem + 0.33333vw);
+  padding-top: calc(2rem + 0.33333vw);
   align-items: center;
   flex: 1;
+  button,
+  a {
+    font-family: 'Poppins';
+  }
   z-index: 10;
   ${({ mobile }) => (mobile ? `overflow: hidden auto;` : '')}
   ${({ theme }) => theme.mediaWidth.upToSmall`
