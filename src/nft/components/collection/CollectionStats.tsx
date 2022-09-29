@@ -127,7 +127,6 @@ const CollectionName = ({
 }) => {
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
   const nameClass = isCollectionStatsLoading ? styles.nameTextLoading : clsx(headlineMedium, styles.nameText)
-  const collectionStatsLoadingIcons = new Array(4).fill(<div className={styles.iconsLoading} />)
 
   return (
     <Row justifyContent="space-between">
@@ -144,7 +143,6 @@ const CollectionName = ({
           gap="8"
           height="32"
         >
-          {isCollectionStatsLoading && collectionStatsLoadingIcons}
           {collectionStats.discordUrl ? (
             <SocialsIcon href={collectionStats.discordUrl ?? ''}>
               <DiscordIcon
