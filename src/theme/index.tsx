@@ -36,6 +36,7 @@ const BREAKPOINTS = {
   xxxl: 1920,
 }
 
+// deprecated - please use the animations.ts file
 const transitions = {
   duration: {
     slow: '500ms',
@@ -272,11 +273,10 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
     // media queries
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
-    //breakpoints
+    // deprecated - please use hardcoded exported values instead of
+    // adding to the theme object
     breakpoint: BREAKPOINTS,
-
     transition: transitions,
-
     opacity: opacities,
 
     // css snippets
