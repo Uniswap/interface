@@ -252,7 +252,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const totalVolumeStr = ethNumberStandardFormatter(stats.stats?.total_volume)
   const floorPriceStr = ethNumberStandardFormatter(stats.floorPrice)
 
-  const statItems = new Array(5).fill(
+  const statsLoadingSkeleton = new Array(5).fill(
     <>
       <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
         <div className={styles.statsLabelLoading} />
@@ -263,7 +263,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 
   return (
     <Row gap={{ sm: '20', md: '60' }} {...props}>
-      {isCollectionStatsLoading && statItems}
+      {isCollectionStatsLoading && statsLoadingSkeleton}
       {totalSupplyStr ? (
         <StatsItem label="Items" isMobile={isMobile ?? false}>
           {totalSupplyStr}

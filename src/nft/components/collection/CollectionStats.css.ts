@@ -165,11 +165,3 @@ export const nameTextLoading = style([
     width: 236,
   },
 ])
-
-export const iconsLoading = style([
-  loadingAsset,
-  sprinkles({
-    width: '24',
-    height: '24',
-  }),
-])
