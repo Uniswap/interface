@@ -41,7 +41,7 @@ export function HomeScreen() {
           return (
             <NFTCollectionsTab
               loadingContainerStyle={loadingContainerStyle}
-              owner={activeAccount.address}
+              owner={activeAccount.address ?? ''}
               tabViewScrollProps={scrollProps}
             />
           )

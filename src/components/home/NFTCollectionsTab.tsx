@@ -1,10 +1,15 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
-import React, { useCallback, useMemo } from 'react'
+import { graphql } from 'babel-plugin-relay/macro'
+import React, { Suspense, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View, ViewStyle } from 'react-native'
+import { useLazyLoadQuery } from 'react-relay'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { TabEmptyState } from 'src/components/home/TabEmptyState'
+import {
+  NFTCollectionsTabScreenQuery,
+  NFTCollectionsTabScreenQuery$data,
+} from 'src/components/home/__generated__/NFTCollectionsTabScreenQuery.graphql'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
@@ -12,48 +17,110 @@ import { GridRecyclerList } from 'src/components/layout/GridRecyclerList'
 import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { PollingInterval } from 'src/constants/misc'
-import { useNftBalancesQuery } from 'src/features/nfts/api'
-import { NFTAsset } from 'src/features/nfts/types'
+import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
+import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
 const MAX_NFT_IMAGE_SIZE = 375
+const nftCollectionsTabQuery = graphql`
+  query NFTCollectionsTabScreenQuery($ownerAddress: String!) {
+    portfolios(ownerAddresses: [$ownerAddress]) {
+      id
+      ownerAddress
+      nftBalances {
+        ownedAsset {
+          id
+          collection {
+            name
+          }
+          smallImageUrl
+          name
+          tokenId
+          description
+          nftContract {
+            address
+          }
+        }
+      }
+    }
+  }
+`
 
-export function NFTCollectionsTab({
+function formatNftItems(data: NFTCollectionsTabScreenQuery$data | null | undefined): NFTItem[] {
+  const items = data?.portfolios?.[0]?.nftBalances?.flat()
+  if (!items) return EMPTY_ARRAY
+  const nfts = items
+    .filter(
+      (item) =>
+        item?.ownedAsset?.name &&
+        item?.ownedAsset?.nftContract?.address &&
+        item?.ownedAsset?.tokenId
+    )
+    .map((item): NFTItem => {
+      return {
+        name: item?.ownedAsset?.name ?? undefined,
+        description: item?.ownedAsset?.description ?? undefined,
+        contractAddress: item?.ownedAsset?.nftContract?.address ?? undefined,
+        tokenId: item?.ownedAsset?.tokenId ?? undefined,
+        imageUrl: item?.ownedAsset?.smallImageUrl ?? undefined,
+        collectionName: item?.ownedAsset?.collection?.name ?? undefined,
+      }
+    })
+  return nfts
+}
+
+export function NFTCollectionsTab(props: {
+  owner: string
+  tabViewScrollProps: TabViewScrollProps
+  loadingContainerStyle?: ViewStyle
+}) {
+  return (
+    <Suspense
+      fallback={
+        <View style={props.loadingContainerStyle}>
+          <Loading repeat={6} type="grid" />
+        </View>
+      }>
+      <NFTCollectionsInner {...props} />
+    </Suspense>
+  )
+}
+
+function NFTCollectionsInner({
   owner,
   tabViewScrollProps,
   loadingContainerStyle,
 }: {
-  owner?: string
+  owner: string
   tabViewScrollProps: TabViewScrollProps
   loadingContainerStyle?: ViewStyle
 }) {
   const navigation = useHomeStackNavigation()
-  const accountAddress = useActiveAccount()?.address
-  const activeAddress = owner ?? accountAddress
   const { t } = useTranslation()
 
-  const { currentData: nftsByCollection, isLoading: loading } = useNftBalancesQuery(
-    activeAddress ? { owner: activeAddress } : skipToken,
-    { pollingInterval: PollingInterval.Normal }
+  const nftData = useLazyLoadQuery<NFTCollectionsTabScreenQuery>(
+    nftCollectionsTabQuery,
+    {
+      ownerAddress: owner,
+    },
+    { networkCacheConfig: { poll: PollingInterval.Normal } }
   )
-  const nftItems = useMemo(() => Object.values(nftsByCollection ?? {}).flat(), [nftsByCollection])
+  const nftDataItems = formatNftItems(nftData)
 
   const onPressItem = useCallback(
-    (asset: NFTAsset.Asset) => {
+    (asset: NFTItem) => {
       navigation.navigate(Screens.NFTItem, {
-        owner: activeAddress ?? '',
-        address: asset.asset_contract.address,
-        token_id: asset.token_id,
+        owner: owner,
+        address: asset.contractAddress ?? '',
+        token_id: asset.tokenId ?? '',
       })
     },
-    [activeAddress, navigation]
+    [navigation, owner]
   )
 
   const renderItem = useCallback(
-    (asset: NFTAsset.Asset) => {
+    (asset: NFTItem) => {
       return (
         <Box flex={1} justifyContent="flex-start" m="xxs">
           <Button activeOpacity={1} onPress={() => onPressItem(asset)}>
@@ -66,16 +133,16 @@ export function NFTCollectionsTab({
               width="100%">
               <NFTViewer
                 maxHeight={MAX_NFT_IMAGE_SIZE}
-                placeholderContent={asset.name || asset.collection.name}
+                placeholderContent={asset.name || asset.collectionName}
                 squareGridView={true}
-                uri={asset.image_url}
+                uri={asset.imageUrl ?? ''}
               />
             </Box>
             <Flex gap="none" py="sm">
               <Text ellipsizeMode="tail" numberOfLines={1} variant="subheadSmall">
                 {asset.name}
               </Text>
-              <Text variant="bodySmall">{asset.collection.name}</Text>
+              <Text variant="bodySmall">{asset.collectionName}</Text>
             </Flex>
           </Button>
         </Box>
@@ -83,17 +150,9 @@ export function NFTCollectionsTab({
     },
     [onPressItem]
   )
-
   return (
     <View>
-      {loading ? (
-        <>
-          {/* TODO(daniel): replace this with an NFT loader type once it's implemented */}
-          <View style={loadingContainerStyle}>
-            <Loading />
-          </View>
-        </>
-      ) : nftItems.length === 0 ? (
+      {nftDataItems.length === 0 ? (
         <TabEmptyState
           description={t('Any NFTs that you receive, mint, or buy will appear here.')}
           style={loadingContainerStyle}
@@ -101,10 +160,8 @@ export function NFTCollectionsTab({
         />
       ) : (
         <GridRecyclerList
-          data={nftItems}
-          getKey={({ asset_contract, token_id }) =>
-            getNFTAssetKey(asset_contract.address, token_id)
-          }
+          data={nftDataItems}
+          getKey={({ contractAddress, tokenId }) => getNFTAssetKey(contractAddress ?? '', tokenId)}
           renderItem={renderItem}
           tabViewScrollProps={tabViewScrollProps}
         />

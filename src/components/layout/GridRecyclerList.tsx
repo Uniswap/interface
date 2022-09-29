@@ -9,8 +9,8 @@ import { dimensions } from 'src/styles/sizing'
 
 interface GridRecyclerListProps<T> {
   data: T[]
-  getKey: (data: T) => string
-  renderItem: (data: T) => ReactElement
+  getKey: (item: T) => string
+  renderItem: (item: T) => ReactElement
   height?: number
   tabViewScrollProps?: TabViewScrollProps
 }
