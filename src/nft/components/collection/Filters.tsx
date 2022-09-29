@@ -32,7 +32,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           Filters
         </Row>
       </Row>
-      <Column paddingTop="8">
+      <Column marginTop="8">
         <Row
           justifyContent="space-between"
           className={styles.rowHover}
@@ -57,11 +57,11 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
         </Row>
         <MarketplaceSelect />
         <PriceRange />
-        <Box marginTop="12">
+        <Box marginTop="28">
           <Box as="span" color="textSecondary" className={badge}>
             Traits
           </Box>
-          <Column marginTop="12" marginBottom="60">
+          <Column marginTop="8" marginBottom="60">
             {Object.entries(traitsByGroup).map(([type, traits], index) => {
               const showBorderBottom = index === Object.keys(traitsByGroup).length - 1
 

@@ -3,11 +3,6 @@ import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { useEffect, useState, FormEvent } from 'react'
 import { FocusEventHandler } from 'react'
 import { useLocation } from 'react-router-dom'
-import * as styles from 'nft/components/collection/Filters.css'
-import { subheadSmall } from 'nft/css/common.css'
-import { Box } from 'nft/components/Box'
-import clsx from 'clsx'
-import { ChevronUpIcon } from 'nft/components/icons'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { isNumber } from 'nft/utils/numbers'
@@ -41,7 +36,7 @@ export const PriceRange = () => {
 
   return (
     <TraitsHeader title="Price range" showBorderBottom>
-      <Row gap="12" marginTop="12" color="textPrimary">
+      <Row gap="12" marginTop="12" marginBottom="20" color="textPrimary">
         <Row position="relative" style={{ flex: 1 }}>
           <NumericInput
             style={{
