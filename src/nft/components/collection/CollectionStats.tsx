@@ -286,7 +286,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           {totalVolumeStr} ETH
         </StatsItem>
       ) : null}
-      {stats.stats?.total_listings > 0 ? (
+      {stats.stats?.total_listings ? (
         <StatsItem label="Listings" isMobile={isMobile ?? false}>
           {totalListingsStr}
         </StatsItem>
