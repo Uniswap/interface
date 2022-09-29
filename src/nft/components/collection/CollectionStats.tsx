@@ -234,14 +234,12 @@ const CollectionDescription = ({ description }: { description: string }) => {
 }
 
 const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => {
-  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-
   return (
     <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
-      <Box as="span" className={isCollectionStatsLoading ? styles.statsLabelLoading : styles.statsLabel}>
+      <Box as="span" className={styles.statsLabel}>
         {`${label}${isMobile ? ': ' : ''}`}
       </Box>
-      <span className={isCollectionStatsLoading ? styles.statsValueLoading : styles.statsValue}>{children}</span>
+      <span className={styles.statsValue}>{children}</span>
     </Box>
   )
 }
@@ -256,27 +254,39 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const totalVolumeStr = ethNumberStandardFormatter(stats.stats?.total_volume)
   const floorPriceStr = ethNumberStandardFormatter(stats.floorPrice)
 
+  const statItems = new Array(5).fill(
+    <>
+      <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
+        <div className={styles.statsLabelLoading} />
+        <span className={styles.statsValueLoading} />
+      </Box>
+    </>
+  )
+
   return (
     <Row gap={{ sm: '20', md: '60' }} {...props}>
-      <StatsItem label="Items" isMobile={isMobile ?? false}>
-        {totalSupplyStr}
-      </StatsItem>
-      {numOwnersStr || isCollectionStatsLoading ? (
+      {isCollectionStatsLoading && statItems}
+      {totalSupplyStr ? (
+        <StatsItem label="Items" isMobile={isMobile ?? false}>
+          {totalSupplyStr}
+        </StatsItem>
+      ) : null}
+      {numOwnersStr ? (
         <StatsItem label="Owners" isMobile={isMobile ?? false}>
           {numOwnersStr}
         </StatsItem>
       ) : null}
-      {stats.floorPrice || isCollectionStatsLoading ? (
+      {stats.floorPrice ? (
         <StatsItem label="Floor Price" isMobile={isMobile ?? false}>
           {floorPriceStr} ETH
         </StatsItem>
       ) : null}
-      {stats.stats?.total_volume || isCollectionStatsLoading ? (
+      {stats.stats?.total_volume ? (
         <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
           {totalVolumeStr} ETH
         </StatsItem>
       ) : null}
-      {stats.stats?.total_listings || isCollectionStatsLoading ? (
+      {stats.stats?.total_listings > 0 ? (
         <StatsItem label="Listings" isMobile={isMobile ?? false}>
           {totalListingsStr}
         </StatsItem>
