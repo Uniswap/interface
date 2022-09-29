@@ -54,9 +54,9 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
         type: WarningLabel.LowLiquidity,
         severity: WarningSeverity.Medium,
         action: WarningAction.DisableReview,
-        title: t('This trade cannot be completed'),
+        title: t('Not enough liquidity'),
         message: t(
-          'There is currently insufficient liquidity between these tokens to perform a swap.'
+          'There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.'
         ),
       })
     } else {
