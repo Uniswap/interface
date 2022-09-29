@@ -77,6 +77,7 @@ export const TokenDetailsLayout = styled.div`
   }
 `
 export const LeftPanel = styled.div`
+  flex: 1;
   max-width: 780px;
   overflow: hidden;
 `

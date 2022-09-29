@@ -204,7 +204,6 @@ const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean; redesig
   font-size: ${({ redesignFlag }) => redesignFlag && '36px'};
   line-height: ${({ redesignFlag }) => redesignFlag && '44px'};
   font-variant: ${({ redesignFlag }) => redesignFlag && 'small-caps'};
-  font-feature-settings: ${({ redesignFlag }) => redesignFlag && 'pnum on, lnum on'};
 `
 
 interface SwapCurrencyInputPanelProps {

@@ -251,8 +251,10 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
         pricePoint = x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf() ? d1 : d0
       }
 
-      setCrosshair(timeScale(pricePoint.timestamp))
-      setDisplayPrice(pricePoint)
+      if (pricePoint) {
+        setCrosshair(timeScale(pricePoint.timestamp))
+        setDisplayPrice(pricePoint)
+      }
     },
     [timeScale, prices]
   )
