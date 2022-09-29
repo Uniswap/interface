@@ -71,6 +71,7 @@ export default function LiquidityDetail() {
     currencyB ?? undefined,
     `${stable}`.toLowerCase() === 'true' ? true : `${stable}`.toLowerCase() === 'false' ? false : undefined
   )
+  const pairModeStable = stable?.toLowerCase() === 'true' ? true : false
   const [tokenA, tokenB] = useMemo(
     () => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)],
     [currencyA, currencyB, chainId]
@@ -335,12 +336,36 @@ export default function LiquidityDetail() {
             </Text>
           </Flex>
           <Flex sx={{ flexDirection: isMobile ? 'column' : 'row', gap: '0.8rem', a: { height: '2rem' } }}>
-            <StyledLink as={Link} to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}`}>
+            <ButtonPrimary
+              sx={{
+                maxWidth: 'max-content',
+                fontFamily: 'Poppins',
+                fontStyle: 'normal',
+                fontWeight: '500',
+                height: '2rem!important',
+                fontSize: '0.8rem',
+                color: '#000000'
+              }}
+              as={Link}
+              to={`/add/${currencyId(currencyA!)}/${currencyId(currencyB!)}/${pairModeStable}`}
+            >
               Increase
-            </StyledLink>
-            <StyledLink as={Link} to={`/remove/${currencyId(currencyA!)}/${currencyId(currencyB!)}`}>
+            </ButtonPrimary>
+            <ButtonPrimary
+              as={Link}
+              to={`/remove/${currencyId(currencyA!)}/${currencyId(currencyB!)}/${pairModeStable}`}
+              sx={{
+                maxWidth: 'max-content',
+                fontFamily: 'Poppins',
+                fontStyle: 'normal',
+                fontWeight: '500',
+                height: '2rem!important',
+                fontSize: '0.8rem',
+                color: '#000000'
+              }}
+            >
               Remove
-            </StyledLink>
+            </ButtonPrimary>
           </Flex>
         </Flex>
         <BorderVerticalContainer>
