@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName } from 'analytics/constants'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -58,6 +60,15 @@ export const SearchBarDropdownSection = ({
               isHovered={hoveredIndex === index + startingIndex}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
+              traceEvent={() =>
+                sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, {
+                  position: index,
+                  selected_type: 'collection',
+                  suggestion_count: suggestions.length,
+                  selected_name: suggestion.name,
+                  selected_address: suggestion.address,
+                })
+              }
               index={index + startingIndex}
             />
           ) : (
@@ -67,6 +78,15 @@ export const SearchBarDropdownSection = ({
               isHovered={hoveredIndex === index + startingIndex}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
+              traceEvent={() =>
+                sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, {
+                  position: index,
+                  selected_type: 'token',
+                  suggestion_count: suggestions.length,
+                  selected_name: suggestion.name,
+                  selected_address: suggestion.address,
+                })
+              }
               index={index + startingIndex}
             />
           )
