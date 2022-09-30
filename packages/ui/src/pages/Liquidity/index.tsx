@@ -17,7 +17,6 @@ import styled from 'styled-components'
 import { client } from 'utils/apolloClient'
 
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
-import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import { DataCard } from '../../components/earn/styled'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
@@ -261,7 +260,15 @@ export default function Liquidity() {
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
+    () =>
+      trackedTokenPairs
+        .filter(([token0, token1, stable]) => {
+          if (!token0.address || !token1.address) {
+            return true
+          }
+          return false
+        })
+        .map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
   const liquidityTokens = useMemo(
@@ -438,11 +445,11 @@ export default function Liquidity() {
             </TitleRow>
 
             {!account ? (
-              <Card padding="40px">
+              <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
-              </Card>
+              </EmptyProposals>
             ) : v2IsLoading || !ethPrice ? (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
