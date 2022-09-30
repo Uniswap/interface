@@ -120,9 +120,9 @@ export default function App() {
                 strict
                 path="/liquidity"
                 component={() => (
-                  <WrongNetworkProtector>
+                  <>
                     <Liquidity />
-                  </WrongNetworkProtector>
+                  </>
                 )}
               />
               <Route
@@ -178,9 +178,9 @@ export default function App() {
                 strict
                 path="/liquidity/:currencyIdA/:currencyIdB"
                 component={() => (
-                  <WrongNetworkProtector>
+                  <>
                     <LiquidityDetail />
-                  </WrongNetworkProtector>
+                  </>
                 )}
               />
               <Route
@@ -188,9 +188,9 @@ export default function App() {
                 strict
                 path="/liquidity/:currencyIdA/:currencyIdB/:stable"
                 component={() => (
-                  <WrongNetworkProtector>
+                  <>
                     <LiquidityDetail />
-                  </WrongNetworkProtector>
+                  </>
                 )}
               />
               {/*    <Route exact strict path="/migrate/v1" component={MigrateV1} />
