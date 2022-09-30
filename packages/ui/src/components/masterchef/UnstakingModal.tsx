@@ -111,7 +111,7 @@ export default function UnstakingModal({ isOpen, onDismiss, pid, stakingInfo }: 
   const maxAmountInput = maxAmountSpend(userStakedAmount)
   // const atMaxAmount = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
   const handleMax = useCallback(() => {
-    if (maxAmountInput) onUserInput(maxAmountInput.toExact())
+    if (maxAmountInput && maxAmountInput.toExact() !== '0') onUserInput(maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
   if (!stakingCurrency) return <p>Loading...</p>
