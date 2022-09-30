@@ -18,9 +18,9 @@ export const ProfileAccountDetails = () => {
   }, [account, setCopied])
 
   return account ? (
-    <Row className={headlineLarge} marginBottom="48" gap="12">
+    <Row className={headlineLarge} marginBottom="48" gap="4">
       <Identicon size={44} />
-      <Box textOverflow="ellipsis" overflow="hidden">
+      <Box textOverflow="ellipsis" overflow="hidden" marginLeft="8">
         {ENSName ?? shortenAddress(account)}
       </Box>
       <MouseoverTooltip
