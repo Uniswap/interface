@@ -134,6 +134,29 @@ const StakingColumn = styled.div<{ isMobile: boolean; isHideInMobile?: boolean; 
   }
 `
 
+const MobilePoolDetailSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.85rem 0.72rem;
+
+  width: 100%;
+  background: #21303e;
+  border-radius: 1.7rem;
+  margin-top: 1.3rem;
+
+  .actions {
+    margin-left: auto;
+    svg {
+      width: 2.57rem;
+      height: 2.57rem;
+    }
+    button {
+      width: 7.15rem;
+    }
+  }
+`
+
 const StakingColumnTitle = ({ children }: { children: React.ReactNode }) => (
   <TYPE.gray fontSize={12} width="100%" className="stakingColTitle">
     {children}
@@ -214,6 +237,71 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   )
   const poolInfo = farmingConfig?.pools[pid]
 
+  const StakeManagementPanel = ({ isMobile, isHideInMobile }: { isMobile: boolean; isHideInMobile?: boolean }) => {
+    return (
+      <StakingColumn isMobile={isMobile} isHideInMobile={isHideInMobile}>
+        <StakingColumnTitle>Staked {poolInfo?.stakingAsset.isLpToken ? 'LP' : 'Token'}</StakingColumnTitle>
+        <TYPE.white fontSize={16} marginRight="1.5rem">
+          {stakingInfo.stakedAmount.toSignificant(6)}
+        </TYPE.white>
+        {approval !== ApprovalState.NOT_APPROVED ? (
+          <div className="actions">
+            <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
+            <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
+          </div>
+        ) : (
+          <ButtonPrimary
+            height={28}
+            width="auto"
+            fontSize={12}
+            padding="0.166rem 0.4rem"
+            borderRadius="0.133rem"
+            onClick={approve}
+          >
+            Approve
+          </ButtonPrimary>
+        )}
+        {stakingInfo.stakingAsset.isLpToken && (
+          <div className="estimated-staked-lp-value">
+            {liquidityValueOfToken0?.toSignificant(4)} {liquidityValueOfToken0?.token.symbol} +{' '}
+            {liquidityValueOfToken1?.toSignificant(4)} {liquidityValueOfToken1?.token.symbol}
+          </div>
+        )}
+      </StakingColumn>
+    )
+  }
+
+  const EarningManagement = ({
+    isMobile,
+    isHideInMobile,
+    marginTop
+  }: {
+    isMobile: boolean
+    isHideInMobile?: boolean
+    marginTop?: string | number
+  }) => {
+    return (
+      <StakingColumn isMobile={isMobile} isHideInMobile={isHideInMobile} style={{ marginTop }}>
+        <StakingColumnTitle>Earned Rewards</StakingColumnTitle>
+        <TYPE.white fontSize={16}>
+          {stakingInfo.pendingReward.toSignificant(6)} {rewardToken.symbol}
+        </TYPE.white>
+        <div className="actions">
+          <ButtonPrimary
+            height={28}
+            width="auto"
+            fontSize={12}
+            padding="0.166rem 0.4rem"
+            borderRadius="0.133rem"
+            onClick={() => setShowClaimRewardModal(true)}
+          >
+            Claim
+          </ButtonPrimary>
+        </div>
+      </StakingColumn>
+    )
+  }
+
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <TopSection>
@@ -233,53 +321,8 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         </TYPE.green01>
       )}
       <StatContainer>
-        <StakingColumn isMobile={isMobile} isHideInMobile>
-          <StakingColumnTitle>Staked {poolInfo?.stakingAsset.isLpToken ? 'LP' : 'Token'}</StakingColumnTitle>
-          <TYPE.white fontSize={16} marginRight="1.5rem">
-            {stakingInfo.stakedAmount.toSignificant(6)}
-          </TYPE.white>
-          {approval !== ApprovalState.NOT_APPROVED ? (
-            <div className="actions">
-              <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
-              <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
-            </div>
-          ) : (
-            <ButtonPrimary
-              height={28}
-              width="auto"
-              fontSize={12}
-              padding="0.166rem 0.4rem"
-              borderRadius="0.133rem"
-              onClick={approve}
-            >
-              Approve
-            </ButtonPrimary>
-          )}
-          {stakingInfo.stakingAsset.isLpToken && (
-            <div className="estimated-staked-lp-value">
-              {liquidityValueOfToken0?.toSignificant(4)} {liquidityValueOfToken0?.token.symbol} +{' '}
-              {liquidityValueOfToken1?.toSignificant(4)} {liquidityValueOfToken1?.token.symbol}
-            </div>
-          )}
-        </StakingColumn>
-        <StakingColumn isMobile={isMobile} isHideInMobile>
-          <StakingColumnTitle>Earned Rewards</StakingColumnTitle>
-          <TYPE.white fontSize={16}>
-            {stakingInfo.pendingReward.toSignificant(6)} {rewardToken.symbol}
-          </TYPE.white>
-          <div className="actions">
-            <ButtonPrimary
-              height={28}
-              width="auto"
-              fontSize={12}
-              padding="0.166rem 0.4rem"
-              borderRadius="0.133rem"
-              onClick={() => setShowClaimRewardModal(true)}
-            >
-              Claim
-            </ButtonPrimary>
-          </div>
-        </StakingColumn>
+        <StakeManagementPanel isMobile={isMobile} isHideInMobile />
+        <EarningManagement isMobile={isMobile} isHideInMobile />
         <StakingColumn isMobile={isMobile}>
           <StakingColumnTitle>APR</StakingColumnTitle>
           <TYPE.white fontSize={16}>
@@ -304,7 +347,12 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
           </TYPE.green01>
         </StakingColumn>
       </StatContainer>
-
+      {isMobile && isMobileActionExpanded && (
+        <MobilePoolDetailSection>
+          <StakeManagementPanel isMobile />
+          <EarningManagement isMobile marginTop="1.28rem" />
+        </MobilePoolDetailSection>
+      )}
       {/* {isStaking && (
         <>
           <BottomSection showBackground={true}>
