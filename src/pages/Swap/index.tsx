@@ -670,18 +670,18 @@ export default function Swap() {
                       </>
                     ) : null}
 
-                    {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
+                    {showDetailsDropdown && (
+                      <SwapDetailsDropdown
+                        trade={trade}
+                        syncing={routeIsSyncing}
+                        loading={routeIsLoading}
+                        showInverted={showInverted}
+                        setShowInverted={setShowInverted}
+                        allowedSlippage={allowedSlippage}
+                      />
+                    )}
                   </OutputInputWrapper>
-                  {showDetailsDropdown && (
-                    <SwapDetailsDropdown
-                      trade={trade}
-                      syncing={routeIsSyncing}
-                      loading={routeIsLoading}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
-                      allowedSlippage={allowedSlippage}
-                    />
-                  )}
+                  {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
                   <div>
                     {swapIsUnsupported ? (
                       <ButtonPrimary disabled={true}>
