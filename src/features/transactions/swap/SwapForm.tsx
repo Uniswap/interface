@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
+import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { GradientButton } from 'src/components/buttons/GradientButton'
@@ -26,6 +27,7 @@ import {
   useSwapActionHandlers,
   useUSDTokenUpdater,
 } from 'src/features/transactions/swap/hooks'
+import { isPriceImpactWarning } from 'src/features/transactions/swap/useSwapWarnings'
 import {
   getRateToDisplay,
   getReviewActionName,
@@ -222,7 +224,6 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFo
               {swapWarning && (
                 <Button onPress={() => setShowWarningModal(true)}>
                   <Flex
-                    centered
                     row
                     alignItems="center"
                     alignSelf="stretch"
@@ -231,15 +232,29 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFo
                     borderBottomRightRadius="lg"
                     flexGrow={1}
                     gap="xs"
-                    p="sm">
-                    <Text color={swapWarningColor.text} variant="badge">
-                      {swapWarning.title}
-                    </Text>
-                    <InfoCircle
+                    px="md"
+                    py="sm">
+                    <AlertTriangleIcon
                       color={theme.colors[swapWarningColor.text]}
-                      height={18}
-                      width={18}
+                      height={theme.iconSizes.sm}
+                      width={theme.iconSizes.sm}
                     />
+                    <Flex row gap="none">
+                      <Text color={swapWarningColor.text} variant="subheadSmall">
+                        {trade.trade && isPriceImpactWarning(swapWarning)
+                          ? getRateToDisplay(trade.trade, showInverseRate)
+                          : swapWarning.title}
+                      </Text>
+                      {isPriceImpactWarning(swapWarning) && (
+                        <Text color="textSecondary" variant="bodySmall">
+                          {rateUnitPrice &&
+                            ` (${formatPrice(rateUnitPrice, {
+                              maximumFractionDigits: 6,
+                              notation: 'standard',
+                            })})`}
+                        </Text>
+                      )}
+                    </Flex>
                   </Flex>
                 </Button>
               )}
@@ -254,9 +269,13 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFo
                     borderBottomRightRadius="lg"
                     flexGrow={1}
                     gap="xs"
-                    justifyContent="space-between"
-                    px="lg"
+                    px="md"
                     py="sm">
+                    <InfoCircle
+                      color={theme.colors.textSecondary}
+                      height={theme.iconSizes.md}
+                      width={theme.iconSizes.md}
+                    />
                     <Flex row gap="none">
                       <Text color="accentTextLightPrimary" variant="bodySmall">
                         {getRateToDisplay(trade.trade, showInverseRate)}
@@ -269,11 +288,6 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFo
                           })})`}
                       </Text>
                     </Flex>
-                    <InfoCircle
-                      color={theme.colors.textSecondary}
-                      height={theme.iconSizes.md}
-                      width={theme.iconSizes.md}
-                    />
                   </Flex>
                 </Button>
               )}

@@ -164,3 +164,9 @@ const formIncomplete = (derivedSwapInfo: DerivedSwapInfo) => {
 
   return false
 }
+
+export function isPriceImpactWarning(warning: Warning) {
+  return (
+    warning.type === WarningLabel.PriceImpactMedium || warning.type === WarningLabel.PriceImpactHigh
+  )
+}
