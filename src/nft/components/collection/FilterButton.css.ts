@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css'
+import { loadingAsset } from 'nft/css/loading.css'
 import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const filterButton = sprinkles({
@@ -20,4 +21,12 @@ export const filterBadge = style([
   {
     top: '-3px',
   },
+])
+
+export const filterButtonLoading = style([
+  loadingAsset,
+  sprinkles({
+    height: '44',
+    width: '100',
+  }),
 ])

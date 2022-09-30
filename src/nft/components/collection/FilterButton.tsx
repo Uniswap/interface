@@ -3,7 +3,7 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/FilterButton.css'
 import { Row } from 'nft/components/Flex'
 import { FilterIcon } from 'nft/components/icons'
-import { useCollectionFilters, useWalletCollections } from 'nft/hooks'
+import { useCollectionFilters, useIsCollectionLoading, useWalletCollections } from 'nft/hooks'
 import { putCommas } from 'nft/utils/putCommas'
 import { useLocation } from 'react-router-dom'
 
@@ -32,13 +32,18 @@ export const FilterButton = ({
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const { pathname } = useLocation()
   const isSellPage = pathname.startsWith('/nfts/sell')
+  const isCollectionNftsLoading = useIsCollectionLoading((state) => state.isCollectionNftsLoading)
 
   const showFilterBadge = isSellPage
     ? collectionFilters.length > 0
     : minPrice || maxPrice || minRarity || maxRarity || traits.length || markets.length || buyNow
   return (
     <Box
-      className={clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)}
+      className={
+        isCollectionNftsLoading
+          ? styles.filterButtonLoading
+          : clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)
+      }
       borderRadius="12"
       fontSize="16"
       cursor="pointer"
@@ -52,14 +57,20 @@ export const FilterButton = ({
       height="44"
       whiteSpace="nowrap"
     >
-      {showFilterBadge && (
-        <Row className={styles.filterBadge} color={isFiltersExpanded ? 'grey700' : 'blue400'}>
-          •
-        </Row>
+      {!isCollectionNftsLoading && (
+        <>
+          {showFilterBadge && (
+            <Row className={styles.filterBadge} color={isFiltersExpanded ? 'grey700' : 'blue400'}>
+              •
+            </Row>
+          )}
+
+          <FilterIcon
+            style={{ marginBottom: '-4px', paddingRight: `${!isFiltersExpanded || showFilterBadge ? '6px' : '0px'}` }}
+          />
+        </>
       )}
-      <FilterIcon
-        style={{ marginBottom: '-4px', paddingRight: `${!isFiltersExpanded || showFilterBadge ? '6px' : '0px'}` }}
-      />
+
       {!isMobile && !isFiltersExpanded && 'Filter'}
 
       {showFilterBadge && !isMobile ? (

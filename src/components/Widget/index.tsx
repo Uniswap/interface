@@ -10,7 +10,7 @@ import { useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { useSyncWidgetTransactions } from './transactions'
 
-export const WIDGET_WIDTH = 320
+export const WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 

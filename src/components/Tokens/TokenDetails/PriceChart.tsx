@@ -33,6 +33,7 @@ import {
 } from 'utils/formatChartTimes'
 
 import LineChart from '../../Charts/LineChart'
+import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
@@ -55,17 +56,21 @@ export function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
-export function getDeltaArrow(delta: number) {
-  if (Math.sign(delta) > 0) {
-    return <StyledUpArrow size={16} key="arrow-up" />
-  } else if (delta === 0) {
+export function getDeltaArrow(delta: number | null | undefined) {
+  // Null-check not including zero
+  if (delta === null || delta === undefined) {
     return null
-  } else {
+  } else if (Math.sign(delta) < 0) {
     return <StyledDownArrow size={16} key="arrow-down" />
   }
+  return <StyledUpArrow size={16} key="arrow-up" />
 }
 
-export function formatDelta(delta: number) {
+export function formatDelta(delta: number | null | undefined) {
+  // Null-check not including zero
+  if (delta === null || delta === undefined) {
+    return '-'
+  }
   let formattedDelta = delta.toFixed(2) + '%'
   if (Math.sign(delta) > 0) {
     formattedDelta = '+' + formattedDelta
@@ -104,8 +109,17 @@ export const TimeOptionsContainer = styled.div`
   height: 40px;
   padding: 4px;
   width: fit-content;
+
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    width: 100%;
+    justify-content: space-between;
+    border: none;
+  }
 `
 const TimeButton = styled.button<{ active: boolean }>`
+  flex: 1;
+  display: flex;
+  align-items: center;
   background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
   font-weight: 600;
   font-size: 16px;
@@ -237,8 +251,10 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
         pricePoint = x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf() ? d1 : d0
       }
 
-      setCrosshair(timeScale(pricePoint.timestamp))
-      setDisplayPrice(pricePoint)
+      if (pricePoint) {
+        setCrosshair(timeScale(pricePoint.timestamp))
+        setDisplayPrice(pricePoint)
+      }
     },
     [timeScale, prices]
   )

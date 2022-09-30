@@ -4,6 +4,7 @@ import { Column, Row } from 'nft/components/Flex'
 import { Marquee } from 'nft/components/layout/Marquee'
 import { headlineMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
+import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
@@ -124,14 +125,13 @@ const CollectionName = ({
   collectionSocialsIsOpen: boolean
   toggleCollectionSocials: () => void
 }) => {
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
+  const nameClass = isCollectionStatsLoading ? styles.nameTextLoading : clsx(headlineMedium, styles.nameText)
+
   return (
     <Row justifyContent="space-between">
       <Row minWidth="0">
-        <Box
-          marginRight={!isVerified ? '12' : '0'}
-          className={clsx(isMobile ? headlineMedium : headlineMedium, styles.nameText)}
-          style={{ lineHeight: '32px' }}
-        >
+        <Box marginRight={!isVerified ? '12' : '0'} className={nameClass}>
           {name}
         </Box>
         {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
@@ -144,7 +144,7 @@ const CollectionName = ({
           height="32"
         >
           {collectionStats.discordUrl ? (
-            <SocialsIcon href={collectionStats.discordUrl}>
+            <SocialsIcon href={collectionStats.discordUrl ?? ''}>
               <DiscordIcon
                 fill={themeVars.colors.textSecondary}
                 color={themeVars.colors.textSecondary}
@@ -170,7 +170,7 @@ const CollectionName = ({
             </SocialsIcon>
           ) : null}
           {collectionStats.externalUrl ? (
-            <SocialsIcon href={collectionStats.externalUrl}>
+            <SocialsIcon href={collectionStats.externalUrl ?? ''}>
               <ExternalIcon fill={themeVars.colors.textSecondary} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
@@ -196,6 +196,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   const [readMore, toggleReadMore] = useReducer((state) => !state, false)
   const baseRef = useRef<HTMLDivElement>(null)
   const descriptionRef = useRef<HTMLDivElement>(null)
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   useEffect(() => {
     if (
@@ -209,7 +210,9 @@ const CollectionDescription = ({ description }: { description: string }) => {
       setShowReadMore(true)
   }, [descriptionRef, baseRef])
 
-  return (
+  return isCollectionStatsLoading ? (
+    <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}></Box>
+  ) : (
     <Box ref={baseRef} marginTop={{ sm: '12', md: '16' }} style={{ maxWidth: '680px' }}>
       <Box
         ref={descriptionRef}
@@ -228,29 +231,44 @@ const CollectionDescription = ({ description }: { description: string }) => {
   )
 }
 
-const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => (
-  <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
-    <Box as="span" className={styles.statsLabel}>
-      {`${label}${isMobile ? ': ' : ''}`}
+const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => {
+  return (
+    <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
+      <Box as="span" className={styles.statsLabel}>
+        {`${label}${isMobile ? ': ' : ''}`}
+      </Box>
+      <span className={styles.statsValue}>{children}</span>
     </Box>
-    <span className={styles.statsValue}>{children}</span>
-  </Box>
-)
+  )
+}
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
   const numOwnersStr = stats.stats ? putCommas(stats.stats.num_owners) : 0
   const totalSupplyStr = stats.stats ? putCommas(stats.stats.total_supply) : 0
   const totalListingsStr = stats.stats ? putCommas(stats.stats.total_listings) : 0
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   // round daily volume & floorPrice to 3 decimals or less
   const totalVolumeStr = ethNumberStandardFormatter(stats.stats?.total_volume)
   const floorPriceStr = ethNumberStandardFormatter(stats.floorPrice)
 
+  const statsLoadingSkeleton = new Array(5).fill(
+    <>
+      <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
+        <div className={styles.statsLabelLoading} />
+        <span className={styles.statsValueLoading} />
+      </Box>
+    </>
+  )
+
   return (
     <Row gap={{ sm: '20', md: '60' }} {...props}>
-      <StatsItem label="Items" isMobile={isMobile ?? false}>
-        {totalSupplyStr}
-      </StatsItem>
+      {isCollectionStatsLoading && statsLoadingSkeleton}
+      {totalSupplyStr ? (
+        <StatsItem label="Items" isMobile={isMobile ?? false}>
+          {totalSupplyStr}
+        </StatsItem>
+      ) : null}
       {numOwnersStr ? (
         <StatsItem label="Owners" isMobile={isMobile ?? false}>
           {numOwnersStr}
@@ -277,10 +295,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 
 export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; isMobile: boolean }) => {
   const [collectionSocialsIsOpen, toggleCollectionSocials] = useReducer((state) => !state, false)
-
-  if (!stats) {
-    return <div>Loading CollectionStats...</div>
-  }
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   return (
     <Box
@@ -291,11 +306,14 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       flexDirection="column"
       width="full"
     >
+      {isCollectionStatsLoading && (
+        <Box as="div" borderRadius="round" position="absolute" className={styles.collectionImageIsLoadingBackground} />
+      )}
       <Box
-        as="img"
+        as={isCollectionStatsLoading ? 'div' : 'img'}
         borderRadius="round"
         position="absolute"
-        className={styles.collectionImage}
+        className={isCollectionStatsLoading ? styles.collectionImageIsLoading : styles.collectionImage}
         src={stats.isFoundation && !stats.imageUrl ? '/nft/svgs/marketplaces/foundation.svg' : stats.imageUrl}
       />
       <Box className={styles.statsText}>
@@ -309,7 +327,9 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
         />
         {!isMobile && (
           <>
-            {stats.description && <CollectionDescription description={stats.description} />}
+            {(stats.description || isCollectionStatsLoading) && (
+              <CollectionDescription description={stats.description} />
+            )}
             <StatsRow stats={stats} marginTop="20" />
           </>
         )}

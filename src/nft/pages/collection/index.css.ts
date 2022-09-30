@@ -1,5 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { buttonTextMedium } from 'nft/css/common.css'
+import { loadingBlock } from 'nft/css/loading.css'
 
 import { sprinkles, vars } from '../../css/sprinkles.css'
 
@@ -44,6 +45,14 @@ export const selectedActivitySwitcherToggle = style([
       bottom: '-8px',
     },
   },
+])
+
+export const loadingBanner = style([
+  loadingBlock,
+  sprinkles({
+    width: 'full',
+    height: '100',
+  }),
 ])
 
 export const noCollectionAssets = sprinkles({
