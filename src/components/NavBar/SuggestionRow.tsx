@@ -19,10 +19,18 @@ interface CollectionRowProps {
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
+  traceEvent: () => void
   index: number
 }
 
-export const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOpen, index }: CollectionRowProps) => {
+export const CollectionRow = ({
+  collection,
+  isHovered,
+  setHoveredIndex,
+  toggleOpen,
+  traceEvent,
+  index,
+}: CollectionRowProps) => {
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const addToSearchHistory = useSearchHistory(
@@ -33,7 +41,8 @@ export const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOp
   const handleClick = useCallback(() => {
     addToSearchHistory(collection)
     toggleOpen()
-  }, [addToSearchHistory, collection, toggleOpen])
+    traceEvent()
+  }, [addToSearchHistory, collection, toggleOpen, traceEvent])
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -96,10 +105,11 @@ interface TokenRowProps {
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
+  traceEvent: () => void
   index: number
 }
 
-export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index }: TokenRowProps) => {
+export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceEvent, index }: TokenRowProps) => {
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const addToSearchHistory = useSearchHistory(
@@ -110,7 +120,8 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
   const handleClick = useCallback(() => {
     addToSearchHistory(token)
     toggleOpen()
-  }, [addToSearchHistory, toggleOpen, token])
+    traceEvent()
+  }, [addToSearchHistory, toggleOpen, token, traceEvent])
 
   const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)
   // Close the modal on escape
