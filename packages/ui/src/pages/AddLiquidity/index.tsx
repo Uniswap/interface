@@ -888,7 +888,7 @@ export default function AddLiquidity() {
                 )}
               <ButtonError
                 className="title"
-                sx={{ backgroundColor: '#CCCCCC!important', border: 'unset!important', fontWeight: '400!important' }}
+                sx={{ border: 'unset!important', fontWeight: '400!important' }}
                 onClick={() => {
                   expertMode ? onAdd() : setShowConfirm(true)
                 }}
