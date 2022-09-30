@@ -136,6 +136,18 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
           tokenA: USDC,
           tokenB: UNI[420]
         }
+      },
+      {
+        // pid 7
+        stakingAsset: {
+          name: 'USDC-ETH',
+          decimal: 18,
+          symbol: 'VLP',
+          isLpToken: true,
+          isStable: false,
+          tokenA: USDC,
+          tokenB: WETH[420]
+        }
       }
     ]
   }
