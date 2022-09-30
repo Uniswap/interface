@@ -27,7 +27,7 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
-import { ArrowDown, ArrowUp, CheckCircle, HelpCircle } from 'react-feather'
+import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
@@ -35,6 +35,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { css, useTheme } from 'styled-components/macro'
 
+import { ReactComponent as SwapArrows } from '../../assets/svg/swap-arrows.svg'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
@@ -73,15 +74,12 @@ import { supportedChainId } from '../../utils/supportedChainId'
 
 const ArrowContainer = styled.div`
   display: inline-block;
-  margin-left: 6%;
-`
-const ArrowDownWrapper = styled.div`
-  margin-top: -80%;
-  margin-left: 24%;
-`
-const ArrowUpWrapper = styled.div`
-  margin-left: 56%;
-  margin-top: -18%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
 `
 
 const SwapOutputWrapper = styled.div<{ redesignFlag: boolean }>`
@@ -606,26 +604,25 @@ export default function Swap() {
                         }}
                         color={theme.textPrimary}
                       >
-                        <ArrowUpWrapper>
-                          <ArrowUp size="12" stroke-width="3" />
-                        </ArrowUpWrapper>
-                        <ArrowDownWrapper>
-                          <ArrowDown size="12" stroke-width="3" />
-                        </ArrowDownWrapper>
+                        <SwapArrows width="20px" height="20px" fill={theme.textPrimary} />
                       </ArrowContainer>
                     ) : (
-                      <ArrowDown
-                        size="16"
+                      <ArrowContainer
                         onClick={() => {
                           setApprovalSubmitted(false) // reset 2 step UI for approvals
                           onSwitchTokens()
                         }}
-                        color={
-                          currencies[Field.INPUT] && currencies[Field.OUTPUT]
-                            ? theme.deprecated_text1
-                            : theme.deprecated_text3
-                        }
-                      />
+                        color={theme.textPrimary}
+                      >
+                        <ArrowDown
+                          size="16"
+                          color={
+                            currencies[Field.INPUT] && currencies[Field.OUTPUT]
+                              ? theme.deprecated_text1
+                              : theme.deprecated_text3
+                          }
+                        />
+                      </ArrowContainer>
                     )}
                   </TraceEvent>
                 </ArrowWrapper>

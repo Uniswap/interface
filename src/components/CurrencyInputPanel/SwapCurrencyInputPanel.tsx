@@ -135,7 +135,7 @@ const LabelRow = styled.div<{ redesignFlag: boolean }>`
   color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.textSecondary : theme.deprecated_text1)};
   font-size: 0.75rem;
   line-height: 1rem;
-  padding: 0;
+  padding: ${({ redesignFlag }) => (redesignFlag ? '0px' : '0 1rem 1rem')};
 
   span:hover {
     cursor: pointer;
