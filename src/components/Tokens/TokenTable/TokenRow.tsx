@@ -52,12 +52,14 @@ const StyledTokenRow = styled.div<{
   font-size: 16px;
   grid-template-columns: ${({ favoriteTokensEnabled }) =>
     favoriteTokensEnabled ? '1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr' : '1fr 7fr 4fr 4fr 4fr 4fr 5fr'};
-  height: ${({ first, last }) => (first || last ? '72px' : '64px')};
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
-  padding-top: ${({ first }) => (first ? '8px' : '0px')};
-  padding-bottom: ${({ last }) => (last ? '8px' : '0px')};
+  ${({ first, last }) => css`
+    height: ${first || last ? '72px' : '64px'};
+    padding-top: ${first ? '8px' : '0px'};
+    padding-bottom: ${last ? '8px' : '0px'};
+  `}
   padding-left: 12px;
   padding-right: 12px;
   transition: ${({
