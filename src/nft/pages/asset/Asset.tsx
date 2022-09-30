@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useQuery } from 'react-query'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useSpring } from 'react-spring/web'
+import { useSpring } from 'react-spring'
 
 import { MouseoverTooltip } from '../../../components/Tooltip/index'
 import { AnimatedBox, Box } from '../../components/Box'
@@ -182,7 +182,7 @@ const Asset = () => {
     <AnimatedBox
       style={{
         // @ts-ignore
-        width: gridWidthOffset.interpolate((x) => `calc(100% - ${x}px)`),
+        width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
       }}
       className={styles.container}
     >

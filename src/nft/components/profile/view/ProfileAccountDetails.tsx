@@ -14,14 +14,14 @@ export const ProfileAccountDetails = () => {
   const { account, ENSName } = useWeb3React()
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
-    setCopied(account || '')
+    setCopied(account ?? '')
   }, [account, setCopied])
 
-  return (
+  return account ? (
     <Row className={headlineLarge} marginBottom="48" gap="12">
       <Identicon size={44} />
       <Box textOverflow="ellipsis" overflow="hidden">
-        {ENSName || shortenAddress(account ?? '')}
+        {ENSName ?? shortenAddress(account)}
       </Box>
       <MouseoverTooltip
         text={
@@ -36,5 +36,5 @@ export const ProfileAccountDetails = () => {
         </Box>
       </MouseoverTooltip>
     </Row>
-  )
+  ) : null
 }
