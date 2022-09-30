@@ -41,7 +41,11 @@ export const numberToWei = (amount: number) => {
   return parseEther(amount.toString())
 }
 
-export const ethNumberStandardFormatter = (amount: string | number | undefined, includeDollarSign = false): string => {
+export const ethNumberStandardFormatter = (
+  amount: string | number | undefined,
+  includeDollarSign = false,
+  removeZeroes = false
+): string => {
   if (!amount) return '-'
 
   const amountInDecimals = parseFloat(amount.toString())
@@ -49,16 +53,13 @@ export const ethNumberStandardFormatter = (amount: string | number | undefined, 
 
   if (amountInDecimals < 0.0001) return `< ${conditionalDollarSign}0.00001`
   if (amountInDecimals < 1) return `${conditionalDollarSign}${amountInDecimals.toFixed(3)}`
-  return (
-    conditionalDollarSign +
-    amountInDecimals
-      .toFixed(2)
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  )
+  const formattedPrice = (removeZeroes ? parseFloat(amountInDecimals.toFixed(2)) : amountInDecimals.toFixed(2))
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return conditionalDollarSign + formattedPrice
 }
 
-export const formatWeiToDecimal = (amount: string) => {
+export const formatWeiToDecimal = (amount: string, removeZeroes = false) => {
   if (!amount) return '-'
-  return ethNumberStandardFormatter(formatEther(amount))
+  return ethNumberStandardFormatter(formatEther(amount), false, removeZeroes)
 }
