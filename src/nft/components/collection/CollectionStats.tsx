@@ -311,7 +311,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       )}
       <Box
         as={isCollectionStatsLoading ? 'div' : 'img'}
-        background="backgroundSurface"
+        background="explicitWhite"
         borderRadius="round"
         position="absolute"
         className={isCollectionStatsLoading ? styles.collectionImageIsLoading : styles.collectionImage}
