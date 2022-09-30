@@ -28,8 +28,8 @@ const Wrapper = styled(Row)<{ redesignFlag: boolean }>`
   justify-content: center;
   background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundFloating : 'none')};
   padding: ${({ redesignFlag }) => (redesignFlag ? '8px 12px' : 'none')};
-  margin-top: ${({ redesignFlag }) => (redesignFlag ? '0xp' : '4px')} !important;
-  min-height: ${({ redesignFlag }) => redesignFlag && '32xp'};
+  margin-top: ${({ redesignFlag }) => (redesignFlag ? '0px' : '4px')} !important;
+  min-height: ${({ redesignFlag }) => redesignFlag && '32px'};
 `
 
 const StyledInfoIcon = styled(Info)`
