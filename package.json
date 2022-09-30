@@ -155,6 +155,7 @@
     "@visx/event": "^2.6.0",
     "@visx/glyph": "^2.10.0",
     "@visx/group": "^2.10.0",
+    "@visx/react-spring": "^2.12.2",
     "@visx/responsive": "^2.10.0",
     "@visx/shape": "^2.11.1",
     "@walletconnect/ethereum-provider": "1.7.1",
