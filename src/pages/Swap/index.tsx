@@ -522,6 +522,8 @@ export default function Swap() {
   const approveTokenButtonDisabled =
     approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted || signatureState === UseERC20PermitState.SIGNED
 
+  const showDetailsDropdown = !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
+
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -668,7 +670,7 @@ export default function Swap() {
 
                     {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
                   </OutputInputWrapper>
-                  {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
+                  {showDetailsDropdown && (
                     <SwapDetailsDropdown
                       trade={trade}
                       syncing={routeIsSyncing}
