@@ -12,7 +12,6 @@ import { Flex } from 'src/components/layout'
 
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { ClientSideOrderBy } from 'src/features/dataApi/coingecko/types'
 import { useTokenMetadataDisplayType } from 'src/features/explore/hooks'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
@@ -107,9 +106,7 @@ export default function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTab
       ref={listRef}
       ListHeaderComponent={
         <Flex mt="sm">
-          <FavoriteTokensCard
-            metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
-          />
+          <FavoriteTokensCard />
           <Flex row alignItems="center" justifyContent="space-between" mx="sm">
             <Text color="textSecondary" variant="smallLabel">
               {t('Top Tokens')}

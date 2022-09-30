@@ -1,21 +1,27 @@
-import React, { ComponentProps, forwardRef, useCallback, useRef } from 'react'
+import { graphql } from 'babel-plugin-relay/macro'
+import React, { ComponentProps, forwardRef, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType, Image, ImageStyle, Pressable } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useLazyLoadQuery } from 'react-relay-offline'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AnimatedButton, Button, ButtonProps } from 'src/components/buttons/Button'
 import { FavoriteButton } from 'src/components/explore/FavoriteButton'
+import { TokenItemQuery } from 'src/components/explore/__generated__/TokenItemQuery.graphql'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { PollingInterval } from 'src/constants/misc'
 import { CoingeckoMarketCoin, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
+import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { removeFavoriteToken } from 'src/features/favorites/slice'
 import { useCurrencyIdFromCoingeckoId } from 'src/features/tokens/useCurrency'
+import { CurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 
@@ -30,6 +36,31 @@ const tokenLogoStyle: ImageStyle = {
   height: TOKEN_LOGO_SIZE,
   resizeMode: 'contain',
 }
+
+// Do one query per item to avoid suspense on entire screen / container
+// @TODO: Find way to load at the root of explore without a rerender when pinned token state changes
+export const tokenItemQuery = graphql`
+  query TokenItemQuery($contracts: [ContractInput!]!) {
+    tokenProjects(contracts: $contracts) {
+      tokens {
+        chain
+        address
+        symbol
+      }
+      logoUrl
+      markets(currencies: USD) {
+        price {
+          currency
+          value
+        }
+        pricePercentChange24h {
+          currency
+          value
+        }
+      }
+    }
+  }
+`
 
 interface TokenItemProps {
   coin: CoingeckoMarketCoin
@@ -177,27 +208,46 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
 
 export const TOKEN_ITEM_BOX_MINWIDTH = 137
 
-export function TokenItemBox({ coin, isEditing }: TokenItemProps & { isEditing?: boolean }) {
+export function TokenItemBox({
+  currencyId,
+  isEditing,
+}: {
+  currencyId: CurrencyId
+  isEditing?: boolean
+}) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-  const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
   const tokenDetailsNavigation = useTokenDetailsNavigation()
+  const queryInput = useMemo(() => [currencyIdToContractInput(currencyId)], [currencyId])
 
-  const onRemove = useCallback(() => {
-    if (!_currencyId) return
-    dispatch(removeFavoriteToken({ currencyId: _currencyId }))
-  }, [_currencyId, dispatch])
+  const { data } = useLazyLoadQuery<TokenItemQuery>(
+    tokenItemQuery,
+    {
+      contracts: queryInput,
+    },
+    { networkCacheConfig: { poll: PollingInterval.Fast } }
+  )
 
-  if (!_currencyId) return null
+  // Parse token fields from response
+  const tokenData = data?.tokenProjects?.[0]
+  // Mirror behavior in top tokens list, use first chain the token is on for the symbol
+  const token = data?.tokenProjects?.[0]?.tokens?.[0]
+  const usdPrice = tokenData?.markets?.[0]?.price?.value
+  const pricePercentChange = tokenData?.markets?.[0]?.price?.value
+
+  const onRemove = useCallback(
+    () => dispatch(removeFavoriteToken({ currencyId })),
+    [currencyId, dispatch]
+  )
 
   return (
     <Pressable
-      testID={`token-box-${coin.symbol}`}
+      testID={`token-box-${token?.symbol}`}
       onPress={() => {
-        tokenDetailsNavigation.navigate(_currencyId)
+        tokenDetailsNavigation.navigate(currencyId)
       }}
       onPressIn={() => {
-        tokenDetailsNavigation.preload(_currencyId)
+        tokenDetailsNavigation.preload(currencyId)
       }}>
       <Box
         bg="backgroundContainer"
@@ -209,9 +259,9 @@ export function TokenItemBox({ coin, isEditing }: TokenItemProps & { isEditing?:
         ) : null}
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="subhead">{coin.symbol.toUpperCase() ?? ''}</Text>
+            <Text variant="subhead">{token?.symbol?.toUpperCase() ?? ''}</Text>
             <Image
-              source={{ uri: coin.image }}
+              source={{ uri: tokenData?.logoUrl ?? '' }}
               style={[
                 boxTokenLogoStyle,
                 {
@@ -226,8 +276,8 @@ export function TokenItemBox({ coin, isEditing }: TokenItemProps & { isEditing?:
           <Flex row>
             <TokenMetadata
               align="flex-start"
-              main={<Text variant="body">{formatUSDPrice(coin.current_price)}</Text>}
-              sub={<RelativeChange change={coin.price_change_percentage_24h ?? undefined} />}
+              main={<Text variant="body">{formatUSDPrice(usdPrice)}</Text>}
+              sub={<RelativeChange change={pricePercentChange ?? undefined} />}
             />
           </Flex>
         </Flex>
