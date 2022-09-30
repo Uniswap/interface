@@ -123,6 +123,8 @@ const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
 
 const DetailsSwapSection = styled(SwapSection)`
   padding: 0;
+  border-top-left-radius: ${({ redesignFlag }) => redesignFlag && '0'};
+  border-top-right-radius: ${({ redesignFlag }) => redesignFlag && '0'};
 `
 
 export function getIsValidSwapQuote(
