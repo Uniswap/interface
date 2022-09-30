@@ -1,5 +1,7 @@
 import { Token, TokenAmount } from '@teleswap/sdk'
 import { ReactComponent as AddIcon } from 'assets/svg/action/add.svg'
+import { ReactComponent as ArrowDown } from 'assets/svg/action/arrowDown.svg'
+import { ReactComponent as ArrowUp } from 'assets/svg/action/arrowUp.svg'
 import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 import { ButtonPrimary } from 'components/Button'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
@@ -46,6 +48,15 @@ const StatContainer = styled.div`
 
   align-items: center;
 };
+`
+
+const StyledArrowDown = styled(ArrowDown)`
+  width: 0.9rem;
+  margin-left: 0.9rem;
+`
+const StyledArrowUp = styled(ArrowUp)`
+  width: 0.9rem;
+  margin-left: 0.9rem;
 `
 
 const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
@@ -189,6 +200,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
 
   const isStaking = true
   const rewardToken = UNI[chainId || 420]
+  const [isMobileActionExpanded, setMobileActionExpansion] = useState(false)
   const priceOfRewardToken = useUSDCPrice(rewardToken)
   const totalValueLockedInUSD = usePairUSDValue(stakingTokenPair, stakingInfo.tvl)
   const calculatedApr = useChefPoolAPR(stakingInfo, stakingTokenPair, stakingInfo.stakedAmount, priceOfRewardToken)
@@ -281,7 +293,15 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
           </TYPE.white>
         </StakingColumn>
         <StakingColumn isMobile={isMobile} isHideInDesktop>
-          <TYPE.green01 fontSize={13}>Details</TYPE.green01>
+          <TYPE.green01
+            fontSize={13}
+            onClick={() => setMobileActionExpansion((prevState) => !prevState)}
+            display="flex"
+          >
+            Details
+            {/* {!isMobileActionExpanded ? <ArrowDown width="0.9rem" /> : <ArrowUp width="0.9rem" />} */}
+            {!isMobileActionExpanded ? <StyledArrowDown /> : <StyledArrowUp />}
+          </TYPE.green01>
         </StakingColumn>
       </StatContainer>
 
