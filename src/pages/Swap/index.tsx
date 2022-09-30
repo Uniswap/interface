@@ -487,7 +487,7 @@ export default function Swap() {
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
-  const showPriceImpactWarning = largerPriceImpact && priceImpactTooHigh
+  const showPriceImpactWarning = Boolean(largerPriceImpact && priceImpactTooHigh)
 
   // Handle time based logging events and event properties.
   useEffect(() => {
