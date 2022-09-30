@@ -1,12 +1,7 @@
 //import { ReactNode } from 'react'
-import styled, { css } from 'styled-components/macro'
-const FilterOption = styled.button<{ active: boolean; width?: string; highlight?: boolean }>`
+import styled from 'styled-components/macro'
+const FilterOption = styled.button<{ active: boolean; highlight?: boolean }>`
   height: 100%;
-  ${({ width }) =>
-    width &&
-    css`
-      width: ${width};
-    `}
   color: ${({ theme, active }) => (active ? theme.accentActive : theme.textPrimary)};
   background-color: ${({ theme, active }) => (active ? theme.accentActiveSoft : theme.backgroundInteractive)};
   margin: 0;

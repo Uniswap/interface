@@ -84,6 +84,9 @@ const CheckContainer = styled.div`
   display: flex;
   flex-direction: flex-end;
 `
+const NetworkFilterOption = styled(FilterOption)`
+  width: 156px;
+`
 
 export default function NetworkFilter() {
   const theme = useTheme()
@@ -100,7 +103,7 @@ export default function NetworkFilter() {
 
   return (
     <StyledMenu ref={node}>
-      <FilterOption width="156px" onClick={toggleMenu} aria-label={`networkFilter`} active={open}>
+      <NetworkFilterOption onClick={toggleMenu} aria-label={`networkFilter`} active={open}>
         <StyledMenuContent>
           <NetworkLabel>
             <Logo src={circleLogoUrl ?? logoUrl} /> {label}
@@ -113,7 +116,7 @@ export default function NetworkFilter() {
             )}
           </Chevron>
         </StyledMenuContent>
-      </FilterOption>
+      </NetworkFilterOption>
       {open && (
         <MenuTimeFlyout>
           {BACKEND_CHAIN_NAMES.map((network) => {
