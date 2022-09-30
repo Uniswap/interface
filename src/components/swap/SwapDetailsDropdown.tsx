@@ -26,6 +26,7 @@ import TradePrice from './TradePrice'
 const Wrapper = styled(Row)<{ redesignFlag: boolean }>`
   width: 100%;
   justify-content: center;
+  border-radius: ${({ redesignFlag }) => redesignFlag && 'inherit'};
   background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.backgroundFloating};
   padding: ${({ redesignFlag }) => redesignFlag && '8px 12px'};
   margin-top: ${({ redesignFlag }) => (redesignFlag ? '0px' : '4px')} !important;
