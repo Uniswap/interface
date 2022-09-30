@@ -26,8 +26,15 @@ import {
   subheadSmall,
 } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useBag, useNFTList, useSellAsset, useSellPageState } from 'nft/hooks'
-import { DropDownOption, ListingMarket, ListingStatus, ListingWarning, SellPageStateType, WalletAsset } from 'nft/types'
+import { useBag, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
+import {
+  DropDownOption,
+  ListingMarket,
+  ListingStatus,
+  ListingWarning,
+  ProfilePageStateType,
+  WalletAsset,
+} from 'nft/types'
 import { formatEth, formatUsdPrice } from 'nft/utils/currency'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { ListingMarkets } from 'nft/utils/listNfts'
@@ -834,7 +841,7 @@ const NFTListRow = ({ asset, globalPriceMethod, globalPrice, setGlobalPrice, sel
 }
 
 export const ListPage = () => {
-  const { setSellPageState } = useSellPageState()
+  const { setProfilePageState: setSellPageState } = useProfilePageState()
   const setGlobalMarketplaces = useSellAsset((state) => state.setGlobalMarketplaces)
   const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[2]]) // default marketplace: x2y2
   const toggleBag = useBag((s) => s.toggleBag)
@@ -869,7 +876,7 @@ export const ListPage = () => {
           aria-label="Back"
           as="button"
           border="none"
-          onClick={() => setSellPageState(SellPageStateType.SELECTING)}
+          onClick={() => setSellPageState(ProfilePageStateType.VIEWING)}
           type="button"
           backgroundColor="transparent"
           cursor="pointer"

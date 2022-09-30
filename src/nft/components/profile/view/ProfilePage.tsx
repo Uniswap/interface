@@ -14,27 +14,28 @@ import {
   TagFillIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { FilterSidebar } from 'nft/components/sell/select/FilterSidebar'
+import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead, subheadSmall } from 'nft/css/common.css'
 import { vars } from 'nft/css/sprinkles.css'
 import {
   useBag,
   useFiltersExpanded,
   useIsMobile,
+  useProfilePageState,
   useSellAsset,
-  useSellPageState,
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
 import { fetchMultipleCollectionStats, fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
-import { DropDownOption, SellPageStateType, WalletAsset, WalletCollection } from 'nft/types'
+import { DropDownOption, ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
 import { Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 
-import * as styles from './SelectPage.css'
+import { ProfileAccountDetails } from './ProfileAccountDetails'
+import * as styles from './ProfilePage.css'
 
 enum SortBy {
   FloorPrice,
@@ -58,7 +59,7 @@ function roundFloorPrice(price?: number, n?: number) {
   return price ? Math.round(price * Math.pow(10, n ?? 3) + Number.EPSILON) / Math.pow(10, n ?? 3) : 0
 }
 
-export const SelectPage = () => {
+export const ProfilePage = () => {
   const { address } = useWalletBalance()
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
@@ -115,7 +116,7 @@ export const SelectPage = () => {
   const listFilter = useWalletCollections((state) => state.listFilter)
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const reset = useSellAsset((state) => state.reset)
-  const setSellPageState = useSellPageState((state) => state.setSellPageState)
+  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [sortBy, setSortBy] = useState(SortBy.DateAcquired)
   const [orderByASC, setOrderBy] = useState(true)
   const [searchText, setSearchText] = useState('')
@@ -245,65 +246,66 @@ export const SelectPage = () => {
   const SortWalletAssetsDropdown = () => <SortDropdown dropDownOptions={sortDropDownOptions} />
 
   return (
-    <Column width="full">
-      <Row
-        alignItems="flex-start"
-        position="relative"
-        paddingLeft={{ sm: '16', md: '52' }}
-        paddingRight={{ sm: '0', md: '72' }}
-        paddingTop={{ sm: '16', md: '40' }}
-      >
+    <Column
+      width="full"
+      paddingLeft={{ sm: '16', md: '52' }}
+      paddingRight={{ sm: '0', md: '72' }}
+      paddingTop={{ sm: '16', md: '40' }}
+    >
+      <Row alignItems="flex-start" position="relative">
         <FilterSidebar SortDropdown={SortWalletAssetsDropdown} />
 
         {(!isMobile || !isFiltersExpanded) && (
-          // @ts-ignore
-          <AnimatedBox
-            paddingLeft={isFiltersExpanded ? '24' : '16'}
-            flexShrink="0"
-            style={{
-              transform: gridX.to((x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`),
-              width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
-            }}
-          >
-            <Row gap="8" flexWrap="nowrap">
-              <FilterButton
-                isMobile={isMobile}
-                isFiltersExpanded={isFiltersExpanded}
-                results={displayAssets.length}
-                onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-              />
-              {!isMobile && <SortDropdown dropDownOptions={sortDropDownOptions} />}
-              <CollectionSearch searchText={searchText} setSearchText={setSearchText} />
-              <SelectAllButton />
-            </Row>
-            <Row>
-              <CollectionFiltersRow
-                collections={walletCollections}
-                collectionFilters={collectionFilters}
-                setCollectionFilters={setCollectionFilters}
-                clearCollectionFilters={clearCollectionFilters}
-              />
-            </Row>
-            <InfiniteScroll
-              next={fetchNextPage}
-              hasMore={hasNextPage ?? false}
-              loader={
-                hasNextPage ? (
-                  <Center>
-                    <LoadingSparkle />
-                  </Center>
-                ) : null
-              }
-              dataLength={displayAssets.length}
-              style={{ overflow: 'unset' }}
+          <Column width="full">
+            <ProfileAccountDetails />
+            <AnimatedBox
+              paddingLeft={isFiltersExpanded ? '24' : '16'}
+              flexShrink="0"
+              style={{
+                transform: gridX.to((x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`),
+                width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
+              }}
             >
-              <div className={assetList}>
-                {displayAssets && displayAssets.length
-                  ? displayAssets.map((asset, index) => <WalletAssetDisplay asset={asset} key={index} />)
-                  : null}
-              </div>
-            </InfiniteScroll>
-          </AnimatedBox>
+              <Row gap="8" flexWrap="nowrap">
+                <FilterButton
+                  isMobile={isMobile}
+                  isFiltersExpanded={isFiltersExpanded}
+                  results={displayAssets.length}
+                  onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                />
+                {!isMobile && <SortDropdown dropDownOptions={sortDropDownOptions} />}
+                <CollectionSearch searchText={searchText} setSearchText={setSearchText} />
+                <SelectAllButton />
+              </Row>
+              <Row>
+                <CollectionFiltersRow
+                  collections={walletCollections}
+                  collectionFilters={collectionFilters}
+                  setCollectionFilters={setCollectionFilters}
+                  clearCollectionFilters={clearCollectionFilters}
+                />
+              </Row>
+              <InfiniteScroll
+                next={fetchNextPage}
+                hasMore={hasNextPage ?? false}
+                loader={
+                  hasNextPage ? (
+                    <Center>
+                      <LoadingSparkle />
+                    </Center>
+                  ) : null
+                }
+                dataLength={displayAssets.length}
+                style={{ overflow: 'unset' }}
+              >
+                <div className={assetList}>
+                  {displayAssets && displayAssets.length
+                    ? displayAssets.map((asset, index) => <WalletAssetDisplay asset={asset} key={index} />)
+                    : null}
+                </div>
+              </InfiniteScroll>
+            </AnimatedBox>
+          </Column>
         )}
       </Row>
       {sellAssets.length > 0 && (
@@ -338,7 +340,7 @@ export const SelectPage = () => {
             fontSize="14"
             cursor="pointer"
             backgroundColor="genieBlue"
-            onClick={() => setSellPageState(SellPageStateType.LISTING)}
+            onClick={() => setSellPageState(ProfilePageStateType.LISTING)}
             lineHeight="16"
             borderRadius="12"
             padding="8"
@@ -384,7 +386,7 @@ export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
 
   return (
     <Link
-      to={`/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=sell`}
+      to={`/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`}
       style={{ textDecoration: 'none' }}
     >
       <Column

@@ -68,7 +68,7 @@ const PageTabs = () => {
 
 const Navbar = () => {
   const { pathname } = useLocation()
-  const isNftPage = pathname.startsWith('/nfts')
+  const showShoppingBag = pathname.startsWith('/nfts') || pathname.startsWith('/profile')
 
   return (
     <>
@@ -96,7 +96,7 @@ const Navbar = () => {
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <MenuDropdown />
               </Box>
-              {isNftPage && <ShoppingBag />}
+              {showShoppingBag && <ShoppingBag />}
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <ChainSelector />
               </Box>
