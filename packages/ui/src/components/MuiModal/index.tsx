@@ -120,7 +120,6 @@ export default function MuiModal({
 }: ModalProps) {
   const onClick = useCallback(
     (event) => {
-      console.log(event.target)
       const wrapper = document.getElementById('modal-content-wrapper')
       if (wrapper && !wrapper?.contains(event.target)) {
         onDismiss && onDismiss()

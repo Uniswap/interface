@@ -647,7 +647,6 @@ export default function RemoveLiquidity() {
                   }}
                   // onChange={setInnerLiquidityPercentage}
                   onChange={(evt, value) => {
-                    console.log(value)
                     setInnerLiquidityPercentage(typeof value === 'number' ? value : value[0])
                   }}
                 />

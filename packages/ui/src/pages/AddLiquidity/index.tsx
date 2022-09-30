@@ -55,8 +55,8 @@ const BorderVerticalContainer = styled(Flex)`
 const CustomizedRadio = styled.input`
   appearance: none;
   border: 1px solid #4ed7b6;
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 1rem;
+  height: 1rem;
   margin: 0;
   border-radius: 50%;
   position: relative;
@@ -65,12 +65,12 @@ const CustomizedRadio = styled.input`
   align-items: center;
   :before {
     content: '';
-    width: 0.7rem;
-    height: 0.7rem;
+    width: 1rem;
+    height: 1rem;
     border-radius: 50%;
     background-color: #4ed7b6;
     transition: 120ms all ease-in-out;
-    box-shadow: inset 0.35rem 0.35rem #4ed7b6;
+    // box-shadow: inset 0.35rem 0.35rem #4ed7b6;
     transform: scale(0);
     position: absolute;
   }
