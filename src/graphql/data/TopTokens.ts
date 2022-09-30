@@ -8,8 +8,8 @@ import {
   sortMethodAtom,
 } from 'components/Tokens/state'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
-import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { fetchQuery, useRelayEnvironment } from 'react-relay'
 
 import {
   Chain,
@@ -19,10 +19,6 @@ import {
 } from './__generated__/TopTokens_TokensQuery.graphql'
 import type { TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { toHistoryDuration } from './util'
-
-export function usePrefetchTopTokens(duration: HistoryDuration, chain: Chain) {
-  return useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
-}
 
 const topTokens100Query = graphql`
   query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
@@ -178,16 +174,33 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const [loading, setLoading] = useState(true)
   const [tokens, setTokens] = useState<TopToken[]>()
   const [page, setPage] = useState(0)
-  const prefetchedData = usePrefetchTopTokens(duration, chain)
-  const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData.topTokens))
+  const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>([])
+  const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData))
   const maxFetchable = useMemo(
     () => prefetchedSelectedTokensWithoutPriceHistory.length,
     [prefetchedSelectedTokensWithoutPriceHistory]
   )
 
   const hasMore = !tokens || tokens.length < prefetchedSelectedTokensWithoutPriceHistory.length
-
   const environment = useRelayEnvironment()
+
+  const loadTokensWithoutPriceHistory = useCallback(
+    ({ duration, chain }: { duration: HistoryDuration; chain: Chain }) => {
+      fetchQuery<TopTokens100Query>(
+        environment,
+        topTokens100Query,
+        { duration, chain },
+        { fetchPolicy: 'store-or-network' }
+      )
+        .toPromise()
+        .then((data) => {
+          if (data?.topTokens) {
+            setPrefetchedData(Array.from(data?.topTokens))
+          }
+        })
+    },
+    [environment]
+  )
 
   // TopTokens should ideally be fetched with usePaginationFragment. The backend does not current support graphql cursors;
   // in the meantime, fetchQuery is used, as other relay hooks do not allow the refreshing and lazy loading we need
@@ -250,6 +263,12 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
       loadTokensWithPriceHistory({ contracts, appendingTokens: false, page: 0 })
     }
   }, [loadTokensWithPriceHistory, prefetchedSelectedTokensWithoutPriceHistory, duration])
+
+  // Trigger fetching top 100 tokens without price history on first load, and on
+  // each change of chain or duration.
+  useEffect(() => {
+    loadTokensWithoutPriceHistory({ duration, chain })
+  }, [chain, duration, loadTokensWithoutPriceHistory])
 
   return {
     loading,
