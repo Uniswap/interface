@@ -100,21 +100,23 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
 const TopSection = styled.div`
   display: flex;
   align-items: center;
+  width: 100%;
   // ${({ theme }) => theme.mediaWidth.upToSmall`
   //   grid-template-columns: 48px 1fr 96px;
   // `};
 `
 
 const StakingColumn = styled.div<{ isMobile: boolean; isHideInMobile?: boolean; isHideInDesktop?: boolean }>`
-  ${({ isMobile }) =>
-    !isMobile
-      ? `max-width: 14rem;
-        width: 100%;`
-      : 'width: auto;'}
+  ${({ isMobile }) => !isMobile && 'max-width: 14rem;'}
+  width: 100%;
   flex-wrap: wrap;
   align-items: center;
   display: ${({ isMobile, isHideInDesktop, isHideInMobile }) =>
     (isMobile && isHideInMobile) || (!isMobile && isHideInDesktop) ? 'none' : 'flex'};
+  &.mobile-details-button {
+    margin-left: auto;
+    width: auto;
+  }
   .stakingColTitle {
     margin-bottom: 0.46rem;
   }
@@ -309,17 +311,17 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         <TYPE.white fontWeight={600} fontSize={18} style={{ marginLeft: '0.26rem' }}>
           {poolInfo?.stakingAsset.name}
         </TYPE.white>
+        {poolInfo?.stakingAsset.isLpToken && (
+          <TYPE.green01
+            marginLeft={isMobile ? 'auto' : 32}
+            fontSize={14}
+            onClick={() => history.push(`/add/${currency0?.address}/${currency1?.address}`)}
+            style={{ cursor: 'pointer' }}
+          >
+            Get {poolInfo?.stakingAsset.name}
+          </TYPE.green01>
+        )}
       </TopSection>
-      {poolInfo?.stakingAsset.isLpToken && (
-        <TYPE.green01
-          marginLeft={isMobile ? 'auto' : 32}
-          fontSize={14}
-          onClick={() => history.push(`/add/${currency0?.address}/${currency1?.address}`)}
-          style={{ cursor: 'pointer' }}
-        >
-          Get {poolInfo?.stakingAsset.name}
-        </TYPE.green01>
-      )}
       <StatContainer>
         <StakeManagementPanel isMobile={isMobile} isHideInMobile />
         <EarningManagement isMobile={isMobile} isHideInMobile />
@@ -335,7 +337,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
             $ {totalValueLockedInUSD ? totalValueLockedInUSD.toSignificant(6) : '--.--'}
           </TYPE.white>
         </StakingColumn>
-        <StakingColumn isMobile={isMobile} isHideInDesktop>
+        <StakingColumn isMobile={isMobile} isHideInDesktop className="mobile-details-button">
           <TYPE.green01
             fontSize={13}
             onClick={() => setMobileActionExpansion((prevState) => !prevState)}
