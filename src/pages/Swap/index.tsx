@@ -82,7 +82,7 @@ const ArrowContainer = styled.div`
   height: 100%;
 `
 
-const InputWrapper = styled.div<{ redesignFlag: boolean }>`
+const SwapSection = styled.div<{ redesignFlag: boolean }>`
   position: relative;
   visibility: ${({ redesignFlag }) => !redesignFlag && 'none'};
   ${({ redesignFlag }) =>
@@ -115,7 +115,7 @@ const InputWrapper = styled.div<{ redesignFlag: boolean }>`
   }
 `
 
-const OutputInputWrapper = styled(InputWrapper)<{ showDetailsDropdown: boolean }>`
+const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
   border-bottom: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundSurface}`};
   border-bottom-left-radius: ${({ redesignFlag, showDetailsDropdown }) => redesignFlag && showDetailsDropdown && '0'};
   border-bottom-right-radius: ${({ redesignFlag, showDetailsDropdown }) => redesignFlag && showDetailsDropdown && '0'};
@@ -568,7 +568,7 @@ export default function Swap() {
 
             <AutoColumn gap={'0px'}>
               <div style={{ display: 'relative' }}>
-                <InputWrapper redesignFlag={redesignFlagEnabled}>
+                <SwapSection redesignFlag={redesignFlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
                     <SwapCurrencyInputPanel
                       label={
@@ -591,7 +591,7 @@ export default function Swap() {
                       loading={independentField === Field.OUTPUT && routeIsSyncing}
                     />
                   </Trace>
-                </InputWrapper>
+                </SwapSection>
                 <ArrowWrapper clickable={isSupportedChain(chainId)} redesignFlag={redesignFlagEnabled}>
                   <TraceEvent
                     events={[Event.onClick]}
@@ -631,7 +631,7 @@ export default function Swap() {
               </div>
               <div>
                 <AutoColumn gap={redesignFlagEnabled ? '12px' : '8px'}>
-                  <OutputInputWrapper redesignFlag={redesignFlagEnabled} showDetailsDropdown={showDetailsDropdown}>
+                  <OutputSwapSection redesignFlag={redesignFlagEnabled} showDetailsDropdown={showDetailsDropdown}>
                     <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                       <SwapCurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
@@ -680,7 +680,7 @@ export default function Swap() {
                         allowedSlippage={allowedSlippage}
                       />
                     )}
-                  </OutputInputWrapper>
+                  </OutputSwapSection>
                   {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
                   <div>
                     {swapIsUnsupported ? (
