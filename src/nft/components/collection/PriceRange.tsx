@@ -2,6 +2,7 @@ import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
+import { usePriceRange } from 'nft/hooks/usePriceRange'
 import { isNumber } from 'nft/utils/numbers'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { FormEvent, useEffect, useState } from 'react'
@@ -16,6 +17,9 @@ export const PriceRange = () => {
   const setMaxPrice = useCollectionFilters((state) => state.setMaxPrice)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
+  const priceLow = usePriceRange((state) => state.priceLow)
+  const priceHigh = usePriceRange((state) => state.priceHigh)
+
   const isMobile = useIsMobile()
 
   const location = useLocation()
@@ -49,8 +53,8 @@ export const PriceRange = () => {
             fontSize="14"
             color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
             backgroundColor="transparent"
-            placeholder="Min"
-            defaultValue={minPrice}
+            placeholder={`${priceLow}`}
+            // defaultValue={minPrice}
             onChange={(v: FormEvent<HTMLInputElement>) => {
               scrollToTop()
               setMinPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
@@ -72,7 +76,7 @@ export const PriceRange = () => {
             fontSize="14"
             color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
             backgroundColor="transparent"
-            placeholder="Max"
+            placeholder={priceHigh}
             defaultValue={maxPrice}
             value={maxPrice}
             onChange={(v: FormEvent<HTMLInputElement>) => {
