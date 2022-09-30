@@ -3,6 +3,7 @@ import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
+import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import { filterTimeAtom } from 'components/Tokens/state'
 import {
   bisect,
@@ -32,7 +33,6 @@ import {
   weekFormatter,
 } from 'utils/formatChartTimes'
 
-import LineChart from '../../Charts/LineChart'
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
@@ -288,7 +288,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           <ArrowCell>{arrow}</ArrowCell>
         </DeltaContainer>
       </ChartHeader>
-      <LineChart
+      <AnimatedInLineChart
         data={prices}
         getX={(p: PricePoint) => timeScale(p.timestamp)}
         getY={(p: PricePoint) => rdScale(p.value)}
@@ -357,7 +357,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           onMouseMove={handleHover}
           onMouseLeave={resetDisplay}
         />
-      </LineChart>
+      </AnimatedInLineChart>
       <TimeOptionsWrapper>
         <TimeOptionsContainer>
           {ORDERED_TIMES.map((time) => (

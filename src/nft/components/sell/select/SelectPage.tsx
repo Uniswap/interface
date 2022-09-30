@@ -32,7 +32,7 @@ import { Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useReducer, us
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import { useSpring } from 'react-spring/web'
+import { useSpring } from 'react-spring'
 
 import * as styles from './SelectPage.css'
 
@@ -261,10 +261,8 @@ export const SelectPage = () => {
             paddingLeft={isFiltersExpanded ? '24' : '16'}
             flexShrink="0"
             style={{
-              transform: gridX.interpolate(
-                (x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`
-              ),
-              width: gridWidthOffset.interpolate((x) => `calc(100% - ${x}px)`),
+              transform: gridX.to((x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`),
+              width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
             }}
           >
             <Row gap="8" flexWrap="nowrap">
