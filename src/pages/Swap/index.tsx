@@ -115,10 +115,12 @@ const InputWrapper = styled.div<{ redesignFlag: boolean }>`
   }
 `
 
-const OutputInputWrapper = styled(InputWrapper)`
+const OutputInputWrapper = styled(InputWrapper)<{ showPriceImpactWarning: boolean }>`
   border-bottom: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundSurface}`};
-  border-bottom-left-radius: ${({ redesignFlag }) => redesignFlag && '0'};
-  border-bottom-right-radius: ${({ redesignFlag }) => redesignFlag && '0'};
+  border-bottom-left-radius: ${({ redesignFlag, showPriceImpactWarning }) =>
+    redesignFlag && showPriceImpactWarning && '0'};
+  border-bottom-right-radius: ${({ redesignFlag, showPriceImpactWarning }) =>
+    redesignFlag && showPriceImpactWarning && '0'};
 `
 
 export function getIsValidSwapQuote(
@@ -485,7 +487,7 @@ export default function Swap() {
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
-  const showPriceImpactWarning = largerPriceImpact && priceImpactSeverity > 3
+  const showPriceImpactWarning = largerPriceImpact && priceImpactTooHigh
 
   // Handle time based logging events and event properties.
   useEffect(() => {
@@ -629,7 +631,10 @@ export default function Swap() {
               </div>
               <div>
                 <AutoColumn gap={redesignFlagEnabled ? '12px' : '8px'}>
-                  <OutputInputWrapper redesignFlag={redesignFlagEnabled}>
+                  <OutputInputWrapper
+                    redesignFlag={redesignFlagEnabled}
+                    showPriceImpactWarning={showPriceImpactWarning}
+                  >
                     <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                       <SwapCurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
