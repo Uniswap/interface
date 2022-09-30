@@ -31,7 +31,7 @@ import { /* StyledInternalLink, */ TYPE } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1132px;
-  width: 37.3rem;
+  width: 40rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
   `};
@@ -39,7 +39,6 @@ const PageWrapper = styled(AutoColumn)`
     justify-self: flex-start;
     font-family: 'Dela Gothic One';
     font-weight: '400';
-    font-size: '.8rem';
     color: '#FFFFFF';
     ${({ theme }) => theme.mediaWidth.upToSmall`
       font-size: .9rem;
@@ -120,7 +119,6 @@ const YourLiquidityGrid = styled(Box)`
   justify-items: flex-start;
   align-items: center;
   place-content: center center;
-  font-size: 0.8rem;
   > div {
     width: max-content;
   }
@@ -133,17 +131,26 @@ const TopPoolsGrid = styled(Box)`
   background-color: rgba(25, 36, 47, 1);
   padding: 1.5rem;
   display: grid;
-  grid-template-columns: 1fr 5fr 3fr 5fr;
+  grid-template-columns: 1fr 5fr 2.5fr 5fr 4fr;
   grid-template-rows: repeat(40px);
   grid-row-gap: 1rem;
-  grid-column-gap: ${() => (isMobile ? '0px' : '1rem')};
+  grid-column-gap: ${() => (isMobile ? '0px' : '0.75rem')};
   grid-auto-flow: row;
   justify-items: flex-start;
   align-items: center;
   place-content: center center;
 `
 
-const HeaderItem = styled(Box)`
+const HeaderItem = styled(Box).attrs((props) => {
+  return {
+    ...props,
+    className: Array.isArray(props.className)
+      ? [...props.className, 'text-detail']
+      : props.className
+      ? [props.className, 'text-detail']
+      : ['text-detail']
+  }
+})`
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
@@ -310,18 +317,21 @@ export default function Liquidity() {
               id
               trackedReserveETH
               token0 {
+                decimals
                 id
                 symbol
                 name
                 derivedETH
               }
               token1 {
+                decimals
                 id
                 symbol
                 name
                 derivedETH
               }
               reserve0
+              stable
               reserve1
               reserveUSD
               totalSupply
@@ -413,14 +423,14 @@ export default function Liquidity() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               {/* <HideSmall> */}
-              <TYPE.mediumHeader className="YourLiquidityText">Your liquidity</TYPE.mediumHeader>
+              <TYPE.mediumHeader className="YourLiquidityText title">Your liquidity</TYPE.mediumHeader>
               {/* </HideSmall> */}
               <ButtonRow>
                 {/* <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
                   Create a pair
                 </ResponsiveButtonSecondary> */}
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  <Text className="AddLiquidity" sx={{ fontWeight: 600, fontSize: '0.8rem', color: '#000000' }}>
+                  <Text className="AddLiquidity text-small" sx={{ fontWeight: 600, color: '#000000' }}>
                     Add Liquidity
                   </Text>
                 </ResponsiveButtonPrimary>
@@ -442,7 +452,7 @@ export default function Liquidity() {
             ) : allV2PairsWithLiquidity?.length > 0 && ethPrice !== undefined ? (
               //  || stakingPairs?.length > 0
               <>
-                <YourLiquidityGrid>
+                <YourLiquidityGrid className="text">
                   <HeaderItem>Pool</HeaderItem>
                   <HeaderItem>Pair Mode</HeaderItem>
                   <HeaderItem>Token</HeaderItem>
@@ -504,10 +514,10 @@ export default function Liquidity() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               {/* <HideSmall> */}
               <TYPE.mediumHeader
+                className="title"
                 style={{
                   justifySelf: 'flex-start',
                   fontFamily: 'Dela Gothic One',
-                  fontSize: '.8rem',
                   color: '#FFFFFF'
                 }}
               >
@@ -522,60 +532,14 @@ export default function Liquidity() {
               <HeaderItem>Pools</HeaderItem>
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem> */}
-            <TopPoolsGrid>
+            <TopPoolsGrid className="text">
               <HeaderItem>#</HeaderItem>
               <HeaderItem>Pools</HeaderItem>
+              <HeaderItem>Pair Mode</HeaderItem>
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem>
               {pools.map((v2Pair, index) => {
-                return (
-                  <>
-                    <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>
-                    <Box
-                      key={`${v2Pair.id}-2`}
-                      sx={{ textAlign: 'center', width: '10rem', display: 'flex', justifyContent: 'flex-start' }}
-                    >
-                      <Flex sx={{ gap: isMobile ? '0.25rem' : '1rem', width: '8rem' }}>
-                        <DoubleCurrencyLogoHorizontal currency0={v2Pair.token0} currency1={v2Pair.token1} />
-                        <Text
-                          sx={{
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            width: 'min-content',
-                            minWidth: isMobile ? '7rem' : 'min-content',
-                            textAlign: 'left'
-                          }}
-                        >
-                          {v2Pair.token0?.symbol?.toUpperCase()}-{v2Pair.token1?.symbol?.toUpperCase()}
-                        </Text>
-                      </Flex>
-                    </Box>
-                    <Box key={`${v2Pair.id}-3`}>
-                      {ethPrice
-                        ? new Bn(v2Pair.trackedReserveETH)
-                            .multipliedBy(ethPrice)
-                            .decimalPlaces(4, Bn.ROUND_HALF_UP)
-                            .toString()
-                        : '-'}
-                      &nbsp; $
-                    </Box>
-                    <Box
-                      key={`${v2Pair.id}-4`}
-                      sx={{ display: 'flex', justifyContent: 'flex-end', width: 'max-content', justifySelf: 'end' }}
-                    >
-                      <ButtonPrimary
-                        style={{ display: 'inline-block !important', whiteSpace: 'nowrap' }}
-                        padding=".3rem"
-                        borderRadius=".5rem"
-                        as={Link}
-                        to={`/add/${v2Pair.token0.id}/${v2Pair.token1.id}`}
-                      >
-                        Provide Liquidity
-                      </ButtonPrimary>
-                    </Box>
-                  </>
-                )
+                return <TopPairRow v2Pair={v2Pair} key={v2Pair.id} index={index} ethPrice={ethPrice} />
               })}
             </TopPoolsGrid>
             {/*  <AutoColumn justify={'center'} gap="md">
@@ -716,6 +680,59 @@ function Table() {
     </Flex>
   )
 } */
+
+function TopPairRow({ v2Pair, index, ethPrice }: { v2Pair: any; index: number; ethPrice?: Bn }) {
+  return (
+    <>
+      <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>
+      <Box
+        key={`${v2Pair.id}-2`}
+        sx={{ textAlign: 'center', width: '10rem', display: 'flex', justifyContent: 'flex-start' }}
+      >
+        <Flex sx={{ gap: isMobile ? '0.25rem' : '0.25rem', width: '8rem' }}>
+          <DoubleCurrencyLogoHorizontal currency0={v2Pair.token0} currency1={v2Pair.token1} />
+          <Text
+            sx={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              width: 'min-content',
+              minWidth: isMobile ? '7rem' : 'min-content',
+              textAlign: 'left'
+            }}
+          >
+            {v2Pair.token0?.symbol?.toUpperCase()}-{v2Pair.token1?.symbol?.toUpperCase()}
+          </Text>
+        </Flex>
+      </Box>
+      <Box key={`${v2Pair.id}-3`}>{v2Pair.stable ? 'Stable' : 'Volatile'}</Box>
+      <Box key={`${v2Pair.id}-3`}>
+        {ethPrice
+          ? new Bn(v2Pair.trackedReserveETH).multipliedBy(ethPrice).decimalPlaces(4, Bn.ROUND_HALF_UP).toString()
+          : '-'}
+        &nbsp; $
+      </Box>
+      <Box
+        key={`${v2Pair.id}-4`}
+        sx={{ display: 'flex', justifyContent: 'flex-end', width: 'max-content', justifySelf: 'end' }}
+      >
+        {/*    <ButtonPrimary
+      className="text-small"
+      style={{ display: 'inline-block !important', whiteSpace: 'nowrap' }}
+      padding=".3rem"
+      borderRadius=".5rem"
+      as={Link}
+      to={`/add/${v2Pair.token0.id}/${v2Pair.token1.id}`}
+    >
+      Provide Liquidity
+    </ButtonPrimary> */}
+        <StyledLink as={Link} to={`/add/${v2Pair.token0.id}/${v2Pair.token1.id}/${v2Pair.stable}`}>
+          Provide Liquidity
+        </StyledLink>
+      </Box>
+    </>
+  )
+}
 
 const range = (len) => {
   const arr: number[] = []

@@ -1,7 +1,7 @@
 import Fade from '@mui/material/Fade'
 import Modal from '@mui/material/Modal'
 import { transparentize } from 'polished'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Flex } from 'rebass'
 import styled, { css } from 'styled-components'
 
@@ -37,7 +37,7 @@ export const StyledModalContent = styled(({ width, maxWidth, minWidth, maxHeight
   overflow: hidden;
   align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
   width: 50vw;
-  max-width: 28rem;
+  max-width: 32rem;
   ${({ maxWidth }) => `max-width: ${maxWidth};`}
   ${({ maxHeight }) =>
     maxHeight &&
@@ -111,13 +111,23 @@ export default function MuiModal({
   isOpen,
   setIsOpen,
   onDismiss,
-  minHeight = '30vh',
+  minHeight = 'fit-content',
   maxHeight = '90vh',
   maxWidth,
   minWidth,
   children,
   title
 }: ModalProps) {
+  const onClick = useCallback(
+    (event) => {
+      console.log(event.target)
+      const wrapper = document.getElementById('modal-content-wrapper')
+      if (wrapper && !wrapper?.contains(event.target)) {
+        onDismiss && onDismiss()
+      }
+    },
+    [onDismiss]
+  )
   return (
     <>
       <Modal
@@ -130,8 +140,9 @@ export default function MuiModal({
         }}
       >
         <Fade in={isOpen}>
-          <StyledModalOverlay>
+          <StyledModalOverlay onClick={onClick}>
             <StyledModalContent
+              id="modal-content-wrapper"
               flexDirection="column"
               overflow="hidden"
               minHeight={minHeight}

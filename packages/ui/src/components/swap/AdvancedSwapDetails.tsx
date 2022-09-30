@@ -39,16 +39,16 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
   return (
     <>
-      <AutoColumn style={{ padding: '0 16px', color: '#D7DCE0' }}>
+      <AutoColumn className="text-detail" style={{ padding: '0 16px', color: '#D7DCE0' }} gap="0.4rem">
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={'.4rem'} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontWeight={400} color={theme.text2}>
               {isExactIn ? 'Minimum received' : 'Maximum sold'}
             </TYPE.black>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
           </RowFixed>
           <RowFixed>
-            <TYPE.black color={theme.text1} fontSize={'.4rem'}>
+            <TYPE.black color={theme.text1}>
               {isExactIn
                 ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.currency.symbol}` ??
                   '-'
@@ -59,7 +59,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={'.4rem'} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontWeight={400} color={theme.text2}>
               Price Impact
             </TYPE.black>
             <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
@@ -69,12 +69,12 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={'.4rem'} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontWeight={400} color={theme.text2}>
               Liquidity Provider Fee
             </TYPE.black>
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
-          <TYPE.black fontSize={'.4rem'} color={theme.text1}>
+          <TYPE.black color={theme.text1}>
             {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
           </TYPE.black>
         </RowBetween>
@@ -91,7 +91,6 @@ const RouteStyled = styled(Box)`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  font-size: 0.4rem;
   color: rgba(255, 255, 255, 0.8);
   /* height: 5.7rem; */
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -154,7 +153,6 @@ const RouteAccordionStyled = styled(Box)`
   display: inline-block;
   transition: all 0.3s;
   margin-left: 0.4rem;
-  font-size: 16px;
 `
 export interface AdvancedSwapDetailsProps {
   trade?: Trade
@@ -184,7 +182,6 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           !inputName ||
           !outputName
         ) {
-          console.log('tradeTemp lack key', tradeTemp)
           return
         }
         const decimal = tradeTemp?.inputAmount?.token?.decimals
@@ -222,7 +219,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   }, [inputName, outputName, amountString])
 
   return (
-    <AutoColumn gap="0px">
+    <AutoColumn gap="0.4rem">
       {trade && (
         <>
           <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
@@ -230,13 +227,14 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             <>
               <RowBetween style={{ padding: '0 16px' }}>
                 <span style={{ display: 'flex', alignItems: 'center' }}>
-                  <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+                  <TYPE.black className="text-detail" fontWeight={400} color={theme.text2}>
                     Route
                   </TYPE.black>
                   <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
                 </span>
                 <SwapRoute trade={trade} />
                 <RouteAccordionStyled
+                  className="text-detail"
                   onClick={() => setShowRouterDetail(!showRouterDetail)}
                   sx={{ marginLeft: '.5rem' }}
                 >
@@ -252,7 +250,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
                   />
                 </RouteAccordionStyled>
               </RowBetween>
-              <RouteStyled sx={showRouterDetail ? { maxHeight: 'unset' } : { display: 'none' }}>
+              <RouteStyled className="text-detail" sx={showRouterDetail ? { maxHeight: 'unset' } : { display: 'none' }}>
                 <img className="leftTokenImg" src={TeleRouteIcon} alt="" />
                 <img className="LineVIcon" src={LineVIcon} alt="" />
                 <div>

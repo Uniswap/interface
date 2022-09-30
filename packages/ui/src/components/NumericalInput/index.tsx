@@ -1,6 +1,6 @@
+import inputClear from 'assets/svg/inputclear.svg'
 import React from 'react'
 import styled from 'styled-components'
-import inputClear from 'assets/svg/inputclear.svg'
 
 import { escapeRegExp } from '../../utils'
 
@@ -73,11 +73,21 @@ export const Input = React.memo(function InnerInput({
       onUserInput(nextUserInput)
     }
   }
-
   return (
     <StyledInput
       {...rest}
-      value={value}
+      value={`${value}`
+        .replace(/,/g, '')
+        .split('.')
+        .map((e, index) => {
+          if (index === 0) {
+            console.log(e)
+            return e.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+          } else {
+            return e
+          }
+        })
+        .join('.')}
       onChange={(event) => {
         // replace commas with periods, because uniswap exclusively uses period as the decimal separator
         enforcer(event.target.value.replace(/,/g, '.'))

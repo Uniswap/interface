@@ -54,8 +54,6 @@ const StyledMenuButton = styled.button`
   background-color: transparent;
   margin: 0;
   padding: 0;
-  height: 35px;
-
   border-radius: 0.5rem;
 
   :hover,
@@ -68,8 +66,8 @@ const StyledMenuButton = styled.button`
     margin-top: 2px;
   }
   .setIcon {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.6rem;
+    height: 1.6rem;
     margin-top: 0.4rem;
   }
 `
@@ -190,7 +188,12 @@ export default function SettingsTab() {
       </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
         {/* <StyledMenuIcon /> */}
-        <img className="setIcon" src={SwapSetIcon} alt="" />
+        <img
+          className="setIcon"
+          src={SwapSetIcon}
+          alt=""
+          style={{ width: '1.6rem!important', height: '1.6rem!important' }}
+        />
         {expertMode ? (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">
@@ -202,7 +205,7 @@ export default function SettingsTab() {
       {open && (
         <MenuFlyout>
           <AutoColumn gap="1.2rem" style={{ padding: '1.6rem' }}>
-            <Text fontWeight={600} fontSize={'.9rem'} color="#FFFFFF" sx={{ fontFamily: 'Poppins' }}>
+            <Text fontWeight={600} className="secondary-title" color="#FFFFFF" sx={{ fontFamily: 'Poppins' }}>
               Swap Settings
             </Text>
             <TransactionSettings

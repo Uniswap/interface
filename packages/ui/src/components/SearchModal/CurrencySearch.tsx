@@ -181,13 +181,14 @@ export function CurrencySearch({
     <ContentWrapper style={{ gap: '1rem' }}>
       <PaddedColumn gap="1rem" style={{ padding: 0 }}>
         <RowBetween>
-          <Text style={{ fontSize: '1rem', fontFamily: 'Dela Gothic One' }} fontWeight={500}>
+          <Text className="title" style={{ fontFamily: 'Poppins' }} fontWeight={600}>
             Select Token
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <Row>
           <SearchInput
+            className="text"
             type="text"
             id="token-search-input"
             placeholder={t('tokenSearchPlaceholder')}

@@ -26,13 +26,25 @@ export function useMintActionHandlers(noLiquidity: boolean | undefined): {
 
   const onFieldAInput = useCallback(
     (typedValue: string) => {
-      dispatch(typeInput({ field: Field.CURRENCY_A, typedValue, noLiquidity: noLiquidity === true }))
+      dispatch(
+        typeInput({
+          field: Field.CURRENCY_A,
+          typedValue: typedValue.replace(/,/g, ''),
+          noLiquidity: noLiquidity === true
+        })
+      )
     },
     [dispatch, noLiquidity]
   )
   const onFieldBInput = useCallback(
     (typedValue: string) => {
-      dispatch(typeInput({ field: Field.CURRENCY_B, typedValue, noLiquidity: noLiquidity === true }))
+      dispatch(
+        typeInput({
+          field: Field.CURRENCY_B,
+          typedValue: typedValue.replace(/,/g, ''),
+          noLiquidity: noLiquidity === true
+        })
+      )
     },
     [dispatch, noLiquidity]
   )

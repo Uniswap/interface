@@ -1,4 +1,6 @@
 import { Currency, CurrencyAmount, Pair } from '@teleswap/sdk'
+import { ReactComponent as ArrowDown } from 'assets/svg/arrowdown.svg'
+import { ReactComponent as TobeSelected } from 'assets/svg/tobeSelected.svg'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { darken } from 'polished'
 import React, { useCallback, useState } from 'react'
@@ -6,8 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { Box, BoxProps } from 'rebass'
 import styled from 'styled-components'
 
-import { ReactComponent as TobeSelected } from 'assets/svg/tobeSelected.svg'
-import { ReactComponent as ArrowDown } from 'assets/svg/arrowdown.svg'
 import { useActiveWeb3React } from '../../hooks'
 import useThemedContext from '../../hooks/useThemedContext'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -26,7 +26,6 @@ const InputRow = styled.div<{ selected: boolean }>`
 const CurrencySelect = styled.button<{ selected: boolean }>`
   align-items: center;
   min-height: fit-content;
-  font-size: 20px;
   font-weight: 500;
   // background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
   // color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
@@ -106,9 +105,8 @@ const StyledBalanceMax = styled.button`
   /* height: 28px; */
   background-color: #39e1ba;
   // border: 1px solid ${({ theme }) => theme.primary5};
-  font-size: 0.5rem;
-  font-weight: 500;
   cursor: pointer;
+  font-weight: 600;
   padding: 0px 8px;
   opacity: 0.8;
   border-radius: 0.9rem;
@@ -212,11 +210,14 @@ export default function CurrencyInputPanel({
                   </>
 
                   {pair ? (
-                    <StyledTokenName className="pair-name-container">
+                    <StyledTokenName className="pair-name-container text-emphasize">
                       {pair?.token0.symbol}:{pair?.token1.symbol}
                     </StyledTokenName>
                   ) : (
-                    <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                    <StyledTokenName
+                      className="token-symbol-container text-emphasize"
+                      active={Boolean(currency && currency.symbol)}
+                    >
                       {(currency && currency.symbol && currency.symbol.length > 20
                         ? currency.symbol.slice(0, 4) +
                           '...' +
@@ -234,9 +235,13 @@ export default function CurrencyInputPanel({
                   fontWeight={500}
                   style={{ display: 'inline', cursor: 'pointer', fontSize: '.6rem', textAlign: 'right' }}
                 >
-                  <span style={{ color: '#6E747B', marginRight: '.1rem' }}>Balance: </span>
+                  <span style={{ color: '#6E747B', marginRight: '.1rem' }} className="text-small">
+                    Balance:{' '}
+                  </span>
                   {!hideBalance && !!currency && selectedCurrencyBalance ? (
-                    <span style={{ color: '#ffffff' }}>{selectedCurrencyBalance?.toSignificant(6)}</span>
+                    <span style={{ color: '#ffffff' }} className="text-small">
+                      {selectedCurrencyBalance?.toSignificant(6)}
+                    </span>
                   ) : (
                     ' -'
                   )}
@@ -256,7 +261,9 @@ export default function CurrencyInputPanel({
                 }}
               />
               {account && currency && showMaxButton && label !== 'To' && (
-                <StyledBalanceMax onClick={onMax}>Max</StyledBalanceMax>
+                <StyledBalanceMax className="text-small" onClick={onMax}>
+                  Max
+                </StyledBalanceMax>
               )}
             </>
           )}
@@ -349,11 +356,14 @@ export function FarmingWithdrawInputPanel({
                     <CurrencyLogo currency={currency} size={'24px'} />
                   ) : null}
                   {pair ? (
-                    <StyledTokenName className="pair-name-container">
+                    <StyledTokenName className="pair-name-container text-emphasize">
                       {pair?.token0.symbol}:{pair?.token1.symbol}
                     </StyledTokenName>
                   ) : (
-                    <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                    <StyledTokenName
+                      className="token-symbol-container text-emphasize"
+                      active={Boolean(currency && currency.symbol)}
+                    >
                       {(currency && currency.symbol && currency.symbol.length > 20
                         ? currency.symbol.slice(0, 4) +
                           '...' +
@@ -393,7 +403,9 @@ export function FarmingWithdrawInputPanel({
                 }}
               />
               {account && currency && showMaxButton && label !== 'To' && (
-                <StyledBalanceMax onClick={onMax}>Max</StyledBalanceMax>
+                <StyledBalanceMax className="text-small" onClick={onMax}>
+                  Max
+                </StyledBalanceMax>
               )}
             </>
           )}

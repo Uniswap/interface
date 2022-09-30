@@ -276,7 +276,9 @@ html {
   background-size: 61%; */
   box-sizing: border-box;
   // font-size: min(1.56vw, 16px);
-  font-size: ${() => (isMobile ? '14px' : 'min(calc(10px + 0.45vw),18px)')};
+  font-size: ${() => (isMobile ? '14px' : 'min(calc(10.718px + 0.171vw),14px)')};// 750:12 to 1920:14
+  // font-size: ${() => (isMobile ? '14px' : 'min(calc(9.436px + 0.342vw),16px)')};// 750:12 to 1920:16
+
   // ${({ theme }) => theme.mediaWidth.upToSmall`
   //   // font-size: max(4.15vw, 16px);
   //   font-size: 4.15vw;
@@ -290,5 +292,56 @@ body {
 #root {
   width: 100%;
   height: 100%;
+}
+.title {
+  font-size: 1.5rem !important;
+}
+.secondary-title {
+  font-size: 1.25rem !important;
+}
+.text-emphasize {
+  font-size: 1.125rem !important;
+}
+.text {
+  font-size: 1rem !important;
+}
+.text-small {
+  font-size: 0.875rem !important;
+}
+.text-detail {
+  font-size: 0.75rem !important;
+}
+
+
+.primary-button-text {
+  font-size: 1.5rem !important;
+}
+.secondary-button-text {
+  font-size: 1rem !important;
+}
+.thirdary-button-text {
+  font-size: 0.875rem !important;
+}
+.forthary-button-text {
+  font-size: 0.75rem !important;
+}
+
+.biggest-radius {
+  border-radius: 3rem!important;
+}
+.bigger-radius {
+  border-radius: 2rem!important;
+}
+.middle-radius {
+  border-radius: 1.5rem!important;
+}
+.smaller-radius {
+  border-radius: 1rem!important;
+}
+.smallest-radius {
+  border-radius: 0.75rem!important;
+}
+.extreme-small-radius {
+  border-radius: 0.5rem!important;
 }
 `
