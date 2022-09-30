@@ -43,6 +43,8 @@ const StatContainer = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.4rem;
+
+  align-items: center;
 };
 `
 
@@ -92,13 +94,16 @@ const TopSection = styled.div`
   // `};
 `
 
-const StakingColumn = styled.div<{ isHide?: boolean }>`
-  max-width: 14rem;
-  width: 100%;
-  display: flex;
+const StakingColumn = styled.div<{ isMobile: boolean; isHideInMobile?: boolean; isHideInDesktop?: boolean }>`
+  ${({ isMobile }) =>
+    !isMobile
+      ? `max-width: 14rem;
+        width: 100%;`
+      : 'width: auto;'}
   flex-wrap: wrap;
   align-items: center;
-  display: ${({ isHide }) => (isHide ? 'none' : 'block')};
+  display: ${({ isMobile, isHideInDesktop, isHideInMobile }) =>
+    (isMobile && isHideInMobile) || (!isMobile && isHideInDesktop) ? 'none' : 'flex'};
   .stakingColTitle {
     margin-bottom: 0.46rem;
   }
@@ -216,7 +221,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
         </TYPE.green01>
       )}
       <StatContainer>
-        <StakingColumn isHide={isMobile}>
+        <StakingColumn isMobile={isMobile} isHideInMobile>
           <StakingColumnTitle>Staked {poolInfo?.stakingAsset.isLpToken ? 'LP' : 'Token'}</StakingColumnTitle>
           <TYPE.white fontSize={16} marginRight="1.5rem">
             {stakingInfo.stakedAmount.toSignificant(6)}
@@ -245,7 +250,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
             </div>
           )}
         </StakingColumn>
-        <StakingColumn isHide={isMobile}>
+        <StakingColumn isMobile={isMobile} isHideInMobile>
           <StakingColumnTitle>Earned Rewards</StakingColumnTitle>
           <TYPE.white fontSize={16}>
             {stakingInfo.pendingReward.toSignificant(6)} {rewardToken.symbol}
@@ -263,17 +268,20 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
             </ButtonPrimary>
           </div>
         </StakingColumn>
-        <StakingColumn>
+        <StakingColumn isMobile={isMobile}>
           <StakingColumnTitle>APR</StakingColumnTitle>
           <TYPE.white fontSize={16}>
             {calculatedApr && calculatedApr !== Infinity ? calculatedApr.toFixed(2) : '--.--'}%
           </TYPE.white>
         </StakingColumn>
-        <StakingColumn>
+        <StakingColumn isMobile={isMobile}>
           <StakingColumnTitle>Liquidity TVL</StakingColumnTitle>
           <TYPE.white fontSize={16}>
             $ {totalValueLockedInUSD ? totalValueLockedInUSD.toSignificant(6) : '--.--'}
           </TYPE.white>
+        </StakingColumn>
+        <StakingColumn isMobile={isMobile} isHideInDesktop>
+          <TYPE.green01 fontSize={13}>Details</TYPE.green01>
         </StakingColumn>
       </StatContainer>
 
