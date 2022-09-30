@@ -115,12 +115,10 @@ const InputWrapper = styled.div<{ redesignFlag: boolean }>`
   }
 `
 
-const OutputInputWrapper = styled(InputWrapper)<{ showPriceImpactWarning: boolean }>`
+const OutputInputWrapper = styled(InputWrapper)<{ showDetailsDropdown: boolean }>`
   border-bottom: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundSurface}`};
-  border-bottom-left-radius: ${({ redesignFlag, showPriceImpactWarning }) =>
-    redesignFlag && showPriceImpactWarning && '0'};
-  border-bottom-right-radius: ${({ redesignFlag, showPriceImpactWarning }) =>
-    redesignFlag && showPriceImpactWarning && '0'};
+  border-bottom-left-radius: ${({ redesignFlag, showDetailsDropdown }) => redesignFlag && showDetailsDropdown && '0'};
+  border-bottom-right-radius: ${({ redesignFlag, showDetailsDropdown }) => redesignFlag && showDetailsDropdown && '0'};
 `
 
 export function getIsValidSwapQuote(
@@ -487,7 +485,7 @@ export default function Swap() {
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
-  const showPriceImpactWarning = Boolean(largerPriceImpact && priceImpactTooHigh)
+  const showPriceImpactWarning = largerPriceImpact && priceImpactTooHigh
 
   // Handle time based logging events and event properties.
   useEffect(() => {
@@ -524,7 +522,9 @@ export default function Swap() {
   const approveTokenButtonDisabled =
     approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted || signatureState === UseERC20PermitState.SIGNED
 
-  const showDetailsDropdown = !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
+  const showDetailsDropdown = Boolean(
+    !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
+  )
 
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
@@ -631,10 +631,7 @@ export default function Swap() {
               </div>
               <div>
                 <AutoColumn gap={redesignFlagEnabled ? '12px' : '8px'}>
-                  <OutputInputWrapper
-                    redesignFlag={redesignFlagEnabled}
-                    showPriceImpactWarning={showPriceImpactWarning}
-                  >
+                  <OutputInputWrapper redesignFlag={redesignFlagEnabled} showDetailsDropdown={showDetailsDropdown}>
                     <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                       <SwapCurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
