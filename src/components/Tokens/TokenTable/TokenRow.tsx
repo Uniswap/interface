@@ -50,15 +50,15 @@ const StyledTokenRow = styled.div<{
 }>`
   background-color: transparent;
   display: grid;
-  font-size: 15px;
+  font-size: 16px;
   grid-template-columns: ${({ favoriteTokensEnabled }) =>
     favoriteTokensEnabled ? '1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr' : '1fr 7fr 4fr 4fr 4fr 4fr 5fr'};
-  height: 60px;
+  height: 64px;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
-  padding-top: ${({ first }) => (first ? '4px' : '0px')};
-  padding-bottom: ${({ last }) => (last ? '4px' : '0px')};
+  margin-top: ${({ first }) => (first ? '8px' : '0px')};
+  margin-bottom: ${({ last }) => (last ? '8px' : '0px')};
   padding-left: 12px;
   padding-right: 12px;
   transition: ${({
@@ -150,7 +150,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   border-color: ${({ theme }) => theme.backgroundOutline};
   border-radius: 8px 8px 0px 0px;
   color: ${({ theme }) => theme.textSecondary};
-  font-size: 12px;
+  font-size: 14px;
   height: 48px;
   line-height: 16px;
   padding: 0px 12px;
@@ -169,6 +169,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
 const ListNumberCell = styled(Cell)<{ header: boolean }>`
   color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
+  font-size: 14px;
   height: ${({ header }) => (header ? '48px' : '60px')};
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -354,9 +355,9 @@ function HeaderCell({
       <HeaderCellWrapper onClick={handleSortCategory}>
         <SortArrowCell>
           {sortAscending ? (
-            <ArrowUp size={14} color={theme.accentActive} />
+            <ArrowUp size={20} strokeWidth={1.8} color={theme.accentActive} />
           ) : (
-            <ArrowDown size={14} color={theme.accentActive} />
+            <ArrowDown size={20} strokeWidth={1.8} color={theme.accentActive} />
           )}
         </SortArrowCell>
         {getHeaderDisplay(category, timeframe)}

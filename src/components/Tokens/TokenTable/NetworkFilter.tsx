@@ -64,7 +64,6 @@ const StyledMenuContent = styled.div`
   gap: 8px;
   align-items: center;
   border: none;
-  width: 100%;
   font-weight: 600;
   vertical-align: middle;
 `
@@ -101,7 +100,7 @@ export default function NetworkFilter() {
 
   return (
     <StyledMenu ref={node}>
-      <FilterOption onClick={toggleMenu} aria-label={`networkFilter`} active={open}>
+      <FilterOption width="156px" onClick={toggleMenu} aria-label={`networkFilter`} active={open}>
         <StyledMenuContent>
           <NetworkLabel>
             <Logo src={circleLogoUrl ?? logoUrl} /> {label}
