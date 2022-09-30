@@ -1,8 +1,8 @@
 import { providers } from 'ethers'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/types'
-import WarningModal from 'src/components/modals/WarningModal'
+import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
+import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,

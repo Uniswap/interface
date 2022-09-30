@@ -16,8 +16,10 @@ import { Screen } from 'src/components/layout/Screen'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { WarningSeverity } from 'src/components/modals/types'
-import WarningModal, { captionForAccountRemovalWarning } from 'src/components/modals/WarningModal'
+import { WarningSeverity } from 'src/components/modals/WarningModal/types'
+import WarningModal, {
+  captionForAccountRemovalWarning,
+} from 'src/components/modals/WarningModal/WarningModal'
 import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { pushNotification } from 'src/features/notifications/notificationSlice'

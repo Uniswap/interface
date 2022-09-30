@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Warning, WarningAction } from 'src/components/modals/types'
+import { Warning, WarningAction } from 'src/components/modals/WarningModal/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'

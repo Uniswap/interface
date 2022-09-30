@@ -1,7 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { TFunction } from 'react-i18next'
-import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'src/components/modals/types'
+import {
+  Warning,
+  WarningAction,
+  WarningLabel,
+  WarningSeverity,
+} from 'src/components/modals/WarningModal/types'
 import { ChainId } from 'src/constants/chains'
 import { NFTAsset } from 'src/features/nfts/types'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'

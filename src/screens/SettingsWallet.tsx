@@ -21,9 +21,10 @@ import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
-
-import { WarningSeverity } from 'src/components/modals/types'
-import WarningModal, { captionForAccountRemovalWarning } from 'src/components/modals/WarningModal'
+import { WarningSeverity } from 'src/components/modals/WarningModal/types'
+import WarningModal, {
+  captionForAccountRemovalWarning,
+} from 'src/components/modals/WarningModal/WarningModal'
 import {
   SettingsRow,
   SettingsSection,
