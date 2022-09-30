@@ -72,8 +72,7 @@ export default function TokenTable() {
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const { loading, tokens, tokensWithoutPriceHistoryCount, hasMore, loadMoreTokens, maxFetchable } =
-    useTopTokens(chainName)
+  const { error, loading, tokens, hasMore, loadMoreTokens, maxFetchable } = useTopTokens(chainName)
   const showMoreLoadingRows = Boolean(loading && hasMore)
 
   const observer = useRef<IntersectionObserver>()
@@ -93,9 +92,9 @@ export default function TokenTable() {
 
   /* loading and error state */
   if (loading && (!tokens || tokens?.length === 0)) {
-    return <LoadingTokenTable rowCount={Math.min(tokensWithoutPriceHistoryCount, PAGE_SIZE)} />
+    return <LoadingTokenTable rowCount={PAGE_SIZE} />
   } else {
-    if (!tokens) {
+    if (error || !tokens) {
       return (
         <NoTokensState
           message={
