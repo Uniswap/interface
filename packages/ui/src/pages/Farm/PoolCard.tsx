@@ -1,5 +1,7 @@
 import { Token, TokenAmount } from '@teleswap/sdk'
 import { ReactComponent as AddIcon } from 'assets/svg/action/add.svg'
+import { ReactComponent as ArrowDown } from 'assets/svg/action/arrowDown.svg'
+import { ReactComponent as ArrowUp } from 'assets/svg/action/arrowUp.svg'
 import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 import { ButtonPrimary } from 'components/Button'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
@@ -23,6 +25,7 @@ import { useChefPoolAPR } from 'hooks/farm/useFarmAPR'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { usePairSidesValueEstimate, usePairUSDValue } from 'hooks/usePairValue'
 import React, { useEffect, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import useUSDCPrice from 'utils/useUSDCPrice'
@@ -42,7 +45,18 @@ const StatContainer = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.4rem;
+
+  align-items: center;
 };
+`
+
+const StyledArrowDown = styled(ArrowDown)`
+  width: 0.9rem;
+  margin-left: 0.9rem;
+`
+const StyledArrowUp = styled(ArrowUp)`
+  width: 0.9rem;
+  margin-left: 0.9rem;
 `
 
 const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
@@ -50,6 +64,7 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  align-items: center;
   // overflow: hidden;
   // position: relative;
   // opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
@@ -85,17 +100,23 @@ const Wrapper = styled.div<{ showBackground: boolean; bgColor: any }>`
 const TopSection = styled.div`
   display: flex;
   align-items: center;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    grid-template-columns: 48px 1fr 96px;
-  `};
+  width: 100%;
+  // ${({ theme }) => theme.mediaWidth.upToSmall`
+  //   grid-template-columns: 48px 1fr 96px;
+  // `};
 `
 
-const StakingColumn = styled.div`
-  max-width: 14rem;
+const StakingColumn = styled.div<{ isMobile: boolean; isHideInMobile?: boolean; isHideInDesktop?: boolean }>`
+  ${({ isMobile }) => !isMobile && 'max-width: 14rem;'}
   width: 100%;
-  display: flex;
   flex-wrap: wrap;
   align-items: center;
+  display: ${({ isMobile, isHideInDesktop, isHideInMobile }) =>
+    (isMobile && isHideInMobile) || (!isMobile && isHideInDesktop) ? 'none' : 'flex'};
+  &.mobile-details-button {
+    margin-left: auto;
+    width: auto;
+  }
   .stakingColTitle {
     margin-bottom: 0.46rem;
   }
@@ -112,6 +133,29 @@ const StakingColumn = styled.div`
     margin-top: 0.33rem;
     width: 100%;
     color: rgba(255, 255, 255, 0.8);
+  }
+`
+
+const MobilePoolDetailSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.85rem 0.72rem;
+
+  width: 100%;
+  background: #21303e;
+  border-radius: 1.7rem;
+  margin-top: 1.3rem;
+
+  .actions {
+    margin-left: auto;
+    svg {
+      width: 2.57rem;
+      height: 2.57rem;
+    }
+    button {
+      width: 7.15rem;
+    }
   }
 `
 
@@ -181,6 +225,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
 
   const isStaking = true
   const rewardToken = UNI[chainId || 420]
+  const [isMobileActionExpanded, setMobileActionExpansion] = useState(false)
   const priceOfRewardToken = useUSDCPrice(rewardToken)
   const totalValueLockedInUSD = usePairUSDValue(stakingTokenPair, stakingInfo.tvl)
   const calculatedApr = useChefPoolAPR(stakingInfo, stakingTokenPair, stakingInfo.stakedAmount, priceOfRewardToken)
@@ -192,91 +237,130 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
     stakingTokenPair,
     new TokenAmount(stakingInfo.stakingToken, stakingInfo.stakedAmount.raw || '0')
   )
+  const poolInfo = farmingConfig?.pools[pid]
+
+  const StakeManagementPanel = ({ isMobile, isHideInMobile }: { isMobile: boolean; isHideInMobile?: boolean }) => {
+    return (
+      <StakingColumn isMobile={isMobile} isHideInMobile={isHideInMobile}>
+        <StakingColumnTitle>Staked {poolInfo?.stakingAsset.isLpToken ? 'LP' : 'Token'}</StakingColumnTitle>
+        <TYPE.white fontSize={16} marginRight="1.5rem">
+          {stakingInfo.stakedAmount.toSignificant(6)}
+        </TYPE.white>
+        {approval !== ApprovalState.NOT_APPROVED ? (
+          <div className="actions">
+            <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
+            <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
+          </div>
+        ) : (
+          <ButtonPrimary
+            height={28}
+            width="auto"
+            fontSize={12}
+            padding="0.166rem 0.4rem"
+            borderRadius="0.133rem"
+            onClick={approve}
+          >
+            Approve
+          </ButtonPrimary>
+        )}
+        {stakingInfo.stakingAsset.isLpToken && (
+          <div className="estimated-staked-lp-value">
+            {liquidityValueOfToken0?.toSignificant(4)} {liquidityValueOfToken0?.token.symbol} +{' '}
+            {liquidityValueOfToken1?.toSignificant(4)} {liquidityValueOfToken1?.token.symbol}
+          </div>
+        )}
+      </StakingColumn>
+    )
+  }
+
+  const EarningManagement = ({
+    isMobile,
+    isHideInMobile,
+    marginTop
+  }: {
+    isMobile: boolean
+    isHideInMobile?: boolean
+    marginTop?: string | number
+  }) => {
+    return (
+      <StakingColumn isMobile={isMobile} isHideInMobile={isHideInMobile} style={{ marginTop }}>
+        <StakingColumnTitle>Earned Rewards</StakingColumnTitle>
+        <TYPE.white fontSize={16}>
+          {stakingInfo.pendingReward.toSignificant(6)} {rewardToken.symbol}
+        </TYPE.white>
+        <div className="actions">
+          <ButtonPrimary
+            height={28}
+            width="auto"
+            fontSize={12}
+            padding="0.166rem 0.4rem"
+            borderRadius="0.133rem"
+            onClick={() => setShowClaimRewardModal(true)}
+          >
+            Claim
+          </ButtonPrimary>
+        </div>
+      </StakingColumn>
+    )
+  }
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <TopSection>
         <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
         <TYPE.white fontWeight={600} fontSize={18} style={{ marginLeft: '0.26rem' }}>
-          {farmingConfig?.pools[pid].stakingAsset.name}
+          {poolInfo?.stakingAsset.name}
         </TYPE.white>
-
-        {farmingConfig?.pools[pid].stakingAsset.isLpToken && (
+        {poolInfo?.stakingAsset.isLpToken && (
           <TYPE.green01
-            marginLeft={32}
+            marginLeft={isMobile ? 'auto' : 32}
             fontSize={14}
-            onClick={() => history.push(`/add/${currency0?.address}/${currency1?.address}`)}
+            onClick={() =>
+              history.push(
+                `/add/${currency0?.address}/${currency1?.address}/${
+                  poolInfo.stakingAsset.isLpToken && poolInfo.stakingAsset.isStable
+                }`
+              )
+            }
             style={{ cursor: 'pointer' }}
           >
-            Get {farmingConfig?.pools[pid].stakingAsset.name}
+            Get {poolInfo?.stakingAsset.name}
           </TYPE.green01>
         )}
       </TopSection>
-
       <StatContainer>
-        <StakingColumn>
-          <StakingColumnTitle>
-            Staked {farmingConfig?.pools[pid].stakingAsset.isLpToken ? 'LP' : 'Token'}
-          </StakingColumnTitle>
-          <TYPE.white fontSize={16} marginRight="1.5rem">
-            {stakingInfo.stakedAmount.toSignificant(6)}
-          </TYPE.white>
-          {approval !== ApprovalState.NOT_APPROVED ? (
-            <div className="actions">
-              <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
-              <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
-            </div>
-          ) : (
-            <ButtonPrimary
-              height={28}
-              width="auto"
-              fontSize={12}
-              padding="0.166rem 0.4rem"
-              borderRadius="0.133rem"
-              onClick={approve}
-            >
-              Approve
-            </ButtonPrimary>
-          )}
-          {stakingInfo.stakingAsset.isLpToken && (
-            <div className="estimated-staked-lp-value">
-              {liquidityValueOfToken0?.toSignificant(4)} {liquidityValueOfToken0?.token.symbol} +{' '}
-              {liquidityValueOfToken1?.toSignificant(4)} {liquidityValueOfToken1?.token.symbol}
-            </div>
-          )}
-        </StakingColumn>
-        <StakingColumn>
-          <StakingColumnTitle>Earned Rewards</StakingColumnTitle>
-          <TYPE.white fontSize={16}>
-            {stakingInfo.pendingReward.toSignificant(6)} {rewardToken.symbol}
-          </TYPE.white>
-          <div className="actions">
-            <ButtonPrimary
-              height={28}
-              width="auto"
-              fontSize={12}
-              padding="0.166rem 0.4rem"
-              borderRadius="0.133rem"
-              onClick={() => setShowClaimRewardModal(true)}
-            >
-              Claim
-            </ButtonPrimary>
-          </div>
-        </StakingColumn>
-        <StakingColumn>
+        <StakeManagementPanel isMobile={isMobile} isHideInMobile />
+        <EarningManagement isMobile={isMobile} isHideInMobile />
+        <StakingColumn isMobile={isMobile}>
           <StakingColumnTitle>APR</StakingColumnTitle>
           <TYPE.white fontSize={16}>
             {calculatedApr && calculatedApr !== Infinity ? calculatedApr.toFixed(2) : '--.--'}%
           </TYPE.white>
         </StakingColumn>
-        <StakingColumn>
+        <StakingColumn isMobile={isMobile}>
           <StakingColumnTitle>Liquidity TVL</StakingColumnTitle>
           <TYPE.white fontSize={16}>
             $ {totalValueLockedInUSD ? totalValueLockedInUSD.toSignificant(6) : '--.--'}
           </TYPE.white>
         </StakingColumn>
+        <StakingColumn isMobile={isMobile} isHideInDesktop className="mobile-details-button">
+          <TYPE.green01
+            fontSize={13}
+            onClick={() => setMobileActionExpansion((prevState) => !prevState)}
+            style={{ cursor: 'pointer', display: 'flex' }}
+          >
+            Details
+            {/* {!isMobileActionExpanded ? <ArrowDown width="0.9rem" /> : <ArrowUp width="0.9rem" />} */}
+            {!isMobileActionExpanded ? <StyledArrowDown /> : <StyledArrowUp />}
+          </TYPE.green01>
+        </StakingColumn>
       </StatContainer>
-
+      {isMobile && isMobileActionExpanded && (
+        <MobilePoolDetailSection>
+          <StakeManagementPanel isMobile />
+          <EarningManagement isMobile marginTop="1.28rem" />
+        </MobilePoolDetailSection>
+      )}
       {/* {isStaking && (
         <>
           <BottomSection showBackground={true}>
