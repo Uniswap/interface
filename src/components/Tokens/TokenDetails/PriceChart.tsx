@@ -56,17 +56,21 @@ export function calculateDelta(start: number, current: number) {
   return (current / start - 1) * 100
 }
 
-export function getDeltaArrow(delta: number) {
-  if (Math.sign(delta) > 0) {
-    return <StyledUpArrow size={16} key="arrow-up" />
-  } else if (delta === 0) {
+export function getDeltaArrow(delta: number | null | undefined) {
+  // Null-check not including zero
+  if (delta === null || delta === undefined) {
     return null
-  } else {
+  } else if (Math.sign(delta) < 0) {
     return <StyledDownArrow size={16} key="arrow-down" />
   }
+  return <StyledUpArrow size={16} key="arrow-up" />
 }
 
-export function formatDelta(delta: number) {
+export function formatDelta(delta: number | null | undefined) {
+  // Null-check not including zero
+  if (delta === null || delta === undefined) {
+    return '-'
+  }
   let formattedDelta = delta.toFixed(2) + '%'
   if (Math.sign(delta) > 0) {
     formattedDelta = '+' + formattedDelta
@@ -247,8 +251,10 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
         pricePoint = x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf() ? d1 : d0
       }
 
-      setCrosshair(timeScale(pricePoint.timestamp))
-      setDisplayPrice(pricePoint)
+      if (pricePoint) {
+        setCrosshair(timeScale(pricePoint.timestamp))
+        setDisplayPrice(pricePoint)
+      }
     },
     [timeScale, prices]
   )

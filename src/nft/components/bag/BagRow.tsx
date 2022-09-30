@@ -7,6 +7,7 @@ import { Column, Row } from 'nft/components/Flex'
 import {
   ChevronDownBagIcon,
   ChevronUpBagIcon,
+  CircularCloseIcon,
   CloseTimerIcon,
   SquareArrowDownIcon,
   SquareArrowUpIcon,
@@ -57,6 +58,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
   const [noImageAvailable, setNoImageAvailable] = useState(!asset.smallImageUrl)
   const handleCardHover = () => setCardHovered(!cardHovered)
   const assetCardRef = useRef<HTMLDivElement>(null)
+  const showRemoveButton = showRemove && cardHovered
 
   if (cardHovered && assetCardRef.current && assetCardRef.current.matches(':hover') === false) setCardHovered(false)
 
@@ -64,6 +66,19 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
     <Link to={getAssetHref(asset)} style={{ textDecoration: 'none' }}>
       <Row ref={assetCardRef} className={styles.bagRow} onMouseEnter={handleCardHover} onMouseLeave={handleCardHover}>
         <Box position="relative" display="flex">
+          <Box
+            display={showRemove && isMobile ? 'block' : 'none'}
+            className={styles.removeAssetOverlay}
+            onClick={(e: MouseEvent) => {
+              e.preventDefault()
+              e.stopPropagation()
+              removeAsset(asset)
+            }}
+            transition="250"
+            zIndex="1"
+          >
+            <CircularCloseIcon />
+          </Box>
           {!noImageAvailable && (
             <Box
               as="img"
@@ -91,7 +106,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
           </Row>
         </Column>
-        {cardHovered && showRemove && (
+        {showRemoveButton && !isMobile && (
           <Box
             marginLeft="16"
             className={styles.removeBagRowButton}
@@ -104,7 +119,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             Remove
           </Box>
         )}
-        {(!cardHovered || !showRemove) && (
+        {(!showRemoveButton || isMobile) && (
           <Column flexShrink="0">
             <Box className={styles.bagRowPrice}>
               {`${formatWeiToDecimal(

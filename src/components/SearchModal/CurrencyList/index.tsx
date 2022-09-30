@@ -3,9 +3,12 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
+import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import { XOctagon } from 'react-feather'
 import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -61,6 +64,12 @@ const Tag = styled.div`
   white-space: nowrap;
   justify-self: flex-end;
   margin-right: 4px;
+`
+
+export const BlockedTokenIcon = styled(XOctagon)<{ size?: string }>`
+  margin-left: 0.3em;
+  width: 1em;
+  height: 1em;
 `
 
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
@@ -125,8 +134,10 @@ export function CurrencyRow({
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+  const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
+  const tokenSafetyFlagEnabled = useTokenSafetyFlag() === TokenSafetyVariant.Enabled
+  const isBlockedToken = !!warning && !warning.canProceed
+  const blockedTokenOpacity = '0.6'
 
   // only show add or remove buttons if not on selected list
   return (
@@ -145,13 +156,20 @@ export function CurrencyRow({
         onClick={() => (isSelected ? null : onSelect(!!warning))}
         disabled={isSelected}
         selected={otherSelected}
+        dim={isBlockedToken}
       >
         <Column>
-          <CurrencyLogo currency={currency} size={'36px'} />
+          <CurrencyLogo
+            currency={currency}
+            size={'36px'}
+            style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
+          />
         </Column>
-        <AutoColumn>
+        <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}>
           <Row>
             <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
+            {tokenSafetyFlagEnabled && <TokenSafetyIcon warning={warning} />}
+            {isBlockedToken && <BlockedTokenIcon />}
           </Row>
           <ThemedText.DeprecatedDarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
             {!currency.isNative && !isOnSelectedList && customAdded ? (

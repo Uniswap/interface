@@ -35,7 +35,7 @@ export const WithCommaCell = ({ value }: CellProps) => <span>{value.value ? putC
 
 export const EthCell = ({ value }: { value: number }) => (
   <Row justifyContent="flex-end" color="textPrimary">
-    {value ? <>{formatWeiToDecimal(value.toString())} ETH</> : '-'}
+    {value ? <>{formatWeiToDecimal(value.toString(), true)} ETH</> : '-'}
   </Row>
 )
 
@@ -66,7 +66,7 @@ export const EthWithDayChange = ({ value }: CellProps) => (
 export const WeiWithDayChange = ({ value }: CellProps) => (
   <Column gap="4">
     <Row justifyContent="flex-end" color="textPrimary">
-      {value && value.value ? <>{formatWeiToDecimal(value.value.toString())} ETH</> : '-'}
+      {value && value.value ? <>{formatWeiToDecimal(value.value.toString(), true)} ETH</> : '-'}
     </Row>
     {value.change ? (
       <Box

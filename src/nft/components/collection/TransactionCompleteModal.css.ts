@@ -1,12 +1,6 @@
-import { globalStyle, style } from '@vanilla-extract/css'
+import { style } from '@vanilla-extract/css'
 import { center } from 'nft/css/common.css'
 import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
-
-globalStyle('a', {
-  color: vars.color.genieBlue,
-  fontWeight: 'bold',
-  textDecoration: 'none',
-})
 
 export const modalContainer = style([
   sprinkles({

@@ -100,6 +100,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
         </div>
         <div
           class="c5"
+          style="opacity: 1;"
         >
           <div
             class="c0 c1"
@@ -138,6 +139,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
         </div>
         <div
           class="c5"
+          style="opacity: 1;"
         >
           <div
             class="c0 c1"
@@ -176,6 +178,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
         </div>
         <div
           class="c5"
+          style="opacity: 1;"
         >
           <div
             class="c0 c1"
