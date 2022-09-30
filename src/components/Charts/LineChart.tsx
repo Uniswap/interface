@@ -6,7 +6,7 @@ import { ReactNode } from 'react'
 import { useTheme } from 'styled-components/macro'
 import { Color } from 'theme/styled'
 
-interface LineChartProps<T> {
+export interface LineChartProps<T> {
   data: T[]
   getX: (t: T) => number
   getY: (t: T) => number

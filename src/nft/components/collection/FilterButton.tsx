@@ -31,10 +31,10 @@ export const FilterButton = ({
   }))
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const { pathname } = useLocation()
-  const isSellPage = pathname.startsWith('/nfts/sell')
+  const isProfilePage = pathname.startsWith('/profile')
   const isCollectionNftsLoading = useIsCollectionLoading((state) => state.isCollectionNftsLoading)
 
-  const showFilterBadge = isSellPage
+  const showFilterBadge = isProfilePage
     ? collectionFilters.length > 0
     : minPrice || maxPrice || minRarity || maxRarity || traits.length || markets.length || buyNow
   return (

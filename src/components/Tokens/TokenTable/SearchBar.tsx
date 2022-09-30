@@ -79,7 +79,7 @@ export default function SearchBar() {
       <Trans
         render={({ translation }) => (
           <TraceEvent
-            events={[Event.onSelect]}
+            events={[Event.onFocus]}
             name={EventName.EXPLORE_SEARCH_SELECTED}
             element={ElementName.EXPLORE_SEARCH_INPUT}
           >
