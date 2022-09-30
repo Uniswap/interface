@@ -121,6 +121,10 @@ const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
   border-bottom-right-radius: ${({ redesignFlag, showDetailsDropdown }) => redesignFlag && showDetailsDropdown && '0'};
 `
 
+const DetailsSwapSection = styled(SwapSection)`
+  padding: 0;
+`
+
 export function getIsValidSwapQuote(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
   tradeState: TradeState,
@@ -669,8 +673,9 @@ export default function Swap() {
                         <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
                       </>
                     ) : null}
-
-                    {showDetailsDropdown && (
+                  </OutputSwapSection>
+                  {showDetailsDropdown && (
+                    <DetailsSwapSection redesignFlag={redesignFlagEnabled}>
                       <SwapDetailsDropdown
                         trade={trade}
                         syncing={routeIsSyncing}
@@ -679,8 +684,8 @@ export default function Swap() {
                         setShowInverted={setShowInverted}
                         allowedSlippage={allowedSlippage}
                       />
-                    )}
-                  </OutputSwapSection>
+                    </DetailsSwapSection>
+                  )}
                   {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
                   <div>
                     {swapIsUnsupported ? (
