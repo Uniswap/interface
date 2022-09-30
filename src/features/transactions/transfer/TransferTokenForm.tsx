@@ -11,7 +11,7 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
-import { WarningAction } from 'src/components/modals/types'
+import { Warning, WarningAction } from 'src/components/modals/types'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -32,6 +32,7 @@ interface TransferTokenProps {
   dispatch: React.Dispatch<AnyAction>
   derivedTransferInfo: DerivedTransferInfo
   onNext: () => void
+  warnings: Warning[]
 }
 
 export interface TransferWarning {
@@ -39,7 +40,12 @@ export interface TransferWarning {
   loading: boolean
 }
 
-export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: TransferTokenProps) {
+export function TransferTokenForm({
+  dispatch,
+  derivedTransferInfo,
+  onNext,
+  warnings,
+}: TransferTokenProps) {
   const {
     currencyAmounts,
     currencyBalances,
@@ -48,7 +54,6 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
     exactAmountUSD = '',
     recipient,
     isUSDInput = false,
-    warnings,
     currencyIn,
     nftIn,
     chainId,

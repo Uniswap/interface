@@ -5,6 +5,7 @@ import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AnimatedFlex, Flex } from 'src/components/layout'
+import { Warning } from 'src/components/modals/types'
 import { Text } from 'src/components/Text'
 import { DerivedSwapInfo, useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
@@ -37,11 +38,18 @@ interface TransactionFlowProps {
   totalGasFee?: string
   step: TransactionStep
   setStep: (newStep: TransactionStep) => void
+  warnings: Warning[]
 }
 
 type InnerContentProps = Pick<
   TransactionFlowProps,
-  'derivedInfo' | 'onClose' | 'dispatch' | 'totalGasFee' | 'txRequest' | 'approveTxRequest'
+  | 'derivedInfo'
+  | 'onClose'
+  | 'dispatch'
+  | 'totalGasFee'
+  | 'txRequest'
+  | 'approveTxRequest'
+  | 'warnings'
 > & {
   step: number
   setStep: (step: TransactionStep) => void
@@ -67,6 +75,7 @@ export function TransactionFlow({
   setStep,
   onClose,
   dispatch,
+  warnings,
 }: TransactionFlowProps) {
   // enable tap to dismiss keyboard on whole modal screen
   // this only applies when we show native keyboard on smaller devices
@@ -118,6 +127,7 @@ export function TransactionFlow({
             step={step}
             totalGasFee={totalGasFee}
             txRequest={txRequest}
+            warnings={warnings}
             onClose={onClose}
           />
         </Flex>
@@ -150,6 +160,7 @@ const useGetInnerContent = ({
   totalGasFee,
   approveTxRequest,
   txRequest,
+  warnings,
 }: InnerContentProps): {
   form: ReactElement
   review: ReactElement
@@ -163,13 +174,21 @@ const useGetInnerContent = ({
   const isSwap = isSwapInfo(derivedInfo)
   if (isSwap) {
     return {
-      form: <SwapForm derivedSwapInfo={derivedInfo} dispatch={dispatch} onNext={onFormNext} />,
+      form: (
+        <SwapForm
+          derivedSwapInfo={derivedInfo}
+          dispatch={dispatch}
+          warnings={warnings}
+          onNext={onFormNext}
+        />
+      ),
       review: (
         <SwapReview
           approveTxRequest={approveTxRequest}
           derivedSwapInfo={derivedInfo}
           totalGasFee={totalGasFee}
           txRequest={txRequest}
+          warnings={warnings}
           onNext={onReviewNext}
           onPrev={onReviewPrev}
         />
@@ -185,6 +204,7 @@ const useGetInnerContent = ({
       <TransferTokenForm
         derivedTransferInfo={derivedInfo}
         dispatch={dispatch}
+        warnings={warnings}
         onNext={onFormNext}
       />
     ),
@@ -193,6 +213,7 @@ const useGetInnerContent = ({
         derivedTransferInfo={derivedInfo}
         totalGasFee={totalGasFee}
         txRequest={txRequest}
+        warnings={warnings}
         onNext={onReviewNext}
         onPrev={onReviewPrev}
       />

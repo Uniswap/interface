@@ -7,6 +7,7 @@ import {
   useSwapActionHandlers,
   useSwapTxAndGasInfo,
 } from 'src/features/transactions/swap/hooks'
+import { useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { TransactionFlow, TransactionStep } from 'src/features/transactions/TransactionFlow'
 import {
   CurrencyField,
@@ -14,6 +15,7 @@ import {
   TransactionState,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 
 interface SwapFormProps {
   prefilledState?: TransactionState
@@ -26,6 +28,7 @@ function otherCurrencyField(field: CurrencyField): CurrencyField {
 
 export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const { t } = useTranslation()
+  const account = useActiveAccountWithThrow()
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const derivedSwapInfo = useDerivedSwapInfo(state)
   const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
@@ -35,6 +38,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
     derivedSwapInfo,
     step === TransactionStep.SUBMITTED
   )
+  const warnings = useSwapWarnings(t, account, derivedSwapInfo, totalGasFee)
 
   // keep currencies list option as state so that rendered list remains stable through the slide animation
   const [listVariation, setListVariation] = useState<TokenSelectorVariation>(
@@ -82,6 +86,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
       }
       totalGasFee={totalGasFee}
       txRequest={txRequest}
+      warnings={warnings}
       onClose={onClose}
     />
   )

@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { WarningAction } from 'src/components/modals/types'
+import { Warning, WarningAction } from 'src/components/modals/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
@@ -19,6 +19,7 @@ interface TransferFormProps {
   totalGasFee?: string
   onNext: () => void
   onPrev: () => void
+  warnings: Warning[]
 }
 
 export function TransferReview({
@@ -27,6 +28,7 @@ export function TransferReview({
   onNext,
   onPrev,
   txRequest,
+  warnings,
 }: TransferFormProps) {
   const { t } = useTranslation()
 
@@ -35,7 +37,6 @@ export function TransferReview({
     formattedAmounts,
     recipient,
     isUSDInput = false,
-    warnings,
     currencyIn,
     nftIn,
     chainId,

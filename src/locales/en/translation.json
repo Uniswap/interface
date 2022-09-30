@@ -244,6 +244,8 @@
   "There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.": "There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.",
   "This trade cannot be completed right now": "This trade cannot be completed right now",
   "You may have lost connection or the network may be down. If the problem persists, please try again later.": "You may have lost connection or the network may be down. If the problem persists, please try again later.",
+  "Not enough {{ nativeCurrency }} to pay network fee": "Not enough {{ nativeCurrency }} to pay network fee",
+  "Network fees are paid in the native token. Buy more {{ nativeCurrency }}.": "Network fees are paid in the native token. Buy more {{ nativeCurrency }}.",
   "Rate impacted by swap size ({{ swapSize }})": "Rate impacted by swap size ({{ swapSize }})",
   "Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.": "Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.",
   "This wallet is view-only": "This wallet is view-only",

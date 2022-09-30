@@ -3,12 +3,30 @@ import { WarningLabel } from 'src/components/modals/types'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { getSwapWarnings, PartialDerivedSwapInfo } from 'src/features/transactions/swap/validate'
+import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
+import { getSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
+import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import { account } from 'src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
-const partialSwapState: PartialDerivedSwapInfo = {
+const emptySwapInfo: Pick<
+  DerivedSwapInfo,
+  'formattedAmounts' | 'exactAmountToken' | 'exactAmountUSD' | 'chainId' | 'wrapType'
+> = {
+  chainId: 1,
+  wrapType: WrapType.NotApplicable,
+  formattedAmounts: {
+    [CurrencyField.INPUT]: '1000',
+    [CurrencyField.OUTPUT]: '1000',
+  },
+  exactAmountToken: '1000',
+  exactAmountUSD: '1000',
+}
+
+const swapState: DerivedSwapInfo = {
+  ...emptySwapInfo,
   currencyAmounts: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '10000'),
     [CurrencyField.OUTPUT]: undefined,
@@ -26,7 +44,8 @@ const partialSwapState: PartialDerivedSwapInfo = {
   nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '11000'),
 }
 
-const insufficientBalanceState: PartialDerivedSwapInfo = {
+const insufficientBalanceState: DerivedSwapInfo = {
+  ...emptySwapInfo,
   currencyAmounts: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '10000'),
     [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(DAI, '200000'),
@@ -44,7 +63,8 @@ const insufficientBalanceState: PartialDerivedSwapInfo = {
   nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '11000'),
 }
 
-const tradeErrorState: PartialDerivedSwapInfo = {
+const tradeErrorState: DerivedSwapInfo = {
+  ...emptySwapInfo,
   currencyAmounts: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(DAI, '1000'),
     [CurrencyField.OUTPUT]: null,
@@ -66,38 +86,62 @@ const tradeErrorState: PartialDerivedSwapInfo = {
   nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '0'),
 }
 
+const insufficientGasBalanceState: DerivedSwapInfo = {
+  ...emptySwapInfo,
+  currencyAmounts: {
+    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(DAI, '1000'),
+    [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(ETH, '2'),
+  },
+  currencyBalances: {
+    [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(DAI, '10000'),
+    [CurrencyField.OUTPUT]: CurrencyAmount.fromRawAmount(ETH, '0'),
+  },
+  currencies: {
+    [CurrencyField.INPUT]: DAI,
+    [CurrencyField.OUTPUT]: ETH,
+  },
+  exactCurrencyField: CurrencyField.INPUT,
+  trade: { loading: false, error: undefined, trade: null },
+  nativeCurrencyBalance: CurrencyAmount.fromRawAmount(ETH, '0'),
+}
+
 const mockTranslate = jest.fn()
 
 describe(getSwapWarnings, () => {
   it('catches incomplete form errors', async () => {
-    const warnings = getSwapWarnings(mockTranslate, partialSwapState)
+    const warnings = getSwapWarnings(mockTranslate, account, swapState, undefined)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
-    const warnings = getSwapWarnings(mockTranslate, insufficientBalanceState)
+    const warnings = getSwapWarnings(mockTranslate, account, insufficientBalanceState, undefined)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.InsufficientFunds)
   })
 
-  // TODO: Add back test for insufficient funds for gas
+  it('catches insufficient gas errors', () => {
+    const warnings = getSwapWarnings(mockTranslate, account, insufficientGasBalanceState, '100')
+    expect(
+      warnings.find((warning) => warning.type === WarningLabel.InsufficientGasFunds)
+    ).toBeTruthy()
+  })
 
   it('catches multiple errors', () => {
     const incompleteAndInsufficientBalanceState = {
-      ...partialSwapState,
+      ...swapState,
       currencyAmounts: {
-        ...partialSwapState.currencyAmounts,
+        ...swapState.currencyAmounts,
         [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '30000'),
       },
     }
 
-    const warnings = getSwapWarnings(mockTranslate, incompleteAndInsufficientBalanceState)
+    const warnings = getSwapWarnings(mockTranslate, account, incompleteAndInsufficientBalanceState)
     expect(warnings.length).toBe(2)
   })
 
   it('catches errors returned by the routing api', () => {
-    const warnings = getSwapWarnings(mockTranslate, tradeErrorState)
+    const warnings = getSwapWarnings(mockTranslate, account, tradeErrorState)
     expect(warnings.find((warning) => warning.type === WarningLabel.SwapRouterError)).toBeTruthy()
   })
 })

@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { useMemo } from 'react'
 import { TFunction } from 'react-i18next'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'src/components/modals/types'
 import { ChainId } from 'src/constants/chains'
@@ -7,12 +8,7 @@ import { CurrencyField } from 'src/features/transactions/transactionState/transa
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { currencyAddress } from 'src/utils/currencyId'
 
-export type PartialDerivedTransferInfo = Pick<
-  DerivedTransferInfo,
-  'currencyBalances' | 'currencyAmounts' | 'recipient' | 'currencyIn' | 'nftIn' | 'chainId'
->
-
-export function getTransferWarnings(t: TFunction, derivedTransferInfo: PartialDerivedTransferInfo) {
+export function getTransferWarnings(t: TFunction, derivedTransferInfo: DerivedTransferInfo) {
   const { currencyBalances, currencyAmounts, recipient, currencyIn, nftIn, chainId } =
     derivedTransferInfo
 
@@ -52,7 +48,15 @@ export function getTransferWarnings(t: TFunction, derivedTransferInfo: PartialDe
     })
   }
 
+  // TODO: Add warning for insufficient gas for transfer
+
   return warnings
+}
+
+export function useTransferWarnings(t: TFunction, derivedTransferInfo: DerivedTransferInfo) {
+  return useMemo(() => {
+    return getTransferWarnings(t, derivedTransferInfo)
+  }, [derivedTransferInfo, t])
 }
 
 const checkIsMissingRequiredParams = (

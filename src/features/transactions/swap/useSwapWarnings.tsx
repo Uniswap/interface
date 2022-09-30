@@ -1,29 +1,25 @@
-import { Percent } from '@uniswap/sdk-core'
+import { CurrencyAmount, NativeCurrency, Percent } from '@uniswap/sdk-core'
+import { useMemo } from 'react'
 import { TFunction } from 'react-i18next'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'src/components/modals/types'
 import { SWAP_NO_ROUTE_ERROR } from 'src/features/routing/routingApi'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { formatPriceImpact } from 'src/utils/format'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
 const PRICE_IMPACT_THRESHOLD_HIGH = new Percent(5, 100) // 5%
 
-export type PartialDerivedSwapInfo = Pick<
-  DerivedSwapInfo,
-  | 'currencyBalances'
-  | 'currencyAmounts'
-  | 'currencies'
-  | 'exactCurrencyField'
-  | 'trade'
-  | 'nativeCurrencyBalance'
-> & {
-  account?: Account
-}
-
-export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
-  const { account, currencyBalances, currencyAmounts, currencies, trade } = state
+export function getSwapWarnings(
+  t: TFunction,
+  account: Account,
+  derivedSwapInfo: DerivedSwapInfo,
+  gasFee?: string
+) {
+  const { currencyBalances, currencyAmounts, currencies, trade, nativeCurrencyBalance } =
+    derivedSwapInfo
 
   const warnings: Warning[] = []
   const priceImpact = trade.trade?.priceImpact
@@ -73,10 +69,36 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
     }
   }
 
-  // TODO: add error for insufficient funds for gas
+  // insufficient funds for gas
+  const nativeAmountIn = currencyAmountIn?.currency.isNative
+    ? (currencyAmountIn as CurrencyAmount<NativeCurrency>)
+    : undefined
+  const hasGasFunds = hasSufficientFundsIncludingGas({
+    transactionAmount: nativeAmountIn,
+    gasFee,
+    nativeCurrencyBalance,
+  })
+  if (
+    // if input balance is already insufficient for swap, don't show balance warning for gas
+    !swapBalanceInsufficient &&
+    nativeCurrencyBalance &&
+    !hasGasFunds
+  ) {
+    warnings.push({
+      type: WarningLabel.InsufficientGasFunds,
+      severity: WarningSeverity.Medium,
+      action: WarningAction.DisableSubmit,
+      title: t('Not enough {{ nativeCurrency }} to pay network fee', {
+        nativeCurrency: nativeCurrencyBalance.currency.symbol,
+      }),
+      message: t('Network fees are paid in the native token. Buy more {{ nativeCurrency }}.', {
+        nativeCurrency: nativeCurrencyBalance.currency.symbol,
+      }),
+    })
+  }
 
   // swap form is missing input, output fields
-  if (formIncomplete(state)) {
+  if (formIncomplete(derivedSwapInfo)) {
     warnings.push({
       type: WarningLabel.FormIncomplete,
       severity: WarningSeverity.None,
@@ -117,8 +139,19 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
   return warnings
 }
 
-const formIncomplete = (state: PartialDerivedSwapInfo) => {
-  const { currencyAmounts, currencies, exactCurrencyField } = state
+export function useSwapWarnings(
+  t: TFunction,
+  account: Account,
+  derivedSwapInfo: DerivedSwapInfo,
+  gasFee?: string
+) {
+  return useMemo(() => {
+    return getSwapWarnings(t, account, derivedSwapInfo, gasFee)
+  }, [account, derivedSwapInfo, t, gasFee])
+}
+
+const formIncomplete = (derivedSwapInfo: DerivedSwapInfo) => {
+  const { currencyAmounts, currencies, exactCurrencyField } = derivedSwapInfo
 
   if (
     !currencies[CurrencyField.INPUT] ||

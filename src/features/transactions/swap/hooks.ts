@@ -3,7 +3,6 @@ import { SwapRouter } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, NativeCurrency, Percent, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20 } from 'src/abis/types'
@@ -31,7 +30,6 @@ import { usePermitSignature } from 'src/features/transactions/permit/usePermitSi
 import { swapActions } from 'src/features/transactions/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
 import { getWrapType, isWrapAction, sumGasFees } from 'src/features/transactions/swap/utils'
-import { getSwapWarnings } from 'src/features/transactions/swap/validate'
 import {
   getWethContract,
   tokenWrapActions,
@@ -97,7 +95,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   } = state
 
   const activeAccount = useActiveAccount()
-  const { t } = useTranslation()
 
   const currencyIn = useCurrency(
     currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn?.address) : undefined
@@ -234,27 +231,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tokenOutBalance,
   ])
 
-  const warnings = useMemo(() => {
-    return getSwapWarnings(t, {
-      account: activeAccount ?? undefined,
-      currencyAmounts,
-      currencyBalances,
-      exactCurrencyField,
-      currencies,
-      trade,
-      nativeCurrencyBalance: nativeInBalance,
-    })
-  }, [
-    activeAccount,
-    currencies,
-    currencyAmounts,
-    currencyBalances,
-    exactCurrencyField,
-    nativeInBalance,
-    t,
-    trade,
-  ])
-
   return useMemo(() => {
     return {
       chainId,
@@ -274,7 +250,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       nativeCurrencyBalance: nativeInBalance,
       selectingCurrencyField,
       txId,
-      warnings,
     }
   }, [
     chainId,
@@ -291,7 +266,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     selectingCurrencyField,
     trade,
     txId,
-    warnings,
     wrapType,
   ])
 }

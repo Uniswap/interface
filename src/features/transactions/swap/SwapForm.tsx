@@ -13,7 +13,7 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { LaserLoader } from 'src/components/loading/LaserLoader'
-import { WarningAction, WarningSeverity } from 'src/components/modals/types'
+import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { useUSDCPrice, useUSDCValue } from 'src/features/routing/useUSDCPrice'
@@ -39,11 +39,12 @@ interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
   onNext: () => void
   derivedSwapInfo: DerivedSwapInfo
+  warnings: Warning[]
 }
 
 export const ARROW_SIZE = 44
 
-export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
+export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFormProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -59,7 +60,6 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     trade,
     wrapType,
     isUSDInput = false,
-    warnings,
   } = derivedSwapInfo
 
   const {

@@ -2,17 +2,35 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'src/components/modals/types'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
+import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import {
-  getTransferWarnings,
-  PartialDerivedTransferInfo,
-} from 'src/features/transactions/transfer/validate'
+import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
+import { getTransferWarnings } from 'src/features/transactions/transfer/useTransferWarnings'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
-const partialTransferState: PartialDerivedTransferInfo = {
+const emptyTransferInfo: Pick<
+  DerivedTransferInfo,
+  'currencyTypes' | 'currencies' | 'formattedAmounts' | 'exactAmountToken' | 'exactCurrencyField'
+> = {
+  currencyTypes: {
+    [CurrencyField.INPUT]: AssetType.Currency,
+  },
+  currencies: {
+    [CurrencyField.INPUT]: undefined,
+  },
+  formattedAmounts: {
+    [CurrencyField.INPUT]: '1000000',
+  },
+  // these numbers don't really match up but that's ok
+  exactAmountToken: '10000',
+  exactCurrencyField: CurrencyField.INPUT,
+}
+
+const transferState: DerivedTransferInfo = {
+  ...emptyTransferInfo,
   currencyAmounts: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '10000'),
   },
@@ -24,7 +42,8 @@ const partialTransferState: PartialDerivedTransferInfo = {
   nftIn: undefined,
 }
 
-const partialTransferState2: PartialDerivedTransferInfo = {
+const transferState2: DerivedTransferInfo = {
+  ...emptyTransferInfo,
   currencyAmounts: {
     [CurrencyField.INPUT]: undefined,
   },
@@ -44,7 +63,11 @@ const mockNFT = {
   asset_contract: { address: '0xNFTAddress' },
 } as NFTAsset.Asset
 
-const transferNFT: PartialDerivedTransferInfo = {
+const transferNFT: DerivedTransferInfo = {
+  ...emptyTransferInfo,
+  currencyTypes: {
+    [CurrencyField.INPUT]: AssetType.ERC721,
+  },
   currencyAmounts: {
     [CurrencyField.INPUT]: undefined,
   },
@@ -57,7 +80,8 @@ const transferNFT: PartialDerivedTransferInfo = {
   nftIn: mockNFT,
 }
 
-const transferCurrency: PartialDerivedTransferInfo = {
+const transferCurrency: DerivedTransferInfo = {
+  ...emptyTransferInfo,
   currencyAmounts: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '1000'),
   },
@@ -70,7 +94,8 @@ const transferCurrency: PartialDerivedTransferInfo = {
   nftIn: undefined,
 }
 
-const insufficientBalanceState: PartialDerivedTransferInfo = {
+const insufficientBalanceState: DerivedTransferInfo = {
+  ...emptyTransferInfo,
   currencyAmounts: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '10000'),
   },
@@ -97,13 +122,13 @@ describe(getTransferWarnings, () => {
   })
 
   it('catches incomplete form errors: no recipient', async () => {
-    const warnings = getTransferWarnings(mockTranslate, partialTransferState)
+    const warnings = getTransferWarnings(mockTranslate, transferState)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches incomplete form errors: no amount', async () => {
-    const warnings = getTransferWarnings(mockTranslate, partialTransferState2)
+    const warnings = getTransferWarnings(mockTranslate, transferState2)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
   })
@@ -116,9 +141,9 @@ describe(getTransferWarnings, () => {
 
   it('catches multiple errors', () => {
     const incompleteAndInsufficientBalanceState = {
-      ...partialTransferState,
+      ...transferState,
       currencyAmounts: {
-        ...partialTransferState.currencyAmounts,
+        ...transferState.currencyAmounts,
         [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '30000'),
       },
     }

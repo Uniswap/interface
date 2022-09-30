@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { WarningAction, WarningSeverity } from 'src/components/modals/types'
+import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/types'
 import WarningModal from 'src/components/modals/WarningModal'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
@@ -28,6 +28,7 @@ interface SwapFormProps {
   approveTxRequest?: providers.TransactionRequest
   txRequest?: providers.TransactionRequest
   totalGasFee?: string
+  warnings: Warning[]
 }
 
 export function SwapReview({
@@ -37,6 +38,7 @@ export function SwapReview({
   approveTxRequest,
   txRequest,
   totalGasFee,
+  warnings,
 }: SwapFormProps) {
   const { t } = useTranslation()
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -50,11 +52,9 @@ export function SwapReview({
     trade: { trade: trade },
     wrapType,
     isUSDInput = false,
-    warnings,
     txId,
   } = derivedSwapInfo
 
-  // TODO: add gas fee warnings here
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
   const { onAcceptTrade, acceptedTrade } = useAcceptedTrade(trade)

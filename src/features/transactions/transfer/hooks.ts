@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
@@ -17,7 +16,6 @@ import {
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { transferTokenActions } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransferTokenParams } from 'src/features/transactions/transfer/useTransferTransactionRequest'
-import { getTransferWarnings } from 'src/features/transactions/transfer/validate'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
@@ -42,7 +40,6 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     isUSDInput,
     txId,
   } = state
-  const { t } = useTranslation()
 
   const activeAccount = useActiveAccount()
   const chainId = tradeableAsset?.chainId
@@ -95,20 +92,6 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     }),
     [currencyIn, nativeInBalance, tokenInBalance]
   )
-
-  const warnings = useMemo(
-    () =>
-      getTransferWarnings(t, {
-        currencyBalances,
-        currencyAmounts,
-        recipient,
-        currencyIn: currencyIn ?? undefined,
-        nftIn,
-        chainId,
-      }),
-    [chainId, currencyAmounts, currencyBalances, currencyIn, nftIn, recipient, t]
-  )
-
   return useMemo(
     () => ({
       currencies,
@@ -126,7 +109,6 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
       },
       isUSDInput,
       recipient,
-      warnings,
       txId,
     }),
     [
@@ -142,7 +124,6 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
       recipient,
       tradeableAsset?.type,
       txId,
-      warnings,
     ]
   )
 }

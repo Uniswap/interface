@@ -19,6 +19,7 @@ import {
   createOnSelectRecipient,
   createOnToggleShowRecipientSelector,
 } from 'src/features/transactions/transfer/utils'
+import { useTransferWarnings } from 'src/features/transactions/transfer/useTransferWarnings'
 
 interface TransferFormProps {
   prefilledState?: TransactionState
@@ -43,6 +44,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
   const transferTxWithGasSettings = useMemo(() => {
     return gasFeeInfo ? { ...txRequest, ...gasFeeInfo.params } : txRequest
   }, [gasFeeInfo, txRequest])
+  const warnings = useTransferWarnings(t, derivedTransferInfo)
 
   return (
     <TransactionFlow
@@ -69,6 +71,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
       }
       totalGasFee={gasFeeInfo?.gasFee}
       txRequest={transferTxWithGasSettings}
+      warnings={warnings}
       onClose={onClose}
     />
   )
