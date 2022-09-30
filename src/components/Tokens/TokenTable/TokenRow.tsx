@@ -7,7 +7,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, TimePeriod } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
@@ -35,7 +35,6 @@ import {
 } from '../state'
 import { useTokenLogoURI } from '../TokenDetails/ChartSection'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
-import { DISPLAYS } from './TimeSelector'
 
 const Cell = styled.div`
   display: flex;
@@ -329,13 +328,6 @@ export const LogoContainer = styled.div`
   display: flex;
 `
 
-/* formatting for volume with timeframe header display */
-function getHeaderDisplay(method: string, timeframe: TimePeriod): string {
-  if (method === TokenSortMethod.VOLUME || method === TokenSortMethod.PERCENT_CHANGE)
-    return `${DISPLAYS[timeframe]} ${method}`
-  return method
-}
-
 /* Get singular header cell for header row */
 function HeaderCell({
   category,
@@ -348,7 +340,6 @@ function HeaderCell({
   const sortAscending = useAtomValue(sortAscendingAtom)
   const handleSortCategory = useSetSortMethod(category)
   const sortMethod = useAtomValue(sortMethodAtom)
-  const timeframe = useAtomValue(filterTimeAtom)
 
   if (sortMethod === category) {
     return (
@@ -360,7 +351,7 @@ function HeaderCell({
             <ArrowDown size={20} strokeWidth={1.8} color={theme.accentActive} />
           )}
         </SortArrowCell>
-        {getHeaderDisplay(category, timeframe)}
+        {category}
       </HeaderCellWrapper>
     )
   }
@@ -370,11 +361,11 @@ function HeaderCell({
         <SortArrowCell>
           <ArrowUp size={14} visibility="hidden" />
         </SortArrowCell>
-        {getHeaderDisplay(category, timeframe)}
+        {category}
       </HeaderCellWrapper>
     )
   }
-  return <HeaderCellWrapper>{getHeaderDisplay(category, timeframe)}</HeaderCellWrapper>
+  return <HeaderCellWrapper>{category}</HeaderCellWrapper>
 }
 
 /* Token Row: skeleton row component */

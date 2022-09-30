@@ -8,7 +8,7 @@ export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
 export const filterStringAtom = atomWithReset<string>('')
 export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
-export const sortMethodAtom = atom<TokenSortMethod>(TokenSortMethod.TOTAL_VALUE_LOCKED)
+export const sortMethodAtom = atom<TokenSortMethod>(TokenSortMethod.VOLUME)
 export const sortAscendingAtom = atom<boolean>(false)
 
 /* for favoriting tokens */
