@@ -216,7 +216,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
                   parseCustomSlippage((rawSlippage / 100).toFixed(2))
                 }}
                 onChange={(e) => parseCustomSlippage(e.target.value)}
-                color={!slippageInputIsValid ? 'red' : ''}
+                // color={!slippageInputIsValid ? 'red' : ''}
               />
               %
             </RowBetween>

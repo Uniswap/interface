@@ -1,4 +1,6 @@
 import { Fraction, JSBI, Pair } from '@teleswap/sdk'
+import GoBack from 'assets/svg/goBack.svg'
+import BoBackBolder from 'assets/svg/goBackBolder.svg'
 import Bn from 'bignumber.js'
 import { ButtonPrimary } from 'components/Button'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -21,9 +23,6 @@ import styled from 'styled-components'
 import { client } from 'utils/apolloClient'
 import { currencyId } from 'utils/currencyId'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
-
-import GoBack from 'assets/svg/goBack.svg'
-import BoBackBolder from 'assets/svg/goBackBolder.svg'
 
 import { useDerivedMintInfo, useMintActionHandlers } from '../../state/mint/hooks'
 
@@ -247,6 +246,7 @@ export default function LiquidityDetail() {
                 name
                 derivedETH
               }
+              stable
               reserve0
               reserve1
               reserveUSD
@@ -335,6 +335,22 @@ export default function LiquidityDetail() {
             >
               {currencyA?.symbol?.toUpperCase()}-{currencyB?.symbol?.toUpperCase()}
             </Text>
+            <Box
+              className="text-small"
+              alignItems="flex-end"
+              sx={{
+                height: '2rem',
+                display: 'flex',
+                alignItems: 'flex-end',
+                fontFamily: 'Poppins',
+                fontStyle: 'normal',
+                color: '#FFFFFF',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {fullInfoPair ? (fullInfoPair.stable ? 'Stable' : 'Volatile') : ''}
+            </Box>
             {/* commented because of merge conflict - By Frank 0929 PR44 */}
           </Flex>
           <Flex sx={{ flexDirection: isMobile ? 'column' : 'row', gap: '0.8rem', a: { height: '1.5rem' } }}>

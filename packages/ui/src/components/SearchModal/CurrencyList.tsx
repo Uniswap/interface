@@ -188,7 +188,6 @@ export default function CurrencyList({
         )
       })
     ) {
-      console.log(Currency.ETHER)
       formatted.unshift(Currency.ETHER)
     }
     /*  if (breakIndex !== undefined) {

@@ -182,7 +182,6 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           !inputName ||
           !outputName
         ) {
-          console.log('tradeTemp lack key', tradeTemp)
           return
         }
         const decimal = tradeTemp?.inputAmount?.token?.decimals

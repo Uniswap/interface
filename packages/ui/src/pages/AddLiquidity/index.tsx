@@ -622,7 +622,8 @@ export default function AddLiquidity() {
             value={formattedAmounts[Field.CURRENCY_A]}
             onUserInput={onFieldAInput}
             onMax={() => {
-              onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+              if (maxAmounts[Field.CURRENCY_A] && maxAmounts[Field.CURRENCY_A]?.toExact() !== '0')
+                onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
             }}
             onCurrencySelect={handleCurrencyASelect}
             showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
@@ -654,7 +655,8 @@ export default function AddLiquidity() {
             onUserInput={onFieldBInput}
             onCurrencySelect={handleCurrencyBSelect}
             onMax={() => {
-              onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+              if (maxAmounts[Field.CURRENCY_B] && maxAmounts[Field.CURRENCY_B]?.toExact() !== '0')
+                onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
             }}
             showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
             currency={currencies[Field.CURRENCY_B]}
@@ -888,7 +890,7 @@ export default function AddLiquidity() {
                 )}
               <ButtonError
                 className="title"
-                sx={{ backgroundColor: '#CCCCCC!important', border: 'unset!important', fontWeight: '400!important' }}
+                sx={{ border: 'unset!important', fontWeight: '400!important' }}
                 onClick={() => {
                   expertMode ? onAdd() : setShowConfirm(true)
                 }}

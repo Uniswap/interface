@@ -131,10 +131,10 @@ const TopPoolsGrid = styled(Box)`
   background-color: rgba(25, 36, 47, 1);
   padding: 1.5rem;
   display: grid;
-  grid-template-columns: 1fr 5fr 3fr 5fr;
+  grid-template-columns: 1fr 5fr 2.5fr 5fr 4fr;
   grid-template-rows: repeat(40px);
   grid-row-gap: 1rem;
-  grid-column-gap: ${() => (isMobile ? '0px' : '1rem')};
+  grid-column-gap: ${() => (isMobile ? '0px' : '0.75rem')};
   grid-auto-flow: row;
   justify-items: flex-start;
   align-items: center;
@@ -317,18 +317,21 @@ export default function Liquidity() {
               id
               trackedReserveETH
               token0 {
+                decimals
                 id
                 symbol
                 name
                 derivedETH
               }
               token1 {
+                decimals
                 id
                 symbol
                 name
                 derivedETH
               }
               reserve0
+              stable
               reserve1
               reserveUSD
               totalSupply
@@ -532,58 +535,11 @@ export default function Liquidity() {
             <TopPoolsGrid className="text">
               <HeaderItem>#</HeaderItem>
               <HeaderItem>Pools</HeaderItem>
+              <HeaderItem>Pair Mode</HeaderItem>
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem>
               {pools.map((v2Pair, index) => {
-                return (
-                  <>
-                    <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>
-                    <Box
-                      key={`${v2Pair.id}-2`}
-                      sx={{ textAlign: 'center', width: '10rem', display: 'flex', justifyContent: 'flex-start' }}
-                    >
-                      <Flex sx={{ gap: isMobile ? '0.25rem' : '1rem', width: '8rem' }}>
-                        <DoubleCurrencyLogoHorizontal currency0={v2Pair.token0} currency1={v2Pair.token1} />
-                        <Text
-                          sx={{
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            width: 'min-content',
-                            minWidth: isMobile ? '7rem' : 'min-content',
-                            textAlign: 'left'
-                          }}
-                        >
-                          {v2Pair.token0?.symbol?.toUpperCase()}-{v2Pair.token1?.symbol?.toUpperCase()}
-                        </Text>
-                      </Flex>
-                    </Box>
-                    <Box key={`${v2Pair.id}-3`}>
-                      {ethPrice
-                        ? new Bn(v2Pair.trackedReserveETH)
-                            .multipliedBy(ethPrice)
-                            .decimalPlaces(4, Bn.ROUND_HALF_UP)
-                            .toString()
-                        : '-'}
-                      &nbsp; $
-                    </Box>
-                    <Box
-                      key={`${v2Pair.id}-4`}
-                      sx={{ display: 'flex', justifyContent: 'flex-end', width: 'max-content', justifySelf: 'end' }}
-                    >
-                      <ButtonPrimary
-                        className="text-small"
-                        style={{ display: 'inline-block !important', whiteSpace: 'nowrap' }}
-                        padding=".3rem"
-                        borderRadius=".5rem"
-                        as={Link}
-                        to={`/add/${v2Pair.token0.id}/${v2Pair.token1.id}`}
-                      >
-                        Provide Liquidity
-                      </ButtonPrimary>
-                    </Box>
-                  </>
-                )
+                return <TopPairRow v2Pair={v2Pair} key={v2Pair.id} index={index} ethPrice={ethPrice} />
               })}
             </TopPoolsGrid>
             {/*  <AutoColumn justify={'center'} gap="md">
@@ -724,6 +680,59 @@ function Table() {
     </Flex>
   )
 } */
+
+function TopPairRow({ v2Pair, index, ethPrice }: { v2Pair: any; index: number; ethPrice?: Bn }) {
+  return (
+    <>
+      <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>
+      <Box
+        key={`${v2Pair.id}-2`}
+        sx={{ textAlign: 'center', width: '10rem', display: 'flex', justifyContent: 'flex-start' }}
+      >
+        <Flex sx={{ gap: isMobile ? '0.25rem' : '0.25rem', width: '8rem' }}>
+          <DoubleCurrencyLogoHorizontal currency0={v2Pair.token0} currency1={v2Pair.token1} />
+          <Text
+            sx={{
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              width: 'min-content',
+              minWidth: isMobile ? '7rem' : 'min-content',
+              textAlign: 'left'
+            }}
+          >
+            {v2Pair.token0?.symbol?.toUpperCase()}-{v2Pair.token1?.symbol?.toUpperCase()}
+          </Text>
+        </Flex>
+      </Box>
+      <Box key={`${v2Pair.id}-3`}>{v2Pair.stable ? 'Stable' : 'Volatile'}</Box>
+      <Box key={`${v2Pair.id}-3`}>
+        {ethPrice
+          ? new Bn(v2Pair.trackedReserveETH).multipliedBy(ethPrice).decimalPlaces(4, Bn.ROUND_HALF_UP).toString()
+          : '-'}
+        &nbsp; $
+      </Box>
+      <Box
+        key={`${v2Pair.id}-4`}
+        sx={{ display: 'flex', justifyContent: 'flex-end', width: 'max-content', justifySelf: 'end' }}
+      >
+        {/*    <ButtonPrimary
+      className="text-small"
+      style={{ display: 'inline-block !important', whiteSpace: 'nowrap' }}
+      padding=".3rem"
+      borderRadius=".5rem"
+      as={Link}
+      to={`/add/${v2Pair.token0.id}/${v2Pair.token1.id}`}
+    >
+      Provide Liquidity
+    </ButtonPrimary> */}
+        <StyledLink as={Link} to={`/add/${v2Pair.token0.id}/${v2Pair.token1.id}/${v2Pair.stable}`}>
+          Provide Liquidity
+        </StyledLink>
+      </Box>
+    </>
+  )
+}
 
 const range = (len) => {
   const arr: number[] = []
