@@ -34,6 +34,7 @@ import { useInfiniteQuery, useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 
+import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
 
@@ -252,62 +253,66 @@ export const ProfilePage = () => {
       paddingRight={{ sm: '0', md: '72' }}
       paddingTop={{ sm: '16', md: '40' }}
     >
-      <Row alignItems="flex-start" position="relative">
-        <FilterSidebar SortDropdown={SortWalletAssetsDropdown} />
+      {walletAssets.length === 0 ? (
+        <EmptyWalletContent />
+      ) : (
+        <Row alignItems="flex-start" position="relative">
+          <FilterSidebar SortDropdown={SortWalletAssetsDropdown} />
 
-        {(!isMobile || !isFiltersExpanded) && (
-          <Column width="full">
-            <ProfileAccountDetails />
-            <AnimatedBox
-              paddingLeft={isFiltersExpanded ? '24' : '16'}
-              flexShrink="0"
-              style={{
-                transform: gridX.to((x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`),
-                width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
-              }}
-            >
-              <Row gap="8" flexWrap="nowrap">
-                <FilterButton
-                  isMobile={isMobile}
-                  isFiltersExpanded={isFiltersExpanded}
-                  results={displayAssets.length}
-                  onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-                />
-                {!isMobile && <SortDropdown dropDownOptions={sortDropDownOptions} />}
-                <CollectionSearch searchText={searchText} setSearchText={setSearchText} />
-                <SelectAllButton />
-              </Row>
-              <Row>
-                <CollectionFiltersRow
-                  collections={walletCollections}
-                  collectionFilters={collectionFilters}
-                  setCollectionFilters={setCollectionFilters}
-                  clearCollectionFilters={clearCollectionFilters}
-                />
-              </Row>
-              <InfiniteScroll
-                next={fetchNextPage}
-                hasMore={hasNextPage ?? false}
-                loader={
-                  hasNextPage ? (
-                    <Center>
-                      <LoadingSparkle />
-                    </Center>
-                  ) : null
-                }
-                dataLength={displayAssets.length}
-                style={{ overflow: 'unset' }}
+          {(!isMobile || !isFiltersExpanded) && (
+            <Column width="full">
+              <ProfileAccountDetails />
+              <AnimatedBox
+                paddingLeft={isFiltersExpanded ? '24' : '16'}
+                flexShrink="0"
+                style={{
+                  transform: gridX.to((x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`),
+                  width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
+                }}
               >
-                <div className={assetList}>
-                  {displayAssets && displayAssets.length
-                    ? displayAssets.map((asset, index) => <WalletAssetDisplay asset={asset} key={index} />)
-                    : null}
-                </div>
-              </InfiniteScroll>
-            </AnimatedBox>
-          </Column>
-        )}
-      </Row>
+                <Row gap="8" flexWrap="nowrap">
+                  <FilterButton
+                    isMobile={isMobile}
+                    isFiltersExpanded={isFiltersExpanded}
+                    results={displayAssets.length}
+                    onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                  />
+                  {!isMobile && <SortDropdown dropDownOptions={sortDropDownOptions} />}
+                  <CollectionSearch searchText={searchText} setSearchText={setSearchText} />
+                  <SelectAllButton />
+                </Row>
+                <Row>
+                  <CollectionFiltersRow
+                    collections={walletCollections}
+                    collectionFilters={collectionFilters}
+                    setCollectionFilters={setCollectionFilters}
+                    clearCollectionFilters={clearCollectionFilters}
+                  />
+                </Row>
+                <InfiniteScroll
+                  next={fetchNextPage}
+                  hasMore={hasNextPage ?? false}
+                  loader={
+                    hasNextPage ? (
+                      <Center>
+                        <LoadingSparkle />
+                      </Center>
+                    ) : null
+                  }
+                  dataLength={displayAssets.length}
+                  style={{ overflow: 'unset' }}
+                >
+                  <div className={assetList}>
+                    {displayAssets && displayAssets.length
+                      ? displayAssets.map((asset, index) => <WalletAssetDisplay asset={asset} key={index} />)
+                      : null}
+                  </div>
+                </InfiniteScroll>
+              </AnimatedBox>
+            </Column>
+          )}
+        </Row>
+      )}
       {sellAssets.length > 0 && (
         <Row
           display={{ sm: 'flex', md: 'none' }}
