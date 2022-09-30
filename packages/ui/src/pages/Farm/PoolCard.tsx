@@ -315,7 +315,13 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
           <TYPE.green01
             marginLeft={isMobile ? 'auto' : 32}
             fontSize={14}
-            onClick={() => history.push(`/add/${currency0?.address}/${currency1?.address}`)}
+            onClick={() =>
+              history.push(
+                `/add/${currency0?.address}/${currency1?.address}/${
+                  poolInfo.stakingAsset.isLpToken && poolInfo.stakingAsset.isStable
+                }`
+              )
+            }
             style={{ cursor: 'pointer' }}
           >
             Get {poolInfo?.stakingAsset.name}
