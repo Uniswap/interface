@@ -7,7 +7,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
 import { Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
-import { useSpring } from 'react-spring/web'
+import { useSpring } from 'react-spring'
 
 import * as styles from './SelectPage.css'
 
@@ -35,7 +35,7 @@ export const FilterSidebar = ({ SortDropdown }: { SortDropdown: () => JSX.Elemen
       height={{ sm: 'full', md: 'auto' }}
       zIndex={{ sm: '3', md: 'auto' }}
       display={isFiltersExpanded ? 'flex' : 'none'}
-      style={{ transform: sidebarX.interpolate((x) => `translateX(${x}px)`) }}
+      style={{ transform: sidebarX.to((x) => `translateX(${x}px)`) }}
     >
       <Box
         paddingTop={{ sm: '24', md: '0' }}

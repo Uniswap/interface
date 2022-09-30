@@ -9,7 +9,7 @@ import { GenieCollection } from 'nft/types'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useSpring } from 'react-spring/web'
+import { useSpring } from 'react-spring'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
@@ -107,8 +107,8 @@ const Collection = () => {
               {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
               <AnimatedBox
                 style={{
-                  transform: gridX.interpolate((x) => `translate(${x as number}px)`),
-                  width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
+                  transform: gridX.to((x) => `translate(${x as number}px)`),
+                  width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
                 }}
               >
                 {isActivityToggled

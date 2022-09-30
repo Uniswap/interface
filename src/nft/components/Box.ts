@@ -40,7 +40,10 @@ export const Box = React.forwardRef<HTMLElement, Props>(({ as = 'div', className
   })
 })
 
-export const AnimatedBox = animated(Box)
+// We get this error around the codebase: https://github.com/microsoft/TypeScript/issues/34933
+// so you see ts-ignore almost everywhere this component is used
+// since we are going to deprecate vanilla-extract, this will be `any` for now
+export const AnimatedBox: any = animated(Box) as any
 
 export type BoxProps = Parameters<typeof Box>[0]
 
