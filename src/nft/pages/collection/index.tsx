@@ -8,7 +8,7 @@ import { GenieCollection } from 'nft/types'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useSpring } from 'react-spring/web'
+import { useSpring } from 'react-spring'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324

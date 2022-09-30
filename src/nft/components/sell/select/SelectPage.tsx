@@ -32,7 +32,7 @@ import { Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useReducer, us
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import { useSpring } from 'react-spring/web'
+import { useSpring } from 'react-spring'
 
 import * as styles from './SelectPage.css'
 

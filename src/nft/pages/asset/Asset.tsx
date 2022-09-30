@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useQuery } from 'react-query'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useSpring } from 'react-spring/web'
+import { useSpring } from 'react-spring'
 
 import { MouseoverTooltip } from '../../../components/Tooltip/index'
 import { AnimatedBox, Box } from '../../components/Box'
