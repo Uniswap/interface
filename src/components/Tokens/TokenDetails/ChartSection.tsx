@@ -11,6 +11,7 @@ import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import useCurrencyLogoURIs, { getTokenLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import styled from 'styled-components/macro'
+import { textFadeIn } from 'theme/animations'
 import { isAddress } from 'utils'
 
 import { useIsFavorited, useToggleFavorite } from '../state'
@@ -42,6 +43,7 @@ export const TokenNameCell = styled.div`
   font-size: 20px;
   line-height: 28px;
   align-items: center;
+  ${textFadeIn}
 `
 const TokenSymbol = styled.span`
   text-transform: uppercase;
