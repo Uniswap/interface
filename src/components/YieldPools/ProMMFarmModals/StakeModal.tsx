@@ -7,13 +7,14 @@ import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
+import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import Checkbox from 'components/CheckBox'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import HoverDropdown from 'components/HoverDropdown'
 import Modal from 'components/Modal'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { VERSION } from 'constants/v2'
 import { useToken } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
@@ -39,12 +40,21 @@ const generateCommonCSS = (isUnstake: boolean) => {
   `
 }
 
+const DropdownIcon = styled(DropdownSVG)`
+  transition: transform 300ms;
+  color: ${({ theme }) => theme.text};
+  &:hover {
+    transform: rotate(180deg);
+  }
+`
+
 const ScrollContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: 240px;
 
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 
   /* width */
@@ -156,10 +166,12 @@ const PositionRow = ({
       )}
       {type === 'stake' && (
         <Flex justifyContent="flex-end" sx={{ gap: '4px' }} alignItems="center" fontSize="12px">
-          <HoverDropdown
-            placement="right"
-            content={formatDollarAmount(availableUSD)}
-            dropdownContent={
+          {formatDollarAmount(availableUSD)}
+          <MouseoverTooltip
+            noArrow
+            placement="bottom"
+            width="fit-content"
+            text={
               <>
                 <Flex alignItems="center">
                   <CurrencyLogo currency={positionAvailable?.amount0.currency} size="16px" />
@@ -175,15 +187,19 @@ const PositionRow = ({
                 </Flex>
               </>
             }
-          />
+          >
+            <DropdownIcon />
+          </MouseoverTooltip>
         </Flex>
       )}
       {(type === 'unstake' || above768) && (
         <Flex justifyContent="flex-end" sx={{ gap: '4px' }} alignItems="center" fontSize="12px">
-          <HoverDropdown
-            placement="right"
-            content={formatDollarAmount(usd)}
-            dropdownContent={
+          {formatDollarAmount(usd)}
+          <MouseoverTooltip
+            noArrow
+            placement="bottom"
+            width="fit-content"
+            text={
               <>
                 <Flex alignItems="center">
                   <CurrencyLogo currency={positionStake?.amount0.currency} size="16px" />
@@ -199,7 +215,9 @@ const PositionRow = ({
                 </Flex>
               </>
             }
-          />
+          >
+            <DropdownIcon />
+          </MouseoverTooltip>
         </Flex>
       )}
 
