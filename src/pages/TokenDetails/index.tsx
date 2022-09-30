@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { formatToDecimal } from 'analytics/utils'
 import {
@@ -21,7 +21,7 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
-import { isCelo, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { isCelo, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
 import { useTokenQuery } from 'graphql/data/Token'
@@ -99,10 +99,10 @@ export default function TokenDetails() {
   const { tokenAddress: tokenAddressParam, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
   const chainId = CHAIN_NAME_TO_CHAIN_ID[validateUrlChainParam(chainName)]
   let tokenAddress = tokenAddressParam
-  let nativeCurrency
+  let nativeCurrency: NativeCurrency | Token | undefined
   if (tokenAddressParam === 'NATIVE') {
     nativeCurrency = nativeOnChain(chainId)
-    tokenAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address?.toLowerCase()
+    tokenAddress = nativeCurrency.wrapped.address
   }
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
@@ -152,7 +152,10 @@ export default function TokenDetails() {
   const { chainId: connectedChainId, account } = useWeb3React()
 
   // TODO: consider updating useTokenBalance to work with just address/chain to avoid using Token data structure here
-  const balanceValue = useTokenBalance(account, new Token(chainId, tokenAddress ?? '', 18))
+  const balanceValue = useTokenBalance(
+    account,
+    useMemo(() => new Token(chainId, tokenAddress ?? '', 18), [chainId, tokenAddress])
+  )
   const balance = balanceValue ? formatToDecimal(balanceValue, Math.min(balanceValue.currency.decimals, 6)) : undefined
   const balanceUsdValue = useStablecoinValue(balanceValue)?.toFixed(2)
   const balanceUsd = balanceUsdValue ? parseFloat(balanceUsdValue) : undefined
@@ -188,11 +191,18 @@ export default function TokenDetails() {
       })
     : null
 
-  const defaultWidgetToken =
-    nativeCurrency ??
-    (token?.address && token.symbol && token.name
-      ? new Token(CHAIN_NAME_TO_CHAIN_ID[currentChainName], token.address, 18, token.symbol, token.name)
-      : undefined)
+  const widgetToken = useMemo(() => {
+    const currentChainId = CHAIN_NAME_TO_CHAIN_ID[currentChainName]
+    // The widget is not yet configured to use Celo.
+    if (isCelo(chainId) || isCelo(currentChainId)) return undefined
+
+    return (
+      nativeCurrency ??
+      (token?.address && token.symbol && token.name
+        ? new Token(currentChainId, token.address, 18, token.symbol, token.name)
+        : undefined)
+    )
+  }, [chainId, currentChainName, nativeCurrency, token?.address, token?.name, token?.symbol])
 
   return (
     <TokenDetailsLayout>
@@ -219,7 +229,7 @@ export default function TokenDetails() {
             <AddressSection address={token.address ?? ''} />
           </LeftPanel>
           <RightPanel>
-            <Widget defaultToken={!isCelo(chainId) ? defaultWidgetToken : undefined} onReviewSwapClick={onReviewSwap} />
+            <Widget defaultToken={widgetToken} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address ?? ''} warning={tokenWarning} />}
             <BalanceSummary address={token.address ?? ''} balance={balance} balanceUsd={balanceUsd} />
           </RightPanel>
