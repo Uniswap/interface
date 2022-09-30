@@ -339,7 +339,7 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
           <TYPE.green01
             fontSize={13}
             onClick={() => setMobileActionExpansion((prevState) => !prevState)}
-            display="flex"
+            style={{ cursor: 'pointer', display: 'flex' }}
           >
             Details
             {/* {!isMobileActionExpanded ? <ArrowDown width="0.9rem" /> : <ArrowUp width="0.9rem" />} */}
