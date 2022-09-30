@@ -82,15 +82,6 @@ const ArrowContainer = styled.div`
   height: 100%;
 `
 
-const SwapOutputWrapper = styled.div<{ redesignFlag: boolean }>`
-  ${({ redesignFlag }) =>
-    redesignFlag &&
-    css`
-      background-color: ${({ theme }) => theme.backgroundModule};
-      border-radius: 12px;
-    `}
-`
-
 const InputWrapper = styled.div<{ redesignFlag: boolean }>`
   position: relative;
   visibility: ${({ redesignFlag }) => !redesignFlag && 'none'};
@@ -105,10 +96,10 @@ const InputWrapper = styled.div<{ redesignFlag: boolean }>`
       line-height: 20px;
       font-weight: 500;
     `}
+
   &:before {
-    background-color: none;
     background-size: 100%;
-    border-radius: 12px;
+    border-radius: inherit;
 
     position: absolute;
     top: 0;
@@ -118,9 +109,16 @@ const InputWrapper = styled.div<{ redesignFlag: boolean }>`
     height: 100%;
     content: '';
   }
+
   &:hover:before {
     background-color: ${({ theme }) => theme.stateOverlayHover};
   }
+`
+
+const OutputInputWrapper = styled(InputWrapper)`
+  border-bottom: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundSurface}`};
+  border-bottom-left-radius: ${({ redesignFlag }) => redesignFlag && '0'};
+  border-bottom-right-radius: ${({ redesignFlag }) => redesignFlag && '0'};
 `
 
 export function getIsValidSwapQuote(
@@ -629,59 +627,57 @@ export default function Swap() {
               </div>
               <div>
                 <AutoColumn gap={redesignFlagEnabled ? '12px' : '8px'}>
-                  <SwapOutputWrapper redesignFlag={redesignFlagEnabled}>
-                    <InputWrapper redesignFlag={redesignFlagEnabled}>
-                      <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
-                        <SwapCurrencyInputPanel
-                          value={formattedAmounts[Field.OUTPUT]}
-                          onUserInput={handleTypeOutput}
-                          label={
-                            independentField === Field.INPUT && !showWrap ? (
-                              <Trans>To (at least)</Trans>
-                            ) : (
-                              <Trans>To</Trans>
-                            )
-                          }
-                          showMaxButton={false}
-                          hideBalance={false}
-                          fiatValue={fiatValueOutput ?? undefined}
-                          priceImpact={stablecoinPriceImpact}
-                          currency={currencies[Field.OUTPUT] ?? null}
-                          onCurrencySelect={handleOutputSelect}
-                          otherCurrency={currencies[Field.INPUT]}
-                          showCommonBases={true}
-                          id={SectionName.CURRENCY_OUTPUT_PANEL}
-                          loading={independentField === Field.INPUT && routeIsSyncing}
-                        />
-                      </Trace>
-
-                      {recipient !== null && !showWrap ? (
-                        <>
-                          <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                            <ArrowWrapper clickable={false} redesignFlag={redesignFlagEnabled}>
-                              <ArrowDown size="16" color={theme.deprecated_text2} />
-                            </ArrowWrapper>
-                            <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                              <Trans>- Remove recipient</Trans>
-                            </LinkStyledButton>
-                          </AutoRow>
-                          <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                        </>
-                      ) : null}
-
-                      {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
-                    </InputWrapper>
-                    {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
-                      <SwapDetailsDropdown
-                        trade={trade}
-                        syncing={routeIsSyncing}
-                        loading={routeIsLoading}
-                        showInverted={showInverted}
-                        setShowInverted={setShowInverted}
-                        allowedSlippage={allowedSlippage}
+                  <OutputInputWrapper redesignFlag={redesignFlagEnabled}>
+                    <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
+                      <SwapCurrencyInputPanel
+                        value={formattedAmounts[Field.OUTPUT]}
+                        onUserInput={handleTypeOutput}
+                        label={
+                          independentField === Field.INPUT && !showWrap ? (
+                            <Trans>To (at least)</Trans>
+                          ) : (
+                            <Trans>To</Trans>
+                          )
+                        }
+                        showMaxButton={false}
+                        hideBalance={false}
+                        fiatValue={fiatValueOutput ?? undefined}
+                        priceImpact={stablecoinPriceImpact}
+                        currency={currencies[Field.OUTPUT] ?? null}
+                        onCurrencySelect={handleOutputSelect}
+                        otherCurrency={currencies[Field.INPUT]}
+                        showCommonBases={true}
+                        id={SectionName.CURRENCY_OUTPUT_PANEL}
+                        loading={independentField === Field.INPUT && routeIsSyncing}
                       />
-                    )}
-                  </SwapOutputWrapper>
+                    </Trace>
+
+                    {recipient !== null && !showWrap ? (
+                      <>
+                        <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                          <ArrowWrapper clickable={false} redesignFlag={redesignFlagEnabled}>
+                            <ArrowDown size="16" color={theme.deprecated_text2} />
+                          </ArrowWrapper>
+                          <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                            <Trans>- Remove recipient</Trans>
+                          </LinkStyledButton>
+                        </AutoRow>
+                        <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                      </>
+                    ) : null}
+
+                    {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
+                  </OutputInputWrapper>
+                  {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
+                    <SwapDetailsDropdown
+                      trade={trade}
+                      syncing={routeIsSyncing}
+                      loading={routeIsLoading}
+                      showInverted={showInverted}
+                      setShowInverted={setShowInverted}
+                      allowedSlippage={allowedSlippage}
+                    />
+                  )}
                   <div>
                     {swapIsUnsupported ? (
                       <ButtonPrimary disabled={true}>
