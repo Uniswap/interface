@@ -7,12 +7,12 @@ import { AlertOctagon, AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
-const BodyRow = styled.div<{ redesignFlag?: boolean }>`
-  color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.textPrimary : theme.black)};
+const BodyRow = styled.div<{ $redesignFlag?: boolean }>`
+  color: ${({ theme, $redesignFlag }) => ($redesignFlag ? theme.textPrimary : theme.black)};
   font-size: 12px;
-  font-weight: ${({ redesignFlag }) => redesignFlag && '400'};
-  font-size: ${({ redesignFlag }) => (redesignFlag ? '14px' : '12px')};
-  line-height: ${({ redesignFlag }) => redesignFlag && '20px'};
+  font-weight: ${({ $redesignFlag }) => $redesignFlag && '400'};
+  font-size: ${({ $redesignFlag }) => ($redesignFlag ? '14px' : '12px')};
+  line-height: ${({ $redesignFlag }) => $redesignFlag && '20px'};
 `
 const CautionOctagon = styled(AlertOctagon)`
   color: ${({ theme }) => theme.deprecated_black};
@@ -67,7 +67,7 @@ export function ChainConnectivityWarning() {
           <Trans>Network Warning</Trans>
         </TitleText>
       </TitleRow>
-      <BodyRow redesignFlag={redesignFlag}>
+      <BodyRow $redesignFlag={redesignFlag}>
         {chainId === SupportedChainId.MAINNET ? (
           <Trans>You may have lost your network connection.</Trans>
         ) : (
