@@ -148,6 +148,7 @@ export default function App() {
                 )}
               />
               <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+              <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
               <Route exact path="/add/:currencyIdA/:currencyIdB/:stable" component={RedirectDuplicateTokenIds} />
               <Route
                 exact
