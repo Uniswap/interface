@@ -1,3 +1,4 @@
+export * from './asset'
 export * from './buildActivityAsset'
 export * from './buildSellObject'
 export * from './calcPoolPrice'

@@ -132,18 +132,27 @@ function toContractInput(token: PrefetchedTopToken) {
   }
 }
 
-// Map of key: ${chain} + ${address} and value: TopToken object.
+// Map of key: ${HistoryDuration} and value: another Map, of key:${chain} + ${address} and value: TopToken object.
 // Acts as a local cache.
-const tokensWithPriceHistoryCache: Record<string, TopToken> = {}
 
-const checkIfAllTokensCached = (tokens: PrefetchedTopToken[]) => {
+const tokensWithPriceHistoryCache: Record<HistoryDuration, Record<string, TopToken>> = {
+  DAY: {},
+  HOUR: {},
+  MAX: {},
+  MONTH: {},
+  WEEK: {},
+  YEAR: {},
+  '%future added value': {},
+}
+
+const checkIfAllTokensCached = (duration: HistoryDuration, tokens: PrefetchedTopToken[]) => {
   let everyTokenInCache = true
   const cachedTokens: TopToken[] = []
 
   const checkCache = (token: PrefetchedTopToken) => {
     const tokenCacheKey = !!token ? `${token.chain}${token.address}` : ''
-    if (tokenCacheKey in tokensWithPriceHistoryCache) {
-      cachedTokens.push(tokensWithPriceHistoryCache[tokenCacheKey])
+    if (tokenCacheKey in tokensWithPriceHistoryCache[duration]) {
+      cachedTokens.push(tokensWithPriceHistoryCache[duration][tokenCacheKey])
       return true
     } else {
       everyTokenInCache = false
@@ -203,8 +212,9 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
         .toPromise()
         .then((data) => {
           if (data?.tokens) {
+            const priceHistoryCacheForCurrentDuration = tokensWithPriceHistoryCache[duration]
             data.tokens.map((token) =>
-              !!token ? (tokensWithPriceHistoryCache[`${token.chain}${token.address}`] = token) : null
+              !!token ? (priceHistoryCacheForCurrentDuration[`${token.chain}${token.address}`] = token) : null
             )
             appendingTokens ? setTokens([...(tokens ?? []), ...data.tokens]) : setTokens([...data.tokens])
             setLoading(false)
@@ -225,7 +235,10 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 
   // Reset count when filters are changed
   useLayoutEffect(() => {
-    const { everyTokenInCache, cachedTokens } = checkIfAllTokensCached(prefetchedSelectedTokensWithoutPriceHistory)
+    const { everyTokenInCache, cachedTokens } = checkIfAllTokensCached(
+      duration,
+      prefetchedSelectedTokensWithoutPriceHistory
+    )
     if (everyTokenInCache) {
       setTokens(cachedTokens)
       setLoading(false)
@@ -236,7 +249,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
       const contracts = prefetchedSelectedTokensWithoutPriceHistory.slice(0, PAGE_SIZE).map(toContractInput)
       loadTokensWithPriceHistory({ contracts, appendingTokens: false, page: 0 })
     }
-  }, [loadTokensWithPriceHistory, prefetchedSelectedTokensWithoutPriceHistory])
+  }, [loadTokensWithPriceHistory, prefetchedSelectedTokensWithoutPriceHistory, duration])
 
   return {
     loading,

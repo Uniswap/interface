@@ -33,6 +33,7 @@ const themeContractValues = {
     genieBlue: '',
     elevation: '',
     tooltip: '',
+    deep: '',
   },
 }
 

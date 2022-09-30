@@ -323,6 +323,7 @@ const Bag = () => {
                 {unavailableAssets.length > 0 && (
                   <UnavailableAssetsHeaderRow
                     assets={unavailableAssets}
+                    usdPrice={fetchedPriceData}
                     clearUnavailableAssets={() => setItemsInBag(availableItems)}
                     didOpenUnavailableAssets={didOpenUnavailableAssets}
                     setDidOpenUnavailableAssets={setDidOpenUnavailableAssets}
@@ -333,6 +334,7 @@ const Bag = () => {
                   <PriceChangeBagRow
                     key={asset.id}
                     asset={asset}
+                    usdPrice={fetchedPriceData}
                     markAssetAsReviewed={markAssetAsReviewed}
                     top={index === 0 && unavailableAssets.length === 0}
                     isMobile={isMobile}
@@ -344,6 +346,7 @@ const Bag = () => {
                   <BagRow
                     key={asset.id}
                     asset={asset}
+                    usdPrice={fetchedPriceData}
                     removeAsset={removeAssetFromBag}
                     showRemove={true}
                     isMobile={isMobile}
