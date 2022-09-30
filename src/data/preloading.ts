@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useRelayEnvironment } from 'react-relay'
-import { loadQuery, QueryOptionsOffline } from 'react-relay-offline'
+import { loadQuery, OfflineLoadQuery, QueryOptionsOffline } from 'react-relay-offline'
 import { GraphQLTaggedNode, OperationType } from 'relay-runtime'
 import { AppStackParamList } from 'src/app/navigation/types'
 import { ChainId } from 'src/constants/chains'
@@ -41,22 +41,24 @@ export const preloadMapping = {
 export function useQueryLoader<Q extends OperationType>(query: GraphQLTaggedNode) {
   const environment = useRelayEnvironment()
 
-  const { preloadedQuery, load, dispose } = useMemo(() => {
+  const { preloadedQuery, load } = useMemo(() => {
     const _preloadedQuery = loadQuery<Q>()
 
     return {
-      preloadedQuery: _preloadedQuery,
+      preloadedQuery: _preloadedQuery as OfflineLoadQuery,
       load: (variables: Q['variables'], options: QueryOptionsOffline) =>
         _preloadedQuery.next(environment, query, variables, options),
-      dispose: () => _preloadedQuery.dispose(),
     }
   }, [environment, query])
 
-  useEffect(() => {
-    return () => {
-      dispose()
-    }
-  })
+  // TODO: this is causing problems on re-render
+  // Figure out how to handle disposing queries
+  // Relay's impl https://github.com/facebook/relay/blob/74630847604f1685e7f64669eaa89b190cf4ce31/packages/react-relay/relay-hooks/useQueryLoader.js#L65
+  // useEffect(() => {
+  //   return () => {
+  //     preloadedQuery.dispose()
+  //   }
+  // }, [preloadedQuery])
 
   return { preloadedQuery, load }
 }

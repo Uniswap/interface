@@ -5,14 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, Route, TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
-import { PreloadedQuery } from 'react-relay'
+import { OfflineLoadQuery } from 'react-relay-offline'
 import { useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList, TabNavigationProp } from 'src/app/navigation/types'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import ExploreTokensTab from 'src/components/explore/tabs/ExploreTokensTab'
 import ExploreWalletsTab from 'src/components/explore/tabs/ExploreWalletsTab'
-import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
@@ -27,7 +26,7 @@ const TOKENS_KEY = 'tokens'
 const WALLETS_KEY = 'wallets'
 
 type Props = {
-  exploreTokensTabQueryRef: PreloadedQuery<ExploreTokensTabQuery> | null | undefined
+  exploreTokensTabQueryRef: OfflineLoadQuery
 } & NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
 
 export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
@@ -83,9 +82,7 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
                 <Loading repeat={4} type="token" />
               </Flex>
             }>
-            {exploreTokensTabQueryRef && (
-              <ExploreTokensTab listRef={listRef} queryRef={exploreTokensTabQueryRef} />
-            )}
+            <ExploreTokensTab listRef={listRef} queryRef={exploreTokensTabQueryRef} />
           </Suspense>
         )
       case WALLETS_KEY:

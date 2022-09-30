@@ -3,11 +3,10 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import { selectionAsync } from 'expo-haptics'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { InteractionManager } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { PreloadedQuery, useQueryLoader } from 'react-relay'
+import { OfflineLoadQuery } from 'react-relay-offline'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
@@ -31,6 +30,8 @@ import { exploreTokensTabQuery } from 'src/components/explore/tabs/ExploreTokens
 import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
+import { PollingInterval } from 'src/constants/misc'
+import { Priority, useQueryScheduler } from 'src/data/useQueryScheduler'
 import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -105,16 +106,12 @@ function TabNavigator() {
 
   const dispatch = useAppDispatch()
 
-  const [exploreTokensTabQueryRef, loadExploreTokensTabQuery] =
-    useQueryLoader<ExploreTokensTabQuery>(exploreTokensTabQuery)
-
-  // Preload query for Explore Screen's Tokens Tab after interactions have completed
-  useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
-      // TODO: Support orderBy token sorting and deprecate CoingeckoOrderBy types
-      loadExploreTokensTabQuery({ topTokensOrderBy: 'MARKET_CAP' })
-    })
-  }, [loadExploreTokensTabQuery])
+  const { preloadedQuery: exploreTokensTabQueryRef } = useQueryScheduler<ExploreTokensTabQuery>(
+    Priority.Idle,
+    exploreTokensTabQuery,
+    { topTokensOrderBy: 'MARKET_CAP' },
+    { networkCacheConfig: { poll: PollingInterval.Slow } }
+  )
 
   return (
     <Tab.Navigator
@@ -305,7 +302,7 @@ export function HomeStackNavigator() {
 export function ExploreStackNavigator({
   exploreTokensTabQueryRef,
 }: {
-  exploreTokensTabQueryRef: PreloadedQuery<ExploreTokensTabQuery> | null | undefined
+  exploreTokensTabQueryRef: OfflineLoadQuery
 }) {
   return (
     <ExploreStack.Navigator
@@ -439,7 +436,6 @@ export function AppStackNavigator() {
     </AppStack.Navigator>
   )
 }
-
 const navOptions = {
   noHeader: { headerShown: false },
   presentationModal: { presentation: 'modal' },
