@@ -261,10 +261,8 @@ export const SelectPage = () => {
             paddingLeft={isFiltersExpanded ? '24' : '16'}
             flexShrink="0"
             style={{
-              transform: gridX.interpolate(
-                (x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`
-              ),
-              width: gridWidthOffset.interpolate((x) => `calc(100% - ${x}px)`),
+              transform: gridX.to((x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`),
+              width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
             }}
           >
             <Row gap="8" flexWrap="nowrap">

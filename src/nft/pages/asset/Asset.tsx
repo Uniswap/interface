@@ -182,7 +182,7 @@ const Asset = () => {
     <AnimatedBox
       style={{
         // @ts-ignore
-        width: gridWidthOffset.interpolate((x) => `calc(100% - ${x}px)`),
+        width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
       }}
       className={styles.container}
     >

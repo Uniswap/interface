@@ -105,8 +105,8 @@ const Collection = () => {
             {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
             <AnimatedBox
               style={{
-                transform: gridX.interpolate((x) => `translate(${x as number}px)`),
-                width: gridWidthOffset.interpolate((x) => `calc(100% - ${x as number}px)`),
+                transform: gridX.to((x) => `translate(${x as number}px)`),
+                width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
               }}
             >
               {isActivityToggled
