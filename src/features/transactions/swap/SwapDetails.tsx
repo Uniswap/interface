@@ -44,53 +44,55 @@ export function SwapDetails({
 
   return (
     <TransactionDetails
+      banner={
+        newTradeToAccept ? (
+          <Flex
+            row
+            alignItems="center"
+            backgroundColor="accentActiveSoft"
+            borderRadius="md"
+            flexShrink={1}
+            gap="sm"
+            justifyContent="space-between"
+            p="xs"
+            pl="md">
+            <Flex centered row gap="none">
+              <Text color="accentActive" variant="subheadSmall">
+                {t('New rate')}
+              </Text>
+            </Flex>
+            <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
+              <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
+                <Text
+                  adjustsFontSizeToFit
+                  color="accentActive"
+                  numberOfLines={1}
+                  textAlign="center"
+                  variant="subheadSmall">
+                  {rate}
+                </Text>
+              </TouchableOpacity>
+            </Flex>
+            <Flex centered row gap="none">
+              <Button
+                backgroundColor="accentActive"
+                borderRadius="sm"
+                px="xs"
+                py="xs"
+                onPress={onAcceptTrade}>
+                <Text color="accentTextLightPrimary" variant="smallLabel">
+                  {t('Accept')}
+                </Text>
+              </Button>
+            </Flex>
+          </Flex>
+        ) : null
+      }
       chainId={acceptedTrade.inputAmount.currency.chainId}
       gasFee={gasFee}
       showWarning={warning && !newTradeToAccept}
       warning={warning}
       onShowWarning={onShowWarning}>
-      {newTradeToAccept && (
-        <Flex
-          row
-          alignItems="center"
-          backgroundColor="accentActiveSoft"
-          borderTopEndRadius="lg"
-          borderTopStartRadius="lg"
-          flexShrink={1}
-          gap="sm"
-          justifyContent="space-between"
-          p="xs"
-          pl="md">
-          <Flex centered row gap="none">
-            <Text color="accentActive" variant="subheadSmall">
-              {t('New rate')}
-            </Text>
-          </Flex>
-          <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
-            <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
-              <Text
-                adjustsFontSizeToFit
-                color="accentActive"
-                numberOfLines={1}
-                textAlign="center"
-                variant="subheadSmall">
-                {rate}
-              </Text>
-            </TouchableOpacity>
-          </Flex>
-          <Flex centered row gap="none">
-            <Button
-              backgroundColor="userThemeColor"
-              borderRadius="md"
-              padding="xs"
-              onPress={onAcceptTrade}>
-              <Text color="accentTextLightPrimary" variant="smallLabel">
-                {t('Accept')}
-              </Text>
-            </Button>
-          </Flex>
-        </Flex>
-      )}
       <Flex
         row
         alignItems="center"

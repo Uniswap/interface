@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, ReactNode } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
@@ -17,8 +17,9 @@ import { Theme } from 'src/styles/theme'
 const ALERT_ICONS_SIZE = 18
 
 interface TransactionDetailsProps {
-  chainId: ChainId | undefined
-  gasFee: string | undefined
+  banner?: ReactNode
+  chainId?: ChainId
+  gasFee?: string
   showWarning?: boolean
   warning?: Warning
   onShowWarning?: () => void
@@ -30,6 +31,7 @@ export const TRANSACTION_DETAILS_SPACER: { color: keyof Theme['colors']; width: 
 }
 
 export function TransactionDetails({
+  banner,
   children,
   chainId,
   gasFee,
@@ -42,15 +44,14 @@ export function TransactionDetails({
   const warningColor = getAlertColor(warning?.severity)
 
   return (
-    <Flex backgroundColor="backgroundContainer" borderRadius="lg" gap="none">
+    <Flex gap="xs">
       {showWarning && warning && onShowWarning && (
         <Button onPress={onShowWarning}>
           <Flex
             row
             alignItems="center"
             backgroundColor={warningColor.background}
-            borderTopEndRadius="lg"
-            borderTopStartRadius="lg"
+            borderRadius="md"
             flexGrow={1}
             gap="xs"
             p="sm">
@@ -59,7 +60,7 @@ export function TransactionDetails({
               height={ALERT_ICONS_SIZE}
               width={ALERT_ICONS_SIZE}
             />
-            <Flex flexGrow={1}>
+            <Flex flexGrow={1} py="xxxs">
               <Text color={warningColor.text} variant="subheadSmall">
                 {warning.title}
               </Text>
@@ -72,14 +73,17 @@ export function TransactionDetails({
           </Flex>
         </Button>
       )}
-      {children}
-      <NetworkFee chainId={chainId} gasFee={gasFee} />
-      <Box
-        borderTopColor={TRANSACTION_DETAILS_SPACER.color}
-        borderTopWidth={TRANSACTION_DETAILS_SPACER.width}
-        p="md">
-        <AccountDetails address={userAddress} iconSize={24} />
-      </Box>
+      {!showWarning && banner}
+      <Flex backgroundColor="backgroundContainer" borderRadius="lg" gap="none">
+        {children}
+        <NetworkFee chainId={chainId} gasFee={gasFee} />
+        <Box
+          borderTopColor={TRANSACTION_DETAILS_SPACER.color}
+          borderTopWidth={TRANSACTION_DETAILS_SPACER.width}
+          p="md">
+          <AccountDetails address={userAddress} iconSize={24} />
+        </Box>
+      </Flex>
     </Flex>
   )
 }
