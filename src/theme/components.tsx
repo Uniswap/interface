@@ -2,12 +2,21 @@ import { Trans } from '@lingui/macro'
 import { outboundLink } from 'components/analytics'
 import { MOBILE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import React, { forwardRef, HTMLProps, ReactNode, useCallback, useImperativeHandle, useState } from 'react'
+import React, {
+  forwardRef,
+  HTMLProps,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useImperativeHandle,
+  useState,
+} from 'react'
 import {
   ArrowLeft,
   CheckCircle,
   Copy,
   ExternalLink as ExternalLinkIconFeather,
+  Info,
   Link as LinkIconFeather,
   Trash,
   X,
@@ -243,11 +252,27 @@ const CopiedTooltip = styled.div<{ isCopyContractTooltip?: boolean }>`
   font-size: 12px;
 `
 
-function Tooltip({ isCopyContractTooltip, tooltipX }: { isCopyContractTooltip: boolean; tooltipX?: number }) {
+enum TooltipDirection {
+  BOTTOM = 0,
+  RIGHT = -90,
+  TOP = 180,
+  LEFT = 90,
+}
+
+function Tooltip({
+  children,
+  isCopyContractTooltip,
+  tooltipX,
+  from = TooltipDirection.BOTTOM,
+}: PropsWithChildren<{
+  isCopyContractTooltip?: boolean
+  tooltipX?: number
+  from?: TooltipDirection
+}>) {
   return (
     <ToolTipWrapper isCopyContractTooltip={isCopyContractTooltip} tooltipX={tooltipX}>
-      <StyledTooltipTriangle />
-      <CopiedTooltip isCopyContractTooltip={isCopyContractTooltip}>Copied!</CopiedTooltip>
+      <StyledTooltipTriangle transform={`rotate(${from} 0 0)`} />
+      <CopiedTooltip isCopyContractTooltip={isCopyContractTooltip}>{children}</CopiedTooltip>
     </ToolTipWrapper>
   )
 }
@@ -268,7 +293,7 @@ export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
   return (
     <CopyIconWrapper onClick={copy}>
       <CopyIcon />
-      {isCopied && <Tooltip isCopyContractTooltip={false} />}
+      {isCopied && <Tooltip isCopyContractTooltip={false}>Copied!</Tooltip>}
     </CopyIconWrapper>
   )
 }
@@ -322,8 +347,51 @@ export function CopyContractAddress({ address }: { address: string }) {
         <TruncatedAddress>{truncated}</TruncatedAddress>
         <Copy size={14} />
       </CopyAddressRow>
-      {isCopied && <Tooltip isCopyContractTooltip tooltipX={tooltipX} />}
+      {isCopied && (
+        <Tooltip isCopyContractTooltip tooltipX={tooltipX}>
+          Copied!
+        </Tooltip>
+      )}
     </CopyContractAddressWrapper>
+  )
+}
+
+const InfoIconTipRow = styled.div<{ isClicked: boolean }>`
+  ${ClickableStyle}
+  color: inherit;
+  stroke: inherit;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  gap: 6px;
+  ${({ theme, isClicked }) => isClicked && `opacity: ${theme.opacity.click} !important`}
+`
+
+const InfoIconTipWrapper = styled.div`
+  align-items: center;
+  justify-content: center;
+  display: flex;
+`
+
+export function InfoIconTip({
+  text,
+  color,
+  backgroundColor,
+}: {
+  text: string
+  color?: Color
+  backgroundColor?: Color
+}) {
+  const [isHover, setIsHover] = useState(false)
+
+  return (
+    <InfoIconTipWrapper onMouseOver={() => setIsHover(true)} onMouseOut={() => setIsHover(false)}>
+      <InfoIconTipRow isClicked={isHover}>
+        <Info size={14} />
+      </InfoIconTipRow>
+      {true && <Tooltip>{text}</Tooltip>}
+    </InfoIconTipWrapper>
   )
 }
 

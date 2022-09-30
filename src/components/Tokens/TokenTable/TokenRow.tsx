@@ -13,8 +13,9 @@ import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
+import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { ClickableStyle } from 'theme'
+import { ClickableStyle, InfoIconTip } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -232,12 +233,14 @@ const SortArrowCell = styled(Cell)`
 `
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
-  ${ClickableStyle}
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
   height: 100%;
   justify-content: flex-end;
   width: 100%;
+`
+const HeaderCellText = styled(Text)`
+  ${ClickableStyle}
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -349,9 +352,9 @@ function HeaderCell({
   const sortMethod = useAtomValue(sortMethodAtom)
   const timeframe = useAtomValue(filterTimeAtom)
 
-  if (sortMethod === category) {
-    return (
-      <HeaderCellWrapper onClick={handleSortCategory}>
+  return (
+    <HeaderCellWrapper onClick={handleSortCategory}>
+      {sortMethod === category && (
         <SortArrowCell>
           {sortAscending ? (
             <ArrowUp size={14} color={theme.accentActive} />
@@ -359,21 +362,13 @@ function HeaderCell({
             <ArrowDown size={14} color={theme.accentActive} />
           )}
         </SortArrowCell>
-        {getHeaderDisplay(category, timeframe)}
-      </HeaderCellWrapper>
-    )
-  }
-  if (sortable) {
-    return (
-      <HeaderCellWrapper onClick={handleSortCategory}>
-        <SortArrowCell>
-          <ArrowUp size={14} visibility="hidden" />
-        </SortArrowCell>
-        {getHeaderDisplay(category, timeframe)}
-      </HeaderCellWrapper>
-    )
-  }
-  return <HeaderCellWrapper>{getHeaderDisplay(category, timeframe)}</HeaderCellWrapper>
+      )}
+      <HeaderCellText>{getHeaderDisplay(category, timeframe)}</HeaderCellText>
+      <div style={{ position: 'relative' }}>
+        <InfoIconTip text="test" />
+      </div>
+    </HeaderCellWrapper>
+  )
 }
 
 /* Token Row: skeleton row component */
