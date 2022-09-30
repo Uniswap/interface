@@ -67,13 +67,13 @@ function AnimatedInLineChart<T>({
                   fill="none"
                   stroke={lineColor}
                 />
-                {shouldAnimate && (
+                {shouldAnimate && lineLength !== 0 && (
                   <animated.path
                     d={d}
                     strokeWidth={strokeWidth}
                     fill="none"
                     stroke={lineColor}
-                    strokeDashoffset={spring.frame.interpolate((v: unknown) => (v as number) * lineLength)}
+                    strokeDashoffset={spring.frame.to((v) => v * lineLength)}
                     strokeDasharray={lineLength}
                   />
                 )}
