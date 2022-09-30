@@ -81,7 +81,6 @@ export const Input = React.memo(function InnerInput({
         .split('.')
         .map((e, index) => {
           if (index === 0) {
-            console.log(e)
             return e.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
           } else {
             return e
