@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ed578a8e5459fb10b150e53396d95f34>>
+ * @generated SignedSource<<ef5b6494b1a5f3dda64ffca85556fc9e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,10 +15,10 @@ export type ContractInput = {
   address?: string | null;
   chain: Chain;
 };
-export type TokenItemQuery$variables = {
+export type PinnedTokenCardQuery$variables = {
   contracts: ReadonlyArray<ContractInput>;
 };
-export type TokenItemQuery$data = {
+export type PinnedTokenCardQuery$data = {
   readonly tokenProjects: ReadonlyArray<{
     readonly logoUrl: string | null;
     readonly markets: ReadonlyArray<{
@@ -38,9 +38,9 @@ export type TokenItemQuery$data = {
     }>;
   } | null> | null;
 };
-export type TokenItemQuery = {
-  response: TokenItemQuery$data;
-  variables: TokenItemQuery$variables;
+export type PinnedTokenCardQuery = {
+  response: PinnedTokenCardQuery$data;
+  variables: PinnedTokenCardQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -128,7 +128,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "TokenItemQuery",
+    "name": "PinnedTokenCardQuery",
     "selections": [
       {
         "alias": null,
@@ -195,7 +195,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "TokenItemQuery",
+    "name": "PinnedTokenCardQuery",
     "selections": [
       {
         "alias": null,
@@ -260,16 +260,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "01e7f55faf44505e2e0728ac481479b9",
+    "cacheID": "4c9d4cfcb5de88c2f675781ac217dd33",
     "id": null,
     "metadata": {},
-    "name": "TokenItemQuery",
+    "name": "PinnedTokenCardQuery",
     "operationKind": "query",
-    "text": "query TokenItemQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    tokens {\n      chain\n      address\n      symbol\n      id\n    }\n    logoUrl\n    markets(currencies: USD) {\n      price {\n        currency\n        value\n        id\n      }\n      pricePercentChange24h {\n        currency\n        value\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query PinnedTokenCardQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    tokens {\n      chain\n      address\n      symbol\n      id\n    }\n    logoUrl\n    markets(currencies: USD) {\n      price {\n        currency\n        value\n        id\n      }\n      pricePercentChange24h {\n        currency\n        value\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "41621e805f6fc3c1adbf4233afd444c1";
+(node as any).hash = "7f13aa046f39225697b1396122afb3df";
 
 export default node;

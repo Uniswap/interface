@@ -4,7 +4,6 @@ import { biometricSettingsReducer } from 'src/features/biometrics/slice'
 import { blocksReducer } from 'src/features/blocks/blocksSlice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
-import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
 import { ensApi } from 'src/features/ens/api'
 import { experimentsReducer } from 'src/features/experiments/slice'
 import { searchHistoryReducer } from 'src/features/explore/searchHistorySlice'
@@ -22,7 +21,6 @@ import { transactionReducer } from 'src/features/transactions/slice'
 import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 export const rootReducer = combineReducers({
-  [coingeckoApi.reducerPath]: coingeckoApi.reducer,
   [multicall.reducerPath]: multicall.reducer,
   [nftApi.reducerPath]: nftApi.reducer,
   [routingApi.reducerPath]: routingApi.reducer,

@@ -8,7 +8,6 @@ import { rootReducer } from 'src/app/rootReducer'
 import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
-import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
 import { ensApi } from 'src/features/ens/api'
 import { gasApi } from 'src/features/gas/api'
 import { nftApi } from 'src/features/nfts/api'
@@ -37,10 +36,9 @@ export const persistConfig = {
     'notifications',
     'experiments',
     ensApi.reducerPath,
-    coingeckoApi.reducerPath,
     nftApi.reducerPath,
   ],
-  version: 21,
+  version: 22,
   migrate: createMigrate(migrations),
 }
 
@@ -69,7 +67,6 @@ export const store = configureStore({
       immutableCheck: false,
     }).concat(
       sagaMiddleware,
-      coingeckoApi.middleware,
       nftApi.middleware,
       routingApi.middleware,
       gasApi.middleware,

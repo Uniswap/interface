@@ -5,8 +5,6 @@ export enum Screens {
   Dev = 'Dev',
   Education = 'Education',
   Explore = 'Explore',
-  ExploreTokens = 'ExploreTokens',
-  ExploreFavorites = 'ExploreFavorites',
   Home = 'Home',
   ImportAccount = 'ImportAccount',
   Notifications = 'Notifications',

@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
-import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
+import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/explore/types'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { NFTViewType } from 'src/features/wallet/types'
 import { AccountType, SignerMnemonicAccount } from './accounts/types'

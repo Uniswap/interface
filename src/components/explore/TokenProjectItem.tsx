@@ -9,7 +9,7 @@ import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { ChainId } from 'src/constants/chains'
-import { CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
+import { CoingeckoOrderBy } from 'src/features/explore/types'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 

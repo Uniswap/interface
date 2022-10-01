@@ -305,4 +305,12 @@ export const migrations = {
       experiments: { experiments: {}, featureFlags: {} },
     }
   },
+
+  22: (state: any) => {
+    const newState = { ...state }
+    delete newState.coingeckoApi
+    delete newState.tokens?.watchedTokens
+    delete newState.tokens?.tokenPairs
+    return newState
+  },
 }

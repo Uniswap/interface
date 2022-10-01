@@ -1,7 +1,7 @@
 import { BoxProps } from '@shopify/restyle'
 import React from 'react'
 import { ViewProps } from 'react-native'
-import { TOKEN_ITEM_BOX_MINWIDTH } from 'src/components/explore/TokenItem'
+import { TOKEN_ITEM_BOX_MINWIDTH } from 'src/components/explore/PinnedTokenCard'
 import { Box } from 'src/components/layout'
 import { Theme } from 'src/styles/theme'
 

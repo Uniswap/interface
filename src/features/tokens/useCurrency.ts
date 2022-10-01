@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
-import { useCoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/hooks'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useTokenInfoFromAddress } from 'src/features/tokens/useTokenInfoFromAddress'
 import { currencyIdToChain } from 'src/utils/currencyId'
@@ -32,19 +31,4 @@ export function useCurrency(currencyId?: string): NullUndefined<Currency> {
   if (currencyId === null || currencyId === undefined) return currencyId
   if (weth?.address?.toUpperCase() === currencyId?.toUpperCase()) return weth
   return isNative ? extendedEther : token
-}
-
-// TODO: consider moving this logic to the data backend
-export function useCurrencyIdFromCoingeckoId(coingeckoId?: string): NullUndefined<string> {
-  const { coinIdToCurrencyIds, isLoading } = useCoinIdAndCurrencyIdMappings()
-
-  return useMemo(() => {
-    if (isLoading || !coingeckoId) return undefined
-
-    const currencyIds = coinIdToCurrencyIds[coingeckoId]
-    if (!currencyIds) return undefined
-
-    // always default to mainnet. if mainnet address not provided, then return any
-    return currencyIds[ChainId.Mainnet] ?? Object.values(currencyIds)[0]
-  }, [coinIdToCurrencyIds, coingeckoId, isLoading])
 }

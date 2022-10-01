@@ -17,6 +17,7 @@ import {
   v19Schema,
   v1Schema,
   v20Schema,
+  v21Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -762,5 +763,16 @@ describe('Redux state migrations', () => {
 
     const v21 = migrations[21](v20Stub)
     expect(v21.experiments).toBeDefined()
+  })
+
+  it('migrates from v21 to v22', () => {
+    const v21Stub = {
+      ...v21Schema,
+      coingeckoApi: {},
+    }
+    const v22 = migrations[22](v21Stub)
+    expect(v22.coingeckoApi).toBeUndefined()
+    expect(v22.tokens.watchedTokens).toBeUndefined()
+    expect(v22.tokens.tokenPairs).toBeUndefined()
   })
 })

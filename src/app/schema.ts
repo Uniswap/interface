@@ -3,7 +3,6 @@ import {
   DEFAULT_ACTIVE_LIST_URLS,
   DEFAULT_LIST_OF_LISTS,
 } from 'src/constants/tokenLists/tokenLists'
-import { DEFAULT_WATCHED_TOKENS } from 'src/constants/watchedTokens'
 import { chainListToStateMap } from 'src/features/chains/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { BY_URL_DEFAULT_LISTS } from 'src/features/tokenLists/reducer'
@@ -37,7 +36,7 @@ export const initialSchema = {
     activeListUrls: DEFAULT_ACTIVE_LIST_URLS,
   },
   tokens: {
-    watchedTokens: DEFAULT_WATCHED_TOKENS,
+    watchedTokens: {},
     customTokens: {},
     tokenPairs: {},
     dismissedWarningTokens: {},
@@ -178,6 +177,8 @@ export const v20Schema = { ...v19Schema }
 
 export const v21Schema = { ...v20Schema, experiments: { experiments: {}, featureFlags: {} } }
 
+export const v22Schema = { ...v21Schema }
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v21Schema
+export const getSchema = () => v22Schema

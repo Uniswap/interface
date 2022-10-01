@@ -1,13 +1,10 @@
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
-import { TokenItemBox } from 'src/components/explore/TokenItem'
+import { PinnedTokenCard } from 'src/components/explore/PinnedTokenCard'
 import { AnimatedFlex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-
-import { Screens } from 'src/screens/Screens'
 
 import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
@@ -33,7 +30,7 @@ export function FavoriteTokensCard() {
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<CurrencyId>) => {
-      return <TokenItemBox currencyId={item} isEditing={isEditing} />
+      return <PinnedTokenCard currencyId={item} isEditing={isEditing} />
     },
     [isEditing]
   )
@@ -86,15 +83,5 @@ function HeaderRow({ isEditing, onPress }: { isEditing: boolean; onPress: () => 
 
 export function FavoritesEmptyState() {
   const { t } = useTranslation()
-  const navigation = useExploreStackNavigation()
-
-  return (
-    <BaseCard.EmptyState
-      buttonLabel={t('Explore tokens')}
-      description={t('Pin tokens to monitor their prices.')}
-      onPress={() => {
-        navigation.navigate(Screens.ExploreTokens)
-      }}
-    />
-  )
+  return <BaseCard.EmptyState description={t('Pin tokens to monitor their prices.')} />
 }

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
+import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/explore/types'
 import { Account } from 'src/features/wallet/accounts/types'
 import { NFTViewType } from 'src/features/wallet/types'
 import { areAddressesEqual, getChecksumAddress } from 'src/utils/addresses'

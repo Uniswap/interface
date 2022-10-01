@@ -40,9 +40,7 @@ import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
-import { ExploreFavoritesScreen } from 'src/screens/ExploreFavoritesScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
-import { ExploreTokensScreen } from 'src/screens/ExploreTokensScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { RestoreCloudBackupPinScreen } from 'src/screens/Import/RestoreCloudBackupPinScreen'
@@ -316,8 +314,6 @@ export function ExploreStackNavigator({
         )}
         name={Screens.Explore}
       />
-      <ExploreStack.Screen component={ExploreTokensScreen} name={Screens.ExploreTokens} />
-      <ExploreStack.Screen component={ExploreFavoritesScreen} name={Screens.ExploreFavorites} />
       <ExploreStack.Screen component={UserScreen} name={Screens.User} />
       <ExploreStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
       <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />

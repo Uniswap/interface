@@ -35,8 +35,6 @@ export type HomeStackParamList = {
 
 export type ExploreStackParamList = {
   [Screens.Explore]: undefined
-  [Screens.ExploreTokens]: undefined
-  [Screens.ExploreFavorites]: undefined
   [Screens.WatchedWallets]: undefined
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
   [Screens.User]: { address: string; preloadedQuery: OfflineLoadQuery }
