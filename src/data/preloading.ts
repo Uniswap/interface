@@ -38,18 +38,32 @@ export const preloadMapping = {
   },
 }
 
-export function useQueryLoader<Q extends OperationType>(query: GraphQLTaggedNode) {
+export function useQueryLoader<Q extends OperationType>(
+  query: GraphQLTaggedNode,
+  // Used when queryRef will immediately be passed to `usePreloadedQuery` to avoid race condition
+  initialConfig?: {
+    params: Q['variables']
+    options: QueryOptionsOffline
+  }
+) {
   const environment = useRelayEnvironment()
 
-  const { preloadedQuery, load } = useMemo(() => {
-    const _preloadedQuery = loadQuery<Q>()
+  const queryRef = useMemo(() => {
+    const prefetch = loadQuery<Q>()
 
-    return {
-      preloadedQuery: _preloadedQuery as OfflineLoadQuery,
+    const { preloadedQuery, load } = {
+      preloadedQuery: prefetch as OfflineLoadQuery,
       load: (variables: Q['variables'], options: QueryOptionsOffline) =>
-        _preloadedQuery.next(environment, query, variables, options),
+        prefetch.next(environment, query, variables, options),
     }
-  }, [environment, query])
+
+    // synchronously load query so cache is initialized by time it's used in usePreloadedQuery
+    if (initialConfig) {
+      load(initialConfig.params, initialConfig.options)
+    }
+
+    return { preloadedQuery: preloadedQuery, load: load }
+  }, [environment, initialConfig, query])
 
   // TODO: this is causing problems on re-render
   // Figure out how to handle disposing queries
@@ -60,5 +74,5 @@ export function useQueryLoader<Q extends OperationType>(query: GraphQLTaggedNode
   //   }
   // }, [preloadedQuery])
 
-  return { preloadedQuery, load }
+  return queryRef
 }

@@ -17,7 +17,10 @@ export function useQueryScheduler<Q extends OperationType>(
   params: Q['variables'],
   options: QueryOptionsOffline
 ) {
-  const { preloadedQuery, load } = useQueryLoader<Q>(query)
+  const { preloadedQuery, load } = useQueryLoader<Q>(
+    query,
+    priority === Priority.Immediate ? { params, options } : undefined
+  )
 
   useEffect(() => {
     register(priority, () => load(params, options))
@@ -28,11 +31,11 @@ export function useQueryScheduler<Q extends OperationType>(
 
 function register(priority: Priority, callback: () => any) {
   switch (priority) {
-    case Priority.Immediate:
-      callback()
-      break
     case Priority.Idle:
       InteractionManager.runAfterInteractions(callback)
+      break
+    case Priority.Immediate:
+      // no-op
       break
     default:
       throw new Error('Unsupported priority' + priority)

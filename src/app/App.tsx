@@ -5,6 +5,7 @@ import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
 import { RelayEnvironmentProvider } from 'react-relay'
+import { useRestore } from 'react-relay-offline'
 import { PersistGate } from 'redux-persist/integration/react'
 import { RelayEnvironmentProvider as RelayHooksEnvironmentProvider } from 'relay-hooks'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
@@ -54,6 +55,13 @@ initExperiments()
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark'
+
+  // wait for hydration of persistent data in memory
+  const isRehydrated = useRestore(RelayEnvironment)
+  if (!isRehydrated) {
+    // TODO: improve loading state
+    return null
+  }
 
   return (
     <StrictMode>
