@@ -9,10 +9,7 @@ export enum TimePeriod {
   WEEK,
   MONTH,
   YEAR,
-  ALL,
 }
-
-export type TimePeriodWithoutAll = Exclude<TimePeriod, TimePeriod.ALL>
 
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
@@ -26,8 +23,6 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
       return 'MONTH'
     case TimePeriod.YEAR:
       return 'YEAR'
-    case TimePeriod.ALL:
-      return 'MAX'
   }
 }
 

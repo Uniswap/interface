@@ -1,4 +1,4 @@
-import { TimePeriod, TimePeriodWithoutAll } from 'graphql/data/util'
+import { TimePeriod } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
 import { useRef } from 'react'
@@ -11,7 +11,7 @@ import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
 import FilterOption from './FilterOption'
 
-export const DISPLAYS: Record<TimePeriodWithoutAll, string> = {
+export const DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.HOUR]: '1H',
   [TimePeriod.DAY]: '1D',
   [TimePeriod.WEEK]: '1W',
@@ -19,7 +19,7 @@ export const DISPLAYS: Record<TimePeriodWithoutAll, string> = {
   [TimePeriod.YEAR]: '1Y',
 }
 
-export const ORDERED_TIMES: TimePeriodWithoutAll[] = [
+export const ORDERED_TIMES: TimePeriod[] = [
   TimePeriod.HOUR,
   TimePeriod.DAY,
   TimePeriod.WEEK,

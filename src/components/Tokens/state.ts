@@ -1,5 +1,5 @@
 import { TokenSortMethod } from 'graphql/data/TopTokens'
-import { TimePeriod, TimePeriodWithoutAll } from 'graphql/data/util'
+import { TimePeriod } from 'graphql/data/util'
 import { atom, useAtom } from 'jotai'
 import { atomWithReset, atomWithStorage, useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
@@ -7,7 +7,7 @@ import { useCallback, useMemo } from 'react'
 export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
 export const filterStringAtom = atomWithReset<string>('')
-export const filterTimeAtom = atom<TimePeriodWithoutAll>(TimePeriod.DAY)
+export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
 export const sortMethodAtom = atom<TokenSortMethod>(TokenSortMethod.VOLUME)
 export const sortAscendingAtom = atom<boolean>(false)
 
