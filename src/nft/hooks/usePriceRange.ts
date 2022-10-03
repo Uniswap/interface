@@ -2,25 +2,25 @@ import create from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
 interface SearchHistoryProps {
-  priceLow: string
-  setPriceLow: (priceLow: string) => void
-  priceHigh: string
-  setPriceHigh: (priceLow: string) => void
+  priceRangeLow: string
+  setPriceRangeLow: (priceRangeLow: string) => void
+  priceRangeHigh: string
+  setPriceRangeHigh: (priceRangeHigh: string) => void
 }
 
 export const usePriceRange = create<SearchHistoryProps>()(
   persist(
     devtools((set) => ({
-      priceLow: '',
-      setPriceLow: (priceLow: string) => {
+      priceRangeLow: '',
+      setPriceRangeLow: (priceRangeLow: string) => {
         set(() => {
-          return { priceLow }
+          return { priceRangeLow }
         })
       },
-      priceHigh: '',
-      setPriceHigh: (priceHigh: string) => {
+      priceRangeHigh: '',
+      setPriceRangeHigh: (priceRangeHigh: string) => {
         set(() => {
-          return { priceHigh }
+          return { priceRangeHigh }
         })
       },
     })),

@@ -48,8 +48,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const setSortBy = useCollectionFilters((state) => state.setSortBy)
   const buyNow = useCollectionFilters((state) => state.buyNow)
-  const setLow = usePriceRange((state) => state.setPriceLow)
-  const setHigh = usePriceRange((state) => state.setPriceHigh)
+  const setPriceRangeLow = usePriceRange((state) => state.setPriceRangeLow)
+  const setPriceRangeHigh = usePriceRange((state) => state.setPriceRangeHigh)
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
   const debouncedSearchByNameText = useDebounce(searchByNameText, 500)
@@ -234,14 +234,19 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }, [collectionStats, location])
 
   useEffect(() => {
-    if (collectionNfts && sortBy <= 1 && !minPrice && !maxPrice) {
+    if (collectionNfts && sortBy <= 1) {
       const maxIndex = sortBy === 1 ? 0 : collectionNfts.length - 1
       const minIndex = sortBy === 1 ? collectionNfts.length - 1 : 0
-      const lowPrice = formatWeiToDecimal(collectionNfts[minIndex]?.priceInfo.ETHPrice ?? '')
-      const maxPrice = formatWeiToDecimal(collectionNfts[maxIndex]?.priceInfo.ETHPrice ?? '')
+      const lowValue = formatWeiToDecimal(collectionNfts[minIndex]?.priceInfo.ETHPrice ?? '')
+      const maxValue = formatWeiToDecimal(collectionNfts[maxIndex]?.priceInfo.ETHPrice ?? '')
 
-      setLow(lowPrice)
-      setHigh(maxPrice)
+      if (minPrice === '') {
+        setPriceRangeLow(lowValue)
+      }
+
+      if (maxPrice === '') {
+        setPriceRangeHigh(maxValue)
+      }
     }
   }, [collectionNfts, sortBy])
 

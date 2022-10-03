@@ -8,8 +8,10 @@ import { scrollToTop } from 'nft/utils/scrollToTop'
 import { FormEvent, useEffect, useState } from 'react'
 import { FocusEventHandler } from 'react'
 import { useLocation } from 'react-router-dom'
+import ReactSlider from 'react-slider'
 
 import { TraitsHeader } from './TraitsHeader'
+import * as styles from './PriceRange.css'
 
 export const PriceRange = () => {
   const [placeholderText, setPlaceholderText] = useState('')
@@ -17,8 +19,13 @@ export const PriceRange = () => {
   const setMaxPrice = useCollectionFilters((state) => state.setMaxPrice)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
-  const priceLow = usePriceRange((state) => state.priceLow)
-  const priceHigh = usePriceRange((state) => state.priceHigh)
+  const priceRangeLow = usePriceRange((state) => state.priceRangeLow)
+  const priceRangeHigh = usePriceRange((state) => state.priceRangeHigh)
+  const setPriceRangeLow = usePriceRange((statae) => statae.setPriceRangeLow)
+  const setPriceRangeHigh = usePriceRange((statae) => statae.setPriceRangeHigh)
+  const [prevMinMax, setPrevMinMax] = useState([0, 100])
+  const [minSet, setMinSet] = useState(false)
+  const [maxSet, setMaxSet] = useState(false)
 
   const isMobile = useIsMobile()
 
@@ -27,6 +34,8 @@ export const PriceRange = () => {
   useEffect(() => {
     setMinPrice('')
     setMaxPrice('')
+    setPriceRangeLow('')
+    setPriceRangeHigh('')
   }, [location.pathname, setMinPrice, setMaxPrice])
 
   const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
@@ -41,7 +50,7 @@ export const PriceRange = () => {
 
   return (
     <TraitsHeader title="Price range" showBorderBottom>
-      <Row gap="12" marginTop="12" marginBottom="20" color="textPrimary">
+      <Row gap="12" marginTop="12" color="textPrimary">
         <Row position="relative" style={{ flex: 1 }}>
           <NumericInput
             style={{
@@ -53,11 +62,29 @@ export const PriceRange = () => {
             fontSize="14"
             color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
             backgroundColor="transparent"
-            placeholder={`${priceLow}`}
-            // defaultValue={minPrice}
+            placeholder={`${priceRangeLow}`}
             onChange={(v: FormEvent<HTMLInputElement>) => {
-              scrollToTop()
+              // If a value is manually changed, reset the sliders.
+
+              console.log(v.currentTarget.value)
+              setPrevMinMax([0, 100])
+
+              // set the value of minprice and range for querying
               setMinPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
+              setPriceRangeLow(v.currentTarget.value)
+
+              // If we are updating the min price and the max price has been adjusted via the slider
+              // We need to maintain that min price when we reset
+              if (maxPrice !== '') {
+                setMaxSet(true)
+                setPriceRangeHigh(maxPrice.toFixed(2))
+              }
+
+              // if the user manually inputs a value, we want this value to persist when moving a slider
+              // back to the start state
+              setMinSet(v.currentTarget.value !== '')
+
+              scrollToTop()
             }}
             onFocus={handleFocus}
             value={minPrice}
@@ -76,17 +103,71 @@ export const PriceRange = () => {
             fontSize="14"
             color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
             backgroundColor="transparent"
-            placeholder={priceHigh}
-            defaultValue={maxPrice}
+            placeholder={priceRangeHigh}
             value={maxPrice}
             onChange={(v: FormEvent<HTMLInputElement>) => {
-              scrollToTop()
+              setPrevMinMax([0, 100])
               setMaxPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
+              setPriceRangeHigh(v.currentTarget.value)
+              setMaxSet(v.currentTarget.value !== '')
+
+              if (minPrice !== '') {
+                setMinSet(true)
+                setPriceRangeLow(minPrice.toFixed(2))
+              }
+
+              scrollToTop()
             }}
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
         </Row>
+      </Row>
+      <Row marginBottom="20">
+        <ReactSlider
+          defaultValue={[0, 100]}
+          value={prevMinMax}
+          className={styles.slider}
+          trackClassName={styles.tracker}
+          thumbClassName={styles.thumb}
+          onAfterChange={(minMax) => {
+            const [newMin, newMax] = minMax
+            const [prevMin, prevMax] = prevMinMax
+            const priceRangeHighNumber = parseFloat(priceRangeHigh)
+            const priceRangeLowNumber = parseFloat(priceRangeLow)
+
+            const diff = priceRangeHighNumber - priceRangeLowNumber
+
+            // This logic checks to see if the slider was actually moved
+            // Otherwise we don't want to update the minprice
+            // Similar logic for max
+            if (newMin !== prevMin) {
+              const minChange = newMin / 100
+              const newMinPrice = minChange * diff + priceRangeLowNumber
+
+              setMinPrice(parseFloat(newMinPrice.toFixed(2)))
+            }
+
+            if (newMax !== prevMax) {
+              const maxChange = (100 - newMax) / 100
+              const newMaxPrice = priceRangeHighNumber - maxChange * diff
+
+              setMaxPrice(parseFloat(newMaxPrice.toFixed(2)))
+            }
+
+            // if they move the slider back to the beginning and have NOT manually set a value, reset the minprice.
+            // Similar logic for max
+            if (newMin === 0 && !minSet) {
+              setMinPrice('')
+            }
+            if (newMax === 100 && !maxSet) {
+              setMaxPrice('')
+            }
+
+            // update the previous minMax for future checks
+            setPrevMinMax(minMax)
+          }}
+        />
       </Row>
     </TraitsHeader>
   )
