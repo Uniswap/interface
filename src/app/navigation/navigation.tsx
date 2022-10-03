@@ -3,7 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import { selectionAsync } from 'expo-haptics'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { OfflineLoadQuery } from 'react-relay-offline'
@@ -111,6 +111,12 @@ function TabNavigator() {
     { networkCacheConfig: { poll: PollingInterval.Slow } }
   )
 
+  // important to memoize to avoid the entire explore stack from getting re-rendered on tab switch
+  const ExploreStackNavigatorMemo = useCallback(
+    () => <ExploreStackNavigator exploreTokensTabQueryRef={exploreTokensTabQueryRef} />,
+    [exploreTokensTabQueryRef]
+  )
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -173,9 +179,7 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        children={() => (
-          <ExploreStackNavigator exploreTokensTabQueryRef={exploreTokensTabQueryRef} />
-        )}
+        component={ExploreStackNavigatorMemo}
         name={Tabs.Explore}
         options={{
           tabBarLabel: t('Explore'),
