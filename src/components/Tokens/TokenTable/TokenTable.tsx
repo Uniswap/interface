@@ -22,13 +22,16 @@ const GridContainer = styled.div`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   margin-left: auto;
   margin-right: auto;
-  border-radius: 8px;
+  border-radius: 12px;
   justify-content: center;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
 
 const TokenDataContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   height: 100%;
   width: 100%;
 `

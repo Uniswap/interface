@@ -23,10 +23,10 @@ const SearchInput = styled.input`
   background-position: 12px center;
   background-color: ${({ theme }) => theme.backgroundModule};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1.5px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
   width: min(200px, 100%);
-  font-size: 16px;
+  font-size: 14px;
   padding-left: 40px;
   color: ${({ theme }) => theme.textSecondary};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
