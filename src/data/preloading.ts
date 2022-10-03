@@ -48,7 +48,7 @@ export function useQueryLoader<Q extends OperationType>(
 ) {
   const environment = useRelayEnvironment()
 
-  const queryRef = useMemo(() => {
+  const queryMemo = useMemo(() => {
     const prefetch = loadQuery<Q>()
 
     const { preloadedQuery, load } = {
@@ -62,7 +62,7 @@ export function useQueryLoader<Q extends OperationType>(
       load(initialConfig.params, initialConfig.options)
     }
 
-    return { preloadedQuery: preloadedQuery, load: load }
+    return { preloadedQuery, load }
   }, [environment, initialConfig, query])
 
   // TODO: this is causing problems on re-render
@@ -74,5 +74,5 @@ export function useQueryLoader<Q extends OperationType>(
   //   }
   // }, [preloadedQuery])
 
-  return queryRef
+  return queryMemo
 }

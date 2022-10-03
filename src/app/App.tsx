@@ -59,7 +59,7 @@ function App() {
   // wait for hydration of persistent data in memory
   const isRehydrated = useRestore(RelayEnvironment)
   if (!isRehydrated) {
-    // TODO: improve loading state
+    // TODO: consider using expo splash screen to delay removing the splash screen
     return null
   }
 
