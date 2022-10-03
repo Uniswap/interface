@@ -1,7 +1,8 @@
 import React from 'react'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
-import { CurrencyInfoLogo } from 'src/components/CurrencyLogo/CurrencyInfoLogo'
+import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
@@ -20,6 +21,7 @@ export function TokenBalanceItem({
   onPressToken,
   onPressTokenIn,
 }: TokenBalanceItemProps) {
+  const theme = useAppTheme()
   const { quantity, currencyInfo, relativeChange24 } = portfolioBalance
   const { currency } = currencyInfo
 
@@ -50,7 +52,12 @@ export function TokenBalanceItem({
         flexShrink={1}
         gap="sm"
         overflow="hidden">
-        <CurrencyInfoLogo currencyInfo={currencyInfo} size={36} />
+        <TokenLogo
+          chainId={currency.chainId}
+          size={theme.imageSizes.lg}
+          symbol={currency.symbol}
+          url={currencyInfo.logoUrl ?? undefined}
+        />
         <Flex alignItems="flex-start" flexShrink={1} gap="none">
           <Text ellipsizeMode="tail" numberOfLines={1} variant="subhead">
             {currency.name ?? currency.symbol}

@@ -1,8 +1,9 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlexAlignType, Image, ImageStyle } from 'react-native'
+import { FlexAlignType } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
+import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
@@ -71,18 +72,7 @@ export const TokenProjectItem = ({
                 </Text>
               </Box>
             )}
-            <Image
-              source={{ uri: logoUrl }}
-              style={[
-                tokenLogoStyle,
-                {
-                  backgroundColor: theme.colors.textTertiary,
-                  borderRadius: TOKEN_LOGO_SIZE / 2,
-                  borderColor: theme.colors.backgroundOutline,
-                  borderWidth: THIN_BORDER,
-                },
-              ]}
-            />
+            <TokenLogo size={theme.imageSizes.lg} symbol={symbol} url={logoUrl} />
           </Flex>
           <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
             <Text variant="subhead">{name}</Text>
@@ -136,12 +126,4 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
       </Flex>
     </Flex>
   )
-}
-
-const THIN_BORDER = 0.5
-const TOKEN_LOGO_SIZE = 36
-const tokenLogoStyle: ImageStyle = {
-  width: TOKEN_LOGO_SIZE,
-  height: TOKEN_LOGO_SIZE,
-  resizeMode: 'contain',
 }

@@ -1,7 +1,7 @@
 import { default as React } from 'react'
-import { Image, ImageStyle } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
+import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -19,7 +19,7 @@ type SearchTokenItemProps = {
 
 export function SearchTokenItem({ token }: SearchTokenItemProps) {
   const dispatch = useAppDispatch()
-
+  const theme = useAppTheme()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   const { chainId, address, name, symbol, logoUrl } = token
@@ -41,9 +41,8 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
       onPressIn={() => {
         tokenDetailsNavigation.preload(currencyId)
       }}>
-      <Flex row alignItems="center" gap="xs" px="xs" py="sm">
-        {/* TODO: Handle no logoUrl by showing placeholder icon with token symbol */}
-        {logoUrl && <Image source={{ uri: logoUrl }} style={logoStyle} />}
+      <Flex row alignItems="center" gap="sm" px="xs" py="sm">
+        <TokenLogo size={theme.imageSizes.lg} symbol={symbol} url={logoUrl ?? undefined} />
         <Flex gap="none">
           <Text color="textPrimary" variant="subhead">
             {name}
@@ -55,10 +54,4 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
       </Flex>
     </Button>
   )
-}
-
-export const logoStyle: ImageStyle = {
-  height: 32,
-  resizeMode: 'cover',
-  width: 32,
 }

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
-import { CurrencyInfoLogo } from 'src/components/CurrencyLogo/CurrencyInfoLogo'
+import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Box, Flex } from 'src/components/layout'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
@@ -32,20 +32,17 @@ export function TokenOptionItem({
   onPress,
   tokenWarningLevelMap,
 }: OptionProps) {
-  const { currencyInfo, quantity, balanceUSD } = option
-  const { currency } = currencyInfo
-
   const theme = useAppTheme()
   const { t } = useTranslation()
-
   const [showWarningModal, setShowWarningModal] = useState(false)
+  const [dismissedWarningTokens, dismissTokenWarning] = useDismissTokenWarnings()
 
+  const { currencyInfo, quantity, balanceUSD } = option
+  const { currency } = currencyInfo
   const id = currencyId(currency.wrapped)
 
   const tokenWarningLevel =
     tokenWarningLevelMap?.[currency.chainId]?.[id] ?? TokenWarningLevel.MEDIUM
-
-  const [dismissedWarningTokens, dismissTokenWarning] = useDismissTokenWarnings()
   const dismissed = Boolean(dismissedWarningTokens[currency.chainId]?.[currency.wrapped.address])
 
   const onPressTokenOption = useCallback(() => {
@@ -71,7 +68,12 @@ export function TokenOptionItem({
         onPress={onPressTokenOption}>
         <Flex row alignItems="center" gap="xs" justifyContent="space-between" py="sm">
           <Flex row shrink alignItems="center" gap="sm">
-            <CurrencyInfoLogo currencyInfo={currencyInfo} size={32} />
+            <TokenLogo
+              chainId={currency.chainId}
+              size={theme.imageSizes.lg}
+              symbol={currency.symbol}
+              url={currencyInfo.logoUrl ?? undefined}
+            />
             <Flex shrink alignItems="flex-start" gap="none">
               <Flex centered row gap="xs">
                 <Flex shrink>
