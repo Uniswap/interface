@@ -179,7 +179,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>()
   const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData))
   const maxFetchable = useMemo(
-    () => (!!prefetchedData ? prefetchedSelectedTokensWithoutPriceHistory.length : 100),
+    () => (prefetchedData ? prefetchedSelectedTokensWithoutPriceHistory.length : 100),
     [prefetchedSelectedTokensWithoutPriceHistory, prefetchedData]
   )
 
