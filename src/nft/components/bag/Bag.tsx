@@ -112,14 +112,16 @@ const Bag = () => {
   const removeAssetFromBag = useBag((s) => s.removeAssetFromBag)
   const bagExpanded = useBag((s) => s.bagExpanded)
   const toggleBag = useBag((s) => s.toggleBag)
+  const setTotalEthPrice = useBag((s) => s.setTotalEthPrice)
+  const setTotalUsdPrice = useBag((s) => s.setTotalUsdPrice)
 
   const { address, balance: balanceInEth, provider } = useWalletBalance()
   const isConnected = !!provider && !!address
 
   const { pathname } = useLocation()
-  const isNFTSellPage = pathname.startsWith('/nfts/sell')
+  const isProfilePage = pathname.startsWith('/profile')
   const isNFTPage = pathname.startsWith('/nfts')
-  const shouldShowBag = isNFTPage && !isNFTSellPage
+  const shouldShowBag = isNFTPage && !isProfilePage
   const isMobile = useIsMobile()
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
@@ -299,6 +301,11 @@ const Bag = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactionStateRef.current])
+
+  useEffect(() => {
+    setTotalEthPrice(totalEthPrice)
+    setTotalUsdPrice(totalUsdPrice)
+  }, [totalEthPrice, totalUsdPrice, setTotalEthPrice, setTotalUsdPrice])
 
   const hasAssetsToShow = itemsInBag.length > 0 || unavailableAssets.length > 0
 

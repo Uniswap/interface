@@ -11,7 +11,6 @@ import { TransactionHistoryMenu } from './TransactionMenu'
 const WalletWrapper = styled.div`
   border-radius: 12px;
   width: 320px;
-  max-height: 376px;
   display: flex;
   flex-direction: column;
   font-size: 16px;

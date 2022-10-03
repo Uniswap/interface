@@ -101,7 +101,7 @@ export default function Modal({
   redesignFlag,
   scrollOverlay,
 }: ModalProps) {
-  const fadeTransition = useTransition(isOpen, null, {
+  const fadeTransition = useTransition(isOpen, {
     config: { duration: 200 },
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -122,12 +122,12 @@ export default function Modal({
 
   return (
     <>
-      {fadeTransition.map(
-        ({ item, key, props }) =>
+      {fadeTransition(
+        ({ opacity }, item) =>
           item && (
             <StyledDialogOverlay
-              key={key}
-              style={props}
+              as={AnimatedDialogOverlay}
+              style={{ opacity: opacity.to({ range: [0.0, 1.0], output: [0, 1] }) }}
               onDismiss={onDismiss}
               initialFocusRef={initialFocusRef}
               unstable_lockFocusAcrossFrames={false}

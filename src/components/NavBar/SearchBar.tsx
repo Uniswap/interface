@@ -1,5 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
+import { sendAnalyticsEvent } from 'analytics'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
@@ -92,6 +95,10 @@ export const SearchBar = () => {
   const showCenteredSearchContent =
     !isOpen && phase1Flag !== NftVariant.Enabled && !isMobileOrTablet && searchValue.length === 0
 
+  const navbarSearchEventProperties = {
+    navbar_search_input_text: debouncedSearchValue,
+  }
+
   return (
     <Box position="relative">
       <Box
@@ -122,20 +129,27 @@ export const SearchBar = () => {
               <ChevronLeftIcon />
             </Box>
           </Box>
-          <Box
-            as="input"
-            placeholder={placeholderText}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              !isOpen && toggleOpen()
-              setSearchValue(event.target.value)
-            }}
-            className={`${styles.searchBarInput} ${
-              showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
-            }`}
-            value={searchValue}
-            ref={inputRef}
-            width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}
-          />
+          <TraceEvent
+            events={[Event.onFocus]}
+            name={EventName.NAVBAR_SEARCH_SELECTED}
+            element={ElementName.NAVBAR_SEARCH_INPUT}
+          >
+            <Box
+              as="input"
+              placeholder={placeholderText}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                !isOpen && toggleOpen()
+                setSearchValue(event.target.value)
+              }}
+              onBlur={() => sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)}
+              className={`${styles.searchBarInput} ${
+                showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
+              }`}
+              value={searchValue}
+              ref={inputRef}
+              width={phase1Flag === NftVariant.Enabled || isOpen ? 'full' : '160'}
+            />
+          </TraceEvent>
         </Row>
         <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
           {isOpen && (

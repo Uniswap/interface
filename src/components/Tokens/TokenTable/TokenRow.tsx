@@ -7,7 +7,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, TimePeriod } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
@@ -35,7 +35,6 @@ import {
 } from '../state'
 import { useTokenLogoURI } from '../TokenDetails/ChartSection'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
-import { DISPLAYS } from './TimeSelector'
 
 const Cell = styled.div`
   display: flex;
@@ -50,15 +49,17 @@ const StyledTokenRow = styled.div<{
 }>`
   background-color: transparent;
   display: grid;
-  font-size: 15px;
+  font-size: 16px;
   grid-template-columns: ${({ favoriteTokensEnabled }) =>
     favoriteTokensEnabled ? '1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr' : '1fr 7fr 4fr 4fr 4fr 4fr 5fr'};
-  height: 60px;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
-  padding-top: ${({ first }) => (first ? '4px' : '0px')};
-  padding-bottom: ${({ last }) => (last ? '4px' : '0px')};
+  ${({ first, last }) => css`
+    height: ${first || last ? '72px' : '64px'};
+    padding-top: ${first ? '8px' : '0px'};
+    padding-bottom: ${last ? '8px' : '0px'};
+  `}
   padding-left: 12px;
   padding-right: 12px;
   transition: ${({
@@ -150,7 +151,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   border-color: ${({ theme }) => theme.backgroundOutline};
   border-radius: 8px 8px 0px 0px;
   color: ${({ theme }) => theme.textSecondary};
-  font-size: 12px;
+  font-size: 14px;
   height: 48px;
   line-height: 16px;
   padding: 0px 12px;
@@ -169,6 +170,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
 const ListNumberCell = styled(Cell)<{ header: boolean }>`
   color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
+  font-size: 14px;
   height: ${({ header }) => (header ? '48px' : '60px')};
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -328,13 +330,6 @@ export const LogoContainer = styled.div`
   display: flex;
 `
 
-/* formatting for volume with timeframe header display */
-function getHeaderDisplay(method: string, timeframe: TimePeriod): string {
-  if (method === TokenSortMethod.VOLUME || method === TokenSortMethod.PERCENT_CHANGE)
-    return `${DISPLAYS[timeframe]} ${method}`
-  return method
-}
-
 /* Get singular header cell for header row */
 function HeaderCell({
   category,
@@ -347,19 +342,18 @@ function HeaderCell({
   const sortAscending = useAtomValue(sortAscendingAtom)
   const handleSortCategory = useSetSortMethod(category)
   const sortMethod = useAtomValue(sortMethodAtom)
-  const timeframe = useAtomValue(filterTimeAtom)
 
   if (sortMethod === category) {
     return (
       <HeaderCellWrapper onClick={handleSortCategory}>
         <SortArrowCell>
           {sortAscending ? (
-            <ArrowUp size={14} color={theme.accentActive} />
+            <ArrowUp size={20} strokeWidth={1.8} color={theme.accentActive} />
           ) : (
-            <ArrowDown size={14} color={theme.accentActive} />
+            <ArrowDown size={20} strokeWidth={1.8} color={theme.accentActive} />
           )}
         </SortArrowCell>
-        {getHeaderDisplay(category, timeframe)}
+        {category}
       </HeaderCellWrapper>
     )
   }
@@ -369,11 +363,11 @@ function HeaderCell({
         <SortArrowCell>
           <ArrowUp size={14} visibility="hidden" />
         </SortArrowCell>
-        {getHeaderDisplay(category, timeframe)}
+        {category}
       </HeaderCellWrapper>
     )
   }
-  return <HeaderCellWrapper>{getHeaderDisplay(category, timeframe)}</HeaderCellWrapper>
+  return <HeaderCellWrapper>{category}</HeaderCellWrapper>
 }
 
 /* Token Row: skeleton row component */
