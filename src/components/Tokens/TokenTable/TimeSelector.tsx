@@ -1,4 +1,4 @@
-import { TimePeriod } from 'graphql/data/util'
+import { TimePeriod, TimePeriodWithoutAll } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
 import { useRef } from 'react'
@@ -11,22 +11,20 @@ import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
 import FilterOption from './FilterOption'
 
-export const DISPLAYS: Record<TimePeriod, string> = {
+export const DISPLAYS: Record<TimePeriodWithoutAll, string> = {
   [TimePeriod.HOUR]: '1H',
   [TimePeriod.DAY]: '1D',
   [TimePeriod.WEEK]: '1W',
   [TimePeriod.MONTH]: '1M',
   [TimePeriod.YEAR]: '1Y',
-  [TimePeriod.ALL]: 'All',
 }
 
-export const ORDERED_TIMES = [
+export const ORDERED_TIMES: TimePeriodWithoutAll[] = [
   TimePeriod.HOUR,
   TimePeriod.DAY,
   TimePeriod.WEEK,
   TimePeriod.MONTH,
   TimePeriod.YEAR,
-  TimePeriod.ALL,
 ]
 
 const InternalMenuItem = styled.div`

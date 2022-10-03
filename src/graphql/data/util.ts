@@ -12,6 +12,8 @@ export enum TimePeriod {
   ALL,
 }
 
+export type TimePeriodWithoutAll = Exclude<TimePeriod, TimePeriod.ALL>
+
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
     case TimePeriod.HOUR:

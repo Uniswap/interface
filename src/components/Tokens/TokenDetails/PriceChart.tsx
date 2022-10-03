@@ -276,8 +276,8 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
-  /* Default curve doesn't look good for the HOUR/ALL chart */
-  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : timePeriod === TimePeriod.HOUR ? 1 : 0.9
+  /* Default curve doesn't look good for the HOUR chart */
+  const curveTension = timePeriod === TimePeriod.HOUR ? 1 : 0.9
 
   return (
     <>
