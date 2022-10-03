@@ -61,9 +61,9 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, rede
       `}
     display: ${({ scrollOverlay }) => (scrollOverlay ? 'inline-table' : 'flex')};
     border-radius: 20px;
-    ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+    ${({ theme, redesignFlag }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
       width: 65vw;
-      margin: 0;
+      margin: ${redesignFlag ? 'auto' : '0'};
     `}
     ${({ theme, mobile }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
       width:  85vw;
