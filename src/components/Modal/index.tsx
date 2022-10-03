@@ -36,7 +36,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, rede
   overflow-y: auto;
 
   &[data-reach-dialog-content] {
-    margin: 0 0 2rem 0;
+    margin: ${({ redesignFlag }) => (redesignFlag ? 'auto' : '0 0 2rem 0')};
     background-color: ${({ theme }) => theme.deprecated_bg0};
     border: 1px solid ${({ theme }) => theme.deprecated_bg1};
     box-shadow: ${({ theme, redesignFlag }) =>
@@ -46,7 +46,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, rede
     overflow-y: auto;
     overflow-x: hidden;
 
-    align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
+    align-self: ${({ mobile }) => mobile && 'flex-end'};
 
     max-width: 420px;
     ${({ maxHeight }) =>
