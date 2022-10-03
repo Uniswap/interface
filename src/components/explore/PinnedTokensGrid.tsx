@@ -1,25 +1,27 @@
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
-import TripleDots from 'src/assets/icons/triple-dots.svg'
-import { PinnedTokenCard } from 'src/components/explore/PinnedTokenCard'
-import { AnimatedFlex } from 'src/components/layout'
-import { BaseCard } from 'src/components/layout/BaseCard'
-
 import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import TripleDots from 'src/assets/icons/triple-dots.svg'
 import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { Flex } from 'src/components/layout'
-import { Separator } from 'src/components/layout/Separator'
+import { PinnedTokenCard } from 'src/components/explore/PinnedTokenCard'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { ElementName } from 'src/features/telemetry/constants'
 import { flex } from 'src/styles/flex'
+import { theme as FixedTheme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
 
+const NUM_COLUMNS = 3
+const GAP_SIZE = FixedTheme.spacing.xs
+const ITEM_FLEX = 1 / NUM_COLUMNS
+
 /** Renders the favorite tokens card on the Explore page */
-export function FavoriteTokensCard() {
+export function PinnedTokensGrid() {
   const [isEditing, setIsEditing] = useState(false)
 
   const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
@@ -29,8 +31,14 @@ export function FavoriteTokensCard() {
   )
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<CurrencyId>) => {
-      return <PinnedTokenCard currencyId={item} isEditing={isEditing} />
+    ({ item, index }: ListRenderItemInfo<CurrencyId>) => {
+      const lastColumn = (index + 1) % NUM_COLUMNS === 0
+      return (
+        <>
+          <PinnedTokenCard currencyId={item} isEditing={isEditing} style={{ flex: ITEM_FLEX }} />
+          {lastColumn ? null : <Box width={GAP_SIZE} />}
+        </>
+      )
     },
     [isEditing]
   )
@@ -39,13 +47,13 @@ export function FavoriteTokensCard() {
     <AnimatedFlex entering={FadeIn} gap="sm" mx="xs">
       <HeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
       <FlatList
-        horizontal
-        ItemSeparatorComponent={() => <Separator mr="sm" />}
+        ItemSeparatorComponent={() => <Box height={GAP_SIZE} />}
         ListEmptyComponent={FavoritesEmptyState}
         contentContainerStyle={{ ...flex.grow }}
         data={favoriteCurrencyIds}
         keyExtractor={(item) => item}
         listKey="explore-pinned-tokens"
+        numColumns={NUM_COLUMNS}
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

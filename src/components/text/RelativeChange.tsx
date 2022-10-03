@@ -10,19 +10,25 @@ interface RelativeChangeProps {
   change?: number
   absoluteChange?: number
   variant?: keyof Theme['textVariants']
+  semanticColor?: boolean // If true, entire % change text will render green or red
 }
 
 export function RelativeChange({
   absoluteChange,
   change,
   variant = 'caption',
+  semanticColor,
 }: RelativeChangeProps) {
   const theme = useAppTheme()
   const isPositiveChange = change ? change > 0 : undefined
 
   return (
     <Flex row alignItems="center" gap="none">
-      <Text color="textSecondary" variant={variant}>
+      <Text
+        color={
+          semanticColor ? (isPositiveChange ? 'accentSuccess' : 'accentFailure') : 'textSecondary'
+        }
+        variant={variant}>
         {change ? `${change.toFixed(2)}%` : '-'}{' '}
         {absoluteChange ? `(${formatPrice(absoluteChange)})` : ''}
       </Text>

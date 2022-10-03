@@ -3,9 +3,9 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { OfflineLoadQuery, usePreloadedQuery } from 'react-relay-offline'
-import { FavoriteTokensCard } from 'src/components/explore/FavoriteTokensCard'
 import { SortingGroup } from 'src/components/explore/FilterGroup'
 import { useOrderByModal } from 'src/components/explore/Modals'
+import { PinnedTokensGrid } from 'src/components/explore/PinnedTokensGrid'
 import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { TokenItemData, TokenProjectItem } from 'src/components/explore/TokenProjectItem'
 import { Flex } from 'src/components/layout'
@@ -106,7 +106,7 @@ export default function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTab
       ref={listRef}
       ListHeaderComponent={
         <Flex mt="sm">
-          <FavoriteTokensCard />
+          <PinnedTokensGrid />
           <Flex row alignItems="center" justifyContent="space-between" mx="sm">
             <Text color="textSecondary" variant="smallLabel">
               {t('Top Tokens')}

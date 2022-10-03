@@ -1,6 +1,14 @@
+import { ShadowProps } from '@shopify/restyle'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback, useMemo } from 'react'
-import { FlexAlignType, Image, ImageStyle, Pressable } from 'react-native'
+import {
+  FlexAlignType,
+  Image,
+  ImageStyle,
+  Pressable,
+  PressableProps,
+  useColorScheme,
+} from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useLazyLoadQuery } from 'react-relay-offline'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -14,13 +22,16 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { PollingInterval } from 'src/constants/misc'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { removeFavoriteToken } from 'src/features/favorites/slice'
+import { Theme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
 const THIN_BORDER = 0.5
 
-const BOX_TOKEN_LOGO_SIZE = 32
+const BOX_TOKEN_LOGO_SIZE = 36
 const boxTokenLogoStyle: ImageStyle = { width: BOX_TOKEN_LOGO_SIZE, height: BOX_TOKEN_LOGO_SIZE }
+
+const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
 
 // Do one query per item to avoid suspense on entire screen / container
 // @TODO: Find way to load at the root of explore without a rerender when pinned token state changes
@@ -52,12 +63,14 @@ export const TOKEN_ITEM_BOX_MINWIDTH = 137
 export function PinnedTokenCard({
   currencyId,
   isEditing,
+  ...rest
 }: {
   currencyId: CurrencyId
   isEditing?: boolean
-}) {
+} & PressableProps) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
+  const isDarkMode = useColorScheme() === 'dark'
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const queryInput = useMemo(() => [currencyIdToContractInput(currencyId)], [currencyId])
 
@@ -74,7 +87,7 @@ export function PinnedTokenCard({
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
   const token = data?.tokenProjects?.[0]?.tokens?.[0]
   const usdPrice = tokenData?.markets?.[0]?.price?.value
-  const pricePercentChange = tokenData?.markets?.[0]?.price?.value
+  const pricePercentChange = tokenData?.markets?.[0]?.pricePercentChange24h?.value
 
   const onRemove = useCallback(
     () => dispatch(removeFavoriteToken({ currencyId })),
@@ -89,40 +102,45 @@ export function PinnedTokenCard({
       }}
       onPressIn={() => {
         tokenDetailsNavigation.preload(currencyId)
-      }}>
-      <Box
-        bg="backgroundContainer"
-        borderRadius="md"
-        justifyContent="space-between"
-        minWidth={TOKEN_ITEM_BOX_MINWIDTH}>
-        {isEditing ? (
-          <RemoveFavoriteTokenButton position="absolute" right={-8} top={-8} onPress={onRemove} />
-        ) : null}
-        <Flex p="sm">
-          <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="subhead">{token?.symbol?.toUpperCase() ?? ''}</Text>
-            <Image
-              source={{ uri: tokenData?.logoUrl ?? '' }}
-              style={[
-                boxTokenLogoStyle,
-                {
-                  backgroundColor: theme.colors.textTertiary,
-                  borderRadius: BOX_TOKEN_LOGO_SIZE / 2,
-                  borderColor: theme.colors.backgroundOutline,
-                  borderWidth: THIN_BORDER,
-                },
-              ]}
+      }}
+      {...rest}>
+      {isEditing ? (
+        <RemoveFavoriteTokenButton position="absolute" right={-8} top={-8} onPress={onRemove} />
+      ) : null}
+      <Flex
+        alignItems="center"
+        bg={isDarkMode ? 'backgroundSurface' : 'backgroundBackdrop'}
+        borderRadius="lg"
+        gap="xxs"
+        p="sm"
+        shadowColor="black"
+        shadowOffset={SHADOW_OFFSET}
+        shadowOpacity={0.05}
+        shadowRadius={6}>
+        <Image
+          source={{ uri: tokenData?.logoUrl ?? '' }}
+          style={[
+            boxTokenLogoStyle,
+            {
+              backgroundColor: theme.colors.textTertiary,
+              borderRadius: BOX_TOKEN_LOGO_SIZE / 2,
+              borderColor: theme.colors.backgroundOutline,
+              borderWidth: THIN_BORDER,
+            },
+          ]}
+        />
+        <TokenMetadata
+          align="center"
+          main={<Text variant="body">{formatUSDPrice(usdPrice)}</Text>}
+          sub={
+            <RelativeChange
+              change={pricePercentChange ?? undefined}
+              semanticColor={true}
+              variant="badge"
             />
-          </Flex>
-          <Flex row>
-            <TokenMetadata
-              align="flex-start"
-              main={<Text variant="body">{formatUSDPrice(usdPrice)}</Text>}
-              sub={<RelativeChange change={pricePercentChange ?? undefined} />}
-            />
-          </Flex>
-        </Flex>
-      </Box>
+          }
+        />
+      </Flex>
     </Pressable>
   )
 }
