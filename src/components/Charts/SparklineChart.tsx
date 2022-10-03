@@ -35,9 +35,7 @@ function SparklineChart({ width, height, tokenData, pricePercentChange, timePeri
       [0, 110]
     )
   const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([30, 0])
-
-  /* Default curve doesn't look good for the ALL chart */
-  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : 0.9
+  const curveTension = 0.9
 
   return (
     <LineChart

@@ -9,7 +9,6 @@ export enum TimePeriod {
   WEEK,
   MONTH,
   YEAR,
-  ALL,
 }
 
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
@@ -24,8 +23,6 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
       return 'MONTH'
     case TimePeriod.YEAR:
       return 'YEAR'
-    case TimePeriod.ALL:
-      return 'MAX'
   }
 }
 
