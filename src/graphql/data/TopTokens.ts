@@ -59,7 +59,7 @@ export enum TokenSortMethod {
 
 export type PrefetchedTopToken = NonNullable<TopTokens100Query['response']['topTokens']>[number]
 
-function useSortedTokens(tokens: TopTokens100Query['response']['topTokens']) {
+function useSortedTokens(tokens: TopTokens100Query['response']['topTokens'] | undefined) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
@@ -176,11 +176,11 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const [tokens, setTokens] = useState<TopToken[]>()
   const [page, setPage] = useState(0)
   const [error, setError] = useState<Error | undefined>()
-  const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>([])
+  const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>()
   const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData))
   const maxFetchable = useMemo(
-    () => prefetchedSelectedTokensWithoutPriceHistory.length,
-    [prefetchedSelectedTokensWithoutPriceHistory]
+    () => (!!prefetchedData ? prefetchedSelectedTokensWithoutPriceHistory.length : 100),
+    [prefetchedSelectedTokensWithoutPriceHistory, prefetchedData]
   )
 
   const hasMore = !tokens || tokens.length < prefetchedSelectedTokensWithoutPriceHistory.length

@@ -95,7 +95,7 @@ export default function TokenTable() {
 
   /* loading and error state */
   if (loading && (!tokens || tokens?.length === 0)) {
-    return <LoadingTokenTable rowCount={PAGE_SIZE} />
+    return <LoadingTokenTable rowCount={Math.min(PAGE_SIZE, maxFetchable)} />
   } else {
     if (error || !tokens) {
       return (
