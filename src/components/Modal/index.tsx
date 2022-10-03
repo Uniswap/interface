@@ -46,7 +46,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, rede
     overflow-y: auto;
     overflow-x: hidden;
 
-    align-self: ${({ mobile, scrollOverlay }) => (mobile ? 'flex-end' : scrollOverlay ? 'start' : 'center')};
+    align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
 
     max-width: 420px;
     ${({ maxHeight }) =>
