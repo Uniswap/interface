@@ -100,8 +100,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         pageParam,
         traits,
         price: {
-          low: debouncedMinPrice,
-          high: debouncedMaxPrice,
+          low: parseFloat(debouncedMinPrice),
+          high: parseFloat(debouncedMaxPrice),
           symbol: 'ETH',
         },
       })

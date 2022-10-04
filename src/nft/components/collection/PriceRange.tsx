@@ -2,7 +2,6 @@ import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
-import { isNumber } from 'nft/utils/numbers'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { useEffect, useState } from 'react'
 import { FocusEventHandler, FormEvent } from 'react'
@@ -50,7 +49,7 @@ export const PriceRange = () => {
           defaultValue={minPrice}
           onChange={(v: FormEvent<HTMLInputElement>) => {
             scrollToTop()
-            setMinPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
+            setMinPrice(v.currentTarget.value)
           }}
           onFocus={handleFocus}
           value={minPrice}
@@ -74,7 +73,7 @@ export const PriceRange = () => {
           value={maxPrice}
           onChange={(v: FormEvent<HTMLInputElement>) => {
             scrollToTop()
-            setMaxPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
+            setMaxPrice(v.currentTarget.value)
           }}
           onFocus={handleFocus}
           onBlur={handleBlur}
