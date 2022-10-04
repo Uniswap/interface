@@ -11,7 +11,7 @@ import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
@@ -96,13 +96,39 @@ const CurrencySelect = styled(ButtonGray)<{
 
   &:hover {
     background-color: ${({ selected, theme, redesignFlag }) =>
-      !redesignFlag && selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3};
+      !redesignFlag && (selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3)};
   }
 
   &:active {
     background-color: ${({ selected, theme, redesignFlag }) =>
-      !redesignFlag && selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3};
+      !redesignFlag && (selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3)};
   }
+
+  ${({ redesignFlag }) =>
+    redesignFlag &&
+    css`
+      &:before {
+        background-size: 100%;
+        border-radius: inherit;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+        content: '';
+        opacity: 0.08;
+      }
+
+      &:hover:before {
+        background-color: ${({ theme }) => theme.stateOverlayHover};
+      }
+
+      &:active:before {
+        background-color: ${({ theme }) => theme.stateOverlayPressed};
+      }
+    `}
 
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
