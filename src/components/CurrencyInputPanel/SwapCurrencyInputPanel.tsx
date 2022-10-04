@@ -109,6 +109,11 @@ const CurrencySelect = styled(ButtonGray)<{
   ${({ redesignFlag }) =>
     redesignFlag &&
     css`
+      &:hover,
+      &:active {
+        background-color: ${({ theme }) => theme.accentAction};
+      }
+
       &:before {
         background-size: 100%;
         border-radius: inherit;
