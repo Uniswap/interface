@@ -75,7 +75,13 @@ const CurrencySelect = styled(ButtonGray)<{
 }>`
   align-items: center;
   background-color: ${({ selected, theme, redesignFlag }) =>
-    redesignFlag ? theme.accentAction : selected ? theme.deprecated_bg2 : theme.deprecated_primary1};
+    redesignFlag
+      ? selected
+        ? theme.backgroundInteractive
+        : theme.accentAction
+      : selected
+      ? theme.deprecated_bg2
+      : theme.deprecated_primary1};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
@@ -106,12 +112,12 @@ const CurrencySelect = styled(ButtonGray)<{
       }
     `}
 
-  ${({ redesignFlag }) =>
+  ${({ redesignFlag, selected }) =>
     redesignFlag &&
     css`
       &:hover,
       &:active {
-        background-color: ${({ theme }) => theme.accentAction};
+        background-color: ${({ theme }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
       }
 
       &:before {
