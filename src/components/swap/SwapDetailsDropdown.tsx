@@ -45,7 +45,7 @@ const StyledCard = styled(OutlineCard)<{ redesignFlag: boolean }>`
 `
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean; redesignFlag: boolean }>`
-  padding: ${({ redesignFlag }) => (redesignFlag ? 'none' : '4px 8px')};
+  padding: ${({ redesignFlag }) => (redesignFlag ? '0' : '4px 8px')};
   background-color: ${({ open, theme, redesignFlag }) =>
     open && !redesignFlag ? theme.deprecated_bg1 : 'transparent'};
   align-items: center;
