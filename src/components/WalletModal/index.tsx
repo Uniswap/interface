@@ -307,7 +307,8 @@ export default function WalletModal({
       )
     }
 
-    function getTermsOfService(redesignFlagEnabled: boolean) {
+    function getTermsOfService(redesignFlagEnabled: boolean, walletView: string) {
+      if (redesignFlagEnabled && walletView === WALLET_VIEWS.PENDING) return null
       return redesignFlagEnabled ? (
         <AutoRow style={{ flexWrap: 'nowrap', padding: '4px 16px' }}>
           <ThemedText.BodySecondary fontSize={16} lineHeight={'24px'}>
@@ -321,15 +322,15 @@ export default function WalletModal({
       ) : (
         <LightCard>
           <AutoRow style={{ flexWrap: 'nowrap' }}>
-            <ThemedText.DeprecatedBody fontSize={16} lineHeight={'24px'}>
+            <ThemedText.DeprecatedBody fontSize={12}>
               <Trans>
                 By connecting a wallet, you agree to Uniswap Labs’{' '}
                 <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/terms-of-service/">
                   Terms of Service
                 </ExternalLink>{' '}
-                and consent to its{' '}
-                <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/privacy-policy">
-                  Privacy Policy
+                and acknowledge that you have read and understand the Uniswap{' '}
+                <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/disclaimer/">
+                  Protocol Disclaimer
                 </ExternalLink>
                 .
               </Trans>
@@ -356,7 +357,7 @@ export default function WalletModal({
               />
             )}
             {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-testid="option-grid">{getOptions()}</OptionGrid>}
-            {!pendingError && walletView !== WALLET_VIEWS.PENDING && getTermsOfService(redesignFlagEnabled)}
+            {!pendingError && getTermsOfService(redesignFlagEnabled, walletView)}
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>
