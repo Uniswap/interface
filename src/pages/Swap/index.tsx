@@ -83,25 +83,20 @@ const ArrowUpWrapper = styled.div`
   margin-left: 56%;
   margin-top: -18%;
 `
-const BottomWrapper = styled.div<{ redesignFlag: boolean }>`
+
+const InputWrapper = styled.div<{ redesignFlag: boolean }>`
+  visibility: ${({ redesignFlag }) => !redesignFlag && 'none'};
   ${({ redesignFlag }) =>
     redesignFlag &&
     css`
       background-color: ${({ theme }) => theme.backgroundModule};
       border-radius: 12px;
-      padding: 8px 12px 10px;
+      padding: 16px;
       color: ${({ theme }) => theme.textSecondary};
       font-size: 14px;
       line-height: 20px;
       font-weight: 500;
     `}
-`
-const TopInputWrapper = styled.div<{ redesignFlag: boolean }>`
-  padding: ${({ redesignFlag }) => redesignFlag && '0px 12px'};
-  visibility: ${({ redesignFlag }) => !redesignFlag && 'none'};
-`
-const BottomInputWrapper = styled.div<{ redesignFlag: boolean }>`
-  padding: ${({ redesignFlag }) => redesignFlag && '8px 0px'};
 `
 
 export function getIsValidSwapQuote(
@@ -308,24 +303,30 @@ export default function Swap() {
     gatherPermitSignature,
   } = useERC20PermitFromTrade(trade, allowedSlippage, transactionDeadline)
 
+  const [approvalPending, setApprovalPending] = useState<boolean>(false)
   const handleApprove = useCallback(async () => {
-    if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
-      try {
-        await gatherPermitSignature()
-      } catch (error) {
-        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
-        if (error?.code !== 4001) {
-          await approveCallback()
+    setApprovalPending(true)
+    try {
+      if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
+        try {
+          await gatherPermitSignature()
+        } catch (error) {
+          // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
+          if (error?.code !== 4001) {
+            await approveCallback()
+          }
         }
-      }
-    } else {
-      await approveCallback()
+      } else {
+        await approveCallback()
 
-      sendEvent({
-        category: 'Swap',
-        action: 'Approve',
-        label: [TRADE_STRING, trade?.inputAmount?.currency.symbol].join('/'),
-      })
+        sendEvent({
+          category: 'Swap',
+          action: 'Approve',
+          label: [TRADE_STRING, trade?.inputAmount?.currency.symbol].join('/'),
+        })
+      }
+    } finally {
+      setApprovalPending(false)
     }
   }, [signatureState, gatherPermitSignature, approveCallback, trade?.inputAmount?.currency.symbol])
 
@@ -541,7 +542,7 @@ export default function Swap() {
 
             <AutoColumn gap={'0px'}>
               <div style={{ display: 'relative' }}>
-                <TopInputWrapper redesignFlag={redesignFlagEnabled}>
+                <InputWrapper redesignFlag={redesignFlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
                     <SwapCurrencyInputPanel
                       label={
@@ -564,7 +565,7 @@ export default function Swap() {
                       loading={independentField === Field.OUTPUT && routeIsSyncing}
                     />
                   </Trace>
-                </TopInputWrapper>
+                </InputWrapper>
                 <ArrowWrapper clickable={isSupportedChain(chainId)} redesignFlag={redesignFlagEnabled}>
                   <TraceEvent
                     events={[Event.onClick]}
@@ -603,10 +604,9 @@ export default function Swap() {
                   </TraceEvent>
                 </ArrowWrapper>
               </div>
-              <BottomWrapper redesignFlag={redesignFlagEnabled}>
-                {redesignFlagEnabled && 'For'}
-                <AutoColumn gap={redesignFlagEnabled ? '0px' : '8px'}>
-                  <BottomInputWrapper redesignFlag={redesignFlagEnabled}>
+              <div>
+                <AutoColumn gap={redesignFlagEnabled ? '12px' : '8px'}>
+                  <InputWrapper redesignFlag={redesignFlagEnabled}>
                     <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                       <SwapCurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
@@ -655,7 +655,7 @@ export default function Swap() {
                       />
                     )}
                     {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
-                  </BottomInputWrapper>
+                  </InputWrapper>
                   <div>
                     {swapIsUnsupported ? (
                       <ButtonPrimary disabled={true}>
@@ -702,7 +702,7 @@ export default function Swap() {
                               approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                             }
                           >
-                            <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                            <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }} height="20px">
                               <span style={{ display: 'flex', alignItems: 'center' }}>
                                 {/* we need to shorten this string on mobile */}
                                 {approvalState === ApprovalState.APPROVED ||
@@ -714,8 +714,8 @@ export default function Swap() {
                                   </Trans>
                                 )}
                               </span>
-                              {approvalState === ApprovalState.PENDING ? (
-                                <Loader stroke="white" />
+                              {approvalPending || approvalState === ApprovalState.PENDING ? (
+                                <Loader stroke={theme.white} />
                               ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                                 signatureState === UseERC20PermitState.SIGNED ? (
                                 <CheckCircle size="20" color={theme.deprecated_green1} />
@@ -728,7 +728,7 @@ export default function Swap() {
                                     </Trans>
                                   }
                                 >
-                                  <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
+                                  <HelpCircle size="20" color={theme.deprecated_white} style={{ marginLeft: '8px' }} />
                                 </MouseoverTooltip>
                               )}
                             </AutoRow>
@@ -810,7 +810,7 @@ export default function Swap() {
                     {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                   </div>
                 </AutoColumn>
-              </BottomWrapper>
+              </div>
             </AutoColumn>
           </SwapWrapper>
           <NetworkAlert />

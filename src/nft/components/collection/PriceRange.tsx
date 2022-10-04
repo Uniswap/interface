@@ -2,7 +2,6 @@ import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
-import { isNumber } from 'nft/utils/numbers'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { useEffect, useState } from 'react'
 import { FocusEventHandler, FormEvent } from 'react'
@@ -37,62 +36,47 @@ export const PriceRange = () => {
   }
 
   return (
-    <>
-      <Row gap="12" marginTop="12" color="textPrimary">
-        <Row position="relative" style={{ flex: 1 }}>
-          <NumericInput
-            style={{
-              width: isMobile ? '100%' : '142px',
-              border: '2px solid rgba(153, 161, 189, 0.24)',
-            }}
-            borderRadius="12"
-            padding="12"
-            fontSize="14"
-            color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
-            backgroundColor="transparent"
-            placeholder="Min"
-            defaultValue={minPrice}
-            onChange={(v: FormEvent<HTMLInputElement>) => {
-              scrollToTop()
-              setMinPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
-            }}
-            onFocus={handleFocus}
-            value={minPrice}
-            onBlur={handleBlur}
-          />
-        </Row>
-        <Row position="relative" style={{ flex: 1 }}>
-          <NumericInput
-            style={{
-              width: isMobile ? '100%' : '142px',
-              border: '2px solid rgba(153, 161, 189, 0.24)',
-            }}
-            borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}
-            borderRadius="12"
-            padding="12"
-            fontSize="14"
-            color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
-            backgroundColor="transparent"
-            placeholder="Max"
-            defaultValue={maxPrice}
-            value={maxPrice}
-            onChange={(v: FormEvent<HTMLInputElement>) => {
-              scrollToTop()
-              setMaxPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
-            }}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-          />
-        </Row>
+    <Row gap="12" marginTop="12" color="textPrimary">
+      <Row position="relative" style={{ flex: 1 }}>
+        <NumericInput
+          style={{
+            width: isMobile ? '100%' : '142px',
+            border: '2px solid rgba(153, 161, 189, 0.24)',
+          }}
+          borderRadius="12"
+          padding="12"
+          fontSize="14"
+          color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+          backgroundColor="transparent"
+          placeholder="Min"
+          defaultValue={minPrice}
+          onChange={(v: FormEvent<HTMLInputElement>) => {
+            scrollToTop()
+            setMinPrice(v.currentTarget.value)
+          }}
+          onFocus={handleFocus}
+          value={minPrice}
+          onBlur={handleBlur}
+        />
       </Row>
-      <Row>
-        <ReactSlider
-          defaultValue={[0, 100]}
-          className={styles.slider}
-          trackClassName={styles.tracker}
-          thumbClassName={styles.thumb}
-          onAfterChange={(props) => {
-            setMinMax(props)
+      <Row position="relative" style={{ flex: 1 }}>
+        <NumericInput
+          style={{
+            width: isMobile ? '100%' : '142px',
+            border: '2px solid rgba(153, 161, 189, 0.24)',
+          }}
+          borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}
+          borderRadius="12"
+          padding="12"
+          fontSize="14"
+          color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+          backgroundColor="transparent"
+          placeholder="Max"
+          defaultValue={maxPrice}
+          value={maxPrice}
+          onChange={(v: FormEvent<HTMLInputElement>) => {
+            scrollToTop()
+            setMaxPrice(v.currentTarget.value)
           }}
         />
       </Row>

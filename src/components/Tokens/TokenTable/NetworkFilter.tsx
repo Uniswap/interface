@@ -8,7 +8,6 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import FilterOption from './FilterOption'
 
 const InternalMenuItem = styled.div`
@@ -58,10 +57,6 @@ const StyledMenu = styled.div`
   position: relative;
   border: none;
   text-align: left;
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    flex: 1;
-  }
 `
 const StyledMenuContent = styled.div`
   display: flex;
@@ -69,7 +64,6 @@ const StyledMenuContent = styled.div`
   gap: 8px;
   align-items: center;
   border: none;
-  width: 100%;
   font-weight: 600;
   vertical-align: middle;
 `
@@ -90,6 +84,9 @@ const CheckContainer = styled.div`
   display: flex;
   flex-direction: flex-end;
 `
+const NetworkFilterOption = styled(FilterOption)`
+  width: 156px;
+`
 
 export default function NetworkFilter() {
   const theme = useTheme()
@@ -106,7 +103,7 @@ export default function NetworkFilter() {
 
   return (
     <StyledMenu ref={node}>
-      <FilterOption onClick={toggleMenu} aria-label={`networkFilter`} active={open}>
+      <NetworkFilterOption onClick={toggleMenu} aria-label={`networkFilter`} active={open}>
         <StyledMenuContent>
           <NetworkLabel>
             <Logo src={circleLogoUrl ?? logoUrl} /> {label}
@@ -119,7 +116,7 @@ export default function NetworkFilter() {
             )}
           </Chevron>
         </StyledMenuContent>
-      </FilterOption>
+      </NetworkFilterOption>
       {open && (
         <MenuTimeFlyout>
           {BACKEND_CHAIN_NAMES.map((network) => {

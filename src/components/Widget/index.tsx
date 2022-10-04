@@ -1,6 +1,5 @@
 import { Currency, OnReviewSwapClick, SwapWidget } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { RPC_PROVIDERS } from 'constants/providers'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -10,7 +9,7 @@ import { useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { useSyncWidgetTransactions } from './transactions'
 
-export const WIDGET_WIDTH = 320
+export const WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
@@ -34,7 +33,7 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
       <SwapWidget
         disableBranding
         hideConnectionUI
-        jsonRpcUrlMap={RPC_PROVIDERS}
+        // jsonRpcUrlMap is excluded - network providers are always passed directly
         routerUrl={WIDGET_ROUTER_URL}
         width={WIDGET_WIDTH}
         locale={locale}

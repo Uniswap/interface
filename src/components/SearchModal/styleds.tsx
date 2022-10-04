@@ -22,7 +22,7 @@ export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;
 `
 
-export const MenuItem = styled(RowBetween)<{ redesignFlag?: boolean }>`
+export const MenuItem = styled(RowBetween)<{ redesignFlag?: boolean; dim?: boolean }>`
   padding: 4px 20px;
   height: 56px;
   display: grid;
@@ -34,7 +34,7 @@ export const MenuItem = styled(RowBetween)<{ redesignFlag?: boolean }>`
     background-color: ${({ theme, disabled, redesignFlag }) =>
       (redesignFlag && theme.hoverDefault) || (!disabled && theme.deprecated_bg2)};
   }
-  opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
+  opacity: ${({ disabled, selected, dim }) => (dim || disabled || selected ? 0.4 : 1)};
 `
 
 export const SearchInput = styled.input<{ redesignFlag?: boolean }>`

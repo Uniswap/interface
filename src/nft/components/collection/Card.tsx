@@ -12,8 +12,8 @@ import {
   RarityVerifiedIcon,
   SuspiciousIcon20,
 } from 'nft/components/icons'
-import { body, subheadSmall } from 'nft/css/common.css'
-import { themeVars, vars } from 'nft/css/sprinkles.css'
+import { body, bodySmall, subheadSmall } from 'nft/css/common.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, UniformHeight, UniformHeights } from 'nft/types'
 import { fallbackProvider, putCommas } from 'nft/utils'
@@ -456,19 +456,21 @@ const Button = ({ children, quantity, selectedChildren, onClick, onSelectedClick
               ? 'accentFailure'
               : asset.notForSale
               ? 'textTertiary'
-              : 'blue400'
+              : 'accentAction'
           }
-          style={{
-            background: `${
-              buttonHovered || isMobile
-                ? selected
-                  ? vars.color.accentFailure
-                  : vars.color.blue400
+          background={
+            buttonHovered || isMobile
+              ? asset.notForSale
+                ? 'backgroundInteractive'
                 : selected
-                ? '#FA2B391F'
-                : '#4C82FB1F'
-            }`,
-          }}
+                ? 'accentFailure'
+                : 'accentAction'
+              : asset.notForSale
+              ? 'backgroundModule'
+              : selected
+              ? 'accentFailureSoft'
+              : 'accentActionSoft'
+          }
           className={clsx(styles.button, subheadSmall)}
           onClick={(e) =>
             selected
@@ -549,7 +551,7 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
           <Box display="flex" marginRight="4">
             <img src={rarityLogo} alt="cardLogo" width={16} />
           </Box>
-          <Box width="full" fontSize="14">
+          <Box width="full" className={bodySmall}>
             {rarityVerified
               ? `Verified by ${asset.collectionName}`
               : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
@@ -575,7 +577,7 @@ const Suspicious = () => {
   return (
     <MouseoverTooltip
       text={
-        <Box fontSize="14">
+        <Box className={bodySmall}>
           Reported for suspicious activity
           <br />
           on Opensea
@@ -593,7 +595,11 @@ const Suspicious = () => {
 const Pool = () => {
   return (
     <MouseoverTooltip
-      text={<Box fontSize="14">This item is part of an NFT liquidity pool. Price increases as supply decreases.</Box>}
+      text={
+        <Box className={bodySmall}>
+          This NFT is part of a liquidity pool. Buying this will increase the price of the remaining pooled NFTs.
+        </Box>
+      }
       placement="top"
     >
       <Box display="flex" flexShrink="0" marginLeft="4" color="textSecondary">

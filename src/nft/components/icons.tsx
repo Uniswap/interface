@@ -1471,3 +1471,30 @@ export const BagCloseIcon = (props: SVGProps) => (
     />
   </svg>
 )
+
+export const EmptyNFTWalletIcon = (props: SVGProps) => (
+  <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <rect
+      x="4.46976"
+      y="35.0579"
+      width="43.9542"
+      height="43.9542"
+      rx="2.75"
+      transform="rotate(-11.245 4.46976 35.0579)"
+      stroke="#5E6887"
+      strokeWidth="2.5"
+    />
+    <path
+      d="M32.0341 22.8646L34.3119 14.3637C34.8837 12.2298 37.077 10.9635 39.2109 11.5353L76.3548 21.488C78.4886 22.0597 79.755 24.2531 79.1832 26.3869L69.2305 63.5308C68.6588 65.6647 66.4654 66.931 64.3315 66.3593L60.3421 65.2903"
+      stroke="#5E6887"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+    />
+    <path
+      d="M81.5762 40.2598L90.5463 49.2299C92.1084 50.792 92.1084 53.3246 90.5463 54.8867L63.355 82.0779C61.7929 83.64 59.2603 83.64 57.6982 82.0779L52.3573 76.737"
+      stroke="#5E6887"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+    />
+  </svg>
+)

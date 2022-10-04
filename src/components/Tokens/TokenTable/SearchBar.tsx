@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import useDebounce from 'hooks/useDebounce'
-import { useResetAtom, useUpdateAtom } from 'jotai/utils'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -21,10 +23,10 @@ const SearchInput = styled.input`
   background-position: 12px center;
   background-color: ${({ theme }) => theme.backgroundModule};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1.5px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
   width: min(200px, 100%);
-  font-size: 16px;
+  font-size: 14px;
   padding-left: 40px;
   color: ${({ theme }) => theme.textSecondary};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
@@ -59,30 +61,37 @@ const SearchInput = styled.input`
 `
 
 export default function SearchBar() {
-  const [localFilterString, setLocalFilterString] = useState('')
+  const currentString = useAtomValue(filterStringAtom)
+  const [localFilterString, setLocalFilterString] = useState(currentString)
   const setFilterString = useUpdateAtom(filterStringAtom)
-  const resetFilterString = useResetAtom(filterStringAtom)
   const debouncedLocalFilterString = useDebounce(localFilterString, 300)
 
   useEffect(() => {
+    setLocalFilterString(currentString)
+  }, [currentString])
+
+  useEffect(() => {
     setFilterString(debouncedLocalFilterString)
-    return () => {
-      resetFilterString()
-    }
-  }, [debouncedLocalFilterString, setFilterString, resetFilterString])
+  }, [debouncedLocalFilterString, setFilterString])
 
   return (
     <SearchBarContainer>
       <Trans
         render={({ translation }) => (
-          <SearchInput
-            type="search"
-            placeholder={`${translation}`}
-            id="searchBar"
-            autoComplete="off"
-            value={localFilterString}
-            onChange={({ target: { value } }) => setLocalFilterString(value)}
-          />
+          <TraceEvent
+            events={[Event.onFocus]}
+            name={EventName.EXPLORE_SEARCH_SELECTED}
+            element={ElementName.EXPLORE_SEARCH_INPUT}
+          >
+            <SearchInput
+              type="search"
+              placeholder={`${translation}`}
+              id="searchBar"
+              autoComplete="off"
+              value={localFilterString}
+              onChange={({ target: { value } }) => setLocalFilterString(value)}
+            />
+          </TraceEvent>
         )}
       >
         Filter tokens

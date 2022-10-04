@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import HoverInlineText from 'components/HoverInlineText'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useMemo } from 'react'
 import { useTheme } from 'styled-components/macro'
 
@@ -18,6 +18,7 @@ export function FiatValue({
   priceImpact?: Percent
 }) {
   const theme = useTheme()
+  const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
     if (priceImpact.lessThan('0')) return theme.deprecated_green1
@@ -30,19 +31,15 @@ export function FiatValue({
   const p = Number(fiatValue?.toFixed())
   const visibleDecimalPlaces = p < 1.05 ? 4 : 2
 
+  const textColor = redesignFlagEnabled
+    ? theme.textSecondary
+    : fiatValue
+    ? theme.deprecated_text3
+    : theme.deprecated_text4
+
   return (
-    <ThemedText.DeprecatedBody fontSize={14} color={fiatValue ? theme.deprecated_text3 : theme.deprecated_text4}>
-      {fiatValue ? (
-        <Trans>
-          $
-          <HoverInlineText
-            text={fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}
-            textColor={fiatValue ? theme.deprecated_text3 : theme.deprecated_text4}
-          />
-        </Trans>
-      ) : (
-        ''
-      )}
+    <ThemedText.DeprecatedBody fontSize={14} color={textColor}>
+      {fiatValue && <>${fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}</>}
       {priceImpact ? (
         <span style={{ color: priceImpactColor }}>
           {' '}

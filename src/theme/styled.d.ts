@@ -58,6 +58,7 @@ export interface ThemeColors {
   hoverState: Color
   hoverDefault: Color
   stateOverlayHover: Color
+  stateOverlayPressed: Color
 }
 
 export interface Colors {

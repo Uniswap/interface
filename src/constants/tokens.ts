@@ -388,6 +388,20 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WMATIC',
     'Wrapped MATIC'
   ),
+  [SupportedChainId.CELO]: new Token(
+    SupportedChainId.CELO,
+    '0x471ece3750da237f93b8e339c536989b8978a438',
+    18,
+    'CELO',
+    'Celo native asset'
+  ),
+  [SupportedChainId.CELO_ALFAJORES]: new Token(
+    SupportedChainId.CELO_ALFAJORES,
+    '0xf194afdf50b03e69bd7d057c1aa9e10c9954e4c9',
+    18,
+    'CELO',
+    'Celo native asset'
+  ),
 }
 
 export function isCelo(chainId: number): chainId is SupportedChainId.CELO | SupportedChainId.CELO_ALFAJORES {

@@ -59,7 +59,7 @@ export default function Updater(): null {
     UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
-        fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
+        fetchList(listUrl, undefined, true).catch((error) => console.debug('list added fetching error', error))
       }
     })
   }, [dispatch, fetchList, lists])

@@ -226,6 +226,7 @@ export interface Palette {
   shallowShadow: Color
   deepShadow: Color
   stateOverlayHover: Color
+  stateOverlayPressed: Color
 }
 
 export const colorsLight: Palette = {
@@ -288,6 +289,7 @@ export const colorsLight: Palette = {
   shallowShadow:
     '6px 6px 10px rgba(51, 53, 72, 0.01), 2px 2px 6px rgba(51, 53, 72, 0.02), 1px 2px 2px rgba(51, 53, 72, 0.02);',
   stateOverlayHover: opacify(8, colors.gray300),
+  stateOverlayPressed: opacify(24, colors.gray200),
 }
 
 export const colorsDark: Palette = {
@@ -348,4 +350,5 @@ export const colorsDark: Palette = {
   deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
   stateOverlayHover: opacify(8, colors.gray300),
+  stateOverlayPressed: opacify(24, colors.gray200),
 }

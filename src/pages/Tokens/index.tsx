@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { filterStringAtom } from 'components/Tokens/state'
 import FavoriteButton from 'components/Tokens/TokenTable/FavoriteButton'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
@@ -10,7 +11,9 @@ import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/Toke
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { isValidBackendChainName } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useNavigate } from 'react-router-dom'
+import { useResetAtom } from 'jotai/utils'
+import { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -27,11 +30,8 @@ const ExploreContainer = styled.div`
     padding-top: 20px;
   }
 `
-const TokenTableContainer = styled.div`
-  padding: 16px 0px;
-`
 export const TitleContainer = styled.div`
-  margin-bottom: 16px;
+  margin-bottom: 32px;
   max-width: 960px;
   margin-left: auto;
   margin-right: auto;
@@ -59,6 +59,7 @@ const FiltersWrapper = styled.div`
   display: flex;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin: 0 auto;
+  margin-bottom: 20px;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     flex-direction: column;
@@ -67,6 +68,12 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
+  const resetFilterString = useResetAtom(filterStringAtom)
+  const location = useLocation()
+  useEffect(() => {
+    resetFilterString()
+  }, [location, resetFilterString])
+
   const navigate = useNavigate()
   useOnGlobalChainSwitch((chain) => {
     if (isValidBackendChainName(chain)) navigate(`/tokens/${chain.toLowerCase()}`)
@@ -77,7 +84,7 @@ const Tokens = () => {
       <ExploreContainer>
         <TitleContainer>
           <ThemedText.LargeHeader>
-            <Trans>Explore Tokens</Trans>
+            <Trans>Top tokens on Uniswap</Trans>
           </ThemedText.LargeHeader>
         </TitleContainer>
         <FiltersWrapper>
@@ -90,9 +97,7 @@ const Tokens = () => {
             <SearchBar />
           </SearchContainer>
         </FiltersWrapper>
-        <TokenTableContainer>
-          <TokenTable />
-        </TokenTableContainer>
+        <TokenTable />
       </ExploreContainer>
     </Trace>
   )
@@ -103,7 +108,7 @@ export const LoadingTokens = () => {
     <ExploreContainer>
       <TitleContainer>
         <ThemedText.LargeHeader>
-          <Trans>Explore Tokens</Trans>
+          <Trans>Top tokens on Uniswap</Trans>
         </ThemedText.LargeHeader>
       </TitleContainer>
       <FiltersWrapper>
@@ -116,9 +121,7 @@ export const LoadingTokens = () => {
           <SearchBar />
         </SearchContainer>
       </FiltersWrapper>
-      <TokenTableContainer>
-        <LoadingTokenTable />
-      </TokenTableContainer>
+      <LoadingTokenTable />
     </ExploreContainer>
   )
 }
