@@ -2,6 +2,7 @@ import { FeeAmount, Position } from '@kyberswap/ks-sdk-elastic'
 import { t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import { rgba } from 'polished'
+import { Link } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 
 import RangeBadge from 'components/Badge/RangeBadge'
@@ -17,11 +18,11 @@ import { shortenAddress } from 'utils'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
 export default function ProAmmPoolInfo({
-  farmAvailable,
+  isFarmActive,
   position,
   tokenId,
 }: {
-  farmAvailable?: boolean
+  isFarmActive?: boolean
   position: Position
   tokenId?: string
 }) {
@@ -47,20 +48,22 @@ export default function ProAmmPoolInfo({
             </Flex>
 
             <Flex sx={{ gap: '8px' }}>
-              {farmAvailable && (
-                <MouseoverTooltip text={t`Available for yield farming`}>
-                  <Flex
-                    width={24}
-                    height={24}
-                    justifyContent="center"
-                    alignItems={'center'}
-                    sx={{
-                      borderRadius: '999px',
-                      background: rgba(theme.apr, 0.2),
-                    }}
-                  >
-                    <MoneyBag size={16} color={theme.apr} />
-                  </Flex>
+              {isFarmActive && (
+                <MouseoverTooltip noArrow placement="top" text={t`Available for yield farming. Click to go to Farm`}>
+                  <Link to={`/farms?tab=elastic&type=active&search=${poolAddress}`}>
+                    <Flex
+                      width={24}
+                      height={24}
+                      justifyContent="center"
+                      alignItems={'center'}
+                      sx={{
+                        background: rgba(theme.apr, 0.2),
+                        borderRadius: '999px',
+                      }}
+                    >
+                      <MoneyBag size={16} color={theme.apr} />
+                    </Flex>
+                  </Link>
                 </MouseoverTooltip>
               )}
               <RangeBadge removed={removed} inRange={!outOfRange} hideText />

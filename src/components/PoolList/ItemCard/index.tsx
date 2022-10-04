@@ -12,7 +12,7 @@ import CopyHelper from 'components/Copy'
 import CurrencyLogo from 'components/CurrencyLogo'
 import Divider from 'components/Divider'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import AgriCulture from 'components/Icons/AgriCulture'
+import { MoneyBagOutline } from 'components/Icons'
 import TabDetailsItems from 'components/PoolList/ItemCard/TabDetailsItems'
 import TabInfoItems from 'components/PoolList/ItemCard/TabInfoItems'
 import TabYourLiquidityItems from 'components/PoolList/ItemCard/TabYourLiquidityItems'
@@ -97,9 +97,19 @@ const ItemCard = ({ poolData, style = {}, myLiquidity }: ListItemProps) => {
       {' '}
       <div style={{ position: 'absolute', top: '16px', right: '16px' }}>
         {isFarmingPool && (
-          <MouseoverTooltip text="Available for yield farming">
+          <MouseoverTooltip
+            noArrow
+            text={
+              <Text>
+                <Trans>
+                  Available for yield farming. Click{' '}
+                  <Link to={`/farms?tab=classic&type=active&search=${poolData.id}`}>here</Link> to go to the farm.
+                </Trans>
+              </Text>
+            }
+          >
             <IconWrapper style={{ width: '24px', height: '24px' }}>
-              <AgriCulture width={16} height={16} color={theme.textReverse} />
+              <MoneyBagOutline size={16} color={theme.textReverse} />
             </IconWrapper>
           </MouseoverTooltip>
         )}

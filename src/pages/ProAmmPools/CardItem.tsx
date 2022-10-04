@@ -157,7 +157,18 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
                   right: '16px',
                 }}
               >
-                <MouseoverTooltip text={t`Available for yield farming`}>
+                <MouseoverTooltip
+                  noArrow
+                  text={
+                    <Text>
+                      <Trans>
+                        Available for yield farming. Click{' '}
+                        <Link to={`/farms?tab=elastic&type=active&search=${pool.address}`}>here</Link> to go to the
+                        farm.
+                      </Trans>
+                    </Text>
+                  }
+                >
                   <IconWrapper style={{ width: '24px', height: '24px' }}>
                     <MoneyBagOutline size={16} color={theme.textReverse} />
                   </IconWrapper>

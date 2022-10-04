@@ -235,8 +235,10 @@ const ListItemGroup = ({
             }}
           >
             {isFarmingPool && (
-              <MouseoverTooltip text={t`Available for yield farming`}>
-                <MoneyBag size={16} color={theme.apr} />
+              <MouseoverTooltip placement="top" text={t`Available for yield farming`}>
+                <Link to={`/farms?tab=classic&type=active&search=${poolData.id}`}>
+                  <MoneyBag size={16} color={theme.apr} />
+                </Link>
               </MouseoverTooltip>
             )}
             {isWarning && (

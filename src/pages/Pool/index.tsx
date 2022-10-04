@@ -406,7 +406,7 @@ function Pool() {
                           key={v2Pair.liquidityToken.address}
                           pair={v2Pair}
                           myLiquidity={transformedUserLiquidityPositions[v2Pair.address.toLowerCase()]}
-                          farmStatus={!farm ? 'NO_FARM' : farm.isEnded ? 'FARM_ENDED' : 'FARM_ACTIVE'}
+                          farm={farm}
                           tab="ALL"
                         />
                       )
@@ -519,7 +519,7 @@ const StakedPool = ({
       pair={pair}
       stakedBalance={TokenAmount.fromRawAmount(pair.liquidityToken, farm.userData?.stakedBalance || '0')}
       myLiquidity={userLiquidityPositions?.find(position => position.pool.id === pair.address)}
-      farmStatus={farm.isEnded ? 'FARM_ENDED' : 'FARM_ACTIVE'}
+      farm={farm}
       farmAPR={farmAPR}
       tab={tab}
     />
