@@ -28,7 +28,7 @@ const Wrapper = styled(Row)<{ redesignFlag: boolean }>`
   justify-content: center;
   border-radius: ${({ redesignFlag }) => redesignFlag && 'inherit'};
   padding: ${({ redesignFlag }) => redesignFlag && '8px 12px'};
-  margin-top: ${({ redesignFlag }) => (redesignFlag ? '0px' : '4px')} !important;
+  margin-top: ${({ redesignFlag }) => (redesignFlag ? '0px' : '4px')};
   min-height: ${({ redesignFlag }) => redesignFlag && '32px'};
 `
 

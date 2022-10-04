@@ -106,6 +106,7 @@ const SwapSection = styled.div<{ redesignFlag: boolean }>`
 
         width: 100%;
         height: 100%;
+        pointer-events: none;
         content: '';
         border: 1px solid ${({ theme }) => theme.backgroundModule};
       }
