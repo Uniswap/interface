@@ -75,13 +75,7 @@ const CurrencySelect = styled(ButtonGray)<{
 }>`
   align-items: center;
   background-color: ${({ selected, theme, redesignFlag }) =>
-    redesignFlag
-      ? selected
-        ? theme.stateOverlayPressed
-        : theme.accentAction
-      : selected
-      ? theme.deprecated_bg2
-      : theme.deprecated_primary1};
+    redesignFlag ? theme.accentAction : selected ? theme.deprecated_bg2 : theme.deprecated_primary1};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
@@ -102,20 +96,12 @@ const CurrencySelect = styled(ButtonGray)<{
 
   &:hover {
     background-color: ${({ selected, theme, redesignFlag }) =>
-      redesignFlag
-        ? theme.stateOverlayHover
-        : selected
-        ? darken(0.05, theme.deprecated_primary1)
-        : theme.deprecated_bg3};
+      !redesignFlag && selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3};
   }
 
   &:active {
     background-color: ${({ selected, theme, redesignFlag }) =>
-      redesignFlag
-        ? theme.stateOverlayPressed
-        : selected
-        ? darken(0.05, theme.deprecated_primary1)
-        : theme.deprecated_bg3};
+      !redesignFlag && selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3};
   }
 
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
