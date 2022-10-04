@@ -1,3 +1,4 @@
+import { graphql } from 'babel-plugin-relay/macro'
 import { selectionAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -24,10 +25,20 @@ import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
+import { HomeScreenQuery$data } from 'src/screens/__generated__/HomeScreenQuery.graphql'
 
 const TOKENS_KEY = 'tokens'
 const NFTS_KEY = 'nfts'
-export function HomeScreen() {
+
+export const homeScreenQuery = graphql`
+  query HomeScreenQuery($owner: String!) {
+    portfolio(ownerAddress: $owner) {
+      ...TotalBalance_portfolio
+    }
+  }
+`
+
+export function HomeScreen({ data }: { data: HomeScreenQuery$data }) {
   // imports test account for easy development/testing
   useTestAccount()
   useBiometricCheck()
@@ -64,7 +75,7 @@ export function HomeScreen() {
         <Flex bg="backgroundBackdrop" gap="sm" pb="md">
           <AccountHeader />
           <Flex gap="sm" px="lg">
-            <TotalBalance showRelativeChange owner={activeAccount.address} />
+            <TotalBalance showRelativeChange portfolio={data.portfolio} />
             {activeAccount?.type !== AccountType.Readonly && (
               <Flex pt="xxs">
                 <QuickActions />

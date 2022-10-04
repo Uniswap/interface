@@ -1,60 +1,48 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense } from 'react'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useFragment } from 'react-relay'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
-import { PollingInterval } from 'src/constants/misc'
-import { TotalBalanceQuery } from 'src/features/balances/__generated__/TotalBalanceQuery.graphql'
+import { TotalBalance_portfolio$key } from 'src/features/balances/__generated__/TotalBalance_portfolio.graphql'
 import { Theme } from 'src/styles/theme'
 import { formatUSDPrice } from 'src/utils/format'
 
 interface TotalBalanceViewProps {
-  owner: Address
+  portfolio: TotalBalance_portfolio$key | null
   showRelativeChange?: boolean
   variant?: keyof Theme['textVariants']
 }
 
 export function TotalBalance({
-  owner,
+  portfolio,
   showRelativeChange,
   variant = 'headlineLarge',
 }: TotalBalanceViewProps) {
-  return (
-    <Suspense fallback={<Loading type="header" />}>
-      <TotalBalanceInner owner={owner} showRelativeChange={showRelativeChange} variant={variant} />
-    </Suspense>
-  )
-}
-
-function TotalBalanceInner({ owner, showRelativeChange, variant }: TotalBalanceViewProps) {
-  const { data: balance } = useLazyLoadQuery<TotalBalanceQuery>(
+  const data = useFragment(
     graphql`
-      query TotalBalanceQuery($owner: String!) {
-        portfolio(ownerAddress: $owner) {
-          assetsValueUSD
-          absoluteChange24H
-          relativeChange24H
-        }
+      fragment TotalBalance_portfolio on Portfolio {
+        assetsValueUSD
+        absoluteChange24H
+        relativeChange24H
       }
     `,
-    { owner },
-    { networkCacheConfig: { poll: PollingInterval.Fast } }
+    portfolio
   )
 
   return (
-    <Flex gap="xxs">
-      <Text variant={variant}>{`${formatUSDPrice(
-        balance?.portfolio?.assetsValueUSD ?? undefined
-      )}`}</Text>
-      {showRelativeChange && (
-        <RelativeChange
-          absoluteChange={balance?.portfolio?.absoluteChange24H ?? undefined}
-          change={balance?.portfolio?.relativeChange24H ?? undefined}
-          variant="bodySmall"
-        />
-      )}
-    </Flex>
+    <Suspense fallback={<Loading type="header" />}>
+      <Flex gap="xxs">
+        <Text variant={variant}>{`${formatUSDPrice(data?.assetsValueUSD ?? undefined)}`}</Text>
+        {showRelativeChange && (
+          <RelativeChange
+            absoluteChange={data?.absoluteChange24H ?? undefined}
+            change={data?.relativeChange24H ?? undefined}
+            variant="bodySmall"
+          />
+        )}
+      </Flex>
+    </Suspense>
   )
 }

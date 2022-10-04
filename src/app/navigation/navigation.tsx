@@ -3,10 +3,10 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import { selectionAsync } from 'expo-haptics'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { OfflineLoadQuery } from 'react-relay-offline'
+import { OfflineLoadQuery, usePreloadedQuery } from 'react-relay-offline'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
@@ -31,17 +31,19 @@ import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { PollingInterval } from 'src/constants/misc'
+import { useQueryLoader } from 'src/data/preloading'
 import { Priority, useQueryScheduler } from 'src/data/useQueryScheduler'
 import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ModalName } from 'src/features/telemetry/constants'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
-import { HomeScreen } from 'src/screens/HomeScreen'
+import { HomeScreen, homeScreenQuery } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { RestoreCloudBackupPinScreen } from 'src/screens/Import/RestoreCloudBackupPinScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
@@ -78,6 +80,7 @@ import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { UserScreen } from 'src/screens/UserScreen'
 import { WatchedWalletsScreen } from 'src/screens/WatchedWalletsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
+import { HomeScreenQuery } from 'src/screens/__generated__/HomeScreenQuery.graphql'
 import { dimensions } from 'src/styles/sizing'
 import { darkTheme } from 'src/styles/theme'
 
@@ -101,14 +104,34 @@ const NullComponent = () => {
 function TabNavigator() {
   const { t } = useTranslation()
   const theme = useAppTheme()
-
   const dispatch = useAppDispatch()
+
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
+
+  const { preloadedQuery: homescreenQueryRef, load: loadPortfolioQuery } =
+    useQueryLoader<HomeScreenQuery>(homeScreenQuery, {
+      params: { owner: activeAccountAddress },
+      options: { networkCacheConfig: { poll: PollingInterval.Fast } },
+    })
+
+  useEffect(() => {
+    // reload home query when active account changes
+    loadPortfolioQuery(
+      { owner: activeAccountAddress },
+      { networkCacheConfig: { poll: PollingInterval.Fast } }
+    )
+  }, [activeAccountAddress, loadPortfolioQuery])
 
   const { preloadedQuery: exploreTokensTabQueryRef } = useQueryScheduler<ExploreTokensTabQuery>(
     Priority.Idle,
     exploreTokensTabQuery,
     { topTokensOrderBy: 'MARKET_CAP' },
     { networkCacheConfig: { poll: PollingInterval.Slow } }
+  )
+
+  const HomeStackNavigatorMemo = useCallback(
+    () => <HomeStackNavigator queryRef={homescreenQueryRef} />,
+    [homescreenQueryRef]
   )
 
   // important to memoize to avoid the entire explore stack from getting re-rendered on tab switch
@@ -137,7 +160,7 @@ function TabNavigator() {
         },
       }}>
       <Tab.Screen
-        component={HomeStackNavigator}
+        children={HomeStackNavigatorMemo}
         name={Tabs.Home}
         options={{
           tabBarLabel: t('Home'),
@@ -281,15 +304,18 @@ function getDrawerEnabled() {
   return routeName ? DRAWER_ENABLED_SCREENS.includes(routeName) : false
 }
 
-export function HomeStackNavigator() {
+export function HomeStackNavigator({ queryRef }: { queryRef: OfflineLoadQuery }) {
+  const { data } = usePreloadedQuery<HomeScreenQuery>(queryRef)
+
+  if (!data) return null
+
   return (
     <HomeStack.Navigator
       initialRouteName={Screens.Home}
       screenOptions={{
         ...navOptions.noHeader,
       }}>
-      {/* <AppBackground /> */}
-      <HomeStack.Screen component={HomeScreen} name={Screens.Home} />
+      <HomeStack.Screen children={() => <HomeScreen data={data} />} name={Screens.Home} />
 
       {/* Tokens */}
       <HomeStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />

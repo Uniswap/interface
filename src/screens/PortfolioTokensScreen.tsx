@@ -13,7 +13,7 @@ import { PortfolioBalanceChart } from 'src/components/PriceChart/PortfolioBalanc
 import { PriceChartLoading } from 'src/components/PriceChart/PriceChartLoading'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-import { TotalBalance } from 'src/features/balances/TotalBalance'
+import { TotalBalance } from 'src/features/balances/TotalBalanceDeprecated'
 import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
