@@ -59,7 +59,7 @@ export enum TokenSortMethod {
 
 export type PrefetchedTopToken = NonNullable<TopTokens100Query['response']['topTokens']>[number]
 
-function useSortedTokens(tokens: TopTokens100Query['response']['topTokens']) {
+function useSortedTokens(tokens: TopTokens100Query['response']['topTokens'] | undefined) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
@@ -167,7 +167,7 @@ interface UseTopTokensReturnValue {
   tokens: TopToken[] | undefined
   hasMore: boolean
   loadMoreTokens: () => void
-  maxFetchable: number
+  loadingRowCount: number
 }
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
@@ -176,11 +176,14 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const [tokens, setTokens] = useState<TopToken[]>()
   const [page, setPage] = useState(0)
   const [error, setError] = useState<Error | undefined>()
-  const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>([])
+  const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>()
   const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData))
-  const maxFetchable = useMemo(
-    () => prefetchedSelectedTokensWithoutPriceHistory.length,
-    [prefetchedSelectedTokensWithoutPriceHistory]
+  const loading = Boolean(loadingTokensWithPriceHistory || loadingTokensWithoutPriceHistory)
+  // loadingRowCount defaults to PAGE_SIZE when no prefetchedData is available yet because the initial load
+  // count will always be PAGE_SIZE.
+  const loadingRowCount = useMemo(
+    () => (prefetchedData ? Math.min(prefetchedSelectedTokensWithoutPriceHistory.length, PAGE_SIZE) : PAGE_SIZE),
+    [prefetchedSelectedTokensWithoutPriceHistory, prefetchedData]
   )
 
   const hasMore = !tokens || tokens.length < prefetchedSelectedTokensWithoutPriceHistory.length
@@ -276,11 +279,11 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 
   return {
     error,
-    loading: loadingTokensWithPriceHistory || loadingTokensWithoutPriceHistory,
+    loading,
     tokens,
     hasMore,
     loadMoreTokens,
-    maxFetchable,
+    loadingRowCount,
   }
 }
 
