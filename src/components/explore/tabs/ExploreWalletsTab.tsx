@@ -18,7 +18,7 @@ function walletKey(wallet: WalletSearchResult) {
   return wallet.address
 }
 
-export default function ExploreWalletsTab({
+function ExploreWalletsTab({
   onSearchWallets,
   listRef,
 }: {
@@ -49,3 +49,5 @@ export default function ExploreWalletsTab({
     </AnimatedBox>
   )
 }
+
+export default React.memo(ExploreWalletsTab)

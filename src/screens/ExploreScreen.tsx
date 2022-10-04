@@ -1,8 +1,8 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { Suspense, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView, Route, TextInput } from 'react-native'
+import { KeyboardAvoidingView, TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
 import { OfflineLoadQuery } from 'react-relay-offline'
@@ -17,7 +17,6 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { renderTabLabel, TabStyles } from 'src/components/layout/screens/TabbedScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
-import { Loading } from 'src/components/loading'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { useDebounce } from 'src/utils/timing'
@@ -65,43 +64,42 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
     return unsubscribe
   }, [navigation])
 
-  const tabs = [
-    { key: TOKENS_KEY, title: t('Tokens') },
-    { key: WALLETS_KEY, title: t('Wallets') },
-  ]
+  const tabs = useMemo(
+    () => [
+      { key: TOKENS_KEY, title: t('Tokens') },
+      { key: WALLETS_KEY, title: t('Wallets') },
+    ],
+    [t]
+  )
   const [tabIndex, setIndex] = useState(0)
 
-  const renderTab = (route: Route) => {
-    switch (route?.key) {
-      case TOKENS_KEY:
-        // TODO: Improve Suspense loading state to closer match ExploreTokensTab content
-        return (
-          <Suspense
-            fallback={
-              <Flex my="sm">
-                <Loading repeat={4} type="token" />
-              </Flex>
-            }>
-            <ExploreTokensTab listRef={listRef} queryRef={exploreTokensTabQueryRef} />
-          </Suspense>
-        )
-      case WALLETS_KEY:
-        return <ExploreWalletsTab onSearchWallets={() => textInputRef.current?.focus()} />
-    }
-    return null
-  }
+  const renderTab = useCallback(
+    ({ route }) => {
+      switch (route?.key) {
+        case TOKENS_KEY:
+          return <ExploreTokensTab listRef={listRef} queryRef={exploreTokensTabQueryRef} />
+        case WALLETS_KEY:
+          return <ExploreWalletsTab onSearchWallets={() => textInputRef.current?.focus()} />
+      }
+      return null
+    },
+    [exploreTokensTabQueryRef, listRef]
+  )
 
-  const renderTabBar = (sceneProps: SceneRendererProps) => {
-    return (
-      <TabBar
-        {...sceneProps}
-        indicatorStyle={[TabStyles.indicator]}
-        navigationState={{ index: tabIndex, routes: tabs }}
-        renderLabel={renderTabLabel}
-        style={[TabStyles.tab, { backgroundColor: theme.colors.backgroundBackdrop }]}
-      />
-    )
-  }
+  const renderTabBar = useCallback(
+    (sceneProps: SceneRendererProps) => {
+      return (
+        <TabBar
+          {...sceneProps}
+          indicatorStyle={[TabStyles.indicator]}
+          navigationState={{ index: tabIndex, routes: tabs }}
+          renderLabel={renderTabLabel}
+          style={[TabStyles.tab, { backgroundColor: theme.colors.backgroundBackdrop }]}
+        />
+      )
+    },
+    [tabIndex, tabs, theme]
+  )
 
   return (
     <Screen edges={['top', 'left', 'right']}>
@@ -134,10 +132,10 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
         ) : (
           <TabView
             navigationState={{ index: tabIndex, routes: tabs }}
-            renderScene={(props) => renderTab(props.route)}
+            renderScene={renderTab}
             renderTabBar={renderTabBar}
             style={TabStyles.tabView}
-            onIndexChange={(index) => setIndex(index)}
+            onIndexChange={setIndex}
           />
         )}
       </Flex>

@@ -49,7 +49,7 @@ type ExploreTokensTabProps = {
   listRef?: React.MutableRefObject<null>
 }
 
-export default function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
+function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
   const { t } = useTranslation()
 
   const { data } = usePreloadedQuery<ExploreTokensTabQuery>(queryRef)
@@ -134,3 +134,5 @@ const tokenKey = (token: TokenItemData) => {
     ? buildCurrencyId(token.chainId, token.address)
     : buildNativeCurrencyId(token.chainId)
 }
+
+export default React.memo(ExploreTokensTab)
