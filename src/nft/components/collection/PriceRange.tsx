@@ -1,3 +1,4 @@
+import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
@@ -52,10 +53,10 @@ export const PriceRange = () => {
   return (
     <TraitsHeader title="Price range" showBorderBottom>
       <Row gap="12" marginTop="12" color="textPrimary">
-        <Row position="relative" style={{ flex: 1 }}>
+        <Row position="relative">
           <NumericInput
             style={{
-              width: isMobile ? '100%' : '142px',
+              width: isMobile ? '100%' : '126px',
               border: '2px solid rgba(153, 161, 189, 0.24)',
             }}
             borderRadius="12"
@@ -92,10 +93,14 @@ export const PriceRange = () => {
             onBlur={handleBlur}
           />
         </Row>
+        <Box color="textPrimary" fontSize="16">
+          to
+        </Box>
+
         <Row position="relative" style={{ flex: 1 }}>
           <NumericInput
             style={{
-              width: isMobile ? '100%' : '142px',
+              width: isMobile ? '100%' : '126px',
               border: '2px solid rgba(153, 161, 189, 0.24)',
             }}
             borderColor={{ default: 'backgroundOutline', focus: 'textSecondary' }}
@@ -124,6 +129,7 @@ export const PriceRange = () => {
           />
         </Row>
       </Row>
+
       <Row marginBottom="20">
         <ReactSlider
           defaultValue={[0, 100]}

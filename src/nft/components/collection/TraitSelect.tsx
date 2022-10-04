@@ -118,7 +118,7 @@ export const TraitSelect = ({
   )
 
   return traits.length ? (
-    <TraitsHeader title={type} showBorderBottom={showBorderBottom}>
+    <TraitsHeader numTraits={traits.length} title={type} showBorderBottom={showBorderBottom}>
       <Column className={styles.filterDropDowns} paddingLeft="0">
         <Input
           value={search}

@@ -8,6 +8,7 @@ import { ReactNode, useState } from 'react'
 interface TraitsHeaderProps {
   title: string
   children: ReactNode
+  numTraits?: number
   showBorderBottom?: boolean
 }
 
@@ -45,6 +46,11 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
         }}
       >
         {title}
+
+        <Box color="textSecondary" marginLeft="auto" marginRight="4">
+          {props.numTraits}
+        </Box>
+
         <Box
           color="textSecondary"
           transition="250"
@@ -52,6 +58,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
           width="28"
           style={{
             transform: `rotate(${isOpen ? 0 : 180}deg)`,
+            display: 'flex',
           }}
         >
           <ChevronUpIcon />
