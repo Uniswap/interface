@@ -81,6 +81,7 @@ import useWrapCallback, { WrapType } from 'hooks/useWrapCallback'
 import { BodyWrapper } from 'pages/AppBody'
 import { ClickableText } from 'pages/Pool/styleds'
 import { useToggleTransactionSettingsMenu, useWalletModalToggle } from 'state/application/hooks'
+import { useAllDexes } from 'state/customizeDexes/hooks'
 import { Field } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
 import { useDerivedSwapInfoV2 } from 'state/swap/useAggregator'
@@ -170,6 +171,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const isShowTradeRoutes = useShowTradeRoutes()
   const isShowTokenInfoSetting = useShowTokenInfo()
   const qs = useParsedQueryString()
+  const allDexes = useAllDexes()
   const [{ show: isShowTutorial = false }] = useTutorialSwapGuide()
 
   const refSuggestPair = useRef<PairSuggestionHandle>(null)
@@ -238,7 +240,10 @@ export default function Swap({ history }: RouteComponentProps) {
     loading: loadingAPI,
     isPairNotfound,
   } = useDerivedSwapInfoV2()
-
+  const comparedDex = useMemo(
+    () => allDexes?.find(dex => dex.id === tradeComparer?.comparedDex),
+    [allDexes, tradeComparer],
+  )
   const currencyIn = currencies[Field.INPUT]
   const currencyOut = currencies[Field.OUTPUT]
 
@@ -849,7 +854,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         </ArrowWrapper>
                       </AutoRow>
                       <Box sx={{ position: 'relative' }}>
-                        {tradeComparer?.tradeSaved?.usd && (
+                        {tradeComparer?.tradeSaved?.usd && comparedDex && (
                           <KyberTag>
                             <Trans>You save</Trans>{' '}
                             {formattedNum(tradeComparer.tradeSaved.usd, true) +
@@ -865,7 +870,7 @@ export default function Swap({ history }: RouteComponentProps) {
                                   <Trans>
                                     The amount you save compared to{' '}
                                     <Text as="span" color={theme.warning}>
-                                      {tradeComparer.comparedDex.name}
+                                      {comparedDex.name}
                                     </Text>
                                     .
                                   </Trans>{' '}

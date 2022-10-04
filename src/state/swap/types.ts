@@ -1,7 +1,5 @@
 import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 
-import { DexConfig } from '../../constants/dexes'
-
 export interface AggregationComparer {
   inputAmount: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<Currency>
@@ -9,7 +7,7 @@ export interface AggregationComparer {
   amountOutUsd: string
   receivedUsd: string
   // outputPriceUSD: number
-  comparedDex: DexConfig
+  comparedDex: string
   tradeSaved?: {
     percent?: number
     usd?: string

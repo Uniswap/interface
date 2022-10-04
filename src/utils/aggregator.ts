@@ -271,7 +271,7 @@ export class Aggregator {
     const tokenOutAddress = currencyOut.isNative ? ETHER_ADDRESS : tokenOut.address
     const comparedDex = DEX_TO_COMPARE[chainId]
 
-    if (tokenInAddress && tokenOutAddress && comparedDex?.value) {
+    if (tokenInAddress && tokenOutAddress && comparedDex) {
       const search = new URLSearchParams({
         // Trade config
         tokenIn: tokenInAddress.toLowerCase(),
@@ -279,7 +279,7 @@ export class Aggregator {
         amountIn: currencyAmountIn.quotient?.toString(),
         saveGas: '0',
         gasInclude: '1',
-        dexes: comparedDex.value,
+        dexes: comparedDex,
         slippageTolerance: slippageTolerance?.toString() ?? '',
         deadline: deadline?.toString() ?? '',
         to,
@@ -294,16 +294,6 @@ export class Aggregator {
         clientData: KYBERSWAP_SOURCE,
       })
       try {
-        // const promises: any[] = [
-        //   fetch(`${baseURL}?${search}`),
-        //   fetch(`${basePriceURL}/api/price/token-price?addresses=${tokenOutAddress}`)
-        // ]
-        // const [resSwap, resPrice] = await Promise.all(promises)
-        // const [swapData, priceData] = await Promise.all([resSwap.json(), resPrice.json()])
-        // if (!swapData?.inputAmount || !swapData?.outputAmount || !priceData?.data) {
-        //   return null
-        // }
-
         const response = await fetchWaiting(
           `${baseURL}?${search}`,
           {
