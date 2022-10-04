@@ -326,10 +326,14 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
           collectionSocialsIsOpen={collectionSocialsIsOpen}
           toggleCollectionSocials={toggleCollectionSocials}
         />
-        <>
-          {(stats.description || isCollectionStatsLoading) && <CollectionDescription description={stats.description} />}
-          <StatsRow stats={stats} marginTop="20" />
-        </>
+        {!isMobile && (
+          <>
+            {(stats.description || isCollectionStatsLoading) && (
+              <CollectionDescription description={stats.description} />
+            )}
+            <StatsRow stats={stats} marginTop="20" />
+          </>
+        )}
       </Box>
       {isMobile && (
         <>
