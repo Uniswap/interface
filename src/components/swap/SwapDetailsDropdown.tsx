@@ -23,9 +23,13 @@ import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
 import TradePrice from './TradePrice'
 
-const Wrapper = styled(Row)`
+const Wrapper = styled(Row)<{ redesignFlag: boolean }>`
   width: 100%;
   justify-content: center;
+  border-radius: ${({ redesignFlag }) => redesignFlag && 'inherit'};
+  padding: ${({ redesignFlag }) => redesignFlag && '8px 12px'};
+  margin-top: ${({ redesignFlag }) => (redesignFlag ? '0px' : '4px')} !important;
+  min-height: ${({ redesignFlag }) => redesignFlag && '32px'};
 `
 
 const StyledInfoIcon = styled(Info)`
@@ -41,14 +45,11 @@ const StyledCard = styled(OutlineCard)<{ redesignFlag: boolean }>`
 `
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean; redesignFlag: boolean }>`
-  padding: ${({ redesignFlag }) => (redesignFlag ? '8px 0px 0px 0px' : '4px 8px')};
+  padding: ${({ redesignFlag }) => (redesignFlag ? '0' : '4px 8px')};
   background-color: ${({ open, theme, redesignFlag }) =>
     open && !redesignFlag ? theme.deprecated_bg1 : 'transparent'};
   align-items: center;
-  border-top: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : 'transparent')};
-  margin-top: ${({ redesignFlag }) => redesignFlag && '8px'};
   cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
-  min-height: 40px;
   border-radius: ${({ redesignFlag }) => !redesignFlag && '12px'};
 `
 
@@ -133,7 +134,7 @@ export default function SwapDetailsDropdown({
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   return (
-    <Wrapper style={{ marginTop: '8px' }}>
+    <Wrapper style={{ marginTop: redesignFlagEnabled ? '0' : '8px' }} redesignFlag={redesignFlagEnabled}>
       <AutoColumn gap={'8px'} style={{ width: '100%', marginBottom: '-8px' }}>
         <TraceEvent
           events={[Event.onClick]}
