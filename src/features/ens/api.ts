@@ -4,6 +4,7 @@ import { providers } from 'ethers'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { areAddressesEqual } from 'src/utils/addresses'
+import { ONE_DAY_MS, ONE_SECOND_MS } from 'src/utils/time'
 
 export type EnslookupParams = {
   nameOrAddress: string
@@ -25,6 +26,7 @@ export const ensApi = createApi({
   reducerPath: ENS_REDUCER_NAME,
   serializeQueryArgs,
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
+  keepUnusedDataFor: ONE_DAY_MS / ONE_SECOND_MS, // one day in seconds
   endpoints: (builder) => ({
     // takes an address "0xasdf..." and converts it to the ENS "x.eth"
     name: builder.query<string | null, EnslookupParams>({
