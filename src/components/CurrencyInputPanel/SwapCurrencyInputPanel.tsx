@@ -94,15 +94,17 @@ const CurrencySelect = styled(ButtonGray)<{
   justify-content: space-between;
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
 
-  &:hover {
-    background-color: ${({ selected, theme, redesignFlag }) =>
-      !redesignFlag && (selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3)};
-  }
+  ${({ redesignFlag, selected }) =>
+    !redesignFlag &&
+    css`
+      &:hover {
+        background-color: ${({ theme }) => (selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3)};
+      }
 
-  &:active {
-    background-color: ${({ selected, theme, redesignFlag }) =>
-      !redesignFlag && (selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3)};
-  }
+      &:active {
+        background-color: ${({ theme }) => (selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3)};
+      }
+    `}
 
   ${({ redesignFlag }) =>
     redesignFlag &&
@@ -118,7 +120,6 @@ const CurrencySelect = styled(ButtonGray)<{
         width: 100%;
         height: 100%;
         content: '';
-        opacity: 0.08;
       }
 
       &:hover:before {
