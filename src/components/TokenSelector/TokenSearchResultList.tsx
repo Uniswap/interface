@@ -268,7 +268,7 @@ function _TokenSearchResultList({
         renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
         sections={sections}
         showsVerticalScrollIndicator={false}
-        windowSize={1}
+        windowSize={5}
       />
       {sections.length > 0 && (
         <AnimatedBox position="absolute" right={0}>
