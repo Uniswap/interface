@@ -38,9 +38,9 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           justifyContent="space-between"
           className={clsx(styles.rowHover, styles.borderTop)}
           gap="2"
-          paddingTop="8"
+          paddingTop="10"
           paddingRight="16"
-          paddingBottom="8"
+          paddingBottom="10"
           paddingLeft="12"
           cursor="pointer"
           onClick={(e) => {
