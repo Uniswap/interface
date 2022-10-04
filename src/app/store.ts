@@ -9,6 +9,7 @@ import { rootSaga } from 'src/app/rootSaga'
 import { walletContextValue } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { ensApi } from 'src/features/ens/api'
+import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { nftApi } from 'src/features/nfts/api'
 import { routingApi } from 'src/features/routing/routingApi'
@@ -66,11 +67,13 @@ export const store = configureStore({
       // slows down dev build considerably
       immutableCheck: false,
     }).concat(
+      ensApi.middleware,
+      forceUpgradeApi.middleware,
+      gasApi.middleware,
       sagaMiddleware,
       nftApi.middleware,
       routingApi.middleware,
-      gasApi.middleware,
-      ensApi.middleware,
+      sagaMiddleware,
       ...middlewares
     ),
   devTools: config.debug,

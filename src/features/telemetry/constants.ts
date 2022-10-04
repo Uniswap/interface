@@ -38,7 +38,6 @@ export const enum ModalName {
   WalletQRCode = 'wallet-qr-code-modal',
   NFTAsset = 'nft-asset',
   TermsModal = 'terms-modal',
-  RecipientSelect = 'recipient-select-modal',
   RecoveryWarning = 'recovery-warning',
   ICloudBackupInfo = 'icloud-backup-info-modal',
   ICloudSkipPinWarning = 'icloud-skip-pin-warning',
@@ -154,15 +153,16 @@ export const enum ElementName {
  * where these methods are called from (e.g. component name, function name, file name).
  */
 export const enum LogContext {
+  Analytics = 'Analytics',
+  AppBackground = 'AppBackground',
   ErrorBoundary = 'ErrorBoundary',
+  Experiments = 'Experiments',
+  ForceUpgrade = 'ForceUpgrade',
   ImageUtils = 'ImageUtils',
-  ValidateAddress = 'ValidateAddress',
   ProviderManager = 'ProviderManager',
   SecurityConcern = 'SecurityConcern',
-  AppBackground = 'AppBackground',
+  ValidateAddress = 'ValidateAddress',
   WrappedTokenInfo = 'WrappedTokenInfo',
-  Experiments = 'Experiments',
-  Analytics = 'Analytics',
 }
 
 /**
