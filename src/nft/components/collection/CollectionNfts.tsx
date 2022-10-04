@@ -239,7 +239,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       const minIndex = sortBy === 1 ? collectionNfts.length - 1 : 0
       const lowValue = formatWeiToDecimal(collectionNfts[minIndex]?.priceInfo.ETHPrice ?? '')
       const maxValue = formatWeiToDecimal(collectionNfts[maxIndex]?.priceInfo.ETHPrice ?? '')
-
+      //
       if (minPrice === '') {
         setPriceRangeLow(lowValue)
       }
