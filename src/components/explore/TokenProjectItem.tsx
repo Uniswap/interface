@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -32,77 +32,74 @@ interface TokenProjectItemProps {
   onCycleMetadata?: () => void
 }
 
-export const TokenProjectItem = ({
-  tokenItemData,
-  index,
-  metadataDisplayType,
-  onCycleMetadata,
-}: TokenProjectItemProps) => {
-  const { t } = useTranslation()
-  const theme = useAppTheme()
-  const tokenDetailsNavigation = useTokenDetailsNavigation()
+export const TokenProjectItem = memo(
+  ({ tokenItemData, index, metadataDisplayType, onCycleMetadata }: TokenProjectItemProps) => {
+    const { t } = useTranslation()
+    const theme = useAppTheme()
+    const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  const { name, logoUrl, chainId, address, symbol, price, marketCap, pricePercentChange24h } =
-    tokenItemData
+    const { name, logoUrl, chainId, address, symbol, price, marketCap, pricePercentChange24h } =
+      tokenItemData
 
-  const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
+    const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
 
-  return (
-    <Button
-      testID={`token-item-${name}`}
-      onPress={() => {
-        tokenDetailsNavigation.navigate(_currencyId)
-      }}
-      onPressIn={() => {
-        tokenDetailsNavigation.preload(_currencyId)
-      }}>
-      <AnimatedFlex
-        row
-        alignItems="center"
-        bg="none"
-        justifyContent="space-between"
-        px="md"
-        py="sm">
-        <Flex centered row flexShrink={1} gap="xs" overflow="hidden">
-          <Flex centered row flexShrink={1} gap="xxs" overflow="hidden">
-            {index !== undefined && (
-              <Box minWidth={16}>
-                <Text color="textSecondary" variant="badge">
-                  {index + 1}
-                </Text>
-              </Box>
-            )}
-            <TokenLogo size={theme.imageSizes.lg} symbol={symbol} url={logoUrl} />
-          </Flex>
-          <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
-            <Text variant="subhead">{name}</Text>
-            <Text color="textSecondary" variant="caption">
-              {symbol.toUpperCase()}
-            </Text>
-          </Flex>
-        </Flex>
-        <Flex row justifyContent="flex-end">
-          <Button disabled={!onCycleMetadata} onPress={onCycleMetadata}>
-            <TokenMetadata
-              main={formatUSDPrice(price)}
-              sub={
-                metadataDisplayType === CoingeckoOrderBy.MarketCapDesc ? (
-                  <Text variant="caption">
-                    {t('MCap {{marketCap}}', {
-                      marketCap: formatNumber(marketCap),
-                    })}
+    return (
+      <Button
+        testID={`token-item-${name}`}
+        onPress={() => {
+          tokenDetailsNavigation.navigate(_currencyId)
+        }}
+        onPressIn={() => {
+          tokenDetailsNavigation.preload(_currencyId)
+        }}>
+        <AnimatedFlex
+          row
+          alignItems="center"
+          bg="none"
+          justifyContent="space-between"
+          px="md"
+          py="sm">
+          <Flex centered row flexShrink={1} gap="xs" overflow="hidden">
+            <Flex centered row flexShrink={1} gap="xxs" overflow="hidden">
+              {index !== undefined && (
+                <Box minWidth={16}>
+                  <Text color="textSecondary" variant="badge">
+                    {index + 1}
                   </Text>
-                ) : (
-                  <RelativeChange change={pricePercentChange24h} />
-                )
-              }
-            />
-          </Button>
-        </Flex>
-      </AnimatedFlex>
-    </Button>
-  )
-}
+                </Box>
+              )}
+              <TokenLogo size={theme.imageSizes.lg} symbol={symbol} url={logoUrl} />
+            </Flex>
+            <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
+              <Text variant="subhead">{name}</Text>
+              <Text color="textSecondary" variant="caption">
+                {symbol.toUpperCase()}
+              </Text>
+            </Flex>
+          </Flex>
+          <Flex row justifyContent="flex-end">
+            <Button disabled={!onCycleMetadata} onPress={onCycleMetadata}>
+              <TokenMetadata
+                main={formatUSDPrice(price)}
+                sub={
+                  metadataDisplayType === CoingeckoOrderBy.MarketCapDesc ? (
+                    <Text variant="caption">
+                      {t('MCap {{marketCap}}', {
+                        marketCap: formatNumber(marketCap),
+                      })}
+                    </Text>
+                  ) : (
+                    <RelativeChange change={pricePercentChange24h} />
+                  )
+                }
+              />
+            </Button>
+          </Flex>
+        </AnimatedFlex>
+      </Button>
+    )
+  }
+)
 
 interface TokenMetadataProps {
   pre?: React.ReactNode

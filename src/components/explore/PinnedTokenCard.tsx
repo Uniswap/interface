@@ -1,6 +1,6 @@
 import { ShadowProps } from '@shopify/restyle'
 import { graphql } from 'babel-plugin-relay/macro'
-import React, { useCallback, useMemo } from 'react'
+import React, { memo, useCallback, useMemo } from 'react'
 import {
   FlexAlignType,
   Image,
@@ -60,7 +60,7 @@ export const pinnedTokenCardQuery = graphql`
 
 export const TOKEN_ITEM_BOX_MINWIDTH = 137
 
-export function PinnedTokenCard({
+function PinnedTokenCard({
   currencyId,
   isEditing,
   ...rest
@@ -189,3 +189,5 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
     </Flex>
   )
 }
+
+export default memo(PinnedTokenCard)

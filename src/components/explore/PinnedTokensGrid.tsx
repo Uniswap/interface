@@ -1,4 +1,4 @@
-import { default as React, useCallback, useMemo, useState } from 'react'
+import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
@@ -6,7 +6,7 @@ import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
 import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { PinnedTokenCard } from 'src/components/explore/PinnedTokenCard'
+import PinnedTokenCard from 'src/components/explore/PinnedTokenCard'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Text } from 'src/components/Text'
@@ -21,9 +21,13 @@ const GAP_SIZE = FixedTheme.spacing.xs
 const ITEM_FLEX = 1 / NUM_COLUMNS
 
 /** Renders the favorite tokens card on the Explore page */
-export function PinnedTokensGrid() {
-  const [isEditing, setIsEditing] = useState(false)
-
+export function PinnedTokensGrid({
+  isEditing,
+  setIsEditing,
+}: {
+  isEditing: boolean
+  setIsEditing: (update: boolean) => void
+}) {
   const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
   const favoriteCurrencyIds = useMemo(
     () => Array.from(favoriteCurrencyIdsSet),

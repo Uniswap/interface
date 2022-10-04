@@ -1,5 +1,5 @@
 import { graphql } from 'babel-plugin-relay/macro'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { OfflineLoadQuery, usePreloadedQuery } from 'react-relay-offline'
@@ -58,6 +58,9 @@ export default function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTab
   const { setOrderByModalIsVisible, orderByModal } = useOrderByModal()
   const [tokenMetadataDisplayType, cycleTokenMetadataDisplayType] = useTokenMetadataDisplayType()
 
+  // Editing pinned tokens
+  const [isEditing, setIsEditing] = useState(false)
+
   // TODO: Support client side search (% change).
   const topTokenItems = useMemo(() => {
     if (!data || !data.topTokenProjects) return EMPTY_ARRAY
@@ -106,7 +109,7 @@ export default function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTab
       ref={listRef}
       ListHeaderComponent={
         <Flex mt="sm">
-          <PinnedTokensGrid />
+          <PinnedTokensGrid isEditing={isEditing} setIsEditing={setIsEditing} />
           <Flex row alignItems="center" justifyContent="space-between" mx="sm">
             <Text color="textSecondary" variant="smallLabel">
               {t('Top Tokens')}
@@ -121,6 +124,7 @@ export default function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTab
       renderItem={renderItem}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
+      windowSize={5}
     />
   )
 }
