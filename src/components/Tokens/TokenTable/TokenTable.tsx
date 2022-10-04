@@ -95,7 +95,6 @@ export default function TokenTable() {
 
   /* loading and error state */
   if (loading && (!tokens || tokens?.length === 0)) {
-    console.log('loading count', loadingRowsCount)
     return <LoadingTokenTable rowCount={loadingRowsCount} />
   } else {
     if (error || !tokens) {
