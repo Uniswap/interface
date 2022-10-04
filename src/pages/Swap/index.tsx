@@ -35,7 +35,6 @@ import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { css, useTheme } from 'styled-components/macro'
 
-import { ReactComponent as SwapArrows } from '../../assets/svg/swap-arrows.svg'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
@@ -609,34 +608,22 @@ export default function Swap() {
                   name={EventName.SWAP_TOKENS_REVERSED}
                   element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
                 >
-                  {redesignFlagEnabled ? (
-                    <ArrowContainer
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }}
-                      color={theme.textPrimary}
-                    >
-                      <SwapArrows width="20px" height="20px" fill={theme.textPrimary} />
-                    </ArrowContainer>
-                  ) : (
-                    <ArrowContainer
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }}
-                      color={theme.textPrimary}
-                    >
-                      <ArrowDown
-                        size="16"
-                        color={
-                          currencies[Field.INPUT] && currencies[Field.OUTPUT]
-                            ? theme.deprecated_text1
-                            : theme.deprecated_text3
-                        }
-                      />
-                    </ArrowContainer>
-                  )}
+                  <ArrowContainer
+                    onClick={() => {
+                      setApprovalSubmitted(false) // reset 2 step UI for approvals
+                      onSwitchTokens()
+                    }}
+                    color={theme.textPrimary}
+                  >
+                    <ArrowDown
+                      size="16"
+                      color={
+                        currencies[Field.INPUT] && currencies[Field.OUTPUT]
+                          ? theme.deprecated_text1
+                          : theme.deprecated_text3
+                      }
+                    />
+                  </ArrowContainer>
                 </TraceEvent>
               </ArrowWrapper>
             </div>
