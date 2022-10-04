@@ -134,7 +134,7 @@ export default function SwapDetailsDropdown({
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   return (
-    <Wrapper style={{ marginTop: '0px' }} redesignFlag={redesignFlagEnabled}>
+    <Wrapper style={{ marginTop: redesignFlagEnabled ? '0' : '8px' }} redesignFlag={redesignFlagEnabled}>
       <AutoColumn gap={'8px'} style={{ width: '100%', marginBottom: '-8px' }}>
         <TraceEvent
           events={[Event.onClick]}
