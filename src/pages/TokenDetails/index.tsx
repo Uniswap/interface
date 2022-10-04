@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { formatToDecimal } from 'analytics/utils'
 import {
@@ -13,14 +13,10 @@ import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
-import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
-import NetworkBalance from 'components/Tokens/TokenDetails/NetworkBalance'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget, { WIDGET_WIDTH } from 'components/Widget'
-import { getChainInfo } from 'constants/chainInfo'
-import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { isCelo, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
@@ -28,7 +24,6 @@ import { useTokenQuery } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useAtomValue } from 'jotai/utils'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
@@ -37,12 +32,6 @@ import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-export const Footer = styled.div`
-  display: none;
-  @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    display: flex;
-  }
-`
 export const TokenDetailsLayout = styled.div`
   display: flex;
   gap: 60px;
@@ -90,18 +79,15 @@ export const RightPanel = styled.div`
     display: none;
   }
 `
-function NetworkBalances(tokenAddress: string | undefined) {
-  return useNetworkTokenBalances({ address: tokenAddress })
-}
 
 export default function TokenDetails() {
   const { tokenAddress: tokenAddressParam, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[validateUrlChainParam(chainName)]
+  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[validateUrlChainParam(chainName)]
   let tokenAddress = tokenAddressParam
-  let nativeCurrency
+  let nativeCurrency: NativeCurrency | Token | undefined
   if (tokenAddressParam === 'NATIVE') {
-    nativeCurrency = nativeOnChain(chainId)
-    tokenAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address?.toLowerCase()
+    nativeCurrency = nativeOnChain(pageChainId)
+    tokenAddress = WRAPPED_NATIVE_CURRENCY[pageChainId]?.address?.toLowerCase()
   }
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
@@ -131,7 +117,7 @@ export default function TokenDetails() {
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
-  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(tokenAddress, chainId) && tokenWarning !== null
+  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(tokenAddress, pageChainId) && tokenWarning !== null
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
   const onReviewSwap = useCallback(
     () => new Promise<boolean>((resolve) => (shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true))),
@@ -145,53 +131,30 @@ export default function TokenDetails() {
     },
     [continueSwap, setContinueSwap]
   )
-
-  /* network balance handling */
-  const { data: networkData } = NetworkBalances(tokenAddress)
-  const { chainId: connectedChainId, account } = useWeb3React()
+  const { account } = useWeb3React()
 
   // TODO: consider updating useTokenBalance to work with just address/chain to avoid using Token data structure here
-  const balanceValue = useTokenBalance(account, new Token(chainId, tokenAddress ?? '', 18))
+  const pageChainToken = new Token(pageChainId, tokenAddress ?? '', 18)
+  const balanceValue = useTokenBalance(account, pageChainToken)
   const balance = balanceValue ? formatToDecimal(balanceValue, Math.min(balanceValue.currency.decimals, 6)) : undefined
   const balanceUsdValue = useStablecoinValue(balanceValue)?.toFixed(2)
   const balanceUsd = balanceUsdValue ? parseFloat(balanceUsdValue) : undefined
 
-  const chainsToList = useMemo(() => {
-    let chainIds = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
-    const userConnectedToATestNetwork = connectedChainId && TESTNET_CHAIN_IDS.includes(connectedChainId)
-    if (!userConnectedToATestNetwork) {
-      chainIds = chainIds.filter((id) => !(TESTNET_CHAIN_IDS as unknown as SupportedChainId[]).includes(id))
+  const defaultWidgetToken = useMemo(() => {
+    if (nativeCurrency) {
+      return nativeCurrency
     }
-    return chainIds
-  }, [connectedChainId])
-
-  const balancesByNetwork = networkData
-    ? chainsToList.map((chainId) => {
-        const amount = networkData[chainId]
-        const fiatValue = amount // for testing purposes
-        if (!fiatValue || !token?.symbol) return null
-        const chainInfo = getChainInfo(chainId)
-        const networkColor = chainInfo.color
-        if (!chainInfo) return null
-        return (
-          <NetworkBalance
-            key={chainId}
-            logoUrl={chainInfo.logoUrl}
-            balance={'1'}
-            tokenSymbol={token.symbol}
-            fiatValue={fiatValue.toSignificant(2)}
-            label={chainInfo.label}
-            networkColor={networkColor}
-          />
-        )
-      })
-    : null
-
-  const defaultWidgetToken =
-    nativeCurrency ??
-    (token?.address && token.symbol && token.name
-      ? new Token(CHAIN_NAME_TO_CHAIN_ID[currentChainName], token.address, 18, token.symbol, token.name)
-      : undefined)
+    if (token) {
+      return new Token(
+        CHAIN_NAME_TO_CHAIN_ID[currentChainName],
+        token.address,
+        18,
+        token?.symbol ?? '',
+        token?.name ?? ''
+      )
+    }
+    return undefined
+  }, [currentChainName, nativeCurrency, token])
 
   return (
     <TokenDetailsLayout>
@@ -218,18 +181,20 @@ export default function TokenDetails() {
             <AddressSection address={token.address ?? ''} />
           </LeftPanel>
           <RightPanel>
-            <Widget defaultToken={!isCelo(chainId) ? defaultWidgetToken : undefined} onReviewSwapClick={onReviewSwap} />
-            {tokenWarning && <TokenSafetyMessage tokenAddress={token.address ?? ''} warning={tokenWarning} />}
-            <BalanceSummary address={token.address ?? ''} balance={balance} balanceUsd={balanceUsd} />
-          </RightPanel>
-          <Footer>
-            <FooterBalanceSummary
-              address={token.address ?? ''}
-              networkBalances={balancesByNetwork}
-              balance={balance}
-              balanceUsd={balanceUsd}
+            <Widget
+              defaultToken={isCelo(pageChainId) ? undefined : defaultWidgetToken}
+              onReviewSwapClick={onReviewSwap}
             />
-          </Footer>
+            {tokenWarning && <TokenSafetyMessage tokenAddress={token.address ?? ''} warning={tokenWarning} />}
+          </RightPanel>
+
+          <BalanceSummary
+            address={token.address ?? ''}
+            symbol={token.symbol ?? ''}
+            balance={balance}
+            balanceUsd={balanceUsd}
+          />
+
           <TokenSafetyModal
             isOpen={isBlockedToken || !!continueSwap}
             tokenAddress={token.address}

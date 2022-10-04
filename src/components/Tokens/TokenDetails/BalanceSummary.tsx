@@ -1,83 +1,163 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { useToken } from 'hooks/Tokens'
-import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
+import { useMultiNetworkAddressBalances } from 'hooks/useMultiNetworkAddressBalances'
 import { AlertTriangle } from 'react-feather'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-const BalancesCard = styled.div`
-  width: 100%;
+import { LARGE_MEDIA_BREAKPOINT, SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
+import { LoadingBubble } from '../loading'
+
+const Wrapper = styled.div`
   height: fit-content;
-  color: ${({ theme }) => theme.textPrimary};
-  font-size: 12px;
-  line-height: 16px;
-  padding: 20px;
-  box-shadow: ${({ theme }) => theme.shallowShadow};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   background-color: ${({ theme }) => theme.backgroundSurface};
-  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
-  border-radius: 16px;
+  border-radius: 20px 20px 0px 0px;
+  display: none !important;
+  padding: 12px 16px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  width: 100%;
+  color: ${({ theme }) => theme.textSecondary};
+  position: fixed;
+  left: 0;
+  bottom: 56px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+
+  @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
+    display: flex !important;
+  }
+`
+const BalanceValue = styled.div`
+  font-size: 20px;
+  line-height: 28px;
+  display: flex;
+  gap: 8px;
+`
+const BalanceTotal = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: ${({ theme }) => theme.textPrimary};
+`
+const BalanceInfo = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+`
+const FiatValue = styled.span`
+  display: flex;
+  align-self: flex-end;
+  font-size: 12px;
+  line-height: 24px;
+
+  @media only screen and (max-width: ${SMALLEST_MOBILE_MEDIA_BREAKPOINT}) {
+    line-height: 16px;
+  }
+`
+const SwapButton = styled.button`
+  background-color: ${({ theme }) => theme.accentAction};
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  border: none;
+  color: ${({ theme }) => theme.accentTextLightPrimary};
+  padding: 12px 16px;
+  width: 120px;
+  height: 44px;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+`
+const TotalBalancesSection = styled.div`
+  display: flex;
+  color: ${({ theme }) => theme.textSecondary};
+  justify-content: space-between;
+  align-items: center;
 `
 const ErrorState = styled.div`
   display: flex;
   align-items: center;
+  gap: 8px;
+  padding-right: 8px;
+`
+const LoadingState = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  color: ${({ theme }) => theme.textSecondary};
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
+`
+const TopBalanceLoadBubble = styled(LoadingBubble)`
+  height: 12px;
+  width: 172px;
+`
+const BottomBalanceLoadBubble = styled(LoadingBubble)`
+  height: 16px;
+  width: 188px;
 `
 const ErrorText = styled.span`
   display: flex;
   flex-wrap: wrap;
 `
 
-const TotalBalanceSection = styled.div`
-  height: fit-content;
-`
-const TotalBalance = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 20px;
-  line-height: 28px;
-  margin-top: 12px;
-  align-items: center;
-`
-const TotalBalanceItem = styled.div`
-  display: flex;
-`
-
-export default function BalanceSummary({
-  address,
-  balance,
-  balanceUsd,
-}: {
+interface BalanceSummaryProps {
   address: string
+  symbol: string
   balance?: number
   balanceUsd?: number
-}) {
-  const token = useToken(address)
-  const { loading, error } = useNetworkTokenBalances({ address })
+}
 
-  if (loading || (!error && !balance && !balanceUsd)) return null
+export default function BalanceSummary({ address, symbol, balance, balanceUsd }: BalanceSummaryProps) {
+  const { account, chainId: connectedChainId } = useWeb3React()
+
+  const tokenSymbol = useToken(address)?.symbol
+  const { data, error, loading } = useMultiNetworkAddressBalances({ ownerAddress: account, tokenAddress: address })
+  console.log(data)
+  console.log(`
+  useMultiNetworkAddressBalances data: 👆
+  =====
+  error: ${error}
+  =====
+  loading: ${loading}
+  ***
+  `)
   return (
-    <BalancesCard>
-      {error ? (
-        <ErrorState>
-          <AlertTriangle size={24} />
-          <ErrorText>
-            <Trans>There was an error loading your {token?.symbol} balance</Trans>
-          </ErrorText>
-        </ErrorState>
-      ) : (
-        <>
-          <TotalBalanceSection>
-            Your balance
-            <TotalBalance>
-              <TotalBalanceItem>{`${balance} ${token?.symbol}`}</TotalBalanceItem>
-              <TotalBalanceItem>{`$${balanceUsd}`}</TotalBalanceItem>
-            </TotalBalance>
-          </TotalBalanceSection>
-        </>
-      )}
-    </BalancesCard>
+    <Wrapper>
+      <TotalBalancesSection>
+        {loading ? (
+          <LoadingState>
+            <TopBalanceLoadBubble></TopBalanceLoadBubble>
+            <BottomBalanceLoadBubble></BottomBalanceLoadBubble>
+          </LoadingState>
+        ) : error ? (
+          <ErrorState>
+            <AlertTriangle size={17} />
+            <ErrorText>
+              <Trans>There was an error fetching your balance</Trans>
+            </ErrorText>
+          </ErrorState>
+        ) : (
+          balance && (
+            <BalanceInfo>
+              <Trans>Your {symbol} balance</Trans>
+              <BalanceTotal>
+                <BalanceValue>
+                  {balance} {tokenSymbol}
+                </BalanceValue>
+                {balanceUsd && <FiatValue>${balanceUsd}</FiatValue>}
+              </BalanceTotal>
+            </BalanceInfo>
+          )
+        )}
+        <Link to={`/swap?outputCurrency=${address}`}>
+          <SwapButton>
+            <Trans>Swap</Trans>
+          </SwapButton>
+        </Link>
+      </TotalBalancesSection>
+    </Wrapper>
   )
 }
