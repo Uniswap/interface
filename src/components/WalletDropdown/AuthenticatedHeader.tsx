@@ -149,14 +149,15 @@ const AuthenticatedHeader = () => {
           </FlexContainer>
         </StatusWrapper>
         <IconContainer>
-          <IconButton onClick={copy} Icon={Copy} text={isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>} />
-          <IconButton href={`${explorer}address/${account}`} Icon={ExternalLink} text={<Trans>Explore</Trans>} />
-          <IconButton
-            dataTestId="wallet-disconnect"
-            onClick={disconnect}
-            Icon={Power}
-            text={<Trans>Disconnect</Trans>}
-          />
+          <IconButton onClick={copy} Icon={Copy}>
+            {isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>}
+          </IconButton>
+          <IconButton href={`${explorer}address/${account}`} target="_blank" Icon={ExternalLink}>
+            <Trans>Explore</Trans>
+          </IconButton>
+          <IconButton data-testid="wallet-disconnect" onClick={disconnect} Icon={Power}>
+            <Trans>Disconnect</Trans>
+          </IconButton>
         </IconContainer>
       </HeaderWrapper>
       <Column>
