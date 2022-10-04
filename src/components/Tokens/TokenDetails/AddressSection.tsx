@@ -21,7 +21,6 @@ const ContractAddress = styled.button`
   border: none;
   min-height: 38px;
   padding: 0px;
-  cursor: pointer;
 `
 
 export default function AddressSection({ address }: { address: string }) {

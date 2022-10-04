@@ -1,8 +1,13 @@
 import { Trans } from '@lingui/macro'
+import { TokenSortMethod } from 'graphql/data/TopTokens'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
+
+import { SMALL_MEDIA_BREAKPOINT } from '../constants'
+import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
+import InfoTip from './InfoTip'
 
 export const StatWrapper = styled.div`
   display: flex;
@@ -24,6 +29,11 @@ export const StatPair = styled.div`
   flex: 1;
   flex-wrap: wrap;
 `
+const StatTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+`
 const StatPrice = styled.span`
   font-size: 28px;
   color: ${({ theme }) => theme.textPrimary};
@@ -34,10 +44,14 @@ const NoData = styled.div`
 
 type NumericStat = number | undefined | null
 
-function Stat({ value, title }: { value: NumericStat; title: ReactNode }) {
+function Stat({ value, title, desc }: { value: NumericStat; title: ReactNode; desc?: string }) {
   return (
     <StatWrapper>
-      {title}
+      <StatTitle>
+        {title}
+        {desc && <InfoTip breakpoint={SMALL_MEDIA_BREAKPOINT}>{desc}</InfoTip>}
+      </StatTitle>
+
       <StatPrice>{value ? formatDollarAmount(value) : '-'}</StatPrice>
     </StatWrapper>
   )
@@ -55,8 +69,12 @@ export default function StatsSection(props: StatsSectionProps) {
     return (
       <TokenStatsSection>
         <StatPair>
-          <Stat value={TVL} title={<Trans>Total Value Locked</Trans>} />
-          <Stat value={volume24H} title={<Trans>24H volume</Trans>} />
+          <Stat value={TVL} desc={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]} title={<Trans>TVL</Trans>} />
+          <Stat
+            value={volume24H}
+            desc="24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+            title={<Trans>24H volume</Trans>}
+          />
         </StatPair>
         <StatPair>
           <Stat value={priceLow52W} title={<Trans>52W low</Trans>} />

@@ -9,7 +9,7 @@ import { WalletCollection } from 'nft/types'
 import { Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import { useSpring } from 'react-spring'
 
-import * as styles from './SelectPage.css'
+import * as styles from './ProfilePage.css'
 
 export const FilterSidebar = ({ SortDropdown }: { SortDropdown: () => JSX.Element }) => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)

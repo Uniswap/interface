@@ -119,9 +119,9 @@ const Bag = () => {
   const isConnected = !!provider && !!address
 
   const { pathname } = useLocation()
-  const isNFTSellPage = pathname.startsWith('/nfts/sell')
+  const isProfilePage = pathname.startsWith('/profile')
   const isNFTPage = pathname.startsWith('/nfts')
-  const shouldShowBag = isNFTPage && !isNFTSellPage
+  const shouldShowBag = isNFTPage && !isProfilePage
   const isMobile = useIsMobile()
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)

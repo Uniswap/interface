@@ -30,11 +30,8 @@ const ExploreContainer = styled.div`
     padding-top: 20px;
   }
 `
-const TokenTableContainer = styled.div`
-  padding: 16px 0px;
-`
 export const TitleContainer = styled.div`
-  margin-bottom: 16px;
+  margin-bottom: 32px;
   max-width: 960px;
   margin-left: auto;
   margin-right: auto;
@@ -62,6 +59,7 @@ const FiltersWrapper = styled.div`
   display: flex;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin: 0 auto;
+  margin-bottom: 20px;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     flex-direction: column;
@@ -86,7 +84,7 @@ const Tokens = () => {
       <ExploreContainer>
         <TitleContainer>
           <ThemedText.LargeHeader>
-            <Trans>Explore Tokens</Trans>
+            <Trans>Top tokens on Uniswap</Trans>
           </ThemedText.LargeHeader>
         </TitleContainer>
         <FiltersWrapper>
@@ -99,9 +97,7 @@ const Tokens = () => {
             <SearchBar />
           </SearchContainer>
         </FiltersWrapper>
-        <TokenTableContainer>
-          <TokenTable />
-        </TokenTableContainer>
+        <TokenTable />
       </ExploreContainer>
     </Trace>
   )
@@ -112,7 +108,7 @@ export const LoadingTokens = () => {
     <ExploreContainer>
       <TitleContainer>
         <ThemedText.LargeHeader>
-          <Trans>Explore Tokens</Trans>
+          <Trans>Top tokens on Uniswap</Trans>
         </ThemedText.LargeHeader>
       </TitleContainer>
       <FiltersWrapper>
@@ -125,9 +121,7 @@ export const LoadingTokens = () => {
           <SearchBar />
         </SearchContainer>
       </FiltersWrapper>
-      <TokenTableContainer>
-        <LoadingTokenTable />
-      </TokenTableContainer>
+      <LoadingTokenTable />
     </ExploreContainer>
   )
 }
