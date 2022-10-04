@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { getTokenDetailsURL } from 'graphql/data/util'
+import { getTokenDetailsURL, useGlobalChainId } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -100,6 +100,15 @@ export const CollectionRow = ({
   )
 }
 
+function useBridgedAddress(token: FungibleToken): [string | undefined, number | undefined] {
+  const globalChainId = useGlobalChainId()
+  const bridgedAddress = globalChainId ? token.extensions?.bridgeInfo?.[globalChainId]?.tokenAddress : undefined
+  if (bridgedAddress && globalChainId) {
+    return [bridgedAddress, globalChainId]
+  }
+  return [undefined, undefined]
+}
+
 interface TokenRowProps {
   token: FungibleToken
   isHovered: boolean
@@ -123,7 +132,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
     traceEvent()
   }, [addToSearchHistory, toggleOpen, token, traceEvent])
 
-  const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)
+  const [bridgedAddress, bridgedChain] = useBridgedAddress(token)
+  console.log(bridgedAddress)
+  const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
