@@ -1,5 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { body, bodySmall } from 'nft/css/common.css'
+import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
 import { breakpoints, sprinkles } from '../../css/sprinkles.css'
 
@@ -111,5 +112,56 @@ export const statsValue = style([
   }),
   {
     lineHeight: '24px',
+  },
+])
+
+export const statsValueLoading = style([
+  loadingAsset,
+  sprinkles({
+    width: '60',
+    height: '20',
+    marginTop: '8',
+  }),
+])
+
+export const statsLabelLoading = style([
+  loadingAsset,
+  sprinkles({
+    width: '60',
+    height: '16',
+  }),
+])
+
+export const descriptionLoading = style([
+  loadingAsset,
+  {
+    maxWidth: 'min(calc(100% - 112px), 600px)',
+  },
+])
+
+export const collectionImageIsLoadingBackground = style([
+  collectionImage,
+  sprinkles({
+    backgroundColor: 'backgroundSurface',
+  }),
+])
+
+export const collectionImageIsLoading = style([
+  loadingBlock,
+  collectionImage,
+  sprinkles({
+    borderStyle: 'solid',
+    borderWidth: '4px',
+    borderColor: 'backgroundSurface',
+  }),
+])
+
+export const nameTextLoading = style([
+  loadingAsset,
+  sprinkles({
+    height: '32',
+  }),
+  {
+    width: 236,
   },
 ])

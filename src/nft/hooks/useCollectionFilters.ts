@@ -25,8 +25,8 @@ export type Trait = {
 interface State {
   traits: Trait[]
   markets: string[]
-  minPrice: number | ''
-  maxPrice: number | ''
+  minPrice: string
+  maxPrice: string
   minRarity: number | ''
   maxRarity: number | ''
   marketCount: Record<string, number>
@@ -43,8 +43,8 @@ type Actions = {
   addTrait: (trait: Trait) => void
   removeTrait: (trait: Trait) => void
   reset: () => void
-  setMinPrice: (price: number | '') => void
-  setMaxPrice: (price: number | '') => void
+  setMinPrice: (price: string) => void
+  setMaxPrice: (price: string) => void
   setMinRarity: (range: number | '') => void
   setMaxRarity: (range: number | '') => void
   setBuyNow: (bool: boolean) => void

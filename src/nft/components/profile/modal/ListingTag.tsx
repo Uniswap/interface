@@ -3,8 +3,8 @@ import { Box } from 'nft/components/Box'
 import { Column } from 'nft/components/Flex'
 import { CloseDropDownIcon } from 'nft/components/icons'
 import { bodySmall, buttonMedium, headlineSmall } from 'nft/css/common.css'
-import { useBag, useIsMobile, useSellAsset, useSellPageState } from 'nft/hooks'
-import { SellPageStateType } from 'nft/types'
+import { useBag, useIsMobile, useProfilePageState, useSellAsset } from 'nft/hooks'
+import { ProfilePageStateType } from 'nft/types'
 import { lazy, Suspense } from 'react'
 import { useLocation } from 'react-router-dom'
 
@@ -15,10 +15,10 @@ const ListingModal = lazy(() => import('./ListingModal'))
 
 const Cart = () => {
   const { pathname } = useLocation()
-  const isNFTSellPage = pathname.startsWith('/nfts/sell')
+  const isProfilePage = pathname.startsWith('/profile')
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const setSellPageState = useSellPageState((state) => state.setSellPageState)
-  const sellPageState = useSellPageState((state) => state.state)
+  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const sellPageState = useProfilePageState((state) => state.state)
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
   const bagExpanded = useBag((s) => s.bagExpanded)
@@ -32,7 +32,7 @@ const Cart = () => {
       left={{ sm: '0', md: 'unset' }}
       right={{ sm: 'unset', md: '0' }}
       top={{ sm: '0', md: 'unset' }}
-      display={bagExpanded && isNFTSellPage ? 'flex' : 'none'}
+      display={bagExpanded && isProfilePage ? 'flex' : 'none'}
     >
       <Suspense fallback={<Loader />}>
         <Column
@@ -45,7 +45,7 @@ const Cart = () => {
           marginLeft="0"
           justifyContent="flex-start"
         >
-          {sellPageState === SellPageStateType.LISTING ? (
+          {sellPageState === ProfilePageStateType.LISTING ? (
             <ListingModal />
           ) : (
             <>
@@ -70,7 +70,7 @@ const Cart = () => {
                   disabled={sellAssets.length === 0}
                   onClick={() => {
                     isMobile && toggleCart()
-                    setSellPageState(SellPageStateType.LISTING)
+                    setSellPageState(ProfilePageStateType.LISTING)
                   }}
                 >
                   Continue

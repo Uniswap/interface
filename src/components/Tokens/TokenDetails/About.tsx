@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { darken } from 'polished'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
+import { textFadeIn } from 'theme/animations'
 
 import Resource from './Resource'
 
@@ -49,6 +50,7 @@ const TRUNCATE_CHARACTER_COUNT = 400
 export const AboutContainer = styled.div`
   gap: 16px;
   padding: 24px 0px;
+  ${textFadeIn}
 `
 export const AboutHeader = styled.span`
   font-size: 28px;

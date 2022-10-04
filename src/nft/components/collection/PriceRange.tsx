@@ -4,6 +4,7 @@ import { useIsMobile } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
 import { isNumber } from 'nft/utils/numbers'
+
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { FormEvent, useEffect, useState } from 'react'
 import { FocusEventHandler } from 'react'
@@ -70,14 +71,14 @@ export const PriceRange = () => {
               setPrevMinMax([0, 100])
 
               // set the value of minprice and range for querying
-              setMinPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
+              setMinPrice(v.currentTarget.value)
               setPriceRangeLow(v.currentTarget.value)
 
               // If we are updating the min price and the max price has been adjusted via the slider
               // We need to maintain that min price when we reset
               if (maxPrice !== '') {
                 setMaxSet(true)
-                setPriceRangeHigh(maxPrice.toFixed(2))
+                setPriceRangeHigh(maxPrice)
               }
 
               // if the user manually inputs a value, we want this value to persist when moving a slider
@@ -107,13 +108,13 @@ export const PriceRange = () => {
             value={maxPrice}
             onChange={(v: FormEvent<HTMLInputElement>) => {
               setPrevMinMax([0, 100])
-              setMaxPrice(isNumber(v.currentTarget.value) ? parseFloat(v.currentTarget.value) : '')
+              setMaxPrice(v.currentTarget.value)
               setPriceRangeHigh(v.currentTarget.value)
               setMaxSet(v.currentTarget.value !== '')
 
               if (minPrice !== '') {
                 setMinSet(true)
-                setPriceRangeLow(minPrice.toFixed(2))
+                setPriceRangeLow(minPrice)
               }
 
               scrollToTop()
@@ -130,7 +131,7 @@ export const PriceRange = () => {
           className={styles.slider}
           trackClassName={styles.tracker}
           thumbClassName={styles.thumb}
-          onAfterChange={(minMax) => {
+          onAfterChange={(minMax: Array<number>) => {
             const [newMin, newMax] = minMax
             const [prevMin, prevMax] = prevMinMax
             const priceRangeHighNumber = parseFloat(priceRangeHigh)
@@ -145,14 +146,14 @@ export const PriceRange = () => {
               const minChange = newMin / 100
               const newMinPrice = minChange * diff + priceRangeLowNumber
 
-              setMinPrice(parseFloat(newMinPrice.toFixed(2)))
+              setMinPrice(newMinPrice.toFixed(2))
             }
 
             if (newMax !== prevMax) {
               const maxChange = (100 - newMax) / 100
               const newMaxPrice = priceRangeHighNumber - maxChange * diff
 
-              setMaxPrice(parseFloat(newMaxPrice.toFixed(2)))
+              setMaxPrice(newMaxPrice.toFixed(2))
             }
 
             // if they move the slider back to the beginning and have NOT manually set a value, reset the minprice.

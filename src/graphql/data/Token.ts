@@ -92,7 +92,6 @@ const tokenPriceQuery = graphql`
     $skip1W: Boolean!
     $skip1M: Boolean!
     $skip1Y: Boolean!
-    $skipMax: Boolean!
   ) {
     tokens(contracts: [$contract]) {
       market(currency: USD) {
@@ -113,10 +112,6 @@ const tokenPriceQuery = graphql`
           value
         }
         priceHistory1Y: priceHistory(duration: YEAR) @skip(if: $skip1Y) {
-          timestamp
-          value
-        }
-        priceHistoryMAX: priceHistory(duration: MAX) @skip(if: $skipMax) {
           timestamp
           value
         }
@@ -161,7 +156,6 @@ export function useTokenPricesCached(token: SingleTokenData) {
         skip1W: timePeriod === TimePeriod.WEEK && !!fetchedTokenPrices,
         skip1M: timePeriod === TimePeriod.MONTH && !!fetchedTokenPrices,
         skip1Y: timePeriod === TimePeriod.YEAR && !!fetchedTokenPrices,
-        skipMax: timePeriod === TimePeriod.ALL && !!fetchedTokenPrices,
       }).subscribe({
         next: (data) => {
           const market = data.tokens?.[0]?.market
@@ -171,7 +165,6 @@ export function useTokenPricesCached(token: SingleTokenData) {
             market.priceHistory1W && updatePrices(TimePeriod.WEEK, filterPrices(market.priceHistory1W))
             market.priceHistory1M && updatePrices(TimePeriod.MONTH, filterPrices(market.priceHistory1M))
             market.priceHistory1Y && updatePrices(TimePeriod.YEAR, filterPrices(market.priceHistory1Y))
-            market.priceHistoryMAX && updatePrices(TimePeriod.ALL, filterPrices(market.priceHistoryMAX))
           }
         },
       })
