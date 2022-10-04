@@ -167,7 +167,8 @@ interface UseTopTokensReturnValue {
   tokens: TopToken[] | undefined
   hasMore: boolean
   loadMoreTokens: () => void
-  maxFetchable: number
+  tokenListLength: number
+  loadingRowsCount: number
 }
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
@@ -178,8 +179,14 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const [error, setError] = useState<Error | undefined>()
   const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>()
   const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData))
-  const maxFetchable = useMemo(
-    () => (prefetchedData ? prefetchedSelectedTokensWithoutPriceHistory.length : 100),
+  const tokenListLength = useMemo(
+    () => prefetchedSelectedTokensWithoutPriceHistory.length,
+    [prefetchedSelectedTokensWithoutPriceHistory]
+  )
+  // loadingRowsCount defaults to PAGE_SIZE when no prefetchedData is available yet because the initial load
+  // count will always be PAGE_SIZE.
+  const loadingRowsCount = useMemo(
+    () => (prefetchedData ? Math.min(prefetchedSelectedTokensWithoutPriceHistory.length, PAGE_SIZE) : PAGE_SIZE),
     [prefetchedSelectedTokensWithoutPriceHistory, prefetchedData]
   )
 
@@ -280,7 +287,8 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     tokens,
     hasMore,
     loadMoreTokens,
-    maxFetchable,
+    tokenListLength,
+    loadingRowsCount,
   }
 }
 
