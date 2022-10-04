@@ -33,7 +33,7 @@ import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { ReactComponent as SwapArrows } from '../../assets/svg/swap-arrows.svg'
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -85,19 +85,16 @@ const ArrowContainer = styled.div`
 const SwapSection = styled.div<{ redesignFlag: boolean }>`
   position: relative;
   visibility: ${({ redesignFlag }) => !redesignFlag && 'none'};
-  ${({ redesignFlag }) =>
-    redesignFlag &&
-    css`
-      background-color: ${({ theme }) => theme.backgroundModule};
-      border-radius: 12px;
-      padding: 16px;
-      color: ${({ theme }) => theme.textSecondary};
-      font-size: 14px;
-      line-height: 20px;
-      font-weight: 500;
-    `}
+  background-color: ${({ theme }) => theme.backgroundModule};
+  border-radius: 12px;
+  padding: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
 
   &:before {
+    box-sizing: border-box;
     background-size: 100%;
     border-radius: inherit;
 
@@ -108,10 +105,15 @@ const SwapSection = styled.div<{ redesignFlag: boolean }>`
     width: 100%;
     height: 100%;
     content: '';
+    border: 1px solid ${({ theme }) => theme.backgroundModule};
   }
 
   &:hover:before {
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+    border-color: ${({ theme }) => theme.stateOverlayHover};
+  }
+
+  &:focus-within:before {
+    border-color: ${({ theme }) => theme.stateOverlayPressed};
   }
 `
 
