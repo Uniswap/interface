@@ -33,7 +33,7 @@ import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 
 import { ReactComponent as SwapArrows } from '../../assets/svg/swap-arrows.svg'
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -84,37 +84,41 @@ const ArrowContainer = styled.div`
 
 const SwapSection = styled.div<{ redesignFlag: boolean }>`
   position: relative;
-  visibility: ${({ redesignFlag }) => !redesignFlag && 'none'};
-  background-color: ${({ theme }) => theme.backgroundModule};
-  border-radius: 12px;
-  padding: 16px;
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
 
-  &:before {
-    box-sizing: border-box;
-    background-size: 100%;
-    border-radius: inherit;
+  ${({ redesignFlag }) =>
+    redesignFlag &&
+    css`
+      background-color: ${({ theme }) => theme.backgroundModule};
+      border-radius: 12px;
+      padding: 16px;
+      color: ${({ theme }) => theme.textSecondary};
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
 
-    position: absolute;
-    top: 0;
-    left: 0;
+      &:before {
+        box-sizing: border-box;
+        background-size: 100%;
+        border-radius: inherit;
 
-    width: 100%;
-    height: 100%;
-    content: '';
-    border: 1px solid ${({ theme }) => theme.backgroundModule};
-  }
+        position: absolute;
+        top: 0;
+        left: 0;
 
-  &:hover:before {
-    border-color: ${({ theme }) => theme.stateOverlayHover};
-  }
+        width: 100%;
+        height: 100%;
+        content: '';
+        border: 1px solid ${({ theme }) => theme.backgroundModule};
+      }
 
-  &:focus-within:before {
-    border-color: ${({ theme }) => theme.stateOverlayPressed};
-  }
+      &:hover:before {
+        border-color: ${({ theme }) => theme.stateOverlayHover};
+      }
+
+      &:focus-within:before {
+        border-color: ${({ theme }) => theme.stateOverlayPressed};
+      }
+    `}
 `
 
 const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
