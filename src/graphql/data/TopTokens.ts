@@ -167,7 +167,7 @@ interface UseTopTokensReturnValue {
   tokens: TopToken[] | undefined
   hasMore: boolean
   loadMoreTokens: () => void
-  loadingRowsCount: number
+  loadingRowCount: number
 }
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
@@ -179,9 +179,9 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>()
   const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData))
   const loading = Boolean(loadingTokensWithPriceHistory || loadingTokensWithoutPriceHistory)
-  // loadingRowsCount defaults to PAGE_SIZE when no prefetchedData is available yet because the initial load
+  // loadingRowCount defaults to PAGE_SIZE when no prefetchedData is available yet because the initial load
   // count will always be PAGE_SIZE.
-  const loadingRowsCount = useMemo(
+  const loadingRowCount = useMemo(
     () => (prefetchedData ? Math.min(prefetchedSelectedTokensWithoutPriceHistory.length, PAGE_SIZE) : PAGE_SIZE),
     [prefetchedSelectedTokensWithoutPriceHistory, prefetchedData]
   )
@@ -283,7 +283,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     tokens,
     hasMore,
     loadMoreTokens,
-    loadingRowsCount,
+    loadingRowCount,
   }
 }
 
