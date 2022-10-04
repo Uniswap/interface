@@ -29,6 +29,10 @@ export const NumericInput = forwardRef<HTMLInputElement, BoxProps>((props, ref) 
       autoComplete="off"
       type="text"
       onInput={(v: FormEvent<HTMLInputElement>) => {
+        if (v.currentTarget.value === '.') {
+          v.currentTarget.value = '0.'
+        }
+
         v.currentTarget.value =
           !!v.currentTarget.value && isNumber(v.currentTarget.value) && parseFloat(v.currentTarget.value) >= 0
             ? v.currentTarget.value
