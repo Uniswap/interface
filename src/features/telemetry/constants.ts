@@ -1,6 +1,7 @@
 /** High-level event names as used by Firebase */
 export enum EventName {
   Impression = 'impression',
+  MarkMeasure = 'mark-measure',
   Transaction = 'transaction',
   UserEvent = 'user-event',
 }
@@ -146,6 +147,10 @@ export const enum ElementName {
   Wrap = 'wrap',
 }
 
+export const enum MarkNames {
+  AppStartup = 'rehydration',
+}
+
 /**
  * Context to pass down to our logMessage and logExceptions methods.
  *
@@ -159,6 +164,7 @@ export const enum LogContext {
   Experiments = 'Experiments',
   ForceUpgrade = 'ForceUpgrade',
   ImageUtils = 'ImageUtils',
+  Marks = 'Marks',
   ProviderManager = 'ProviderManager',
   SecurityConcern = 'SecurityConcern',
   ValidateAddress = 'ValidateAddress',

@@ -1,6 +1,7 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
-import React, { StrictMode, Suspense } from 'react'
+import * as SplashScreen from 'expo-splash-screen'
+import React, { StrictMode, Suspense, useCallback, useEffect, useState } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
@@ -24,10 +25,15 @@ import { NotificationToastWrapper } from 'src/features/notifications/Notificatio
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { initAnalytics } from 'src/features/telemetry'
+import { MarkNames } from 'src/features/telemetry/constants'
+import { Trace } from 'src/features/telemetry/Trace'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync()
 
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
@@ -54,43 +60,70 @@ initAnalytics()
 initExperiments()
 
 function App() {
+  return (
+    <Trace startMark={MarkNames.AppStartup}>
+      <StrictMode>
+        <SafeAreaProvider>
+          <Provider store={store}>
+            <RelayEnvironmentProvider environment={RelayEnvironment}>
+              <RelayHooksEnvironmentProvider environment={RelayEnvironment}>
+                <PersistGate loading={null} persistor={persistor}>
+                  <DynamicThemeProvider>
+                    <ErrorBoundary>
+                      <WalletContextProvider>
+                        <BiometricContextProvider>
+                          <LockScreenContextProvider>
+                            <DataUpdaters />
+                            <BottomSheetModalProvider>
+                              <AppModals />
+                              <AppInner />
+                            </BottomSheetModalProvider>
+                          </LockScreenContextProvider>
+                        </BiometricContextProvider>
+                      </WalletContextProvider>
+                    </ErrorBoundary>
+                  </DynamicThemeProvider>
+                </PersistGate>
+              </RelayHooksEnvironmentProvider>
+            </RelayEnvironmentProvider>
+          </Provider>
+        </SafeAreaProvider>
+      </StrictMode>
+    </Trace>
+  )
+}
+
+function AppInner() {
   const isDarkMode = useColorScheme() === 'dark'
 
-  // wait for hydration of persistent data in memory
+  const [appIsReady, setAppIsReady] = useState(false)
   const isRehydrated = useRestore(RelayEnvironment)
-  if (!isRehydrated) {
-    // TODO: consider using expo splash screen to delay removing the splash screen
+  useEffect(() => {
+    // wait for hydration of persistent data in memory
+    if (isRehydrated) {
+      setAppIsReady(true)
+    }
+  }, [isRehydrated])
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync()
+    }
+  }, [appIsReady])
+
+  if (!appIsReady) {
     return null
   }
 
   return (
-    <StrictMode>
-      <SafeAreaProvider>
-        <Provider store={store}>
-          <RelayEnvironmentProvider environment={RelayEnvironment}>
-            <RelayHooksEnvironmentProvider environment={RelayEnvironment}>
-              <PersistGate loading={null} persistor={persistor}>
-                <DynamicThemeProvider>
-                  <ErrorBoundary>
-                    <WalletContextProvider>
-                      <BiometricContextProvider>
-                        <LockScreenContextProvider>
-                          <DataUpdaters />
-                          <BottomSheetModalProvider>
-                            <AppModals />
-                            <NavStack isDarkMode={isDarkMode} />
-                          </BottomSheetModalProvider>
-                        </LockScreenContextProvider>
-                      </BiometricContextProvider>
-                    </WalletContextProvider>
-                  </ErrorBoundary>
-                </DynamicThemeProvider>
-              </PersistGate>
-            </RelayHooksEnvironmentProvider>
-          </RelayEnvironmentProvider>
-        </Provider>
-      </SafeAreaProvider>
-    </StrictMode>
+    <Trace endMark={MarkNames.AppStartup}>
+      <NavStack isDarkMode={isDarkMode} onReady={onLayoutRootView} />
+    </Trace>
   )
 }
 
@@ -113,11 +146,12 @@ function DataUpdaters() {
   )
 }
 
-function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
+function NavStack({ isDarkMode, onReady }: { isDarkMode: boolean; onReady: () => void }) {
   return (
     <NavigationContainer
       onReady={(navigationRef) => {
         routingInstrumentation.registerNavigationContainer(navigationRef)
+        onReady()
       }}>
       <NotificationToastWrapper>
         <DrawerNavigator />

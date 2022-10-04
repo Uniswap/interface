@@ -66,6 +66,7 @@ export function logException(context: LogContext, error: any, extraTags?: LogTag
  */
 export function logMessage(context: LogContext, message: string, extraTags?: LogTags) {
   if (__DEV__) {
+    logger.info('telemetry', 'logMessage', context, message)
     return
   }
 
