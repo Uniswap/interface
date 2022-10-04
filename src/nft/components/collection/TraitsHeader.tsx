@@ -38,7 +38,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
         fontSize="14"
         paddingTop="10"
         paddingLeft="12"
-        paddingRight="12"
+        paddingRight="16"
         paddingBottom="10"
         onClick={(e) => {
           e.preventDefault()
@@ -61,7 +61,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
             display: 'flex',
           }}
         >
-          <ChevronUpIcon />
+          <ChevronUpIcon secondaryWidth={'23px'} />
         </Box>
       </Box>
       {children}

@@ -108,7 +108,7 @@ export const MarketplaceSelect = () => {
         fontSize="14"
         paddingTop="8"
         paddingLeft="12"
-        paddingRight="12"
+        paddingRight="16"
         paddingBottom="8"
         onClick={(e) => {
           e.preventDefault()
@@ -120,12 +120,12 @@ export const MarketplaceSelect = () => {
           color="textSecondary"
           transition="250"
           height="28"
-          width="28"
+          width="24"
           style={{
             transform: `rotate(${isOpen ? 0 : 180}deg)`,
           }}
         >
-          <ChevronUpIcon />
+          <ChevronUpIcon secondaryWidth={'23px'} />
         </Box>
       </Box>
       <Column className={styles.filterDropDowns} paddingLeft="0">
