@@ -1,4 +1,4 @@
-import { Currency, OnReviewSwapClick, SwapWidget } from '@uniswap/widgets'
+import { Currency, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
@@ -48,4 +48,10 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
       {tokenSelector}
     </>
   )
+}
+
+export function WidgetSkeleton() {
+  const darkMode = useIsDarkMode()
+  const theme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
+  return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
 }
