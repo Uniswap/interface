@@ -208,7 +208,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
         descriptionRef.current.getBoundingClientRect().width >= 590)
     )
       setShowReadMore(true)
-  }, [descriptionRef, baseRef])
+  }, [descriptionRef, baseRef, isCollectionStatsLoading])
 
   return isCollectionStatsLoading ? (
     <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}></Box>
@@ -326,14 +326,10 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
           collectionSocialsIsOpen={collectionSocialsIsOpen}
           toggleCollectionSocials={toggleCollectionSocials}
         />
-        {!isMobile && (
-          <>
-            {(stats.description || isCollectionStatsLoading) && (
-              <CollectionDescription description={stats.description} />
-            )}
-            <StatsRow stats={stats} marginTop="20" />
-          </>
-        )}
+        <>
+          {(stats.description || isCollectionStatsLoading) && <CollectionDescription description={stats.description} />}
+          <StatsRow stats={stats} marginTop="20" />
+        </>
       </Box>
       {isMobile && (
         <>
