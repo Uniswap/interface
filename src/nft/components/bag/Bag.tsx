@@ -3,6 +3,7 @@ import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
 import { parseEther } from 'ethers/lib/utils'
 import { BagFooter } from 'nft/components/bag/BagFooter'
+import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Center, Column } from 'nft/components/Flex'
@@ -30,10 +31,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
-import ListingModal from '../profile/modal/ListingModal'
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
+import { ProfileBagContent } from './profile/ProfileBagContent'
 
 const EmptyState = () => {
   const { pathname } = useLocation()
@@ -298,7 +299,7 @@ const Bag = () => {
                   (isProfilePage && sellAssets.length === 0 && <EmptyState />)}
                 <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
                 <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
-                  {isProfilePage ? <></> : <BagContent />}
+                  {isProfilePage ? <ProfileBagContent /> : <BagContent />}
                 </Column>
                 <ScrollingIndicator show={userCanScroll && scrollProgress < 100} />
                 {hasAssetsToShow && !isProfilePage && (
@@ -315,7 +316,6 @@ const Bag = () => {
                 )}
                 {sellAssets.length !== 0 && isProfilePage && (
                   <Box
-                    // as="button"
                     marginX="28"
                     paddingY="10"
                     className={`${buttonTextMedium} ${commonButtonStyles}`}

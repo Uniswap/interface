@@ -1,5 +1,7 @@
 import clsx from 'clsx'
 import ms from 'ms.macro'
+import { ListingButton } from 'nft/components/bag/profile/ListingButton'
+import { getListingState } from 'nft/components/bag/profile/utils'
 import { Box } from 'nft/components/Box'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Column, Row } from 'nft/components/Flex'
@@ -41,8 +43,6 @@ import { ListingMarkets } from 'nft/utils/listNfts'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { Dispatch, FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 
-import { ListingButton } from '../modal/ListingButton'
-import { getListingState } from '../modal/utils'
 import * as styles from './ListPage.css'
 
 const SelectMarketplacesModal = ({
