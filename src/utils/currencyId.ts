@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId, isPolygonChain } from 'src/constants/chains'
-import { getChecksumAddress } from 'src/utils/addresses'
+import { areAddressesEqual, getChecksumAddress } from 'src/utils/addresses'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 export type CurrencyId = string
@@ -71,7 +71,7 @@ export function graphQLCurrencyInfo(currency: Currency): {
 }
 
 export const isNativeCurrencyAddress = (address: Address) =>
-  address === NATIVE_ADDRESS || address === NATIVE_ADDRESS_ALT
+  areAddressesEqual(address, NATIVE_ADDRESS) || areAddressesEqual(address, NATIVE_ADDRESS_ALT)
 
 // Currency ids are formatted as `chainId-tokenaddress`
 export function currencyIdToAddress(_currencyId: string): Address {

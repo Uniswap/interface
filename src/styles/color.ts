@@ -381,6 +381,7 @@ export interface Palette {
   black: string
   none: string
   blue300: string
+  magentaVibrant: string
 
   chain_1: string
   chain_3: string
@@ -442,6 +443,7 @@ export const colorsLight: Palette = {
   white: colors.white,
   black: colors.black,
   blue300: colors.blue300,
+  magentaVibrant: colors.magentaVibrant,
 
   chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,
@@ -502,6 +504,7 @@ export const colorsDark: Palette = {
   black: colors.black,
   none: 'transparent',
   blue300: colors.blue300,
+  magentaVibrant: colors.magentaVibrant,
 
   chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,

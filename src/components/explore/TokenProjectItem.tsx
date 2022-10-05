@@ -1,8 +1,10 @@
-import React, { memo } from 'react'
+import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
+import { FadeInRight } from 'react-native-reanimated'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import PinIcon from 'src/assets/icons/pin.svg'
+import { AnimatedButton, Button, ButtonProps } from 'src/components/buttons/Button'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
@@ -11,6 +13,8 @@ import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { ChainId } from 'src/constants/chains'
 import { CoingeckoOrderBy } from 'src/features/explore/types'
+import { addFavoriteToken } from 'src/features/favorites/slice'
+import { opacify } from 'src/utils/colors'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 
@@ -30,26 +34,43 @@ interface TokenProjectItemProps {
   index?: number
   metadataDisplayType?: string
   onCycleMetadata?: () => void
+  disabled?: boolean
+  isEditing?: boolean
 }
 
 export const TokenProjectItem = memo(
-  ({ tokenItemData, index, metadataDisplayType, onCycleMetadata }: TokenProjectItemProps) => {
+  ({
+    tokenItemData,
+    index,
+    metadataDisplayType,
+    onCycleMetadata,
+    disabled,
+    isEditing,
+  }: TokenProjectItemProps) => {
     const { t } = useTranslation()
     const theme = useAppTheme()
+    const dispatch = useAppDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
 
     const { name, logoUrl, chainId, address, symbol, price, marketCap, pricePercentChange24h } =
       tokenItemData
-
     const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
+
+    const onPinToken = useCallback(() => {
+      dispatch(addFavoriteToken({ currencyId: _currencyId }))
+    }, [_currencyId, dispatch])
 
     return (
       <Button
+        disabled={disabled}
+        opacity={disabled ? 0.3 : 1}
         testID={`token-item-${name}`}
         onPress={() => {
+          if (disabled) return
           tokenDetailsNavigation.navigate(_currencyId)
         }}
         onPressIn={() => {
+          if (disabled) return
           tokenDetailsNavigation.preload(_currencyId)
         }}>
         <AnimatedFlex
@@ -77,7 +98,7 @@ export const TokenProjectItem = memo(
               </Text>
             </Flex>
           </Flex>
-          <Flex row justifyContent="flex-end">
+          <Flex row alignItems="center" justifyContent="flex-end">
             <Button disabled={!onCycleMetadata} onPress={onCycleMetadata}>
               <TokenMetadata
                 main={formatUSDPrice(price)}
@@ -94,6 +115,7 @@ export const TokenProjectItem = memo(
                 }
               />
             </Button>
+            {isEditing ? <PinButton disabled={Boolean(disabled)} onPress={onPinToken} /> : null}
           </Flex>
         </AnimatedFlex>
       </Button>
@@ -122,5 +144,26 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
         )}
       </Flex>
     </Flex>
+  )
+}
+
+function PinButton({ disabled, ...rest }: { disabled: boolean } & ButtonProps) {
+  const theme = useAppTheme()
+  return (
+    <Box opacity={disabled ? 0 : 1}>
+      <AnimatedButton
+        borderRadius="full"
+        borderWidth={1}
+        entering={FadeInRight}
+        justifyContent="center"
+        padding="xs"
+        {...rest}
+        style={{
+          backgroundColor: opacify(5, theme.colors.magentaVibrant),
+          borderColor: opacify(20, theme.colors.magentaVibrant),
+        }}>
+        <PinIcon color={theme.colors.magentaVibrant} height={14} strokeWidth={2} width={14} />
+      </AnimatedButton>
+    </Box>
   )
 }

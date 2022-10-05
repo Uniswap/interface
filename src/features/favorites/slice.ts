@@ -22,7 +22,7 @@ export const slice = createSlice({
       { payload: { currencyId } }: PayloadAction<{ currencyId: string }>
     ) => {
       if (state.tokens.indexOf(currencyId) === -1) {
-        state.tokens.push(currencyId)
+        state.tokens.push(currencyId.toLowerCase()) // normalize all IDs
       } else {
         logger.warn(
           'slice',

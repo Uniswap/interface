@@ -124,18 +124,20 @@ function PinnedTokenCardInner({ currencyId, isEditing, ...rest }: PinnedTokenCar
         shadowOffset={SHADOW_OFFSET}
         shadowOpacity={0.05}
         shadowRadius={6}>
-        <Image
-          source={{ uri: tokenData?.logoUrl ?? '' }}
-          style={[
-            boxTokenLogoStyle,
-            {
-              backgroundColor: theme.colors.textTertiary,
-              borderRadius: BOX_TOKEN_LOGO_SIZE / 2,
-              borderColor: theme.colors.backgroundOutline,
-              borderWidth: THIN_BORDER,
-            },
-          ]}
-        />
+        {tokenData?.logoUrl && (
+          <Image
+            source={{ uri: tokenData.logoUrl }}
+            style={[
+              boxTokenLogoStyle,
+              {
+                backgroundColor: theme.colors.textTertiary,
+                borderRadius: BOX_TOKEN_LOGO_SIZE / 2,
+                borderColor: theme.colors.backgroundOutline,
+                borderWidth: THIN_BORDER,
+              },
+            ]}
+          />
+        )}
         <TokenMetadata
           align="center"
           main={<Text variant="body">{formatUSDPrice(usdPrice)}</Text>}
@@ -168,7 +170,7 @@ function RemoveFavoriteTokenButton(props: ButtonProps) {
       justifyContent="center"
       width={theme.imageSizes.lg}
       zIndex="tooltip">
-      <Box backgroundColor="accentAction" borderRadius="md" height={2} width={12} />
+      <Box backgroundColor="textSecondary" borderRadius="md" height={2} width={12} />
     </AnimatedButton>
   )
 }

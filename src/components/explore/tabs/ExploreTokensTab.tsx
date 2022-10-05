@@ -3,6 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { OfflineLoadQuery, usePreloadedQuery } from 'react-relay-offline'
+import { useAppSelector } from 'src/app/hooks'
 import { SortingGroup } from 'src/components/explore/FilterGroup'
 import { useOrderByModal } from 'src/components/explore/Modals'
 import { PinnedTokensGrid } from 'src/components/explore/PinnedTokensGrid'
@@ -13,6 +14,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useTokenMetadataDisplayType } from 'src/features/explore/hooks'
+import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
@@ -94,16 +96,32 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
       .filter(Boolean)
   }, [data])
 
+  // Monitor the pinned tokens
+  const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
+
   const renderItem = useCallback(
-    ({ item, index }: ListRenderItemInfo<TokenItemData>) => (
-      <TokenProjectItem
-        index={index}
-        metadataDisplayType={tokenMetadataDisplayType}
-        tokenItemData={item}
-        onCycleMetadata={cycleTokenMetadataDisplayType}
-      />
-    ),
-    [cycleTokenMetadataDisplayType, tokenMetadataDisplayType]
+    ({ item, index }: ListRenderItemInfo<TokenItemData>) => {
+      // Disable the row if editing and already pinned.
+      // Avoid doing this within TokenProjectItem so we can memoize
+      // (referencing favorites within item will cause rerenders for each item as we add/remove favorites)
+      const { chainId, address } = item
+      const _currencyId = address
+        ? buildCurrencyId(chainId, address)
+        : buildNativeCurrencyId(chainId)
+      const disabled = isEditing && favoriteCurrencyIdsSet.has(_currencyId.toLocaleLowerCase())
+
+      return (
+        <TokenProjectItem
+          disabled={disabled}
+          index={index}
+          isEditing={isEditing}
+          metadataDisplayType={tokenMetadataDisplayType}
+          tokenItemData={item}
+          onCycleMetadata={cycleTokenMetadataDisplayType}
+        />
+      )
+    },
+    [cycleTokenMetadataDisplayType, favoriteCurrencyIdsSet, isEditing, tokenMetadataDisplayType]
   )
 
   return (
@@ -126,7 +144,7 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
       renderItem={renderItem}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      windowSize={5}
+      windowSize={3}
     />
   )
 }
