@@ -49,6 +49,7 @@ export function TokenBalanceList({
       )}
       scrollEventThrottle={TAB_VIEW_SCROLL_THROTTLE}
       showsVerticalScrollIndicator={false}
+      windowSize={5}
       onScroll={tabViewScrollProps?.onScroll}
       {...tabViewScrollProps}
     />
