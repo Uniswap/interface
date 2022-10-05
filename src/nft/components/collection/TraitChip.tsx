@@ -1,7 +1,5 @@
-import styled from 'styled-components/macro'
-import { Box } from 'nft/components/Box'
 import { CrossIcon } from 'nft/components/icons'
-import { useCollectionFilters } from 'nft/hooks'
+import styled from 'styled-components/macro'
 
 const BubbleWrap = styled.div`
   display: flex;

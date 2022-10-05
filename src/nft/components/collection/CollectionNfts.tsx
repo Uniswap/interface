@@ -7,10 +7,7 @@ import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center, Row } from 'nft/components/Flex'
 import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
-import styled from 'styled-components/macro'
 import { bodySmall, buttonTextMedium, headlineMedium } from 'nft/css/common.css'
-import { marketPlaceItems } from './MarketplaceSelect'
-
 import { vars } from 'nft/css/sprinkles.css'
 import {
   CollectionFilters,
@@ -24,16 +21,18 @@ import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
+import { pluralize } from 'nft/utils/roundAndPluralize'
+import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
-import { pluralize } from 'nft/utils/roundAndPluralize'
-import { TraitChip } from './TraitChip'
-import { scrollToTop } from 'nft/utils/scrollToTop'
+import styled from 'styled-components/macro'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
+import { marketPlaceItems } from './MarketplaceSelect'
+import { TraitChip } from './TraitChip'
 
 interface CollectionNftsProps {
   contractAddress: string
