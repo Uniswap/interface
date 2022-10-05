@@ -1,6 +1,6 @@
 import { ShadowProps } from '@shopify/restyle'
 import { graphql } from 'babel-plugin-relay/macro'
-import React, { memo, useCallback, useMemo } from 'react'
+import React, { memo, Suspense, useCallback, useMemo } from 'react'
 import {
   FlexAlignType,
   Image,
@@ -16,6 +16,7 @@ import { AnimatedButton, ButtonProps } from 'src/components/buttons/Button'
 import { PinnedTokenCardQuery } from 'src/components/explore/__generated__/PinnedTokenCardQuery.graphql'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -60,14 +61,20 @@ export const pinnedTokenCardQuery = graphql`
 
 export const TOKEN_ITEM_BOX_MINWIDTH = 137
 
-function PinnedTokenCard({
-  currencyId,
-  isEditing,
-  ...rest
-}: {
+type PinnedTokenCardProps = {
   currencyId: CurrencyId
   isEditing?: boolean
-} & PressableProps) {
+} & PressableProps
+
+function PinnedTokenCard(props: PinnedTokenCardProps) {
+  return (
+    <Suspense fallback={<Loading />}>
+      <PinnedTokenCardInner {...props} />
+    </Suspense>
+  )
+}
+
+function PinnedTokenCardInner({ currencyId, isEditing, ...rest }: PinnedTokenCardProps) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const isDarkMode = useColorScheme() === 'dark'
