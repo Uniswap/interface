@@ -17,6 +17,7 @@ import { getTradeVersion } from '../utils/getTradeVersion'
 import isZero from '../utils/isZero'
 import { switchToNetwork } from 'utils/switchToNetwork'
 import { t } from '@lingui/macro'
+import { tryParseAmount } from 'state/swap/hooks'
 import { useActiveWeb3React } from './web3'
 import { useArgentWalletContract } from './useArgentWalletContract'
 import useENS from './useENS'
@@ -73,114 +74,113 @@ function useSwapCallArguments(
   const routerContract = useV2RouterContract()
   const argentWalletContract = useArgentWalletContract()
 
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+  if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+  if (trade instanceof V2Trade) {
+    if (!routerContract) return []
+    const swapMethods = []
 
-    if (trade instanceof V2Trade) {
-      if (!routerContract) return []
-      const swapMethods = []
+    swapMethods.push(
+      Router.swapCallParameters(trade, {
+        feeOnTransfer: false,
+        allowedSlippage,
+        recipient,
+        deadline: deadline.toNumber(),
+      })
+    )
 
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
       swapMethods.push(
         Router.swapCallParameters(trade, {
-          feeOnTransfer: false,
+          feeOnTransfer: true,
           allowedSlippage,
           recipient,
           deadline: deadline.toNumber(),
         })
       )
-
-      if (trade.tradeType === TradeType.EXACT_INPUT) {
-        swapMethods.push(
-          Router.swapCallParameters(trade, {
-            feeOnTransfer: true,
-            allowedSlippage,
-            recipient,
-            deadline: deadline.toNumber(),
-          })
-        )
-      }
-      return swapMethods.map(({ methodName, args, value }) => {
-        if (argentWalletContract && trade.inputAmount.currency.isToken) {
-          return {
-            address: argentWalletContract.address,
-            calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
-              [
-                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), routerContract.address),
-                {
-                  to: routerContract.address,
-                  value: value,
-                  data: routerContract.interface.encodeFunctionData(methodName, args),
-                },
-              ],
-            ]),
-            value: '0x0',
-          }
-        } else {
-          return {
-            address: routerContract.address,
-            calldata: routerContract.interface.encodeFunctionData(methodName, args),
-            value,
-          }
-        }
-      })
-    } else {
-      // trade is V3Trade
-      const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-      if (!swapRouterAddress) return []
-
-      const { value, calldata } = SwapRouter.swapCallParameters(trade, {
-        recipient,
-        slippageTolerance: allowedSlippage,
-        deadline: deadline.toString(),
-        ...(signatureData
-          ? {
-              inputTokenPermit:
-                'allowed' in signatureData
-                  ? {
-                      expiry: signatureData.deadline,
-                      nonce: signatureData.nonce,
-                      s: signatureData.s,
-                      r: signatureData.r,
-                      v: signatureData.v as any,
-                    }
-                  : {
-                      deadline: signatureData.deadline,
-                      amount: signatureData.amount,
-                      s: signatureData.s,
-                      r: signatureData.r,
-                      v: signatureData.v as any,
-                    },
-            }
-          : {}),
-      })
-
-
+    }
+    return swapMethods.map(({ methodName, args, value }) => {
       if (argentWalletContract && trade.inputAmount.currency.isToken) {
-        return [
-          {
-            address: argentWalletContract.address,
-            calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
-              [
-                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapRouterAddress),
-                {
-                  to: swapRouterAddress,
-                  value: value,
-                  data: calldata,
-                },
-              ],
-            ]),
-            value: '0x0',
-          },
-        ]
+        return {
+          address: argentWalletContract.address,
+          calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
+            [
+              approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), routerContract.address),
+              {
+                to: routerContract.address,
+                value: value,
+                data: routerContract.interface.encodeFunctionData(methodName, args),
+              },
+            ],
+          ]),
+          value: '0x0',
+        }
+      } else {
+        return {
+          address: routerContract.address,
+          calldata: routerContract.interface.encodeFunctionData(methodName, args),
+          value,
+        }
       }
+    })
+  } else {
+    // trade is V3Trade
+    const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
+    if (!swapRouterAddress) return []
+
+    const { value, calldata } = SwapRouter.swapCallParameters(trade, {
+      recipient,
+      slippageTolerance: allowedSlippage,
+      deadline: deadline.toString(),
+      ...(signatureData
+        ? {
+          inputTokenPermit:
+            'allowed' in signatureData
+              ? {
+                expiry: signatureData.deadline,
+                nonce: signatureData.nonce,
+                s: signatureData.s,
+                r: signatureData.r,
+                v: signatureData.v as any,
+              }
+              : {
+                deadline: signatureData.deadline,
+                amount: signatureData.amount,
+                s: signatureData.s,
+                r: signatureData.r,
+                v: signatureData.v as any,
+              },
+        }
+        : {}),
+    })
+
+
+    if (argentWalletContract && trade.inputAmount.currency.isToken) {
       return [
         {
-          address: swapRouterAddress,
-          calldata,
-          value,
+          address: argentWalletContract.address,
+          calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
+            [
+              approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapRouterAddress),
+              {
+                to: swapRouterAddress,
+                value: value,
+                data: calldata,
+              },
+            ],
+          ]),
+          value: '0x0',
         },
       ]
     }
+    return [
+      {
+        address: swapRouterAddress,
+        calldata,
+        value,
+      },
+    ]
   }
+}
 
 
 /**
@@ -220,9 +220,8 @@ function swapErrorToUserReadableMessage(error: any): string {
         console.error(error, reason)
         return t`An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
       }
-      return t`Unknown error${
-        reason ? `: "${reason}"` : ''
-      }. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+      return t`Unknown error${reason ? `: "${reason}"` : ''
+        }. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
   }
 }
 
@@ -246,196 +245,247 @@ export function useSwapCallback(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
-    if (!trade || !library || !account || !chainId) {
-      return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
+  if (!trade || !library || !account || !chainId) {
+    return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
+  }
+  if (!recipient) {
+    if (recipientAddressOrName !== null) {
+      return { state: SwapCallbackState.INVALID, callback: null, error: 'Invalid recipient' }
+    } else {
+      return { state: SwapCallbackState.LOADING, callback: null, error: null }
     }
-    if (!recipient) {
-      if (recipientAddressOrName !== null) {
-        return { state: SwapCallbackState.INVALID, callback: null, error: 'Invalid recipient' }
-      } else {
-        return { state: SwapCallbackState.LOADING, callback: null, error: null }
-      }
-    }
+  }
+  
 
-    return {
-      state: SwapCallbackState.VALID,
-      callback: async function onSwap(): Promise<string> {
-        const estimatedCalls: SwapCallEstimate[] = await Promise.all(
-          swapCalls.map((call) => {
-            const { address, calldata, value } = call
+  return {
+    state: SwapCallbackState.VALID,
+    callback: async function onSwap(): Promise<string> {
+      const estimatedCalls: SwapCallEstimate[] = await Promise.all(
+        swapCalls.map((call) => {
+          const { address, calldata, value } = call
+          
 
-            const tx =
-              !value || isZero(value)
-                ? { from: account, to: address, data: calldata }
-                : {
-                    from: account,
-                    to: address,
-                    data: calldata,
-                    value,
-                  }
+          const tx =
+            !value || isZero(value)
+              ? { from: account, to: address, data: calldata }
+              : {
+                from: account,
+                to: address,
+                data: calldata,
+                value,
+              }
 
-            return library
-              .estimateGas(tx)
-              .then((gasEstimate) => {
-                return {    
-                  call,
-                  gasEstimate,
-                }
-              })
-              .catch((gasError) => {
-                console.debug('Gas estimate failed, trying eth_call to extract error', call)
-                
-                return library
-                  .call(tx)
-                  .then((result) => {
-                    console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
-                    return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
-                  })
-                  .catch((callError) => {
-                    console.debug('Call threw error', call, callError)
-                    return { call, error: new Error(swapErrorToUserReadableMessage(callError)) }
-                  })
-              })
-          })
-        )
-
-        // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
-        let bestCallOption: SuccessfulCall | SwapCallEstimate | undefined = estimatedCalls.find(
-          (el, ix, list): el is SuccessfulCall =>
-            'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
-        )
-
-        // check if any calls errored with a recognizable error
-        if (!bestCallOption) {
-          const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
-          if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
-          const firstNoErrorCall = estimatedCalls.find<SwapCallEstimate>(
-            (call): call is SwapCallEstimate => !('error' in call)
-          )
-          if (!firstNoErrorCall) throw new Error('Unexpected error. Could not estimate gas for the swap.')
-          bestCallOption = firstNoErrorCall
-        }
-
-        const {
-          call: { address, calldata, value },
-        } = bestCallOption
-        
-        const useDegenSlippage = true
-        let _library = library;
-
-        async function getCurrentGasPrices() {
-          const fetchEndpoint = `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`
-          const response = await axios.get(fetchEndpoint);
-          const prices = {
-            low: response.data.result.SafeGasPrice,
-            medium: response.data.result.ProposeGasPrice,
-            // add 5 to the recommended gas produced by etherscan..
-            high: (parseInt(response.data.result.FastGasPrice) + 5)
-          };
-          return prices;
-        }
-        const gasEstimate: {
-          gasLimit?: any, 
-          gasPrice?:any
-        } = ('gasEstimate' in bestCallOption
-        ? { 
-            gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate)
-            
-          }
-        : { })
-
-        // for now automatically use fast gas for all trades on expert mode.
-        const useDegenMode = useExpertMode
-        const useProtection = useFrontrunProtection
-        let shouldResetGasSettings = false
-        if (useDegenMode) {
-          const gasPrices = await getCurrentGasPrices()
-          // use custom gas settings if they have them applied
-          if (gasSettings?.custom && gasSettings?.custom > 0) {
-            gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
-            if (gasSettings?.useOnce) {
-              shouldResetGasSettings = true
-            }
-          } else {
-            // allocate an additional +26 gwei to account for any changes that may have occurred
-            // since this is expert mode the idea is to get the swap off as fast as possible
-            gasEstimate.gasPrice = toHex(((+gasPrices.high + 12) * 1e9))
-          }
-        } else if (gasSettings?.low || gasSettings?.high || gasSettings?.medium  || gasSettings?.ultra || gasSettings?.custom && gasSettings?.custom > 0) {
-          const gasPrices = await getCurrentGasPrices()
-          if (gasSettings?.low) {
-            gasEstimate.gasPrice = toHex((+gasPrices.low  * 1e9))
-          } else if (gasSettings?.medium) {
-            gasEstimate.gasPrice = toHex((+gasPrices.medium  * 1e9))
-          } else if (gasSettings?.high) {
-            gasEstimate.gasPrice = toHex((+gasPrices.high  * 1e9))
-          } else if (gasSettings?.ultra)  {
-            const ultraGasPrice = +gasPrices.high + 12;
-            gasEstimate.gasPrice = toHex((+ultraGasPrice * 1e9));
-          } else if (gasSettings?.custom && gasSettings?.custom > 0) {
-            gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
-            if (gasSettings?.useOnce) {
-              shouldResetGasSettings = true
-            }
-          }
-        }
- 
-        if (useProtection) {
-          await switchToNetwork({...FlashBotsFrontRunRpc, library: flashbotsFrontRunProtectionProvider as Web3Provider, chainId: 1})
-          _library = flashbotsFrontRunProtectionProvider as Web3Provider ;
-        }
-
-        return _library  
-          .getSigner()
-          .sendTransaction({
-            from: account,
-            to: address,
-            data: calldata,
-            // let the wallet try if we can't estimate the gas
-           ...gasEstimate,
-            ...(value && !isZero(value) ? { value } : {}),
-          })
-          .then((response) => {
-            if (shouldResetGasSettings) {
-              dispatchGasSettings({...gasSettings, custom: undefined })
-            }
-            const inputSymbol = trade.inputAmount.currency.symbol
-            const outputSymbol = trade.outputAmount.currency.symbol
-            const inputAmount = trade.inputAmount.toSignificant(4)
-            const outputAmount = trade.outputAmount.toSignificant(4)
-
-            const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient =
-              recipient === account
-                ? base
-                : `${base} to ${
-                    recipientAddressOrName && isAddress(recipientAddressOrName)
-                      ? shortenAddress(recipientAddressOrName)
-                      : recipientAddressOrName
-                  }`
-
-            const tradeVersion = getTradeVersion(trade)
-
-            const withVersion = tradeVersion === Version.v3 ? withRecipient : `${withRecipient} on ${tradeVersion}`
-
-            addTransaction(response, {
-              summary: withVersion,
+          return library
+            .estimateGas(tx)
+            .then((gasEstimate) => {
+              return {
+                call,
+                gasEstimate,
+              }
             })
+            .catch((gasError) => {
+              console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
-            return response.hash
-          })
-          .catch((error) => {
-            // if the user rejected the tx, pass this along
-            if (error?.code === 4001) {
-              throw new Error('Transaction rejected.')
-            } else {
-              // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, address, calldata, value)
+              // ran into a gas error.
 
-              throw new Error(`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
-            }
+              // try once to adjust the tokens output value
+
+
+              const adjustedTrade = trade?.outputAmount?.currency?.isNative ? trade?.inputAmount : trade?.outputAmount;
+              const adjustedIsOutput = trade?.outputAmount?.currency?.isNative == false
+
+              if (adjustedTrade?.toFixed(18).includes('.')) {
+                const amountAdjusted = `${adjustedTrade?.toFixed(18)}99`
+                if (adjustedIsOutput) {
+                  trade = {
+                    ...trade,
+                    outputAmount: tryParseAmount(amountAdjusted, trade?.outputAmount.currency) as any
+                  } as any
+                } else {
+                  trade = {
+                    ...trade,
+                    inputAmount: tryParseAmount(amountAdjusted, trade?.outputAmount.currency) as any
+                  } as any
+                }
+              } else {
+                const amountAdjusted = `${adjustedTrade?.toFixed(18)}.099`;
+                if (adjustedIsOutput) {
+                  trade = {
+                    ...trade,
+                    outputAmount: tryParseAmount(amountAdjusted, trade?.outputAmount.currency) as any
+                  } as any
+                } else {
+                  trade = {
+                    ...trade,
+                    inputAmount: tryParseAmount(amountAdjusted, trade?.outputAmount.currency) as any
+                  } as any
+                }
+              }
+
+              console.log(`Manually adjusting trade to run optimally`, trade);
+
+              // re run the swap with a 
+
+              return library
+                .call(tx)
+                .then((result) => {
+                  console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
+                  return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
+                })
+                .catch((callError) => {
+                  console.debug('Call threw error', call, callError)
+                  return { call, error: new Error(swapErrorToUserReadableMessage(callError)) }
+                })
+            })
+        })
+      )
+
+      // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
+      let bestCallOption: SuccessfulCall | SwapCallEstimate | undefined = estimatedCalls.find(
+        (el, ix, list): el is SuccessfulCall =>
+          'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
+      )
+
+      // check if any calls errored with a recognizable error
+      if (!bestCallOption) {
+
+        
+
+        const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
+        
+        if (errorCalls.filter(callError => !callError?.error?.message.includes('gas')).length > 0) throw errorCalls[errorCalls.length - 1].error
+        let  firstNoErrorCall = estimatedCalls.find<SwapCallEstimate>(
+          (call): call is SwapCallEstimate => !('error' in call)
+        )
+        if (!firstNoErrorCall && errorCalls.filter(callError => !callError?.error?.message.includes('gas')).length > 0) {
+          throw new Error('Unexpected error. Could not estimate gas for the swap.')
+        }
+        if (!firstNoErrorCall) {
+          firstNoErrorCall = errorCalls.find(callError => !!callError?.error?.message.includes('gas'))
+        }
+
+        bestCallOption = firstNoErrorCall || swapCalls[ 0 ] as any
+      }
+
+      const {
+        call: { address, calldata, value },
+      } = bestCallOption!
+
+      const useDegenSlippage = true
+      let _library = library;
+
+      async function getCurrentGasPrices() {
+        const fetchEndpoint = `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`
+        const response = await axios.get(fetchEndpoint);
+        const prices = {
+          low: response.data.result.SafeGasPrice,
+          medium: response.data.result.ProposeGasPrice,
+          // add 5 to the recommended gas produced by etherscan..
+          high: (parseInt(response.data.result.FastGasPrice) + 5)
+        };
+        return prices;
+      }
+      const gasEstimate: {
+        gasLimit?: any,
+        gasPrice?: any
+      } = ('gasEstimate' in bestCallOption!
+        ? {
+          gasLimit: calculateGasMargin(chainId, bestCallOption.gasEstimate)
+
+        }
+        : {})
+
+      // for now automatically use fast gas for all trades on expert mode.
+      const useDegenMode = useExpertMode
+      const useProtection = useFrontrunProtection
+      let shouldResetGasSettings = false
+      if (useDegenMode) {
+        const gasPrices = await getCurrentGasPrices()
+        // use custom gas settings if they have them applied
+        if (gasSettings?.custom && gasSettings?.custom > 0) {
+          gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
+          if (gasSettings?.useOnce) {
+            shouldResetGasSettings = true
+          }
+        } else {
+          // allocate an additional +26 gwei to account for any changes that may have occurred
+          // since this is expert mode the idea is to get the swap off as fast as possible
+          gasEstimate.gasPrice = toHex(((+gasPrices.high + 12) * 1e9))
+        }
+      } else if (gasSettings?.low || gasSettings?.high || gasSettings?.medium || gasSettings?.ultra || gasSettings?.custom && gasSettings?.custom > 0) {
+        const gasPrices = await getCurrentGasPrices()
+        if (gasSettings?.low) {
+          gasEstimate.gasPrice = toHex((+gasPrices.low * 1e9))
+        } else if (gasSettings?.medium) {
+          gasEstimate.gasPrice = toHex((+gasPrices.medium * 1e9))
+        } else if (gasSettings?.high) {
+          gasEstimate.gasPrice = toHex((+gasPrices.high * 1e9))
+        } else if (gasSettings?.ultra) {
+          const ultraGasPrice = +gasPrices.high + 12;
+          gasEstimate.gasPrice = toHex((+ultraGasPrice * 1e9));
+        } else if (gasSettings?.custom && gasSettings?.custom > 0) {
+          gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
+          if (gasSettings?.useOnce) {
+            shouldResetGasSettings = true
+          }
+        }
+      }
+
+      if (useProtection) {
+        await switchToNetwork({ ...FlashBotsFrontRunRpc, library: flashbotsFrontRunProtectionProvider as Web3Provider, chainId: 1 })
+        _library = flashbotsFrontRunProtectionProvider as Web3Provider;
+      }
+
+      return _library
+        .getSigner()
+        .sendTransaction({
+          from: account,
+          to: address,
+          data: calldata,
+          // let the wallet try if we can't estimate the gas
+          ...gasEstimate,
+          ...(value && !isZero(value) ? { value } : {}),
+        })
+        .then((response) => {
+          if (shouldResetGasSettings) {
+            dispatchGasSettings({ ...gasSettings, custom: undefined })
+          }
+          const inputSymbol = trade?.inputAmount.currency.symbol
+          const outputSymbol = trade?.outputAmount.currency.symbol
+          const inputAmount = trade?.inputAmount.toSignificant(4)
+          const outputAmount = trade?.outputAmount.toSignificant(4)
+
+          const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
+          const withRecipient =
+            recipient === account
+              ? base
+              : `${base} to ${recipientAddressOrName && isAddress(recipientAddressOrName)
+                ? shortenAddress(recipientAddressOrName)
+                : recipientAddressOrName
+              }`
+
+          const tradeVersion = getTradeVersion(trade)
+
+          const withVersion = tradeVersion === Version.v3 ? withRecipient : `${withRecipient} on ${tradeVersion}`
+
+          addTransaction(response, {
+            summary: withVersion,
           })
-      },
-      error: null,
-    }
+
+          return response.hash
+        })
+        .catch((error) => {
+          // if the user rejected the tx, pass this along
+          if (error?.code === 4001) {
+            throw new Error('Transaction rejected.')
+          } else {
+            // otherwise, the error was unexpected and we need to convey that
+            console.error(`Swap failed`, error, address, calldata, value)
+
+            throw new Error(`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
+          }
+        })
+    },
+    error: null,
+  }
 }
