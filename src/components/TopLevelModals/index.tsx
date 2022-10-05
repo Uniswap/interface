@@ -24,6 +24,12 @@ export default function TopLevelModals() {
 
   useAccountRiskCheck(account)
   const open = Boolean(blockedAccountModalOpen && account)
+
+  console.log(
+    'info',
+    useTokensFlag() === TokensVariant.Enabled &&
+      (location.pathname.includes('/pool') || location.pathname.includes('/swap'))
+  )
   return (
     <>
       <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
