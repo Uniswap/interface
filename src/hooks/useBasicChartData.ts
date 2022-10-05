@@ -1,4 +1,5 @@
 import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
+import axios from 'axios'
 import { getUnixTime, subHours } from 'date-fns'
 import { useMemo } from 'react'
 import useSWR from 'swr'
@@ -73,37 +74,45 @@ const liveDataApi: { [chainId in ChainId]?: string } = {
 }
 
 const fetchKyberDataSWR = async (url: string) => {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error()
+  const res = await axios.get(url, { timeout: 5000 })
   if (res.status === 204) {
     throw new Error('No content')
   }
-  return res.json()
+  return res.data
 }
 
 const fetchKyberDataSWRWithHeader = async (url: string) => {
-  const res = await fetch(url, {
-    headers: {
-      'accept-version': 'Latest',
-    },
-  })
-  if (!res.ok) throw new Error()
+  const res = await axios
+    .get(url, {
+      timeout: 5000,
+      headers: {
+        'accept-version': 'Latest',
+      },
+    })
+    .catch(error => {
+      throw error
+    })
+
   if (res.status === 204) {
     throw new Error('No content')
   }
-  return res.json()
+  return res.data
 }
 
 const fetchCoingeckoDataSWR = async (tokenAddresses: any, chainId: any, timeFrame: any): Promise<any> => {
   return await Promise.all(
     [tokenAddresses[0], tokenAddresses[1]].map(address =>
-      fetch(generateCoingeckoUrl(chainId, address, timeFrame)).then(res => {
-        if (!res.ok) throw new Error()
-        if (res.status === 204) {
-          throw new Error('No content')
-        }
-        return res.json()
-      }),
+      axios
+        .get(generateCoingeckoUrl(chainId, address, timeFrame), { timeout: 5000 })
+        .then(res => {
+          if (res.status === 204) {
+            throw new Error('No content')
+          }
+          return res.data
+        })
+        .catch(error => {
+          throw error
+        }),
     ),
   )
 }
