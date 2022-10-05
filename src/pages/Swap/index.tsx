@@ -131,7 +131,7 @@ export default function Swap({ history }: RouteComponentProps) {
       console.log('vdfParam: ', vdfParam)
       const fetchAndUpdateVdfParam = async () => {
         console.log('fetch vdfparam!')
-        await fetch('http://147.46.240.248:40002/zkp/getVdfParams', {
+        fetch('/parameters/vdf_zkp_sigma_parameter.data.bin', {
           method: 'GET',
         })
           .then((res) => res.json())
@@ -152,7 +152,7 @@ export default function Swap({ history }: RouteComponentProps) {
       console.log('vdfSnarkParam: ', vdfSnarkParam)
       const fetchAndUpdateVdfSnarkParam = async () => {
         console.log('fetch vdfsnarkparam!')
-        await fetch('http://147.46.240.248:40002/zkp/getVdfSnarkParams', {
+        await fetch('/parameters/vdf_zkp_parameter.data.bin', {
           method: 'GET',
         })
           .then(async (res) => {
@@ -183,7 +183,7 @@ export default function Swap({ history }: RouteComponentProps) {
       console.log('encryptionParam: ', encryptionParam)
       const fetchAndUpdateEncryptionParam = async () => {
         console.log('fetch EncryptionParam!')
-        await fetch('http://147.46.240.248:40002/zkp/getEncryptionParams', {
+        await fetch('/parameters/encryption_zkp_parameters.data.bin', {
           method: 'GET',
         })
           .then(async (res) => {
@@ -213,7 +213,7 @@ export default function Swap({ history }: RouteComponentProps) {
       console.log('encryptionProverKey: ', encryptionProverKey)
       const fetchAndUpdateEncryptionProverKey = async () => {
         console.log('fetch EncryptionProverKey!')
-        await fetch('http://147.46.240.248:40002/zkp/getEncryptionProverKey', {
+        await fetch('/parameters/encryption_prover_key.data.bin', {
           method: 'GET',
         })
           .then(async (res) => {
@@ -243,7 +243,7 @@ export default function Swap({ history }: RouteComponentProps) {
       console.log('encryptionVerifierData: ', encryptionVerifierData)
       const fetchAndUpdateEncryptionVerifierData = async () => {
         console.log('fetch EncryptionVerifierData!')
-        await fetch('http://147.46.240.248:40002/zkp/getEncryptionVerifierData', {
+        await fetch('/parameters/encryption_verifier_data.data.bin', {
           method: 'GET',
         })
           .then(async (res) => {
