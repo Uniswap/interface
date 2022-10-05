@@ -1182,8 +1182,8 @@ msgstr "생성되지 않음"
 #~ msgstr "죄송합니다! 알 수없는 오류가 발생했습니다. 페이지를 새로 고침하거나 다른 브라우저 또는 기기에서 방문하세요."
 
 #: src/components/Header/NetworkSelector.tsx
-#~ msgid "Optimism Bridge"
-#~ msgstr "Optimism 브릿지"
+msgid "Optimism Bridge"
+msgstr "Optimism 브릿지"
 
 #: src/components/DowntimeWarning/index.tsx
 #~ msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -1558,8 +1558,8 @@ msgstr "<0/>을 정확히 <1/>로 바꿉니다."
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
-#~ msgid "Swap Anyway"
-#~ msgstr "스왑 진행하기"
+msgid "Swap Anyway"
+msgstr "스왑 진행하기"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
@@ -1655,8 +1655,8 @@ msgstr "입력 토큰을 이체할 수 없습니다. 입력 토큰에 문제가 
 #~ msgstr "시장 가격이 지정된 가격 범위를 벗어났습니다. 단일 자산 예금만."
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#~ msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
-#~ msgstr "받을 수 있는 최소 금액입니다. 가격이 더 하락하면 거래가 취소 될 것입니다."
+msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
+msgstr "받을 수 있는 최소 금액입니다. 가격이 더 하락하면 거래가 취소 될 것입니다."
 
 #: src/components/Header/Polling.tsx
 #~ msgid "The most recent block number on this network. Prices update on every block."
@@ -2254,8 +2254,8 @@ msgstr "아직 이 풀에 유동성이 없습니다."
 #~ msgstr "내 미 청구 UNI"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
-#~ msgid "after slippage"
-#~ msgstr "슬리피지 발생 후"
+msgid "after slippage"
+msgstr "슬리피지 발생 후"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 #~ msgid "blocked activities"
@@ -2270,8 +2270,8 @@ msgstr "아직 이 풀에 유동성이 없습니다."
 #~ msgstr "{0}에 찬성"
 
 #: src/components/Header/Polling.tsx
-#~ msgid "gwei"
-#~ msgstr "gwei"
+msgid "gwei"
+msgstr "기가웨이"
 
 #: src/components/Web3Status/index.tsx
 #~ msgid "has socks emoji"
