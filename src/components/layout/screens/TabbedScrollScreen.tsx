@@ -20,13 +20,14 @@ import { Route, SceneRendererProps, TabBar, TabView } from 'react-native-tab-vie
 import { ScrollEvent } from 'recyclerlistview/dist/reactnative/core/scrollcomponent/BaseScrollView'
 import { useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
+import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
 
-const LEFT_EDGE = (dimensions.fullWidth * 1) / 8
+const SIDEBAR_SWIPE_CONTAINER_WIDTH = 45
 
 type TabbedScrollScreenProps = {
   renderTab: (
@@ -100,39 +101,19 @@ export default function TabbedScrollScreen({
     navigation.dispatch(DrawerActions.openDrawer())
   }, [navigation])
 
-  const panTabViewGesture = useMemo(
+  const panSidebarContainerGesture = useMemo(
     () =>
-      Gesture.Pan().onStart(({ translationX, absoluteX }) => {
+      Gesture.Pan().onStart(({ translationX }) => {
         // only register as a side swipe above a certain threshold
         if (Math.abs(translationX) < SWIPE_THRESHOLD) {
           return
         }
 
-        const startingPoint = absoluteX - translationX
-
-        // Left -> Right swipe
         if (translationX > 0) {
-          if (tabIndex === 0) {
-            runOnJS(openSidebar)()
-          } else {
-            if (startingPoint < LEFT_EDGE) {
-              // Open the sidebar if swiping on the left 1/8 of the screen
-              runOnJS(openSidebar)()
-            } else {
-              // Switch tabs
-              runOnJS(setIndex)(tabIndex - 1)
-            }
-          }
-
-          return
-        }
-
-        // Right -> Left Swipe
-        if (tabIndex < tabs.length - 1) {
-          runOnJS(setIndex)(tabIndex + 1)
+          runOnJS(openSidebar)()
         }
       }),
-    [openSidebar, tabIndex, tabs]
+    [openSidebar]
   )
 
   const panHeaderGesture = useMemo(
@@ -255,22 +236,30 @@ export default function TabbedScrollScreen({
   }
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <GestureDetector gesture={panTabViewGesture}>
-        <TabView
-          lazy
-          initialLayout={{
-            height: 0,
-            width: dimensions.fullWidth,
-          }}
-          navigationState={{ index: tabIndex, routes }}
-          renderScene={(props) =>
-            renderTab(props.route, scrollPropsForTab(props.route.key), loadingContainerStyle)
-          }
-          renderTabBar={renderTabBar}
-          swipeEnabled={false}
-          onIndexChange={onTabIndexChange}
+      <TabView
+        lazy
+        initialLayout={{
+          height: 0,
+          width: dimensions.fullWidth,
+        }}
+        navigationState={{ index: tabIndex, routes }}
+        renderScene={(props) =>
+          renderTab(props.route, scrollPropsForTab(props.route.key), loadingContainerStyle)
+        }
+        renderTabBar={renderTabBar}
+        onIndexChange={onTabIndexChange}
+      />
+      <GestureDetector gesture={panSidebarContainerGesture}>
+        <Box
+          bottom={0}
+          height="100%"
+          left={0}
+          position="absolute"
+          top={0}
+          width={SIDEBAR_SWIPE_CONTAINER_WIDTH} // Roughly 1/2 icon width on tokens tab
         />
       </GestureDetector>
+
       <GestureDetector gesture={panHeaderGesture}>
         <AnimatedFlex
           style={[TabStyles.header, headerAnimatedStyle, { marginTop: insets.top }]}
