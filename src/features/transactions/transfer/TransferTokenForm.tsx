@@ -9,6 +9,7 @@ import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
+import { TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { Warning, WarningAction } from 'src/components/modals/WarningModal/types'
@@ -109,6 +110,14 @@ export function TransferTokenForm({
     setShowWarningModal(showModal)
   }, [])
 
+  const [inputSelection, setInputSelection] = useState<TextInputProps['selection']>()
+  const resetSelection = useCallback(
+    (start: number, end?: number) => {
+      setInputSelection({ start, end: end ?? start })
+    },
+    [setInputSelection]
+  )
+
   return (
     <>
       <Suspense fallback={null}>
@@ -139,10 +148,12 @@ export function TransferTokenForm({
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
                 isUSDInput={isUSDInput}
+                selection={inputSelection}
                 showSoftInputOnFocus={shouldCompressView}
                 usdValue={inputCurrencyUSDValue}
                 value={formattedAmounts[CurrencyField.INPUT]}
                 warnings={warnings}
+                onSelectionChange={(start, end) => setInputSelection({ start, end })}
                 onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
                 onSetMax={onSetMax}
                 onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
@@ -179,6 +190,9 @@ export function TransferTokenForm({
         <AnimatedFlex exiting={FadeOutDown} gap="xs">
           {!nftIn && !shouldCompressView && (
             <DecimalPad
+              hasCurrencyPrefix={isUSDInput}
+              resetSelection={resetSelection}
+              selection={inputSelection}
               setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
               value={formattedAmounts[CurrencyField.INPUT]}
             />
