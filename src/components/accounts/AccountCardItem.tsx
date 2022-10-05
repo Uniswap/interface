@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
+import Check from 'src/assets/icons/check.svg'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
@@ -22,7 +23,7 @@ interface Props {
   onPressEdit?: (address: Address) => void
 }
 
-export function AccountCardItem({ account, onPress, onPressEdit }: Props) {
+export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPressEdit }: Props) {
   const { address } = account
   const theme = useAppTheme()
   const displayName = useDisplayName(address)
@@ -32,11 +33,13 @@ export function AccountCardItem({ account, onPress, onPressEdit }: Props) {
   // Use ENS avatar if found, if not revert to Unicon
   const icon = useMemo(() => {
     if (avatar) {
-      return <AvatarWithVisibilityBadge avatarUri={avatar} showViewOnlyBadge={false} size={36} />
+      return (
+        <AvatarWithVisibilityBadge avatarUri={avatar} showViewOnlyBadge={isViewOnly} size={36} />
+      )
     }
 
-    return <UniconWithVisibilityBadge address={address} showViewOnlyBadge={false} size={36} />
-  }, [address, avatar])
+    return <UniconWithVisibilityBadge address={address} showViewOnlyBadge={isViewOnly} size={36} />
+  }, [address, avatar, isViewOnly])
 
   return (
     <Button pb="sm" pt="xs" px="lg" onPress={onPress ? () => onPress(address) : undefined}>
@@ -48,7 +51,14 @@ export function AccountCardItem({ account, onPress, onPressEdit }: Props) {
           <Text variant="subhead">{displayName?.name}</Text>
           <TotalBalance owner={address} variant="caption" />
         </Flex>
-        <Flex row alignItems="center" justifyContent="space-between">
+        <Flex row alignItems="center" gap="xs">
+          {isActive && (
+            <Check
+              color={theme.colors.userThemeMagenta}
+              height={theme.iconSizes.lg}
+              width={theme.iconSizes.lg}
+            />
+          )}
           {onPressEdit && (
             <Button name={ElementName.Edit} onPress={() => onPressEdit(address)}>
               <TripleDots

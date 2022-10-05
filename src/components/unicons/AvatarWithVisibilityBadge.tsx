@@ -21,7 +21,7 @@ export function AvatarWithVisibilityBadge({ avatarUri, size, showViewOnlyBadge }
       <RemoteImage borderRadius={size} height={size} uri={avatarUri} width={size} />
       <Flex
         centered
-        backgroundColor="backgroundAction"
+        backgroundColor="backgroundBackdrop"
         borderRadius="full"
         bottom={-4}
         height={24}

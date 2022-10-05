@@ -85,6 +85,7 @@ export const enum ElementName {
   GetHelp = 'get-help',
   ImportAccount = 'import',
   Manage = 'manage',
+  ManageConnections = 'manage-connections',
   NFTAssetItem = 'nft-asset-item',
   NFTAssetViewOnOpensea = 'nft-asset-view-on-opensea',
   NFTCollectionDiscord = 'nft-collection-discord',

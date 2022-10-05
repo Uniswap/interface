@@ -4,23 +4,20 @@ import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-gesture-handler'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import PlusSquareIcon from 'src/assets/icons/plus-square.svg'
-import QRCode from 'src/assets/icons/qr-code.svg'
+import GlobalIcon from 'src/assets/icons/global.svg'
+import HelpIcon from 'src/assets/icons/help.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
-import { IconButton } from 'src/components/buttons/IconButton'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, {
   captionForAccountRemovalWarning,
 } from 'src/components/modals/WarningModal/WarningModal'
-import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
@@ -41,6 +38,11 @@ import {
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
+import { openUri } from 'src/utils/linking'
+
+const onPressGetHelp = () => {
+  openUri('https://help.uniswap.org')
+}
 
 export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { t } = useTranslation()
@@ -51,16 +53,15 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
 
-  const [showQRModal, setShowQRModal] = useState(false)
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
   const [showEditAccountModal, setShowEditAccountModal] = useState(false)
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
   const [pendingRemoveAccount, setPendingRemoveAccount] = useState<Account | null>(null)
 
-  const { accountsData, mnemonicWallets, viewOnlyWallets } = useMemo(() => {
+  const { accountsData, mnemonicWallets } = useMemo(() => {
     const accounts = Object.values(addressToAccount)
     const _mnemonicWallets = accounts
-      .filter((a) => a.address !== activeAccountAddress && a.type === AccountType.SignerMnemonic)
+      .filter((a) => a.type === AccountType.SignerMnemonic)
       .sort((a, b) => {
         return (
           (a as SignerMnemonicAccount).derivationIndex -
@@ -75,9 +76,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     return {
       accountsData: [..._mnemonicWallets, ..._viewOnlyWallets],
       mnemonicWallets: _mnemonicWallets,
-      viewOnlyWallets: _viewOnlyWallets,
     }
-  }, [activeAccountAddress, addressToAccount])
+  }, [addressToAccount])
 
   const onPressEdit = useCallback((address: Address) => {
     setShowEditAccountModal(true)
@@ -115,12 +115,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     [navigation, dispatch]
   )
 
-  const onPressQRCode = useCallback(() => {
-    setShowQRModal(true)
-  }, [setShowQRModal])
-
-  const onCloseQrCode = () => setShowQRModal(false)
-
   const onPressAddWallet = () => {
     setShowAddWalletModal(true)
   }
@@ -130,9 +124,12 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   }
 
   const onPressSettings = () => {
-    navigation.closeDrawer()
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
   }
+
+  const onPressManageConnections = useCallback(() => {
+    navigation.navigate(Screens.SettingsWalletManageConnection, { address: activeAccountAddress })
+  }, [navigation, activeAccountAddress])
 
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
     const onPressWalletSettings = () => {
@@ -302,64 +299,74 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
 
   return (
     <Screen bg="backgroundBackdrop">
-      <Flex row alignItems="center" pb="md" pt="xxl" px="lg">
+      <Flex pb="md" pt="lg" px="lg">
         <AddressDisplay
           showAddressAsSubtitle
           showCopy
           address={activeAccountAddress}
           captionVariant="bodySmall"
-          flex={1}
+          size={36}
           variant="headlineSmall"
           verticalGap="none"
         />
-        <IconButton
-          icon={
-            <QRCode
-              color={theme.colors.textTertiary}
-              height={theme.iconSizes.md}
-              width={theme.iconSizes.md}
+      </Flex>
+
+      <Separator mb="md" />
+
+      <Flex gap="lg" pb="lg" px="lg">
+        <Button
+          name={ElementName.ManageConnections}
+          testID={ElementName.ManageConnections}
+          onPress={onPressManageConnections}>
+          <Flex row alignItems="center" gap="sm">
+            <GlobalIcon
+              color={theme.colors.textSecondary}
+              height={theme.iconSizes.lg}
+              width={theme.iconSizes.lg}
             />
-          }
-          onPress={onPressQRCode}
+            <Text color="textSecondary" variant="subhead">
+              {t('Manage connections')}
+            </Text>
+          </Flex>
+        </Button>
+        <Button name={ElementName.GetHelp} testID={ElementName.GetHelp} onPress={onPressGetHelp}>
+          <Flex row alignItems="center" gap="sm">
+            <HelpIcon
+              color={theme.colors.textSecondary}
+              height={theme.iconSizes.lg}
+              width={theme.iconSizes.lg}
+            />
+            <Text color="textSecondary" variant="subhead">
+              {t('Get help')}
+            </Text>
+          </Flex>
+        </Button>
+        <Button name={ElementName.Settings} testID={ElementName.Settings} onPress={onPressSettings}>
+          <Flex row alignItems="center" gap="sm">
+            <SettingsIcon
+              color={theme.colors.textSecondary}
+              height={theme.iconSizes.lg}
+              width={theme.iconSizes.lg}
+            />
+            <Text color="textSecondary" variant="subhead">
+              {t('Settings')}
+            </Text>
+          </Flex>
+        </Button>
+      </Flex>
+
+      <Box flexGrow={1} />
+
+      <Separator mb="sm" />
+      <Box>
+        <AccountList
+          accounts={accountsData}
+          onAddWallet={onPressAddWallet}
+          onPress={onPressAccount}
+          onPressEdit={onPressEdit}
         />
-      </Flex>
+      </Box>
 
-      {accountsData.length > 0 && <Separator mb="sm" />}
-
-      <AccountList
-        mnenomicAccounts={mnemonicWallets}
-        viewOnlyAccounts={viewOnlyWallets}
-        onPress={onPressAccount}
-        onPressEdit={onPressEdit}
-      />
-
-      <Flex>
-        <Box bg="backgroundOutline" height={0.5} mb="sm" />
-        <Flex gap="xl" pb="xl" px="lg">
-          <Button
-            name={ElementName.ImportAccount}
-            testID={ElementName.ImportAccount}
-            onPress={onPressAddWallet}>
-            <Flex row alignItems="center" gap="sm">
-              <PlusSquareIcon color={theme.colors.textSecondary} height={24} width={24} />
-              <Text color="textSecondary" variant="subhead">
-                {t('Add wallet')}
-              </Text>
-            </Flex>
-          </Button>
-          <Button
-            name={ElementName.Settings}
-            testID={ElementName.Settings}
-            onPress={onPressSettings}>
-            <Flex row alignItems="center" gap="sm">
-              <SettingsIcon color={theme.colors.textSecondary} height={24} width={24} />
-              <Text color="textSecondary" variant="subhead">
-                {t('Settings')}
-              </Text>
-            </Flex>
-          </Button>
-        </Flex>
-      </Flex>
       <ActionSheetModal
         isVisible={showEditAccountModal}
         name={ModalName.Account}
@@ -386,18 +393,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           onConfirm={onPressRemoveConfirm}
         />
       )}
-      <BottomSheetModal
-        hideHandlebar
-        isVisible={showQRModal}
-        name={ModalName.WalletQRCode}
-        onClose={onCloseQrCode}>
-        <Flex py="xxxl">
-          <WalletQRCode address={activeAccountAddress} />
-          <Flex centered mt="md" position="absolute" width="100%">
-            <Box bg="backgroundOutline" borderRadius="sm" height={4} width={40} />
-          </Flex>
-        </Flex>
-      </BottomSheetModal>
     </Screen>
   )
 }

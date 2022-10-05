@@ -1,56 +1,60 @@
 import { ComponentProps, default as React, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo, SectionList } from 'react-native'
+import { FlatList, ListRenderItemInfo } from 'react-native'
+import { useAppTheme } from 'src/app/hooks'
+import PlusIcon from 'src/assets/icons/plus.svg'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
-import { Box } from 'src/components/layout'
+import { IconButton } from 'src/components/buttons/IconButton'
+import { TextButton } from 'src/components/buttons/TextButton'
+import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 
 type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress' | 'onPressEdit'> & {
-  mnenomicAccounts: Account[]
-  viewOnlyAccounts: Account[]
+  accounts: Account[]
+  onAddWallet: () => void
 }
 
-export function AccountList({
-  mnenomicAccounts,
-  viewOnlyAccounts,
-  onPressEdit,
-  onPress,
-}: AccountListProps) {
+const STICKY_HEADER_INDICES = [0]
+
+export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: AccountListProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const activeAccount = useActiveAccount()
 
-  const sectionData = useMemo(
-    () => [
-      ...(mnenomicAccounts.length > 0
-        ? [
-            {
-              title: t('Wallets'),
-              data: mnenomicAccounts,
-            },
-          ]
-        : []),
-      ...(viewOnlyAccounts.length > 0
-        ? [
-            {
-              title: t('View Only'),
-              data: viewOnlyAccounts,
-            },
-          ]
-        : []),
-    ],
-    [mnenomicAccounts, t, viewOnlyAccounts]
+  const ListHeader = useMemo(
+    () => (
+      <Flex
+        row
+        alignItems="center"
+        bg="backgroundBackdrop"
+        borderBottomColor="backgroundOutline"
+        pb="sm">
+        <Box flex={1}>
+          <Text color="textPrimary" px="lg" variant="body">
+            {t('Your wallets')}
+          </Text>
+        </Box>
+        <IconButton
+          borderColor="backgroundOutline"
+          borderRadius="full"
+          borderWidth={1}
+          icon={
+            <PlusIcon
+              color={theme.colors.textSecondary}
+              height={theme.iconSizes.sm}
+              width={theme.iconSizes.sm}
+            />
+          }
+          mr="md"
+          onPress={onAddWallet}
+        />
+      </Flex>
+    ),
+    [t, theme, onAddWallet]
   )
-
-  const renderSectionHeader = useMemo(() => {
-    return ({ section: { title } }: { section: { title: string } }) => (
-      <Box bg="backgroundBackdrop" pb="md" px="lg">
-        <Text variant="body">{title}</Text>
-      </Box>
-    )
-  }, [])
 
   const renderItem = useMemo(
     () =>
@@ -68,13 +72,37 @@ export function AccountList({
     [activeAccount, onPress, onPressEdit]
   )
 
+  if (accounts.length <= 1) {
+    return (
+      <TextButton ml="lg" mt="sm" onPress={onAddWallet}>
+        <Flex centered row>
+          <Box
+            alignItems="center"
+            borderColor="backgroundOutline"
+            borderRadius="full"
+            borderWidth={1}
+            justifyContent="center"
+            p="xs">
+            <PlusIcon
+              color={theme.colors.textSecondary}
+              height={theme.iconSizes.sm}
+              width={theme.iconSizes.sm}
+            />
+          </Box>
+          <Text variant="body">{t('Add another wallet')}</Text>
+        </Flex>
+      </TextButton>
+    )
+  }
+
   return (
-    <SectionList
+    <FlatList
+      ListHeaderComponent={ListHeader}
+      data={accounts}
       keyExtractor={key}
       renderItem={renderItem}
-      renderSectionHeader={renderSectionHeader}
-      sections={sectionData}
       showsVerticalScrollIndicator={false}
+      stickyHeaderIndices={STICKY_HEADER_INDICES}
     />
   )
 }
