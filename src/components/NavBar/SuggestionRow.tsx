@@ -135,7 +135,6 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
   }, [addToSearchHistory, toggleOpen, token, traceEvent])
 
   const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
-  console.log(bridgedAddress)
   const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
   // Close the modal on escape
   useEffect(() => {
