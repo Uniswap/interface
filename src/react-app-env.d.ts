@@ -29,3 +29,6 @@ declare module 'multihashes' {
 declare module 'babel-plugin-relay/macro' {
   export { graphql as default } from 'react-relay'
 }
+
+declare module 'flubber'
+declare module 'd3-interpolate-path'

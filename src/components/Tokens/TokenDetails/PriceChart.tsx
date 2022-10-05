@@ -180,6 +180,8 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
         .range([graphInnerHeight, 0]),
     [prices, graphInnerHeight]
   )
+  const getX = useCallback((p: PricePoint) => timeScale(p.timestamp), [timeScale])
+  const getY = useCallback((p: PricePoint) => rdScale(p.value), [rdScale])
 
   function tickFormat(
     timePeriod: TimePeriod,
@@ -264,6 +266,10 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
+  /* Default curve doesn't look good for the HOUR/ALL chart */
+  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : timePeriod === TimePeriod.HOUR ? 1 : 0.9
+  const curve = useMemo(() => curveCardinal.tension(curveTension), [curveTension])
+
   // TODO: Display no data available error
   if (!prices) {
     return null
@@ -276,9 +282,6 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
-  /* Default curve doesn't look good for the HOUR/ALL chart */
-  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : timePeriod === TimePeriod.HOUR ? 1 : 0.9
-
   return (
     <>
       <ChartHeader>
@@ -288,16 +291,17 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           <ArrowCell>{arrow}</ArrowCell>
         </DeltaContainer>
       </ChartHeader>
-      <AnimatedInLineChart
-        data={prices}
-        getX={(p: PricePoint) => timeScale(p.timestamp)}
-        getY={(p: PricePoint) => rdScale(p.value)}
-        marginTop={margin.top}
-        curve={curveCardinal.tension(curveTension)}
-        strokeWidth={2}
-        width={width}
-        height={graphHeight}
-      >
+      <svg width={width} height={height}>
+        <AnimatedInLineChart
+          data={prices}
+          // @ts-ignore
+          getX={getX}
+          // @ts-ignore
+          getY={getY}
+          marginTop={margin.top}
+          curve={curve}
+          strokeWidth={2}
+        />
         {crosshair !== null ? (
           <g>
             <AxisBottom
@@ -344,7 +348,13 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
             />
           </g>
         ) : (
-          <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} hideTicks />
+          <AxisBottom
+            scale={timeScale}
+            stroke={theme.backgroundOutline}
+            top={graphHeight - 1}
+            hideTicks
+            tickComponent={() => null}
+          />
         )}
         <rect
           x={0}
@@ -357,7 +367,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           onMouseMove={handleHover}
           onMouseLeave={resetDisplay}
         />
-      </AnimatedInLineChart>
+      </svg>
       <TimeOptionsWrapper>
         <TimeOptionsContainer>
           {ORDERED_TIMES.map((time) => (
