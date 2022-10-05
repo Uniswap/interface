@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
@@ -11,7 +12,6 @@ import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { VerifiedIcon } from '../../nft/components/icons'
 import * as styles from './SearchBar.css'
 
 interface CollectionRowProps {
