@@ -14,17 +14,10 @@ const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
   const handleHover = () => setHovered(!hovered)
 
   return (
-    <Row
-      padding="4"
-      marginBottom="4"
-      borderRadius="8"
-      position="relative"
-      onMouseEnter={handleHover}
-      onMouseLeave={handleHover}
-    >
+    <Row paddingY="8" position="relative" onMouseEnter={handleHover} onMouseLeave={handleHover}>
       <div>
         <Box
-          visibility={isMobile ? 'visible' : 'hidden'}
+          display={isMobile ? 'flex' : 'none'}
           className={styles.removeAsset}
           onClick={(e) => {
             e.preventDefault()

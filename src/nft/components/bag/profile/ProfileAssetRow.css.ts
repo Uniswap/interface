@@ -17,8 +17,8 @@ export const removeAsset = style([
     cursor: 'pointer',
   }),
   {
-    bottom: '-12px',
-    left: '28px',
+    bottom: '-4px',
+    left: '24px',
   },
 ])
 

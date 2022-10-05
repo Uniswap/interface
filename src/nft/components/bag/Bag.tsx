@@ -316,6 +316,7 @@ const Bag = () => {
                 )}
                 {sellAssets.length !== 0 && isProfilePage && (
                   <Box
+                    marginTop="32"
                     marginX="28"
                     paddingY="10"
                     className={`${buttonTextMedium} ${commonButtonStyles}`}
