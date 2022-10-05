@@ -1,4 +1,3 @@
-import { useWhatChanged } from '@simbathesailor/use-what-changed'
 import graphql from 'babel-plugin-relay/macro'
 import {
   favoritesAtom,
@@ -289,7 +288,6 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     }
   }, [everyTokenInCache, cachedTokens])
 
-  useWhatChanged([everyTokenInCache, prefetchedSelectedTokensWithoutPriceHistory, loadTokensWithPriceHistory])
   useEffect(() => {
     if (!everyTokenInCache && duration === prefetchedDataDuration) {
       console.log('duration info', duration, prefetchedDataDuration)
