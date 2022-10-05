@@ -21,6 +21,9 @@ const DEFAULT_QUERY_PARAMS = {
 
 // error string hardcoded in @uniswap/routing-api
 export const SWAP_NO_ROUTE_ERROR = 'NO_ROUTE'
+// error string hardcoded in @uniswap/api
+// https://github.com/Uniswap/api/blob/main/bin/stacks/api-v1.ts#L234
+export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
 
 export const routingApi = createApi({
   reducerPath: 'routingApi',

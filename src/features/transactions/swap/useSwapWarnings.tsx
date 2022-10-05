@@ -7,7 +7,7 @@ import {
   WarningLabel,
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
-import { SWAP_NO_ROUTE_ERROR } from 'src/features/routing/routingApi'
+import { API_RATE_LIMIT_ERROR, SWAP_NO_ROUTE_ERROR } from 'src/features/routing/routingApi'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
@@ -59,6 +59,14 @@ export function getSwapWarnings(
         message: t(
           'There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.'
         ),
+      })
+    } else if (errorData?.data?.errorCode === API_RATE_LIMIT_ERROR) {
+      warnings.push({
+        type: WarningLabel.RateLimit,
+        severity: WarningSeverity.Medium,
+        action: WarningAction.DisableReview,
+        title: t('Rate limit exceeded'),
+        message: t('Please try again in a few minutes.'),
       })
     } else {
       // catch all other router errors in a generic swap router error message
