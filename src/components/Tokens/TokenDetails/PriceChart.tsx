@@ -364,4 +364,37 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   )
 }
 
-export default PriceChart
+export function MissingPriceChart({ width, height, prices }: PriceChartProps) {
+  const theme = useTheme()
+  return (
+    <>
+      <ChartHeader />
+      <svg width={width} height={height}>
+        <path
+          d="M 0 80 Q 104 10, 208 80 T 416 80
+          M 416 80 Q 520 10, 624 80 T 1248 80"
+          stroke={theme.backgroundOutline}
+          fill="transparent"
+          strokeWidth="2"
+        />
+      </svg>
+      {/* <TimeOptionsWrapper>
+        <TimeOptionsContainer>
+          {ORDERED_TIMES.map((time) => (
+            <TimeButton
+              key={DISPLAYS[time]}
+              active={timePeriod === time}
+              onClick={() => {
+                setTimePeriod(time)
+              }}
+            >
+              {DISPLAYS[time]}
+            </TimeButton>
+          ))}
+        </TimeOptionsContainer>
+      </TimeOptionsWrapper> */}
+    </>
+  )
+}
+
+export default MissingPriceChart
