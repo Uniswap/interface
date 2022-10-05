@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { sprinkles } from 'nft/css/sprinkles.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { vars } from 'nft/css/sprinkles.css'
 
 // https://www.npmjs.com/package/react-slider
 // https://codesandbox.io/s/peaceful-pine-gqszx6?file=/src/styles.css:587-641

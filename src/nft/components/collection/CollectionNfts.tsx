@@ -8,7 +8,6 @@ import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center, Row } from 'nft/components/Flex'
 import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
 import { bodySmall, buttonTextMedium, headlineMedium } from 'nft/css/common.css'
-import { formatWeiToDecimal } from 'nft/utils'
 import { vars } from 'nft/css/sprinkles.css'
 import {
   CollectionFilters,
@@ -19,8 +18,10 @@ import {
   useIsMobile,
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
+import { usePriceRange } from 'nft/hooks/usePriceRange'
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
+import { formatWeiToDecimal } from 'nft/utils'
 import { getRarityStatus } from 'nft/utils/asset'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -29,7 +30,6 @@ import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
-import { usePriceRange } from 'nft/hooks/usePriceRange'
 
 interface CollectionNftsProps {
   contractAddress: string
@@ -248,7 +248,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       const minIndex = sortBy === 1 ? collectionNfts.length - 1 : 0
       const lowValue = formatWeiToDecimal(collectionNfts[minIndex]?.priceInfo.ETHPrice ?? '')
       const maxValue = formatWeiToDecimal(collectionNfts[maxIndex]?.priceInfo.ETHPrice ?? '')
-      //
+
       if (minPrice === '') {
         setPriceRangeLow(lowValue)
       }
@@ -257,7 +257,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         setPriceRangeHigh(maxValue)
       }
     }
-  }, [collectionNfts, sortBy])
+  }, [collectionNfts, sortBy, maxPrice, minPrice, setPriceRangeHigh, setPriceRangeLow])
 
   return (
     <>
