@@ -71,20 +71,6 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
-  if (chainId === ChainId.ArbitrumRinkeby) {
-    switch (type) {
-      case ExplorerDataType.TRANSACTION:
-        return `https://rinkeby-explorer.arbitrum.io/tx/${data}`
-      case ExplorerDataType.ADDRESS:
-      case ExplorerDataType.TOKEN:
-        return `https://rinkeby-explorer.arbitrum.io/address/${data}`
-      case ExplorerDataType.BLOCK:
-        return `https://rinkeby-explorer.arbitrum.io/block/${data}`
-      default:
-        return 'https://rinkeby-explorer.arbitrum.io/'
-    }
-  }
-
   const prefix = CHAIN_INFO[chainId]?.explorer ?? 'https://etherscan.io/'
 
   switch (type) {
@@ -95,7 +81,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
       return `${prefix}token/${data}`
 
     case ExplorerDataType.BLOCK:
-      if (chainId === ChainId.Optimism || chainId === ChainId.OptimisticKovan) {
+      if (chainId === ChainId.Optimism) {
         return `${prefix}tx/${data}`
       }
       return `${prefix}block/${data}`

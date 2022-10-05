@@ -8,12 +8,8 @@ export function getInfuraChainName(chainId: ChainId) {
       return 'goerli'
     case ChainId.ArbitrumOne:
       return 'arbitrum'
-    case ChainId.ArbitrumRinkeby:
-      return 'arbitrum-rinkeby'
     case ChainId.Optimism:
       return 'optimism'
-    case ChainId.OptimisticKovan:
-      return 'optimism-kovan'
     case ChainId.Polygon:
       return 'matic'
     case ChainId.PolygonMumbai:

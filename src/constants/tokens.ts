@@ -203,23 +203,9 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WETH',
     'Wrapped Ether'
   ),
-  [ChainId.OptimisticKovan]: new Token(
-    ChainId.OptimisticKovan,
-    '0x4200000000000000000000000000000000000006',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
   [ChainId.ArbitrumOne]: new Token(
     ChainId.ArbitrumOne,
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    18,
-    'WETH',
-    'Wrapped Ether'
-  ),
-  [ChainId.ArbitrumRinkeby]: new Token(
-    ChainId.ArbitrumRinkeby,
-    '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681',
     18,
     'WETH',
     'Wrapped Ether'

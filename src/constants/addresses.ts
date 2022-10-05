@@ -7,9 +7,7 @@ type AddressMap = { [chainId: number]: string }
 
 const SUPPORTED_L1_L2_CHAINS = [
   ChainId.Optimism,
-  ChainId.OptimisticKovan,
   ChainId.ArbitrumOne,
-  ChainId.ArbitrumRinkeby,
   ChainId.Polygon,
   ChainId.PolygonMumbai,
 ]
@@ -29,13 +27,11 @@ export const UNI_ADDRESS: AddressMap = constructSameAddressMap(
 )
 export const MULTICALL_ADDRESS: AddressMap = {
   ...constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [
-    ChainId.OptimisticKovan,
     ChainId.Optimism,
     ChainId.Polygon,
     ChainId.PolygonMumbai,
   ]),
   [ChainId.ArbitrumOne]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
-  [ChainId.ArbitrumRinkeby]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
 }
 export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
 export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap(
@@ -93,7 +89,7 @@ export const SOCKS_CONTROLLER_ADDRESSES: AddressMap = {
 }
 export const V3_MIGRATOR_ADDRESSES: AddressMap = constructSameAddressMap(
   '0xA5644E29708357803b5A882D272c41cC0dF92B34',
-  [ChainId.ArbitrumOne, ChainId.ArbitrumRinkeby, ChainId.Polygon, ChainId.PolygonMumbai]
+  [ChainId.ArbitrumOne, ChainId.Polygon, ChainId.PolygonMumbai]
 )
 
 export function constructSameAddressMap<T extends string>(

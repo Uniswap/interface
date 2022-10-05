@@ -74,11 +74,9 @@ const SWAP_GAS_LIMIT_FALLBACKS: Record<ChainId, string> = {
   [ChainId.Mainnet]: '420000',
   [ChainId.Goerli]: '420000',
   [ChainId.Optimism]: '420000',
-  [ChainId.OptimisticKovan]: '420000',
   [ChainId.Polygon]: '420000',
   [ChainId.PolygonMumbai]: '420000',
   [ChainId.ArbitrumOne]: '1200000',
-  [ChainId.ArbitrumRinkeby]: '1200000',
 }
 
 export function useSimulatedGasLimit(

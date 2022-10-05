@@ -2,12 +2,10 @@
 
 import {
   ARBITRUM_LOGO,
-  ARBITRUM_RINKEBY_LOGO,
   ETHEREUM_LOGO,
   GOERLI_LOGO,
   MUMBAI_LOGO,
   OPTIMISM_LOGO,
-  OPTIMISTIC_KOVAN_LOGO,
   POLYGON_LOGO,
 } from 'src/assets'
 
@@ -20,9 +18,7 @@ export enum ChainId {
   Goerli = 5,
 
   ArbitrumOne = 42161,
-  ArbitrumRinkeby = 421611,
   Optimism = 10,
-  OptimisticKovan = 69,
   Polygon = 137,
   PolygonMumbai = 80001,
 }
@@ -32,19 +28,12 @@ export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.Mainnet,
   ChainId.Goerli,
   ChainId.ArbitrumOne,
-  ChainId.ArbitrumRinkeby,
   ChainId.Optimism,
-  ChainId.OptimisticKovan,
   ChainId.Polygon,
   ChainId.PolygonMumbai,
 ]
 
-export const TESTNET_CHAIN_IDS = [
-  ChainId.Goerli,
-  ChainId.ArbitrumRinkeby,
-  ChainId.OptimisticKovan,
-  ChainId.PolygonMumbai,
-]
+export const TESTNET_CHAIN_IDS = [ChainId.Goerli, ChainId.PolygonMumbai]
 
 export const L1_CHAIN_IDS = [ChainId.Mainnet, ChainId.Goerli] as const
 
@@ -53,9 +42,7 @@ export type L1ChainId = typeof L1_CHAIN_IDS[number]
 
 export const L2_CHAIN_IDS = [
   ChainId.ArbitrumOne,
-  ChainId.ArbitrumRinkeby,
   ChainId.Optimism,
-  ChainId.OptimisticKovan,
   ChainId.Polygon,
   ChainId.PolygonMumbai,
 ] as const
@@ -110,17 +97,6 @@ export const CHAIN_INFO: ChainInfo = {
     nativeCurrency: { name: 'Arbitrum ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
   },
-  [ChainId.ArbitrumRinkeby]: {
-    blockWaitMsBeforeWarning: 600000, // 10 minutes
-    bridge: 'https://bridge.arbitrum.io/',
-    docs: 'https://offchainlabs.com/',
-    explorer: 'https://rinkeby-explorer.arbitrum.io/',
-    infoLink: 'https://info.uniswap.org/#/arbitrum/',
-    label: 'Arbitrum Rinkeby',
-    logo: ARBITRUM_RINKEBY_LOGO,
-    nativeCurrency: { name: 'Rinkeby ArbETH', symbol: 'rinkArbETH', decimals: 18 },
-    rpcUrls: ['https://rinkeby.arbitrum.io/rpc'],
-  },
   [ChainId.Mainnet]: {
     blockWaitMsBeforeWarning: 60000, // 1 minute
     docs: 'https://docs.uniswap.org/',
@@ -149,18 +125,6 @@ export const CHAIN_INFO: ChainInfo = {
     logo: OPTIMISM_LOGO,
     nativeCurrency: { name: 'Optimistic ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://mainnet.optimism.io'],
-    statusPage: 'https://optimism.io/status',
-  },
-  [ChainId.OptimisticKovan]: {
-    blockWaitMsBeforeWarning: 600000, // 10 minutes
-    bridge: 'https://gateway.optimism.io/',
-    docs: 'https://optimism.io/',
-    explorer: 'https://optimistic.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/optimism',
-    label: 'Optimistic Kovan',
-    logo: OPTIMISTIC_KOVAN_LOGO,
-    rpcUrls: ['https://kovan.optimism.io'],
-    nativeCurrency: { name: 'Optimistic kovETH', symbol: 'kovOpETH', decimals: 18 },
     statusPage: 'https://optimism.io/status',
   },
   [ChainId.Polygon]: {
@@ -202,9 +166,7 @@ export const CHAIN_ID_TO_LOGO: Record<ChainId, any> = {
   [ChainId.Mainnet]: ETHEREUM_LOGO,
   [ChainId.Goerli]: ETHEREUM_LOGO,
   [ChainId.Optimism]: ETHEREUM_LOGO,
-  [ChainId.OptimisticKovan]: ETHEREUM_LOGO,
   [ChainId.ArbitrumOne]: ETHEREUM_LOGO,
-  [ChainId.ArbitrumRinkeby]: ETHEREUM_LOGO,
   [ChainId.Polygon]: POLYGON_LOGO,
   [ChainId.PolygonMumbai]: POLYGON_LOGO,
 }

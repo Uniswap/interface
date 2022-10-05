@@ -644,10 +644,6 @@ describe('Redux state migrations', () => {
           '0': txDetails0,
           '1': txDetails1,
         },
-        [ChainId.OptimisticKovan]: {
-          '0': txDetails0,
-          '1': txDetails1,
-        },
         [ROPSTEN]: {
           '0': txDetails0,
           '1': txDetails1,
@@ -661,9 +657,6 @@ describe('Redux state migrations', () => {
       },
       [TEST_ADDRESS_2]: {
         [ChainId.ArbitrumOne]: {
-          '0': txDetails0,
-        },
-        [ChainId.ArbitrumRinkeby]: {
           '0': txDetails0,
         },
         [ChainId.Optimism]: {
@@ -716,13 +709,11 @@ describe('Redux state migrations', () => {
 
     expect(v19.transactions[TEST_ADDRESS][ChainId.Mainnet]).toBeDefined()
     expect(v19.transactions[TEST_ADDRESS][ChainId.Goerli]).toBeDefined()
-    expect(v19.transactions[TEST_ADDRESS][ChainId.OptimisticKovan]).toBeDefined()
     expect(v19.transactions[TEST_ADDRESS][ROPSTEN]).toBeUndefined()
     expect(v19.transactions[TEST_ADDRESS][RINKEBY]).toBeUndefined()
     expect(v19.transactions[TEST_ADDRESS][KOVAN]).toBeUndefined()
 
     expect(v19.transactions[TEST_ADDRESS_2][ChainId.ArbitrumOne]).toBeDefined()
-    expect(v19.transactions[TEST_ADDRESS_2][ChainId.ArbitrumRinkeby]).toBeDefined()
     expect(v19.transactions[TEST_ADDRESS_2][ChainId.Optimism]).toBeDefined()
     expect(v19.transactions[TEST_ADDRESS_2][ROPSTEN]).toBeUndefined()
     expect(v19.transactions[TEST_ADDRESS_2][RINKEBY]).toBeUndefined()
