@@ -7,7 +7,6 @@ const TraitChipWrap = styled.div`
   align-items: center;
   padding: 8px 4px 8px 12px;
   font-weight: 600;
-
   border-radius: 12px;
   background-color: ${({ theme }) => theme.backgroundModule};
   font-size: 14px;
