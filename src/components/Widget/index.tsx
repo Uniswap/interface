@@ -1,3 +1,6 @@
+// eslint-disable-next-line
+import '@uniswap/widgets/dist/fonts.css'
+
 import { Currency, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { useActiveLocale } from 'hooks/useActiveLocale'
