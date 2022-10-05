@@ -11,11 +11,11 @@ const query = graphql`
   query searchTokensProjectsQuery($searchQuery: String!, $skip: Boolean!) {
     searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {
       logoUrl
+      name
       tokens {
         chain
         address
         decimals
-        name
         symbol
       }
     }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<81f2ab4a607b1920b7f54b7c2b3c9f2f>>
+ * @generated SignedSource<<92afd3d1a2f0db21592fb7b6675b8d79>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +14,11 @@ export type topTokensQuery$variables = {};
 export type topTokensQuery$data = {
   readonly topTokenProjects: ReadonlyArray<{
     readonly logoUrl: string | null;
+    readonly name: string | null;
     readonly tokens: ReadonlyArray<{
       readonly address: string | null;
       readonly chain: Chain;
       readonly decimals: number | null;
-      readonly name: string | null;
       readonly symbol: string | null;
     }>;
   } | null> | null;
@@ -57,28 +57,28 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "chain",
+  "name": "name",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "address",
+  "name": "chain",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "decimals",
+  "name": "address",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "decimals",
   "storageKey": null
 },
 v6 = {
@@ -111,6 +111,7 @@ return {
         "plural": true,
         "selections": [
           (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -119,7 +120,6 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
@@ -149,6 +149,7 @@ return {
         "plural": true,
         "selections": [
           (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -157,7 +158,6 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
@@ -173,16 +173,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5605b4e593b68e266d27666ed5607af4",
+    "cacheID": "31ece9211a7bbdb935c944c1ab903d33",
     "id": null,
     "metadata": {},
     "name": "topTokensQuery",
     "operationKind": "query",
-    "text": "query topTokensQuery {\n  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {\n    logoUrl\n    tokens {\n      chain\n      address\n      decimals\n      name\n      symbol\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query topTokensQuery {\n  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {\n    logoUrl\n    name\n    tokens {\n      chain\n      address\n      decimals\n      symbol\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0333f2e936b1cb9080eb7deea61e09a3";
+(node as any).hash = "8279b4a563922d1ac7060817a4f9f660";
 
 export default node;

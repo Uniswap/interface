@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8f2d14acfe372a3ad8f0afe937e3b7d8>>
+ * @generated SignedSource<<638c91d8690838cc70f06d2a65368043>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,11 +17,11 @@ export type searchTokensProjectsQuery$variables = {
 export type searchTokensProjectsQuery$data = {
   readonly searchTokenProjects?: ReadonlyArray<{
     readonly logoUrl: string | null;
+    readonly name: string | null;
     readonly tokens: ReadonlyArray<{
       readonly address: string | null;
       readonly chain: Chain;
       readonly decimals: number | null;
-      readonly name: string | null;
       readonly symbol: string | null;
     }>;
   } | null> | null;
@@ -62,28 +62,28 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "chain",
+  "name": "name",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "address",
+  "name": "chain",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "decimals",
+  "name": "address",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "decimals",
   "storageKey": null
 },
 v7 = {
@@ -121,6 +121,7 @@ return {
             "plural": true,
             "selections": [
               (v2/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -129,7 +130,6 @@ return {
                 "name": "tokens",
                 "plural": true,
                 "selections": [
-                  (v3/*: any*/),
                   (v4/*: any*/),
                   (v5/*: any*/),
                   (v6/*: any*/),
@@ -166,6 +166,7 @@ return {
             "plural": true,
             "selections": [
               (v2/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -174,7 +175,6 @@ return {
                 "name": "tokens",
                 "plural": true,
                 "selections": [
-                  (v3/*: any*/),
                   (v4/*: any*/),
                   (v5/*: any*/),
                   (v6/*: any*/),
@@ -192,16 +192,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8c725c2771fe844bd08efc2b4eb09fae",
+    "cacheID": "ab29099d341df671cb77aea539ab50ff",
     "id": null,
     "metadata": {},
     "name": "searchTokensProjectsQuery",
     "operationKind": "query",
-    "text": "query searchTokensProjectsQuery(\n  $searchQuery: String!\n  $skip: Boolean!\n) {\n  searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {\n    logoUrl\n    tokens {\n      chain\n      address\n      decimals\n      name\n      symbol\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query searchTokensProjectsQuery(\n  $searchQuery: String!\n  $skip: Boolean!\n) {\n  searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {\n    logoUrl\n    name\n    tokens {\n      chain\n      address\n      decimals\n      symbol\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "14aa3ff85f25e2399f46da1027cb1e5b";
+(node as any).hash = "a892f72180072deba8b36858883da388";
 
 export default node;

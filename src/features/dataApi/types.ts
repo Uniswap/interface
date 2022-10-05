@@ -21,10 +21,10 @@ export type GQLToken = {
   readonly address: string | null
   readonly decimals: number | null
   readonly symbol: string | null
-  readonly name: string | null
 }
 
 export type GQLTokenProject = {
   readonly tokens: readonly GQLToken[]
   readonly logoUrl: string | null
+  readonly name: string | null
 }

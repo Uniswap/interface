@@ -30,7 +30,8 @@ export function tokenProjectToCurrencyInfos(
   return tokenProject
     .flatMap((project) =>
       project?.tokens.map((token) => {
-        const { chain, address, decimals, symbol, name } = token
+        const { logoUrl, name } = project
+        const { chain, address, decimals, symbol } = token
         const chainId = fromGraphQLChain(chain)
         if (!chainId || !decimals || !symbol || !name) return null
 
@@ -42,7 +43,7 @@ export function tokenProjectToCurrencyInfos(
         const currencyInfo: CurrencyInfo = {
           currency,
           currencyId: currencyId(currency),
-          logoUrl: project.logoUrl,
+          logoUrl,
         }
 
         return currencyInfo

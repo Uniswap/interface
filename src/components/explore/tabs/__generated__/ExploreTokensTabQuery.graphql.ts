@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<485a71d350e4cb470d010faf7e8af823>>
+ * @generated SignedSource<<8806ce597f1088bc88656423cbb451f0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,6 +36,7 @@ export type ExploreTokensTabQuery$data = {
     readonly tokens: ReadonlyArray<{
       readonly address: string | null;
       readonly chain: Chain;
+      readonly decimals: number | null;
       readonly symbol: string | null;
     }>;
   } | null> | null;
@@ -102,45 +103,52 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "decimals",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "symbol",
   "storageKey": null
 },
-v7 = [
+v8 = [
   {
     "kind": "Literal",
     "name": "currencies",
     "value": "USD"
   }
 ],
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "currency",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "value",
   "storageKey": null
 },
-v10 = [
-  (v8/*: any*/),
-  (v9/*: any*/)
+v11 = [
+  (v9/*: any*/),
+  (v10/*: any*/)
 ],
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v12 = [
-  (v8/*: any*/),
+v13 = [
   (v9/*: any*/),
-  (v11/*: any*/)
+  (v10/*: any*/),
+  (v12/*: any*/)
 ];
 return {
   "fragment": {
@@ -169,13 +177,14 @@ return {
             "selections": [
               (v4/*: any*/),
               (v5/*: any*/),
-              (v6/*: any*/)
+              (v6/*: any*/),
+              (v7/*: any*/)
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v7/*: any*/),
+            "args": (v8/*: any*/),
             "concreteType": "TokenProjectMarket",
             "kind": "LinkedField",
             "name": "markets",
@@ -188,7 +197,7 @@ return {
                 "kind": "LinkedField",
                 "name": "price",
                 "plural": false,
-                "selections": (v10/*: any*/),
+                "selections": (v11/*: any*/),
                 "storageKey": null
               },
               {
@@ -198,7 +207,7 @@ return {
                 "kind": "LinkedField",
                 "name": "marketCap",
                 "plural": false,
-                "selections": (v10/*: any*/),
+                "selections": (v11/*: any*/),
                 "storageKey": null
               },
               {
@@ -208,7 +217,7 @@ return {
                 "kind": "LinkedField",
                 "name": "pricePercentChange24h",
                 "plural": false,
-                "selections": (v10/*: any*/),
+                "selections": (v11/*: any*/),
                 "storageKey": null
               }
             ],
@@ -248,13 +257,14 @@ return {
               (v4/*: any*/),
               (v5/*: any*/),
               (v6/*: any*/),
-              (v11/*: any*/)
+              (v7/*: any*/),
+              (v12/*: any*/)
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v7/*: any*/),
+            "args": (v8/*: any*/),
             "concreteType": "TokenProjectMarket",
             "kind": "LinkedField",
             "name": "markets",
@@ -267,7 +277,7 @@ return {
                 "kind": "LinkedField",
                 "name": "price",
                 "plural": false,
-                "selections": (v12/*: any*/),
+                "selections": (v13/*: any*/),
                 "storageKey": null
               },
               {
@@ -277,7 +287,7 @@ return {
                 "kind": "LinkedField",
                 "name": "marketCap",
                 "plural": false,
-                "selections": (v12/*: any*/),
+                "selections": (v13/*: any*/),
                 "storageKey": null
               },
               {
@@ -287,30 +297,30 @@ return {
                 "kind": "LinkedField",
                 "name": "pricePercentChange24h",
                 "plural": false,
-                "selections": (v12/*: any*/),
+                "selections": (v13/*: any*/),
                 "storageKey": null
               },
-              (v11/*: any*/)
+              (v12/*: any*/)
             ],
             "storageKey": "markets(currencies:\"USD\")"
           },
-          (v11/*: any*/)
+          (v12/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "3ff40eb390e76ed307ec19735b2333ba",
+    "cacheID": "adc64525b5cfce8486370d19321ec7ab",
     "id": null,
     "metadata": {},
     "name": "ExploreTokensTabQuery",
     "operationKind": "query",
-    "text": "query ExploreTokensTabQuery(\n  $topTokensOrderBy: MarketSortableField!\n) {\n  topTokenProjects(orderBy: $topTokensOrderBy, page: 1, pageSize: 100) {\n    name\n    logoUrl\n    tokens {\n      chain\n      address\n      symbol\n      id\n    }\n    markets(currencies: USD) {\n      price {\n        currency\n        value\n        id\n      }\n      marketCap {\n        currency\n        value\n        id\n      }\n      pricePercentChange24h {\n        currency\n        value\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query ExploreTokensTabQuery(\n  $topTokensOrderBy: MarketSortableField!\n) {\n  topTokenProjects(orderBy: $topTokensOrderBy, page: 1, pageSize: 100) {\n    name\n    logoUrl\n    tokens {\n      chain\n      address\n      decimals\n      symbol\n      id\n    }\n    markets(currencies: USD) {\n      price {\n        currency\n        value\n        id\n      }\n      marketCap {\n        currency\n        value\n        id\n      }\n      pricePercentChange24h {\n        currency\n        value\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bb9a32513b2e0ba3fd44cf10b804a748";
+(node as any).hash = "b1791c4c1d4a01ebb0f9f31bab2c5e3d";
 
 export default node;

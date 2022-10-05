@@ -10,14 +10,14 @@ import { CurrencyId } from 'src/utils/currencyId'
 const query = graphql`
   query tokenProjectsQuery($contracts: [ContractInput!]!) {
     tokenProjects(contracts: $contracts) {
+      logoUrl
+      name
       tokens {
         chain
         address
         decimals
-        name
         symbol
       }
-      logoUrl
     }
   }
 `

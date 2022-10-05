@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc1c19fdf6db4ba558abdaf18b91dae8>>
+ * @generated SignedSource<<eb894b70c2fa6a6a5ab2e33644bd973a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,11 +20,11 @@ export type tokenProjectsQuery$variables = {
 export type tokenProjectsQuery$data = {
   readonly tokenProjects: ReadonlyArray<{
     readonly logoUrl: string | null;
+    readonly name: string | null;
     readonly tokens: ReadonlyArray<{
       readonly address: string | null;
       readonly chain: Chain;
       readonly decimals: number | null;
-      readonly name: string | null;
       readonly symbol: string | null;
     }>;
   } | null> | null;
@@ -53,42 +53,42 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "chain",
+  "name": "logoUrl",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "address",
+  "name": "name",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "decimals",
+  "name": "chain",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "address",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "symbol",
+  "name": "decimals",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "logoUrl",
+  "name": "symbol",
   "storageKey": null
 },
 v8 = {
@@ -113,6 +113,8 @@ return {
         "name": "tokenProjects",
         "plural": true,
         "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -121,15 +123,13 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
-              (v6/*: any*/)
+              (v6/*: any*/),
+              (v7/*: any*/)
             ],
             "storageKey": null
-          },
-          (v7/*: any*/)
+          }
         ],
         "storageKey": null
       }
@@ -151,6 +151,8 @@ return {
         "name": "tokenProjects",
         "plural": true,
         "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -159,16 +161,14 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
               (v6/*: any*/),
+              (v7/*: any*/),
               (v8/*: any*/)
             ],
             "storageKey": null
           },
-          (v7/*: any*/),
           (v8/*: any*/)
         ],
         "storageKey": null
@@ -176,16 +176,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "831d6a26f54213f451a423e9df8c85e5",
+    "cacheID": "70b17eba7e15a8cf3fa657e3b552b397",
     "id": null,
     "metadata": {},
     "name": "tokenProjectsQuery",
     "operationKind": "query",
-    "text": "query tokenProjectsQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    tokens {\n      chain\n      address\n      decimals\n      name\n      symbol\n      id\n    }\n    logoUrl\n    id\n  }\n}\n"
+    "text": "query tokenProjectsQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    logoUrl\n    name\n    tokens {\n      chain\n      address\n      decimals\n      symbol\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "cb5201bf5a2042dbeb91557660518f2f";
+(node as any).hash = "86ba58b2b2b958d9124ec8e19f1521ea";
 
 export default node;

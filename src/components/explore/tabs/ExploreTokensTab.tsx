@@ -24,6 +24,8 @@ export const exploreTokensTabQuery = graphql`
       tokens {
         chain
         address
+        # HACK: Decimals included so Token Selector's top tokens query can reuse cached data
+        decimals
         symbol
       }
       markets(currencies: USD) {
