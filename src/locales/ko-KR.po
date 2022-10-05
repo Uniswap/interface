@@ -1559,7 +1559,7 @@ msgstr "<0/>을 정확히 <1/>로 바꿉니다."
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
-msgstr "스왑 진행하기"
+msgstr "어쨌든 스왑"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Swap exactly <0/> for <1/>"
