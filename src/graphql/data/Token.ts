@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery } from 'react-relay'
 
 import { Chain, TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
-import { TokenPrices$data } from './__generated__/TokenPrices.graphql'
 import { ContractInput, HistoryDuration, TokenQuery, TokenQuery$data } from './__generated__/TokenQuery.graphql'
 import environment from './RelayEnvironment'
 import { TimePeriod, toHistoryDuration } from './util'
@@ -63,7 +62,7 @@ const tokenQuery = graphql`
 `
 
 export type PricePoint = { value: number; timestamp: number }
-export function filterPrices(prices: TokenPrices$data['priceHistory'] | undefined) {
+export function filterPrices(prices: NonNullable<NonNullable<SingleTokenData>['market']>['priceHistory'] | undefined) {
   return prices?.filter((p): p is PricePoint => Boolean(p && p.value))
 }
 
