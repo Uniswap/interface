@@ -60,17 +60,3 @@ export const collectionFilterBubbleText = style({
   textOverflow: 'ellipsis',
   overflow: 'hidden',
 })
-
-export const sellModeButton = style([
-  sprinkles({
-    marginLeft: { sm: '8', md: 'auto' },
-    gap: '8',
-    padding: '12',
-    borderRadius: '12',
-    background: 'backgroundInteractive',
-    cursor: 'pointer',
-  }),
-  {
-    ':hover': { background: vars.color.accentAction },
-  },
-])
