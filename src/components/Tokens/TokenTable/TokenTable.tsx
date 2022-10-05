@@ -58,8 +58,13 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
-const LoadingMoreRows = Array(LOADING_ROWS_COUNT).fill(<LoadingRow />)
-const LoadingRows = (rowCount?: number) => Array(rowCount ?? PAGE_SIZE).fill(<LoadingRow />)
+const LoadingRows = (rowCount?: number) =>
+  Array(rowCount ?? PAGE_SIZE)
+    .fill(null)
+    .map((_, index) => {
+      return <LoadingRow key={index} />
+    })
+const LoadingMoreRows = LoadingRows(LOADING_ROWS_COUNT)
 
 export function LoadingTokenTable({ rowCount }: { rowCount?: number }) {
   return (
@@ -95,7 +100,6 @@ export default function TokenTable() {
 
   /* loading and error state */
   if (loading && (!tokens || tokens?.length === 0)) {
-    console.log('LOADING ROWS SHOWN')
     return <LoadingTokenTable rowCount={loadingRowCount} />
   } else {
     if (error || !tokens) {
@@ -116,7 +120,6 @@ export default function TokenTable() {
         <NoTokensState message={<Trans>No tokens found</Trans>} />
       )
     } else {
-      console.log('SHOWED DATA')
       return (
         <>
           <GridContainer>

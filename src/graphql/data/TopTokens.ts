@@ -63,7 +63,6 @@ function useSortedTokens(tokens: TopTokens100Query['response']['topTokens'] | un
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
-  // console.log('sorted Method and sort Ascending', sortMethod, sortAscending)
   return useMemo(() => {
     if (!tokens) return []
 
@@ -97,8 +96,6 @@ function useFilteredTokens(tokens: PrefetchedTopToken[]) {
   const showFavorites = useAtomValue(showFavoritesAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
-
-  // console.log('filter string, favorites, show favorites', filterString, favorites, showFavorites)
 
   return useMemo(() => {
     if (!tokens) {
@@ -202,7 +199,6 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     () => checkIfAllTokensCached(duration, prefetchedSelectedTokensWithoutPriceHistory),
     [duration, prefetchedSelectedTokensWithoutPriceHistory]
   )
-  const loading = Boolean(loadingTokensWithPriceHistory || loadingTokensWithoutPriceHistory)
   // loadingRowCount defaults to PAGE_SIZE when no prefetchedData is available yet because the initial load
   // count will always be PAGE_SIZE.
   const loadingRowCount = useMemo(
@@ -289,13 +285,13 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   }, [everyTokenInCache, cachedTokens])
 
   useEffect(() => {
-    if (!everyTokenInCache && duration === prefetchedDataDuration) {
-      console.log('duration info', duration, prefetchedDataDuration)
-      console.log('new token history being loaded')
+    if (!everyTokenInCache) {
       setLoadingTokensWithPriceHistory(true)
       setTokens([])
-      const contracts = prefetchedSelectedTokensWithoutPriceHistory.slice(0, PAGE_SIZE).map(toContractInput)
-      loadTokensWithPriceHistory({ contracts, appendingTokens: false, page: 0 })
+      if (duration === prefetchedDataDuration) {
+        const contracts = prefetchedSelectedTokensWithoutPriceHistory.slice(0, PAGE_SIZE).map(toContractInput)
+        loadTokensWithPriceHistory({ contracts, appendingTokens: false, page: 0 })
+      }
     }
   }, [
     everyTokenInCache,
@@ -314,7 +310,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 
   return {
     error,
-    loading,
+    loading: loadingTokensWithPriceHistory || loadingTokensWithoutPriceHistory,
     tokens,
     hasMore,
     loadMoreTokens,
