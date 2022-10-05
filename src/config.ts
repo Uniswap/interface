@@ -57,7 +57,7 @@ const _config: Config = {
   coingeckoApiUrl: COINGECKO_API_URL,
   covalentApiKey: process.env.COVALENT_API_KEY || COVALENT_API_KEY,
   debug: parseBoolean(DEBUG),
-  uniswapApiUrl: UNISWAP_API_URL,
+  uniswapApiUrl: process.env.UNISWAP_API_URL || UNISWAP_API_URL,
   uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
   uniswapGasServiceUrl: UNISWAP_GAS_SERVICE_URL,
   uniswapAppUrl: UNISWAP_APP_URL,
