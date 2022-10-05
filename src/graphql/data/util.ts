@@ -82,7 +82,7 @@ export function isValidBackendChainName(chainName: string | undefined): chainNam
 
 export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?: number) {
   if (address === ZERO_ADDRESS && chainId && chainId === SupportedChainId.MAINNET) {
-    return `/tokens/ethereum/${NATIVE_CHAIN_ID}`
+    return `/tokens/${CHAIN_ID_TO_BACKEND_NAME[chainId].toLowerCase()}/${NATIVE_CHAIN_ID}`
   } else if (chainName) {
     return `/tokens/${chainName.toLowerCase()}/${address}`
   } else if (chainId) {
