@@ -104,11 +104,11 @@ const CurrencySelect = styled(ButtonGray)<{
     !redesignFlag &&
     css`
       &:hover {
-        background-color: ${({ theme }) => (selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3)};
+        background-color: ${({ theme }) => (selected ? theme.deprecated_bg3 : darken(0.05, theme.deprecated_primary1))};
       }
 
       &:active {
-        background-color: ${({ theme }) => (selected ? darken(0.05, theme.deprecated_primary1) : theme.deprecated_bg3)};
+        background-color: ${({ theme }) => (selected ? theme.deprecated_bg3 : darken(0.05, theme.deprecated_primary1))};
       }
     `}
 
