@@ -1,7 +1,7 @@
 import { CrossIcon } from 'nft/components/icons'
 import styled from 'styled-components/macro'
 
-const BubbleWrap = styled.div`
+const TraitChipWrap = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,12 +22,12 @@ const CrossIconWrap = styled.div`
 
 export const TraitChip = ({ onClick, value }: { value: string; onClick: () => void }) => {
   return (
-    <BubbleWrap>
+    <TraitChipWrap>
       <span>{value}</span>
 
       <CrossIconWrap onClick={onClick}>
         <CrossIcon style={{ marginTop: 2 }} cursor="pointer" />
       </CrossIconWrap>
-    </BubbleWrap>
+    </TraitChipWrap>
   )
 }
