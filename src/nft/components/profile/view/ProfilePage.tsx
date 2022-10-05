@@ -1,12 +1,11 @@
-import clsx from 'clsx'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { Center, Column, Row } from 'nft/components/Flex'
-import { CrossIcon } from 'nft/components/icons'
+import { CrossIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
-import { subhead, subheadSmall } from 'nft/css/common.css'
+import { buttonTextMedium, subhead } from 'nft/css/common.css'
 import {
   useFiltersExpanded,
   useIsMobile,
@@ -17,25 +16,34 @@ import {
 } from 'nft/hooks'
 import { fetchMultipleCollectionStats, fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletCollection } from 'nft/types'
-import { Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { useSpring } from 'react-spring'
+import styled from 'styled-components/macro'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
 import { WalletAssetDisplay } from './WalletAssetDisplay'
 
-export const formatEth = (price: number) => {
-  if (price > 1000000) {
-    return `${Math.round(price / 1000000)}M`
-  } else if (price > 1000) {
-    return `${Math.round(price / 1000)}K`
-  } else {
-    return `${Math.round(price * 100 + Number.EPSILON) / 100}`
+const SellModeButton = styled.button<{ active: boolean }>`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  gap: 8px;
+  cursor: pointer;
+  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
+  color: #fff;
+  border: none;
+  outline: none;
+  &:hover {
+    background-color: ${({ theme }) => theme.accentAction};
   }
-}
+`
 
 function roundFloorPrice(price?: number, n?: number) {
   return price ? Math.round(price * Math.pow(10, n ?? 3) + Number.EPSILON) / Math.pow(10, n ?? 3) : 0
@@ -46,6 +54,25 @@ export const ProfilePage = () => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
+  const walletAssets = useWalletCollections((state) => state.walletAssets)
+  const setWalletAssets = useWalletCollections((state) => state.setWalletAssets)
+  const displayAssets = useWalletCollections((state) => state.displayAssets)
+  const setDisplayAssets = useWalletCollections((state) => state.setDisplayAssets)
+  const walletCollections = useWalletCollections((state) => state.walletCollections)
+  const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
+  const listFilter = useWalletCollections((state) => state.listFilter)
+  const sellAssets = useSellAsset((state) => state.sellAssets)
+  const reset = useSellAsset((state) => state.reset)
+  const resetSellAssets = useSellAsset((state) => state.reset)
+  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
+  const isMobile = useIsMobile()
+  const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
+
+  const handleSellModeClick = () => {
+    resetSellAssets()
+    toggleSellMode()
+  }
 
   const { data: ownerCollections } = useQuery(
     ['ownerCollections', address],
@@ -89,16 +116,9 @@ export const ProfilePage = () => {
 
   const ownerAssets = useMemo(() => (isSuccess ? ownerAssetsData?.pages.flat() : null), [isSuccess, ownerAssetsData])
 
-  const walletAssets = useWalletCollections((state) => state.walletAssets)
-  const setWalletAssets = useWalletCollections((state) => state.setWalletAssets)
-  const displayAssets = useWalletCollections((state) => state.displayAssets)
-  const walletCollections = useWalletCollections((state) => state.walletCollections)
-  const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
-  const sellAssets = useSellAsset((state) => state.sellAssets)
-  const reset = useSellAsset((state) => state.reset)
-  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
-  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
-  const isMobile = useIsMobile()
+  useEffect(() => {
+    setDisplayAssets(walletAssets, listFilter)
+  }, [walletAssets, listFilter, setDisplayAssets])
 
   useEffect(() => {
     setWalletAssets(ownerAssets?.flat() ?? [])
@@ -159,14 +179,20 @@ export const ProfilePage = () => {
                   width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
                 }}
               >
-                <Row gap="8" flexWrap="nowrap">
+                <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
                   <FilterButton
                     isMobile={isMobile}
                     isFiltersExpanded={isFiltersExpanded}
                     results={displayAssets.length}
                     onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                   />
-                  <SelectAllButton />
+                  <Row gap="8" flexWrap="nowrap">
+                    {isSellMode && <SelectAllButton />}
+                    <SellModeButton active={isSellMode} onClick={handleSellModeClick}>
+                      <TagIcon height={20} width={20} />
+                      Sell
+                    </SellModeButton>
+                  </Row>
                 </Row>
                 <Row>
                   <CollectionFiltersRow
@@ -265,23 +291,13 @@ const SelectAllButton = () => {
   }
   return (
     <Box
-      display="flex"
-      flexShrink="0"
-      flexDirection="row"
-      alignItems="center"
-      marginLeft={{ sm: '8', md: 'auto' }}
-      borderRadius="12"
-      backgroundColor="backgroundOutline"
-      fontWeight="medium"
-      height="44"
-      paddingTop="12"
-      paddingBottom="12"
-      paddingRight="16"
-      paddingLeft="16"
+      marginRight="12"
+      paddingX="12"
+      paddingY="10"
       cursor="pointer"
-      color="textPrimary"
+      color="textSecondary"
       onClick={toggleAllSelected}
-      className={clsx(`${subheadSmall} ${isAllSelected ? styles.buttonSelected : null}`)}
+      className={buttonTextMedium}
     >
       {isAllSelected ? 'Deselect all' : 'Select all'}
     </Box>
@@ -368,31 +384,5 @@ const CollectionFilterItem = ({
         <CrossIcon />
       </Box>
     </Row>
-  )
-}
-
-const CollectionSearch = ({
-  searchText,
-  setSearchText,
-}: {
-  searchText: string
-  setSearchText: Dispatch<SetStateAction<string>>
-}) => {
-  return (
-    <Box
-      as="input"
-      borderColor={{ default: 'backgroundOutline', focus: 'genieBlue' }}
-      borderWidth="1px"
-      borderStyle="solid"
-      borderRadius="8"
-      padding="12"
-      backgroundColor="backgroundSurface"
-      fontSize="14"
-      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
-      placeholder="Search by name"
-      value={searchText}
-      width="full"
-      onChange={(e: FormEvent<HTMLInputElement>) => setSearchText(e.currentTarget.value)}
-    />
   )
 }
