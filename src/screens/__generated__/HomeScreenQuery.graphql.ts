@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1816468f5ede59783b488015c4060a3>>
+ * @generated SignedSource<<20d41ef76d481fab4efa3ce0dffe6769>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,9 +14,9 @@ export type HomeScreenQuery$variables = {
   owner: string;
 };
 export type HomeScreenQuery$data = {
-  readonly portfolio: {
+  readonly portfolios: ReadonlyArray<{
     readonly " $fragmentSpreads": FragmentRefs<"TotalBalance_portfolio">;
-  } | null;
+  } | null> | null;
 };
 export type HomeScreenQuery = {
   response: HomeScreenQuery$data;
@@ -33,11 +33,24 @@ var v0 = [
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "ownerAddress",
-    "variableName": "owner"
+    "items": [
+      {
+        "kind": "Variable",
+        "name": "ownerAddresses.0",
+        "variableName": "owner"
+      }
+    ],
+    "kind": "ListValue",
+    "name": "ownerAddresses"
   }
-];
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -50,8 +63,8 @@ return {
         "args": (v1/*: any*/),
         "concreteType": "Portfolio",
         "kind": "LinkedField",
-        "name": "portfolio",
-        "plural": false,
+        "name": "portfolios",
+        "plural": true,
         "selections": [
           {
             "args": null,
@@ -76,53 +89,45 @@ return {
         "args": (v1/*: any*/),
         "concreteType": "Portfolio",
         "kind": "LinkedField",
-        "name": "portfolio",
-        "plural": false,
+        "name": "portfolios",
+        "plural": true,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "assetsValueUSD",
+            "concreteType": "Amount",
+            "kind": "LinkedField",
+            "name": "tokensTotalDenominatedValue",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "value",
+                "storageKey": null
+              },
+              (v2/*: any*/)
+            ],
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "absoluteChange24H",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "relativeChange24H",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          }
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "1d5e4b0132125d3162d65a92efecdd8f",
+    "cacheID": "bbb38bedadc5b937ede6ae7f56546a73",
     "id": null,
     "metadata": {},
     "name": "HomeScreenQuery",
     "operationKind": "query",
-    "text": "query HomeScreenQuery(\n  $owner: String!\n) {\n  portfolio(ownerAddress: $owner) {\n    ...TotalBalance_portfolio\n    id\n  }\n}\n\nfragment TotalBalance_portfolio on Portfolio {\n  assetsValueUSD\n  absoluteChange24H\n  relativeChange24H\n}\n"
+    "text": "query HomeScreenQuery(\n  $owner: String!\n) {\n  portfolios(ownerAddresses: [$owner]) {\n    ...TotalBalance_portfolio\n    id\n  }\n}\n\nfragment TotalBalance_portfolio on Portfolio {\n  tokensTotalDenominatedValue {\n    value\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e8de5ab88af39edb4159b988447e6ff9";
+(node as any).hash = "e2f0cb814a240dfbb4b5efb53482ff67";
 
 export default node;

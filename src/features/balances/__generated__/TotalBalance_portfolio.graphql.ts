@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7eca4cddfad9815c002906b77dc71a28>>
+ * @generated SignedSource<<b00843973d40d4cd028136c2f09e77d5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,9 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type TotalBalance_portfolio$data = {
-  readonly absoluteChange24H: number | null;
-  readonly assetsValueUSD: number | null;
-  readonly relativeChange24H: number | null;
+  readonly tokensTotalDenominatedValue: {
+    readonly value: number | null;
+  } | null;
   readonly " $fragmentType": "TotalBalance_portfolio";
 };
 export type TotalBalance_portfolio$key = {
@@ -30,22 +30,19 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "assetsValueUSD",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "absoluteChange24H",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "relativeChange24H",
+      "concreteType": "Amount",
+      "kind": "LinkedField",
+      "name": "tokensTotalDenominatedValue",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "value",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -53,6 +50,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "8249c9594ed2d20657eff87ae9a8d087";
+(node as any).hash = "7f2a9e7f870aba5bd8ec65c8e0cdc8cc";
 
 export default node;

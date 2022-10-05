@@ -32,7 +32,7 @@ const NFTS_KEY = 'nfts'
 
 export const homeScreenQuery = graphql`
   query HomeScreenQuery($owner: String!) {
-    portfolio(ownerAddress: $owner) {
+    portfolios(ownerAddresses: [$owner]) {
       ...TotalBalance_portfolio
     }
   }
@@ -75,7 +75,7 @@ export function HomeScreen({ data }: { data: HomeScreenQuery$data }) {
         <Flex bg="backgroundBackdrop" gap="sm" pb="md">
           <AccountHeader />
           <Flex gap="sm" px="lg">
-            <TotalBalance showRelativeChange portfolio={data.portfolio} />
+            <TotalBalance portfolio={data?.portfolios?.[0] ?? null} />
             {activeAccount?.type !== AccountType.Readonly && (
               <Flex pt="xxs">
                 <QuickActions />
