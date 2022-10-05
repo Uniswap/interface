@@ -278,7 +278,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     loadTokensWithPriceHistory({ contracts, appendingTokens: true, page, tokens })
   }, [prefetchedSelectedTokensWithoutPriceHistory, page, loadTokensWithPriceHistory, tokens])
 
-  // Reset count when filters are changed
+  // Load tokens from cache when everything is available.
   useEffect(() => {
     if (everyTokenInCache) {
       setTokens(cachedTokens)
@@ -286,6 +286,8 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     }
   }, [everyTokenInCache, cachedTokens])
 
+  // Load new token with price history data when prefetchedSelectedTokensWithoutPriceHistory for current
+  // duration has already been resolved.
   useEffect(() => {
     if (!everyTokenInCache) {
       setLoadingTokensWithPriceHistory(true)
