@@ -3,7 +3,6 @@ import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
 import { parseEther } from 'ethers/lib/utils'
 import { BagFooter } from 'nft/components/bag/BagFooter'
-import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Center, Column } from 'nft/components/Flex'
@@ -31,6 +30,7 @@ import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
 import * as styles from './Bag.css'
+import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
 
 const EmptyState = () => {
@@ -75,7 +75,6 @@ const Bag = () => {
   const { account } = useWeb3React()
   const bagStatus = useBag((s) => s.bagStatus)
   const setBagStatus = useBag((s) => s.setBagStatus)
-  const markAssetAsReviewed = useBag((s) => s.markAssetAsReviewed)
   const didOpenUnavailableAssets = useBag((s) => s.didOpenUnavailableAssets)
   const setDidOpenUnavailableAssets = useBag((s) => s.setDidOpenUnavailableAssets)
   const bagIsLocked = useBag((s) => s.isLocked)
@@ -85,7 +84,6 @@ const Bag = () => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const uncheckedItemsInBag = useBag((s) => s.itemsInBag)
   const setItemsInBag = useBag((s) => s.setItemsInBag)
-  const removeAssetFromBag = useBag((s) => s.removeAssetFromBag)
   const bagExpanded = useBag((s) => s.bagExpanded)
   const toggleBag = useBag((s) => s.toggleBag)
   const setTotalEthPrice = useBag((s) => s.setTotalEthPrice)
@@ -231,31 +229,6 @@ const Bag = () => {
     useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))
   }, [])
 
-  const { unchangedAssets, priceChangedAssets, unavailableAssets, availableItems } = useMemo(() => {
-    const unchangedAssets = itemsInBag
-      .filter((item) => item.status === BagItemStatus.ADDED_TO_BAG || item.status === BagItemStatus.REVIEWED)
-      .map((item) => item.asset)
-    const priceChangedAssets = itemsInBag
-      .filter((item) => item.status === BagItemStatus.REVIEWING_PRICE_CHANGE)
-      .map((item) => item.asset)
-    const unavailableAssets = itemsInBag
-      .filter((item) => item.status === BagItemStatus.UNAVAILABLE)
-      .map((item) => item.asset)
-    const availableItems = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE)
-
-    return { unchangedAssets, priceChangedAssets, unavailableAssets, availableItems }
-  }, [itemsInBag])
-
-  useEffect(() => {
-    const hasAssetsInReview = priceChangedAssets.length > 0
-    const hasAssets = itemsInBag.length > 0
-
-    if (bagStatus === BagStatus.IN_REVIEW && !hasAssetsInReview) {
-      if (hasAssets) setBagStatus(BagStatus.CONFIRM_REVIEW)
-      else setBagStatus(BagStatus.ADDING_TO_BAG)
-    }
-  }, [bagStatus, itemsInBag, priceChangedAssets, setBagStatus])
-
   useEffect(() => {
     if (bagIsLocked && !isOpen) setModalIsOpen(true)
   }, [bagIsLocked, isOpen])
@@ -283,7 +256,7 @@ const Bag = () => {
     setTotalUsdPrice(totalUsdPrice)
   }, [totalEthPrice, totalUsdPrice, setTotalEthPrice, setTotalUsdPrice])
 
-  const hasAssetsToShow = itemsInBag.length > 0 || unavailableAssets.length > 0
+  const hasAssetsToShow = itemsInBag.length > 0
 
   const scrollHandler = (event: React.UIEvent<HTMLDivElement>) => {
     const scrollTop = event.currentTarget.scrollTop
@@ -307,40 +280,7 @@ const Bag = () => {
             {itemsInBag.length === 0 && bagStatus === BagStatus.ADDING_TO_BAG && <EmptyState />}
             <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
             <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
-              <Column display={priceChangedAssets.length > 0 || unavailableAssets.length > 0 ? 'flex' : 'none'}>
-                {unavailableAssets.length > 0 && (
-                  <UnavailableAssetsHeaderRow
-                    assets={unavailableAssets}
-                    usdPrice={fetchedPriceData}
-                    clearUnavailableAssets={() => setItemsInBag(availableItems)}
-                    didOpenUnavailableAssets={didOpenUnavailableAssets}
-                    setDidOpenUnavailableAssets={setDidOpenUnavailableAssets}
-                    isMobile={isMobile}
-                  />
-                )}
-                {priceChangedAssets.map((asset, index) => (
-                  <PriceChangeBagRow
-                    key={asset.id}
-                    asset={asset}
-                    usdPrice={fetchedPriceData}
-                    markAssetAsReviewed={markAssetAsReviewed}
-                    top={index === 0 && unavailableAssets.length === 0}
-                    isMobile={isMobile}
-                  />
-                ))}
-              </Column>
-              <Column gap="8">
-                {unchangedAssets.map((asset) => (
-                  <BagRow
-                    key={asset.id}
-                    asset={asset}
-                    usdPrice={fetchedPriceData}
-                    removeAsset={removeAssetFromBag}
-                    showRemove={true}
-                    isMobile={isMobile}
-                  />
-                ))}
-              </Column>
+              <BagContent />
             </Column>
             <ScrollingIndicator show={userCanScroll && scrollProgress < 100} />
             {hasAssetsToShow && (
