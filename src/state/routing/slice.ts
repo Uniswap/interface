@@ -72,14 +72,14 @@ export const routingApi = createApi({
             const chainName = CHAIN_INFO[chainId].label
             const query = qs.stringify({
               ...DEFAULT_QUERY_PARAMS,
-              blockChainName: chainName,
+              blockchainName: chainName,
               chainId,
               inputTokenAddress: tokenInAddress,
               outputTokenAddress: tokenOutAddress,
               amountIn: amount,
               type,
             })
-            result = await fetch(`pair/path?${query}`)
+            result = await fetch(`router/path?${query}`)
           }
 
           return { data: result.data as GetQuoteResult }

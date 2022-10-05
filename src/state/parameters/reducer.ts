@@ -17,6 +17,7 @@ export interface ParameterState {
   readonly encryptionParam: string
   readonly encryptionProverKey: string
   readonly encryptionVerifierData: string
+  readonly progress: number
 }
 
 const initialState: ParameterState = {
@@ -25,6 +26,7 @@ const initialState: ParameterState = {
   encryptionParam: '',
   encryptionProverKey: '',
   encryptionVerifierData: '',
+  progress: 0,
 }
 
 const parameterSlice = createSlice({
@@ -49,6 +51,9 @@ const parameterSlice = createSlice({
     setZkpParameters(state, action: { payload: { newParam: ParameterState } }) {
       state = action.payload.newParam
     },
+    setProgress(state, action: { payload: { newParam: number } }) {
+      state.progress = action.payload.newParam
+    },
   },
 })
 
@@ -59,5 +64,6 @@ export const {
   setEncryptionProverKey,
   setEncryptionVerifierData,
   setZkpParameters,
+  setProgress,
 } = parameterSlice.actions
 export default parameterSlice.reducer
