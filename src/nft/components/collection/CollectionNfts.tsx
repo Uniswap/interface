@@ -7,7 +7,10 @@ import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center, Row } from 'nft/components/Flex'
 import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
+import styled from 'styled-components/macro'
 import { bodySmall, buttonTextMedium, headlineMedium } from 'nft/css/common.css'
+import { marketPlaceItems } from './MarketplaceSelect'
+
 import { vars } from 'nft/css/sprinkles.css'
 import {
   CollectionFilters,
@@ -26,6 +29,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
+import { pluralize } from 'nft/utils/roundAndPluralize'
+import { TraitChip } from './TraitChip'
+import { scrollToTop } from 'nft/utils/scrollToTop'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
 
@@ -36,6 +42,17 @@ interface CollectionNftsProps {
 }
 
 const rarityStatusCache = new Map<string, boolean>()
+
+const ClearAllButton = styled.button`
+  color: ${({ theme }) => theme.textTertiary};
+  padding-left: 8px;
+  padding-right: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  background: none;
+`
 
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
   const traits = useCollectionFilters((state) => state.traits)
@@ -48,6 +65,11 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const setSortBy = useCollectionFilters((state) => state.setSortBy)
   const buyNow = useCollectionFilters((state) => state.buyNow)
   const setIsCollectionNftsLoading = useIsCollectionLoading((state) => state.setIsCollectionNftsLoading)
+  const removeTrait = useCollectionFilters((state) => state.removeTrait)
+  const removeMarket = useCollectionFilters((state) => state.removeMarket)
+  const reset = useCollectionFilters((state) => state.reset)
+  const setMin = useCollectionFilters((state) => state.setMinPrice)
+  const setMax = useCollectionFilters((state) => state.setMaxPrice)
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
@@ -208,6 +230,16 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const hasNfts = collectionNfts && collectionNfts.length > 0
 
+  let minMaxPriceChipText = ''
+
+  if (debouncedMinPrice && debouncedMaxPrice) {
+    minMaxPriceChipText = `Price: ${debouncedMinPrice}-${debouncedMaxPrice} ETH`
+  } else if (debouncedMinPrice) {
+    minMaxPriceChipText = `Min. Price: ${debouncedMinPrice} ETH`
+  } else if (debouncedMaxPrice) {
+    minMaxPriceChipText = `Max Price: ${debouncedMaxPrice} ETH`
+  }
+
   useEffect(() => {
     const marketCount: any = {}
     collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
@@ -254,6 +286,43 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             />
             <SortDropdown dropDownOptions={sortDropDownOptions} />
             <CollectionSearch />
+          </Row>
+          <Row paddingTop="12" gap="8" flexWrap="wrap">
+            {markets.map((market) => (
+              <TraitChip
+                key={market}
+                value={marketPlaceItems[market as keyof typeof marketPlaceItems]}
+                onClick={() => {
+                  scrollToTop()
+                  removeMarket(market)
+                }}
+              />
+            ))}
+            {traits.map((trait) => (
+              <TraitChip
+                key={trait.trait_value}
+                value={
+                  trait.trait_type === 'Number of traits'
+                    ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
+                    : trait.trait_value
+                }
+                onClick={() => {
+                  scrollToTop()
+                  removeTrait(trait)
+                }}
+              />
+            ))}
+            {minMaxPriceChipText && (
+              <TraitChip
+                value={minMaxPriceChipText}
+                onClick={() => {
+                  setMin('')
+                  setMax('')
+                }}
+              />
+            )}
+
+            {traits.length || markets.length > 0 ? <ClearAllButton onClick={reset}>Clear All</ClearAllButton> : null}
           </Row>
         </Box>
       </AnimatedBox>
