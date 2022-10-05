@@ -37,7 +37,7 @@ export const buttonTextLarge = sprinkles({ fontWeight: 'semibold', fontSize: '20
 export const buttonTextMedium = sprinkles({ fontWeight: 'semibold', fontSize: '16', lineHeight: '20' })
 export const buttonTextSmall = sprinkles({ fontWeight: 'semibold', fontSize: '14', lineHeight: '16' })
 
-const commonButtonStyles = style([
+export const commonButtonStyles = style([
   sprinkles({
     borderRadius: '12',
     transition: '250',
