@@ -1,6 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import Polygon from 'assets/networks/polygon-network.png'
+import { KS_SETTING_API } from 'constants/env'
 import { createClient } from 'utils/client'
 
 import { NetworkInfo } from '../type'
@@ -19,9 +20,7 @@ const mumbaiInfo: NetworkInfo = {
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/piavgh/mumbai-blocks'),
   etherscanUrl: 'https://mumbai.polygonscan.com/',
   etherscanName: 'Polygonscan',
-  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainIds=${
-    ChainId.MUMBAI
-  }&pageSize=${100}&isWhitelisted=${true}`,
+  tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.MUMBAI}&isWhitelisted=${true}`,
   bridgeURL: 'https://wallet.matic.network/bridge',
   nativeToken: {
     symbol: 'MATIC',

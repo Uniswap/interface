@@ -3,6 +3,7 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import CRONOS_DARK from 'assets/networks/cronos-network-dark.svg'
 import CRONOS from 'assets/networks/cronos-network.svg'
 import CronosLogo from 'assets/svg/cronos-token-logo.svg'
+import { KS_SETTING_API } from 'constants/env'
 import { createClient } from 'utils/client'
 
 import { NetworkInfo } from '../type'
@@ -29,9 +30,7 @@ const cronosTestnetInfo: NetworkInfo = {
   ),
   etherscanUrl: 'https://cronos.org/explorer/testnet3',
   etherscanName: 'Cronos explorer',
-  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainIds=${
-    ChainId.CRONOSTESTNET
-  }&pageSize=${100}&isWhitelisted=${true}`,
+  tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.CRONOSTESTNET}&isWhitelisted=${true}`,
   bridgeURL: 'https://cronos.crypto.org/docs/bridge/cdcapp.html',
   nativeToken: {
     symbol: 'CRO',

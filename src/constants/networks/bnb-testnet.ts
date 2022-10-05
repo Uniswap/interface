@@ -2,6 +2,7 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import BnbLogo from 'assets/images/bnb-logo.png'
 import BSC from 'assets/networks/bsc-network.png'
+import { KS_SETTING_API } from 'constants/env'
 import { createClient } from 'utils/client'
 
 import { NetworkInfo } from '../type'
@@ -20,9 +21,7 @@ const bnbTestnetInfo: NetworkInfo = {
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-blocks-bsctestnet'),
   etherscanUrl: 'https://testnet.bscscan.com',
   etherscanName: 'BscScan',
-  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainIds=${
-    ChainId.BSCTESTNET
-  }&pageSize=${100}&isWhitelisted=${true}`,
+  tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.BSCTESTNET}&isWhitelisted=${true}`,
   bridgeURL: 'https://www.binance.org/en/bridge',
   nativeToken: {
     symbol: 'BNB',

@@ -1,6 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import OASIS from 'assets/networks/oasis-network.svg'
+import { KS_SETTING_API } from 'constants/env'
 import { createClient } from 'utils/client'
 
 import { NetworkInfo } from '../type'
@@ -23,9 +24,7 @@ const oasisInfo: NetworkInfo = {
   blockClient: createClient('https://oasis-graph.kyberengineering.io/subgraphs/name/kybernetwork/oasis-blocks'),
   etherscanUrl: 'https://explorer.emerald.oasis.dev',
   etherscanName: 'Oasis Emerald Explorer',
-  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainIds=${
-    ChainId.OASIS
-  }&pageSize=${100}&isWhitelisted=${true}`,
+  tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.OASIS}&isWhitelisted=${true}`,
   bridgeURL: 'https://oasisprotocol.org/b-ridges',
   nativeToken: {
     symbol: 'ROSE',

@@ -556,3 +556,7 @@ export const deleteUnique = <T>(array: T[] | undefined, element: T): T[] => {
   }
   return array
 }
+
+export const filterTruthy = <T>(array: (T | undefined | null | false)[]): T[] => {
+  return array.filter(Boolean) as T[]
+}

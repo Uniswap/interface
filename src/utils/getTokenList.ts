@@ -1,5 +1,6 @@
 import { TokenList } from '@uniswap/token-lists'
 import { ValidateFunction } from 'ajv'
+import axios from 'axios'
 
 import contenthashToUri from './contenthashToUri'
 import { parseENSAddress } from './parseENSAddress'
@@ -87,6 +88,40 @@ export default async function getTokenList(
     return parsedData
   }
   throw new Error('Unrecognized list URL protocol.')
+}
+
+// loop to fetch all whitelist token
+export async function getTokenListV2(
+  listUrl: string,
+  resolveENSContentHash?: (ensName: string) => Promise<string>,
+): Promise<TokenList> {
+  return new Promise(async (resolve, reject) => {
+    let tokens: any[] = []
+    try {
+      const pageSize = 100
+      const maximumPage = 15
+      let page = 1
+      while (true) {
+        const { data } = await axios.get(`${listUrl}&pageSize=${pageSize}&page=${page}`)
+        page++
+        const tokensResponse = data.data.tokens ?? []
+        tokens = tokens.concat(tokensResponse)
+        if (tokensResponse.length < pageSize || page >= maximumPage) break // out of tokens, and prevent infinity loop
+      }
+    } catch (error) {
+      return reject(`Failed to download list ${listUrl}`)
+    }
+    const parsedData: TokenList = {
+      tokens,
+      name: 'KyberSwap Token List',
+      logoURI: 'https://kyberswap.com/favicon.png',
+      keywords: ['kyberswap', 'dmmexchange'],
+      version: { major: 0, minor: 0, patch: 0 },
+      timestamp: Date.now() + '',
+    }
+    formatTokensAddress(parsedData)
+    resolve(parsedData)
+  })
 }
 
 const formatTokensAddress = (tokenList: any) => {

@@ -1,6 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import Polygon from 'assets/networks/polygon-network.png'
+import { KS_SETTING_API } from 'constants/env'
 import { createClient } from 'utils/client'
 
 import { NetworkInfo } from '../type'
@@ -18,9 +19,7 @@ const maticInfo: NetworkInfo = {
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/dynamic-amm/ethereum-blocks-polygon'),
   etherscanUrl: 'https://polygonscan.com',
   etherscanName: 'Polygonscan',
-  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainIds=${
-    ChainId.MATIC
-  }&pageSize=${100}&isWhitelisted=${true}`,
+  tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.MATIC}&isWhitelisted=${true}`,
   bridgeURL: 'https://wallet.matic.network/bridge',
   nativeToken: {
     symbol: 'MATIC',

@@ -1,6 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import AVAX from 'assets/networks/avax-network.png'
+import { KS_SETTING_API } from 'constants/env'
 import { createClient } from 'utils/client'
 
 import { NetworkInfo } from '../type'
@@ -19,9 +20,7 @@ const avaxTestnetInfo: NetworkInfo = {
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/ethereum-block-fuji'),
   etherscanUrl: 'https://testnet.snowtrace.io',
   etherscanName: 'Snowtrace',
-  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainIds=${
-    ChainId.AVAXTESTNET
-  }&pageSize=${100}&isWhitelisted=${true}`,
+  tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.AVAXTESTNET}&isWhitelisted=${true}`,
   bridgeURL: 'https://bridge.avax.network',
   nativeToken: {
     symbol: 'AVAX',

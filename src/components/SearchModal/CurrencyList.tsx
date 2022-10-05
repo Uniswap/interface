@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import { rgba } from 'polished'
-import React, { CSSProperties, useCallback, useMemo } from 'react'
+import React, { CSSProperties, memo, useCallback } from 'react'
 import { Star, Trash } from 'react-feather'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Flex, Text } from 'rebass'
@@ -125,8 +125,9 @@ function CurrencyRow({
     }
 
     if (currency.isToken) {
-      const addr = (currency as Token).address
-      return !!favoriteTokens.addresses?.includes(addr)
+      const addr = (currency as Token).address ?? ''
+      const addresses = favoriteTokens?.addresses ?? []
+      return !!addresses?.includes(addr) || !!addresses?.includes(addr.toLowerCase())
     }
 
     return false
@@ -159,7 +160,7 @@ interface TokenRowProps {
   style: CSSProperties
 }
 
-export default function CurrencyList({
+function CurrencyList({
   currencies,
   selectedCurrency,
   isImportedTab,
@@ -170,9 +171,10 @@ export default function CurrencyList({
   handleClickFavorite,
   removeImportedToken,
   loadMoreRows,
-  totalItems,
+  hasMore,
 }: {
   isImportedTab: boolean
+  hasMore: boolean
   currencies: Currency[]
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
@@ -182,15 +184,10 @@ export default function CurrencyList({
   handleClickFavorite: (e: React.MouseEvent, currency: Currency) => void
   removeImportedToken: (token: Token) => void
   loadMoreRows: () => Promise<void>
-  totalItems: number
 }) {
   const { account } = useActiveWeb3React()
-  const itemCurrencies: (Currency | undefined)[] = currencies
-  const itemCurrencyBalances = useCurrencyBalances(account || undefined, itemCurrencies)
-  const itemData = useMemo(
-    () => ({ currencies: itemCurrencies, currencyBalances: itemCurrencyBalances }),
-    [itemCurrencies, itemCurrencyBalances],
-  )
+  const currencyBalances = useCurrencyBalances(account || undefined, currencies)
+
   const Row: any = useCallback(
     function TokenRow({ style, currency, currencyBalance }: TokenRowProps) {
       const isSelected = Boolean(selectedCurrency && currency && selectedCurrency.equals(currency))
@@ -253,20 +250,26 @@ export default function CurrencyList({
     <InfiniteScroll
       dataLength={currencies.length}
       next={loadMoreRows}
-      hasMore={currencies.length < totalItems}
-      height={'auto'}
-      loader={<h4>Loading...</h4>}
-      scrollableTarget="scrollableDiv"
+      hasMore={hasMore}
+      loader={
+        <Flex justifyContent={'center'} fontSize={13} marginBottom={10}>
+          <Text>loading...</Text>
+        </Flex>
+      }
+      endMessage={null}
+      scrollableTarget="currency-list-wrapper"
     >
-      {itemData.currencies.map((item, index) => (
+      {currencies.map((item, index) => (
         <Row
           key={index}
           index={index}
           currency={item}
-          currencyBalance={itemData.currencyBalances[index]}
+          currencyBalance={currencyBalances[index]}
           style={{ height: 56 }}
         />
       ))}
     </InfiniteScroll>
   )
 }
+
+export default memo(CurrencyList)

@@ -10,10 +10,12 @@ import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import InfoHelper from 'components/InfoHelper'
+import { KS_SETTING_API } from 'constants/env'
 import { nativeOnChain } from 'constants/tokens'
 import { AllTokenType, useAllTokens, useToken } from 'hooks/Tokens'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import usePrevious from 'hooks/usePrevious'
 import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -22,7 +24,7 @@ import { filterTokens } from 'utils/filtering'
 
 import { useActiveWeb3React } from '../../hooks'
 import { ButtonText, CloseIcon, TYPE } from '../../theme'
-import { isAddress } from '../../utils'
+import { filterTruthy, isAddress } from '../../utils'
 import Column from '../Column'
 import { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
@@ -88,7 +90,7 @@ const cacheTokens: AllTokenType = {}
 const fetchTokenByAddress = async (address: string, chainId: ChainId) => {
   const findToken = cacheTokens[address] || cacheTokens[address.toLowerCase()]
   if (findToken) return findToken
-  const url = `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?query=${address}&chainIds=${chainId}`
+  const url = `${KS_SETTING_API}/v1/tokens?query=${address}&chainIds=${chainId}`
   const response = await axios.get(url)
   const token = response.data.data.tokens[0]
   if (token) cacheTokens[address] = token
@@ -96,9 +98,40 @@ const fetchTokenByAddress = async (address: string, chainId: ChainId) => {
 }
 
 const formatAndCacheToken = (tokenResponse: TokenResponse) => {
-  const formated = new WrappedTokenInfo(tokenResponse as TokenInfo)
-  cacheTokens[tokenResponse.address] = formated
-  return formated
+  try {
+    const tokenInfo = new WrappedTokenInfo(tokenResponse as TokenInfo)
+    cacheTokens[tokenResponse.address] = tokenInfo
+    return tokenInfo
+  } catch (e) {
+    return null
+  }
+}
+
+const PAGE_SIZE = 20
+
+const fetchTokens = async (
+  search: string | undefined,
+  page: number,
+  chainId: ChainId | undefined,
+): Promise<{ tokens: TokenResponse[] }> => {
+  try {
+    const params: { query: string; isWhitelisted?: boolean; pageSize: number; page: number; chainIds: string } = {
+      query: search ?? '',
+      chainIds: chainId?.toString() ?? '',
+      page,
+      pageSize: PAGE_SIZE,
+    }
+    if (!search) {
+      params.isWhitelisted = true
+    }
+    const url = `${KS_SETTING_API}/v1/tokens?${stringify(params)}`
+
+    const response = await axios.get(url)
+    const { tokens } = response.data.data
+    return { tokens }
+  } catch (error) {
+    return { tokens: [] }
+  }
 }
 
 export function CurrencySearch({
@@ -125,9 +158,8 @@ export function CurrencySearch({
   const defaultTokens = useAllTokens()
 
   const tokenImports = useUserAddedTokens()
-  const [pageCount, setPageCount] = useState(1)
+  const [pageCount, setPageCount] = useState(0)
   const [fetchedTokens, setFetchedTokens] = useState<Token[]>(Object.values(defaultTokens))
-  const [totalItems, setTotalItems] = useState(0)
 
   const tokenComparator = useTokenComparator(false)
 
@@ -150,28 +182,30 @@ export function CurrencySearch({
 
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken.wrapped] : []
-    return filterTokens(fetchedTokens, debouncedQuery)
-  }, [isAddressSearch, searchToken, fetchedTokens, debouncedQuery])
+    return fetchedTokens
+  }, [isAddressSearch, searchToken, fetchedTokens])
 
   const filteredCommonTokens: Token[] = useMemo(() => {
     return filterTokens(commonTokens as Token[], debouncedQuery)
   }, [commonTokens, debouncedQuery])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
-    if (searchToken) return [searchToken.wrapped]
-    const sorted = filteredTokens.sort(tokenComparator)
-    const symbolMatch = debouncedQuery
-      .toLowerCase()
-      .split(/\s+/)
-      .filter(s => s.length > 0)
-    if (symbolMatch.length > 1) return sorted
-
-    return [
-      // sort any exact symbol matches first
-      ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
-      ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0]),
-    ]
-  }, [filteredTokens, debouncedQuery, searchToken, tokenComparator])
+    if (!debouncedQuery) {
+      // only sort whitelist token,  token search we don't sort
+      const sorted = filteredTokens.sort(tokenComparator)
+      const symbolMatch = debouncedQuery
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(s => s.length > 0)
+      if (symbolMatch.length > 1) return sorted
+      return [
+        // sort any exact symbol matches first
+        ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
+        ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0]),
+      ]
+    }
+    return filteredTokens
+  }, [filteredTokens, debouncedQuery, tokenComparator])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -192,10 +226,13 @@ export function CurrencySearch({
     }
   }, [isOpen])
 
+  const listTokenRef = useRef<HTMLInputElement>(null)
+
   const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value
     const checksumInput = isAddress(input)
     setSearchQuery(checksumInput || input)
+    if (listTokenRef?.current) listTokenRef.current.scrollTop = 0
   }, [])
 
   const handleEnter = useCallback(
@@ -256,29 +293,6 @@ export function CurrencySearch({
   const node = useRef<HTMLDivElement>()
   useOnClickOutside(node, open ? toggle : undefined)
 
-  const fetchTokens = useCallback(
-    async (
-      search: string | undefined,
-      page: number,
-    ): Promise<{ tokens: TokenResponse[]; pagination: { totalItems: number } }> => {
-      const params: { query: string; isWhitelisted?: boolean; pageSize: number; page: number; chainIds: string } = {
-        query: search ?? '',
-        chainIds: chainId?.toString() ?? '',
-        page,
-        pageSize: 10,
-      }
-      if (!search) {
-        params.pageSize = 100
-        params.isWhitelisted = true
-      }
-      const url = `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?${stringify(params)}`
-      const response = await axios.get(url)
-      const { tokens, pagination } = response.data.data
-      return { tokens, pagination }
-    },
-    [chainId],
-  )
-
   const fetchFavoriteTokenFromAddress = useCallback(async () => {
     try {
       if (!Object.keys(cacheTokens).length && !Object.keys(defaultTokens).length) return
@@ -307,7 +321,8 @@ export function CurrencySearch({
           if (el.status !== 'fulfilled') return
           const tokenResponse = el.value
           if (!tokenResponse) return
-          result.push(formatAndCacheToken(tokenResponse))
+          const formattedToken = formatAndCacheToken(tokenResponse)
+          if (formattedToken) result.push(formattedToken)
         })
       }
       setCommonTokens(result)
@@ -321,24 +336,32 @@ export function CurrencySearch({
     fetchFavoriteTokenFromAddress()
   }, [fetchFavoriteTokenFromAddress])
 
-  const loadMoreRows = async () => {
-    const { tokens } = await fetchTokens(debouncedQuery, pageCount)
-    setPageCount(pageCount => pageCount + 1)
-    const parsedTokenList = tokens.map(token => formatAndCacheToken(token))
-    setFetchedTokens(current => [...current, ...parsedTokenList])
-  }
+  const fetchListTokens = useCallback(
+    async (page?: number) => {
+      const nextPage = (page ?? pageCount) + 1
+      let tokens = []
+      if (debouncedQuery) {
+        const data = await fetchTokens(debouncedQuery, nextPage, chainId)
+        tokens = data.tokens
+      } else {
+        tokens = Object.values(defaultTokens) as WrappedTokenInfo[]
+      }
+      const parsedTokenList = filterTruthy(tokens.map(formatAndCacheToken))
+      setPageCount(nextPage)
+      setFetchedTokens(current => (nextPage === 1 ? [] : current).concat(parsedTokenList))
+      setHasMoreToken(parsedTokenList.length === PAGE_SIZE && !!debouncedQuery)
+    },
+    [chainId, debouncedQuery, defaultTokens, pageCount],
+  )
 
+  const [hasMoreToken, setHasMoreToken] = useState(false)
+  const prevQuery = usePrevious(debouncedQuery)
   useEffect(() => {
-    const fetchData = async () => {
-      if (isAddressSearch) return
-      const { tokens, pagination } = await fetchTokens(debouncedQuery, 1)
-      const parsedTokenList = tokens.map(token => formatAndCacheToken(token))
-      setFetchedTokens(parsedTokenList)
-      setTotalItems(pagination.totalItems)
-      setPageCount(2)
+    if (!isAddressSearch && prevQuery !== debouncedQuery) {
+      fetchListTokens(0)
     }
-    fetchData()
-  }, [debouncedQuery, isAddressSearch, fetchTokens])
+    // need call api when only debouncedQuery change
+  }, [debouncedQuery, prevQuery, fetchListTokens, isAddressSearch])
 
   useEffect(() => {
     if (Object.keys(defaultTokens).length) fetchFavoriteTokenFromAddress()
@@ -348,7 +371,7 @@ export function CurrencySearch({
 
   const combinedTokens = useMemo(() => {
     const currencies: Currency[] = filteredSortedTokens
-    if (showETH && chainId) currencies.unshift(nativeOnChain(chainId))
+    if (showETH && chainId && !currencies.find(e => e.isNative)) currencies.unshift(nativeOnChain(chainId))
     return currencies
   }, [showETH, chainId, filteredSortedTokens])
 
@@ -475,7 +498,7 @@ export function CurrencySearch({
       )}
 
       {visibleCurrencies?.length > 0 ? (
-        <div id="scrollableDiv" style={{ flex: '1', overflow: 'auto' }}>
+        <div ref={listTokenRef} id="currency-list-wrapper" style={{ height: '100%', overflowY: 'scroll' }}>
           <CurrencyList
             removeImportedToken={removeImportedToken}
             currencies={visibleCurrencies}
@@ -486,8 +509,8 @@ export function CurrencySearch({
             selectedCurrency={selectedCurrency}
             showImportView={showImportView}
             setImportToken={setImportToken}
-            loadMoreRows={loadMoreRows}
-            totalItems={totalItems}
+            loadMoreRows={fetchListTokens}
+            hasMore={hasMoreToken}
           />
         </div>
       ) : (

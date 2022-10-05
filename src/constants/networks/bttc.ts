@@ -1,6 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 
 import BTT from 'assets/networks/bttc.png'
+import { KS_SETTING_API } from 'constants/env'
 import { createClient } from 'utils/client'
 
 import { NetworkInfo } from '../type'
@@ -23,9 +24,7 @@ const bttcInfo: NetworkInfo = {
   blockClient: createClient('https://bttc-graph.kyberengineering.io/subgraphs/name/kybernetwork/bttc-blocks'),
   etherscanUrl: 'https://bttcscan.com',
   etherscanName: 'Bttcscan',
-  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainIds=${
-    ChainId.BTTC
-  }&pageSize=${100}&isWhitelisted=${true}`,
+  tokenListUrl: `${KS_SETTING_API}/v1/tokens?chainIds=${ChainId.BTTC}&isWhitelisted=${true}`,
   bridgeURL: 'https://wallet.bt.io/bridge',
   nativeToken: {
     symbol: 'BTT',

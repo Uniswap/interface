@@ -1,6 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import useSWR from 'swr'
 
+import { KS_SETTING_API } from 'constants/env'
 import { NETWORKS_INFO } from 'constants/networks'
 
 // It's recommended to use NETWORKS_INFO[chainId].route,
@@ -14,7 +15,7 @@ const useLiquiditySources = (chainId?: ChainId) => {
   const chainString = chainId ? chainIdMapping[chainId] || NETWORKS_INFO[chainId].route : ''
 
   return useSWR<{ name: string; logoURL: string; dexId: string }[]>(
-    `${process.env.REACT_APP_KS_SETTING_API}/v1/dexes?chain=${chainString}&isEnabled=true&pageSize=100`,
+    `${KS_SETTING_API}/v1/dexes?chain=${chainString}&isEnabled=true&pageSize=100`,
     async (url: string) => {
       if (!chainId || !chainString) {
         const err = `chain (${chainId}) is not supported`
