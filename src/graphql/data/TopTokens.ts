@@ -182,17 +182,17 @@ interface UseTopTokensReturnValue {
   loadingRowCount: number
 }
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
-  if (chain !== cachedChain) {
-    cachedChain = chain
-    resetTokensWithPriceHistoryCache()
-  }
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
   const [loadingTokensWithoutPriceHistory, setLoadingTokensWithoutPriceHistory] = useState(true)
   const [loadingTokensWithPriceHistory, setLoadingTokensWithPriceHistory] = useState(true)
   const [tokens, setTokens] = useState<TopToken[]>()
+  const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>()
+  if (chain !== cachedChain) {
+    cachedChain = chain
+    resetTokensWithPriceHistoryCache()
+  }
   const [page, setPage] = useState(0)
   const [error, setError] = useState<Error | undefined>()
-  const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>()
   const [prefetchedDataDuration, setPrefetchedDataDuration] = useState<HistoryDuration>()
   const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData))
   const { everyTokenInCache, cachedTokens } = useMemo(
@@ -211,6 +211,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 
   const loadTokensWithoutPriceHistory = useCallback(
     ({ duration, chain }: { duration: HistoryDuration; chain: Chain }) => {
+      setTokens([])
       fetchQuery<TopTokens100Query>(
         environment,
         topTokens100Query,
@@ -224,6 +225,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
         complete: () => {
           setLoadingTokensWithoutPriceHistory(false)
           setPrefetchedDataDuration(duration)
+          setLoadingTokensWithPriceHistory(true)
         },
       })
     },
