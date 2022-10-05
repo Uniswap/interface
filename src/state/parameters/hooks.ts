@@ -6,7 +6,6 @@ import {
   setEncryptionParam,
   setEncryptionProverKey,
   setEncryptionVerifierData,
-  setProgress,
   setVdfParam,
   setVdfSnarkParam,
   setZkpParameters,
@@ -31,10 +30,6 @@ export function useEncryptionProverKey(): string {
 
 export function useEncryptionVerifierData(): string {
   return useAppSelector((state) => state.parameters.encryptionVerifierData)
-}
-
-export function useProgress(): number {
-  return useAppSelector((state) => state.parameters.progress)
 }
 
 export function useParameters(): ParameterState {
@@ -122,18 +117,4 @@ export function useParametersManager(): [ParameterState, (newParam: ParameterSta
   )
 
   return [parameters, updateParameters]
-}
-
-export function useProgressManager(): [number, (newParam: number) => void] {
-  const dispatch = useAppDispatch()
-  const progress = useProgress()
-
-  const updateProgress = useCallback(
-    (newParam: number) => {
-      dispatch(setProgress({ newParam }))
-    },
-    [dispatch]
-  )
-
-  return [progress, updateProgress]
 }

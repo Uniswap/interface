@@ -682,16 +682,6 @@ export default function Swap({ history }: RouteComponentProps) {
               />
             )}
             <div>
-              {
-                // TODO: fix design and comment
-                trade && priceImpactSeverity > 2 && (
-                  <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                    <Text fontSize={18} fontWeight={400} color={'red'}>
-                      <Trans>Warning : reduce trade amount or accept price impact</Trans>
-                    </Text>
-                  </AutoRow>
-                )
-              }
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
                   <ThemedText.Main mb="4px">

@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Signature, splitSignature } from '@ethersproject/bytes'
-import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
@@ -16,15 +15,11 @@ import {
   setEncryptionParam,
   setEncryptionProverKey,
   setEncryptionVerifierData,
-  setProgress,
   setVdfParam,
   setVdfSnarkParam,
   VdfParam,
 } from 'state/parameters/reducer'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
-
-import TEX_RECORDER from '../../../abis/tex-recorder.json'
-const RECORDER_ADDRESS = '0xfE00D0e535E25b675e33EAEF146bfB81591b4372'
 
 type AnyTrade =
   | V2Trade<Currency, Currency, TradeType>
@@ -178,42 +173,11 @@ export default function useSendSwapTransaction(
 
         console.log(sig)
 
-        dispatch(setProgress({ newParam: 1 }))
-
         sigHandler()
-
-        const txId = solidityKeccak256(
-          ['address', 'uint256', 'uint256', 'address[]', 'address', 'uint256'],
-          [account.toLowerCase(), `${amountIn}`, `${amountoutMin}`, path, account.toLowerCase(), `${deadline}`]
-        )
-
-        const recorderContract = new Contract(RECORDER_ADDRESS, TEX_RECORDER.abi, signer)
-        const params = [txId]
-        const action = 'cancelTx'
-        const unsignedTx = await recorderContract.populateTransaction[action](...params)
-        console.log('unsignedTx', unsignedTx)
-        // const checkedTx = await signer?.checkTransaction(unsignedTx)
-        // console.log('checkedTx', checkedTx)
-        console.log(signer, signAddress)
-        // const cancelTx = await signer?.signTransaction(unsignedTx)
-
-        const signed = await signer?.provider.send('personal_sign', ['0x00', 'from_address'])
-
-        console.log('signed', signed)
-
-        const cancelTx = await signer.signTransaction({
-          data: unsignedTx.data,
-          from: signAddress,
-          to: RECORDER_ADDRESS,
-          gasLimit: '5000000',
-          gasPrice: '3000000000',
-        })
 
         const vdfData = await getVdfProof(parameters.vdfParam || vdfParam, parameters.vdfSnarkParam || vdfSnarkParam)
 
         console.log(vdfData)
-
-        dispatch(setProgress({ newParam: 2 }))
 
         const encryptData = await poseidonEncrypt(
           parameters.encryptionParam || encryptionParam,
@@ -227,7 +191,10 @@ export default function useSendSwapTransaction(
 
         console.log(encryptData)
 
-        dispatch(setProgress({ newParam: 3 }))
+        const txId = solidityKeccak256(
+          ['address', 'uint256', 'uint256', 'address[]', 'address', 'uint256'],
+          [account.toLowerCase(), `${amountIn}`, `${amountoutMin}`, path, account.toLowerCase(), `${deadline}`]
+        )
 
         const encryptedPath = {
           message_length: encryptData.message_length,
@@ -253,10 +220,7 @@ export default function useSendSwapTransaction(
           txId,
         }
 
-        const sendResponse = await sendEIP712Tx(address, encryptedTx, sig, cancelTx, library)
-
-        dispatch(setProgress({ newParam: 4 }))
-
+        const sendResponse = await sendEIP712Tx(address, encryptedTx, sig)
         const finalResponse: RadiusSwapResponse = {
           data: sendResponse.data,
           msg: sendResponse.msg,
@@ -316,7 +280,6 @@ async function fetchEncryptionProverKey(callback: (res: string) => void) {
 }
 
 async function fetchEncryptionVerifierData(callback: (res: string) => void) {
-  console.log('OPERATOR_ADDRESS ', process.env.OPERATOR_ADDRESS)
   return await fetch('http://147.46.240.248:40002/zkp/getEncryptionVerifierData', {
     method: 'GET',
   }).then(async (res) => {
@@ -398,18 +361,8 @@ async function poseidonEncrypt(
 async function sendEIP712Tx(
   routerAddress: string,
   encryptedTx: EncryptedTx,
-  signature: Signature,
-  cancelTx: string,
-  library: JsonRpcProvider | undefined
+  signature: Signature
 ): Promise<RadiusSwapResponse> {
-  const recorderContract = new Contract(RECORDER_ADDRESS, TEX_RECORDER.abi, library)
-
-  const timeLimit = setTimeout(() => {
-    library?.sendTransaction(cancelTx)
-  }, 5000)
-
-  console.log('set timeout')
-
   const sendResponse = await fetch('http://147.46.240.248:40002/txs/send/EIP712Tx', {
     method: 'POST',
     headers,
@@ -425,22 +378,8 @@ async function sendEIP712Tx(
     }),
   })
     .then((res) => res.json())
-    .then(async (res) => {
+    .then((res) => {
       console.log(res)
-
-      // await fetch('http://147.46.240.248:40002/zkp/getVdfParams', {
-      //   method: 'GET',
-      // })
-
-      let txId = ''
-      while (txId === '') {
-        const txIds = await recorderContract?.roundTxIdList(res.data.round)
-        txId = txIds[res.data.order]
-      }
-      if (txId === encryptedTx.txId) {
-        clearTimeout(timeLimit)
-      }
-
       return res
     })
     .catch((error) => {

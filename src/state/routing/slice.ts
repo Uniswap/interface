@@ -57,8 +57,8 @@ export const routingApi = createApi({
       }
     >({
       async queryFn(args, _api, _extraOptions, fetch) {
-        // const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, useClientSideRouter, type } = args
-        const { tokenInAddress, tokenOutAddress, amount, useClientSideRouter, type } = args
+        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, useClientSideRouter, type } =
+          args
 
         let result
 
@@ -72,7 +72,7 @@ export const routingApi = createApi({
             const chainName = CHAIN_INFO[chainId].label
             const query = qs.stringify({
               ...DEFAULT_QUERY_PARAMS,
-              blockchainName: chainName,
+              blockChainName: chainName,
               chainId,
               inputTokenAddress: tokenInAddress,
               outputTokenAddress: tokenOutAddress,

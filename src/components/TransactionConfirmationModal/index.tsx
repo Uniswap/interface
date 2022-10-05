@@ -10,7 +10,6 @@ import useInterval from 'lib/hooks/useInterval'
 import { ReactNode, useContext, useState } from 'react'
 import { AlertCircle, AlertTriangle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
-import { useProgressManager } from 'state/parameters/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -126,8 +125,6 @@ function TransactionSubmittedContent({
     }
   }, 80)
 
-  const [progress, setProgress] = useProgressManager()
-
   return (
     <Wrapper>
       <Section inline={inline}>
@@ -139,7 +136,7 @@ function TransactionSubmittedContent({
         )}
         <div style={{ margin: 20 }}>
           <Text fontWeight={500} fontSize={20} textAlign="center">
-            <Trans>1. Transaction Encryption ({progress})</Trans>
+            <Trans>1. Transaction Encryption</Trans>
           </Text>
         </div>
         <RowBetween>
