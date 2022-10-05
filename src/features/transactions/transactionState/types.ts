@@ -11,9 +11,6 @@ export type BaseDerivedInfo<TInput = Currency> = {
   currencyBalances: {
     [CurrencyField.INPUT]: NullUndefined<CurrencyAmount<Currency>>
   }
-  formattedAmounts: {
-    [CurrencyField.INPUT]: string
-  }
   exactAmountUSD?: string
   exactAmountToken: string
   exactCurrencyField: CurrencyField

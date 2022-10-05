@@ -70,9 +70,7 @@ export type DerivedSwapInfo<
   currencyBalances: BaseDerivedInfo<TInput>['currencyBalances'] & {
     [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<TOutput>>
   }
-  formattedAmounts: BaseDerivedInfo<TInput>['formattedAmounts'] & {
-    [CurrencyField.OUTPUT]: string
-  }
+  formattedDerivedValue: string
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
   isUSDInput?: boolean
@@ -179,43 +177,14 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     ]
   )
 
-  const getFormattedInput = useCallback(() => {
-    if (isExactIn || isWrapAction(wrapType)) {
-      return isUSDInput ? exactAmountUSD : exactAmountToken
+  const otherCurrencyField = isExactIn ? CurrencyField.OUTPUT : CurrencyField.INPUT
+  const getFormattedDerivedValue = useCallback(() => {
+    if (isUSDInput) {
+      return tradeUSDValue?.toFixed(2) ?? ''
     }
 
-    return isUSDInput
-      ? tradeUSDValue?.toFixed(2)
-      : (
-          currencyAmounts[CurrencyField.INPUT]?.toSignificant(NUM_CURRENCY_SIG_FIGS) ?? ''
-        ).toString()
-  }, [
-    currencyAmounts,
-    exactAmountToken,
-    exactAmountUSD,
-    isExactIn,
-    isUSDInput,
-    tradeUSDValue,
-    wrapType,
-  ])
-
-  const getFormattedOutput = useCallback(() => {
-    if (!isExactIn || isWrapAction(wrapType)) {
-      return isUSDInput ? exactAmountUSD : exactAmountToken
-    }
-
-    return isUSDInput
-      ? tradeUSDValue?.toFixed(2)
-      : currencyAmounts[CurrencyField.OUTPUT]?.toSignificant(NUM_CURRENCY_SIG_FIGS)
-  }, [
-    currencyAmounts,
-    exactAmountToken,
-    exactAmountUSD,
-    isExactIn,
-    isUSDInput,
-    tradeUSDValue,
-    wrapType,
-  ])
+    return currencyAmounts[otherCurrencyField]?.toSignificant(NUM_CURRENCY_SIG_FIGS) ?? ''
+  }, [currencyAmounts, isUSDInput, otherCurrencyField, tradeUSDValue])
 
   const currencyBalances = useMemo(() => {
     return {
@@ -240,10 +209,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       exactAmountToken,
       exactAmountUSD,
       exactCurrencyField,
-      formattedAmounts: {
-        [CurrencyField.INPUT]: getFormattedInput() || '',
-        [CurrencyField.OUTPUT]: getFormattedOutput() || '',
-      },
+      formattedDerivedValue: getFormattedDerivedValue(),
       trade,
       wrapType,
       isUSDInput,
@@ -259,8 +225,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountToken,
     exactAmountUSD,
     exactCurrencyField,
-    getFormattedInput,
-    getFormattedOutput,
+    getFormattedDerivedValue,
     isUSDInput,
     nativeInBalance,
     selectingCurrencyField,

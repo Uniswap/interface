@@ -15,11 +15,11 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { useDerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { useTransferTransactionRequest } from 'src/features/transactions/transfer/useTransferTransactionRequest'
+import { useTransferWarnings } from 'src/features/transactions/transfer/useTransferWarnings'
 import {
   createOnSelectRecipient,
   createOnToggleShowRecipientSelector,
 } from 'src/features/transactions/transfer/utils'
-import { useTransferWarnings } from 'src/features/transactions/transfer/useTransferWarnings'
 
 interface TransferFormProps {
   prefilledState?: TransactionState
@@ -50,6 +50,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
     <TransactionFlow
       derivedInfo={derivedTransferInfo}
       dispatch={dispatch}
+      exactValue={derivedTransferInfo.formattedAmounts[CurrencyField.INPUT]}
       flowName={t('Send')}
       recipientSelector={
         <RecipientSelect

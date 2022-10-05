@@ -29,6 +29,7 @@ interface SwapFormProps {
   txRequest?: providers.TransactionRequest
   totalGasFee?: string
   warnings: Warning[]
+  exactValue: string
 }
 
 export function SwapReview({
@@ -39,6 +40,7 @@ export function SwapReview({
   txRequest,
   totalGasFee,
   warnings,
+  exactValue,
 }: SwapFormProps) {
   const { t } = useTranslation()
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -48,9 +50,10 @@ export function SwapReview({
   const {
     currencies,
     currencyAmounts,
-    formattedAmounts,
+    formattedDerivedValue,
     trade: { trade: trade },
     wrapType,
+    exactCurrencyField,
     isUSDInput = false,
     txId,
   } = derivedSwapInfo
@@ -162,6 +165,10 @@ export function SwapReview({
     return null
   }
 
+  const [amountIn, amountOut] =
+    exactCurrencyField === CurrencyField.INPUT
+      ? [exactValue, formattedDerivedValue]
+      : [formattedDerivedValue, exactValue]
   return (
     <>
       {showWarningModal && swapWarning?.title && (
@@ -182,8 +189,8 @@ export function SwapReview({
         actionButtonProps={actionButtonProps}
         currencyIn={currencyIn}
         currencyOut={currencyOut}
-        formattedAmountIn={formattedAmounts[CurrencyField.INPUT]}
-        formattedAmountOut={formattedAmounts[CurrencyField.OUTPUT]}
+        formattedAmountIn={amountIn}
+        formattedAmountOut={amountOut}
         isUSDInput={isUSDInput}
         transactionDetails={getTransactionDetails()}
         onPrev={onPrev}

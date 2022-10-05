@@ -26,6 +26,9 @@ export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
   nftIn: NFTAsset.Asset | undefined
   chainId: ChainId | undefined
   exactCurrencyField: CurrencyField.INPUT
+  formattedAmounts: {
+    [CurrencyField.INPUT]: string
+  }
   recipient?: string
   isUSDInput?: boolean
   txId?: string

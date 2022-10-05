@@ -39,6 +39,7 @@ interface TransactionFlowProps {
   step: TransactionStep
   setStep: (newStep: TransactionStep) => void
   warnings: Warning[]
+  exactValue: string
 }
 
 type InnerContentProps = Pick<
@@ -50,6 +51,7 @@ type InnerContentProps = Pick<
   | 'txRequest'
   | 'approveTxRequest'
   | 'warnings'
+  | 'exactValue'
 > & {
   step: number
   setStep: (step: TransactionStep) => void
@@ -76,6 +78,7 @@ export function TransactionFlow({
   onClose,
   dispatch,
   warnings,
+  exactValue,
 }: TransactionFlowProps) {
   // enable tap to dismiss keyboard on whole modal screen
   // this only applies when we show native keyboard on smaller devices
@@ -123,6 +126,7 @@ export function TransactionFlow({
             approveTxRequest={approveTxRequest}
             derivedInfo={derivedInfo}
             dispatch={dispatch}
+            exactValue={exactValue}
             setStep={setStep}
             step={step}
             totalGasFee={totalGasFee}
@@ -161,6 +165,7 @@ const useGetInnerContent = ({
   approveTxRequest,
   txRequest,
   warnings,
+  exactValue,
 }: InnerContentProps): {
   form: ReactElement
   review: ReactElement
@@ -178,6 +183,7 @@ const useGetInnerContent = ({
         <SwapForm
           derivedSwapInfo={derivedInfo}
           dispatch={dispatch}
+          exactValue={exactValue}
           warnings={warnings}
           onNext={onFormNext}
         />
@@ -186,6 +192,7 @@ const useGetInnerContent = ({
         <SwapReview
           approveTxRequest={approveTxRequest}
           derivedSwapInfo={derivedInfo}
+          exactValue={exactValue}
           totalGasFee={totalGasFee}
           txRequest={txRequest}
           warnings={warnings}

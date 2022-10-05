@@ -42,11 +42,18 @@ interface SwapFormProps {
   onNext: () => void
   derivedSwapInfo: DerivedSwapInfo
   warnings: Warning[]
+  exactValue: string
 }
 
 export const ARROW_SIZE = 44
 
-export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFormProps) {
+export function SwapForm({
+  dispatch,
+  onNext,
+  derivedSwapInfo,
+  warnings,
+  exactValue,
+}: SwapFormProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -58,7 +65,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFo
     exactCurrencyField,
     exactAmountToken,
     exactAmountUSD = '',
-    formattedAmounts,
+    formattedDerivedValue,
     trade,
     wrapType,
     isUSDInput = false,
@@ -107,7 +114,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFo
   }
 
   const onCurrencyInputPress = (currencyField: CurrencyField) => () => {
-    const newExactAmount = formattedAmounts[currencyField]
+    const newExactAmount = currencyField === exactCurrencyField ? exactValue : formattedDerivedValue
     onUpdateExactCurrencyField(currencyField, newExactAmount)
   }
 
@@ -166,7 +173,9 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFo
                 selection={inputSelection}
                 showSoftInputOnFocus={shouldCompressView}
                 usdValue={inputCurrencyUSDValue}
-                value={formattedAmounts[CurrencyField.INPUT]}
+                value={
+                  exactCurrencyField === CurrencyField.INPUT ? exactValue : formattedDerivedValue
+                }
                 warnings={warnings}
                 onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
                 onSelectionChange={(start, end) => setInputSelection({ start, end })}
@@ -213,7 +222,9 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFo
                   showNonZeroBalancesOnly={false}
                   showSoftInputOnFocus={shouldCompressView}
                   usdValue={outputCurrencyUSDValue}
-                  value={formattedAmounts[CurrencyField.OUTPUT]}
+                  value={
+                    exactCurrencyField === CurrencyField.OUTPUT ? exactValue : formattedDerivedValue
+                  }
                   warnings={warnings}
                   onPressIn={onCurrencyInputPress(CurrencyField.OUTPUT)}
                   onSelectionChange={(start, end) => setOutputSelection({ start, end })}
@@ -301,7 +312,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, warnings }: SwapFo
               resetSelection={resetSelection}
               selection={selection[exactCurrencyField]}
               setValue={(value: string) => onSetAmount(exactCurrencyField, value, isUSDInput)}
-              value={formattedAmounts[exactCurrencyField]}
+              value={exactValue}
             />
           )}
           <GradientButton

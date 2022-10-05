@@ -62,11 +62,13 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
     [selectingCurrencyField, onSelectCurrency]
   )
 
+  const exactValue = state.isUSDInput ? state.exactAmountUSD : state.exactAmountToken
   return (
     <TransactionFlow
       approveTxRequest={approveTxRequest}
       derivedInfo={derivedSwapInfo}
       dispatch={dispatch}
+      exactValue={exactValue ?? ''}
       flowName={t('Swap')}
       setStep={setStep}
       showTokenSelector={!!selectingCurrencyField}
