@@ -60,6 +60,12 @@ const tokenQuery = graphql`
           value
           currency
         }
+        priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+          value
+        }
+        priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+          value
+        }
       }
       project {
         description

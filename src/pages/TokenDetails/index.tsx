@@ -216,9 +216,8 @@ export default function TokenDetails() {
             <StatsSection
               TVL={token.market?.totalValueLocked?.value}
               volume24H={token.market?.volume24H?.value}
-              // TODO: Reenable these values once they're available in schema
-              // priceHigh52W={token.market?.priceHigh52W?.value}
-              // priceLow52W={token.market?.priceLow52W?.value}
+              priceHigh52W={token.market?.priceHigh52W?.value}
+              priceLow52W={token.market?.priceLow52W?.value}
             />
             <AboutSection
               address={token.address ?? ''}
