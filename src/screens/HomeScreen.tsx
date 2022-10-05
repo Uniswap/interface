@@ -1,26 +1,38 @@
+import { DrawerActions } from '@react-navigation/core'
 import { graphql } from 'babel-plugin-relay/macro'
 import { selectionAsync } from 'expo-haptics'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
+import { useAppStackNavigation } from 'src/app/navigation/types'
+import NotificationIcon from 'src/assets/icons/bell.svg'
+import HamburgerIcon from 'src/assets/icons/hamburger.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
+import { AddressDisplay } from 'src/components/AddressDisplay'
+import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SendButton } from 'src/components/buttons/SendButton'
 import { NFTCollectionsTab } from 'src/components/home/NFTCollectionsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Arrow } from 'src/components/icons/Arrow'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import TabbedScrollScreen, {
   TabViewScrollProps,
 } from 'src/components/layout/screens/TabbedScrollScreen'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
+import { EXPERIMENTS, EXP_VARIANTS } from 'src/features/experiments/constants'
+import { useExperimentVariant } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
+import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { usePendingTransactions } from 'src/features/transactions/hooks'
+import { TransactionDetails } from 'src/features/transactions/types'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
@@ -44,6 +56,78 @@ export function HomeScreen({ data }: { data: HomeScreenQuery$data }) {
   useBiometricCheck()
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
+  const theme = useAppTheme()
+  const navigation = useAppStackNavigation()
+
+  const onPressHamburger = useCallback(() => {
+    navigation.dispatch(DrawerActions.openDrawer())
+  }, [navigation])
+
+  const { preload, navigate } = useEagerActivityNavigation()
+  const onPressNotifications = useCallback(() => {
+    navigate(activeAccount.address)
+  }, [activeAccount.address, navigate])
+
+  const onPressInNotifications = useCallback(() => {
+    preload(activeAccount.address)
+  }, [activeAccount.address, preload])
+
+  const pendingTransactions: TransactionDetails[] | undefined =
+    usePendingTransactions(activeAccount.address) ?? []
+  const hasPendingTransactions = pendingTransactions?.length > 0
+
+  const tabsExperimentVariant = useExperimentVariant(
+    EXPERIMENTS.sticky_tabs_header,
+    EXP_VARIANTS.TABS
+  )
+  const scrollHeader = useMemo(() => {
+    if (!tabsExperimentVariant || tabsExperimentVariant === EXP_VARIANTS.TABS) return
+
+    const shouldShowActions = [
+      EXP_VARIANTS.TITLE_ACTIONS.valueOf(),
+      EXP_VARIANTS.ACTIONS_TITLES_TABS.valueOf(),
+    ].includes(tabsExperimentVariant)
+
+    return (
+      <Flex row justifyContent="space-between" px="lg" py="xs">
+        {shouldShowActions ? (
+          <Button justifyContent="center" onPress={onPressHamburger}>
+            <HamburgerIcon
+              color={theme.colors.textSecondary}
+              height={theme.iconSizes.md}
+              width={theme.iconSizes.md}
+            />
+          </Button>
+        ) : (
+          <Box />
+        )}
+        <AddressDisplay address={activeAccount.address} variant="subhead" />
+        {shouldShowActions ? (
+          <Button
+            justifyContent="center"
+            onPress={onPressNotifications}
+            onPressIn={onPressInNotifications}>
+            {hasPendingTransactions ? (
+              <PendingNotificationBadge />
+            ) : (
+              <NotificationIcon color={theme.colors.textSecondary} height={24} width={24} />
+            )}
+          </Button>
+        ) : (
+          <Box />
+        )}
+      </Flex>
+    )
+  }, [
+    activeAccount.address,
+    hasPendingTransactions,
+    onPressHamburger,
+    onPressInNotifications,
+    onPressNotifications,
+    tabsExperimentVariant,
+    theme.colors.textSecondary,
+    theme.iconSizes.md,
+  ])
 
   const renderTab = useMemo(() => {
     return (route: Route, scrollProps: TabViewScrollProps, loadingContainerStyle: ViewStyle) => {
@@ -71,7 +155,7 @@ export function HomeScreen({ data }: { data: HomeScreenQuery$data }) {
 
   return (
     <TabbedScrollScreen
-      headerContent={
+      contentHeader={
         <Flex bg="backgroundBackdrop" gap="sm" pb="md">
           <AccountHeader />
           <Flex gap="sm" px="lg">
@@ -85,6 +169,7 @@ export function HomeScreen({ data }: { data: HomeScreenQuery$data }) {
         </Flex>
       }
       renderTab={renderTab}
+      scrollHeader={scrollHeader}
       tabs={[
         { key: TOKENS_KEY, title: t('Tokens') },
         { key: NFTS_KEY, title: t('NFTs') },

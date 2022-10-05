@@ -24,19 +24,22 @@ import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { EXPERIMENTS, EXP_VARIANTS } from 'src/features/experiments/constants'
+import { useExperimentVariant } from 'src/features/experiments/hooks'
 import { dimensions } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
 
 const SIDEBAR_SWIPE_CONTAINER_WIDTH = 45
 
 type TabbedScrollScreenProps = {
+  contentHeader?: ReactElement
+  scrollHeader?: ReactElement
   renderTab: (
     route: Route,
     scrollProps: TabViewScrollProps,
     loadingContainerStyle: ViewStyle
   ) => ReactElement | null
   tabs: { key: string; title: string }[]
-  headerContent?: ReactElement
 }
 
 export type TabViewScrollProps = {
@@ -81,15 +84,22 @@ export const renderTabLabel = ({ route, focused }: { route: Route; focused: bool
 }
 
 export default function TabbedScrollScreen({
+  contentHeader,
+  scrollHeader,
   renderTab,
   tabs,
-  headerContent,
 }: TabbedScrollScreenProps) {
   const insets = useSafeAreaInsets()
   const theme = useAppTheme()
   const navigation = useAppStackNavigation()
 
+  const tabsExperimentsVariant = useExperimentVariant(
+    EXPERIMENTS.sticky_tabs_header,
+    EXP_VARIANTS.TABS
+  )
+
   const [headerHeight, setHeaderHeight] = useState(INITIAL_TAB_BAR_HEIGHT) // estimation for initial height, updated on layout
+  const [scrollHeaderHeight, setScrollHeaderHeight] = useState(INITIAL_TAB_BAR_HEIGHT) // estimation for initial height, updated on layout
   const animatedScrollY = useSharedValue(0)
   const isListGliding = useRef(false)
 
@@ -130,13 +140,22 @@ export default function TabbedScrollScreen({
   )
 
   const tabBarAnimatedStyle = useAnimatedStyle(() => {
+    // If scrollHeader exists, we must account for scrollHeader padding which is equal to insets.top
+    let tabBarTop = Math.max(scrollHeaderHeight - insets.top, 0)
+
+    if (
+      tabsExperimentsVariant === EXP_VARIANTS.TITLE_ACTIONS ||
+      tabsExperimentsVariant === EXP_VARIANTS.TABS
+    ) {
+      tabBarTop = 0
+    }
     return {
       transform: [
         {
           translateY: interpolate(
             animatedScrollY.value,
             [0, headerHeight],
-            [headerHeight, 0],
+            [headerHeight, tabBarTop],
             Extrapolate.CLAMP
           ),
         },
@@ -189,6 +208,22 @@ export default function TabbedScrollScreen({
       ],
     }
   })
+
+  const scrollHeaderAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            animatedScrollY.value,
+            [0, headerHeight],
+            [-headerHeight, 0],
+            Extrapolate.CLAMP
+          ),
+        },
+      ],
+    }
+  })
+
   const scrollPropsForTab = (routeKey: string) => {
     return {
       ref: (ref: Ref<any>) => {
@@ -261,12 +296,26 @@ export default function TabbedScrollScreen({
       </GestureDetector>
 
       <GestureDetector gesture={panHeaderGesture}>
-        <AnimatedFlex
-          style={[TabStyles.header, headerAnimatedStyle, { marginTop: insets.top }]}
-          onLayout={(event: LayoutChangeEvent) => setHeaderHeight(event.nativeEvent.layout.height)}>
-          {headerContent}
-        </AnimatedFlex>
+        {contentHeader && (
+          <AnimatedFlex
+            style={[TabStyles.header, headerAnimatedStyle, { marginTop: insets.top }]}
+            onLayout={(event: LayoutChangeEvent) =>
+              setHeaderHeight(event.nativeEvent.layout.height)
+            }>
+            {contentHeader}
+          </AnimatedFlex>
+        )}
       </GestureDetector>
+      {scrollHeader && (
+        <AnimatedFlex
+          bg="backgroundBackdrop"
+          style={[TabStyles.header, scrollHeaderAnimatedStyle, { paddingTop: insets.top }]}
+          onLayout={(event: LayoutChangeEvent) =>
+            setScrollHeaderHeight(event.nativeEvent.layout.height)
+          }>
+          {scrollHeader}
+        </AnimatedFlex>
+      )}
     </Screen>
   )
 }
