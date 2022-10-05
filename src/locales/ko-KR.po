@@ -1183,7 +1183,7 @@ msgstr "생성되지 않음"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Bridge"
-msgstr "Optimism 브릿지"
+msgstr "낙관의 다리"
 
 #: src/components/DowntimeWarning/index.tsx
 #~ msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
@@ -1656,7 +1656,7 @@ msgstr "입력 토큰을 이체할 수 없습니다. 입력 토큰에 문제가 
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
-msgstr "받을 수 있는 최소 금액입니다. 가격이 더 하락하면 거래가 취소 될 것입니다."
+msgstr "받을 수 있는 최소 금액입니다. 가격이 더 하락하면 거래가 되돌릴 것입니다."
 
 #: src/components/Header/Polling.tsx
 #~ msgid "The most recent block number on this network. Prices update on every block."
@@ -2255,7 +2255,7 @@ msgstr "아직 이 풀에 유동성이 없습니다."
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
-msgstr "슬리피지 발생 후"
+msgstr "미끄러진 후"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 #~ msgid "blocked activities"
