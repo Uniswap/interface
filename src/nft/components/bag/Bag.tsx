@@ -6,7 +6,7 @@ import { BagFooter } from 'nft/components/bag/BagFooter'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Center, Column } from 'nft/components/Flex'
-import { LargeBagIcon } from 'nft/components/icons'
+import { LargeBagIcon, LargeTagIcon } from 'nft/components/icons'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
@@ -34,20 +34,31 @@ import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
 
 const EmptyState = () => {
+  const { pathname } = useLocation()
+  const isProfilePage = pathname.startsWith('/profile')
+
   return (
     <Center height="full">
-      <Column gap="12">
+      <Column gap={isProfilePage ? '16' : '12'}>
         <Center>
-          <LargeBagIcon color={themeVars.colors.textTertiary} />
+          {isProfilePage ? (
+            <LargeTagIcon color={themeVars.colors.textTertiary} />
+          ) : (
+            <LargeBagIcon color={themeVars.colors.textTertiary} />
+          )}
         </Center>
-        <Column gap="16">
-          <Center className={subhead} style={{ lineHeight: '24px' }}>
-            Your bag is empty
-          </Center>
-          <Center fontSize="12" fontWeight="normal" color="textSecondary" style={{ lineHeight: '16px' }}>
-            Selected NFTs will appear here
-          </Center>
-        </Column>
+        {isProfilePage ? (
+          <span className={subhead}>No NFTs Selected</span>
+        ) : (
+          <Column gap="16">
+            <Center className={subhead} style={{ lineHeight: '24px' }}>
+              Your bag is empty
+            </Center>
+            <Center fontSize="12" fontWeight="normal" color="textSecondary" style={{ lineHeight: '16px' }}>
+              Selected NFTs will appear here
+            </Center>
+          </Column>
+        )}
       </Column>
     </Center>
   )
