@@ -7,6 +7,7 @@ import { CrossIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { buttonTextMedium, subhead } from 'nft/css/common.css'
 import {
+  useBag,
   useFiltersExpanded,
   useIsMobile,
   useProfilePageState,
@@ -66,6 +67,7 @@ export const ProfilePage = () => {
   const resetSellAssets = useSellAsset((state) => state.reset)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
+  const isBagExpanded = useBag((state) => state.bagExpanded)
   const isMobile = useIsMobile()
   const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
 
@@ -150,16 +152,15 @@ export const ProfilePage = () => {
     }
   }, [collectionStats, ownerCollections, setWalletCollections])
 
-  const { gridX, gridWidthOffset } = useSpring({
+  const { gridX } = useSpring({
     gridX: isFiltersExpanded ? 300 : -16,
-    gridWidthOffset: isFiltersExpanded ? 300 /* right padding */ : 0,
   })
 
   return (
     <Column
       width="full"
       paddingLeft={{ sm: '16', md: '52' }}
-      paddingRight={{ sm: '0', md: '72' }}
+      paddingRight={{ sm: '0', md: isBagExpanded ? '0' : '72' }}
       paddingTop={{ sm: '16', md: '40' }}
     >
       {walletAssets.length === 0 ? (
@@ -176,7 +177,6 @@ export const ProfilePage = () => {
                 flexShrink="0"
                 style={{
                   transform: gridX.to((x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`),
-                  width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
                 }}
               >
                 <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
@@ -217,7 +217,9 @@ export const ProfilePage = () => {
                 >
                   <div className={assetList}>
                     {displayAssets && displayAssets.length
-                      ? displayAssets.map((asset, index) => <WalletAssetDisplay asset={asset} key={index} />)
+                      ? displayAssets.map((asset, index) => (
+                          <WalletAssetDisplay asset={asset} isSellMode={isSellMode} key={index} />
+                        ))
                       : null}
                   </div>
                 </InfiniteScroll>
