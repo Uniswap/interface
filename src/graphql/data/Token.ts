@@ -76,12 +76,10 @@ const tokenQuery = graphql`
 `
 
 export function useTokenQuery(address: string, chain: Chain, timePeriod: TimePeriod) {
-  const data = useLazyLoadQuery<TokenQuery>(tokenQuery, {
+  return useLazyLoadQuery<TokenQuery>(tokenQuery, {
     contract: { address: address.toLowerCase(), chain },
     duration: toHistoryDuration(timePeriod),
   })
-
-  return data
 }
 
 const tokenPriceQuery = graphql`

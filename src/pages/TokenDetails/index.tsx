@@ -1,6 +1,5 @@
-import { NativeCurrency, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { formatToDecimal } from 'analytics/utils'
 import {
   LARGE_MEDIA_BREAKPOINT,
   MAX_WIDTH_MEDIA_BREAKPOINT,
@@ -10,23 +9,22 @@ import {
 import { filterTimeAtom } from 'components/Tokens/state'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
-import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
+import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget, { WIDGET_WIDTH } from 'components/Widget'
-import { isCelo, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { isCelo, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
 import { useTokenQuery } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useAtomValue } from 'jotai/utils'
-import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
+import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -82,42 +80,56 @@ export const RightPanel = styled.div`
 
 export default function TokenDetails() {
   const { tokenAddress: tokenAddressParam, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
+  const { account } = useWeb3React()
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[validateUrlChainParam(chainName)]
-  let tokenAddress = tokenAddressParam
-  let nativeCurrency: NativeCurrency | Token | undefined
-  if (tokenAddressParam === 'NATIVE') {
-    nativeCurrency = nativeOnChain(pageChainId)
-    tokenAddress = WRAPPED_NATIVE_CURRENCY[pageChainId]?.address?.toLowerCase()
-  }
-
-  const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
-  const isBlockedToken = tokenWarning?.canProceed === false
-
-  const timePeriod = useAtomValue(filterTimeAtom)
   const currentChainName = validateUrlChainParam(chainName)
-  const token = useTokenQuery(tokenAddress ?? '', currentChainName, timePeriod).tokens?.[0]
+  const nativeCurrency = nativeOnChain(pageChainId)
+  const timePeriod = useAtomValue(filterTimeAtom)
+  const isNative = tokenAddressParam === 'NATIVE'
+  const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddressParam
+  const tokenQueryData = useTokenQuery(tokenQueryAddress ?? '', currentChainName, timePeriod).tokens?.[0]
+  const pageToken = useMemo(
+    () =>
+      tokenQueryData && !isNative
+        ? new Token(
+            CHAIN_NAME_TO_CHAIN_ID[currentChainName],
+            tokenAddressParam ?? '',
+            18,
+            tokenQueryData?.symbol ?? '',
+            tokenQueryData?.name ?? ''
+          )
+        : undefined,
+    [currentChainName, isNative, tokenAddressParam, tokenQueryData]
+  )
+
+  const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
+
+  const tokenBalance = useTokenBalance(account, pageToken)
+
+  const tokenWarning = tokenAddressParam ? checkWarning(tokenAddressParam) : null
+  const isBlockedToken = tokenWarning?.canProceed === false
 
   const navigate = useNavigate()
   const switchChains = useCallback(
     (newChain: Chain) => {
       const chainSegment = newChain.toLowerCase()
-      if (tokenAddressParam === 'NATIVE') {
+      if (isNative) {
         navigate(`/tokens/${chainSegment}/NATIVE`)
       } else {
-        token?.project?.tokens?.forEach((token) => {
+        tokenQueryData?.project?.tokens?.forEach((token) => {
           if (token.chain === newChain && token.address) {
             navigate(`/tokens/${chainSegment}/${token.address}`)
           }
         })
       }
     },
-    [navigate, token?.project?.tokens, tokenAddressParam]
+    [isNative, navigate, tokenQueryData?.project?.tokens]
   )
   useOnGlobalChainSwitch(switchChains)
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
-  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(tokenAddress, pageChainId) && tokenWarning !== null
+  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(tokenAddressParam, pageChainId) && tokenWarning !== null
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
   const onReviewSwap = useCallback(
     () => new Promise<boolean>((resolve) => (shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true))),
@@ -131,73 +143,58 @@ export default function TokenDetails() {
     },
     [continueSwap, setContinueSwap]
   )
-  const { account } = useWeb3React()
-
-  // TODO: consider updating useTokenBalance to work with just address/chain to avoid using Token data structure here
-  const pageChainToken = new Token(pageChainId, tokenAddress ?? '', 18)
-  const balanceValue = useTokenBalance(account, pageChainToken)
-  const balance = balanceValue ? formatToDecimal(balanceValue, Math.min(balanceValue.currency.decimals, 6)) : undefined
-  const balanceUsdValue = useStablecoinValue(balanceValue)?.toFixed(2)
-  const balanceUsd = balanceUsdValue ? parseFloat(balanceUsdValue) : undefined
 
   const defaultWidgetToken = useMemo(() => {
+    if (pageToken) {
+      return pageToken
+    }
     if (nativeCurrency) {
       return nativeCurrency
     }
-    if (token) {
-      return new Token(
-        CHAIN_NAME_TO_CHAIN_ID[currentChainName],
-        token.address,
-        18,
-        token?.symbol ?? '',
-        token?.name ?? ''
-      )
-    }
     return undefined
-  }, [currentChainName, nativeCurrency, token])
+  }, [nativeCurrency, pageToken])
 
   return (
     <TokenDetailsLayout>
-      {token && (
+      {tokenQueryData && (
         <>
           <LeftPanel>
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            <ChartSection token={token} nativeCurrency={nativeCurrency} />
+            <ChartSection token={tokenQueryData} nativeCurrency={isNative ? nativeCurrency : undefined} />
             <StatsSection
-              TVL={token.market?.totalValueLocked?.value}
-              volume24H={token.market?.volume24H?.value}
+              TVL={tokenQueryData.market?.totalValueLocked?.value}
+              volume24H={tokenQueryData.market?.volume24H?.value}
               // TODO: Reenable these values once they're available in schema
               // priceHigh52W={token.market?.priceHigh52W?.value}
               // priceLow52W={token.market?.priceLow52W?.value}
             />
             <AboutSection
-              address={token.address ?? ''}
-              description={token.project?.description}
-              homepageUrl={token.project?.homepageUrl}
-              twitterName={token.project?.twitterName}
+              address={tokenQueryData.address ?? ''}
+              description={tokenQueryData.project?.description}
+              homepageUrl={tokenQueryData.project?.homepageUrl}
+              twitterName={tokenQueryData.project?.twitterName}
             />
-            <AddressSection address={token.address ?? ''} />
+            <AddressSection address={tokenQueryData.address ?? ''} />
           </LeftPanel>
           <RightPanel>
             <Widget
               defaultToken={isCelo(pageChainId) ? undefined : defaultWidgetToken}
               onReviewSwapClick={onReviewSwap}
             />
-            {tokenWarning && <TokenSafetyMessage tokenAddress={token.address ?? ''} warning={tokenWarning} />}
+            {tokenWarning && <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />}
+            {/* <BalanceSummary /> */}
           </RightPanel>
 
-          <BalanceSummary
-            address={token.address ?? ''}
-            symbol={token.symbol ?? ''}
-            balance={balance}
-            balanceUsd={balanceUsd}
+          <MobileBalanceSummaryFooter
+            tokenAmount={tokenBalance}
+            nativeCurrencyAmount={isNative ? nativeCurrencyBalance : undefined}
           />
 
           <TokenSafetyModal
             isOpen={isBlockedToken || !!continueSwap}
-            tokenAddress={token.address}
+            tokenAddress={tokenQueryData.address}
             onContinue={() => onResolveSwap(true)}
             onBlocked={() => navigate(-1)}
             onCancel={() => onResolveSwap(false)}

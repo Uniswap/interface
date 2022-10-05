@@ -67,7 +67,7 @@ export function useMultiNetworkAddressBalances({ ownerAddress, tokenAddress }: u
       feature_flag_multi_network_balances === BaseVariant.Enabled
         ? ALL_SUPPORTED_CHAIN_IDS
         : isSupportedChain(connectedChainId)
-        ? [connectedChainId]
+        ? [SupportedChainId.MAINNET, connectedChainId]
         : [SupportedChainId.MAINNET]
 
     chainsToCheck.forEach((chainId) => {
@@ -82,11 +82,8 @@ export function useMultiNetworkAddressBalances({ ownerAddress, tokenAddress }: u
                 try {
                   const wrappedNativeContract = getContract(wrappedNative.address, WETH_ABI, provider) as Weth
                   const balance = await wrappedNativeContract.balanceOf(ownerAddress, { blockTag: 'latest' })
-                  const amount = CurrencyAmount.fromRawAmount(
-                    new Token(chainId, wrappedNative.address, 18),
-                    balance.toString()
-                  )
-                  resolve(handleBalance({ amount, chainId, tokenAddress: wrappedNative.address }))
+                  const amount = CurrencyAmount.fromRawAmount(wrappedNative, balance.toString())
+                  resolve(handleBalance({ amount, chainId, tokenAddress: wrappedNative.address.toLowerCase() }))
                 } catch (e) {}
               })
             )
@@ -116,6 +113,7 @@ export function useMultiNetworkAddressBalances({ ownerAddress, tokenAddress }: u
         }
       }
     })
+
     Promise.all(promises)
       .catch(() => ({}))
       .finally(() => setLoading(false))
