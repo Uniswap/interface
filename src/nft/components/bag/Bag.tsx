@@ -6,18 +6,24 @@ import { BagFooter } from 'nft/components/bag/BagFooter'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
-import { Center, Column, Row } from 'nft/components/Flex'
-import { BagCloseIcon, LargeBagIcon } from 'nft/components/icons'
+import { Center, Column } from 'nft/components/Flex'
+import { LargeBagIcon } from 'nft/components/icons'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useBag, useIsMobile, useSendTransaction, useTransactionResponse, useWalletBalance } from 'nft/hooks'
+import {
+  useBag,
+  useIsMobile,
+  useSellAsset,
+  useSendTransaction,
+  useTransactionResponse,
+  useWalletBalance,
+} from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, RouteResponse, TxStateType } from 'nft/types'
 import { buildSellObject } from 'nft/utils/buildSellObject'
 import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
 import { fetchPrice } from 'nft/utils/fetchPrice'
-import { roundAndPluralize } from 'nft/utils/roundAndPluralize'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import { sortUpdatedAssets } from 'nft/utils/updatedAssets'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -25,6 +31,7 @@ import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
 import * as styles from './Bag.css'
+import { BagHeader } from './BagHeader'
 
 const EmptyState = () => {
   return (
@@ -64,39 +71,6 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
   />
 )
 
-interface BagHeaderProps {
-  numberOfAssets: number
-  toggleBag: () => void
-  resetFlow: () => void
-}
-
-const BagHeader = ({ numberOfAssets, toggleBag, resetFlow }: BagHeaderProps) => {
-  return (
-    <Column gap="4" paddingX="32" marginBottom="20">
-      <Row className={styles.header}>
-        My bag
-        <Box display="flex" padding="2" color="textSecondary" cursor="pointer" onClick={toggleBag}>
-          <BagCloseIcon />
-        </Box>
-      </Row>
-      {numberOfAssets > 0 && (
-        <Box fontSize="14" fontWeight="normal" style={{ lineHeight: '20px' }} color="textPrimary">
-          {roundAndPluralize(numberOfAssets, 'NFT')} ·{' '}
-          <Box
-            as="span"
-            className={styles.clearAll}
-            onClick={() => {
-              resetFlow()
-            }}
-          >
-            Clear all
-          </Box>
-        </Box>
-      )}
-    </Column>
-  )
-}
-
 const Bag = () => {
   const { account } = useWeb3React()
   const bagStatus = useBag((s) => s.bagStatus)
@@ -107,6 +81,8 @@ const Bag = () => {
   const bagIsLocked = useBag((s) => s.isLocked)
   const setLocked = useBag((s) => s.setLocked)
   const reset = useBag((s) => s.reset)
+  const resetSellAssets = useSellAsset((state) => state.reset)
+  const sellAssets = useSellAsset((state) => state.sellAssets)
   const uncheckedItemsInBag = useBag((s) => s.itemsInBag)
   const setItemsInBag = useBag((s) => s.setItemsInBag)
   const removeAssetFromBag = useBag((s) => s.removeAssetFromBag)
@@ -121,7 +97,7 @@ const Bag = () => {
   const { pathname } = useLocation()
   const isProfilePage = pathname.startsWith('/profile')
   const isNFTPage = pathname.startsWith('/nfts')
-  const shouldShowBag = isNFTPage && !isProfilePage
+  const shouldShowBag = isNFTPage || isProfilePage
   const isMobile = useIsMobile()
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
@@ -322,7 +298,12 @@ const Bag = () => {
       {bagExpanded && shouldShowBag ? (
         <Portal>
           <Column zIndex={isMobile || isOpen ? 'modal' : '3'} className={styles.bagContainer}>
-            <BagHeader numberOfAssets={itemsInBag.length} toggleBag={toggleBag} resetFlow={reset} />
+            <BagHeader
+              numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
+              toggleBag={toggleBag}
+              resetFlow={isProfilePage ? resetSellAssets : reset}
+              isProfilePage={isProfilePage}
+            />
             {itemsInBag.length === 0 && bagStatus === BagStatus.ADDING_TO_BAG && <EmptyState />}
             <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
             <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
