@@ -19,8 +19,7 @@ export interface WidgetProps {
 
 export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps) {
   const locale = useActiveLocale()
-  const darkMode = useIsDarkMode()
-  const theme = darkMode ? DARK_THEME : LIGHT_THEME
+  const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
   const { provider } = useWeb3React()
 
   const { inputs, tokenSelector } = useSyncWidgetInputs(defaultToken)
@@ -50,7 +49,5 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
 }
 
 export function WidgetSkeleton() {
-  const darkMode = useIsDarkMode()
-  const theme = darkMode ? DARK_THEME : LIGHT_THEME
-  return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
+  return <SwapWidgetSkeleton theme={useIsDarkMode() ? DARK_THEME : LIGHT_THEME} width={WIDGET_WIDTH} />
 }
