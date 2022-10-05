@@ -377,6 +377,7 @@ export const StyledActionButtonSwapForm = styled.button<{ active?: boolean; hove
   border: none;
   background-color: transparent;
   margin: 0;
+  padding: 0;
   height: 36px;
   width: 36px;
   border-radius: 999px;
