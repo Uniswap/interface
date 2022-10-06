@@ -58,6 +58,16 @@ const tokenQuery = graphql`
         }
       }
     }
+    tokenProjects(contracts: [$contract]) {
+      description
+      homepageUrl
+      twitterName
+      logoUrl
+      tokens {
+        chain
+        address
+      }
+    }
   }
 `
 

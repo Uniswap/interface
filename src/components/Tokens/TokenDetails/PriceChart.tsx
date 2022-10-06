@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
@@ -10,7 +11,7 @@ import { PricePoint } from 'graphql/data/Token'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import {
@@ -247,17 +248,13 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
-  // TODO: Display no data available error
-  if (!prices) {
-    return null
-  }
-
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
   const delta = calculateDelta(startingPrice.value, displayPrice.value)
   const formattedDelta = formatDelta(delta)
   const arrow = getDeltaArrow(delta)
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
+  const hasData = prices && prices.length > 0
 
   /*
    * Default curve doesn't look good for the HOUR chart.
@@ -275,8 +272,12 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           <ArrowCell>{arrow}</ArrowCell>
         </DeltaContainer>
       </ChartHeader>
-      {test ? (
-        <MissingPriceChart width={width} height={graphHeight} />
+      {!hasData ? (
+        <MissingPriceChart
+          width={width}
+          height={graphHeight}
+          message={prices && prices.length === 0 ? <NoV3DataMessage /> : <MissingDataMessage />}
+        />
       ) : (
         <AnimatedInLineChart
           data={prices}
@@ -377,7 +378,12 @@ const StyledMissingChart = styled.svg`
 
 const chartBottomPadding = 15
 
-function MissingPriceChart({ width, height }: { width: number; height: number }) {
+const NoV3DataMessage = () => (
+  <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
+)
+const MissingDataMessage = () => <Trans>Missing chart data</Trans>
+
+function MissingPriceChart({ width, height, message }: { width: number; height: number; message: ReactNode }) {
   const theme = useTheme()
   const midPoint = height / 2 + 45
   return (
@@ -391,7 +397,7 @@ function MissingPriceChart({ width, height }: { width: number; height: number })
       />
       <TrendingUp stroke={theme.textTertiary} x={0} size={12} y={height - chartBottomPadding - 10} />
       <text y={height - chartBottomPadding} x="20" fill={theme.textTertiary}>
-        Missing chart data
+        {message || <Trans>Missing chart data</Trans>}
       </text>
       <path
         d={`M 0 ${height - 1}, ${width} ${height - 1}`}
