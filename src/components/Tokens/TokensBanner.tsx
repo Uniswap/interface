@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useGlobalChainName } from 'graphql/data/util'
 import { X } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
@@ -63,14 +64,16 @@ export default function TokensBanner() {
   const navigate = useNavigate()
   const chainName = useGlobalChainName().toLowerCase()
 
-  const openExplorePage = () => {
+  const navigateToExplorePage = () => {
     navigate(`/tokens/${chainName}`)
   }
 
   return (
-    <PopupContainer show={showTokensPromoBanner} onClick={openExplorePage}>
+    <PopupContainer show={showTokensPromoBanner} onClick={navigateToExplorePage}>
       <Header>
-        <HeaderText to={'/tokens'}>Explore Top Tokens</HeaderText>
+        <HeaderText to={'/tokens'}>
+          <Trans>Explore Top Tokens</Trans>
+        </HeaderText>
         <X
           size={20}
           color={theme.textSecondary}
@@ -83,7 +86,9 @@ export default function TokensBanner() {
         />
       </Header>
 
-      <Description to={'/tokens'}>Check out the new explore tab to discover and learn more</Description>
+      <Description to={'/tokens'}>
+        <Trans>Check out the new explore tab to discover and learn more</Trans>
+      </Description>
     </PopupContainer>
   )
 }
