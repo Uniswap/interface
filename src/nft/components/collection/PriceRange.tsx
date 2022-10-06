@@ -4,16 +4,14 @@ import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { isNumber } from 'nft/utils/numbers'
-
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { FormEvent, useEffect, useState } from 'react'
 import { FocusEventHandler } from 'react'
 import { useLocation } from 'react-router-dom'
 import ReactSlider from 'react-slider'
 
-import { TraitsHeader } from './TraitsHeader'
 import * as styles from './PriceRange.css'
+import { TraitsHeader } from './TraitsHeader'
 
 export const PriceRange = () => {
   const [placeholderText, setPlaceholderText] = useState('')
@@ -38,7 +36,7 @@ export const PriceRange = () => {
     setMaxPrice('')
     setPriceRangeLow('')
     setPriceRangeHigh('')
-  }, [location.pathname, setMinPrice, setMaxPrice])
+  }, [location.pathname, setMinPrice, setMaxPrice, setPriceRangeLow, setPriceRangeHigh])
 
   const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
     setPlaceholderText(e.currentTarget.placeholder)
@@ -51,7 +49,7 @@ export const PriceRange = () => {
   }
 
   return (
-    <TraitsHeader title="Price range" showBorderBottom>
+    <TraitsHeader title="Price range">
       <Row gap="12" marginTop="12" color="textPrimary">
         <Row position="relative">
           <NumericInput
@@ -67,8 +65,6 @@ export const PriceRange = () => {
             placeholder={`${priceRangeLow}`}
             onChange={(v: FormEvent<HTMLInputElement>) => {
               // If a value is manually changed, reset the sliders.
-
-              console.log(v.currentTarget.value)
               setPrevMinMax([0, 100])
 
               // set the value of minprice and range for querying
@@ -112,6 +108,7 @@ export const PriceRange = () => {
             placeholder={priceRangeHigh}
             value={maxPrice}
             onChange={(v: FormEvent<HTMLInputElement>) => {
+              // See above comments for explanation on code logic
               setPrevMinMax([0, 100])
               setMaxPrice(v.currentTarget.value)
               setPriceRangeHigh(v.currentTarget.value)

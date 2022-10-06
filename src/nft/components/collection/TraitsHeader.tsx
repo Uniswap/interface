@@ -9,11 +9,11 @@ interface TraitsHeaderProps {
   title: string
   children: ReactNode
   numTraits?: number
-  showBorderBottom?: boolean
+  showBorderTop?: boolean
 }
 
 export const TraitsHeader = (props: TraitsHeaderProps) => {
-  const { children, showBorderBottom, title } = props
+  const { children, showBorderTop, title } = props
   const [isOpen, setOpen] = useState(false)
 
   return (
@@ -21,8 +21,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
       as="details"
       className={clsx(
         subheadSmall,
-        showBorderBottom && styles.showBorderBottom,
-        styles.borderTop,
+        showBorderTop && styles.borderTop,
         !isOpen && styles.rowHover,
         isOpen && styles.detailsOpen
       )}
@@ -37,7 +36,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
         alignItems="center"
         fontSize="14"
         paddingTop="10"
-        paddingLeft="12"
+        paddingLeft="8"
         paddingRight="16"
         paddingBottom="10"
         onClick={(e) => {

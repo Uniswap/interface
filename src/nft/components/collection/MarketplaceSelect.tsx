@@ -95,7 +95,7 @@ export const MarketplaceSelect = () => {
   return (
     <Box
       as="details"
-      className={clsx(subheadSmall, !isOpen && styles.rowHover, styles.borderTop, isOpen && styles.detailsOpen)}
+      className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
       open={isOpen}
     >
       <Box
@@ -107,7 +107,7 @@ export const MarketplaceSelect = () => {
         alignItems="center"
         fontSize="14"
         paddingTop="8"
-        paddingLeft="12"
+        paddingLeft="8"
         paddingRight="16"
         paddingBottom="8"
         onClick={(e) => {
