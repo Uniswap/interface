@@ -49,7 +49,7 @@ export const PriceRange = () => {
   }
 
   return (
-    <TraitsHeader title="Price range" showBorderBottom>
+    <TraitsHeader title="Price range">
       <Row gap="12" marginTop="12" color="textPrimary">
         <Row position="relative">
           <NumericInput

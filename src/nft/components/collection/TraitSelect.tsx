@@ -98,11 +98,11 @@ const TraitItem = ({
 }
 
 export const TraitSelect = ({
-  showBorderBottom,
+  showBorderTop,
   traits,
   type,
 }: {
-  showBorderBottom?: boolean
+  showBorderTop?: boolean
   traits: Trait[]
   type: string
 }) => {
@@ -118,7 +118,7 @@ export const TraitSelect = ({
   )
 
   return traits.length ? (
-    <TraitsHeader numTraits={traits.length} title={type} showBorderBottom={showBorderBottom}>
+    <TraitsHeader numTraits={traits.length} title={type} showBorderTop={showBorderTop}>
       <Column className={styles.filterDropDowns} paddingLeft="0">
         <Input
           value={search}

@@ -5,7 +5,7 @@ import { MarketplaceSelect } from 'nft/components/collection/MarketplaceSelect'
 import { PriceRange } from 'nft/components/collection/PriceRange'
 import { Column, Row } from 'nft/components/Flex'
 import { Radio } from 'nft/components/layout/Radio'
-import { badge } from 'nft/css/common.css'
+import { caption } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks'
 import { Trait } from 'nft/hooks/useCollectionFilters'
 import { groupBy } from 'nft/utils/groupBy'
@@ -29,7 +29,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
   return (
     <Box className={styles.container}>
       <Row width="full" justifyContent="space-between">
-        <Row as="span" color="textSecondary" className={badge}>
+        <Row as="span" color="textSecondary" paddingLeft="8" className={caption}>
           Filters
         </Row>
       </Row>
@@ -41,7 +41,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           paddingTop="10"
           paddingRight="16"
           paddingBottom="10"
-          paddingLeft="12"
+          paddingLeft="8"
           cursor="pointer"
           onClick={(e) => {
             e.preventDefault()
@@ -58,14 +58,14 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
         <MarketplaceSelect />
         <PriceRange />
         <Box marginTop="28">
-          <Box as="span" color="textSecondary" className={badge}>
+          <Box as="span" color="textSecondary" paddingLeft="8" className={caption}>
             Traits
           </Box>
           <Column marginTop="8" marginBottom="60">
             {Object.entries(traitsByGroup).map(([type, traits], index) => {
-              const showBorderBottom = index === Object.keys(traitsByGroup).length - 1
+              const showBorderTop = index === 0
 
-              return <TraitSelect key={type} {...{ type, traits }} showBorderBottom={showBorderBottom} />
+              return <TraitSelect key={type} {...{ type, traits }} showBorderTop={showBorderTop} />
             })}
           </Column>
         </Box>
