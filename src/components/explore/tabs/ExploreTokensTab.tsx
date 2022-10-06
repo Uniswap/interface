@@ -12,6 +12,7 @@ import { TokenItemData, TokenProjectItem } from 'src/components/explore/TokenPro
 import { Flex } from 'src/components/layout'
 
 import { Text } from 'src/components/Text'
+import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useTokenMetadataDisplayType } from 'src/features/explore/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
@@ -80,7 +81,8 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
         const { chain, address, symbol } = token
         const chainId = fromGraphQLChain(chain)
 
-        if (!name || !logoUrl || !symbol || !chainId) return null
+        // Only show tokens on Mainnet
+        if (!name || !logoUrl || !symbol || !chainId || chainId !== ChainId.Mainnet) return null
 
         return {
           chainId,
