@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { formatToDecimal } from 'analytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import { formatUSDPriceWithCommas } from 'nft/utils'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
+import { BalanceSummaryProps } from './BalanceSummary'
 
 const Wrapper = styled.div`
   height: fit-content;
@@ -82,25 +82,23 @@ const TotalBalancesSection = styled.div`
   align-items: center;
 `
 
-interface MobileBalanceSummaryFooterProps {
-  tokenAmount: CurrencyAmount<Token> | undefined
-  nativeCurrencyAmount: CurrencyAmount<Currency> | undefined
-}
-
 export default function MobileBalanceSummaryFooter({
   tokenAmount,
   nativeCurrencyAmount,
-}: MobileBalanceSummaryFooterProps) {
-  const formattedBalance = tokenAmount
-    ? formatToDecimal(tokenAmount, Math.min(tokenAmount.currency.decimals, 6))
-    : undefined
+  isNative,
+}: BalanceSummaryProps) {
   const balanceUsdValue = useStablecoinValue(tokenAmount)?.toFixed(2)
+  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(2)
+
+  const formattedBalance = tokenAmount
+    ? formatToDecimal(tokenAmount, Math.min(tokenAmount.currency.decimals, 2))
+    : undefined
+
   const balanceUsd = balanceUsdValue ? parseFloat(balanceUsdValue) : undefined
 
   const formattedNativeBalance = nativeCurrencyAmount
-    ? formatToDecimal(nativeCurrencyAmount, Math.min(nativeCurrencyAmount.currency.decimals, 6))
+    ? formatToDecimal(nativeCurrencyAmount, Math.min(nativeCurrencyAmount.currency.decimals, 2))
     : undefined
-  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(2)
   const nativeBalanceUsd = nativeBalanceUsdValue ? parseFloat(nativeBalanceUsdValue) : undefined
 
   if (!tokenAmount && !nativeCurrencyAmount) {
@@ -112,32 +110,27 @@ export default function MobileBalanceSummaryFooter({
   return (
     <Wrapper>
       <TotalBalancesSection>
-        {Boolean(formattedBalance !== undefined) ? (
+        {Boolean(formattedBalance !== undefined && !isNative) && (
           <BalanceInfo>
             <Trans>Your {tokenAmount?.currency?.symbol} balance</Trans>
             <BalanceTotal>
               <BalanceValue>
                 {formattedBalance} {tokenAmount?.currency?.symbol}
               </BalanceValue>
-              {Boolean(balanceUsd !== undefined && balanceUsd > 0) && (
-                <FiatValue>{formatUSDPriceWithCommas(balanceUsd || 0)}</FiatValue>
-              )}
+              <FiatValue>{formatDollarAmount(balanceUsd)}</FiatValue>
             </BalanceTotal>
           </BalanceInfo>
-        ) : (
-          Boolean(formattedNativeBalance !== undefined) && (
-            <BalanceInfo>
-              <Trans>Your {nativeCurrencyAmount?.currency?.symbol} balance</Trans>
-              <BalanceTotal>
-                <BalanceValue>
-                  {formattedNativeBalance} {nativeCurrencyAmount?.currency?.symbol}
-                </BalanceValue>
-                {Boolean(nativeBalanceUsd !== undefined && nativeBalanceUsd > 0) && (
-                  <FiatValue>{formatUSDPriceWithCommas(nativeBalanceUsd || 0)}</FiatValue>
-                )}
-              </BalanceTotal>
-            </BalanceInfo>
-          )
+        )}
+        {isNative && (
+          <BalanceInfo>
+            <Trans>Your {nativeCurrencyAmount?.currency?.symbol} balance</Trans>
+            <BalanceTotal>
+              <BalanceValue>
+                {formattedNativeBalance} {nativeCurrencyAmount?.currency?.symbol}
+              </BalanceValue>
+              <FiatValue>{formatDollarAmount(nativeBalanceUsd)}</FiatValue>
+            </BalanceTotal>
+          </BalanceInfo>
         )}
         <Link to={`/swap?outputCurrency=${outputTokenAddress}`}>
           <SwapButton>

@@ -9,6 +9,7 @@ import {
 import { filterTimeAtom } from 'components/Tokens/state'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
+import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
@@ -106,7 +107,7 @@ export default function TokenDetails() {
 
   const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
 
-  const tokenBalance = useTokenBalance(account, pageToken)
+  const tokenBalance = useTokenBalance(account, isNative ? nativeCurrency.wrapped : pageToken)
 
   const tokenWarning = tokenAddressParam ? checkWarning(tokenAddressParam) : null
   const isBlockedToken = tokenWarning?.canProceed === false
@@ -173,7 +174,6 @@ export default function TokenDetails() {
             <StatsSection
               TVL={tokenQueryData.market?.totalValueLocked?.value}
               volume24H={tokenQueryData.market?.volume24H?.value}
-              // TODO: Reenable these values once they're available in schema
               priceHigh52W={tokenQueryData.market?.priceHigh52W?.value}
               priceLow52W={tokenQueryData.market?.priceLow52W?.value}
             />
@@ -188,12 +188,17 @@ export default function TokenDetails() {
           <RightPanel>
             <Widget defaultToken={widgetToken} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />}
-            {/* <BalanceSummary /> */}
+            <BalanceSummary
+              tokenAmount={tokenBalance}
+              nativeCurrencyAmount={nativeCurrencyBalance}
+              isNative={isNative}
+            />
           </RightPanel>
 
           <MobileBalanceSummaryFooter
             tokenAmount={tokenBalance}
-            nativeCurrencyAmount={isNative ? nativeCurrencyBalance : undefined}
+            nativeCurrencyAmount={nativeCurrencyBalance}
+            isNative={isNative}
           />
 
           <TokenSafetyModal
