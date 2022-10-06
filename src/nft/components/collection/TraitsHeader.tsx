@@ -36,6 +36,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
         alignItems="center"
         fontSize="14"
         paddingTop="10"
+        paddingBottom="10"
         paddingLeft="8"
         paddingRight="16"
         onClick={(e) => {
