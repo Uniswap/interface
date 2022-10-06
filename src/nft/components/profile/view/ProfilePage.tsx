@@ -37,6 +37,7 @@ import { useSpring } from 'react-spring'
 import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
+import { ProfilePageLoadingSkeleton } from './ProfilePageLoadingSkeleton'
 
 enum SortBy {
   FloorPrice,
@@ -66,7 +67,7 @@ export const ProfilePage = () => {
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
 
-  const { data: ownerCollections } = useQuery(
+  const { data: ownerCollections, isLoading: collectionsAreLoading } = useQuery(
     ['ownerCollections', address],
     () => OSCollectionsFetcher({ params: { asset_owner: address, offset: '0', limit: '300' } }),
     {
@@ -75,7 +76,7 @@ export const ProfilePage = () => {
   )
 
   const ownerCollectionsAddresses = useMemo(() => ownerCollections?.map(({ address }) => address), [ownerCollections])
-  const { data: collectionStats } = useQuery(
+  const { data: collectionStats, isLoading: collectionStatsAreLoading } = useQuery(
     ['ownerCollectionStats', ownerCollectionsAddresses],
     () => fetchMultipleCollectionStats({ addresses: ownerCollectionsAddresses ?? [] }),
     {
@@ -88,6 +89,7 @@ export const ProfilePage = () => {
     fetchNextPage,
     hasNextPage,
     isSuccess,
+    isLoading: assetsAreLoading,
   } = useInfiniteQuery(
     ['ownerAssets', address, collectionFilters],
     async ({ pageParam = 0 }) => {
@@ -105,6 +107,8 @@ export const ProfilePage = () => {
       refetchOnMount: false,
     }
   )
+
+  const anyQueryIsLoading = collectionsAreLoading || collectionStatsAreLoading || assetsAreLoading
 
   const ownerAssets = useMemo(() => (isSuccess ? ownerAssetsData?.pages.flat() : null), [isSuccess, ownerAssetsData])
 
@@ -190,7 +194,7 @@ export const ProfilePage = () => {
 
   const { gridX, gridWidthOffset } = useSpring({
     gridX: isFiltersExpanded ? 300 : -16,
-    gridWidthOffset: isFiltersExpanded ? 300 /* right padding */ : 0,
+    gridWidthOffset: isFiltersExpanded ? 300 /* right padding */ : -16,
   })
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
@@ -250,10 +254,12 @@ export const ProfilePage = () => {
     <Column
       width="full"
       paddingLeft={{ sm: '16', md: '52' }}
-      paddingRight={{ sm: '0', md: '72' }}
+      paddingRight={{ sm: '16', md: '72' }}
       paddingTop={{ sm: '16', md: '40' }}
     >
-      {walletAssets.length === 0 ? (
+      {anyQueryIsLoading ? (
+        <ProfilePageLoadingSkeleton />
+      ) : walletAssets.length === 0 ? (
         <EmptyWalletContent />
       ) : (
         <Row alignItems="flex-start" position="relative">
