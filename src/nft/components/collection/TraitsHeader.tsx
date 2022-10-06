@@ -38,7 +38,6 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
         paddingTop="10"
         paddingLeft="8"
         paddingRight="16"
-        paddingBottom="10"
         onClick={(e) => {
           e.preventDefault()
           setOpen(!isOpen)

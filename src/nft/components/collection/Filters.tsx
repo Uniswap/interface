@@ -28,15 +28,11 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
 
   return (
     <Box className={styles.container}>
-      <Row width="full" justifyContent="space-between">
-        <Row as="span" color="textSecondary" paddingLeft="8" className={caption} style={{ fontWeight: 600 }}>
-          Filters
-        </Row>
-      </Row>
+      <Row width="full" justifyContent="space-between"></Row>
       <Column marginTop="8">
         <Row
           justifyContent="space-between"
-          className={clsx(styles.rowHover, styles.borderTop)}
+          className={clsx(styles.rowHover)}
           gap="2"
           paddingTop="10"
           paddingRight="16"
@@ -57,15 +53,21 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
         </Row>
         <MarketplaceSelect />
         <PriceRange />
-        <Box marginTop="28">
-          <Box as="span" color="textSecondary" paddingLeft="8" className={caption} style={{ fontWeight: 600 }}>
-            Traits
-          </Box>
-          <Column marginTop="8" marginBottom="60">
+
+        <Box
+          as="span"
+          color="textSecondary"
+          paddingLeft="8"
+          marginTop="24"
+          marginBottom="12"
+          className={styles.borderTop}
+        ></Box>
+        <Box>
+          <Column marginBottom="60">
             {Object.entries(traitsByGroup).map(([type, traits], index) => {
               const showBorderTop = index === 0
 
-              return <TraitSelect key={type} {...{ type, traits }} showBorderTop={showBorderTop} />
+              return <TraitSelect key={type} {...{ type, traits }} />
             })}
           </Column>
         </Box>
