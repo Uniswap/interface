@@ -1,14 +1,22 @@
 import { AssetDetails } from 'nft/components/details/AssetDetails'
-import { Row } from 'nft/components/Flex'
+import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { useParams } from 'react-router-dom'
+import styled from 'styled-components/macro'
+
+const AssetContainer = styled.div`
+  display: flex;
+  padding-right: 116px;
+  padding-left: 116px;
+`
 
 const Asset = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
 
   return (
-    <Row>
+    <AssetContainer>
       <AssetDetails tokenId={tokenId} contractAddress={contractAddress} />
-    </Row>
+      <AssetPriceDetails />
+    </AssetContainer>
   )
 }
 
