@@ -318,7 +318,7 @@ export const L2NetworkLogo = styled.div<{ networkUrl?: string; size?: string }>`
   width: ${({ size }) => size ?? '12px'};
   position: absolute;
   left: 50%;
-  top: 50%;
+  bottom: 0;
   background: url(${({ networkUrl }) => networkUrl});
   background-repeat: no-repeat;
   background-size: ${({ size }) => (size ? `${size} ${size}` : '12px 12px')};
@@ -481,7 +481,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
   const formattedDelta = formatDelta(delta)
-  const sortAscending = useAtomValue(sortAscendingAtom)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -512,7 +511,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
           }
-          listNumber={sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1}
+          listNumber={tokenListIndex + 1}
           tokenInfo={
             <ClickableName>
               <LogoContainer>

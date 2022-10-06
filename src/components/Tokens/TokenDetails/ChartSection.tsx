@@ -6,15 +6,16 @@ import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { SingleTokenData, useTokenPricesCached } from 'graphql/data/Token'
+import { PriceDurations, SingleTokenData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
+import { useAtomValue } from 'jotai/utils'
 import useCurrencyLogoURIs, { getTokenLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
 import { isAddress } from 'utils'
 
-import { useIsFavorited, useToggleFavorite } from '../state'
+import { filterTimeAtom, useIsFavorited, useToggleFavorite } from '../state'
 import { ClickFavorited, FavoriteIcon, L2NetworkLogo, LogoContainer } from '../TokenTable/TokenRow'
 import PriceChart from './PriceChart'
 import ShareButton from './ShareButton'
@@ -71,17 +72,18 @@ export function useTokenLogoURI(
 export default function ChartSection({
   token,
   nativeCurrency,
+  prices,
 }: {
   token: NonNullable<SingleTokenData>
   nativeCurrency?: Token | NativeCurrency
+  prices: PriceDurations
 }) {
   const isFavorited = useIsFavorited(token.address)
   const toggleFavorite = useToggleFavorite(token.address)
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
   const L2Icon = getChainInfo(chainId).circleLogoUrl
   const warning = checkWarning(token.address ?? '')
-
-  const { prices } = useTokenPricesCached(token)
+  const timePeriod = useAtomValue(filterTimeAtom)
 
   const logoSrc = useTokenLogoURI(token, nativeCurrency)
 
@@ -110,7 +112,7 @@ export default function ChartSection({
       </TokenInfoContainer>
       <ChartContainer>
         <ParentSize>
-          {({ width, height }) => prices && <PriceChart prices={prices} width={width} height={height} />}
+          {({ width, height }) => prices && <PriceChart prices={prices[timePeriod]} width={width} height={height} />}
         </ParentSize>
       </ChartContainer>
     </ChartHeader>
