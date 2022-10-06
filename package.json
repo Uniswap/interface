@@ -30,9 +30,9 @@
     "test:e2e:run": "RN_SRC_EXT=e2e.js detox test -c ios.sim.debug",
     "tsc:compile": "tsc --project .",
     "unicons": "cd scripts && python3 populate_svgs.py && cd .. && yarn lint --fix",
-    "pod": "./podinstall.sh",
-    "upload-env-local": "bash ./uploadEnvLocal.sh",
-    "download-env-local": "bash ./downloadEnvLocal.sh"
+    "pod": "./scripts/podinstall.sh",
+    "upload-env-local": "bash ./scripts/uploadEnvLocal.sh",
+    "download-env-local": "bash ./scripts/downloadEnvLocal.sh"
   },
   "dependencies": {
     "@amplitude/experiment-react-native-client": "^0.7.3",
