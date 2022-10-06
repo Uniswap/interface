@@ -47,7 +47,7 @@ const ClearAllButton = styled.button`
   padding-left: 8px;
   padding-right: 8px;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   background: none;
@@ -229,15 +229,17 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const hasNfts = collectionNfts && collectionNfts.length > 0
 
-  let minMaxPriceChipText = ''
+  const minMaxPriceChipText: string | undefined = useMemo(() => {
+    if (debouncedMinPrice && debouncedMaxPrice) {
+      return `Price: ${debouncedMinPrice}-${debouncedMaxPrice} ETH`
+    } else if (debouncedMinPrice) {
+      return `Min. Price: ${debouncedMinPrice} ETH`
+    } else if (debouncedMaxPrice) {
+      return `Max Price: ${debouncedMaxPrice} ETH`
+    }
 
-  if (debouncedMinPrice && debouncedMaxPrice) {
-    minMaxPriceChipText = `Price: ${debouncedMinPrice}-${debouncedMaxPrice} ETH`
-  } else if (debouncedMinPrice) {
-    minMaxPriceChipText = `Min. Price: ${debouncedMinPrice} ETH`
-  } else if (debouncedMaxPrice) {
-    minMaxPriceChipText = `Max Price: ${debouncedMaxPrice} ETH`
-  }
+    return undefined
+  }, [debouncedMinPrice, debouncedMaxPrice])
 
   useEffect(() => {
     const marketCount: any = {}
@@ -303,7 +305,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 value={
                   trait.trait_type === 'Number of traits'
                     ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
-                    : trait.trait_value
+                    : `${trait.trait_type}: ${trait.trait_value}`
                 }
                 onClick={() => {
                   scrollToTop()
@@ -315,13 +317,22 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               <TraitChip
                 value={minMaxPriceChipText}
                 onClick={() => {
+                  scrollToTop()
                   setMin('')
                   setMax('')
                 }}
               />
             )}
-
-            {traits.length || markets.length > 0 ? <ClearAllButton onClick={reset}>Clear All</ClearAllButton> : null}
+            {traits.length || markets.length > 0 || minMaxPriceChipText ? (
+              <ClearAllButton
+                onClick={() => {
+                  reset()
+                  scrollToTop()
+                }}
+              >
+                Clear All
+              </ClearAllButton>
+            ) : null}
           </Row>
         </Box>
       </AnimatedBox>

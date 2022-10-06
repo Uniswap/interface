@@ -8,7 +8,7 @@ const TraitChipWrap = styled.div`
   padding: 8px 4px 8px 12px;
   font-weight: 600;
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.backgroundInteractive};
   font-size: 14px;
 `
 
@@ -17,6 +17,7 @@ const CrossIconWrap = styled.div`
   height: 28px;
   width: 28px;
   border: none;
+  padding-top: 2px;
 `
 
 export const TraitChip = ({ onClick, value }: { value: string; onClick: () => void }) => {
@@ -25,7 +26,7 @@ export const TraitChip = ({ onClick, value }: { value: string; onClick: () => vo
       <span>{value}</span>
 
       <CrossIconWrap onClick={onClick}>
-        <CrossIcon style={{ marginTop: 2 }} cursor="pointer" />
+        <CrossIcon cursor="pointer" />
       </CrossIconWrap>
     </TraitChipWrap>
   )
