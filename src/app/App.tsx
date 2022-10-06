@@ -1,7 +1,6 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
-import * as SplashScreen from 'expo-splash-screen'
-import React, { StrictMode, Suspense, useCallback } from 'react'
+import React, { StrictMode, Suspense } from 'react'
 import { StatusBar, Text, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
@@ -29,9 +28,6 @@ import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
-
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync()
 
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
@@ -104,11 +100,9 @@ function App() {
 function AppInner() {
   const isDarkMode = useColorScheme() === 'dark'
 
-  const onLayoutRootView = useCallback(() => SplashScreen.hideAsync(), [])
-
   return (
     <Trace endMark={MarkNames.AppStartup}>
-      <NavStack isDarkMode={isDarkMode} onReady={onLayoutRootView} />
+      <NavStack isDarkMode={isDarkMode} />
     </Trace>
   )
 }
@@ -132,12 +126,11 @@ function DataUpdaters() {
   )
 }
 
-function NavStack({ isDarkMode, onReady }: { isDarkMode: boolean; onReady: () => void }) {
+function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
   return (
     <NavigationContainer
       onReady={(navigationRef) => {
         routingInstrumentation.registerNavigationContainer(navigationRef)
-        onReady()
       }}>
       <NotificationToastWrapper>
         <DrawerNavigator />
