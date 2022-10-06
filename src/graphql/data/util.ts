@@ -1,4 +1,6 @@
+import { NATIVE_CHAIN_ID } from 'analytics/constants'
 import { SupportedChainId } from 'constants/chains'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { useAppSelector } from 'state/hooks'
 
 import { Chain, HistoryDuration } from './__generated__/TokenQuery.graphql'
@@ -79,7 +81,9 @@ export function isValidBackendChainName(chainName: string | undefined): chainNam
 }
 
 export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?: number) {
-  if (chainName) {
+  if (address === ZERO_ADDRESS && chainId && chainId === SupportedChainId.MAINNET) {
+    return `/tokens/${CHAIN_ID_TO_BACKEND_NAME[chainId].toLowerCase()}/${NATIVE_CHAIN_ID}`
+  } else if (chainName) {
     return `/tokens/${chainName.toLowerCase()}/${address}`
   } else if (chainId) {
     const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
