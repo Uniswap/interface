@@ -13,9 +13,10 @@ import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
+import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { formatDollarAmount, formatDollarPrice } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatDollarAmt'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -34,6 +35,7 @@ import {
   useToggleFavorite,
 } from '../state'
 import { useTokenLogoURI } from '../TokenDetails/ChartSection'
+import InfoTip from '../TokenDetails/InfoTip'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
 const Cell = styled.div`
@@ -229,17 +231,17 @@ const PriceInfoCell = styled(Cell)`
     align-items: flex-end;
   }
 `
-const SortArrowCell = styled(Cell)`
-  padding-right: 2px;
-`
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
-  ${ClickableStyle}
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
+  gap: 4px;
   height: 100%;
   justify-content: flex-end;
   width: 100%;
+`
+const HeaderCellText = styled(Text)`
+  ${ClickableStyle}
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -330,6 +332,17 @@ export const LogoContainer = styled.div`
   display: flex;
 `
 
+export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
+  [TokenSortMethod.PRICE]: undefined,
+  [TokenSortMethod.PERCENT_CHANGE]: undefined,
+  [TokenSortMethod.TOTAL_VALUE_LOCKED]: (
+    <Trans>Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool.</Trans>
+  ),
+  [TokenSortMethod.VOLUME]: (
+    <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
+  ),
+}
+
 /* Get singular header cell for header row */
 function HeaderCell({
   category,
@@ -343,31 +356,23 @@ function HeaderCell({
   const handleSortCategory = useSetSortMethod(category)
   const sortMethod = useAtomValue(sortMethodAtom)
 
-  if (sortMethod === category) {
-    return (
-      <HeaderCellWrapper onClick={handleSortCategory}>
-        <SortArrowCell>
+  const description = HEADER_DESCRIPTIONS[category]
+
+  return (
+    <HeaderCellWrapper onClick={handleSortCategory}>
+      {sortMethod === category && (
+        <>
           {sortAscending ? (
             <ArrowUp size={20} strokeWidth={1.8} color={theme.accentActive} />
           ) : (
             <ArrowDown size={20} strokeWidth={1.8} color={theme.accentActive} />
           )}
-        </SortArrowCell>
-        {category}
-      </HeaderCellWrapper>
-    )
-  }
-  if (sortable) {
-    return (
-      <HeaderCellWrapper onClick={handleSortCategory}>
-        <SortArrowCell>
-          <ArrowUp size={14} visibility="hidden" />
-        </SortArrowCell>
-        {category}
-      </HeaderCellWrapper>
-    )
-  }
-  return <HeaderCellWrapper>{category}</HeaderCellWrapper>
+        </>
+      )}
+      <HeaderCellText>{category}</HeaderCellText>
+      {description && <InfoTip text={description}></InfoTip>}
+    </HeaderCellWrapper>
+  )
 }
 
 /* Token Row: skeleton row component */
@@ -527,7 +532,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {token.market?.price?.value ? formatDollarPrice(token.market.price.value) : '-'}
+                {token.market?.price?.value ? formatDollar(token.market.price.value, true) : '-'}
                 <PercentChangeInfoCell>
                   {formattedDelta}
                   {arrow}
@@ -543,12 +548,12 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           marketCap={
             <ClickableContent>
-              {token.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
+              {token.market?.totalValueLocked?.value ? formatDollar(token.market.totalValueLocked.value) : '-'}
             </ClickableContent>
           }
           volume={
             <ClickableContent>
-              {token.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
+              {token.market?.volume?.value ? formatDollar(token.market.volume.value) : '-'}
             </ClickableContent>
           }
           sparkLine={

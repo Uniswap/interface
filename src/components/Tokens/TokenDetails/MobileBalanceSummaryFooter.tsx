@@ -3,7 +3,7 @@ import { formatToDecimal } from 'analytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { formatDollarPrice } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatDollarAmt'
 
 import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { BalanceSummaryProps } from './BalanceSummary'
@@ -117,7 +117,7 @@ export default function MobileBalanceSummaryFooter({
               <BalanceValue>
                 {formattedBalance} {tokenAmount?.currency?.symbol}
               </BalanceValue>
-              <FiatValue>{formatDollarPrice(balanceUsd)}</FiatValue>
+              <FiatValue>{formatDollar(balanceUsd, true)}</FiatValue>
             </BalanceTotal>
           </BalanceInfo>
         )}
@@ -128,7 +128,7 @@ export default function MobileBalanceSummaryFooter({
               <BalanceValue>
                 {formattedNativeBalance} {nativeCurrencyAmount?.currency?.symbol}
               </BalanceValue>
-              <FiatValue>{formatDollarPrice(nativeBalanceUsd)}</FiatValue>
+              <FiatValue>{formatDollar(nativeBalanceUsd, true)}</FiatValue>
             </BalanceTotal>
           </BalanceInfo>
         )}

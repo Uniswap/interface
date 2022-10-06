@@ -1,8 +1,12 @@
 import { Trans } from '@lingui/macro'
+import { TokenSortMethod } from 'graphql/data/TopTokens'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
-import { formatDollarAmount, formatDollarPrice } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatDollarAmt'
+
+import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
+import InfoTip from './InfoTip'
 
 export const StatWrapper = styled.div`
   display: flex;
@@ -24,6 +28,11 @@ export const StatPair = styled.div`
   flex: 1;
   flex-wrap: wrap;
 `
+const StatTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+`
 const StatPrice = styled.span`
   font-size: 28px;
   color: ${({ theme }) => theme.textPrimary};
@@ -34,11 +43,25 @@ const NoData = styled.div`
 
 type NumericStat = number | undefined | null
 
-function Stat({ value, title, isPrice = false }: { value: NumericStat; title: ReactNode; isPrice?: boolean }) {
+function Stat({
+  value,
+  title,
+  description,
+  isPrice = false,
+}: {
+  value: NumericStat
+  title: ReactNode
+  description?: ReactNode
+  isPrice?: boolean
+}) {
   return (
     <StatWrapper>
-      {title}
-      {isPrice ? <StatPrice>{formatDollarPrice(value)}</StatPrice> : <StatPrice>{formatDollarAmount(value)}</StatPrice>}
+      <StatTitle>
+        {title}
+        {description && <InfoTip text={description}></InfoTip>}
+      </StatTitle>
+
+      <StatPrice>{formatDollar(value, isPrice)}</StatPrice>
     </StatWrapper>
   )
 }
@@ -55,8 +78,20 @@ export default function StatsSection(props: StatsSectionProps) {
     return (
       <TokenStatsSection>
         <StatPair>
-          <Stat value={TVL} title={<Trans>Total Value Locked</Trans>} />
-          <Stat value={volume24H} title={<Trans>24H volume</Trans>} />
+          <Stat
+            value={TVL}
+            description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
+            title={<Trans>TVL</Trans>}
+          />
+          <Stat
+            value={volume24H}
+            description={
+              <Trans>
+                24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+              </Trans>
+            }
+            title={<Trans>24H volume</Trans>}
+          />
         </StatPair>
         <StatPair>
           <Stat value={priceLow52W} title={<Trans>52W low</Trans>} isPrice={true} />
