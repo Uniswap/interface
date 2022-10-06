@@ -38,7 +38,7 @@ export function getSwapWarnings(
       type: WarningLabel.InsufficientFunds,
       severity: WarningSeverity.None,
       action: WarningAction.DisableReview,
-      title: t('You don’t have enough {{ symbol }}.', {
+      title: t('Not enough {{ symbol }}.', {
         symbol: currencyAmountIn.currency?.symbol,
       }),
     })

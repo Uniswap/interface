@@ -140,8 +140,9 @@ export function TransferTokenForm({
               backgroundColor="backgroundContainer"
               borderRadius="xl"
               justifyContent="center"
-              px="md"
-              py="lg">
+              pb="md"
+              pt="lg"
+              px="md">
               <CurrencyInputPanel
                 autoFocus
                 currency={currencyIn}

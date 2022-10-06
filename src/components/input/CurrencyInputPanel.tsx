@@ -95,7 +95,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   )
 
   return (
-    <Flex gap="none" {...transformedProps}>
+    <Flex gap="xxs" {...transformedProps}>
       {currency && isOutput && (
         <Text color="textSecondary" pb="xs" variant="caption">
           {t("You'll receive")}
@@ -142,13 +142,6 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           </Flex>
         )}
         <Flex row alignItems="center" gap="xs">
-          {currency && onSetMax && (
-            <MaxAmountButton
-              currencyAmount={currencyAmount}
-              currencyBalance={currencyBalance}
-              onSetMax={onSetMax}
-            />
-          )}
           <SelectTokenButton
             selectedCurrency={currency}
             showNonZeroBalancesOnly={showNonZeroBalancesOnly}
@@ -160,21 +153,29 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
       {!!currency && (
         <Flex row alignItems="center" gap="xs" justifyContent="space-between" py="xxs">
           {currency && (
-            <Text color="textSecondary" variant="caption">
+            <Text color="textSecondary" variant="bodySmall">
               {!isUSDInput ? formattedUSDValue : formattedCurrencyAmount}
             </Text>
           )}
-          <Flex justifyContent="flex-end">
+          <Flex row alignItems="center" gap="xxs" justifyContent="flex-end">
             {showInsufficientBalanceWarning && (
-              <Text color="accentWarning" variant="caption">
+              <Text color="accentWarning" variant="bodySmall">
                 {insufficientBalanceWarning.title}
               </Text>
             )}
 
             {currency && !showInsufficientBalanceWarning && (
-              <Text color="textSecondary" variant="caption">
+              <Text color="textSecondary" variant="bodySmall">
                 {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
               </Text>
+            )}
+
+            {currency && onSetMax && (
+              <MaxAmountButton
+                currencyAmount={currencyAmount}
+                currencyBalance={currencyBalance}
+                onSetMax={onSetMax}
+              />
             )}
           </Flex>
         </Flex>

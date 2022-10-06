@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { maxAmountSpend } from 'src/utils/balance'
 
 interface MaxAmountButtonProps {
@@ -35,15 +35,13 @@ export function MaxAmountButton({
   }
 
   return (
-    <PrimaryButton
-      borderRadius="md"
+    <TextButton
       disabled={disableMaxButton}
-      label={t('Max')}
-      p="xs"
       style={style}
-      textVariant="smallLabel"
-      variant="transparent"
-      onPress={onPress}
-    />
+      textColor={disableMaxButton ? 'textTertiary' : 'accentAction'}
+      textVariant="subheadSmall"
+      onPress={onPress}>
+      {t('Max')}
+    </TextButton>
   )
 }

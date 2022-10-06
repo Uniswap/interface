@@ -162,7 +162,7 @@ export function SwapForm({
       <Flex fill grow gap="xs" justifyContent="space-between" onLayout={onLayout}>
         <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xs">
           <Trace section={SectionName.CurrencyInputPanel}>
-            <Flex backgroundColor="backgroundContainer" borderRadius="xl" px="md" py="lg">
+            <Flex backgroundColor="backgroundContainer" borderRadius="xl" pb="md" pt="lg" px="md">
               <CurrencyInputPanel
                 currency={currencies[CurrencyField.INPUT]}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
@@ -204,9 +204,10 @@ export function SwapForm({
                 borderTopRightRadius="xl"
                 gap="none"
                 overflow="hidden"
+                pb="md"
                 position="relative"
-                px="md"
-                py="lg">
+                pt="lg"
+                px="md">
                 <Box bottom={0} left={0} position="absolute" right={0}>
                   {swapDataRefreshing && !swapWarning ? <LaserLoader /> : null}
                 </Box>

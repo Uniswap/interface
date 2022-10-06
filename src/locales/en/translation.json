@@ -235,7 +235,7 @@
   "You swapped {{ inputAmount }}{{ inputCurrency }} for {{ outputAmount }}{{ outputCurrency }}.": "You swapped {{ inputAmount }}{{ inputCurrency }} for {{ outputAmount }}{{ outputCurrency }}.",
   "Swap failed": "Swap failed",
   "Keep in mind that the network fee is still charged for failed swaps.": "Keep in mind that the network fee is still charged for failed swaps.",
-  "You don’t have enough {{ symbol }}.": "You don’t have enough {{ symbol }}.",
+  "Not enough {{ symbol }}.": "Not enough {{ symbol }}.",
   "Not enough liquidity": "Not enough liquidity",
   "There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.": "There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.",
   "Rate limit exceeded": "Rate limit exceeded",

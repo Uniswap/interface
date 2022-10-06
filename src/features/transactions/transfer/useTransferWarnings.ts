@@ -35,7 +35,7 @@ export function getTransferWarnings(t: TFunction, derivedTransferInfo: DerivedTr
       type: WarningLabel.InsufficientFunds,
       severity: WarningSeverity.None,
       action: WarningAction.DisableReview,
-      title: t('You don’t have enough {{ symbol }}.', {
+      title: t('Not enough {{ symbol }}.', {
         symbol: currencyAmountIn.currency?.symbol,
       }),
       message: t(
