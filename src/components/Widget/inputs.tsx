@@ -8,7 +8,7 @@ const EMPTY_AMOUNT = ''
  * Integrates the Widget's inputs.
  * Treats the Widget as a controlled component, using the app's own token selector for selection.
  */
-export function useSyncWidgetInputs(defaultToken?: Currency) {
+export function useSyncWidgetInputs(token?: Currency) {
   const [type, setType] = useState(TradeType.EXACT_INPUT)
   const [amount, setAmount] = useState(EMPTY_AMOUNT)
   const onAmountChange = useCallback((field: Field, amount: string) => {
@@ -17,15 +17,15 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   }, [])
 
   const [tokens, setTokens] = useState<{ [Field.INPUT]?: Currency; [Field.OUTPUT]?: Currency }>({
-    [Field.OUTPUT]: defaultToken,
+    [Field.OUTPUT]: token,
   })
 
   useEffect(() => {
     setTokens({
-      [Field.OUTPUT]: defaultToken,
+      [Field.OUTPUT]: token,
     })
     setAmount(EMPTY_AMOUNT)
-  }, [defaultToken])
+  }, [token])
 
   const onSwitchTokens = useCallback(() => {
     setType((type) => invertTradeType(type))
