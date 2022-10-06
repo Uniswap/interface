@@ -2,8 +2,9 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { formatToDecimal } from 'analytics/utils'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { useGlobalChainName } from 'graphql/data/util'
+import { validateUrlChainParam } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
@@ -78,9 +79,11 @@ export interface BalanceSummaryProps {
 }
 
 export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNative }: BalanceSummaryProps) {
-  const pageChainName = useGlobalChainName()
   const balanceUsdValue = useStablecoinValue(tokenAmount)?.toFixed(2)
   const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(2)
+
+  const { chainName } = useParams<{ chainName?: string }>()
+  const pageChainName = validateUrlChainParam(chainName).toLowerCase()
 
   const tokenIsWrappedNative =
     tokenAmount &&
