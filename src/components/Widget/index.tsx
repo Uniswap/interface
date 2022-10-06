@@ -1,4 +1,4 @@
-import { Currency, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
+import { Currency, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -39,6 +39,7 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
         onReviewSwapClick={onReviewSwapClick}
         // defaultChainId is excluded - it is always inferred from the passed provider
         provider={provider}
+        tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
         {...inputs}
         {...settings}
         {...transactions}
