@@ -481,7 +481,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
   const formattedDelta = formatDelta(delta)
-  const sortAscending = useAtomValue(sortAscendingAtom)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -512,7 +511,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
           }
-          listNumber={sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1}
+          listNumber={tokenListIndex + 1}
           tokenInfo={
             <ClickableName>
               <LogoContainer>
