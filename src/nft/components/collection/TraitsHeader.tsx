@@ -47,22 +47,22 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
       >
         {title}
 
-        <Box color="textSecondary" marginLeft="auto" marginRight="4">
-          {props.numTraits}
-        </Box>
-
-        <Box
-          color="textSecondary"
-          transition="250"
-          height="28"
-          width="28"
-          style={{
-            transform: `rotate(${isOpen ? 0 : 180}deg)`,
-            display: 'flex',
-            marginRight: isOpen ? -6 : 0,
-          }}
-        >
-          <ChevronUpIcon secondaryWidth={'23px'} />
+        <Box display="flex" alignItems="center">
+          <Box color="textTertiary" display="inline-block" marginRight="12">
+            {props.numTraits}
+          </Box>
+          <Box
+            color="textSecondary"
+            display="inline-block"
+            transition="250"
+            height="28"
+            width="28"
+            style={{
+              transform: `rotate(${isOpen ? 0 : 180}deg)`,
+            }}
+          >
+            <ChevronUpIcon />
+          </Box>
         </Box>
       </Box>
       {children}
