@@ -250,7 +250,7 @@ function LiveChart({
       ) : (
         <>
           <Flex justifyContent="space-between" alignItems="center" paddingY="4px">
-            <Flex flex={1}>
+            <Flex flex={isMobile ? 2 : 1}>
               <DoubleCurrencyLogo
                 currency0={nativeInputCurrency}
                 currency1={nativeOutputCurrency}
@@ -262,7 +262,7 @@ function LiveChart({
                   <Text fontSize={isMobile ? 18 : 24} fontWeight={500} color={theme.text}>
                     {nativeInputCurrency?.symbol}
                   </Text>
-                  <Text marginLeft="4px">
+                  <Text marginLeft="4px" style={{ whiteSpace: 'nowrap' }}>
                     {' / '}
                     {nativeOutputCurrency?.symbol}
                   </Text>
