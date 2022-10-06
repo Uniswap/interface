@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
+import { LOOKSRARE_MARKETPLACE_CONTRACT, X2Y2_TRANSFER_CONTRACT } from 'nft/queries'
 import {
   INVERSE_BASIS_POINTS,
   OPENSEA_CROSS_CHAIN_CONDUIT,
@@ -60,9 +61,9 @@ export async function approveCollectionRow(
     marketplace.name === 'OpenSea'
       ? OPENSEA_CROSS_CHAIN_CONDUIT
       : marketplace.name === 'Rarible'
-      ? process.env.REACT_APP_LOOKSRARE_MARKETPLACE_CONTRACT
+      ? LOOKSRARE_MARKETPLACE_CONTRACT
       : marketplace.name === 'X2Y2'
-      ? process.env.REACT_APP_X2Y2_TRANSFER_CONTRACT
+      ? X2Y2_TRANSFER_CONTRACT
       : looksRareAddress
   await approveCollection(spender ?? '', collectionAddress, signer, (newStatus: ListingStatus) =>
     updateStatus({
