@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
 import { TokenModel_PriceQuery } from 'src/components/PriceChart/__generated__/TokenModel_PriceQuery.graphql'
@@ -53,7 +53,7 @@ export function useTokenPriceGraphs(token: Token): NullUndefined<GraphMetadatas>
   const { address, chain } = graphQLCurrencyInfo(token)
   const graphQLChain = toGraphQLChain(chain)
 
-  const { data: priceData } = useLazyLoadQuery<TokenModel_PriceQuery>(
+  const priceData = useLazyLoadQuery<TokenModel_PriceQuery>(
     priceQuery,
     {
       contract: {

@@ -1,11 +1,11 @@
-import { useNavigation } from '@react-navigation/core'
-import { useCallback } from 'react'
-import { GraphQLTaggedNode } from 'react-relay'
+import { CommonActions, useNavigation } from '@react-navigation/core'
+import { useCallback, useEffect } from 'react'
+import { GraphQLTaggedNode, useQueryLoader } from 'react-relay'
 import { OperationType } from 'relay-runtime'
+import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { RootParamList } from 'src/app/navigation/types'
 import { PollingInterval } from 'src/constants/misc'
-import { useQueryLoader } from 'src/data/preloading'
 import { Screens } from 'src/screens/Screens'
 
 /**
@@ -27,7 +27,7 @@ export function useEagerNavigation<Q extends OperationType>(
 ) {
   const { navigate } = useNavigation<any>()
 
-  const { preloadedQuery, load } = useQueryLoader<Q>(query)
+  const [preloadedQuery, load] = useQueryLoader<Q>(query)
 
   const registerNavigationIntent = useCallback(
     (params: Q['variables']) => {
@@ -50,6 +50,13 @@ export function useEagerNavigation<Q extends OperationType>(
     [navigate, preloadedQuery]
   )
 
+  // `preloadedQuery` may be null right after creation. This updates `params` with the non-null `preloadedQuery`
+  // when it becomes set.
+  useEffect(() => {
+    if (!preloadedQuery) return
+    navigationRef.dispatch(CommonActions.setParams({ preloadedQuery }))
+  }, [preloadedQuery])
+
   return { registerNavigationIntent, preloadedNavigate }
 }
 
@@ -60,7 +67,7 @@ export function useEagerRootNavigation<Q extends OperationType>(
   query: GraphQLTaggedNode,
   pollingInterval?: PollingInterval
 ) {
-  const { preloadedQuery, load } = useQueryLoader<Q>(query)
+  const [preloadedQuery, load] = useQueryLoader<Q>(query)
 
   const registerNavigationIntent = useCallback(
     (params: Q['variables']) => {
@@ -82,6 +89,13 @@ export function useEagerRootNavigation<Q extends OperationType>(
     },
     [preloadedQuery, screen]
   )
+
+  // `preloadedQuery` may be null right after creation. This updates `params` with the non-null `preloadedQuery`
+  // when it becomes set.
+  useEffect(() => {
+    if (!preloadedQuery) return
+    navigationRef.dispatch(CommonActions.setParams({ preloadedQuery }))
+  }, [preloadedQuery])
 
   return { registerNavigationIntent, preloadedNavigate }
 }

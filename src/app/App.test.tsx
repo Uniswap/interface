@@ -4,10 +4,6 @@ import 'react-native'
 import renderer from 'react-test-renderer'
 import App from 'src/app/App'
 
-jest.mock('react-relay-offline', () => ({
-  useRestore: () => true,
-}))
-
 it('renders correctly', () => {
   renderer.create(<App />)
 })

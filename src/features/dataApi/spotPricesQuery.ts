@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import {
@@ -33,7 +33,7 @@ const query = graphql`
  * with Suspense.
  */
 export function useSpotPrice(currency: NullUndefined<Currency>, skip?: boolean) {
-  const { data } = useLazyLoadQuery<spotPricesQuery>(
+  const data = useLazyLoadQuery<spotPricesQuery>(
     query,
     {
       contracts: [

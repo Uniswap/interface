@@ -2,7 +2,7 @@ import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
-import { OfflineLoadQuery, usePreloadedQuery } from 'react-relay-offline'
+import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppSelector } from 'src/app/hooks'
 import { SortingGroup } from 'src/components/explore/FilterGroup'
 import { useOrderByModal } from 'src/components/explore/Modals'
@@ -49,14 +49,14 @@ export const exploreTokensTabQuery = graphql`
 `
 
 type ExploreTokensTabProps = {
-  queryRef: OfflineLoadQuery
+  queryRef: PreloadedQuery<ExploreTokensTabQuery>
   listRef?: React.MutableRefObject<null>
 }
 
 function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
   const { t } = useTranslation()
 
-  const { data } = usePreloadedQuery<ExploreTokensTabQuery>(queryRef)
+  const data = usePreloadedQuery<ExploreTokensTabQuery>(exploreTokensTabQuery, queryRef)
 
   // Sorting and filtering
   const { setOrderByModalIsVisible, orderByModal } = useOrderByModal()

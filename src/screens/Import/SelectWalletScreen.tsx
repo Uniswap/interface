@@ -4,7 +4,7 @@ import React, { Suspense, useCallback, useMemo, useReducer, useRef } from 'react
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -77,7 +77,7 @@ function WalletPreviewList({
   const { status } = useSagaStatus(importAccountSagaName)
   const loadingAccounts = status === SagaStatus.Started
 
-  const { data } = useLazyLoadQuery<SelectWalletScreenQuery>(selectWalletScreenQuery, {
+  const data = useLazyLoadQuery<SelectWalletScreenQuery>(selectWalletScreenQuery, {
     ownerAddresses: addresses,
   })
 

@@ -6,7 +6,7 @@ import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { OfflineLoadQuery, usePreloadedQuery } from 'react-relay-offline'
+import { PreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
@@ -31,7 +31,6 @@ import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { PollingInterval } from 'src/constants/misc'
-import { useQueryLoader } from 'src/data/preloading'
 import { Priority, useQueryScheduler } from 'src/data/useQueryScheduler'
 import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
@@ -108,21 +107,23 @@ function TabNavigator() {
 
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
-  const { preloadedQuery: homescreenQueryRef, load: loadPortfolioQuery } =
-    useQueryLoader<HomeScreenQuery>(homeScreenQuery, {
-      params: { owner: activeAccountAddress },
-      options: { networkCacheConfig: { poll: PollingInterval.Fast } },
-    })
-
-  useEffect(() => {
-    // reload home query when active account changes
-    loadPortfolioQuery(
+  const { queryReference: homeScreenQueryRef, load: loadHomeScreenQuery } =
+    useQueryScheduler<HomeScreenQuery>(
+      Priority.Immediate,
+      homeScreenQuery,
       { owner: activeAccountAddress },
       { networkCacheConfig: { poll: PollingInterval.Fast } }
     )
-  }, [activeAccountAddress, loadPortfolioQuery])
 
-  const { preloadedQuery: exploreTokensTabQueryRef } = useQueryScheduler<ExploreTokensTabQuery>(
+  useEffect(() => {
+    // reload home query when active account changes
+    loadHomeScreenQuery(
+      { owner: activeAccountAddress },
+      { networkCacheConfig: { poll: PollingInterval.Fast } }
+    )
+  }, [activeAccountAddress, loadHomeScreenQuery])
+
+  const { queryReference: exploreTokensTabQueryRef } = useQueryScheduler<ExploreTokensTabQuery>(
     Priority.Idle,
     exploreTokensTabQuery,
     { topTokensOrderBy: 'MARKET_CAP' },
@@ -130,13 +131,16 @@ function TabNavigator() {
   )
 
   const HomeStackNavigatorMemo = useCallback(
-    () => <HomeStackNavigator queryRef={homescreenQueryRef} />,
-    [homescreenQueryRef]
+    () => (homeScreenQueryRef ? <HomeStackNavigator queryRef={homeScreenQueryRef} /> : null),
+    [homeScreenQueryRef]
   )
 
   // important to memoize to avoid the entire explore stack from getting re-rendered on tab switch
   const ExploreStackNavigatorMemo = useCallback(
-    () => <ExploreStackNavigator exploreTokensTabQueryRef={exploreTokensTabQueryRef} />,
+    () =>
+      exploreTokensTabQueryRef ? (
+        <ExploreStackNavigator exploreTokensTabQueryRef={exploreTokensTabQueryRef} />
+      ) : null,
     [exploreTokensTabQueryRef]
   )
 
@@ -304,18 +308,14 @@ function getDrawerEnabled() {
   return routeName ? DRAWER_ENABLED_SCREENS.includes(routeName) : false
 }
 
-export function HomeStackNavigator({ queryRef }: { queryRef: OfflineLoadQuery }) {
-  const { data } = usePreloadedQuery<HomeScreenQuery>(queryRef)
-
-  if (!data) return null
-
+export function HomeStackNavigator({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuery> }) {
   return (
     <HomeStack.Navigator
       initialRouteName={Screens.Home}
       screenOptions={{
         ...navOptions.noHeader,
       }}>
-      <HomeStack.Screen children={() => <HomeScreen data={data} />} name={Screens.Home} />
+      <HomeStack.Screen children={() => <HomeScreen queryRef={queryRef} />} name={Screens.Home} />
 
       {/* Tokens */}
       <HomeStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
@@ -330,7 +330,7 @@ export function HomeStackNavigator({ queryRef }: { queryRef: OfflineLoadQuery })
 export function ExploreStackNavigator({
   exploreTokensTabQueryRef,
 }: {
-  exploreTokensTabQueryRef: OfflineLoadQuery
+  exploreTokensTabQueryRef: PreloadedQuery<ExploreTokensTabQuery>
 }) {
   return (
     <ExploreStack.Navigator

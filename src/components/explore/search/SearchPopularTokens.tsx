@@ -1,7 +1,7 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchPopularTokensQuery } from 'src/components/explore/search/__generated__/SearchPopularTokensQuery.graphql'
 import { Separator } from 'src/components/layout/Separator'
@@ -12,7 +12,7 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 export function SearchPopularTokens() {
   // Load popular tokens by top trading volume
-  const { data } = useLazyLoadQuery<SearchPopularTokensQuery>(
+  const data = useLazyLoadQuery<SearchPopularTokensQuery>(
     graphql`
       query SearchPopularTokensQuery {
         topTokenProjects(orderBy: VOLUME, page: 1, pageSize: 3) {

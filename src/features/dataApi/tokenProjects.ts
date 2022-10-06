@@ -1,6 +1,6 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { currencyIdToContractInput, tokenProjectToCurrencyInfos } from 'src/features/dataApi/utils'
@@ -29,7 +29,7 @@ const query = graphql`
 export function useTokenProjects(currencyIds: CurrencyId[]): CurrencyInfo[] {
   const contracts = currencyIds.map((id) => currencyIdToContractInput(id))
 
-  const { data } = useLazyLoadQuery<tokenProjectsQuery>(query, {
+  const data = useLazyLoadQuery<tokenProjectsQuery>(query, {
     contracts,
   })
 

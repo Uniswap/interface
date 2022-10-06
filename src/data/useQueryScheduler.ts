@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { InteractionManager } from 'react-native'
-import { QueryOptionsOffline } from 'react-relay-offline'
+import { useQueryLoader } from 'react-relay'
 import { GraphQLTaggedNode, OperationType } from 'relay-runtime'
-import { useQueryLoader } from 'src/data/preloading'
+
+type QueryOptions = Parameters<ReturnType<typeof useQueryLoader>[1]>['1']
 
 export enum Priority {
   // Wait until there is no active work (as defined by InteractionManager)
@@ -15,18 +16,21 @@ export function useQueryScheduler<Q extends OperationType>(
   priority: Priority,
   query: GraphQLTaggedNode,
   params: Q['variables'],
-  options: QueryOptionsOffline
+  options: QueryOptions
 ) {
-  const { preloadedQuery, load } = useQueryLoader<Q>(
-    query,
-    priority === Priority.Immediate ? { params, options } : undefined
-  )
+  const [queryReference, load] = useQueryLoader<Q>(query)
+  const loaded = useRef(false)
 
   useEffect(() => {
+    if (loaded.current) {
+      return
+    }
+
+    loaded.current = true
     register(priority, () => load(params, options))
   }, [load, options, params, priority])
 
-  return { preloadedQuery, load }
+  return { queryReference, load }
 }
 
 function register(priority: Priority, callback: () => any) {
@@ -35,7 +39,7 @@ function register(priority: Priority, callback: () => any) {
       InteractionManager.runAfterInteractions(callback)
       break
     case Priority.Immediate:
-      // no-op
+      callback()
       break
     default:
       throw new Error('Unsupported priority' + priority)

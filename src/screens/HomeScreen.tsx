@@ -1,10 +1,11 @@
 import { DrawerActions } from '@react-navigation/core'
 import { graphql } from 'babel-plugin-relay/macro'
 import { selectionAsync } from 'expo-haptics'
-import React, { useCallback, useMemo } from 'react'
+import React, { Suspense, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
+import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
@@ -23,6 +24,7 @@ import { Box, Flex } from 'src/components/layout'
 import TabbedScrollScreen, {
   TabViewScrollProps,
 } from 'src/components/layout/screens/TabbedScrollScreen'
+import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
@@ -37,7 +39,7 @@ import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { HomeScreenQuery$data } from 'src/screens/__generated__/HomeScreenQuery.graphql'
+import { HomeScreenQuery } from 'src/screens/__generated__/HomeScreenQuery.graphql'
 
 const TOKENS_KEY = 'tokens'
 const NFTS_KEY = 'nfts'
@@ -50,7 +52,17 @@ export const homeScreenQuery = graphql`
   }
 `
 
-export function HomeScreen({ data }: { data: HomeScreenQuery$data }) {
+export function HomeScreen({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuery> }) {
+  return (
+    <Suspense fallback={<Loading />}>
+      <HomeScreenInner queryRef={queryRef} />
+    </Suspense>
+  )
+}
+
+function HomeScreenInner({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuery> }) {
+  const data = usePreloadedQuery<HomeScreenQuery>(homeScreenQuery, queryRef)
+
   // imports test account for easy development/testing
   useTestAccount()
   useBiometricCheck()

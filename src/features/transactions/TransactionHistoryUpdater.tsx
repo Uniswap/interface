@@ -1,7 +1,7 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import { useEffect } from 'react'
 import { batch } from 'react-redux'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import {
   addToNotificationCount,
@@ -25,7 +25,7 @@ export function TransactionHistoryUpdater({ address }: { address: Address }) {
   const lastTxNotificationUpdate: number | undefined =
     useAppSelector(selectLastTxNotificationUpdate)[address] ?? 0
 
-  const { data } = useLazyLoadQuery<TransactionHistoryUpdaterQuery>(transactionUpdaterQuery, {
+  const data = useLazyLoadQuery<TransactionHistoryUpdaterQuery>(transactionUpdaterQuery, {
     address,
   })
 

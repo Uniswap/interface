@@ -1,7 +1,7 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import { logger } from 'ethers'
 import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
 import { PortfolioModel_PortfolioQuery } from 'src/components/PriceChart/__generated__/PortfolioModel_PortfolioQuery.graphql'
@@ -63,7 +63,7 @@ const portfolioCharts = graphql`
 `
 
 export function usePortfolioBalanceGraphs(owner: Address): NullUndefined<GraphMetadatas> {
-  const { data: portfolioData } = useLazyLoadQuery<PortfolioModel_PortfolioQuery>(
+  const portfolioData = useLazyLoadQuery<PortfolioModel_PortfolioQuery>(
     portfolioCharts,
     {
       ownerAddress: owner,

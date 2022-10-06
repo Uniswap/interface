@@ -1,6 +1,6 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense } from 'react'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -29,7 +29,7 @@ export function TotalBalance({
 }
 
 function TotalBalanceInner({ owner, showRelativeChange, variant }: TotalBalanceViewProps) {
-  const { data: balance } = useLazyLoadQuery<TotalBalanceDeprecatedQuery>(
+  const balance = useLazyLoadQuery<TotalBalanceDeprecatedQuery>(
     graphql`
       query TotalBalanceDeprecatedQuery($owner: String!) {
         portfolio(ownerAddress: $owner) {

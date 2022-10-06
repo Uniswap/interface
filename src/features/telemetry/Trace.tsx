@@ -118,7 +118,7 @@ function _Trace({
     }
 
     const markDuration = Date.now() - markStartTime
-    logMessage(LogContext.Marks, `Mark ${endMark}: ${markDuration}ms`)
+    logMessage(LogContext.Marks, `${endMark}: ${markDuration}ms`)
   }, [combinedProps, endMark, parentTrace.marks])
 
   return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>

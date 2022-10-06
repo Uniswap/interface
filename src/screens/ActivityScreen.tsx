@@ -2,7 +2,7 @@ import { graphql } from 'babel-plugin-relay/macro'
 import { selectionAsync } from 'expo-haptics'
 import React, { Suspense, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { OfflineLoadQuery, usePreloadedQuery } from 'react-relay-offline'
+import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
@@ -106,6 +106,12 @@ export type ActivityScreenQueryResponse = NonNullable<
 
 export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) {
   const { preloadedQuery } = route.params
+
+  if (!preloadedQuery) {
+    // TODO: improve loading state
+    return <Loading />
+  }
+
   return (
     <Suspense fallback={<Loading />}>
       <Activity preloadedQuery={preloadedQuery} />
@@ -113,7 +119,11 @@ export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) 
   )
 }
 
-export function Activity({ preloadedQuery }: { preloadedQuery: OfflineLoadQuery }) {
+export function Activity({
+  preloadedQuery,
+}: {
+  preloadedQuery: PreloadedQuery<ActivityScreenQuery>
+}) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const navigation = useAppStackNavigation()
@@ -122,7 +132,10 @@ export function Activity({ preloadedQuery }: { preloadedQuery: OfflineLoadQuery 
   const readonly = type === AccountType.Readonly
 
   // Parse remote txn data from query and merge with local txn data
-  const { data: transactionData } = usePreloadedQuery<ActivityScreenQuery>(preloadedQuery)
+  const transactionData = usePreloadedQuery<ActivityScreenQuery>(
+    activityScreenQuery,
+    preloadedQuery
+  )
 
   const formattedTransactions = useMemo(
     () => (transactionData ? parseDataResponseToTransactionDetails(transactionData) : []),

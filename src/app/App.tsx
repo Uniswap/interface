@@ -1,14 +1,11 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { StrictMode, Suspense, useCallback, useEffect, useState } from 'react'
+import React, { StrictMode, Suspense, useCallback } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
-import { RelayEnvironmentProvider } from 'react-relay'
-import { useRestore } from 'react-relay-offline'
 import { PersistGate } from 'redux-persist/integration/react'
-import { RelayEnvironmentProvider as RelayHooksEnvironmentProvider } from 'relay-hooks'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { AppModals } from 'src/app/modals/AppModals'
 import { DrawerNavigator } from 'src/app/navigation/navigation'
@@ -16,7 +13,7 @@ import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
-import { RelayEnvironment } from 'src/data/relay'
+import { RelayPersistGate } from 'src/data/relay'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { initExperiments } from 'src/features/experiments/experiments'
@@ -65,27 +62,29 @@ function App() {
       <StrictMode>
         <SafeAreaProvider>
           <Provider store={store}>
-            <RelayEnvironmentProvider environment={RelayEnvironment}>
-              <RelayHooksEnvironmentProvider environment={RelayEnvironment}>
-                <PersistGate loading={null} persistor={persistor}>
-                  <DynamicThemeProvider>
-                    <ErrorBoundary>
-                      <WalletContextProvider>
-                        <BiometricContextProvider>
-                          <LockScreenContextProvider>
-                            <DataUpdaters />
-                            <BottomSheetModalProvider>
-                              <AppModals />
-                              <AppInner />
-                            </BottomSheetModalProvider>
-                          </LockScreenContextProvider>
-                        </BiometricContextProvider>
-                      </WalletContextProvider>
-                    </ErrorBoundary>
-                  </DynamicThemeProvider>
-                </PersistGate>
-              </RelayHooksEnvironmentProvider>
-            </RelayEnvironmentProvider>
+            <Trace startMark={MarkNames.RelayRestore}>
+              <RelayPersistGate loading={null}>
+                <Trace endMark={MarkNames.RelayRestore}>
+                  <PersistGate loading={null} persistor={persistor}>
+                    <DynamicThemeProvider>
+                      <ErrorBoundary>
+                        <WalletContextProvider>
+                          <BiometricContextProvider>
+                            <LockScreenContextProvider>
+                              <DataUpdaters />
+                              <BottomSheetModalProvider>
+                                <AppModals />
+                                <AppInner />
+                              </BottomSheetModalProvider>
+                            </LockScreenContextProvider>
+                          </BiometricContextProvider>
+                        </WalletContextProvider>
+                      </ErrorBoundary>
+                    </DynamicThemeProvider>
+                  </PersistGate>
+                </Trace>
+              </RelayPersistGate>
+            </Trace>
           </Provider>
         </SafeAreaProvider>
       </StrictMode>
@@ -96,29 +95,7 @@ function App() {
 function AppInner() {
   const isDarkMode = useColorScheme() === 'dark'
 
-  const [appIsReady, setAppIsReady] = useState(false)
-  const isRehydrated = useRestore(RelayEnvironment)
-  useEffect(() => {
-    // wait for hydration of persistent data in memory
-    if (isRehydrated) {
-      setAppIsReady(true)
-    }
-  }, [isRehydrated])
-
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
-      await SplashScreen.hideAsync()
-    }
-  }, [appIsReady])
-
-  if (!appIsReady) {
-    return null
-  }
+  const onLayoutRootView = useCallback(() => SplashScreen.hideAsync(), [])
 
   return (
     <Trace endMark={MarkNames.AppStartup}>

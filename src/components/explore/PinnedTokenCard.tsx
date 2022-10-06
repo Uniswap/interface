@@ -10,7 +10,7 @@ import {
   useColorScheme,
 } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AnimatedButton, ButtonProps } from 'src/components/buttons/Button'
 import { PinnedTokenCardQuery } from 'src/components/explore/__generated__/PinnedTokenCardQuery.graphql'
@@ -81,7 +81,7 @@ function PinnedTokenCardInner({ currencyId, isEditing, ...rest }: PinnedTokenCar
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const queryInput = useMemo(() => [currencyIdToContractInput(currencyId)], [currencyId])
 
-  const { data } = useLazyLoadQuery<PinnedTokenCardQuery>(
+  const data = useLazyLoadQuery<PinnedTokenCardQuery>(
     pinnedTokenCardQuery,
     {
       contracts: queryInput,

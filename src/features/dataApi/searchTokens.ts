@@ -1,6 +1,6 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { CurrencyInfo } from 'src/features/dataApi/types'
@@ -27,7 +27,7 @@ export function useSearchTokens(
   chainFilter: ChainId | null,
   skip: boolean
 ): CurrencyInfo[] {
-  const { data } = useLazyLoadQuery<searchTokensProjectsQuery>(query, {
+  const data = useLazyLoadQuery<searchTokensProjectsQuery>(query, {
     searchQuery: searchQuery ?? '',
     skip,
   })

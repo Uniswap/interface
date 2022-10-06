@@ -6,11 +6,14 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { OfflineLoadQuery } from 'react-relay-offline'
+import { PreloadedQuery } from 'react-relay'
 import { EducationContentType } from 'src/components/education'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
+import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
+import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
+import { UserScreenQuery } from 'src/screens/__generated__/UserScreenQuery.graphql'
 
 type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
   Pick<NFTAsset.Asset, 'token_id'>
@@ -37,7 +40,10 @@ export type ExploreStackParamList = {
   [Screens.Explore]: undefined
   [Screens.WatchedWallets]: undefined
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
-  [Screens.User]: { address: string; preloadedQuery: OfflineLoadQuery }
+  [Screens.User]: {
+    address: string
+    preloadedQuery: NullUndefined<PreloadedQuery<UserScreenQuery>>
+  }
   [Screens.NFTItem]: NFTItem
   [Screens.NFTCollection]: {
     collectionAddress: Address
@@ -125,10 +131,10 @@ export type AppStackParamList = {
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.TokenDetails]: {
     currencyId: string
-    preloadedQuery: OfflineLoadQuery
+    preloadedQuery: NullUndefined<PreloadedQuery<TokenDetailsScreenQuery>>
   }
   [Screens.Activity]: {
-    preloadedQuery: OfflineLoadQuery
+    preloadedQuery: NullUndefined<PreloadedQuery<ActivityScreenQuery>>
   }
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }

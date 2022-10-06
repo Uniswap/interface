@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { OfflineLoadQuery, useFragment, usePreloadedQuery } from 'react-relay-offline'
+import { PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { IconButton } from 'src/components/buttons/IconButton'
@@ -152,7 +152,7 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
 
   const currency = useCurrency(_currencyId)
 
-  if (!currency) {
+  if (!currency || !preloadedQuery) {
     return null
   }
 
@@ -168,14 +168,14 @@ function TokenDetails({
   preloadedQuery,
 }: {
   currency: Currency
-  preloadedQuery: OfflineLoadQuery
+  preloadedQuery: PreloadedQuery<TokenDetailsScreenQuery>
 }) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
 
-  const { data } = usePreloadedQuery<TokenDetailsScreenQuery>(preloadedQuery)
+  const data = usePreloadedQuery<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, preloadedQuery)
 
   const { tokenWarningLevel, tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(
     currency.wrapped

@@ -3,7 +3,7 @@ import { default as React, Suspense, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useLazyLoadQuery } from 'react-relay-offline'
+import { useLazyLoadQuery } from 'react-relay'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
@@ -34,29 +34,25 @@ export function SearchResultsSectionInner({ searchQuery }: { searchQuery: string
   const { t } = useTranslation()
 
   // Search for matching tokens
-  const { data: tokenResultsData } =
-    useLazyLoadQuery<SearchResultsSection_searchTokenProjectsQuery>(
-      graphql`
-        query SearchResultsSection_searchTokenProjectsQuery(
-          $searchQuery: String!
-          $skip: Boolean!
-        ) {
-          searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {
-            logoUrl
-            tokens {
-              chain
-              address
-              name
-              symbol
-            }
+  const tokenResultsData = useLazyLoadQuery<SearchResultsSection_searchTokenProjectsQuery>(
+    graphql`
+      query SearchResultsSection_searchTokenProjectsQuery($searchQuery: String!, $skip: Boolean!) {
+        searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {
+          logoUrl
+          tokens {
+            chain
+            address
+            name
+            symbol
           }
         }
-      `,
-      {
-        searchQuery,
-        skip: searchQuery.length === 0,
       }
-    )
+    `,
+    {
+      searchQuery,
+      skip: searchQuery.length === 0,
+    }
+  )
 
   const tokenResults = useMemo(() => {
     if (!tokenResultsData || !tokenResultsData.searchTokenProjects) return EMPTY_ARRAY

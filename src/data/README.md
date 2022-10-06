@@ -36,15 +36,14 @@ type Query {
 
 | | | |
 |--|--|--|
-| Relay runtime | [relay.ts](./relay.ts) | Defines `fetchQuery`, `Network` and `store` |
-| [react-relay-offline](https://github.com/morrys/react-relay-offline) | [relay.ts](./relay.ts) | automatic persistence and rehydration of the store |
+| Relay runtime | [relay.ts](./relay.tsx) | Defines `fetchQuery`, `Network` and `store` |
 | Navigation with preloaded data | [useEagerNavigation](../app/navigation/useEagerNavigation.ts) | Utility hook
 
-### Persisted cache / offline support
+### Persisted cache
 
 Persisting cache data across sessions improves app start up time (or at least perceived time). There's no use case for true offline support at the moment.
 
-`relay-offline` is one of (the?) only published libary for offline relay support that works with relay modern. It requires us to use [relay-hooks](https://github.com/relay-tools/relay-hooks) over official relay hooks (which are experiment - suspense).
+[relay.ts](./relay.tsx) defines a `RelayPersistedGate` and handles a simple load/dump cache strategy.
 
 **Typical flow (top to bottom)**
 

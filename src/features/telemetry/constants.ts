@@ -150,7 +150,8 @@ export const enum ElementName {
 }
 
 export const enum MarkNames {
-  AppStartup = 'rehydration',
+  AppStartup = 'AppStartup',
+  RelayRestore = 'RelayRestore',
 }
 
 /**
