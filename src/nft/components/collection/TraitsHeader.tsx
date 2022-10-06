@@ -34,10 +34,12 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
         justifyContent="space-between"
         cursor="pointer"
         alignItems="center"
-        fontSize="14"
+        fontSize="16"
         paddingTop="10"
         paddingLeft="8"
+        paddingBottom="10"
         paddingRight="16"
+        lineHeight="20"
         onClick={(e) => {
           e.preventDefault()
           setOpen(!isOpen)

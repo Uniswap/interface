@@ -46,7 +46,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           onMouseEnter={toggleBuyNowHover}
           onMouseLeave={toggleBuyNowHover}
         >
-          <Box fontSize="14" fontWeight="medium" as="summary">
+          <Box fontSize="16" fontWeight="medium" as="summary" lineHeight="20">
             Buy now
           </Box>
           <Radio hovered={buyNowHovered} checked={buyNow} onClick={handleBuyNowToggle} />

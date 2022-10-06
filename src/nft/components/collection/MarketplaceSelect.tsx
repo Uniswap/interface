@@ -105,11 +105,12 @@ export const MarketplaceSelect = () => {
         justifyContent="space-between"
         cursor="pointer"
         alignItems="center"
-        fontSize="14"
+        fontSize="16"
         paddingTop="8"
         paddingLeft="8"
         paddingRight="16"
         paddingBottom="8"
+        lineHeight="20"
         onClick={(e) => {
           e.preventDefault()
           setOpen(!isOpen)
