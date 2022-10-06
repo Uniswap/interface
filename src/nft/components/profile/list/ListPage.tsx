@@ -236,7 +236,7 @@ const SetDurationModal = () => {
 const convertDurationToExpiration = (amount: number, duration: Duration) => {
   const durationFactor =
     duration === Duration.hour ? 1 : duration === Duration.day ? 24 : duration === Duration.week ? 24 * 7 : 24 * 30
-  return Math.round(Date.now() + ms`1 hour` * durationFactor * amount)
+  return Math.round((Date.now() + ms`1 hour` * durationFactor * amount) / 1000)
 }
 
 interface GlobalDurationButtonProps {
