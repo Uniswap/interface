@@ -58,7 +58,11 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     nativeCurrencyAmount &&
     tokenAmount.currency.address.toLowerCase() === nativeCurrencyAmount.currency.wrapped.address.toLowerCase()
 
-  if (!tokenAmount && !tokenIsWrappedNative && !isNative) {
+  if (
+    (!tokenAmount && !tokenIsWrappedNative && !isNative) ||
+    (!isNative && !tokenIsWrappedNative && tokenAmount?.equalTo(0)) ||
+    (isNative && tokenAmount?.equalTo(0) && nativeCurrencyAmount?.equalTo(0))
+  ) {
     return null
   }
   const showNative = tokenIsWrappedNative || isNative

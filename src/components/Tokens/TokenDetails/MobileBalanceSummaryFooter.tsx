@@ -101,7 +101,7 @@ export default function MobileBalanceSummaryFooter({
     : undefined
   const nativeBalanceUsd = nativeBalanceUsdValue ? parseFloat(nativeBalanceUsdValue) : undefined
 
-  if (!tokenAmount && !nativeCurrencyAmount) {
+  if ((!tokenAmount && !nativeCurrencyAmount) || (nativeCurrencyAmount?.equalTo(0) && tokenAmount?.equalTo(0))) {
     return null
   }
 
