@@ -21,7 +21,7 @@ interface SparklineChartProps {
 function SparklineChart({ width, height, tokenData, pricePercentChange, timePeriod }: SparklineChartProps) {
   const theme = useTheme()
   // for sparkline
-  const pricePoints = filterPrices(tokenData?.market?.priceHistory) ?? []
+  const pricePoints = filterPrices([]) ?? []
   const hasData = pricePoints.length !== 0
   const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
   const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY

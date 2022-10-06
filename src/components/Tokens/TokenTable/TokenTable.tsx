@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { showFavoritesAtom } from 'components/Tokens/state'
-import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
+import { PAGE_SIZE, useTopTokens2 } from 'graphql/data/TopTokens'
 import { validateUrlChainParam } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useCallback, useRef } from 'react'
@@ -80,7 +80,7 @@ export default function TokenTable() {
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const { error, loading, tokens, hasMore, loadMoreTokens, loadingRowCount } = useTopTokens(chainName)
+  const { error, loading, tokens, hasMore, loadMoreTokens, loadingRowCount } = useTopTokens2(chainName)
   const showMoreLoadingRows = Boolean(loading && hasMore)
 
   const observer = useRef<IntersectionObserver>()

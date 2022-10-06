@@ -1,12 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { ParentSize } from '@visx/responsive'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName } from 'analytics/constants'
-import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
+import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
@@ -30,6 +28,7 @@ import {
   filterTimeAtom,
   sortAscendingAtom,
   sortMethodAtom,
+  TokenSortMethod,
   useIsFavorited,
   useSetSortMethod,
   useToggleFavorite,
@@ -396,7 +395,7 @@ export function TokenRow({
   marketCap: ReactNode
   price: ReactNode
   percentChange: ReactNode
-  sparkLine: ReactNode
+  sparkLine?: ReactNode
   tokenInfo: ReactNode
   volume: ReactNode
   last?: boolean
@@ -556,21 +555,21 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               {token.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
             </ClickableContent>
           }
-          sparkLine={
-            <SparkLine>
-              <ParentSize>
-                {({ width, height }) => (
-                  <SparklineChart
-                    width={width}
-                    height={height}
-                    tokenData={token}
-                    pricePercentChange={token.market?.pricePercentChange?.value}
-                    timePeriod={timePeriod}
-                  />
-                )}
-              </ParentSize>
-            </SparkLine>
-          }
+          // sparkLine={
+          //   <SparkLine>
+          //     <ParentSize>
+          //       {({ width, height }) => (
+          //         <SparklineChart
+          //           width={width}
+          //           height={height}
+          //           tokenData={token}
+          //           pricePercentChange={token.market?.pricePercentChange?.value}
+          //           timePeriod={timePeriod}
+          //         />
+          //       )}
+          //     </ParentSize>
+          //   </SparkLine>
+          // }
           first={tokenListIndex === 0}
           last={tokenListIndex === tokenListLength - 1}
         />

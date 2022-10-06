@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { TokenSortMethod } from 'graphql/data/TopTokens'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
+import { TokenSortMethod } from '../state'
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
 import InfoTip from './InfoTip'
 
