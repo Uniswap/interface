@@ -1,5 +1,7 @@
+import { Trans } from '@lingui/macro'
+import { useGlobalChainName } from 'graphql/data/util'
 import { X } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useShowTokensPromoBanner } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
@@ -59,22 +61,33 @@ const Description = styled(Link)`
 export default function TokensBanner() {
   const theme = useTheme()
   const [showTokensPromoBanner, setShowTokensPromoBanner] = useShowTokensPromoBanner()
+  const navigate = useNavigate()
+  const chainName = useGlobalChainName().toLowerCase()
 
-  const closeBanner = () => {
-    setShowTokensPromoBanner(false)
+  const navigateToExplorePage = () => {
+    navigate(`/tokens/${chainName}`)
   }
 
   return (
-    <PopupContainer show={showTokensPromoBanner}>
+    <PopupContainer show={showTokensPromoBanner} onClick={navigateToExplorePage}>
       <Header>
-        <HeaderText to={'/tokens'} onClick={closeBanner}>
-          Explore Top Tokens
+        <HeaderText to={'/tokens'}>
+          <Trans>Explore Top Tokens</Trans>
         </HeaderText>
-        <X size={20} color={theme.textSecondary} onClick={closeBanner} style={{ cursor: 'pointer' }} />
+        <X
+          size={20}
+          color={theme.textSecondary}
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            setShowTokensPromoBanner(false)
+          }}
+          style={{ cursor: 'pointer' }}
+        />
       </Header>
 
-      <Description to={'/tokens'} onClick={closeBanner}>
-        Check out the new explore tab to discover and learn more
+      <Description to={'/tokens'}>
+        <Trans>Check out the new explore tab to discover and learn more</Trans>
       </Description>
     </PopupContainer>
   )
