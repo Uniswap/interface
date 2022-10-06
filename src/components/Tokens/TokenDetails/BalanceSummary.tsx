@@ -3,6 +3,7 @@ import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
+import { formatDollarPrice } from 'utils/formatDollarAmt'
 
 const BalancesCard = styled.div`
   width: 100%;
@@ -73,7 +74,7 @@ export default function BalanceSummary({
             Your balance
             <TotalBalance>
               <TotalBalanceItem>{`${balance} ${token?.symbol}`}</TotalBalanceItem>
-              <TotalBalanceItem>{`$${balanceUsd}`}</TotalBalanceItem>
+              <TotalBalanceItem>{formatDollarPrice(balanceUsd)}</TotalBalanceItem>
             </TotalBalance>
           </TotalBalanceSection>
         </>

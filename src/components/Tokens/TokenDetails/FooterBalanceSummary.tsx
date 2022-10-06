@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { formatDollarPrice } from 'utils/formatDollarAmt'
 
 import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { LoadingBubble } from '../loading'
@@ -169,7 +170,7 @@ export default function FooterBalanceSummary({
                 <BalanceValue>
                   {balance} {tokenSymbol}
                 </BalanceValue>
-                <FiatValue>{`$${balanceUsd}`}</FiatValue>
+                <FiatValue>{formatDollarPrice(balanceUsd)}</FiatValue>
               </BalanceTotal>
               {multipleBalances && (
                 <ViewAll onClick={() => setShowMultipleBalances(!showMultipleBalances)}>

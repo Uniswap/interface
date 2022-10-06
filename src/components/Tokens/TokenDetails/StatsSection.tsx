@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
-import { formatDollarAmount } from 'utils/formatDollarAmt'
+import { formatDollarAmount, formatDollarPrice } from 'utils/formatDollarAmt'
 
 export const StatWrapper = styled.div`
   display: flex;
@@ -34,11 +34,11 @@ const NoData = styled.div`
 
 type NumericStat = number | undefined | null
 
-function Stat({ value, title }: { value: NumericStat; title: ReactNode }) {
+function Stat({ value, title, isPrice = false }: { value: NumericStat; title: ReactNode; isPrice?: boolean }) {
   return (
     <StatWrapper>
       {title}
-      <StatPrice>{value ? formatDollarAmount(value) : '-'}</StatPrice>
+      {isPrice ? <StatPrice>{formatDollarPrice(value)}</StatPrice> : <StatPrice>{formatDollarAmount(value)}</StatPrice>}
     </StatWrapper>
   )
 }
@@ -59,8 +59,8 @@ export default function StatsSection(props: StatsSectionProps) {
           <Stat value={volume24H} title={<Trans>24H volume</Trans>} />
         </StatPair>
         <StatPair>
-          <Stat value={priceLow52W} title={<Trans>52W low</Trans>} />
-          <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} />
+          <Stat value={priceLow52W} title={<Trans>52W low</Trans>} isPrice={true} />
+          <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
         </StatPair>
       </TokenStatsSection>
     )

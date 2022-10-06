@@ -15,7 +15,7 @@ import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { formatDollarAmount } from 'utils/formatDollarAmt'
+import { formatDollarPrice } from 'utils/formatDollarAmt'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -527,7 +527,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {token.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
+                {token.market?.price?.value ? formatDollarPrice(token.market.price.value) : '-'}
                 <PercentChangeInfoCell>
                   {formattedDelta}
                   {arrow}

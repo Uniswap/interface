@@ -1,4 +1,5 @@
 import styled, { useTheme } from 'styled-components/macro'
+import { formatDollarPrice } from 'utils/formatDollarAmt'
 
 const Balance = styled.div`
   width: 100%;
@@ -42,7 +43,7 @@ export default function NetworkBalance({
   logoUrl: string
   balance: string
   tokenSymbol: string
-  fiatValue: string | number
+  fiatValue: number
   label: string
   networkColor: string | undefined
 }) {
@@ -55,7 +56,7 @@ export default function NetworkBalance({
           <BalanceItem>
             {balance}&nbsp;{tokenSymbol}
           </BalanceItem>
-          <BalanceItem>${fiatValue}</BalanceItem>
+          <BalanceItem>{formatDollarPrice(fiatValue)}</BalanceItem>
         </BalanceRow>
         <Network color={networkColor ?? theme.textPrimary}>{label}</Network>
       </Balance>

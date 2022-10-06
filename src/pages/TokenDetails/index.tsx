@@ -172,7 +172,7 @@ export default function TokenDetails() {
   const balancesByNetwork = networkData
     ? chainsToList.map((chainId) => {
         const amount = networkData[chainId]
-        const fiatValue = amount // for testing purposes
+        const fiatValue = amount?.toFixed(6) ? parseFloat(amount?.toFixed(6)) : undefined
         if (!fiatValue || !token?.symbol) return null
         const chainInfo = getChainInfo(chainId)
         const networkColor = chainInfo.color
@@ -183,7 +183,7 @@ export default function TokenDetails() {
             logoUrl={chainInfo.logoUrl}
             balance={'1'}
             tokenSymbol={token.symbol}
-            fiatValue={fiatValue.toSignificant(2)}
+            fiatValue={fiatValue}
             label={chainInfo.label}
             networkColor={networkColor}
           />
