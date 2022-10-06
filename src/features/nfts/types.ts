@@ -223,4 +223,5 @@ export type NFTItem = {
   tokenId?: string
   imageUrl?: string
   collectionName?: string
+  isVerifiedCollection?: boolean
 }

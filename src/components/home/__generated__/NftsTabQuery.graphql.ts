@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e6ad4d6de47711a8f6f7faeddd9de3ee>>
+ * @generated SignedSource<<694efe17f9f90c8e4fe949805e8c744b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,15 +9,16 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-export type NFTCollectionsTabScreenQuery$variables = {
+export type NftsTabQuery$variables = {
   ownerAddress: string;
 };
-export type NFTCollectionsTabScreenQuery$data = {
+export type NftsTabQuery$data = {
   readonly portfolios: ReadonlyArray<{
     readonly id: string;
     readonly nftBalances: ReadonlyArray<{
       readonly ownedAsset: {
         readonly collection: {
+          readonly isVerified: boolean | null;
           readonly name: string | null;
         } | null;
         readonly description: string | null;
@@ -33,9 +34,9 @@ export type NFTCollectionsTabScreenQuery$data = {
     readonly ownerAddress: string;
   } | null> | null;
 };
-export type NFTCollectionsTabScreenQuery = {
-  response: NFTCollectionsTabScreenQuery$data;
-  variables: NFTCollectionsTabScreenQuery$variables;
+export type NftsTabQuery = {
+  response: NftsTabQuery$data;
+  variables: NftsTabQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -84,24 +85,31 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "smallImageUrl",
+  "name": "isVerified",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "tokenId",
+  "name": "smallImageUrl",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "description",
+  "name": "tokenId",
   "storageKey": null
 },
 v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "description",
+  "storageKey": null
+},
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -113,81 +121,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "NFTCollectionsTabScreenQuery",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "Portfolio",
-        "kind": "LinkedField",
-        "name": "portfolios",
-        "plural": true,
-        "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "NftBalance",
-            "kind": "LinkedField",
-            "name": "nftBalances",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "NftAsset",
-                "kind": "LinkedField",
-                "name": "ownedAsset",
-                "plural": false,
-                "selections": [
-                  (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "NftCollection",
-                    "kind": "LinkedField",
-                    "name": "collection",
-                    "plural": false,
-                    "selections": [
-                      (v4/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  (v5/*: any*/),
-                  (v4/*: any*/),
-                  (v6/*: any*/),
-                  (v7/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "NftContract",
-                    "kind": "LinkedField",
-                    "name": "nftContract",
-                    "plural": false,
-                    "selections": [
-                      (v8/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "type": "Query",
-    "abstractKey": null
-  },
-  "kind": "Request",
-  "operation": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Operation",
-    "name": "NFTCollectionsTabScreenQuery",
+    "name": "NftsTabQuery",
     "selections": [
       {
         "alias": null,
@@ -225,14 +159,14 @@ return {
                     "plural": false,
                     "selections": [
                       (v4/*: any*/),
-                      (v2/*: any*/)
+                      (v5/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v5/*: any*/),
-                  (v4/*: any*/),
                   (v6/*: any*/),
+                  (v4/*: any*/),
                   (v7/*: any*/),
+                  (v8/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -241,7 +175,83 @@ return {
                     "name": "nftContract",
                     "plural": false,
                     "selections": [
-                      (v8/*: any*/),
+                      (v9/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "type": "Query",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Operation",
+    "name": "NftsTabQuery",
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "Portfolio",
+        "kind": "LinkedField",
+        "name": "portfolios",
+        "plural": true,
+        "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "NftBalance",
+            "kind": "LinkedField",
+            "name": "nftBalances",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "NftAsset",
+                "kind": "LinkedField",
+                "name": "ownedAsset",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "NftCollection",
+                    "kind": "LinkedField",
+                    "name": "collection",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/),
+                      (v5/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v6/*: any*/),
+                  (v4/*: any*/),
+                  (v7/*: any*/),
+                  (v8/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "NftContract",
+                    "kind": "LinkedField",
+                    "name": "nftContract",
+                    "plural": false,
+                    "selections": [
+                      (v9/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -259,16 +269,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9e57921a40e533c272ae880f756550fc",
+    "cacheID": "38accc44d2aacdde8c9e59a98227440c",
     "id": null,
     "metadata": {},
-    "name": "NFTCollectionsTabScreenQuery",
+    "name": "NftsTabQuery",
     "operationKind": "query",
-    "text": "query NFTCollectionsTabScreenQuery(\n  $ownerAddress: String!\n) {\n  portfolios(ownerAddresses: [$ownerAddress]) {\n    id\n    ownerAddress\n    nftBalances {\n      ownedAsset {\n        id\n        collection {\n          name\n          id\n        }\n        smallImageUrl\n        name\n        tokenId\n        description\n        nftContract {\n          address\n          id\n        }\n      }\n      id\n    }\n  }\n}\n"
+    "text": "query NftsTabQuery(\n  $ownerAddress: String!\n) {\n  portfolios(ownerAddresses: [$ownerAddress]) {\n    id\n    ownerAddress\n    nftBalances {\n      ownedAsset {\n        id\n        collection {\n          name\n          isVerified\n          id\n        }\n        smallImageUrl\n        name\n        tokenId\n        description\n        nftContract {\n          address\n          id\n        }\n      }\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "48328c989a4cc838ef5733778b450aab";
+(node as any).hash = "e39cc8fd1da25b474c7a069c4b07134b";
 
 export default node;

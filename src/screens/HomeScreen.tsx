@@ -17,7 +17,7 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SendButton } from 'src/components/buttons/SendButton'
-import { NFTCollectionsTab } from 'src/components/home/NFTCollectionsTab'
+import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Arrow } from 'src/components/icons/Arrow'
 import { Box, Flex } from 'src/components/layout'
@@ -146,7 +146,7 @@ function HomeScreenInner({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuer
       switch (route?.key) {
         case NFTS_KEY:
           return (
-            <NFTCollectionsTab
+            <NftsTab
               loadingContainerStyle={loadingContainerStyle}
               owner={activeAccount.address ?? ''}
               tabViewScrollProps={scrollProps}
