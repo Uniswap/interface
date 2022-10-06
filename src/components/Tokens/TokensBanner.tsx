@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { useGlobalChainName } from 'graphql/data/util'
+import { useWeb3React } from '@web3-react/core'
+import { chainIdToBackendName } from 'graphql/data/util'
 import { X } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import { useShowTokensPromoBanner } from 'state/user/hooks'
@@ -62,7 +63,8 @@ export default function TokensBanner() {
   const theme = useTheme()
   const [showTokensPromoBanner, setShowTokensPromoBanner] = useShowTokensPromoBanner()
   const navigate = useNavigate()
-  const chainName = useGlobalChainName().toLowerCase()
+  const { chainId: connectedChainId } = useWeb3React()
+  const chainName = chainIdToBackendName(connectedChainId).toLowerCase()
 
   const navigateToExplorePage = () => {
     navigate(`/tokens/${chainName}`)
