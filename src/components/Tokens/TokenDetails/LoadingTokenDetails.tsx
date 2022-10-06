@@ -1,3 +1,4 @@
+import { WidgetSkeleton } from 'components/Widget'
 import { Footer, LeftPanel, RightPanel, TokenDetailsLayout } from 'pages/TokenDetails'
 import styled, { useTheme } from 'styled-components/macro'
 
@@ -154,7 +155,9 @@ export function LoadingTokenDetails() {
   return (
     <TokenDetailsLayout>
       <LoadingTokenDetail />
-      <RightPanel />
+      <RightPanel>
+        <WidgetSkeleton />
+      </RightPanel>
       <Footer />
     </TokenDetailsLayout>
   )

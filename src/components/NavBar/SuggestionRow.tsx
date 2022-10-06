@@ -1,5 +1,7 @@
 import clsx from 'clsx'
-import { getTokenDetailsURL } from 'graphql/data/util'
+import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
+import { getChainInfo } from 'constants/chainInfo'
+import { getTokenDetailsURL, useGlobalChainId } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -100,6 +102,15 @@ export const CollectionRow = ({
   )
 }
 
+function useBridgedAddress(token: FungibleToken): [string | undefined, number | undefined, string | undefined] {
+  const globalChainId = useGlobalChainId()
+  const bridgedAddress = globalChainId ? token.extensions?.bridgeInfo?.[globalChainId]?.tokenAddress : undefined
+  if (bridgedAddress && globalChainId) {
+    return [bridgedAddress, globalChainId, getChainInfo(globalChainId)?.circleLogoUrl]
+  }
+  return [undefined, undefined, undefined]
+}
+
 interface TokenRowProps {
   token: FungibleToken
   isHovered: boolean
@@ -123,7 +134,8 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
     traceEvent()
   }, [addToSearchHistory, toggleOpen, token, traceEvent])
 
-  const tokenDetailsPath = getTokenDetailsURL(token.address, undefined, token.chainId)
+  const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
+  const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -150,14 +162,17 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
     >
       <Row style={{ width: '65%' }}>
         {!brokenImage && token.logoURI ? (
-          <Box
-            as="img"
-            src={token.logoURI.includes('ipfs://') ? uriToHttp(token.logoURI)[0] : token.logoURI}
-            alt={token.name}
-            className={clsx(loaded ? styles.suggestionImage : styles.imageHolder)}
-            onError={() => setBrokenImage(true)}
-            onLoad={() => setLoaded(true)}
-          />
+          <LogoContainer>
+            <Box
+              as="img"
+              src={token.logoURI.includes('ipfs://') ? uriToHttp(token.logoURI)[0] : token.logoURI}
+              alt={token.name}
+              className={clsx(loaded ? styles.suggestionImage : styles.imageHolder)}
+              onError={() => setBrokenImage(true)}
+              onLoad={() => setLoaded(true)}
+            />
+            <L2NetworkLogo networkUrl={L2Icon} size="16px" />
+          </LogoContainer>
         ) : (
           <Box className={styles.imageHolder} />
         )}

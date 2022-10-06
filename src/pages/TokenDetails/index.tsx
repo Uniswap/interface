@@ -110,7 +110,7 @@ export default function TokenDetails() {
 
   const timePeriod = useAtomValue(filterTimeAtom)
   const currentChainName = validateUrlChainParam(chainName)
-  const token = useTokenQuery(tokenAddress ?? '', currentChainName, timePeriod).tokens?.[0]
+  const [token, prices] = useTokenQuery(tokenAddress ?? '', currentChainName, timePeriod)
 
   const navigate = useNavigate()
   const switchChains = useCallback(
@@ -212,13 +212,12 @@ export default function TokenDetails() {
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            <ChartSection token={token} nativeCurrency={nativeCurrency} />
+            <ChartSection token={token} prices={prices} nativeCurrency={nativeCurrency} />
             <StatsSection
               TVL={token.market?.totalValueLocked?.value}
               volume24H={token.market?.volume24H?.value}
-              // TODO: Reenable these values once they're available in schema
-              // priceHigh52W={token.market?.priceHigh52W?.value}
-              // priceLow52W={token.market?.priceLow52W?.value}
+              priceHigh52W={token.market?.priceHigh52W?.value}
+              priceLow52W={token.market?.priceLow52W?.value}
             />
             <AboutSection
               address={token.address ?? ''}
