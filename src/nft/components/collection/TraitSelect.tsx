@@ -3,6 +3,7 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { subheadSmall } from 'nft/css/common.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
@@ -17,11 +18,13 @@ const TraitItem = ({
   addTrait,
   removeTrait,
   isTraitSelected,
+  showBorderBottom,
 }: {
   trait: Trait
   addTrait: (trait: Trait) => void
   removeTrait: (trait: Trait) => void
   isTraitSelected: boolean
+  showBorderBottom?: boolean
 }) => {
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
   const [hovered, setHovered] = useState(false)
@@ -69,7 +72,12 @@ const TraitItem = ({
       cursor="pointer"
       paddingLeft="12"
       paddingRight="12"
-      style={{ paddingBottom: '22px', paddingTop: '22px' }}
+      borderRadius="12"
+      style={{
+        paddingBottom: '22px',
+        paddingTop: '22px',
+        borderBottom: showBorderBottom ? `1px solid ${themeVars.colors.backgroundOutline}` : undefined,
+      }}
       maxHeight="44"
       onMouseEnter={handleHover}
       onMouseLeave={handleHover}
@@ -128,17 +136,20 @@ export const TraitSelect = ({
           marginBottom="8"
           autoComplete="off"
         />
-        {searchedTraits.map((trait) => {
+        {searchedTraits.map((trait, index) => {
           const isTraitSelected = selectedTraits.find(
             ({ trait_type, trait_value }) =>
               trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
           )
+
+          const showBorderBottom = searchedTraits.length - 1 === index
 
           return (
             <TraitItem
               isTraitSelected={!!isTraitSelected}
               key={trait.trait_value}
               {...{ trait, addTrait, removeTrait }}
+              showBorderBottom={showBorderBottom}
             />
           )
         })}

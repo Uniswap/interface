@@ -127,7 +127,7 @@ export const PriceRange = () => {
         </Row>
       </Row>
 
-      <Row marginBottom="20">
+      <Row marginBottom="20" paddingLeft="8" paddingRight="8">
         <ReactSlider
           defaultValue={[0, 100]}
           value={prevMinMax}

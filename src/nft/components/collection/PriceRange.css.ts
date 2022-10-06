@@ -7,7 +7,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 
 export const slider = style([
   sprinkles({
-    backgroundColor: 'blue',
+    backgroundColor: 'none',
     height: '8',
     marginTop: '20',
     borderRadius: '8',
@@ -17,7 +17,7 @@ export const slider = style([
 
 export const tracker = style([
   sprinkles({
-    backgroundColor: 'blue',
+    backgroundColor: 'accentAction',
     height: '8',
   }),
   {
@@ -38,13 +38,14 @@ export const tracker = style([
 
 export const thumb = style([
   sprinkles({
-    backgroundColor: 'white',
     width: '12',
     height: '20',
     borderRadius: '4',
     cursor: 'pointer',
   }),
   {
+    backgroundColor: '#F5F6FC',
+    boxShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12)',
     top: -6,
   },
 ])

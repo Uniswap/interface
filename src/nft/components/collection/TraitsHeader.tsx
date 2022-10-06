@@ -59,6 +59,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
           style={{
             transform: `rotate(${isOpen ? 0 : 180}deg)`,
             display: 'flex',
+            marginRight: isOpen ? -6 : 0,
           }}
         >
           <ChevronUpIcon secondaryWidth={'23px'} />

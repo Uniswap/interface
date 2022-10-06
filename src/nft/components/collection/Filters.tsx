@@ -11,6 +11,7 @@ import { Trait } from 'nft/hooks/useCollectionFilters'
 import { groupBy } from 'nft/utils/groupBy'
 import { useMemo } from 'react'
 import { useReducer } from 'react'
+import { Checkbox } from 'nft/components/layout/Checkbox'
 
 import { TraitSelect } from './TraitSelect'
 
@@ -49,23 +50,27 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           <Box fontSize="16" fontWeight="medium" as="summary" lineHeight="20">
             Buy now
           </Box>
-          <Radio hovered={buyNowHovered} checked={buyNow} onClick={handleBuyNowToggle} />
+
+          <Checkbox hovered={buyNowHovered} checked={buyNow} onClick={handleBuyNowToggle}>
+            <span />
+          </Checkbox>
         </Row>
         <MarketplaceSelect />
         <PriceRange />
-        <Box
-          as="span"
-          color="textSecondary"
-          paddingLeft="8"
-          marginTop="24"
-          marginBottom="12"
-          className={styles.borderTop}
-        ></Box>
+        {Object.entries(traitsByGroup).length > 0 && (
+          <Box
+            as="span"
+            color="textSecondary"
+            paddingLeft="8"
+            marginTop="24"
+            marginBottom="12"
+            className={styles.borderTop}
+          ></Box>
+        )}
+
         <Box>
           <Column marginBottom="60">
-            {Object.entries(traitsByGroup).map(([type, traits], index) => {
-              const showBorderTop = index === 0
-
+            {Object.entries(traitsByGroup).map(([type, traits]) => {
               return <TraitSelect key={type} {...{ type, traits }} />
             })}
           </Column>
