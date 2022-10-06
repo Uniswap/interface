@@ -2,8 +2,11 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { formatToDecimal } from 'analytics/utils'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { validateUrlChainParam } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { StyledInternalLink } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 const BalancesCard = styled.div`
@@ -43,6 +46,32 @@ const TotalBalanceItem = styled.div`
   display: flex;
 `
 
+const BalanceRowLink = styled(StyledInternalLink)`
+  color: unset;
+`
+
+function BalanceRow({ currency, formattedBalance, formattedUSDValue, href }: BalanceRowData) {
+  const content = (
+    <TotalBalance key={currency.wrapped.address}>
+      <TotalBalanceItem>
+        <CurrencyLogo currency={currency} />
+        &nbsp;{formattedBalance} {currency?.symbol}
+      </TotalBalanceItem>
+      <TotalBalanceItem>{formatDollarAmount(formattedUSDValue === 0 ? undefined : formattedUSDValue)}</TotalBalanceItem>
+    </TotalBalance>
+  )
+  if (href) {
+    return <BalanceRowLink to={href}>{content}</BalanceRowLink>
+  }
+  return content
+}
+
+interface BalanceRowData {
+  currency: Currency
+  formattedBalance: number
+  formattedUSDValue: number | undefined
+  href?: string
+}
 export interface BalanceSummaryProps {
   tokenAmount: CurrencyAmount<Token> | undefined
   nativeCurrencyAmount: CurrencyAmount<Currency> | undefined
@@ -52,6 +81,9 @@ export interface BalanceSummaryProps {
 export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNative }: BalanceSummaryProps) {
   const balanceUsdValue = useStablecoinValue(tokenAmount)?.toFixed(2)
   const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(2)
+
+  const { chainName } = useParams<{ chainName?: string }>()
+  const pageChainName = validateUrlChainParam(chainName).toLowerCase()
 
   const tokenIsWrappedNative =
     tokenAmount &&
@@ -70,14 +102,18 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
   const currencies = []
 
   if (tokenAmount) {
-    currencies.push({
+    const tokenData: BalanceRowData = {
       currency: tokenAmount.currency,
       formattedBalance: formatToDecimal(tokenAmount, Math.min(tokenAmount.currency.decimals, 2)),
       formattedUSDValue: balanceUsdValue ? parseFloat(balanceUsdValue) : undefined,
-    })
+    }
+    if (isNative) {
+      tokenData.href = `/tokens/${pageChainName}/${tokenAmount.currency.address}`
+    }
+    currencies.push(tokenData)
   }
   if (showNative && nativeCurrencyAmount) {
-    const nativeData = {
+    const nativeData: BalanceRowData = {
       currency: nativeCurrencyAmount.currency,
       formattedBalance: formatToDecimal(nativeCurrencyAmount, Math.min(nativeCurrencyAmount.currency.decimals, 2)),
       formattedUSDValue: nativeBalanceUsdValue ? parseFloat(nativeBalanceUsdValue) : undefined,
@@ -85,6 +121,7 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     if (isNative) {
       currencies.unshift(nativeData)
     } else {
+      nativeData.href = `/tokens/${pageChainName}/NATIVE`
       currencies.push(nativeData)
     }
   }
@@ -93,16 +130,8 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     <BalancesCard>
       <TotalBalanceSection>
         <Trans>Your balance</Trans>
-        {currencies.map(({ currency, formattedBalance, formattedUSDValue }) => (
-          <TotalBalance key={currency.wrapped.address}>
-            <TotalBalanceItem>
-              <CurrencyLogo currency={currency} />
-              &nbsp;{formattedBalance} {currency?.symbol}
-            </TotalBalanceItem>
-            <TotalBalanceItem>
-              {formatDollarAmount(formattedUSDValue === 0 ? undefined : formattedUSDValue)}
-            </TotalBalanceItem>
-          </TotalBalance>
+        {currencies.map((props) => (
+          <BalanceRow {...props} key={props.currency.wrapped.address} />
         ))}
       </TotalBalanceSection>
     </BalancesCard>
