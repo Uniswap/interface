@@ -102,6 +102,7 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
       <FlatList
         ListFooterComponent={<Box height={theme.spacing.lg} />}
         ListHeaderComponent={ListHeader}
+        bounces={false}
         data={accounts}
         keyExtractor={key}
         renderItem={renderItem}
