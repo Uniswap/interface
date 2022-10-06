@@ -14,11 +14,9 @@ export function AccountDetails({ address, iconSize = 20 }: { address: string; ic
         <Unicon address={address} size={iconSize} />
         <Text variant="subheadSmall">{displayName?.name}</Text>
       </Flex>
-      {displayName?.type !== 'address' && (
-        <Text color="textSecondary" variant="bodySmall">
-          {shortenAddress(address)}
-        </Text>
-      )}
+      <Text color="textSecondary" variant="bodySmall">
+        {shortenAddress(address)}
+      </Text>
     </Flex>
   )
 }

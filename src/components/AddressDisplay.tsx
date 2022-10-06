@@ -73,7 +73,6 @@ export function AddressDisplay({
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
   const displayName = useDisplayName(address, showShortenedEns)
-  const nameTypeIsAddress = displayName?.type === 'address'
   const { data: avatar } = useENSAvatar(address)
 
   const onPressCopyAddress = () => {
@@ -81,8 +80,6 @@ export function AddressDisplay({
     dispatch(pushNotification({ type: AppNotificationType.Copied }))
     setClipboard(address)
   }
-
-  const showCaption = showAddressAsSubtitle && !nameTypeIsAddress
 
   // Extract sizes so copy icon can match font variants
   const mainSize = theme.textVariants[variant].fontSize
@@ -112,7 +109,8 @@ export function AddressDisplay({
         alignItems={textAlign || (!showUnicon || direction === 'column' ? 'center' : 'flex-start')}
         flexShrink={1}
         gap={verticalGap}>
-        <CopyButtonWrapper onPress={showCopy && !showCaption ? onPressCopyAddress : undefined}>
+        <CopyButtonWrapper
+          onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="sm">
             <Text
               color={color}
@@ -123,12 +121,12 @@ export function AddressDisplay({
               {displayName?.name}
             </Text>
 
-            {showCopy && !showCaption && (
+            {showCopy && !showAddressAsSubtitle && (
               <CopyIcon color={theme.colors.textPrimary} height={mainSize} width={mainSize} />
             )}
           </Flex>
         </CopyButtonWrapper>
-        {showCaption && (
+        {showAddressAsSubtitle && (
           <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
             <Flex centered row gap="sm">
               <Text color={captionColor} variant={captionVariant}>

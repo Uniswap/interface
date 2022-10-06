@@ -20,16 +20,10 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
   const theme = useAppTheme()
 
   const displayName = useDisplayName(account.address)
-  const nameTypeIsAddress = displayName?.type === 'address'
   return (
     <>
       <Separator />
-      <Flex
-        row
-        alignItems="center"
-        justifyContent="space-between"
-        px="lg"
-        py={!nameTypeIsAddress ? 'xs' : 'md'}>
+      <Flex row alignItems="center" justifyContent="space-between" px="lg" py="xs">
         <Unicon address={account.address} size={ICON_SIZE} />
         <Flex alignItems="center" gap="none" p="none">
           <Text
@@ -38,11 +32,9 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
             variant="body">
             {displayName?.name}
           </Text>
-          {!nameTypeIsAddress && (
-            <Text color="textSecondary" variant="caption">
-              {shortenAddress(account.address)}
-            </Text>
-          )}
+          <Text color="textSecondary" variant="caption">
+            {shortenAddress(account.address)}
+          </Text>
         </Flex>
         <Box height={ICON_SIZE} width={ICON_SIZE}>
           {activeAccount?.address === account.address && (

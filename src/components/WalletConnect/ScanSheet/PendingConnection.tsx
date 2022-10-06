@@ -23,7 +23,6 @@ import { ElementName } from 'src/features/telemetry/constants'
 import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
-  useDisplayName,
 } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { settlePendingSession } from 'src/features/walletConnect/WalletConnect'
@@ -118,8 +117,6 @@ type SwitchAccountProps = {
 
 const SwitchAccountRow = ({ activeAddress, onPress }: SwitchAccountProps) => {
   const theme = useAppTheme()
-  const displayName = useDisplayName(activeAddress)
-  const nameTypeIsAddress = displayName?.type === 'address'
 
   return (
     <Button m="none" name={ElementName.WCDappSwitchAccount} p="none" onPress={onPress}>
@@ -131,14 +128,12 @@ const SwitchAccountRow = ({ activeAddress, onPress }: SwitchAccountProps) => {
           variant="subheadSmall"
           verticalGap="none"
         />
-        {!nameTypeIsAddress && (
-          <Flex centered row shrink gap="xs">
-            <Text color="textSecondary" variant="bodySmall">
-              {shortenAddress(activeAddress)}
-            </Text>
-            <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="20" />
-          </Flex>
-        )}
+        <Flex centered row shrink gap="xs">
+          <Text color="textSecondary" variant="bodySmall">
+            {shortenAddress(activeAddress)}
+          </Text>
+          <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="20" />
+        </Flex>
       </Flex>
     </Button>
   )

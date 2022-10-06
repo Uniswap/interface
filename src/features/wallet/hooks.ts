@@ -15,7 +15,7 @@ import {
   selectSignerMnemonicAccountExists,
 } from 'src/features/wallet/selectors'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { getValidAddress, sanitizeAddressText, shortenAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'src/utils/addresses'
 import { trimToLength } from 'src/utils/string'
 
 const ENS_TRIM_LENGTH = 8
@@ -64,29 +64,33 @@ export function useSelectAccountNotificationSetting(address: Address) {
   return useAppSelector(makeSelectAccountNotificationSetting(address))
 }
 
+/** Displays the ENS name if one is available otherwise displays the local name which will be required.
+ * It is not required for now so if its not available we just show "Wallet".
+ */
 export function useDisplayName(
   address: NullUndefined<string>,
   showShortenedEns = false
 ):
   | {
       name: string
-      type: 'local' | 'ens' | 'address'
+      type: 'local' | 'ens'
     }
   | undefined {
-  const maybeLocalName = useAccounts()[address ?? '']?.name // if address is a local account with a name
-
   const validated = getValidAddress(address)
   const ens = useENSName(validated ?? undefined)
 
+  const localName = useAccounts()[address ?? '']?.name || 'Wallet' // if address is a local account with a name
+
   if (!address) return
 
-  if (maybeLocalName) return { name: maybeLocalName, type: 'local' }
-  if (ens.data)
+  if (ens.data) {
     return {
       name: showShortenedEns ? trimToLength(ens.data, ENS_TRIM_LENGTH) : ens.data,
       type: 'ens',
     }
-  return { name: `${sanitizeAddressText(shortenAddress(address))}`, type: 'address' }
+  }
+
+  return { name: localName, type: 'local' }
 }
 
 export function useWCTimeoutError(
