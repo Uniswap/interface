@@ -1,5 +1,6 @@
+import { NATIVE_CHAIN_ID } from 'analytics/constants'
 import { SupportedChainId } from 'constants/chains'
-import { useAppSelector } from 'state/hooks'
+import { ZERO_ADDRESS } from 'constants/misc'
 
 import { Chain, HistoryDuration } from './__generated__/TokenQuery.graphql'
 
@@ -39,13 +40,10 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.OPTIMISM_GOERLI]: 'OPTIMISM',
 }
 
-export function useGlobalChainId() {
-  return useAppSelector((state) => state.application.chainId)
-}
-
-export function useGlobalChainName() {
-  const chainId = useGlobalChainId()
-  return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId] ? CHAIN_ID_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
+export function chainIdToBackendName(chainId: number | undefined) {
+  return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
+    ? CHAIN_ID_TO_BACKEND_NAME[chainId]
+    : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET]
 }
 
 export const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
@@ -79,7 +77,9 @@ export function isValidBackendChainName(chainName: string | undefined): chainNam
 }
 
 export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?: number) {
-  if (chainName) {
+  if (address === ZERO_ADDRESS && chainId && chainId === SupportedChainId.MAINNET) {
+    return `/tokens/${CHAIN_ID_TO_BACKEND_NAME[chainId].toLowerCase()}/${NATIVE_CHAIN_ID}`
+  } else if (chainName) {
     return `/tokens/${chainName.toLowerCase()}/${address}`
   } else if (chainId) {
     const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
