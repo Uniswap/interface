@@ -29,7 +29,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
   return (
     <Box className={styles.container}>
       <Row width="full" justifyContent="space-between">
-        <Row as="span" color="textSecondary" paddingLeft="8" className={caption}>
+        <Row as="span" color="textSecondary" paddingLeft="8" className={caption} style={{ fontWeight: 600 }}>
           Filters
         </Row>
       </Row>
@@ -58,7 +58,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
         <MarketplaceSelect />
         <PriceRange />
         <Box marginTop="28">
-          <Box as="span" color="textSecondary" paddingLeft="8" className={caption}>
+          <Box as="span" color="textSecondary" paddingLeft="8" className={caption} style={{ fontWeight: 600 }}>
             Traits
           </Box>
           <Column marginTop="8" marginBottom="60">
