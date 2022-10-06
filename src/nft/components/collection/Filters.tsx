@@ -36,7 +36,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
       <Column marginTop="8">
         <Row
           justifyContent="space-between"
-          className={clsx(styles.rowHover, styles.borderTop)}
+          className={clsx(styles.rowHover)}
           gap="2"
           paddingTop="10"
           paddingRight="16"
@@ -63,9 +63,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           </Box>
           <Column marginTop="8" marginBottom="60">
             {Object.entries(traitsByGroup).map(([type, traits], index) => {
-              const showBorderTop = index === 0
-
-              return <TraitSelect key={type} {...{ type, traits }} showBorderTop={showBorderTop} />
+              return <TraitSelect key={type} {...{ type, traits }} />
             })}
           </Column>
         </Box>
