@@ -6,4 +6,5 @@ export enum FeatureFlag {
   tokens = 'tokens',
   tokenSafety = 'tokenSafety',
   traceJsonRpc = 'traceJsonRpc',
+  multiNetworkBalances = 'multiNetworkBalances',
 }
