@@ -298,7 +298,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   }
 
   return (
-    <Screen bg="backgroundBackdrop">
+    <Screen bg="backgroundBackdrop" edges={['top']}>
       <Flex pb="md" pt="lg" px="lg">
         <AddressDisplay
           showAddressAsSubtitle
@@ -358,14 +358,12 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       <Box flexGrow={1} />
 
       <Separator mb="sm" />
-      <Box>
-        <AccountList
-          accounts={accountsData}
-          onAddWallet={onPressAddWallet}
-          onPress={onPressAccount}
-          onPressEdit={onPressEdit}
-        />
-      </Box>
+      <AccountList
+        accounts={accountsData}
+        onAddWallet={onPressAddWallet}
+        onPress={onPressAccount}
+        onPressEdit={onPressEdit}
+      />
 
       <ActionSheetModal
         isVisible={showEditAccountModal}
