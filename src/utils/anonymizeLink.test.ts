@@ -11,8 +11,8 @@ describe('#anonymizeLink', () => {
     expect(anonymizeLink('https://etherscan.io/address/0xabcd')).toEqual('https://etherscan.io/address/***')
   })
   it('anonymizes any addresses in testnet etherscan urls', () => {
-    expect(anonymizeLink('https://rinkeby.etherscan.io/address/0xabcd')).toEqual(
-      'https://rinkeby.etherscan.io/address/***'
+    expect(anonymizeLink('https://goerli.etherscan.io/address/0xabcd')).toEqual(
+      'https://goerli.etherscan.io/address/***'
     )
   })
   it('anonymizes any addresses in testnet etherscan urls', () => {
@@ -33,9 +33,9 @@ describe('#anonymizeLink', () => {
   it('works for arbitrum urls', () => {
     expect(anonymizeLink('https://arbiscan.io/0x/0xabc')).toEqual('https://arbiscan.io/0x/***')
   })
-  it('works for arbitrum rinkeby urls', () => {
-    expect(anonymizeLink('https://rinkeby-explorer.arbitrum.io/0x/0xabc')).toEqual(
-      'https://rinkeby-explorer.arbitrum.io/0x/***'
+  it('works for arbitrum goerli urls', () => {
+    expect(anonymizeLink('https://goerli-explorer.arbitrum.io/0x/0xabc')).toEqual(
+      'https://goerli-explorer.arbitrum.io/0x/***'
     )
   })
 })
