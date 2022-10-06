@@ -1,4 +1,5 @@
-import { Footer, LeftPanel, RightPanel, TokenDetailsLayout } from 'pages/TokenDetails'
+import { WidgetSkeleton } from 'components/Widget'
+import { LeftPanel, RightPanel, TokenDetailsLayout } from 'pages/TokenDetails'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { LoadingBubble } from '../loading'
@@ -154,8 +155,9 @@ export function LoadingTokenDetails() {
   return (
     <TokenDetailsLayout>
       <LoadingTokenDetail />
-      <RightPanel />
-      <Footer />
+      <RightPanel>
+        <WidgetSkeleton />
+      </RightPanel>
     </TokenDetailsLayout>
   )
 }
