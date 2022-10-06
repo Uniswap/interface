@@ -143,55 +143,80 @@ export function TransactionFlow({
 }
 
 function InnerContentRouter(props: InnerContentProps) {
-  const { form, review, submitted } = useGetInnerContent(props)
-  switch (props.step) {
-    case TransactionStep.SUBMITTED:
-      return submitted
-    case TransactionStep.FORM:
-      return form
-    case TransactionStep.REVIEW:
-      return review
-    default:
-      return null
-  }
+  const { derivedInfo, setStep } = props
+  const onFormNext = useCallback(() => setStep(TransactionStep.REVIEW), [setStep])
+  const onReviewNext = useCallback(() => setStep(TransactionStep.SUBMITTED), [setStep])
+  const onReviewPrev = useCallback(() => setStep(TransactionStep.FORM), [setStep])
+  const onRetrySubmit = useCallback(() => setStep(TransactionStep.FORM), [setStep])
+
+  const isSwap = isSwapInfo(derivedInfo)
+  if (isSwap)
+    return (
+      <SwapInnerContent
+        derivedSwapInfo={derivedInfo}
+        onFormNext={onFormNext}
+        onRetrySubmit={onRetrySubmit}
+        onReviewNext={onReviewNext}
+        onReviewPrev={onReviewPrev}
+        {...props}
+      />
+    )
+  return (
+    <TransferInnerContent
+      derivedTransferInfo={derivedInfo}
+      onFormNext={onFormNext}
+      onRetrySubmit={onRetrySubmit}
+      onReviewNext={onReviewNext}
+      onReviewPrev={onReviewPrev}
+      {...props}
+    />
+  )
 }
 
-const useGetInnerContent = ({
-  derivedInfo,
+interface SwapInnerContentProps extends InnerContentProps {
+  derivedSwapInfo: DerivedSwapInfo
+  onFormNext: () => void
+  onReviewNext: () => void
+  onReviewPrev: () => void
+  onRetrySubmit: () => void
+}
+
+function SwapInnerContent({
+  derivedSwapInfo,
   onClose,
   dispatch,
-  setStep,
   totalGasFee,
   approveTxRequest,
   txRequest,
   warnings,
+  onFormNext,
+  onReviewNext,
+  onReviewPrev,
+  onRetrySubmit,
+  step,
   exactValue,
-}: InnerContentProps): {
-  form: ReactElement
-  review: ReactElement
-  submitted: ReactElement
-} => {
-  const onRetrySubmit = useCallback(() => setStep(TransactionStep.FORM), [setStep])
-  const onFormNext = useCallback(() => setStep(TransactionStep.REVIEW), [setStep])
-  const onReviewNext = useCallback(() => setStep(TransactionStep.SUBMITTED), [setStep])
-  const onReviewPrev = useCallback(() => setStep(TransactionStep.FORM), [setStep])
+}: SwapInnerContentProps) {
+  switch (step) {
+    case TransactionStep.SUBMITTED:
+      return (
+        <SwapStatus derivedSwapInfo={derivedSwapInfo} onNext={onClose} onTryAgain={onRetrySubmit} />
+      )
 
-  const isSwap = isSwapInfo(derivedInfo)
-  if (isSwap) {
-    return {
-      form: (
+    case TransactionStep.FORM:
+      return (
         <SwapForm
-          derivedSwapInfo={derivedInfo}
+          derivedSwapInfo={derivedSwapInfo}
           dispatch={dispatch}
           exactValue={exactValue}
           warnings={warnings}
           onNext={onFormNext}
         />
-      ),
-      review: (
+      )
+    case TransactionStep.REVIEW:
+      return (
         <SwapReview
           approveTxRequest={approveTxRequest}
-          derivedSwapInfo={derivedInfo}
+          derivedSwapInfo={derivedSwapInfo}
           exactValue={exactValue}
           totalGasFee={totalGasFee}
           txRequest={txRequest}
@@ -199,38 +224,63 @@ const useGetInnerContent = ({
           onNext={onReviewNext}
           onPrev={onReviewPrev}
         />
-      ),
-      submitted: (
-        <SwapStatus derivedSwapInfo={derivedInfo} onNext={onClose} onTryAgain={onRetrySubmit} />
-      ),
-    }
+      )
+    default:
+      return null
   }
+}
 
-  return {
-    form: (
-      <TransferTokenForm
-        derivedTransferInfo={derivedInfo}
-        dispatch={dispatch}
-        warnings={warnings}
-        onNext={onFormNext}
-      />
-    ),
-    review: (
-      <TransferReview
-        derivedTransferInfo={derivedInfo}
-        totalGasFee={totalGasFee}
-        txRequest={txRequest}
-        warnings={warnings}
-        onNext={onReviewNext}
-        onPrev={onReviewPrev}
-      />
-    ),
-    submitted: (
-      <TransferStatus
-        derivedTransferInfo={derivedInfo}
-        onNext={onClose}
-        onTryAgain={onRetrySubmit}
-      />
-    ),
+interface TransferInnerContentProps extends InnerContentProps {
+  derivedTransferInfo: DerivedTransferInfo
+  onFormNext: () => void
+  onReviewNext: () => void
+  onReviewPrev: () => void
+  onRetrySubmit: () => void
+}
+
+function TransferInnerContent({
+  derivedTransferInfo,
+  onClose,
+  dispatch,
+  step,
+  totalGasFee,
+  txRequest,
+  warnings,
+  onFormNext,
+  onRetrySubmit,
+  onReviewNext,
+  onReviewPrev,
+}: TransferInnerContentProps) {
+  switch (step) {
+    case TransactionStep.SUBMITTED:
+      return (
+        <TransferStatus
+          derivedTransferInfo={derivedTransferInfo}
+          onNext={onClose}
+          onTryAgain={onRetrySubmit}
+        />
+      )
+    case TransactionStep.FORM:
+      return (
+        <TransferTokenForm
+          derivedTransferInfo={derivedTransferInfo}
+          dispatch={dispatch}
+          warnings={warnings}
+          onNext={onFormNext}
+        />
+      )
+    case TransactionStep.REVIEW:
+      return (
+        <TransferReview
+          derivedTransferInfo={derivedTransferInfo}
+          totalGasFee={totalGasFee}
+          txRequest={txRequest}
+          warnings={warnings}
+          onNext={onReviewNext}
+          onPrev={onReviewPrev}
+        />
+      )
+    default:
+      return null
   }
 }
