@@ -8,7 +8,13 @@ const EMPTY_AMOUNT = ''
  * Integrates the Widget's inputs.
  * Treats the Widget as a controlled component, using the app's own token selector for selection.
  */
-export function useSyncWidgetInputs(token?: Currency) {
+export function useSyncWidgetInputs({
+  token,
+  onTokenChange,
+}: {
+  token?: Currency
+  onTokenChange?: (token: Currency) => void
+}) {
   const [type, setType] = useState(TradeType.EXACT_INPUT)
   const [amount, setAmount] = useState(EMPTY_AMOUNT)
   const onAmountChange = useCallback((field: Field, amount: string) => {
@@ -20,6 +26,16 @@ export function useSyncWidgetInputs(token?: Currency) {
     [Field.OUTPUT]: token,
   })
 
+  useEffect(() => {
+    if (tokens[Field.INPUT] !== token && tokens[Field.OUTPUT] !== token) {
+      const token = tokens[Field.OUTPUT] || tokens[Field.INPUT]
+      if (token) {
+        onTokenChange?.(token)
+      }
+    }
+  }, [onTokenChange, token, tokens])
+
+  // Initialize with the passed token.
   useEffect(() => {
     setTokens({
       [Field.OUTPUT]: token,
@@ -35,35 +51,34 @@ export function useSyncWidgetInputs(token?: Currency) {
     }))
   }, [])
 
-  const [selectingField, setSelectingField] = useState<Field>()
-  const otherField = useMemo(() => (selectingField === Field.INPUT ? Field.OUTPUT : Field.INPUT), [selectingField])
-  const [selectingToken, otherToken] = useMemo(() => {
-    if (selectingField === undefined) return [undefined, undefined]
-    return [tokens[selectingField], tokens[otherField]]
-  }, [otherField, selectingField, tokens])
+  const [selectorField, setSelectorField] = useState<Field>()
   const onTokenSelectorClick = useCallback((field: Field) => {
-    setSelectingField(field)
+    setSelectorField(field)
     return false
   }, [])
+
+  // Configure token selection through the interface selector (CurrencySearchModal).
+  const otherField = useMemo(() => {
+    if (selectorField === undefined) return
+    return selectorField === Field.INPUT ? Field.OUTPUT : Field.INPUT
+  }, [selectorField])
   const onTokenSelect = useCallback(
     (token: Currency) => {
-      if (selectingField === undefined) return
-      setType(TradeType.EXACT_INPUT)
-      setTokens(() => {
-        return {
-          [otherField]: token === otherToken ? selectingToken : otherToken,
-          [selectingField]: token,
-        }
-      })
+      if (selectorField === undefined || otherField === undefined) return
+      if (token === tokens[otherField]) {
+        onSwitchTokens()
+        return
+      }
+      setTokens({ ...tokens, [selectorField]: token })
     },
-    [otherField, otherToken, selectingField, selectingToken]
+    [onSwitchTokens, otherField, selectorField, tokens]
   )
   const tokenSelector = (
     <CurrencySearchModal
-      isOpen={selectingField !== undefined}
-      onDismiss={() => setSelectingField(undefined)}
-      selectedCurrency={selectingToken}
-      otherSelectedCurrency={otherToken}
+      isOpen={selectorField !== undefined}
+      onDismiss={() => setSelectorField(undefined)}
+      selectedCurrency={selectorField && tokens[selectorField]}
+      otherSelectedCurrency={otherField && tokens[otherField]}
       onCurrencySelect={onTokenSelect}
     />
   )

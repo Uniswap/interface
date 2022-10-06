@@ -14,15 +14,16 @@ const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export interface WidgetProps {
   token?: Currency
+  onTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ token, onReviewSwapClick }: WidgetProps) {
+export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
   const locale = useActiveLocale()
   const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
   const { provider } = useWeb3React()
 
-  const { inputs, tokenSelector } = useSyncWidgetInputs(token)
+  const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
