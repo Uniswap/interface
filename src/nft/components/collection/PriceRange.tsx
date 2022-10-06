@@ -9,6 +9,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { FocusEventHandler } from 'react'
 import { useLocation } from 'react-router-dom'
 import ReactSlider from 'react-slider'
+import { useIsDarkMode } from 'state/user/hooks'
 
 import * as styles from './PriceRange.css'
 import { TraitsHeader } from './TraitsHeader'
@@ -26,6 +27,7 @@ export const PriceRange = () => {
   const [prevMinMax, setPrevMinMax] = useState([0, 100])
   const [minSet, setMinSet] = useState(false)
   const [maxSet, setMaxSet] = useState(false)
+  const isDarktheme = useIsDarkMode()
 
   const isMobile = useIsMobile()
 
@@ -131,7 +133,7 @@ export const PriceRange = () => {
         <ReactSlider
           defaultValue={[0, 100]}
           value={prevMinMax}
-          className={styles.slider}
+          className={isDarktheme ? styles.sliderDark : styles.sliderLight}
           trackClassName={styles.tracker}
           thumbClassName={styles.thumb}
           onAfterChange={(minMax: Array<number>) => {
