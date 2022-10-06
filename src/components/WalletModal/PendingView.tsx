@@ -116,9 +116,9 @@ export default function PendingView({
                 <ThemedText.MediumHeader>
                   <Trans>Waiting to connect</Trans>
                 </ThemedText.MediumHeader>
-                <ThemedText.SubHeader style={{ paddingTop: '8px' }}>
+                <ThemedText.BodyPrimary style={{ paddingTop: '8px' }}>
                   <Trans>Confirm this connection in your wallet</Trans>
-                </ThemedText.SubHeader>
+                </ThemedText.BodyPrimary>
               </WaitingToConnectSection>
             </>
           )}

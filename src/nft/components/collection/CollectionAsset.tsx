@@ -110,7 +110,7 @@ export const CollectionAsset = ({
           <Card.SecondaryRow>
             <Card.SecondaryDetails>
               <Card.SecondaryInfo>
-                {notForSale ? '' : `${formatWeiToDecimal(asset.currentEthPrice)} ETH`}
+                {notForSale ? '' : `${formatWeiToDecimal(asset.currentEthPrice, true)} ETH`}
               </Card.SecondaryInfo>
               {(asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) && <Card.Pool />}
             </Card.SecondaryDetails>

@@ -9,7 +9,6 @@ export enum TimePeriod {
   WEEK,
   MONTH,
   YEAR,
-  ALL,
 }
 
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
@@ -24,8 +23,6 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
       return 'MONTH'
     case TimePeriod.YEAR:
       return 'YEAR'
-    case TimePeriod.ALL:
-      return 'MAX'
   }
 }
 
@@ -42,8 +39,12 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.OPTIMISM_GOERLI]: 'OPTIMISM',
 }
 
+export function useGlobalChainId() {
+  return useAppSelector((state) => state.application.chainId)
+}
+
 export function useGlobalChainName() {
-  const chainId = useAppSelector((state) => state.application.chainId)
+  const chainId = useGlobalChainId()
   return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId] ? CHAIN_ID_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
 }
 

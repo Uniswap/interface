@@ -17,16 +17,14 @@ export const DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.WEEK]: '1W',
   [TimePeriod.MONTH]: '1M',
   [TimePeriod.YEAR]: '1Y',
-  [TimePeriod.ALL]: 'All',
 }
 
-export const ORDERED_TIMES = [
+export const ORDERED_TIMES: TimePeriod[] = [
   TimePeriod.HOUR,
   TimePeriod.DAY,
   TimePeriod.WEEK,
   TimePeriod.MONTH,
   TimePeriod.YEAR,
-  TimePeriod.ALL,
 ]
 
 const InternalMenuItem = styled.div`

@@ -1,8 +1,6 @@
-import { Currency, OnReviewSwapClick, SwapWidget } from '@uniswap/widgets'
+import { Currency, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { RPC_PROVIDERS } from 'constants/providers'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useMemo } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 
@@ -21,8 +19,7 @@ export interface WidgetProps {
 
 export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps) {
   const locale = useActiveLocale()
-  const darkMode = useIsDarkMode()
-  const theme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
+  const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
   const { provider } = useWeb3React()
 
   const { inputs, tokenSelector } = useSyncWidgetInputs(defaultToken)
@@ -34,7 +31,7 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
       <SwapWidget
         disableBranding
         hideConnectionUI
-        jsonRpcUrlMap={RPC_PROVIDERS}
+        // jsonRpcUrlMap is excluded - network providers are always passed directly
         routerUrl={WIDGET_ROUTER_URL}
         width={WIDGET_WIDTH}
         locale={locale}
@@ -49,4 +46,8 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
       {tokenSelector}
     </>
   )
+}
+
+export function WidgetSkeleton() {
+  return <SwapWidgetSkeleton theme={useIsDarkMode() ? DARK_THEME : LIGHT_THEME} width={WIDGET_WIDTH} />
 }

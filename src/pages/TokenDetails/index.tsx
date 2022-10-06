@@ -64,6 +64,7 @@ export const TokenDetailsLayout = styled.div`
   }
 `
 export const LeftPanel = styled.div`
+  flex: 1;
   max-width: 780px;
   overflow: hidden;
 `
@@ -81,13 +82,14 @@ export const RightPanel = styled.div`
 export default function TokenDetails() {
   const { tokenAddress: tokenAddressParam, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
   const { account } = useWeb3React()
-  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[validateUrlChainParam(chainName)]
   const currentChainName = validateUrlChainParam(chainName)
+  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[validateUrlChainParam(chainName)]
   const nativeCurrency = nativeOnChain(pageChainId)
   const timePeriod = useAtomValue(filterTimeAtom)
   const isNative = tokenAddressParam === 'NATIVE'
   const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddressParam
-  const tokenQueryData = useTokenQuery(tokenQueryAddress ?? '', currentChainName, timePeriod).tokens?.[0]
+  const [tokenQueryData, prices] = useTokenQuery(tokenQueryAddress ?? '', currentChainName, timePeriod)
+
   const pageToken = useMemo(
     () =>
       tokenQueryData && !isNative
@@ -144,15 +146,16 @@ export default function TokenDetails() {
     [continueSwap, setContinueSwap]
   )
 
-  const defaultWidgetToken = useMemo(() => {
+  const widgetToken = useMemo(() => {
     if (pageToken) {
       return pageToken
     }
     if (nativeCurrency) {
+      if (isCelo(pageChainId)) return undefined
       return nativeCurrency
     }
     return undefined
-  }, [nativeCurrency, pageToken])
+  }, [nativeCurrency, pageChainId, pageToken])
 
   return (
     <TokenDetailsLayout>
@@ -162,13 +165,17 @@ export default function TokenDetails() {
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            <ChartSection token={tokenQueryData} nativeCurrency={isNative ? nativeCurrency : undefined} />
+            <ChartSection
+              token={tokenQueryData}
+              nativeCurrency={isNative ? nativeCurrency : undefined}
+              prices={prices}
+            />
             <StatsSection
               TVL={tokenQueryData.market?.totalValueLocked?.value}
               volume24H={tokenQueryData.market?.volume24H?.value}
               // TODO: Reenable these values once they're available in schema
-              // priceHigh52W={token.market?.priceHigh52W?.value}
-              // priceLow52W={token.market?.priceLow52W?.value}
+              priceHigh52W={tokenQueryData.market?.priceHigh52W?.value}
+              priceLow52W={tokenQueryData.market?.priceLow52W?.value}
             />
             <AboutSection
               address={tokenQueryData.address ?? ''}
@@ -179,10 +186,7 @@ export default function TokenDetails() {
             <AddressSection address={tokenQueryData.address ?? ''} />
           </LeftPanel>
           <RightPanel>
-            <Widget
-              defaultToken={isCelo(pageChainId) ? undefined : defaultWidgetToken}
-              onReviewSwapClick={onReviewSwap}
-            />
+            <Widget defaultToken={widgetToken} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />}
             {/* <BalanceSummary /> */}
           </RightPanel>
