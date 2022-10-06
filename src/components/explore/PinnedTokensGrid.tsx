@@ -39,12 +39,17 @@ export function PinnedTokensGrid({
       const lastColumn = (index + 1) % NUM_COLUMNS === 0
       return (
         <>
-          <PinnedTokenCard currencyId={item} isEditing={isEditing} style={{ flex: ITEM_FLEX }} />
+          <PinnedTokenCard
+            currencyId={item}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            style={{ flex: ITEM_FLEX }}
+          />
           {lastColumn ? null : <Box width={GAP_SIZE} />}
         </>
       )
     },
-    [isEditing]
+    [isEditing, setIsEditing]
   )
 
   return (

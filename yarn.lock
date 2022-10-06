@@ -18392,6 +18392,11 @@ react-native-codegen@^0.0.17:
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
 
+react-native-context-menu-view@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-context-menu-view/-/react-native-context-menu-view-1.6.0.tgz#f850351a7b5697d8ba75df198bd671536a54cf33"
+  integrity sha512-K3oSzBjzC5wetbOYiyMqZyLAMhAu7WBHghBl0utb2PL+66G/dI4vGgCvOFeHBxSv2IJQ4C7KBFCJQaXW8sakVQ==
+
 react-native-device-info@^10.0.2:
   version "10.0.2"
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.0.2.tgz#17cd96df277cca5a22fb80409527c181a08d4ed1"

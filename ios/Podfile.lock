@@ -805,6 +805,8 @@ PODS:
   - React-jsinspector (0.68.3)
   - React-logger (0.68.3):
     - glog
+  - react-native-context-menu-view (1.6.0):
+    - React
   - react-native-get-random-values (1.7.0):
     - React-Core
   - react-native-mmkv (2.4.3):
@@ -1049,6 +1051,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-context-menu-view (from `../node_modules/react-native-context-menu-view`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
@@ -1214,6 +1217,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-context-menu-view:
+    :path: "../node_modules/react-native-context-menu-view"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
   react-native-mmkv:
@@ -1375,6 +1380,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: a5043e9e1e1bd13b80b58b228c6901b3721a4f54
   React-jsinspector: 86e89b9f135787a2e8eb74b3fc00ec61e9a80ae1
   React-logger: f790bd10f86b38012e108fb4b564023602702270
+  react-native-context-menu-view: d3b3e77985d5b05674a70f8e7eafe404dfa5bbcc
   react-native-get-random-values: 237bffb1c7e05fb142092681531810a29ba53015
   react-native-mmkv: 1265a348a4711097ba29c8bcefd5971f48220f2b
   react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95

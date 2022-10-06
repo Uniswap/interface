@@ -1,6 +1,7 @@
 import { ShadowProps } from '@shopify/restyle'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { memo, Suspense, useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   FlexAlignType,
   Image,
@@ -9,6 +10,7 @@ import {
   PressableProps,
   useColorScheme,
 } from 'react-native'
+import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -21,9 +23,17 @@ import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { PollingInterval } from 'src/constants/misc'
+import { AssetType } from 'src/entities/assets'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { removeFavoriteToken } from 'src/features/favorites/slice'
+import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'src/features/transactions/transactionState/transactionState'
 import { Theme } from 'src/styles/theme'
+import { fromGraphQLChain } from 'src/utils/chainId'
 import { CurrencyId } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
@@ -64,6 +74,7 @@ export const TOKEN_ITEM_BOX_MINWIDTH = 137
 type PinnedTokenCardProps = {
   currencyId: CurrencyId
   isEditing?: boolean
+  setIsEditing: (update: boolean) => void
 } & PressableProps
 
 function PinnedTokenCard(props: PinnedTokenCardProps) {
@@ -74,8 +85,14 @@ function PinnedTokenCard(props: PinnedTokenCardProps) {
   )
 }
 
-function PinnedTokenCardInner({ currencyId, isEditing, ...rest }: PinnedTokenCardProps) {
+function PinnedTokenCardInner({
+  currencyId,
+  isEditing,
+  setIsEditing,
+  ...rest
+}: PinnedTokenCardProps) {
   const theme = useAppTheme()
+  const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const isDarkMode = useColorScheme() === 'dark'
   const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -93,6 +110,7 @@ function PinnedTokenCardInner({ currencyId, isEditing, ...rest }: PinnedTokenCar
   const tokenData = data?.tokenProjects?.[0]
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
   const token = data?.tokenProjects?.[0]?.tokens?.[0]
+  const chainId = fromGraphQLChain(token?.chain)
   const usdPrice = tokenData?.markets?.[0]?.price?.value
   const pricePercentChange = tokenData?.markets?.[0]?.pricePercentChange24h?.value
 
@@ -101,55 +119,100 @@ function PinnedTokenCardInner({ currencyId, isEditing, ...rest }: PinnedTokenCar
     [currencyId, dispatch]
   )
 
+  const navigateToSwapSell = useCallback(() => {
+    if (!token?.address || !chainId) return
+
+    const swapFormState: TransactionState = {
+      exactCurrencyField: CurrencyField.INPUT,
+      exactAmountToken: '0',
+      [CurrencyField.INPUT]: {
+        address: token.address,
+        chainId: chainId,
+        type: AssetType.Currency,
+      },
+      [CurrencyField.OUTPUT]: null,
+    }
+    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+  }, [chainId, dispatch, token?.address])
+
+  const menuActions = useMemo(() => {
+    return [
+      { title: t('Remove pin'), systemIcon: 'pin' },
+      { title: t('Edit pins'), systemIcon: 'square.and.pencil' },
+      { title: t('Swap'), systemIcon: 'arrow.2.squarepath' },
+    ]
+  }, [t])
+
   return (
     <Pressable
       testID={`token-box-${token?.symbol}`}
       onPress={() => {
+        if (isEditing) return
         tokenDetailsNavigation.navigate(currencyId)
       }}
       onPressIn={() => {
+        if (isEditing) return
         tokenDetailsNavigation.preload(currencyId)
       }}
       {...rest}>
       {isEditing ? (
         <RemoveFavoriteTokenButton position="absolute" right={-8} top={-8} onPress={onRemove} />
       ) : null}
-      <Flex
-        alignItems="center"
-        bg={isDarkMode ? 'backgroundSurface' : 'backgroundBackdrop'}
-        borderRadius="lg"
-        gap="xxs"
-        p="sm"
-        shadowColor="black"
-        shadowOffset={SHADOW_OFFSET}
-        shadowOpacity={0.05}
-        shadowRadius={6}>
-        {tokenData?.logoUrl && (
-          <Image
-            source={{ uri: tokenData.logoUrl }}
-            style={[
-              boxTokenLogoStyle,
-              {
-                backgroundColor: theme.colors.textTertiary,
-                borderRadius: BOX_TOKEN_LOGO_SIZE / 2,
-                borderColor: theme.colors.backgroundOutline,
-                borderWidth: THIN_BORDER,
-              },
-            ]}
-          />
-        )}
-        <TokenMetadata
-          align="center"
-          main={<Text variant="body">{formatUSDPrice(usdPrice)}</Text>}
-          sub={
-            <RelativeChange
-              change={pricePercentChange ?? undefined}
-              semanticColor={true}
-              variant="badge"
-            />
+      <ContextMenu
+        actions={menuActions}
+        disabled={isEditing}
+        onPress={(e) => {
+          // Emitted index based on order of menu action array
+          // remove pin action
+          if (e.nativeEvent.index === 0) {
+            onRemove()
           }
-        />
-      </Flex>
+          // Edit mode toggle action
+          if (e.nativeEvent.index === 1) {
+            setIsEditing(true)
+          }
+          // Swap token action
+          if (e.nativeEvent.index === 2) {
+            navigateToSwapSell()
+          }
+        }}>
+        <Flex
+          alignItems="center"
+          bg={isDarkMode ? 'backgroundSurface' : 'backgroundBackdrop'}
+          borderRadius="lg"
+          gap="xxs"
+          p="sm"
+          shadowColor="black"
+          shadowOffset={SHADOW_OFFSET}
+          shadowOpacity={0.05}
+          shadowRadius={6}>
+          {tokenData?.logoUrl && (
+            <Image
+              source={{ uri: tokenData.logoUrl }}
+              style={[
+                boxTokenLogoStyle,
+                {
+                  backgroundColor: theme.colors.textTertiary,
+                  borderRadius: BOX_TOKEN_LOGO_SIZE / 2,
+                  borderColor: theme.colors.backgroundOutline,
+                  borderWidth: THIN_BORDER,
+                },
+              ]}
+            />
+          )}
+          <TokenMetadata
+            align="center"
+            main={<Text variant="body">{formatUSDPrice(usdPrice)}</Text>}
+            sub={
+              <RelativeChange
+                change={pricePercentChange ?? undefined}
+                semanticColor={true}
+                variant="badge"
+              />
+            }
+          />
+        </Flex>
+      </ContextMenu>
     </Pressable>
   )
 }

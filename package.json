@@ -103,6 +103,7 @@
     "react": "17.0.2",
     "react-i18next": "^11.12.0",
     "react-native": "0.68.3",
+    "react-native-context-menu-view": "^1.6.0",
     "react-native-device-info": "^10.0.2",
     "react-native-flipper-relay-devtools": "^1.0.3",
     "react-native-gesture-handler": "^2.6.0",

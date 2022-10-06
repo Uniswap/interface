@@ -110,13 +110,13 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
       const _currencyId = address
         ? buildCurrencyId(chainId, address)
         : buildNativeCurrencyId(chainId)
-      const disabled = isEditing && favoriteCurrencyIdsSet.has(_currencyId.toLocaleLowerCase())
+      const isPinned = favoriteCurrencyIdsSet.has(_currencyId.toLocaleLowerCase())
 
       return (
         <TokenProjectItem
-          disabled={disabled}
           index={index}
           isEditing={isEditing}
+          isPinned={isPinned}
           metadataDisplayType={tokenMetadataDisplayType}
           tokenItemData={item}
           onCycleMetadata={cycleTokenMetadataDisplayType}
