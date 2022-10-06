@@ -84,7 +84,7 @@ export default function TokenDetails() {
   const { tokenAddress: tokenAddressParam, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
   const { account } = useWeb3React()
   const currentChainName = validateUrlChainParam(chainName)
-  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[validateUrlChainParam(chainName)]
+  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[currentChainName]
   const nativeCurrency = nativeOnChain(pageChainId)
   const timePeriod = useAtomValue(filterTimeAtom)
   const isNative = tokenAddressParam === 'NATIVE'

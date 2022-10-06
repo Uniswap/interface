@@ -11,6 +11,7 @@ const VerifiedContainer = styled.div`
 export const VerifiedIcon = styled(Verified)<{ size?: string }>`
   width: ${({ size }) => size ?? '1em'};
   height: ${({ size }) => size ?? '1em'};
+  color: ${({ theme }) => theme.accentAction};
 `
 
 export default function TokenSafetyIcon({ warning }: { warning: Warning | null }) {

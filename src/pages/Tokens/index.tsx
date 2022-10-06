@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
@@ -9,7 +10,7 @@ import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { isValidBackendChainName, useGlobalChainName } from 'graphql/data/util'
+import { chainIdToBackendName, isValidBackendChainName } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
@@ -71,18 +72,19 @@ const Tokens = () => {
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
   const navigate = useNavigate()
-  const { chainName } = useParams<{ chainName?: string }>()
-  const globalChainName = useGlobalChainName()
+  const { chainName: chainNameParam } = useParams<{ chainName?: string }>()
+  const { chainId: connectedChainId } = useWeb3React()
+  const connectedChainName = chainIdToBackendName(connectedChainId)
 
   useEffect(() => {
     resetFilterString()
   }, [location, resetFilterString])
 
   useEffect(() => {
-    if (!chainName) {
-      navigate(`/tokens/${globalChainName.toLowerCase()}`)
+    if (!chainNameParam) {
+      navigate(`/tokens/${connectedChainName.toLowerCase()}`)
     }
-  }, [chainName, globalChainName, navigate])
+  }, [chainNameParam, connectedChainName, navigate])
 
   useOnGlobalChainSwitch((chain) => {
     if (isValidBackendChainName(chain)) {

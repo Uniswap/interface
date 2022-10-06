@@ -97,7 +97,7 @@ export default function ChartSection({
           </LogoContainer>
           {nativeCurrency?.name ?? token.name ?? <Trans>Name not found</Trans>}
           <TokenSymbol>{nativeCurrency?.symbol ?? token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
-          {!warning && <VerifiedIcon size="20px" />}
+          {!warning && <VerifiedIcon size="16px" />}
         </TokenNameCell>
         <TokenActions>
           {token.name && token.symbol && token.address && (

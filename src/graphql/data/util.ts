@@ -1,7 +1,6 @@
 import { NATIVE_CHAIN_ID } from 'analytics/constants'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { useAppSelector } from 'state/hooks'
 
 import { Chain, HistoryDuration } from './__generated__/TokenQuery.graphql'
 
@@ -41,13 +40,10 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.OPTIMISM_GOERLI]: 'OPTIMISM',
 }
 
-export function useGlobalChainId() {
-  return useAppSelector((state) => state.application.chainId)
-}
-
-export function useGlobalChainName() {
-  const chainId = useGlobalChainId()
-  return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId] ? CHAIN_ID_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
+export function chainIdToBackendName(chainId: number | undefined) {
+  return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
+    ? CHAIN_ID_TO_BACKEND_NAME[chainId]
+    : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET]
 }
 
 export const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
