@@ -33,7 +33,7 @@ export const formatDollarPrice = (num: number | undefined | null) => {
   if (num === 0) return '$0.00'
   if (!num) return '-'
   if (num < 0.000001) {
-    return '$<0.000001'
+    return `$${num.toExponential(2)}`
   }
   if (num >= 0.000001 && num < 0.1) {
     return `$${Number(num).toPrecision(3)}`

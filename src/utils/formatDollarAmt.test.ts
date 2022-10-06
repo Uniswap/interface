@@ -9,7 +9,7 @@ describe('formatDollarPrice', () => {
     expect(formatDollarPrice(0)).toEqual('$0.00')
   })
   it('< 0.000001', () => {
-    expect(formatDollarPrice(0.0000000001)).toEqual('$<0.000001')
+    expect(formatDollarPrice(0.00000000011231231432)).toEqual('$1.12e-10')
   })
   it('num >= 0.000001 && num < 0.1', () => {
     expect(formatDollarPrice(0.00123123124)).toEqual('$0.00123')
