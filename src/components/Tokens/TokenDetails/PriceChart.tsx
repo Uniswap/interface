@@ -262,7 +262,6 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
    * making it unacceptable for shorter durations / smaller variances.
    */
   const curveTension = timePeriod === TimePeriod.HOUR ? 1 : 0.9
-  const test = true
   return (
     <>
       <ChartHeader>
