@@ -431,5 +431,8 @@
   "Invalid word: {{word}}": "Invalid word: {{word}}",
   "Recovery phrases must be 12-24 words": "Recovery phrases must be 12-24 words",
   "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
-  "Invalid phrase": "Invalid phrase"
+  "Invalid phrase": "Invalid phrase",
+  "Update the app to continue": "Update the app to continue",
+  "The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets.": "The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets.",
+  "Update app": "Update app"
 }

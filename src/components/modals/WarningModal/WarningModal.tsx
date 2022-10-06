@@ -23,6 +23,8 @@ type WarningModalProps = {
   confirmText?: string
   useBiometric?: boolean
   severity?: WarningSeverity
+  isDismissible?: boolean
+  hideHandlebar?: boolean
 }
 
 export function captionForAccountRemovalWarning(
@@ -52,6 +54,8 @@ export default function WarningModal({
   severity = WarningSeverity.Medium,
   children,
   useBiometric = false,
+  isDismissible = true,
+  hideHandlebar = false,
 }: PropsWithChildren<WarningModalProps>) {
   const { requiredForTransactions } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt(onConfirm)
@@ -70,6 +74,8 @@ export default function WarningModal({
   return (
     <BottomSheetModal
       backgroundColor={theme.colors.backgroundSurface}
+      hideHandlebar={hideHandlebar}
+      isDismissible={isDismissible}
       isVisible={isVisible}
       name={modalName}
       onClose={onClose}>

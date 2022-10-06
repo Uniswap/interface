@@ -6,7 +6,7 @@ import {
   BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
-import React, { ComponentProps, PropsWithChildren, useEffect, useRef } from 'react'
+import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
@@ -25,6 +25,7 @@ type Props = {
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   fullScreen?: boolean
   backgroundColor?: string
+  isDismissible?: boolean
 }
 
 const HandleBar = () => {
@@ -59,11 +60,25 @@ export function BottomSheetModal({
   fullScreen,
   hideHandlebar,
   backgroundColor,
+  isDismissible = true,
 }: Props) {
   const modalRef = useRef<BaseModal>(null)
   const { animatedHandleHeight, animatedSnapPoints, animatedContentHeight, handleContentLayout } =
     useBottomSheetDynamicSnapPoints(snapPoints)
   const theme = useAppTheme()
+
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        opacity={0.4}
+        pressBehavior={isDismissible ? 'close' : 'none'}
+      />
+    ),
+    [isDismissible]
+  )
 
   useEffect(() => {
     if (isVisible) {
@@ -79,9 +94,11 @@ export function BottomSheetModal({
   return (
     <BaseModal
       ref={modalRef}
-      backdropComponent={Backdrop}
+      backdropComponent={renderBackdrop}
       backgroundStyle={{ backgroundColor: backgroundColor ?? theme.colors.backgroundSurface }}
       contentHeight={animatedContentHeight}
+      enableContentPanningGesture={isDismissible}
+      enableHandlePanningGesture={isDismissible}
       handleComponent={hideHandlebar ? null : HandleBar}
       handleHeight={animatedHandleHeight}
       snapPoints={animatedSnapPoints}

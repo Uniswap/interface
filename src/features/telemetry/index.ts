@@ -50,6 +50,7 @@ export async function logEvent(name: string, params: {}) {
  */
 export function logException(context: LogContext, error: any, extraTags?: LogTags) {
   if (__DEV__) {
+    logger.error('telemetry', 'logException', context, error)
     return
   }
 

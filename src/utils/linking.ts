@@ -1,6 +1,6 @@
 import { Linking } from 'react-native'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
-import { logMessage } from 'src/features/telemetry'
+import { logException, logMessage } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 import { logger } from 'src/utils/logger'
 
@@ -22,15 +22,14 @@ export async function openUri(uri: string, isSafeUri = false) {
 
   const supported = await Linking.canOpenURL(uri)
   if (!supported) {
-    logger.debug('utils/linking', 'openUri', 'cannot open URI', uri)
+    logMessage(LogContext.OpenUri, `Cannot open URI: ${uri}`)
     return
   }
 
   try {
-    logger.debug('utils/linking', 'openUri', 'attempting to open URI', uri)
     await Linking.openURL(uri)
   } catch (error) {
-    logger.error('utils/linking', 'openUri', 'error opening URI', error)
+    logException(LogContext.OpenUri, error)
   }
 }
 
