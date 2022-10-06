@@ -31,6 +31,12 @@ import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
+const Hr = styled.hr`
+  background-color: ${({ theme }) => theme.textSecondary};
+  opacity: 24%;
+  border: none;
+  height: 0.5px;
+`
 export const TokenDetailsLayout = styled.div`
   display: flex;
   gap: 60px;
@@ -177,6 +183,7 @@ export default function TokenDetails() {
               priceHigh52W={tokenQueryData.market?.priceHigh52W?.value}
               priceLow52W={tokenQueryData.market?.priceLow52W?.value}
             />
+            <Hr />
             <AboutSection
               address={tokenQueryData.address ?? ''}
               description={tokenQueryData.project?.description}
