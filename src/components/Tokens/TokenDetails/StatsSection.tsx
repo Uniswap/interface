@@ -1,9 +1,13 @@
 import { Trans } from '@lingui/macro'
+import { TokenSortMethod } from 'graphql/data/TopTokens'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/animations'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
+
+import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
+import InfoTip from './InfoTip'
 
 export const StatWrapper = styled.div`
   display: flex;
@@ -24,8 +28,14 @@ export const StatPair = styled.div`
   flex: 1;
   flex-wrap: wrap;
 `
+
 const Header = styled(ThemedText.MediumHeader)`
   font-size: 28px !important;
+`
+const StatTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
 `
 const StatPrice = styled.span`
   font-size: 28px;
@@ -41,10 +51,14 @@ const Wrapper = styled.div`
 
 type NumericStat = number | undefined | null
 
-function Stat({ value, title }: { value: NumericStat; title: ReactNode }) {
+function Stat({ value, title, description }: { value: NumericStat; title: ReactNode; description?: ReactNode }) {
   return (
     <StatWrapper>
-      {title}
+      <StatTitle>
+        {title}
+        {description && <InfoTip text={description}></InfoTip>}
+      </StatTitle>
+
       <StatPrice>{value ? formatDollarAmount(value) : '-'}</StatPrice>
     </StatWrapper>
   )
@@ -66,8 +80,20 @@ export default function StatsSection(props: StatsSectionProps) {
         </Header>
         <TokenStatsSection>
           <StatPair>
-            <Stat value={TVL} title={<Trans>Total Value Locked</Trans>} />
-            <Stat value={volume24H} title={<Trans>24H volume</Trans>} />
+            <Stat
+              value={TVL}
+              description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
+              title={<Trans>TVL</Trans>}
+            />
+            <Stat
+              value={volume24H}
+              description={
+                <Trans>
+                  24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+                </Trans>
+              }
+              title={<Trans>24H volume</Trans>}
+            />
           </StatPair>
           <StatPair>
             <Stat value={priceLow52W} title={<Trans>52W low</Trans>} />
