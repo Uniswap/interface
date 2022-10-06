@@ -1,6 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { configureStore, Middleware } from '@reduxjs/toolkit'
-import { persistReducer, persistStore } from 'redux-persist'
+import { persistReducer, persistStore, Storage } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
 import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
@@ -14,6 +13,25 @@ import { gasApi } from 'src/features/gas/api'
 import { nftApi } from 'src/features/nfts/api'
 import { routingApi } from 'src/features/routing/routingApi'
 
+import { MMKV } from 'react-native-mmkv'
+
+const storage = new MMKV()
+
+export const reduxStorage: Storage = {
+  setItem: (key, value) => {
+    storage.set(key, value)
+    return Promise.resolve(true)
+  },
+  getItem: (key) => {
+    const value = storage.getString(key)
+    return Promise.resolve(value)
+  },
+  removeItem: (key) => {
+    storage.delete(key)
+    return Promise.resolve()
+  },
+}
+
 const sagaMiddleware = createSagaMiddleware({
   context: {
     signers: walletContextValue.signers,
@@ -24,7 +42,7 @@ const sagaMiddleware = createSagaMiddleware({
 
 export const persistConfig = {
   key: 'root',
-  storage: AsyncStorage,
+  storage: reduxStorage,
   whitelist: [
     'wallet',
     'biometricSettings',

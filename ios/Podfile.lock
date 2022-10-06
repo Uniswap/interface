@@ -566,6 +566,9 @@ PODS:
     - MLImage (= 1.0.0-beta2)
     - MLKitCommon (~> 5.0)
     - Protobuf (~> 3.12)
+  - MMKV (1.2.14):
+    - MMKVCore (~> 1.2.14)
+  - MMKVCore (1.2.14)
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -803,6 +806,9 @@ PODS:
   - React-logger (0.68.3):
     - glog
   - react-native-get-random-values (1.7.0):
+    - React-Core
+  - react-native-mmkv (2.4.3):
+    - MMKV (>= 1.2.13)
     - React-Core
   - react-native-netinfo (9.3.0):
     - React-Core
@@ -1044,6 +1050,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
+  - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -1121,6 +1128,8 @@ SPEC REPOS:
     - MLKitTextRecognition
     - MLKitTextRecognitionCommon
     - MLKitVision
+    - MMKV
+    - MMKVCore
     - nanopb
     - OneSignalXCFramework
     - PromisesObjC
@@ -1207,6 +1216,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
+  react-native-mmkv:
+    :path: "../node_modules/react-native-mmkv"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-onesignal:
@@ -1342,6 +1353,8 @@ SPEC CHECKSUMS:
   MLKitTextRecognition: 8b0e0023a4babc66ca83d8b82864e57931164445
   MLKitTextRecognitionCommon: 3e84602c928fe2b775fae81376f2136324cbd763
   MLKitVision: e87dc3f2e456a6ab32361ebd985e078dd2746143
+  MMKV: 9c4663aa7ca255d478ff10f2f5cb7d17c1651ccd
+  MMKVCore: 89f5c8a66bba2dcd551779dea4d412eeec8ff5bb
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OneSignalXCFramework: fe027712118f2862ab193b72270487f11450ea63
   Permission-FaceID: aaf43b353c25aaa2c1a501f93fa33dcb0f76e6c8
@@ -1363,6 +1376,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 86e89b9f135787a2e8eb74b3fc00ec61e9a80ae1
   React-logger: f790bd10f86b38012e108fb4b564023602702270
   react-native-get-random-values: 237bffb1c7e05fb142092681531810a29ba53015
+  react-native-mmkv: 1265a348a4711097ba29c8bcefd5971f48220f2b
   react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
   react-native-onesignal: 7643517fe655b94cfda8e697ec16f9b9135648b8
   react-native-pager-view: e76d64a5114a152e942caa09136e4e250709378c
@@ -1407,6 +1421,6 @@ SPEC CHECKSUMS:
   WalletConnectSwift: 1fbff8f5315bd8d41596773ca1b384aa873b6824
   Yoga: 2f6a78c58dcc2963bd8e34d96a4246d9dff2e3a7
 
-PODFILE CHECKSUM: 06ca01798a5852f9afb2885b70b43441d1016bd2
+PODFILE CHECKSUM: a6ced9bb798bab581aec9fb71a8be84c15c6542e
 
 COCOAPODS: 1.11.3

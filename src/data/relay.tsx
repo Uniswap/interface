@@ -13,7 +13,7 @@ import {
 import { config } from 'src/config'
 import { useAsyncData } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
-import { ONE_MINUTE_MS } from 'src/utils/time'
+import { ONE_SECOND_MS } from 'src/utils/time'
 
 if (__DEV__) {
   // We need to add the plugin before creating `RelayEnvironment`. See discussion here:
@@ -23,7 +23,7 @@ if (__DEV__) {
 }
 
 const RELAY_STORE_RECORDS_KEY = 'relay-store-records'
-const RELAY_STORE_DUMP_THROTTLE_MS = ONE_MINUTE_MS
+const RELAY_STORE_DUMP_THROTTLE_MS = 30 * ONE_SECOND_MS
 
 /**
  * Extension of relay's `RecordSource` that can restore memory cache from disk,
