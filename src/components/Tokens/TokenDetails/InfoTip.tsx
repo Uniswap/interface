@@ -7,7 +7,7 @@ const InfoTipContainer = styled.div`
   display: flex;
   position: relative;
   align-items: center;
-  cursor: pointer;
+  cursor: help;
 `
 
 const InfoTipBody = styled.div`
