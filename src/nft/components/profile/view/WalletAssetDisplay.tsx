@@ -3,21 +3,12 @@ import { Column } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
-import { WalletAsset } from 'nft/types'
+import { DetailsOrigin, WalletAsset } from 'nft/types'
+import { formatEth, getAssetHref } from 'nft/utils'
 import { useMemo, useReducer } from 'react'
 import { Link } from 'react-router-dom'
 
 import * as styles from './ProfilePage.css'
-
-const formatEth = (price: number) => {
-  if (price > 1000000) {
-    return `${Math.round(price / 1000000)}M`
-  } else if (price > 1000) {
-    return `${Math.round(price / 1000)}K`
-  } else {
-    return `${Math.round(price * 100 + Number.EPSILON) / 100}`
-  }
-}
 
 export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; isSellMode: boolean }) => {
   const sellAssets = useSellAsset((state) => state.sellAssets)
@@ -51,10 +42,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
   }
 
   return (
-    <Link
-      to={`/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`}
-      style={{ textDecoration: 'none' }}
-    >
+    <Link to={getAssetHref(asset, DetailsOrigin.PROFILE)} style={{ textDecoration: 'none' }}>
       <Column
         color={'textPrimary'}
         className={subheadSmall}
@@ -67,7 +55,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
           width="full"
           borderTopLeftRadius="20"
           borderTopRightRadius="20"
-          src={asset.image_url || '/nft/svgs/image-placeholder.svg'}
+          src={asset.image_url ?? '/nft/svgs/image-placeholder.svg'}
           style={{ aspectRatio: '1' }}
         />
         <Column
