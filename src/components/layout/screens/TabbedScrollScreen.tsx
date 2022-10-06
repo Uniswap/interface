@@ -83,6 +83,28 @@ export const renderTabLabel = ({ route, focused }: { route: Route; focused: bool
   )
 }
 
+export const panSidebarContainerGestureAction = (openSidebar: () => void) =>
+  Gesture.Pan().onStart(({ translationX }) => {
+    // only register as a side swipe above a certain threshold
+    if (Math.abs(translationX) < SWIPE_THRESHOLD) {
+      return
+    }
+
+    if (translationX > 0) {
+      runOnJS(openSidebar)()
+    }
+  })
+
+export const panHeaderGestureAction = (openSidebar: () => void) =>
+  Gesture.Pan().onStart(({ translationX }) => {
+    // only register as a side swipe above a certain threshold
+    if (Math.abs(translationX) < SWIPE_THRESHOLD || translationX < 0) {
+      return
+    }
+
+    runOnJS(openSidebar)()
+  })
+
 export default function TabbedScrollScreen({
   contentHeader,
   scrollHeader,
@@ -112,32 +134,10 @@ export default function TabbedScrollScreen({
   }, [navigation])
 
   const panSidebarContainerGesture = useMemo(
-    () =>
-      Gesture.Pan().onStart(({ translationX }) => {
-        // only register as a side swipe above a certain threshold
-        if (Math.abs(translationX) < SWIPE_THRESHOLD) {
-          return
-        }
-
-        if (translationX > 0) {
-          runOnJS(openSidebar)()
-        }
-      }),
+    () => panSidebarContainerGestureAction(openSidebar),
     [openSidebar]
   )
-
-  const panHeaderGesture = useMemo(
-    () =>
-      Gesture.Pan().onStart(({ translationX }) => {
-        // only register as a side swipe above a certain threshold
-        if (Math.abs(translationX) < SWIPE_THRESHOLD || translationX < 0) {
-          return
-        }
-
-        runOnJS(openSidebar)()
-      }),
-    [openSidebar]
-  )
+  const panHeaderGesture = useMemo(() => panHeaderGestureAction(openSidebar), [openSidebar])
 
   const tabBarAnimatedStyle = useAnimatedStyle(() => {
     // If scrollHeader exists, we must account for scrollHeader padding which is equal to insets.top

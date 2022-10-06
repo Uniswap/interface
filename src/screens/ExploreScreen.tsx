@@ -1,8 +1,9 @@
-import { useScrollToTop } from '@react-navigation/native'
+import { DrawerActions, useScrollToTop } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput } from 'react-native'
+import { GestureDetector } from 'react-native-gesture-handler'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
 import { PreloadedQuery } from 'react-relay'
@@ -16,7 +17,12 @@ import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
-import { renderTabLabel, TabStyles } from 'src/components/layout/screens/TabbedScrollScreen'
+import {
+  panHeaderGestureAction,
+  panSidebarContainerGestureAction,
+  renderTabLabel,
+  TabStyles,
+} from 'src/components/layout/screens/TabbedScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Loading } from 'src/components/loading'
 import { Screens, Tabs } from 'src/screens/Screens'
@@ -25,6 +31,8 @@ import { useDebounce } from 'src/utils/timing'
 
 const TOKENS_KEY = 'tokens'
 const WALLETS_KEY = 'wallets'
+
+const SIDEBAR_SWIPE_CONTAINER_WIDTH = 45
 
 type Props = {
   exploreTokensTabQueryRef: PreloadedQuery<ExploreTokensTabQuery>
@@ -107,20 +115,32 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
     [tabIndex, tabs, theme]
   )
 
+  const openSidebar = useCallback(() => {
+    navigation.dispatch(DrawerActions.openDrawer())
+  }, [navigation])
+
+  const panSidebarContainerGesture = useMemo(
+    () => panSidebarContainerGestureAction(openSidebar),
+    [openSidebar]
+  )
+  const panHeaderGesture = useMemo(() => panHeaderGestureAction(openSidebar), [openSidebar])
+
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <Flex bg="backgroundBackdrop" m="sm">
-        <SearchTextInput
-          ref={textInputRef}
-          showCancelButton
-          backgroundColor="backgroundContainer"
-          placeholder={t('Search tokens or addresses')}
-          value={searchQuery}
-          onCancel={onSearchCancel}
-          onChangeText={onChangeSearchFilter}
-          onFocus={onSearchFocus}
-        />
-      </Flex>
+      <GestureDetector gesture={panHeaderGesture}>
+        <Flex bg="backgroundBackdrop" m="sm">
+          <SearchTextInput
+            ref={textInputRef}
+            showCancelButton
+            backgroundColor="backgroundContainer"
+            placeholder={t('Search tokens or addresses')}
+            value={searchQuery}
+            onCancel={onSearchCancel}
+            onChangeText={onChangeSearchFilter}
+            onFocus={onSearchFocus}
+          />
+        </Flex>
+      </GestureDetector>
       <Flex grow>
         {isSearchMode ? (
           <KeyboardAvoidingView behavior="height" style={flex.fill}>
@@ -145,6 +165,17 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
           />
         )}
       </Flex>
+
+      <GestureDetector gesture={panSidebarContainerGesture}>
+        <Box
+          bottom={0}
+          height="100%"
+          left={0}
+          position="absolute"
+          top={0}
+          width={SIDEBAR_SWIPE_CONTAINER_WIDTH} // Roughly 1/2 icon width on tokens tab
+        />
+      </GestureDetector>
     </Screen>
   )
 }
