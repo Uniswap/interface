@@ -467,6 +467,11 @@ const navOptions = {
   presentationModal: { presentation: 'modal' },
 } as const
 
-const DRAWER_ENABLED_SCREENS = [Screens.Explore.valueOf(), Tabs.Explore.valueOf()]
+// These should remain enabled to support swipe to close. But to prevent swipe to open set SIDEBAR_WIDTH to 0.
+const DRAWER_ENABLED_SCREENS = [
+  Screens.Home.valueOf(),
+  Screens.Explore.valueOf(),
+  Tabs.Explore.valueOf(),
+]
 const SIDEBAR_WIDTH = Math.min(dimensions.fullWidth * 0.8, 320)
 const SWIPE_WIDTH = dimensions.fullWidth * 0.125
