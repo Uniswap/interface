@@ -124,6 +124,8 @@ export function ExperimentsModal() {
             )
           })}
         </Flex>
+        {/* // Spacer for keyboard input */}
+        <Flex height={300} />
       </Flex>
     </BottomSheetModal>
   )
