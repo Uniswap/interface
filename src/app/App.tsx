@@ -2,7 +2,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { StrictMode, Suspense, useCallback } from 'react'
-import { StatusBar, useColorScheme } from 'react-native'
+import { StatusBar, Text, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -13,6 +13,7 @@ import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
+import { useStorageMigrator } from 'src/data/migrateStorage'
 import { RelayPersistGate } from 'src/data/relay'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
@@ -57,6 +58,14 @@ initAnalytics()
 initExperiments()
 
 function App() {
+  // TODO(MOB-2795): remove once most devices are migrated
+  const hasMigrated = useStorageMigrator()
+
+  if (!hasMigrated) {
+    // show loading while storage is being migrated
+    return <Text>Migrating storage...</Text>
+  }
+
   return (
     <Trace startMark={MarkNames.AppStartup}>
       <StrictMode>
