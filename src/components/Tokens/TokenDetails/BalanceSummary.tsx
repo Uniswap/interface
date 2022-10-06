@@ -79,8 +79,8 @@ export interface BalanceSummaryProps {
 }
 
 export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNative }: BalanceSummaryProps) {
-  const balanceUsdValue = useStablecoinValue(tokenAmount)?.toFixed(2)
-  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(2)
+  const balanceUsdValue = useStablecoinValue(tokenAmount)?.toFixed(6)
+  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(6)
 
   const { chainName } = useParams<{ chainName?: string }>()
   const pageChainName = validateUrlChainParam(chainName).toLowerCase()

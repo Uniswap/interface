@@ -87,8 +87,8 @@ export default function MobileBalanceSummaryFooter({
   nativeCurrencyAmount,
   isNative,
 }: BalanceSummaryProps) {
-  const balanceUsdValue = useStablecoinValue(tokenAmount)?.toFixed(2)
-  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(2)
+  const balanceUsdValue = useStablecoinValue(tokenAmount)?.toFixed(6)
+  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(6)
 
   const formattedBalance = tokenAmount
     ? formatToDecimal(tokenAmount, Math.min(tokenAmount.currency.decimals, 2))

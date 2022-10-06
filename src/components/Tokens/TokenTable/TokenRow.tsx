@@ -15,7 +15,7 @@ import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { formatDollarPrice } from 'utils/formatDollarAmt'
+import { formatDollarAmount, formatDollarPrice } from 'utils/formatDollarAmt'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
