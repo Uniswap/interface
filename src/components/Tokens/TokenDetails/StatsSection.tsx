@@ -5,7 +5,6 @@ import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
-import { SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
 import InfoTip from './InfoTip'
 
@@ -44,12 +43,12 @@ const NoData = styled.div`
 
 type NumericStat = number | undefined | null
 
-function Stat({ value, title, desc }: { value: NumericStat; title: ReactNode; desc?: string }) {
+function Stat({ value, title, description }: { value: NumericStat; title: ReactNode; description?: ReactNode }) {
   return (
     <StatWrapper>
       <StatTitle>
         {title}
-        {desc && <InfoTip breakpoint={SMALL_MEDIA_BREAKPOINT}>{desc}</InfoTip>}
+        {description && <InfoTip text={description}></InfoTip>}
       </StatTitle>
 
       <StatPrice>{value ? formatDollarAmount(value) : '-'}</StatPrice>
@@ -69,10 +68,18 @@ export default function StatsSection(props: StatsSectionProps) {
     return (
       <TokenStatsSection>
         <StatPair>
-          <Stat value={TVL} desc={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]} title={<Trans>TVL</Trans>} />
+          <Stat
+            value={TVL}
+            description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
+            title={<Trans>TVL</Trans>}
+          />
           <Stat
             value={volume24H}
-            desc="24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+            description={
+              <Trans>
+                24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+              </Trans>
+            }
             title={<Trans>24H volume</Trans>}
           />
         </StatPair>

@@ -1,9 +1,7 @@
-import { PropsWithChildren, useState } from 'react'
+import Tooltip from 'components/Tooltip'
+import { ReactNode, useCallback, useState } from 'react'
 import { Info } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
-import { Z_INDEX } from 'theme/zIndex'
-
-import { ReactComponent as TooltipTriangle } from '../../../assets/svg/tooltip_triangle.svg'
+import styled from 'styled-components/macro'
 
 const InfoTipContainer = styled.div`
   display: flex;
@@ -12,75 +10,25 @@ const InfoTipContainer = styled.div`
   cursor: pointer;
 `
 
-const InfoTipWrapper = styled.div<{ breakpoint: string }>`
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  left: 15px;
-  max-width: 280;
-  ${({ breakpoint }) => css`
-    @media only screen and (max-width: ${breakpoint}) {
-      flex-direction: column;
-      top: 20px;
-      transform: translateX(calc(-50% - 8px));
-    }
-  `}
-`
-
-const InfoTipBody = styled.div<{ breakpoint: string }>`
-  z-index: ${Z_INDEX.popover};
-  background-color: ${({ theme }) => theme.backgroundBackdrop};
-  border-radius: 12px;
+const InfoTipBody = styled.div`
   color: ${({ theme }) => theme.textPrimary};
-  padding: 10px 12px;
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-  width: 228px;
-  box-shadow: ${({ theme }) => theme.deepShadow};
-
-  ${({ breakpoint }) => css`
-    @media only screen and (max-width: ${breakpoint}) {
-      width: 186px;
-    }
-  `}
 `
 
-const TriangleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
+export default function InfoTip({ text }: { text: ReactNode; size?: number }) {
+  const [show, setShow] = useState<boolean>(false)
 
-const StyledTooltipTriangle = styled(TooltipTriangle)<{ breakpoint: string }>`
-  z-index: ${Z_INDEX.tooltip};
-  path {
-    fill: ${({ theme }) => theme.backgroundBackdrop};
-  }
-  rotate: -90deg;
-  transform: translateY(2.5px);
-  ${({ breakpoint }) => css`
-    @media only screen and (max-width: ${breakpoint}) {
-      rotate: none;
-      transform: translateY(0);
-    }
-  `}
-`
-
-export default function InfoTip({ children, breakpoint }: PropsWithChildren<{ breakpoint: string }>) {
-  const [isHover, setIsHover] = useState(false)
+  const open = useCallback(() => setShow(true), [setShow])
+  const close = useCallback(() => setShow(false), [setShow])
   return (
-    <InfoTipContainer onMouseOver={() => setIsHover(true)} onMouseOut={() => setIsHover(false)}>
-      <Info size={14} />
-      {isHover && (
-        <InfoTipWrapper breakpoint={breakpoint}>
-          <TriangleWrapper>
-            <StyledTooltipTriangle breakpoint={breakpoint} />
-          </TriangleWrapper>
-
-          <InfoTipBody breakpoint={breakpoint}>{children}</InfoTipBody>
-        </InfoTipWrapper>
-      )}
-    </InfoTipContainer>
+    <span style={{ marginLeft: 4, display: 'flex', alignItems: 'center', backgroundColor: 'black' }}>
+      <Tooltip text={<InfoTipBody>{text}</InfoTipBody>} show={show} placement="right">
+        <InfoTipContainer onClick={open} onMouseEnter={open} onMouseLeave={close}>
+          <Info size={14} />
+        </InfoTipContainer>
+      </Tooltip>
+    </span>
   )
 }

@@ -332,13 +332,15 @@ export const LogoContainer = styled.div`
   display: flex;
 `
 
-export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, string | undefined> = {
+export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
   [TokenSortMethod.PRICE]: undefined,
   [TokenSortMethod.PERCENT_CHANGE]: undefined,
-  [TokenSortMethod.TOTAL_VALUE_LOCKED]:
-    'Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool.',
-  [TokenSortMethod.VOLUME]:
-    'Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.',
+  [TokenSortMethod.TOTAL_VALUE_LOCKED]: (
+    <Trans>Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool.</Trans>
+  ),
+  [TokenSortMethod.VOLUME]: (
+    <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
+  ),
 }
 
 /* Get singular header cell for header row */
@@ -368,7 +370,7 @@ function HeaderCell({
         </>
       )}
       <HeaderCellText>{category}</HeaderCellText>
-      {description && <InfoTip breakpoint={MAX_WIDTH_MEDIA_BREAKPOINT}>{description}</InfoTip>}
+      {description && <InfoTip text={description}></InfoTip>}
     </HeaderCellWrapper>
   )
 }
