@@ -5,7 +5,7 @@ import { MarketplaceSelect } from 'nft/components/collection/MarketplaceSelect'
 import { PriceRange } from 'nft/components/collection/PriceRange'
 import { Column, Row } from 'nft/components/Flex'
 import { Radio } from 'nft/components/layout/Radio'
-import { caption } from 'nft/css/common.css'
+import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks'
 import { Trait } from 'nft/hooks/useCollectionFilters'
 import { groupBy } from 'nft/utils/groupBy'
@@ -29,7 +29,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
   return (
     <Box className={styles.container}>
       <Row width="full" justifyContent="space-between">
-        <Row as="span" color="textSecondary" paddingLeft="8" className={caption}>
+        <Row as="span" color="textSecondary" paddingLeft="8" className={subheadSmall} lineHeight="20">
           Filters
         </Row>
       </Row>
@@ -58,7 +58,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
         <MarketplaceSelect />
         <PriceRange />
         <Box marginTop="28">
-          <Box as="span" color="textSecondary" paddingLeft="8" className={caption}>
+          <Box as="span" color="textSecondary" paddingLeft="8" className={subheadSmall}>
             Traits
           </Box>
           <Column marginTop="8" marginBottom="60">
