@@ -3,8 +3,6 @@ import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
-import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { AppNotificationType } from 'src/features/notifications/types'
 import { CurrencyId, currencyId } from 'src/utils/currencyId'
 
 export function useFavoriteCurrencies(currencies: Currency[]) {
@@ -26,13 +24,5 @@ export function useToggleFavoriteCallback(id: CurrencyId) {
     } else {
       dispatch(addFavoriteToken({ currencyId: id }))
     }
-
-    dispatch(
-      pushNotification({
-        type: AppNotificationType.Favorites,
-        isAddition: !isFavoriteToken,
-        currencyId: id,
-      })
-    )
   }, [dispatch, id, isFavoriteToken])
 }

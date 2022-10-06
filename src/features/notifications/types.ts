@@ -117,12 +117,6 @@ export type TransactionNotification =
   | TransferNFTTxNotification
   | UnknownTxNotification
 
-export interface FavoriteNotification extends AppNotificationBase {
-  type: AppNotificationType.Favorites
-  isAddition: boolean
-  currencyId: string
-}
-
 export interface CopyNotification extends AppNotificationBase {
   type: AppNotificationType.Copied
 }
@@ -138,5 +132,4 @@ export type AppNotification =
   | CopyNotification
   | WalletConnectNotification
   | TransactionNotification
-  | FavoriteNotification
   | SwapNetworkNotification

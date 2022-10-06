@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { store } from 'src/app/store'
 import CheckCircle from 'src/assets/icons/check-circle.svg'
-import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
 import {
   DappLogoWithTxStatus,
   LogoWithTxStatus,
@@ -24,7 +23,6 @@ import {
   AppNotificationDefault,
   ApproveTxNotification,
   CopyNotification,
-  FavoriteNotification as FavoriteNotificationType,
   SwapNetworkNotification as SwapNetworkNotificationType,
   SwapTxNotification,
   TransactionNotificationBase,
@@ -375,27 +373,6 @@ export function DefaultNotification({
   notification: AppNotificationDefault
 }) {
   return <NotificationToast address={address} hideDelay={hideDelay} title={title} />
-}
-
-export function FavoriteNotification({
-  notification: { currencyId, isAddition, hideDelay },
-}: {
-  notification: FavoriteNotificationType
-}) {
-  const { t } = useTranslation()
-  const currency = useCurrency(currencyId)
-  const title = isAddition ? t('Added to favorites') : t('Removed from favorites')
-  const icon = <CurrencyLogoOrPlaceholder currency={currency} size={NOTIFICATION_ICON_SIZE} />
-  return (
-    <NotificationToast
-      useSmallDisplay
-      hideDelay={hideDelay}
-      icon={icon}
-      title={title}
-      // TODO: re-enable when press on toasts are supported
-      // onPress={() => navigate(Screens.TokenDetails, { currencyId })}
-    />
-  )
 }
 
 export function CopiedNotification({
