@@ -10,14 +10,21 @@ const instancesSet: { [title: string]: Set<Error> } = {}
 export default function useDebug(
   props: { [key: string]: any } & {
     title: string
+    filter?: RegExp | string
   },
 ) {
   const prevProps = useRef(props)
   const instanceRef = useRef(new Error('Trace'))
   const trace = instanceRef.current.stack || ''
   // const skipRealChanged = true // recommend: true
+  const isMatch = props.filter
+    ? typeof props.filter === 'string'
+      ? trace.includes(props.filter)
+      : props.filter.test(trace)
+    : true
 
   useEffect(() => {
+    if (!isMatch) return
     const instance = instanceRef.current
     if (!instancesSet[props.title]) instancesSet[props.title] = new Set()
     instancesSet[props.title].add(instance)
@@ -28,6 +35,7 @@ export default function useDebug(
   }, [])
 
   useEffect(() => {
+    if (!isMatch) return
     const instances = [...instancesSet[props.title]]
     const propKeys = new Set<string>()
     Object.keys(prevProps.current).forEach(key => propKeys.add(key))
@@ -62,7 +70,13 @@ export default function useDebug(
           console.log('Is real changed:', isRealChanged, isRealChanged ? '' : '🆘 🆘 🆘')
           console.log(' - Old:', prevProps.current[key])
           console.log(' - New:', props[key])
-          if (typeof prevProps.current[key] === 'object' && typeof props[key] === 'object' && isRealChanged) {
+          if (
+            prevProps.current[key] &&
+            typeof prevProps.current[key] === 'object' &&
+            props[key] &&
+            typeof props[key] === 'object' &&
+            isRealChanged
+          ) {
             // find which key is really changed for object and array
             const propSubKeys = new Set<string>()
             Object.keys(prevProps.current[key]).forEach(subkey => propSubKeys.add(subkey))

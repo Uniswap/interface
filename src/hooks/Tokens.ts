@@ -182,18 +182,23 @@ export function useToken(tokenAddress?: string): Token | NativeCurrency | undefi
   const symbol = useSingleCallResult(token ? undefined : tokenContract, 'symbol', undefined, NEVER_RELOAD)
   const symbolBytes32 = useSingleCallResult(token ? undefined : tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
   const decimals = useSingleCallResult(token ? undefined : tokenContract, 'decimals', undefined, NEVER_RELOAD)
+  const decimalsResult = decimals.result?.[0]
+  const symbolResult = symbol.result?.[0]
+  const symbolBytes32Result = symbolBytes32.result?.[0]
+  const tokenNameResult = tokenName.result?.[0]
+  const tokenNameBytes32Result = tokenNameBytes32.result?.[0]
 
   return useMemo(() => {
     if (token) return token
     if (!chainId || !address) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
-    if (decimals.result) {
+    if (decimalsResult) {
       return new Token(
         chainId,
         address,
-        decimals.result[0],
-        parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
-        parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token'),
+        decimalsResult,
+        parseStringOrBytes32(symbolResult, symbolBytes32Result, 'UNKNOWN'),
+        parseStringOrBytes32(tokenNameResult, tokenNameBytes32Result, 'Unknown Token'),
       )
     }
     return undefined
@@ -201,14 +206,14 @@ export function useToken(tokenAddress?: string): Token | NativeCurrency | undefi
     address,
     chainId,
     decimals.loading,
-    decimals.result,
+    decimalsResult,
     symbol.loading,
-    symbol.result,
-    symbolBytes32.result,
+    symbolResult,
+    symbolBytes32Result,
     token,
     tokenName.loading,
-    tokenName.result,
-    tokenNameBytes32.result,
+    tokenNameResult,
+    tokenNameBytes32Result,
   ])
 }
 

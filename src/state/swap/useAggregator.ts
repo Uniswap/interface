@@ -53,9 +53,10 @@ export function useDerivedSwapInfoV2(): {
 
   const isExactIn: boolean = independentField === Field.INPUT
 
+  const currency = isExactIn ? inputCurrency : outputCurrency
   const parsedAmount = useMemo(() => {
-    return tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
-  }, [typedValue, isExactIn, inputCurrency, outputCurrency])
+    return tryParseAmount(typedValue, currency ?? undefined)
+  }, [typedValue, currency])
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
