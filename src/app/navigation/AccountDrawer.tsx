@@ -3,6 +3,7 @@ import { selectionAsync } from 'expo-haptics'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-gesture-handler'
+import { SvgProps } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import GlobalIcon from 'src/assets/icons/global.svg'
 import HelpIcon from 'src/assets/icons/help.svg'
@@ -44,9 +45,10 @@ const onPressGetHelp = () => {
   openUri('https://help.uniswap.org')
 }
 
+const UNICON_WIDTH = 36
+
 export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { t } = useTranslation()
-  const theme = useAppTheme()
 
   const activeAccountAddress = useActiveAccountAddress()
   const addressToAccount = useAccounts()
@@ -305,7 +307,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           showCopy
           address={activeAccountAddress}
           captionVariant="bodySmall"
-          size={36}
+          size={UNICON_WIDTH}
           variant="headlineSmall"
           verticalGap="none"
         />
@@ -314,45 +316,24 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       <Separator mb="md" />
 
       <Flex gap="lg" pb="lg" px="lg">
-        <Button
+        <SettingsButton
+          Icon={GlobalIcon}
+          label={t('Manage connections')}
           name={ElementName.ManageConnections}
-          testID={ElementName.ManageConnections}
-          onPress={onPressManageConnections}>
-          <Flex row alignItems="center" gap="sm">
-            <GlobalIcon
-              color={theme.colors.textSecondary}
-              height={theme.iconSizes.lg}
-              width={theme.iconSizes.lg}
-            />
-            <Text color="textSecondary" variant="subhead">
-              {t('Manage connections')}
-            </Text>
-          </Flex>
-        </Button>
-        <Button name={ElementName.GetHelp} testID={ElementName.GetHelp} onPress={onPressGetHelp}>
-          <Flex row alignItems="center" gap="sm">
-            <HelpIcon
-              color={theme.colors.textSecondary}
-              height={theme.iconSizes.lg}
-              width={theme.iconSizes.lg}
-            />
-            <Text color="textSecondary" variant="subhead">
-              {t('Get help')}
-            </Text>
-          </Flex>
-        </Button>
-        <Button name={ElementName.Settings} testID={ElementName.Settings} onPress={onPressSettings}>
-          <Flex row alignItems="center" gap="sm">
-            <SettingsIcon
-              color={theme.colors.textSecondary}
-              height={theme.iconSizes.lg}
-              width={theme.iconSizes.lg}
-            />
-            <Text color="textSecondary" variant="subhead">
-              {t('Settings')}
-            </Text>
-          </Flex>
-        </Button>
+          onPress={onPressManageConnections}
+        />
+        <SettingsButton
+          Icon={HelpIcon}
+          label={t('Get help')}
+          name={ElementName.GetHelp}
+          onPress={onPressGetHelp}
+        />
+        <SettingsButton
+          Icon={SettingsIcon}
+          label={t('Settings')}
+          name={ElementName.Settings}
+          onPress={onPressSettings}
+        />
       </Flex>
 
       <Box flexGrow={1} />
@@ -392,5 +373,36 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         />
       )}
     </Screen>
+  )
+}
+
+function SettingsButton({
+  name,
+  Icon,
+  onPress,
+  label,
+}: {
+  name: string
+  Icon: React.FC<SvgProps>
+  label: string
+  onPress: () => void
+}) {
+  const theme = useAppTheme()
+
+  return (
+    <Button name={name} testID={name} onPress={onPress}>
+      <Flex row alignItems="center" gap="sm">
+        <Box alignItems="center" width={UNICON_WIDTH}>
+          <Icon
+            color={theme.colors.textSecondary}
+            height={theme.iconSizes.lg}
+            width={theme.iconSizes.lg}
+          />
+        </Box>
+        <Text color="textSecondary" variant="subhead">
+          {label}
+        </Text>
+      </Flex>
+    </Button>
   )
 }
