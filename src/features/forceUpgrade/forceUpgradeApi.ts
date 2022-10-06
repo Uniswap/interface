@@ -5,7 +5,6 @@ import { flags } from 'src/features/experiments/flagsConstants'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { logException } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
-import { ONE_HOUR_MS, ONE_SECOND_MS } from 'src/utils/time'
 
 type UpgradeStatusReponse = {
   force_upgrade: {
@@ -20,9 +19,6 @@ type UpgradeStatusReponse = {
 export const forceUpgradeApi = createApi({
   reducerPath: 'forceUpgradeApi',
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
-  // Prevents fetching the flag more than once every hour
-  // More info here: https://redux-toolkit.js.org/rtk-query/api/createApi#refetchonmountorargchange
-  refetchOnMountOrArgChange: ONE_HOUR_MS / ONE_SECOND_MS, // one hour in seconds
   endpoints: (builder) => ({
     checkForceUpgrade: builder.query<UpgradeStatus, void>({
       async queryFn() {

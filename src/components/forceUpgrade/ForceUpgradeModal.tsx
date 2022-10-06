@@ -13,13 +13,13 @@ export function ForceUpgradeModal() {
   const { t } = useTranslation()
   const [isVisible, setIsVisible] = useState(false)
 
-  const { data: upgradeStatus } = useCheckForceUpgradeQuery()
+  const { data: upgradeStatus, isSuccess } = useCheckForceUpgradeQuery()
 
   useEffect(() => {
-    if (upgradeStatus !== UpgradeStatus.NotRequired) {
+    if (isSuccess && upgradeStatus !== UpgradeStatus.NotRequired) {
       setIsVisible(true)
     }
-  }, [upgradeStatus])
+  }, [isSuccess, upgradeStatus])
 
   const onPressConfirm = () => {
     /**
