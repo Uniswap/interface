@@ -12,8 +12,7 @@ import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useLazyLoadQuery } from 'react-relay'
 
-import { Chain, HistoryDuration } from './__generated__/TopTokens_TokensQuery.graphql'
-import type { TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
+import type { Chain, HistoryDuration, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { toHistoryDuration } from './util'
 
 const topTokens100Query = graphql`
