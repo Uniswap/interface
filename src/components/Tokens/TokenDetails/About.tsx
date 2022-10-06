@@ -95,9 +95,9 @@ export function AboutSection({ address, description, homepageUrl, twitterName }:
         )}
       </TokenDescriptionContainer>
       <br />
-      <ThemedText.BodySecondary>
+      <ThemedText.SubHeaderSmall>
         <Trans>Links</Trans>
-      </ThemedText.BodySecondary>
+      </ThemedText.SubHeaderSmall>
       <ResourcesContainer>
         <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
         <Resource name={'Protocol info'} link={`https://info.uniswap.org/#/tokens/${address}`} />

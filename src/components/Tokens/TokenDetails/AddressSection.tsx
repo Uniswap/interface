@@ -25,9 +25,9 @@ const ContractAddress = styled.button`
 export default function AddressSection({ address }: { address: string }) {
   return (
     <ContractAddressSection>
-      <ThemedText.BodySecondary>
+      <ThemedText.SubHeaderSmall>
         <Trans>Contract address</Trans>
-      </ThemedText.BodySecondary>
+      </ThemedText.SubHeaderSmall>
       <ContractAddress>
         <CopyContractAddress address={address} />
       </ContractAddress>
