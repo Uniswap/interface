@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
@@ -10,8 +11,8 @@ import { PricePoint } from 'graphql/data/Token'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight } from 'react-feather'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import {
   dayHourFormatter,
@@ -248,17 +249,13 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
-  // TODO: Display no data available error
-  if (!prices) {
-    return null
-  }
-
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
   const delta = calculateDelta(startingPrice.value, displayPrice.value)
   const formattedDelta = formatDelta(delta)
   const arrow = getDeltaArrow(delta)
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
+  const hasData = prices && prices.length > 0
 
   /*
    * Default curve doesn't look good for the HOUR chart.
@@ -266,7 +263,6 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
    * making it unacceptable for shorter durations / smaller variances.
    */
   const curveTension = timePeriod === TimePeriod.HOUR ? 1 : 0.9
-
   return (
     <>
       <ChartHeader>
@@ -276,76 +272,84 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           <ArrowCell>{arrow}</ArrowCell>
         </DeltaContainer>
       </ChartHeader>
-      <AnimatedInLineChart
-        data={prices}
-        getX={(p: PricePoint) => timeScale(p.timestamp)}
-        getY={(p: PricePoint) => rdScale(p.value)}
-        marginTop={margin.top}
-        curve={curveCardinal.tension(curveTension)}
-        strokeWidth={2}
-        width={width}
-        height={graphHeight}
-      >
-        {crosshair !== null ? (
-          <g>
-            <AxisBottom
-              scale={timeScale}
-              stroke={theme.backgroundOutline}
-              tickFormat={tickFormatter}
-              tickStroke={theme.backgroundOutline}
-              tickLength={4}
-              hideTicks={true}
-              tickTransform={'translate(0 -5)'}
-              tickValues={ticks}
-              top={graphHeight - 1}
-              tickLabelProps={() => ({
-                fill: theme.textSecondary,
-                fontSize: 12,
-                textAnchor: 'middle',
-                transform: 'translate(0 -24)',
-              })}
-            />
-            <text
-              x={crosshair + (crosshairAtEdge ? -4 : 4)}
-              y={margin.crosshair + 10}
-              textAnchor={crosshairAtEdge ? 'end' : 'start'}
-              fontSize={12}
-              fill={theme.textSecondary}
-            >
-              {crosshairDateFormatter(displayPrice.timestamp)}
-            </text>
-            <Line
-              from={{ x: crosshair, y: margin.crosshair }}
-              to={{ x: crosshair, y: graphHeight }}
-              stroke={theme.backgroundOutline}
-              strokeWidth={1}
-              pointerEvents="none"
-              strokeDasharray="4,4"
-            />
-            <GlyphCircle
-              left={crosshair}
-              top={rdScale(displayPrice.value) + margin.top}
-              size={50}
-              fill={theme.accentActive}
-              stroke={theme.backgroundOutline}
-              strokeWidth={2}
-            />
-          </g>
-        ) : (
-          <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} hideTicks />
-        )}
-        <rect
-          x={0}
-          y={0}
+      {!hasData ? (
+        <MissingPriceChart
           width={width}
           height={graphHeight}
-          fill={'transparent'}
-          onTouchStart={handleHover}
-          onTouchMove={handleHover}
-          onMouseMove={handleHover}
-          onMouseLeave={resetDisplay}
+          message={prices && prices.length === 0 ? <NoV3DataMessage /> : <MissingDataMessage />}
         />
-      </AnimatedInLineChart>
+      ) : (
+        <AnimatedInLineChart
+          data={prices}
+          getX={(p: PricePoint) => timeScale(p.timestamp)}
+          getY={(p: PricePoint) => rdScale(p.value)}
+          marginTop={margin.top}
+          curve={curveCardinal.tension(curveTension)}
+          strokeWidth={2}
+          width={width}
+          height={graphHeight}
+        >
+          {crosshair !== null ? (
+            <g>
+              <AxisBottom
+                scale={timeScale}
+                stroke={theme.backgroundOutline}
+                tickFormat={tickFormatter}
+                tickStroke={theme.backgroundOutline}
+                tickLength={4}
+                hideTicks={true}
+                tickTransform={'translate(0 -5)'}
+                tickValues={ticks}
+                top={graphHeight - 1}
+                tickLabelProps={() => ({
+                  fill: theme.textSecondary,
+                  fontSize: 12,
+                  textAnchor: 'middle',
+                  transform: 'translate(0 -24)',
+                })}
+              />
+              <text
+                x={crosshair + (crosshairAtEdge ? -4 : 4)}
+                y={margin.crosshair + 10}
+                textAnchor={crosshairAtEdge ? 'end' : 'start'}
+                fontSize={12}
+                fill={theme.textSecondary}
+              >
+                {crosshairDateFormatter(displayPrice.timestamp)}
+              </text>
+              <Line
+                from={{ x: crosshair, y: margin.crosshair }}
+                to={{ x: crosshair, y: graphHeight }}
+                stroke={theme.backgroundOutline}
+                strokeWidth={1}
+                pointerEvents="none"
+                strokeDasharray="4,4"
+              />
+              <GlyphCircle
+                left={crosshair}
+                top={rdScale(displayPrice.value) + margin.top}
+                size={50}
+                fill={theme.accentActive}
+                stroke={theme.backgroundOutline}
+                strokeWidth={2}
+              />
+            </g>
+          ) : (
+            <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} hideTicks />
+          )}
+          <rect
+            x={0}
+            y={0}
+            width={width}
+            height={graphHeight}
+            fill={'transparent'}
+            onTouchStart={handleHover}
+            onTouchMove={handleHover}
+            onMouseMove={handleHover}
+            onMouseLeave={resetDisplay}
+          />
+        </AnimatedInLineChart>
+      )}
       <TimeOptionsWrapper>
         <TimeOptionsContainer>
           {ORDERED_TIMES.map((time) => (
@@ -362,6 +366,46 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
         </TimeOptionsContainer>
       </TimeOptionsWrapper>
     </>
+  )
+}
+
+const StyledMissingChart = styled.svg`
+  text {
+    font-size: 12px;
+    font-weight: 400;
+  }
+`
+
+const chartBottomPadding = 15
+
+const NoV3DataMessage = () => (
+  <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
+)
+const MissingDataMessage = () => <Trans>Missing chart data</Trans>
+
+function MissingPriceChart({ width, height, message }: { width: number; height: number; message: ReactNode }) {
+  const theme = useTheme()
+  const midPoint = height / 2 + 45
+  return (
+    <StyledMissingChart width={width} height={height}>
+      <path
+        d={`M 0 ${midPoint} Q 104 ${midPoint - 70}, 208 ${midPoint} T 416 ${midPoint}
+          M 416 ${midPoint} Q 520 ${midPoint - 70}, 624 ${midPoint} T 832 ${midPoint}`}
+        stroke={theme.backgroundOutline}
+        fill="transparent"
+        strokeWidth="2"
+      />
+      <TrendingUp stroke={theme.textTertiary} x={0} size={12} y={height - chartBottomPadding - 10} />
+      <text y={height - chartBottomPadding} x="20" fill={theme.textTertiary}>
+        {message || <Trans>Missing chart data</Trans>}
+      </text>
+      <path
+        d={`M 0 ${height - 1}, ${width} ${height - 1}`}
+        stroke={theme.backgroundOutline}
+        fill="transparent"
+        strokeWidth="1"
+      />
+    </StyledMissingChart>
   )
 }
 

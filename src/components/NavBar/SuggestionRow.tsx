@@ -1,7 +1,9 @@
+import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
+import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
-import { getTokenDetailsURL, useGlobalChainId } from 'graphql/data/util'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -14,7 +16,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { formatDollarPrice } from 'utils/formatDollarAmt'
 
-import { VerifiedIcon } from '../../nft/components/icons'
 import * as styles from './SearchBar.css'
 
 interface CollectionRowProps {
@@ -104,10 +105,10 @@ export const CollectionRow = ({
 }
 
 function useBridgedAddress(token: FungibleToken): [string | undefined, number | undefined, string | undefined] {
-  const globalChainId = useGlobalChainId()
-  const bridgedAddress = globalChainId ? token.extensions?.bridgeInfo?.[globalChainId]?.tokenAddress : undefined
-  if (bridgedAddress && globalChainId) {
-    return [bridgedAddress, globalChainId, getChainInfo(globalChainId)?.circleLogoUrl]
+  const { chainId: connectedChainId } = useWeb3React()
+  const bridgedAddress = connectedChainId ? token.extensions?.bridgeInfo?.[connectedChainId]?.tokenAddress : undefined
+  if (bridgedAddress && connectedChainId) {
+    return [bridgedAddress, connectedChainId, getChainInfo(connectedChainId)?.circleLogoUrl]
   }
   return [undefined, undefined, undefined]
 }
