@@ -31,7 +31,7 @@ const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
       </div>
       <Column gap="4" overflow="hidden" flexWrap="nowrap">
         <Box overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={subhead}>
-          {asset.name || `#${asset.tokenId}`}
+          {asset.name ?? `#${asset.tokenId}`}
         </Box>
         <Box overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={bodySmall}>
           {asset.collection?.name}
