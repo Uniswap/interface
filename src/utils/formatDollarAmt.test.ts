@@ -1,5 +1,7 @@
 import { formatDollar } from './formatDollarAmt'
 
+//TODO(lynnshaoyu): add unit test for currencyAmountToPreciseFloat
+
 describe('formatDollar for a price', () => {
   it('undefined or null', () => {
     expect(formatDollar(undefined, true)).toEqual('-')
