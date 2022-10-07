@@ -8,8 +8,7 @@ import styled from 'styled-components'
 
 import Announcement from 'components/Icons/Announcement'
 import { useActiveWeb3React } from 'hooks'
-
-// import { ExternalLink } from 'theme'
+import { ExternalLink } from 'theme'
 
 const BannerWrapper = styled.div`
   width: 100%;
@@ -45,19 +44,20 @@ const Content = styled.div`
 `
 
 const banner = {
-  localStorageKey: 'ethw-',
-  start: 'Thu, 13 Sep 2022 00:00:00 GMT',
-  end: 'Thu, 13 Oct 2022 00:00:00 GMT',
+  localStorageKey: 'bsc-maintenance-',
+  start: 'Thu, 7 Oct 2022 00:00:00 GMT',
+  end: 'Thu, 30 Oct 2022 00:00:00 GMT',
+  onlyChains: [ChainId.BSCMAINNET],
   text: (
     <Text marginLeft="4px" marginRight="1rem" lineHeight="20px" color="#fff" fontSize="14px" flex={1}>
-      On Ethereum POW, you can withdraw liquidity from pools and make swaps. In the long run, KyberSwap will only
-      maintain support for Ethereum (PoS) as the canonical chain
-      {/* <ExternalLink */}
-      {/*   href="https://blog.kyber.network/notice-of-exploit-of-kyberswap-frontend-963aa8febd6a" */}
-      {/*   style={{ color: '#fff', fontWeight: 500, textDecoration: 'underline' }} */}
-      {/* > */}
-      {/*   here. */}
-      {/* </ExternalLink> */}
+      BNB Chain is currently under maintenance and has been paused temporarily. For further info please refer to{' '}
+      <ExternalLink
+        href="https://twitter.com/BNBCHAIN/status/1578148078636650496"
+        style={{ color: '#fff', fontWeight: 500, textDecoration: 'underline' }}
+      >
+        this
+      </ExternalLink>{' '}
+      official announcement from the Binance Team.
     </Text>
   ),
 }
@@ -74,7 +74,7 @@ function TopBanner() {
     setTimeout(() => setShow(!!showBanner), 200)
   }, [showBanner])
 
-  if (!show || ChainId.ETHW !== chainId) return null
+  if (!show || (chainId && !banner.onlyChains.includes(chainId))) return null
   const now = new Date()
   if (now > new Date(banner.start) && now < new Date(banner.end))
     return (
