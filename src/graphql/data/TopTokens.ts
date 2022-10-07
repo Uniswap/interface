@@ -12,7 +12,7 @@ import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useLazyLoadQuery } from 'react-relay'
 
-import type { Chain, HistoryDuration, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
+import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { toHistoryDuration } from './util'
 
 const topTokens100Query = graphql`
@@ -81,7 +81,7 @@ function useSortedTokens(tokens: TopTokens100Query['response']['topTokens'] | un
   }, [tokens, sortMethod, sortAscending])
 }
 
-function useFilteredTokens(tokens: PrefetchedTopToken[]) {
+function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']>['topTokens']) {
   const filterString = useAtomValue(filterStringAtom)
   const favorites = useAtomValue(favoritesAtom)
   const showFavorites = useAtomValue(showFavoritesAtom)
@@ -119,50 +119,6 @@ function toContractInput(token: PrefetchedTopToken) {
   }
 }
 
-// Map of key: ${HistoryDuration} and value: another Map, of key:${chain} + ${address} and value: TopToken object.
-// Acts as a local cache.
-
-let tokensWithPriceHistoryCache: Record<HistoryDuration, Record<string, TopToken>> = {
-  DAY: {},
-  HOUR: {},
-  MAX: {},
-  MONTH: {},
-  WEEK: {},
-  YEAR: {},
-  '%future added value': {},
-}
-let cachedChain: Chain | undefined
-const resetTokensWithPriceHistoryCache = () => {
-  tokensWithPriceHistoryCache = {
-    DAY: {},
-    HOUR: {},
-    MAX: {},
-    MONTH: {},
-    WEEK: {},
-    YEAR: {},
-    '%future added value': {},
-  }
-}
-
-const checkIfAllTokensCached = (duration: HistoryDuration, tokens: PrefetchedTopToken[]) => {
-  let everyTokenInCache = true
-  const cachedTokens: TopToken[] = []
-
-  const checkCache = (token: PrefetchedTopToken) => {
-    const tokenCacheKey = !!token ? `${token.chain}${token.address}` : ''
-    if (tokenCacheKey in tokensWithPriceHistoryCache[duration]) {
-      cachedTokens.push(tokensWithPriceHistoryCache[duration][tokenCacheKey])
-      return true
-    } else {
-      everyTokenInCache = false
-      cachedTokens.length = 0
-      return false
-    }
-  }
-  tokens.every((token) => checkCache(token))
-  return { everyTokenInCache, cachedTokens }
-}
-
 export type TopToken = NonNullable<NonNullable<TopTokens100Query['response']>['topTokens']>[number]
 interface UseTopTokensReturnValue {
   error: Error | undefined
@@ -175,7 +131,9 @@ interface UseTopTokensReturnValue {
 
 export function useTopTokens2(chain: Chain): UseTopTokensReturnValue {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
-  const tokens = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain }).topTokens
+  const tokens = useFilteredTokens(
+    useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain }).topTokens
+  )
 
   return {
     tokens: useSortedTokens(tokens),
