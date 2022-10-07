@@ -8,7 +8,7 @@ import {
   sortMethodAtom,
 } from 'components/Tokens/state'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { fetchQuery, useRelayEnvironment } from 'react-relay'
 
 import {
@@ -131,7 +131,7 @@ function toContractInput(token: PrefetchedTopToken) {
 // Map of key: ${HistoryDuration} and value: another Map, of key:${chain} + ${address} and value: TopToken object.
 // Acts as a local cache.
 
-const tokensWithPriceHistoryCache: Record<HistoryDuration, Record<string, TopToken>> = {
+let tokensWithPriceHistoryCache: Record<HistoryDuration, Record<string, TopToken>> = {
   DAY: {},
   HOUR: {},
   MAX: {},
@@ -139,6 +139,18 @@ const tokensWithPriceHistoryCache: Record<HistoryDuration, Record<string, TopTok
   WEEK: {},
   YEAR: {},
   '%future added value': {},
+}
+let cachedChain: Chain | undefined
+const resetTokensWithPriceHistoryCache = () => {
+  tokensWithPriceHistoryCache = {
+    DAY: {},
+    HOUR: {},
+    MAX: {},
+    MONTH: {},
+    WEEK: {},
+    YEAR: {},
+    '%future added value': {},
+  }
 }
 
 const checkIfAllTokensCached = (duration: HistoryDuration, tokens: PrefetchedTopToken[]) => {
@@ -174,11 +186,19 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const [loadingTokensWithoutPriceHistory, setLoadingTokensWithoutPriceHistory] = useState(true)
   const [loadingTokensWithPriceHistory, setLoadingTokensWithPriceHistory] = useState(true)
   const [tokens, setTokens] = useState<TopToken[]>()
+  const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>()
+  if (chain !== cachedChain) {
+    cachedChain = chain
+    resetTokensWithPriceHistoryCache()
+  }
   const [page, setPage] = useState(0)
   const [error, setError] = useState<Error | undefined>()
-  const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>()
+  const [prefetchedDataDuration, setPrefetchedDataDuration] = useState<HistoryDuration>()
   const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData))
-  const loading = Boolean(loadingTokensWithPriceHistory || loadingTokensWithoutPriceHistory)
+  const { everyTokenInCache, cachedTokens } = useMemo(
+    () => checkIfAllTokensCached(duration, prefetchedSelectedTokensWithoutPriceHistory),
+    [duration, prefetchedSelectedTokensWithoutPriceHistory]
+  )
   // loadingRowCount defaults to PAGE_SIZE when no prefetchedData is available yet because the initial load
   // count will always be PAGE_SIZE.
   const loadingRowCount = useMemo(
@@ -191,6 +211,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 
   const loadTokensWithoutPriceHistory = useCallback(
     ({ duration, chain }: { duration: HistoryDuration; chain: Chain }) => {
+      setTokens([])
       fetchQuery<TopTokens100Query>(
         environment,
         topTokens100Query,
@@ -201,7 +222,11 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
           if (data?.topTokens) setPrefetchedData([...data?.topTokens])
         },
         error: setError,
-        complete: () => setLoadingTokensWithoutPriceHistory(false),
+        complete: () => {
+          setLoadingTokensWithoutPriceHistory(false)
+          setPrefetchedDataDuration(duration)
+          setLoadingTokensWithPriceHistory(true)
+        },
       })
     },
     [environment]
@@ -253,22 +278,32 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     loadTokensWithPriceHistory({ contracts, appendingTokens: true, page, tokens })
   }, [prefetchedSelectedTokensWithoutPriceHistory, page, loadTokensWithPriceHistory, tokens])
 
-  // Reset count when filters are changed
-  useLayoutEffect(() => {
-    const { everyTokenInCache, cachedTokens } = checkIfAllTokensCached(
-      duration,
-      prefetchedSelectedTokensWithoutPriceHistory
-    )
+  // Load tokens from cache when everything is available.
+  useEffect(() => {
     if (everyTokenInCache) {
       setTokens(cachedTokens)
       setLoadingTokensWithPriceHistory(false)
-    } else {
+    }
+  }, [everyTokenInCache, cachedTokens])
+
+  // Load new token with price history data when prefetchedSelectedTokensWithoutPriceHistory for current
+  // duration has already been resolved.
+  useEffect(() => {
+    if (!everyTokenInCache) {
       setLoadingTokensWithPriceHistory(true)
       setTokens([])
-      const contracts = prefetchedSelectedTokensWithoutPriceHistory.slice(0, PAGE_SIZE).map(toContractInput)
-      loadTokensWithPriceHistory({ contracts, appendingTokens: false, page: 0 })
+      if (duration === prefetchedDataDuration) {
+        const contracts = prefetchedSelectedTokensWithoutPriceHistory.slice(0, PAGE_SIZE).map(toContractInput)
+        loadTokensWithPriceHistory({ contracts, appendingTokens: false, page: 0 })
+      }
     }
-  }, [loadTokensWithPriceHistory, prefetchedSelectedTokensWithoutPriceHistory, duration])
+  }, [
+    everyTokenInCache,
+    prefetchedSelectedTokensWithoutPriceHistory,
+    loadTokensWithPriceHistory,
+    duration,
+    prefetchedDataDuration,
+  ])
 
   // Trigger fetching top 100 tokens without price history on first load, and on
   // each change of chain or duration.
@@ -279,7 +314,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 
   return {
     error,
-    loading,
+    loading: loadingTokensWithPriceHistory || loadingTokensWithoutPriceHistory,
     tokens,
     hasMore,
     loadMoreTokens,

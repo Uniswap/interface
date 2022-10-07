@@ -47,6 +47,9 @@ class TokenSafetyLookupTable {
     if (!this.dict) {
       this.dict = this.createMap()
     }
+    if (address === 'native') {
+      return TOKEN_LIST_TYPES.UNI_DEFAULT
+    }
     return this.dict[address] ?? TOKEN_LIST_TYPES.UNKNOWN
   }
 }

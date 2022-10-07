@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
@@ -9,11 +10,11 @@ import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { isValidBackendChainName } from 'graphql/data/util'
+import { chainIdToBackendName, isValidBackendChainName } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -70,13 +71,25 @@ const FiltersWrapper = styled.div`
 const Tokens = () => {
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
+  const navigate = useNavigate()
+  const { chainName: chainNameParam } = useParams<{ chainName?: string }>()
+  const { chainId: connectedChainId } = useWeb3React()
+  const connectedChainName = chainIdToBackendName(connectedChainId)
+
   useEffect(() => {
     resetFilterString()
   }, [location, resetFilterString])
 
-  const navigate = useNavigate()
+  useEffect(() => {
+    if (!chainNameParam) {
+      navigate(`/tokens/${connectedChainName.toLowerCase()}`)
+    }
+  }, [chainNameParam, connectedChainName, navigate])
+
   useOnGlobalChainSwitch((chain) => {
-    if (isValidBackendChainName(chain)) navigate(`/tokens/${chain.toLowerCase()}`)
+    if (isValidBackendChainName(chain)) {
+      navigate(`/tokens/${chain.toLowerCase()}`)
+    }
   })
 
   return (
