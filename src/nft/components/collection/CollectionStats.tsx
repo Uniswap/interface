@@ -208,7 +208,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
         descriptionRef.current.getBoundingClientRect().width >= 590)
     )
       setShowReadMore(true)
-  }, [descriptionRef, baseRef])
+  }, [descriptionRef, baseRef, isCollectionStatsLoading])
 
   return isCollectionStatsLoading ? (
     <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}></Box>

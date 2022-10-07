@@ -1,4 +1,4 @@
-import { DetailsOrigin, GenieAsset } from 'nft/types'
+import { DetailsOrigin, GenieAsset, WalletAsset } from 'nft/types'
 
 export function getRarityStatus(
   rarityStatusCache: Map<string, boolean>,
@@ -17,6 +17,10 @@ export function getRarityStatus(
   return hasRarity
 }
 
-export const getAssetHref = (asset: GenieAsset, origin?: DetailsOrigin) => {
-  return `/nfts/asset/${asset.address}/${asset.tokenId}${origin ? `?origin=${origin}` : ''}`
+export const getAssetHref = (asset: GenieAsset | WalletAsset, origin?: DetailsOrigin) => {
+  const address =
+    (asset as GenieAsset).address !== undefined
+      ? (asset as GenieAsset).address
+      : (asset as WalletAsset).asset_contract.address
+  return `/nfts/asset/${address}/${asset.tokenId}${origin ? `?origin=${origin}` : ''}`
 }
