@@ -92,16 +92,14 @@ export default function ChartSection({
   // append it to the prices list for every duration.
   let latestPricePoint: PricePoint = { value: 0, timestamp: 0 }
   let latestPricePointTimePeriod: TimePeriod
-  Object.keys(TimePeriod).forEach((key) => {
-    if (key in prices) {
-      const latestPricePointForTimePeriod = prices[key as unknown as TimePeriod]?.slice(-1)[0]
-      if (latestPricePointForTimePeriod && latestPricePointForTimePeriod.timestamp > latestPricePoint.timestamp) {
-        latestPricePoint = latestPricePointForTimePeriod
-        latestPricePointTimePeriod = key as unknown as TimePeriod
-      }
+  Object.keys(prices).forEach((key) => {
+    const latestPricePointForTimePeriod = prices[key as unknown as TimePeriod]?.slice(-1)[0]
+    if (latestPricePointForTimePeriod && latestPricePointForTimePeriod.timestamp > latestPricePoint.timestamp) {
+      latestPricePoint = latestPricePointForTimePeriod
+      latestPricePointTimePeriod = key as unknown as TimePeriod
     }
   })
-  Object.keys(TimePeriod).forEach((key) => {
+  Object.keys(prices).forEach((key) => {
     if ((key as unknown as TimePeriod) !== latestPricePointTimePeriod) {
       prices[key as unknown as TimePeriod]?.push(latestPricePoint)
     }
