@@ -1,17 +1,4 @@
-import { AddressZero } from '@ethersproject/constants'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-
-import { currencyAmountToPreciseFloat, formatDollar } from './formatDollarAmt'
-describe('currencyAmountToPreciseFloat', () => {
-  it('lots of decimals', () => {
-    const currencyAmount = CurrencyAmount.fromFractionalAmount(new Token(1, AddressZero, 0), 101230, 7)
-    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(14461.42857142857)
-  })
-  it('integer', () => {
-    const currencyAmount = CurrencyAmount.fromRawAmount(new Token(1, AddressZero, 0), 101230)
-    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(101230)
-  })
-})
+import { formatDollar } from './formatDollarAmt'
 
 describe('formatDollar for a price', () => {
   it('undefined or null', () => {
