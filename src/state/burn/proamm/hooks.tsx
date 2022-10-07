@@ -102,7 +102,7 @@ export function useDerivedProAmmBurnInfo(
       : undefined
 
   const outOfRange =
-    pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false
+    pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent >= position.tickUpper : false
   let error: ReactNode | undefined
   if (!account) {
     error = <Trans>Connect Wallet</Trans>

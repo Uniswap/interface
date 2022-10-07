@@ -72,7 +72,7 @@ const PositionRow = ({
   const removed = BigNumber.from(position.liquidity.toString()).eq(0)
   const outOfRange =
     positionSDK &&
-    (positionSDK.pool.tickCurrent < position.tickLower || positionSDK.pool.tickCurrent > position.tickUpper)
+    (positionSDK.pool.tickCurrent < position.tickLower || positionSDK.pool.tickCurrent >= position.tickUpper)
 
   const usd =
     (usdPrices?.[0] || 0) * parseFloat(positionSDK?.amount0.toExact() || '0') +
