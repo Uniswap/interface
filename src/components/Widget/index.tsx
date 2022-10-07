@@ -1,3 +1,7 @@
+// Import fonts.css for the side-effect of loading fonts for @uniswap/widgets.
+// eslint-disable-next-line no-restricted-imports
+import '@uniswap/widgets/dist/fonts.css'
+
 import { Currency, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { useActiveLocale } from 'hooks/useActiveLocale'
