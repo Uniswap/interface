@@ -9,10 +9,12 @@ import {
   TokenSortMethod,
 } from 'components/Tokens/state'
 import { useAtomValue } from 'jotai/utils'
-import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay'
+import { useMemo, useState } from 'react'
+import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
 import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
+import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery.graphql'
+import { filterPrices, PricePoint } from './Token'
 import { toHistoryDuration } from './util'
 
 const topTokens100Query = graphql`
@@ -43,6 +45,33 @@ const topTokens100Query = graphql`
       }
       project {
         logoUrl
+      }
+    }
+  }
+`
+
+// export const tokenSparklineFragment = graphql`
+//   fragment TopTokensSparklineFragment on Query {
+//     tokens(contracts: $contracts) {
+//       market(currency: USD) {
+//         priceHistory(duration: $duration) {
+//           timestamp
+//           value
+//         }
+//       }
+//     }
+//   }
+// `
+
+const tokenSparklineQuery = graphql`
+  query TopTokensSparklineQuery($duration: HistoryDuration!, $chain: Chain!) {
+    topTokens(pageSize: 100, page: 1, chain: $chain) {
+      address
+      market(currency: USD) {
+        priceHistory(duration: $duration) {
+          timestamp
+          value
+        }
       }
     }
   }
@@ -120,10 +149,12 @@ function toContractInput(token: PrefetchedTopToken) {
 }
 
 export type TopToken = NonNullable<NonNullable<TopTokens100Query['response']>['topTokens']>[number]
+export type SparklineMap = { [key: string]: PricePoint[] | undefined }
 interface UseTopTokensReturnValue {
   error: Error | undefined
   loading: boolean
   tokens: TopToken[] | undefined
+  sparklines: SparklineMap
   hasMore: boolean
   loadMoreTokens: () => void
   loadingRowCount: number
@@ -131,12 +162,31 @@ interface UseTopTokensReturnValue {
 
 export function useTopTokens2(chain: Chain): UseTopTokensReturnValue {
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
+
+  const environment = useRelayEnvironment()
+  const [sparklines, setSparklines] = useState<SparklineMap>({})
+  useMemo(() => {
+    fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, {
+      duration,
+      chain,
+    }).subscribe({
+      next(data) {
+        const map: SparklineMap = {}
+        data.topTokens?.forEach(
+          (current) => current?.address && (map[current.address] = filterPrices(current?.market?.priceHistory))
+        )
+        setSparklines(map)
+      },
+    })
+  }, [chain, duration, environment])
+
   const tokens = useFilteredTokens(
     useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain }).topTokens
   )
 
   return {
     tokens: useSortedTokens(tokens),
+    sparklines,
     error: undefined,
     loading: false,
     hasMore: false,
