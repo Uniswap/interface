@@ -76,7 +76,7 @@ const TraitItem = ({
       style={{
         paddingBottom: '22px',
         paddingTop: '22px',
-        borderBottom: showBorderBottom ? `1px solid ${themeVars.colors.backgroundOutline}` : undefined,
+        // borderBottom: showBorderBottom ? `1px solid ${themeVars.colors.backgroundOutline}` : undefined,
       }}
       maxHeight="44"
       onMouseEnter={handleHover}
