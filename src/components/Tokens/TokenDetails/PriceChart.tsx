@@ -263,6 +263,10 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
    * making it unacceptable for shorter durations / smaller variances.
    */
   const curveTension = timePeriod === TimePeriod.HOUR ? 1 : 0.9
+
+  const getX = useMemo(() => (p: PricePoint) => timeScale(p.timestamp), [timeScale])
+  const getY = useMemo(() => (p: PricePoint) => rdScale(p.value), [rdScale])
+  const curve = useMemo(() => curveCardinal.tension(curveTension), [curveTension])
   return (
     <>
       <ChartHeader>
@@ -279,16 +283,15 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           message={prices && prices.length === 0 ? <NoV3DataMessage /> : <MissingDataMessage />}
         />
       ) : (
-        <AnimatedInLineChart
-          data={prices}
-          getX={(p: PricePoint) => timeScale(p.timestamp)}
-          getY={(p: PricePoint) => rdScale(p.value)}
-          marginTop={margin.top}
-          curve={curveCardinal.tension(curveTension)}
-          strokeWidth={2}
-          width={width}
-          height={graphHeight}
-        >
+        <svg width={width} height={graphHeight}>
+          <AnimatedInLineChart
+            data={prices}
+            getX={getX}
+            getY={getY}
+            marginTop={margin.top}
+            curve={curve}
+            strokeWidth={2}
+          />
           {crosshair !== null ? (
             <g>
               <AxisBottom
@@ -348,7 +351,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
             onMouseMove={handleHover}
             onMouseLeave={resetDisplay}
           />
-        </AnimatedInLineChart>
+        </svg>
       )}
       <TimeOptionsWrapper>
         <TimeOptionsContainer>
