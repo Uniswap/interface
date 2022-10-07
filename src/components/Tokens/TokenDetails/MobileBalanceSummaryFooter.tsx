@@ -5,33 +5,31 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatDollarAmt'
 
-import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { BalanceSummaryProps } from './BalanceSummary'
 
 const Wrapper = styled.div`
-  height: fit-content;
+  align-content: center;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px 20px 0px 0px;
-  display: flex;
-  padding: 12px 16px;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
-  width: 100%;
-  color: ${({ theme }) => theme.textSecondary};
-  position: fixed;
-  left: 0;
   bottom: 56px;
+  color: ${({ theme }) => theme.textSecondary};
   display: flex;
   flex-direction: column;
-  align-content: center;
+  font-weight: 500;
+  font-size: 14px;
+  height: fit-content;
+  left: 0;
+  line-height: 20px;
+  padding: 12px 16px;
+  position: fixed;
+  width: 100%;
 
-  // 768 hardcoded to match NFT-redesign navbar breakpoints
-  // src/nft/css/sprinkles.css.ts
-  // change to match theme breakpoints when this navbar is updated
-  @media screen and (min-width: 768px) {
-    display: none !important;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    bottom: 0px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    display: none;
   }
 `
 const BalanceValue = styled.div`
@@ -52,34 +50,34 @@ const BalanceInfo = styled.div`
   flex-direction: column;
 `
 const FiatValue = styled.span`
-  display: flex;
   align-self: flex-end;
+  display: flex;
   font-size: 12px;
-  line-height: 24px;
+  line-height: 16px;
 
-  @media only screen and (max-width: ${SMALLEST_MOBILE_MEDIA_BREAKPOINT}) {
-    line-height: 16px;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}) {
+    line-height: 24px;
   }
 `
 const SwapButton = styled.button`
-  background-color: ${({ theme }) => theme.accentAction};
-  border-radius: 12px;
-  display: flex;
   align-items: center;
+  background-color: ${({ theme }) => theme.accentAction};
   border: none;
+  border-radius: 12px;
   color: ${({ theme }) => theme.accentTextLightPrimary};
+  display: flex;
   padding: 12px 16px;
-  width: 120px;
-  height: 44px;
   font-size: 16px;
   font-weight: 600;
+  height: 44px;
   justify-content: center;
+  width: 120px;
 `
 const TotalBalancesSection = styled.div`
+  align-items: center;
   display: flex;
   color: ${({ theme }) => theme.textSecondary};
   justify-content: space-between;
-  align-items: center;
 `
 
 export default function MobileBalanceSummaryFooter({
