@@ -282,7 +282,7 @@ export const getConsiderationItems = (
 ): {
   sellerFee: ConsiderationInputItem
   openseaFee: ConsiderationInputItem
-  creatorFee?: ConsiderationInputItem
+  creatorFee?: ConsiderationInputItem[]
 } => {
   const openSeaBasisPoints = OPENSEA_DEFAULT_FEE * INVERSE_BASIS_POINTS
   const creatorFeeBasisPoints = asset.creatorPercentage * INVERSE_BASIS_POINTS
@@ -299,6 +299,6 @@ export const getConsiderationItems = (
     sellerFee: createConsiderationItem(sellerFee, signerAddress),
     openseaFee: createConsiderationItem(openseaFee, OPENSEA_FEE_ADDRESS),
     creatorFee:
-      creatorFeeBasisPoints > 0 ? createConsiderationItem(creatorFee, asset.asset_contract.payout_address) : undefined,
+      creatorFeeBasisPoints > 0 ? [createConsiderationItem(creatorFee, asset.asset_contract.payout_address)] : [],
   }
 }

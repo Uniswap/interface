@@ -1,5 +1,5 @@
 export const OPENSEA_BASE_API_PATH = 'https://api.opensea.io'
-export const OPENSEA_FEE_ADDRESS = '0x8de9c5a032463c561423387a9648c5c7bcc5bc90'
+export const OPENSEA_FEE_ADDRESS = '0x0000a26b00c1F0DF003000390027140000fAa719'
 export const OPENSEA_DEFAULT_ZONE = '0x004c00500000ad104d7dbd00e3ae0a5c00560c00'
 export const OPENSEA_LISTINGS_API_PATH = '/v2/orders/ethereum/seaport/listings'
 export const OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY =
