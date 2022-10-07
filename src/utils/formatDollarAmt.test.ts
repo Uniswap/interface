@@ -1,6 +1,18 @@
-import { formatDollar } from './formatDollarAmt'
+import { CurrencyAmount } from '@uniswap/sdk-core'
+import { USDC_MAINNET } from 'constants/tokens'
 
-//TODO(lynnshaoyu): add unit test for currencyAmountToPreciseFloat
+import { currencyAmountToPreciseFloat, formatDollar } from './formatDollarAmt'
+
+describe('currencyAmountToPreciseFloat', () => {
+  it('lots of decimals', () => {
+    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '200000000', '7')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(28.571)
+  })
+  it('integer', () => {
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '20000000')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(20.0)
+  })
+})
 
 describe('formatDollar for a price', () => {
   it('undefined or null', () => {
