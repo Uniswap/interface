@@ -4,6 +4,14 @@ import { USDC_MAINNET } from 'constants/tokens'
 import { currencyAmountToPreciseFloat, formatDollar } from './formatDollarAmt'
 
 describe('currencyAmountToPreciseFloat', () => {
+  it('small number', () => {
+    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '20000', '7')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(0.00285)
+  })
+  it('tiny number', () => {
+    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '2', '7')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(0.000000285)
+  })
   it('lots of decimals', () => {
     const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '200000000', '7')
     expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(28.571)
