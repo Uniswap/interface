@@ -1,15 +1,16 @@
-import { AddressZero } from '@ethersproject/constants'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
+import { USDC_MAINNET } from 'constants/tokens'
 
 import { currencyAmountToPreciseFloat, formatDollar } from './formatDollarAmt'
+
 describe('currencyAmountToPreciseFloat', () => {
   it('lots of decimals', () => {
-    const currencyAmount = CurrencyAmount.fromFractionalAmount(new Token(1, AddressZero, 0), 101230, 7)
-    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(14461.42857142857)
+    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '200000000', '7')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(28.571)
   })
   it('integer', () => {
-    const currencyAmount = CurrencyAmount.fromRawAmount(new Token(1, AddressZero, 0), 101230)
-    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(101230)
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '20000000')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(20.0)
   })
 })
 
