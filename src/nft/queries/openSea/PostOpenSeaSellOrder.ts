@@ -16,9 +16,6 @@ export async function PostOpenSeaSellOrder<T>(
     ...opts,
   }
 
-  console.log('DBUG ')
-  console.log(process.env)
-
   const response = await _fetch(apiPath, fetchOpts)
   return response.json()
 }
