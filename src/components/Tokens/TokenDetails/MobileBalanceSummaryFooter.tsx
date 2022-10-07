@@ -1,85 +1,81 @@
 import { Trans } from '@lingui/macro'
 import { formatToDecimal } from 'analytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { StyledInternalLink } from 'theme'
 import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatDollarAmt'
 
-import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { BalanceSummaryProps } from './BalanceSummary'
 
 const Wrapper = styled.div`
-  height: fit-content;
+  align-content: center;
+  align-items: center;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px 20px 0px 0px;
+  bottom: 56px;
+  color: ${({ theme }) => theme.textSecondary};
   display: flex;
-  padding: 12px 16px;
+  flex-direction: row;
   font-weight: 500;
   font-size: 14px;
-  line-height: 20px;
-  width: 100%;
-  color: ${({ theme }) => theme.textSecondary};
-  position: fixed;
+  height: fit-content;
+  justify-content: space-between;
   left: 0;
-  bottom: 56px;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
+  line-height: 20px;
+  padding: 12px 16px;
+  position: fixed;
+  width: 100%;
 
-  // 768 hardcoded to match NFT-redesign navbar breakpoints
-  // src/nft/css/sprinkles.css.ts
-  // change to match theme breakpoints when this navbar is updated
-  @media screen and (min-width: 768px) {
-    display: none !important;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    bottom: 0px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    display: none;
   }
 `
 const BalanceValue = styled.div`
+  color: ${({ theme }) => theme.textPrimary};
   font-size: 20px;
   line-height: 28px;
   display: flex;
   gap: 8px;
 `
 const BalanceTotal = styled.div`
+  align-items: center;
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   gap: 8px;
-  color: ${({ theme }) => theme.textPrimary};
 `
 const BalanceInfo = styled.div`
   display: flex;
-  justify-content: flex-start;
+  flex: 10 1 auto;
   flex-direction: column;
+  justify-content: flex-start;
 `
 const FiatValue = styled.span`
-  display: flex;
-  align-self: flex-end;
   font-size: 12px;
-  line-height: 24px;
+  line-height: 16px;
 
-  @media only screen and (max-width: ${SMALLEST_MOBILE_MEDIA_BREAKPOINT}) {
-    line-height: 16px;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    line-height: 24px;
   }
 `
-const SwapButton = styled.button`
+const SwapButton = styled(StyledInternalLink)`
   background-color: ${({ theme }) => theme.accentAction};
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
   border: none;
+  border-radius: 12px;
   color: ${({ theme }) => theme.accentTextLightPrimary};
-  padding: 12px 16px;
-  width: 120px;
-  height: 44px;
-  font-size: 16px;
-  font-weight: 600;
-  justify-content: center;
-`
-const TotalBalancesSection = styled.div`
   display: flex;
-  color: ${({ theme }) => theme.textSecondary};
-  justify-content: space-between;
-  align-items: center;
+  flex: 1 1 auto;
+  padding: 12px 16px;
+  font-size: 1em;
+  font-weight: 600;
+  height: 44px;
+  justify-content: center;
+  margin: auto;
+  max-width: 100vw;
 `
 
 export default function MobileBalanceSummaryFooter({
@@ -101,43 +97,35 @@ export default function MobileBalanceSummaryFooter({
     : undefined
   const nativeBalanceUsd = nativeBalanceUsdValue ? currencyAmountToPreciseFloat(nativeBalanceUsdValue) : undefined
 
-  if ((!tokenAmount && !nativeCurrencyAmount) || (nativeCurrencyAmount?.equalTo(0) && tokenAmount?.equalTo(0))) {
-    return null
-  }
-
   const outputTokenAddress = tokenAmount?.currency.address ?? nativeCurrencyAmount?.wrapped.currency.address
 
   return (
     <Wrapper>
-      <TotalBalancesSection>
-        {Boolean(formattedBalance !== undefined && !isNative) && (
-          <BalanceInfo>
-            <Trans>Your {tokenAmount?.currency?.symbol} balance</Trans>
-            <BalanceTotal>
-              <BalanceValue>
-                {formattedBalance} {tokenAmount?.currency?.symbol}
-              </BalanceValue>
-              <FiatValue>{formatDollar(balanceUsd, true)}</FiatValue>
-            </BalanceTotal>
-          </BalanceInfo>
-        )}
-        {isNative && (
-          <BalanceInfo>
-            <Trans>Your {nativeCurrencyAmount?.currency?.symbol} balance</Trans>
-            <BalanceTotal>
-              <BalanceValue>
-                {formattedNativeBalance} {nativeCurrencyAmount?.currency?.symbol}
-              </BalanceValue>
-              <FiatValue>{formatDollar(nativeBalanceUsd, true)}</FiatValue>
-            </BalanceTotal>
-          </BalanceInfo>
-        )}
-        <Link to={`/swap?outputCurrency=${outputTokenAddress}`}>
-          <SwapButton>
-            <Trans>Swap</Trans>
-          </SwapButton>
-        </Link>
-      </TotalBalancesSection>
+      {Boolean(formattedBalance !== undefined && !isNative && tokenAmount?.greaterThan(0)) && (
+        <BalanceInfo>
+          <Trans>Your {tokenAmount?.currency?.symbol} balance</Trans>
+          <BalanceTotal>
+            <BalanceValue>
+              {formattedBalance} {tokenAmount?.currency?.symbol}
+            </BalanceValue>
+            <FiatValue>{formatDollar(balanceUsd, true)}</FiatValue>
+          </BalanceTotal>
+        </BalanceInfo>
+      )}
+      {Boolean(isNative && nativeCurrencyAmount?.greaterThan(0)) && (
+        <BalanceInfo>
+          <Trans>Your {nativeCurrencyAmount?.currency?.symbol} balance</Trans>
+          <BalanceTotal>
+            <BalanceValue>
+              {formattedNativeBalance} {nativeCurrencyAmount?.currency?.symbol}
+            </BalanceValue>
+            <FiatValue>{formatDollar(nativeBalanceUsd, true)}</FiatValue>
+          </BalanceTotal>
+        </BalanceInfo>
+      )}
+      <SwapButton to={`/swap?outputCurrency=${outputTokenAddress}`}>
+        <Trans>Swap</Trans>
+      </SwapButton>
     </Wrapper>
   )
 }
