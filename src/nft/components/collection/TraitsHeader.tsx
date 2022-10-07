@@ -4,6 +4,7 @@ import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { ReactNode, useState } from 'react'
+import { themeVars } from 'nft/css/sprinkles.css'
 
 interface TraitsHeaderProps {
   title: string
@@ -26,6 +27,9 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
         isOpen && styles.detailsOpen
       )}
       open={isOpen}
+      style={{
+        borderBottom: isOpen ? `1px solid ${themeVars.colors.backgroundOutline}` : undefined,
+      }}
     >
       <Box
         as="summary"
