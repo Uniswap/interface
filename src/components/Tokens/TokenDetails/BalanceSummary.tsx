@@ -91,6 +91,7 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     tokenAmount.currency.address.toLowerCase() === nativeCurrencyAmount.currency.wrapped.address.toLowerCase()
 
   if (
+    (!tokenAmount && !nativeCurrencyAmount) ||
     (!tokenAmount && !tokenIsWrappedNative && !isNative) ||
     (!isNative && !tokenIsWrappedNative && tokenAmount?.equalTo(0)) ||
     (isNative && tokenAmount?.equalTo(0) && nativeCurrencyAmount?.equalTo(0))
