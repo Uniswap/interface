@@ -77,6 +77,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     backgroundBackdrop: darkMode ? colorsDark.backgroundBackdrop : colorsLight.backgroundBackdrop,
     backgroundSurface: darkMode ? colorsDark.backgroundSurface : colorsLight.backgroundSurface,
     backgroundModule: darkMode ? colorsDark.backgroundModule : colorsLight.backgroundModule,
+    backgroundFloating: darkMode ? colorsDark.backgroundFloating : colorsLight.backgroundFloating,
     backgroundInteractive: darkMode ? colorsDark.backgroundInteractive : colorsLight.backgroundInteractive,
     backgroundOutline: darkMode ? colorsDark.backgroundOutline : colorsLight.backgroundOutline,
     backgroundScrim: darkMode ? colorsDark.backgroundScrim : colorsLight.backgroundScrim,

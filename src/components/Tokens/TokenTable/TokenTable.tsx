@@ -58,8 +58,13 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
-const LoadingMoreRows = Array(LOADING_ROWS_COUNT).fill(<LoadingRow />)
-const LoadingRows = (rowCount?: number) => Array(rowCount ?? PAGE_SIZE).fill(<LoadingRow />)
+const LoadingRows = (rowCount?: number) =>
+  Array(rowCount ?? PAGE_SIZE)
+    .fill(null)
+    .map((_, index) => {
+      return <LoadingRow key={index} />
+    })
+const LoadingMoreRows = LoadingRows(LOADING_ROWS_COUNT)
 
 export function LoadingTokenTable({ rowCount }: { rowCount?: number }) {
   return (
@@ -75,7 +80,7 @@ export default function TokenTable() {
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const { error, loading, tokens, hasMore, loadMoreTokens, maxFetchable } = useTopTokens(chainName)
+  const { error, loading, tokens, hasMore, loadMoreTokens, loadingRowCount } = useTopTokens(chainName)
   const showMoreLoadingRows = Boolean(loading && hasMore)
 
   const observer = useRef<IntersectionObserver>()
@@ -95,7 +100,7 @@ export default function TokenTable() {
 
   /* loading and error state */
   if (loading && (!tokens || tokens?.length === 0)) {
-    return <LoadingTokenTable rowCount={PAGE_SIZE} />
+    return <LoadingTokenTable rowCount={loadingRowCount} />
   } else {
     if (error || !tokens) {
       return (
@@ -126,7 +131,7 @@ export default function TokenTable() {
                     <LoadedRow
                       key={token?.address}
                       tokenListIndex={index}
-                      tokenListLength={maxFetchable}
+                      tokenListLength={tokens.length}
                       token={token}
                       ref={index + 1 === tokens.length ? lastTokenRef : undefined}
                     />

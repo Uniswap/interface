@@ -1,22 +1,11 @@
-import clsx from 'clsx'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
-import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center, Column, Row } from 'nft/components/Flex'
-import {
-  BagFillIcon,
-  ClockIconFilled,
-  CrossIcon,
-  NonRarityIconFilled,
-  PaintPaletteIconFilled,
-  TagFillIcon,
-  VerifiedIcon,
-} from 'nft/components/icons'
+import { CrossIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
-import { subhead, subheadSmall } from 'nft/css/common.css'
-import { vars } from 'nft/css/sprinkles.css'
+import { buttonTextMedium, subhead } from 'nft/css/common.css'
 import {
   useBag,
   useFiltersExpanded,
@@ -27,34 +16,35 @@ import {
   useWalletCollections,
 } from 'nft/hooks'
 import { fetchMultipleCollectionStats, fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
-import { DropDownOption, ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
-import { Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
+import { ProfilePageStateType, WalletCollection } from 'nft/types'
+import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
-import { Link } from 'react-router-dom'
 import { useSpring } from 'react-spring'
+import styled from 'styled-components/macro'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
+import { WalletAssetDisplay } from './WalletAssetDisplay'
 
-enum SortBy {
-  FloorPrice,
-  LastPrice,
-  DateAcquired,
-  DateCreated,
-  DateListed,
-}
-
-const formatEth = (price: number) => {
-  if (price > 1000000) {
-    return `${Math.round(price / 1000000)}M`
-  } else if (price > 1000) {
-    return `${Math.round(price / 1000)}K`
-  } else {
-    return `${Math.round(price * 100 + Number.EPSILON) / 100}`
+const SellModeButton = styled.button<{ active: boolean }>`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  gap: 8px;
+  cursor: pointer;
+  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
+  color: #fff;
+  border: none;
+  outline: none;
+  &:hover {
+    background-color: ${({ theme }) => theme.accentAction};
   }
-}
+`
 
 function roundFloorPrice(price?: number, n?: number) {
   return price ? Math.round(price * Math.pow(10, n ?? 3) + Number.EPSILON) / Math.pow(10, n ?? 3) : 0
@@ -65,6 +55,26 @@ export const ProfilePage = () => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
+  const walletAssets = useWalletCollections((state) => state.walletAssets)
+  const setWalletAssets = useWalletCollections((state) => state.setWalletAssets)
+  const displayAssets = useWalletCollections((state) => state.displayAssets)
+  const setDisplayAssets = useWalletCollections((state) => state.setDisplayAssets)
+  const walletCollections = useWalletCollections((state) => state.walletCollections)
+  const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
+  const listFilter = useWalletCollections((state) => state.listFilter)
+  const sellAssets = useSellAsset((state) => state.sellAssets)
+  const reset = useSellAsset((state) => state.reset)
+  const resetSellAssets = useSellAsset((state) => state.reset)
+  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
+  const isBagExpanded = useBag((state) => state.bagExpanded)
+  const isMobile = useIsMobile()
+  const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
+
+  const handleSellModeClick = () => {
+    resetSellAssets()
+    toggleSellMode()
+  }
 
   const { data: ownerCollections } = useQuery(
     ['ownerCollections', address],
@@ -108,21 +118,9 @@ export const ProfilePage = () => {
 
   const ownerAssets = useMemo(() => (isSuccess ? ownerAssetsData?.pages.flat() : null), [isSuccess, ownerAssetsData])
 
-  const walletAssets = useWalletCollections((state) => state.walletAssets)
-  const setWalletAssets = useWalletCollections((state) => state.setWalletAssets)
-  const displayAssets = useWalletCollections((state) => state.displayAssets)
-  const setDisplayAssets = useWalletCollections((state) => state.setDisplayAssets)
-  const walletCollections = useWalletCollections((state) => state.walletCollections)
-  const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
-  const listFilter = useWalletCollections((state) => state.listFilter)
-  const sellAssets = useSellAsset((state) => state.sellAssets)
-  const reset = useSellAsset((state) => state.reset)
-  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
-  const [sortBy, setSortBy] = useState(SortBy.DateAcquired)
-  const [orderByASC, setOrderBy] = useState(true)
-  const [searchText, setSearchText] = useState('')
-  const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
-  const isMobile = useIsMobile()
+  useEffect(() => {
+    setDisplayAssets(walletAssets, listFilter)
+  }, [walletAssets, listFilter, setDisplayAssets])
 
   useEffect(() => {
     setWalletAssets(ownerAssets?.flat() ?? [])
@@ -131,15 +129,6 @@ export const ProfilePage = () => {
   useEffect(() => {
     ownerCollections && setWalletCollections(ownerCollections)
   }, [ownerCollections, setWalletCollections])
-
-  useEffect(() => {
-    if (searchText) {
-      const filtered = walletAssets.filter((asset) => asset.name?.toLowerCase().includes(searchText.toLowerCase()))
-      setDisplayAssets(filtered, listFilter)
-    } else {
-      setDisplayAssets(walletAssets, listFilter)
-    }
-  }, [searchText, walletAssets, listFilter, setDisplayAssets])
 
   useEffect(() => {
     if (ownerCollections?.length && collectionStats?.length) {
@@ -153,31 +142,6 @@ export const ProfilePage = () => {
   }, [collectionStats, ownerCollections, setWalletCollections])
 
   useEffect(() => {
-    const sorted = displayAssets && [...displayAssets]
-    if (sortBy === SortBy.FloorPrice && orderByASC) sorted?.sort((a, b) => (b.floorPrice || 0) - (a.floorPrice || 0))
-    else if (sortBy === SortBy.FloorPrice && !orderByASC)
-      sorted?.sort((a, b) => (a.floorPrice || 0) - (b.floorPrice || 0))
-    else if (sortBy === SortBy.LastPrice && orderByASC) sorted?.sort((a, b) => b.lastPrice - a.lastPrice)
-    else if (sortBy === SortBy.LastPrice && !orderByASC) sorted?.sort((a, b) => a.lastPrice - b.lastPrice)
-    else if (sortBy === SortBy.DateCreated && orderByASC)
-      sorted?.sort(
-        (a, b) => new Date(a.asset_contract.created_date).getTime() - new Date(b.asset_contract.created_date).getTime()
-      )
-    else if (sortBy === SortBy.DateCreated && !orderByASC)
-      sorted?.sort(
-        (a, b) => new Date(b.asset_contract.created_date).getTime() - new Date(a.asset_contract.created_date).getTime()
-      )
-    else if (sortBy === SortBy.DateAcquired && orderByASC)
-      sorted?.sort((a, b) => new Date(a.date_acquired).getTime() - new Date(b.date_acquired).getTime())
-    else if (sortBy === SortBy.DateAcquired && !orderByASC)
-      sorted?.sort((a, b) => new Date(b.date_acquired).getTime() - new Date(a.date_acquired).getTime())
-    else if (sortBy === SortBy.DateListed && orderByASC) sorted?.sort((a, b) => +b.listing_date - +a.listing_date)
-    else if (sortBy === SortBy.DateListed && !orderByASC) sorted?.sort((a, b) => +a.listing_date - +b.listing_date)
-    setDisplayAssets(sorted, listFilter)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy, orderByASC, listFilter])
-
-  useEffect(() => {
     if (ownerCollections?.length && collectionStats?.length) {
       const ownerCollectionsCopy = [...ownerCollections]
       for (const collection of ownerCollectionsCopy) {
@@ -188,76 +152,22 @@ export const ProfilePage = () => {
     }
   }, [collectionStats, ownerCollections, setWalletCollections])
 
-  const { gridX, gridWidthOffset } = useSpring({
+  const { gridX } = useSpring({
     gridX: isFiltersExpanded ? 300 : -16,
-    gridWidthOffset: isFiltersExpanded ? 300 /* right padding */ : 0,
   })
-
-  const sortDropDownOptions: DropDownOption[] = useMemo(
-    () => [
-      {
-        displayText: 'Floor price',
-        onClick: () => {
-          setOrderBy(false)
-          setSortBy(SortBy.FloorPrice)
-        },
-        icon: <NonRarityIconFilled width="28" height="28" color={vars.color.blue400} />,
-        reverseOnClick: () => setOrderBy(!orderByASC),
-      },
-      {
-        displayText: 'Last price',
-        onClick: () => {
-          setOrderBy(false)
-          setSortBy(SortBy.LastPrice)
-        },
-        icon: <ClockIconFilled width="28" height="28" />,
-        reverseOnClick: () => setOrderBy(!orderByASC),
-      },
-      {
-        displayText: 'Date acquired',
-        onClick: () => {
-          setOrderBy(false)
-          setSortBy(SortBy.DateAcquired)
-        },
-        icon: <BagFillIcon width="28" height="28" color={vars.color.blue400} />,
-        reverseOnClick: () => setOrderBy(!orderByASC),
-      },
-      {
-        displayText: 'Date created',
-        onClick: () => {
-          setOrderBy(false)
-          setSortBy(SortBy.DateCreated)
-        },
-        icon: <PaintPaletteIconFilled width="28" height="28" color={vars.color.blue400} />,
-        reverseOnClick: () => setOrderBy(!orderByASC),
-      },
-      {
-        displayText: 'Date listed',
-        onClick: () => {
-          setOrderBy(false)
-          setSortBy(SortBy.DateListed)
-        },
-        icon: <TagFillIcon width="28" height="28" color={vars.color.blue400} />,
-        reverseOnClick: () => setOrderBy(!orderByASC),
-      },
-    ],
-    [orderByASC]
-  )
-
-  const SortWalletAssetsDropdown = () => <SortDropdown dropDownOptions={sortDropDownOptions} />
 
   return (
     <Column
       width="full"
       paddingLeft={{ sm: '16', md: '52' }}
-      paddingRight={{ sm: '0', md: '72' }}
+      paddingRight={{ sm: '0', md: isBagExpanded ? '0' : '72' }}
       paddingTop={{ sm: '16', md: '40' }}
     >
       {walletAssets.length === 0 ? (
         <EmptyWalletContent />
       ) : (
         <Row alignItems="flex-start" position="relative">
-          <FilterSidebar SortDropdown={SortWalletAssetsDropdown} />
+          <FilterSidebar />
 
           {(!isMobile || !isFiltersExpanded) && (
             <Column width="full">
@@ -267,19 +177,22 @@ export const ProfilePage = () => {
                 flexShrink="0"
                 style={{
                   transform: gridX.to((x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`),
-                  width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
                 }}
               >
-                <Row gap="8" flexWrap="nowrap">
+                <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
                   <FilterButton
                     isMobile={isMobile}
                     isFiltersExpanded={isFiltersExpanded}
                     results={displayAssets.length}
                     onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                   />
-                  {!isMobile && <SortDropdown dropDownOptions={sortDropDownOptions} />}
-                  <CollectionSearch searchText={searchText} setSearchText={setSearchText} />
-                  <SelectAllButton />
+                  <Row gap="8" flexWrap="nowrap">
+                    {isSellMode && <SelectAllButton />}
+                    <SellModeButton active={isSellMode} onClick={handleSellModeClick}>
+                      <TagIcon height={20} width={20} />
+                      Sell
+                    </SellModeButton>
+                  </Row>
                 </Row>
                 <Row>
                   <CollectionFiltersRow
@@ -304,7 +217,9 @@ export const ProfilePage = () => {
                 >
                   <div className={assetList}>
                     {displayAssets && displayAssets.length
-                      ? displayAssets.map((asset, index) => <WalletAssetDisplay asset={asset} key={index} />)
+                      ? displayAssets.map((asset, index) => (
+                          <WalletAssetDisplay asset={asset} isSellMode={isSellMode} key={index} />
+                        ))
                       : null}
                   </div>
                 </InfiniteScroll>
@@ -358,125 +273,6 @@ export const ProfilePage = () => {
   )
 }
 
-export const WalletAssetDisplay = ({ asset }: { asset: WalletAsset }) => {
-  const sellAssets = useSellAsset((state) => state.sellAssets)
-  const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
-  const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
-  const cartExpanded = useBag((state) => state.bagExpanded)
-  const toggleCart = useBag((state) => state.toggleBag)
-  const isMobile = useIsMobile()
-
-  const [boxHovered, toggleBoxHovered] = useReducer((state) => {
-    return !state
-  }, false)
-  const [buttonHovered, toggleButtonHovered] = useReducer((state) => {
-    return !state
-  }, false)
-
-  const isSelected = useMemo(() => {
-    return sellAssets.some((item) => asset.id === item.id)
-  }, [asset, sellAssets])
-
-  const handleSelect = () => {
-    isSelected ? removeSellAsset(asset) : selectSellAsset(asset)
-    if (
-      !cartExpanded &&
-      !sellAssets.find(
-        (x) => x.tokenId === asset.tokenId && x.asset_contract.address === asset.asset_contract.address
-      ) &&
-      !isMobile
-    )
-      toggleCart()
-  }
-
-  return (
-    <Link
-      to={`/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`}
-      style={{ textDecoration: 'none' }}
-    >
-      <Column
-        color={'textPrimary'}
-        className={subheadSmall}
-        onMouseEnter={toggleBoxHovered}
-        onMouseLeave={toggleBoxHovered}
-      >
-        <Box
-          as="img"
-          alt={asset.name}
-          width="full"
-          borderTopLeftRadius="20"
-          borderTopRightRadius="20"
-          src={asset.image_url || '/nft/svgs/image-placeholder.svg'}
-          style={{ aspectRatio: '1' }}
-        />
-        <Column
-          position="relative"
-          borderBottomLeftRadius="20"
-          borderBottomRightRadius="20"
-          transition="250"
-          backgroundColor={boxHovered ? 'backgroundOutline' : 'backgroundSurface'}
-          paddingY="12"
-          paddingX="12"
-        >
-          <Box className={subheadSmall} overflow="hidden" textOverflow="ellipsis" marginTop="4" lineHeight="20">
-            {asset.name ? asset.name : `#${asset.tokenId}`}
-          </Box>
-          <Box fontSize="12" marginTop="4" lineHeight="16" overflow="hidden" textOverflow="ellipsis">
-            {asset.collection?.name}
-            {asset.collectionIsVerified ? <VerifiedIcon className={styles.verifiedBadge} /> : null}
-          </Box>
-          <Box as="span" fontSize="12" lineHeight="16" color="textSecondary" marginTop="8">
-            Last:&nbsp;
-            {asset.lastPrice ? (
-              <>
-                {formatEth(asset.lastPrice)}
-                &nbsp;ETH
-              </>
-            ) : (
-              <Box as="span" marginLeft="6">
-                &mdash;
-              </Box>
-            )}
-          </Box>
-          <Box as="span" fontSize="12" lineHeight="16" color="textSecondary" marginTop="4">
-            Floor:&nbsp;
-            {asset.floorPrice ? (
-              <>
-                {formatEth(asset.floorPrice)}
-                &nbsp;ETH
-              </>
-            ) : (
-              <Box as="span" marginLeft="8">
-                &mdash;
-              </Box>
-            )}
-          </Box>
-          <Box
-            marginTop="12"
-            textAlign="center"
-            width="full"
-            borderRadius="12"
-            paddingY="8"
-            transition="250"
-            color={buttonHovered ? 'textPrimary' : isSelected ? 'red400' : 'genieBlue'}
-            backgroundColor={buttonHovered ? (isSelected ? 'red400' : 'genieBlue') : 'backgroundSurface'}
-            className={subheadSmall}
-            onMouseEnter={toggleButtonHovered}
-            onMouseLeave={toggleButtonHovered}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              handleSelect()
-            }}
-          >
-            {isSelected ? 'Remove' : 'Select'}
-          </Box>
-        </Column>
-      </Column>
-    </Link>
-  )
-}
-
 const SelectAllButton = () => {
   const [isAllSelected, setIsAllSelected] = useState(false)
   const displayAssets = useWalletCollections((state) => state.displayAssets)
@@ -497,23 +293,13 @@ const SelectAllButton = () => {
   }
   return (
     <Box
-      display="flex"
-      flexShrink="0"
-      flexDirection="row"
-      alignItems="center"
-      marginLeft={{ sm: '8', md: 'auto' }}
-      borderRadius="12"
-      backgroundColor="backgroundOutline"
-      fontWeight="medium"
-      height="44"
-      paddingTop="12"
-      paddingBottom="12"
-      paddingRight="16"
-      paddingLeft="16"
+      marginRight="12"
+      paddingX="12"
+      paddingY="10"
       cursor="pointer"
-      color="textPrimary"
+      color="textSecondary"
       onClick={toggleAllSelected}
-      className={clsx(`${subheadSmall} ${isAllSelected ? styles.buttonSelected : null}`)}
+      className={buttonTextMedium}
     >
       {isAllSelected ? 'Deselect all' : 'Select all'}
     </Box>
@@ -600,31 +386,5 @@ const CollectionFilterItem = ({
         <CrossIcon />
       </Box>
     </Row>
-  )
-}
-
-const CollectionSearch = ({
-  searchText,
-  setSearchText,
-}: {
-  searchText: string
-  setSearchText: Dispatch<SetStateAction<string>>
-}) => {
-  return (
-    <Box
-      as="input"
-      borderColor={{ default: 'backgroundOutline', focus: 'genieBlue' }}
-      borderWidth="1px"
-      borderStyle="solid"
-      borderRadius="8"
-      padding="12"
-      backgroundColor="backgroundSurface"
-      fontSize="14"
-      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
-      placeholder="Search by name"
-      value={searchText}
-      width="full"
-      onChange={(e: FormEvent<HTMLInputElement>) => setSearchText(e.currentTarget.value)}
-    />
   )
 }

@@ -134,6 +134,9 @@ export const statsLabelLoading = style([
 
 export const descriptionLoading = style([
   loadingAsset,
+  sprinkles({
+    height: '20',
+  }),
   {
     maxWidth: 'min(calc(100% - 112px), 600px)',
   },

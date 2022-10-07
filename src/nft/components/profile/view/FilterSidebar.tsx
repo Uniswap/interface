@@ -11,7 +11,7 @@ import { useSpring } from 'react-spring'
 
 import * as styles from './ProfilePage.css'
 
-export const FilterSidebar = ({ SortDropdown }: { SortDropdown: () => JSX.Element }) => {
+export const FilterSidebar = () => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
 
@@ -62,11 +62,6 @@ export const FilterSidebar = ({ SortDropdown }: { SortDropdown: () => JSX.Elemen
         <Row marginTop="14" marginLeft="2" gap="6" flexWrap="wrap" width="276">
           <ListStatusFilterButtons listFilter={listFilter} setListFilter={setListFilter} />
         </Row>
-        {isMobile && (
-          <Box paddingTop="20">
-            <SortDropdown />
-          </Box>
-        )}
         <CollectionSelect
           collections={walletCollections}
           collectionFilters={collectionFilters}

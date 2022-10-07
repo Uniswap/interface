@@ -36,15 +36,14 @@ export const SwapWrapper = styled.main<{ margin?: string; maxWidth?: string; red
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean; redesignFlag: boolean }>`
-  padding: 4px;
   border-radius: 12px;
   height: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
   width: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
   position: relative;
   margin-top: ${({ redesignFlag }) => (redesignFlag ? '-18px' : '-14px')};
   margin-bottom: ${({ redesignFlag }) => (redesignFlag ? '-18px' : '-14px')};
-  left: calc(50% - 16px);
-  /* transform: rotate(90deg); */
+  margin-left: auto;
+  margin-right: auto;
   background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundInteractive : theme.deprecated_bg1)};
   border: 4px solid;
   border-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg0)};

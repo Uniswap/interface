@@ -9,6 +9,7 @@ export interface ThemeColors {
   backgroundBackdrop: Color
   backgroundSurface: Color
   backgroundModule: Color
+  backgroundFloating: Color
   backgroundInteractive: Color
   backgroundOutline: Color
   backgroundScrim: Color
