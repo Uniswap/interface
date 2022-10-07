@@ -43,53 +43,98 @@ const Content = styled.div`
   `}
 `
 
-const banner = {
-  localStorageKey: 'bsc-maintenance-',
-  start: 'Thu, 7 Oct 2022 00:00:00 GMT',
-  end: 'Thu, 30 Oct 2022 00:00:00 GMT',
-  onlyChains: [ChainId.BSCMAINNET],
-  text: (
-    <Text marginLeft="4px" marginRight="1rem" lineHeight="20px" color="#fff" fontSize="14px" flex={1}>
-      BNB Chain is currently under maintenance and has been paused temporarily. For further info please refer to{' '}
-      <ExternalLink
-        href="https://twitter.com/BNBCHAIN/status/1578148078636650496"
-        style={{ color: '#fff', fontWeight: 500, textDecoration: 'underline' }}
-      >
-        this
-      </ExternalLink>{' '}
-      official announcement from the Binance Team.
-    </Text>
-  ),
+type TextNode =
+  | string
+  | {
+      text: string
+      link: string
+    }
+
+type Banner = {
+  key: string
+  start: string
+  end: string
+  onlyChains: ChainId[]
+  text: TextNode[]
 }
+
+const banners: Banner[] = [
+  {
+    key: 'bsc-maintenance',
+    start: 'Thu, 7 Oct 2022 00:00:00 GMT',
+    end: 'Thu, 7 Oct 2022 00:00:00 GMT',
+    onlyChains: [ChainId.BSCMAINNET],
+    text: [
+      'BNB Chain is currently under maintenance and has been paused temporarily. For further info please refer to ',
+      {
+        text: 'this',
+        link: 'https://twitter.com/BNBCHAIN/status/1578148078636650496',
+      },
+      ' official announcement from the Binance Team.',
+    ],
+  },
+  {
+    key: 'ethw',
+    start: 'Thu, 13 Sep 2022 00:00:00 GMT',
+    end: 'Thu, 13 Oct 2022 00:00:00 GMT',
+    onlyChains: [ChainId.ETHW],
+    text: [
+      'On Ethereum POW, you can withdraw liquidity from pools and make swaps. In the long run, KyberSwap will only maintain support for Ethereum (PoS) as the canonical chain ',
+    ],
+  },
+]
 
 function TopBanner() {
   const below768 = useMedia('(max-width: 768px)')
 
-  const [showBanner, setShowBanner] = useLocalStorage(banner.localStorageKey, true)
+  const [showBanner, setShowBanner] = useLocalStorage('banners', {})
   const { chainId } = useActiveWeb3React()
 
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState<{ [key: string]: boolean | undefined }>({})
 
   useEffect(() => {
-    setTimeout(() => setShow(!!showBanner), 200)
+    setTimeout(() => setShow(showBanner || {}), 200)
   }, [showBanner])
 
-  if (!show || (chainId && !banner.onlyChains.includes(chainId))) return null
-  const now = new Date()
-  if (now > new Date(banner.start) && now < new Date(banner.end))
+  const renderBanner = (banner: Banner) => {
+    if (show[banner.key] === false || (chainId && !banner.onlyChains.includes(chainId))) return <></>
+    const now = new Date()
+    if (now < new Date(banner.start) || now > new Date(banner.end)) return <></>
     return (
-      <BannerWrapper>
+      <BannerWrapper key={banner.key}>
         {!below768 && <div />}
         <Content>
           <Announcement />
-          {banner.text}
+          <Text
+            marginLeft="4px"
+            marginRight="1rem"
+            lineHeight="20px"
+            color="#fff"
+            fontSize="14px"
+            flex={1}
+            style={{ whiteSpace: 'break-spaces' }}
+          >
+            {banner.text.map(textNode =>
+              typeof textNode === 'string' ? (
+                textNode
+              ) : (
+                <ExternalLink
+                  key={textNode.text + '-' + textNode.link}
+                  href={textNode.link}
+                  style={{ color: '#fff', fontWeight: 500, textDecoration: 'underline' }}
+                >
+                  {textNode.text}
+                </ExternalLink>
+              ),
+            )}
+          </Text>
         </Content>
 
-        <StyledClose size={24} onClick={() => setShowBanner(false)} />
+        <StyledClose size={24} onClick={() => setShowBanner({ ...showBanner, [banner.key]: false })} />
       </BannerWrapper>
     )
-
-  return null
+  }
+  return <>{banners.map(renderBanner)}</>
 }
 
 export default TopBanner
