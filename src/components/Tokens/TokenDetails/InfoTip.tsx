@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'
 
 const InfoTipContainer = styled.div`
   display: flex;
+  color: ${({ theme }) => theme.textSecondary};
   position: relative;
   align-items: center;
   cursor: help;
@@ -23,7 +24,7 @@ export default function InfoTip({ text }: { text: ReactNode; size?: number }) {
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
   return (
-    <span style={{ marginLeft: 4, display: 'flex', alignItems: 'center', backgroundColor: 'black' }}>
+    <span style={{ marginLeft: 4, display: 'flex', alignItems: 'center' }}>
       <Tooltip text={<InfoTipBody>{text}</InfoTipBody>} show={show} placement="right">
         <InfoTipContainer onClick={open} onMouseEnter={open} onMouseLeave={close}>
           <Info size={14} />
