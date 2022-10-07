@@ -1,19 +1,20 @@
 import { FeeAmount, Position } from '@kyberswap/ks-sdk-elastic'
-import { t } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
-import { rgba } from 'polished'
 import { Link } from 'react-router-dom'
+import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
 import RangeBadge from 'components/Badge/RangeBadge'
 import { AutoColumn } from 'components/Column'
 import Copy from 'components/Copy'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { MoneyBag } from 'components/Icons'
+import { FarmingIcon } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
 import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
 import useTheme from 'hooks/useTheme'
+import { MEDIA_WIDTHS } from 'theme'
 import { shortenAddress } from 'utils'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
@@ -26,6 +27,7 @@ export default function ProAmmPoolInfo({
   position: Position
   tokenId?: string
 }) {
+  const upToSmall = useMedia(`(max-width: ${MEDIA_WIDTHS.upToSmall}px)`)
   const theme = useTheme()
   const poolAddress = useProAmmPoolInfo(position.pool.token0, position.pool.token1, position.pool.fee as FeeAmount)
 
@@ -34,6 +36,39 @@ export default function ProAmmPoolInfo({
 
   const token0Shown = unwrappedToken(position.pool.token0)
   const token1Shown = unwrappedToken(position.pool.token1)
+
+  const renderFarmIcon = () => {
+    if (!isFarmActive) {
+      return null
+    }
+
+    if (upToSmall) {
+      return (
+        <MouseoverTooltip
+          noArrow
+          placement="top"
+          text={
+            <Text>
+              <Trans>
+                Available for yield farming. Click{' '}
+                <Link to={`/farms?tab=elastic&type=active&search=${poolAddress}`}>here</Link> to go to the farm.
+              </Trans>
+            </Text>
+          }
+        >
+          <FarmingIcon />
+        </MouseoverTooltip>
+      )
+    }
+
+    return (
+      <MouseoverTooltip width="fit-content" placement="top" text={t`Available for yield farming`}>
+        <Link to={`/farms?tab=elastic&type=active&search=${poolAddress}`}>
+          <FarmingIcon />
+        </Link>
+      </MouseoverTooltip>
+    )
+  }
 
   return (
     <>
@@ -48,24 +83,7 @@ export default function ProAmmPoolInfo({
             </Flex>
 
             <Flex sx={{ gap: '8px' }}>
-              {isFarmActive && (
-                <MouseoverTooltip noArrow placement="top" text={t`Available for yield farming. Click to go to Farm`}>
-                  <Link to={`/farms?tab=elastic&type=active&search=${poolAddress}`}>
-                    <Flex
-                      width={24}
-                      height={24}
-                      justifyContent="center"
-                      alignItems={'center'}
-                      sx={{
-                        background: rgba(theme.apr, 0.2),
-                        borderRadius: '999px',
-                      }}
-                    >
-                      <MoneyBag size={16} color={theme.apr} />
-                    </Flex>
-                  </Link>
-                </MouseoverTooltip>
-              )}
+              {renderFarmIcon()}
               <RangeBadge removed={removed} inRange={!outOfRange} hideText />
             </Flex>
           </Flex>
