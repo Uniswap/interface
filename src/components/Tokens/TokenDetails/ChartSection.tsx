@@ -6,9 +6,9 @@ import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { PriceDurations, SingleTokenData } from 'graphql/data/Token'
+import { PriceDurations, PricePoint, SingleTokenData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import useCurrencyLogoURIs, { getTokenLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import styled from 'styled-components/macro'
@@ -86,6 +86,26 @@ export default function ChartSection({
   const timePeriod = useAtomValue(filterTimeAtom)
 
   const logoSrc = useTokenLogoURI(token, nativeCurrency)
+
+  // Backend doesn't always return latest price point for every duration.
+  // Thus we need to manually determine latest price point available, and
+  // append it to the prices list for every duration.
+  let latestPricePoint: PricePoint = { value: 0, timestamp: 0 }
+  let latestPricePointTimePeriod: TimePeriod
+  Object.keys(TimePeriod).forEach((key) => {
+    if (key in prices) {
+      const latestPricePointForTimePeriod = prices[key as unknown as TimePeriod]?.slice(-1)[0]
+      if (latestPricePointForTimePeriod && latestPricePointForTimePeriod.timestamp > latestPricePoint.timestamp) {
+        latestPricePoint = latestPricePointForTimePeriod
+        latestPricePointTimePeriod = key as unknown as TimePeriod
+      }
+    }
+  })
+  Object.keys(TimePeriod).forEach((key) => {
+    if ((key as unknown as TimePeriod) !== latestPricePointTimePeriod) {
+      prices[key as unknown as TimePeriod]?.push(latestPricePoint)
+    }
+  })
 
   return (
     <ChartHeader>
