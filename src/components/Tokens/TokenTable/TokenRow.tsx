@@ -16,7 +16,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { formatDollarAmount } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatDollarAmt'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -532,7 +532,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {token.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
+                {token.market?.price?.value ? formatDollar(token.market.price.value, true) : '-'}
                 <PercentChangeInfoCell>
                   {formattedDelta}
                   {arrow}
@@ -548,12 +548,12 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           marketCap={
             <ClickableContent>
-              {token.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
+              {token.market?.totalValueLocked?.value ? formatDollar(token.market.totalValueLocked.value) : '-'}
             </ClickableContent>
           }
           volume={
             <ClickableContent>
-              {token.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
+              {token.market?.volume?.value ? formatDollar(token.market.volume.value) : '-'}
             </ClickableContent>
           }
           sparkLine={

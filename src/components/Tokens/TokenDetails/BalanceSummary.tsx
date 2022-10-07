@@ -7,7 +7,7 @@ import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
-import { formatDollarAmount } from 'utils/formatDollarAmt'
+import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatDollarAmt'
 
 const BalancesCard = styled.div`
   box-shadow: ${({ theme }) => theme.shallowShadow};
@@ -50,14 +50,14 @@ const BalanceRowLink = styled(StyledInternalLink)`
   color: unset;
 `
 
-function BalanceRow({ currency, formattedBalance, formattedUSDValue, href }: BalanceRowData) {
+function BalanceRow({ currency, formattedBalance, usdValue, href }: BalanceRowData) {
   const content = (
     <TotalBalance key={currency.wrapped.address}>
       <TotalBalanceItem>
         <CurrencyLogo currency={currency} />
         &nbsp;{formattedBalance} {currency?.symbol}
       </TotalBalanceItem>
-      <TotalBalanceItem>{formatDollarAmount(formattedUSDValue === 0 ? undefined : formattedUSDValue)}</TotalBalanceItem>
+      <TotalBalanceItem>{formatDollar(usdValue === 0 ? undefined : usdValue, true)}</TotalBalanceItem>
     </TotalBalance>
   )
   if (href) {
@@ -69,7 +69,7 @@ function BalanceRow({ currency, formattedBalance, formattedUSDValue, href }: Bal
 interface BalanceRowData {
   currency: Currency
   formattedBalance: number
-  formattedUSDValue: number | undefined
+  usdValue: number | undefined
   href?: string
 }
 export interface BalanceSummaryProps {
@@ -79,8 +79,8 @@ export interface BalanceSummaryProps {
 }
 
 export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNative }: BalanceSummaryProps) {
-  const balanceUsdValue = useStablecoinValue(tokenAmount)?.toFixed(2)
-  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(2)
+  const balanceUsdValue = useStablecoinValue(tokenAmount)
+  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)
 
   const { chainName } = useParams<{ chainName?: string }>()
   const pageChainName = validateUrlChainParam(chainName).toLowerCase()
@@ -105,7 +105,7 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     const tokenData: BalanceRowData = {
       currency: tokenAmount.currency,
       formattedBalance: formatToDecimal(tokenAmount, Math.min(tokenAmount.currency.decimals, 2)),
-      formattedUSDValue: balanceUsdValue ? parseFloat(balanceUsdValue) : undefined,
+      usdValue: balanceUsdValue ? currencyAmountToPreciseFloat(balanceUsdValue) : undefined,
     }
     if (isNative) {
       tokenData.href = `/tokens/${pageChainName}/${tokenAmount.currency.address}`
@@ -116,7 +116,7 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     const nativeData: BalanceRowData = {
       currency: nativeCurrencyAmount.currency,
       formattedBalance: formatToDecimal(nativeCurrencyAmount, Math.min(nativeCurrencyAmount.currency.decimals, 2)),
-      formattedUSDValue: nativeBalanceUsdValue ? parseFloat(nativeBalanceUsdValue) : undefined,
+      usdValue: nativeBalanceUsdValue ? currencyAmountToPreciseFloat(nativeBalanceUsdValue) : undefined,
     }
     if (isNative) {
       currencies.unshift(nativeData)
