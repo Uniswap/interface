@@ -76,11 +76,6 @@ const SwapButton = styled(StyledInternalLink)`
   justify-content: center;
   margin: auto;
   max-width: 100vw;
-  transition: 250ms ease max-width;
-
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-    max-width: 50vw;
-  }
 `
 
 export default function MobileBalanceSummaryFooter({
