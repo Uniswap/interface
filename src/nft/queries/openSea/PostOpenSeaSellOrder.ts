@@ -11,10 +11,13 @@ export async function PostOpenSeaSellOrder<T>(
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'X-API-KEY': process.env.OPENSEA_API_KEY ?? '',
+      'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY ?? '',
     },
     ...opts,
   }
+
+  console.log('DBUG ')
+  console.log(process.env)
 
   const response = await _fetch(apiPath, fetchOpts)
   return response.json()
