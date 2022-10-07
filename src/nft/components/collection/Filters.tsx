@@ -62,7 +62,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
             as="span"
             color="textSecondary"
             paddingLeft="8"
-            marginTop="24"
+            marginTop="12"
             marginBottom="12"
             className={styles.borderTop}
           ></Box>
