@@ -133,6 +133,7 @@ export const PriceRange = () => {
         <ReactSlider
           disabled={!(priceRangeLow || !priceRangeHigh)}
           defaultValue={[0, 100]}
+          disabled={!(minPrice || !maxPrice)}
           value={prevMinMax}
           className={isDarktheme ? styles.sliderDark : styles.sliderLight}
           trackClassName={styles.tracker}

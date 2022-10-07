@@ -71,7 +71,7 @@ const TraitItem = ({
       justifyContent="space-between"
       cursor="pointer"
       paddingLeft="12"
-      paddingRight="12"
+      paddingRight="16"
       borderRadius="12"
       style={{
         paddingBottom: '22px',

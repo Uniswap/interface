@@ -126,7 +126,7 @@ export const MarketplaceSelect = () => {
             transform: `rotate(${isOpen ? 0 : 180}deg)`,
           }}
         >
-          <ChevronUpIcon secondaryWidth={'23px'} />
+          <ChevronUpIcon />
         </Box>
       </Box>
       <Column className={styles.filterDropDowns} paddingLeft="0">
