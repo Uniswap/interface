@@ -4,7 +4,11 @@ import numbro from 'numbro'
 
 // Convert [CurrencyAmount] to number with necessary precision for price formatting.
 export const currencyAmountToPreciseFloat = (currencyAmount: CurrencyAmount<Currency>) => {
-  return parseFloat(currencyAmount.toFixed(3))
+  const floatForLargerNumbers = parseFloat(currencyAmount.toFixed(3))
+  if (floatForLargerNumbers < 0.1) {
+    return parseFloat(currencyAmount.toSignificant(3))
+  }
+  return floatForLargerNumbers
 }
 
 // Using a currency library here in case we want to add more in future.
