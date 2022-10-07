@@ -5,7 +5,6 @@ import styled from 'styled-components/macro'
 
 const InfoTipContainer = styled.div`
   display: flex;
-  color: ${({ theme }) => theme.textSecondary};
   position: relative;
   align-items: center;
   cursor: help;
