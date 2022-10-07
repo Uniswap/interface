@@ -3,7 +3,7 @@ import { formatToDecimal } from 'analytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { formatDollarAmount } from 'utils/formatDollarAmt'
+import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatDollarAmt'
 
 import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { BalanceSummaryProps } from './BalanceSummary'
@@ -87,19 +87,19 @@ export default function MobileBalanceSummaryFooter({
   nativeCurrencyAmount,
   isNative,
 }: BalanceSummaryProps) {
-  const balanceUsdValue = useStablecoinValue(tokenAmount)?.toFixed(2)
-  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(2)
+  const balanceUsdValue = useStablecoinValue(tokenAmount)
+  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)
 
   const formattedBalance = tokenAmount
     ? formatToDecimal(tokenAmount, Math.min(tokenAmount.currency.decimals, 2))
     : undefined
 
-  const balanceUsd = balanceUsdValue ? parseFloat(balanceUsdValue) : undefined
+  const balanceUsd = balanceUsdValue ? currencyAmountToPreciseFloat(balanceUsdValue) : undefined
 
   const formattedNativeBalance = nativeCurrencyAmount
     ? formatToDecimal(nativeCurrencyAmount, Math.min(nativeCurrencyAmount.currency.decimals, 2))
     : undefined
-  const nativeBalanceUsd = nativeBalanceUsdValue ? parseFloat(nativeBalanceUsdValue) : undefined
+  const nativeBalanceUsd = nativeBalanceUsdValue ? currencyAmountToPreciseFloat(nativeBalanceUsdValue) : undefined
 
   if ((!tokenAmount && !nativeCurrencyAmount) || (nativeCurrencyAmount?.equalTo(0) && tokenAmount?.equalTo(0))) {
     return null
@@ -117,7 +117,7 @@ export default function MobileBalanceSummaryFooter({
               <BalanceValue>
                 {formattedBalance} {tokenAmount?.currency?.symbol}
               </BalanceValue>
-              <FiatValue>{formatDollarAmount(balanceUsd)}</FiatValue>
+              <FiatValue>{formatDollar(balanceUsd, true)}</FiatValue>
             </BalanceTotal>
           </BalanceInfo>
         )}
@@ -128,7 +128,7 @@ export default function MobileBalanceSummaryFooter({
               <BalanceValue>
                 {formattedNativeBalance} {nativeCurrencyAmount?.currency?.symbol}
               </BalanceValue>
-              <FiatValue>{formatDollarAmount(nativeBalanceUsd)}</FiatValue>
+              <FiatValue>{formatDollar(nativeBalanceUsd, true)}</FiatValue>
             </BalanceTotal>
           </BalanceInfo>
         )}

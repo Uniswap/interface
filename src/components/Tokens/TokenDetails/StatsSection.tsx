@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/animations'
-import { formatDollarAmount } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatDollarAmt'
 
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
 import InfoTip from './InfoTip'
@@ -51,7 +51,17 @@ const Wrapper = styled.div`
 
 type NumericStat = number | undefined | null
 
-function Stat({ value, title, description }: { value: NumericStat; title: ReactNode; description?: ReactNode }) {
+function Stat({
+  value,
+  title,
+  description,
+  isPrice = false,
+}: {
+  value: NumericStat
+  title: ReactNode
+  description?: ReactNode
+  isPrice?: boolean
+}) {
   return (
     <StatWrapper>
       <StatTitle>
@@ -59,7 +69,7 @@ function Stat({ value, title, description }: { value: NumericStat; title: ReactN
         {description && <InfoTip text={description}></InfoTip>}
       </StatTitle>
 
-      <StatPrice>{value ? formatDollarAmount(value) : '-'}</StatPrice>
+      <StatPrice>{formatDollar(value, isPrice)}</StatPrice>
     </StatWrapper>
   )
 }
@@ -96,8 +106,8 @@ export default function StatsSection(props: StatsSectionProps) {
             />
           </StatPair>
           <StatPair>
-            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} />
-            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} />
+            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} isPrice={true} />
+            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
           </StatPair>
         </TokenStatsSection>
       </Wrapper>
