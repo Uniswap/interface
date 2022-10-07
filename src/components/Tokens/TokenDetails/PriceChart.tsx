@@ -332,9 +332,9 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
                 left={crosshair}
                 top={rdScale(displayPrice.value) + margin.top}
                 size={50}
-                fill={theme.accentActive}
+                fill={theme.accentAction}
                 stroke={theme.backgroundOutline}
-                strokeWidth={2}
+                strokeWidth={0.5}
               />
             </g>
           ) : (
