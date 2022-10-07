@@ -59,6 +59,7 @@ const MarketplaceItem = ({
       className={`${subheadSmall} ${styles.subRowHover}`}
       paddingLeft="12"
       paddingRight="16"
+      borderRadius="12"
       cursor="pointer"
       style={{ paddingBottom: '22px', paddingTop: '22px', maxHeight: '44px' }}
       onMouseEnter={toggleHover}
