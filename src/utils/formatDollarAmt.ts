@@ -6,7 +6,6 @@ import numbro from 'numbro'
 export const currencyAmountToPreciseFloat = (currencyAmount: CurrencyAmount<Currency>) => {
   const floatForLargerNumbers = parseFloat(currencyAmount.toFixed(3))
   if (floatForLargerNumbers < 0.1) {
-    console.log('parsed')
     return parseFloat(currencyAmount.toSignificant(3))
   }
   return floatForLargerNumbers
