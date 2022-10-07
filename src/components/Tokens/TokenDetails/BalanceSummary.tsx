@@ -130,8 +130,8 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     <BalancesCard>
       <TotalBalanceSection>
         <Trans>Your balance</Trans>
-        {currencies.map((props) => (
-          <BalanceRow {...props} key={props.currency.wrapped.address} />
+        {currencies.map((props, i) => (
+          <BalanceRow {...props} key={props.currency.wrapped.address + i} />
         ))}
       </TotalBalanceSection>
     </BalancesCard>
