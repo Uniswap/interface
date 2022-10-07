@@ -5,3 +5,4 @@ build/
 artifacts/
 .vscode/
 **/*.log
+*.idea/

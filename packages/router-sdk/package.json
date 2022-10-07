@@ -1,0 +1,46 @@
+{
+  "name": "@teleswap/router-sdk",
+  "version": "1.3.0",
+  "description": "An sdk for routing swaps using Uniswap v2 and Uniswap v3.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "dist/index.js",
+  "module": "dist/router-sdk.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "tsdx test",
+    "build": "tsdx build",
+    "start": "tsdx watch",
+    "prepublishOnly": "tsdx build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Uniswap/router-sdk.git"
+  },
+  "keywords": [
+    "uniswap",
+    "ethereum"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@ethersproject/abi": "^5.5.0",
+    "@uniswap/sdk-core": "^3.0.1",
+    "@uniswap/swap-router-contracts": "^1.3.0",
+    "@teleswap/v2-sdk": "^3.0.1",
+    "@uniswap/v3-sdk": "^3.7.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.25",
+    "prettier": "^2.4.1",
+    "tsdx": "^0.14.1"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "semi": false,
+    "singleQuote": true
+  }
+}
