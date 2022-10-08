@@ -274,3 +274,11 @@ export const BLOCKED_ADDRESSES: string[] = [
 ]
 
 export const DomainName = 'Teleswap V2'
+
+export const ENABLED_NETWORK_LABELS: { [chainId in ChainId]?: string } = {
+  // [ChainId.RINKEBY]: 'Rinkeby',
+  // [ChainId.ROPSTEN]: 'Ropsten',
+  // [ChainId.GÖRLI]: 'Görli',
+  [ChainId.OP_GOERLI]: 'OpGörli'
+  // [ChainId.KOVAN]: 'Kovan'
+}

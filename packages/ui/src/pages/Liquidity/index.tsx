@@ -4,6 +4,7 @@ import { Pair /* , JSBI */ /*  , Token  */ } from '@teleswap/sdk'
 import Bn from 'bignumber.js'
 import DoubleCurrencyLogoHorizontal from 'components/DoubleLogo'
 import { LiquidityCard } from 'components/PositionCard'
+import { ENABLED_NETWORK_LABELS } from 'constants/index'
 // import { BIG_INT_ZERO } from 'constants/index'
 import gql from 'graphql-tag'
 import useThemedContext from 'hooks/useThemedContext'
@@ -26,7 +27,7 @@ import { usePairs } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { /* StyledInternalLink, */ TYPE } from '../../theme'
+import { /* StyledInternalLink, */ StyledInternalLink, TYPE } from '../../theme'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1132px;
@@ -295,6 +296,9 @@ export default function Liquidity() {
       trackedTokenPairs
         .filter(([token0, token1, stable]) => {
           if (!token0.address || !token1.address) {
+            return false
+          }
+          if (!ENABLED_NETWORK_LABELS[token0.chainId]) {
             return false
           }
           return true
@@ -598,14 +602,14 @@ export default function Liquidity() {
                 return <TopPairRow v2Pair={v2Pair} key={v2Pair.id} index={index} ethPrice={ethPrice} />
               })}
             </TopPoolsGrid>
-            {/*  <AutoColumn justify={'center'} gap="md">
+            <AutoColumn justify={'center'} gap="md">
               <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
                 {`Don't see a pool you joined?`}&nbsp;
                 <StyledInternalLink id="import-pool-link" to="/find">
                   Import it.
                 </StyledInternalLink>
               </Text>
-            </AutoColumn> */}
+            </AutoColumn>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
