@@ -5,7 +5,7 @@ import bn from 'bignumber.js'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { BackToMyLiquidity } from 'components/LiquidityDetail'
 import QuestionHelper from 'components/QuestionHelper'
-// import Settings from 'components/Settings'
+import Settings from 'components/Settings'
 // import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import { usePresetPeripheryAddress } from 'hooks/usePresetContractAddress'
@@ -583,8 +583,7 @@ export default function AddLiquidity() {
           <span style={{ fontFamily: 'Poppins', fontWeight: 400, color: '#FFFFFF' }} className={'title'}>
             Add Liquidity
           </span>
-          {/* <Settings /> */}
-          <Box width={24}></Box>
+          <Settings />
         </AutoRow>
         <AutoColumn gap=".4rem">
           {/* {noLiquidity ||

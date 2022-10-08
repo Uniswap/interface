@@ -349,7 +349,6 @@ const FixedWidthStyledNavLink = function ({
 }: React.PropsWithoutRef<NavLinkProps> & React.RefAttributes<HTMLAnchorElement>) {
   const ref = useRef<any>()
   useLayoutEffect(() => {
-    console.log(ref.current)
     if (ref.current) {
       ref.current.style.width = `calc(${window.getComputedStyle(ref.current.childNodes[0]).width} + 2rem)`
     }
