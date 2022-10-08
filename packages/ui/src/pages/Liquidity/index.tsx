@@ -264,9 +264,9 @@ export default function Liquidity() {
       trackedTokenPairs
         .filter(([token0, token1, stable]) => {
           if (!token0.address || !token1.address) {
-            return true
+            return false
           }
-          return false
+          return true
         })
         .map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
@@ -288,7 +288,6 @@ export default function Liquidity() {
       ),
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
   )
-
   const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
   const v2IsLoading =
     fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some((V2Pair) => !V2Pair)
