@@ -205,15 +205,15 @@ export function toV2LiquidityToken([tokenA, tokenB, stable]: [Token, Token, bool
  * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
  */
 export function useTrackedTokenPairs(): [Token, Token, boolean][] {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const tokens = useAllTokens()
   // pinned pairs
-  const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
+  const pinnedPairs = useMemo(() => (account ? (chainId ? PINNED_PAIRS[chainId] ?? [] : []) : []), [chainId])
 
   // pairs for every token against every base
   const generatedPairs: [Token, Token, boolean][] = useMemo(
     () =>
-      chainId
+      chainId && account
         ? [
             ...flatMap(Object.keys(tokens), (tokenAddress) => {
               const token = tokens[tokenAddress]
@@ -251,7 +251,7 @@ export function useTrackedTokenPairs(): [Token, Token, boolean][] {
             })
           ]
         : [],
-    [tokens, chainId]
+    [chainId, account, tokens]
   )
 
   // pairs saved by users
