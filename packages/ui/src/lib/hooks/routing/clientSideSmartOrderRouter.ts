@@ -1,11 +1,12 @@
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line no-restricted-imports
-import { AlphaRouter, AlphaRouterConfig, ChainId } from '@teleswap/smart-order-router'
+import { AlphaRouter, AlphaRouterConfig, ChainId, SwapOptions } from '@teleswap/smart-order-router'
 import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { GetQuoteResult } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
+import { Percent } from '@uniswap/sdk-core'
 
 export function toSupportedChainId(chainId: ChainId): SupportedChainId | undefined {
   const numericChainId: number = chainId
@@ -30,6 +31,7 @@ async function getQuote(
     amount: BigintIsh
   },
   router: AlphaRouter,
+  swapConfig: SwapOptions,
   config: Partial<AlphaRouterConfig>
 ): Promise<{ data: GetQuoteResult; error?: unknown }> {
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
@@ -43,16 +45,16 @@ async function getQuote(
     amount,
     quoteCurrency,
     type === 'exactIn' ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    /*swapConfig=*/ undefined,
+    swapConfig,
     config
   )
 
   if (!swapRoute) throw new Error('Failed to generate client side quote')
 
-  return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute) }
+  return { data: transformSwapRouteToGetQuoteResult(type, amount, swapRoute, swapConfig) }
 }
 
-interface QuoteArguments {
+export interface QuoteArguments {
   tokenInAddress: string
   tokenInChainId: ChainId
   tokenInDecimals: number
@@ -63,6 +65,9 @@ interface QuoteArguments {
   tokenOutSymbol?: string
   amount: string
   type: 'exactIn' | 'exactOut'
+  recipient
+  slippageTolerance
+  deadline
 }
 
 export async function getClientSideQuote(
@@ -76,11 +81,20 @@ export async function getClientSideQuote(
     tokenOutDecimals,
     tokenOutSymbol,
     amount,
-    type
+    type,
+    recipient,
+    slippageTolerance,
+    deadline
   }: QuoteArguments,
   router: AlphaRouter,
   config: Partial<AlphaRouterConfig>
 ) {
+  const slippageTolerancePercent = parseSlippageTolerance(slippageTolerance)
+  const swapConfig = {
+    deadline: parseDeadline(deadline),
+    recipient,
+    slippageTolerance: slippageTolerancePercent
+  }
   return getQuote(
     {
       type,
@@ -99,6 +113,16 @@ export async function getClientSideQuote(
       amount
     },
     router,
+    swapConfig,
     config
   )
+}
+
+export function parseSlippageTolerance(slippageTolerance: string): Percent {
+  const slippagePer10k = Math.round(parseFloat(slippageTolerance) * 100)
+  return new Percent(slippagePer10k, 10_000)
+}
+
+export function parseDeadline(deadline: string): number {
+  return Math.floor(Date.now() / 1000) + parseInt(deadline)
 }

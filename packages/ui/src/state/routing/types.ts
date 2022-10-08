@@ -65,7 +65,10 @@ export interface GetQuoteResult {
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
   route: Array<(V3PoolInRoute | V2PoolInRoute)[]>
+  percents: Array<number>
   routeString: string
+  priceImpactWithoutFee: string
+  realizedLPFee: string
 }
 
 export class InterfaceTrade<

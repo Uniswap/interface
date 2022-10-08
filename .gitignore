@@ -6,3 +6,4 @@ artifacts/
 .vscode/
 **/*.log
 *.idea/
+*.yarn-error.log

@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@teleswap/router-sdk'
-import {AlphaRouter, ChainId, V2SubgraphProvider} from '@teleswap/smart-order-router'
+import { AlphaRouter, ChainId, V2SubgraphProvider } from '@teleswap/smart-order-router'
 import { RPC_PROVIDERS } from 'constants/providers'
-import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { getClientSideQuote, QuoteArguments, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
 
@@ -39,7 +39,7 @@ const API_QUERY_PARAMS = {
   protocols: 'v2,v3,mixed'
 }
 const CLIENT_PARAMS = {
-  protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED]
+  protocols: [Protocol.V2]
 }
 // Price queries are tuned down to minimize the required RPCs to respond to them.
 // TODO(zzmp): This will be used after testing router caching.
@@ -66,6 +66,12 @@ const PRICE_PARAMS = {
   minSplits: 1,
   maxSplits: 1,
   distributionPercent: 100
+}
+
+export async function route(req: QuoteArguments): Promise<{ data: GetQuoteResult; error?: unknown }> {
+  const router = getRouter(req.tokenInChainId)
+  const result = await getClientSideQuote(req, router, CLIENT_PARAMS)
+  return result
 }
 
 export const routingApi = createApi({

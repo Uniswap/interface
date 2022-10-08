@@ -1,8 +1,13 @@
-import { Protocol } from '@teleswap/router-sdk'
-import { routeAmountsToString, SwapRoute } from '@teleswap/smart-order-router'
+import { Protocol, ZERO } from '@teleswap/router-sdk'
+import { Fraction, Percent } from '@teleswap/sdk'
+import { _100 } from '@teleswap/sdk/dist/constants'
+import {routeAmountsToString, SwapOptions, SwapRoute, V2RouteWithValidQuote} from '@teleswap/smart-order-router'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pool } from '@uniswap/v3-sdk'
+import JSBI from 'jsbi'
 import { GetQuoteResult, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
+
+import { computeSlippageAdjustedAmountsByRoute, computeTradePriceBreakdownByRoute } from './prices'
 
 // from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
 export function transformSwapRouteToGetQuoteResult(
@@ -18,13 +23,33 @@ export function transformSwapRouteToGetQuoteResult(
     gasPriceWei,
     methodParameters,
     blockNumber
-  }: SwapRoute
+  }: SwapRoute,
+  swapConfig: SwapOptions
 ): GetQuoteResult {
   const routeResponse: Array<(V3PoolInRoute | V2PoolInRoute)[]> = []
 
-  for (const subRoute of route) {
-    const { amount, quote, tokenPath } = subRoute
+  let _realizedLPFee = JSBI.BigInt(0)
+  let _priceImpactWithoutFee: Percent = new Fraction(ZERO)
 
+  const percents: number[] = []
+
+  for (const subRoute of route) {
+    const { amount, quote, tokenPath, percent } = subRoute
+    percents.push(percent)
+
+    const slippageAdjustedAmounts = computeSlippageAdjustedAmountsByRoute(
+      subRoute as V2RouteWithValidQuote,
+      swapConfig.slippageTolerance
+    )
+
+    // subRoute.percent, subRoute.tokenPath
+    const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdownByRoute(
+      subRoute as V2RouteWithValidQuote
+    )
+    _priceImpactWithoutFee = _priceImpactWithoutFee.add(
+      priceImpactWithoutFee.multiply(subRoute.percent.toString()).divide(_100)
+    )
+    _realizedLPFee = JSBI.add(_realizedLPFee, realizedLPFee)
     const pools = subRoute.protocol === Protocol.V2 ? subRoute.route.pairs : subRoute.route.pools
     const curRoute: (V3PoolInRoute | V2PoolInRoute)[] = []
     for (let i = 0; i < pools.length; i++) {
@@ -32,12 +57,12 @@ export function transformSwapRouteToGetQuoteResult(
       const tokenIn = tokenPath[i]
       const tokenOut = tokenPath[i + 1]
 
-      let edgeAmountIn = undefined
+      let edgeAmountIn = ''
       if (i === 0) {
         edgeAmountIn = type === 'exactIn' ? amount.quotient.toString() : quote.quotient.toString()
       }
 
-      let edgeAmountOut = undefined
+      let edgeAmountOut = ''
       if (i === pools.length - 1) {
         edgeAmountOut = type === 'exactIn' ? quote.quotient.toString() : amount.quotient.toString()
       }
@@ -124,7 +149,10 @@ export function transformSwapRouteToGetQuoteResult(
     gasUseEstimateUSD: estimatedGasUsedUSD.toExact(),
     gasPriceWei: gasPriceWei.toString(),
     route: routeResponse,
-    routeString: routeAmountsToString(route)
+    routeString: routeAmountsToString(route),
+    priceImpactWithoutFee: _priceImpactWithoutFee.toSignificant(4).toString(),
+    realizedLPFee: _realizedLPFee.toString(),
+    percents
   }
 
   return result
