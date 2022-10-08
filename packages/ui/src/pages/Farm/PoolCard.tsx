@@ -190,16 +190,16 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const backgroundColor = useColor()
 
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakingToken)
-  const [, stakingTokenPair] = stakingInfo.stakingPair
-  // const [, stakingTokenPair] = usePair(currency0, currency1, (stakingInfo.stakingAsset as LiquidityAsset).isStable)
+  const [stakingTokenPairStatus, stakingTokenPair] = stakingInfo.stakingPair
 
   useEffect(() => {
     console.debug('PoolCard data:', {
       pid,
       stakingTokenPair,
+      stakingTokenPairStatus,
       totalSupplyOfStakingToken
     })
-  }, [pid, stakingTokenPair, totalSupplyOfStakingToken])
+  }, [pid, stakingTokenPair, totalSupplyOfStakingToken, stakingTokenPairStatus])
 
   // // let returnOverMonth: Percent = new Percent('0')
   // let valueOfTotalStakedAmountInWETH: TokenAmount | undefined
@@ -216,12 +216,6 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   //     )
   //   )
   // }
-
-  // // get the USD value of staked WETH
-  // const USDPrice = useUSDCPrice(WETH)
-  // const valueOfTotalStakedAmountInUSDC =
-  //   valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
-  // console.debug('valueOfTotalStakedAmountInUSDC', valueOfTotalStakedAmountInUSDC)
 
   const isStaking = true
   const rewardToken = UNI[chainId || 420]
