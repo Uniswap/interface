@@ -66,7 +66,7 @@ export const CONTRACT_ADDRESS: CONTRACT_ADDRESS_TYPE = {
     },
   },
 }
-/* 
+/*
 export const FACTORY_ADDRESS = '0xCa368eA3e9D45704B4bB08D40f0628018c892e4E'
 export const ROUTER_ADDRESS = '0xBD86b34E6a136bfd4D417342Ca04c6e3F7Ab7614'
 export const WETH_ADDRESS = '0x4200000000000000000000000000000000000006'
@@ -86,6 +86,7 @@ export const TEN = JSBI.BigInt(10)
 export const _100 = JSBI.BigInt(100)
 export const _997 = JSBI.BigInt(997)
 export const _1000 = JSBI.BigInt(1000)
+export const _10000 = JSBI.BigInt(10000)
 
 export enum SolidityType {
   uint8 = 'uint8',

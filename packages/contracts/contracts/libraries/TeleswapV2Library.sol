@@ -53,11 +53,8 @@ library TeleswapV2Library {
         require(reserveIn > 0 && reserveOut > 0, 'TeleswapV2Library: INSUFFICIENT_LIQUIDITY');
         if (stable) {
             amountIn -= amountIn.div(10000);
-
             decimalIn = decimalIn.mul(10**decimalIn);
             decimalOut = decimalOut.mul(10**decimalOut);
-
-
             uint xy = _k(reserveIn, reserveOut, decimalIn, decimalOut);
             reserveIn = reserveIn.mul(1e18).div(decimalIn);
             reserveOut = reserveOut.mul(1e18).div(decimalOut);
