@@ -32,12 +32,12 @@ export function transformSwapRouteToGetQuoteResult(
       const tokenIn = tokenPath[i]
       const tokenOut = tokenPath[i + 1]
 
-      let edgeAmountIn = undefined
+      let edgeAmountIn: string
       if (i === 0) {
         edgeAmountIn = type === 'exactIn' ? amount.quotient.toString() : quote.quotient.toString()
       }
 
-      let edgeAmountOut = undefined
+      let edgeAmountOut: string
       if (i === pools.length - 1) {
         edgeAmountOut = type === 'exactIn' ? quote.quotient.toString() : amount.quotient.toString()
       }
@@ -61,8 +61,8 @@ export function transformSwapRouteToGetQuoteResult(
           liquidity: nextPool.liquidity.toString(),
           sqrtRatioX96: nextPool.sqrtRatioX96.toString(),
           tickCurrent: nextPool.tickCurrent.toString(),
-          amountIn: edgeAmountIn,
-          amountOut: edgeAmountOut
+          amountIn: edgeAmountIn! ?? undefined,
+          amountOut: edgeAmountOut! ?? undefined
         })
       } else {
         const reserve0 = nextPool.reserve0
@@ -100,8 +100,8 @@ export function transformSwapRouteToGetQuoteResult(
             },
             quotient: reserve1.quotient.toString()
           },
-          amountIn: edgeAmountIn,
-          amountOut: edgeAmountOut
+          amountIn: edgeAmountIn! ?? undefined,
+          amountOut: edgeAmountOut! ?? undefined
         })
       }
     }
