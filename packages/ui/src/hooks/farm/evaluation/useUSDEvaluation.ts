@@ -3,10 +3,10 @@ import { usePairUSDValue } from 'hooks/usePairValue'
 import useUSDCPrice from 'utils/useUSDCPrice'
 
 function isPair(token: Pair | Token | null): token is Pair {
-  return !!(token as Pair).liquidityToken
+  return !!token && !!(token as Pair).liquidityToken
 }
 function isToken(token: Pair | Token | null): token is Token {
-  return !!(token as Token).decimals
+  return !!token && !!(token as Token).decimals
 }
 
 export function useUSDEvaluation(token: Pair | Token | null, quantity?: TokenAmount): CurrencyAmount | undefined {

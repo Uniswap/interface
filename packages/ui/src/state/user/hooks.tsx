@@ -157,7 +157,6 @@ export function useRemoveUserAddedToken(): (chainId: number, address: string) =>
 export function useUserAddedTokens(): Token[] {
   const { chainId } = useActiveWeb3React()
   const serializedTokensMap = useSelector<AppState, AppState['user']['tokens']>(({ user: { tokens } }) => tokens)
-
   return useMemo(() => {
     if (!chainId) return []
     return Object.values(serializedTokensMap?.[chainId as ChainId] ?? {}).map(deserializeToken)
@@ -205,15 +204,14 @@ export function toV2LiquidityToken([tokenA, tokenB, stable]: [Token, Token, bool
  * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
  */
 export function useTrackedTokenPairs(): [Token, Token, boolean][] {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const tokens = useAllTokens()
   // pinned pairs
-  const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
-
+  const pinnedPairs = useMemo(() => (account ? (chainId ? PINNED_PAIRS[chainId] ?? [] : []) : []), [chainId])
   // pairs for every token against every base
   const generatedPairs: [Token, Token, boolean][] = useMemo(
     () =>
-      chainId
+      chainId && account
         ? [
             ...flatMap(Object.keys(tokens), (tokenAddress) => {
               const token = tokens[tokenAddress]
@@ -251,7 +249,7 @@ export function useTrackedTokenPairs(): [Token, Token, boolean][] {
             })
           ]
         : [],
-    [tokens, chainId]
+    [chainId, account, tokens]
   )
 
   // pairs saved by users
@@ -271,10 +269,9 @@ export function useTrackedTokenPairs(): [Token, Token, boolean][] {
     })
   }, [savedSerializedPairs, chainId])
 
-  const combinedList = useMemo(
-    () => userPairs.concat(generatedPairs).concat(pinnedPairs),
-    [generatedPairs, pinnedPairs, userPairs]
-  )
+  const combinedList = useMemo(() => {
+    return userPairs.concat(generatedPairs).concat(pinnedPairs)
+  }, [generatedPairs, pinnedPairs, userPairs])
 
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list

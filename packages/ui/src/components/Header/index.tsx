@@ -1,9 +1,10 @@
-import {
-  ChainId
-  // TokenAmount
-} from '@teleswap/sdk'
+// import {
+//   ChainId
+//   // TokenAmount
+// } from '@teleswap/sdk'
 import TeleLogo from 'assets/images/tele/logo.svg'
 import TextLogo from 'assets/svg/textLogo.svg'
+import { ENABLED_NETWORK_LABELS } from 'constants/index'
 import useThemedContext from 'hooks/useThemedContext'
 import React, { useLayoutEffect, useState } from 'react'
 import { useRef } from 'react'
@@ -301,6 +302,7 @@ const StyledNavLink = styled(NavLink).attrs((props) => ({
     position: relative;
     right: -1px;
   }
+  min-width: fit-content;
   height: 100%;
   // padding: 0 1rem;
   display: inline-flex;
@@ -349,7 +351,6 @@ const FixedWidthStyledNavLink = function ({
 }: React.PropsWithoutRef<NavLinkProps> & React.RefAttributes<HTMLAnchorElement>) {
   const ref = useRef<any>()
   useLayoutEffect(() => {
-    console.log(ref.current)
     if (ref.current) {
       ref.current.style.width = `calc(${window.getComputedStyle(ref.current.childNodes[0]).width} + 2rem)`
     }
@@ -420,14 +421,6 @@ export const StyledMenuButton = styled.button`
     stroke: ${({ theme }) => theme.text1};
   }
 `
-
-const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.OP_GOERLI]: 'OpGörli',
-  [ChainId.KOVAN]: 'Kovan'
-}
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
@@ -556,9 +549,9 @@ export default function Header() {
             }}
           >
             <HideSmall>
-              {chainId && NETWORK_LABELS[chainId] && (
-                <NetworkCard className="secondary-title" title={NETWORK_LABELS[chainId]}>
-                  {NETWORK_LABELS[chainId]}
+              {chainId && ENABLED_NETWORK_LABELS[chainId] && (
+                <NetworkCard className="secondary-title" title={ENABLED_NETWORK_LABELS[chainId]}>
+                  {ENABLED_NETWORK_LABELS[chainId]}
                 </NetworkCard>
               )}
             </HideSmall>

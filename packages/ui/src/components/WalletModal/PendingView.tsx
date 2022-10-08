@@ -60,6 +60,7 @@ const ErrorButton = styled.div`
 
 const LoadingWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
+  border-radius: 1rem;
   align-items: center;
   background: transparent !important;
   justify-content: center;
