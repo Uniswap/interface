@@ -123,6 +123,36 @@ const YourLiquidityGrid = styled(Box)`
   }
 `
 
+const MobileYourLiquidityGrid = styled(Box)`
+  // border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
+  background-color: rgba(25, 36, 47, 1);
+  padding: 1.5rem;
+  display: grid;
+  grid-auto-rows: auto;
+  grid-template-columns: 1fr;
+  grid-row-gap: 1rem;
+  grid-auto-flow: row;
+  justify-items: flex-start;
+  align-items: center;
+  place-content: center center;
+`
+
+const MobileYourLiquidityCard = styled(Box)`
+  display: grid;
+  width: 100%;
+  grid-template-rows: 3fr 1fr 2fr;
+  grid-row-gap: 0.5rem;
+  grid-auto-flow: row dense;
+  grid-template-columns: 2fr 1fr 2fr;
+  .mobile-pair-icon {
+    grid-column: 1 / 3;
+  }
+  .mobile-pair-manage-link {
+    grid-column: 3 / 4;
+  }
+`
+
 const TopPoolsGrid = styled(Box)`
   // border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 1rem;
@@ -130,7 +160,7 @@ const TopPoolsGrid = styled(Box)`
   background-color: rgba(25, 36, 47, 1);
   padding: 1.5rem;
   display: grid;
-  grid-template-columns: 1fr 5fr 2.5fr 5fr 4fr;
+  grid-template-columns: ${() => (isMobile ? '1fr 1fr 0.5fr' : '1fr 5fr 2.5fr 5fr 4fr')};
   grid-template-rows: repeat(40px);
   grid-row-gap: 1rem;
   grid-column-gap: ${() => (isMobile ? '0px' : '0.75rem')};
@@ -248,6 +278,7 @@ const StyledTableView = styled(Box)`
 
 const StyledLink = styled(ButtonPrimary)`
   & {
+    ${() => (isMobile ? 'width: 4rem;' : '')}
     display: inline-block !important;
     padding: 0.3rem;
     border-radius: 0.7rem !important;
@@ -437,7 +468,7 @@ export default function Liquidity() {
                 </ResponsiveButtonSecondary> */}
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
                   <Text className="AddLiquidity text-small" sx={{ fontWeight: 600, color: '#000000' }}>
-                    Add Liquidity
+                    {isMobile ? '+ Add' : `Add Liquidity`}
                   </Text>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
@@ -458,25 +489,44 @@ export default function Liquidity() {
             ) : allV2PairsWithLiquidity?.length > 0 && ethPrice !== undefined ? (
               //  || stakingPairs?.length > 0
               <>
-                <YourLiquidityGrid className="text">
-                  <HeaderItem>Pool</HeaderItem>
-                  <HeaderItem>Pair Mode</HeaderItem>
-                  <HeaderItem>Token</HeaderItem>
-                  <HeaderItem>Amount</HeaderItem>
-                  <HeaderItem>Value</HeaderItem>
-                  <HeaderItem></HeaderItem>
-                  {allV2PairsWithLiquidity.map((v2Pair, index) => (
-                    <LiquidityCard
-                      key={index}
-                      pair={v2Pair}
-                      needBgColor={false}
-                      // stakedBalance={stakingInfosWithBalance[index].stakedAmount}
-                      border={`1px solid rgba(255, 255, 255, 0.2)!important`}
-                      borderRadius={`24px`}
-                      ethPrice={ethPrice}
-                    ></LiquidityCard>
-                  ))}
-                </YourLiquidityGrid>
+                {!isMobile && (
+                  <YourLiquidityGrid className="text">
+                    <HeaderItem>Pool</HeaderItem>
+                    <HeaderItem>Pair Mode</HeaderItem>
+                    <HeaderItem>Token</HeaderItem>
+                    <HeaderItem>Amount</HeaderItem>
+                    <HeaderItem>Value</HeaderItem>
+                    <HeaderItem></HeaderItem>
+                    {allV2PairsWithLiquidity.map((v2Pair, index) => (
+                      <LiquidityCard
+                        key={index}
+                        pair={v2Pair}
+                        needBgColor={false}
+                        // stakedBalance={stakingInfosWithBalance[index].stakedAmount}
+                        border={`1px solid rgba(255, 255, 255, 0.2)!important`}
+                        borderRadius={`24px`}
+                        ethPrice={ethPrice}
+                      ></LiquidityCard>
+                    ))}
+                  </YourLiquidityGrid>
+                )}
+                {isMobile && (
+                  <MobileYourLiquidityGrid>
+                    {allV2PairsWithLiquidity.map((v2Pair, index) => (
+                      <MobileYourLiquidityCard key={v2Pair.liquidityToken.address}>
+                        <LiquidityCard
+                          key={index}
+                          pair={v2Pair}
+                          needBgColor={false}
+                          // stakedBalance={stakingInfosWithBalance[index].stakedAmount}
+                          border={`1px solid rgba(255, 255, 255, 0.2)!important`}
+                          borderRadius={`24px`}
+                          ethPrice={ethPrice}
+                        ></LiquidityCard>
+                      </MobileYourLiquidityCard>
+                    ))}
+                  </MobileYourLiquidityGrid>
+                )}
 
                 {/* <ButtonSecondary>
                   <RowBetween>
@@ -539,9 +589,9 @@ export default function Liquidity() {
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem> */}
             <TopPoolsGrid className="text">
-              <HeaderItem>#</HeaderItem>
+              {!isMobile && <HeaderItem>#</HeaderItem>}
               <HeaderItem>Pools</HeaderItem>
-              <HeaderItem>Pair Mode</HeaderItem>
+              {!isMobile && <HeaderItem>Pair Mode</HeaderItem>}
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem>
               {pools.map((v2Pair, index) => {
@@ -690,7 +740,7 @@ function Table() {
 function TopPairRow({ v2Pair, index, ethPrice }: { v2Pair: any; index: number; ethPrice?: Bn }) {
   return (
     <>
-      <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>
+      {!isMobile && <Box key={`${v2Pair.id}-1`}>{index + 1}</Box>}
       <Box
         key={`${v2Pair.id}-2`}
         sx={{ textAlign: 'center', width: '10rem', display: 'flex', justifyContent: 'flex-start' }}
@@ -711,10 +761,10 @@ function TopPairRow({ v2Pair, index, ethPrice }: { v2Pair: any; index: number; e
           </Text>
         </Flex>
       </Box>
-      <Box key={`${v2Pair.id}-3`}>{v2Pair.stable ? 'Stable' : 'Volatile'}</Box>
+      {!isMobile && <Box key={`${v2Pair.id}-3`}>{v2Pair.stable ? 'Stable' : 'Volatile'}</Box>}
       <Box key={`${v2Pair.id}-3`}>
         {ethPrice
-          ? new Bn(v2Pair.trackedReserveETH).multipliedBy(ethPrice).decimalPlaces(4, Bn.ROUND_HALF_UP).toString()
+          ? new Bn(v2Pair.trackedReserveETH).multipliedBy(ethPrice).decimalPlaces(4, Bn.ROUND_HALF_UP).toFixed(4)
           : '-'}
         &nbsp; $
       </Box>
@@ -733,7 +783,7 @@ function TopPairRow({ v2Pair, index, ethPrice }: { v2Pair: any; index: number; e
       Provide Liquidity
     </ButtonPrimary> */}
         <StyledLink as={Link} to={`/add/${v2Pair.token0.id}/${v2Pair.token1.id}/${v2Pair.stable}`}>
-          Provide Liquidity
+          {isMobile ? '+' : 'Provide Liquidity'}
         </StyledLink>
       </Box>
     </>
