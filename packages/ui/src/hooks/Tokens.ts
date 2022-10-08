@@ -16,7 +16,6 @@ import { useBytes32TokenContract, useTokenContract } from './useContract'
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
-
   return useMemo(() => {
     if (!chainId) return {}
 

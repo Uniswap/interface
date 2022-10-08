@@ -489,7 +489,7 @@ export default function LiquidityDetail() {
             </Box>
             <Box sx={{ justifySelf: 'end' }}>
               {userHoldingPercentage instanceof Fraction
-                ? +userHoldingPercentage.toSignificant(4) * 100
+                ? +userHoldingPercentage.toFixed(4) * 100
                 : userHoldingPercentage}
               %
             </Box>

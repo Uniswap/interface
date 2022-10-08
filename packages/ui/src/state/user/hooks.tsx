@@ -157,7 +157,6 @@ export function useRemoveUserAddedToken(): (chainId: number, address: string) =>
 export function useUserAddedTokens(): Token[] {
   const { chainId } = useActiveWeb3React()
   const serializedTokensMap = useSelector<AppState, AppState['user']['tokens']>(({ user: { tokens } }) => tokens)
-
   return useMemo(() => {
     if (!chainId) return []
     return Object.values(serializedTokensMap?.[chainId as ChainId] ?? {}).map(deserializeToken)
@@ -209,7 +208,6 @@ export function useTrackedTokenPairs(): [Token, Token, boolean][] {
   const tokens = useAllTokens()
   // pinned pairs
   const pinnedPairs = useMemo(() => (account ? (chainId ? PINNED_PAIRS[chainId] ?? [] : []) : []), [chainId])
-
   // pairs for every token against every base
   const generatedPairs: [Token, Token, boolean][] = useMemo(
     () =>
@@ -271,10 +269,9 @@ export function useTrackedTokenPairs(): [Token, Token, boolean][] {
     })
   }, [savedSerializedPairs, chainId])
 
-  const combinedList = useMemo(
-    () => userPairs.concat(generatedPairs).concat(pinnedPairs),
-    [generatedPairs, pinnedPairs, userPairs]
-  )
+  const combinedList = useMemo(() => {
+    return userPairs.concat(generatedPairs).concat(pinnedPairs)
+  }, [generatedPairs, pinnedPairs, userPairs])
 
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list

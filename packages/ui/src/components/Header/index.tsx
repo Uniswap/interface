@@ -301,6 +301,7 @@ const StyledNavLink = styled(NavLink).attrs((props) => ({
     position: relative;
     right: -1px;
   }
+  min-width: fit-content;
   height: 100%;
   // padding: 0 1rem;
   display: inline-flex;

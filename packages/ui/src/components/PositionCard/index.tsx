@@ -1,4 +1,5 @@
 import { JSBI, Pair, Percent, TokenAmount } from '@teleswap/sdk'
+import RightArrow from 'assets/svg/right-arrow.svg'
 import Bn from 'bignumber.js'
 import { gql } from 'graphql-tag'
 import { darken } from 'polished'
@@ -15,6 +16,7 @@ import { BIG_INT_ZERO } from '../../constants'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
+import { useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink /* , TYPE */ } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -482,6 +484,15 @@ const StyledLink = styled(ButtonPrimary)`
   }
 `
 
+const MobileYourLiquidityCardColumnHead = styled(Text)`
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+`
+
 export function LiquidityCard({
   pair,
   border,
@@ -494,7 +505,7 @@ export function LiquidityCard({
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
   const pairModeStable = !!pair.stable
-
+  const unclaimedAmount = useUserUnclaimedAmount(account)
   const [showMore, setShowMore] = useState(false)
 
   const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
@@ -582,48 +593,49 @@ export function LiquidityCard({
       })()
     }
   }, [ethPrice, pair.token0, pair.token1])
-  return (
-    <>
-      <Box>
-        <DoubleCurrencyLogoHorizontal currency0={currency0} currency1={currency1} size={20} />
-      </Box>
-      <Box>{pair.stable ? 'Stable' : 'Volatile'}</Box>
-      <Box
-        sx={{
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          width: 'min-content',
-          textAlign: 'left',
-          ...(isMobile && { maxWidth: '3.5rem' })
-        }}
-      >
-        {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
-      </Box>
-      <Box>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</Box>
-      <Box>
-        {fullInfoPair && userHoldingPercentage && userHoldingPercentage !== '-'
-          ? new Bn(fullInfoPair.trackedReserveETH)
-              .multipliedBy(ethPrice)
-              .multipliedBy(userHoldingPercentage?.toFixed(18))
-              .decimalPlaces(4, Bn.ROUND_HALF_UP)
-              .toString()
-          : '-'}
-        &nbsp;$
-      </Box>
-      {/* <td>xx</td> */}
-      <Box style={{ display: 'flex', justifyContent: 'space-between', justifySelf: 'end' }}>
-        {/* <ButtonPrimary padding={"unset"} width={"5rem"} borderRadius={".3rem"} sx={{ height: "1.3rem", fontSize: ".5rem", color: "#000000" }} as={Link} to="/manager">
+  if (!isMobile) {
+    return (
+      <>
+        <Box>
+          <DoubleCurrencyLogoHorizontal currency0={currency0} currency1={currency1} size={20} />
+        </Box>
+        <Box>{pair.stable ? 'Stable' : 'Volatile'}</Box>
+        <Box
+          sx={{
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            width: 'min-content',
+            textAlign: 'left',
+            ...(isMobile ? { maxWidth: '3.5rem' } : {})
+          }}
+        >
+          {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
+        </Box>
+        <Box>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</Box>
+        <Box>
+          {fullInfoPair && userHoldingPercentage && userHoldingPercentage !== '-'
+            ? new Bn(fullInfoPair.trackedReserveETH)
+                .multipliedBy(ethPrice)
+                .multipliedBy(userHoldingPercentage?.toFixed(18))
+                .decimalPlaces(4, Bn.ROUND_HALF_UP)
+                .toString()
+            : '-'}
+          &nbsp;$
+        </Box>
+        {/* <td>xx</td> */}
+        <Box style={{ display: 'flex', justifyContent: 'space-between', justifySelf: 'end' }}>
+          {/* <ButtonPrimary padding={"unset"} width={"5rem"} borderRadius={".3rem"} sx={{ height: "1.3rem", fontSize: ".5rem", color: "#000000" }} as={Link} to="/manager">
           Manage
         </ButtonPrimary> */}
-        <StyledLink
-          className="text-small"
-          as={Link}
-          to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}/${pairModeStable}`}
-        >
-          Manage
-        </StyledLink>
-        {/*  <Box style={{ display: 'inline-block' }}>
+          <StyledLink
+            className="text-small"
+            as={Link}
+            to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}/${pairModeStable}`}
+          >
+            Manage
+          </StyledLink>
+          {/*  <Box style={{ display: 'inline-block' }}>
           <ButtonPrimary
             style={{ display: 'inline-block !important' }}
             padding=".3rem"
@@ -644,7 +656,74 @@ export function LiquidityCard({
             Remove
           </ButtonPrimary>
         </Box> */}
-      </Box>
-    </>
-  )
+        </Box>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <Box className="mobile-pair-icon" display={'flex'} alignItems="center" justifyContent={'flex-start'}>
+          <DoubleCurrencyLogoHorizontal currency0={currency0} currency1={currency1} size={20} />
+          <Text
+            sx={{
+              'font-Family': 'Poppins',
+              'font-Style': 'normal',
+              'font-Weight': '500',
+              'font-Size': '1rem',
+              'line-Height': '1.5rem',
+              color: '#FFFFFF'
+            }}
+          >
+            {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
+          </Text>
+        </Box>
+        <Box
+          className="mobile-pair-manage-link"
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            a: {
+              background: 'unset!important',
+              fontFamily: 'Poppins',
+              fontStyle: 'normal',
+              fontWeight: '600',
+              fontSize: '0.8rem',
+              lineHeight: '1.15rem',
+              color: '#39e1ba',
+              position: 'relative',
+              textAlign: 'right',
+              paddingRight: '1rem'
+            }
+          }}
+        >
+          <StyledLink as={Link} to={`/liquidity/${currencyId(currency0)}/${currencyId(currency1)}/${pairModeStable}`}>
+            Manage
+            <img
+              src={RightArrow}
+              alt="right-arrow"
+              style={{ position: 'absolute', right: 0 }}
+              height="14px"
+              width={'14px'}
+            />
+          </StyledLink>
+        </Box>
+        <MobileYourLiquidityCardColumnHead>Amount</MobileYourLiquidityCardColumnHead>
+        <MobileYourLiquidityCardColumnHead>Value</MobileYourLiquidityCardColumnHead>
+        <MobileYourLiquidityCardColumnHead>Unclaimed Earnings</MobileYourLiquidityCardColumnHead>
+        <Box>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</Box>
+        <Box>
+          {fullInfoPair && userHoldingPercentage && userHoldingPercentage !== '-'
+            ? new Bn(fullInfoPair.trackedReserveETH)
+                .multipliedBy(ethPrice)
+                .multipliedBy(userHoldingPercentage?.toFixed(18))
+                .decimalPlaces(4, Bn.ROUND_HALF_UP)
+                .toString()
+            : '-'}
+          &nbsp;$
+        </Box>
+        <Box>{unclaimedAmount ? unclaimedAmount.toSignificant(4) : '-'}</Box>
+      </>
+    )
+  }
 }

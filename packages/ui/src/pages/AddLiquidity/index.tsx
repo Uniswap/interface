@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@teleswap/sdk'
+import LiquidityPlusIcon from 'assets/svg/liquidityPlusIcon.svg'
 import bn from 'bignumber.js'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { BackToMyLiquidity } from 'components/LiquidityDetail'
@@ -11,13 +12,13 @@ import { useIsTransactionUnsupported } from 'hooks/Trades'
 import { usePresetPeripheryAddress } from 'hooks/usePresetContractAddress'
 import useThemedContext from 'hooks/useThemedContext'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useHistory, useParams } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import LiquidityPlusIcon from 'assets/svg/liquidityPlusIcon.svg'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -189,11 +190,6 @@ export default function AddLiquidity() {
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
-        // {
-        //   from: wrappedCurrency(currencyA, chainId)?.address,
-        //   to: wrappedCurrency(currencyB, chainId)?.address,
-        //   stable: true,
-        // },
         [
           tokenBIsETH
             ? wrappedCurrency(currencyA, chainId)?.address ?? ''
@@ -912,7 +908,7 @@ export default function AddLiquidity() {
           fontFamily: 'Poppins',
           zIndex: -1,
           color: 'rgba(255,255,255,0.6)',
-          maxWidth: '30rem',
+          maxWidth: isMobile ? '100%' : '30rem',
           fontSize: '0.6rem',
           position: 'relative',
           width: '30rem',
