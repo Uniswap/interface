@@ -85,7 +85,7 @@ export default function AddLiquidity() {
   const { currencyIdA, currencyIdB, stable } = useParams<{ currencyIdA: string; currencyIdB: string; stable: string }>()
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useThemedContext()
-  const [pairModeStable, setPairModeStable] = useState(false)
+  const [pairModeStable, setPairModeStable] = useState(!!stable)
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
@@ -407,7 +407,7 @@ export default function AddLiquidity() {
                 color: '#999999'
               }}
             >
-              0.3%
+              {!pairModeStable ? '0.3%' : '0.01%'}
             </Text>
           </Flex>
         </BorderVerticalContainer>
@@ -805,21 +805,13 @@ export default function AddLiquidity() {
             color: '#D7DCE0'
           }}
         >
-          By adding liquidity to this pair,you’ll earn 0.3% of all the trades on this pair proportional to your share of
+          By adding liquidity to this pair,you’ll earn 0.01% of all the trades on this pair proportional to your share of
           the pool. And earnings will be claimed while removing your liquidity.
         </Text>
         <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0' }}></Box> */}
         <Box
           sx={{
-            button: {
-              maxHeight: '3.5rem',
-              fontWeight: 400
-            },
-            a: {
-              maxHeight: '3.5rem',
-              fontWeight: 400
-            },
-            '*': {
+            'button,a': {
               maxHeight: '3.5rem',
               fontWeight: 400
             }
@@ -932,9 +924,8 @@ export default function AddLiquidity() {
           backdropFilter: 'blur(36.9183px)'
         }}
       >
-        By adding liquidity to this pair,you’ll earn 0.3% of all the trades on this pair proportional to your share of
-        the pool. And earnings will be claimed while removing your liquidity. 0.044663 ETH 0.30% minimum received
-        slippage tolerance
+        By adding liquidity to this pair,you will earn {!pairModeStable ? '0.3%' : '0.01%'} of all the trades on this
+        pair proportional to your share of the pool. And earnings will be claimed while removing your liquidity.
       </Box>
     </>
   )
