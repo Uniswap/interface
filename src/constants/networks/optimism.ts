@@ -30,7 +30,7 @@ const optimismInfo: NetworkInfo = {
     logo: EthereumLogo,
     decimal: 18,
   },
-  rpcUrl: 'https://mainnet.optimism.io',
+  rpcUrl: 'https://opt-mainnet.g.alchemy.com/v2/N7gZFcuMkhLTTpdsRLEcDXYIJssj6GsI',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/optimism/route/encode`,
   classic: {
     static: {
