@@ -1,9 +1,10 @@
-import {
-  ChainId
-  // TokenAmount
-} from '@teleswap/sdk'
+// import {
+//   ChainId
+//   // TokenAmount
+// } from '@teleswap/sdk'
 import TeleLogo from 'assets/images/tele/logo.svg'
 import TextLogo from 'assets/svg/textLogo.svg'
+import { ENABLED_NETWORK_LABELS } from 'constants/index'
 import useThemedContext from 'hooks/useThemedContext'
 import React, { useLayoutEffect, useState } from 'react'
 import { useRef } from 'react'
@@ -421,14 +422,6 @@ export const StyledMenuButton = styled.button`
   }
 `
 
-const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.OP_GOERLI]: 'OpGörli',
-  [ChainId.KOVAN]: 'Kovan'
-}
-
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
@@ -556,9 +549,9 @@ export default function Header() {
             }}
           >
             <HideSmall>
-              {chainId && NETWORK_LABELS[chainId] && (
-                <NetworkCard className="secondary-title" title={NETWORK_LABELS[chainId]}>
-                  {NETWORK_LABELS[chainId]}
+              {chainId && ENABLED_NETWORK_LABELS[chainId] && (
+                <NetworkCard className="secondary-title" title={ENABLED_NETWORK_LABELS[chainId]}>
+                  {ENABLED_NETWORK_LABELS[chainId]}
                 </NetworkCard>
               )}
             </HideSmall>
