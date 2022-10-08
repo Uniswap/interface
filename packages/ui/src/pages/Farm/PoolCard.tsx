@@ -193,12 +193,14 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const [stakingTokenPairStatus, stakingTokenPair] = stakingInfo.stakingPair
 
   useEffect(() => {
-    console.debug('PoolCard data:', {
-      pid,
-      stakingTokenPair,
-      stakingTokenPairStatus,
-      totalSupplyOfStakingToken
-    })
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('PoolCard data:', {
+        pid,
+        stakingTokenPair,
+        stakingTokenPairStatus,
+        totalSupplyOfStakingToken
+      })
+    }
   }, [pid, stakingTokenPair, totalSupplyOfStakingToken, stakingTokenPairStatus])
 
   // // let returnOverMonth: Percent = new Percent('0')
@@ -225,7 +227,9 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const calculatedApr = useChefPoolAPR(stakingInfo, stakingTokenPair, stakingInfo.stakedAmount, priceOfRewardToken)
   const [approval, approve] = useApproveCallback(new TokenAmount(stakingInfo.stakingToken, '1'), mchefContract?.address)
   useEffect(() => {
-    console.debug(`approval status for ${stakingInfo.stakingAsset.name} is now: ${approval}`)
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug(`approval status for ${stakingInfo.stakingAsset.name} is now: ${approval}`)
+    }
   }, [stakingInfo, approval])
   const { liquidityValueOfToken0, liquidityValueOfToken1 } = usePairSidesValueEstimate(
     stakingTokenPair,
