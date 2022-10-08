@@ -69,6 +69,8 @@ export interface GetQuoteResult {
   routeString: string
   priceImpactWithoutFee: string
   realizedLPFee: string
+  minOut: string
+  maxIn: string
 }
 
 export class InterfaceTrade<

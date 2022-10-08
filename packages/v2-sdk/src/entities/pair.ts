@@ -49,7 +49,7 @@ export class Pair {
     return computePairAddress({ factoryAddress: FACTORY_ADDRESS, tokenA, tokenB, stable })
   }
 
-  public constructor(currencyAmountA: CurrencyAmount<Token>, tokenAmountB: CurrencyAmount<Token>, stable: boolean) {
+  public constructor(currencyAmountA: CurrencyAmount<Token>, tokenAmountB: CurrencyAmount<Token>, stable: boolean = false) {
     const tokenAmounts = currencyAmountA.currency.sortsBefore(tokenAmountB.currency) // does safety checks
       ? [currencyAmountA, tokenAmountB]
       : [tokenAmountB, currencyAmountA]
