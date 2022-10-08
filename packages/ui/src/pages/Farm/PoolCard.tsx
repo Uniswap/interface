@@ -190,16 +190,18 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const backgroundColor = useColor()
 
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakingToken)
-  const [, stakingTokenPair] = stakingInfo.stakingPair
-  // const [, stakingTokenPair] = usePair(currency0, currency1, (stakingInfo.stakingAsset as LiquidityAsset).isStable)
+  const [stakingTokenPairStatus, stakingTokenPair] = stakingInfo.stakingPair
 
   useEffect(() => {
-    console.debug('PoolCard data:', {
-      pid,
-      stakingTokenPair,
-      totalSupplyOfStakingToken
-    })
-  }, [pid, stakingTokenPair, totalSupplyOfStakingToken])
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('PoolCard data:', {
+        pid,
+        stakingTokenPair,
+        stakingTokenPairStatus,
+        totalSupplyOfStakingToken
+      })
+    }
+  }, [pid, stakingTokenPair, totalSupplyOfStakingToken, stakingTokenPairStatus])
 
   // // let returnOverMonth: Percent = new Percent('0')
   // let valueOfTotalStakedAmountInWETH: TokenAmount | undefined
@@ -217,12 +219,6 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   //   )
   // }
 
-  // // get the USD value of staked WETH
-  // const USDPrice = useUSDCPrice(WETH)
-  // const valueOfTotalStakedAmountInUSDC =
-  //   valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
-  // console.debug('valueOfTotalStakedAmountInUSDC', valueOfTotalStakedAmountInUSDC)
-
   const isStaking = true
   const rewardToken = UNI[chainId || 420]
   const [isMobileActionExpanded, setMobileActionExpansion] = useState(false)
@@ -231,7 +227,9 @@ export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInf
   const calculatedApr = useChefPoolAPR(stakingInfo, stakingTokenPair, stakingInfo.stakedAmount, priceOfRewardToken)
   const [approval, approve] = useApproveCallback(new TokenAmount(stakingInfo.stakingToken, '1'), mchefContract?.address)
   useEffect(() => {
-    console.debug(`approval status for ${stakingInfo.stakingAsset.name} is now: ${approval}`)
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug(`approval status for ${stakingInfo.stakingAsset.name} is now: ${approval}`)
+    }
   }, [stakingInfo, approval])
   const { liquidityValueOfToken0, liquidityValueOfToken1 } = usePairSidesValueEstimate(
     stakingTokenPair,

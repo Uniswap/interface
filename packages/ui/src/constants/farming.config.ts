@@ -114,7 +114,37 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
         }
       },
       {
-        // pid 5
+        isHidden: true,
+        // pid 5 -- ABANDONED for changing the swap contract
+        stakingAsset: {
+          name: 'USDC-USDT',
+          decimal: 18,
+          symbol: 'SLP',
+          isLpToken: false
+        }
+      },
+      {
+        isHidden: true,
+        // pid 6 -- ABANDONED for changing the swap contract
+        stakingAsset: {
+          name: 'USDC-SUSHI',
+          decimal: 18,
+          symbol: 'SLP',
+          isLpToken: false
+        }
+      },
+      {
+        isHidden: true,
+        // pid 7 -- ABANDONED for changing the swap contract
+        stakingAsset: {
+          name: 'USDC-ETH',
+          decimal: 18,
+          symbol: 'VLP',
+          isLpToken: false
+        }
+      },
+      {
+        // pid 8
         stakingAsset: {
           name: 'USDC-USDT',
           decimal: 18,
@@ -126,19 +156,7 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
         }
       },
       {
-        // pid 6
-        stakingAsset: {
-          name: 'USDC-SUSHI',
-          decimal: 18,
-          symbol: 'SLP',
-          isLpToken: true,
-          isStable: false,
-          tokenA: USDC,
-          tokenB: UNI[420]
-        }
-      },
-      {
-        // pid 7
+        // pid 9
         stakingAsset: {
           name: 'USDC-ETH',
           decimal: 18,
@@ -147,6 +165,18 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
           isStable: false,
           tokenA: USDC,
           tokenB: WETH[420]
+        }
+      },
+      {
+        // pid 10
+        stakingAsset: {
+          name: 'USDC-SUSHI',
+          decimal: 18,
+          symbol: 'SLP',
+          isLpToken: true,
+          isStable: false,
+          tokenA: USDC,
+          tokenB: UNI[420]
         }
       }
     ]

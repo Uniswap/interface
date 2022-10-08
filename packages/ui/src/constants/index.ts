@@ -23,17 +23,17 @@ export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const USDC = new Token(
   ChainId.OP_GOERLI,
-  '0x56c822f91C1DC40ce32Ae6109C7cc1D18eD08ECE',
+  '0x53B1c6025E3f9B149304Cf1B39ee7c577d76c6Ca',
   18,
   'USDC',
-  'Fake USD Coin'
+  'Test USD Coin'
 )
 export const USDT = new Token(
   ChainId.OP_GOERLI,
-  '0x70abc17e870366c336a5dad05061828feff76ff5',
+  '0x5986C8FfADCA9cee5C28A85cC3d4F335aab5Dc90',
   18,
   'USDT',
-  'Fake Tether USD'
+  'Test Tether USD'
 )
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 export const FEI = new Token(ChainId.MAINNET, '0x956F47F50A910163D8BF957Cf5846D573E7f87CA', 18, 'FEI', 'Fei USD')
