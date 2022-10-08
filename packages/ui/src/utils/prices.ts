@@ -89,12 +89,11 @@ export function computeTradePriceBreakdown(trade?: Trade | null): {
 
 export function computeSlippageAdjustedAmountsByRoute(
   route: V2RouteWithValidQuote,
-  allowedSlippage: number
-): { [field in Field]?: CurrencyAmount } {
-  const pct = basisPointsToPercent(allowedSlippage)
+  allowedSlippage: Percent
+): { [field in Field]?: string } {
   return {
-    [Field.INPUT]: route.maximumAmountIn(pct),
-    [Field.OUTPUT]: route.minimumAmountOut(pct)
+    [Field.INPUT]: route.maximumAmountIn(allowedSlippage).quotient.toString(),
+    [Field.OUTPUT]: route.minimumAmountOut(allowedSlippage).quotient.toString()
   }
 }
 

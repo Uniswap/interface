@@ -1,7 +1,7 @@
 import { Protocol, ZERO } from '@teleswap/router-sdk'
 import { Fraction, Percent } from '@teleswap/sdk'
 import { _100 } from '@teleswap/sdk/dist/constants'
-import {routeAmountsToString, SwapOptions, SwapRoute, V2RouteWithValidQuote} from '@teleswap/smart-order-router'
+import { routeAmountsToString, SwapOptions, SwapRoute, V2RouteWithValidQuote } from '@teleswap/smart-order-router'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pool } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
@@ -39,7 +39,7 @@ export function transformSwapRouteToGetQuoteResult(
 
     const slippageAdjustedAmounts = computeSlippageAdjustedAmountsByRoute(
       subRoute as V2RouteWithValidQuote,
-      swapConfig.slippageTolerance
+      new Percent(swapConfig.slippageTolerance.numerator, JSBI.BigInt(10000))
     )
 
     // subRoute.percent, subRoute.tokenPath
@@ -86,8 +86,8 @@ export function transformSwapRouteToGetQuoteResult(
           liquidity: nextPool.liquidity.toString(),
           sqrtRatioX96: nextPool.sqrtRatioX96.toString(),
           tickCurrent: nextPool.tickCurrent.toString(),
-          amountIn: edgeAmountIn,
-          amountOut: edgeAmountOut
+          amountIn: edgeAmountIn! ?? undefined,
+          amountOut: edgeAmountOut! ?? undefined
         })
       } else {
         const reserve0 = nextPool.reserve0
@@ -125,8 +125,8 @@ export function transformSwapRouteToGetQuoteResult(
             },
             quotient: reserve1.quotient.toString()
           },
-          amountIn: edgeAmountIn,
-          amountOut: edgeAmountOut
+          amountIn: edgeAmountIn! ?? undefined,
+          amountOut: edgeAmountOut! ?? undefined
         })
       }
     }
