@@ -1,4 +1,3 @@
-import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { AlertTriangle, X } from 'react-feather'
 import styled from 'styled-components'

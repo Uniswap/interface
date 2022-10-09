@@ -1,6 +1,6 @@
 import { JSBI, TokenAmount } from '@teleswap/sdk'
 // import { isAddress } from 'ethers/lib/utils'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 

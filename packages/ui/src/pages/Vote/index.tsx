@@ -1,6 +1,5 @@
 import { ChainId, JSBI, TokenAmount } from '@teleswap/sdk'
 import { darken } from 'polished'
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from 'rebass/styled-components'
 import styled from 'styled-components'

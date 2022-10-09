@@ -1,6 +1,6 @@
 import { Trade, TradeType } from '@teleswap/sdk'
 import useThemedContext from 'hooks/useThemedContext'
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 

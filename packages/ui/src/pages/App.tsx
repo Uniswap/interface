@@ -1,7 +1,7 @@
 import bg from 'assets/svg/background-new.svg'
 import LiquidityDetail from 'components/LiquidityDetail'
 import { WrongNetworkProtector } from 'components/WrongNetworkProtector'
-import React, { Suspense } from 'react'
+import { Suspense } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Route, Switch } from 'react-router-dom'
 import { Box } from 'rebass'

@@ -1,6 +1,6 @@
 import { TokenAmount } from '@teleswap/sdk'
 import useThemedContext from 'hooks/useThemedContext'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled from 'styled-components'
 

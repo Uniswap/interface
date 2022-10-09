@@ -1,5 +1,4 @@
 import { Percent } from '@teleswap/sdk'
-import React from 'react'
 
 import { ONE_BIPS } from '../../constants'
 import { warningSeverity } from '../../utils/prices'

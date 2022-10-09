@@ -1,5 +1,4 @@
 import { darken, lighten } from 'polished'
-import React from 'react'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 import styled from 'styled-components'

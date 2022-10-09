@@ -1,6 +1,6 @@
 import { MixedRouteSDK, Trade } from '@teleswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Route as V2Route } from '@teleswap/v2-sdk'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 
 export enum TradeState {

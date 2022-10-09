@@ -1,6 +1,5 @@
 import type { Currency, Percent, Price } from '@teleswap/sdk'
 import useThemedContext from 'hooks/useThemedContext'
-import React from 'react'
 import { Text } from 'rebass'
 
 import { AutoColumn } from '../../components/Column'

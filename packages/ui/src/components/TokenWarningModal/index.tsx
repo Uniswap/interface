@@ -1,6 +1,5 @@
 import { Token } from '@teleswap/sdk'
 import { ImportToken } from 'components/SearchModal/ImportToken'
-import React from 'react'
 
 import Modal from '../Modal'
 

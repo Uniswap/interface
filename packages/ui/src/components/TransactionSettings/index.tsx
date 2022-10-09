@@ -1,6 +1,6 @@
 import useThemedContext from 'hooks/useThemedContext'
 import { darken } from 'polished'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { TYPE } from '../../theme'

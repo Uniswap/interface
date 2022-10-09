@@ -1,5 +1,5 @@
 import useThemedContext from 'hooks/useThemedContext'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { X } from 'react-feather'
 // Settings
 import { Text } from 'rebass'

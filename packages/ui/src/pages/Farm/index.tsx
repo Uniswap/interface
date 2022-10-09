@@ -4,7 +4,7 @@
 // import { useChefContract } from 'hooks/farm/useChefContract'
 import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 // import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { AutoColumn } from '../../components/Column'

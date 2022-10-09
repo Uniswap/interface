@@ -1,6 +1,6 @@
 import { Trade } from '@teleswap/sdk'
 import useThemedContext from 'hooks/useThemedContext'
-import React, { Fragment, memo } from 'react'
+import { Fragment, memo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'
 import { unwrappedToken } from 'utils/wrappedCurrency'

@@ -1,6 +1,5 @@
 import { Price } from '@teleswap/sdk'
 import useThemedContext from 'hooks/useThemedContext'
-import React from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 
