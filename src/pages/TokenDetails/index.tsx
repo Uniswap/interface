@@ -16,17 +16,17 @@ import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBal
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import Widget, { WIDGET_WIDTH } from 'components/Widget'
+import Widget, { Field, Tokens, WIDGET_WIDTH } from 'components/Widget'
 import { isCelo, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
 import { useTokenQuery } from 'graphql/data/Token'
-import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID, chainIdToBackendName, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useAtomValue } from 'jotai/utils'
 import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -147,16 +147,32 @@ export default function TokenDetails() {
     [continueSwap, setContinueSwap]
   )
 
+  const [tokens, setTokens] = useState<Tokens>({})
   const widgetToken = useMemo(() => {
     if (pageToken) {
       return pageToken
-    }
-    if (nativeCurrency) {
-      if (isCelo(pageChainId)) return undefined
+    } else if (nativeCurrency && !isCelo(pageChainId)) {
       return nativeCurrency
     }
     return undefined
   }, [nativeCurrency, pageChainId, pageToken])
+  useEffect(() => {
+    if (tokens[Field.INPUT] === widgetToken || tokens[Field.OUTPUT] === widgetToken) return
+    setTokens({ [Field.OUTPUT]: widgetToken })
+  }, [tokens, widgetToken])
+  const onTokensChange = useCallback(
+    (tokens: Tokens) => {
+      setTokens(tokens)
+      if (tokens[Field.INPUT] === widgetToken || tokens[Field.OUTPUT] === widgetToken) return
+      const token = tokens[Field.OUTPUT] || tokens[Field.INPUT]
+      if (!token) return
+
+      const network = chainIdToBackendName(token.chainId).toLowerCase()
+      const address = token.isNative ? 'NATIVE' : token.address
+      navigate(`/tokens/${network}/${address}`)
+    },
+    [navigate, widgetToken]
+  )
 
   return (
     <TokenDetailsLayout>
@@ -186,7 +202,7 @@ export default function TokenDetails() {
             <AddressSection address={tokenQueryData.address ?? ''} />
           </LeftPanel>
           <RightPanel>
-            <Widget token={widgetToken} onReviewSwapClick={onReviewSwap} />
+            <Widget tokens={tokens} onTokensChange={onTokensChange} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />}
             <BalanceSummary
               tokenAmount={tokenBalance}

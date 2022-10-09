@@ -1,29 +1,31 @@
-import { Currency, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
+import { EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 
-import { useSyncWidgetInputs } from './inputs'
+import { Tokens, useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { useSyncWidgetTransactions } from './transactions'
 
+export type { Tokens } from './inputs'
+export { Field } from '@uniswap/widgets'
 export const WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export interface WidgetProps {
-  token?: Currency
-  onTokenChange?: (token: Currency) => void
+  tokens: Tokens
+  onTokensChange: (tokens: Tokens) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
+export default function Widget({ tokens, onTokensChange, onReviewSwapClick }: WidgetProps) {
   const locale = useActiveLocale()
   const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
   const { provider } = useWeb3React()
 
-  const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange })
+  const { inputs, tokenSelector } = useSyncWidgetInputs({ tokens, onTokensChange })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
