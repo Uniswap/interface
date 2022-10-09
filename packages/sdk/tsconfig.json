@@ -1,12 +1,14 @@
 {
-  "include": ["src", "test"],
+  "include": [
+    "src",
+    "test"
+  ],
   "compilerOptions": {
     "target": "es2018",
     "module": "esnext",
     "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
-    "rootDir": "./",
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
@@ -19,9 +21,13 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
+    "isolatedModules": true,
     "baseUrl": "./",
     "paths": {
-      "*": ["src/*", "node_modules/*"]
+      "*": [
+        "src/*",
+        "node_modules/*"
+      ]
     },
     "esModuleInterop": true,
     "resolveJsonModule": true

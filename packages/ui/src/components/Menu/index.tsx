@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
 import styled from 'styled-components'
 

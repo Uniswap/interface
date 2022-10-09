@@ -1,5 +1,5 @@
 import { TokenAmount } from '@teleswap/sdk'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -20,8 +20,7 @@ import AddressInputPanel from '../AddressInputPanel'
 import { AutoColumn, ColumnCenter } from '../Column'
 // import { isAddress } from 'ethers/lib/utils'
 import Confetti from '../Confetti'
-import { Break, CardSection, DataCard } from '../earn/styled'
-import { CardBGImage, CardBGImageSmaller, CardNoise } from '../earn/styled'
+import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from '../earn/styled'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
 

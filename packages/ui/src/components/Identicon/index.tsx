@@ -1,5 +1,5 @@
 import Jazzicon from 'jazzicon'
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'

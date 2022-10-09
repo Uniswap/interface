@@ -1,5 +1,5 @@
-import { Currency, Fraction, Percent, Price, sortedInsert, CurrencyAmount, TradeType, Token } from '@uniswap/sdk-core'
 import { Pair } from '@teleswap/v2-sdk'
+import { Currency, CurrencyAmount, Fraction, Percent, Price, sortedInsert, Token, TradeType } from '@uniswap/sdk-core'
 import { BestTradeOptions, Pool } from '@uniswap/v3-sdk'
 import invariant from 'tiny-invariant'
 import { ONE, ZERO } from '../../constants'

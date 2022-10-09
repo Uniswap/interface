@@ -1,19 +1,19 @@
 import JSBI from 'jsbi'
+import { BigintIsh as InternalBigintIsh } from './constants'
+export {
+  ChainId,
+  CONTRACT_ADDRESS,
+  DEFAULT_TOKEN_NAME,
+  INIT_CODE_HASH,
+  MINIMUM_LIQUIDITY,
+  PERIPHERY_NAME,
+  Rounding,
+  TradeType,
+} from './constants'
+export * from './entities'
+export * from './errors'
+export * from './fetcher'
+export * from './router'
 export { JSBI }
 
-export {
-  BigintIsh,
-  ChainId,
-  PERIPHERY_NAME,
-  DEFAULT_TOKEN_NAME,
-  TradeType,
-  Rounding,
-  INIT_CODE_HASH,
-  CONTRACT_ADDRESS,
-  MINIMUM_LIQUIDITY,
-} from './constants'
-
-export * from './errors'
-export * from './entities'
-export * from './router'
-export * from './fetcher'
+export type BigintIsh = InternalBigintIsh

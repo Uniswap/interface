@@ -1,15 +1,14 @@
-import React from 'react'
 import { CheckCircle, Triangle } from 'react-feather'
 import styled from 'styled-components'
 
+import ExternalLinkIconSvg from 'assets/svg/external-link-green.svg'
+import { Box } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { ExternalLink } from '../../theme'
 import { getEtherscanLink } from '../../utils'
 import Loader from '../Loader'
 import { RowFixed } from '../Row'
-import ExternalLinkIconSvg from 'assets/svg/external-link-green.svg'
-import { Box } from 'rebass'
 
 const TransactionWrapper = styled.div``
 

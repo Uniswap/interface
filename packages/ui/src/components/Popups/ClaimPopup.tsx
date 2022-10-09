@@ -1,5 +1,5 @@
 import { TokenAmount } from '@teleswap/sdk'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
 

@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@teleswa
 import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
 import useThemedContext from 'hooks/useThemedContext'
-import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'

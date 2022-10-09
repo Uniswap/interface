@@ -1,10 +1,10 @@
+import CopyIconSvg from 'assets/svg/copy.svg'
 import React from 'react'
 import { CheckCircle } from 'react-feather'
 import styled from 'styled-components'
 
 import useCopyClipboard from '../../hooks/useCopyClipboard'
 import { LinkStyledButton } from '../../theme'
-import CopyIconSvg from 'assets/svg/copy.svg'
 
 const CopyIcon = styled(LinkStyledButton)`
   color: ${({ theme }) => theme.text3};

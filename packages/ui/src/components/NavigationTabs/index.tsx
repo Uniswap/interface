@@ -1,5 +1,4 @@
 import { darken } from 'polished'
-import React from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'

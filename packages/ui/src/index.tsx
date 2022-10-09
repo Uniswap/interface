@@ -2,7 +2,7 @@ import 'inter-ui'
 import './i18n'
 
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
-import React, { StrictMode } from 'react'
+import { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'
 import { createRoot } from 'react-dom/client'
 import ReactGA from 'react-ga'

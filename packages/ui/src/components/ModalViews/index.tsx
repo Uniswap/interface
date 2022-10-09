@@ -1,5 +1,4 @@
 import useThemedContext from 'hooks/useThemedContext'
-import React from 'react'
 import { ArrowUpCircle } from 'react-feather'
 import styled from 'styled-components'
 

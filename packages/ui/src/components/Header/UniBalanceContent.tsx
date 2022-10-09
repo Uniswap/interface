@@ -1,8 +1,4 @@
-import {
-  // ChainId,
-  TokenAmount
-} from '@teleswap/sdk'
-import React from 'react' // useMemo
+import { TokenAmount } from '@teleswap/sdk'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 
@@ -13,10 +9,7 @@ import { useActiveWeb3React } from '../../hooks'
 // import { useMerkleDistributorContract } from '../../hooks/useContract'
 // import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
 // import { useTotalUniEarned } from '../../state/stake/hooks'
-import {
-  // useAggregateUniBalance,
-  useTokenBalance
-} from '../../state/wallet/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
 import {
   // ExternalLink, StyledInternalLink,
   TYPE
