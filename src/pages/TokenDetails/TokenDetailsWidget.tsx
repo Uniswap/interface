@@ -4,6 +4,7 @@ import { chainIdToBackendName } from 'graphql/data/util'
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+/** A wrapper of Widget which controls the Tokens to keep them in sync with the displayed TokenDetails. */
 export default function TokenDetailsWidget({
   token,
   onReviewSwap,
