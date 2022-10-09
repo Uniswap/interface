@@ -1,6 +1,5 @@
 import { Protocol, ZERO } from '@teleswap/router-sdk'
 import { Fraction, Percent } from '@teleswap/sdk'
-import { _100 } from '@teleswap/sdk/dist/constants'
 import { routeAmountsToString, SwapOptions, SwapRoute, V2RouteWithValidQuote } from '@teleswap/smart-order-router'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pool } from '@uniswap/v3-sdk'
@@ -54,7 +53,7 @@ export function transformSwapRouteToGetQuoteResult(
       subRoute as V2RouteWithValidQuote
     )
     _priceImpactWithoutFee = _priceImpactWithoutFee.add(
-      priceImpactWithoutFee.multiply(subRoute.percent.toString()).divide(_100)
+      priceImpactWithoutFee.multiply(subRoute.percent.toString()).divide(JSBI.BigInt(100))
     )
     _realizedLPFee = JSBI.add(_realizedLPFee, realizedLPFee)
     const pools = subRoute.protocol === Protocol.V2 ? subRoute.route.pairs : subRoute.route.pools
