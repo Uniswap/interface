@@ -83,35 +83,25 @@ export const RightPanel = styled.div`
 `
 
 export default function TokenDetails() {
-  const { tokenAddress: tokenAddressParam, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
+  const { tokenAddress: address, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
   const { account } = useWeb3React()
   const currentChainName = validateUrlChainParam(chainName)
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[currentChainName]
-  const nativeCurrency = nativeOnChain(pageChainId)
   const timePeriod = useAtomValue(filterTimeAtom)
-  const isNative = tokenAddressParam === 'NATIVE'
-  const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddressParam
+  const isNative = address === 'NATIVE'
+  const nativeCurrency = nativeOnChain(pageChainId)
+  const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : address
   const [tokenQueryData, prices] = useTokenQuery(tokenQueryAddress ?? '', currentChainName, timePeriod)
-
-  const pageToken = useMemo(
-    () =>
-      tokenQueryData && !isNative
-        ? new Token(
-            CHAIN_NAME_TO_CHAIN_ID[currentChainName],
-            tokenAddressParam ?? '',
-            18,
-            tokenQueryData?.symbol ?? '',
-            tokenQueryData?.name ?? ''
-          )
-        : undefined,
-    [currentChainName, isNative, tokenAddressParam, tokenQueryData]
-  )
+  const token = useMemo(() => {
+    if (!tokenQueryData) return
+    if (isNative) return nativeCurrency
+    return new Token(pageChainId, address ?? '', 18, tokenQueryData?.symbol ?? '', tokenQueryData?.name ?? '')
+  }, [tokenQueryData, isNative, nativeCurrency, pageChainId, address])
 
   const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
+  const tokenBalance = useTokenBalance(account, token?.wrapped)
 
-  const tokenBalance = useTokenBalance(account, isNative ? nativeCurrency.wrapped : pageToken)
-
-  const tokenWarning = tokenAddressParam ? checkWarning(tokenAddressParam) : null
+  const tokenWarning = address ? checkWarning(address) : null
   const isBlockedToken = tokenWarning?.canProceed === false
 
   const navigate = useNavigate()
@@ -134,7 +124,7 @@ export default function TokenDetails() {
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
-  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(tokenAddressParam, pageChainId) && tokenWarning !== null
+  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(address, pageChainId) && tokenWarning !== null
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
   const onReviewSwap = useCallback(
     () => new Promise<boolean>((resolve) => (shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true))),
@@ -148,15 +138,6 @@ export default function TokenDetails() {
     },
     [continueSwap, setContinueSwap]
   )
-
-  const widgetToken = useMemo(() => {
-    if (pageToken) {
-      return pageToken
-    } else if (nativeCurrency && !isCelo(pageChainId)) {
-      return nativeCurrency
-    }
-    return undefined
-  }, [nativeCurrency, pageChainId, pageToken])
 
   return (
     <TokenDetailsLayout>
@@ -186,7 +167,8 @@ export default function TokenDetails() {
             <AddressSection address={tokenQueryData.address ?? ''} />
           </LeftPanel>
           <RightPanel>
-            <TokenDetailsWidget token={widgetToken} onReviewSwap={onReviewSwap} />
+            {/* TODO: The widget does not yet support CELO. */}
+            <TokenDetailsWidget token={!isCelo(pageChainId) ? token : undefined} onReviewSwap={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />}
             <BalanceSummary
               tokenAmount={tokenBalance}
