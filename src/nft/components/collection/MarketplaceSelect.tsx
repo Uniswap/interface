@@ -142,7 +142,7 @@ export const MarketplaceSelect = () => {
               transform: `rotate(${isOpen ? 0 : 180}deg)`,
             }}
           >
-            <ChevronUpIcon />
+            <ChevronUpIcon className={styles.chevronIcon} />
           </Box>
         </Box>
       </Box>

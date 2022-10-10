@@ -141,7 +141,6 @@ export const TraitSelect = ({
             ({ trait_type, trait_value }) =>
               trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
           )
-
           const showBorderBottom = searchedTraits.length - 1 === index
 
           return (
