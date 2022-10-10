@@ -39,7 +39,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           paddingTop="10"
           paddingRight="16"
           paddingBottom="10"
-          paddingLeft="8"
+          paddingLeft="12"
           cursor="pointer"
           onClick={(e) => {
             e.preventDefault()

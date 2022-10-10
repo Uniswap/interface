@@ -5,7 +5,7 @@ export const container = style([
   sprinkles({
     overflow: 'auto',
     height: 'viewHeight',
-    paddingTop: '24',
+    paddingTop: '4',
   }),
   {
     width: '300px',
@@ -56,7 +56,7 @@ export const filterDropDowns = style([
     overflowY: 'scroll',
   }),
   {
-    maxHeight: '190px',
+    maxHeight: '236px',
     '::-webkit-scrollbar': { display: 'none' },
     scrollbarWidth: 'none',
   },

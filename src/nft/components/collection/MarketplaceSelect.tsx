@@ -109,7 +109,7 @@ export const MarketplaceSelect = () => {
         alignItems="center"
         fontSize="16"
         paddingTop="8"
-        paddingLeft="8"
+        paddingLeft="12"
         paddingRight="16"
         paddingBottom="8"
         lineHeight="20"
@@ -120,17 +120,6 @@ export const MarketplaceSelect = () => {
         }}
       >
         Marketplaces
-        {/* <Box
-          color="textSecondary"
-          transition="250"
-          height="28"
-          width="24"
-          style={{
-            transform: `rotate(${isOpen ? 0 : 180}deg)`,
-          }}
-        >
-          <ChevronUpIcon />
-        </Box> */}
         <Box display="flex" alignItems="center">
           <Box
             color="textSecondary"
