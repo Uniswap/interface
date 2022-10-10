@@ -140,11 +140,12 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 
   const environment = useRelayEnvironment()
   const [sparklines, setSparklines] = useState<SparklineMap>({})
-  useMemo(() => {
-    fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, {
-      duration,
-      chain,
-    }).subscribe({
+  const query = useMemo(
+    () => fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, { duration, chain }),
+    [chain, duration, environment]
+  )
+  useEffect(() => {
+    const subscription = query.subscribe({
       next(data) {
         const map: SparklineMap = {}
         data.topTokens?.forEach(
@@ -153,7 +154,8 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
         setSparklines(map)
       },
     })
-  }, [chain, duration, environment])
+    return () => subscription.unsubscribe()
+  }, [query])
 
   useEffect(() => {
     setSparklines({})
