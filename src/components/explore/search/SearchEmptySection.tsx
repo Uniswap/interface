@@ -80,7 +80,7 @@ export function SearchEmptySection() {
       )}
       <Flex gap="xxs">
         <Text color="textSecondary" mx="xs" variant="subheadSmall">
-          {t('Popular Tokens')}
+          {t('Popular tokens')}
         </Text>
         <Suspense fallback={<Loading repeat={3} type="token" />}>
           <SearchPopularTokens />
