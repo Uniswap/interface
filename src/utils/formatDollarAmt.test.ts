@@ -39,8 +39,14 @@ describe('formatDollar for a price', () => {
   it('num >= 0.1 && num < 1.05', () => {
     expect(formatDollar(0.812831, true)).toEqual('$0.813')
   })
+  it('number is greater than 1 million', () => {
+    expect(formatDollar(11192312.408, true)).toEqual('$1.12e+7')
+  })
+  it('number in the thousands', () => {
+    expect(formatDollar(1234.408, true)).toEqual('$1,234.41')
+  })
   it('number is greater than 1.05', () => {
-    expect(formatDollar(102312.408, true)).toEqual('$102312.41')
+    expect(formatDollar(102312.408, true)).toEqual('$102,312.41')
   })
 })
 

@@ -22,6 +22,7 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
+import { formatDollar } from 'utils/formatDollarAmt'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
@@ -270,7 +271,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   return (
     <>
       <ChartHeader>
-        <TokenPrice>${displayPrice.value < 0.000001 ? '<0.000001' : displayPrice.value.toFixed(6)}</TokenPrice>
+        <TokenPrice>{formatDollar(displayPrice.value, true)}</TokenPrice>
         <DeltaContainer>
           {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>
