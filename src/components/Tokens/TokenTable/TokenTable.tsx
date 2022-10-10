@@ -94,7 +94,7 @@ export default function TokenTable({ setRowCount }: { setRowCount: (c: number) =
         message={
           <>
             <AlertTriangle size={16} />
-            <Trans>An error occured loading tokens. Please try again.</Trans>
+            <Trans>An error occurred loading tokens. Please try again.</Trans>
           </>
         }
       />
