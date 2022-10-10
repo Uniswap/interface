@@ -532,7 +532,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
             <ClickableContent>
               <PriceInfoCell>
                 {token.market?.price?.value
-                  ? formatDollar({ num: token.market.price.value, isPrice: true, neater: true })
+                  ? formatDollar({ num: token.market.price.value, isPrice: true, lessPreciseStablecoinValues: true })
                   : '-'}
                 <PercentChangeInfoCell>
                   {formattedDelta}

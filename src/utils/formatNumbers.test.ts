@@ -1,7 +1,12 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
-import { USDC_MAINNET } from 'constants/tokens'
+import { CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { renBTC, USDC_MAINNET } from 'constants/tokens'
 
-import { currencyAmountToPreciseFloat, formatDollar, formatTransactionAmount } from './formatNumbers'
+import {
+  currencyAmountToPreciseFloat,
+  formatDollar,
+  formatTransactionAmount,
+  priceToPreciseFloat,
+} from './formatNumbers'
 
 describe('currencyAmountToPreciseFloat', () => {
   it('small number', () => {
@@ -19,6 +24,25 @@ describe('currencyAmountToPreciseFloat', () => {
   it('integer', () => {
     const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '20000000')
     expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(20.0)
+  })
+})
+
+describe('priceToPreciseFloat', () => {
+  it('small number', () => {
+    const price = new Price(renBTC, USDC_MAINNET, 1234, 1)
+    expect(priceToPreciseFloat(price)).toEqual(0.0810373)
+  })
+  it('tiny number', () => {
+    const price = new Price(renBTC, USDC_MAINNET, 12345600, 1)
+    expect(priceToPreciseFloat(price)).toEqual(0.00000810005)
+  })
+  it('lots of decimals', () => {
+    const price = new Price(renBTC, USDC_MAINNET, 123, 7)
+    expect(priceToPreciseFloat(price)).toEqual(5.691056911)
+  })
+  it('integer', () => {
+    const price = new Price(renBTC, USDC_MAINNET, 1, 7)
+    expect(priceToPreciseFloat(price)).toEqual(700)
   })
 })
 
@@ -87,7 +111,7 @@ describe('formatDollar for a price', () => {
     expect(formatDollar({ num: 0.812831, isPrice })).toEqual('$0.813')
   })
   it('neater number', () => {
-    expect(formatDollar({ num: 1.0000001, isPrice, neater: true })).toEqual('$1.00')
+    expect(formatDollar({ num: 1.0000001, isPrice, lessPreciseStablecoinValues: true })).toEqual('$1.00')
   })
   it('number is greater than 1 million', () => {
     expect(formatDollar({ num: 11192312.408, isPrice })).toEqual('$1.12e+7')

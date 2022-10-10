@@ -1,5 +1,5 @@
 /* Copied from Uniswap/v-3: https://github.com/Uniswap/v3-info/blob/master/src/utils/numbers.ts */
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { DEFAULT_LOCALE } from 'constants/locales'
 import numbro from 'numbro'
 
@@ -10,13 +10,23 @@ export const currencyAmountToPreciseFloat = (currencyAmount: CurrencyAmount<Curr
   if (floatForLargerNumbers < 0.1) {
     return parseFloat(currencyAmount.toSignificant(6))
   }
-  return parseFloat(currencyAmount.toExact())
+  return floatForLargerNumbers
+}
+
+// Convert [Price] to number with necessary precision for price formatting.
+export const priceToPreciseFloat = (price: Price<Currency, Currency> | undefined) => {
+  if (!price) return undefined
+  const floatForLargerNumbers = parseFloat(price.toFixed(9))
+  if (floatForLargerNumbers < 0.1) {
+    return parseFloat(price.toSignificant(6))
+  }
+  return floatForLargerNumbers
 }
 
 interface FormatDollarArgs {
   num: number | undefined | null
   isPrice?: boolean
-  neater?: boolean
+  lessPreciseStablecoinValues?: boolean
   digits?: number
   round?: boolean
 }
@@ -25,7 +35,7 @@ interface FormatDollarArgs {
 export const formatDollar = ({
   num,
   isPrice = false,
-  neater = false,
+  lessPreciseStablecoinValues = false,
   digits = 2,
   round = true,
 }: FormatDollarArgs): string => {
@@ -39,7 +49,9 @@ export const formatDollar = ({
     if ((num >= 0.000001 && num < 0.1) || num > 1000000) {
       return `$${Number(num).toPrecision(3)}`
     }
-    if (num >= 0.1 && num < (neater ? 1.0 : 1.05)) {
+    // We only show 2 decimal places in explore table for stablecoin value ranges
+    // for the sake of readability (as opposed to the usual 3 elsewhere).
+    if (num >= 0.1 && num < (lessPreciseStablecoinValues ? 1.0 : 1.05)) {
       return `$${num.toFixed(3)}`
     }
     return `$${Number(num.toFixed(2)).toLocaleString(DEFAULT_LOCALE, { minimumFractionDigits: 2 })}`
