@@ -116,7 +116,7 @@ export const defaultShowLiveCharts: { [chainId in ChainId]: boolean } = {
 
 export const initialState: UserState = {
   userDarkMode: null, // default to system preference
-  matchesDarkMode: false,
+  matchesDarkMode: true,
   userExpertMode: false,
   userLocale: null,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,

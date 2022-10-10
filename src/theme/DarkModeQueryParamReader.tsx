@@ -3,8 +3,8 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { RouteComponentProps } from 'react-router-dom'
 
-import { AppDispatch } from '../state'
-import { updateUserDarkMode } from '../state/user/actions'
+import { AppDispatch } from 'state'
+import { updateUserDarkMode } from 'state/user/actions'
 
 export default function DarkModeQueryParamReader({ location: { search } }: RouteComponentProps): null {
   const dispatch = useDispatch<AppDispatch>()

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" translate="no">
+<html lang="en" data-theme="dark" translate="no">
   <head>
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico?version=v" />
@@ -237,11 +237,16 @@
           }
         }
 
-        function setInitialColorMode() {
+        function setInitialColorMode(usePrefersColorScheme) {
           function getInitialColorMode() {
             const useDarkMode = doesUseDarkMode()
             if (typeof useDarkMode === 'boolean') {
               return useDarkMode ? 'dark' : 'light'
+            }
+
+            if (usePrefersColorScheme === false) {
+              // default to 'dark'.
+              return 'dark'
             }
 
             // If there is no saved preference, use a media query
@@ -252,8 +257,8 @@
               return mql.matches ? 'dark' : 'light'
             }
 
-            // default to 'light'.
-            return 'light'
+            // default to 'dark'.
+            return 'dark'
           }
           const colorMode = getInitialColorMode()
           // add HTML attribute if dark mode
@@ -261,7 +266,7 @@
             document.documentElement.setAttribute('data-theme', 'dark')
           }
         }
-        setInitialColorMode()
+        setInitialColorMode(false)
       })()
     </script>
     <script src="/charting_library/charting_library.standalone.js"></script>

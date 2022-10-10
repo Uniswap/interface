@@ -14,7 +14,8 @@ export default function Updater(): null {
     }
 
     const match = window?.matchMedia('(prefers-color-scheme: dark)')
-    dispatch(updateMatchesDarkMode({ matchesDarkMode: match.matches }))
+    // Uncomment this to use browser's theme.
+    // dispatch(updateMatchesDarkMode({ matchesDarkMode: match.matches }))
 
     if (match?.addListener) {
       match?.addListener(darkHandler)
