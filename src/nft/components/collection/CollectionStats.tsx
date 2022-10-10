@@ -288,7 +288,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
       ) : null}
       {stats.stats?.total_listings ? (
         <StatsItem label="Listed" isMobile={isMobile ?? false}>
-          {listedPercentageStr} %
+          {listedPercentageStr}%
         </StatsItem>
       ) : null}
     </Row>
