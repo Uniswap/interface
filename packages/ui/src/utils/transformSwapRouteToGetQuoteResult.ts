@@ -24,7 +24,7 @@ export function transformSwapRouteToGetQuoteResult(
     methodParameters,
     blockNumber
   }: SwapRoute,
-  swapConfig: SwapOptions
+  swapConfig?: SwapOptions
 ): GetQuoteResult {
   const routeResponse: Array<(V3PoolInRoute | V2PoolInRoute)[]> = []
 
@@ -33,8 +33,9 @@ export function transformSwapRouteToGetQuoteResult(
 
   const percents: number[] = []
 
-  let maxInput = JSBI.BigInt(0)
-  let minOut = JSBI.BigInt(0)
+  console.log('debug joy', '-------', amount.denominator.toString(), quote.denominator.toString())
+  let maxInput = new Fraction(ZERO, amount.denominator)
+  let minOut = new Fraction(ZERO, quote.denominator)
 
   for (const subRoute of route) {
     const { amount, quote, tokenPath, percent } = subRoute
@@ -42,11 +43,12 @@ export function transformSwapRouteToGetQuoteResult(
 
     const slippageAdjustedAmounts = computeSlippageAdjustedAmountsByRoute(
       subRoute as V2RouteWithValidQuote,
-      new Percent(swapConfig.slippageTolerance.numerator, JSBI.BigInt(10000))
+      // TODO: hard code
+      50
     )
 
-    maxInput = JSBI.add(maxInput, JSBI.BigInt(slippageAdjustedAmounts[Field.INPUT]))
-    minOut = JSBI.add(minOut, JSBI.BigInt(slippageAdjustedAmounts[Field.OUTPUT]))
+    maxInput = maxInput.add(slippageAdjustedAmounts[Field.INPUT])
+    minOut = minOut.add(slippageAdjustedAmounts[Field.OUTPUT])
 
     // subRoute.percent, subRoute.tokenPath
     const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdownByRoute(
@@ -158,8 +160,8 @@ export function transformSwapRouteToGetQuoteResult(
     routeString: routeAmountsToString(route),
     priceImpactWithoutFee: _priceImpactWithoutFee.toSignificant(4).toString(),
     realizedLPFee: _realizedLPFee.toString(),
-    maxIn: new Fraction(maxInput, amount.denominator).toSignificant(4),
-    minOut: new Fraction(minOut, quote.denominator).toSignificant(4),
+    maxIn: maxInput.toSignificant(4),
+    minOut: minOut.toSignificant(4),
     percents
   }
 

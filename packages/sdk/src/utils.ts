@@ -9,7 +9,7 @@ export function validateSolidityTypeInstance(value: JSBI, solidityType: Solidity
   invariant(JSBI.lessThanOrEqual(value, SOLIDITY_TYPE_MAXIMA[solidityType]), `${value} is not a ${solidityType}.`)
 }
 
-// warns if addresses are not checksummed
+// warns if addresses are not check summed
 export function validateAndParseAddress(address: string): string {
   try {
     return getAddress(address)

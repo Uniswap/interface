@@ -894,18 +894,6 @@ export class AlphaRouter
       V2_SUPPORTED.includes(this.chainId)
     ) {
       log.info({ protocols, tradeType }, 'Routing across all protocols');
-      // quotePromises.push(
-      //   this.getV3Quotes(
-      //     tokenIn,
-      //     tokenOut,
-      //     amounts,
-      //     percents,
-      //     quoteToken,
-      //     v3gasModel,
-      //     tradeType,
-      //     routingConfig
-      //   )
-      // );
       quotePromises.push(
         this.getV2Quotes(
           tokenIn,
@@ -928,18 +916,6 @@ export class AlphaRouter
           { protocols, swapType: tradeType },
           'Routing across MixedRoutes'
         );
-        // quotePromises.push(
-        //   this.getMixedRouteQuotes(
-        //     tokenIn,
-        //     tokenOut,
-        //     amounts,
-        //     percents,
-        //     quoteToken,
-        //     mixedRouteGasModel,
-        //     tradeType,
-        //     routingConfig
-        //   )
-        // );
       }
     } else {
       if (
@@ -947,18 +923,6 @@ export class AlphaRouter
         (protocolsSet.size == 0 && !V2_SUPPORTED.includes(this.chainId))
       ) {
         log.info({ protocols, swapType: tradeType }, 'Routing across V3');
-        // quotePromises.push(
-        //   this.getV3Quotes(
-        //     tokenIn,
-        //     tokenOut,
-        //     amounts,
-        //     percents,
-        //     quoteToken,
-        //     v3gasModel,
-        //     tradeType,
-        //     routingConfig
-        //   )
-        // );
       }
       if (protocolsSet.has(Protocol.V2)) {
         log.info({ protocols, swapType: tradeType }, 'Routing across V2');
@@ -986,18 +950,6 @@ export class AlphaRouter
           { protocols, swapType: tradeType },
           'Routing across MixedRoutes'
         );
-        // quotePromises.push(
-        //   this.getMixedRouteQuotes(
-        //     tokenIn,
-        //     tokenOut,
-        //     amounts,
-        //     percents,
-        //     quoteToken,
-        //     mixedRouteGasModel,
-        //     tradeType,
-        //     routingConfig
-        //   )
-        // );
       }
     }
 

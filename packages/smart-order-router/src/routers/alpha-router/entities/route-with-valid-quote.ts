@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { Protocol } from '@teleswap/router-sdk';
-import {Fraction, Percent } from "@teleswap/sdk/src";
-import {ONE, ZERO} from "@teleswap/sdk/src/constants";
+import { Fraction, Percent } from "@teleswap/sdk/src";
+import { ONE, ZERO } from "@teleswap/sdk/src/constants";
 import { Token, TradeType } from '@uniswap/sdk-core';
 import { Pool } from '@uniswap/v3-sdk';
 import _ from 'lodash';
@@ -151,7 +151,7 @@ export class V2RouteWithValidQuote implements IV2RouteWithValidQuote {
       return this.quote
     } else {
       const slippageAdjustedAmountOut = new Fraction(ONE)
-        .add(slippageTolerance)
+        .add(new Fraction(slippageTolerance.numerator, slippageTolerance.denominator))
         .invert()
         .multiply(this.quote.numerator).quotient
       return CurrencyAmount.fromRawAmount(this.quote.currency, slippageAdjustedAmountOut)
@@ -163,7 +163,10 @@ export class V2RouteWithValidQuote implements IV2RouteWithValidQuote {
     if (this.tradeType === TradeType.EXACT_INPUT) {
       return this.amount
     } else {
-      const slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(this.amount.numerator).quotient
+      const slippageAdjustedAmountIn = new Fraction(ONE)
+        .add(new Fraction(slippageTolerance.numerator, slippageTolerance.denominator))
+        .multiply(this.amount.numerator)
+        .quotient
       return CurrencyAmount.fromRawAmount(this.amount.currency, slippageAdjustedAmountIn)
     }
   }

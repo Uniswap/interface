@@ -70,14 +70,17 @@ export class V2QuoteProvider implements IV2QuoteProvider {
       let insufficientInputAmountErrorCount = 0;
       let insufficientReservesErrorCount = 0;
       for (const amount of amounts) {
+        console.log('debug joy', 'amoutn-!!!!!', amount.numerator.toString(), amount.denominator.toString())
         try {
           if (tradeType == TradeType.EXACT_INPUT) {
             let outputAmount = amount.wrapped;
 
+            console.log('debug joy', "outputAmount", outputAmount.numerator.toString(), outputAmount.denominator.toString())
             for (const pair of route.pairs) {
               const [outputAmountNew] = pair.getOutputAmount(outputAmount);
               outputAmount = outputAmountNew;
             }
+            console.log('debug joy', "outputAmount", outputAmount.numerator.toString(), outputAmount.denominator.toString())
 
             amountQuotes.push({
               amount,

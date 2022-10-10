@@ -9,7 +9,7 @@ import {
   Token,
   TradeType,
 } from '@uniswap/sdk-core'
-import { InsufficientInputAmountError } from 'errors'
+import { InsufficientInputAmountError } from '../errors'
 import invariant from 'tiny-invariant'
 import { ONE, ZERO } from '../constants'
 

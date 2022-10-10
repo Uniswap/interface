@@ -30,8 +30,8 @@ async function getQuote(
     amount: BigintIsh
   },
   router: AlphaRouter,
-  swapConfig: SwapOptions,
-  config: Partial<AlphaRouterConfig>
+  config: Partial<AlphaRouterConfig>,
+  swapConfig?: SwapOptions
 ): Promise<{ data: GetQuoteResult; error?: unknown }> {
   const currencyIn = new Token(tokenIn.chainId, tokenIn.address, tokenIn.decimals, tokenIn.symbol)
   const currencyOut = new Token(tokenOut.chainId, tokenOut.address, tokenOut.decimals, tokenOut.symbol)
@@ -64,9 +64,9 @@ export interface QuoteArguments {
   tokenOutSymbol?: string
   amount: string
   type: 'exactIn' | 'exactOut'
-  recipient
-  slippageTolerance
-  deadline
+  recipient?: string
+  slippageTolerance: string
+  deadline?: string
 }
 
 export async function getClientSideQuote(
@@ -88,12 +88,6 @@ export async function getClientSideQuote(
   router: AlphaRouter,
   config: Partial<AlphaRouterConfig>
 ) {
-  const slippageTolerancePercent = parseSlippageTolerance(slippageTolerance)
-  const swapConfig = {
-    deadline: parseDeadline(deadline),
-    recipient,
-    slippageTolerance: slippageTolerancePercent
-  }
   return getQuote(
     {
       type,
@@ -112,7 +106,6 @@ export async function getClientSideQuote(
       amount
     },
     router,
-    swapConfig,
     config
   )
 }

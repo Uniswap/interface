@@ -102,9 +102,6 @@ export class V2PoolProvider implements IV2PoolProvider {
 
       poolAddressSet.add(poolAddress);
       sortedTokenPairs.push([token0, token1, stable]);
-      console.log('debug joyyy', token0.address, token1.address)
-      console.log('debug joyyy', token0.symbol, token1.symbol)
-      console.log('debug joyyy', poolAddress)
       sortedPoolAddresses.push(poolAddress);
     }
 

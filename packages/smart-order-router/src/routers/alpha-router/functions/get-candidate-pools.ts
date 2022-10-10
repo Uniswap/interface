@@ -635,7 +635,6 @@ export async function getV2CandidatePools({
     blockNumber,
   });
 
-  console.log('block number', blockNumber)
   console.log(tokenIn, tokenOut)
   console.log('debug joy', 'alPoolsRaw', allPoolsRaw)
 

@@ -2,7 +2,7 @@ import { SupportedChainId } from './chains'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 if (typeof INFURA_KEY === 'undefined') {
-  throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
+  // throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
 }
 
 /**
@@ -113,7 +113,8 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
     ...FALLBACK_URLS[SupportedChainId.OPTIMISM]
   ],
   [SupportedChainId.OPTIMISM_GOERLI]: [
-    `https://optimism-goerli.infura.io/v3/${INFURA_KEY}`,
+    // `https://optimism-goerli.infura.io/v3/${INFURA_KEY}`,
+    `https://opt-goerli.g.alchemy.com/v2/gys0tYywAw0vS4O00cy8cB7nOyhW5oTp`,
     ...FALLBACK_URLS[SupportedChainId.OPTIMISM_GOERLI]
   ],
   [SupportedChainId.ARBITRUM_ONE]: [

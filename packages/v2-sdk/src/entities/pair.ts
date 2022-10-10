@@ -30,10 +30,6 @@ export const computePairAddress = ({
   stable: boolean
 }): string => {
   const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
-  console.log('debug joy', factoryAddress)
-  console.log('debug joy', INIT_CODE_HASH)
-  console.log('debug joy', keccak256(['bytes'], [pack(['address', 'address', 'bool'], [token0.address, token1.address, stable])]),)
-
   return getCreate2Address(
     factoryAddress,
     keccak256(['bytes'], [pack(['address', 'address', 'bool'], [token0.address, token1.address, stable])]),
@@ -196,7 +192,7 @@ export class Pair {
       outputAmount = JSBI.divide(JSBI.multiply(outputAmount, decimalOut), _1e18)
       const out = CurrencyAmount.fromRawAmount(
           inputAmount.currency.equals(this.token0) ? this.token1 : this.token0,
-          JSBI.BigInt(outputAmount),
+          JSBI.divide(outputAmount, inputAmount.denominator),
       )
       return [out, new Pair(inputReserve.add(inputAmount), outputReserve.subtract(out), this.stable)]
     }else {
@@ -238,7 +234,7 @@ export class Pair {
       inputAmount = JSBI.divide(JSBI.multiply(inputAmount, decimalIn), _1e18)
       const input = CurrencyAmount.fromRawAmount(
           outputAmount.currency.equals(this.token0) ? this.token1 : this.token0,
-          JSBI.BigInt(inputAmount),
+          JSBI.divide(inputAmount, outputAmount.denominator),
       )
       return [
         input, new Pair(inputReserve.add(input), outputReserve.subtract(outputAmount), this.stable)
