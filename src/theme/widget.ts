@@ -2,8 +2,8 @@ import { colorsDark, colorsLight } from './colors'
 
 const fonts = {
   fontFamily: {
-    font: "'Inter custom', sans-serif;",
-    variable: "'Inter custom', sans-serif;",
+    font: 'Inter custom',
+    variable: 'Inter custom',
   },
 }
 
