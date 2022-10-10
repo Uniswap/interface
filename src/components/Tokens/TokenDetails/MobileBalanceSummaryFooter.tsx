@@ -3,7 +3,7 @@ import { formatToDecimal } from 'analytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
-import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatDollar'
+import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatNumbers'
 
 import { BalanceSummaryProps } from './BalanceSummary'
 

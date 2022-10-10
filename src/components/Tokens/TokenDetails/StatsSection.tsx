@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/animations'
-import { formatDollar } from 'utils/formatDollar'
+import { formatDollar } from 'utils/formatNumbers'
 
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
 import InfoTip from './InfoTip'

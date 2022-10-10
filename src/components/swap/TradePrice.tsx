@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { formatTransactionAmount } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
@@ -41,7 +42,9 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   let formattedPrice: string
   try {
-    formattedPrice = showInverted ? price.toSignificant(4) : price.invert()?.toSignificant(4)
+    formattedPrice = showInverted
+      ? formatTransactionAmount(parseFloat(price.toSignificant(4)))
+      : formatTransactionAmount(parseFloat(price.invert().toSignificant(4)))
   } catch (error) {
     formattedPrice = '0'
   }

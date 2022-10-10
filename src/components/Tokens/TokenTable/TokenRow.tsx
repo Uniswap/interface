@@ -16,7 +16,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { formatDollar } from 'utils/formatDollar'
+import { formatDollar } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,

@@ -22,7 +22,7 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
-import { formatDollar } from 'utils/formatDollar'
+import { formatDollar } from 'utils/formatNumbers'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'

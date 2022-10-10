@@ -14,7 +14,7 @@ import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { formatDollar } from 'utils/formatDollar'
+import { formatDollar } from 'utils/formatNumbers'
 
 import * as styles from './SearchBar.css'
 
