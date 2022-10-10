@@ -29,6 +29,7 @@ export const rowHover = style([
   {
     ':hover': {
       background: themeVars.colors.backgroundInteractive,
+      borderRadius: 12,
     },
   },
 ])
@@ -47,18 +48,27 @@ export const subRowHover = style({
   },
 })
 
-export const detailsOpen = sprinkles({
-  overflow: 'hidden',
-})
+export const detailsOpen = style([
+  sprinkles({
+    overflow: 'hidden',
+  }),
+  {
+    borderTop: '1px solid',
+    borderColor: themeVars.colors.backgroundOutline,
+  },
+])
 
 export const filterDropDowns = style([
   sprinkles({
     overflowY: 'scroll',
   }),
   {
-    maxHeight: '236px',
+    maxHeight: '302px',
     '::-webkit-scrollbar': { display: 'none' },
     scrollbarWidth: 'none',
+    borderBottom: '1px solid',
+
+    borderColor: themeVars.colors.backgroundOutline,
   },
 ])
 

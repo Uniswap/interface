@@ -28,8 +28,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
       )}
       open={isOpen}
       style={{
-        borderBottom: isOpen ? `1px solid ${themeVars.colors.backgroundOutline}` : undefined,
-        borderRadius: isOpen ? undefined : 12,
+        borderTop: isOpen ? `1px solid ${themeVars.colors.backgroundOutline}` : undefined,
       }}
     >
       <Box

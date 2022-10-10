@@ -98,7 +98,9 @@ export const MarketplaceSelect = () => {
       as="details"
       className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
       open={isOpen}
-      borderRadius="12"
+      style={{
+        borderRadius: isOpen ? undefined : 12,
+      }}
     >
       <Box
         as="summary"

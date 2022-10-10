@@ -3,7 +3,6 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { subheadSmall } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
@@ -18,7 +17,6 @@ const TraitItem = ({
   addTrait,
   removeTrait,
   isTraitSelected,
-  showBorderBottom,
 }: {
   trait: Trait
   addTrait: (trait: Trait) => void
@@ -76,7 +74,6 @@ const TraitItem = ({
       style={{
         paddingBottom: '22px',
         paddingTop: '22px',
-        // borderBottom: showBorderBottom ? `1px solid ${themeVars.colors.backgroundOutline}` : undefined,
       }}
       maxHeight="44"
       onMouseEnter={handleHover}
