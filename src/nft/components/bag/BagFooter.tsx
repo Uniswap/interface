@@ -1,11 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import Loader from 'components/Loader'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { bodySmall, header2, subheadSmall } from 'nft/css/common.css'
+import { bodySmall, headlineSmall } from 'nft/css/common.css'
 import { BagStatus } from 'nft/types'
-import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils/currency'
+import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { useModalIsOpen, useToggleWalletModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 
@@ -18,8 +17,7 @@ interface BagFooterProps {
   totalEthPrice: BigNumber
   totalUsdPrice: number | undefined
   bagStatus: BagStatus
-  setBagStatus: (status: BagStatus) => void
-  fetchReview: () => void
+  fetchAssets: () => void
   assetsAreInReview: boolean
 }
 
@@ -37,8 +35,7 @@ export const BagFooter = ({
   totalEthPrice,
   totalUsdPrice,
   bagStatus,
-  setBagStatus,
-  fetchReview,
+  fetchAssets,
   assetsAreInReview,
 }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
@@ -63,20 +60,18 @@ export const BagFooter = ({
         borderTopRightRadius={showWarning ? '0' : '12'}
         className={styles.footer}
       >
-        <Box marginBottom="8" style={{ lineHeight: '20px', opacity: '0.54' }} className={subheadSmall}>
-          Total
-        </Box>
-        <Column marginBottom="16">
+        <Column gap="4" paddingTop="8" paddingBottom="20">
           <Row justifyContent="space-between">
-            <Box className={header2}>{`${formatWeiToDecimal(totalEthPrice.toString())}`}</Box>
-            <Row className={styles.ethPill}>
-              <Box as="img" src={ethereumLogoUrl} alt="Ethereum" width="24" height="24" />
-              ETH
-            </Row>
+            <Box fontWeight="semibold" className={headlineSmall}>
+              Total
+            </Box>
+            <Box fontWeight="semibold" className={headlineSmall}>
+              {`${formatWeiToDecimal(totalEthPrice.toString())} ETH`}
+            </Box>
           </Row>
-          <Box fontWeight="normal" style={{ lineHeight: '20px', opacity: '0.6' }} className={bodySmall}>
+          <Row justifyContent="flex-end" color="textSecondary" className={bodySmall}>
             {`${ethNumberStandardFormatter(totalUsdPrice, true)}`}
-          </Box>
+          </Row>
         </Column>
         <Row
           as="button"
@@ -86,14 +81,12 @@ export const BagFooter = ({
           onClick={() => {
             if (!isConnected) {
               toggleWalletModal()
-            } else if (bagStatus === BagStatus.ADDING_TO_BAG) {
-              fetchReview()
-            } else if (bagStatus === BagStatus.CONFIRM_REVIEW || bagStatus === BagStatus.WARNING) {
-              setBagStatus(BagStatus.FETCHING_FINAL_ROUTE)
+            } else {
+              fetchAssets()
             }
           }}
         >
-          {isPending && <Loader size="20px" stroke="backgroundSurface" />}
+          {isPending && <Loader size="20px" stroke="white" />}
           {!isConnected || walletModalIsOpen
             ? 'Connect wallet'
             : bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET

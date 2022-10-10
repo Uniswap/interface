@@ -49,7 +49,7 @@ export default function DowntimeWarning() {
 
   switch (chainId) {
     case SupportedChainId.OPTIMISM:
-    case SupportedChainId.OPTIMISTIC_KOVAN:
+    case SupportedChainId.OPTIMISM_GOERLI:
       return (
         <Wrapper>
           <Trans>

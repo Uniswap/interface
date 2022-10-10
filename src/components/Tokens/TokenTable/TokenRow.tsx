@@ -7,15 +7,16 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
+import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { formatDollarAmount } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatDollarAmt'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -34,8 +35,8 @@ import {
   useToggleFavorite,
 } from '../state'
 import { useTokenLogoURI } from '../TokenDetails/ChartSection'
+import InfoTip from '../TokenDetails/InfoTip'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
-import { DISPLAYS } from './TimeSelector'
 
 const Cell = styled.div`
   display: flex;
@@ -50,15 +51,17 @@ const StyledTokenRow = styled.div<{
 }>`
   background-color: transparent;
   display: grid;
-  font-size: 15px;
+  font-size: 16px;
   grid-template-columns: ${({ favoriteTokensEnabled }) =>
     favoriteTokensEnabled ? '1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr' : '1fr 7fr 4fr 4fr 4fr 4fr 5fr'};
-  height: 60px;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
-  padding-top: ${({ first }) => (first ? '4px' : '0px')};
-  padding-bottom: ${({ last }) => (last ? '4px' : '0px')};
+  ${({ first, last }) => css`
+    height: ${first || last ? '72px' : '64px'};
+    padding-top: ${first ? '8px' : '0px'};
+    padding-bottom: ${last ? '8px' : '0px'};
+  `}
   padding-left: 12px;
   padding-right: 12px;
   transition: ${({
@@ -150,7 +153,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   border-color: ${({ theme }) => theme.backgroundOutline};
   border-radius: 8px 8px 0px 0px;
   color: ${({ theme }) => theme.textSecondary};
-  font-size: 12px;
+  font-size: 14px;
   height: 48px;
   line-height: 16px;
   padding: 0px 12px;
@@ -169,6 +172,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
 const ListNumberCell = styled(Cell)<{ header: boolean }>`
   color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
+  font-size: 14px;
   height: ${({ header }) => (header ? '48px' : '60px')};
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -195,7 +199,7 @@ const MarketCapCell = styled(DataCell)`
 const NameCell = styled(Cell)`
   justify-content: flex-start;
   padding: 0px 8px;
-  min-width: 200px;
+  min-width: 240px;
   gap: 8px;
 `
 const PriceCell = styled(DataCell)`
@@ -227,17 +231,17 @@ const PriceInfoCell = styled(Cell)`
     align-items: flex-end;
   }
 `
-const SortArrowCell = styled(Cell)`
-  padding-right: 2px;
-`
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
-  ${ClickableStyle}
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
+  gap: 4px;
   height: 100%;
   justify-content: flex-end;
   width: 100%;
+`
+const HeaderCellText = styled(Text)`
+  ${ClickableStyle}
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -316,7 +320,7 @@ export const L2NetworkLogo = styled.div<{ networkUrl?: string; size?: string }>`
   width: ${({ size }) => size ?? '12px'};
   position: absolute;
   left: 50%;
-  top: 50%;
+  bottom: 0;
   background: url(${({ networkUrl }) => networkUrl});
   background-repeat: no-repeat;
   background-size: ${({ size }) => (size ? `${size} ${size}` : '12px 12px')};
@@ -328,11 +332,15 @@ export const LogoContainer = styled.div`
   display: flex;
 `
 
-/* formatting for volume with timeframe header display */
-function getHeaderDisplay(method: string, timeframe: TimePeriod): string {
-  if (method === TokenSortMethod.VOLUME || method === TokenSortMethod.PERCENT_CHANGE)
-    return `${DISPLAYS[timeframe]} ${method}`
-  return method
+export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
+  [TokenSortMethod.PRICE]: undefined,
+  [TokenSortMethod.PERCENT_CHANGE]: undefined,
+  [TokenSortMethod.TOTAL_VALUE_LOCKED]: (
+    <Trans>Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool.</Trans>
+  ),
+  [TokenSortMethod.VOLUME]: (
+    <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
+  ),
 }
 
 /* Get singular header cell for header row */
@@ -347,33 +355,24 @@ function HeaderCell({
   const sortAscending = useAtomValue(sortAscendingAtom)
   const handleSortCategory = useSetSortMethod(category)
   const sortMethod = useAtomValue(sortMethodAtom)
-  const timeframe = useAtomValue(filterTimeAtom)
 
-  if (sortMethod === category) {
-    return (
-      <HeaderCellWrapper onClick={handleSortCategory}>
-        <SortArrowCell>
+  const description = HEADER_DESCRIPTIONS[category]
+
+  return (
+    <HeaderCellWrapper onClick={handleSortCategory}>
+      {sortMethod === category && (
+        <>
           {sortAscending ? (
-            <ArrowUp size={14} color={theme.accentActive} />
+            <ArrowUp size={20} strokeWidth={1.8} color={theme.accentActive} />
           ) : (
-            <ArrowDown size={14} color={theme.accentActive} />
+            <ArrowDown size={20} strokeWidth={1.8} color={theme.accentActive} />
           )}
-        </SortArrowCell>
-        {getHeaderDisplay(category, timeframe)}
-      </HeaderCellWrapper>
-    )
-  }
-  if (sortable) {
-    return (
-      <HeaderCellWrapper onClick={handleSortCategory}>
-        <SortArrowCell>
-          <ArrowUp size={14} visibility="hidden" />
-        </SortArrowCell>
-        {getHeaderDisplay(category, timeframe)}
-      </HeaderCellWrapper>
-    )
-  }
-  return <HeaderCellWrapper>{getHeaderDisplay(category, timeframe)}</HeaderCellWrapper>
+        </>
+      )}
+      <HeaderCellText>{category}</HeaderCellText>
+      {description && <InfoTip text={description}></InfoTip>}
+    </HeaderCellWrapper>
+  )
 }
 
 /* Token Row: skeleton row component */
@@ -485,10 +484,8 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[filterNetwork]).circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
   const delta = token.market?.pricePercentChange?.value
-  const arrow = delta ? getDeltaArrow(delta) : null
-  const formattedDelta = delta ? formatDelta(delta) : null
-  const sortAscending = useAtomValue(sortAscendingAtom)
-  const { chainName } = useParams<{ chainName?: string }>()
+  const arrow = getDeltaArrow(delta)
+  const formattedDelta = formatDelta(delta)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -504,7 +501,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   return (
     <div ref={ref}>
       <StyledLink
-        to={`/tokens/${chainName}/${tokenAddress}`}
+        to={getTokenDetailsURL(token.address, token.chain)}
         onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
       >
         <TokenRow
@@ -519,7 +516,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
           }
-          listNumber={sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1}
+          listNumber={tokenListIndex + 1}
           tokenInfo={
             <ClickableName>
               <LogoContainer>
@@ -535,7 +532,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {token.market?.price?.value ? formatDollarAmount(token.market.price.value) : '-'}
+                {token.market?.price?.value ? formatDollar(token.market.price.value, true) : '-'}
                 <PercentChangeInfoCell>
                   {formattedDelta}
                   {arrow}
@@ -545,18 +542,18 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           percentChange={
             <ClickableContent>
-              {formattedDelta ?? '-'}
+              {formattedDelta}
               {arrow}
             </ClickableContent>
           }
           marketCap={
             <ClickableContent>
-              {token.market?.totalValueLocked?.value ? formatDollarAmount(token.market.totalValueLocked.value) : '-'}
+              {token.market?.totalValueLocked?.value ? formatDollar(token.market.totalValueLocked.value) : '-'}
             </ClickableContent>
           }
           volume={
             <ClickableContent>
-              {token.market?.volume?.value ? formatDollarAmount(token.market.volume.value) : '-'}
+              {token.market?.volume?.value ? formatDollar(token.market.volume.value) : '-'}
             </ClickableContent>
           }
           sparkLine={

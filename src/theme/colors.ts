@@ -215,7 +215,7 @@ export interface Palette {
   chain_10: Color
   chain_137: Color
   chain_42: Color
-  chain_69: Color
+  chain_420: Color
   chain_42161: Color
   chain_421611: Color
   chain_80001: Color
@@ -226,6 +226,7 @@ export interface Palette {
   shallowShadow: Color
   deepShadow: Color
   stateOverlayHover: Color
+  stateOverlayPressed: Color
 }
 
 export const colorsLight: Palette = {
@@ -275,7 +276,7 @@ export const colorsLight: Palette = {
   chain_10: colors.networkOptimism,
   chain_137: colors.networkPolygon,
   chain_42: colors.networkArbitrum,
-  chain_69: colors.networkOptimism,
+  chain_420: colors.networkOptimism,
   chain_42161: colors.networkEthereum,
   chain_421611: colors.networkEthereum,
   chain_80001: colors.networkPolygon,
@@ -288,6 +289,7 @@ export const colorsLight: Palette = {
   shallowShadow:
     '6px 6px 10px rgba(51, 53, 72, 0.01), 2px 2px 6px rgba(51, 53, 72, 0.02), 1px 2px 2px rgba(51, 53, 72, 0.02);',
   stateOverlayHover: opacify(8, colors.gray300),
+  stateOverlayPressed: opacify(24, colors.gray200),
 }
 
 export const colorsDark: Palette = {
@@ -337,7 +339,7 @@ export const colorsDark: Palette = {
   chain_10: colors.networkOptimism,
   chain_137: colors.networkPolygon,
   chain_42: colors.networkArbitrum,
-  chain_69: colors.networkEthereum,
+  chain_420: colors.networkEthereum,
   chain_42161: colors.networkEthereum,
   chain_421611: colors.networkEthereum,
   chain_80001: colors.networkPolygon,
@@ -348,4 +350,5 @@ export const colorsDark: Palette = {
   deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
   stateOverlayHover: opacify(8, colors.gray300),
+  stateOverlayPressed: opacify(24, colors.gray200),
 }

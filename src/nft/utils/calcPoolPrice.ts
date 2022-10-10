@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BagItem, GenieAsset, Markets, UpdatedGenieAsset } from 'nft/types'
+import { BagItem, BagItemStatus, GenieAsset, Markets, UpdatedGenieAsset } from 'nft/types'
 
 export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   let amountToBuy: BigNumber = BigNumber.from(0)
@@ -58,6 +58,9 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
   if (
     !uncheckedItemsInBag.some(
       (item) => item.asset.marketplace === Markets.NFTX || item.asset.marketplace === Markets.NFT20
+    ) ||
+    uncheckedItemsInBag.every(
+      (item) => item.status === BagItemStatus.REVIEWED || item.status === BagItemStatus.REVIEWING_PRICE_CHANGE
     )
   )
     return uncheckedItemsInBag

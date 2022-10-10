@@ -2,6 +2,8 @@ import { Trans } from '@lingui/macro'
 import { darken } from 'polished'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
+import { textFadeIn } from 'theme/animations'
 
 import Resource from './Resource'
 
@@ -23,8 +25,8 @@ const TokenDescriptionContainer = styled.div`
 const TruncateDescriptionButton = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   font-weight: 400;
-  font-size: 14px;
-  padding-top: 14px;
+  font-size: 0.85em;
+  padding-top: 0.5em;
 
   &:hover,
   &:focus {
@@ -49,10 +51,10 @@ const TRUNCATE_CHARACTER_COUNT = 400
 export const AboutContainer = styled.div`
   gap: 16px;
   padding: 24px 0px;
+  ${textFadeIn}
 `
-export const AboutHeader = styled.span`
-  font-size: 28px;
-  line-height: 36px;
+export const AboutHeader = styled(ThemedText.MediumHeader)`
+  font-size: 28px !important;
 `
 
 export const ResourcesContainer = styled.div`
@@ -88,10 +90,14 @@ export function AboutSection({ address, description, homepageUrl, twitterName }:
         {tokenDescription}
         {shouldTruncate && (
           <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
-            {isDescriptionTruncated ? <Trans>Read more</Trans> : <Trans>Hide</Trans>}
+            {isDescriptionTruncated ? <Trans>Show more</Trans> : <Trans>Hide</Trans>}
           </TruncateDescriptionButton>
         )}
       </TokenDescriptionContainer>
+      <br />
+      <ThemedText.SubHeaderSmall>
+        <Trans>Links</Trans>
+      </ThemedText.SubHeaderSmall>
       <ResourcesContainer>
         <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
         <Resource name={'Protocol info'} link={`https://info.uniswap.org/#/tokens/${address}`} />

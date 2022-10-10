@@ -11,7 +11,7 @@ export const rarityProviderLogo: { [key: string]: string } = {
   Genie: fallbackProviderLogo,
 }
 
-export const getRarityProviderLogo = (source?: string): string | null => {
-  if (!source) return null
+export const getRarityProviderLogo = (source?: string): string | undefined => {
+  if (!source) return undefined
   return rarityProviderLogo[source] || fallbackProviderLogo
 }

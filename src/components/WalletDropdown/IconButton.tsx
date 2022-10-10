@@ -58,31 +58,28 @@ const IconWrapper = styled.span`
   width: 16px;
   height: 16px;
 `
-
-interface IconButtonProps {
-  text: React.ReactNode
+interface BaseProps {
   Icon: Icon
-  onClick?: () => void
-  href?: string
-  dataTestId?: string
+}
+interface IconLinkProps extends React.ComponentPropsWithoutRef<'a'>, BaseProps {}
+interface IconButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseProps {}
+
+const IconBlock = (props: React.ComponentPropsWithoutRef<'a' | 'button'>) => {
+  if ('href' in props) {
+    return <IconBlockLink {...props} />
+  }
+  // ignoring 'button' 'type' conflict between React and styled-components
+  // @ts-ignore
+  return <IconBlockButton {...props} />
 }
 
-const IconButton = ({ Icon, onClick, text, href, dataTestId }: IconButtonProps) => {
-  return href ? (
-    <IconBlockLink data-testId={dataTestId} href={href} target="_blank">
-      <IconWrapper>
-        <Icon strokeWidth={1.5} size={16} />
-        <IconHoverText>{text}</IconHoverText>
-      </IconWrapper>
-    </IconBlockLink>
-  ) : (
-    <IconBlockButton data-testId={dataTestId} onClick={onClick}>
-      <IconWrapper>
-        <Icon strokeWidth={1.5} size={16} />
-        <IconHoverText>{text}</IconHoverText>
-      </IconWrapper>
-    </IconBlockButton>
-  )
-}
+const IconButton = ({ Icon, children, ...rest }: IconButtonProps | IconLinkProps) => (
+  <IconBlock {...rest}>
+    <IconWrapper>
+      <Icon strokeWidth={1.5} size={16} />
+      <IconHoverText>{children}</IconHoverText>
+    </IconWrapper>
+  </IconBlock>
+)
 
 export default IconButton

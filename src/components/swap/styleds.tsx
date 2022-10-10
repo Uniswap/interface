@@ -10,7 +10,7 @@ import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div<{ redesignFlag: boolean; navBarFlag: boolean }>`
   padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px 8px')};
-  max-width: ${({ redesignFlag }) => (redesignFlag ? '420px' : '480px')};
+  max-width: 480px;
   width: 100%;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
@@ -30,25 +30,23 @@ export const SwapWrapper = styled.main<{ margin?: string; maxWidth?: string; red
   border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : 'transparent')};
   padding: 8px;
   z-index: ${Z_INDEX.deprecated_content};
-  font-feature-settings: ${({ redesignFlag }) => redesignFlag && "'ss02' off"};
   box-shadow: ${({ redesignFlag }) =>
     !redesignFlag &&
     '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.01)'};
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean; redesignFlag: boolean }>`
-  padding: 4px;
   border-radius: 12px;
   height: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
   width: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
   position: relative;
-  margin-top: -14px;
+  margin-top: ${({ redesignFlag }) => (redesignFlag ? '-18px' : '-14px')};
   margin-bottom: ${({ redesignFlag }) => (redesignFlag ? '-18px' : '-14px')};
-  left: calc(50% - 16px);
-  /* transform: rotate(90deg); */
-  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg1)};
+  margin-left: auto;
+  margin-right: auto;
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundInteractive : theme.deprecated_bg1)};
   border: 4px solid;
-  border-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundModule : theme.deprecated_bg0)};
+  border-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg0)};
 
   z-index: 2;
   ${({ clickable }) =>

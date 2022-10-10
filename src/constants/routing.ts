@@ -157,7 +157,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
   ],
-  [SupportedChainId.OPTIMISTIC_KOVAN]: [nativeOnChain(SupportedChainId.OPTIMISTIC_KOVAN)],
+  [SupportedChainId.OPTIMISM_GOERLI]: [nativeOnChain(SupportedChainId.OPTIMISM_GOERLI)],
   [SupportedChainId.POLYGON]: [
     nativeOnChain(SupportedChainId.POLYGON),
     WETH_POLYGON,

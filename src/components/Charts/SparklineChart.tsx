@@ -25,11 +25,17 @@ function SparklineChart({ width, height, tokenData, pricePercentChange, timePeri
   const hasData = pricePoints.length !== 0
   const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
   const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
-  const widthScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, 124])
-  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([42, 0])
-
-  /* Default curve doesn't look good for the ALL chart */
-  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : 0.9
+  const widthScale = scaleLinear()
+    .domain(
+      // the range of possible input values
+      [startingPrice.timestamp, endingPrice.timestamp]
+    )
+    .range(
+      // the range of possible output values that the inputs should be transformed to (see https://www.d3indepth.com/scales/ for details)
+      [0, 110]
+    )
+  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([30, 0])
+  const curveTension = 0.9
 
   return (
     <LineChart
@@ -37,6 +43,7 @@ function SparklineChart({ width, height, tokenData, pricePercentChange, timePeri
       getX={(p: PricePoint) => widthScale(p.timestamp)}
       getY={(p: PricePoint) => rdScale(p.value)}
       curve={curveCardinal.tension(curveTension)}
+      marginTop={5}
       color={pricePercentChange && pricePercentChange < 0 ? theme.accentFailure : theme.accentSuccess}
       strokeWidth={1.5}
       width={width}

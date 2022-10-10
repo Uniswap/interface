@@ -36,6 +36,7 @@ const BREAKPOINTS = {
   xxxl: 1920,
 }
 
+// deprecated - please use the animations.ts file
 const transitions = {
   duration: {
     slow: '500ms',
@@ -76,6 +77,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     backgroundBackdrop: darkMode ? colorsDark.backgroundBackdrop : colorsLight.backgroundBackdrop,
     backgroundSurface: darkMode ? colorsDark.backgroundSurface : colorsLight.backgroundSurface,
     backgroundModule: darkMode ? colorsDark.backgroundModule : colorsLight.backgroundModule,
+    backgroundFloating: darkMode ? colorsDark.backgroundFloating : colorsLight.backgroundFloating,
     backgroundInteractive: darkMode ? colorsDark.backgroundInteractive : colorsLight.backgroundInteractive,
     backgroundOutline: darkMode ? colorsDark.backgroundOutline : colorsLight.backgroundOutline,
     backgroundScrim: darkMode ? colorsDark.backgroundScrim : colorsLight.backgroundScrim,
@@ -116,7 +118,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     chain_10: colorsDark.chain_10,
     chain_137: colorsDark.chain_137,
     chain_42: colorsDark.chain_42,
-    chain_69: colorsDark.chain_69,
+    chain_420: colorsDark.chain_420,
     chain_42161: colorsDark.chain_42161,
     chain_421611: colorsDark.chain_421611,
     chain_80001: colorsDark.chain_80001,
@@ -126,6 +128,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     hoverState: opacify(24, ColorsPalette.blue200),
     hoverDefault: opacify(8, ColorsPalette.gray200),
     stateOverlayHover: darkMode ? colorsDark.stateOverlayHover : colorsLight.stateOverlayHover,
+    stateOverlayPressed: darkMode ? colorsDark.stateOverlayPressed : colorsLight.stateOverlayPressed,
   }
 }
 
@@ -271,11 +274,10 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
     // media queries
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
-    //breakpoints
+    // deprecated - please use hardcoded exported values instead of
+    // adding to the theme object
     breakpoint: BREAKPOINTS,
-
     transition: transitions,
-
     opacity: opacities,
 
     // css snippets
@@ -352,6 +354,9 @@ export const ThemedText = {
   },
   SubHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={16} color={'textPrimary'} {...props} />
+  },
+  SubHeaderSmall(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={14} color={'textSecondary'} {...props} />
   },
   DeprecatedSmall(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />

@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
-import { useGlobalChainName } from 'graphql/data/util'
+import { chainIdToBackendName } from 'graphql/data/util'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { UniIcon } from 'nft/components/icons'
@@ -37,7 +38,8 @@ const MenuItem = ({ href, id, isActive, children }: MenuItemProps) => {
 const PageTabs = () => {
   const { pathname } = useLocation()
   const nftFlag = useNftFlag()
-  const chainName = useGlobalChainName()
+  const { chainId: connectedChainId } = useWeb3React()
+  const chainName = chainIdToBackendName(connectedChainId)
 
   const isPoolActive =
     pathname.startsWith('/pool') ||
@@ -68,7 +70,7 @@ const PageTabs = () => {
 
 const Navbar = () => {
   const { pathname } = useLocation()
-  const isNftPage = pathname.startsWith('/nfts')
+  const showShoppingBag = pathname.startsWith('/nfts') || pathname.startsWith('/profile')
 
   return (
     <>
@@ -96,7 +98,7 @@ const Navbar = () => {
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <MenuDropdown />
               </Box>
-              {isNftPage && <ShoppingBag />}
+              {showShoppingBag && <ShoppingBag />}
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <ChainSelector />
               </Box>

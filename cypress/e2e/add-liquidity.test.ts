@@ -21,20 +21,20 @@ describe('Add Liquidity', () => {
     cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('not.contain.text', 'ETH')
   })
 
-  it('token not in storage is loaded', () => {
+  it.skip('token not in storage is loaded', () => {
     cy.visit('/add/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'SKL')
     cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'MKR')
   })
 
-  it('single token can be selected', () => {
+  it.skip('single token can be selected', () => {
     cy.visit('/add/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'SKL')
     cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')
   })
 
-  it('loads fee tier distribution', () => {
+  it.skip('loads fee tier distribution', () => {
     cy.fixture('feeTierDistribution.json').then((feeTierDistribution) => {
       cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req: CyHttpMessages.IncomingHttpRequest) => {
         if (hasQuery(req, 'FeeTierDistributionQuery')) {

@@ -1,3 +1,5 @@
+export { Activity } from './Activity'
+export { ActivitySwitcher } from './ActivitySwitcher'
 export { CollectionNfts } from './CollectionNfts'
 export { CollectionSearch } from './CollectionSearch'
 export { CollectionStats } from './CollectionStats'

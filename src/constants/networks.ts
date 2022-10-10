@@ -75,9 +75,9 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
     // "Fallback" URLs
     'https://rpc.ankr.com/optimism',
   ],
-  [SupportedChainId.OPTIMISTIC_KOVAN]: [
+  [SupportedChainId.OPTIMISM_GOERLI]: [
     // "Safe" URLs
-    'https://kovan.optimism.io',
+    'https://goerli.optimism.io',
   ],
   [SupportedChainId.CELO]: [
     // "Safe" URLs
@@ -112,9 +112,9 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
     `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.OPTIMISM],
   ],
-  [SupportedChainId.OPTIMISTIC_KOVAN]: [
-    `https://optimism-kovan.infura.io/v3/${INFURA_KEY}`,
-    ...FALLBACK_URLS[SupportedChainId.OPTIMISTIC_KOVAN],
+  [SupportedChainId.OPTIMISM_GOERLI]: [
+    `https://optimism-goerli.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[SupportedChainId.OPTIMISM_GOERLI],
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
     `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,

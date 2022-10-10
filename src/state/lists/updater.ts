@@ -31,7 +31,7 @@ export default function Updater(): null {
   }, [fetchList, isWindowVisible, lists])
 
   useEffect(() => {
-    if (chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)) {
+    if (chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISM_GOERLI].includes(chainId)) {
       dispatch(enableList(OPTIMISM_LIST))
     }
     if (chainId && [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)) {
@@ -59,7 +59,7 @@ export default function Updater(): null {
     UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
-        fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
+        fetchList(listUrl, undefined, true).catch((error) => console.debug('list added fetching error', error))
       }
     })
   }, [dispatch, fetchList, lists])
