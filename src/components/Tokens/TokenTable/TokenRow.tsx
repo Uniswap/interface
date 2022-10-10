@@ -531,7 +531,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {token.market?.price?.value ? formatDollar(token.market.price.value, true) : '-'}
+                {token.market?.price?.value
+                  ? formatDollar({ num: token.market.price.value, isPrice: true, neater: true })
+                  : '-'}
                 <PercentChangeInfoCell>
                   {formattedDelta}
                   {arrow}
@@ -547,12 +549,12 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           marketCap={
             <ClickableContent>
-              {token.market?.totalValueLocked?.value ? formatDollar(token.market.totalValueLocked.value) : '-'}
+              {token.market?.totalValueLocked?.value ? formatDollar({ num: token.market.totalValueLocked.value }) : '-'}
             </ClickableContent>
           }
           volume={
             <ClickableContent>
-              {token.market?.volume?.value ? formatDollar(token.market.volume.value) : '-'}
+              {token.market?.volume?.value ? formatDollar({ num: token.market.volume.value }) : '-'}
             </ClickableContent>
           }
           sparkLine={

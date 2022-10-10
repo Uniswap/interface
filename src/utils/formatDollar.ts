@@ -12,14 +12,22 @@ export const currencyAmountToPreciseFloat = (currencyAmount: CurrencyAmount<Curr
   return floatForLargerNumbers
 }
 
+interface FormatDollarArgs {
+  num: number | undefined | null
+  isPrice?: boolean
+  neater?: boolean
+  digits?: number
+  round?: boolean
+}
+
 // Using a currency library here in case we want to add more in future.
-export const formatDollar = (
-  num: number | undefined | null,
+export const formatDollar = ({
+  num,
   isPrice = false,
   neater = false,
   digits = 2,
-  round = true
-) => {
+  round = true,
+}: FormatDollarArgs): string => {
   if (isPrice) {
     if (num === 0) return '$0.00'
     if (!num) return '-'
@@ -60,6 +68,8 @@ export const formatDollar = (
       .toUpperCase()
   }
 }
+
+export const formatTxnDollar = (num: number | undefined) => {}
 
 // using a currency library here in case we want to add more in future
 export const formatAmount = (num: number | undefined, digits = 2) => {

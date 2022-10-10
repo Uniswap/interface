@@ -190,7 +190,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
       <Column className={styles.suggestionSecondaryContainer}>
         {token.priceUsd && (
           <Row gap="4">
-            <Box className={styles.primaryText}>{formatDollar(token.priceUsd, true)}</Box>
+            <Box className={styles.primaryText}>{formatDollar({ num: token.priceUsd, isPrice: true })}</Box>
           </Row>
         )}
         {token.price24hChange && (

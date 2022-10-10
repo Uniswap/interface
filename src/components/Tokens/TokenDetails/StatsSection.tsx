@@ -69,7 +69,7 @@ function Stat({
         {description && <InfoTip text={description}></InfoTip>}
       </StatTitle>
 
-      <StatPrice>{formatDollar(value, isPrice)}</StatPrice>
+      <StatPrice>{formatDollar({ num: value, isPrice })}</StatPrice>
     </StatWrapper>
   )
 }

@@ -271,7 +271,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{formatDollar(displayPrice.value, true)}</TokenPrice>
+        <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
         <DeltaContainer>
           {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>
