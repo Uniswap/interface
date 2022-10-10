@@ -3,14 +3,17 @@ import { selectionAsync } from 'expo-haptics'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-gesture-handler'
+import { Edge } from 'react-native-safe-area-context'
 import { SvgProps } from 'react-native-svg'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import GlobalIcon from 'src/assets/icons/global.svg'
 import HelpIcon from 'src/assets/icons/help.svg'
+import PlusIcon from 'src/assets/icons/plus.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Separator } from 'src/components/layout/Separator'
@@ -49,6 +52,7 @@ const UNICON_WIDTH = 36
 
 export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const activeAccountAddress = useActiveAccountAddress()
   const addressToAccount = useAccounts()
@@ -295,12 +299,17 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     return menuItems
   }, [hasImportedSeedPhrase, dispatch, navigation, t])
 
+  const screenEdges: Edge[] = useMemo(
+    () => (accountsData.length <= 1 ? ['top', 'bottom'] : ['top']),
+    [accountsData.length]
+  )
+
   if (!activeAccountAddress) {
     return null
   }
 
   return (
-    <Screen bg="backgroundBackdrop" edges={['top']}>
+    <Screen bg="backgroundBackdrop" edges={screenEdges}>
       <Flex pb="md" pt="lg" px="lg">
         <AddressDisplay
           showAddressAsSubtitle
@@ -339,12 +348,34 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       <Box flexGrow={1} />
 
       <Separator mb="sm" />
-      <AccountList
-        accounts={accountsData}
-        onAddWallet={onPressAddWallet}
-        onPress={onPressAccount}
-        onPressEdit={onPressEdit}
-      />
+
+      {accountsData.length <= 1 ? (
+        <TextButton ml="lg" mt="sm" onPress={onPressAddWallet}>
+          <Flex centered row>
+            <Box
+              alignItems="center"
+              borderColor="backgroundOutline"
+              borderRadius="full"
+              borderWidth={1}
+              justifyContent="center"
+              p="xs">
+              <PlusIcon
+                color={theme.colors.textSecondary}
+                height={theme.iconSizes.sm}
+                width={theme.iconSizes.sm}
+              />
+            </Box>
+            <Text variant="body">{t('Add another wallet')}</Text>
+          </Flex>
+        </TextButton>
+      ) : (
+        <AccountList
+          accounts={accountsData}
+          onAddWallet={onPressAddWallet}
+          onPress={onPressAccount}
+          onPressEdit={onPressEdit}
+        />
+      )}
 
       <ActionSheetModal
         isVisible={showEditAccountModal}

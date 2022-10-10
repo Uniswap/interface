@@ -6,7 +6,6 @@ import { useAppTheme } from 'src/app/hooks'
 import PlusIcon from 'src/assets/icons/plus.svg'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { IconButton } from 'src/components/buttons/IconButton'
-import { TextButton } from 'src/components/buttons/TextButton'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
@@ -73,29 +72,6 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
       },
     [activeAccount, onPress, onPressEdit]
   )
-
-  if (accounts.length <= 1) {
-    return (
-      <TextButton ml="lg" mt="sm" onPress={onAddWallet}>
-        <Flex centered row>
-          <Box
-            alignItems="center"
-            borderColor="backgroundOutline"
-            borderRadius="full"
-            borderWidth={1}
-            justifyContent="center"
-            p="xs">
-            <PlusIcon
-              color={theme.colors.textSecondary}
-              height={theme.iconSizes.sm}
-              width={theme.iconSizes.sm}
-            />
-          </Box>
-          <Text variant="body">{t('Add another wallet')}</Text>
-        </Flex>
-      </TextButton>
-    )
-  }
 
   return (
     <Box flexShrink={1} position="relative">
