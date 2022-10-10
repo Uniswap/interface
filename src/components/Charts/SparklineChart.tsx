@@ -3,6 +3,7 @@ import { curveCardinal, scaleLinear } from 'd3'
 import { PricePoint } from 'graphql/data/Token'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { TimePeriod } from 'graphql/data/util'
+import { memo } from 'react'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
@@ -24,7 +25,7 @@ interface SparklineChartProps {
   sparklineMap: SparklineMap
 }
 
-export default function SparklineChart({
+function _SparklineChart({
   width,
   height,
   tokenData,
@@ -73,3 +74,5 @@ export default function SparklineChart({
     />
   )
 }
+
+export default memo(_SparklineChart)
