@@ -604,8 +604,7 @@ export default function Campaign() {
               <CampaignDetailTab active={activeTab === 'leaderboard'} onClick={() => setActiveTab('leaderboard')}>
                 <Trans>Leaderboard</Trans>
               </CampaignDetailTab>
-              {/* TODO nguyenhuudungz: Check có leaderboard mới show. */}
-              {selectedCampaign && selectedCampaign.campaignState !== CampaignState.CampaignStateReady && (
+              {selectedCampaign && selectedCampaign.campaignState === CampaignState.CampaignStateDistributedRewards && (
                 <CampaignDetailTab active={activeTab === 'lucky_winners'} onClick={() => setActiveTab('lucky_winners')}>
                   <Trans>Lucky Winners</Trans>
                 </CampaignDetailTab>

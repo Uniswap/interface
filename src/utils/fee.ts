@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction } from '@kyberswap/ks-sdk-core'
+import { Fraction } from '@kyberswap/ks-sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 
@@ -6,30 +6,6 @@ import { BIPS_BASE, RESERVE_USD_DECIMALS } from 'constants/index'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 import { Aggregator } from 'utils/aggregator'
 import { formattedNum } from 'utils/index'
-
-// This function is not correct, the result will be rounded.
-// Eg. 0.9999 (amountIn) * 0.0008 (fee bps currency_in) = 0.000799 (round 6 number, for example, swap from usdt)
-// => amount without fee in = 0.9999 - 0.000799 = 0.999101
-// We have amountPlusFee = 0.999101 / (1 - 0.0008) = 0.9999009207 => Wrong.
-// TODO nguyenhuudungz: Delete this function and logic of encoding in frontend after releasing it in backend.
-export function getAmountPlusFeeInQuotient(
-  amount: CurrencyAmount<Currency> | string,
-  feeConfig: FeeConfig | undefined,
-) {
-  let amountPlusFee = new Fraction(typeof amount === 'string' ? amount : amount.quotient, JSBI.BigInt(1))
-
-  if (feeConfig) {
-    if (feeConfig.isInBps) {
-      const feeAmountBpsDecimal = new Fraction(feeConfig.feeAmount).divide(BIPS_BASE)
-      const feeAmountDecimal = amountPlusFee.multiply(feeAmountBpsDecimal).quotient
-      amountPlusFee = amountPlusFee.add(feeAmountDecimal)
-    } else {
-      amountPlusFee = amountPlusFee.add(feeConfig.feeAmount)
-    }
-  }
-
-  return amountPlusFee.quotient.toString()
-}
 
 /**
  * Get Fee Amount in a Trade (unit: USD)
