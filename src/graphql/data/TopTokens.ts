@@ -50,19 +50,6 @@ const topTokens100Query = graphql`
   }
 `
 
-// export const tokenSparklineFragment = graphql`
-//   fragment TopTokensSparklineFragment on Query {
-//     tokens(contracts: $contracts) {
-//       market(currency: USD) {
-//         priceHistory(duration: $duration) {
-//           timestamp
-//           value
-//         }
-//       }
-//     }
-//   }
-// `
-
 const tokenSparklineQuery = graphql`
   query TopTokensSparklineQuery($duration: HistoryDuration!, $chain: Chain!) {
     topTokens(pageSize: 100, page: 1, chain: $chain) {
