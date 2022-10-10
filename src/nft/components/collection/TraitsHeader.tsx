@@ -30,6 +30,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
       style={{
         borderBottom: isOpen ? `1px solid ${themeVars.colors.backgroundOutline}` : undefined,
       }}
+      borderRadius="12"
     >
       <Box
         as="summary"
@@ -43,6 +44,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
         paddingLeft="8"
         paddingBottom="10"
         paddingRight="16"
+        borderRadius="12"
         lineHeight="20"
         onClick={(e) => {
           e.preventDefault()
