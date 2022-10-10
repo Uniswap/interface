@@ -42,7 +42,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import Tokens, { LoadingTokens } from './Tokens'
+import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
@@ -168,14 +168,7 @@ export default function App() {
                 <Routes>
                   {tokensFlag === TokensVariant.Enabled && (
                     <>
-                      <Route
-                        path="tokens"
-                        element={
-                          <Suspense fallback={<LoadingTokens />}>
-                            <Tokens />
-                          </Suspense>
-                        }
-                      >
+                      <Route path="tokens" element={<Tokens />}>
                         <Route path=":chainName" />
                       </Route>
                       <Route

@@ -1,13 +1,19 @@
+import { SparkLineLoadingBubble } from 'components/Tokens/TokenTable/TokenRow'
 import { curveCardinal, scaleLinear } from 'd3'
+import { PricePoint } from 'graphql/data/Token'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { TimePeriod } from 'graphql/data/util'
-import React from 'react'
-import { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
 import LineChart from './LineChart'
 
-type PricePoint = { value: number; timestamp: number }
+const LoadingContainer = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
 interface SparklineChartProps {
   width: number
@@ -32,7 +38,11 @@ export default function SparklineChart({
 
   // Don't display if there's one or less pricepoints
   if (!pricePoints || pricePoints.length <= 1) {
-    return null
+    return (
+      <LoadingContainer>
+        <SparkLineLoadingBubble />
+      </LoadingContainer>
+    )
   }
 
   const startingPrice = pricePoints[0]

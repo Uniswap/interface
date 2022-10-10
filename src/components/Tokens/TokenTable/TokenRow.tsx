@@ -312,7 +312,7 @@ const IconLoadingBubble = styled(LoadingBubble)`
   border-radius: 50%;
   width: 24px;
 `
-const SparkLineLoadingBubble = styled(LongLoadingBubble)`
+export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
@@ -480,6 +480,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const isFavorited = useIsFavorited(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
+  const sortAscending = useAtomValue(sortAscendingAtom)
 
   const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
   const filterNetwork = lowercaseChainName.toUpperCase()
@@ -518,7 +519,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
           }
-          listNumber={tokenListIndex + 1}
+          listNumber={sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1}
           tokenInfo={
             <ClickableName>
               <LogoContainer>
