@@ -1,7 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 
-import { currencyAmountToPreciseFloat, formatDollar } from './formatDollarAmt'
+import { currencyAmountToPreciseFloat, formatDollar } from './formatDollar'
 
 describe('currencyAmountToPreciseFloat', () => {
   it('small number', () => {
@@ -38,6 +38,9 @@ describe('formatDollar for a price', () => {
   })
   it('num >= 0.1 && num < 1.05', () => {
     expect(formatDollar(0.812831, true)).toEqual('$0.813')
+  })
+  it('neater number', () => {
+    expect(formatDollar(1.0000001, true, true)).toEqual('$1.00')
   })
   it('number is greater than 1 million', () => {
     expect(formatDollar(11192312.408, true)).toEqual('$1.12e+7')

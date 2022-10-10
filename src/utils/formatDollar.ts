@@ -13,7 +13,13 @@ export const currencyAmountToPreciseFloat = (currencyAmount: CurrencyAmount<Curr
 }
 
 // Using a currency library here in case we want to add more in future.
-export const formatDollar = (num: number | undefined | null, isPrice = false, digits = 2, round = true) => {
+export const formatDollar = (
+  num: number | undefined | null,
+  isPrice = false,
+  neater = false,
+  digits = 2,
+  round = true
+) => {
   if (isPrice) {
     if (num === 0) return '$0.00'
     if (!num) return '-'
@@ -23,11 +29,10 @@ export const formatDollar = (num: number | undefined | null, isPrice = false, di
     if ((num >= 0.000001 && num < 0.1) || num > 1000000) {
       return `$${Number(num).toPrecision(3)}`
     }
-    if (num >= 0.1 && num < 1.05) {
+    if (num >= 0.1 && num < (neater ? 1.0 : 1.05)) {
       return `$${num.toFixed(3)}`
     }
-    // if number is greater than 1.05:
-    return `$${Number(num.toFixed(2)).toLocaleString(DEFAULT_LOCALE)}`
+    return `$${Number(num.toFixed(2)).toLocaleString(DEFAULT_LOCALE, { minimumFractionDigits: 2 })}`
   }
   // For volume dollar amounts, like market cap, total value locked, etc.
   else {
