@@ -36,7 +36,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   }
 
   ::placeholder {
-    color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.textSecondary : theme.deprecated_text4)};
+    color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.textTertiary : theme.deprecated_text4)};
   }
 `
 
