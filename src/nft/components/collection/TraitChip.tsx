@@ -17,7 +17,7 @@ const CrossIconWrap = styled.div`
   height: 28px;
   width: 28px;
   border: none;
-  padding-top: 2px;
+  padding-top: 1px;
 `
 
 export const TraitChip = ({ onClick, value }: { value: string; onClick: () => void }) => {
