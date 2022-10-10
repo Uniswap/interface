@@ -98,6 +98,7 @@ export const MarketplaceSelect = () => {
       as="details"
       className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
       open={isOpen}
+      borderRadius="12"
     >
       <Box
         as="summary"
@@ -112,6 +113,7 @@ export const MarketplaceSelect = () => {
         paddingRight="16"
         paddingBottom="8"
         lineHeight="20"
+        borderRadius="12"
         onClick={(e) => {
           e.preventDefault()
           setOpen(!isOpen)
@@ -140,7 +142,7 @@ export const MarketplaceSelect = () => {
               transform: `rotate(${isOpen ? 0 : 180}deg)`,
             }}
           >
-            <ChevronUpIcon />
+            <ChevronUpIcon className={styles.chevronIcon} />
           </Box>
         </Box>
       </Box>

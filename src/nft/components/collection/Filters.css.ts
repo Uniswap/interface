@@ -28,7 +28,7 @@ export const container = style([
 export const rowHover = style([
   {
     ':hover': {
-      background: themeVars.colors.backgroundSurface,
+      background: themeVars.colors.backgroundInteractive,
     },
   },
 ])
@@ -36,14 +36,14 @@ export const rowHover = style([
 export const rowHoverOpen = style([
   {
     ':hover': {
-      background: themeVars.colors.backgroundOutline,
+      background: themeVars.colors.backgroundInteractive,
     },
   },
 ])
 
 export const subRowHover = style({
   ':hover': {
-    background: themeVars.colors.backgroundOutline,
+    background: themeVars.colors.backgroundInteractive,
   },
 })
 
@@ -68,4 +68,8 @@ export const borderTop = style({
 
 export const showBorderBottom = style({
   borderBottom: `1px solid ${themeVars.colors.backgroundOutline}`,
+})
+
+export const chevronIcon = style({
+  marginLeft: -1,
 })

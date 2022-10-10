@@ -6,6 +6,8 @@ interface SearchHistoryProps {
   setPriceRangeLow: (priceRangeLow: string) => void
   priceRangeHigh: string
   setPriceRangeHigh: (priceRangeHigh: string) => void
+  prevMinMax: Array<number>
+  setPrevMinMax: (prevMinMax: Array<number>) => void
 }
 
 export const usePriceRange = create<SearchHistoryProps>()(
@@ -21,6 +23,15 @@ export const usePriceRange = create<SearchHistoryProps>()(
       setPriceRangeHigh: (priceRangeHigh: string) => {
         set(() => {
           return { priceRangeHigh }
+        })
+      },
+      prevMinMax: [0, 100],
+      setPrevMinMax: (prevMinMax: Array<number>) => {
+        set(() => {
+          console.log('in function')
+          console.log(prevMinMax)
+
+          return { prevMinMax }
         })
       },
     })),

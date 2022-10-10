@@ -2,8 +2,9 @@ import { Trans } from '@lingui/macro'
 import { TokenSortMethod } from 'graphql/data/TopTokens'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/animations'
-import { formatDollarAmount } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatDollarAmt'
 
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
 import InfoTip from './InfoTip'
@@ -21,12 +22,15 @@ export const StatWrapper = styled.div`
 export const TokenStatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
-  ${textFadeIn}
 `
 export const StatPair = styled.div`
   display: flex;
   flex: 1;
   flex-wrap: wrap;
+`
+
+const Header = styled(ThemedText.MediumHeader)`
+  font-size: 28px !important;
 `
 const StatTitle = styled.div`
   display: flex;
@@ -40,10 +44,24 @@ const StatPrice = styled.span`
 const NoData = styled.div`
   color: ${({ theme }) => theme.textTertiary};
 `
+const Wrapper = styled.div`
+  gap: 16px;
+  ${textFadeIn}
+`
 
 type NumericStat = number | undefined | null
 
-function Stat({ value, title, description }: { value: NumericStat; title: ReactNode; description?: ReactNode }) {
+function Stat({
+  value,
+  title,
+  description,
+  isPrice = false,
+}: {
+  value: NumericStat
+  title: ReactNode
+  description?: ReactNode
+  isPrice?: boolean
+}) {
   return (
     <StatWrapper>
       <StatTitle>
@@ -51,7 +69,7 @@ function Stat({ value, title, description }: { value: NumericStat; title: ReactN
         {description && <InfoTip text={description}></InfoTip>}
       </StatTitle>
 
-      <StatPrice>{value ? formatDollarAmount(value) : '-'}</StatPrice>
+      <StatPrice>{formatDollar(value, isPrice)}</StatPrice>
     </StatWrapper>
   )
 }
@@ -66,28 +84,33 @@ export default function StatsSection(props: StatsSectionProps) {
   const { priceLow52W, priceHigh52W, TVL, volume24H } = props
   if (TVL || volume24H || priceLow52W || priceHigh52W) {
     return (
-      <TokenStatsSection>
-        <StatPair>
-          <Stat
-            value={TVL}
-            description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
-            title={<Trans>TVL</Trans>}
-          />
-          <Stat
-            value={volume24H}
-            description={
-              <Trans>
-                24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
-              </Trans>
-            }
-            title={<Trans>24H volume</Trans>}
-          />
-        </StatPair>
-        <StatPair>
-          <Stat value={priceLow52W} title={<Trans>52W low</Trans>} />
-          <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} />
-        </StatPair>
-      </TokenStatsSection>
+      <Wrapper>
+        <Header>
+          <Trans>Stats</Trans>
+        </Header>
+        <TokenStatsSection>
+          <StatPair>
+            <Stat
+              value={TVL}
+              description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
+              title={<Trans>TVL</Trans>}
+            />
+            <Stat
+              value={volume24H}
+              description={
+                <Trans>
+                  24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+                </Trans>
+              }
+              title={<Trans>24H volume</Trans>}
+            />
+          </StatPair>
+          <StatPair>
+            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} isPrice={true} />
+            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
+          </StatPair>
+        </TokenStatsSection>
+      </Wrapper>
     )
   } else {
     return <NoData>No stats available</NoData>

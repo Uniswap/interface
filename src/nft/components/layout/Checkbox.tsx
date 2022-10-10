@@ -20,6 +20,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({ hovered, children, ...props 
       overflow="hidden"
       cursor="pointer"
       lineHeight="1"
+      style={{ marginRight: 1 }}
     >
       {children}
       <Box
