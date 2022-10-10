@@ -24,7 +24,6 @@ export const TraitChip = ({ onClick, value }: { value: string; onClick: () => vo
   return (
     <TraitChipWrap>
       <span>{value}</span>
-
       <CrossIconWrap onClick={onClick}>
         <CrossIcon cursor="pointer" />
       </CrossIconWrap>

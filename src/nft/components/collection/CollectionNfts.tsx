@@ -68,6 +68,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const setPriceRangeLow = usePriceRange((state) => state.setPriceRangeLow)
   const setPriceRangeHigh = usePriceRange((state) => state.setPriceRangeHigh)
+  const setPrevMinMax = usePriceRange((state) => state.setPrevMinMax)
 
   const setIsCollectionNftsLoading = useIsCollectionLoading((state) => state.setIsCollectionNftsLoading)
   const removeTrait = useCollectionFilters((state) => state.removeTrait)
@@ -237,7 +238,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const minMaxPriceChipText: string | undefined = useMemo(() => {
     if (debouncedMinPrice && debouncedMaxPrice) {
-      return `Price: ${debouncedMinPrice}-${debouncedMaxPrice} ETH`
+      return `Price: ${debouncedMinPrice} - ${debouncedMaxPrice} ETH`
     } else if (debouncedMinPrice) {
       return `Min. Price: ${debouncedMinPrice} ETH`
     } else if (debouncedMaxPrice) {
@@ -343,6 +344,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                   scrollToTop()
                   setMin('')
                   setMax('')
+                  setPrevMinMax([0, 100])
                 }}
               />
             )}
@@ -350,6 +352,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               <ClearAllButton
                 onClick={() => {
                   reset()
+                  setPrevMinMax([0, 100])
                   scrollToTop()
                 }}
               >
