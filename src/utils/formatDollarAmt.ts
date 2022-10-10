@@ -1,5 +1,6 @@
 /* Copied from Uniswap/v-3: https://github.com/Uniswap/v3-info/blob/master/src/utils/numbers.ts */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { DEFAULT_LOCALE } from 'constants/locales'
 import numbro from 'numbro'
 
 // Convert [CurrencyAmount] to number with necessary precision for price formatting.
@@ -19,14 +20,14 @@ export const formatDollar = (num: number | undefined | null, isPrice = false, di
     if (num < 0.000001) {
       return `$${num.toExponential(2)}`
     }
-    if (num >= 0.000001 && num < 0.1) {
+    if ((num >= 0.000001 && num < 0.1) || num > 1000000) {
       return `$${Number(num).toPrecision(3)}`
     }
     if (num >= 0.1 && num < 1.05) {
       return `$${num.toFixed(3)}`
     }
     // if number is greater than 1.05:
-    return `$${num.toFixed(2)}`
+    return `$${Number(num.toFixed(2)).toLocaleString(DEFAULT_LOCALE)}`
   }
   // For volume dollar amounts, like market cap, total value locked, etc.
   else {
