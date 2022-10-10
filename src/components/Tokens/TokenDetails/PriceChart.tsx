@@ -22,6 +22,7 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
+import { formatDollar } from 'utils/formatDollarAmt'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
@@ -263,10 +264,14 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
    * making it unacceptable for shorter durations / smaller variances.
    */
   const curveTension = timePeriod === TimePeriod.HOUR ? 1 : 0.9
+
+  const getX = useMemo(() => (p: PricePoint) => timeScale(p.timestamp), [timeScale])
+  const getY = useMemo(() => (p: PricePoint) => rdScale(p.value), [rdScale])
+  const curve = useMemo(() => curveCardinal.tension(curveTension), [curveTension])
   return (
     <>
       <ChartHeader>
-        <TokenPrice>${displayPrice.value < 0.000001 ? '<0.000001' : displayPrice.value.toFixed(6)}</TokenPrice>
+        <TokenPrice>{formatDollar(displayPrice.value, true)}</TokenPrice>
         <DeltaContainer>
           {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>
@@ -279,16 +284,15 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           message={prices && prices.length === 0 ? <NoV3DataMessage /> : <MissingDataMessage />}
         />
       ) : (
-        <AnimatedInLineChart
-          data={prices}
-          getX={(p: PricePoint) => timeScale(p.timestamp)}
-          getY={(p: PricePoint) => rdScale(p.value)}
-          marginTop={margin.top}
-          curve={curveCardinal.tension(curveTension)}
-          strokeWidth={2}
-          width={width}
-          height={graphHeight}
-        >
+        <svg width={width} height={graphHeight}>
+          <AnimatedInLineChart
+            data={prices}
+            getX={getX}
+            getY={getY}
+            marginTop={margin.top}
+            curve={curve}
+            strokeWidth={2}
+          />
           {crosshair !== null ? (
             <g>
               <AxisBottom
@@ -329,9 +333,9 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
                 left={crosshair}
                 top={rdScale(displayPrice.value) + margin.top}
                 size={50}
-                fill={theme.accentActive}
+                fill={theme.accentAction}
                 stroke={theme.backgroundOutline}
-                strokeWidth={2}
+                strokeWidth={0.5}
               />
             </g>
           ) : (
@@ -348,7 +352,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
             onMouseMove={handleHover}
             onMouseLeave={resetDisplay}
           />
-        </AnimatedInLineChart>
+        </svg>
       )}
       <TimeOptionsWrapper>
         <TimeOptionsContainer>

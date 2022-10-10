@@ -174,7 +174,6 @@ const ListNumberCell = styled(Cell)<{ header: boolean }>`
   color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
   font-size: 14px;
-  height: ${({ header }) => (header ? '48px' : '60px')};
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
@@ -200,7 +199,7 @@ const MarketCapCell = styled(DataCell)`
 const NameCell = styled(Cell)`
   justify-content: flex-start;
   padding: 0px 8px;
-  min-width: 200px;
+  min-width: 240px;
   gap: 8px;
 `
 const PriceCell = styled(DataCell)`

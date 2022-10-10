@@ -1,15 +1,24 @@
-import { AddressZero } from '@ethersproject/constants'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
+import { USDC_MAINNET } from 'constants/tokens'
 
 import { currencyAmountToPreciseFloat, formatDollar } from './formatDollarAmt'
+
 describe('currencyAmountToPreciseFloat', () => {
+  it('small number', () => {
+    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '20000', '7')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(0.00285)
+  })
+  it('tiny number', () => {
+    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '2', '7')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(0.000000285)
+  })
   it('lots of decimals', () => {
-    const currencyAmount = CurrencyAmount.fromFractionalAmount(new Token(1, AddressZero, 0), 101230, 7)
-    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(14461.42857142857)
+    const currencyAmount = CurrencyAmount.fromFractionalAmount(USDC_MAINNET, '200000000', '7')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(28.571)
   })
   it('integer', () => {
-    const currencyAmount = CurrencyAmount.fromRawAmount(new Token(1, AddressZero, 0), 101230)
-    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(101230)
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '20000000')
+    expect(currencyAmountToPreciseFloat(currencyAmount)).toEqual(20.0)
   })
 })
 
@@ -30,8 +39,14 @@ describe('formatDollar for a price', () => {
   it('num >= 0.1 && num < 1.05', () => {
     expect(formatDollar(0.812831, true)).toEqual('$0.813')
   })
+  it('number is greater than 1 million', () => {
+    expect(formatDollar(11192312.408, true)).toEqual('$1.12e+7')
+  })
+  it('number in the thousands', () => {
+    expect(formatDollar(1234.408, true)).toEqual('$1,234.41')
+  })
   it('number is greater than 1.05', () => {
-    expect(formatDollar(102312.408, true)).toEqual('$102312.41')
+    expect(formatDollar(102312.408, true)).toEqual('$102,312.41')
   })
 })
 

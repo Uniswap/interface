@@ -91,6 +91,7 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     tokenAmount.currency.address.toLowerCase() === nativeCurrencyAmount.currency.wrapped.address.toLowerCase()
 
   if (
+    (!tokenAmount && !nativeCurrencyAmount) ||
     (!tokenAmount && !tokenIsWrappedNative && !isNative) ||
     (!isNative && !tokenIsWrappedNative && tokenAmount?.equalTo(0)) ||
     (isNative && tokenAmount?.equalTo(0) && nativeCurrencyAmount?.equalTo(0))
@@ -130,8 +131,8 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     <BalancesCard>
       <TotalBalanceSection>
         <Trans>Your balance</Trans>
-        {currencies.map((props) => (
-          <BalanceRow {...props} key={props.currency.wrapped.address} />
+        {currencies.map((props, i) => (
+          <BalanceRow {...props} key={props.currency.wrapped.address + i} />
         ))}
       </TotalBalanceSection>
     </BalancesCard>
