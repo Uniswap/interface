@@ -6,7 +6,7 @@ import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
+import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
@@ -30,6 +30,7 @@ import {
   filterTimeAtom,
   sortAscendingAtom,
   sortMethodAtom,
+  TokenSortMethod,
   useIsFavorited,
   useSetSortMethod,
   useToggleFavorite,
@@ -310,7 +311,7 @@ const IconLoadingBubble = styled(LoadingBubble)`
   border-radius: 50%;
   width: 24px;
 `
-const SparkLineLoadingBubble = styled(LongLoadingBubble)`
+export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
@@ -395,7 +396,7 @@ export function TokenRow({
   marketCap: ReactNode
   price: ReactNode
   percentChange: ReactNode
-  sparkLine: ReactNode
+  sparkLine?: ReactNode
   tokenInfo: ReactNode
   volume: ReactNode
   last?: boolean
@@ -466,6 +467,7 @@ interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
   token: NonNullable<TopToken>
+  sparklineMap: SparklineMap
 }
 
 /* Loaded State: row component with token information */
@@ -477,6 +479,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const isFavorited = useIsFavorited(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
+  const sortAscending = useAtomValue(sortAscendingAtom)
 
   const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
   const filterNetwork = lowercaseChainName.toUpperCase()
@@ -515,7 +518,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
           }
-          listNumber={tokenListIndex + 1}
+          listNumber={sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1}
           tokenInfo={
             <ClickableName>
               <LogoContainer>
@@ -558,15 +561,18 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           sparkLine={
             <SparkLine>
               <ParentSize>
-                {({ width, height }) => (
-                  <SparklineChart
-                    width={width}
-                    height={height}
-                    tokenData={token}
-                    pricePercentChange={token.market?.pricePercentChange?.value}
-                    timePeriod={timePeriod}
-                  />
-                )}
+                {({ width, height }) =>
+                  props.sparklineMap && (
+                    <SparklineChart
+                      width={width}
+                      height={height}
+                      tokenData={token}
+                      pricePercentChange={token.market?.pricePercentChange?.value}
+                      timePeriod={timePeriod}
+                      sparklineMap={props.sparklineMap}
+                    />
+                  )
+                }
               </ParentSize>
             </SparkLine>
           }

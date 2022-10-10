@@ -3,15 +3,13 @@ import { showFavoritesAtom } from 'components/Tokens/state'
 import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
 import { validateUrlChainParam } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useCallback, useRef } from 'react'
+import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
-
-const LOADING_ROWS_COUNT = 3
 
 const GridContainer = styled.div`
   display: flex;
@@ -58,13 +56,19 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
-const LoadingRows = (rowCount?: number) =>
-  Array(rowCount ?? PAGE_SIZE)
-    .fill(null)
-    .map((_, index) => {
-      return <LoadingRow key={index} />
-    })
-const LoadingMoreRows = LoadingRows(LOADING_ROWS_COUNT)
+const LoadingRowsWrapper = styled.div`
+  margin-top: 8px;
+`
+
+const LoadingRows = (rowCount?: number) => (
+  <LoadingRowsWrapper>
+    {Array(rowCount ?? PAGE_SIZE)
+      .fill(null)
+      .map((_, index) => {
+        return <LoadingRow key={index} />
+      })}
+  </LoadingRowsWrapper>
+)
 
 export function LoadingTokenTable({ rowCount }: { rowCount?: number }) {
   return (
@@ -75,73 +79,51 @@ export function LoadingTokenTable({ rowCount }: { rowCount?: number }) {
   )
 }
 
-export default function TokenTable() {
+export default function TokenTable({ setRowCount }: { setRowCount: (c: number) => void }) {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const { error, loading, tokens, hasMore, loadMoreTokens, loadingRowCount } = useTopTokens(chainName)
-  const showMoreLoadingRows = Boolean(loading && hasMore)
-
-  const observer = useRef<IntersectionObserver>()
-  const lastTokenRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (loading) return
-      if (observer.current) observer.current.disconnect()
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          loadMoreTokens()
-        }
-      })
-      if (node) observer.current.observe(node)
-    },
-    [loading, hasMore, loadMoreTokens]
-  )
+  const { tokens, sparklines } = useTopTokens(chainName)
+  setRowCount(tokens?.length ?? PAGE_SIZE)
 
   /* loading and error state */
-  if (loading && (!tokens || tokens?.length === 0)) {
-    return <LoadingTokenTable rowCount={loadingRowCount} />
+  if (!tokens) {
+    return (
+      <NoTokensState
+        message={
+          <>
+            <AlertTriangle size={16} />
+            <Trans>An error occurred loading tokens. Please try again.</Trans>
+          </>
+        }
+      />
+    )
+  } else if (tokens?.length === 0) {
+    return showFavorites ? (
+      <NoTokensState message={<Trans>You have no favorited tokens</Trans>} />
+    ) : (
+      <NoTokensState message={<Trans>No tokens found</Trans>} />
+    )
   } else {
-    if (error || !tokens) {
-      return (
-        <NoTokensState
-          message={
-            <>
-              <AlertTriangle size={16} />
-              <Trans>An error occurred loading tokens. Please try again.</Trans>
-            </>
-          }
-        />
-      )
-    } else if (tokens?.length === 0) {
-      return showFavorites ? (
-        <NoTokensState message={<Trans>You have no favorited tokens</Trans>} />
-      ) : (
-        <NoTokensState message={<Trans>No tokens found</Trans>} />
-      )
-    } else {
-      return (
-        <>
-          <GridContainer>
-            <HeaderRow />
-            <TokenDataContainer>
-              {tokens.map(
-                (token, index) =>
-                  token && (
-                    <LoadedRow
-                      key={token?.address}
-                      tokenListIndex={index}
-                      tokenListLength={tokens.length}
-                      token={token}
-                      ref={index + 1 === tokens.length ? lastTokenRef : undefined}
-                    />
-                  )
-              )}
-              {showMoreLoadingRows && LoadingMoreRows}
-            </TokenDataContainer>
-          </GridContainer>
-        </>
-      )
-    }
+    return (
+      <GridContainer>
+        <HeaderRow />
+        <TokenDataContainer>
+          {tokens.map(
+            (token, index) =>
+              token && (
+                <LoadedRow
+                  key={token?.address}
+                  tokenListIndex={index}
+                  tokenListLength={tokens.length}
+                  token={token}
+                  sparklineMap={sparklines}
+                />
+              )
+          )}
+        </TokenDataContainer>
+      </GridContainer>
+    )
   }
 }

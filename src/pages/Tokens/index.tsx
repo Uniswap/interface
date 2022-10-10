@@ -10,10 +10,11 @@ import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
+import { PAGE_SIZE } from 'graphql/data/TopTokens'
 import { chainIdToBackendName, isValidBackendChainName } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
-import { useEffect } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -76,6 +77,8 @@ const Tokens = () => {
   const { chainId: connectedChainId } = useWeb3React()
   const connectedChainName = chainIdToBackendName(connectedChainId)
 
+  const [rowCount, setRowCount] = useState(PAGE_SIZE)
+
   useEffect(() => {
     resetFilterString()
   }, [location, resetFilterString])
@@ -110,7 +113,9 @@ const Tokens = () => {
             <SearchBar />
           </SearchContainer>
         </FiltersWrapper>
-        <TokenTable />
+        <Suspense fallback={<LoadingTokenTable rowCount={rowCount} />}>
+          <TokenTable setRowCount={setRowCount} />
+        </Suspense>
       </ExploreContainer>
     </Trace>
   )
