@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { subhead } from 'nft/css/common.css'
-import { breakpoints, sprinkles, vars } from 'nft/css/sprinkles.css'
+import { breakpoints, sprinkles } from 'nft/css/sprinkles.css'
 
 export const bagContainer = style([
   sprinkles({
@@ -33,29 +32,5 @@ export const assetsContainer = style([
   {
     '::-webkit-scrollbar': { display: 'none' },
     scrollbarWidth: 'none',
-  },
-])
-
-export const header = style([
-  subhead,
-  sprinkles({
-    color: 'textPrimary',
-    justifyContent: 'space-between',
-  }),
-  {
-    lineHeight: '24px',
-  },
-])
-
-export const clearAll = style([
-  sprinkles({
-    color: 'textTertiary',
-    cursor: 'pointer',
-    fontWeight: 'semibold',
-  }),
-  {
-    ':hover': {
-      color: vars.color.blue400,
-    },
   },
 ])

@@ -1,11 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import {
-  LARGE_MEDIA_BREAKPOINT,
-  MAX_WIDTH_MEDIA_BREAKPOINT,
-  MOBILE_MEDIA_BREAKPOINT,
-  SMALL_MEDIA_BREAKPOINT,
-} from 'components/Tokens/constants'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
@@ -31,37 +25,28 @@ import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
+const Hr = styled.hr`
+  background-color: ${({ theme }) => theme.textSecondary};
+  opacity: 24%;
+  border: none;
+  height: 0.5px;
+`
 export const TokenDetailsLayout = styled.div`
   display: flex;
-  gap: 60px;
-  padding: 68px 20px;
-  width: 100%;
+  padding: 0 8px;
   justify-content: center;
+  width: 100%;
 
-  @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    gap: 16px;
+    padding: 0 16px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    gap: 20px;
+    padding: 48px 20px;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.xl}px) {
     gap: 40px;
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding-top: 48px;
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: 20px;
-  }
-
-  @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    gap: 0px;
-  }
-
-  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    padding-left: 8px;
-    padding-right: 8px;
   }
 `
 export const LeftPanel = styled.div`
@@ -70,13 +55,13 @@ export const LeftPanel = styled.div`
   overflow: hidden;
 `
 export const RightPanel = styled.div`
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 20px;
   width: ${WIDGET_WIDTH}px;
 
-  @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    display: none;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    display: flex;
   }
 `
 
@@ -177,6 +162,7 @@ export default function TokenDetails() {
               priceHigh52W={tokenQueryData.market?.priceHigh52W?.value}
               priceLow52W={tokenQueryData.market?.priceLow52W?.value}
             />
+            <Hr />
             <AboutSection
               address={tokenQueryData.address ?? ''}
               description={tokenQueryData.project?.description}
