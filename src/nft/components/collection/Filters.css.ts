@@ -52,6 +52,10 @@ export const detailsOpen = style([
   sprinkles({
     overflow: 'hidden',
   }),
+  {
+    borderTop: '1px solid',
+    borderColor: themeVars.colors.backgroundOutline,
+  },
 ])
 
 export const filterDropDowns = style([
@@ -63,7 +67,6 @@ export const filterDropDowns = style([
     '::-webkit-scrollbar': { display: 'none' },
     scrollbarWidth: 'none',
     borderBottom: '1px solid',
-
     borderColor: themeVars.colors.backgroundOutline,
   },
 ])

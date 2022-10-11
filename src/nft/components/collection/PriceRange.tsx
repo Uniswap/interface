@@ -67,23 +67,33 @@ export const PriceRange = () => {
             backgroundColor="transparent"
             placeholder={`${priceRangeLow}`}
             onChange={(v: FormEvent<HTMLInputElement>) => {
-              // If a value is manually changed, reset the sliders.
-              setPrevMinMax([0, 100])
+              const [, prevMax] = prevMinMax
+
+              if (v.currentTarget.value && parseInt(v.currentTarget.value) > parseInt(priceRangeLow)) {
+                const range = parseInt(v.currentTarget.value) - parseInt(priceRangeLow)
+                const newLow = 100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow)))
+
+                setPrevMinMax([newLow, prevMax])
+              } else {
+                setPrevMinMax([0, prevMax])
+              }
+
+              setMinPrice(v.currentTarget.value)
+
+              // setPrevMinMax([newLow, prevMax])
 
               // set the value of minprice and range for querying
-              setMinPrice(v.currentTarget.value)
-              setPriceRangeLow(v.currentTarget.value)
 
               // If we are updating the min price and the max price has been adjusted via the slider
               // We need to maintain that min price when we reset
-              if (maxPrice !== '') {
-                setMaxSet(true)
-                setPriceRangeHigh(maxPrice)
-              }
+              // if (maxPrice !== '') {
+              //   setMaxSet(true)
+              //   setPriceRangeHigh(maxPrice)
+              // }
 
               // if the user manually inputs a value, we want this value to persist when moving a slider
               // back to the start state
-              setMinSet(v.currentTarget.value !== '')
+              // setMinSet(v.currentTarget.value !== '')
 
               scrollToTop()
             }}
@@ -111,18 +121,19 @@ export const PriceRange = () => {
             placeholder={priceRangeHigh}
             value={maxPrice}
             onChange={(v: FormEvent<HTMLInputElement>) => {
-              // See above comments for explanation on code logic
-              setPrevMinMax([0, 100])
-              setMaxPrice(v.currentTarget.value)
-              setPriceRangeHigh(v.currentTarget.value)
-              setMaxSet(v.currentTarget.value !== '')
+              const [prevMin] = prevMinMax
 
-              if (minPrice !== '') {
-                setMinSet(true)
-                setPriceRangeLow(minPrice)
+              if (v.currentTarget.value && parseInt(v.currentTarget.value) > parseInt(priceRangeLow)) {
+                const range = parseInt(priceRangeHigh) - parseInt(v.currentTarget.value)
+                const newMax = 100 - 100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow)))
+
+                setPrevMinMax([prevMin, newMax])
+              } else {
+                setPrevMinMax([prevMin, 100])
               }
 
-              scrollToTop()
+              setMaxPrice(v.currentTarget.value)
+              // scrollToTop()
             }}
             onFocus={handleFocus}
             onBlur={handleBlur}
@@ -165,10 +176,10 @@ export const PriceRange = () => {
 
             // if they move the slider back to the beginning and have NOT manually set a value, reset the minprice.
             // Similar logic for max
-            if (newMin === 0 && !minSet) {
+            if (newMin === 0) {
               setMinPrice('')
             }
-            if (newMax === 100 && !maxSet) {
+            if (newMax === 100) {
               setMaxPrice('')
             }
 
