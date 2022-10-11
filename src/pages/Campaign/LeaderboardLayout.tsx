@@ -53,7 +53,7 @@ export default function LeaderboardLayout({
   )
 
   const [currentPage, setCurrentPage] = useSelectedCampaignLeaderboardPageNumberManager()
-  const [currentPageLuckywinner, setCurrentPageLuckywinner] = useSelectedCampaignLuckyWinnerPageNumber()
+  const [currentPageLuckyWinner, setCurrentPageLuckyWinner] = useSelectedCampaignLuckyWinnerPageNumber()
   const [leaderboardSearchValue, setLeaderboardSearchValue] = useSelectedCampaignLeaderboardLookupAddressManager()
   const [luckyWinnersSearchValue, setLuckyWinnersSearchValue] = useSelectedCampaignLuckyWinnersLookupAddressManager()
   const [searchValue, setSearchValue] =
@@ -89,8 +89,8 @@ export default function LeaderboardLayout({
 
   useEffect(() => {
     setCurrentPage(0)
-    setCurrentPageLuckywinner(0)
-  }, [selectedCampaign, setCurrentPageLuckywinner, setCurrentPage])
+    setCurrentPageLuckyWinner(0)
+  }, [selectedCampaign, setCurrentPageLuckyWinner, setCurrentPage])
 
   const leaderboardTableBody = (selectedCampaignLeaderboard?.rankings ?? []).map((data, index) => {
     const isThisRankingEligible = Boolean(selectedCampaign && data.totalPoint >= selectedCampaign.tradingVolumeRequired)
@@ -176,7 +176,7 @@ export default function LeaderboardLayout({
   }
 
   const onPageChange = (pageNumber: number) => {
-    if (type === 'lucky_winner') setCurrentPageLuckywinner(pageNumber - 1)
+    if (type === 'lucky_winner') setCurrentPageLuckyWinner(pageNumber - 1)
     else setCurrentPage(pageNumber - 1)
   }
 
@@ -233,7 +233,7 @@ export default function LeaderboardLayout({
       <Pagination
         onPageChange={onPageChange}
         totalCount={totalItems}
-        currentPage={type === 'lucky_winner' ? currentPageLuckywinner + 1 : +currentPage + 1}
+        currentPage={type === 'lucky_winner' ? currentPageLuckyWinner + 1 : +currentPage + 1}
         pageSize={CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE}
         style={{ padding: '0' }}
       />
