@@ -36,10 +36,6 @@ export const PriceRange = () => {
     setMaxPrice('')
     setPriceRangeLow('')
     setPriceRangeHigh('')
-
-    if (minPrice === '' && maxPrice === '') {
-      setPrevMinMax([0, 100])
-    }
   }, [location.pathname])
 
   const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
