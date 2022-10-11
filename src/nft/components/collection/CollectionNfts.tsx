@@ -283,7 +283,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       const maxValue = formatWeiToDecimal(collectionNfts[maxIndex]?.priceInfo.ETHPrice ?? '')
 
       if (minPrice === '') {
-        setPriceRangeLow(lowValue.toFixed(2))
+        setPriceRangeLow(lowValue?.toFixed(2))
       }
 
       if (maxPrice === '') {
@@ -298,7 +298,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       const maxValue = formatWeiToDecimal(collectionNfts[maxIndex]?.priceInfo.ETHPrice ?? '')
 
       if (minPrice === '') {
-        setPriceRangeLow(lowValue.toFixed(2))
+        setPriceRangeLow(lowValue?.toFixed(2))
       }
 
       if (maxPrice === '') {
