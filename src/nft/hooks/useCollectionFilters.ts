@@ -84,7 +84,7 @@ export const useCollectionFilters = create<CollectionFilters>()(
         set(({ traits }) => ({
           traits: traits.filter((x) => JSON.stringify(x) !== JSON.stringify(trait)),
         })),
-      reset: () => set(() => ({ traits: [], minRarity: '', maxRarity: '', markets: [] })),
+      reset: () => set(() => ({ traits: [], minRarity: '', maxRarity: '', markets: [], minPrice: '', maxPrice: '' })),
       setMinPrice: (price) => set(() => ({ minPrice: price })),
       setMaxPrice: (price) => set(() => ({ maxPrice: price })),
       setMinRarity: (range) => set(() => ({ minRarity: range })),

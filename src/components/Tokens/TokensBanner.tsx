@@ -74,7 +74,7 @@ export default function TokensBanner() {
     <PopupContainer show={showTokensPromoBanner} onClick={navigateToExplorePage}>
       <Header>
         <HeaderText to={'/tokens'}>
-          <Trans>Explore Top Tokens</Trans>
+          <Trans>Explore Top Tokens on Uniswap</Trans>
         </HeaderText>
         <X
           size={20}
@@ -89,7 +89,7 @@ export default function TokensBanner() {
       </Header>
 
       <Description to={'/tokens'}>
-        <Trans>Check out the new explore tab to discover and learn more</Trans>
+        <Trans>Sort and filter assets across networks on the new Tokens page.</Trans>
       </Description>
     </PopupContainer>
   )

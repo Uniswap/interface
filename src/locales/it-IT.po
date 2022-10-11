@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-21 21:05\n"
+"PO-Revision-Date: 2022-10-11 02:57\n"
 "Last-Translator: \n"
 "Language: it_IT\n"
 "Language-Team: Italian\n"
@@ -20,10 +20,6 @@ msgstr ""
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
 msgstr "$-"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "$<0/>"
-msgstr "$<0/>"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/swap/GasEstimateBadge.tsx
@@ -62,6 +58,10 @@ msgstr "0 UNI / settimana"
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
 msgstr "Volume 24 ore"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+msgstr "Il volume 24 ore è l'importo dell'asset che è stato scambiato su Uniswap v3 nelle ultime 24 ore."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -240,7 +240,7 @@ msgid "Amount"
 msgstr "Importo"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
-msgid "An error occured loading tokens. Please try again."
+msgid "An error occurred loading tokens. Please try again."
 msgstr "Si è verificato un errore durante il caricamento dei token. Per favore riprova."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
@@ -374,9 +374,12 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Aggiungendo questa lista si suppone implicitamente che i dati siano corretti. Chiunque può creare una lista, tra cui la creazione di versioni false di liste esistenti ed elenchi che affermano di rappresentare progetti che non ne hanno uno."
 
 #: src/components/WalletModal/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Collegando un portafoglio, accetti <0>Termini di servizio</0> di Uniswap Labs e riconosci di aver letto e compreso l'Esonero di responsabilità del protocollo <1></1>."
+
+#: src/components/WalletModal/index.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
+msgstr "Collegando un portafoglio, accetti i <0>Termini di servizio</0> di Uniswap Labs e acconsenti alla sua <1>Informativa sulla privacy</1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -605,11 +608,13 @@ msgid "Contract address"
 msgstr "Indirizzo del contratto"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Copiato!"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 msgid "Copy"
 msgstr "copia"
 
@@ -889,10 +894,6 @@ msgstr "L'esecuzione di questa proposta attiverà i calldata on-chain."
 msgid "Execution Submitted"
 msgstr "Esecuzione inviata"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Expanded results from inactive Token Lists"
-msgstr "Risultati espansi dalle liste Token inattive"
-
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
 msgstr "Uscita prevista"
@@ -913,10 +914,9 @@ msgstr "Scaduto"
 msgid "Explore"
 msgstr "Esplorare"
 
-#: src/pages/Tokens/index.tsx
-#: src/pages/Tokens/index.tsx
-msgid "Explore Tokens"
-msgstr "Esplora i token"
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Explore Top Tokens on Uniswap"
+msgstr "Esplora i migliori token su Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1130,6 +1130,10 @@ msgstr "Tema chiaro"
 msgid "Light theme"
 msgstr "Tema leggero"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Links"
+msgstr "Collegamenti"
+
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
@@ -1262,6 +1266,11 @@ msgstr "Min:"
 msgid "Minimum received"
 msgstr "Minimo ricevuto"
 
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Missing chart data"
+msgstr "Dati del grafico mancanti"
+
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Dipendenze mancanti"
@@ -1270,7 +1279,7 @@ msgstr "Dipendenze mancanti"
 msgid "More"
 msgstr "Altro"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "NFT Collections"
 msgstr "Collezioni NFT"
 
@@ -1297,6 +1306,10 @@ msgstr "Le commissioni di rete superano il 50% dell'importo dello swap!"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Nuova Posizione"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No NFTs in"
+msgstr "Nessun NFT in"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -1339,7 +1352,7 @@ msgstr "Nessuna informazione sul token disponibile"
 msgid "No tokens found"
 msgstr "Nessun token trovato"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "No tokens found."
 msgstr "Nessun token trovato."
 
@@ -1468,11 +1481,11 @@ msgstr "Raggruppato {0}:"
 msgid "Pools"
 msgstr "Piscine"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular NFT collections"
 msgstr "Collezioni NFT popolari"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular tokens"
 msgstr "Token popolari"
 
@@ -1577,10 +1590,6 @@ msgstr "In coda"
 msgid "Rates"
 msgstr "Tariffe"
 
-#: src/components/Tokens/TokenDetails/About.tsx
-msgid "Read more"
-msgstr "Leggi di più"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Leggi tutto su UNI"
@@ -1601,7 +1610,7 @@ msgstr "Per saperne di più sugli asset non supportati"
 msgid "Recent Transactions"
 msgstr "Transazioni Recenti"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Recent searches"
 msgstr "Ricerche recenti"
 
@@ -1719,10 +1728,6 @@ msgstr "Se stesso"
 msgid "Self Delegate"
 msgstr "Auto-Delegato"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "Sell NFTs"
-msgstr "Vendi NFT"
-
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1755,6 +1760,10 @@ msgstr "Mostra annullata"
 msgid "Show closed positions"
 msgstr "Mostra posizioni chiuse"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Show more"
+msgstr "Mostra di più"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
 msgstr "Semplice"
@@ -1770,6 +1779,14 @@ msgstr "Alcuni asset non sono disponibili attraverso questa interfaccia perché 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Qualcosa è andato storto"
+
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Sort and filter assets across networks on the new Tokens page."
+msgstr "Ordina e filtra le risorse tra le reti nella nuova pagina Token."
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Stats"
+msgstr "Statistiche"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1806,7 +1823,7 @@ msgstr "Fornitura di {0} {1} e {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/index.tsx
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1847,6 +1864,10 @@ msgstr "Scambio di {0} {1} per {2} {3}"
 #: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "Simbolo non trovato"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "TVL"
+msgstr "TVL"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1962,14 +1983,6 @@ msgstr "Impossibile inviare la transazione perché il termine è scaduto. Si pre
 msgid "There is no liquidity data."
 msgstr "Non ci sono dati sulla liquidità."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "There was an error fetching your balance"
-msgstr "Si è verificato un errore durante il recupero del saldo"
-
-#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {0} balance"
-msgstr "Si è verificato un errore durante il caricamento del saldo {0}"
-
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Questo indirizzo è bloccato sull'interfaccia di Uniswap Labs perché è associato a uno o più"
@@ -1993,6 +2006,10 @@ msgstr "Questo percorso ottimizza la tua produzione totale considerando percorsi
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Questo token non viene visualizzato negli elenchi di token attivi. Assicurati che questo sia il token che vuoi scambiare."
+
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
+msgstr "Questo token non ha dati grafici perché non è stato scambiato su Uniswap v3"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "This token is not supported in the Uniswap Labs app"
@@ -2033,23 +2050,20 @@ msgid "Token not supported"
 msgstr "Token non supportato"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Token"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "Token da elenchi inattivi. Importa token specifici di seguito o fai clic su Gestisci per attivare più elenchi."
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "I pool migliori"
 
-#: src/components/Tokens/TokenDetails/StatsSection.tsx
-msgid "Total Value Locked"
-msgstr "Valore totale bloccato"
+#: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
+msgid "Top tokens on Uniswap"
+msgstr "I migliori token su Uniswap"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -2058,6 +2072,10 @@ msgstr "Totale depositato"
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
 msgstr "Depositi totali"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
+msgstr "Il valore totale bloccato (TVL) è l'importo dell'asset che si trova attualmente in un pool di liquidità Uniswap v3."
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
@@ -2263,9 +2281,17 @@ msgstr "Prezzo {0} V3:"
 msgid "View accrued fees and analytics<0>↗</0>"
 msgstr "Visualizza le commissioni e le analisi accumulate<0>↗</0>"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "View and sell NFTs"
+msgstr "Visualizza e vendi NFT"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "Visualizza elenco"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View more analytics"
+msgstr "Visualizza più analisi"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -2278,10 +2304,6 @@ msgstr "Visualizza su Etherscan"
 msgid "View on Explorer"
 msgstr "Visualizza su Explorer"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "View token analytics"
-msgstr "Visualizza l'analisi dei token"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2290,6 +2312,10 @@ msgstr "Visualizza l'analisi dei token"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Visualizza transazione su Explorer"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
+msgstr "Il volume è l'importo dell'asset che è stato scambiato su Uniswap v3 durante il periodo di tempo selezionato."
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -2473,10 +2499,6 @@ msgid "You have no favorited tokens"
 msgstr "Non hai token preferiti"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
-msgid "You may have lost your network connection, or {label} might be down right now."
-msgstr "Potresti aver perso la connessione di rete o {label} potrebbe essere inattivo in questo momento."
-
-#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "Potresti aver perso la connessione di rete."
 
@@ -2517,9 +2539,9 @@ msgstr "La tua liquidità V2"
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Le tue posizioni di liquidità V3 attive appariranno qui."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "Your balances by network"
-msgstr "I tuoi saldi per rete"
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
+msgid "Your balance"
+msgstr "Il tuo bilancio"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2608,6 +2630,11 @@ msgstr "Le tue transazioni appariranno qui..."
 msgid "Your unclaimed UNI"
 msgstr "La tua UNI non richiesta"
 
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+msgid "Your {0} balance"
+msgstr "Il tuo saldo {0}"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "dopo lo slittamento"
@@ -2684,8 +2711,8 @@ msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Importa token} other {Importa token}}"
 
 #: src/constants/tokenSafety.tsx
-msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
-msgstr "{0, plural, =1 {Questo token non è verificato} other {Questi token non sono verificati}}"
+msgid "{0, plural, =1 {This token isn't verified.} other {These tokens aren't verified.}}"
+msgstr "{0, plural, =1 {Questo token non è verificato.} other {Questi token non sono verificati.}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
@@ -2757,10 +2784,6 @@ msgstr "{0} token LP UNI-V2 disponibili"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} Voti"
-
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "{0} all balances"
-msgstr "{0} tutti i saldi"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2838,6 +2861,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} gettoni"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} might be down right now, or you may have lost your network connection."
+msgstr "{label} potrebbe essere inattivo in questo momento o potresti aver perso la connessione di rete."
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"

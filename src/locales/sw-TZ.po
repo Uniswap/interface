@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-21 21:05\n"
+"PO-Revision-Date: 2022-10-11 02:57\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -20,10 +20,6 @@ msgstr ""
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
 msgstr "$ -"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "$<0/>"
-msgstr "$<0/>"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/swap/GasEstimateBadge.tsx
@@ -62,6 +58,10 @@ msgstr "0 UNI / wiki"
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
 msgstr "Kiasi cha 24H"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+msgstr "Kiasi cha 24H ni kiasi cha mali ambacho kimeuzwa kwenye Uniswap v3 katika saa 24 zilizopita."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -240,7 +240,7 @@ msgid "Amount"
 msgstr "Kiasi"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
-msgid "An error occured loading tokens. Please try again."
+msgid "An error occurred loading tokens. Please try again."
 msgstr "Hitilafu imetokea wakati wa kupakia tokeni. Tafadhali jaribu tena."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
@@ -374,9 +374,12 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Kwa kuongeza orodha hii unaamini kabisa kuwa data ni sahihi. Mtu yeyote anaweza kuunda orodha, pamoja na kuunda matoleo bandia ya orodha zilizopo na orodha ambazo zinadai kuwakilisha miradi ambayo haina moja."
 
 #: src/components/WalletModal/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Kwa kuunganisha mkoba, unakubaliana na Uniswap Labs ' <0>Masharti ya Huduma</0> na kutambua kwamba umesoma na kuelewa Uniswap <1>Itifaki Kanusho</1>."
+
+#: src/components/WalletModal/index.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
+msgstr "Kwa kuunganisha pochi, unakubali Sheria na Masharti <0>ya</0> Labs na kukubali <1>Sera yake ya Faragha</1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -605,11 +608,13 @@ msgid "Contract address"
 msgstr "Anwani ya mkataba"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Imenakiliwa!"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 msgid "Copy"
 msgstr "Nakili"
 
@@ -889,10 +894,6 @@ msgstr "Utekelezaji wa pendekezo hili utaweka data ya simu kwenye mnyororo."
 msgid "Execution Submitted"
 msgstr "Utekelezaji Umewasilishwa"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Expanded results from inactive Token Lists"
-msgstr "Matokeo yaliyopanuliwa kutoka kwa Orodha za Ishara ambazo hazifanyi kazi"
-
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
 msgstr "Pato Linalotarajiwa"
@@ -913,10 +914,9 @@ msgstr "Imeisha muda"
 msgid "Explore"
 msgstr "Chunguza"
 
-#: src/pages/Tokens/index.tsx
-#: src/pages/Tokens/index.tsx
-msgid "Explore Tokens"
-msgstr "Chunguza Tokeni"
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Explore Top Tokens on Uniswap"
+msgstr "Gundua Tokeni Kuu kwenye Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1130,6 +1130,10 @@ msgstr "Mandhari mepesi"
 msgid "Light theme"
 msgstr "Mandhari nyepesi"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Links"
+msgstr "Viungo"
+
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
@@ -1262,6 +1266,11 @@ msgstr "Dak:"
 msgid "Minimum received"
 msgstr "Kiwango cha chini kimepokelewa"
 
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Missing chart data"
+msgstr "Data ya chati haipo"
+
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Kukosa utegemezi"
@@ -1270,7 +1279,7 @@ msgstr "Kukosa utegemezi"
 msgid "More"
 msgstr "Zaidi"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "NFT Collections"
 msgstr "Mikusanyiko ya NFT"
 
@@ -1297,6 +1306,10 @@ msgstr "Ada za mtandao zinazidi 50% ya kiasi cha ubadilishaji!"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Nafasi mpya"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No NFTs in"
+msgstr "Hakuna NFTs ndani"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -1339,7 +1352,7 @@ msgstr "Hakuna maelezo ya tokeni yanayopatikana"
 msgid "No tokens found"
 msgstr "Hakuna tokeni zilizopatikana"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "No tokens found."
 msgstr "Hakuna tokeni zilizopatikana."
 
@@ -1468,11 +1481,11 @@ msgstr "Iliyounganishwa {0}:"
 msgid "Pools"
 msgstr "Mabwawa"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular NFT collections"
 msgstr "Mikusanyiko maarufu ya NFT"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular tokens"
 msgstr "Ishara maarufu"
 
@@ -1577,10 +1590,6 @@ msgstr "Kupanga foleni"
 msgid "Rates"
 msgstr "Viwango"
 
-#: src/components/Tokens/TokenDetails/About.tsx
-msgid "Read more"
-msgstr "Soma zaidi"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Soma zaidi kuhusu UNI"
@@ -1601,7 +1610,7 @@ msgstr "Soma zaidi kuhusu mali zisizoungwa mkono"
 msgid "Recent Transactions"
 msgstr "Shughuli za Hivi Karibuni"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Recent searches"
 msgstr "Utafutaji wa hivi majuzi"
 
@@ -1719,10 +1728,6 @@ msgstr "Binafsi"
 msgid "Self Delegate"
 msgstr "Ujumbe wa Kujitegemea"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "Sell NFTs"
-msgstr "Uza NFTs"
-
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1755,6 +1760,10 @@ msgstr "Onyesho Limeghairiwa"
 msgid "Show closed positions"
 msgstr "Onyesha nafasi zilizofungwa"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Show more"
+msgstr "Onyesha zaidi"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
 msgstr "Rahisi"
@@ -1770,6 +1779,14 @@ msgstr "Mali zingine hazipatikani kupitia kiolesura hiki kwa sababu zinaweza kuf
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Hitilafu imetokea"
+
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Sort and filter assets across networks on the new Tokens page."
+msgstr "Panga na uchuje vipengee kwenye mitandao kwenye ukurasa mpya wa Tokeni."
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Stats"
+msgstr "Takwimu"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1806,7 +1823,7 @@ msgstr "Kusambaza {0} {1} na {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/index.tsx
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1847,6 +1864,10 @@ msgstr "Kubadilisha {0} {1} kwa {2} {3}"
 #: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "Alama haijapatikana"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "TVL"
+msgstr "TVL"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1962,14 +1983,6 @@ msgstr "Shughuli haikuweza kutumwa kwa sababu tarehe ya mwisho imepita. Tafadhal
 msgid "There is no liquidity data."
 msgstr "Hakuna data ya ukwasi."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "There was an error fetching your balance"
-msgstr "Kulikuwa na hitilafu katika kuleta salio lako"
-
-#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {0} balance"
-msgstr "Kulikuwa na hitilafu katika kupakia salio lako {0}"
-
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Anwani hii imezuiwa kwenye kiolesura cha Uniswap Labs kwa sababu inahusishwa na moja au zaidi"
@@ -1993,6 +2006,10 @@ msgstr "Njia hii huboresha jumla ya matokeo yako kwa kuzingatia njia zilizogawan
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Ishara hii haionekani kwenye orodha (s) zinazotumika. Hakikisha hii ndio ishara kwamba unataka kufanya biashara."
+
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
+msgstr "Tokeni hii haina data ya chati kwa sababu haijauzwa kwenye Uniswap v3"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "This token is not supported in the Uniswap Labs app"
@@ -2033,23 +2050,20 @@ msgid "Token not supported"
 msgstr "Tokeni haitumiki"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Ishara"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "Ishara kutoka orodha zisizotumika. Leta ishara maalum hapa chini au bofya Dhibiti ili kuamsha orodha zaidi."
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Mabwawa ya juu"
 
-#: src/components/Tokens/TokenDetails/StatsSection.tsx
-msgid "Total Value Locked"
-msgstr "Jumla ya Thamani Imefungwa"
+#: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
+msgid "Top tokens on Uniswap"
+msgstr "Ishara kuu kwenye Uniswap"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -2058,6 +2072,10 @@ msgstr "Jumla iliyowekwa"
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
 msgstr "Amana ya jumla"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
+msgstr "Jumla ya thamani iliyofungwa (TVL) ni kiasi cha kipengee ambacho kwa sasa kiko kwenye kundi la ukwasi la Uniswap v3."
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
@@ -2263,9 +2281,17 @@ msgstr "Bei ya V3 {0}"
 msgid "View accrued fees and analytics<0>↗</0>"
 msgstr "Angalia ada na uchanganuzi ulioongezeka <0> ↗</0>"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "View and sell NFTs"
+msgstr "Tazama na uuze NFTs"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "Angalia orodha"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View more analytics"
+msgstr "Tazama uchanganuzi zaidi"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -2278,10 +2304,6 @@ msgstr "Angalia kwenye Etherscan"
 msgid "View on Explorer"
 msgstr "Angalia kwenye Kichunguzi"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "View token analytics"
-msgstr "Tazama uchanganuzi wa tokeni"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2290,6 +2312,10 @@ msgstr "Tazama uchanganuzi wa tokeni"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Angalia shughuli kwenye Kivinjari"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
+msgstr "Kiasi ni kiasi cha kipengee ambacho kimeuzwa kwenye Uniswap v3 katika muda uliochaguliwa."
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -2473,10 +2499,6 @@ msgid "You have no favorited tokens"
 msgstr "Huna tokeni unazopenda"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
-msgid "You may have lost your network connection, or {label} might be down right now."
-msgstr "Labda umepoteza muunganisho wako wa mtandao, au {label} inaweza kuwa chini sasa hivi."
-
-#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "Labda umepoteza muunganisho wako wa mtandao."
 
@@ -2517,9 +2539,9 @@ msgstr "Ukiritimba wako wa V2"
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Nafasi zako za ukwasi za V3 zinazotumika zitaonekana hapa."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "Your balances by network"
-msgstr "Salio lako kwa mtandao"
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
+msgid "Your balance"
+msgstr "Mizani yako"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2608,6 +2630,11 @@ msgstr "Shughuli zako zitaonekana hapa ..."
 msgid "Your unclaimed UNI"
 msgstr "UNI yako isiyodaiwa"
 
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+msgid "Your {0} balance"
+msgstr "Salio lako {0}"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "baada ya kuteleza"
@@ -2684,8 +2711,8 @@ msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Leta ishara} other {Leta tokeni}}"
 
 #: src/constants/tokenSafety.tsx
-msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
-msgstr "{0, plural, =1 {Tokeni hii haijathibitishwa} other {Tokeni hizi hazijathibitishwa}}"
+msgid "{0, plural, =1 {This token isn't verified.} other {These tokens aren't verified.}}"
+msgstr "{0, plural, =1 {Tokeni hii haijathibitishwa.} other {Tokeni hizi hazijathibitishwa.}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
@@ -2757,10 +2784,6 @@ msgstr "{0} ishara za UNI-V2 LP zinapatikana"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} Kura"
-
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "{0} all balances"
-msgstr "{0} mizani yote"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2838,6 +2861,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "Ishara {activeTokensOnThisChain}"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} might be down right now, or you may have lost your network connection."
+msgstr "{label} inaweza kuwa chini sasa hivi, au unaweza kuwa umepoteza muunganisho wako wa mtandao."
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"

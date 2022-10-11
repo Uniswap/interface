@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-21 21:05\n"
+"PO-Revision-Date: 2022-10-11 02:57\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -20,10 +20,6 @@ msgstr ""
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
 msgstr "$-"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "$<0/>"
-msgstr "<0/>دولار"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/swap/GasEstimateBadge.tsx
@@ -62,6 +58,10 @@ msgstr "0 UNI / أسبوع"
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
 msgstr "حجم 24H"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+msgstr "حجم 24 ساعة هو مقدار الأصل الذي تم تداوله على Uniswap v3 خلال الـ 24 ساعة الماضية."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -240,8 +240,8 @@ msgid "Amount"
 msgstr "المبلغ"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
-msgid "An error occured loading tokens. Please try again."
-msgstr "حدث خطأ أثناء تحميل الرموز. حاول مرة اخرى."
+msgid "An error occurred loading tokens. Please try again."
+msgstr "حدث خطأ أثناء تحميل الرموز المميزة. حاول مرة اخرى."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -374,9 +374,12 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "بإضافة هذه القائمة فإنك تثق ضمنًا بأن البيانات صحيحة. ويمكن لأي شخص أن ينشئ قائمة، بما في ذلك إنشاء صيغ مزيفة من القوائم القائمة والقوائم التي تزعم أنها تمثل مشاريع لا تملك قائمة."
 
 #: src/components/WalletModal/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "من خلال ربط المحفظة ، فإنك توافق على شروط الخدمة</0> <0>وتقر بأنك قد قرأت وفهمت إخلاء مسؤولية بروتوكول <1></1>."
+
+#: src/components/WalletModal/index.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
+msgstr "من خلال ربط المحفظة ، فإنك توافق على شروط الخدمة <0>الخاصة بـ</1>Labs وتوافق على</0> سياسة الخصوصية <1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -605,11 +608,13 @@ msgid "Contract address"
 msgstr "عنوان العقد"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "نسخ!"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 msgid "Copy"
 msgstr "ينسخ"
 
@@ -889,10 +894,6 @@ msgstr "سيؤدي تنفيذ هذا الاقتراح إلى تفعيل Calldata
 msgid "Execution Submitted"
 msgstr "تم تقديم التنفيذ"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Expanded results from inactive Token Lists"
-msgstr "النتائج الموسعة من قوائم الرموز غير النشطة"
-
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
 msgstr "الناتج المتوقع"
@@ -913,10 +914,9 @@ msgstr "منتهي الصلاحية"
 msgid "Explore"
 msgstr "يكتشف"
 
-#: src/pages/Tokens/index.tsx
-#: src/pages/Tokens/index.tsx
-msgid "Explore Tokens"
-msgstr "اكتشف الرموز"
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Explore Top Tokens on Uniswap"
+msgstr "استكشف أفضل الرموز على Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1130,6 +1130,10 @@ msgstr "مظهر خفيف"
 msgid "Light theme"
 msgstr "مظهر خفيف"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Links"
+msgstr "الروابط"
+
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
@@ -1262,6 +1266,11 @@ msgstr "دقيقة:"
 msgid "Minimum received"
 msgstr "تلقى الحد الأدنى"
 
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Missing chart data"
+msgstr "بيانات الرسم البياني مفقودة"
+
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "التبعيات المفقودة"
@@ -1270,7 +1279,7 @@ msgstr "التبعيات المفقودة"
 msgid "More"
 msgstr "المزيد"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "NFT Collections"
 msgstr "مجموعات NFT"
 
@@ -1297,6 +1306,10 @@ msgstr "رسوم الشبكة تتجاوز 50٪ من مبلغ المبادلة!"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "موضع جديد"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No NFTs in"
+msgstr "لا توجد NFTs في"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -1339,7 +1352,7 @@ msgstr "لا توجد معلومات رمزية متاحة"
 msgid "No tokens found"
 msgstr "لم يتم العثور على الرموز المميزة"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "No tokens found."
 msgstr "لم يتم العثور على الرموز المميزة."
 
@@ -1468,11 +1481,11 @@ msgstr "مجمّع {0}:"
 msgid "Pools"
 msgstr "حمامات السباحة"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular NFT collections"
 msgstr "مجموعات NFT الشعبية"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular tokens"
 msgstr "الرموز الشعبية"
 
@@ -1577,10 +1590,6 @@ msgstr "قائمة الانتظار"
 msgid "Rates"
 msgstr "الأسعار"
 
-#: src/components/Tokens/TokenDetails/About.tsx
-msgid "Read more"
-msgstr "اقرأ أكثر"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "اقرأ المزيد عن UNI"
@@ -1601,7 +1610,7 @@ msgstr "اقرأ المزيد عن الأصول غير المدعومة"
 msgid "Recent Transactions"
 msgstr "المعاملات الأخيرة"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Recent searches"
 msgstr "عمليات البحث الأخيرة"
 
@@ -1719,10 +1728,6 @@ msgstr "نفسه"
 msgid "Self Delegate"
 msgstr "تفويض ذاتي"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "Sell NFTs"
-msgstr "بيع NFTs"
-
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1755,6 +1760,10 @@ msgstr "إظهار الملغاة"
 msgid "Show closed positions"
 msgstr "إظهار المراكز المغلقة"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Show more"
+msgstr "أظهر المزيد"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
 msgstr "بسيط"
@@ -1770,6 +1779,14 @@ msgstr "بعض الأصول غير متوفرة من خلال هذه الواج�
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "حدث خطأ ما"
+
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Sort and filter assets across networks on the new Tokens page."
+msgstr "قم بفرز الأصول وتصفيتها عبر الشبكات في صفحة الرموز الجديدة."
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Stats"
+msgstr "احصائيات"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1806,7 +1823,7 @@ msgstr "إمداد {0} {1} و {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/index.tsx
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1847,6 +1864,10 @@ msgstr "مبادلة {0} {1} مقابل {2} {3}"
 #: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "لم يتم العثور على الرمز"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "TVL"
+msgstr "TVL"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1962,14 +1983,6 @@ msgstr "تعذر إرسال المعاملة لانتهاء الموعد الم�
 msgid "There is no liquidity data."
 msgstr "لا توجد بيانات سيولة."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "There was an error fetching your balance"
-msgstr "حدث خطأ في جلب رصيدك"
-
-#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {0} balance"
-msgstr "حدث خطأ أثناء تحميل رصيدك {0}"
-
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "هذا العنوان محظور في واجهة Uniswap Labs لأنه مرتبط بواحد أو أكثر"
@@ -1993,6 +2006,10 @@ msgstr "يعمل هذا المسار على تحسين إنتاجك الإجما
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "لا يظهر هذا الرمز في قائمة (قوائم) الرموز النشطة. تأكد من أن هذا هو الرمز الذي تريد تداوله."
+
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
+msgstr "لا يحتوي هذا الرمز المميز على بيانات مخطط لأنه لم يتم تداوله على Uniswap v3"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "This token is not supported in the Uniswap Labs app"
@@ -2033,23 +2050,20 @@ msgid "Token not supported"
 msgstr "رمز غير مدعوم"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "الرموز"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "الرموز من القوائم غير النشطة. قم باستيراد الرموز المميزة المحددة أدناه أو انقر فوق \"إدارة\" لتنشيط المزيد من القوائم."
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "أفضل المجموعات"
 
-#: src/components/Tokens/TokenDetails/StatsSection.tsx
-msgid "Total Value Locked"
-msgstr "إجمالي القيمة مؤمن"
+#: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
+msgid "Top tokens on Uniswap"
+msgstr "أعلى الرموز على Uniswap"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -2058,6 +2072,10 @@ msgstr "الإجمالي المودَع"
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
 msgstr "مجموع الودائع"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
+msgstr "إجمالي القيمة المقفلة (TVL) هو مقدار الأصل الموجود حاليًا في تجمع سيولة Uniswap v3."
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
@@ -2263,9 +2281,17 @@ msgstr "سعر V3 {0}:"
 msgid "View accrued fees and analytics<0>↗</0>"
 msgstr "عرض الرسوم المتراكمة والتحليلات <0>↗</0>"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "View and sell NFTs"
+msgstr "عرض وبيع NFTs"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "عرض القائمة"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View more analytics"
+msgstr "عرض المزيد من التحليلات"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -2278,10 +2304,6 @@ msgstr "عرض على Etherscan"
 msgid "View on Explorer"
 msgstr "عرض على Explorer"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "View token analytics"
-msgstr "عرض تحليلات الرمز المميز"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2290,6 +2312,10 @@ msgstr "عرض تحليلات الرمز المميز"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "عرض المعاملة على Explorer"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
+msgstr "الحجم هو مقدار الأصل الذي تم تداوله على Uniswap v3 خلال الإطار الزمني المحدد."
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -2473,10 +2499,6 @@ msgid "You have no favorited tokens"
 msgstr "ليس لديك رموز مفضلة"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
-msgid "You may have lost your network connection, or {label} might be down right now."
-msgstr "ربما تكون قد فقدت اتصالك بالشبكة ، أو ربما يكون الرقم {label}"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "ربما تكون قد فقدت اتصالك بالشبكة."
 
@@ -2517,9 +2539,9 @@ msgstr "سيولة V2 الخاصة بك"
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "ستظهر مراكز سيولة V3 النشطة الخاصة بك هنا."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "Your balances by network"
-msgstr "الأرصدة الخاصة بك عن طريق الشبكة"
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
+msgid "Your balance"
+msgstr "رصيدك"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2608,6 +2630,11 @@ msgstr "المعاملات الخاصة بك ستظهر هنا..."
 msgid "Your unclaimed UNI"
 msgstr "UNI الخاص بك بدون مطالبة"
 
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+msgid "Your {0} balance"
+msgstr "رصيدك {0}"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "بعد الانزلاق السعري"
@@ -2684,8 +2711,8 @@ msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {رمز الاستيراد} other {استيراد الرموز}}"
 
 #: src/constants/tokenSafety.tsx
-msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
-msgstr "{0, plural, =1 {لم يتم التحقق من هذا الرمز} other {لم يتم التحقق من هذه الرموز}}"
+msgid "{0, plural, =1 {This token isn't verified.} other {These tokens aren't verified.}}"
+msgstr "{0, plural, =1 {لم يتم التحقق من هذا الرمز المميز.} other {لم يتم التحقق من هذه الرموز المميزة.}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
@@ -2757,10 +2784,6 @@ msgstr "{0} رموز UNI-V2 LP متاحة"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} أصوات"
-
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "{0} all balances"
-msgstr "{0} جميع الأرصدة"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2838,6 +2861,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} توكينز"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} might be down right now, or you may have lost your network connection."
+msgstr "قد يكون الرقم {label} معطلاً الآن ، أو ربما فقدت اتصالك بالشبكة."
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"

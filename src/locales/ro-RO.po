@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-21 21:05\n"
+"PO-Revision-Date: 2022-10-11 02:57\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -20,10 +20,6 @@ msgstr ""
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
 msgstr "$-"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "$<0/>"
-msgstr "<0/>USD"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/swap/GasEstimateBadge.tsx
@@ -62,6 +58,10 @@ msgstr "0 UNI / săptămână"
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
 msgstr "Volum 24 ore"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+msgstr "Volumul 24 de ore este valoarea activului care a fost tranzacționat pe Uniswap v3 în ultimele 24 de ore."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -240,7 +240,7 @@ msgid "Amount"
 msgstr "Sumă"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
-msgid "An error occured loading tokens. Please try again."
+msgid "An error occurred loading tokens. Please try again."
 msgstr "A apărut o eroare la încărcarea jetoanelor. Vă rugăm să încercați din nou."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
@@ -374,9 +374,12 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Prin adăugarea acestei liste ești încrezător implicit că datele sunt corecte. Oricine poate crea o listă, inclusiv crearea de versiuni false ale listelor și liste existente care pretind că reprezintă proiecte care nu au unul."
 
 #: src/components/WalletModal/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Prin conectarea unui portofel, sunteți de acord cu <0>Termenii și condițiile</0> și confirmați că ați citit și înțeles Declinarea răspunderii privind protocolul <1></1>."
+
+#: src/components/WalletModal/index.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
+msgstr "Conectând un portofel, sunteți de acord cu <0>Termenii și condițiile Uniswap Labs</0> și sunteți de acord cu <1>Politica de confidențialitate</1>a acestuia."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -605,11 +608,13 @@ msgid "Contract address"
 msgstr "Adresa contractului"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Copiat!"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 msgid "Copy"
 msgstr "Copie"
 
@@ -889,10 +894,6 @@ msgstr "Executarea acestei propuneri va pune în aplicare calldata în lanț."
 msgid "Execution Submitted"
 msgstr "Execuție depusă"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Expanded results from inactive Token Lists"
-msgstr "Rezultate extinse din Listele de Jetoane/Grupuri inactive"
-
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
 msgstr "Rezultat așteptat"
@@ -913,10 +914,9 @@ msgstr "Expirat"
 msgid "Explore"
 msgstr "Explora"
 
-#: src/pages/Tokens/index.tsx
-#: src/pages/Tokens/index.tsx
-msgid "Explore Tokens"
-msgstr "Explorați jetoanele"
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Explore Top Tokens on Uniswap"
+msgstr "Explorați Top Tokens pe Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1130,6 +1130,10 @@ msgstr "Tema luminii"
 msgid "Light theme"
 msgstr "Tema ușoară"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Links"
+msgstr "Legături"
+
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
@@ -1262,6 +1266,11 @@ msgstr "Min:"
 msgid "Minimum received"
 msgstr "Minimum primit"
 
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Missing chart data"
+msgstr "Lipsesc date din diagramă"
+
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Dependențe lipsă"
@@ -1270,7 +1279,7 @@ msgstr "Dependențe lipsă"
 msgid "More"
 msgstr "Mai mult"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "NFT Collections"
 msgstr "Colecții NFT"
 
@@ -1297,6 +1306,10 @@ msgstr "Taxele de rețea depășesc 50% din valoarea swapului!"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Poziție nouă"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No NFTs in"
+msgstr "Nu există NFT"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -1339,7 +1352,7 @@ msgstr "Nu există informații despre simboluri disponibile"
 msgid "No tokens found"
 msgstr "Nu s-au găsit jetoane"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "No tokens found."
 msgstr "Nu s-au găsit jetoane."
 
@@ -1468,11 +1481,11 @@ msgstr "Grupat {0}:"
 msgid "Pools"
 msgstr "Piscine"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular NFT collections"
 msgstr "Colecții populare NFT"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular tokens"
 msgstr "Jetoane populare"
 
@@ -1577,10 +1590,6 @@ msgstr "La coadă"
 msgid "Rates"
 msgstr "Tarife"
 
-#: src/components/Tokens/TokenDetails/About.tsx
-msgid "Read more"
-msgstr "Citeste mai mult"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Citește mai multe despre UNI"
@@ -1601,7 +1610,7 @@ msgstr "Citește mai multe despre activele neacceptate"
 msgid "Recent Transactions"
 msgstr "Tranzacții recente"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Recent searches"
 msgstr "Căutări recente"
 
@@ -1719,10 +1728,6 @@ msgstr "Sine"
 msgid "Self Delegate"
 msgstr "Auto Delegare"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "Sell NFTs"
-msgstr "Vinde NFT-uri"
-
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1755,6 +1760,10 @@ msgstr "Show Anulat"
 msgid "Show closed positions"
 msgstr "Afișați pozițiile închise"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Show more"
+msgstr "Afișați mai multe"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
 msgstr "Simplu"
@@ -1770,6 +1779,14 @@ msgstr "Unele active nu sunt disponibile prin intermediul acestei interfețe deo
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Ceva nu a funcţionat corect"
+
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Sort and filter assets across networks on the new Tokens page."
+msgstr "Sortați și filtrați activele în rețele pe noua pagină Tokens."
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Stats"
+msgstr "Statistici"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1806,7 +1823,7 @@ msgstr "Se furnizează {0} {1} și {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/index.tsx
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1847,6 +1864,10 @@ msgstr "Se schimbă {0} {1} cu {2} {3}"
 #: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "Simbolul nu a fost găsit"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "TVL"
+msgstr "TVL"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1962,14 +1983,6 @@ msgstr "Tranzacția nu a putut fi trimisă deoarece termenul a trecut. Te rugăm
 msgid "There is no liquidity data."
 msgstr "Nu există date privind lichiditatea."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "There was an error fetching your balance"
-msgstr "A apărut o eroare la preluarea soldului dvs"
-
-#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {0} balance"
-msgstr "A apărut o eroare la încărcarea soldului dvs. {0}"
-
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Această adresă este blocată pe interfața Uniswap Labs deoarece este asociată cu unul sau mai multe"
@@ -1993,6 +2006,10 @@ msgstr "Această rută vă optimizează producția totală, luând în considera
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Acest jeton nu apare pe lista (listele) de jetoane active. Asigură-te că acesta este jetonul pe care vrei să îl tranzacționezi."
+
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
+msgstr "Acest simbol nu are date de diagramă deoarece nu a fost tranzacționat pe Uniswap v3"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "This token is not supported in the Uniswap Labs app"
@@ -2033,23 +2050,20 @@ msgid "Token not supported"
 msgstr "Tokenul nu este acceptat"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Jetoane"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "Jetoane din liste inactive. Importă jetoanele specifice de mai jos sau fă clic pe Gestionare pentru a activa mai multe liste."
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Grupuri de top"
 
-#: src/components/Tokens/TokenDetails/StatsSection.tsx
-msgid "Total Value Locked"
-msgstr "Valoarea totală blocată"
+#: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
+msgid "Top tokens on Uniswap"
+msgstr "Top tokens pe Uniswap"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -2058,6 +2072,10 @@ msgstr "Total depozitat"
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
 msgstr "Depozite totale"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
+msgstr "Valoarea totală blocată (TVL) este valoarea activului care se află în prezent într-un pool de lichidități Uniswap v3."
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
@@ -2263,9 +2281,17 @@ msgstr "Preț V3 {0}:"
 msgid "View accrued fees and analytics<0>↗</0>"
 msgstr "Vizualizează taxele acumulate și statisticile<0>↗</0>"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "View and sell NFTs"
+msgstr "Vizualizați și vindeți NFT-uri"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "Vizualizează lista"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View more analytics"
+msgstr "Vedeți mai multe analize"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -2278,10 +2304,6 @@ msgstr "Vizualizare pe Etherscan"
 msgid "View on Explorer"
 msgstr "Vizualizează pe Explorer"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "View token analytics"
-msgstr "Vizualizați analizele tokenului"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2290,6 +2312,10 @@ msgstr "Vizualizați analizele tokenului"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Vizualizează tranzacția în Explorer"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
+msgstr "Volumul este valoarea activului care a fost tranzacționat pe Uniswap v3 în intervalul de timp selectat."
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -2473,10 +2499,6 @@ msgid "You have no favorited tokens"
 msgstr "Nu aveți jetoane preferate"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
-msgid "You may have lost your network connection, or {label} might be down right now."
-msgstr "Poate că v-ați pierdut conexiunea la rețea sau {label} ar putea fi întrerupt chiar acum."
-
-#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "Este posibil să fi pierdut conexiunea la rețea."
 
@@ -2517,9 +2539,9 @@ msgstr "Lichiditatea ta V2"
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Pozițiile dvs. active de lichiditate V3 vor apărea aici."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "Your balances by network"
-msgstr "Soldurile dvs. în funcție de rețea"
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
+msgid "Your balance"
+msgstr "Echilibrul tau"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2608,6 +2630,11 @@ msgstr "Tranzacțiile tale vor apărea aici..."
 msgid "Your unclaimed UNI"
 msgstr "UNI nerevendicate de tine"
 
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+msgid "Your {0} balance"
+msgstr "Soldul tău {0}"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "după alunecare"
@@ -2684,8 +2711,8 @@ msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Import token} other {Importați jetoane}}"
 
 #: src/constants/tokenSafety.tsx
-msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
-msgstr "{0, plural, =1 {Acest simbol nu este verificat} other {Aceste jetoane nu sunt verificate}}"
+msgid "{0, plural, =1 {This token isn't verified.} other {These tokens aren't verified.}}"
+msgstr "{0, plural, =1 {Acest simbol nu este verificat.} other {Aceste jetoane nu sunt verificate.}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
@@ -2757,10 +2784,6 @@ msgstr "{0} Jetoane UNI-V2 LP disponibile"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} Voturi"
-
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "{0} all balances"
-msgstr "{0} toate soldurile"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2838,6 +2861,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} jetoane"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} might be down right now, or you may have lost your network connection."
+msgstr "Este posibil ca {label} să fie întrerupt în acest moment sau este posibil să fi pierdut conexiunea la rețea."
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"

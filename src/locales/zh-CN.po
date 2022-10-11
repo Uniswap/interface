@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-21 21:05\n"
+"PO-Revision-Date: 2022-10-11 02:57\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -20,10 +20,6 @@ msgstr ""
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
 msgstr "$-"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "$<0/>"
-msgstr "$<0/> 美元"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/swap/GasEstimateBadge.tsx
@@ -62,6 +58,10 @@ msgstr "0 UNI 代币 / 每周"
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
 msgstr "24小时音量"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+msgstr "24H 交易量是过去 24 小时内在 Uniswap v3 上交易的资产数量。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -240,8 +240,8 @@ msgid "Amount"
 msgstr "数额"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
-msgid "An error occured loading tokens. Please try again."
-msgstr "加载令牌时发生错误。请再试一次。"
+msgid "An error occurred loading tokens. Please try again."
+msgstr "加载令牌时出错。请再试一次。"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -374,9 +374,12 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "添加此代币列表代表您信任其数据是正确的。任何人都可以创建代币列表，包括创建假冒实际列表的造假版本，以及自我声称代表了某项目的代币列表。"
 
 #: src/components/WalletModal/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "连接钱包即表示您同意 Uniswap Labs 的 <0>服务条款</0> 并确认您已阅读并理解 Uniswap <1>协议免责声明</1>。"
+
+#: src/components/WalletModal/index.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
+msgstr "连接钱包即表示您同意 Uniswap Labs 的 <0>服务条款</0> 并同意其 <1>隐私政策</1>。"
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -605,11 +608,13 @@ msgid "Contract address"
 msgstr "合约地址"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "复制！"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 msgid "Copy"
 msgstr "复制"
 
@@ -889,10 +894,6 @@ msgstr "执行此提案将在链上制定 calldata。"
 msgid "Execution Submitted"
 msgstr "提交执行"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Expanded results from inactive Token Lists"
-msgstr "从待用代币列表中扩展出的结果"
-
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
 msgstr "预期获得"
@@ -913,10 +914,9 @@ msgstr "已过期"
 msgid "Explore"
 msgstr "探索"
 
-#: src/pages/Tokens/index.tsx
-#: src/pages/Tokens/index.tsx
-msgid "Explore Tokens"
-msgstr "探索代币"
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Explore Top Tokens on Uniswap"
+msgstr "探索 Uniswap 上的热门代币"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1130,6 +1130,10 @@ msgstr "浅色主题"
 msgid "Light theme"
 msgstr "轻主题"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Links"
+msgstr "链接"
+
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
@@ -1262,6 +1266,11 @@ msgstr "最小值："
 msgid "Minimum received"
 msgstr "收到的最低数额"
 
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Missing chart data"
+msgstr "缺少图表数据"
+
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "缺少依赖套件"
@@ -1270,7 +1279,7 @@ msgstr "缺少依赖套件"
 msgid "More"
 msgstr "更多"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "NFT Collections"
 msgstr "NFT 集合"
 
@@ -1297,6 +1306,10 @@ msgstr "网络费用超过兑换金额的50%！"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "新仓位"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No NFTs in"
+msgstr "没有 NFT"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -1339,7 +1352,7 @@ msgstr "没有可用的令牌信息"
 msgid "No tokens found"
 msgstr "未找到令牌"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "No tokens found."
 msgstr "未找到令牌。"
 
@@ -1468,11 +1481,11 @@ msgstr "流动池汇集 {0}:"
 msgid "Pools"
 msgstr "游泳池"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular NFT collections"
 msgstr "流行的 NFT 合集"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular tokens"
 msgstr "热门代币"
 
@@ -1577,10 +1590,6 @@ msgstr "排队"
 msgid "Rates"
 msgstr "费率"
 
-#: src/components/Tokens/TokenDetails/About.tsx
-msgid "Read more"
-msgstr "阅读更多"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "阅读更多关于 UNI 代币的信息"
@@ -1601,7 +1610,7 @@ msgstr "阅读有关不受支持的代币的更多信息"
 msgid "Recent Transactions"
 msgstr "最近的交易"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Recent searches"
 msgstr "最近的搜索"
 
@@ -1719,10 +1728,6 @@ msgstr "自我"
 msgid "Self Delegate"
 msgstr "自我委托"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "Sell NFTs"
-msgstr "出售 NFT"
-
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1755,6 +1760,10 @@ msgstr "节目取消"
 msgid "Show closed positions"
 msgstr "显示已关闭的仓位"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Show more"
+msgstr "显示更多"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
 msgstr "简单型"
@@ -1770,6 +1779,14 @@ msgstr "有些代币无法通过此界面使用，因为它们可能无法很好
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "出错了"
+
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Sort and filter assets across networks on the new Tokens page."
+msgstr "在新的令牌页面上跨网络对资产进行排序和过滤。"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Stats"
+msgstr "统计数据"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1806,7 +1823,7 @@ msgstr "提供 {0} {1} 和 {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/index.tsx
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1847,6 +1864,10 @@ msgstr "将 {0} {1} 兑换为 {2} {3}"
 #: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "找不到符号"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "TVL"
+msgstr "电视L"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1962,14 +1983,6 @@ msgstr "由于期限已过，因此无法发送交易。请检查您的交易截
 msgid "There is no liquidity data."
 msgstr "没有流动性数据。"
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "There was an error fetching your balance"
-msgstr "提取余额时出错"
-
-#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {0} balance"
-msgstr "加载您的 {0} 余额时出错"
-
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "此地址在 Uniswap Labs 界面上被阻止，因为它与一个或多个相关联"
@@ -1993,6 +2006,10 @@ msgstr "此路线通过考虑拆分路线、多跳和每一步的 gas 成本来�
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "此代币未出现在激活的代币列表中。请确保这是您想要交易的代币。"
+
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
+msgstr "此代币没有图表数据，因为它尚未在 Uniswap v3 上交易"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "This token is not supported in the Uniswap Labs app"
@@ -2033,23 +2050,20 @@ msgid "Token not supported"
 msgstr "不支持该代币"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "代币"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "待用代币列表中的代币。在下面导入特定代币或单击“管理”以激活更多列表。"
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "顶级流动池"
 
-#: src/components/Tokens/TokenDetails/StatsSection.tsx
-msgid "Total Value Locked"
-msgstr "总价值锁定"
+#: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
+msgid "Top tokens on Uniswap"
+msgstr "Uniswap 上的热门代币"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -2058,6 +2072,10 @@ msgstr "存入总额"
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
 msgstr "存入总额"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
+msgstr "锁定的总价值 (TVL) 是当前在 Uniswap v3 流动性池中的资产数量。"
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
@@ -2263,9 +2281,17 @@ msgstr "V3 {0} 兑换率："
 msgid "View accrued fees and analytics<0>↗</0>"
 msgstr "查看已累积手续费和数据分析<0>↗</0>"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "View and sell NFTs"
+msgstr "查看和出售 NFT"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "查看代币列表"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View more analytics"
+msgstr "查看更多分析"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -2278,10 +2304,6 @@ msgstr "在 Etherscan 上查看"
 msgid "View on Explorer"
 msgstr "在以太坊资源浏览器上查看"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "View token analytics"
-msgstr "查看令牌分析"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2290,6 +2312,10 @@ msgstr "查看令牌分析"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "在以太坊资源浏览器上查看交易"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
+msgstr "交易量是在选定时间范围内在 Uniswap v3 上交易的资产数量。"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -2473,10 +2499,6 @@ msgid "You have no favorited tokens"
 msgstr "您没有收藏的代币"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
-msgid "You may have lost your network connection, or {label} might be down right now."
-msgstr "您的网络连接可能已断开，或者 {label} 可能正处停机状态。"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "您的网络连接可能断了。"
 
@@ -2517,9 +2539,9 @@ msgstr "您的V2流动资金"
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "您的 V3 流动性仓位将在此显示。"
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "Your balances by network"
-msgstr "您的网络余额"
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
+msgid "Your balance"
+msgstr "您的余额"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2608,6 +2630,11 @@ msgstr "您的交易将出现在这里..."
 msgid "Your unclaimed UNI"
 msgstr "您未领取的 UNI 代币"
 
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+msgid "Your {0} balance"
+msgstr "您的 {0} 余额"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "滑点后"
@@ -2684,8 +2711,8 @@ msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {导入令牌} other {导入代币}}"
 
 #: src/constants/tokenSafety.tsx
-msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
-msgstr "{0, plural, =1 {此令牌未经验证} other {这些令牌未经验证}}"
+msgid "{0, plural, =1 {This token isn't verified.} other {These tokens aren't verified.}}"
+msgstr "{0, plural, =1 {此令牌未经过验证。} other {这些令牌未经验证。}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
@@ -2757,10 +2784,6 @@ msgstr "{0} UNI-V2 流动池代币可用"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} 票"
-
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "{0} all balances"
-msgstr "{0} 所有余额"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2838,6 +2861,10 @@ msgstr "{USER_AMOUNT} UNI 代币"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} 代币"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} might be down right now, or you may have lost your network connection."
+msgstr "{label} 现在可能已关闭，或者您可能已丢失网络连接。"
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"

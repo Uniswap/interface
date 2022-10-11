@@ -212,12 +212,74 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
 
 exports[`renders loading rows when isLoading is true 1`] = `
 <DocumentFragment>
-  <div
+  .c0 {
+  display: grid;
+}
+
+.c0 > div {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left,#F7F8FA 25%,#EDEEF2 50%,#F7F8FA 75% );
+  background-size: 400%;
+  border-radius: 12px;
+  height: 2.4em;
+  will-change: background-position;
+}
+
+.c1 {
+  grid-column-gap: 0.5em;
+  grid-template-columns: repeat(12,1fr);
+  max-width: 960px;
+  padding: 12px 20px;
+}
+
+.c1 > div:nth-child(4n + 1) {
+  grid-column: 1 / 8;
+  height: 1em;
+  margin-bottom: 0.25em;
+}
+
+.c1 > div:nth-child(4n + 2) {
+  grid-column: 12;
+  height: 1em;
+  margin-top: 0.25em;
+}
+
+.c1 > div:nth-child(4n + 3) {
+  grid-column: 1 / 4;
+  height: 0.75em;
+}
+
+<div
     style="position: relative; height: 10px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
   >
     <div
-      style="height: 0px; width: 100%;"
-    />
+      style="height: 560px; width: 100%;"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div />
+        <div />
+        <div />
+      </div>
+      <div
+        class="c0 c1"
+      >
+        <div />
+        <div />
+        <div />
+      </div>
+      <div
+        class="c0 c1"
+      >
+        <div />
+        <div />
+        <div />
+      </div>
+    </div>
   </div>
 </DocumentFragment>
 `;

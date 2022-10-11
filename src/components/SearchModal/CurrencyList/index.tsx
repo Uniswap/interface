@@ -227,6 +227,14 @@ export const formatAnalyticsEventProperties = (
     : { search_token_address_input: isAddressSearch }),
 })
 
+const LoadingRow = () => (
+  <LoadingRows>
+    <div />
+    <div />
+    <div />
+  </LoadingRows>
+)
+
 export default function CurrencyList({
   height,
   currencies,
@@ -272,13 +280,7 @@ export default function CurrencyList({
       const token = currency?.wrapped
 
       if (isLoading) {
-        return (
-          <LoadingRows>
-            <div />
-            <div />
-            <div />
-          </LoadingRows>
-        )
+        return LoadingRow()
       } else if (currency) {
         return (
           <CurrencyRow
@@ -303,7 +305,11 @@ export default function CurrencyList({
     return currencyKey(currency)
   }, [])
 
-  return (
+  return isLoading ? (
+    <FixedSizeList height={height} ref={fixedListRef as any} width="100%" itemData={[]} itemCount={10} itemSize={56}>
+      {LoadingRow}
+    </FixedSizeList>
+  ) : (
     <FixedSizeList
       height={height}
       ref={fixedListRef as any}

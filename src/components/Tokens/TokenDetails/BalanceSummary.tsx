@@ -7,7 +7,7 @@ import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
-import { formatDollarAmount } from 'utils/formatDollarAmt'
+import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
   box-shadow: ${({ theme }) => theme.shallowShadow};
@@ -50,14 +50,14 @@ const BalanceRowLink = styled(StyledInternalLink)`
   color: unset;
 `
 
-function BalanceRow({ currency, formattedBalance, formattedUSDValue, href }: BalanceRowData) {
+function BalanceRow({ currency, formattedBalance, usdValue, href }: BalanceRowData) {
   const content = (
     <TotalBalance key={currency.wrapped.address}>
       <TotalBalanceItem>
         <CurrencyLogo currency={currency} />
         &nbsp;{formattedBalance} {currency?.symbol}
       </TotalBalanceItem>
-      <TotalBalanceItem>{formatDollarAmount(formattedUSDValue === 0 ? undefined : formattedUSDValue)}</TotalBalanceItem>
+      <TotalBalanceItem>{formatDollar({ num: usdValue === 0 ? undefined : usdValue, isPrice: true })}</TotalBalanceItem>
     </TotalBalance>
   )
   if (href) {
@@ -69,7 +69,7 @@ function BalanceRow({ currency, formattedBalance, formattedUSDValue, href }: Bal
 interface BalanceRowData {
   currency: Currency
   formattedBalance: number
-  formattedUSDValue: number | undefined
+  usdValue: number | undefined
   href?: string
 }
 export interface BalanceSummaryProps {
@@ -79,8 +79,8 @@ export interface BalanceSummaryProps {
 }
 
 export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNative }: BalanceSummaryProps) {
-  const balanceUsdValue = useStablecoinValue(tokenAmount)?.toFixed(2)
-  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)?.toFixed(2)
+  const balanceUsdValue = useStablecoinValue(tokenAmount)
+  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)
 
   const { chainName } = useParams<{ chainName?: string }>()
   const pageChainName = validateUrlChainParam(chainName).toLowerCase()
@@ -91,6 +91,7 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     tokenAmount.currency.address.toLowerCase() === nativeCurrencyAmount.currency.wrapped.address.toLowerCase()
 
   if (
+    (!tokenAmount && !nativeCurrencyAmount) ||
     (!tokenAmount && !tokenIsWrappedNative && !isNative) ||
     (!isNative && !tokenIsWrappedNative && tokenAmount?.equalTo(0)) ||
     (isNative && tokenAmount?.equalTo(0) && nativeCurrencyAmount?.equalTo(0))
@@ -105,7 +106,7 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     const tokenData: BalanceRowData = {
       currency: tokenAmount.currency,
       formattedBalance: formatToDecimal(tokenAmount, Math.min(tokenAmount.currency.decimals, 2)),
-      formattedUSDValue: balanceUsdValue ? parseFloat(balanceUsdValue) : undefined,
+      usdValue: balanceUsdValue ? currencyAmountToPreciseFloat(balanceUsdValue) : undefined,
     }
     if (isNative) {
       tokenData.href = `/tokens/${pageChainName}/${tokenAmount.currency.address}`
@@ -116,7 +117,7 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     const nativeData: BalanceRowData = {
       currency: nativeCurrencyAmount.currency,
       formattedBalance: formatToDecimal(nativeCurrencyAmount, Math.min(nativeCurrencyAmount.currency.decimals, 2)),
-      formattedUSDValue: nativeBalanceUsdValue ? parseFloat(nativeBalanceUsdValue) : undefined,
+      usdValue: nativeBalanceUsdValue ? currencyAmountToPreciseFloat(nativeBalanceUsdValue) : undefined,
     }
     if (isNative) {
       currencies.unshift(nativeData)
@@ -130,8 +131,8 @@ export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNa
     <BalancesCard>
       <TotalBalanceSection>
         <Trans>Your balance</Trans>
-        {currencies.map((props) => (
-          <BalanceRow {...props} key={props.currency.wrapped.address} />
+        {currencies.map((props, i) => (
+          <BalanceRow {...props} key={props.currency.wrapped.address + i} />
         ))}
       </TotalBalanceSection>
     </BalancesCard>
