@@ -1,15 +1,6 @@
-import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { unwrapToken } from 'graphql/data/util'
 
 import { FungibleToken } from '../../types'
-
-function replaceWrappedWithNative(token: FungibleToken) {
-  const address = token.address.toLowerCase()
-  const nativeAddress = WRAPPED_NATIVE_CURRENCY[token.chainId]?.address.toLowerCase()
-  if (address !== nativeAddress) return token
-
-  const nativeToken = nativeOnChain(token.chainId)
-  return { ...token, ...nativeToken, address: 'NATIVE' }
-}
 
 export const fetchTrendingTokens = async (numTokens?: number): Promise<FungibleToken[]> => {
   // TODO: WETH->ETH
@@ -23,5 +14,5 @@ export const fetchTrendingTokens = async (numTokens?: number): Promise<FungibleT
   })
 
   const { data } = (await r.json()) as { data: FungibleToken[] }
-  return data.map(replaceWrappedWithNative)
+  return data.map((token) => unwrapToken(token.chainId, token))
 }
