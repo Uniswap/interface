@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Twitter } from 'react-feather'
@@ -65,6 +66,8 @@ interface TokenInfo {
   tokenName: string
   tokenSymbol: string
   tokenAddress: string
+  tokenChain: string
+  isNative: boolean
 }
 
 export default function ShareButton(tokenInfo: TokenInfo) {
@@ -79,7 +82,11 @@ export default function ShareButton(tokenInfo: TokenInfo) {
   const shareTweet = () => {
     toggleShare()
     window.open(
-      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenInfo.tokenName}%20(${tokenInfo.tokenSymbol})%20https://app.uniswap.org/%23/tokens/${tokenInfo.tokenAddress}%20via%20@uniswap`,
+      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenInfo.tokenName}%20(${
+        tokenInfo.tokenSymbol
+      })%20https://app.uniswap.org/%23/tokens/${tokenInfo.tokenChain}/${
+        tokenInfo.isNative ? NATIVE_CHAIN_ID : tokenInfo.tokenAddress
+      }%20via%20@uniswap`,
       'newwindow',
       `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
     )
