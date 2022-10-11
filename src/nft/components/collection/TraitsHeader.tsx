@@ -4,28 +4,22 @@ import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { ReactNode, useState } from 'react'
-import { themeVars } from 'nft/css/sprinkles.css'
 
 interface TraitsHeaderProps {
   title: string
   children: ReactNode
   numTraits?: number
-  showBorderTop?: boolean
+  hideBorderTop?: boolean
 }
 
 export const TraitsHeader = (props: TraitsHeaderProps) => {
-  const { children, showBorderTop, title } = props
+  const { children, title } = props
   const [isOpen, setOpen] = useState(false)
 
   return (
     <Box
       as="details"
-      className={clsx(
-        subheadSmall,
-        showBorderTop && styles.borderTop,
-        !isOpen && styles.rowHover,
-        isOpen && styles.detailsOpen
-      )}
+      className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && !props.hideBorderTop && styles.detailsOpen)}
       open={isOpen}
     >
       <Box
