@@ -110,6 +110,7 @@ export function NotificationToast({
         borderWidth={1}
         left={0}
         marginHorizontal="md"
+        pointerEvents="box-none"
         position="absolute"
         right={0}
         style={animatedStyle}
@@ -197,7 +198,7 @@ export function NotificationContentSmall({
   onPressIn,
 }: NotificationContentProps) {
   return (
-    <Flex alignItems="center">
+    <Flex row flexShrink={1} justifyContent="center" pointerEvents="box-none">
       <Button
         bg="backgroundBackdrop"
         borderColor="backgroundAction"
