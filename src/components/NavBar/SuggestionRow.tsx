@@ -14,7 +14,7 @@ import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { formatDollar } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatNumbers'
 
 import * as styles from './SearchBar.css'
 
@@ -190,7 +190,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
       <Column className={styles.suggestionSecondaryContainer}>
         {token.priceUsd && (
           <Row gap="4">
-            <Box className={styles.primaryText}>{formatDollar(token.priceUsd, true)}</Box>
+            <Box className={styles.primaryText}>{formatDollar({ num: token.priceUsd, isPrice: true })}</Box>
           </Row>
         )}
         {token.price24hChange && (
