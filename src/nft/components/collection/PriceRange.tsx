@@ -141,8 +141,8 @@ export const PriceRange = () => {
           onAfterChange={(minMax: Array<number>) => {
             const [newMin, newMax] = minMax
             const [prevMin, prevMax] = prevMinMax
-            const priceRangeHighNumber = parseFloat(priceRangeHigh)
-            const priceRangeLowNumber = parseFloat(priceRangeLow)
+            const priceRangeHighNumber = parseFloat(priceRangeHigh.replace(/,/g, ''))
+            const priceRangeLowNumber = parseFloat(priceRangeLow.replace(/,/g, ''))
 
             const diff = priceRangeHighNumber - priceRangeLowNumber
 

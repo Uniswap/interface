@@ -52,10 +52,6 @@ export const detailsOpen = style([
   sprinkles({
     overflow: 'hidden',
   }),
-  {
-    borderTop: '1px solid',
-    borderColor: themeVars.colors.backgroundOutline,
-  },
 ])
 
 export const filterDropDowns = style([

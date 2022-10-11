@@ -27,9 +27,6 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
         isOpen && styles.detailsOpen
       )}
       open={isOpen}
-      style={{
-        borderTop: isOpen ? `1px solid ${themeVars.colors.backgroundOutline}` : undefined,
-      }}
     >
       <Box
         as="summary"

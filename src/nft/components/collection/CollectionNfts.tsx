@@ -290,6 +290,24 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       if (maxPrice === '') {
         setPriceRangeHigh(maxValue)
       }
+    } else if (collectionNfts) {
+      const sortedByNftValue = collectionNfts?.sort(
+        (a, b) => parseFloat(a?.currentUsdPrice ?? '') - parseFloat(b?.currentUsdPrice ?? '')
+      )
+      const maxIndex = sortedByNftValue?.length - 1
+      const minIndex = 0
+      const lowValue = formatWeiToDecimal(collectionNfts[minIndex]?.priceInfo.ETHPrice ?? '')
+      const maxValue = formatWeiToDecimal(collectionNfts[maxIndex]?.priceInfo.ETHPrice ?? '')
+
+      if (minPrice === '') {
+        setPriceRangeLow(lowValue)
+      }
+
+      if (maxPrice === '') {
+        setPriceRangeHigh(maxValue)
+      }
+
+      console.log(sortedByNftValue)
     }
   }, [collectionNfts, sortBy, maxPrice, minPrice, setPriceRangeHigh, setPriceRangeLow])
 
