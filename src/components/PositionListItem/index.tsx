@@ -118,7 +118,7 @@ const DataText = styled.div`
   font-size: 18px;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    font-size: 14px;
+    font-size: 18px;
   `};
 `
 
