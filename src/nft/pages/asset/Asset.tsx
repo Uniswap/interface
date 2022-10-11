@@ -1,5 +1,8 @@
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+import { fetchSingleAsset } from 'nft/queries'
+import { useMemo } from 'react'
+import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -11,12 +14,30 @@ const AssetContainer = styled.div`
 
 const Asset = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
+  const { data } = useQuery(
+    ['assetDetail', contractAddress, tokenId],
+    () => fetchSingleAsset({ contractAddress, tokenId }),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
+  )
+
+  const asset = useMemo(() => (data ? data[0] : undefined), [data])
+  const collection = useMemo(() => (data ? data[1] : undefined), [data])
 
   return (
-    <AssetContainer>
-      <AssetDetails tokenId={tokenId} contractAddress={contractAddress} />
-      <AssetPriceDetails />
-    </AssetContainer>
+    <>
+      {asset && collection ? (
+        <AssetContainer>
+          <AssetDetails collection={collection} asset={asset} />
+          <AssetPriceDetails collection={collection} asset={asset} />
+        </AssetContainer>
+      ) : (
+        <div>Holder for loading ...</div>
+      )}
+    </>
   )
 }
 

@@ -63,7 +63,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       </Text>{' '}
       {usdcPrice && (
         <ThemedText.DeprecatedDarkGray>
-          <Trans>(${formatDollar({ num: priceToPreciseFloat(usdcPrice) })})</Trans>
+          <Trans>({formatDollar({ num: priceToPreciseFloat(usdcPrice) })})</Trans>
         </ThemedText.DeprecatedDarkGray>
       )}
     </StyledPriceContainer>

@@ -119,9 +119,7 @@ export default function ChartSection({
           {!warning && <VerifiedIcon size="16px" />}
         </TokenNameCell>
         <TokenActions>
-          {token.name && token.symbol && token.address && (
-            <ShareButton tokenName={token.name} tokenSymbol={token.symbol} tokenAddress={token.address} />
-          )}
+          {token.name && token.symbol && token.address && <ShareButton token={token} isNative={!!nativeCurrency} />}
           {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && (
             <ClickFavorited onClick={toggleFavorite}>
               <FavoriteIcon isFavorited={isFavorited} />

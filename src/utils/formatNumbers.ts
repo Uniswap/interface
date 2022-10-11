@@ -31,7 +31,19 @@ interface FormatDollarArgs {
   round?: boolean
 }
 
-// Using a currency library here in case we want to add more in future.
+/**
+ * Returns a USD dollar or equivalent denominated numerical value formatted
+ * in human readable string for use in template.
+ *
+ * Adheres to guidelines for prices and other numbers defined here:
+ * https://www.notion.so/uniswaplabs/Number-standards-fbb9f533f10e4e22820722c2f66d23c0
+ * @param num numerical value denominated in USD or USD equivalent
+ * @param isPrice whether the amount represents a price or not
+ * @param lessPreciseStablecoinValues whether or not we should show less precise values for
+ * stablecoins (around 1$ in value always) for the sake of readability
+ * @param digits number of digits after the decimal for non-price amounts
+ * @param round whether or not to round up non-price amounts
+ */
 export const formatDollar = ({
   num,
   isPrice = false,
@@ -83,8 +95,15 @@ export const formatDollar = ({
   }
 }
 
-// For transaction review numbers, such as token quantities, NFT price (token-denominated),
-// network fees, transaction history items.
+/**
+ * Returns a numerical amount of any token formatted in human readable string for use in template.
+ *
+ * For transaction review numbers, such as token quantities, NFT price (token-denominated),
+ *  network fees, transaction history items. Adheres to guidelines defined here:
+ * https://www.notion.so/uniswaplabs/Number-standards-fbb9f533f10e4e22820722c2f66d23c0
+ * @param num numerical value denominated in any token
+ * @param maxDigits the maximum number of digits that should be shown for the quantity
+ */
 export const formatTransactionAmount = (num: number | undefined | null, maxDigits = 9) => {
   if (num === 0) return '0.00'
   if (!num) return ''
