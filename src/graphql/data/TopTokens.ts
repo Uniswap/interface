@@ -135,25 +135,22 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
 
   const environment = useRelayEnvironment()
   const [sparklines, setSparklines] = useState<SparklineMap>({})
-  const query = useMemo(
-    () =>
-      fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, { duration, chain }).map((data) => ({
-        topTokens: data.topTokens?.map((token) => unwrapToken(chainId, token)),
-      })),
-    [chain, chainId, duration, environment]
-  )
   useEffect(() => {
-    const subscription = query.subscribe({
-      next(data) {
-        const map: SparklineMap = {}
-        data.topTokens?.forEach(
-          (current) => current?.address && (map[current.address] = filterPrices(current?.market?.priceHistory))
-        )
-        setSparklines(map)
-      },
-    })
+    const subscription = fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, { duration, chain })
+      .map((data) => ({
+        topTokens: data.topTokens?.map((token) => unwrapToken(chainId, token)),
+      }))
+      .subscribe({
+        next(data) {
+          const map: SparklineMap = {}
+          data.topTokens?.forEach(
+            (current) => current?.address && (map[current.address] = filterPrices(current?.market?.priceHistory))
+          )
+          setSparklines(map)
+        },
+      })
     return () => subscription.unsubscribe()
-  }, [query])
+  }, [chain, chainId, duration, environment])
 
   useEffect(() => {
     setSparklines({})
