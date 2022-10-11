@@ -14,17 +14,16 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverDropdown from 'components/HoverDropdown'
 import LocalLoader from 'components/LocalLoader'
 import Modal from 'components/Modal'
-import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
-import { useToken, useTokens } from 'hooks/Tokens'
+import { useToken } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { usePool } from 'hooks/usePools'
 import { useProAmmPositions } from 'hooks/useProAmmPositions'
 import useTheme from 'hooks/useTheme'
-import { useTokensPrice } from 'state/application/hooks'
-import { useFarmAction, usePostionFilter, useProMMFarms } from 'state/farms/promm/hooks'
+import { useElasticFarms, useFarmAction, usePositionFilter } from 'state/farms/elastic/hooks'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { StyledInternalLink } from 'theme'
 import { PositionDetails } from 'types/position'
 import { formatDollarAmount } from 'utils/numbers'
@@ -57,7 +56,7 @@ const PositionRow = ({
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
-  const usdPrices = useTokensPrice([token0, token1], VERSION.ELASTIC)
+  const usdPrices = useTokenPrices([token0Address, token1Address])
 
   // construct Position from details returned
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
@@ -75,8 +74,8 @@ const PositionRow = ({
     (positionSDK.pool.tickCurrent < position.tickLower || positionSDK.pool.tickCurrent >= position.tickUpper)
 
   const usd =
-    (usdPrices?.[0] || 0) * parseFloat(positionSDK?.amount0.toExact() || '0') +
-    (usdPrices?.[1] || 0) * parseFloat(positionSDK?.amount1.toExact() || '0')
+    (usdPrices?.[token0Address] || 0) * parseFloat(positionSDK?.amount0.toExact() || '0') +
+    (usdPrices?.[token1Address] || 0) * parseFloat(positionSDK?.amount1.toExact() || '0')
 
   const above768 = useMedia('(min-width: 768px)')
 
@@ -157,20 +156,21 @@ function ProMMDepositNFTModal({
   const theme = useTheme()
   const checkboxGroupRef = useRef<any>()
   const above768 = useMedia('(min-width: 768px)')
-  const { data: farms } = useProMMFarms()
-  const selectedFarm = farms[selectedFarmAddress || '']
-  const poolAddresses = selectedFarm
-    ?.filter(farm => (tab === 'active' ? farm.endTime > +new Date() / 1000 : farm.endTime < +new Date() / 1000))
-    .map(farm => farm.poolAddress.toLowerCase())
+  const { farms } = useElasticFarms()
+  const selectedFarm = farms?.find(farm => farm.id.toLowerCase() === selectedFarmAddress.toLowerCase())
+
+  const poolAddresses =
+    selectedFarm?.pools
+      .filter(pool => (tab === 'active' ? pool.endTime > +new Date() / 1000 : pool.endTime < +new Date() / 1000))
+      .map(pool => pool.poolAddress.toLowerCase()) || []
 
   const [selectedNFTs, setSeletedNFTs] = useState<string[]>([])
-  const tokens = useTokens(selectedFarm.map(farm => [farm.token0, farm.token1]).reduce((arr, cur) => [...arr, ...cur]))
 
   const { deposit } = useFarmAction(selectedFarmAddress)
 
   const { positions, loading: positionsLoading } = useProAmmPositions(account)
 
-  const { filterOptions, activeFilter, setActiveFilter, eligiblePositions } = usePostionFilter(
+  const { filterOptions, activeFilter, setActiveFilter, eligiblePositions } = usePositionFilter(
     positions || [],
     poolAddresses,
   )
@@ -205,8 +205,8 @@ function ProMMDepositNFTModal({
       const finishedPoses = eligiblePositions.filter(pos => selectedNFTs.includes(pos.tokenId.toString()))
       finishedPoses.forEach(pos => {
         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_DEPOSIT_LIQUIDITY_COMPLETED, {
-          token_1: tokens[pos.token0],
-          token_2: tokens[pos.token1],
+          token_1: pos.token0,
+          token_2: pos.token1,
         })
       })
     }

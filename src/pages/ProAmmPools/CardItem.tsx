@@ -23,7 +23,7 @@ import { useAllTokens } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
 import { useToggleEthPowAckModal } from 'state/application/hooks'
-import { useProMMFarms } from 'state/farms/promm/hooks'
+import { useElasticFarms } from 'state/farms/elastic/hooks'
 import { useUrlOnEthPowAck } from 'state/pools/hooks'
 import { ProMMPoolData } from 'state/prommPools/hooks'
 import { ExternalLink } from 'theme'
@@ -78,7 +78,7 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
   const toggleEthPowAckModal = useToggleEthPowAckModal()
 
   const allTokens = useAllTokens()
-  const { data: farms } = useProMMFarms()
+  const { farms } = useElasticFarms()
 
   const token0 =
     allTokens[isAddressString(pair[0].token0.address)] ||
@@ -134,16 +134,18 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
 
         let fairlaunchAddress = ''
         let pid = -1
-        Object.keys(farms).forEach(addr => {
-          const farm = farms[addr]
+
+        farms?.forEach(farm => {
+          const p = farm.pools
             .filter(item => item.endTime > Date.now() / 1000)
             .find(item => item.poolAddress.toLowerCase() === pool.address.toLowerCase())
 
-          if (farm) {
-            fairlaunchAddress = addr
-            pid = farm.pid
+          if (p) {
+            fairlaunchAddress = farm.id
+            pid = Number(p.pid)
           }
         })
+
         const isFarmingPool = !!fairlaunchAddress && pid !== -1
 
         return (

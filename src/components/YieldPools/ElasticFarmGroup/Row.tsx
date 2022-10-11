@@ -1,8 +1,8 @@
-import { CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
-import { Pool, Position } from '@kyberswap/ks-sdk-elastic'
+import { ChainId, CurrencyAmount } from '@kyberswap/ks-sdk-core'
+import { computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Minus, Plus, Share2 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useMedia } from 'react-use'
@@ -20,20 +20,20 @@ import InfoHelper from 'components/InfoHelper'
 import Modal from 'components/Modal'
 import { MouseoverTooltip, MouseoverTooltipDesktopOnly } from 'components/Tooltip'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
-import { VERSION } from 'constants/v2'
-import { useToken } from 'hooks/Tokens'
+import { NETWORKS_INFO } from 'constants/networks'
+import { useActiveWeb3React } from 'hooks'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
-import { useRewardTokenPrices } from 'state/farms/hooks'
-import { useProMMFarmTVL } from 'state/farms/promm/hooks'
-import { ProMMFarm } from 'state/farms/promm/types'
+import { useElasticFarms } from 'state/farms/elastic/hooks'
+import { FarmingPool } from 'state/farms/elastic/types'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { ExternalLink } from 'theme'
 import { shortenAddress } from 'utils'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import { formatDollarAmount } from 'utils/numbers'
 
+import { ModalContentWrapper } from '../ElasticFarmModals/styled'
 import { APRTooltipContent } from '../FarmingPoolAPRCell'
-import { ModalContentWrapper } from '../ProMMFarmModals/styled'
 import { useSharePoolContext } from '../SharePoolContext'
 import { InfoRow, ProMMFarmTableRow, ProMMFarmTableRowMobile, RewardMobileArea } from '../styleds'
 import { ActionButton, ButtonColorScheme, MinimalActionButton } from './buttons'
@@ -49,42 +49,20 @@ const ButtonGroupContainerOnMobile = styled.div`
   }
 `
 
-const Reward = ({ token: address, amount }: { token: string; amount?: BigNumber }) => {
-  const token = useToken(address)
-
-  const tokenAmout = token && CurrencyAmount.fromRawAmount(token, amount?.toString() || '0')
-
-  return (
-    <Flex alignItems="center" sx={{ gap: '4px' }}>
-      <HoverInlineText text={tokenAmout?.toSignificant(6) || '0'} maxCharacters={10}></HoverInlineText>
-      <MouseoverTooltip placement="top" text={token?.symbol} width="fit-content">
-        <CurrencyLogo currency={token} size="16px" />
-      </MouseoverTooltip>
-    </Flex>
-  )
-}
-
 const Row = ({
   isApprovedForAll,
   fairlaunchAddress,
-  farm,
+  pool,
   onOpenModal,
   onHarvest,
-  onUpdateDepositedInfo,
   isUserAffectedByFarmIssue,
 }: {
   isUserAffectedByFarmIssue: boolean
   isApprovedForAll: boolean
   fairlaunchAddress: string
-  farm: ProMMFarm
-  onOpenModal: (modalType: 'deposit' | 'withdraw' | 'stake' | 'unstake', pid?: number) => void
+  pool: FarmingPool
+  onOpenModal: (modalType: 'deposit' | 'withdraw' | 'stake' | 'unstake', pid?: number | string) => void
   onHarvest: () => void
-  onUpdateDepositedInfo: (input: {
-    poolAddress: string
-    usdValue: number
-    token0Amount: CurrencyAmount<Token>
-    token1Amount: CurrencyAmount<Token>
-  }) => void
 }) => {
   const theme = useTheme()
   const currentTimestamp = Math.floor(Date.now() / 1000)
@@ -92,111 +70,88 @@ const Row = ({
   const qs = useParsedQueryString()
   const tab = qs.type || 'active'
 
-  const token0 = useToken(farm.token0)
-  const token1 = useToken(farm.token1)
+  const { chainId } = useActiveWeb3React()
 
-  const { tvl, farmAPR, poolAPY } = useProMMFarmTVL(fairlaunchAddress, farm.pid)
+  const { userFarmInfo, poolFeeLast24h } = useElasticFarms()
 
-  const prices = useRewardTokenPrices([token0?.wrapped, token1?.wrapped], VERSION.ELASTIC)
+  const tokenAddress = [
+    ...new Set([
+      pool.token0.wrapped.address.toLowerCase(),
+      pool.token1.wrapped.address.toLowerCase(),
+      ...pool.rewardTokens.map(rw => rw.wrapped.address.toLowerCase()),
+    ]),
+  ]
+  const tokenPrices = useTokenPrices(tokenAddress)
+  const tvl =
+    tokenPrices[pool.token0.wrapped.address] * Number(pool.tvlToken0.toExact()) +
+    tokenPrices[pool.token1.wrapped.address] * Number(pool.tvlToken1.toExact())
 
-  const pool = useMemo(() => {
-    if (token0 && token1)
-      return new Pool(
-        token0.wrapped,
-        token1.wrapped,
-        farm.feeTier,
-        farm.sqrtP.toString(),
-        farm.baseL.toString(),
-        farm.reinvestL.toString(),
-        farm.currentTick,
+  const totalRewardValue = pool.totalRewards.reduce(
+    (total, rw) => total + Number(rw.toExact()) * tokenPrices[rw.currency.wrapped.address],
+    0,
+  )
+
+  const farmDuration = (pool.endTime - pool.startTime) / 86400
+  const farmAPR = (365 * 100 * (totalRewardValue || 0)) / farmDuration / pool.poolTvl
+
+  let poolAPY = 0
+  if (pool.feesUSD && poolFeeLast24h[pool.poolAddress]) {
+    const pool24hFee = pool.feesUSD - poolFeeLast24h[pool.poolAddress]
+
+    poolAPY = (pool24hFee * 100 * 365) / pool.poolTvl
+  }
+
+  const joinedPositions = userFarmInfo?.[fairlaunchAddress]?.joinedPositions[pool.pid] || []
+  const depositedPositions =
+    userFarmInfo?.[fairlaunchAddress]?.depositedPositions.filter(pos => {
+      return (
+        pool.poolAddress.toLowerCase() ===
+        computePoolAddress({
+          factoryAddress: NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.coreFactory,
+          tokenA: pos.pool.token0,
+          tokenB: pos.pool.token1,
+          fee: pos.pool.fee,
+          initCodeHashManualOverride: NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.initCodeHash,
+        }).toLowerCase()
       )
-    return null
-  }, [token0, token1, farm])
+    }) || []
+  const rewardPendings =
+    userFarmInfo?.[fairlaunchAddress]?.rewardPendings[pool.pid] ||
+    pool.rewardTokens.map(token => CurrencyAmount.fromRawAmount(token, 0))
 
-  const position: {
-    token0Amount: CurrencyAmount<Token>
-    token1Amount: CurrencyAmount<Token>
-    amountUsd: number
-    rewardAmounts: BigNumber[]
-    token0Staked: CurrencyAmount<Token>
-    token1Staked: CurrencyAmount<Token>
-    stakedUsd: number
-  } | null = useMemo(() => {
-    if (pool && token0 && token1) {
-      let token0Amount = CurrencyAmount.fromRawAmount(token0.wrapped, '0')
-      let token1Amount = CurrencyAmount.fromRawAmount(token1.wrapped, '0')
+  const canStake = depositedPositions.some(pos => {
+    const stakedPos = joinedPositions.find(j => j.nftId.toString() === pos.nftId.toString())
+    return !stakedPos
+      ? true
+      : BigNumber.from(pos.liquidity.toString()).gt(BigNumber.from(stakedPos.liquidity.toString()))
+  })
 
-      let token0Staked = CurrencyAmount.fromRawAmount(token0.wrapped, '0')
-      let token1Staked = CurrencyAmount.fromRawAmount(token1.wrapped, '0')
+  const canHarvest = rewardPendings.some(amount => amount.greaterThan(0))
 
-      const rewardAmounts = farm.rewardTokens.map(_item => BigNumber.from('0'))
-
-      farm.userDepositedNFTs.forEach(item => {
-        const pos = new Position({
-          pool,
-          liquidity: item.liquidity.toString(),
-          tickLower: item.tickLower,
-          tickUpper: item.tickUpper,
-        })
-
-        token0Amount = token0Amount.add(pos.amount0)
-        token1Amount = token1Amount.add(pos.amount1)
-
-        item.rewardPendings.forEach((rw, index) => (rewardAmounts[index] = rewardAmounts[index].add(rw)))
-      })
-
-      const amount0Usd = prices[0] * parseFloat(token0Amount.toExact())
-      const amount1Usd = prices[1] * parseFloat(token1Amount.toExact())
-
-      farm.userDepositedNFTs.forEach(item => {
-        const pos = new Position({
-          pool,
-          liquidity: item.stakedLiquidity.toString(),
-          tickLower: item.tickLower,
-          tickUpper: item.tickUpper,
-        })
-
-        token0Staked = token0Staked.add(pos.amount0)
-        token1Staked = token1Staked.add(pos.amount1)
-      })
-
-      const amount0StakedUsd = prices[0] * parseFloat(token0Staked.toExact())
-      const amount1StakedUsd = prices[1] * parseFloat(token1Staked.toExact())
-
-      return {
-        token1Amount,
-        amountUsd: amount0Usd + amount1Usd,
-        token0Amount,
-        rewardAmounts,
-        token0Staked,
-        token1Staked,
-        stakedUsd: amount0StakedUsd + amount1StakedUsd,
-      }
-    }
-    return null
-  }, [pool, token0, token1, prices, farm])
-
-  const canStake =
-    farm.userDepositedNFTs.filter(item => item.liquidity.sub(item.stakedLiquidity).gt(BigNumber.from(0))).length > 0
-  const canHarvest = farm.userDepositedNFTs.some(pos => !!pos.rewardPendings.length)
-  const canUnstake = farm.userDepositedNFTs.some(pos => pos.stakedLiquidity.gt(0))
-  const isFarmStarted = farm.startTime <= currentTimestamp
+  const canUnstake = !!joinedPositions.length
+  const isFarmStarted = pool.startTime <= currentTimestamp
 
   const setSharePoolAddress = useSharePoolContext()
 
-  useEffect(() => {
-    if (position)
-      onUpdateDepositedInfo({
-        poolAddress: farm.poolAddress,
-        usdValue: position.amountUsd || 0,
-        token0Amount: position.token0Amount,
-        token1Amount: position.token1Amount,
-      })
-  }, [position, farm.poolAddress, onUpdateDepositedInfo])
-
   const [showTargetVolInfo, setShowTargetVolInfo] = useState(false)
 
-  const amountCanStaked = (position?.amountUsd || 0) - (position?.stakedUsd || 0)
+  const depositedUsd = depositedPositions.reduce(
+    (usd, pos) =>
+      usd +
+      Number(pos.amount1.toExact()) * (tokenPrices[pos.pool.token1.address.toLowerCase()] || 0) +
+      Number(pos.amount0.toExact()) * (tokenPrices[pos.pool.token0.address.toLowerCase()] || 0),
+    0,
+  )
+
+  const stakedUsd = joinedPositions.reduce(
+    (usd, pos) =>
+      usd +
+      Number(pos.amount1.toExact()) * (tokenPrices[pos.pool.token1.address.toLowerCase()] || 0) +
+      Number(pos.amount0.toExact()) * (tokenPrices[pos.pool.token0.address.toLowerCase()] || 0),
+    0,
+  )
+
+  const amountCanStaked = depositedUsd - stakedUsd
 
   if (!above1000) {
     const renderStakeButtonOnMobile = () => {
@@ -230,7 +185,7 @@ const Row = ({
         <ActionButton
           disabled={!isApprovedForAll || tab === 'ended' || !isFarmStarted || !canStake}
           style={{ flex: 1 }}
-          onClick={() => onOpenModal('stake', farm.pid)}
+          onClick={() => onOpenModal('stake', pool.pid)}
         >
           <Plus width={20} height={20} />
           <Text fontSize={14}>
@@ -269,10 +224,14 @@ const Row = ({
 
         <ProMMFarmTableRowMobile>
           <Flex alignItems="center" marginBottom="20px">
-            <DoubleCurrencyLogo currency0={token0} currency1={token1} size={20} />
-            <Link to={`/elastic/add/${farm.token0}/${farm.token1}/${farm.feeTier}`}>
+            <DoubleCurrencyLogo currency0={pool.token0} currency1={pool.token1} size={20} />
+            <Link
+              to={`/elastic/add/${pool.token0.isNative ? pool.token0.symbol : pool.token0.address}/${
+                pool.token1.isNative ? pool.token1.symbol : pool.token1.address
+              }/${pool.pool.fee}`}
+            >
               <Text fontSize={16} fontWeight="500">
-                {token0?.symbol} - {token1?.symbol}
+                {pool.token0.symbol} - {pool.token1.symbol}
               </Text>
             </Link>
           </Flex>
@@ -285,12 +244,12 @@ const Row = ({
             color={theme.subText}
             width="max-content"
           >
-            <Text>Fee = {(farm.feeTier * 100) / ELASTIC_BASE_FEE_UNIT}%</Text>
+            <Text>Fee = {(pool.pool.fee * 100) / ELASTIC_BASE_FEE_UNIT}%</Text>
             <Text color={theme.subText}>|</Text>
 
             <Flex alignItems="center">
-              <Text>{shortenAddress(farm.poolAddress, 2)}</Text>
-              <CopyHelper toCopy={farm.poolAddress} />
+              <Text>{shortenAddress(pool.poolAddress, 2)}</Text>
+              <CopyHelper toCopy={pool.poolAddress} />
             </Flex>
           </Flex>
 
@@ -331,7 +290,7 @@ const Row = ({
                 text={t`After harvesting, your rewards will unlock linearly over the indicated time period`}
               />
             </Text>
-            <Text>{getFormattedTimeFromSecond(farm.vestingDuration, true)}</Text>
+            <Text>{getFormattedTimeFromSecond(pool.vestingDuration, true)}</Text>
           </InfoRow>
 
           <InfoRow>
@@ -341,19 +300,19 @@ const Row = ({
             </Text>
 
             <Flex flexDirection="column" alignItems="flex-end" justifyContent="center" sx={{ gap: '8px' }}>
-              {farm.startTime > currentTimestamp ? (
+              {pool.startTime > currentTimestamp ? (
                 <>
                   <Text color={theme.subText} fontSize="12px">
                     <Trans>New phase will start in</Trans>
                   </Text>
-                  {getFormattedTimeFromSecond(farm.startTime - currentTimestamp)}
+                  {getFormattedTimeFromSecond(pool.startTime - currentTimestamp)}
                 </>
-              ) : farm.endTime > currentTimestamp ? (
+              ) : pool.endTime > currentTimestamp ? (
                 <>
                   <Text color={theme.subText} fontSize="12px">
                     <Trans>Current phase will end in</Trans>
                   </Text>
-                  {getFormattedTimeFromSecond(farm.endTime - currentTimestamp)}
+                  {getFormattedTimeFromSecond(pool.endTime - currentTimestamp)}
                 </>
               ) : (
                 <Trans>ENDED</Trans>
@@ -367,8 +326,8 @@ const Row = ({
             </Text>
 
             <Flex justifyContent="flex-end" color={!!amountCanStaked ? theme.warning : theme.text}>
-              {!!position?.amountUsd ? formatDollarAmount(position.amountUsd) : '--'}
-              {!!amountCanStaked && (
+              {!!depositedUsd ? formatDollarAmount(depositedUsd) : '--'}
+              {!!depositedUsd && (
                 <InfoHelper
                   color={theme.warning}
                   text={t`You still have ${formatDollarAmount(
@@ -387,14 +346,14 @@ const Row = ({
 
           <RewardMobileArea>
             <Flex justifyContent="center" alignItems="center" marginBottom="8px" sx={{ gap: '4px' }}>
-              {farm.rewardTokens.map((token, idx) => {
-                return (
-                  <React.Fragment key={token}>
-                    <Reward key={token} token={token} amount={position?.rewardAmounts[idx]} />
-                    {idx !== farm.rewardTokens.length - 1 && <Text color={theme.subText}>|</Text>}
-                  </React.Fragment>
-                )
-              })}
+              {rewardPendings.map(amount => (
+                <Flex alignItems="center" sx={{ gap: '4px' }} key={amount.currency.symbol}>
+                  <HoverInlineText text={amount.toSignificant(6)} maxCharacters={10}></HoverInlineText>
+                  <MouseoverTooltip placement="top" text={amount.currency.symbol} width="fit-content">
+                    <CurrencyLogo currency={amount.currency} size="16px" />
+                  </MouseoverTooltip>
+                </Flex>
+              ))}
             </Flex>
 
             <ActionButton
@@ -414,7 +373,7 @@ const Row = ({
             <ActionButton
               colorScheme={ButtonColorScheme.Red}
               style={{ flex: 1 }}
-              onClick={() => onOpenModal('unstake', farm.pid)}
+              onClick={() => onOpenModal('unstake', Number(pool.pid))}
               disabled={!canUnstake}
             >
               <Minus width={20} height={20} />
@@ -480,7 +439,7 @@ const Row = ({
         placement="top"
         width="300px"
       >
-        <MinimalActionButton onClick={() => onOpenModal('stake', farm.pid)}>
+        <MinimalActionButton onClick={() => onOpenModal('stake', Number(pool.pid))}>
           <Plus size={16} />
         </MinimalActionButton>
       </MouseoverTooltipDesktopOnly>
@@ -502,7 +461,10 @@ const Row = ({
         placement="top"
         width="300px"
       >
-        <MinimalActionButton colorScheme={ButtonColorScheme.Red} onClick={() => onOpenModal('unstake', farm.pid)}>
+        <MinimalActionButton
+          colorScheme={ButtonColorScheme.Red}
+          onClick={() => onOpenModal('unstake', Number(pool.pid))}
+        >
           <Minus size={16} />
         </MinimalActionButton>
       </MouseoverTooltipDesktopOnly>
@@ -531,21 +493,23 @@ const Row = ({
     <ProMMFarmTableRow>
       <div>
         <Flex alignItems="center">
-          <DoubleCurrencyLogo currency0={token0} currency1={token1} />
+          <DoubleCurrencyLogo currency0={pool.token0} currency1={pool.token1} />
           <Link
-            to={`/elastic/add/${farm.token0}/${farm.token1}/${farm.feeTier}`}
+            to={`/elastic/add/${pool.token0.isNative ? pool.token0.symbol : pool.token0.address}/${
+              pool.token1.isNative ? pool.token1.symbol : pool.token1.address
+            }/${pool.pool.fee}`}
             style={{
               textDecoration: 'none',
             }}
           >
             <Text fontSize={14} fontWeight={500}>
-              {token0?.symbol} - {token1?.symbol}
+              {pool.token0.symbol} - {pool.token1.symbol}
             </Text>
           </Link>
 
           <Flex
             onClick={() => {
-              setSharePoolAddress(farm.poolAddress)
+              setSharePoolAddress(pool.poolAddress)
             }}
             sx={{
               marginLeft: '8px',
@@ -565,12 +529,12 @@ const Row = ({
           color={theme.subText}
           width="max-content"
         >
-          <Text>Fee = {(farm.feeTier * 100) / ELASTIC_BASE_FEE_UNIT}%</Text>
+          <Text>Fee = {(pool.pool.fee * 100) / ELASTIC_BASE_FEE_UNIT}%</Text>
           <Text color={theme.subText}>|</Text>
 
           <Flex alignItems="center">
-            <Text>{shortenAddress(farm.poolAddress, 2)}</Text>
-            <CopyHelper toCopy={farm.poolAddress} />
+            <Text>{shortenAddress(pool.poolAddress, 2)}</Text>
+            <CopyHelper toCopy={pool.poolAddress} />
           </Flex>
         </Flex>
       </div>
@@ -595,19 +559,19 @@ const Row = ({
       </Flex>
 
       <Flex flexDirection="column" alignItems="flex-end" justifyContent="center" sx={{ gap: '8px' }}>
-        {farm.startTime > currentTimestamp ? (
+        {pool.startTime > currentTimestamp ? (
           <>
             <Text color={theme.subText} fontSize="12px">
               <Trans>New phase will start in</Trans>
             </Text>
-            {getFormattedTimeFromSecond(farm.startTime - currentTimestamp)}
+            {getFormattedTimeFromSecond(pool.startTime - currentTimestamp)}
           </>
-        ) : farm.endTime > currentTimestamp ? (
+        ) : pool.endTime > currentTimestamp ? (
           <>
             <Text color={theme.subText} fontSize="12px">
               <Trans>Current phase will end in</Trans>
             </Text>
-            {getFormattedTimeFromSecond(farm.endTime - currentTimestamp)}
+            {getFormattedTimeFromSecond(pool.endTime - currentTimestamp)}
           </>
         ) : (
           <Trans>ENDED</Trans>
@@ -616,7 +580,7 @@ const Row = ({
 
       {amountCanStaked ? (
         <Flex justifyContent="flex-end" color={theme.warning}>
-          {formatDollarAmount(position?.amountUsd || 0)}
+          {formatDollarAmount(depositedUsd)}
           <InfoHelper
             placement="top"
             color={theme.warning}
@@ -638,7 +602,7 @@ const Row = ({
                   </Trans>
                 </Text>
                 <Text as="span" color={theme.text}>
-                  Staked: {formatDollarAmount(position?.amountUsd || 0)}
+                  Staked: {formatDollarAmount(stakedUsd)}
                 </Text>
                 <Text as="span" color={theme.warning}>
                   Not staked: {formatDollarAmount(amountCanStaked)}
@@ -649,13 +613,18 @@ const Row = ({
         </Flex>
       ) : (
         <Flex justifyContent="flex-end" color={theme.text}>
-          {position?.amountUsd ? formatDollarAmount(position.amountUsd) : '--'}
+          {depositedUsd ? formatDollarAmount(depositedUsd) : '--'}
         </Flex>
       )}
 
       <Flex flexDirection="column" alignItems="flex-end" sx={{ gap: '8px' }}>
-        {farm.rewardTokens.map((token, idx) => (
-          <Reward key={token} token={token} amount={position?.rewardAmounts[idx]} />
+        {rewardPendings.map(amount => (
+          <Flex alignItems="center" sx={{ gap: '4px' }} key={amount.currency.symbol}>
+            <HoverInlineText text={amount.toSignificant(6)} maxCharacters={10}></HoverInlineText>
+            <MouseoverTooltip placement="top" text={amount.currency.symbol} width="fit-content">
+              <CurrencyLogo currency={amount.currency} size="16px" />
+            </MouseoverTooltip>
+          </Flex>
         ))}
       </Flex>
       <Flex justifyContent="flex-end" sx={{ gap: '4px' }}>

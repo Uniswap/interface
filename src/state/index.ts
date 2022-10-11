@@ -6,7 +6,7 @@ import burnProAmm from './burn/proamm/reducer'
 import burn from './burn/reducer'
 import campaigns from './campaigns/reducer'
 import customizeDexes from './customizeDexes'
-import prommFarms from './farms/promm/reducer'
+import elasticFarm from './farms/elastic'
 import farms from './farms/reducer'
 import { updateVersion } from './global/actions'
 import lists from './lists/reducer'
@@ -16,6 +16,7 @@ import multicall from './multicall/reducer'
 import pair from './pair/reducer'
 import pools from './pools/reducer'
 import swap from './swap/reducer'
+import tokenPrices from './tokenPrices'
 import transactions from './transactions/reducer'
 import tutorial from './tutorial/reducer'
 import user from './user/reducer'
@@ -39,12 +40,13 @@ const store = configureStore({
     pair,
     pools,
     farms,
-    prommFarms,
     vesting,
     // [dataApi.reducerPath]: dataApi.reducer
     campaigns,
     tutorial,
     customizeDexes,
+    elasticFarm,
+    tokenPrices,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({ thunk: false, immutableCheck: false, serializableCheck: false })

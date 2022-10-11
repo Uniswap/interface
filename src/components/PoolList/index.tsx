@@ -116,8 +116,8 @@ const PoolList = ({
 
       switch (sortedColumn) {
         case SORT_FIELD.LIQ:
-          return parseFloat(poolA?.amp.toString() || '0') * parseFloat(poolA?.reserveUSD) >
-            parseFloat(poolB?.amp.toString() || '0') * parseFloat(poolB?.reserveUSD)
+          return parseFloat(poolA?.amp?.toString() || '0') * parseFloat(poolA?.reserveUSD) >
+            parseFloat(poolB?.amp?.toString() || '0') * parseFloat(poolB?.reserveUSD)
             ? (sortDirection ? -1 : 1) * 1
             : (sortDirection ? -1 : 1) * -1
         case SORT_FIELD.VOL:

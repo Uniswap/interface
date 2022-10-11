@@ -131,7 +131,6 @@ export const GET_BLOCKS = (timestamps: number[]) => {
 }
 
 const PoolFields = (withFee?: boolean) => `
-  fragment PoolFields on Pool {
     id
     txCount
     token0 {
@@ -171,7 +170,6 @@ const PoolFields = (withFee?: boolean) => `
     token1PriceMin
     token1PriceMax
     createdAtTimestamp
-  }
 `
 
 export const USER_POSITIONS = gql`
@@ -234,10 +232,9 @@ export const POOL_DATA = (poolAddress: string, block: number, withFee?: boolean)
   const queryString = `
     query pools {
       pools(${block ? `block: {number: ${block}}` : ``} where: { id: "${poolAddress}"} ) {
-        ...PoolFields
+        ${PoolFields(withFee)}
       }
     }
-    ${PoolFields(withFee)}
     `
 
   return gql(queryString)
@@ -261,13 +258,12 @@ export const POOLS_BULK_FROM_LIST = (pools: string[], withFee?: boolean) => {
   const queryString = `
   query pools {
     pools(first: ${pools.length}, where: {id_in: ${poolsString}}, orderBy: reserveUSD, orderDirection: desc) {
-      ...PoolFields
+        ${PoolFields(withFee)}
     }
   }
   `
 
   return gql`
-    ${PoolFields(withFee)}
     ${queryString}
   `
 }
@@ -276,13 +272,12 @@ export const POOLS_BULK_WITH_PAGINATION = (first: number, skip: number, withFee?
   const queryString = `
   query pools {
     pools(first: ${first}, skip: ${skip}) {
-      ...PoolFields
+      ${PoolFields(withFee)}
     }
   }
   `
 
   return gql`
-    ${PoolFields(withFee)}
     ${queryString}
   `
 }

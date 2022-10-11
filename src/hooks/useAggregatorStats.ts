@@ -2,14 +2,7 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import useSWR from 'swr'
 
 import { KS_SETTING_API } from 'constants/env'
-import { NETWORKS_INFO } from 'constants/networks'
-
-// It's recommended to use NETWORKS_INFO[chainId].route,
-// but very unfortunately that BE uses `bsc` instead of `bnb`
-const chainIdMapping: Partial<Record<ChainId, string>> = {
-  [ChainId.BSCMAINNET]: 'bsc',
-  [ChainId.BTTC]: 'bttc',
-}
+import { NETWORKS_INFO, chainIdMapping } from 'constants/networks'
 
 const useLiquiditySources = (chainId?: ChainId) => {
   const chainString = chainId ? chainIdMapping[chainId] || NETWORKS_INFO[chainId].route : ''

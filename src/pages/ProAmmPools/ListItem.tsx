@@ -23,7 +23,7 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { ButtonIcon } from 'pages/Pools/styleds'
 import { useToggleEthPowAckModal } from 'state/application/hooks'
-import { useProMMFarms } from 'state/farms/promm/hooks'
+import { useElasticFarms } from 'state/farms/elastic/hooks'
 import { useUrlOnEthPowAck } from 'state/pools/hooks'
 import { ProMMPoolData } from 'state/prommPools/hooks'
 import { ExternalLink } from 'theme'
@@ -120,7 +120,7 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
   const token1Slug = isToken1WETH ? nativeToken.symbol : pair[0].token1.address
   const token1Symbol = isToken1WETH ? nativeToken.symbol : token1.symbol
 
-  const { data: farms } = useProMMFarms()
+  const { farms } = useElasticFarms()
 
   const { mixpanelHandler } = useMixpanel()
 
@@ -134,14 +134,15 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
 
         let fairlaunchAddress = ''
         let pid = -1
-        Object.keys(farms).forEach(addr => {
-          const farm = farms[addr]
+
+        farms?.forEach(farm => {
+          const p = farm.pools
             .filter(item => item.endTime > Date.now() / 1000)
             .find(item => item.poolAddress.toLowerCase() === pool.address.toLowerCase())
 
-          if (farm) {
-            fairlaunchAddress = addr
-            pid = farm.pid
+          if (p) {
+            fairlaunchAddress = farm.id
+            pid = Number(p.pid)
           }
         })
 

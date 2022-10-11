@@ -1,6 +1,5 @@
 import { Token } from '@kyberswap/ks-sdk-core'
 import { BigNumber } from 'ethers'
-import React from 'react'
 
 import { ZERO_ADDRESS } from 'constants/index'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'

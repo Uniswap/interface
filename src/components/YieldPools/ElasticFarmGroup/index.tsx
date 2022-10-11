@@ -1,8 +1,7 @@
-import { CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
+import { Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import { BigNumber } from 'ethers'
 import { rgba } from 'polished'
-import { useCallback, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Info } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
@@ -17,18 +16,16 @@ import Withdraw from 'components/Icons/Withdraw'
 import InfoHelper from 'components/InfoHelper'
 import { MouseoverTooltip, MouseoverTooltipDesktopOnly } from 'components/Tooltip'
 import { ZERO_ADDRESS } from 'constants/index'
-import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
-import { useTokens } from 'hooks/Tokens'
 import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import { Dots } from 'pages/Pool/styleds'
 import { useWalletModalToggle } from 'state/application/hooks'
-import { useRewardTokenPrices } from 'state/farms/hooks'
-import { useFailedNFTs, useFarmAction } from 'state/farms/promm/hooks'
-import { ProMMFarm } from 'state/farms/promm/types'
+import { useFailedNFTs, useFarmAction } from 'state/farms/elastic/hooks'
+import { FarmingPool, UserInfo } from 'state/farms/elastic/types'
 import { useSingleCallResult } from 'state/multicall/hooks'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { useIsTransactionPending } from 'state/transactions/hooks'
 import { formatDollarAmount } from 'utils/numbers'
 
@@ -70,100 +67,69 @@ type Props = {
   address: string
   onOpenModal: (
     modalType: 'forcedWithdraw' | 'harvest' | 'deposit' | 'withdraw' | 'stake' | 'unstake',
-    pid?: number,
+    pid?: number | string,
   ) => void
-  farms: ProMMFarm[]
+  pools: FarmingPool[]
+  userInfo?: UserInfo
 }
 
-const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, farms }) => {
+const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, pools, userInfo }) => {
   const theme = useTheme()
   const { account } = useActiveWeb3React()
   const above768 = useMedia('(min-width: 768px)')
   const above1000 = useMedia('(min-width: 1000px)')
 
-  const [userPoolFarmInfo, setUserPoolFarmInfo] = useState<{
-    [pid: number]: {
-      usdValue: number
-      token0Amount: CurrencyAmount<Token>
-      token1Amount: CurrencyAmount<Token>
-    }
-  }>({})
+  const tokenAddressList = pools
+    .map(p => [p.token0.wrapped.address, p.token1.wrapped.address, ...p.rewardTokens.map(rw => rw.wrapped.address)])
+    .flat()
 
-  const rewardAddresses = useMemo(() => {
-    const rws = farms.reduce((acc, cur) => [...acc, ...cur.rewardTokens], [] as string[])
-    return [...new Set(rws)]
-  }, [farms])
+  const tokenPrices = useTokenPrices([...new Set(tokenAddressList)])
 
-  const rwTokenMap = useTokens(rewardAddresses)
+  const depositedUsd =
+    userInfo?.depositedPositions.reduce(
+      (acc, cur) =>
+        acc +
+        Number(cur.amount0.toExact()) * (tokenPrices[cur.amount0.currency.wrapped.address] || 0) +
+        Number(cur.amount1.toExact()) * (tokenPrices[cur.amount1.currency.wrapped.address] || 0),
+      0,
+    ) || 0
 
-  const rwTokens = useMemo(() => Object.values(rwTokenMap), [rwTokenMap])
-  const prices = useRewardTokenPrices(rwTokens, VERSION.ELASTIC)
+  const userDepositedTokenAmounts =
+    userInfo?.depositedPositions.reduce<{
+      [address: string]: CurrencyAmount<Token>
+    }>((result, pos) => {
+      const address0 = pos.amount0.currency.address
+      const address1 = pos.amount1.currency.address
 
-  const priceMap: { [key: string]: number } = useMemo(
-    () =>
-      prices?.reduce(
-        (acc, cur, index) => ({
-          ...acc,
-          [rwTokens[index]?.isToken ? rwTokens[index].address : ZERO_ADDRESS]: cur,
-        }),
-        {},
-      ),
-    [prices, rwTokens],
-  )
+      if (!result[address0]) result[address0] = pos.amount0
+      else result[address0] = result[address0].add(pos.amount0)
 
-  const totalUserReward: { totalUsdValue: number; amounts: CurrencyAmount<Token>[] } = useMemo(() => {
-    const temp: { [address: string]: BigNumber } = {}
-    farms.forEach(farm => {
-      const tks = farm.rewardTokens
+      if (!result[address1]) result[address1] = pos.amount1
+      else result[address1] = result[address1].add(pos.amount1)
 
-      farm.userDepositedNFTs.forEach(pos => {
-        pos.rewardPendings.forEach((amount, index) => {
-          const tkAddress = tks[index]
-          if (temp[tkAddress]) temp[tkAddress] = temp[tkAddress].add(amount)
-          else temp[tkAddress] = amount
-        })
-      })
-    })
+      return result
+    }, {}) || {}
 
-    let usd = 0
-    const amounts: CurrencyAmount<Token>[] = []
+  const rewardPendings = Object.values(userInfo?.rewardPendings || {}).flat()
+  const rewardUSD =
+    rewardPendings.reduce(
+      (acc, cur) => acc + Number(cur.toExact()) * (tokenPrices[cur.currency.wrapped.address] || 0),
+      0,
+    ) || 0
 
-    Object.keys(temp).forEach((key: string) => {
-      const token = rwTokenMap[key]
-      const price = priceMap[key]
+  const rewardAmounts =
+    rewardPendings.reduce<{
+      [address: string]: CurrencyAmount<Currency>
+    }>((result, amount) => {
+      const address = amount.currency.wrapped.address
 
-      if (token) {
-        const amount = CurrencyAmount.fromRawAmount(token, temp[key].toString())
-        usd += price * parseFloat(amount.toExact())
-        if (amount.greaterThan(0)) amounts.push(amount)
-      }
-    })
-
-    return {
-      totalUsdValue: usd,
-      amounts,
-    }
-  }, [farms, rwTokenMap, priceMap])
-
-  const depositedUsd = Object.values(userPoolFarmInfo).reduce((acc, cur) => acc + cur.usdValue, 0)
-
-  const userDepositedTokenAmounts = Object.values(userPoolFarmInfo).reduce<{
-    [address: string]: CurrencyAmount<Token>
-  }>((result, info) => {
-    const address0 = info.token0Amount.currency.address
-    const address1 = info.token1Amount.currency.address
-
-    if (!result[address0]) result[address0] = info.token0Amount
-    else result[address0] = result[address0].add(info.token0Amount)
-
-    if (!result[address1]) result[address1] = info.token1Amount
-    else result[address1] = result[address1].add(info.token1Amount)
-
-    return result
-  }, {})
+      if (!result[address]) result[address] = amount
+      else result[address] = result[address].add(amount)
+      return result
+    }, {}) || {}
 
   const failedNFTs = useFailedNFTs()
-  const userNFTs = farms.map(farm => farm.userDepositedNFTs.map(item => item.tokenId.toString())).flat()
+  const userNFTs: string[] = userInfo?.depositedPositions.map(pos => pos.nftId.toString()) || []
   const hasAffectedByFarmIssue = userNFTs.some(id => failedNFTs.includes(id))
 
   const toggleWalletModal = useWalletModalToggle()
@@ -184,37 +150,13 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, farms }) => {
     }
   }
 
-  const aggregateDepositedInfo = useCallback(
-    ({
-      poolAddress,
-      usdValue,
-      token0Amount,
-      token1Amount,
-    }: {
-      poolAddress: string | number
-      usdValue: number
-      token0Amount: CurrencyAmount<Token>
-      token1Amount: CurrencyAmount<Token>
-    }) => {
-      setUserPoolFarmInfo(prev => ({
-        ...prev,
-        [poolAddress]: {
-          usdValue,
-          token0Amount,
-          token1Amount,
-        },
-      }))
-    },
-    [],
-  )
-
   const qs = useParsedQueryString()
   const tab = qs.type || 'active'
 
-  if (!farms) return null
+  if (!pools) return null
 
-  const canHarvest = farms.some(farm => farm.userDepositedNFTs.some(pos => !!pos.rewardPendings.length))
-  const canWithdraw = farms.some(farms => farms.userDepositedNFTs.length)
+  const canHarvest = Object.values(userInfo?.rewardPendings || {}).some(rw => rw.some(item => item.greaterThan('0')))
+  const canWithdraw = !!userInfo?.depositedPositions.length
 
   const renderApproveButton = () => {
     if (isApprovedForAll || tab === 'ended') {
@@ -627,7 +569,7 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, farms }) => {
                       fontWeight: 500,
                     }}
                   >
-                    {formatDollarAmount(totalUserReward.totalUsdValue)}
+                    {formatDollarAmount(rewardUSD)}
                   </Text>
                 ) : (
                   '--'
@@ -635,12 +577,12 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, farms }) => {
               }
               hideIcon={!account}
               dropdownContent={
-                totalUserReward.amounts.length ? (
+                Object.values(rewardAmounts).length ? (
                   <AutoColumn gap="sm">
-                    {totalUserReward.amounts.map(
+                    {Object.values(rewardAmounts).map(
                       amount =>
                         amount.greaterThan(0) && (
-                          <Flex alignItems="center" key={amount.currency.address}>
+                          <Flex alignItems="center" key={amount.currency.wrapped.address}>
                             <CurrencyLogo currency={amount.currency} size="16px" />
                             <Text fontSize="12px" marginLeft="4px">
                               {amount.toSignificant(8)}
@@ -706,7 +648,7 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, farms }) => {
                     fontWeight: 500,
                   }}
                 >
-                  {formatDollarAmount(totalUserReward.totalUsdValue)}
+                  {formatDollarAmount(rewardUSD)}
                 </Text>
               ) : (
                 '--'
@@ -714,12 +656,12 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, farms }) => {
             }
             hideIcon={!account}
             dropdownContent={
-              totalUserReward.amounts.length ? (
+              Object.values(rewardAmounts).length ? (
                 <AutoColumn gap="sm">
-                  {totalUserReward.amounts.map(
+                  {Object.values(rewardAmounts).map(
                     amount =>
                       amount.greaterThan(0) && (
-                        <Flex alignItems="center" key={amount.currency.address}>
+                        <Flex alignItems="center" key={amount.currency.wrapped.address}>
                           <CurrencyLogo currency={amount.currency} size="16px" />
                           <Text fontSize="12px" marginLeft="4px">
                             {amount.toSignificant(8)}
@@ -741,7 +683,7 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, farms }) => {
   }
 
   return (
-    <FarmContent>
+    <FarmContent data-testid="farm-block">
       {above1000 ? (
         <>
           {renderFarmGroupHeaderOnDesktop()}
@@ -764,18 +706,17 @@ const ProMMFarmGroup: React.FC<Props> = ({ address, onOpenModal, farms }) => {
 
       <Divider />
 
-      {farms.map((farm, index) => {
+      {pools.map(pool => {
         return (
           <Row
             isUserAffectedByFarmIssue={hasAffectedByFarmIssue}
             isApprovedForAll={isApprovedForAll}
-            farm={farm}
-            key={farm.poolAddress + '_' + index}
+            pool={pool}
+            key={pool.id}
             onOpenModal={onOpenModal}
-            onUpdateDepositedInfo={aggregateDepositedInfo}
             fairlaunchAddress={address}
             onHarvest={() => {
-              onOpenModal('harvest', farm.pid)
+              onOpenModal('harvest', Number(pool.pid))
             }}
           />
         )

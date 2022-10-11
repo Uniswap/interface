@@ -1,3 +1,4 @@
+import { computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Trans, t } from '@lingui/macro'
 import { stringify } from 'querystring'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -16,15 +17,15 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
-import { useBlockNumber, useModalOpen, useOpenModal } from 'state/application/hooks'
-import { useFailedNFTs, useGetProMMFarms, useProMMFarms } from 'state/farms/promm/hooks'
-import { ProMMFarm } from 'state/farms/promm/types'
+import { useModalOpen, useOpenModal } from 'state/application/hooks'
+import { useElasticFarms, useFailedNFTs } from 'state/farms/elastic/hooks'
 import { StyledInternalLink } from 'theme'
+import { isAddressString } from 'utils'
 
-import ProMMFarmGroup from './ProMMFarmGroup'
-import { DepositModal, StakeUnstakeModal } from './ProMMFarmModals'
-import HarvestModal from './ProMMFarmModals/HarvestModal'
-import WithdrawModal from './ProMMFarmModals/WithdrawModal'
+import ElasticFarmGroup from './ElasticFarmGroup'
+import { DepositModal, StakeUnstakeModal } from './ElasticFarmModals'
+import HarvestModal from './ElasticFarmModals/HarvestModal'
+import WithdrawModal from './ElasticFarmModals/WithdrawModal'
 import { SharePoolContext } from './SharePoolContext'
 import {
   HeadingContainer,
@@ -38,9 +39,8 @@ import {
 type ModalType = 'deposit' | 'withdraw' | 'stake' | 'unstake' | 'harvest' | 'forcedWithdraw'
 
 // this address exists on both Polygon and Avalanche
-const affectedFairlaunchAddress = '0x5C503D4b7DE0633f031229bbAA6A5e4A31cc35d8'
 
-function ProMMFarms({ active }: { active: boolean }) {
+function ElasticFarms({ active }: { active: boolean }) {
   const theme = useTheme()
   const { chainId } = useActiveWeb3React()
   const [stakedOnly, setStakedOnly] = useState({
@@ -48,15 +48,10 @@ function ProMMFarms({ active }: { active: boolean }) {
     ended: false,
   })
   const activeTab = active ? 'active' : 'ended'
-  const { data: farms, loading } = useProMMFarms()
-  const getProMMFarms = useGetProMMFarms()
+
+  const { farms, loading, userFarmInfo } = useElasticFarms()
 
   const failedNFTs = useFailedNFTs()
-  const blockNumber = useBlockNumber()
-
-  useEffect(() => {
-    getProMMFarms()
-  }, [getProMMFarms, blockNumber])
 
   const ref = useRef<HTMLDivElement>()
   const [open, setOpen] = useState(false)
@@ -80,33 +75,71 @@ function ProMMFarms({ active }: { active: boolean }) {
 
   const filteredFarms = useMemo(() => {
     const now = Date.now() / 1000
-    return Object.keys(farms).reduce((acc: { [key: string]: ProMMFarm[] }, address) => {
-      const currentFarms = farms[address].filter(farm => {
-        const filterActive = active ? farm.endTime >= now : farm.endTime < now
-        const filterSearchText = search
-          ? farm.token0.toLowerCase().includes(search) ||
-            farm.token1.toLowerCase().includes(search) ||
-            farm.poolAddress.toLowerCase() === search ||
-            farm?.token0Info?.symbol?.toLowerCase().includes(search) ||
-            farm?.token1Info?.symbol?.toLowerCase().includes(search) ||
-            farm?.token0Info?.name?.toLowerCase().includes(search) ||
-            farm?.token1Info?.name?.toLowerCase().includes(search)
-          : true
 
-        let filterStaked = true
-        if (stakedOnly[activeTab]) {
-          filterStaked = farm.userDepositedNFTs.length > 0
-        }
-
-        return filterActive && filterSearchText && filterStaked
+    // filter active/ended farm
+    let result = farms
+      ?.map(farm => {
+        const pools = farm.pools.filter(pool => (active ? pool.endTime >= now : pool.endTime < now))
+        return { ...farm, pools }
       })
+      .filter(farm => !!farm.pools.length)
 
-      if (currentFarms.length) acc[address] = currentFarms
-      return acc
-    }, {})
-  }, [farms, active, search, stakedOnly, activeTab])
+    const searchAddress = isAddressString(search)
+    // filter by address
+    if (searchAddress) {
+      if (chainId)
+        result = result?.map(farm => {
+          farm.pools = farm.pools.filter(pool => {
+            const poolAddress = computePoolAddress({
+              factoryAddress: NETWORKS_INFO[chainId].elastic.coreFactory,
+              tokenA: pool.token0.wrapped,
+              tokenB: pool.token1.wrapped,
+              fee: pool.pool.fee,
+              initCodeHashManualOverride: NETWORKS_INFO[chainId].elastic.initCodeHash,
+            })
+            return [poolAddress, pool.pool.token1.address, pool.pool.token0.address].includes(searchAddress)
+          })
+          return farm
+        })
+    } else {
+      // filter by symbol and name of token
+      result = result?.map(farm => {
+        farm.pools = farm.pools.filter(pool => {
+          return (
+            pool.token0.symbol?.toLowerCase().includes(search) ||
+            pool.token0.symbol?.toLowerCase().includes(search) ||
+            pool.token1.name?.toLowerCase().includes(search) ||
+            pool.token1.name?.toLowerCase().includes(search)
+          )
+        })
+        return farm
+      })
+    }
 
-  const noFarms = !Object.keys(filteredFarms).length
+    if (stakedOnly[activeTab] && chainId) {
+      result = result?.map(item => {
+        if (!userFarmInfo?.[item.id].depositedPositions.length) {
+          return { ...item, pools: [] }
+        }
+        const stakedPools = userFarmInfo?.[item.id].depositedPositions.map(pos =>
+          computePoolAddress({
+            factoryAddress: NETWORKS_INFO[chainId].elastic.coreFactory,
+            tokenA: pos.pool.token0,
+            tokenB: pos.pool.token1,
+            fee: pos.pool.fee,
+            initCodeHashManualOverride: NETWORKS_INFO[chainId].elastic.initCodeHash,
+          }).toLowerCase(),
+        )
+
+        const pools = item.pools.filter(pool => stakedPools.includes(pool.poolAddress.toLowerCase()))
+        return { ...item, pools }
+      })
+    }
+
+    return result?.filter(farm => !!farm.pools.length) || []
+  }, [farms, active, search, stakedOnly, activeTab, chainId, userFarmInfo])
+
+  const noFarms = !filteredFarms.length
 
   const [selectedFarm, setSeletedFarm] = useState<null | string>(null)
   const [selectedModal, setSeletedModal] = useState<ModalType | null>(null)
@@ -129,21 +162,14 @@ function ProMMFarms({ active }: { active: boolean }) {
   const renderAnnouncement = () => {
     // show announcement only when user was affected in one of the visible farms on the UI
     const now = Date.now() / 1000
-    if (activeTab === 'active') {
-      const shouldShow = farms?.[affectedFairlaunchAddress]
-        ?.filter(farm => now <= farm.endTime) // active
-        .flatMap(farm => farm.userDepositedNFTs.map(item => item.tokenId.toString()))
-        .some(nft => failedNFTs.includes(nft))
-
-      return shouldShow ? <FarmIssueAnnouncement isEnded={false} /> : null
-    }
 
     if (activeTab === 'ended') {
-      const shouldShow = farms?.[affectedFairlaunchAddress]
-        ?.filter(farm => now > farm.endTime) // active
-        .flatMap(farm => farm.userDepositedNFTs.map(item => item.tokenId.toString()))
-        .some(nft => failedNFTs.includes(nft))
-
+      const endedFarms = farms?.filter(farm => farm.pools.every(p => p.endTime < now))
+      const shouldShow = endedFarms?.some(farm =>
+        userFarmInfo?.[farm.id].depositedPositions
+          .map(pos => pos.nftId.toString())
+          .some(nft => failedNFTs.includes(nft)),
+      )
       return shouldShow ? <FarmIssueAnnouncement isEnded /> : null
     }
 
@@ -273,17 +299,18 @@ function ProMMFarms({ active }: { active: boolean }) {
             rowGap: '48px',
           }}
         >
-          {Object.keys(filteredFarms).map(fairLaunchAddress => {
+          {filteredFarms.map(farm => {
             return (
-              <ProMMFarmGroup
-                key={fairLaunchAddress}
-                address={fairLaunchAddress}
-                onOpenModal={(modalType: ModalType, pid?: number, forced?: boolean) => {
+              <ElasticFarmGroup
+                key={farm.id}
+                address={farm.id}
+                onOpenModal={(modalType: ModalType, pid?: number | string, forced?: boolean) => {
                   setSeletedModal(modalType)
-                  setSeletedFarm(fairLaunchAddress)
-                  setSeletedPoolId(pid ?? null)
+                  setSeletedFarm(farm.id)
+                  setSeletedPoolId(Number(pid) ?? null)
                 }}
-                farms={filteredFarms[fairLaunchAddress]}
+                pools={farm.pools}
+                userInfo={userFarmInfo?.[farm.id]}
               />
             )
           })}
@@ -294,4 +321,4 @@ function ProMMFarms({ active }: { active: boolean }) {
   )
 }
 
-export default ProMMFarms
+export default ElasticFarms

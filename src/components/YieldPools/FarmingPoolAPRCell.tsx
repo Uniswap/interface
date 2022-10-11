@@ -6,7 +6,8 @@ import { Box, Flex, Text } from 'rebass'
 import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
 import useTheme from 'hooks/useTheme'
-import { useProMMFarmTVL } from 'state/farms/promm/hooks'
+import { useElasticFarms } from 'state/farms/elastic/hooks'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { MEDIA_WIDTHS } from 'theme'
 
 type Props = {
@@ -94,7 +95,31 @@ export const APRTooltipContent = ({ poolAPR, farmAPR }: { poolAPR: number; farmA
 
 const FarmingPoolAPRCell: React.FC<Props> = ({ poolAPR, fairlaunchAddress, pid, tooltipPlacement = 'right' }) => {
   const theme = useTheme()
-  const { farmAPR } = useProMMFarmTVL(fairlaunchAddress, pid)
+
+  const { farms } = useElasticFarms()
+  const pool = farms
+    ?.find(farm => farm.id.toLowerCase() === fairlaunchAddress.toLowerCase())
+    ?.pools.find(pool => Number(pool.pid) === Number(pid))
+
+  const tokenPrices = useTokenPrices(
+    [
+      pool?.token0.wrapped.address,
+      pool?.token1.wrapped.address,
+      ...(pool?.rewardTokens.map(rw => rw.wrapped.address) as string[]),
+    ].filter(address => !!address) as string[],
+  )
+
+  let farmAPR = 0
+  if (pool) {
+    const totalRewardValue = pool.totalRewards.reduce(
+      (total, rw) => total + Number(rw.toExact()) * tokenPrices[rw.currency.wrapped.address],
+      0,
+    )
+
+    const farmDuration = (pool.endTime - pool.startTime) / 86400
+    farmAPR = (365 * 100 * (totalRewardValue || 0)) / farmDuration / pool.poolTvl
+  }
+
   return (
     <Flex
       alignItems={'center'}

@@ -1,6 +1,5 @@
-import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
+import { Token, WETH } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -9,16 +8,15 @@ import { FadeInAnimation } from 'components/Animation'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { nativeOnChain } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import useMarquee from 'hooks/useMarquee'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
-import { setFarmsData } from 'state/farms/actions'
+import { useElasticFarms } from 'state/farms/elastic/hooks'
 import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
-import { useProMMFarmsFetchOnlyOne } from 'state/farms/promm/hooks'
-import { useAppDispatch } from 'state/hooks'
 
 const StyledLink = styled(Link)`
   display: flex;
@@ -40,30 +38,28 @@ const MarqueeItem = ({ token0: address0, token1: address1 }: { token0: string; t
   const { chainId } = useActiveWeb3React()
 
   const token0 = useToken(address0) as Token
+  const currency0 =
+    chainId && address0.toLowerCase() === WETH[chainId].address.toLowerCase() ? nativeOnChain(chainId) : token0
+
   const token1 = useToken(address1) as Token
+  const currency1 =
+    chainId && address1.toLowerCase() === WETH[chainId].address.toLowerCase() ? nativeOnChain(chainId) : token1
 
   const qs = useParsedQueryString()
   if (!token0 || !token1) return null
 
-  const token0Address =
-    token0.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
-      ? WETH[chainId as ChainId].symbol?.slice(1)
-      : token0.address
-
-  const token1Address =
-    token1.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
-      ? WETH[chainId as ChainId].symbol?.slice(1)
-      : token1.address
+  const token0Address = currency0.isNative ? currency0.symbol : token0.address
+  const token1Address = currency1.isNative ? currency1.symbol : token1.address
 
   const tab = (qs.tab as string) || VERSION.ELASTIC
 
   return (
     <StyledLink to={`/pools/${token0Address}/${token1Address}?tab=${tab}`}>
-      <CurrencyLogo currency={token0} size="16px" />
+      <CurrencyLogo currency={currency0} size="16px" />
       <Text fontSize="12px">
-        {token0.symbol} - {token1.symbol}
+        {currency0.symbol} - {currency1.symbol}
       </Text>
-      <CurrencyLogo currency={token1} size="16px" />
+      <CurrencyLogo currency={currency1} size="16px" />
     </StyledLink>
   )
 }
@@ -71,25 +67,22 @@ const MarqueeItem = ({ token0: address0, token1: address1 }: { token0: string; t
 const FarmingPoolsMarquee = ({ tab }: { tab: string }) => {
   const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
 
-  const farms = useProMMFarmsFetchOnlyOne()
+  const { farms } = useElasticFarms()
   const theme = useTheme()
 
   const existedPairs: { [key: string]: boolean } = {}
-  const activePrommFarm = Object.values(farms)
-    .flat()
-    .filter(item => item.endTime > +new Date() / 1000)
-    .filter(item => {
-      const key = item.token0 + '_' + item.token1
-      if (existedPairs[key]) return false
-      existedPairs[key] = true
-      return true
-    })
 
-  const dispatch = useAppDispatch()
-  const { chainId } = useActiveWeb3React()
-  useEffect(() => {
-    dispatch(setFarmsData({}))
-  }, [dispatch, chainId])
+  const activePrommFarm =
+    farms
+      ?.map(farm => farm.pools)
+      .flat()
+      .filter(item => item.endTime > +new Date() / 1000)
+      .filter(item => {
+        const key = item.token0.wrapped.address + '_' + item.token1.wrapped.address
+        if (existedPairs[key]) return false
+        existedPairs[key] = true
+        return true
+      }) || []
 
   const increaseRef = useMarquee(tab === VERSION.ELASTIC ? activePrommFarm : uniqueAndActiveFarms)
 
@@ -120,7 +113,11 @@ const FarmingPoolsMarquee = ({ tab }: { tab: string }) => {
                     />
                   ))
                 : activePrommFarm.map(farm => (
-                    <MarqueeItem key={`${farm.token0}-${farm.token1}`} token0={farm.token0} token1={farm.token1} />
+                    <MarqueeItem
+                      key={`${farm.token0.wrapped.address}-${farm.token1.wrapped.address}`}
+                      token0={farm.token0.wrapped.address}
+                      token1={farm.token1.wrapped.address}
+                    />
                   ))}
             </Marquee>
           </MarqueeWrapper>

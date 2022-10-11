@@ -19,7 +19,7 @@ import { useFarmRewardsUSD } from 'utils/dmm'
 import { fixedFormatting, getFullDisplayBalance } from 'utils/formatBalance'
 import { formatDollarAmount } from 'utils/numbers'
 
-import { ModalContentWrapper } from './ProMMFarmModals/styled'
+import { ModalContentWrapper } from './ElasticFarmModals/styled'
 import { RewardBalanceWrapper } from './styleds'
 
 const HarvestAll = ({ totalRewards, onHarvestAll }: { totalRewards: Reward[]; onHarvestAll?: () => void }) => {

@@ -18,7 +18,7 @@ import { useActiveWeb3React } from 'hooks'
 import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useOpenModal } from 'state/application/hooks'
-import { useProMMFarms } from 'state/farms/promm/hooks'
+import { FarmUpdater, useElasticFarms } from 'state/farms/elastic/hooks'
 import { Field } from 'state/mint/proamm/actions'
 import { ProMMPoolData, usePoolDatas, useTopPoolAddresses, useUserProMMPositions } from 'state/prommPools/hooks'
 
@@ -91,7 +91,7 @@ export default function ProAmmPoolList({
 }: PoolListProps) {
   const above1000 = useMedia('(min-width: 1000px)')
 
-  const { data: farms } = useProMMFarms()
+  const { farms } = useElasticFarms()
 
   const [sortDirection, setSortDirection] = useState(true)
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.TVL)
@@ -144,10 +144,12 @@ export default function ProAmmPoolList({
     )
 
     if (isShowOnlyActiveFarmPools) {
-      const activePoolFarmAddress = Object.values(farms)
-        .flat()
-        .filter(item => item.endTime > +new Date() / 1000)
-        .map(item => item.poolAddress.toLowerCase())
+      const activePoolFarmAddress =
+        farms
+          ?.map(farm => farm.pools)
+          .flat()
+          .filter(item => item.endTime > +new Date() / 1000)
+          .map(item => item.poolAddress.toLowerCase()) || []
       filteredPools = filteredPools.filter(pool => activePoolFarmAddress.includes(pool.address.toLowerCase()))
     }
 
@@ -381,6 +383,7 @@ export default function ProAmmPoolList({
         />
       )}
       <ShareModal url={shareUrl} />
+      <FarmUpdater interval={false} />
     </PageWrapper>
   )
 }

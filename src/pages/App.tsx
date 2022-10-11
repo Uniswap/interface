@@ -38,7 +38,8 @@ import SwapV2 from './SwapV2'
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
 const Pool = lazy(() => import(/* webpackChunkName: 'my-pool-page' */ './Pool'))
 
-const Yield = lazy(() => import(/* webpackChunkName: 'yield-page' */ './Yield'))
+const Farm = lazy(() => import(/* webpackChunkName: 'yield-page' */ './Farm'))
+
 const PoolFinder = lazy(() => import(/* webpackChunkName: 'pool-finder-page' */ './PoolFinder'))
 const CreatePool = lazy(() => import(/* webpackChunkName: 'create-pool-page' */ './CreatePool'))
 const ProAmmRemoveLiquidity = lazy(
@@ -207,7 +208,7 @@ export default function App() {
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
-                    <Route exact strict path="/farms" component={Yield} />
+                    <Route exact strict path="/farms" component={Farm} />
                     <Route exact strict path="/myPools" component={Pool} />
 
                     {/* Create new pool */}

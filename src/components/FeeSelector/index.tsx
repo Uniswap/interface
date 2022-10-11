@@ -11,7 +11,7 @@ import { MoneyBag } from 'components/Icons'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useProAmmPoolInfos } from 'hooks/useProAmmPoolInfo'
 import useTheme from 'hooks/useTheme'
-import { useProMMFarmsFetchOnlyOne } from 'state/farms/promm/hooks'
+import { useElasticFarms } from 'state/farms/elastic/hooks'
 
 import { useFeeTierDistribution } from './hook'
 
@@ -147,7 +147,7 @@ function FeeSelector({
   const [show, setShow] = useState(false)
   const feeTierDistribution = useFeeTierDistribution(currencyA, currencyB)
 
-  const farms = useProMMFarmsFetchOnlyOne()
+  const { farms } = useElasticFarms()
 
   const showFeeDistribution = Object.values(feeTierDistribution).some(item => item !== 0)
 
@@ -157,14 +157,16 @@ function FeeSelector({
   })
 
   const now = Date.now() / 1000
-  const farmingPoolAddress = Object.values(farms)
-    .flat()
-    .filter(farm => farm.endTime >= now)
-    .map(farm => farm.poolAddress)
+  const farmingPoolAddress =
+    farms
+      ?.map(farm => farm.pools)
+      .flat()
+      .filter(farm => farm.endTime >= now)
+      .map(farm => farm.poolAddress) || []
 
   const poolAddresses = useProAmmPoolInfos(currencyA, currencyB, FEE_AMOUNTS)
   const tiersThatHasFarm = FEE_AMOUNTS.filter((fee, i) => {
-    const poolAddress = poolAddresses[i]
+    const poolAddress = poolAddresses[i].toLowerCase()
     return farmingPoolAddress.includes(poolAddress)
   })
 

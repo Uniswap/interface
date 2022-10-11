@@ -89,3 +89,8 @@ export const MAINNET_NETWORKS = [
   ChainId.OASIS,
   ChainId.OPTIMISM,
 ]
+
+export const chainIdMapping: Partial<Record<ChainId, string>> = {
+  [ChainId.BSCMAINNET]: 'bsc',
+  [ChainId.BTTC]: 'bttc',
+}

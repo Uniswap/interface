@@ -1,7 +1,8 @@
-import { Position } from '@kyberswap/ks-sdk-elastic'
+import { ChainId } from '@kyberswap/ks-sdk-core'
+import { Position, computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
@@ -14,16 +15,18 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverDropdown from 'components/HoverDropdown'
 import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { VERSION } from 'constants/v2'
-import { useToken, useTokens } from 'hooks/Tokens'
+import { NETWORKS_INFO } from 'constants/networks'
+import { useActiveWeb3React } from 'hooks'
+import { useToken } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
-import { useTokensPrice } from 'state/application/hooks'
-import { useFailedNFTs, useFarmAction, usePostionFilter, useProMMFarms } from 'state/farms/promm/hooks'
-import { UserPositionFarm } from 'state/farms/promm/types'
+import { useElasticFarms, useFailedNFTs, useFarmAction, usePositionFilter } from 'state/farms/elastic/hooks'
+import { UserPositionFarm } from 'state/farms/elastic/types'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
+import { PositionDetails } from 'types/position'
 import { formatDollarAmount } from 'utils/numbers'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
@@ -56,7 +59,7 @@ const PositionRow = ({
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
-  const usdPrices = useTokensPrice([token0, token1], VERSION.ELASTIC)
+  const usdPrices = useTokenPrices([token0Address, token1Address])
 
   // construct Position from details returned
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
@@ -76,8 +79,8 @@ const PositionRow = ({
   const theme = useTheme()
 
   const usd =
-    (usdPrices?.[0] || 0) * parseFloat(positionSDK?.amount0.toExact() || '0') +
-    (usdPrices?.[1] || 0) * parseFloat(positionSDK?.amount1.toExact() || '0')
+    (usdPrices?.[token0Address] || 0) * parseFloat(positionSDK?.amount0.toExact() || '0') +
+    (usdPrices?.[token1Address] || 0) * parseFloat(positionSDK?.amount1.toExact() || '0')
 
   const above768 = useMedia('(min-width: 768px)')
 
@@ -174,39 +177,57 @@ function WithdrawModal({
   forced?: boolean
 }) {
   const theme = useTheme()
+  const { chainId } = useActiveWeb3React()
   const above768 = useMedia('(min-width: 768px)')
 
   const qs = useParsedQueryString()
   const tab = qs.type || 'active'
 
   const checkboxGroupRef = useRef<any>()
-  const { data: farms } = useProMMFarms()
-  const selectedFarm = farms[selectedFarmAddress]
-  const tokens = useTokens(selectedFarm.map(farm => [farm.token0, farm.token1]).reduce((arr, cur) => [...arr, ...cur]))
-  const poolAddresses = selectedFarm
-    ?.filter(farm => (tab === 'active' ? farm.endTime > +new Date() / 1000 : farm.endTime < +new Date() / 1000))
-    .map(farm => farm.poolAddress.toLowerCase())
+  const { farms, userFarmInfo } = useElasticFarms()
+
+  const selectedFarm = farms?.find(farm => farm.id.toLowerCase() === selectedFarmAddress.toLowerCase())
+
+  const poolAddresses =
+    selectedFarm?.pools
+      .filter(pool => (tab === 'active' ? pool.endTime > +new Date() / 1000 : pool.endTime < +new Date() / 1000))
+      .map(pool => pool.poolAddress.toLowerCase()) || []
 
   const failedNFTs = useFailedNFTs()
 
-  const userDepositedNFTs = useMemo(() => {
-    const uniqueNfts: { [id: string]: UserPositionFarm } = {}
-    const res = (selectedFarm || []).reduce((allNFTs, farm) => {
-      return [...allNFTs, ...farm.userDepositedNFTs]
-    }, [] as UserPositionFarm[])
+  const { depositedPositions = [], joinedPositions = {} } = userFarmInfo?.[selectedFarm?.id || ''] || {}
 
-    res.forEach(item => {
-      if (
-        !uniqueNfts[item.tokenId.toString()] ||
-        item.stakedLiquidity.gt(uniqueNfts[item.tokenId.toString()].stakedLiquidity)
-      ) {
-        uniqueNfts[item.tokenId.toString()] = item
-      }
-    })
-    return Object.values(uniqueNfts)
-  }, [selectedFarm])
+  const userDepositedNFTs: PositionDetails[] = depositedPositions.map(pos => {
+    const stakedLiquidity = Object.values(joinedPositions)
+      .flat()
+      .filter(
+        p => pos.nftId.toString() === p.nftId.toString() && BigNumber.from(p.liquidity.toString()).gt('0'),
+      )?.[0]?.liquidity
 
-  const { filterOptions, activeFilter, setActiveFilter, eligiblePositions } = usePostionFilter(
+    return {
+      nonce: BigNumber.from(0),
+      poolId: computePoolAddress({
+        factoryAddress: NETWORKS_INFO[chainId as ChainId].elastic.coreFactory,
+        tokenA: pos.pool.token0,
+        tokenB: pos.pool.token1,
+        fee: pos.pool.fee,
+        initCodeHashManualOverride: NETWORKS_INFO[chainId as ChainId].elastic.initCodeHash,
+      }),
+      feeGrowthInsideLast: BigNumber.from(0),
+      operator: '',
+      rTokenOwed: BigNumber.from(0),
+      fee: pos.pool.fee,
+      tokenId: pos.nftId,
+      tickLower: pos.tickLower,
+      tickUpper: pos.tickUpper,
+      liquidity: BigNumber.from(pos.liquidity.toString()),
+      token0: pos.amount0.currency.address,
+      token1: pos.amount1.currency.address,
+      stakedLiquidity: stakedLiquidity ? BigNumber.from(stakedLiquidity.toString()) : BigNumber.from(0),
+    }
+  })
+
+  const { filterOptions, activeFilter, setActiveFilter, eligiblePositions } = usePositionFilter(
     userDepositedNFTs || [],
     poolAddresses,
   )
@@ -258,8 +279,8 @@ function WithdrawModal({
       const finishedPoses = eligiblePositions.filter(pos => selectedNFTs.includes(pos.tokenId.toString()))
       finishedPoses.forEach(pos => {
         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_WITHDRAW_LIQUIDITY_COMPLETED, {
-          token_1: tokens[pos.token0],
-          token_2: tokens[pos.token1],
+          token_1: pos.token0,
+          token_2: pos.token1,
         })
       })
     }

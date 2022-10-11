@@ -1,7 +1,6 @@
-import { CurrencyAmount } from '@kyberswap/ks-sdk-core'
+import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -12,12 +11,10 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { VERSION } from 'constants/v2'
-import { useToken } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
-import { useTokensPrice } from 'state/application/hooks'
-import { useFarmAction, useProMMFarms } from 'state/farms/promm/hooks'
+import { useElasticFarms, useFarmAction } from 'state/farms/elastic/hooks'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { StyledInternalLink } from 'theme'
 import { formatDollarAmount } from 'utils/numbers'
 
@@ -55,45 +52,32 @@ function HarvestModal({
   onDismiss: () => void
 }) {
   const theme = useTheme()
-  const { data: farms } = useProMMFarms()
-  const selectedFarm = farms[farmsAddress]
+  const { farms, userFarmInfo } = useElasticFarms()
+  const selectedFarm = farms?.find(farm => farm.id.toLowerCase() === farmsAddress.toLowerCase())
 
   const { harvest } = useFarmAction(farmsAddress)
-  const selectedPool = poolId !== null ? selectedFarm[poolId] : undefined
-  const token0 = useToken(selectedPool?.token0)
-  const token1 = useToken(selectedPool?.token1)
+  const selectedPool =
+    poolId !== null ? selectedFarm?.pools.find(pool => Number(pool.pid) === Number(poolId)) : undefined
 
-  const [usdByToken, setUsdValueByToken] = useState<{ [address: string]: number }>({})
   const { mixpanelHandler } = useMixpanel()
-  const aggreateRewardUsdValue = useCallback(({ address, value }: { address: string; value: number }) => {
-    setUsdValueByToken(prev => {
-      const tmp = { ...prev }
-      if (tmp[address]) tmp[address] = tmp[address] + value
-      else tmp[address] = value
 
-      return tmp
-    })
-  }, [])
+  const rewards: { [address: string]: CurrencyAmount<Currency> } = {}
 
-  const rewards: { [address: string]: BigNumber } = {}
+  const { rewardPendings = {}, joinedPositions = {} } = userFarmInfo?.[farmsAddress] || {}
 
-  if (poolId === null) {
-    selectedFarm.forEach(farm => {
-      farm.userDepositedNFTs.forEach(pos => {
-        pos.rewardPendings.forEach((amount, index) => {
-          const token = farm.rewardTokens[index]
-          if (rewards[token]) rewards[token] = rewards[token].add(BigNumber.from(amount))
-          else rewards[token] = amount
-        })
+  if (!poolId) {
+    Object.values(rewardPendings || {})
+      .flat()
+      .forEach(reward => {
+        const token = reward.currency.wrapped.address
+        if (rewards[token]) rewards[token] = rewards[token].add(reward)
+        else rewards[token] = reward
       })
-    })
   } else {
-    selectedPool?.userDepositedNFTs.forEach(pos => {
-      pos.rewardPendings.forEach((amount, index) => {
-        const token = selectedPool.rewardTokens[index]
-        if (rewards[token]) rewards[token] = rewards[token].add(BigNumber.from(amount))
-        else rewards[token] = amount
-      })
+    rewardPendings?.[poolId.toString()]?.forEach(reward => {
+      const token = reward.currency.wrapped.address
+      if (rewards[token]) rewards[token] = rewards[token].add(reward)
+      else rewards[token] = reward
     })
   }
 
@@ -102,21 +86,21 @@ function HarvestModal({
     const poolIds: BigNumber[] = []
 
     if (poolId === null)
-      selectedFarm.forEach(farm => {
-        farm.userDepositedNFTs
-          .filter(pos => pos.stakedLiquidity.gt(0))
-          .forEach(pos => {
-            nftIds.push(BigNumber.from(pos.tokenId))
-            poolIds.push(BigNumber.from(farm.pid))
-          })
+      Object.keys(joinedPositions).forEach(pid => {
+        joinedPositions?.[pid].forEach(pos => {
+          if (BigNumber.from(pos.liquidity.toString()).gt(BigNumber.from(0))) {
+            nftIds.push(pos.nftId)
+            poolIds.push(BigNumber.from(pid))
+          }
+        })
       })
     else
-      selectedPool?.userDepositedNFTs
-        .filter(pos => pos.stakedLiquidity.gt(0))
-        .forEach(pos => {
-          nftIds.push(BigNumber.from(pos.tokenId))
+      joinedPositions[poolId.toString()]?.forEach(pos => {
+        if (BigNumber.from(pos.liquidity.toString()).gt(BigNumber.from(0))) {
+          nftIds.push(pos.nftId)
           poolIds.push(BigNumber.from(poolId))
-        })
+        }
+      })
 
     const tx = await harvest(nftIds, poolIds)
     if (tx) {
@@ -129,9 +113,11 @@ function HarvestModal({
     }
   }
 
-  const addresses = Object.keys(rewards).filter(rw => rewards[rw].gt(BigNumber.from(0)))
-
-  const usd = Object.keys(usdByToken).reduce((acc, cur) => acc + usdByToken[cur], 0)
+  const rewardAddress = Object.keys(rewards)
+  const tokenPrices = useTokenPrices(rewardAddress)
+  const usdValue = Object.values(rewards).reduce((acc, cur) => {
+    return acc + Number(cur.toExact()) * (tokenPrices[cur.currency.wrapped.address] || 0)
+  }, 0)
 
   return (
     <Modal isOpen={!!selectedFarm} onDismiss={onDismiss} maxHeight={80} maxWidth="392px">
@@ -142,7 +128,7 @@ function HarvestModal({
               <Trans>Harvest All</Trans>
             ) : (
               <Flex>
-                <DoubleCurrencyLogo size={24} currency0={token0} currency1={token1} />{' '}
+                <DoubleCurrencyLogo size={24} currency0={selectedPool?.token0} currency1={selectedPool?.token1} />{' '}
                 <Text>
                   <Trans>Harvest</Trans>
                 </Text>
@@ -176,15 +162,17 @@ function HarvestModal({
           <Text>
             <Trans>My Rewards</Trans>
           </Text>
-          <Text>{formatDollarAmount(usd)}</Text>
+          <Text>{formatDollarAmount(usdValue)}</Text>
         </Flex>
 
         <RewardRow>
-          {addresses.map((rw, index) => (
-            <>
-              <Reward key={rw} token={rw} amount={rewards[rw]} onAggreateUsdValue={aggreateRewardUsdValue} />
-              {index !== addresses.length - 1 && <Text color={theme.subText}>|</Text>}
-            </>
+          {Object.values(rewards).map(reward => (
+            <Flex alignItems="center" sx={{ gap: '4px' }} key={reward.currency.symbol}>
+              <HoverInlineText text={reward.toSignificant(6) || '0'} maxCharacters={10}></HoverInlineText>
+              <MouseoverTooltip placement="top" text={reward.currency.symbol} width="fit-content">
+                <CurrencyLogo currency={reward.currency} size="16px" />
+              </MouseoverTooltip>
+            </Flex>
           ))}
         </RewardRow>
 
@@ -193,41 +181,6 @@ function HarvestModal({
         </ButtonPrimary>
       </ModalContentWrapper>
     </Modal>
-  )
-}
-
-const Reward = ({
-  token: address,
-  amount,
-  onAggreateUsdValue,
-}: {
-  token: string
-  amount?: BigNumber
-  onAggreateUsdValue: (input: { address: string; value: number }) => void
-}) => {
-  const token = useToken(address)
-
-  const price = useTokensPrice([token], VERSION.ELASTIC)
-
-  const amountString = amount?.toString()
-
-  const tokenAmout = useMemo(() => {
-    return token && CurrencyAmount.fromRawAmount(token, amountString || '0')
-  }, [amountString, token])
-
-  useEffect(() => {
-    if (price[0] && tokenAmout) {
-      onAggreateUsdValue({ address, value: price[0] * parseFloat(tokenAmout?.toExact()) })
-    }
-  }, [tokenAmout, price, address, onAggreateUsdValue])
-
-  return (
-    <Flex alignItems="center" sx={{ gap: '4px' }}>
-      <HoverInlineText text={tokenAmout?.toSignificant(6) || '0'} maxCharacters={10}></HoverInlineText>
-      <MouseoverTooltip placement="top" text={token?.symbol} width="fit-content">
-        <CurrencyLogo currency={token} size="16px" />
-      </MouseoverTooltip>
-    </Flex>
   )
 }
 

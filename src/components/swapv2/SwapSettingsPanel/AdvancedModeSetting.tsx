@@ -1,5 +1,5 @@
 import { Trans, t } from '@lingui/macro'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Flex } from 'rebass'
 
 import QuestionHelper from 'components/QuestionHelper'

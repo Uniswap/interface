@@ -1,4 +1,5 @@
-import { Position } from '@kyberswap/ks-sdk-elastic'
+import { ChainId } from '@kyberswap/ks-sdk-core'
+import { computePoolAddress } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -15,17 +16,15 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { VERSION } from 'constants/v2'
-import { useToken } from 'hooks/Tokens'
+import { NETWORKS_INFO } from 'constants/networks'
+import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
-import { useTokensPrice } from 'state/application/hooks'
-import { useFarmAction, useProMMFarms } from 'state/farms/promm/hooks'
-import { ProMMFarm, UserPositionFarm } from 'state/farms/promm/types'
+import { useElasticFarms, useFarmAction } from 'state/farms/elastic/hooks'
+import { NFTPosition } from 'state/farms/elastic/types'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { StyledInternalLink } from 'theme'
 import { formatDollarAmount } from 'utils/numbers'
-import { unwrappedToken } from 'utils/wrappedCurrency'
 
 import { ModalContentWrapper, TableHeader, TableRow, Title } from './styled'
 
@@ -85,6 +84,11 @@ const StakeTableRow = styled(TableRow)<{ isUnstake: boolean }>`
   ${({ isUnstake }) => generateCommonCSS(isUnstake)}
 `
 
+type ExplicitNFT = {
+  available: NFTPosition
+  staked: NFTPosition
+}
+
 const PositionRow = ({
   position,
   onChange,
@@ -92,57 +96,28 @@ const PositionRow = ({
   type,
 }: {
   selected: boolean
-  position: UserPositionFarm
+  position: ExplicitNFT
   onChange: (value: boolean) => void
   type: 'stake' | 'unstake'
 }) => {
-  const {
-    token0: token0Address,
-    token1: token1Address,
-    fee: feeAmount,
-    liquidity,
-    stakedLiquidity,
-    tickLower,
-    tickUpper,
-  } = position
   const above768 = useMedia('(min-width: 768px)')
 
-  const token0 = useToken(token0Address)
-  const token1 = useToken(token1Address)
-  const currency0 = token0 ? unwrappedToken(token0) : undefined
-  const currency1 = token1 ? unwrappedToken(token1) : undefined
+  const usdPrices = useTokenPrices([position.available.pool.token0.address, position.available.pool.token1.address])
 
-  const usdPrices = useTokensPrice([token0, token1], VERSION.ELASTIC)
-
-  // construct Position from details returned
-  const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
-
-  const positionStake = useMemo(() => {
-    if (pool) {
-      return new Position({ pool, liquidity: stakedLiquidity.toString(), tickLower, tickUpper })
-    }
-    return undefined
-  }, [pool, tickLower, tickUpper, stakedLiquidity])
-
-  const positionAvailable = useMemo(() => {
-    if (pool) {
-      return new Position({ pool, liquidity: liquidity.sub(stakedLiquidity).toString(), tickLower, tickUpper })
-    }
-    return undefined
-  }, [liquidity, pool, tickLower, tickUpper, stakedLiquidity])
-
-  const removed = BigNumber.from(position.liquidity.toString()).eq(0)
   const outOfRange =
-    positionStake &&
-    (positionStake.pool.tickCurrent < position.tickLower || positionStake.pool.tickCurrent >= position.tickUpper)
+    position.available.pool.tickCurrent < position.available.tickLower ||
+    position.available.pool.tickCurrent >= position.available.tickUpper
+
+  const token0Price = usdPrices[position.available.pool.token0.address] || 0
+  const token1Price = usdPrices[position.available.pool.token1.address] || 0
 
   const availableUSD =
-    (usdPrices?.[0] || 0) * parseFloat(positionAvailable?.amount0.toExact() || '0') +
-    (usdPrices?.[1] || 0) * parseFloat(positionAvailable?.amount1.toExact() || '0')
+    token0Price * parseFloat(position.available.amount0.toExact() || '0') +
+    token1Price * parseFloat(position.available.amount1.toExact() || '0')
 
   const usd =
-    (usdPrices?.[0] || 0) * parseFloat(positionStake?.amount0.toExact() || '0') +
-    (usdPrices?.[1] || 0) * parseFloat(positionStake?.amount1.toExact() || '0')
+    token0Price * parseFloat(position.staked.amount0.toExact() || '0') +
+    token1Price * parseFloat(position.staked.amount1.toExact() || '0')
 
   return (
     <StakeTableRow isUnstake={type === 'unstake'}>
@@ -155,13 +130,17 @@ const PositionRow = ({
       />
       {above768 ? (
         <Flex alignItems="center">
-          <Text>{position.tokenId.toString()}</Text>
+          <Text>{position.available.nftId.toString()}</Text>
         </Flex>
       ) : (
         <Flex alignItems="center">
-          <Text marginRight="4px">{position.tokenId.toString()}</Text>
-          <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} />
-          <RangeBadge removed={removed} inRange={!outOfRange} hideText />
+          <Text marginRight="4px">{position.available.nftId.toString()}</Text>
+          <DoubleCurrencyLogo
+            currency0={position.available.pool.token0}
+            currency1={position.available.pool.token1}
+            size={16}
+          />
+          <RangeBadge removed={false} inRange={!outOfRange} hideText />
         </Flex>
       )}
       {type === 'stake' && (
@@ -174,15 +153,15 @@ const PositionRow = ({
             text={
               <>
                 <Flex alignItems="center">
-                  <CurrencyLogo currency={positionAvailable?.amount0.currency} size="16px" />
+                  <CurrencyLogo currency={position.available.amount0.currency} size="16px" />
                   <Text fontSize={12} marginLeft="4px">
-                    {positionAvailable?.amount0.toSignificant(8)}
+                    {position.available.amount0.toSignificant(8)}
                   </Text>
                 </Flex>
                 <Flex alignItems="center" marginTop="8px">
-                  <CurrencyLogo currency={positionAvailable?.amount1.currency} size="16px" />
+                  <CurrencyLogo currency={position.available.amount1.currency} size="16px" />
                   <Text fontSize={12} marginLeft="4px">
-                    {positionAvailable?.amount1.toSignificant(8)}
+                    {position.available.amount1.toSignificant(8)}
                   </Text>
                 </Flex>
               </>
@@ -202,15 +181,15 @@ const PositionRow = ({
             text={
               <>
                 <Flex alignItems="center">
-                  <CurrencyLogo currency={positionStake?.amount0.currency} size="16px" />
+                  <CurrencyLogo currency={position.available.amount0.currency} size="16px" />
                   <Text fontSize={12} marginLeft="4px">
-                    {positionStake?.amount0.toSignificant(8)}
+                    {position.staked.amount0.toSignificant(8)}
                   </Text>
                 </Flex>
                 <Flex alignItems="center" marginTop="8px">
-                  <CurrencyLogo currency={positionStake?.amount1.currency} size="16px" />
+                  <CurrencyLogo currency={position.available.amount1.currency} size="16px" />
                   <Text fontSize={12} marginLeft="4px">
-                    {positionStake?.amount1.toSignificant(8)}
+                    {position.staked.amount1.toSignificant(8)}
                   </Text>
                 </Flex>
               </>
@@ -223,7 +202,7 @@ const PositionRow = ({
 
       {above768 && (
         <Flex justifyContent="flex-end">
-          <RangeBadge removed={removed} inRange={!outOfRange} />
+          <RangeBadge removed={false} inRange={!outOfRange} />
         </Flex>
       )}
     </StakeTableRow>
@@ -243,26 +222,66 @@ function StakeModal({
 }) {
   const theme = useTheme()
   const checkboxGroupRef = useRef<any>()
-  const { data: farms } = useProMMFarms()
-  const selectedFarm = farms[selectedFarmAddress] as ProMMFarm[]
+  const { chainId } = useActiveWeb3React()
+
+  const { farms, userFarmInfo } = useElasticFarms()
+  const selectedFarm = farms?.find(farm => farm.id.toLowerCase() === selectedFarmAddress.toLowerCase())
 
   const { stake, unstake } = useFarmAction(selectedFarmAddress)
 
-  const selectedPool = selectedFarm.find(pool => pool.pid === poolId) as ProMMFarm
+  const selectedPool = selectedFarm?.pools.find(pool => Number(pool.pid) === Number(poolId))
 
-  const token0 = useToken(selectedPool.token0)
-  const token1 = useToken(selectedPool.token1)
+  const { token0, token1 } = selectedPool || {}
 
-  const eligibleNfts = useMemo(() => {
-    return selectedPool.userDepositedNFTs.filter(item => {
-      if (type === 'stake') {
-        return item.liquidity.sub(item.stakedLiquidity).gt(BigNumber.from(0))
-      }
-      return item.stakedLiquidity.gt(BigNumber.from(0))
-    })
-  }, [type, selectedPool])
+  const eligibleNfts: ExplicitNFT[] = useMemo(() => {
+    const joinedPositions = userFarmInfo?.[selectedFarmAddress].joinedPositions[poolId] || []
+    const depositedPositions =
+      userFarmInfo?.[selectedFarmAddress].depositedPositions.filter(pos => {
+        return (
+          selectedPool?.poolAddress.toLowerCase() ===
+          computePoolAddress({
+            factoryAddress: NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.coreFactory,
+            tokenA: pos.pool.token0,
+            tokenB: pos.pool.token1,
+            fee: pos.pool.fee,
+            initCodeHashManualOverride: NETWORKS_INFO[chainId || ChainId.MAINNET].elastic.initCodeHash,
+          }).toLowerCase()
+        )
+      }) || []
 
-  const [selectedNFTs, setSeletedNFTs] = useState<UserPositionFarm[]>([])
+    return depositedPositions
+      .map(item => {
+        const stakedLiquidity = BigNumber.from(
+          joinedPositions.find(pos => pos.nftId.toString() === item.nftId.toString())?.liquidity.toString() || 0,
+        )
+        const availableLiquidity = BigNumber.from(item.liquidity.toString()).sub(stakedLiquidity)
+        return {
+          available: new NFTPosition({
+            nftId: item.nftId,
+            pool: item.pool,
+            liquidity: availableLiquidity.toString(),
+            tickLower: item.tickLower,
+            tickUpper: item.tickUpper,
+          }),
+
+          staked: new NFTPosition({
+            nftId: item.nftId,
+            pool: item.pool,
+            liquidity: stakedLiquidity.toString(),
+            tickLower: item.tickLower,
+            tickUpper: item.tickUpper,
+          }),
+        }
+      })
+      .filter(item => {
+        if (type === 'stake') {
+          return BigNumber.from(item.available.liquidity.toString()).gt(BigNumber.from(0))
+        }
+        return BigNumber.from(item.staked.liquidity.toString()).gt(BigNumber.from(0))
+      })
+  }, [type, selectedPool, chainId, poolId, selectedFarmAddress, userFarmInfo])
+
+  const [selectedNFTs, setSeletedNFTs] = useState<ExplicitNFT[]>([])
   const { mixpanelHandler } = useMixpanel()
   useEffect(() => {
     if (!checkboxGroupRef.current) return
@@ -282,8 +301,8 @@ function StakeModal({
     if (type === 'stake') {
       const txhash = await stake(
         BigNumber.from(poolId),
-        selectedNFTs.map(item => BigNumber.from(item.tokenId)),
-        selectedNFTs.map(item => item.liquidity.sub(item.stakedLiquidity)),
+        selectedNFTs.map(item => item.available.nftId),
+        selectedNFTs.map(item => BigNumber.from(item.available.liquidity.toString())),
       )
       if (txhash) {
         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_STAKE_LIQUIDITY_COMPLETED, {
@@ -294,8 +313,8 @@ function StakeModal({
     } else {
       const txhash = await unstake(
         BigNumber.from(poolId),
-        selectedNFTs.map(item => BigNumber.from(item.tokenId)),
-        selectedNFTs.map(item => item.stakedLiquidity),
+        selectedNFTs.map(item => item.available.nftId),
+        selectedNFTs.map(item => BigNumber.from(item.staked.liquidity.toString())),
       )
       if (txhash) {
         mixpanelHandler(MIXPANEL_TYPE.ELASTIC_UNSTAKE_LIQUIDITY_COMPLETED, {
@@ -399,16 +418,20 @@ function StakeModal({
             </StakeTableHeader>
 
             <ScrollContainer>
-              {eligibleNfts.map((pos: any) => (
+              {eligibleNfts.map(pos => (
                 <PositionRow
                   type={type}
-                  selected={selectedNFTs.map(item => item.tokenId.toString()).includes(pos.tokenId.toString())}
-                  key={pos.tokenId.toString()}
+                  selected={selectedNFTs
+                    .map(item => item.available.nftId.toString())
+                    .includes(pos.available.nftId.toString())}
+                  key={pos.available.nftId.toString()}
                   position={pos}
                   onChange={(selected: boolean) => {
                     if (selected) setSeletedNFTs(prev => [...prev, pos])
                     else {
-                      setSeletedNFTs(prev => prev.filter(item => item.tokenId.toString() !== pos.tokenId.toString()))
+                      setSeletedNFTs(prev =>
+                        prev.filter(item => item.available.nftId.toString() !== pos.available.nftId.toString()),
+                      )
                     }
                   }}
                 />

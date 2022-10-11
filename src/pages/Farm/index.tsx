@@ -1,4 +1,4 @@
-import { Token } from '@kyberswap/ks-sdk-core'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { stringify } from 'qs'
 import { useMemo } from 'react'
@@ -17,8 +17,8 @@ import Vesting from 'components/Vesting'
 import ProMMVesting from 'components/Vesting/ProMMVesting'
 import YieldPools from 'components/YieldPools'
 import ElasticFarmSummary from 'components/YieldPools/ElasticFarmSummary'
+import ElasticFarms from 'components/YieldPools/ElasticFarms'
 import FarmGuide from 'components/YieldPools/FarmGuide'
-import ProMMFarms from 'components/YieldPools/ProMMFarms'
 import {
   NewText,
   PageWrapper,
@@ -29,18 +29,18 @@ import {
   TopBar,
   UpcomingPoolsWrapper,
 } from 'components/YieldPools/styleds'
+import { ZERO_ADDRESS } from 'constants/index'
 import { UPCOMING_POOLS } from 'constants/upcoming-pools'
 import { VERSION } from 'constants/v2'
-import { useTokens } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { AppState } from 'state'
 import { useBlockNumber } from 'state/application/hooks'
+import { FarmUpdater, useElasticFarms } from 'state/farms/elastic/hooks'
 import { useFarmsData } from 'state/farms/hooks'
-import { useProMMFarms } from 'state/farms/promm/hooks'
 import { isInEnum } from 'utils/string'
 
-const Farms = () => {
+const Farm = () => {
   const { loading } = useFarmsData()
   const qs = useParsedQueryString()
   const type = qs.type || 'active'
@@ -52,12 +52,12 @@ const Farms = () => {
   const renderTabContent = () => {
     switch (type) {
       case 'active':
-        return farmType === VERSION.ELASTIC ? <ProMMFarms active /> : <YieldPools loading={loading} active />
+        return farmType === VERSION.ELASTIC ? <ElasticFarms active /> : <YieldPools loading={loading} active />
       case 'coming':
         return <UpcomingFarms />
       case 'ended':
         return farmType === VERSION.ELASTIC ? (
-          <ProMMFarms active={false} />
+          <ElasticFarms active={false} />
         ) : (
           <YieldPools loading={loading} active={false} />
         )
@@ -77,22 +77,10 @@ const Farms = () => {
 
   const blockNumber = useBlockNumber()
 
-  const { data: prommFarms } = useProMMFarms()
-
-  const prommRewardTokenAddress = useMemo(() => {
-    return [
-      ...new Set(
-        Object.values(prommFarms).reduce((acc, cur) => {
-          return [...acc, ...cur.map(item => item.rewardTokens).flat()]
-        }, [] as string[]),
-      ),
-    ]
-  }, [prommFarms])
-
-  const prommTokenMap = useTokens(prommRewardTokenAddress)
+  const { farms: elasticFarms } = useElasticFarms()
 
   const rewardTokens = useMemo(() => {
-    const tokenMap: { [address: string]: Token } = {}
+    const tokenMap: { [address: string]: Currency } = {}
     const currentTimestamp = Math.floor(Date.now() / 1000)
     Object.values(farmsByFairLaunch)
       .flat()
@@ -107,12 +95,17 @@ const Farms = () => {
         })
       })
 
-    Object.values(prommTokenMap).forEach(item => {
-      if (!tokenMap[item.wrapped.address]) tokenMap[item.wrapped.address] = item
+    elasticFarms?.forEach(farm => {
+      farm.pools.forEach(pool => {
+        if (pool.endTime > Date.now() / 1000)
+          pool.totalRewards.forEach(reward => {
+            tokenMap[reward.currency.isNative ? ZERO_ADDRESS : reward.currency.wrapped.address] = reward.currency
+          })
+      })
     })
 
     return Object.values(tokenMap)
-  }, [farmsByFairLaunch, blockNumber, prommTokenMap])
+  }, [farmsByFairLaunch, blockNumber, elasticFarms])
 
   const rewardPriceAndTutorial = !!rewardTokens.length && (
     <Flex
@@ -131,6 +124,7 @@ const Farms = () => {
 
   return (
     <>
+      <FarmUpdater />
       <PageWrapper gap="24px">
         <TopBar>
           <ClassicElasticTab />
@@ -239,4 +233,4 @@ const Farms = () => {
   )
 }
 
-export default Farms
+export default Farm

@@ -48,8 +48,8 @@ import {
   OUTSIDE_FAIRLAUNCH_ADDRESSES,
   TOBE_EXTENDED_FARMING_POOLS,
 } from '../../constants'
+import { ModalContentWrapper } from './ElasticFarmModals/styled'
 import { APRTooltipContent } from './FarmingPoolAPRCell'
-import { ModalContentWrapper } from './ProMMFarmModals/styled'
 import { ActionButton, DataText, GetLP, RewardBalanceWrapper, StyledItemCard, TableRow } from './styleds'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {

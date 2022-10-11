@@ -1,25 +1,22 @@
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Token } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
 import { Contract } from 'ethers'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import FAIRLAUNCH_V2_ABI from 'constants/abis/fairlaunch-v2.json'
 import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
 import REWARD_LOCKER_V2_ABI from 'constants/abis/reward-locker-v2.json'
-import { ZERO_ADDRESS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
-import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
-import { useTokens } from 'hooks/Tokens'
 import { useMultipleContracts, useRewardLockerContracts } from 'hooks/useContract'
 import { AppState } from 'state'
-import { useRewardTokenPrices } from 'state/farms/hooks'
-import { useGetProMMFarms, useProMMFarms } from 'state/farms/promm/hooks'
+import { useElasticFarms } from 'state/farms/elastic/hooks'
 import { RewardLockerVersion } from 'state/farms/types'
 import { useAppDispatch } from 'state/hooks'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 import { useRewardTokensFullInfo } from 'utils/dmm'
 
 import { setLoading, setSchedulesByRewardLocker } from './actions'
@@ -204,56 +201,30 @@ export interface Schedule {
 
 export const usePrommSchedules = () => {
   const { account } = useActiveWeb3React()
-  const { data: farms, loading: farmLoading } = useProMMFarms()
-  const getProMMFarm = useGetProMMFarms()
+  const { farms, loading: farmLoading } = useElasticFarms()
 
-  const firstRender = useRef(true)
-
-  useEffect(() => {
-    if (!Object.keys(farms).length && firstRender.current) {
-      getProMMFarm()
-      firstRender.current = false
-    }
-  }, [farms, getProMMFarm])
-
-  const rewardTokenAddresses = useMemo(() => {
-    const addresses: { [address: string]: 1 } = {}
-    Object.values(farms).forEach(farms => {
-      farms.forEach(farm => {
-        farm.rewardTokens.forEach(tk => (addresses[tk] = 1))
+  const rewardTokenMap = useMemo(() => {
+    const addresses: { [address: string]: Currency } = {}
+    farms?.forEach(farm => {
+      farm.pools.forEach(pool => {
+        pool.rewardTokens.forEach(tk => (addresses[tk.wrapped.address] = tk))
       })
     })
-    return Object.keys(addresses)
+    return addresses
   }, [farms])
 
-  const rwTokenMap = useTokens(rewardTokenAddresses)
+  const prices = useTokenPrices(Object.keys(rewardTokenMap))
 
-  const tokens = useMemo(() => {
-    return Object.values(rwTokenMap)
-  }, [rwTokenMap])
-
-  const prices = useRewardTokenPrices(tokens, VERSION.ELASTIC)
-
-  const tokenPriceMap = useMemo(() => {
-    return prices.reduce((priceMap, price, index) => {
-      return {
-        ...priceMap,
-        [tokens[index]?.isNative ? ZERO_ADDRESS : tokens[index]?.address]: price,
-      }
-    }, {} as { [address: string]: number })
-  }, [prices, tokens])
-
-  const rewardTokensByRewardLocker = useMemo(() => {
+  const rewardTokensByRewardLocker: { [rewardLocker: string]: string[] } = useMemo(() => {
     const temp: { [rewardLocker: string]: string[] } = {}
 
-    Object.values(farms).forEach(farms => {
-      farms.forEach(farm => {
+    farms?.forEach(farm => {
+      farm.pools.forEach(pool => {
         const rl = farm.rewardLocker
         if (!temp[rl]) temp[rl] = []
-        temp[rl] = [...new Set(temp[rl].concat(farm.rewardTokens))]
+        temp[rl] = [...new Set(temp[rl].concat(pool.rewardTokens.map(rw => rw.wrapped.address)))]
       })
     })
-
     return temp
   }, [farms])
 
@@ -277,7 +248,7 @@ export const usePrommSchedules = () => {
 
         const schedules = await Promise.all(
           rewardTokensByRewardLocker[address]
-            .filter(token => !!rwTokenMap[token])
+            .filter(tokenAddress => !!rewardTokenMap[tokenAddress])
             .map(async token => {
               const res = await contract.getVestingSchedules(account, token)
               return res.map((item: any, index: number) => ({
@@ -285,8 +256,8 @@ export const usePrommSchedules = () => {
                 startTime: item.startTime.toNumber(),
                 endTime: item.endTime.toNumber(),
                 index,
-                token: rwTokenMap[token],
-                tokenPrice: tokenPriceMap[token] || 0,
+                token: rewardTokenMap[token],
+                tokenPrice: prices[token] || 0,
                 contract,
               }))
             }),
@@ -300,7 +271,7 @@ export const usePrommSchedules = () => {
     }
 
     getVestingSchedules()
-  }, [tokenPriceMap, rewardLockerContracts, account, rewardLockerAddresses, rewardTokensByRewardLocker, rwTokenMap])
+  }, [prices, rewardLockerContracts, account, rewardLockerAddresses, rewardTokensByRewardLocker, rewardTokenMap])
 
   return {
     schedulesByRewardLocker,
