@@ -483,7 +483,7 @@ export default function Swap() {
   )
 
   const handleMaxInput = useCallback(() => {
-    maxInputAmount && onUserInput(Field.INPUT, formatTransactionAmount(currencyAmountToPreciseFloat(maxInputAmount)))
+    maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
     sendEvent({
       category: 'Swap',
       action: 'Max',
