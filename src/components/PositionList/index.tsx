@@ -68,13 +68,7 @@ const ToggleLabel = styled.button`
   background-color: transparent;
   border: none;
   color: ${({ theme }) => theme.accentAction};
-`
-
-const MobileTogglePosition = styled.div`
-  @media screen and (max-width: ${MEDIA_WIDTHS.deprecated_upToExtraSmall}px) {
-    position: absolute;
-    right: 20px;
-  }
+  font-size: 1rem;
 `
 
 type PositionListProps = React.PropsWithChildren<{
@@ -111,7 +105,11 @@ export default function PositionList({
       <MobileHeader redesignFlag={redesignFlagEnabled}>
         <Trans>Your positions</Trans>
         <ToggleWrap>
-          <ToggleLabel>
+          <ToggleLabel
+            onClick={() => {
+              setUserHideClosedPositions(!userHideClosedPositions)
+            }}
+          >
             {userHideClosedPositions ? <Trans>Show closed positions</Trans> : <Trans>Hide closed positions</Trans>}
           </ToggleLabel>
         </ToggleWrap>

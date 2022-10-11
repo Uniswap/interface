@@ -59,7 +59,7 @@ const LinkRow = styled(Link)<{ redesignFlag: boolean }>`
 
   ${({ theme, redesignFlag }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-direction: column;
-    ${redesignFlag && `row-gap: 12px;`}
+    ${redesignFlag && `row-gap: 8px;`}
   `};
 `
 
@@ -79,7 +79,6 @@ const RangeLineItem = styled(DataLineItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
-
   margin-top: 4px;
   width: 100%;
 `
@@ -90,7 +89,6 @@ const DoubleArrow = styled.span<{ redesignFlag: boolean }>`
 `
 
 const RangeText = styled.span`
-  /* background-color: ${({ theme }) => theme.deprecated_bg2}; */
   padding: 0.25rem 0.25rem;
   border-radius: 8px;
 `
