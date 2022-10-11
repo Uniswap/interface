@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { formatDollar, formatTransactionAmount, priceToPreciseFloat } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
@@ -33,15 +34,12 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   const theme = useTheme()
 
   const usdcPrice = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
-  /*
-   * calculate needed amount of decimal prices, for prices between 0.95-1.05 use 4 decimal places
-   */
-  const p = Number(usdcPrice?.toFixed())
-  const visibleDecimalPlaces = p < 1.05 ? 4 : 2
 
   let formattedPrice: string
   try {
-    formattedPrice = showInverted ? price.toSignificant(4) : price.invert()?.toSignificant(4)
+    formattedPrice = showInverted
+      ? formatTransactionAmount(priceToPreciseFloat(price))
+      : formatTransactionAmount(priceToPreciseFloat(price.invert()))
   } catch (error) {
     formattedPrice = '0'
   }
@@ -65,7 +63,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       </Text>{' '}
       {usdcPrice && (
         <ThemedText.DeprecatedDarkGray>
-          <Trans>(${usdcPrice.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })})</Trans>
+          <Trans>(${formatDollar({ num: priceToPreciseFloat(usdcPrice) })})</Trans>
         </ThemedText.DeprecatedDarkGray>
       )}
     </StyledPriceContainer>
