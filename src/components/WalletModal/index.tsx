@@ -157,7 +157,7 @@ export default function WalletModal({
 
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
-  const phase1FlagEnabled = useNftFlag() === NftVariant.Enabled
+  const nftFlagEnabled = useNftFlag() === NftVariant.Enabled
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
 
@@ -309,9 +309,9 @@ export default function WalletModal({
       )
     }
 
-    function getTermsOfService(phase1FlagEnabled: boolean, walletView: string) {
-      if (phase1FlagEnabled && walletView === WALLET_VIEWS.PENDING) return null
-      return phase1FlagEnabled ? (
+    function getTermsOfService(nftFlagEnabled: boolean, walletView: string) {
+      if (nftFlagEnabled && walletView === WALLET_VIEWS.PENDING) return null
+      return nftFlagEnabled ? (
         <AutoRow style={{ flexWrap: 'nowrap', padding: '4px 16px' }}>
           <ThemedText.BodySecondary fontSize={16} lineHeight={'24px'}>
             <Trans>
@@ -359,7 +359,7 @@ export default function WalletModal({
               />
             )}
             {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-testid="option-grid">{getOptions()}</OptionGrid>}
-            {!pendingError && getTermsOfService(phase1FlagEnabled, walletView)}
+            {!pendingError && getTermsOfService(nftFlagEnabled, walletView)}
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>
