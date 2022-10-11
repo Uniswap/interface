@@ -161,7 +161,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     return itemsInBag.some((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
   }, [itemsInBag, asset])
 
-  const isOwner = account?.toLowerCase() === asset.owner.toLowerCase()
+  const isOwner =
+    asset.owner && typeof asset.owner === 'string' ? account?.toLowerCase() === asset.owner.toLowerCase() : false
 
   if (isOwner) {
     return <OwnerContainer asset={asset} />
