@@ -110,7 +110,13 @@ describe('formatDollar for a price', () => {
   it('num >= 0.1 && num < 1.05', () => {
     expect(formatDollar({ num: 0.812831, isPrice })).toEqual('$0.813')
   })
-  it('neater number', () => {
+  it('lessPreciseStablecoinValues number less than 1, rounds to 0.999', () => {
+    expect(formatDollar({ num: 0.9994, isPrice, lessPreciseStablecoinValues: true })).toEqual('$0.999')
+  })
+  it('lessPreciseStablecoinValues number less than, rounds to 1.00', () => {
+    expect(formatDollar({ num: 0.9995, isPrice, lessPreciseStablecoinValues: true })).toEqual('$1.00')
+  })
+  it('lessPreciseStablecoinValues number greater than 1', () => {
     expect(formatDollar({ num: 1.0000001, isPrice, lessPreciseStablecoinValues: true })).toEqual('$1.00')
   })
   it('number is greater than 1 million', () => {

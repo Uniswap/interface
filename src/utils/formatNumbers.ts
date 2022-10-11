@@ -51,7 +51,7 @@ export const formatDollar = ({
     }
     // We only show 2 decimal places in explore table for stablecoin value ranges
     // for the sake of readability (as opposed to the usual 3 elsewhere).
-    if (num >= 0.1 && num < (lessPreciseStablecoinValues ? 1.0 : 1.05)) {
+    if (num >= 0.1 && num < (lessPreciseStablecoinValues ? 0.9995 : 1.05)) {
       return `$${num.toFixed(3)}`
     }
     return `$${Number(num.toFixed(2)).toLocaleString(DEFAULT_LOCALE, { minimumFractionDigits: 2 })}`
