@@ -1,12 +1,11 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
-import { HomeStackScreenProp } from 'src/app/navigation/types'
+import { AppStackScreenProp } from 'src/app/navigation/types'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
-import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
+import { GradientButton } from 'src/components/buttons/GradientButton'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -23,18 +22,19 @@ import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
+import { UNISWAP_NFT_BASE_URL } from 'src/screens/NFTItemScreen'
 import { Screens } from 'src/screens/Screens'
-import { formatNumber, formatNFTFloorPrice } from 'src/utils/format'
+import { formatNFTFloorPrice, formatNumber } from 'src/utils/format'
 import { openUri } from 'src/utils/linking'
 
 interface Props {
   collection?: NFTAsset.Collection
   collectionName: string
+  collectionAddress: string
 }
 
-function NFTCollectionHeader({ collection, collectionName }: Props) {
+function NFTCollectionHeader({ collection, collectionName, collectionAddress }: Props) {
   const { t } = useTranslation()
-  const appTheme = useAppTheme()
 
   return (
     <Trace section={SectionName.NFTCollectionHeader}>
@@ -130,19 +130,16 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
               </Button>
             )}
           </Flex>
-          <Button
+          <GradientButton
             borderColor="backgroundOutline"
             borderRadius="md"
             borderWidth={1}
-            name={ElementName.NFTCollectionViewOnOpensea}
+            label={t('View on Uniswap.com')}
+            name={ElementName.NFTCollectionViewOnUniswap}
             py="sm"
-            testID={ElementName.NFTCollectionViewOnOpensea}
-            onPress={() => openUri(`https://opensea.io/collection/${collection?.slug}`)}>
-            <Flex alignItems="center" flexDirection="row" gap="xs" justifyContent="center">
-              <OpenSeaIcon color={appTheme.colors.textPrimary} height={20} width={20} />
-              <Text variant="mediumLabel">{t('View Collection on Opensea')}</Text>
-            </Flex>
-          </Button>
+            testID={ElementName.NFTCollectionViewOnUniswap}
+            onPress={() => openUri(`${UNISWAP_NFT_BASE_URL}/nfts/collection/${collectionAddress}`)}
+          />
         </Flex>
       </Flex>
     </Trace>
@@ -152,7 +149,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
 export function NFTCollectionScreen({
   navigation,
   route,
-}: HomeStackScreenProp<Screens.NFTCollection>) {
+}: AppStackScreenProp<Screens.NFTCollection>) {
   const { t } = useTranslation()
 
   const activeAddress = useActiveAccount()?.address
@@ -212,7 +209,11 @@ export function NFTCollectionScreen({
               <Loading repeat={4} type="box" />
             </Box>
           ) : (
-            <NFTCollectionHeader collection={collection} collectionName={collection?.name ?? ''} />
+            <NFTCollectionHeader
+              collection={collection}
+              collectionAddress={collectionAddress}
+              collectionName={collection?.name ?? ''}
+            />
           )}
         </Box>
         <Text mx="lg" variant="mediumLabel">

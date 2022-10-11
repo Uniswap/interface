@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { HomeStackScreenProp } from 'src/app/navigation/types'
+import { AppStackScreenProp } from 'src/app/navigation/types'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
-import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { LinkButton } from 'src/components/buttons/LinkButton'
 import { SendButton } from 'src/components/buttons/SendButton'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { Chevron } from 'src/components/icons/Chevron'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
@@ -21,16 +21,20 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { iconSizes } from 'src/styles/sizing'
 import { openUri } from 'src/utils/linking'
 
 const MAX_NFT_IMAGE_SIZE = 512
+
+// TODO {MOB-2827}: replace with `uniswapAppUrl` const when NFT feature is moved off vercel
+export const UNISWAP_NFT_BASE_URL = 'https://interface-6y0ofdy69-uniswap.vercel.app/#'
 
 export function NFTItemScreen({
   navigation,
   route: {
     params: { owner, address, token_id },
   },
-}: HomeStackScreenProp<Screens.NFTItem>) {
+}: AppStackScreenProp<Screens.NFTItem>) {
   const theme = useAppTheme()
   const { t } = useTranslation()
 
@@ -68,70 +72,58 @@ export function NFTItemScreen({
 
   const isMyNFT = owner && owner === accountAddress
 
+  const assetUrl = `${UNISWAP_NFT_BASE_URL}/nfts/asset/${asset.asset_contract.address}/${asset.token_id}`
+
   return (
-    <HeaderScrollScreen
-      contentHeader={<BackButton showButtonLabel px="md" />}
-      fixedHeader={<BackButton showButtonLabel />}>
-      <Flex my="sm">
-        <Flex centered>
-          <NFTViewer autoplay maxHeight={MAX_NFT_IMAGE_SIZE} uri={asset.image_url} />
-        </Flex>
+    <>
+      <HeaderScrollScreen contentHeader={<BackButton px="md" />} fixedHeader={<BackButton />}>
+        <Flex mb="xxl" mt="md" pb="xxl">
+          <Flex centered>
+            <NFTViewer autoplay maxHeight={MAX_NFT_IMAGE_SIZE} uri={asset.image_url} />
+          </Flex>
 
-        <Flex mx="md">
-          <Flex gap="xs">
-            <Text numberOfLines={2} variant="headlineSmall">
-              {asset?.name}
-            </Text>
+          <Flex mx="md">
+            <Flex gap="xs">
+              <Text numberOfLines={2} variant="headlineSmall">
+                {asset.name}
+              </Text>
 
-            {/* Collection info */}
-            <Button onPress={onPressCollection}>
-              <Flex
-                row
-                alignItems="center"
-                borderColor="backgroundOutline"
-                borderRadius="md"
-                borderWidth={1}
-                gap="xs"
-                px="md"
-                py="sm">
-                <Flex grow row flexBasis={0} gap="sm">
-                  {asset.collection.image_url ? (
-                    <Box borderRadius="full" height={32} overflow="hidden" width={32}>
-                      <NFTViewer uri={asset.collection.image_url} />
-                    </Box>
-                  ) : null}
-                  <Flex grow row alignItems="center" flexBasis={0} gap="xs">
-                    <Text color="textPrimary" numberOfLines={1} variant="subhead">
-                      {asset.collection.name}
-                    </Text>
-                    {asset.collection.safelist_request_status === 'verified' && (
-                      <VerifiedIcon height={16} width={16} />
-                    )}
+              {/* Collection info */}
+              <Button onPress={onPressCollection}>
+                <Flex
+                  row
+                  alignItems="center"
+                  borderColor="backgroundOutline"
+                  borderRadius="md"
+                  borderWidth={1}
+                  gap="xs"
+                  px="md"
+                  py="sm">
+                  <Flex grow row flexBasis={0} gap="sm">
+                    {asset.collection.image_url ? (
+                      <Box borderRadius="full" height={32} overflow="hidden" width={32}>
+                        <NFTViewer uri={asset.collection.image_url} />
+                      </Box>
+                    ) : null}
+                    <Flex grow row alignItems="center" flexBasis={0} gap="xs">
+                      <Text color="textPrimary" numberOfLines={1} variant="subhead">
+                        {asset.collection.name}
+                      </Text>
+                      {asset.collection.safelist_request_status === 'verified' && (
+                        <VerifiedIcon height={16} width={16} />
+                      )}
+                    </Flex>
                   </Flex>
+                  <Chevron color={theme.colors.textSecondary} direction="e" />
                 </Flex>
-                <Chevron color={theme.colors.textSecondary} direction="e" />
-              </Flex>
-            </Button>
-          </Flex>
+              </Button>
+            </Flex>
 
-          {/* Action buttons */}
-          <Flex centered row gap="xs">
-            <PrimaryButton
-              borderRadius="md"
-              flex={1}
-              icon={<OpenSeaIcon color={theme.colors.textPrimary} height={20} width={20} />}
-              label="OpenSea"
-              name={ElementName.NFTAssetViewOnOpensea}
-              testID={ElementName.NFTAssetViewOnOpensea}
-              variant="transparent"
-              onPress={() => openUri(asset.permalink)}
-            />
+            {/* Action buttons */}
             {isMyNFT && <SendButton flex={1} initialState={initialSendState} />}
-          </Flex>
 
-          {/* Metadata */}
-          {asset.collection.description && (
-            <Flex gap="sm">
+            {/* Metadata */}
+            {asset.collection.description && (
               <Flex gap="sm">
                 <Text color="textSecondary" variant="headlineSmall">
                   {t('Description')}
@@ -143,10 +135,41 @@ export function NFTItemScreen({
                   text={asset.collection.description}
                 />
               </Flex>
-            </Flex>
-          )}
+            )}
+          </Flex>
         </Flex>
+      </HeaderScrollScreen>
+      <Flex
+        row
+        alignItems="center"
+        bg="backgroundBackdrop"
+        borderTopColor="backgroundOutline"
+        borderTopWidth={1}
+        bottom={0}
+        gap="none"
+        justifyContent="space-between"
+        pb="xl"
+        position="absolute"
+        pt="sm"
+        px="xl">
+        <Flex fill row gap="sm">
+          <Flex centered>
+            <NFTViewer autoplay maxHeight={36} uri={asset.image_url} />
+          </Flex>
+          <Flex gap="none" justifyContent="center">
+            <Text variant="subhead">{asset.name}</Text>
+            <TextButton
+              name={ElementName.NFTAssetViewOnUniswap}
+              testID={ElementName.NFTAssetViewOnUniswap}
+              textColor="textSecondary"
+              textVariant="caption"
+              onPress={() => openUri(assetUrl)}>
+              {t('View on Uniswap.com')}
+            </TextButton>
+          </Flex>
+        </Flex>
+        <LinkButton label="" size={iconSizes.md} url={assetUrl} />
       </Flex>
-    </HeaderScrollScreen>
+    </>
   )
 }

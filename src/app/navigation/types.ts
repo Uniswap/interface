@@ -28,12 +28,6 @@ export type HomeStackParamList = {
   [Screens.Home]: undefined
   [Screens.PortfolioTokens]: { owner: Address | undefined }
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
-  [Screens.NFTItem]: NFTItem
-  [Screens.NFTCollection]: {
-    collectionAddress: Address
-    slug: string
-    owner?: Address
-  }
 }
 
 export type ExploreStackParamList = {
@@ -43,12 +37,6 @@ export type ExploreStackParamList = {
   [Screens.User]: {
     address: string
     preloadedQuery: NullUndefined<PreloadedQuery<UserScreenQuery>>
-  }
-  [Screens.NFTItem]: NFTItem
-  [Screens.NFTCollection]: {
-    collectionAddress: Address
-    slug: string
-    owner?: Address
   }
   [Screens.PortfolioTokens]: { owner: Address | undefined }
 }
@@ -132,6 +120,12 @@ export type AppStackParamList = {
   [Screens.TokenDetails]: {
     currencyId: string
     preloadedQuery: NullUndefined<PreloadedQuery<TokenDetailsScreenQuery>>
+  }
+  [Screens.NFTItem]: NFTItem
+  [Screens.NFTCollection]: {
+    collectionAddress: Address
+    slug: string
+    owner?: Address
   }
   [Screens.Activity]: {
     preloadedQuery: NullUndefined<PreloadedQuery<ActivityScreenQuery>>

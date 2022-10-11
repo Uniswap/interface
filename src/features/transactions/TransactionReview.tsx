@@ -16,7 +16,6 @@ import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
 import { NFTAsset } from 'src/features/nfts/types'
 import { dimensions } from 'src/styles/sizing'
-import { Theme } from 'src/styles/theme'
 
 interface BaseReviewProps {
   actionButtonProps: ActionButtonProps
@@ -145,7 +144,6 @@ export function TransactionReview({
               disabled={actionButtonProps.disabled}
               label={actionButtonProps.label}
               name={actionButtonProps.name}
-              textColor={theme.colors.accentTextLightPrimary as keyof Theme['colors']}
               onPress={actionButtonProps.onPress}
             />
           </Flex>

@@ -3,7 +3,6 @@ import React, { Suspense, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { GradientButton } from 'src/components/buttons/GradientButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
@@ -79,7 +78,6 @@ export function TransferTokenForm({
   })
 
   const { t } = useTranslation()
-  const theme = useAppTheme()
 
   const { onShowTokenSelector, onSetAmount, onSetMax } = useSwapActionHandlers(dispatch)
   const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
@@ -204,7 +202,6 @@ export function TransferTokenForm({
             label={t('Review transfer')}
             name={ElementName.ReviewTransfer}
             testID={ElementName.ReviewTransfer}
-            textColor={theme.colors.accentTextLightPrimary}
             textVariant="largeLabel"
             onPress={onPressReview}
           />

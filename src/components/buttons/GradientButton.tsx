@@ -5,7 +5,7 @@ import { TouchableArea } from 'src/components-uds/TouchableArea'
 import { ShadowProps } from '@shopify/restyle'
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { ButtonProps } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 
@@ -15,21 +15,25 @@ type GradientButtonProps = ButtonProps & {
   label?: string
   icon?: ReactElement
   textVariant?: keyof Theme['textVariants']
-  textColor?: keyof Theme['colors'] | string
+  textColor?: keyof Theme['colors']
 }
 
 // TODO: make this a more extensible component for use throughout the app
 export function GradientButton({
   icon,
   onPress,
-  textColor,
+  textColor = 'accentTextLightPrimary',
   label,
   textVariant,
   disabled,
   height,
+  p,
+  px,
+  py,
   ...rest
 }: GradientButtonProps) {
   const theme = useAppTheme()
+
   return (
     <TouchableArea
       alignItems="center"
@@ -47,12 +51,14 @@ export function GradientButton({
       {...rest}>
       {icon}
       {label && (
-        <Text
-          style={{ color: textColor }}
-          textAlign="center"
-          variant={textVariant ?? 'mediumLabel'}>
-          {label}
-        </Text>
+        <Box px={px || p || 'none'} py={py || p || 'none'}>
+          <Text
+            style={{ color: theme.colors[textColor] }}
+            textAlign="center"
+            variant={textVariant ?? 'mediumLabel'}>
+            {label}
+          </Text>
+        </Box>
       )}
       {/* TODO: fix gradient definition so it fills space properly (right now needs 200% height on rect) */}
       <Flex borderRadius="md" height="100%" overflow="hidden" position="absolute" width="100%">

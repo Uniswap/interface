@@ -322,7 +322,6 @@ export function SwapForm({
             label={getReviewActionName(t, wrapType)}
             name={ElementName.ReviewSwap}
             testID={ElementName.ReviewSwap}
-            textColor={theme.colors.accentTextLightPrimary}
             textVariant="largeLabel"
             onPress={onReview}
           />

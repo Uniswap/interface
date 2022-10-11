@@ -5,6 +5,7 @@ import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { iconSizes } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 import { openUri } from 'src/utils/linking'
 
@@ -13,6 +14,7 @@ interface LinkButtonProps extends Omit<ComponentProps<typeof TextButton>, 'onPre
   url: string
   isSafeUri?: boolean
   color?: keyof Theme['colors']
+  size?: number
 }
 
 export function LinkButton({
@@ -21,17 +23,19 @@ export function LinkButton({
   textVariant,
   color,
   isSafeUri = false,
+  size = iconSizes.sm,
   ...rest
 }: LinkButtonProps) {
   const theme = useAppTheme()
+  const iconColor = color ? theme.colors[color] : theme.colors.textSecondary
 
   return (
     <Button onPress={() => openUri(url, isSafeUri)} {...rest}>
-      <Flex row alignItems="center" gap="xs">
+      <Flex centered row gap="xxs">
         <Text color={color} variant={textVariant}>
           {label}
         </Text>
-        <ExternalLinkIcon fill={color ? theme.colors[color] : '#99A1BD'} height={14} width={14} />
+        <ExternalLinkIcon fill={iconColor} height={size} width={size} />
       </Flex>
     </Button>
   )

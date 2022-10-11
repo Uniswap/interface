@@ -319,10 +319,6 @@ export function HomeStackNavigator({ queryRef }: { queryRef: PreloadedQuery<Home
 
       {/* Tokens */}
       <HomeStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
-
-      {/* NFTS */}
-      <HomeStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
-      <HomeStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
     </HomeStack.Navigator>
   )
 }
@@ -346,8 +342,6 @@ export function ExploreStackNavigator({
       />
       <ExploreStack.Screen component={UserScreen} name={Screens.User} />
       <ExploreStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
-      <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
-      <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       <ExploreStack.Screen component={WatchedWalletsScreen} name={Screens.WatchedWallets} />
     </ExploreStack.Navigator>
   )
@@ -444,6 +438,8 @@ export function AppStackNavigator() {
       />
 
       <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
+      <AppStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
+      <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
 
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
