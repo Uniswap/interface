@@ -38,7 +38,6 @@ export function useSyncWidgetTransactions() {
           token_address: undefined,
         }
         sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-          element: ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON,
           section: SectionName.WIDGET,
           ...eventProperties,
         })
@@ -54,7 +53,6 @@ export function useSyncWidgetTransactions() {
           amount: undefined,
         }
         sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, {
-          element: ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON,
           section: SectionName.WIDGET,
           ...eventProperties,
           type,
@@ -67,7 +65,6 @@ export function useSyncWidgetTransactions() {
           chainId,
         } as WrapTransactionInfo)
       } else if (type === WidgetTransactionType.SWAP) {
-        // TODO(lynnshaoyu): Swap Submitted
         const { slippageTolerance, trade, tradeType } = transaction.info
         const baseTxInfo = {
           type: AppTransactionType.SWAP,
@@ -90,6 +87,13 @@ export function useSyncWidgetTransactions() {
             minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(slippageTolerance).quotient.toString(),
           } as ExactInputSwapTransactionInfo)
         }
+        // TODO(lynnshaoyu): add event properties for SWAP_SUBMITTED_BUTTON_CLICKED
+        const eventProperties = {}
+        sendAnalyticsEvent(EventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
+          element: ElementName.CONFIRM_SWAP_BUTTON,
+          section: SectionName.WIDGET,
+          ...eventProperties,
+        })
       }
     },
     [addTransaction, chainId]
