@@ -36,6 +36,7 @@ export const PriceRange = () => {
     setMaxPrice('')
     setPriceRangeLow('')
     setPriceRangeHigh('')
+    setPrevMinMax([0, 100])
   }, [location.pathname])
 
   console.log('price range')
