@@ -71,7 +71,7 @@ export const PriceRange = () => {
 
               if (v.currentTarget.value) {
                 const range = parseInt(v.currentTarget.value) - parseInt(priceRangeLow)
-                const newLow = 100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow)))
+                const newLow = Math.floor(100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow))))
 
                 if (parseInt(v.currentTarget.value) > parseInt(maxPrice)) {
                   setPrevMinMax([prevMax, prevMax])
@@ -114,7 +114,7 @@ export const PriceRange = () => {
 
               if (v.currentTarget.value) {
                 const range = parseInt(priceRangeHigh) - parseInt(v.currentTarget.value)
-                const newMax = 100 - 100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow)))
+                const newMax = Math.floor(100 - 100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow))))
 
                 if (parseInt(v.currentTarget.value) < parseInt(minPrice)) {
                   setPrevMinMax([prevMin, prevMin])

@@ -66,6 +66,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const buyNow = useCollectionFilters((state) => state.buyNow)
 
   const setPriceRangeLow = usePriceRange((state) => state.setPriceRangeLow)
+  const priceRangeLow = usePriceRange((state) => state.priceRangeLow)
+  const priceRangeHigh = usePriceRange((state) => state.priceRangeHigh)
   const setPriceRangeHigh = usePriceRange((state) => state.setPriceRangeHigh)
   const setPrevMinMax = usePriceRange((state) => state.setPrevMinMax)
 
@@ -280,15 +282,15 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       const lowValue = collectionStats.floorPrice
       const maxValue = 10 * collectionStats.floorPrice
 
-      if (minPrice === '') {
-        setPriceRangeLow(lowValue.toFixed(2))
+      if (priceRangeLow === '') {
+        setPriceRangeLow(lowValue?.toFixed(2))
       }
 
-      if (maxPrice === '') {
+      if (priceRangeHigh === '') {
         setPriceRangeHigh(maxValue.toFixed(2))
       }
     }
-  }, [collectionStats, maxPrice, minPrice, setPriceRangeHigh, setPriceRangeLow])
+  }, [collectionStats, priceRangeLow, priceRangeHigh, setPriceRangeHigh, setPriceRangeLow])
 
   return (
     <>
