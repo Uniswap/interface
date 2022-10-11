@@ -31,15 +31,24 @@ type TraceProps = {
  * and propagates the context to child traces.
  */
 export const Trace = memo(
-  ({ shouldLogImpression, name, children, page, section, element, properties }: PropsWithChildren<TraceProps>) => {
+  ({
+    shouldLogImpression,
+    name,
+    children,
+    page,
+    section,
+    modal,
+    element,
+    properties,
+  }: PropsWithChildren<TraceProps>) => {
     const parentTrace = useContext(TraceContext)
 
     const combinedProps = useMemo(
       () => ({
         ...parentTrace,
-        ...Object.fromEntries(Object.entries({ page, section, element }).filter(([_, v]) => v !== undefined)),
+        ...Object.fromEntries(Object.entries({ page, section, modal, element }).filter(([_, v]) => v !== undefined)),
       }),
-      [element, parentTrace, page, section]
+      [element, parentTrace, page, modal, section]
     )
 
     useEffect(() => {

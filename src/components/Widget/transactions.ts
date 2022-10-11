@@ -6,6 +6,8 @@ import {
   TransactionType as WidgetTransactionType,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
+import { ElementName, EventName, SectionName } from 'analytics/constants'
 import { useCallback, useMemo } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import {
@@ -29,9 +31,34 @@ export function useSyncWidgetTransactions() {
         return
       } else if (type === WidgetTransactionType.APPROVAL) {
         // TODO(lynnshaoyu): APPROVE_TOKEN_TXN_SUBMITTED
+        const eventProperties = {
+          // get this info from widget handlers
+          chain_id: response.chainId,
+          token_symbol: undefined,
+          token_address: undefined,
+        }
+        sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+          element: ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON,
+          section: SectionName.WIDGET,
+          ...eventProperties,
+        })
       } else if (type === WidgetTransactionType.WRAP || type === WidgetTransactionType.UNWRAP) {
         // TODO(lynnshaoyu): WRAP_TOKEN_TXN_SUBMITTED
-
+        const eventProperties = {
+          // get this info from widget handlers
+          token_in_address: undefined,
+          token_out_address: undefined,
+          token_in_symbol: undefined,
+          token_out_symbol: undefined,
+          chain_id: undefined,
+          amount: undefined,
+        }
+        sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, {
+          element: ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON,
+          section: SectionName.WIDGET,
+          ...eventProperties,
+          type,
+        })
         const { amount } = transaction.info
         addTransaction(response, {
           type: AppTransactionType.WRAP,

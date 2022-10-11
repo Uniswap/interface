@@ -1,4 +1,6 @@
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
+import { EventName, sendAnalyticsEvent } from 'analytics'
+import { ElementName, SectionName } from 'analytics/constants'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -28,7 +30,10 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   }, [defaultToken])
 
   const onSwitchTokens = useCallback(() => {
-    // TODO(lynnshaoyu): Swap Tokens Reversed
+    sendAnalyticsEvent(EventName.SWAP_TOKENS_REVERSED, {
+      element: ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON,
+      section: SectionName.WIDGET,
+    })
     setType((type) => invertTradeType(type))
     setTokens((tokens) => ({
       [Field.INPUT]: tokens[Field.OUTPUT],
