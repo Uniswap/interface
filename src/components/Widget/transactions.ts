@@ -25,11 +25,14 @@ export function useSyncWidgetTransactions() {
     (_hash: string, transaction: Transaction<TransactionInfo>) => {
       const { type, response } = transaction.info
 
-      if (!type || !response) {
+      if (type === undefined || !response) {
         return
+      } else if (type === WidgetTransactionType.APPROVAL) {
+        // TODO(lynnshaoyu): APPROVE_TOKEN_TXN_SUBMITTED
       } else if (type === WidgetTransactionType.WRAP || type === WidgetTransactionType.UNWRAP) {
-        const { amount } = transaction.info
+        // TODO(lynnshaoyu): WRAP_TOKEN_TXN_SUBMITTED
 
+        const { amount } = transaction.info
         addTransaction(response, {
           type: AppTransactionType.WRAP,
           unwrapped: type === WidgetTransactionType.UNWRAP,
@@ -37,6 +40,7 @@ export function useSyncWidgetTransactions() {
           chainId,
         } as WrapTransactionInfo)
       } else if (type === WidgetTransactionType.SWAP) {
+        // TODO(lynnshaoyu): Swap Submitted
         const { slippageTolerance, trade, tradeType } = transaction.info
         const baseTxInfo = {
           type: AppTransactionType.SWAP,

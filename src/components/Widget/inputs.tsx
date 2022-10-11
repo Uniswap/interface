@@ -28,6 +28,7 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   }, [defaultToken])
 
   const onSwitchTokens = useCallback(() => {
+    // TODO(lynnshaoyu): Swap Tokens Reversed
     setType((type) => invertTradeType(type))
     setTokens((tokens) => ({
       [Field.INPUT]: tokens[Field.OUTPUT],

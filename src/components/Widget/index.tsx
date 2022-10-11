@@ -5,6 +5,7 @@ import '@uniswap/widgets/dist/fonts.css'
 import { Currency, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useCallback } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 
@@ -18,10 +19,10 @@ const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export interface WidgetProps {
   defaultToken?: Currency
-  onReviewSwapClick?: OnReviewSwapClick
+  onReviewSwap?: OnReviewSwapClick
 }
 
-export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps) {
+export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
   const locale = useActiveLocale()
   const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
   const { provider } = useWeb3React()
@@ -29,6 +30,11 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
   const { inputs, tokenSelector } = useSyncWidgetInputs(defaultToken)
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
+
+  const onReviewSwapClick = useCallback(() => {
+    // TODO(lynnshaoyu): Swap Confirm Modal Opened
+    return onReviewSwap?.()
+  }, [onReviewSwap])
 
   return (
     <>

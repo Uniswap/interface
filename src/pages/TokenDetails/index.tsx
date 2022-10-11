@@ -172,7 +172,7 @@ export default function TokenDetails() {
             <AddressSection address={tokenQueryData.address ?? ''} />
           </LeftPanel>
           <RightPanel>
-            <Widget defaultToken={widgetToken} onReviewSwapClick={onReviewSwap} />
+            <Widget defaultToken={widgetToken} onReviewSwap={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />}
             <BalanceSummary
               tokenAmount={tokenBalance}
