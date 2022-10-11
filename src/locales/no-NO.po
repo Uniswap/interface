@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-21 21:05\n"
+"PO-Revision-Date: 2022-10-11 02:57\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -20,10 +20,6 @@ msgstr ""
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
 msgstr "$-"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "$<0/>"
-msgstr "$<0/>"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/swap/GasEstimateBadge.tsx
@@ -62,6 +58,10 @@ msgstr "0 UNI / uke"
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
 msgstr "24H volum"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+msgstr "24H volum er mengden av eiendelen som har blitt handlet på Uniswap v3 i løpet av de siste 24 timene."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -240,7 +240,7 @@ msgid "Amount"
 msgstr "Beløp"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
-msgid "An error occured loading tokens. Please try again."
+msgid "An error occurred loading tokens. Please try again."
 msgstr "Det oppsto en feil ved lasting av tokens. Vær så snill, prøv på nytt."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
@@ -374,9 +374,12 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Ved å legge til denne listen stoler du implisitt på at dataene er riktige. Hvem som helst kan opprette en liste, inkludere å lage falske versjoner av eksisterende lister og lister som påstår å representere prosjekter som ikke har et."
 
 #: src/components/WalletModal/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Ved å koble til en lommebok godtar du Uniswap Labs' <0>vilkår for bruk</0> og erkjenner at du har lest og forstått Uniswap <1>Protocol Ansvarsfraskrivelse</1>."
+
+#: src/components/WalletModal/index.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
+msgstr "Ved å koble til en lommebok godtar du Uniswap Labs' <0>vilkår for bruk</0> og samtykker til <1>personvernregler</1>."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -605,11 +608,13 @@ msgid "Contract address"
 msgstr "Kontraktsadresse"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Kopiert!"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 msgid "Copy"
 msgstr "Kopiere"
 
@@ -889,10 +894,6 @@ msgstr "Utførelse av dette forslaget vil innføre anropsdataene i kjeden."
 msgid "Execution Submitted"
 msgstr "Utførelse innsendt"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Expanded results from inactive Token Lists"
-msgstr "Ekspanderte resultater fra inaktive pollettlister"
-
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
 msgstr "Forventet utgang"
@@ -913,10 +914,9 @@ msgstr "Utløpt"
 msgid "Explore"
 msgstr "Utforske"
 
-#: src/pages/Tokens/index.tsx
-#: src/pages/Tokens/index.tsx
-msgid "Explore Tokens"
-msgstr "Utforsk tokens"
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Explore Top Tokens on Uniswap"
+msgstr "Utforsk Top Tokens på Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1130,6 +1130,10 @@ msgstr "Lys tema"
 msgid "Light theme"
 msgstr "Lett tema"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Links"
+msgstr "Lenker"
+
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
@@ -1262,6 +1266,11 @@ msgstr "Min:"
 msgid "Minimum received"
 msgstr "Minimum mottatt"
 
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Missing chart data"
+msgstr "Manglende kartdata"
+
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Mangler avhengigheter"
@@ -1270,7 +1279,7 @@ msgstr "Mangler avhengigheter"
 msgid "More"
 msgstr "Mer"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "NFT Collections"
 msgstr "NFT-samlinger"
 
@@ -1297,6 +1306,10 @@ msgstr "Nettverksavgifter overstiger 50 % av byttebeløpet!"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Ny posisjon"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No NFTs in"
+msgstr "Ingen NFT-er inne"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -1339,7 +1352,7 @@ msgstr "Ingen tokeninformasjon tilgjengelig"
 msgid "No tokens found"
 msgstr "Ingen tokens funnet"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "No tokens found."
 msgstr "Ingen tokens funnet."
 
@@ -1468,11 +1481,11 @@ msgstr "Pott {0}:"
 msgid "Pools"
 msgstr "Bassenger"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular NFT collections"
 msgstr "Populære NFT-samlinger"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular tokens"
 msgstr "Populære tokens"
 
@@ -1577,10 +1590,6 @@ msgstr "I kø"
 msgid "Rates"
 msgstr "Priser"
 
-#: src/components/Tokens/TokenDetails/About.tsx
-msgid "Read more"
-msgstr "Les mer"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Les mer om UNI"
@@ -1601,7 +1610,7 @@ msgstr "Les mer om ikke-støttede ressurser"
 msgid "Recent Transactions"
 msgstr "Nylige transaksjoner"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Recent searches"
 msgstr "Nylige søk"
 
@@ -1719,10 +1728,6 @@ msgstr "Selv"
 msgid "Self Delegate"
 msgstr "Selvdelegat"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "Sell NFTs"
-msgstr "Selg NFT-er"
-
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1755,6 +1760,10 @@ msgstr "Vis avbrutt"
 msgid "Show closed positions"
 msgstr "Vis lukkede stillinger"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Show more"
+msgstr "Vis mer"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
 msgstr "Enkel"
@@ -1770,6 +1779,14 @@ msgstr "Noen aktiva er ikke tilgjengelige gjennom dette grensesnittet fordi de k
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Noe gikk galt"
+
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Sort and filter assets across networks on the new Tokens page."
+msgstr "Sorter og filtrer eiendeler på tvers av nettverk på den nye Tokens-siden."
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Stats"
+msgstr "Statistikk"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1806,7 +1823,7 @@ msgstr "Leverer {0} {1} og {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/index.tsx
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1847,6 +1864,10 @@ msgstr "Bytte {0} {1} mot {2} {3}"
 #: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "Symbol ikke funnet"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "TVL"
+msgstr "TVL"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1962,14 +1983,6 @@ msgstr "Transaksjonen kunne ikke sendes fordi fristen er passert. Kontroller at 
 msgid "There is no liquidity data."
 msgstr "Det er ingen likviditetsdata."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "There was an error fetching your balance"
-msgstr "Det oppsto en feil under henting av saldoen din"
-
-#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {0} balance"
-msgstr "Det oppsto en feil ved innlasting av {0} -saldoen din"
-
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Denne adressen er blokkert på Uniswap Labs-grensesnittet fordi den er knyttet til en eller flere"
@@ -1993,6 +2006,10 @@ msgstr "Denne ruten optimaliserer din totale produksjon ved å vurdere delte rut
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Denne polletten vises ikke på den / de aktive pollettlistene. Forsikre deg om at dette er polletten du vil handle."
+
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
+msgstr "Dette tokenet har ikke diagramdata fordi det ikke har blitt handlet på Uniswap v3"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "This token is not supported in the Uniswap Labs app"
@@ -2033,23 +2050,20 @@ msgid "Token not supported"
 msgstr "Token støttes ikke"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Polletter"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "Polletter fra inaktive lister. Importer spesifikke polleter nedenfor, eller klikk på administrer for å aktivere flere lister."
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Ledende potter"
 
-#: src/components/Tokens/TokenDetails/StatsSection.tsx
-msgid "Total Value Locked"
-msgstr "Total verdi låst"
+#: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
+msgid "Top tokens on Uniswap"
+msgstr "Topp tokens på Uniswap"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -2058,6 +2072,10 @@ msgstr "Totalt avsatt"
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
 msgstr "Totale innskudd"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
+msgstr "Total verdi låst (TVL) er mengden av eiendelen som for øyeblikket er i en Uniswap v3-likviditetspool."
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
@@ -2263,9 +2281,17 @@ msgstr "V3 {0} pris:"
 msgid "View accrued fees and analytics<0>↗</0>"
 msgstr "Vis påløpte gebyrer og analyser<0>↗</0>"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "View and sell NFTs"
+msgstr "Se og selg NFT-er"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "Se liste"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View more analytics"
+msgstr "Se flere analyser"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -2278,10 +2304,6 @@ msgstr "Utsikt på Etherscan"
 msgid "View on Explorer"
 msgstr "Se på Explorer"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "View token analytics"
-msgstr "Se tokenanalyse"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2290,6 +2312,10 @@ msgstr "Se tokenanalyse"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Se transaksjonen på Explorer"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
+msgstr "Volum er mengden av eiendelen som har blitt omsatt på Uniswap v3 i løpet av den valgte tidsrammen."
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -2473,10 +2499,6 @@ msgid "You have no favorited tokens"
 msgstr "Du har ingen favorittsymboler"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
-msgid "You may have lost your network connection, or {label} might be down right now."
-msgstr "Du kan ha mistet nettverkstilkoblingen, eller {label} kan være nede akkurat nå."
-
-#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "Du kan ha mistet nettverkstilkoblingen."
 
@@ -2517,9 +2539,9 @@ msgstr "Din V2-likviditet"
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Dine aktive V3-likviditetsposisjoner vil vises her."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "Your balances by network"
-msgstr "Dine saldoer etter nettverk"
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
+msgid "Your balance"
+msgstr "Din balanse"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2608,6 +2630,11 @@ msgstr "Dine transaksjoner vil vises her ..."
 msgid "Your unclaimed UNI"
 msgstr "Ditt uavklarte UNI"
 
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+msgid "Your {0} balance"
+msgstr "Din {0} -saldo"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "etter utglidning"
@@ -2684,8 +2711,8 @@ msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Importer token} other {Importer tokens}}"
 
 #: src/constants/tokenSafety.tsx
-msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
-msgstr "{0, plural, =1 {Dette tokenet er ikke bekreftet} other {Disse tokenene er ikke verifisert}}"
+msgid "{0, plural, =1 {This token isn't verified.} other {These tokens aren't verified.}}"
+msgstr "{0, plural, =1 {Dette tokenet er ikke bekreftet.} other {Disse tokenene er ikke verifisert.}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
@@ -2757,10 +2784,6 @@ msgstr "{0} UNI-V2 LP-pollettenes tilgjengelig"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} Stemmer"
-
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "{0} all balances"
-msgstr "{0} alle saldoer"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2838,6 +2861,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} poletter"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} might be down right now, or you may have lost your network connection."
+msgstr "{label} kan være nede akkurat nå, eller du kan ha mistet nettverkstilkoblingen."
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
