@@ -29,7 +29,6 @@ export const PriceRange = () => {
   const isDarktheme = useIsDarkMode()
 
   const isMobile = useIsMobile()
-
   const location = useLocation()
 
   useEffect(() => {
@@ -37,7 +36,11 @@ export const PriceRange = () => {
     setMaxPrice('')
     setPriceRangeLow('')
     setPriceRangeHigh('')
-  }, [location.pathname, setMinPrice, setMaxPrice, setPriceRangeLow, setPriceRangeHigh])
+
+    if (minPrice === '' && maxPrice === '') {
+      setPrevMinMax([0, 100])
+    }
+  }, [location.pathname])
 
   console.log('price range')
   console.log(priceRangeLow)

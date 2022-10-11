@@ -67,8 +67,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const setPriceRangeLow = usePriceRange((state) => state.setPriceRangeLow)
   const priceRangeLow = usePriceRange((state) => state.priceRangeLow)
-  const setPriceRangeHigh = usePriceRange((state) => state.setPriceRangeHigh)
   const priceRangeHigh = usePriceRange((state) => state.priceRangeHigh)
+  const setPriceRangeHigh = usePriceRange((state) => state.setPriceRangeHigh)
   const setPrevMinMax = usePriceRange((state) => state.setPrevMinMax)
 
   const setIsCollectionNftsLoading = useIsCollectionLoading((state) => state.setIsCollectionNftsLoading)
