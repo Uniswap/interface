@@ -121,27 +121,4 @@ const Tokens = () => {
   )
 }
 
-export const LoadingTokens = () => {
-  return (
-    <ExploreContainer>
-      <TitleContainer>
-        <ThemedText.LargeHeader>
-          <Trans>Top tokens on Uniswap</Trans>
-        </ThemedText.LargeHeader>
-      </TitleContainer>
-      <FiltersWrapper>
-        <FiltersContainer>
-          <NetworkFilter />
-          {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
-          <TimeSelector />
-        </FiltersContainer>
-        <SearchContainer>
-          <SearchBar />
-        </SearchContainer>
-      </FiltersWrapper>
-      <LoadingTokenTable />
-    </ExploreContainer>
-  )
-}
-
 export default Tokens
