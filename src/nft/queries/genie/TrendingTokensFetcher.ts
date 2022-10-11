@@ -3,7 +3,6 @@ import { unwrapToken } from 'graphql/data/util'
 import { FungibleToken } from '../../types'
 
 export const fetchTrendingTokens = async (numTokens?: number): Promise<FungibleToken[]> => {
-  // TODO: WETH->ETH
   const url = `${process.env.REACT_APP_TEMP_API_URL}/tokens/trending${numTokens ? `?numTokens=${numTokens}` : ''}`
 
   const r = await fetch(url, {
