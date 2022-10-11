@@ -6,7 +6,7 @@ import { isAddress } from 'utils'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { isCelo, nativeOnChain } from '../../constants/tokens'
+import { isCelo, NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon'
 
@@ -69,7 +69,7 @@ export default function useCurrencyLogoURIs(
   return useMemo(() => {
     const logoURIs = [...locations]
     if (currency) {
-      if (currency.isNative || currency.address === 'NATIVE') {
+      if (currency.isNative || currency.address === NATIVE_CHAIN_ID) {
         logoURIs.push(getNativeLogoURI(currency.chainId))
       } else if (currency.isToken || currency.address) {
         const checksummedAddress = isAddress(currency.address)

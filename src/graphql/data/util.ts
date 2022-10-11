@@ -1,7 +1,6 @@
-import { NATIVE_CHAIN_ID } from 'analytics/constants'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 
 import { Chain, HistoryDuration } from './__generated__/TokenQuery.graphql'
 
@@ -98,5 +97,5 @@ export function unwrapToken<T extends { address: string | null } | null>(chainId
   if (address !== nativeAddress) return token
 
   const nativeToken = nativeOnChain(chainId)
-  return { ...token, ...nativeToken, address: 'NATIVE' }
+  return { ...token, ...nativeToken, address: NATIVE_CHAIN_ID }
 }

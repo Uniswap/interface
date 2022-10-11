@@ -4,7 +4,7 @@ import { Weth } from 'abis/types'
 import WETH_ABI from 'abis/weth.json'
 import { ALL_SUPPORTED_CHAIN_IDS, isSupportedChain, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
-import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { BaseVariant, FeatureFlag, useBaseFlag } from 'featureFlags'
 import { useCallback, useEffect, useState } from 'react'
 import { getContract } from 'utils'
@@ -56,7 +56,7 @@ export function useMultiNetworkAddressBalances({ ownerAddress, tokenAddress }: u
     }
     const isConnecteToTestnet = connectedChainId ? TESTNET_CHAIN_IDS.includes(connectedChainId) : false
     setLoading(true)
-    const isNative = tokenAddress === 'NATIVE'
+    const isNative = tokenAddress === NATIVE_CHAIN_ID
     const promises: Promise<any>[] = []
 
     const isWrappedNative = ALL_SUPPORTED_CHAIN_IDS.some(

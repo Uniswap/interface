@@ -64,8 +64,6 @@ export enum WALLET_CONNECTION_RESULT {
   FAILED = 'Failed',
 }
 
-export const NATIVE_CHAIN_ID = 'NATIVE'
-
 export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
   ACCEPTED = 'Accepted',
   REJECTED = 'Rejected',
