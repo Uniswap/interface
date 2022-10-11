@@ -7,13 +7,14 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Loader from 'components/Loader'
 import { RowBetween } from 'components/Row'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
 import { PositionDetails } from 'types/position'
 import { formatTickPrice } from 'utils/formatTickPrice'
@@ -21,40 +22,44 @@ import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
-const LinkRow = styled(Link)`
+const LinkRow = styled(Link)<{ redesignFlag: boolean }>`
   align-items: center;
-  border-radius: 20px;
   display: flex;
   cursor: pointer;
   user-select: none;
   display: flex;
   flex-direction: column;
-
+  border-radius: ${({ redesignFlag }) => (redesignFlag ? '0px' : '20px')};
   justify-content: space-between;
   color: ${({ theme }) => theme.deprecated_text1};
-  margin: 8px 0;
+  margin: ${({ redesignFlag }) => (redesignFlag ? '0px' : '8px 0')};
   padding: 16px;
   text-decoration: none;
   font-weight: 500;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+
+  ${({ redesignFlag, theme }) =>
+    !redesignFlag &&
+    css`
+      background-color: ${theme.deprecated_bg1};
+    `}
 
   &:last-of-type {
-    margin: 8px 0 0 0;
+    margin: ${({ redesignFlag }) => (redesignFlag ? '0px' : '8px 0 0 0')};
   }
   & > div:not(:first-child) {
     text-align: center;
   }
   :hover {
-    background-color: ${({ theme }) => theme.deprecated_bg2};
+    background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.hoverDefault : theme.deprecated_bg2)};
   }
 
   @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     /* flex-direction: row; */
   }
 
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+  ${({ theme, redesignFlag }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-direction: column;
-    row-gap: 12px;
+    ${redesignFlag && `row-gap: 12px;`}
   `};
 `
 
@@ -77,26 +82,16 @@ const RangeLineItem = styled(DataLineItem)`
 
   margin-top: 4px;
   width: 100%;
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-  background-color: ${({ theme }) => theme.deprecated_bg2};
-    border-radius: 12px;
-    padding: 8px 0;
-`};
 `
 
-const DoubleArrow = styled.span`
+const DoubleArrow = styled.span<{ redesignFlag: boolean }>`
   margin: 0 2px;
   color: ${({ theme }) => theme.deprecated_text3};
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    margin: 4px;
-    padding: 20px;
-  `};
 `
 
 const RangeText = styled.span`
   /* background-color: ${({ theme }) => theme.deprecated_bg2}; */
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.25rem;
   border-radius: 8px;
 `
 
@@ -226,8 +221,11 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
 
   const removed = liquidity?.eq(0)
 
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+
   return (
-    <LinkRow to={positionSummaryLink}>
+    <LinkRow redesignFlag={redesignFlagEnabled} to={positionSummaryLink}>
       <RowBetween>
         <PrimaryPositionIdData>
           <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={18} margin />
@@ -256,10 +254,10 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
             </Trans>
           </RangeText>{' '}
           <HideSmall>
-            <DoubleArrow>⟷</DoubleArrow>{' '}
+            <DoubleArrow redesignFlag={redesignFlagEnabled}>⟷</DoubleArrow>{' '}
           </HideSmall>
           <SmallOnly>
-            <DoubleArrow>⟷</DoubleArrow>{' '}
+            <DoubleArrow redesignFlag={redesignFlagEnabled}>⟷</DoubleArrow>{' '}
           </SmallOnly>
           <RangeText>
             <ExtentsText>

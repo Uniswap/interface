@@ -12,6 +12,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -133,12 +134,17 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   `};
 `
 
-const MainContentWrapper = styled.main`
+const MainContentWrapper = styled.main<{ redesignFlag: boolean }>`
   background-color: ${({ theme }) => theme.deprecated_bg0};
-  padding: 8px;
-  border-radius: 20px;
+  border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : 'transparent')};
+  padding: ${({ redesignFlag }) => (redesignFlag ? '0px' : '8px')};
+  border-radius: ${({ redesignFlag }) => (redesignFlag ? '16px' : '20px')};
   display: flex;
   flex-direction: column;
+  ${({ redesignFlag }) =>
+    redesignFlag &&
+    `box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+  0px 24px 32px rgba(0, 0, 0, 0.01);`}
 `
 
 function PositionsLoadingPlaceholder() {
@@ -164,6 +170,9 @@ function WrongNetworkCard() {
   const navBarFlag = useNavBarFlag()
   const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const theme = useTheme()
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+
   return (
     <>
       <PageWrapper navBarFlag={navBarFlagEnabled}>
@@ -175,7 +184,7 @@ function WrongNetworkCard() {
               </ThemedText.LargeHeader>
             </TitleRow>
 
-            <MainContentWrapper>
+            <MainContentWrapper redesignFlag={redesignFlagEnabled}>
               <ErrorContainer>
                 <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
@@ -198,6 +207,8 @@ export default function Pool() {
   const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const { account, chainId } = useWeb3React()
   const toggleWalletModal = useToggleWalletModal()
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const theme = useTheme()
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
@@ -294,7 +305,7 @@ export default function Pool() {
                 </ButtonRow>
               </TitleRow>
 
-              <MainContentWrapper>
+              <MainContentWrapper redesignFlag={redesignFlagEnabled}>
                 {positionsLoading ? (
                   <PositionsLoadingPlaceholder />
                 ) : filteredPositions && closedPositions && filteredPositions.length > 0 ? (

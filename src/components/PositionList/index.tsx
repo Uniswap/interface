@@ -1,16 +1,23 @@
 import { Trans } from '@lingui/macro'
 import PositionListItem from 'components/PositionListItem'
-import Toggle from 'components/Toggle'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import React from 'react'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
 
-const DesktopHeader = styled.div`
+const DesktopHeader = styled.div<{ redesignFlag: boolean }>`
   display: none;
   font-size: 14px;
   font-weight: 500;
   padding: 8px;
+
+  ${({ redesignFlag }) =>
+    redesignFlag &&
+    css`
+      padding: 16px;
+      border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+    `}
 
   @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     align-items: center;
@@ -23,14 +30,21 @@ const DesktopHeader = styled.div`
   }
 `
 
-const MobileHeader = styled.div`
+const MobileHeader = styled.div<{ redesignFlag: boolean }>`
   font-weight: medium;
-  font-size: 16px;
-  font-weight: 500;
   padding: 8px;
+  font-weight: 500;
+  padding: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  ${({ redesignFlag }) =>
+    redesignFlag &&
+    css`
+      padding: 16px;
+      border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+    `}
 
   @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     display: none;
@@ -38,8 +52,8 @@ const MobileHeader = styled.div`
 
   @media screen and (max-width: ${MEDIA_WIDTHS.deprecated_upToExtraSmall}px) {
     display: flex;
-    flex-direction: column;
-    align-items: start;
+    flex-direction: row;
+    justify-content: space-between;
   }
 `
 
@@ -49,9 +63,11 @@ const ToggleWrap = styled.div`
   align-items: center;
 `
 
-const ToggleLabel = styled.div`
-  opacity: ${({ theme }) => theme.opacity.hover};
-  margin-right: 10px;
+const ToggleLabel = styled.button`
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  color: ${({ theme }) => theme.accentAction};
 `
 
 const MobileTogglePosition = styled.div`
@@ -72,41 +88,32 @@ export default function PositionList({
   setUserHideClosedPositions,
   userHideClosedPositions,
 }: PositionListProps) {
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+
   return (
     <>
-      <DesktopHeader>
+      <DesktopHeader redesignFlag={redesignFlagEnabled}>
         <div>
           <Trans>Your positions</Trans>
           {positions && ' (' + positions.length + ')'}
         </div>
-        <ToggleWrap>
-          <ToggleLabel>
-            <Trans>Show closed positions</Trans>
-          </ToggleLabel>
-          <Toggle
-            id="desktop-hide-closed-positions"
-            isActive={!userHideClosedPositions}
-            toggle={() => {
-              setUserHideClosedPositions(!userHideClosedPositions)
-            }}
-          />
-        </ToggleWrap>
+
+        <ToggleLabel
+          id="desktop-hide-closed-positions"
+          onClick={() => {
+            setUserHideClosedPositions(!userHideClosedPositions)
+          }}
+        >
+          {userHideClosedPositions ? <Trans>Show closed positions</Trans> : <Trans>Hide closed positions</Trans>}
+        </ToggleLabel>
       </DesktopHeader>
-      <MobileHeader>
+      <MobileHeader redesignFlag={redesignFlagEnabled}>
         <Trans>Your positions</Trans>
         <ToggleWrap>
           <ToggleLabel>
-            <Trans>Show closed positions</Trans>
+            {userHideClosedPositions ? <Trans>Show closed positions</Trans> : <Trans>Hide closed positions</Trans>}
           </ToggleLabel>
-          <MobileTogglePosition>
-            <Toggle
-              id="mobile-hide-closed-positions"
-              isActive={!userHideClosedPositions}
-              toggle={() => {
-                setUserHideClosedPositions(!userHideClosedPositions)
-              }}
-            />
-          </MobileTogglePosition>
         </ToggleWrap>
       </MobileHeader>
       {positions.map((p) => {

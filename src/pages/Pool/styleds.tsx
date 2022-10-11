@@ -58,12 +58,13 @@ export const Dots = styled.span`
 `
 
 export const LoadingRows = styled(BaseLoadingRows)`
-  padding-top: 48px;
+  padding-top: 36px;
   min-width: 75%;
   max-width: 960px;
   grid-column-gap: 0.5em;
   grid-row-gap: 0.8em;
   grid-template-columns: repeat(3, 1fr);
+  padding: 8px;
 
   & > div:nth-child(4n + 1) {
     grid-column: 1 / 3;
