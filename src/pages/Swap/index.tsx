@@ -694,12 +694,12 @@ export default function Swap() {
                     properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                     element={ElementName.CONNECT_WALLET_BUTTON}
                   >
-                    <ButtonLight onClick={toggleWalletModal} redesignFlag={redesignFlagEnabled}>
+                    <ButtonLight onClick={toggleWalletModal} redesignFlag={redesignFlagEnabled} fontWeight={600}>
                       <Trans>Connect Wallet</Trans>
                     </ButtonLight>
                   </TraceEvent>
                 ) : showWrap ? (
-                  <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                  <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} fontWeight={600}>
                     {wrapInputError ? (
                       <WrapErrorText wrapInputError={wrapInputError} />
                     ) : wrapType === WrapType.WRAP ? (
@@ -718,6 +718,7 @@ export default function Swap() {
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                     <AutoColumn style={{ width: '100%' }} gap="12px">
                       <ButtonConfirmed
+                        fontWeight={600}
                         onClick={handleApprove}
                         disabled={approveTokenButtonDisabled}
                         width="100%"
@@ -780,7 +781,7 @@ export default function Swap() {
                         }
                         error={isValid && priceImpactSeverity > 2}
                       >
-                        <Text fontSize={16} fontWeight={500}>
+                        <Text fontSize={16} fontWeight={600}>
                           {priceImpactTooHigh ? (
                             <Trans>High Price Impact</Trans>
                           ) : trade && priceImpactSeverity > 2 ? (
@@ -811,7 +812,7 @@ export default function Swap() {
                     disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh || !!swapCallbackError}
                     error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                   >
-                    <Text fontSize={20} fontWeight={500}>
+                    <Text fontSize={20} fontWeight={600}>
                       {swapInputError ? (
                         swapInputError
                       ) : routeIsSyncing || routeIsLoading ? (
