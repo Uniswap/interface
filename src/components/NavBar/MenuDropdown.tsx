@@ -143,7 +143,7 @@ export const MenuDropdown = () => {
                     <BarChartIcon width={24} height={24} />
                   </Icon>
                   <PrimaryMenuRow.Text>
-                    <Trans>View token analytics</Trans>
+                    <Trans>View more analytics</Trans>
                   </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
               </Column>
