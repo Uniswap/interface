@@ -68,7 +68,7 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
     />
   )
 
-  const value: SwapController = useMemo(() => ({ type, amount, ...tokens }), [amount, tokens, type])
+  const value: SwapController['value'] = useMemo(() => ({ type, amount, ...tokens }), [amount, tokens, type])
   const valueHandlers: SwapEventHandlers = useMemo(
     () => ({ onAmountChange, onSwitchTokens, onTokenSelectorClick }),
     [onAmountChange, onSwitchTokens, onTokenSelectorClick]

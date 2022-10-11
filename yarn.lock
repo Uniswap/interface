@@ -4149,7 +4149,7 @@
   resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.5.tgz#7c097047d489c1624038c0fbbd3d76dc705bf153"
   integrity sha512-RSMhfuAX2rPimnevvAAiwoyV2bCGTIKhVHEBOLTMF+oVxYcKKe9hCwx/cffY12t/usXWHlEJ//V7JoxTKI1Lyg==
 
-"@uniswap/router-sdk@^1.0.3", "@uniswap/router-sdk@^1.3.0":
+"@uniswap/router-sdk@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.3.0.tgz#8c17e957f65099a18dda536cd05fc34e779628aa"
   integrity sha512-T6kXQFXrAkIHfCCmhyW+0xgUyuFVepL9rlwG9+MjnfVtmGIBssbMzyFKGk5HGQYlk6WQrm630W1j87kdfXpZ/Q==
@@ -4305,10 +4305,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.12.0":
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.12.0.tgz#4341b84dba9f51d7e08425204e79381c7b3ea45c"
-  integrity sha512-gQDW+4cP09TUpt2WGIzp5WopY2smfs8blFtoDPfAcaCHFQqZ+83PqGmcYHJeLa6IEUFD/zBNNLpiuNBgfJWgXA==
+"@uniswap/widgets@^2.13.2":
+  version "2.13.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.13.2.tgz#bc5a9996d69d763fbb5aa4ab924531ab5bb299f0"
+  integrity sha512-9bBu3ssEyB9VJs1TWSbHZE9eqI42r2dEJJo+yuoym25ofzdCTcVM6WfBJOGWgUDFlHLELRUBsXTb7uqafwWQtA==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
@@ -4316,7 +4316,7 @@
     "@popperjs/core" "^2.4.4"
     "@reduxjs/toolkit" "^1.6.1"
     "@uniswap/redux-multicall" "^1.1.1"
-    "@uniswap/router-sdk" "^1.0.3"
+    "@uniswap/router-sdk" "^1.3.0"
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/smart-order-router" "^2.10.0"
     "@uniswap/token-lists" "^1.0.0-beta.30"
