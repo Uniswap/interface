@@ -47,6 +47,9 @@ const SellModeButton = styled.button<{ active: boolean }>`
   }
 `
 
+const FILTER_SIDEBAR_WIDTH = 300
+const PADDING = 16
+
 function roundFloorPrice(price?: number, n?: number) {
   return price ? Math.round(price * Math.pow(10, n ?? 3) + Number.EPSILON) / Math.pow(10, n ?? 3) : 0
 }
@@ -157,15 +160,15 @@ export const ProfilePage = () => {
   }, [collectionStats, ownerCollections, setWalletCollections])
 
   const { gridX } = useSpring({
-    gridX: isFiltersExpanded ? 300 : -16,
+    gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
   })
 
   return (
     <Column
       width="full"
-      paddingLeft={{ sm: '16', md: '52' }}
-      paddingRight={{ sm: '16', md: isBagExpanded ? '0' : '72' }}
-      paddingTop={{ sm: '16', md: '40' }}
+      paddingLeft={{ sm: `${PADDING}`, md: '52' }}
+      paddingRight={{ sm: `${PADDING}`, md: isBagExpanded ? '0' : '72' }}
+      paddingTop={{ sm: `${PADDING}`, md: '40' }}
     >
       {anyQueryIsLoading ? (
         <ProfilePageLoadingSkeleton />
@@ -182,7 +185,8 @@ export const ProfilePage = () => {
                 flexShrink="0"
                 style={{
                   transform: gridX.to(
-                    (x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : -16)}px)`
+                    (x) =>
+                      `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
                   ),
                 }}
               >
