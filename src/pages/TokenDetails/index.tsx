@@ -11,7 +11,7 @@ import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget, { WIDGET_WIDTH } from 'components/Widget'
-import { isCelo, nativeOnChain } from 'constants/tokens'
+import { isCelo, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
 import { useTokenQuery } from 'graphql/data/Token'
@@ -72,7 +72,7 @@ export default function TokenDetails() {
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[currentChainName]
   const nativeCurrency = nativeOnChain(pageChainId)
   const timePeriod = useAtomValue(filterTimeAtom)
-  const isNative = tokenAddressParam === 'NATIVE'
+  const isNative = tokenAddressParam === NATIVE_CHAIN_ID
   const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddressParam
   const [tokenQueryData, prices] = useTokenQuery(tokenQueryAddress ?? '', currentChainName, timePeriod)
 
