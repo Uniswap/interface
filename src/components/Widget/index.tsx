@@ -4,9 +4,12 @@ import '@uniswap/widgets/dist/fonts.css'
 
 import { Currency, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
+import { networkConnection } from 'connection'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useEffect } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
+import { switchChain } from 'utils/switchChain'
 
 import { useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
@@ -24,11 +27,22 @@ export interface WidgetProps {
 export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps) {
   const locale = useActiveLocale()
   const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
-  const { provider } = useWeb3React()
+  const { chainId, connector, provider } = useWeb3React()
 
   const { inputs, tokenSelector } = useSyncWidgetInputs(defaultToken)
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
+
+  // Because we pass a network connector to provider, it will not auto-switch chains
+  // (this is only done by the widget for its own connectors, created with jsonRpcUrlMap).
+  // Instead, we should auto-switch when there is a mismatch.
+  useEffect(() => {
+    const tokenChainId = inputs.value.INPUT?.chainId ?? inputs.value.OUTPUT?.chainId
+    if (chainId === undefined || tokenChainId === undefined || chainId === tokenChainId) return
+    if (connector === networkConnection.connector) {
+      switchChain(connector, tokenChainId)
+    }
+  })
 
   return (
     <>
