@@ -1,14 +1,20 @@
+import { SparkLineLoadingBubble } from 'components/Tokens/TokenTable/TokenRow'
 import { curveCardinal, scaleLinear } from 'd3'
-import { filterPrices } from 'graphql/data/Token'
-import { TopToken } from 'graphql/data/TopTokens'
+import { PricePoint } from 'graphql/data/Token'
+import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { TimePeriod } from 'graphql/data/util'
-import React from 'react'
-import { useTheme } from 'styled-components/macro'
+import { memo } from 'react'
+import styled, { useTheme } from 'styled-components/macro'
 
-import { DATA_EMPTY, getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
+import { getPriceBounds } from '../Tokens/TokenDetails/PriceChart'
 import LineChart from './LineChart'
 
-type PricePoint = { value: number; timestamp: number }
+const LoadingContainer = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
 interface SparklineChartProps {
   width: number
@@ -16,15 +22,32 @@ interface SparklineChartProps {
   tokenData: TopToken
   pricePercentChange: number | undefined | null
   timePeriod: TimePeriod
+  sparklineMap: SparklineMap
 }
 
-function SparklineChart({ width, height, tokenData, pricePercentChange, timePeriod }: SparklineChartProps) {
+function _SparklineChart({
+  width,
+  height,
+  tokenData,
+  pricePercentChange,
+  timePeriod,
+  sparklineMap,
+}: SparklineChartProps) {
   const theme = useTheme()
   // for sparkline
-  const pricePoints = filterPrices(tokenData?.market?.priceHistory) ?? []
-  const hasData = pricePoints.length !== 0
-  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
-  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
+  const pricePoints = tokenData?.address ? sparklineMap[tokenData.address] : null
+
+  // Don't display if there's one or less pricepoints
+  if (!pricePoints || pricePoints.length <= 1) {
+    return (
+      <LoadingContainer>
+        <SparkLineLoadingBubble />
+      </LoadingContainer>
+    )
+  }
+
+  const startingPrice = pricePoints[0]
+  const endingPrice = pricePoints[pricePoints.length - 1]
   const widthScale = scaleLinear()
     .domain(
       // the range of possible input values
@@ -52,4 +75,4 @@ function SparklineChart({ width, height, tokenData, pricePercentChange, timePeri
   )
 }
 
-export default React.memo(SparklineChart)
+export default memo(_SparklineChart)
