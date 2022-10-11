@@ -10,11 +10,10 @@ import { PriceDurations, PricePoint, SingleTokenData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import useCurrencyLogoURIs, { getTokenLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
+import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
-import { isAddress } from 'utils'
 
 import { filterTimeAtom, useIsFavorited, useToggleFavorite } from '../state'
 import { ClickFavorited, FavoriteIcon, L2NetworkLogo, LogoContainer } from '../TokenTable/TokenRow'
@@ -61,13 +60,12 @@ export function useTokenLogoURI(
   token: NonNullable<SingleTokenData> | NonNullable<TopToken>,
   nativeCurrency?: Token | NativeCurrency
 ) {
-  const checksummedAddress = isAddress(token.address)
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
-  return (
-    useCurrencyLogoURIs(nativeCurrency)[0] ??
-    (checksummedAddress && getTokenLogoURI(checksummedAddress, chainId)) ??
-    token.project?.logoUrl
-  )
+  return [
+    ...useCurrencyLogoURIs(nativeCurrency),
+    ...useCurrencyLogoURIs({ ...token, chainId }),
+    token.project?.logoUrl,
+  ][0]
 }
 
 export default function ChartSection({
