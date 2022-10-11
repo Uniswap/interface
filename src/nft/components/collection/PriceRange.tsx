@@ -69,31 +69,20 @@ export const PriceRange = () => {
             onChange={(v: FormEvent<HTMLInputElement>) => {
               const [, prevMax] = prevMinMax
 
-              if (v.currentTarget.value && parseInt(v.currentTarget.value) > parseInt(priceRangeLow)) {
+              if (v.currentTarget.value) {
                 const range = parseInt(v.currentTarget.value) - parseInt(priceRangeLow)
                 const newLow = 100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow)))
 
-                setPrevMinMax([newLow, prevMax])
+                if (parseInt(v.currentTarget.value) > parseInt(maxPrice)) {
+                  setPrevMinMax([prevMax, prevMax])
+                } else {
+                  setPrevMinMax([newLow, prevMax])
+                }
               } else {
                 setPrevMinMax([0, prevMax])
               }
 
               setMinPrice(v.currentTarget.value)
-
-              // setPrevMinMax([newLow, prevMax])
-
-              // set the value of minprice and range for querying
-
-              // If we are updating the min price and the max price has been adjusted via the slider
-              // We need to maintain that min price when we reset
-              // if (maxPrice !== '') {
-              //   setMaxSet(true)
-              //   setPriceRangeHigh(maxPrice)
-              // }
-
-              // if the user manually inputs a value, we want this value to persist when moving a slider
-              // back to the start state
-              // setMinSet(v.currentTarget.value !== '')
 
               scrollToTop()
             }}
@@ -123,17 +112,21 @@ export const PriceRange = () => {
             onChange={(v: FormEvent<HTMLInputElement>) => {
               const [prevMin] = prevMinMax
 
-              if (v.currentTarget.value && parseInt(v.currentTarget.value) > parseInt(priceRangeLow)) {
+              if (v.currentTarget.value) {
                 const range = parseInt(priceRangeHigh) - parseInt(v.currentTarget.value)
                 const newMax = 100 - 100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow)))
 
-                setPrevMinMax([prevMin, newMax])
+                if (parseInt(v.currentTarget.value) < parseInt(minPrice)) {
+                  setPrevMinMax([prevMin, prevMin])
+                } else {
+                  setPrevMinMax([prevMin, newMax])
+                }
               } else {
                 setPrevMinMax([prevMin, 100])
               }
 
               setMaxPrice(v.currentTarget.value)
-              // scrollToTop()
+              scrollToTop()
             }}
             onFocus={handleFocus}
             onBlur={handleBlur}
