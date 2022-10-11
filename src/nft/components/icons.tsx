@@ -1396,6 +1396,19 @@ export const LargeBagIcon = (props: SVGProps) => (
   </svg>
 )
 
+export const LargeTagIcon = (props: SVGProps) => (
+  <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M55.6215 80.6815L55.621 80.6819C55.0823 81.2212 54.4427 81.649 53.7386 81.9409C53.0345 82.2328 52.2797 82.383 51.5175 82.383C50.7553 82.383 50.0006 82.2328 49.2965 81.9409C48.5923 81.649 47.9527 81.2212 47.414 80.6819L47.413 80.681L17.7 51.0025V17.7H51.0029L80.714 47.411C80.7141 47.4111 80.7142 47.4112 80.7143 47.4113C81.7943 48.498 82.4006 49.9679 82.4006 51.5C82.4006 53.032 81.7944 54.5017 80.7146 55.5884C80.7144 55.5886 80.7142 55.5888 80.714 55.589L55.6215 80.6815Z"
+      stroke="currentColor"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle cx="34" cy="34" r="3" fill="currentColor" />
+  </svg>
+)
+
 export const CircularCloseIcon = (props: SVGProps) => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <circle cx="8" cy="8" r="8" fill="#293249" />
@@ -1495,6 +1508,18 @@ export const EmptyNFTWalletIcon = (props: SVGProps) => (
       stroke="#5E6887"
       strokeWidth="2.5"
       strokeLinecap="round"
+    />
+  </svg>
+)
+
+export const CancelListingIcon = (props: SVGProps) => (
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M71 31L75.36 35.36C76.85 36.8589 77.6863 38.8865 77.6863 41C77.6863 43.1135 76.85 45.1411 75.36 46.64L46.68 75.32C45.937 76.0638 45.0547 76.6539 44.0835 77.0565C43.1123 77.4591 42.0713 77.6663 41.02 77.6663C39.9687 77.6663 38.9277 77.4591 37.9565 77.0565C36.9853 76.6539 36.103 76.0638 35.36 75.32L31 71M47.8 7.8L41 1H1V41L7.8 47.8M77.6863 1L1.62987 77.0565M21 21H21.0333"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </svg>
 )

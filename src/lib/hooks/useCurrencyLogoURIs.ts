@@ -1,13 +1,12 @@
-import { Currency } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { isAddress } from 'utils'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { isCelo, nativeOnChain } from '../../constants/tokens'
+import { isCelo, NATIVE_CHAIN_ID, nativeOnChain } from '../../constants/tokens'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon'
 
@@ -54,15 +53,27 @@ export function getTokenLogoURI(address: string, chainId: SupportedChainId = Sup
   }
 }
 
-export default function useCurrencyLogoURIs(currency?: Currency | null): string[] {
-  const locations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
+export default function useCurrencyLogoURIs(
+  currency:
+    | {
+        isNative?: boolean
+        isToken?: boolean
+        address?: string
+        chainId: number
+        logoURI?: string
+      }
+    | null
+    | undefined
+): string[] {
+  const locations = useHttpLocations(currency?.logoURI)
   return useMemo(() => {
     const logoURIs = [...locations]
     if (currency) {
-      if (currency.isNative) {
+      if (currency.isNative || currency.address === NATIVE_CHAIN_ID) {
         logoURIs.push(getNativeLogoURI(currency.chainId))
-      } else if (currency.isToken) {
-        const logoURI = getTokenLogoURI(currency.address, currency.chainId)
+      } else if (currency.isToken || currency.address) {
+        const checksummedAddress = isAddress(currency.address)
+        const logoURI = checksummedAddress && getTokenLogoURI(checksummedAddress, currency.chainId)
         if (logoURI) {
           logoURIs.push(logoURI)
         }

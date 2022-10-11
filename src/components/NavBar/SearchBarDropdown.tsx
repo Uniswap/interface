@@ -106,7 +106,7 @@ interface SearchBarDropdownProps {
 
 export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, isLoading }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
-  const searchHistory = useSearchHistory((state: { history: (FungibleToken | GenieCollection)[] }) => state.history)
+  const { history: searchHistory, updateItem: updateSearchHistory } = useSearchHistory()
   const shortenedHistory = useMemo(() => searchHistory.slice(0, 2), [searchHistory])
   const { pathname } = useLocation()
   const isNFTPage = pathname.includes('/nfts')
@@ -146,9 +146,11 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
       refetchOnReconnect: false,
     }
   )
+  useEffect(() => {
+    trendingTokenResults?.forEach(updateSearchHistory)
+  }, [trendingTokenResults, updateSearchHistory])
 
   const trendingTokensLength = phase1Flag === NftVariant.Enabled ? (isTokenPage ? 3 : 2) : 4
-
   const trendingTokens = useMemo(
     () =>
       trendingTokenResults
