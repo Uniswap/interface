@@ -8,6 +8,7 @@ import {
   sortMethodAtom,
   TokenSortMethod,
 } from 'components/Tokens/state'
+import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
@@ -15,7 +16,7 @@ import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery.graphql'
 import { filterPrices, PricePoint } from './Token'
-import { toHistoryDuration } from './util'
+import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration } from './util'
 
 const topTokens100Query = graphql`
   query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
@@ -66,13 +67,11 @@ const tokenSparklineQuery = graphql`
 
 export type PrefetchedTopToken = NonNullable<TopTokens100Query['response']['topTokens']>[number]
 
-function useSortedTokens(tokens: TopTokens100Query['response']['topTokens'] | undefined) {
+function useSortedTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
   return useMemo(() => {
-    if (!tokens) return []
-
     let tokenArray = Array.from(tokens)
     switch (sortMethod) {
       case TokenSortMethod.PRICE:
@@ -97,7 +96,7 @@ function useSortedTokens(tokens: TopTokens100Query['response']['topTokens'] | un
   }, [tokens, sortMethod, sortAscending])
 }
 
-function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']>['topTokens']) {
+function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
   const filterString = useAtomValue(filterStringAtom)
   const favorites = useAtomValue(favoritesAtom)
   const showFavorites = useAtomValue(showFavoritesAtom)
@@ -105,10 +104,6 @@ function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']>['t
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
   return useMemo(() => {
-    if (!tokens) {
-      return []
-    }
-
     let returnTokens = tokens
     if (showFavorites) {
       returnTokens = returnTokens?.filter((token) => token?.address && favorites.includes(token.address))
@@ -135,14 +130,28 @@ interface UseTopTokensReturnValue {
   sparklines: SparklineMap
 }
 
+function replaceWrappedWithNative<T extends { address: string | null } | null>(chainId: number, token: T): T {
+  if (!token?.address) return token
+  const address = token.address.toLowerCase()
+  const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+  if (address !== nativeAddress) return token
+
+  const nativeToken = nativeOnChain(chainId)
+  return { ...token, ...nativeToken }
+}
+
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
   const environment = useRelayEnvironment()
   const [sparklines, setSparklines] = useState<SparklineMap>({})
   const query = useMemo(
-    () => fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, { duration, chain }),
-    [chain, duration, environment]
+    () =>
+      fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, { duration, chain }).map((data) => ({
+        topTokens: data.topTokens?.map((token) => replaceWrappedWithNative(chainId, token)),
+      })),
+    [chain, chainId, duration, environment]
   )
   useEffect(() => {
     const subscription = query.subscribe({
@@ -161,12 +170,12 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     setSparklines({})
   }, [duration])
 
-  const tokens = useFilteredTokens(
-    useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain }).topTokens
+  const { topTokens } = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
+  const mappedTokens = useMemo(
+    () => topTokens?.map((token) => replaceWrappedWithNative(chainId, token)) ?? [],
+    [chainId, topTokens]
   )
-
-  return {
-    tokens: useSortedTokens(tokens),
-    sparklines,
-  }
+  const filteredTokens = useFilteredTokens(mappedTokens)
+  const sortedTokens = useSortedTokens(filteredTokens)
+  return useMemo(() => ({ tokens: sortedTokens, sparklines }), [sortedTokens, sparklines])
 }
