@@ -26,12 +26,9 @@ export const PriceRange = () => {
   const setPriceRangeHigh = usePriceRange((statae) => statae.setPriceRangeHigh)
   const prevMinMax = usePriceRange((state) => state.prevMinMax)
   const setPrevMinMax = usePriceRange((state) => state.setPrevMinMax)
-  const [minSet, setMinSet] = useState(false)
-  const [maxSet, setMaxSet] = useState(false)
   const isDarktheme = useIsDarkMode()
 
   const isMobile = useIsMobile()
-
   const location = useLocation()
 
   useEffect(() => {
@@ -39,7 +36,11 @@ export const PriceRange = () => {
     setMaxPrice('')
     setPriceRangeLow('')
     setPriceRangeHigh('')
-  }, [location.pathname, setMinPrice, setMaxPrice, setPriceRangeLow, setPriceRangeHigh])
+
+    if (minPrice === '' && maxPrice === '') {
+      setPrevMinMax([0, 100])
+    }
+  }, [location.pathname])
 
   const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
     setPlaceholderText(e.currentTarget.placeholder)
