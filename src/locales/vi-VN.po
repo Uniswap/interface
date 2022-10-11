@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-09-21 21:05\n"
+"PO-Revision-Date: 2022-10-11 02:57\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -20,10 +20,6 @@ msgstr ""
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
 msgstr "$-"
-
-#: src/components/CurrencyInputPanel/FiatValue.tsx
-msgid "$<0/>"
-msgstr "$<0/>"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/swap/GasEstimateBadge.tsx
@@ -62,6 +58,10 @@ msgstr "0 UNI / tuần"
 #: src/components/Tokens/TokenDetails/StatsSection.tsx
 msgid "24H volume"
 msgstr "24H khối lượng"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours."
+msgstr "Khối lượng 24H là số lượng tài sản đã được giao dịch trên Uniswap v3 trong 24 giờ qua."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -240,7 +240,7 @@ msgid "Amount"
 msgstr "Số tiền"
 
 #: src/components/Tokens/TokenTable/TokenTable.tsx
-msgid "An error occured loading tokens. Please try again."
+msgid "An error occurred loading tokens. Please try again."
 msgstr "Đã xảy ra lỗi khi tải mã thông báo. Vui lòng thử lại."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
@@ -374,9 +374,12 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Bằng cách thêm danh sách này, bạn hoàn toàn tin tưởng rằng dữ liệu là chính xác. Bất kỳ ai cũng có thể tạo danh sách, bao gồm cả việc tạo các phiên bản giả mạo của danh sách hiện có và danh sách yêu cầu đại diện cho các dự án không có danh sách đó."
 
 #: src/components/WalletModal/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Bằng cách kết nối ví, bạn đồng ý với <0>Điều khoản dịch vụ</0> của Uniswap Labs và xác nhận rằng bạn đã đọc và hiểu Tuyên bố từ chối trách nhiệm</1><1>."
+
+#: src/components/WalletModal/index.tsx
+msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and consent to its <1>Privacy Policy</1>."
+msgstr "Bằng cách kết nối ví, bạn đồng ý với <0>Điều khoản dịch vụ</0> của Uniswap Labs và đồng ý với <1>Chính sách quyền riêng tư</1>của Uniswap Labs."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -605,11 +608,13 @@ msgid "Contract address"
 msgstr "Địa chỉ hợp đồng"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Đã sao chép!"
 
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/nft/components/profile/view/ProfileAccountDetails.tsx
 msgid "Copy"
 msgstr "Sao chép"
 
@@ -889,10 +894,6 @@ msgstr "Việc thực thi đề xuất này sẽ tạo ra calldata trên chuỗi
 msgid "Execution Submitted"
 msgstr "Thực thi đã được đệ trình"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Expanded results from inactive Token Lists"
-msgstr "Kết quả mở rộng từ Danh sách mã token không hoạt động"
-
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Expected Output"
 msgstr "Sản lượng mong đợi"
@@ -913,10 +914,9 @@ msgstr "Đã hết hạn"
 msgid "Explore"
 msgstr "Khám phá"
 
-#: src/pages/Tokens/index.tsx
-#: src/pages/Tokens/index.tsx
-msgid "Explore Tokens"
-msgstr "Khám phá mã thông báo"
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Explore Top Tokens on Uniswap"
+msgstr "Khám phá các mã thông báo hàng đầu trên Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1130,6 +1130,10 @@ msgstr "Chủ đề ánh sáng"
 msgid "Light theme"
 msgstr "Chủ đề ánh sáng"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Links"
+msgstr "Liên kết"
+
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
@@ -1262,6 +1266,11 @@ msgstr "Tối thiểu:"
 msgid "Minimum received"
 msgstr "Số tiền nhận được tối thiểu"
 
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Missing chart data"
+msgstr "Thiếu dữ liệu biểu đồ"
+
 #: src/lib/hooks/swap/useSwapCallback.tsx
 msgid "Missing dependencies"
 msgstr "Thiếu phụ thuộc"
@@ -1270,7 +1279,7 @@ msgstr "Thiếu phụ thuộc"
 msgid "More"
 msgstr "Thêm nữa"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "NFT Collections"
 msgstr "Bộ sưu tập NFT"
 
@@ -1297,6 +1306,10 @@ msgstr "Phí mạng vượt quá 50% số tiền hoán đổi!"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Vị trí mới"
+
+#: src/nft/components/profile/view/EmptyWalletContent.tsx
+msgid "No NFTs in"
+msgstr "Không có NFT trong"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -1339,7 +1352,7 @@ msgstr "Không có thông tin mã thông báo có sẵn"
 msgid "No tokens found"
 msgstr "Không tìm thấy mã thông báo"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "No tokens found."
 msgstr "Không tìm thấy mã thông báo nào."
 
@@ -1468,11 +1481,11 @@ msgstr "Pool {0}:"
 msgid "Pools"
 msgstr "Hồ bơi"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular NFT collections"
 msgstr "Bộ sưu tập NFT phổ biến"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular tokens"
 msgstr "Các mã thông báo phổ biến"
 
@@ -1577,10 +1590,6 @@ msgstr "Xếp hàng"
 msgid "Rates"
 msgstr "Tỷ giá"
 
-#: src/components/Tokens/TokenDetails/About.tsx
-msgid "Read more"
-msgstr "Đọc thêm"
-
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
 msgstr "Đọc thêm về UNI"
@@ -1601,7 +1610,7 @@ msgstr "Đọc thêm về nội dung không được hỗ trợ"
 msgid "Recent Transactions"
 msgstr "Giao dịch gần đây"
 
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Recent searches"
 msgstr "Tìm kiếm gần đây"
 
@@ -1719,10 +1728,6 @@ msgstr "Bản thân"
 msgid "Self Delegate"
 msgstr "Tự ủy quyền"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "Sell NFTs"
-msgstr "Bán NFT"
-
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1755,6 +1760,10 @@ msgstr "Hiển thị Đã bị Hủy"
 msgid "Show closed positions"
 msgstr "Hiển thị các vị trí đã đóng"
 
+#: src/components/Tokens/TokenDetails/About.tsx
+msgid "Show more"
+msgstr "Cho xem nhiều hơn"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
 msgstr "Đơn giản"
@@ -1770,6 +1779,14 @@ msgstr "Một số tài sản không khả dụng thông qua giao diện này v�
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
 msgstr "Đã xảy ra sự cố"
+
+#: src/components/Tokens/TokensBanner.tsx
+msgid "Sort and filter assets across networks on the new Tokens page."
+msgstr "Sắp xếp và lọc nội dung trên các mạng trên trang Mã thông báo mới."
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "Stats"
+msgstr "Số liệu thống kê"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1806,7 +1823,7 @@ msgstr "Cung cấp {0} {1} và {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/index.tsx
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1847,6 +1864,10 @@ msgstr "Đổi {0} {1} lấy {2} {3}"
 #: src/components/Tokens/TokenDetails/ChartSection.tsx
 msgid "Symbol not found"
 msgstr "Không tìm thấy ký hiệu"
+
+#: src/components/Tokens/TokenDetails/StatsSection.tsx
+msgid "TVL"
+msgstr "TVL"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1962,14 +1983,6 @@ msgstr "Không thể gửi giao dịch vì đã hết thời hạn. Vui lòng ki
 msgid "There is no liquidity data."
 msgstr "Không có dữ liệu thanh khoản."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "There was an error fetching your balance"
-msgstr "Đã xảy ra lỗi khi tìm nạp số dư của bạn"
-
-#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {0} balance"
-msgstr "Đã xảy ra lỗi khi tải số dư {0} của bạn"
-
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Địa chỉ này bị chặn trên giao diện Uniswap Labs vì nó được liên kết với một hoặc nhiều"
@@ -1993,6 +2006,10 @@ msgstr "Lộ trình này tối ưu hóa tổng sản lượng của bạn bằng
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
 msgstr "Mã token này không xuất hiện trên (các) danh sách mã token đang hoạt động. Đảm bảo rằng đây là mã token mà bạn muốn giao dịch."
+
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "This token doesn't have chart data because it hasn't been traded on Uniswap v3"
+msgstr "Mã thông báo này không có dữ liệu biểu đồ vì nó chưa được giao dịch trên Uniswap v3"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "This token is not supported in the Uniswap Labs app"
@@ -2033,23 +2050,20 @@ msgid "Token not supported"
 msgstr "Mã thông báo không được hỗ trợ"
 
 #: src/components/Header/index.tsx
-#: src/components/NavBar/SearchBar.tsx
+#: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Token"
 
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "Mã token từ danh sách không hoạt động. Nhập mã token cụ thể bên dưới hoặc nhấp vào Quản lý để kích hoạt thêm danh sách."
-
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
 msgstr "Pool hàng đầu"
 
-#: src/components/Tokens/TokenDetails/StatsSection.tsx
-msgid "Total Value Locked"
-msgstr "Tổng giá trị đã khóa"
+#: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
+msgid "Top tokens on Uniswap"
+msgstr "Các mã thông báo hàng đầu trên Uniswap"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -2058,6 +2072,10 @@ msgstr "Tổng số tiền gửi"
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
 msgstr "Tổng số tiền gửi"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Total value locked (TVL) is the amount of the asset that’s currently in a Uniswap v3 liquidity pool."
+msgstr "Tổng giá trị bị khóa (TVL) là số lượng tài sản hiện có trong nhóm thanh khoản Uniswap v3."
 
 #: src/components/swap/RouterLabel.tsx
 msgid "Trade Route"
@@ -2263,9 +2281,17 @@ msgstr "V3 {0} Giá:"
 msgid "View accrued fees and analytics<0>↗</0>"
 msgstr "Xem phí đã tích lũy và số liệu phân tích <0>↗</0>"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "View and sell NFTs"
+msgstr "Xem và bán NFT"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
 msgstr "Danh sách xem"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View more analytics"
+msgstr "Xem thêm phân tích"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -2278,10 +2304,6 @@ msgstr "Xem trên Etherscan"
 msgid "View on Explorer"
 msgstr "Xem trên Explorer"
 
-#: src/components/NavBar/MenuDropdown.tsx
-msgid "View token analytics"
-msgstr "Xem phân tích mã thông báo"
-
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2290,6 +2312,10 @@ msgstr "Xem phân tích mã thông báo"
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Xem giao dịch trên Explorer"
+
+#: src/components/Tokens/TokenTable/TokenRow.tsx
+msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
+msgstr "Khối lượng là số lượng tài sản đã được giao dịch trên Uniswap v3 trong khung thời gian đã chọn."
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -2473,10 +2499,6 @@ msgid "You have no favorited tokens"
 msgstr "Bạn không có mã thông báo ưa thích nào"
 
 #: src/components/Header/ChainConnectivityWarning.tsx
-msgid "You may have lost your network connection, or {label} might be down right now."
-msgstr "Có thể bạn đã mất kết nối mạng hoặc {label} có thể bị ngắt ngay bây giờ."
-
-#: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "Bạn có thể đã mất kết nối mạng của mình."
 
@@ -2517,9 +2539,9 @@ msgstr "Thanh khoản V2 của bạn"
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Các vị trí thanh khoản V3 đang hoạt động của bạn sẽ xuất hiện tại đây."
 
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "Your balances by network"
-msgstr "Số dư của bạn theo mạng"
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
+msgid "Your balance"
+msgstr "Số dư của bạn"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2608,6 +2630,11 @@ msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây..."
 msgid "Your unclaimed UNI"
 msgstr "UNI chưa được nhận của bạn"
 
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
+msgid "Your {0} balance"
+msgstr "Số dư {0} của bạn"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "after slippage"
 msgstr "sau khi trượt"
@@ -2684,8 +2711,8 @@ msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Nhập mã thông báo} other {Nhập mã thông báo}}"
 
 #: src/constants/tokenSafety.tsx
-msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
-msgstr "{0, plural, =1 {Mã thông báo này chưa được xác minh} other {Những mã thông báo này chưa được xác minh}}"
+msgid "{0, plural, =1 {This token isn't verified.} other {These tokens aren't verified.}}"
+msgstr "{0, plural, =1 {Mã thông báo này chưa được xác minh.} other {Những mã thông báo này không được xác minh.}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
@@ -2757,10 +2784,6 @@ msgstr "{0} mã token UNI-V2 LP có sẵn"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} phiếu bầu"
-
-#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
-msgid "{0} all balances"
-msgstr "{0} tất cả số dư"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -2838,6 +2861,10 @@ msgstr "{USER_AMOUNT} UNI"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{activeTokensOnThisChain} tokens"
 msgstr "{activeTokensOnThisChain} mã thông báo"
+
+#: src/components/Header/ChainConnectivityWarning.tsx
+msgid "{label} might be down right now, or you may have lost your network connection."
+msgstr "{label} có thể không hoạt động ngay bây giờ hoặc bạn có thể đã mất kết nối mạng."
 
 #: src/components/NetworkAlert/NetworkAlert.tsx
 msgid "{label} token bridge"
