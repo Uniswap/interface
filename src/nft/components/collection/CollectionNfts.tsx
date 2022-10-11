@@ -279,12 +279,11 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   useEffect(() => {
     if (collectionNfts && sortBy <= 1) {
       const maxIndex = sortBy === 1 ? 0 : collectionNfts.length - 1
-      const minIndex = sortBy === 1 ? collectionNfts.length - 1 : 0
-      const lowValue = formatWeiToDecimal(collectionNfts[minIndex]?.priceInfo.ETHPrice ?? '')
+      const lowValue = collectionStats.floorPrice
       const maxValue = formatWeiToDecimal(collectionNfts[maxIndex]?.priceInfo.ETHPrice ?? '')
 
       if (minPrice === '') {
-        setPriceRangeLow(lowValue)
+        setPriceRangeLow(lowValue.toFixed(2))
       }
 
       if (maxPrice === '') {
@@ -295,12 +294,11 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         (a, b) => parseFloat(a?.currentUsdPrice ?? '') - parseFloat(b?.currentUsdPrice ?? '')
       )
       const maxIndex = sortedByNftValue?.length - 1
-      const minIndex = 0
-      const lowValue = formatWeiToDecimal(collectionNfts[minIndex]?.priceInfo.ETHPrice ?? '')
+      const lowValue = collectionStats.floorPrice
       const maxValue = formatWeiToDecimal(collectionNfts[maxIndex]?.priceInfo.ETHPrice ?? '')
 
       if (minPrice === '') {
-        setPriceRangeLow(lowValue)
+        setPriceRangeLow(lowValue.toFixed(2))
       }
 
       if (maxPrice === '') {
