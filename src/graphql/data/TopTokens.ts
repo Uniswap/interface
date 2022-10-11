@@ -137,7 +137,7 @@ function replaceWrappedWithNative<T extends { address: string | null } | null>(c
   if (address !== nativeAddress) return token
 
   const nativeToken = nativeOnChain(chainId)
-  return { ...token, ...nativeToken }
+  return { ...token, ...nativeToken, address: 'NATIVE' }
 }
 
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {

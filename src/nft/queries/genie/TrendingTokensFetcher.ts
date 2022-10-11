@@ -8,7 +8,7 @@ function replaceWrappedWithNative(token: FungibleToken) {
   if (address !== nativeAddress) return token
 
   const nativeToken = nativeOnChain(token.chainId)
-  return { ...token, ...nativeToken }
+  return { ...token, ...nativeToken, address: 'NATIVE' }
 }
 
 export const fetchTrendingTokens = async (numTokens?: number): Promise<FungibleToken[]> => {
