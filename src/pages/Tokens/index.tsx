@@ -85,13 +85,13 @@ const Tokens = () => {
 
   useEffect(() => {
     if (!chainNameParam) {
-      navigate(`/tokens/${connectedChainName.toLowerCase()}`)
+      navigate(`/tokens/${connectedChainName.toLowerCase()}`, { replace: true })
     }
   }, [chainNameParam, connectedChainName, navigate])
 
   useOnGlobalChainSwitch((chain) => {
     if (isValidBackendChainName(chain)) {
-      navigate(`/tokens/${chain.toLowerCase()}`)
+      navigate(`/tokens/${chain.toLowerCase()}`, { replace: true })
     }
   })
 
