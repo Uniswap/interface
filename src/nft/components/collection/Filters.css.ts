@@ -51,11 +51,21 @@ export const subRowHover = style({
 export const detailsOpen = style([
   sprinkles({
     overflow: 'hidden',
+    marginTop: '4',
+    marginBottom: '4',
+    opacity: '1',
   }),
   {
     borderTop: '1px solid',
     borderColor: themeVars.colors.backgroundOutline,
   },
+])
+
+export const detailsClosed = style([
+  detailsOpen,
+  sprinkles({
+    opacity: '0',
+  }),
 ])
 
 export const filterDropDowns = style([
