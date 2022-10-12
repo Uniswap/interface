@@ -61,10 +61,13 @@ export function useTokenFromNetwork(
   )
 
   return useMemo(() => {
+    // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
     if (tokenChainId !== undefined && tokenChainId !== chainId) return undefined
     if (typeof tokenAddress !== 'string' || !isSupportedChain(chainId) || !formattedAddress) return undefined
+
     if (isLoading || !chainId) return null
     if (!parsedDecimals) return undefined
+
     return new Token(chainId, formattedAddress, parsedDecimals, parsedSymbol, parsedName)
   }, [tokenChainId, chainId, tokenAddress, formattedAddress, isLoading, parsedDecimals, parsedSymbol, parsedName])
 }
