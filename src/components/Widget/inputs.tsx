@@ -21,10 +21,13 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   })
 
   useEffect(() => {
-    setTokens({
-      [Field.OUTPUT]: defaultToken,
-    })
-    setAmount(EMPTY_AMOUNT)
+    // Add some hysteresis - if there is no new default, do not update the display.
+    if (defaultToken) {
+      setTokens({
+        [Field.OUTPUT]: defaultToken,
+      })
+      setAmount(EMPTY_AMOUNT)
+    }
   }, [defaultToken])
 
   const onSwitchTokens = useCallback(() => {

@@ -160,7 +160,11 @@ export default function TokenDetails() {
             <AddressSection address={tokenQueryData.address ?? ''} />
           </LeftPanel>
           <RightPanel>
-            <Widget defaultToken={widgetToken} onReviewSwapClick={onReviewSwap} />
+            <Widget
+              // A null token is still loading, and should not be overridden.
+              defaultToken={pageToken === null ? undefined : pageToken ?? nativeCurrency}
+              onReviewSwapClick={onReviewSwap}
+            />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />}
             <BalanceSummary
               tokenAmount={tokenBalance}
