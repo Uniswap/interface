@@ -84,7 +84,8 @@ const TraitItem = ({
         as="span"
         whiteSpace="nowrap"
         textOverflow="ellipsis"
-        overflow="hidden"
+        overflowX="hidden"
+        overflowY="visible"
         maxWidth={!showFullTraitName ? '160' : 'full'}
         onMouseOver={(e) => isEllipsisActive(e)}
         onMouseLeave={() => toggleShowFullTraitName({ shouldShow: false, trait_type: '', trait_value: '' })}
