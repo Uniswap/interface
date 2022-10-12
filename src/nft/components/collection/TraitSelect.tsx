@@ -124,15 +124,17 @@ export const TraitSelect = ({
 
   return traits.length ? (
     <TraitsHeader numTraits={traits.length} title={type} hideBorderTop={hideBorderTop}>
+      <Input
+        value={search}
+        onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
+        placeholder="Search"
+        marginTop="8"
+        marginBottom="8"
+        autoComplete="off"
+        position="static"
+        width="full"
+      />
       <Column className={styles.filterDropDowns} paddingLeft="0">
-        <Input
-          value={search}
-          onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
-          placeholder="Search"
-          marginTop="8"
-          marginBottom="8"
-          autoComplete="off"
-        />
         {searchedTraits.map((trait, index) => {
           const isTraitSelected = selectedTraits.find(
             ({ trait_type, trait_value }) =>
