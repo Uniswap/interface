@@ -65,6 +65,7 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
       selectedCurrency={selectingToken}
       otherSelectedCurrency={otherToken}
       onCurrencySelect={onTokenSelect}
+      chainId={tokens.INPUT?.chainId ?? tokens.OUTPUT?.chainId}
     />
   )
 
