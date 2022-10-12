@@ -4,6 +4,7 @@ import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
+import { useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { FormEvent, useEffect, useState } from 'react'
 import { FocusEventHandler } from 'react'
@@ -49,7 +50,7 @@ export const PriceRange = () => {
   }
 
   return (
-    <TraitsHeader title="Price range">
+    <TraitsHeader title="Price range" index={-9}>
       <Row gap="12" marginTop="12" color="textPrimary">
         <Row position="relative">
           <NumericInput
