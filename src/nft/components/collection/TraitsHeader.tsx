@@ -22,8 +22,10 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
 
   const prevTraitIsOpen = props.index !== undefined ? traitsOpen[props.index - 1] : false
 
+  console.log(traitsOpen)
+
   useEffect(() => {
-    if (props.index) {
+    if (props.index !== undefined) {
       setTraitsOpen(props.index, isOpen)
     }
   }, [isOpen])

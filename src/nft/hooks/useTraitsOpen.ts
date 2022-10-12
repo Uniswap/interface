@@ -15,6 +15,10 @@ export const useTraitsOpen = create<TraitsOpenState>()(
     devtools((set) => ({
       traitsOpen: {},
       setTraitsOpen: (index, isOpen) => {
+        if (index === 0) {
+          console.log('hiiiii')
+        }
+
         set(({ traitsOpen }) => ({ traitsOpen: { ...traitsOpen, [index]: isOpen } }))
       },
     })),
