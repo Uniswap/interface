@@ -8,7 +8,8 @@ export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEp
   return futureTimestampInSecondsSinceEpoch - new Date().getTime() / 1000
 }
 
-export const getDurationFromDateMilliseconds = (start: Date): number => {
+export const getDurationFromDateMilliseconds = (start?: Date): number | undefined => {
+  if (!start) return undefined
   return new Date().getTime() - start.getTime()
 }
 
