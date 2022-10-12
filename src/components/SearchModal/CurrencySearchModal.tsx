@@ -44,7 +44,7 @@ export default memo(function CurrencySearchModal({
   showCurrencyAmount = true,
   disableNonToken = false,
 }: CurrencySearchModalProps) {
-  const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
+  const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
   const userAddedTokens = useUserAddedTokens()
 
@@ -91,7 +91,6 @@ export default memo(function CurrencySearchModal({
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()
 
-  const showManageView = useCallback(() => setModalView(CurrencyModalView.manage), [setModalView])
   const handleBackImport = useCallback(
     () => setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search),
     [setModalView, prevView]
@@ -117,7 +116,6 @@ export default memo(function CurrencySearchModal({
           showCommonBases={showCommonBases}
           showCurrencyAmount={showCurrencyAmount}
           disableNonToken={disableNonToken}
-          showManageView={showManageView}
         />
       )
       break
