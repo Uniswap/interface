@@ -33,7 +33,7 @@ const Hr = styled.hr`
 `
 export const TokenDetailsLayout = styled.div`
   display: flex;
-  padding: 0 8px 52px;
+  padding: 0 8px;
   justify-content: center;
   width: 100%;
 
