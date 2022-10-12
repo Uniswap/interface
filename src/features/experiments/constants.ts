@@ -2,19 +2,21 @@
  * Experiment names
  * These should match the Experiment Key on Amplitude
  */
-/* eslint-disable @typescript-eslint/naming-convention */
 export enum EXPERIMENTS {
-  sticky_tabs_header = 'sticky-tabs-header',
+  StickyTabsHeader = 'sticky-tabs-header',
+}
+
+export enum FEATURE_FLAGS {
+  SwapNativeKeyboard = 'swap-native-keyboard',
 }
 
 /**
  * Experiment variants
  * These should match the `Variant Value` on Amplitude
  */
-
 export enum EXP_VARIANTS {
-  TABS = 'tabs',
-  TITLE_ACTIONS = 'title-actions',
-  ACTIONS_TITLES_TABS = 'actions-titles-tabs',
-  TITLES_TABS = 'titles-tabs',
+  Tabs = 'tabs',
+  TitleActions = 'title-actions',
+  ActionsTitlesTabs = 'actions-titles-tabs',
+  TitlesTabs = 'titles-tabs',
 }

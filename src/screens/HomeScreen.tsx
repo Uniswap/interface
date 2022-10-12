@@ -89,15 +89,15 @@ function HomeScreenInner({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuer
   const hasPendingTransactions = pendingTransactions?.length > 0
 
   const tabsExperimentVariant = useExperimentVariant(
-    EXPERIMENTS.sticky_tabs_header,
-    EXP_VARIANTS.TABS
+    EXPERIMENTS.StickyTabsHeader,
+    EXP_VARIANTS.Tabs
   )
   const scrollHeader = useMemo(() => {
-    if (!tabsExperimentVariant || tabsExperimentVariant === EXP_VARIANTS.TABS) return
+    if (!tabsExperimentVariant || tabsExperimentVariant === EXP_VARIANTS.Tabs) return
 
     const shouldShowActions = [
-      EXP_VARIANTS.TITLE_ACTIONS.valueOf(),
-      EXP_VARIANTS.ACTIONS_TITLES_TABS.valueOf(),
+      EXP_VARIANTS.TitleActions.valueOf(),
+      EXP_VARIANTS.ActionsTitlesTabs.valueOf(),
     ].includes(tabsExperimentVariant)
 
     return (

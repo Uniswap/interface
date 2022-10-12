@@ -116,8 +116,8 @@ export default function TabbedScrollScreen({
   const navigation = useAppStackNavigation()
 
   const tabsExperimentsVariant = useExperimentVariant(
-    EXPERIMENTS.sticky_tabs_header,
-    EXP_VARIANTS.TABS
+    EXPERIMENTS.StickyTabsHeader,
+    EXP_VARIANTS.Tabs
   )
 
   const [headerHeight, setHeaderHeight] = useState(INITIAL_TAB_BAR_HEIGHT) // estimation for initial height, updated on layout
@@ -144,8 +144,8 @@ export default function TabbedScrollScreen({
     let tabBarTop = Math.max(scrollHeaderHeight - insets.top, 0)
 
     if (
-      tabsExperimentsVariant === EXP_VARIANTS.TITLE_ACTIONS ||
-      tabsExperimentsVariant === EXP_VARIANTS.TABS
+      tabsExperimentsVariant === EXP_VARIANTS.TitleActions ||
+      tabsExperimentsVariant === EXP_VARIANTS.Tabs
     ) {
       tabBarTop = 0
     }
