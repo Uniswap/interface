@@ -1,10 +1,10 @@
 import { Box } from 'nft/components/Box'
 import { Column } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
-import { subheadSmall } from 'nft/css/common.css'
+import { bodySmall, subheadSmall } from 'nft/css/common.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { DetailsOrigin, WalletAsset } from 'nft/types'
-import { formatEth, getAssetHref } from 'nft/utils'
+import { getAssetHref } from 'nft/utils'
 import { useMemo, useReducer } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -44,8 +44,8 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
   return (
     <Link to={getAssetHref(asset, DetailsOrigin.PROFILE)} style={{ textDecoration: 'none' }}>
       <Column
-        color={'textPrimary'}
-        className={subheadSmall}
+        // color={'textPrimary'}
+        // className={subheadSmall}
         onMouseEnter={toggleBoxHovered}
         onMouseLeave={toggleBoxHovered}
       >
@@ -64,17 +64,31 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
           borderBottomRightRadius="20"
           transition="250"
           backgroundColor={boxHovered ? 'backgroundOutline' : 'backgroundSurface'}
-          paddingY="12"
+          paddingTop="12"
+          paddingBottom="20"
           paddingX="12"
         >
-          <Box className={subheadSmall} overflow="hidden" textOverflow="ellipsis" marginTop="4" lineHeight="20">
+          <Box
+            className={subheadSmall}
+            color="textPrimary"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+          >
             {asset.name ? asset.name : `#${asset.tokenId}`}
           </Box>
-          <Box fontSize="12" marginTop="4" lineHeight="16" overflow="hidden" textOverflow="ellipsis">
+          <Box
+            className={bodySmall}
+            color="textSecondary"
+            marginTop="4"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+          >
             {asset.collection?.name}
             {asset.collectionIsVerified ? <VerifiedIcon className={styles.verifiedBadge} /> : null}
           </Box>
-          <Box as="span" fontSize="12" lineHeight="16" color="textSecondary" marginTop="8">
+          {/* <Box as="span" fontSize="12" lineHeight="16" color="textSecondary" marginTop="8">
             Last:&nbsp;
             {asset.lastPrice ? (
               <>
@@ -99,7 +113,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
                 &mdash;
               </Box>
             )}
-          </Box>
+          </Box> */}
           {isSellMode && (
             <Box
               marginTop="12"
