@@ -44,6 +44,10 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
     [connector]
   )
 
+  if (!inputs.value.INPUT && !inputs.value.OUTPUT) {
+    return <WidgetSkeleton />
+  }
+
   return (
     <>
       <SwapWidget
