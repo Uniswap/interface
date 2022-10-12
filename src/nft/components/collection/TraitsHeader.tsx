@@ -32,7 +32,10 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
     <>
       <Box
         className={clsx(subheadSmall, !isOpen && styles.rowHover, styles.detailsOpen)}
-        style={{ opacity: !prevTraitIsOpen && isOpen && props.index !== 0 ? 100 : 0 }}
+        style={{
+          opacity: !prevTraitIsOpen && isOpen && props.index !== 0 ? 100 : 0,
+          marginTop: prevTraitIsOpen ? 0 : 8,
+        }}
       />
       <Box as="details" className={clsx(subheadSmall, !isOpen && styles.rowHover)} open={isOpen}>
         <Box
