@@ -2,15 +2,54 @@ import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { isSupportedChain } from 'constants/chains'
+import ERC20_ABI from 'abis/erc20.json'
+import { Erc20 } from 'abis/types'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
+import { RPC_PROVIDERS } from 'constants/providers'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
-import { isAddress } from '../../utils'
+import { getContract, isAddress } from '../../utils'
 import { supportedChainId } from '../../utils/supportedChainId'
+
+/**
+ * Returns a Token's decimals from the given chain.
+ */
+export function useDecimals(tokenAddress: string | undefined, chainId: SupportedChainId): number | undefined {
+  const { chainId: activeChainId } = useWeb3React()
+  const [decimals, setDecimals] = useState(0)
+
+  const formattedAddress = isAddress(tokenAddress)
+  const tokenContract = useTokenContract(
+    chainId === activeChainId ? (formattedAddress ? formattedAddress : undefined) : undefined,
+    false
+  )
+  const { result: [decimalsResult] = [] } = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD)
+
+  useEffect(() => {
+    if (decimalsResult) setDecimals(decimalsResult)
+    if (!formattedAddress || chainId === activeChainId) return
+
+    const provider = RPC_PROVIDERS[chainId]
+    const contract = getContract(formattedAddress, ERC20_ABI, provider) as Erc20
+    contract
+      .decimals()
+      .then((value) => {
+        if (!stale) setDecimals(value)
+      })
+      .catch(() => undefined)
+
+    let stale = false
+    return () => {
+      stale = true
+    }
+  }, [activeChainId, chainId, decimalsResult, formattedAddress])
+
+  return decimals || undefined
+}
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
@@ -29,10 +68,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useTokenFromNetwork(
-  tokenAddress: string | null | undefined,
-  tokenChainId?: number
-): Token | null | undefined {
+export function useTokenFromNetwork(tokenAddress: string | undefined): Token | null | undefined {
   const { chainId } = useWeb3React()
 
   const formattedAddress = isAddress(tokenAddress)
@@ -62,14 +98,13 @@ export function useTokenFromNetwork(
 
   return useMemo(() => {
     // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
-    if (tokenChainId !== undefined && tokenChainId !== chainId) return undefined
     if (typeof tokenAddress !== 'string' || !isSupportedChain(chainId) || !formattedAddress) return undefined
 
     if (isLoading || !chainId) return null
     if (!parsedDecimals) return undefined
 
     return new Token(chainId, formattedAddress, parsedDecimals, parsedSymbol, parsedName)
-  }, [tokenChainId, chainId, tokenAddress, formattedAddress, isLoading, parsedDecimals, parsedSymbol, parsedName])
+  }, [chainId, tokenAddress, formattedAddress, isLoading, parsedDecimals, parsedSymbol, parsedName])
 }
 
 type TokenMap = { [address: string]: Token }

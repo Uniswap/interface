@@ -19,7 +19,7 @@ export const WIDGET_WIDTH = 360
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export interface WidgetProps {
-  defaultToken?: Currency
+  defaultToken: Currency
   onReviewSwapClick?: OnReviewSwapClick
 }
 
