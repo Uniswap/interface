@@ -40,12 +40,6 @@ export const PriceRange = () => {
     setPrevMinMax([0, 100])
   }, [location.pathname])
 
-  console.log('price range')
-  console.log(priceRangeLow)
-  console.log(priceRangeHigh)
-  console.log(minPrice)
-  console.log(maxPrice)
-
   const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
     setPlaceholderText(e.currentTarget.placeholder)
     e.currentTarget.placeholder = ''

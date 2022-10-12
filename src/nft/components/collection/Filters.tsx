@@ -72,7 +72,6 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
         <Box>
           <Column marginBottom="60">
             {Object.entries(traitsByGroup).map(([type, traits], index) => {
-              console.log(`index: ${index}`)
               return <TraitSelect key={type} {...{ type, traits }} index={index} hideBorderTop={index === 0} />
             })}
           </Column>
