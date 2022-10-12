@@ -109,13 +109,14 @@ const ELASTIC_FARM_QUERY = gql`
         endTime
         feeTarget
         vestingDuration
-        rewardTokens {
+        rewardTokens(orderBy: priority, orderDirection: asc) {
           token {
             id
             symbol
             name
             decimals
           }
+          priority
           amount
         }
         joinedPositions {

@@ -307,7 +307,7 @@ function ElasticFarms({ active }: { active: boolean }) {
                 onOpenModal={(modalType: ModalType, pid?: number | string, forced?: boolean) => {
                   setSeletedModal(modalType)
                   setSeletedFarm(farm.id)
-                  setSeletedPoolId(Number(pid) ?? null)
+                  setSeletedPoolId(Number(pid) || null)
                 }}
                 pools={farm.pools}
                 userInfo={userFarmInfo?.[farm.id]}

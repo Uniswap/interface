@@ -19,7 +19,7 @@ const arbitrumInfo: NetworkInfo = {
   classicClient: createClient(
     'https://arbitrum-graph.kyberengineering.io/subgraphs/name/kybernetwork/kyberswap-exchange-arbitrum',
   ),
-  elasticClient: createClient('https://api.thegraph.com/subgraphs/name/viet-nv/kyberswap-elastic-arbitrum-one'),
+  elasticClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/kyberswap-elastic-arbitrum-one'),
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/kybernetwork/arbitrum-blocks'),
   etherscanUrl: 'https://arbiscan.io',
   etherscanName: 'Arbiscan',

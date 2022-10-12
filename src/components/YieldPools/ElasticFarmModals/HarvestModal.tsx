@@ -65,7 +65,7 @@ function HarvestModal({
 
   const { rewardPendings = {}, joinedPositions = {} } = userFarmInfo?.[farmsAddress] || {}
 
-  if (!poolId) {
+  if (poolId === null) {
     Object.values(rewardPendings || {})
       .flat()
       .forEach(reward => {
@@ -87,7 +87,7 @@ function HarvestModal({
 
     if (poolId === null)
       Object.keys(joinedPositions).forEach(pid => {
-        joinedPositions?.[pid].forEach(pos => {
+        joinedPositions[pid].forEach(pos => {
           if (BigNumber.from(pos.liquidity.toString()).gt(BigNumber.from(0))) {
             nftIds.push(pos.nftId)
             poolIds.push(BigNumber.from(pid))
