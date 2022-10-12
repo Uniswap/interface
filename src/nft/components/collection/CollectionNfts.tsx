@@ -1,3 +1,6 @@
+import 'rc-slider/assets/index.css'
+import './CollectionNfts.css'
+
 import clsx from 'clsx'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
@@ -6,7 +9,7 @@ import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { Center, Row } from 'nft/components/Flex'
-import { NonRarityIcon, RarityIcon } from 'nft/components/icons'
+import { NonRarityIcon, RarityIcon, SweepIcon } from 'nft/components/icons'
 import { bodySmall, buttonTextMedium, headlineMedium } from 'nft/css/common.css'
 import { vars } from 'nft/css/sprinkles.css'
 import {
@@ -24,11 +27,13 @@ import { getRarityStatus } from 'nft/utils/asset'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { default as Slider } from 'rc-slider'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
 import { marketPlaceItems } from './MarketplaceSelect'
@@ -42,6 +47,12 @@ interface CollectionNftsProps {
 
 const rarityStatusCache = new Map<string, boolean>()
 
+const ActionsContainer = styled.div`
+  display: flex;
+  margin-top: 12px;
+  justify-content: space-between;
+`
+
 const ClearAllButton = styled.button`
   color: ${({ theme }) => theme.textTertiary};
   padding-left: 8px;
@@ -51,6 +62,42 @@ const ClearAllButton = styled.button`
   border: none;
   cursor: pointer;
   background: none;
+`
+
+const SweepButton = styled.div<{ enabled: boolean }>`
+  display: flex;
+  gap: 8px;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 18px 10px 12px;
+  cursor: pointer;
+  background: ${({ theme, enabled }) =>
+    enabled ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)' : theme.backgroundInteractive};
+`
+
+const SweepContainer = styled.div`
+  display: flex;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: ${({ theme }) => theme.backgroundModule};
+  justify-content: space-between;
+`
+
+const SweepLeftmostContainer = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 24px;
+  padding: 6px 0px;
+`
+
+const SweepSubContainer = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 12px;
+`
+
+const StyledSlider = styled(Slider)`
+  height: '20px';
 `
 
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
@@ -73,6 +120,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
   const debouncedSearchByNameText = useDebounce(searchByNameText, 500)
+
+  const [sweepIsToggled, toggleSweep] = useReducer((s) => !s, false)
+  const theme = useTheme()
 
   const {
     data: collectionAssets,
@@ -278,16 +328,24 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           paddingBottom="8"
           style={{ backdropFilter: 'blur(24px)' }}
         >
-          <Row marginTop="12" gap="12">
-            <FilterButton
-              isMobile={isMobile}
-              isFiltersExpanded={isFiltersExpanded}
-              onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-              collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
-            />
-            <SortDropdown dropDownOptions={sortDropDownOptions} />
-            <CollectionSearch />
-          </Row>
+          <ActionsContainer>
+            <Row gap="12">
+              <FilterButton
+                isMobile={isMobile}
+                isFiltersExpanded={isFiltersExpanded}
+                onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
+              />
+              <SortDropdown dropDownOptions={sortDropDownOptions} />
+              <CollectionSearch />
+            </Row>
+            <SweepButton enabled={sweepIsToggled} onClick={toggleSweep}>
+              <SweepIcon width="24px" height="24px" />
+              <ThemedText.BodyPrimary fontWeight={600} lineHeight="20px" marginTop="2px" marginBottom="2px">
+                Sweep
+              </ThemedText.BodyPrimary>
+            </SweepButton>
+          </ActionsContainer>
           <Row paddingTop="12" gap="8" flexWrap="wrap">
             {markets.map((market) => (
               <TraitChip
@@ -335,6 +393,34 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             ) : null}
           </Row>
         </Box>
+        {sweepIsToggled && (
+          <SweepContainer>
+            <SweepLeftmostContainer>
+              <ThemedText.SubHeaderSmall color="textPrimary" lineHeight="20px">
+                Sweep
+              </ThemedText.SubHeaderSmall>
+              <SweepSubContainer>
+                <StyledSlider
+                  defaultValue={0}
+                  trackStyle={{
+                    background: `radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)`,
+                    marginTop: '1px',
+                    height: '8px',
+                  }}
+                  handleStyle={{
+                    width: '12px',
+                    height: '20px',
+                    backgroundColor: `${theme.textPrimary}`,
+                    borderRadius: '4px',
+                    border: 'none',
+                    boxShadow: `${theme.shallowShadow}`,
+                  }}
+                  railStyle={{ marginTop: '1px', backgroundColor: `${theme.accentActionSoft}`, height: '8px' }}
+                />
+              </SweepSubContainer>
+            </SweepLeftmostContainer>
+          </SweepContainer>
+        )}
       </AnimatedBox>
       <InfiniteScroll
         next={fetchNextPage}
