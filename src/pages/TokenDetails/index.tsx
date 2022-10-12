@@ -33,7 +33,7 @@ const Hr = styled.hr`
 `
 export const TokenDetailsLayout = styled.div`
   display: flex;
-  padding: 0 8px 52px;
+  padding: 0 8px;
   justify-content: center;
   width: 100%;
 
@@ -171,7 +171,6 @@ export default function TokenDetails() {
 
           <MobileBalanceSummaryFooter
             tokenAmount={tokenBalance}
-            tokenAddress={tokenQueryAddress}
             nativeCurrencyAmount={nativeCurrencyBalance}
             isNative={isNative}
           />
