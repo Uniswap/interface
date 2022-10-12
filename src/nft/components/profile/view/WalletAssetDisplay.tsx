@@ -1,7 +1,7 @@
 import { Box } from 'nft/components/Box'
 import { Column } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
-import { bodySmall, subheadSmall } from 'nft/css/common.css'
+import { bodySmall, buttonTextSmall, subheadSmall } from 'nft/css/common.css'
 import { useBag, useIsMobile, useSellAsset } from 'nft/hooks'
 import { DetailsOrigin, WalletAsset } from 'nft/types'
 import { getAssetHref } from 'nft/utils'
@@ -122,9 +122,17 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
               borderRadius="12"
               paddingY="8"
               transition="250"
-              color={buttonHovered ? 'textPrimary' : isSelected ? 'red400' : 'genieBlue'}
-              backgroundColor={buttonHovered ? (isSelected ? 'red400' : 'genieBlue') : 'backgroundSurface'}
-              className={subheadSmall}
+              color={buttonHovered || isSelected ? 'textPrimary' : 'accentAction'}
+              backgroundColor={
+                buttonHovered
+                  ? isSelected
+                    ? 'accentFailure'
+                    : 'accentAction'
+                  : isSelected
+                  ? 'backgroundInteractive'
+                  : 'accentActionSoft'
+              }
+              className={buttonTextSmall}
               onMouseEnter={toggleButtonHovered}
               onMouseLeave={toggleButtonHovered}
               onClick={(e) => {
