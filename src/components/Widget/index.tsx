@@ -50,6 +50,8 @@ export default function Widget({ defaultToken }: WidgetProps) {
     sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
   }, [inputs.value.INPUT, trace])
 
+  const onExpandSwapDetails = sendAnalyticsEvent(EventName.SWAP_DETAILS_EXPANDED, { ...trace })
+
   return (
     <>
       <Trace section={SectionName.WIDGET}>
@@ -65,6 +67,7 @@ export default function Widget({ defaultToken }: WidgetProps) {
           provider={connector === networkConnection.connector ? null : provider} // use jsonRpcUrlMap for network providers
           tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
           onSwapApprove={onSwapApprove}
+          onExpandSwapDetails={onExpandSwapDetails}
           {...inputs}
           {...settings}
           {...transactions}
