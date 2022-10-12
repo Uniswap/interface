@@ -11,6 +11,7 @@ import { EventName, SectionName } from 'analytics/constants'
 import { useTrace } from 'analytics/Trace'
 import { formatToDecimal, getTokenAddress } from 'analytics/utils'
 import { formatSwapSignedAnalyticsEventProperties } from 'components/swap/ConfirmSwapModal'
+import { WrapType } from 'hooks/useWrapCallback'
 import { useCallback, useMemo } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import {
@@ -46,12 +47,10 @@ export function useSyncWidgetTransactions() {
           amount: transactionAmount
             ? formatToDecimal(transactionAmount, transactionAmount?.currency.decimals)
             : undefined,
-        }
-        sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, {
+          type: type === WidgetTransactionType.WRAP ? WrapType.WRAP : WrapType.UNWRAP,
           ...trace,
-          ...eventProperties,
-          type,
-        })
+        }
+        sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, eventProperties)
         const { amount } = transaction.info
         addTransaction(response, {
           type: AppTransactionType.WRAP,
@@ -62,11 +61,14 @@ export function useSyncWidgetTransactions() {
       } else if (type === WidgetTransactionType.SWAP) {
         const { slippageTolerance, trade, tradeType } = transaction.info
 
-        const eventProperties = formatSwapSignedAnalyticsEventProperties({
-          trade,
-          txHash: transaction.receipt?.transactionHash ?? '',
-        })
-        sendAnalyticsEvent(EventName.SWAP_SIGNED, { ...trace, ...eventProperties })
+        const eventProperties = {
+          ...formatSwapSignedAnalyticsEventProperties({
+            trade,
+            txHash: transaction.receipt?.transactionHash ?? '',
+          }),
+          ...trace,
+        }
+        sendAnalyticsEvent(EventName.SWAP_SIGNED, eventProperties)
         const baseTxInfo = {
           type: AppTransactionType.SWAP,
           tradeType,
