@@ -169,12 +169,14 @@ export default function TokenDetails() {
             />
           </RightPanel>
 
-          <MobileBalanceSummaryFooter
-            tokenAmount={tokenBalance}
-            tokenAddress={tokenQueryAddress}
-            nativeCurrencyAmount={nativeCurrencyBalance}
-            isNative={isNative}
-          />
+          {tokenQueryAddress && (
+            <MobileBalanceSummaryFooter
+              tokenAmount={tokenBalance}
+              tokenAddress={tokenQueryAddress}
+              nativeCurrencyAmount={nativeCurrencyBalance}
+              isNative={isNative}
+            />
+          )}
 
           <TokenSafetyModal
             isOpen={isBlockedToken || !!continueSwap}
