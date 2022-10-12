@@ -142,7 +142,7 @@ export const MarketplaceSelect = () => {
             </Box>
           </Box>
         </Box>
-        <Column className={styles.filterDropDowns} paddingLeft="0">
+        <Column className={styles.filterDropDowns} paddingBottom="4" paddingLeft="0">
           {Object.entries(marketPlaceItems).map(([value, title]) => (
             <MarketplaceItem
               key={value}
