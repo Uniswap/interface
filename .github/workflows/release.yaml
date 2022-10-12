@@ -64,6 +64,15 @@ jobs:
         with:
           cid: ${{ steps.upload.outputs.hash }}
           seeds: ${{ secrets.CRUST_SEEDS }}
+      
+      - name: Pin to 4everland
+        uses: 4everland/pin-action@main
+        continue-on-error: true
+        timeout-minutes: 2
+        with:
+          EVER_TOKEN: ${{ secrets.EVER_TOKEN }}
+          EVER_PROJECT_NAME: 'uniswap-interface'
+          path: './build'
 
       - name: Convert CIDv0 to CIDv1
         id: convert-cidv0
