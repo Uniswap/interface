@@ -14,7 +14,7 @@ import {
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName, SectionName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
-import { Trace, useTrace } from 'analytics/Trace'
+import { useTrace } from 'analytics/Trace'
 import {
   formatPercentInBasisPointsNumber,
   formatSwapQuoteReceivedEventProperties,
@@ -134,29 +134,27 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
 
   return (
     <>
-      <Trace section={SectionName.WIDGET}>
-        <SwapWidget
-          disableBranding
-          hideConnectionUI
-          jsonRpcUrlMap={RPC_PROVIDERS}
-          routerUrl={WIDGET_ROUTER_URL}
-          width={WIDGET_WIDTH}
-          locale={locale}
-          theme={theme}
-          // defaultChainId is excluded - it is always inferred from the passed provider
-          provider={connector === networkConnection.connector ? null : provider} // use jsonRpcUrlMap for network providers
-          tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
-          {...inputs}
-          {...settings}
-          {...transactions}
-          onExpandSwapDetails={onExpandSwapDetails}
-          onInitialSwapQuote={onInitialSwapQuote}
-          onReviewSwapClick={onReviewSwap}
-          onSubmitSwapClick={onSubmitSwapClick}
-          onSwapApprove={onSwapApprove}
-          onSwapPriceUpdateAck={onSwapPriceUpdateAck}
-        />
-      </Trace>
+      <SwapWidget
+        disableBranding
+        hideConnectionUI
+        jsonRpcUrlMap={RPC_PROVIDERS}
+        routerUrl={WIDGET_ROUTER_URL}
+        width={WIDGET_WIDTH}
+        locale={locale}
+        theme={theme}
+        // defaultChainId is excluded - it is always inferred from the passed provider
+        provider={connector === networkConnection.connector ? null : provider} // use jsonRpcUrlMap for network providers
+        tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
+        {...inputs}
+        {...settings}
+        {...transactions}
+        onExpandSwapDetails={onExpandSwapDetails}
+        onInitialSwapQuote={onInitialSwapQuote}
+        onReviewSwapClick={onReviewSwap}
+        onSubmitSwapClick={onSubmitSwapClick}
+        onSwapApprove={onSwapApprove}
+        onSwapPriceUpdateAck={onSwapPriceUpdateAck}
+      />
       {tokenSelector}
     </>
   )

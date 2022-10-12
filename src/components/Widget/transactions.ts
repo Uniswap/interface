@@ -24,9 +24,10 @@ import { currencyId } from 'utils/currencyId'
 
 /** Integrates the Widget's transactions, showing the widget's transactions in the app. */
 export function useSyncWidgetTransactions() {
+  const trace = useTrace({ section: SectionName.WIDGET })
+
   const { chainId } = useWeb3React()
   const addTransaction = useTransactionAdder()
-  const trace = useTrace({ section: SectionName.WIDGET })
 
   const onTxSubmit = useCallback(
     (_hash: string, transaction: Transaction<TransactionInfo>) => {
