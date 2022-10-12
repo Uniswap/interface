@@ -27,20 +27,8 @@ export function useSyncWidgetTransactions() {
     (_hash: string, transaction: Transaction<TransactionInfo>) => {
       const { type, response } = transaction.info
 
-      if (type === undefined || !response) {
+      if (!type || !response) {
         return
-      } else if (type === WidgetTransactionType.APPROVAL) {
-        // TODO(lynnshaoyu): APPROVE_TOKEN_TXN_SUBMITTED
-        const eventProperties = {
-          // get this info from widget handlers
-          chain_id: response.chainId,
-          token_symbol: undefined,
-          token_address: undefined,
-        }
-        sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-          section: SectionName.WIDGET,
-          ...eventProperties,
-        })
       } else if (type === WidgetTransactionType.WRAP || type === WidgetTransactionType.UNWRAP) {
         // TODO(lynnshaoyu): WRAP_TOKEN_TXN_SUBMITTED
         const eventProperties = {

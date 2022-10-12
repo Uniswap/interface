@@ -4,6 +4,9 @@ import '@uniswap/widgets/dist/fonts.css'
 
 import { Currency, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, SectionName } from 'analytics/constants'
+import { getTokenAddress } from 'analytics/utils'
 import { networkConnection } from 'connection'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -38,6 +41,18 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
     return onReviewSwap?.()
   }, [onReviewSwap])
 
+  const onSwapApprove = useCallback(() => {
+    const input = inputs.value.INPUT
+    if (!input) return
+    const eventProperties = {
+      chain_id: input.chainId,
+      token_symbol: input.symbol,
+      token_address: getTokenAddress(input),
+      section: SectionName.WIDGET,
+    }
+    sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
+  }, [inputs.value.INPUT])
+
   return (
     <>
       <SwapWidget
@@ -52,6 +67,7 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
         // defaultChainId is excluded - it is always inferred from the passed provider
         provider={connector === networkConnection.connector ? null : provider} // use jsonRpcUrlMap for network providers
         tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
+        onSwapApprove={onSwapApprove}
         {...inputs}
         {...settings}
         {...transactions}
