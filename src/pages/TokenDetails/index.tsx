@@ -1,4 +1,3 @@
-import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
@@ -19,13 +18,12 @@ import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useAtomValue } from 'jotai/utils'
-import { useDecimals } from 'lib/hooks/useCurrency'
+import { useTokenFromQuery } from 'lib/hooks/useCurrency'
 import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { isAddress } from 'utils'
 
 const Hr = styled.hr`
   background-color: ${({ theme }) => theme.textSecondary};
@@ -80,23 +78,9 @@ export default function TokenDetails() {
     currentChainName,
     timePeriod
   )
-
-  const decimals = useDecimals(tokenAddress, pageChainId)
-  const token = useMemo(() => {
-    const address = isAddress(tokenAddress)
-    if (!address || !tokenQueryData || !decimals) return
-
-    return new Token(
-      pageChainId,
-      address,
-      decimals,
-      tokenQueryData.symbol ?? undefined,
-      tokenQueryData.name ?? undefined
-    )
-  }, [decimals, pageChainId, tokenAddress, tokenQueryData])
+  const token = useTokenFromQuery({ ...tokenQueryData, chainId: pageChainId })
 
   const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
-
   const tokenBalance = useTokenBalance(account, isNative ? nativeCurrency.wrapped : token ?? undefined)
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null

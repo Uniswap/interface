@@ -10,45 +10,80 @@ import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useEffect, useMemo, useState } from 'react'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { getContract, isAddress } from '../../utils'
 import { supportedChainId } from '../../utils/supportedChainId'
 
 /**
- * Returns a Token's decimals from the given chain.
+ * Returns a Token from query data.
+ * Data should already include all fields except decimals, or it will be considered invalid.
+ * Returns null if the token is loading or null was passed.
+ * Returns undefined if invalid or the token does not exist.
  */
-export function useDecimals(tokenAddress: string | undefined, chainId: SupportedChainId): number | undefined {
+export function useTokenFromQuery({
+  address: tokenAddress,
+  chainId,
+  symbol,
+  name,
+  project,
+}: {
+  address?: string
+  chainId: SupportedChainId
+  symbol?: string | null
+  name?: string | null
+  project?: { logoUrl?: string | null } | null
+}): Token | null | undefined {
   const { chainId: activeChainId } = useWeb3React()
-  const [decimals, setDecimals] = useState(0)
+  const address = isAddress(tokenAddress)
+  const [decimals, setDecimals] = useState<number | null | undefined>(null)
 
-  const formattedAddress = isAddress(tokenAddress)
-  const tokenContract = useTokenContract(
-    chainId === activeChainId ? (formattedAddress ? formattedAddress : undefined) : undefined,
-    false
+  const tokenContract = useTokenContract(chainId === activeChainId ? (address ? address : undefined) : undefined, false)
+  const { loading, result: [decimalsResult] = [] } = useSingleCallResult(
+    tokenContract,
+    'decimals',
+    undefined,
+    NEVER_RELOAD
   )
-  const { result: [decimalsResult] = [] } = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD)
 
   useEffect(() => {
-    if (decimalsResult) setDecimals(decimalsResult)
-    if (!formattedAddress || chainId === activeChainId) return
+    if (loading) {
+      setDecimals(null)
+    } else if (decimalsResult) {
+      setDecimals(decimalsResult)
+    } else if (!address || !chainId || chainId === activeChainId) {
+      setDecimals(undefined)
+    } else {
+      setDecimals(null)
 
-    const provider = RPC_PROVIDERS[chainId]
-    const contract = getContract(formattedAddress, ERC20_ABI, provider) as Erc20
-    contract
-      .decimals()
-      .then((value) => {
-        if (!stale) setDecimals(value)
-      })
-      .catch(() => undefined)
+      // Load decimals from a cross-chain RPC provider.
+      const provider = RPC_PROVIDERS[chainId]
+      const contract = getContract(address, ERC20_ABI, provider) as Erc20
+      contract
+        .decimals()
+        .then((value) => {
+          if (!stale) setDecimals(value)
+        })
+        .catch(() => undefined)
+    }
 
     let stale = false
     return () => {
       stale = true
     }
-  }, [activeChainId, chainId, decimalsResult, formattedAddress])
+  }, [activeChainId, address, chainId, decimalsResult, loading])
 
-  return decimals || undefined
+  return useMemo(() => {
+    if (!chainId || !address) return undefined
+    if (decimals === null || decimals === undefined) return decimals
+    if (!symbol || !name) {
+      return new Token(chainId, address, decimals, symbol ?? undefined, name ?? undefined)
+    } else {
+      const logoURI = project?.logoUrl ?? undefined
+      return new WrappedTokenInfo({ chainId, address, decimals, symbol, name, logoURI })
+    }
+  }, [address, chainId, decimals, name, project?.logoUrl, symbol])
 }
 
 // parse a name or symbol from a token response
