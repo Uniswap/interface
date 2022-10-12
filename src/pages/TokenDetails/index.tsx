@@ -33,7 +33,7 @@ const Hr = styled.hr`
 `
 export const TokenDetailsLayout = styled.div`
   display: flex;
-  padding: 0 8px;
+  padding: 0 8px 52px;
   justify-content: center;
   width: 100%;
 
@@ -169,11 +169,14 @@ export default function TokenDetails() {
             />
           </RightPanel>
 
-          <MobileBalanceSummaryFooter
-            tokenAmount={tokenBalance}
-            nativeCurrencyAmount={nativeCurrencyBalance}
-            isNative={isNative}
-          />
+          {tokenQueryAddress && (
+            <MobileBalanceSummaryFooter
+              tokenAmount={tokenBalance}
+              tokenAddress={tokenQueryAddress}
+              nativeCurrencyAmount={nativeCurrencyBalance}
+              isNative={isNative}
+            />
+          )}
 
           <TokenSafetyModal
             isOpen={isBlockedToken || !!continueSwap}
