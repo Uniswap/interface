@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { X } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useShowTokensPromoBanner } from 'state/user/hooks'
@@ -64,26 +66,28 @@ export default function TokensBanner() {
   }
 
   return (
-    <PopupContainer show={showTokensPromoBanner} to="/tokens" onClick={closeBanner}>
-      <Header>
-        <HeaderText>
-          <Trans>Explore Top Tokens on Uniswap</Trans>
-        </HeaderText>
-        <X
-          size={20}
-          color={theme.textSecondary}
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            closeBanner()
-          }}
-          style={{ cursor: 'pointer' }}
-        />
-      </Header>
+    <TraceEvent events={[Event.onClick]} name={EventName.EXPLORE_BANNER_CLICKED} element={ElementName.EXPLORE_BANNER}>
+      <PopupContainer show={showTokensPromoBanner} to="/tokens" onClick={closeBanner}>
+        <Header>
+          <HeaderText>
+            <Trans>Explore top tokens on Uniswap</Trans>
+          </HeaderText>
+          <X
+            size={20}
+            color={theme.textSecondary}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              closeBanner()
+            }}
+            style={{ cursor: 'pointer' }}
+          />
+        </Header>
 
-      <Description>
-        <Trans>Sort and filter assets across networks on the new Tokens page.</Trans>
-      </Description>
-    </PopupContainer>
+        <Description>
+          <Trans>Sort and filter assets across networks on the new Tokens page.</Trans>
+        </Description>
+      </PopupContainer>
+    </TraceEvent>
   )
 }
