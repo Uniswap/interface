@@ -80,10 +80,7 @@ export default function TokenDetails() {
 
   const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
 
-  const tokenBalance = useTokenBalance(
-    account,
-    isNative ? nativeCurrency.wrapped : pageToken !== null ? pageToken : undefined
-  )
+  const tokenBalance = useTokenBalance(account, isNative ? nativeCurrency.wrapped : pageToken ?? undefined)
 
   const tokenWarning = tokenAddressParam ? checkWarning(tokenAddressParam) : null
   const isBlockedToken = tokenWarning?.canProceed === false
