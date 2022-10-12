@@ -1,5 +1,3 @@
-import React from 'react'
-
 function Binance({ width, height }: { width?: number; height?: number }) {
   return (
     <svg width={width || 160} height={height || 32} viewBox="0 0 160 32" fill="none" xmlns="http://www.w3.org/2000/svg">
