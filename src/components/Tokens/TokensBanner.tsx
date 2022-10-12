@@ -11,26 +11,30 @@ import { Z_INDEX } from 'theme/zIndex'
 import tokensPromoDark from '../../assets/images/tokensPromoDark.png'
 import tokensPromoLight from '../../assets/images/tokensPromoLight.png'
 
-const PopupContainer = styled.div<{ show: boolean }>`
-  position: fixed;
-  display: ${({ show }) => (show ? 'flex' : 'none')};
-  flex-direction: column;
-  padding: 12px 16px 12px 20px;
-  gap: 8px;
-  bottom: 48px;
-  right: 16px;
-  width: 320px;
-  height: 88px;
-  z-index: ${Z_INDEX.sticky};
-  background-color: ${({ theme }) => (theme.darkMode ? theme.backgroundScrim : opacify(60, '#FDF0F8'))};
-  color: ${({ theme }) => theme.textPrimary};
+const BackgroundColor = styled.div`
+  background-color: ${({ theme }) => (theme.darkMode ? theme.backgroundScrim : '#FDF0F8')};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
+  bottom: 48px;
   box-shadow: ${({ theme }) => theme.deepShadow};
-
+  height: 88px;
+  position: fixed;
+  right: 16px;
+  width: 320px;
+  z-index: ${Z_INDEX.sticky};
+`
+const PopupContainer = styled.div<{ show: boolean }>`
+  background-color: ${({ theme }) => (theme.darkMode ? theme.backgroundScrim : opacify(60, '#FDF0F8'))};
   background-image: url(${({ theme }) => (theme.darkMode ? `${tokensPromoDark}` : `${tokensPromoLight}`)});
   background-size: cover;
   background-blend-mode: overlay;
+  border-radius: 12px;
+  color: ${({ theme }) => theme.textPrimary};
+  display: ${({ show }) => (show ? 'flex' : 'none')};
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  padding: 12px 16px 12px 20px;
 
   transition: ${({
     theme: {
@@ -39,24 +43,24 @@ const PopupContainer = styled.div<{ show: boolean }>`
   }) => `${duration.slow} opacity ${timing.in}`};
 `
 const Header = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: space-between;
 `
 const HeaderText = styled(Link)`
+  color: ${({ theme }) => theme.textPrimary};
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
   text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
 `
 const Description = styled(Link)`
+  color: ${({ theme }) => theme.textPrimary};
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
+  text-decoration: none;b
   width: 75%;
-  text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
 `
 
 export default function TokensBanner() {
@@ -71,26 +75,28 @@ export default function TokensBanner() {
   }
 
   return (
-    <PopupContainer show={showTokensPromoBanner} onClick={navigateToExplorePage}>
-      <Header>
-        <HeaderText to={'/tokens'}>
-          <Trans>Explore Top Tokens on Uniswap</Trans>
-        </HeaderText>
-        <X
-          size={20}
-          color={theme.textSecondary}
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            setShowTokensPromoBanner(false)
-          }}
-          style={{ cursor: 'pointer' }}
-        />
-      </Header>
+    <BackgroundColor>
+      <PopupContainer show={showTokensPromoBanner} onClick={navigateToExplorePage}>
+        <Header>
+          <HeaderText to={'/tokens'}>
+            <Trans>Explore Top Tokens on Uniswap</Trans>
+          </HeaderText>
+          <X
+            size={20}
+            color={theme.textSecondary}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setShowTokensPromoBanner(false)
+            }}
+            style={{ cursor: 'pointer' }}
+          />
+        </Header>
 
-      <Description to={'/tokens'}>
-        <Trans>Sort and filter assets across networks on the new Tokens page.</Trans>
-      </Description>
-    </PopupContainer>
+        <Description to={'/tokens'}>
+          <Trans>Sort and filter assets across networks on the new Tokens page.</Trans>
+        </Description>
+      </PopupContainer>
+    </BackgroundColor>
   )
 }
