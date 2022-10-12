@@ -24,6 +24,30 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
     : defaultValue
 }
 
+const tokenCache: { [addr: string]: Token } = {}
+
+function keyForChainIdAndAddress(tokenAddress: string, chainId: number): string {
+  return tokenAddress + chainId.toString()
+}
+
+interface TokenParams {
+  tokenAddress: string
+  chainId: number
+  decimals: number
+  symbol?: string
+  name?: string
+}
+
+function getOrCreateToken({ tokenAddress, chainId, decimals, symbol, name }: TokenParams) {
+  const key = keyForChainIdAndAddress(tokenAddress, chainId)
+  if (tokenCache[key]) {
+    return tokenCache[key]
+  } else {
+    tokenCache[key] = new Token(chainId, tokenAddress, decimals, symbol, name)
+    return tokenCache[key]
+  }
+}
+
 /**
  * Returns a Token from the tokenAddress.
  * Returns null if token is loading or null was passed.
@@ -34,7 +58,6 @@ export function useTokenFromNetwork(
   chainId?: number
 ): Token | null | undefined {
   const web3ReactChainId = useWeb3React().chainId
-  if (!chainId) chainId = web3ReactChainId
   const supportedChain = isSupportedChain(chainId)
 
   const formattedAddress = isAddress(tokenAddress)
@@ -48,33 +71,25 @@ export function useTokenFromNetwork(
   const symbolBytes32 = useSingleCallResult(tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
   const decimals = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD)
 
-  return useMemo(() => {
-    if (typeof tokenAddress !== 'string' || !supportedChain || !formattedAddress) return undefined
-    if (decimals.loading || symbol.loading || tokenName.loading || !chainId) return null
-    if (decimals.result) {
-      return new Token(
-        chainId,
-        formattedAddress,
-        decimals.result[0],
-        parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
-        parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token')
-      )
-    }
+  if (
+    typeof tokenAddress !== 'string' ||
+    !supportedChain ||
+    !formattedAddress ||
+    (chainId && chainId !== web3ReactChainId) ||
+    !web3ReactChainId
+  )
     return undefined
-  }, [
-    formattedAddress,
-    chainId,
-    supportedChain,
-    decimals.loading,
-    decimals.result,
-    symbol.loading,
-    symbol.result,
-    symbolBytes32.result,
-    tokenAddress,
-    tokenName.loading,
-    tokenName.result,
-    tokenNameBytes32.result,
-  ])
+  if (decimals.loading || symbol.loading || tokenName.loading || !chainId) return null
+  if (decimals.result) {
+    return getOrCreateToken({
+      chainId: web3ReactChainId,
+      tokenAddress: formattedAddress,
+      decimals: decimals.result[0],
+      symbol: parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
+      name: parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token'),
+    })
+  }
+  return undefined
 }
 
 type TokenMap = { [address: string]: Token }
