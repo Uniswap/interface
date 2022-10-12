@@ -136,7 +136,7 @@ export const TraitSelect = ({
         position="static"
         width="full"
       />
-      <Column className={styles.filterDropDowns} paddingLeft="0" paddingBottom="4">
+      <Column className={styles.filterDropDowns} paddingLeft="0" paddingBottom="8">
         {searchedTraits.map((trait, index) => {
           const isTraitSelected = selectedTraits.find(
             ({ trait_type, trait_value }) =>
