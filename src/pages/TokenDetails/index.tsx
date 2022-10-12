@@ -1,4 +1,3 @@
-import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
@@ -19,6 +18,7 @@ import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useAtomValue } from 'jotai/utils'
+import { useTokenFromNetwork } from 'lib/hooks/useCurrency'
 import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -76,23 +76,11 @@ export default function TokenDetails() {
   const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddressParam
   const [tokenQueryData, prices] = useTokenQuery(tokenQueryAddress ?? '', currentChainName, timePeriod)
 
-  const pageToken = useMemo(
-    () =>
-      tokenQueryData && !isNative
-        ? new Token(
-            CHAIN_NAME_TO_CHAIN_ID[currentChainName],
-            tokenAddressParam ?? '',
-            18,
-            tokenQueryData?.symbol ?? '',
-            tokenQueryData?.name ?? ''
-          )
-        : undefined,
-    [currentChainName, isNative, tokenAddressParam, tokenQueryData]
-  )
+  const pageToken = useTokenFromNetwork(tokenAddressParam, CHAIN_NAME_TO_CHAIN_ID[currentChainName])
 
   const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
 
-  const tokenBalance = useTokenBalance(account, isNative ? nativeCurrency.wrapped : pageToken)
+  const tokenBalance = useTokenBalance(account, isNative ? nativeCurrency.wrapped : pageToken ?? undefined)
 
   const tokenWarning = tokenAddressParam ? checkWarning(tokenAddressParam) : null
   const isBlockedToken = tokenWarning?.canProceed === false
