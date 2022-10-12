@@ -1,5 +1,4 @@
 import 'rc-slider/assets/index.css'
-import './CollectionNfts.css'
 
 import clsx from 'clsx'
 import useDebounce from 'hooks/useDebounce'
