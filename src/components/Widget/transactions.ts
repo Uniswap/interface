@@ -8,6 +8,8 @@ import {
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { ElementName, EventName, SectionName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
+import { formatToDecimal, getTokenAddress } from 'analytics/utils'
 import { useCallback, useMemo } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import {
@@ -22,6 +24,7 @@ import { currencyId } from 'utils/currencyId'
 export function useSyncWidgetTransactions() {
   const { chainId } = useWeb3React()
   const addTransaction = useTransactionAdder()
+  const trace = useTrace({ section: SectionName.WIDGET })
 
   const onTxSubmit = useCallback(
     (_hash: string, transaction: Transaction<TransactionInfo>) => {
@@ -30,18 +33,21 @@ export function useSyncWidgetTransactions() {
       if (!type || !response) {
         return
       } else if (type === WidgetTransactionType.WRAP || type === WidgetTransactionType.UNWRAP) {
-        // TODO(lynnshaoyu): WRAP_TOKEN_TXN_SUBMITTED
+        const { type, amount: transactionAmount } = transaction.info
+
         const eventProperties = {
           // get this info from widget handlers
-          token_in_address: undefined,
-          token_out_address: undefined,
-          token_in_symbol: undefined,
-          token_out_symbol: undefined,
-          chain_id: undefined,
-          amount: undefined,
+          token_in_address: getTokenAddress(transactionAmount.currency),
+          token_out_address: getTokenAddress(transactionAmount.currency.wrapped),
+          token_in_symbol: transactionAmount.currency.symbol,
+          token_out_symbol: transactionAmount.currency.wrapped.symbol,
+          chain_id: transactionAmount.currency.chainId,
+          amount: transactionAmount
+            ? formatToDecimal(transactionAmount, transactionAmount?.currency.decimals)
+            : undefined,
         }
         sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, {
-          section: SectionName.WIDGET,
+          ...trace,
           ...eventProperties,
           type,
         })
@@ -84,7 +90,7 @@ export function useSyncWidgetTransactions() {
         })
       }
     },
-    [addTransaction, chainId]
+    [addTransaction, chainId, trace]
   )
 
   const txHandlers: TransactionEventHandlers = useMemo(() => ({ onTxSubmit }), [onTxSubmit])
