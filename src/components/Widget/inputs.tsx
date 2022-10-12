@@ -1,6 +1,6 @@
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
 import { sendAnalyticsEvent } from 'analytics'
-import { ElementName, EventName, SectionName } from 'analytics/constants'
+import { EventName } from 'analytics/constants'
 import { useTrace } from 'analytics/Trace'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -18,9 +18,7 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   const [amount, setAmount] = useState(EMPTY_AMOUNT)
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {
-      if (origin === 'max') {
-        sendAnalyticsEvent(EventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED, { ...trace })
-      }
+      origin === 'max' && sendAnalyticsEvent(EventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED, { ...trace })
       setType(toTradeType(field))
       setAmount(amount)
     },
@@ -39,16 +37,13 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   }, [defaultToken])
 
   const onSwitchTokens = useCallback(() => {
-    sendAnalyticsEvent(EventName.SWAP_TOKENS_REVERSED, {
-      element: ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON,
-      section: SectionName.WIDGET,
-    })
+    sendAnalyticsEvent(EventName.SWAP_TOKENS_REVERSED, { ...trace })
     setType((type) => invertTradeType(type))
     setTokens((tokens) => ({
       [Field.INPUT]: tokens[Field.OUTPUT],
       [Field.OUTPUT]: tokens[Field.INPUT],
     }))
-  }, [])
+  }, [trace])
 
   const [selectingField, setSelectingField] = useState<Field>()
   const otherField = useMemo(() => (selectingField === Field.INPUT ? Field.OUTPUT : Field.INPUT), [selectingField])
