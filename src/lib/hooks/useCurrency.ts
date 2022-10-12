@@ -29,8 +29,12 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useTokenFromNetwork(tokenAddress: string | null | undefined): Token | null | undefined {
-  const { chainId } = useWeb3React()
+export function useTokenFromNetwork(
+  tokenAddress: string | null | undefined,
+  chainId?: number
+): Token | null | undefined {
+  const web3ReactChainId = useWeb3React().chainId
+  if (!chainId) chainId = web3ReactChainId
   const supportedChain = isSupportedChain(chainId)
 
   const formattedAddress = isAddress(tokenAddress)
@@ -46,7 +50,7 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
 
   return useMemo(() => {
     if (typeof tokenAddress !== 'string' || !supportedChain || !formattedAddress) return undefined
-    if (decimals.loading || symbol.loading || tokenName.loading) return null
+    if (decimals.loading || symbol.loading || tokenName.loading || !chainId) return null
     if (decimals.result) {
       return new Token(
         chainId,
