@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { useWeb3React } from '@web3-react/core'
-import { chainIdToBackendName } from 'graphql/data/util'
 import { X } from 'react-feather'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useShowTokensPromoBanner } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
@@ -62,19 +60,17 @@ const Description = styled(Link)`
 export default function TokensBanner() {
   const theme = useTheme()
   const [showTokensPromoBanner, setShowTokensPromoBanner] = useShowTokensPromoBanner()
-  const navigate = useNavigate()
-  const { chainId: connectedChainId } = useWeb3React()
-  const chainName = chainIdToBackendName(connectedChainId).toLowerCase()
 
-  const navigateToExplorePage = () => {
-    navigate(`/tokens/${chainName}`)
+  const closeBanner = () => {
+    setShowTokensPromoBanner(false)
   }
 
   return (
-    <PopupContainer show={showTokensPromoBanner} onClick={navigateToExplorePage}>
+    <PopupContainer show={showTokensPromoBanner}>
       <Header>
-        <HeaderText to={'/tokens'}>
+        <HeaderText to={'/tokens'} onClick={closeBanner}>
           <Trans>Explore Top Tokens on Uniswap</Trans>
+          Explore Top Tokens
         </HeaderText>
         <X
           size={20}
@@ -82,13 +78,13 @@ export default function TokensBanner() {
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            setShowTokensPromoBanner(false)
+            closeBanner()
           }}
           style={{ cursor: 'pointer' }}
         />
       </Header>
 
-      <Description to={'/tokens'}>
+      <Description to={'/tokens'} onClick={closeBanner}>
         <Trans>Sort and filter assets across networks on the new Tokens page.</Trans>
       </Description>
     </PopupContainer>
