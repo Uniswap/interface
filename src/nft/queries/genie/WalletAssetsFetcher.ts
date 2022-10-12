@@ -34,7 +34,6 @@ export const fetchWalletAssets = async ({
     },
   })
   const data = await r.json()
-  console.log(data.data.assets)
   return data.data.assets.map((asset: any) => {
     return {
       ...asset,
