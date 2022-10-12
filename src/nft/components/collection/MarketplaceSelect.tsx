@@ -97,7 +97,7 @@ export const MarketplaceSelect = () => {
 
   return (
     <>
-      <div className={clsx(isOpen && styles.detailsOpen)} style={{ marginBottom: 4, marginTop: 4 }} />
+      <div className={styles.detailsOpen} style={{ marginBottom: 4, marginTop: 4, opacity: isOpen ? 100 : 0 }} />
       <Box
         as="details"
         className={clsx(subheadSmall, !isOpen && styles.rowHover)}
