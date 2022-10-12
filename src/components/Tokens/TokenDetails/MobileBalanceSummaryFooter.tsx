@@ -82,8 +82,7 @@ export default function MobileBalanceSummaryFooter({
   tokenAmount,
   nativeCurrencyAmount,
   isNative,
-  tokenAddress,
-}: BalanceSummaryProps & { tokenAddress?: string }) {
+}: BalanceSummaryProps) {
   const balanceUsdValue = useStablecoinValue(tokenAmount)
   const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)
 
@@ -122,7 +121,7 @@ export default function MobileBalanceSummaryFooter({
           </BalanceTotal>
         </BalanceInfo>
       )}
-      <SwapButton to={`/swap?outputCurrency=${tokenAddress}`}>
+      <SwapButton to={`/swap?outputCurrency=${tokenAmount?.currency.address}`}>
         <Trans>Swap</Trans>
       </SwapButton>
     </Wrapper>

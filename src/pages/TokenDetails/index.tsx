@@ -171,7 +171,6 @@ export default function TokenDetails() {
 
           <MobileBalanceSummaryFooter
             tokenAmount={tokenBalance}
-            tokenAddress={tokenQueryAddress}
             nativeCurrencyAmount={nativeCurrencyBalance}
             isNative={isNative}
           />
