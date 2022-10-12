@@ -1,10 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
-import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
-import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -207,32 +203,6 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FeatureFlagGroup name="Phase 0">
-        <FeatureFlagOption
-          variant={RedesignVariant}
-          value={useRedesignFlag()}
-          featureFlag={FeatureFlag.redesign}
-          label="Redesign"
-        />
-        <FeatureFlagOption
-          variant={NavBarVariant}
-          value={useNavBarFlag()}
-          featureFlag={FeatureFlag.navBar}
-          label="NavBar"
-        />
-        <FeatureFlagOption
-          variant={TokensVariant}
-          value={useTokensFlag()}
-          featureFlag={FeatureFlag.tokens}
-          label="Tokens"
-        />
-        <FeatureFlagOption
-          variant={TokenSafetyVariant}
-          value={useTokenSafetyFlag()}
-          featureFlag={FeatureFlag.tokenSafety}
-          label="Token Safety"
-        />
-      </FeatureFlagGroup>
       <FeatureFlagGroup name="Phase 0 Follow-ups">
         <FeatureFlagOption
           variant={FavoriteTokensVariant}

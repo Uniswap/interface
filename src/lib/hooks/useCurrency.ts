@@ -31,50 +31,45 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
  */
 export function useTokenFromNetwork(
   tokenAddress: string | null | undefined,
-  chainId?: number
+  tokenChainId?: number
 ): Token | null | undefined {
-  const web3ReactChainId = useWeb3React().chainId
-  if (!chainId) chainId = web3ReactChainId
-  const supportedChain = isSupportedChain(chainId)
+  const { chainId } = useWeb3React()
 
   const formattedAddress = isAddress(tokenAddress)
-
   const tokenContract = useTokenContract(formattedAddress ? formattedAddress : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(formattedAddress ? formattedAddress : undefined, false)
 
+  // TODO: Fix redux-multicall so that these values do not reload.
   const tokenName = useSingleCallResult(tokenContract, 'name', undefined, NEVER_RELOAD)
   const tokenNameBytes32 = useSingleCallResult(tokenContractBytes32, 'name', undefined, NEVER_RELOAD)
   const symbol = useSingleCallResult(tokenContract, 'symbol', undefined, NEVER_RELOAD)
   const symbolBytes32 = useSingleCallResult(tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
   const decimals = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD)
 
+  const isLoading = useMemo(
+    () => decimals.loading || symbol.loading || tokenName.loading,
+    [decimals.loading, symbol.loading, tokenName.loading]
+  )
+  const parsedDecimals = useMemo(() => decimals.result?.[0], [decimals.result])
+  const parsedSymbol = useMemo(
+    () => parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
+    [symbol.result, symbolBytes32.result]
+  )
+  const parsedName = useMemo(
+    () => parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token'),
+    [tokenName.result, tokenNameBytes32.result]
+  )
+
   return useMemo(() => {
-    if (typeof tokenAddress !== 'string' || !supportedChain || !formattedAddress) return undefined
-    if (decimals.loading || symbol.loading || tokenName.loading || !chainId) return null
-    if (decimals.result) {
-      return new Token(
-        chainId,
-        formattedAddress,
-        decimals.result[0],
-        parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
-        parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token')
-      )
-    }
-    return undefined
-  }, [
-    formattedAddress,
-    chainId,
-    supportedChain,
-    decimals.loading,
-    decimals.result,
-    symbol.loading,
-    symbol.result,
-    symbolBytes32.result,
-    tokenAddress,
-    tokenName.loading,
-    tokenName.result,
-    tokenNameBytes32.result,
-  ])
+    // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
+    if (tokenChainId !== undefined && tokenChainId !== chainId) return undefined
+    if (typeof tokenAddress !== 'string' || !isSupportedChain(chainId) || !formattedAddress) return undefined
+
+    if (isLoading || !chainId) return null
+    if (!parsedDecimals) return undefined
+
+    return new Token(chainId, formattedAddress, parsedDecimals, parsedSymbol, parsedName)
+  }, [tokenChainId, chainId, tokenAddress, formattedAddress, isLoading, parsedDecimals, parsedSymbol, parsedName])
 }
 
 type TokenMap = { [address: string]: Token }
@@ -109,8 +104,7 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
 
   const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
 
-  const supportedChain = isSupportedChain(chainId)
-  if (currencyId === null || currencyId === undefined || !supportedChain) return null
+  if (currencyId === null || currencyId === undefined || !isSupportedChain(chainId)) return null
 
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
   const wrappedNative = nativeCurrency?.wrapped
