@@ -20,8 +20,9 @@ export interface ITraceContext {
 
 export const TraceContext = createContext<ITraceContext>({})
 
-export function useTrace(): ITraceContext {
-  return useContext(TraceContext)
+export function useTrace(trace?: ITraceContext): ITraceContext {
+  const parentTrace = useContext(TraceContext)
+  return useMemo(() => ({ ...parentTrace, ...trace }), [parentTrace, trace])
 }
 
 type TraceProps = {

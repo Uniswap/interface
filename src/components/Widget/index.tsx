@@ -11,7 +11,7 @@ import { getTokenAddress } from 'analytics/utils'
 import { networkConnection } from 'connection'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 
@@ -37,8 +37,7 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
-  const parentTrace = useTrace()
-  const trace = useMemo(() => ({ ...parentTrace, section: SectionName.WIDGET }), [parentTrace])
+  const trace = useTrace({ section: SectionName.WIDGET })
 
   const onReviewSwapClick = useCallback(() => {
     // TODO(lynnshaoyu): Swap Confirm Modal Opened
