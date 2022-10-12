@@ -1,5 +1,5 @@
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
@@ -22,6 +22,15 @@ export const getTokenAddress = (currency: Currency) => (currency.isNative ? NATI
 export const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(2)) * 100
 
 export const formatPercentNumber = (percent: Percent): number => parseFloat(percent.toFixed(2))
+
+export const getPriceUpdateBasisPoints = (
+  prevPrice: Price<Currency, Currency>,
+  newPrice: Price<Currency, Currency>
+): number => {
+  const changeFraction = newPrice.subtract(prevPrice).divide(prevPrice)
+  const changePercentage = new Percent(changeFraction.numerator, changeFraction.denominator)
+  return formatPercentInBasisPointsNumber(changePercentage)
+}
 
 export const formatSwapQuoteReceivedEventProperties = (
   trade: Trade<Currency, Currency, TradeType>,

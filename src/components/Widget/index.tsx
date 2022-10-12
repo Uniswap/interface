@@ -13,9 +13,9 @@ import {
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
-import { EventName, SectionName } from 'analytics/constants'
+import { EventName, SectionName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
 import { Trace, useTrace } from 'analytics/Trace'
-import { formatSwapQuoteReceivedEventProperties, getTokenAddress } from 'analytics/utils'
+import { formatSwapQuoteReceivedEventProperties, getPriceUpdateBasisPoints, getTokenAddress } from 'analytics/utils'
 import { networkConnection } from 'connection'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -73,10 +73,20 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
     sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
   }, [inputs.value.INPUT, trace])
 
-  const onReviewSwapClick = useCallback(() => {
-    // TODO(lynnshaoyu): Swap Confirm Modal Opened
-    return onReviewSwap?.()
-  }, [onReviewSwap])
+  const onSwapPriceUpdateAck = useCallback(
+    (stale: Trade<Currency, Currency, TradeType>, update: Trade<Currency, Currency, TradeType>) => {
+      const eventProperties = {
+        chain_id: update.inputAmount.currency.chainId,
+        response: SWAP_PRICE_UPDATE_USER_RESPONSE.ACCEPTED,
+        token_in_symbol: update.inputAmount.currency.symbol,
+        token_out_symbol: update.outputAmount.currency.symbol,
+        price_update_basis_points: getPriceUpdateBasisPoints(stale.executionPrice, update.executionPrice),
+        ...trace,
+      }
+      sendAnalyticsEvent(EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED, eventProperties)
+    },
+    [trace]
+  )
 
   return (
     <>
@@ -89,12 +99,13 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
           width={WIDGET_WIDTH}
           locale={locale}
           theme={theme}
-          onReviewSwapClick={onReviewSwapClick}
+          onReviewSwapClick={onReviewSwap}
           // defaultChainId is excluded - it is always inferred from the passed provider
           provider={connector === networkConnection.connector ? null : provider} // use jsonRpcUrlMap for network providers
           tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
           onInitialSwapQuote={onInitialSwapQuote}
           onSwapApprove={onSwapApprove}
+          onSwapPriceUpdateAck={onSwapPriceUpdateAck}
           {...inputs}
           {...settings}
           {...transactions}
