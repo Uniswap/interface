@@ -10,7 +10,6 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { AppBackground } from 'src/components/gradients/AppBackground'
 import { Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loading } from 'src/components/loading'
@@ -180,7 +179,6 @@ export function Activity({
 
   return (
     <HeaderScrollScreen
-      background={<AppBackground />}
       contentHeader={ContentHeader}
       fixedHeader={
         <Flex centered>

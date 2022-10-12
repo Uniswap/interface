@@ -10,7 +10,6 @@ import { LinkButton } from 'src/components/buttons/LinkButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
-import { AppBackground } from 'src/components/gradients/AppBackground'
 import { Chevron } from 'src/components/icons/Chevron'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
@@ -180,7 +179,6 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
         overflow="hidden"
         px="lg"
         py="xxxl">
-        <AppBackground />
         <Flex alignItems="center" flex={1} gap="md" justifyContent="flex-end">
           <Box>
             <HeaderIcon dapp={pendingSession.dapp} showChain={false} />

@@ -3,7 +3,6 @@ import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { OnboardingBackground } from 'src/components/gradients/OnboardingBackground'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
@@ -26,7 +25,6 @@ export function OnboardingScreen({
 
   return (
     <Screen edges={['right', 'left']} style={{ paddingTop: headerHeight }}>
-      <OnboardingBackground />
       <KeyboardAvoidingView
         behavior="padding"
         style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
