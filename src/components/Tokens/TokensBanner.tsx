@@ -46,8 +46,6 @@ const HeaderText = styled.span`
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
-  text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
 `
 
 const Description = styled.span`
@@ -55,8 +53,6 @@ const Description = styled.span`
   font-size: 12px;
   line-height: 16px;
   width: 75%;
-  text-decoration: none;
-  color: ${({ theme }) => theme.textPrimary};
 `
 
 export default function TokensBanner() {
