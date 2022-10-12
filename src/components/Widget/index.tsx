@@ -6,6 +6,7 @@ import { Currency, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSk
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName, SectionName } from 'analytics/constants'
+import { Trace, useTrace } from 'analytics/Trace'
 import { getTokenAddress } from 'analytics/utils'
 import { networkConnection } from 'connection'
 import { RPC_PROVIDERS } from 'constants/providers'
@@ -36,6 +37,8 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
+  const trace = useTrace({ section: SectionName.WIDGET })
+
   const onReviewSwapClick = useCallback(() => {
     // TODO(lynnshaoyu): Swap Confirm Modal Opened
     return onReviewSwap?.()
@@ -48,30 +51,32 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
       chain_id: input.chainId,
       token_symbol: input.symbol,
       token_address: getTokenAddress(input),
-      section: SectionName.WIDGET,
+      ...trace,
     }
     sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
-  }, [inputs.value.INPUT])
+  }, [inputs.value.INPUT, trace])
 
   return (
     <>
-      <SwapWidget
-        disableBranding
-        hideConnectionUI
-        jsonRpcUrlMap={RPC_PROVIDERS}
-        routerUrl={WIDGET_ROUTER_URL}
-        width={WIDGET_WIDTH}
-        locale={locale}
-        theme={theme}
-        onReviewSwapClick={onReviewSwapClick}
-        // defaultChainId is excluded - it is always inferred from the passed provider
-        provider={connector === networkConnection.connector ? null : provider} // use jsonRpcUrlMap for network providers
-        tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
-        onSwapApprove={onSwapApprove}
-        {...inputs}
-        {...settings}
-        {...transactions}
-      />
+      <Trace section={SectionName.WIDGET}>
+        <SwapWidget
+          disableBranding
+          hideConnectionUI
+          jsonRpcUrlMap={RPC_PROVIDERS}
+          routerUrl={WIDGET_ROUTER_URL}
+          width={WIDGET_WIDTH}
+          locale={locale}
+          theme={theme}
+          onReviewSwapClick={onReviewSwapClick}
+          // defaultChainId is excluded - it is always inferred from the passed provider
+          provider={connector === networkConnection.connector ? null : provider} // use jsonRpcUrlMap for network providers
+          tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
+          onSwapApprove={onSwapApprove}
+          {...inputs}
+          {...settings}
+          {...transactions}
+        />
+      </Trace>
       {tokenSelector}
     </>
   )
