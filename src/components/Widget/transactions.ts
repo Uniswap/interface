@@ -7,9 +7,10 @@ import {
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
-import { ElementName, EventName, SectionName } from 'analytics/constants'
+import { EventName, SectionName } from 'analytics/constants'
 import { useTrace } from 'analytics/Trace'
 import { formatToDecimal, getTokenAddress } from 'analytics/utils'
+import { formatSwapSignedAnalyticsEventProperties } from 'components/swap/ConfirmSwapModal'
 import { useCallback, useMemo } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import {
@@ -60,6 +61,12 @@ export function useSyncWidgetTransactions() {
         } as WrapTransactionInfo)
       } else if (type === WidgetTransactionType.SWAP) {
         const { slippageTolerance, trade, tradeType } = transaction.info
+
+        const eventProperties = formatSwapSignedAnalyticsEventProperties({
+          trade,
+          txHash: transaction.receipt?.transactionHash ?? '',
+        })
+        sendAnalyticsEvent(EventName.SWAP_SIGNED, { ...trace, ...eventProperties })
         const baseTxInfo = {
           type: AppTransactionType.SWAP,
           tradeType,
@@ -81,13 +88,6 @@ export function useSyncWidgetTransactions() {
             minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(slippageTolerance).quotient.toString(),
           } as ExactInputSwapTransactionInfo)
         }
-        // TODO(lynnshaoyu): add event properties for SWAP_SUBMITTED_BUTTON_CLICKED
-        const eventProperties = {}
-        sendAnalyticsEvent(EventName.SWAP_SIGNED, {
-          element: ElementName.CONFIRM_SWAP_BUTTON,
-          section: SectionName.WIDGET,
-          ...eventProperties,
-        })
       }
     },
     [addTransaction, chainId, trace]

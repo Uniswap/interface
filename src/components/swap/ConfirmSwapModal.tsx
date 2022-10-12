@@ -18,11 +18,11 @@ import TransactionConfirmationModal, {
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
 
-const formatAnalyticsEventProperties = ({
+export const formatSwapSignedAnalyticsEventProperties = ({
   trade,
   txHash,
 }: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
+  trade: InterfaceTrade<Currency, Currency, TradeType> | Trade<Currency, Currency, TradeType>
   txHash: string
 }) => ({
   transaction_hash: txHash,
@@ -149,7 +149,7 @@ export default function ConfirmSwapModal({
 
   useEffect(() => {
     if (!attemptingTxn && isOpen && txHash && trade && txHash !== lastTxnHashLogged) {
-      sendAnalyticsEvent(EventName.SWAP_SIGNED, formatAnalyticsEventProperties({ trade, txHash }))
+      sendAnalyticsEvent(EventName.SWAP_SIGNED, formatSwapSignedAnalyticsEventProperties({ trade, txHash }))
       setLastTxnHashLogged(txHash)
     }
   }, [attemptingTxn, isOpen, txHash, trade, lastTxnHashLogged])
