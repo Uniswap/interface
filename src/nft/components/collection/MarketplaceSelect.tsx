@@ -97,7 +97,7 @@ export const MarketplaceSelect = () => {
 
   return (
     <>
-      <div className={styles.detailsOpen} style={{ marginBottom: 4, marginTop: 4, opacity: isOpen ? 100 : 0 }} />
+      <div className={styles.detailsOpen} style={{ marginBottom: 8, marginTop: 8, opacity: isOpen ? 100 : 0 }} />
       <Box
         as="details"
         className={clsx(subheadSmall, !isOpen && styles.rowHover)}
@@ -142,7 +142,7 @@ export const MarketplaceSelect = () => {
             </Box>
           </Box>
         </Box>
-        <Column className={styles.filterDropDowns} paddingBottom="4" paddingLeft="0">
+        <Column className={styles.filterDropDowns} paddingBottom="8" paddingLeft="0">
           {Object.entries(marketPlaceItems).map(([value, title]) => (
             <MarketplaceItem
               key={value}
