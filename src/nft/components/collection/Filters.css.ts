@@ -51,8 +51,8 @@ export const subRowHover = style({
 export const detailsOpen = style([
   sprinkles({
     overflow: 'hidden',
-    marginTop: '4',
-    marginBottom: '4',
+    marginTop: '8',
+    marginBottom: '8',
     opacity: '1',
   }),
   {

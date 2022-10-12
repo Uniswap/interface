@@ -64,19 +64,17 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
             color="textSecondary"
             paddingLeft="8"
             marginTop="12"
-            marginBottom="12"
+            style={{ marginBottom: -4 }}
             className={styles.borderTop}
           ></Box>
         )}
 
-        <Box>
-          <Column marginBottom="60">
-            {Object.entries(traitsByGroup).map(([type, traits], index) => {
-              console.log(`index: ${index}`)
-              return <TraitSelect key={type} {...{ type, traits }} index={index} hideBorderTop={index === 0} />
-            })}
-          </Column>
-        </Box>
+        <Column>
+          {Object.entries(traitsByGroup).map(([type, traits], index) => {
+            console.log(`index: ${index}`)
+            return <TraitSelect key={type} {...{ type, traits }} index={index} hideBorderTop={index === 0} />
+          })}
+        </Column>
       </Column>
     </Box>
   )
