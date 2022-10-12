@@ -51,7 +51,7 @@ const ScrollContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 240px;
+  min-height: 90px;
 
   overflow-y: auto;
   overflow-x: hidden;
