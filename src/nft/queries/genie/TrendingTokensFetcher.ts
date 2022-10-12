@@ -1,3 +1,5 @@
+import { unwrapToken } from 'graphql/data/util'
+
 import { FungibleToken } from '../../types'
 
 export const fetchTrendingTokens = async (numTokens?: number): Promise<FungibleToken[]> => {
@@ -10,7 +12,6 @@ export const fetchTrendingTokens = async (numTokens?: number): Promise<FungibleT
     },
   })
 
-  const data = await r.json()
-
-  return data.data
+  const { data } = (await r.json()) as { data: FungibleToken[] }
+  return data.map((token) => unwrapToken(token.chainId, token))
 }

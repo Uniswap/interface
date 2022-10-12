@@ -5,6 +5,7 @@ import { devtools, persist } from 'zustand/middleware'
 interface SearchHistoryProps {
   history: (FungibleToken | GenieCollection)[]
   addItem: (item: FungibleToken | GenieCollection) => void
+  updateItem: (update: FungibleToken | GenieCollection) => void
 }
 
 export const useSearchHistory = create<SearchHistoryProps>()(
@@ -15,6 +16,16 @@ export const useSearchHistory = create<SearchHistoryProps>()(
         set(({ history }) => {
           const historyCopy = [...history]
           if (historyCopy.length === 0 || historyCopy[0].address !== item.address) historyCopy.unshift(item)
+          return { history: historyCopy }
+        })
+      },
+      updateItem: (update: FungibleToken | GenieCollection) => {
+        set(({ history }) => {
+          const index = history.findIndex((item) => item.address === update.address)
+          if (index === -1) return { history }
+
+          const historyCopy = [...history]
+          historyCopy[index] = update
           return { history: historyCopy }
         })
       },

@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { TokenSortMethod } from 'graphql/data/TopTokens'
 import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { textFadeIn } from 'theme/animations'
-import { formatDollar } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatNumbers'
 
+import { TokenSortMethod } from '../state'
 import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
 import InfoTip from './InfoTip'
 
@@ -69,7 +69,7 @@ function Stat({
         {description && <InfoTip text={description}></InfoTip>}
       </StatTitle>
 
-      <StatPrice>{formatDollar(value, isPrice)}</StatPrice>
+      <StatPrice>{formatDollar({ num: value, isPrice })}</StatPrice>
     </StatWrapper>
   )
 }

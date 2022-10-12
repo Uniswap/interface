@@ -1,7 +1,7 @@
-import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
+import { BaseVariant } from '../index'
 
 export function useRedesignFlag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.redesign)
+  return BaseVariant.Enabled
 }
 
 export { BaseVariant as RedesignVariant }

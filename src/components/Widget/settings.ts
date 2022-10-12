@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { Slippage, SwapEventHandlers, SwapSettingsController } from '@uniswap/widgets'
+import { Slippage, SwapController, SwapEventHandlers } from '@uniswap/widgets'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { useCallback, useMemo, useState } from 'react'
 import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
@@ -44,7 +44,7 @@ export function useSyncWidgetSettings() {
     setAppSlippage('auto')
   }, [setAppSlippage, setAppTtl])
 
-  const settings: SwapSettingsController = useMemo(() => {
+  const settings: SwapController['settings'] = useMemo(() => {
     const auto = appSlippage === 'auto'
     return { slippage: { auto, max: widgetSlippage }, transactionTtl: widgetTtl }
   }, [widgetSlippage, widgetTtl, appSlippage])
