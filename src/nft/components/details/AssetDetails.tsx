@@ -13,7 +13,6 @@ import { badge, bodySmall, caption, headlineMedium, subhead } from 'nft/css/comm
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
-import { fetchSingleAsset } from 'nft/queries'
 import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -25,7 +24,6 @@ import { toSignificant } from 'nft/utils/toSignificant'
 import qs from 'query-string'
 import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { useQuery } from 'react-query'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 
@@ -107,14 +105,11 @@ enum MediaType {
 }
 
 interface AssetDetailsProps {
-  tokenId: string
-  contractAddress: string
+  asset: GenieAsset
+  collection: CollectionInfoForAsset
 }
 
-export const AssetDetails = ({ tokenId, contractAddress }: AssetDetailsProps) => {
-  const { data } = useQuery(['assetDetail', contractAddress, tokenId], () =>
-    fetchSingleAsset({ contractAddress, tokenId })
-  )
+export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
   const addAssetToBag = useBag((state) => state.addAssetToBag)
@@ -127,8 +122,6 @@ export const AssetDetails = ({ tokenId, contractAddress }: AssetDetailsProps) =>
   const creatorEnsName = useENSName(creatorAddress)
   const ownerEnsName = useENSName(ownerAddress)
   const parsed = qs.parse(search)
-  const asset = useMemo(() => (data ? data[0] : ({} as GenieAsset)), [data])
-  const collection = useMemo(() => (data ? data[1] : ({} as CollectionInfoForAsset)), [data])
   const { gridWidthOffset } = useSpring({
     gridWidthOffset: bagExpanded ? 324 : 0,
   })
@@ -415,8 +408,8 @@ export const AssetDetails = ({ tokenId, contractAddress }: AssetDetailsProps) =>
             <Traits collectionAddress={asset.address} traits={asset.traits ?? []} />
           ) : (
             <Details
-              contractAddress={contractAddress}
-              tokenId={tokenId}
+              contractAddress={asset.address}
+              tokenId={asset.tokenId}
               tokenType={asset.tokenType}
               blockchain="Ethereum"
               metadataUrl={asset.externalLink}

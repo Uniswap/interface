@@ -106,10 +106,12 @@ export const TraitSelect = ({
   hideBorderTop,
   traits,
   type,
+  index,
 }: {
   hideBorderTop?: boolean
   traits: Trait[]
   type: string
+  index: number
 }) => {
   const addTrait = useCollectionFilters((state) => state.addTrait)
   const removeTrait = useCollectionFilters((state) => state.removeTrait)
@@ -123,16 +125,18 @@ export const TraitSelect = ({
   )
 
   return traits.length ? (
-    <TraitsHeader numTraits={traits.length} title={type} hideBorderTop={hideBorderTop}>
-      <Column className={styles.filterDropDowns} paddingLeft="0">
-        <Input
-          value={search}
-          onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
-          placeholder="Search"
-          marginTop="8"
-          marginBottom="8"
-          autoComplete="off"
-        />
+    <TraitsHeader index={index} numTraits={traits.length} title={type} hideBorderTop={hideBorderTop}>
+      <Input
+        value={search}
+        onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
+        placeholder="Search"
+        marginTop="8"
+        marginBottom="8"
+        autoComplete="off"
+        position="static"
+        width="full"
+      />
+      <Column className={styles.filterDropDowns} paddingLeft="0" paddingBottom="4">
         {searchedTraits.map((trait, index) => {
           const isTraitSelected = selectedTraits.find(
             ({ trait_type, trait_value }) =>

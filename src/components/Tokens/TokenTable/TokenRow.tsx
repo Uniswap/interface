@@ -6,7 +6,7 @@ import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
-import { TokenSortMethod, TopToken } from 'graphql/data/TopTokens'
+import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { ForwardedRef, forwardRef } from 'react'
@@ -16,7 +16,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
-import { formatDollar } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatNumbers'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -30,6 +30,7 @@ import {
   filterTimeAtom,
   sortAscendingAtom,
   sortMethodAtom,
+  TokenSortMethod,
   useIsFavorited,
   useSetSortMethod,
   useToggleFavorite,
@@ -173,7 +174,6 @@ const ListNumberCell = styled(Cell)<{ header: boolean }>`
   color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
   font-size: 14px;
-  height: ${({ header }) => (header ? '48px' : '60px')};
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
@@ -311,7 +311,7 @@ const IconLoadingBubble = styled(LoadingBubble)`
   border-radius: 50%;
   width: 24px;
 `
-const SparkLineLoadingBubble = styled(LongLoadingBubble)`
+export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
@@ -396,7 +396,7 @@ export function TokenRow({
   marketCap: ReactNode
   price: ReactNode
   percentChange: ReactNode
-  sparkLine: ReactNode
+  sparkLine?: ReactNode
   tokenInfo: ReactNode
   volume: ReactNode
   last?: boolean
@@ -467,6 +467,7 @@ interface LoadedRowProps {
   tokenListIndex: number
   tokenListLength: number
   token: NonNullable<TopToken>
+  sparklineMap: SparklineMap
 }
 
 /* Loaded State: row component with token information */
@@ -478,6 +479,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const isFavorited = useIsFavorited(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
+  const sortAscending = useAtomValue(sortAscendingAtom)
 
   const lowercaseChainName = useParams<{ chainName?: string }>().chainName?.toUpperCase() ?? 'ethereum'
   const filterNetwork = lowercaseChainName.toUpperCase()
@@ -486,12 +488,14 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
   const formattedDelta = formatDelta(delta)
+  const rank = sortAscending ? tokenListLength - tokenListIndex : tokenListIndex + 1
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
     token_address: tokenAddress,
     token_symbol: tokenSymbol,
     token_list_index: tokenListIndex,
+    token_list_rank: rank,
     token_list_length: tokenListLength,
     time_frame: timePeriod,
     search_token_address_input: filterString,
@@ -516,7 +520,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
           }
-          listNumber={tokenListIndex + 1}
+          listNumber={rank}
           tokenInfo={
             <ClickableName>
               <LogoContainer>
@@ -532,7 +536,9 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {token.market?.price?.value ? formatDollar(token.market.price.value, true) : '-'}
+                {token.market?.price?.value
+                  ? formatDollar({ num: token.market.price.value, isPrice: true, lessPreciseStablecoinValues: true })
+                  : '-'}
                 <PercentChangeInfoCell>
                   {formattedDelta}
                   {arrow}
@@ -548,26 +554,29 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           }
           marketCap={
             <ClickableContent>
-              {token.market?.totalValueLocked?.value ? formatDollar(token.market.totalValueLocked.value) : '-'}
+              {token.market?.totalValueLocked?.value ? formatDollar({ num: token.market.totalValueLocked.value }) : '-'}
             </ClickableContent>
           }
           volume={
             <ClickableContent>
-              {token.market?.volume?.value ? formatDollar(token.market.volume.value) : '-'}
+              {token.market?.volume?.value ? formatDollar({ num: token.market.volume.value }) : '-'}
             </ClickableContent>
           }
           sparkLine={
             <SparkLine>
               <ParentSize>
-                {({ width, height }) => (
-                  <SparklineChart
-                    width={width}
-                    height={height}
-                    tokenData={token}
-                    pricePercentChange={token.market?.pricePercentChange?.value}
-                    timePeriod={timePeriod}
-                  />
-                )}
+                {({ width, height }) =>
+                  props.sparklineMap && (
+                    <SparklineChart
+                      width={width}
+                      height={height}
+                      tokenData={token}
+                      pricePercentChange={token.market?.pricePercentChange?.value}
+                      timePeriod={timePeriod}
+                      sparklineMap={props.sparklineMap}
+                    />
+                  )
+                }
               </ParentSize>
             </SparkLine>
           }

@@ -7,6 +7,7 @@ import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
@@ -156,6 +157,7 @@ export default function WalletModal({
 
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+  const nftFlagEnabled = useNftFlag() === NftVariant.Enabled
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
 
@@ -307,9 +309,9 @@ export default function WalletModal({
       )
     }
 
-    function getTermsOfService(redesignFlagEnabled: boolean, walletView: string) {
-      if (redesignFlagEnabled && walletView === WALLET_VIEWS.PENDING) return null
-      return redesignFlagEnabled ? (
+    function getTermsOfService(nftFlagEnabled: boolean, walletView: string) {
+      if (nftFlagEnabled && walletView === WALLET_VIEWS.PENDING) return null
+      return nftFlagEnabled ? (
         <AutoRow style={{ flexWrap: 'nowrap', padding: '4px 16px' }}>
           <ThemedText.BodySecondary fontSize={16} lineHeight={'24px'}>
             <Trans>
@@ -357,7 +359,7 @@ export default function WalletModal({
               />
             )}
             {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-testid="option-grid">{getOptions()}</OptionGrid>}
-            {!pendingError && getTermsOfService(redesignFlagEnabled, walletView)}
+            {!pendingError && getTermsOfService(nftFlagEnabled, walletView)}
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>

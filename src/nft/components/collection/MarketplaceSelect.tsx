@@ -5,6 +5,7 @@ import { Column, Row } from 'nft/components/Flex'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
+import { useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { FormEvent, useEffect, useReducer, useState } from 'react'
 
 import { Checkbox } from '../layout/Checkbox'
@@ -92,6 +93,7 @@ export const MarketplaceSelect = () => {
   }))
 
   const [isOpen, setOpen] = useState(!!selectedMarkets.length)
+  const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
 
   return (
     <Box
@@ -119,6 +121,7 @@ export const MarketplaceSelect = () => {
         onClick={(e) => {
           e.preventDefault()
           setOpen(!isOpen)
+          setTraitsOpen(-10, !isOpen)
         }}
       >
         Marketplaces

@@ -1,9 +1,11 @@
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
+import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/CollectionSearch.css'
 import { useIsCollectionLoading } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { FormEvent } from 'react'
+import { magicalGradientOnHover } from 'nft/css/common.css'
 
 export const CollectionSearch = () => {
   const setSearchByNameText = useCollectionFilters((state) => state.setSearch)
@@ -14,14 +16,17 @@ export const CollectionSearch = () => {
     <Box
       as="input"
       borderColor={{ default: 'backgroundOutline', focus: 'genieBlue' }}
-      borderWidth="1px"
+      borderWidth="1.5px"
       borderStyle="solid"
       borderRadius="12"
       padding="12"
       backgroundColor="backgroundSurface"
+      style={{
+        width: 332,
+      }}
       fontSize="16"
       height="44"
-      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+      color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
       value={searchByNameText}
       placeholder={iscollectionStatsLoading ? '' : 'Search by name'}
       className={clsx(iscollectionStatsLoading && styles.filterButtonLoading)}

@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { SingleTokenData } from 'graphql/data/Token'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Twitter } from 'react-feather'
@@ -62,9 +64,8 @@ const ShareAction = styled.div`
 `
 
 interface TokenInfo {
-  tokenName: string
-  tokenSymbol: string
-  tokenAddress: string
+  token: NonNullable<SingleTokenData>
+  isNative: boolean
 }
 
 export default function ShareButton(tokenInfo: TokenInfo) {
@@ -75,11 +76,12 @@ export default function ShareButton(tokenInfo: TokenInfo) {
   useOnClickOutside(node, open ? toggleShare : undefined)
   const positionX = (window.screen.width - TWITTER_WIDTH) / 2
   const positionY = (window.screen.height - TWITTER_HEIGHT) / 2
+  const tokenAddress = tokenInfo.isNative ? NATIVE_CHAIN_ID : tokenInfo.token.address
 
   const shareTweet = () => {
     toggleShare()
     window.open(
-      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenInfo.tokenName}%20(${tokenInfo.tokenSymbol})%20https://app.uniswap.org/%23/tokens/${tokenInfo.tokenAddress}%20via%20@uniswap`,
+      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenInfo.token.name}%20(${tokenInfo.token.symbol})%20https://app.uniswap.org/%23/tokens/${tokenInfo.token.chain}/${tokenAddress}%20via%20@uniswap`,
       'newwindow',
       `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
     )

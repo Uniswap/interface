@@ -300,7 +300,7 @@ export const colorsDark: Palette = {
   backgroundModule: colors.gray800,
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
-  backgroundOutline: opacify(24, colors.gray300),
+  backgroundOutline: opacify(14, colors.gray300),
   backgroundScrim: opacify(72, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.gray900),
 

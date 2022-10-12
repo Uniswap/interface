@@ -7,7 +7,7 @@ import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
-import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatDollarAmt'
+import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
   box-shadow: ${({ theme }) => theme.shallowShadow};
@@ -57,7 +57,7 @@ function BalanceRow({ currency, formattedBalance, usdValue, href }: BalanceRowDa
         <CurrencyLogo currency={currency} />
         &nbsp;{formattedBalance} {currency?.symbol}
       </TotalBalanceItem>
-      <TotalBalanceItem>{formatDollar(usdValue === 0 ? undefined : usdValue, true)}</TotalBalanceItem>
+      <TotalBalanceItem>{formatDollar({ num: usdValue === 0 ? undefined : usdValue, isPrice: true })}</TotalBalanceItem>
     </TotalBalance>
   )
   if (href) {
