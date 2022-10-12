@@ -77,7 +77,7 @@ export function useSyncWidgetTransactions() {
         }
         // TODO(lynnshaoyu): add event properties for SWAP_SUBMITTED_BUTTON_CLICKED
         const eventProperties = {}
-        sendAnalyticsEvent(EventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
+        sendAnalyticsEvent(EventName.SWAP_SIGNED, {
           element: ElementName.CONFIRM_SWAP_BUTTON,
           section: SectionName.WIDGET,
           ...eventProperties,

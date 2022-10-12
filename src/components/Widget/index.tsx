@@ -2,7 +2,7 @@
 // eslint-disable-next-line no-restricted-imports
 import '@uniswap/widgets/dist/fonts.css'
 
-import { Currency, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
+import { Currency, EMPTY_TOKEN_LIST, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName, SectionName } from 'analytics/constants'
@@ -25,10 +25,9 @@ const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export interface WidgetProps {
   defaultToken?: Currency
-  onReviewSwap?: OnReviewSwapClick
 }
 
-export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
+export default function Widget({ defaultToken }: WidgetProps) {
   const locale = useActiveLocale()
   const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
   const { connector, provider } = useWeb3React()
@@ -38,11 +37,6 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
   const { transactions } = useSyncWidgetTransactions()
 
   const trace = useTrace({ section: SectionName.WIDGET })
-
-  const onReviewSwapClick = useCallback(() => {
-    // TODO(lynnshaoyu): Swap Confirm Modal Opened
-    return onReviewSwap?.()
-  }, [onReviewSwap])
 
   const onSwapApprove = useCallback(() => {
     const input = inputs.value.INPUT
@@ -67,7 +61,6 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
           width={WIDGET_WIDTH}
           locale={locale}
           theme={theme}
-          onReviewSwapClick={onReviewSwapClick}
           // defaultChainId is excluded - it is always inferred from the passed provider
           provider={connector === networkConnection.connector ? null : provider} // use jsonRpcUrlMap for network providers
           tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
