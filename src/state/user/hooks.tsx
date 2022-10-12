@@ -257,8 +257,10 @@ export function useUserAddedTokensOnChain(chainId: number | undefined | null): T
   }, [serializedTokensMap, chainId])
 }
 
-export function useUserAddedTokens(): Token[] {
-  return useUserAddedTokensOnChain(useWeb3React().chainId)
+export function useUserAddedTokens(tokenChainId?: number): Token[] {
+  const { chainId: activeChainId } = useWeb3React()
+  const chainId = tokenChainId ?? activeChainId
+  return useUserAddedTokensOnChain(chainId)
 }
 
 function serializePair(pair: Pair): SerializedPair {

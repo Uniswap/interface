@@ -24,6 +24,7 @@ interface CurrencySearchModalProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
+  chainId?: number
 }
 
 export enum CurrencyModalView {
@@ -43,6 +44,7 @@ export default memo(function CurrencySearchModal({
   showCommonBases = false,
   showCurrencyAmount = true,
   disableNonToken = false,
+  chainId,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
@@ -118,6 +120,7 @@ export default memo(function CurrencySearchModal({
           showCurrencyAmount={showCurrencyAmount}
           disableNonToken={disableNonToken}
           showManageView={showManageView}
+          chainId={chainId}
         />
       )
       break

@@ -1,15 +1,16 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
+import { SupportedChainId } from '@looksrare/sdk'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { EventName, ModalName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { sendEvent } from 'components/analytics'
+import { nativeOnChain } from 'constants/tokens'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
-import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -57,6 +58,7 @@ interface CurrencySearchProps {
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
   showManageView: () => void
+  chainId?: number
 }
 
 export function CurrencySearch({
@@ -69,11 +71,13 @@ export function CurrencySearch({
   onDismiss,
   isOpen,
   showManageView,
+  chainId: tokenChainId,
 }: CurrencySearchProps) {
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
-  const { chainId } = useWeb3React()
+  const { chainId: activeChainId } = useWeb3React()
+  const chainId = tokenChainId ?? activeChainId
   const theme = useTheme()
 
   const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
@@ -84,7 +88,7 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
 
-  const allTokens = useAllTokens()
+  const allTokens = useAllTokens(chainId)
 
   // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
@@ -116,7 +120,7 @@ export function CurrencySearch({
 
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
-  const native = useNativeCurrency()
+  const native = nativeOnChain(chainId ?? SupportedChainId.MAINNET)
 
   const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
     // Use Celo ERC20 Implementation and exclude the native asset

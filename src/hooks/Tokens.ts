@@ -13,9 +13,14 @@ import { useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hoo
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
-  const { chainId } = useWeb3React()
-  const userAddedTokens = useUserAddedTokens()
+function useTokensFromMap(
+  tokenMap: TokenAddressMap,
+  includeUserAdded: boolean,
+  tokenChainId?: number
+): { [address: string]: Token } {
+  const { chainId: activeChainId } = useWeb3React()
+  const chainId = tokenChainId ?? activeChainId
+  const userAddedTokens = useUserAddedTokens(chainId)
 
   return useMemo(() => {
     if (!chainId) return {}
@@ -49,9 +54,9 @@ function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean):
   }, [chainId, userAddedTokens, tokenMap, includeUserAdded])
 }
 
-export function useAllTokens(): { [address: string]: Token } {
+export function useAllTokens(chainId?: number): { [address: string]: Token } {
   const allTokens = useCombinedActiveList()
-  return useTokensFromMap(allTokens, true)
+  return useTokensFromMap(allTokens, true, chainId)
 }
 
 type BridgeInfo = Record<
