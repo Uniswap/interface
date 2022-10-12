@@ -83,7 +83,7 @@ export default function MobileBalanceSummaryFooter({
   nativeCurrencyAmount,
   isNative,
   tokenAddress,
-}: BalanceSummaryProps & { tokenAddress: string }) {
+}: BalanceSummaryProps & { tokenAddress?: string }) {
   const balanceUsdValue = useStablecoinValue(tokenAmount)
   const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)
 
