@@ -30,7 +30,7 @@ export const useTokenPrices = (addresses: Array<string>) => {
     const fetchPrices = async () => {
       const chainString = chainId ? chainIdMapping[chainId] || NETWORKS_INFO[chainId].route : ''
       const res = await fetch(
-        `${process.env.REACT_APP_PRICE_API}/${chainString}/api/v1/prices/?ids=${unknownPriceList.join(',')}`,
+        `${process.env.REACT_APP_PRICE_API}/${chainString}/api/v1/prices?ids=${unknownPriceList.join(',')}`,
       ).then(res => res.json())
 
       if (res?.data?.prices?.length) {
