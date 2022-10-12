@@ -1,5 +1,7 @@
 import { OrderPayload } from '../../utils/x2y2'
 
+export const X2Y2_TRANSFER_CONTRACT = '0xf849de01b080adc3a814fabe1e2087475cf2e354'
+
 export const newX2Y2Order = async (payload: OrderPayload): Promise<boolean> => {
   const body = JSON.stringify(payload)
   const url = `${process.env.REACT_APP_GENIE_API_URL}/postX2Y2SellOrderWithApiKey`
