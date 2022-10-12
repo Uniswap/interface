@@ -96,61 +96,64 @@ export const MarketplaceSelect = () => {
   const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
 
   return (
-    <Box
-      as="details"
-      className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
-      open={isOpen}
-      style={{
-        borderRadius: isOpen ? undefined : 12,
-      }}
-    >
+    <>
+      <div className={clsx(isOpen && styles.detailsOpen)} style={{ marginBottom: 4, marginTop: 4 }} />
       <Box
-        as="summary"
-        className={clsx(isOpen ? styles.rowHoverOpen : styles.rowHover)}
-        display="flex"
-        justifyContent="space-between"
-        cursor="pointer"
-        alignItems="center"
-        fontSize="16"
-        paddingTop="8"
-        paddingLeft="12"
-        paddingRight="16"
-        paddingBottom="8"
-        lineHeight="20"
-        borderRadius="12"
-        onClick={(e) => {
-          e.preventDefault()
-          setOpen(!isOpen)
-          setTraitsOpen(-10, !isOpen)
+        as="details"
+        className={clsx(subheadSmall, !isOpen && styles.rowHover)}
+        open={isOpen}
+        style={{
+          borderRadius: isOpen ? undefined : 12,
         }}
       >
-        Marketplaces
-        <Box display="flex" alignItems="center">
-          <Box
-            color="textSecondary"
-            display="inline-block"
-            transition="250"
-            height="28"
-            width="28"
-            style={{
-              transform: `rotate(${isOpen ? 0 : 180}deg)`,
-            }}
-          >
-            <ChevronUpIcon className={styles.chevronIcon} />
+        <Box
+          as="summary"
+          className={clsx(isOpen ? styles.rowHoverOpen : styles.rowHover)}
+          display="flex"
+          justifyContent="space-between"
+          cursor="pointer"
+          alignItems="center"
+          fontSize="16"
+          paddingTop="8"
+          paddingLeft="12"
+          paddingRight="16"
+          paddingBottom="8"
+          lineHeight="20"
+          borderRadius="12"
+          onClick={(e) => {
+            e.preventDefault()
+            setOpen(!isOpen)
+            setTraitsOpen(-10, !isOpen)
+          }}
+        >
+          Marketplaces
+          <Box display="flex" alignItems="center">
+            <Box
+              color="textSecondary"
+              display="inline-block"
+              transition="250"
+              height="28"
+              width="28"
+              style={{
+                transform: `rotate(${isOpen ? 0 : 180}deg)`,
+              }}
+            >
+              <ChevronUpIcon className={styles.chevronIcon} />
+            </Box>
           </Box>
         </Box>
+        <Column className={styles.filterDropDowns} paddingLeft="0">
+          {Object.entries(marketPlaceItems).map(([value, title]) => (
+            <MarketplaceItem
+              key={value}
+              title={title}
+              value={value}
+              count={marketCount?.[value] || 0}
+              {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
+            />
+          ))}
+        </Column>
       </Box>
-      <Column className={styles.filterDropDowns} paddingLeft="0">
-        {Object.entries(marketPlaceItems).map(([value, title]) => (
-          <MarketplaceItem
-            key={value}
-            title={title}
-            value={value}
-            count={marketCount?.[value] || 0}
-            {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
-          />
-        ))}
-      </Column>
-    </Box>
+    </>
   )
 }
