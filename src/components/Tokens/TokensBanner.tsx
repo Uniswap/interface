@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
+import { chainIdToBackendName } from 'graphql/data/util'
 import { X } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useShowTokensPromoBanner } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
@@ -9,10 +11,9 @@ import { Z_INDEX } from 'theme/zIndex'
 import tokensPromoDark from '../../assets/images/tokensPromoDark.png'
 import tokensPromoLight from '../../assets/images/tokensPromoLight.png'
 
-const PopupContainer = styled(Link)<{ show: boolean }>`
+const PopupContainer = styled.div<{ show: boolean }>`
   position: fixed;
   display: ${({ show }) => (show ? 'flex' : 'none')};
-  text-decoration: none;
   flex-direction: column;
   padding: 12px 16px 12px 20px;
   gap: 8px;
@@ -42,31 +43,37 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
 `
-const HeaderText = styled.span`
+const HeaderText = styled(Link)`
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
+  text-decoration: none;
+  color: ${({ theme }) => theme.textPrimary};
 `
-
-const Description = styled.span`
+const Description = styled(Link)`
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
   width: 75%;
+  text-decoration: none;
+  color: ${({ theme }) => theme.textPrimary};
 `
 
 export default function TokensBanner() {
   const theme = useTheme()
   const [showTokensPromoBanner, setShowTokensPromoBanner] = useShowTokensPromoBanner()
+  const navigate = useNavigate()
+  const { chainId: connectedChainId } = useWeb3React()
+  const chainName = chainIdToBackendName(connectedChainId).toLowerCase()
 
-  const closeBanner = () => {
-    setShowTokensPromoBanner(false)
+  const navigateToExplorePage = () => {
+    navigate(`/tokens/${chainName}`)
   }
 
   return (
-    <PopupContainer show={showTokensPromoBanner} to="/tokens" onClick={closeBanner}>
+    <PopupContainer show={showTokensPromoBanner} onClick={navigateToExplorePage}>
       <Header>
-        <HeaderText>
+        <HeaderText to={'/tokens'}>
           <Trans>Explore Top Tokens on Uniswap</Trans>
         </HeaderText>
         <X
@@ -75,13 +82,13 @@ export default function TokensBanner() {
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            closeBanner()
+            setShowTokensPromoBanner(false)
           }}
           style={{ cursor: 'pointer' }}
         />
       </Header>
 
-      <Description>
+      <Description to={'/tokens'}>
         <Trans>Sort and filter assets across networks on the new Tokens page.</Trans>
       </Description>
     </PopupContainer>
