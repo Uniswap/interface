@@ -1,7 +1,7 @@
-import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
+import { BaseVariant } from '../index'
 
 export function useNavBarFlag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.navBar)
+  return BaseVariant.Enabled
 }
 
 export { BaseVariant as NavBarVariant }
