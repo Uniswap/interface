@@ -16,7 +16,6 @@ export enum Screens {
   ProfileStack = 'ProfileStack',
   Settings = 'Settings',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',
-  SettingsManualBackup = 'SettingsManualBackup',
   SettingsCloudBackupScreen = 'SettingsCloudBackupScreen',
   SettingsWallet = 'SettingsWallet',
   SettingsWalletEdit = 'SettingsWalletEdit',

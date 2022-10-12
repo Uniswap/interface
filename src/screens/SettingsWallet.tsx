@@ -12,7 +12,6 @@ import BriefcaseIcon from 'src/assets/icons/briefcase.svg'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import EditIcon from 'src/assets/icons/edit.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
-import PencilIcon from 'src/assets/icons/pencil.svg'
 import TrendingUpIcon from 'src/assets/icons/trending-up.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -206,13 +205,6 @@ export function SettingsWallet({
           screenProps: { address },
           text: t('iCloud backup'),
           icon: <CloudIcon {...iconProps} />,
-          isHidden: readonly,
-        },
-        {
-          screen: Screens.SettingsManualBackup,
-          screenProps: { address },
-          text: t('Manual backup'),
-          icon: <PencilIcon {...iconProps} />,
           isHidden: readonly,
         },
       ],

@@ -60,7 +60,6 @@ export type SettingsStackParamList = {
   [Screens.Dev]: undefined
   [Screens.SettingsCloudBackupScreen]: { address: Address }
   [Screens.SettingsCloudBackupStatus]: { address: Address }
-  [Screens.SettingsManualBackup]: { address: Address }
   [Screens.SettingsViewSeedPhrase]: { address: Address }
   [OnboardingScreens.Landing]: undefined // temporary to be able to view onboarding from settings
 }
