@@ -2,7 +2,7 @@ import { OrderPayload } from '../../utils/x2y2'
 
 export const newX2Y2Order = async (payload: OrderPayload): Promise<boolean> => {
   const body = JSON.stringify(payload)
-  const url = `${process.env.REACT_APP_GENIE_API_URL}/postX2Y2SellOrderWithApiKey`
+  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/postX2Y2SellOrderWithApiKey`
   const ac = new AbortController()
   const req = new Request(url, {
     method: 'POST',

@@ -24,7 +24,7 @@ export const fetchWalletAssets = async ({
     ? collectionAddresses.reduce((str, collectionAddress) => str + `&assetContractAddresses=${collectionAddress}`, '')
     : ''
   const url = `${
-    process.env.REACT_APP_GENIE_API_URL
+    process.env.REACT_APP_GENIE_V3_API_URL
   }/walletAssets?address=${ownerAddress}${collectionAddressesString}&limit=25&offset=${pageParam * 25}`
 
   const r = await fetch(url, {
