@@ -83,6 +83,7 @@ export function useTokenSectionsByVariation(
   }, [portfolioBalancesById, hideSmallBalances])
 
   const favoriteCurrencies = useFavoriteCurrencies()
+
   const commonBaseCurrencies = useAllCommonBaseCurrencies()
 
   const popularWithoutBalances = useMemo(() => {
@@ -218,8 +219,12 @@ function _TokenSearchResultList({
 
   const debouncedSearchFilter = useDebounce(searchFilter)
   const sections = useTokenSectionsByVariation(variation, chainFilter, debouncedSearchFilter)
-
   const tokenWarningLevelMap = useCombinedTokenWarningLevelMap()
+
+  const sectionsRef = useRef(sections)
+  useEffect(() => {
+    sectionsRef.current = sections
+  }, [sections])
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<TokenOption>) => {
@@ -237,14 +242,14 @@ function _TokenSearchResultList({
 
   useEffect(() => {
     // when changing lists to show, resume at the top of the list
-    if (sections.length > 0) {
+    if (sectionsRef.current.length > 0) {
       sectionListRef.current?.scrollToLocation({
         itemIndex: 0,
         sectionIndex: 0,
         animated: false,
       })
     }
-  }, [variation, sections])
+  }, [variation, sectionsRef])
 
   return (
     <Box>
