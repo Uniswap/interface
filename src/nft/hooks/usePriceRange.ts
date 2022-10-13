@@ -28,9 +28,6 @@ export const usePriceRange = create<SearchHistoryProps>()(
       prevMinMax: [0, 100],
       setPrevMinMax: (prevMinMax: Array<number>) => {
         set(() => {
-          console.log('in function')
-          console.log(prevMinMax)
-
           return { prevMinMax }
         })
       },
