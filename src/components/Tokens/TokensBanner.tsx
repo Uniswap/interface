@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { X } from 'react-feather'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useShowTokensPromoBanner } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
@@ -11,26 +11,28 @@ import { Z_INDEX } from 'theme/zIndex'
 import tokensPromoDark from '../../assets/images/tokensPromoDark.png'
 import tokensPromoLight from '../../assets/images/tokensPromoLight.png'
 
-const BackgroundColor = styled.div`
+const BackgroundColor = styled(Link)<{ show: boolean }>`
   background-color: ${({ theme }) => (theme.darkMode ? theme.backgroundScrim : '#FDF0F8')};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
   bottom: 48px;
   box-shadow: ${({ theme }) => theme.deepShadow};
+  display: ${({ show }) => (show ? 'block' : 'none')};
   height: 88px;
   position: fixed;
   right: 16px;
+  text-decoration: none;
   width: 320px;
   z-index: ${Z_INDEX.sticky};
 `
-const PopupContainer = styled.div<{ show: boolean }>`
+const PopupContainer = styled.div`
   background-color: ${({ theme }) => (theme.darkMode ? theme.backgroundScrim : opacify(60, '#FDF0F8'))};
   background-image: url(${({ theme }) => (theme.darkMode ? `${tokensPromoDark}` : `${tokensPromoLight}`)});
   background-size: cover;
   background-blend-mode: overlay;
   border-radius: 12px;
   color: ${({ theme }) => theme.textPrimary};
-  display: ${({ show }) => (show ? 'flex' : 'none')};
+  display: flex;
   flex-direction: column;
   gap: 8px;
   height: 100%;
@@ -47,38 +49,31 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
 `
-const HeaderText = styled(Link)`
+const HeaderText = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
-  text-decoration: none;
 `
-const Description = styled(Link)`
+const Description = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-  text-decoration: none;b
   width: 75%;
 `
 
 export default function TokensBanner() {
   const theme = useTheme()
   const [showTokensPromoBanner, setShowTokensPromoBanner] = useShowTokensPromoBanner()
-  const navigate = useNavigate()
   const { chainId: connectedChainId } = useWeb3React()
   const chainName = chainIdToBackendName(connectedChainId).toLowerCase()
 
-  const navigateToExplorePage = () => {
-    navigate(`/tokens/${chainName}`)
-  }
-
   return (
-    <BackgroundColor>
-      <PopupContainer show={showTokensPromoBanner} onClick={navigateToExplorePage}>
+    <BackgroundColor show={showTokensPromoBanner} to={`/tokens/${chainName}`}>
+      <PopupContainer>
         <Header>
-          <HeaderText to={'/tokens'}>
+          <HeaderText>
             <Trans>Explore Top Tokens on Uniswap</Trans>
           </HeaderText>
           <X
@@ -93,7 +88,7 @@ export default function TokensBanner() {
           />
         </Header>
 
-        <Description to={'/tokens'}>
+        <Description>
           <Trans>Sort and filter assets across networks on the new Tokens page.</Trans>
         </Description>
       </PopupContainer>
