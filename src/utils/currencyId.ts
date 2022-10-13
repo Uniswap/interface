@@ -78,6 +78,19 @@ export function currencyIdToAddress(_currencyId: string): Address {
   return _currencyId.split('-')[1]
 }
 
+// Similar to `currencyIdToAddress`, except native addresses are `null`.
+export function currencyIdToGraphQLAddress(_currencyId: string): Address | null {
+  const address = currencyIdToAddress(_currencyId)
+
+  // backend only expects `null` when address is `NATIVE_ADDRESS`,
+  // but not for Polygon's NATIVE_ADDRESS_ALT
+  if (areAddressesEqual(address, NATIVE_ADDRESS)) {
+    return null
+  }
+
+  return address
+}
+
 export function currencyIdToChain(_currencyId?: string): ChainId | null {
   if (!_currencyId) return null
   return toSupportedChainId(_currencyId.split('-')[0])

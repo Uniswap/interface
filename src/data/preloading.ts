@@ -5,7 +5,7 @@ import { ActivityScreenQuery$variables } from 'src/screens/__generated__/Activit
 import { TokenDetailsScreenQuery$variables } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 import { UserScreenQuery$variables } from 'src/screens/__generated__/UserScreenQuery.graphql'
 import { toGraphQLChain } from 'src/utils/chainId'
-import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
+import { currencyIdToChain, currencyIdToGraphQLAddress } from 'src/utils/currencyId'
 
 /** Helper to map from screen params to query variables. */
 export const preloadMapping = {
@@ -18,7 +18,7 @@ export const preloadMapping = {
     return {
       contract: {
         chain: toGraphQLChain(currencyIdToChain(currencyId) ?? ChainId.Mainnet) ?? 'ETHEREUM',
-        address: currencyIdToAddress(currencyId),
+        address: currencyIdToGraphQLAddress(currencyId),
       },
     }
   },
