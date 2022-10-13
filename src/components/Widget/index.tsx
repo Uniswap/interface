@@ -2,13 +2,20 @@
 // eslint-disable-next-line no-restricted-imports
 import '@uniswap/widgets/dist/fonts.css'
 
-import { Currency, EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
+import {
+  AddEthereumChainParameter,
+  Currency,
+  EMPTY_TOKEN_LIST,
+  OnReviewSwapClick,
+  SwapWidget,
+  SwapWidgetSkeleton,
+} from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { networkConnection } from 'connection'
-import { RPC_PROVIDERS } from 'constants/providers'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useCallback } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
+import { switchChain } from 'utils/switchChain'
 
 import { useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
@@ -32,19 +39,29 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
+  const onSwitchChain = useCallback(
+    // TODO: Widget should not break if this rejects - upstream the catch to ignore it.
+    ({ chainId }: AddEthereumChainParameter) => switchChain(connector, Number(chainId)).catch(() => undefined),
+    [connector]
+  )
+
+  if (!inputs.value.INPUT && !inputs.value.OUTPUT) {
+    return <WidgetSkeleton />
+  }
+
   return (
     <>
       <SwapWidget
         disableBranding
         hideConnectionUI
-        jsonRpcUrlMap={RPC_PROVIDERS}
         routerUrl={WIDGET_ROUTER_URL}
         width={WIDGET_WIDTH}
         locale={locale}
         theme={theme}
         onReviewSwapClick={onReviewSwapClick}
         // defaultChainId is excluded - it is always inferred from the passed provider
-        provider={connector === networkConnection.connector ? null : provider} // use jsonRpcUrlMap for network providers
+        provider={provider}
+        onSwitchChain={onSwitchChain}
         tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
         {...inputs}
         {...settings}
