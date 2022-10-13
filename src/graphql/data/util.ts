@@ -97,5 +97,10 @@ export function unwrapToken<T extends { address: string | null } | null>(chainId
   if (address !== nativeAddress) return token
 
   const nativeToken = nativeOnChain(chainId)
-  return { ...token, ...nativeToken, address: NATIVE_CHAIN_ID }
+  return {
+    ...token,
+    ...nativeToken,
+    address: NATIVE_CHAIN_ID,
+    extensions: undefined, // prevents marking cross-chain wrapped tokens as native
+  }
 }
