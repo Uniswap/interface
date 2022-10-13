@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { sprinkles } from 'nft/css/sprinkles.css'
-import { themeVars } from 'nft/css/sprinkles.css'
+import { themeVars, vars } from 'nft/css/sprinkles.css'
 
 // https://www.npmjs.com/package/react-slider
 // https://codesandbox.io/s/peaceful-pine-gqszx6?file=/src/styles.css:587-641
@@ -48,10 +48,11 @@ export const thumb = style([
     height: '20',
     borderRadius: '4',
     cursor: 'pointer',
+    boxShadow: 'shallow',
   }),
   {
-    backgroundColor: '#F5F6FC',
-    boxShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12)',
+    backgroundColor: vars.color.grey50,
+
     top: -6,
   },
 ])

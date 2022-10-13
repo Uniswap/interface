@@ -33,7 +33,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
       <Column marginTop="8">
         <Row
           justifyContent="space-between"
-          className={clsx(styles.rowHover)}
+          className={styles.rowHover}
           gap="2"
           borderRadius="12"
           paddingTop="12"

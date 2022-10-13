@@ -34,6 +34,7 @@ const themeContractValues = {
     elevation: '',
     tooltip: '',
     deep: '',
+    shallow: '',
   },
 }
 
@@ -179,7 +180,7 @@ export const vars = createGlobalTheme(':root', {
     grey300: '#99A1BD',
     grey200: '#B7BED4',
     grey100: '#DDE3F7',
-    grey50: '#EDEFF7',
+    grey50: '#F5F6FC',
     accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
     outline: 'rgba(153, 161, 189, 0.24)',
     lightGrayOverlay: '#99A1BD14',

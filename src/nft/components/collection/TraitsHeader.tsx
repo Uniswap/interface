@@ -51,9 +51,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
           paddingLeft="12"
           paddingBottom="10"
           paddingRight="16"
-          style={{
-            borderRadius: 12,
-          }}
+          borderRadius="12"
           lineHeight="20"
           onClick={(e) => {
             e.preventDefault()
@@ -74,6 +72,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
               width="28"
               style={{
                 transform: `rotate(${isOpen ? 0 : 180}deg)`,
+                marginRight: -1,
               }}
             >
               <ChevronUpIcon className={styles.chevronIcon} />

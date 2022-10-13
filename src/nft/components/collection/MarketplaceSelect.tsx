@@ -135,6 +135,7 @@ export const MarketplaceSelect = () => {
               width="28"
               style={{
                 transform: `rotate(${isOpen ? 0 : 180}deg)`,
+                marginRight: -1,
               }}
             >
               <ChevronUpIcon className={styles.chevronIcon} />
