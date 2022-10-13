@@ -80,6 +80,7 @@ export default function TokenDetails() {
   )
   const queryToken = useTokenFromQuery(isNative ? undefined : { ...tokenQueryData, chainId: pageChainId })
   const token = isNative ? nativeCurrency : queryToken
+  const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddress
 
   const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
   const tokenBalance = useTokenBalance(account, token?.wrapped)
