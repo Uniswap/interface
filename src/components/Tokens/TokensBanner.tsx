@@ -19,7 +19,7 @@ const PopupContainer = styled(Link)<{ show: boolean }>`
   padding: 12px 16px 12px 20px;
   gap: 8px;
   bottom: 48px;
-  right: 16px;
+  right: clamp(0px, 1vw, 16px);
   width: 320px;
   height: 88px;
   z-index: ${Z_INDEX.sticky};
@@ -54,7 +54,7 @@ const Description = styled.span`
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-  width: 75%;
+  width: max(212px, calc(100% - 36px));
 `
 
 export default function TokensBanner() {
