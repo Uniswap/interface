@@ -57,7 +57,7 @@ function App() {
   // TODO(MOB-2795): remove once most devices are migrated
   const hasMigrated = useStorageMigrator()
 
-  if (hasMigrated) {
+  if (!hasMigrated) {
     // show loading while storage is being migrated
     return (
       // temporary change
