@@ -15,7 +15,7 @@ import {
 } from 'nft/queries/openSea'
 
 import ERC721 from '../../abis/erc721.json'
-import { createLooksRareOrder, newX2Y2Order, PostOpenSeaSellOrder } from '../queries'
+import { createLooksRareOrder, LOOKSRARE_MARKETPLACE_CONTRACT, newX2Y2Order, PostOpenSeaSellOrder } from '../queries'
 import { INVERSE_BASIS_POINTS, OPENSEA_DEFAULT_FEE, OPENSEA_FEE_ADDRESS } from '../queries/openSea'
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
 import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
@@ -198,7 +198,7 @@ export async function signListing(
           signer,
           SupportedChainId.MAINNET,
           makerOrder,
-          process.env.REACT_APP_LOOKSRARE_MARKETPLACE_CONTRACT || ''
+          LOOKSRARE_MARKETPLACE_CONTRACT
         )
         setStatus(ListingStatus.PENDING)
         const payload = {

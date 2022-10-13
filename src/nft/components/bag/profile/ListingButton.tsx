@@ -55,7 +55,7 @@ export const ListingButton = ({ onClick, buttonText, showWarningOverride = false
       (asset: WalletAsset) => asset.marketplaces === undefined || asset.marketplaces.length === 0
     )
     const missingExpiration = sellAssets.some((asset) => {
-      return asset.expirationTime != null && asset.expirationTime - Date.now() < ms`60 seconds`
+      return asset.expirationTime != null && asset.expirationTime * 1000 - Date.now() < ms`60 seconds`
     })
     const invalidExpiration = sellAssets.some((asset) => {
       return asset.expirationTime != null && isNaN(asset.expirationTime)

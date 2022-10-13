@@ -4,7 +4,13 @@ import '@uniswap/widgets/dist/fonts.css'
 
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
+import {
+  AddEthereumChainParameter,
+  EMPTY_TOKEN_LIST,
+  OnReviewSwapClick,
+  SwapWidget,
+  SwapWidgetSkeleton,
+} from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName, SectionName } from 'analytics/constants'
@@ -16,13 +22,12 @@ import {
   getPriceUpdateBasisPoints,
   getTokenAddress,
 } from 'analytics/utils'
-import { networkConnection } from 'connection'
-import { RPC_PROVIDERS } from 'constants/providers'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useCallback } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 import { computeRealizedPriceImpact } from 'utils/prices'
+import { switchChain } from 'utils/switchChain'
 
 import { useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
@@ -34,10 +39,10 @@ const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export interface WidgetProps {
   defaultToken?: Currency
-  onReviewSwap?: OnReviewSwapClick
+  onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
+export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps) {
   const locale = useActiveLocale()
   const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
   const { connector, provider } = useWeb3React()
@@ -111,25 +116,34 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
     },
     [trace]
   )
+  const onSwitchChain = useCallback(
+    // TODO: Widget should not break if this rejects - upstream the catch to ignore it.
+    ({ chainId }: AddEthereumChainParameter) => switchChain(connector, Number(chainId)).catch(() => undefined),
+    [connector]
+  )
+
+  if (!inputs.value.INPUT && !inputs.value.OUTPUT) {
+    return <WidgetSkeleton />
+  }
 
   return (
     <>
       <SwapWidget
         disableBranding
         hideConnectionUI
-        jsonRpcUrlMap={RPC_PROVIDERS}
         routerUrl={WIDGET_ROUTER_URL}
         width={WIDGET_WIDTH}
         locale={locale}
         theme={theme}
         // defaultChainId is excluded - it is always inferred from the passed provider
-        provider={connector === networkConnection.connector ? null : provider} // use jsonRpcUrlMap for network providers
+        provider={provider}
+        onSwitchChain={onSwitchChain}
         tokenList={EMPTY_TOKEN_LIST} // prevents loading the default token list, as we use our own token selector UI
         {...inputs}
         {...settings}
         {...transactions}
         onExpandSwapDetails={onExpandSwapDetails}
-        onReviewSwapClick={onReviewSwap}
+        onReviewSwapClick={onReviewSwapClick}
         onSubmitSwapClick={onSubmitSwapClick}
         onSwapApprove={onApproveToken}
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
