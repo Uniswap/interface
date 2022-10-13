@@ -11,9 +11,17 @@ import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import styled from 'styled-components/macro'
 
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
 import * as styles from './CollectionStats.css'
+
+const PercentChange = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+`
 
 const MobileSocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
   return (
@@ -288,7 +296,9 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
       ) : null}
       {stats.stats?.one_day_change ? (
         <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
-          {floorChangeStr}% {arrow}
+          <PercentChange>
+            {floorChangeStr}% {arrow}
+          </PercentChange>
         </StatsItem>
       ) : null}
       {stats.stats?.total_volume ? (
