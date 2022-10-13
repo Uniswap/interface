@@ -1,7 +1,7 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import React, { StrictMode, Suspense } from 'react'
-import { StatusBar, Text, useColorScheme } from 'react-native'
+import { StatusBar, Text, useColorScheme, View } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -57,9 +57,21 @@ function App() {
   // TODO(MOB-2795): remove once most devices are migrated
   const hasMigrated = useStorageMigrator()
 
-  if (!hasMigrated) {
+  if (hasMigrated) {
     // show loading while storage is being migrated
-    return <Text>Migrating storage...</Text>
+    return (
+      // temporary change
+      // eslint-disable-next-line react-native/no-inline-styles
+      <View style={{ margin: 50, top: 100 }}>
+        <Text
+          style={
+            // eslint-disable-next-line react-native/no-inline-styles
+            { color: 'red', fontSize: 25 }
+          }>
+          Migrating local storage. This may take a few minutes...
+        </Text>
+      </View>
+    )
   }
 
   return (
