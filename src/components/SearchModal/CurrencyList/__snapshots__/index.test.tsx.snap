@@ -3,7 +3,7 @@
 exports[`renders currency rows correctly when currencies list is non-empty 1`] = `
 <DocumentFragment>
   .c7 {
-  color: #6E727D;
+  color: #99A1BD;
 }
 
 .c4 {
@@ -72,7 +72,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
 }
 
 .c3:hover {
-  background-color: #EDEEF2;
+  background-color: #C9D0E714;
 }
 
 .c6 {
@@ -221,7 +221,7 @@ exports[`renders loading rows when isLoading is true 1`] = `
   animation: fAQEyV 1.5s infinite;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
-  background: linear-gradient( to left,#F7F8FA 25%,#EDEEF2 50%,#F7F8FA 75% );
+  background: linear-gradient( to left,#F5F6FC 25%,#E8ECFB 50%,#F5F6FC 75% );
   background-size: 400%;
   border-radius: 12px;
   height: 2.4em;

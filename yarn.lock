@@ -4144,12 +4144,12 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/redux-multicall@^1.1.1", "@uniswap/redux-multicall@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.5.tgz#7c097047d489c1624038c0fbbd3d76dc705bf153"
-  integrity sha512-RSMhfuAX2rPimnevvAAiwoyV2bCGTIKhVHEBOLTMF+oVxYcKKe9hCwx/cffY12t/usXWHlEJ//V7JoxTKI1Lyg==
+"@uniswap/redux-multicall@^1.1.1", "@uniswap/redux-multicall@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.6.tgz#27e52d97e359b6de06410fbc6d0699b9e6422707"
+  integrity sha512-B7kR63dtIJzr9iGITsNYAh8ktDfKEi9Ilsfq0oKxSzAChZmkq9Ss/EZ6/VKSvq1m4rPe+b9CPxZIBdRzpmf2/w==
 
-"@uniswap/router-sdk@^1.0.3", "@uniswap/router-sdk@^1.3.0":
+"@uniswap/router-sdk@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.3.0.tgz#8c17e957f65099a18dda536cd05fc34e779628aa"
   integrity sha512-T6kXQFXrAkIHfCCmhyW+0xgUyuFVepL9rlwG9+MjnfVtmGIBssbMzyFKGk5HGQYlk6WQrm630W1j87kdfXpZ/Q==
@@ -4305,10 +4305,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.11.0":
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.11.0.tgz#45dfa2b27f021d41ca803aa9e5b954e4ef1a704c"
-  integrity sha512-ik6SR074G2NAlq28kt2wdXPnrCvmZUN1RCnbR/rcpkYYNbjdNjShXYsLlWka3ERiJXdhA41YGBE/WBRUYHsCdg==
+"@uniswap/widgets@^2.14.1":
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.14.1.tgz#82fb36d2258dd673e9e4c74df191f37cb4ac794c"
+  integrity sha512-uVf8wWjpkODNW1+GWKYzkDp+uFuctyFz0wj2UlNmhmgmKx4aSXeZKHMhDTgtlj5Xbb2RiKDvKnI0Ko4GCjGJGw==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
@@ -4316,7 +4316,7 @@
     "@popperjs/core" "^2.4.4"
     "@reduxjs/toolkit" "^1.6.1"
     "@uniswap/redux-multicall" "^1.1.1"
-    "@uniswap/router-sdk" "^1.0.3"
+    "@uniswap/router-sdk" "^1.3.0"
     "@uniswap/sdk-core" "^3.0.1"
     "@uniswap/smart-order-router" "^2.10.0"
     "@uniswap/token-lists" "^1.0.0-beta.30"

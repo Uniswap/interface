@@ -1511,3 +1511,15 @@ export const EmptyNFTWalletIcon = (props: SVGProps) => (
     />
   </svg>
 )
+
+export const CancelListingIcon = (props: SVGProps) => (
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M71 31L75.36 35.36C76.85 36.8589 77.6863 38.8865 77.6863 41C77.6863 43.1135 76.85 45.1411 75.36 46.64L46.68 75.32C45.937 76.0638 45.0547 76.6539 44.0835 77.0565C43.1123 77.4591 42.0713 77.6663 41.02 77.6663C39.9687 77.6663 38.9277 77.4591 37.9565 77.0565C36.9853 76.6539 36.103 76.0638 35.36 75.32L31 71M47.8 7.8L41 1H1V41L7.8 47.8M77.6863 1L1.62987 77.0565M21 21H21.0333"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)

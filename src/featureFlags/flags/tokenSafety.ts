@@ -1,7 +1,7 @@
-import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
+import { BaseVariant } from '../index'
 
 export function useTokenSafetyFlag(): BaseVariant {
-  return useBaseFlag(FeatureFlag.tokenSafety)
+  return BaseVariant.Enabled
 }
 
 export { BaseVariant as TokenSafetyVariant }

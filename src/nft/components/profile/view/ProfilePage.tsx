@@ -26,6 +26,7 @@ import styled from 'styled-components/macro'
 import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
+import { ProfilePageLoadingSkeleton } from './ProfilePageLoadingSkeleton'
 import { WalletAssetDisplay } from './WalletAssetDisplay'
 
 const SellModeButton = styled.button<{ active: boolean }>`
@@ -45,6 +46,9 @@ const SellModeButton = styled.button<{ active: boolean }>`
     background-color: ${({ theme }) => theme.accentAction};
   }
 `
+
+const FILTER_SIDEBAR_WIDTH = 300
+const PADDING = 16
 
 function roundFloorPrice(price?: number, n?: number) {
   return price ? Math.round(price * Math.pow(10, n ?? 3) + Number.EPSILON) / Math.pow(10, n ?? 3) : 0
@@ -76,7 +80,7 @@ export const ProfilePage = () => {
     toggleSellMode()
   }
 
-  const { data: ownerCollections } = useQuery(
+  const { data: ownerCollections, isLoading: collectionsAreLoading } = useQuery(
     ['ownerCollections', address],
     () => OSCollectionsFetcher({ params: { asset_owner: address, offset: '0', limit: '300' } }),
     {
@@ -85,7 +89,7 @@ export const ProfilePage = () => {
   )
 
   const ownerCollectionsAddresses = useMemo(() => ownerCollections?.map(({ address }) => address), [ownerCollections])
-  const { data: collectionStats } = useQuery(
+  const { data: collectionStats, isLoading: collectionStatsAreLoading } = useQuery(
     ['ownerCollectionStats', ownerCollectionsAddresses],
     () => fetchMultipleCollectionStats({ addresses: ownerCollectionsAddresses ?? [] }),
     {
@@ -98,6 +102,7 @@ export const ProfilePage = () => {
     fetchNextPage,
     hasNextPage,
     isSuccess,
+    isLoading: assetsAreLoading,
   } = useInfiniteQuery(
     ['ownerAssets', address, collectionFilters],
     async ({ pageParam = 0 }) => {
@@ -115,6 +120,8 @@ export const ProfilePage = () => {
       refetchOnMount: false,
     }
   )
+
+  const anyQueryIsLoading = collectionsAreLoading || collectionStatsAreLoading || assetsAreLoading
 
   const ownerAssets = useMemo(() => (isSuccess ? ownerAssetsData?.pages.flat() : null), [isSuccess, ownerAssetsData])
 
@@ -153,17 +160,19 @@ export const ProfilePage = () => {
   }, [collectionStats, ownerCollections, setWalletCollections])
 
   const { gridX } = useSpring({
-    gridX: isFiltersExpanded ? 300 : -16,
+    gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
   })
 
   return (
     <Column
       width="full"
-      paddingLeft={{ sm: '16', md: '52' }}
-      paddingRight={{ sm: '0', md: isBagExpanded ? '0' : '72' }}
-      paddingTop={{ sm: '16', md: '40' }}
+      paddingLeft={{ sm: `${PADDING}`, md: '52' }}
+      paddingRight={{ sm: `${PADDING}`, md: isBagExpanded ? '0' : '72' }}
+      paddingTop={{ sm: `${PADDING}`, md: '40' }}
     >
-      {walletAssets.length === 0 ? (
+      {anyQueryIsLoading ? (
+        <ProfilePageLoadingSkeleton />
+      ) : walletAssets.length === 0 ? (
         <EmptyWalletContent />
       ) : (
         <Row alignItems="flex-start" position="relative">
@@ -173,10 +182,12 @@ export const ProfilePage = () => {
             <Column width="full">
               <ProfileAccountDetails />
               <AnimatedBox
-                paddingLeft={isFiltersExpanded ? '24' : '16'}
                 flexShrink="0"
                 style={{
-                  transform: gridX.to((x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? 300 : 0)}px)`),
+                  transform: gridX.to(
+                    (x) =>
+                      `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
+                  ),
                 }}
               >
                 <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
