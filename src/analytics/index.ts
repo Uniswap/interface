@@ -39,6 +39,7 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
     console.log(`[analytics(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return
   }
+
   track(eventName, eventProperties)
 }
 

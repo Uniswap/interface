@@ -3,30 +3,23 @@
 import '@uniswap/widgets/dist/fonts.css'
 
 import { Trade } from '@uniswap/router-sdk'
-import {
-  Currency,
-  EMPTY_TOKEN_LIST,
-  OnReviewSwapClick,
-  SwapWidget,
-  SwapWidgetSkeleton,
-  TradeType,
-} from '@uniswap/widgets'
+import { Currency, TradeType } from '@uniswap/sdk-core'
+import { EMPTY_TOKEN_LIST, OnReviewSwapClick, SwapWidget, SwapWidgetSkeleton } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
-import { EventName, SectionName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
+import { EventName, SectionName } from 'analytics/constants'
+import { SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
 import { useTrace } from 'analytics/Trace'
 import {
   formatPercentInBasisPointsNumber,
-  formatSwapQuoteReceivedEventProperties,
   formatToDecimal,
-  getDurationFromDateMilliseconds,
   getPriceUpdateBasisPoints,
   getTokenAddress,
 } from 'analytics/utils'
 import { networkConnection } from 'connection'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 import { computeRealizedPriceImpact } from 'utils/prices'
@@ -55,25 +48,10 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
 
   const trace = useTrace({ section: SectionName.WIDGET })
 
-  const [initialQuoteDate, setInitialQuoteDate] = useState<Date>()
-  const onInitialSwapQuote = useCallback(
-    (trade: Trade<Currency, Currency, TradeType>) => {
-      setInitialQuoteDate(new Date())
-      const eventProperties = {
-        // TODO(1416): Include undefined values.
-        ...formatSwapQuoteReceivedEventProperties(
-          trade,
-          /* gasUseEstimateUSD= */ undefined,
-          /* fetchingSwapQuoteStartTime= */ undefined
-        ),
-        ...trace,
-      }
-      sendAnalyticsEvent(EventName.SWAP_QUOTE_RECEIVED, eventProperties)
-    },
-    [trace]
-  )
+  // TODO(lynnshaoyu): add back onInitialSwapQuote logging once widget side logic is fixed
+  // in onInitialSwapQuote handler.
 
-  const onSwapApprove = useCallback(() => {
+  const onApproveToken = useCallback(() => {
     const input = inputs.value.INPUT
     if (!input) return
     const eventProperties = {
@@ -123,13 +101,15 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
         is_auto_router_api: undefined,
         is_auto_slippage: undefined,
         chain_id: trade.inputAmount.currency.chainId,
-        duration_from_first_quote_to_swap_submission_milliseconds: getDurationFromDateMilliseconds(initialQuoteDate),
+        // duration should be getDurationFromDateMilliseconds(initialQuoteDate) once initialQuoteDate
+        // is made available from TODO above for onInitialSwapQuote logging.
+        duration_from_first_quote_to_swap_submission_milliseconds: undefined,
         swap_quote_block_number: undefined,
         ...trace,
       }
       sendAnalyticsEvent(EventName.SWAP_SUBMITTED_BUTTON_CLICKED, eventProperties)
     },
-    [initialQuoteDate, trace]
+    [trace]
   )
 
   return (
@@ -149,10 +129,9 @@ export default function Widget({ defaultToken, onReviewSwap }: WidgetProps) {
         {...settings}
         {...transactions}
         onExpandSwapDetails={onExpandSwapDetails}
-        onInitialSwapQuote={onInitialSwapQuote}
         onReviewSwapClick={onReviewSwap}
         onSubmitSwapClick={onSubmitSwapClick}
-        onSwapApprove={onSwapApprove}
+        onSwapApprove={onApproveToken}
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
       />
       {tokenSelector}
