@@ -73,7 +73,6 @@ export default function TokenDetails() {
   const nativeCurrency = nativeOnChain(pageChainId)
   const timePeriod = useAtomValue(filterTimeAtom)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
-  const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddress
   const [tokenQueryData, prices] = useTokenQuery(
     isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '',
     currentChainName,
@@ -81,6 +80,7 @@ export default function TokenDetails() {
   )
   const queryToken = useTokenFromQuery(isNative ? undefined : { ...tokenQueryData, chainId: pageChainId })
   const token = isNative ? nativeCurrency : queryToken
+  const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddress
 
   const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
   const tokenBalance = useTokenBalance(account, token?.wrapped)
