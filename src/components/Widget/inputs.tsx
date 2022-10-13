@@ -21,13 +21,12 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   })
 
   useEffect(() => {
-    // Add some hysteresis - if there is no new default, do not update the display.
-    if (defaultToken) {
-      setTokens({
-        [Field.OUTPUT]: defaultToken,
-      })
-      setAmount(EMPTY_AMOUNT)
-    }
+    // Avoid overwriting tokens if none are specified, so that a loading token does not cause layout flashing.
+    if (!defaultToken) return
+    setTokens({
+      [Field.OUTPUT]: defaultToken,
+    })
+    setAmount(EMPTY_AMOUNT)
   }, [defaultToken])
 
   const onSwitchTokens = useCallback(() => {
