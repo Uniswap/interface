@@ -1,4 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
+import { PageName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
@@ -124,67 +126,71 @@ export default function TokenDetails() {
   )
 
   return (
-    <TokenDetailsLayout>
-      {tokenQueryData && (
-        <>
-          <LeftPanel>
-            <BreadcrumbNavLink to={`/tokens/${chainName}`}>
-              <ArrowLeft size={14} /> Tokens
-            </BreadcrumbNavLink>
-            <ChartSection
-              token={tokenQueryData}
-              currency={token}
-              nativeCurrency={isNative ? nativeCurrency : undefined}
-              prices={prices}
-            />
-            <StatsSection
-              TVL={tokenQueryData.market?.totalValueLocked?.value}
-              volume24H={tokenQueryData.market?.volume24H?.value}
-              priceHigh52W={tokenQueryData.market?.priceHigh52W?.value}
-              priceLow52W={tokenQueryData.market?.priceLow52W?.value}
-            />
-            <Hr />
-            <AboutSection
-              address={tokenQueryData.address ?? ''}
-              description={tokenQueryData.project?.description}
-              homepageUrl={tokenQueryData.project?.homepageUrl}
-              twitterName={tokenQueryData.project?.twitterName}
-            />
-            <AddressSection address={tokenQueryData.address ?? ''} />
-          </LeftPanel>
-          <RightPanel>
-            <Widget
-              // A null token is still loading, and should not be overridden.
-              defaultToken={token === null ? undefined : token ?? nativeCurrency}
-              onReviewSwapClick={onReviewSwap}
-            />
-            {tokenWarning && <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />}
-            <BalanceSummary
-              tokenAmount={tokenBalance}
-              nativeCurrencyAmount={nativeCurrencyBalance}
-              isNative={isNative}
-            />
-          </RightPanel>
+    <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ tokenAddress, tokenName: chainName }} shouldLogImpression>
+      <TokenDetailsLayout>
+        {tokenQueryData && (
+          <>
+            <LeftPanel>
+              <BreadcrumbNavLink to={`/tokens/${chainName}`}>
+                <ArrowLeft size={14} /> Tokens
+              </BreadcrumbNavLink>
+              <ChartSection
+                token={tokenQueryData}
+                currency={token}
+                nativeCurrency={isNative ? nativeCurrency : undefined}
+                prices={prices}
+              />
+              <StatsSection
+                TVL={tokenQueryData.market?.totalValueLocked?.value}
+                volume24H={tokenQueryData.market?.volume24H?.value}
+                priceHigh52W={tokenQueryData.market?.priceHigh52W?.value}
+                priceLow52W={tokenQueryData.market?.priceLow52W?.value}
+              />
+              <Hr />
+              <AboutSection
+                address={tokenQueryData.address ?? ''}
+                description={tokenQueryData.project?.description}
+                homepageUrl={tokenQueryData.project?.homepageUrl}
+                twitterName={tokenQueryData.project?.twitterName}
+              />
+              <AddressSection address={tokenQueryData.address ?? ''} />
+            </LeftPanel>
+            <RightPanel>
+              <Widget
+                // A null token is still loading, and should not be overridden.
+                defaultToken={token === null ? undefined : token ?? nativeCurrency}
+                onReviewSwapClick={onReviewSwap}
+              />
+              {tokenWarning && (
+                <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />
+              )}
+              <BalanceSummary
+                tokenAmount={tokenBalance}
+                nativeCurrencyAmount={nativeCurrencyBalance}
+                isNative={isNative}
+              />
+            </RightPanel>
 
-          {tokenQueryAddress && (
-            <MobileBalanceSummaryFooter
-              tokenAmount={tokenBalance}
-              tokenAddress={tokenQueryAddress}
-              nativeCurrencyAmount={nativeCurrencyBalance}
-              isNative={isNative}
-            />
-          )}
+            {tokenQueryAddress && (
+              <MobileBalanceSummaryFooter
+                tokenAmount={tokenBalance}
+                tokenAddress={tokenQueryAddress}
+                nativeCurrencyAmount={nativeCurrencyBalance}
+                isNative={isNative}
+              />
+            )}
 
-          <TokenSafetyModal
-            isOpen={isBlockedToken || !!continueSwap}
-            tokenAddress={tokenQueryData.address}
-            onContinue={() => onResolveSwap(true)}
-            onBlocked={() => navigate(-1)}
-            onCancel={() => onResolveSwap(false)}
-            showCancel={true}
-          />
-        </>
-      )}
-    </TokenDetailsLayout>
+            <TokenSafetyModal
+              isOpen={isBlockedToken || !!continueSwap}
+              tokenAddress={tokenQueryData.address}
+              onContinue={() => onResolveSwap(true)}
+              onBlocked={() => navigate(-1)}
+              onCancel={() => onResolveSwap(false)}
+              showCancel={true}
+            />
+          </>
+        )}
+      </TokenDetailsLayout>
+    </Trace>
   )
 }
