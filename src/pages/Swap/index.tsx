@@ -28,6 +28,7 @@ import { useUSDCValue, useUSDCValueV2AndV3 } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
+import { AddressManager } from 'components/AddressManager'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import AppBody from '../AppBody'
 import { AutoColumn } from '../../components/Column'
@@ -129,7 +130,7 @@ type ClipboardEventListener =
   | null
   | ((event: ClipboardEvent) => void);
 
-  export const InternalCardWrapper = styled(StyledInternalLink)`
+export const InternalCardWrapper = styled(StyledInternalLink)`
   min-width: 190px;
   width:100%;
   margin-right: 16px;
@@ -167,14 +168,14 @@ const StyledInfo = styled(Info)`
 
 export const FixedContainer = styled(AutoColumn)``
 
-export const ScrollableRow = styled.div<{background?:string}>`
+export const ScrollableRow = styled.div<{ background?: string }>`
   display: flex;
   flex-direction: row;
   align-items:center;
   width: 100%;
   overflow-x: auto;
   white-space: nowrap;
-  background: ${({background}) => background ? background : 'initial'};
+  background: ${({ background }) => background ? background : 'initial'};
   ::-webkit-scrollbar {
     display: none;
   }
@@ -243,7 +244,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
   const [useAutoSlippage,] = useSetAutoSlippage()
-  const [useDetectRenounced, ] = useUserDetectRenounced()
+  const [useDetectRenounced,] = useUserDetectRenounced()
 
   const parsedAmounts = useMemo(
     () =>
@@ -258,57 +259,57 @@ export default function Swap({ history }: RouteComponentProps) {
         },
     [independentField, parsedAmount, showWrap, trade]
   )
-  const [automaticCalculatedSlippage, setAutomaticCalculatedSlippage] = React.useState(-1) 
+  const [automaticCalculatedSlippage, setAutomaticCalculatedSlippage] = React.useState(-1)
   const setSlippage = useSetUserSlippageTolerance()
   React.useEffect(() => {
     const test = async () => {
-    if (parsedAmounts.INPUT && 
-        parsedAmounts.INPUT?.currency &&  
-        parsedAmounts.OUTPUT && 
-        useAutoSlippage && 
-        parsedAmounts.OUTPUT?.currency && 
+      if (parsedAmounts.INPUT &&
+        parsedAmounts.INPUT?.currency &&
+        parsedAmounts.OUTPUT &&
+        useAutoSlippage &&
+        parsedAmounts.OUTPUT?.currency &&
         library?.provider) {
-        const address = !parsedAmounts?.OUTPUT?.currency?.isNative ? 
-                      ((parsedAmounts.OUTPUT.currency as any).address ? 
-                      (parsedAmounts?.OUTPUT?.currency as any).address : 
-                      (parsedAmounts.OUTPUT.currency.wrapped).address) as string
-                       : !parsedAmounts?.INPUT?.currency?.isNative ? 
-                       ((parsedAmounts?.INPUT?.currency as any).address ? 
-                       (parsedAmounts?.INPUT?.currency as any).address :
-                        (parsedAmounts.INPUT.currency.wrapped).address) as string : 
-                       ''
+        const address = !parsedAmounts?.OUTPUT?.currency?.isNative ?
+          ((parsedAmounts.OUTPUT.currency as any).address ?
+            (parsedAmounts?.OUTPUT?.currency as any).address :
+            (parsedAmounts.OUTPUT.currency.wrapped).address) as string
+          : !parsedAmounts?.INPUT?.currency?.isNative ?
+            ((parsedAmounts?.INPUT?.currency as any).address ?
+              (parsedAmounts?.INPUT?.currency as any).address :
+              (parsedAmounts.INPUT.currency.wrapped).address) as string :
+            ''
         console.log(address)
         getTokenTaxes(address, library?.provider).then((taxes) => {
-          let value:number | null = parsedAmounts?.INPUT?.currency.isNative ? 
-          ((taxes?.buy ?? 0) + 1) : parsedAmounts?.OUTPUT?.currency.isNative ? 
-          taxes.sell : 0;
+          let value: number | null = parsedAmounts?.INPUT?.currency.isNative ?
+            ((taxes?.buy ?? 0) + 1) : parsedAmounts?.OUTPUT?.currency.isNative ?
+              taxes.sell : 0;
           if (value) value += 3
-        const parsed = Math.floor(Number.parseFloat((value ?? '0').toString()) * 100)
-        if (automaticCalculatedSlippage !== parsed) {
-          setSlippage(new Percent(parsed, 10_000))
-          setAutomaticCalculatedSlippage(value as number)
-        }
-      })
+          const parsed = Math.floor(Number.parseFloat((value ?? '0').toString()) * 100)
+          if (automaticCalculatedSlippage !== parsed) {
+            setSlippage(new Percent(parsed, 10_000))
+            setAutomaticCalculatedSlippage(value as number)
+          }
+        })
+      }
     }
-  }
-  test()
+    test()
   }, [
-    parsedAmounts.OUTPUT, 
-    parsedAmounts.INPUT, 
-    library, 
+    parsedAmounts.OUTPUT,
+    parsedAmounts.INPUT,
+    library,
     useAutoSlippage
   ])
-  
-  const isOutputCurrencyRenounced =  useContractOwner((currencies?.OUTPUT as any)?.address, useDetectRenounced ? 'eth' : undefined)
+
+  const isOutputCurrencyRenounced = useContractOwner((currencies?.OUTPUT as any)?.address, useDetectRenounced ? 'eth' : undefined)
   const isInputCurrencyRenounced = useContractOwner((currencies?.INPUT as any)?.address, useDetectRenounced ? 'eth' : undefined)
 
   const isEqualShallow = React.useCallback(
-    (address: string) => _.isEqual(isOutputCurrencyRenounced.toLowerCase(), address.toLowerCase()), 
-  [isOutputCurrencyRenounced])
+    (address: string) => _.isEqual(isOutputCurrencyRenounced.toLowerCase(), address.toLowerCase()),
+    [isOutputCurrencyRenounced])
 
   const isEqualShallowInput = React.useCallback(
-    (address: string) => _.isEqual(isInputCurrencyRenounced.toLowerCase(), address.toLowerCase()), 
-  [isInputCurrencyRenounced])
+    (address: string) => _.isEqual(isInputCurrencyRenounced.toLowerCase(), address.toLowerCase()),
+    [isInputCurrencyRenounced])
 
   const isOutputRenounced = React.useMemo(() => RENOUNCED_ADDRESSES.some(isEqualShallow), [isOutputCurrencyRenounced, isEqualShallow])
   const isInputRenounced = React.useMemo(() => RENOUNCED_ADDRESSES.some(isEqualShallowInput), [isInputCurrencyRenounced, isEqualShallowInput])
@@ -322,7 +323,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
-    },    
+    },
     [onUserInput]
   )
   const handleTypeOutput = useCallback(
@@ -459,10 +460,10 @@ export default function Swap({ history }: RouteComponentProps) {
     singleHopOnly,
   ])
 
-  
+
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
-  
+
   // warnings on the greater of fiat value price impact and execution price impact
   const priceImpactSeverity = useMemo(() => {
     const executionPriceImpact = trade?.priceImpact
@@ -508,6 +509,9 @@ export default function Swap({ history }: RouteComponentProps) {
   )
   const [showChart, setShowChart] = React.useState(false)
 
+  const [showAddressManager, setShowAddressManger] = React.useState(false)
+  const dismissAddressManager = () => setShowAddressManger(false)
+
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
   }, [maxInputAmount, onUserInput])
@@ -528,9 +532,9 @@ export default function Swap({ history }: RouteComponentProps) {
     let retVal = 'https://www.flooz.trade/embedded/0x005d1123878fc55fbd56b54c73963b234a64af3c/?backgroundColor=transparent&refId=I56v2c&chainId=1'
     if (chainId === 56) {
       retVal = 'https://www.flooz.trade/embedded/0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5/?backgroundColor=transparent&refId=I56v2c'
-    } 
+    }
     return retVal;
-  },[chainId])
+  }, [chainId])
 
   const kibaBalance = useKiba(account)
 
@@ -567,77 +571,77 @@ export default function Swap({ history }: RouteComponentProps) {
     }
   }
 
-const [gettingMax, setGettingMax] = React.useState(false)
+  const [gettingMax, setGettingMax] = React.useState(false)
 
-const trySetMaxTx = async () => {
-  if (gettingMax) return
+  const trySetMaxTx = async () => {
+    if (gettingMax) return
 
-  const outputToken = currencies.OUTPUT
-  if (!outputToken) return 
+    const outputToken = currencies.OUTPUT
+    if (!outputToken) return
 
-  // fetch honeypot status as well as max tx amount
-  setGettingMax(true)
-  const outputTokenAddress = ((outputToken as any)?.currency || outputToken as any).address
-  const response = { data: (await getMaxes(outputTokenAddress)) }
-  
-  // alert them its a honey pot if so
-  if (response.data && response?.data?.IsHoneypot) {
-    Swal.fire({
-      toast: true,
-      position: 'bottom-end',
-      timer: 3000,
-      showConfirmButton: false,
-      timerProgressBar: true,
-      icon: 'warning',
-      title: `The token your trying to buy max of has been detected as a honeypot. This could be wrong, so do your own research`
-    })
-    if (response.data && response.data?.MaxTxAmount) {
+    // fetch honeypot status as well as max tx amount
+    setGettingMax(true)
+    const outputTokenAddress = ((outputToken as any)?.currency || outputToken as any).address
+    const response = { data: (await getMaxes(outputTokenAddress)) }
+
+    // alert them its a honey pot if so
+    if (response.data && response?.data?.IsHoneypot) {
+      Swal.fire({
+        toast: true,
+        position: 'bottom-end',
+        timer: 3000,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        icon: 'warning',
+        title: `The token your trying to buy max of has been detected as a honeypot. This could be wrong, so do your own research`
+      })
+      if (response.data && response.data?.MaxTxAmount) {
+        // other wise handle the max tx amount input
+        const formattedMax = response.data?.MaxTxAmount / 10 ** outputToken.decimals
+        handleTypeOutput(formattedMax.toString())
+      }
+    } else if (response.data && response.data?.MaxTxAmount) {
       // other wise handle the max tx amount input
-      const formattedMax = response.data?.MaxTxAmount / 10 ** outputToken.decimals 
+      const formattedMax = response.data?.MaxTxAmount / 10 ** outputToken.decimals
       handleTypeOutput(formattedMax.toString())
+    } else {
+      // else we failed to fetch it
+      Swal.fire({
+        toast: true,
+        position: 'bottom-end',
+        timer: 3000,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        icon: 'error',
+        title: `Failed to retrieve max transaction amount for ${outputToken.symbol}`
+      })
     }
-  } else if (response.data && response.data?.MaxTxAmount) {
-    // other wise handle the max tx amount input
-    const formattedMax = response.data?.MaxTxAmount / 10 ** outputToken.decimals 
-    handleTypeOutput(formattedMax.toString())
-  } else {
-    // else we failed to fetch it
-    Swal.fire({
-      toast: true,
-      position: 'bottom-end',
-      timer: 3000,
-      showConfirmButton: false,
-      timerProgressBar: true,
-      icon: 'error',
-      title: `Failed to retrieve max transaction amount for ${outputToken.symbol}`
-    })
+
+    setGettingMax(false)
   }
 
-  setGettingMax(false)
-}
+  const showTrySetMax = React.useMemo(() => {
+    const amounts = parsedAmounts
+    if (!amounts) {
+      return false
+    }
+    const outputCurrency = currencies.OUTPUT
+    if (!outputCurrency) {
+      return false
+    }
 
-const showTrySetMax = React.useMemo(() => {
-  const amounts = parsedAmounts 
-  if (!amounts ) {
-    return false
-  }
-  const outputCurrency = currencies.OUTPUT
-  if (!outputCurrency) {
-    return false
-  }
+    if (outputCurrency.isNative) {
+      return false
+    }
 
-  if (outputCurrency.isNative) {
-    return false
-  }
+    return true
+  }, [
+    currencies.OUTPUT,
+    currencies.INPUT,
+  ])
 
-  return true
-},[    
-  currencies.OUTPUT, 
-  currencies.INPUT,
- ])
-
-const toggleShowChart = () => setShowChart(!showChart)
-  const onViewChangeFn = (view:any) => setView(view)
+  const toggleShowChart = () => setShowChart(!showChart)
+  const onViewChangeFn = (view: any) => setView(view)
   return (
     <>
       <TokenWarningModal
@@ -646,14 +650,15 @@ const toggleShowChart = () => setShowChart(!showChart)
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
-    
+
       <AppBody style={{ marginTop: 0, paddingTop: 0, position: 'relative', minWidth: '45%', maxWidth: view === 'bridge' ? 690 : 480 }}>
         <SwapHeader view={view} onViewChange={onViewChangeFn} allowedSlippage={allowedSlippage} />
+        <AddressManager isOpen={showAddressManager} onDismiss={dismissAddressManager} />
         {!isBinance && (
           <>
-         
+
             {view === 'swap' && <Wrapper id="swap-page">
-         
+
               <ConfirmSwapModal
                 isOpen={showConfirm}
                 trade={trade}
@@ -670,10 +675,10 @@ const toggleShowChart = () => setShowChart(!showChart)
 
               <GasSelectorModal isOpen={gasSettingsOpen} onDismiss={closeGasSettings} />
 
-              <small style={{color: theme.text1, cursor:'pointer', display:'flex', marginBottom:5, alignItems:'center', justifyContent: 'flex-end'}} onClick={openGasSettings}>Customize Gas <ArrowUpRight /></small>
+              <small style={{ color: theme.text1, cursor: 'pointer', display: 'flex', marginBottom: 5, alignItems: 'center', justifyContent: 'flex-end' }} onClick={openGasSettings}>Customize Gas <ArrowUpRight /></small>
               <AutoColumn gap={'xs'}>
-              {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge  variant={BadgeVariant.DEFAULT}>
-                Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}
+                {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge variant={BadgeVariant.DEFAULT}>
+                  Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}
                 <div style={{ display: 'relative' }}>
                   <CurrencyInputPanel
                     label={
@@ -691,43 +696,45 @@ const toggleShowChart = () => setShowChart(!showChart)
                     showCommonBases={true}
                     hideBalance={false}
                     hideInput={false}
-                    
+
                     id="swap-currency-input"
                   />
-                            {Boolean(useDetectRenounced && currencies.INPUT?.symbol && !currencies.INPUT.isNative) && <Badge style={{color: theme.text1, fontSize:12, display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isInputRenounced ? 'green' : 'red'} /></Badge>}
+                  {Boolean(useDetectRenounced && currencies.INPUT?.symbol && !currencies.INPUT.isNative) && <Badge style={{ color: theme.text1, fontSize: 12, display: 'flex', margin: 0 }}>renounced? &nbsp;<Circle fontSize={8} fill={isInputRenounced ? 'green' : 'red'} /></Badge>}
 
                   <ArrowWrapper clickable>
-                    < Majgic 
-                      
-                      onClick={resetToStepTwo}  
+                    < Majgic
+
+                      onClick={resetToStepTwo}
                     />
                   </ArrowWrapper>
                   <CurrencyInputPanel
                     value={formattedAmounts[Field.OUTPUT]}
                     onUserInput={handleTypeOutput}
-                    label={independentField === Field.INPUT && !showWrap ? <Trans><> To (at least)  </></Trans> :<Trans> <>To </></Trans> }
+                    label={independentField === Field.INPUT && !showWrap ? <Trans><> To (at least)  </></Trans> : <Trans> <>To </></Trans>}
                     showMaxButton={false}
                     hideBalance={false}
-                    
+
                     showOnlyTrumpCoins={true}
                     fiatValue={fiatValueOutput ?? undefined}
                     priceImpact={priceImpact}
                     currency={currencies[Field.OUTPUT]}
                     onCurrencySelect={handleOutputSelect}
                     otherCurrency={currencies[Field.INPUT]}
-                    showCommonBases={true}  
+                    showCommonBases={true}
                     id="swap-currency-output"
                   />
-                    {Boolean(useDetectRenounced && currencies.OUTPUT?.symbol && !currencies?.OUTPUT?.isNative) && <Badge style={{color: theme.text1, fontSize:12,  display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isOutputRenounced ? 'green' : 'red'} /></Badge>}
-                            
+                  {Boolean(useDetectRenounced && currencies.OUTPUT?.symbol && !currencies?.OUTPUT?.isNative) && <Badge style={{ color: theme.text1, fontSize: 12, display: 'flex', margin: 0 }}>renounced? &nbsp;<Circle fontSize={8} fill={isOutputRenounced ? 'green' : 'red'} /></Badge>}
+
                   {isExpertMode && showTrySetMax && (
-                    <TYPE.link style={{display:'flex', justifyContent:'flex-end',  cursor: 'pointer'}} onClick={trySetMaxTx}>{!gettingMax ? 'Buy Max Tx Amount' : <>Loading maxes &nbsp; <Loader /></>} </TYPE.link>
+                    <TYPE.link style={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }} onClick={trySetMaxTx}>{!gettingMax ? 'Buy Max Tx Amount' : <>Loading maxes &nbsp; <Loader /></>} </TYPE.link>
                   )}
                 </div>
 
+
+
                 {!cannotUseFeature && useOtherAddress && !showWrap ? (
                   <>
-                    <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                    <AutoRow justify="space-between" style={{marginTop:5, padding: '0 1rem' }}>
                       <ArrowWrapper clickable={false}>
                         <ArrowDown size="16" color={theme.text2} />
                       </ArrowWrapper>
@@ -735,6 +742,8 @@ const toggleShowChart = () => setShowChart(!showChart)
                         <Trans>- Remove send</Trans>
                       </LinkStyledButton>
                     </AutoRow>
+                    <TYPE.link onClick={() => setShowAddressManger(true)}>Show Address Manager</TYPE.link>
+
                     <AddressInputPanel id="recipient" value={recipient as string} onChange={onChangeRecipient} />
                   </>
                 ) : null}
@@ -746,7 +755,7 @@ const toggleShowChart = () => setShowChart(!showChart)
                 )}
 
                 {showWrap ? null : (
-                  <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
+                  <Row style={{zIndex: 0, justifyContent: !trade ? 'center' : 'space-between' }}>
                     <RowFixed style={{ padding: '5px 0px' }}>
                       {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
                         (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
@@ -879,7 +888,7 @@ const toggleShowChart = () => setShowChart(!showChart)
                           }
                         >
                           <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                            <span style={{ display: 'flex', justifyContent:'start', gap:10, alignItems: 'center' }}>
+                            <span style={{ display: 'flex', justifyContent: 'start', gap: 10, alignItems: 'center' }}>
                               <CurrencyLogo
                                 currency={currencies[Field.INPUT]}
                                 size={'20px'}
@@ -935,7 +944,7 @@ const toggleShowChart = () => setShowChart(!showChart)
                       </AutoColumn>
                     </AutoRow>
                   ) : (
-                    <ButtonError style={{ marginTop: 15 }}
+                    <ButtonError style={{zIndex:0, marginTop: 15 }}
                       onClick={swapBtnClick}
                       id="swap-button"
                       disabled={!isValid || priceImpactTooHigh || !!swapCallbackError}
@@ -955,7 +964,7 @@ const toggleShowChart = () => setShowChart(!showChart)
                     </ButtonError>
                   )}
                   {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-          
+
                 </div>
               </AutoColumn>
             </Wrapper>}
@@ -972,17 +981,17 @@ const toggleShowChart = () => setShowChart(!showChart)
           </Wrapper>
         )}
         {view === 'flooz' && <Wrapper>
-          <iframe style={{backgroundColor:'bg0', display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 600, width: '100%' }} src={floozUrl} />
-            
-          </Wrapper>}
+          <iframe style={{ backgroundColor: 'bg0', display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 600, width: '100%' }} src={floozUrl} />
+
+        </Wrapper>}
         {view === 'limit' &&
-          <Wrapper style={{width: '100%'}}>
+          <Wrapper style={{ width: '100%' }}>
             <LimitOrders />
           </Wrapper>}
         {!!isBinance && view === 'swap' && binanceSwapURL && <iframe style={{ display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 800, width: '100%' }} src={binanceSwapURL} />}
       </AppBody>
 
-      
+
       <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />

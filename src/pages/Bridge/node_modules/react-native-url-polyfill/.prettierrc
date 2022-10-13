@@ -1,0 +1,14 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "bracketSpacing": false,
+  "jsxBracketSameLine": true,
+  "overrides": [
+    {
+      "files": "*.md",
+      "options": {
+        "bracketSpacing": true
+      }
+    }
+  ]
+}

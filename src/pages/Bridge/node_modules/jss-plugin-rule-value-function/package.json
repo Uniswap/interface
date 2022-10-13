@@ -1,0 +1,51 @@
+{
+  "name": "jss-plugin-rule-value-function",
+  "description": "JSS plugin for function value and rule syntax",
+  "version": "10.9.2",
+  "license": "MIT",
+  "homepage": "https://cssinjs.org/",
+  "main": "dist/jss-plugin-rule-value-function.cjs.js",
+  "module": "dist/jss-plugin-rule-value-function.esm.js",
+  "unpkg": "dist/jss-plugin-rule-value-function.bundle.js",
+  "sideEffects": false,
+  "typings": "./src/index.d.ts",
+  "author": "JSS Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cssinjs/jss.git",
+    "directory": "packages/jss-plugin-rule-value-function"
+  },
+  "bugs": {
+    "url": "https://github.com/cssinjs/jss/issues/new?title=[jss-plugin-rule-value-function]"
+  },
+  "files": [
+    "dist",
+    "src",
+    "!*.test.*"
+  ],
+  "keywords": [
+    "jss",
+    "style",
+    "sheet",
+    "stylesheet",
+    "css",
+    "components",
+    "composable",
+    "css in js",
+    "css-in-js",
+    "dynamic",
+    "function",
+    "reactive",
+    "animation"
+  ],
+  "scripts": {
+    "build": "node ../../scripts/build.js",
+    "check-snapshot": "node ../../scripts/match-snapshot.js"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.3.1",
+    "jss": "10.9.2",
+    "tiny-warning": "^1.0.2"
+  },
+  "gitHead": "a9a6339826b2d6f398ecd62cb469a6948103d2be"
+}

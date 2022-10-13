@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../server/api-utils/web.ts"],"names":["byteLength","payload","TextEncoder","encode","buffer"],"mappings":"AAEA;;;;QAAgBA,UAAU,GAAVA,UAAU;AAAnB,SAASA,UAAU,CAACC,OAAe,EAAU;IAClD,OAAO,IAAIC,WAAW,EAAE,CAACC,MAAM,CAACF,OAAO,CAAC,CAACG,MAAM,CAACJ,UAAU,CAAA;CAC3D"}

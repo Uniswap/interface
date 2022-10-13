@@ -1,0 +1,46 @@
+{
+  "name": "json-rpc-engine",
+  "version": "5.4.0",
+  "description": "a tool for processing JSON RPC",
+  "license": "ISC",
+  "author": "kumavis",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "lint": "eslint . --ext js,json",
+    "lint:fix": "eslint . --ext js,json --fix",
+    "test": "mocha ./test",
+    "coverage": "nyc --check-coverage yarn test"
+  },
+  "dependencies": {
+    "eth-rpc-errors": "^3.0.0",
+    "safe-event-emitter": "^1.0.1"
+  },
+  "devDependencies": {
+    "@metamask/eslint-config": "^2.1.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-json": "^2.1.0",
+    "eslint-plugin-mocha": "^6.3.0",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.0",
+    "sinon": "^9.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MetaMask/json-rpc-engine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MetaMask/json-rpc-engine/issues"
+  },
+  "homepage": "https://github.com/MetaMask/json-rpc-engine#readme",
+  "directories": {
+    "test": "test"
+  },
+  "contributors": [
+    "kumavis <aaron@kumavis.me>"
+  ]
+}

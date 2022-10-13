@@ -157,7 +157,7 @@ export const TYPE = {
     return <TextWrapper  fontWeight={500} color={'text2'} {...props} />
   },
   link(props: TextProps) {
-    return <TextWrapper link={true}  fontWeight={500} color={'primary1'} {...props} />
+    return <TextWrapper style={{cursor: 'pointer'}} link={true}  fontWeight={500} color={'primary1'} {...props} />
   },
   label(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'text1'} {...props} />

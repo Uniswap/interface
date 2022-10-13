@@ -1,0 +1,213 @@
+/// <reference types="node" />
+/// <reference types="node" />
+/// <reference types="node" />
+/// <reference types="node" />
+/// <reference types="node" />
+import './node-polyfill-fetch';
+import './node-polyfill-web-streams';
+import type { Route } from './router';
+import { CacheFs } from '../shared/lib/utils';
+import type { MiddlewareManifest } from '../build/webpack/plugins/middleware-plugin';
+import type RenderResult from './render-result';
+import type { FetchEventResult } from './web/types';
+import type { PrerenderManifest } from '../build';
+import type { CustomRoutes } from '../lib/load-custom-routes';
+import type { BaseNextRequest, BaseNextResponse } from './base-http';
+import type { PagesManifest } from '../build/webpack/plugins/pages-manifest-plugin';
+import type { PayloadOptions } from './send-payload';
+import type { NextParsedUrlQuery, NextUrlWithParsedQuery } from './request-meta';
+import type { Params } from '../shared/lib/router/utils/route-matcher';
+import type { NextConfig } from './config-shared';
+import type { DynamicRoutes, PageChecker } from './router';
+import { IncomingMessage, ServerResponse } from 'http';
+import { UrlWithParsedQuery } from 'url';
+import { NodeNextRequest, NodeNextResponse } from './base-http/node';
+import { ParsedUrlQuery } from 'querystring';
+import { RenderOpts } from './render';
+import { ParsedUrl } from '../shared/lib/router/utils/parse-url';
+import BaseServer, { Options, FindComponentsResult, MiddlewareRoutingItem, RoutingItem, RequestContext } from './base-server';
+import { FontManifest } from './font-utils';
+import ResponseCache from './response-cache';
+export * from './base-server';
+export interface NodeRequestHandler {
+    (req: IncomingMessage | BaseNextRequest, res: ServerResponse | BaseNextResponse, parsedUrl?: NextUrlWithParsedQuery | undefined): Promise<void>;
+}
+export default class NextNodeServer extends BaseServer {
+    private imageResponseCache?;
+    constructor(options: Options);
+    private compression;
+    protected loadEnvConfig({ dev, forceReload, }: {
+        dev: boolean;
+        forceReload?: boolean;
+    }): void;
+    protected getResponseCache({ dev }: {
+        dev: boolean;
+    }): ResponseCache;
+    protected getPublicDir(): string;
+    protected getHasStaticDir(): boolean;
+    protected getPagesManifest(): PagesManifest | undefined;
+    protected getAppPathsManifest(): PagesManifest | undefined;
+    protected hasPage(pathname: string): Promise<boolean>;
+    protected getBuildId(): string;
+    protected getCustomRoutes(): CustomRoutes;
+    protected generateImageRoutes(): Route[];
+    protected generateStaticRoutes(): Route[];
+    protected setImmutableAssetCacheControl(res: BaseNextResponse): void;
+    protected generateFsStaticRoutes(): Route[];
+    protected generatePublicRoutes(): Route[];
+    private _validFilesystemPathSet;
+    protected getFilesystemPaths(): Set<string>;
+    protected sendRenderResult(req: NodeNextRequest, res: NodeNextResponse, options: {
+        result: RenderResult;
+        type: 'html' | 'json';
+        generateEtags: boolean;
+        poweredByHeader: boolean;
+        options?: PayloadOptions | undefined;
+    }): Promise<void>;
+    protected sendStatic(req: NodeNextRequest, res: NodeNextResponse, path: string): Promise<void>;
+    protected handleCompression(req: NodeNextRequest, res: NodeNextResponse): void;
+    protected handleUpgrade(req: NodeNextRequest, socket: any, head: any): Promise<void>;
+    protected proxyRequest(req: NodeNextRequest, res: NodeNextResponse, parsedUrl: ParsedUrl, upgradeHead?: any): Promise<{
+        finished: boolean;
+    }>;
+    protected runApi(req: BaseNextRequest | NodeNextRequest, res: BaseNextResponse | NodeNextResponse, query: ParsedUrlQuery, params: Params | undefined, page: string, builtPagePath: string): Promise<boolean>;
+    protected renderHTML(req: NodeNextRequest, res: NodeNextResponse, pathname: string, query: NextParsedUrlQuery, renderOpts: RenderOpts): Promise<RenderResult | null>;
+    protected streamResponseChunk(res: NodeNextResponse, chunk: any): void;
+    protected imageOptimizer(req: NodeNextRequest, res: NodeNextResponse, paramsResult: import('./image-optimizer').ImageParamsResult): Promise<{
+        buffer: Buffer;
+        contentType: string;
+        maxAge: number;
+    }>;
+    protected getPagePath(pathname: string, locales?: string[]): string;
+    protected renderPageComponent(ctx: RequestContext, bubbleNoFallback: boolean): Promise<false | {
+        type: "html" | "json";
+        body: RenderResult;
+        revalidateOptions?: any;
+    } | null>;
+    protected findPageComponents({ pathname, query, params, isAppPath, }: {
+        pathname: string;
+        query: NextParsedUrlQuery;
+        params: Params | null;
+        isAppPath: boolean;
+    }): Promise<FindComponentsResult | null>;
+    protected getFontManifest(): FontManifest;
+    protected getServerComponentManifest(): any;
+    protected getServerCSSManifest(): any;
+    protected getFallback(page: string): Promise<string>;
+    protected generateRoutes(): {
+        headers: Route[];
+        rewrites: {
+            beforeFiles: Route[];
+            afterFiles: Route[];
+            fallback: Route[];
+        };
+        fsRoutes: Route[];
+        redirects: Route[];
+        catchAllRoute: Route;
+        catchAllMiddleware: Route[];
+        pageChecker: PageChecker;
+        useFileSystemPublicRoutes: boolean;
+        dynamicRoutes: DynamicRoutes | undefined;
+        nextConfig: NextConfig;
+    };
+    protected ensureApiPage(_pathname: string): Promise<void>;
+    /**
+     * Resolves `API` request, in development builds on demand
+     * @param req http request
+     * @param res http response
+     * @param pathname path of request
+     */
+    protected handleApiRequest(req: BaseNextRequest, res: BaseNextResponse, pathname: string, query: ParsedUrlQuery): Promise<boolean>;
+    protected getCacheFilesystem(): CacheFs;
+    private normalizeReq;
+    private normalizeRes;
+    getRequestHandler(): NodeRequestHandler;
+    render(req: BaseNextRequest | IncomingMessage, res: BaseNextResponse | ServerResponse, pathname: string, query?: NextParsedUrlQuery, parsedUrl?: NextUrlWithParsedQuery, internal?: boolean): Promise<void>;
+    renderToHTML(req: BaseNextRequest | IncomingMessage, res: BaseNextResponse | ServerResponse, pathname: string, query?: ParsedUrlQuery): Promise<string | null>;
+    renderError(err: Error | null, req: BaseNextRequest | IncomingMessage, res: BaseNextResponse | ServerResponse, pathname: string, query?: NextParsedUrlQuery, setHeaders?: boolean): Promise<void>;
+    renderErrorToHTML(err: Error | null, req: BaseNextRequest | IncomingMessage, res: BaseNextResponse | ServerResponse, pathname: string, query?: ParsedUrlQuery): Promise<string | null>;
+    render404(req: BaseNextRequest | IncomingMessage, res: BaseNextResponse | ServerResponse, parsedUrl?: NextUrlWithParsedQuery, setHeaders?: boolean): Promise<void>;
+    serveStatic(req: BaseNextRequest | IncomingMessage, res: BaseNextResponse | ServerResponse, path: string, parsedUrl?: UrlWithParsedQuery): Promise<void>;
+    protected getStaticRoutes(): Route[];
+    protected isServeableUrl(untrustedFileUrl: string): boolean;
+    protected generateRewrites({ restrictedRedirectPaths, }: {
+        restrictedRedirectPaths: string[];
+    }): {
+        beforeFiles: Route[];
+        afterFiles: Route[];
+        fallback: Route[];
+    };
+    protected getMiddlewareManifest(): MiddlewareManifest | null;
+    /** Returns the middleware routing item if there is one. */
+    protected getMiddleware(): MiddlewareRoutingItem | undefined;
+    protected getEdgeFunctions(): RoutingItem[];
+    /**
+     * Get information for the edge function located in the provided page
+     * folder. If the edge function info can't be found it will throw
+     * an error.
+     */
+    protected getEdgeFunctionInfo(params: {
+        page: string;
+        /** Whether we should look for a middleware or not */
+        middleware: boolean;
+    }): {
+        name: string;
+        paths: string[];
+        env: string[];
+        wasm: {
+            filePath: string;
+            name: string;
+        }[];
+        assets: {
+            filePath: string;
+            name: string;
+        }[];
+    } | null;
+    /**
+     * Checks if a middleware exists. This method is useful for the development
+     * server where we need to check the filesystem. Here we just check the
+     * middleware manifest.
+     */
+    protected hasMiddleware(pathname: string): Promise<boolean>;
+    /**
+     * A placeholder for a function to be defined in the development server.
+     * It will make sure that the root middleware or an edge function has been compiled
+     * so that we can run it.
+     */
+    protected ensureMiddleware(): Promise<void>;
+    protected ensureEdgeFunction(_params: {
+        page: string;
+        appPaths: string[] | null;
+    }): Promise<void>;
+    /**
+     * This method gets all middleware matchers and execute them when the request
+     * matches. It will make sure that each middleware exists and is compiled and
+     * ready to be invoked. The development server will decorate it to add warns
+     * and errors with rich traces.
+     */
+    protected runMiddleware(params: {
+        request: BaseNextRequest;
+        response: BaseNextResponse;
+        parsedUrl: ParsedUrl;
+        parsed: UrlWithParsedQuery;
+        onWarning?: (warning: Error) => void;
+    }): Promise<FetchEventResult | {
+        finished: boolean;
+    }>;
+    protected generateCatchAllMiddlewareRoute(devReady?: boolean): Route[];
+    private _cachedPreviewManifest;
+    protected getPrerenderManifest(): PrerenderManifest;
+    protected getRoutesManifest(): any;
+    protected attachRequestMeta(req: BaseNextRequest, parsedUrl: NextUrlWithParsedQuery): void;
+    protected runEdgeFunction(params: {
+        req: BaseNextRequest | NodeNextRequest;
+        res: BaseNextResponse | NodeNextResponse;
+        query: ParsedUrlQuery;
+        params: Params | undefined;
+        page: string;
+        appPaths: string[] | null;
+        onWarning?: (warning: Error) => void;
+    }): Promise<FetchEventResult | null>;
+    protected get _isLikeServerless(): boolean;
+    protected get serverDistDir(): string;
+}

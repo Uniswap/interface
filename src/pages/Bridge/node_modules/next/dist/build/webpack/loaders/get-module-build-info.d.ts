@@ -1,0 +1,40 @@
+import type { MiddlewareMatcher, RSCModuleType } from '../../analysis/get-page-static-info';
+import { webpack } from 'next/dist/compiled/webpack/webpack';
+/**
+ * A getter for module build info that casts to the type it should have.
+ * We also expose here types to make easier to use it.
+ */
+export declare function getModuleBuildInfo(webpackModule: webpack.Module): {
+    nextEdgeMiddleware?: EdgeMiddlewareMeta | undefined;
+    nextEdgeApiFunction?: EdgeMiddlewareMeta | undefined;
+    nextEdgeSSR?: EdgeSSRMeta | undefined;
+    nextUsedEnvVars?: Set<string> | undefined;
+    nextWasmMiddlewareBinding?: AssetBinding | undefined;
+    nextAssetMiddlewareBinding?: AssetBinding | undefined;
+    usingIndirectEval?: boolean | Set<string> | undefined;
+    route?: RouteMeta | undefined;
+    importLocByPath?: Map<string, any> | undefined;
+    rootDir?: string | undefined;
+    rsc?: RSCMeta | undefined;
+};
+export interface RSCMeta {
+    type?: RSCModuleType;
+    requests?: string[];
+}
+export interface RouteMeta {
+    page: string;
+    absolutePagePath: string;
+}
+export interface EdgeMiddlewareMeta {
+    page: string;
+    matchers?: MiddlewareMatcher[];
+}
+export interface EdgeSSRMeta {
+    isServerComponent: boolean;
+    isAppDir?: boolean;
+    page: string;
+}
+export interface AssetBinding {
+    filePath: string;
+    name: string;
+}

@@ -1,0 +1,12 @@
+﻿// @flow
+import type {ToCssOptions} from './flow-types'
+import type StyleSheet from './StyleSheet'
+
+declare export default class SheetsRegistry {
+  index: number;
+  registry: Array<StyleSheet>;
+  add(sheet: StyleSheet): void;
+  reset(): void;
+  remove(sheet: StyleSheet): void;
+  toString(options?: {|attached?: boolean, ...ToCssOptions|}): string;
+}

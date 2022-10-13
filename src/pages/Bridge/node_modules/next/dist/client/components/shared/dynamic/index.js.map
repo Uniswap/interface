@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../../client/components/shared/dynamic/index.tsx"],"names":["dynamic","loader","LazyLoadable","React","lazy"],"mappings":"AAAA;;;;kBAcwBA,OAAO;;AAdb,IAAA,MAAO,oCAAP,OAAO,EAAA;AAcV,SAASA,OAAO,CAC7BC,MAAiB,EACO;IACxB,MAAMC,YAAY,iBAAGC,MAAK,QAAA,CAACC,IAAI,CAACH,MAAM,CAAC;IAEvC,OAAOC,YAAY,CAAA;CACpB"}

@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../shared/lib/amp-mode.ts"],"names":["isInAmpMode","ampFirst","hybrid","hasQuery"],"mappings":"AAAA;;;;QAAgBA,WAAW,GAAXA,WAAW;AAApB,SAASA,WAAW,CAAC,EAC1BC,QAAQ,EAAG,KAAK,CAAA,EAChBC,MAAM,EAAG,KAAK,CAAA,EACdC,QAAQ,EAAG,KAAK,CAAA,IACjB,GAAG,EAAE,EAAW;IACf,OAAOF,QAAQ,IAAKC,MAAM,IAAIC,QAAQ,AAAC,CAAA;CACxC"}

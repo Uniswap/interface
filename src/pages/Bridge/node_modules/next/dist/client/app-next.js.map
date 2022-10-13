@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../client/app-next.js"],"names":["window","next","version","appDir","hydrate"],"mappings":"AAAA;AAAiC,IAAA,SAAa,WAAb,aAAa,CAAA;QAGvC,kDAAkD;QAClD,qDAAqD;AAE5DA,MAAM,CAACC,IAAI,GAAG;IACZC,OAAO,EAAPA,SAAO,QAAA;IACPC,MAAM,EAAE,IAAI;CACb;AAEDC,CAAAA,GAAAA,SAAO,AAAE,CAAA,QAAF,EAAE"}

@@ -1,0 +1,52 @@
+{
+  "name": "eth-json-rpc-middleware",
+  "version": "6.0.0",
+  "main": "block-ref.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "printf '%s\\n' 'No lint command'",
+    "test": "node test/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "*.js"
+  ],
+  "resolutions": {
+    "ganache-core/**/elliptic": "^6.5.3",
+    "ganache-core/lodash": "^4.17.19"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "async": "^2.5.0",
+    "concat-stream": "^1.6.2",
+    "eth-block-tracker": "^4.4.1",
+    "ethjs-query": "^0.3.8",
+    "ganache-core": "^2.7.0",
+    "tape": "^4.6.3"
+  },
+  "dependencies": {
+    "btoa": "^1.2.1",
+    "clone": "^2.1.1",
+    "eth-query": "^2.1.2",
+    "eth-rpc-errors": "^3.0.0",
+    "eth-sig-util": "^1.4.2",
+    "ethereumjs-util": "^5.1.2",
+    "json-rpc-engine": "^5.3.0",
+    "json-stable-stringify": "^1.0.1",
+    "node-fetch": "^2.6.1",
+    "pify": "^3.0.0",
+    "safe-event-emitter": "^1.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kumavis/eth-json-rpc-middleware.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kumavis/eth-json-rpc-middleware/issues"
+  },
+  "homepage": "https://github.com/kumavis/eth-json-rpc-middleware#readme",
+  "description": ""
+}

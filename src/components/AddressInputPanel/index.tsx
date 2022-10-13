@@ -1,13 +1,22 @@
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ExternalLink, TYPE } from '../../theme'
-import { ReactNode, useCallback, useContext } from 'react'
+import { ReactNode, useCallback, useContext, useState } from 'react'
 import { Trans, t } from '@lingui/macro'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
+import Select from 'react-select'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { useAddressManager } from 'components/AddressManager'
 import useENS from '../../hooks/useENS'
+
+const SelectItem = styled(Select)`
+  color:#222 !important;
+  z-index: 1000;
+  > 
+`
+
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -35,12 +44,12 @@ const InputContainer = styled.div`
 `
 
 const Input = styled.input<{ error?: boolean }>`
-  font-size: 1.25rem;
+  font-size: 1rem;
   outline: none;
   border: none;
   flex: 1 1 auto;
   width: 0;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg0};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
   overflow: hidden;
@@ -50,7 +59,7 @@ const Input = styled.input<{ error?: boolean }>`
   ::placeholder {
     color: ${({ theme }) => theme.text4};
   }
-  padding: 0px;
+  padding: 5px;
   -webkit-appearance: textfield;
 
   ::-webkit-search-decoration {
@@ -100,6 +109,18 @@ export default function AddressInputPanel({
 
   const error = Boolean(value?.length > 0 && !loading && !address)
 
+  const [addresses,] = useAddressManager()
+  const [useManual, setUseManual] = useState(false)
+  function styleFn(provided: any, state: any) {
+    return { ...provided, color: theme.text1, background: theme.bg0 };
+  }
+  const styles = {
+    singleValue: {
+      color: theme.text1,
+      background: theme.bg0
+    }
+  }
+
   return (
     <InputPanel id={id}>
       <ContainerRow error={error}>
@@ -108,7 +129,13 @@ export default function AddressInputPanel({
             <RowBetween>
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
                 {label ?? <Trans>Recipient</Trans>}
+                {addresses.length > 0 && <small>
+                  <TYPE.link onClick={() => {
+                    setUseManual(!useManual)
+                  }}>{useManual ? 'Switch to Select' : 'Switch to Input'}</TYPE.link>
+                </small>}
               </TYPE.black>
+
               {address && chainId && (
                 <ExternalLink
                   href={getExplorerLink(chainId, name ?? address, ExplorerDataType.ADDRESS)}
@@ -118,7 +145,7 @@ export default function AddressInputPanel({
                 </ExternalLink>
               )}
             </RowBetween>
-            <Input
+            {Boolean(addresses.length == 0 || useManual) && <Input
               className={className}
               type="text"
               autoComplete="off"
@@ -130,7 +157,11 @@ export default function AddressInputPanel({
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}
               value={value}
-            />
+            />}
+
+            {Boolean(addresses.length > 0 && !useManual) && (
+              <SelectItem theme={theme} options={addresses} onChange={(e: any) => onChange(e.value as any)} value={addresses.find((item) => item.value?.toLowerCase() === value?.toLowerCase())} />
+            )}
           </AutoColumn>
         </InputContainer>
       </ContainerRow>

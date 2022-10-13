@@ -1,0 +1,1 @@
+export declare function useSyncExternalStoreWithTracked<Snapshot extends Selection, Selection = Snapshot>(subscribe: (onStoreChange: () => void) => () => void, getSnapshot: () => Snapshot, getServerSnapshot?: undefined | null | (() => Snapshot), isEqual?: (a: Selection, b: Selection) => boolean): Snapshot;

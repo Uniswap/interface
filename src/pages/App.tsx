@@ -15,6 +15,7 @@ import {
 } from "@apollo/client";
 import AppBody from './AppBody'
 import Badge from 'components/Badge';
+import { Bridge } from 'components/AccountDetails/Bridge';
 import { ChartPage } from 'components/swap/ChartPage'
 import CreateProposal from './CreateProposal'
 import { DarkGreyCard } from 'components/Card'
@@ -206,6 +207,7 @@ export default function App() {
                       <Route exact strict path="/charts/:network/:pairAddress" component={SelectiveChartWithPair} />
                       <Route exact strict path="/charts" component={SelectiveChartWithPair} />
 
+                      <Route exact strict path="/bridge" component={Bridge} />
                       {/* End Chart Pages Routes */}
 
                       <Route exact strict path="/fomo" component={FomoPage} />

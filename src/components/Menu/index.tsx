@@ -228,7 +228,7 @@ export default function Menu() {
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const [darkMode, toggleDarkMode] = useDarkModeManager()
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
-  const theme =useTheme()
+  const theme = useTheme()
   useEffect(() => {
     setMenu('main')
   }, [open])
@@ -268,7 +268,7 @@ export default function Menu() {
                       </div>
                       <Tool size={16} opacity={0.6} />
                     </InternalLinkMenuItem>
-                    { <InternalLinkMenuItem to="/details">
+                    {<InternalLinkMenuItem to="/details">
                       <div>
                         <Trans>Transactions</Trans>
                       </div>
@@ -280,17 +280,11 @@ export default function Menu() {
                       </div>
                       <Info opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href="https://t.me/KibaInuGlobal/">
+                    <MenuItem href="https://docs.kiba.app">
                       <div>
-                        <Trans>Telegram</Trans>
+                        <Trans>Docs</Trans>
                       </div>
                       <BookOpen opacity={0.6} size={16} />
-                    </MenuItem>
-                    <MenuItem href="https://www.dextools.io/app/ether/pair-explorer/0xbf6dcdfe6e138428f5abe709e33e8ac1f7780e48">
-                      <div>
-                        <Trans>Dextools</Trans>
-                      </div>
-                      <BarChart2 opacity={0.6} size={16} />
                     </MenuItem>
                     <MenuItem href={'https://twitter.com/KibaInuWorld'}>
                       <div>
@@ -298,16 +292,16 @@ export default function Menu() {
                       </div>
                       <Twitter opacity={0.6} size={16} />
                     </MenuItem>
+                    <ToggleMenuItem onClick={() => toggleDarkMode()}>
+                      <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
+                      {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
+                    </ToggleMenuItem>
                     <ToggleMenuItem onClick={() => setMenu('lang')}>
                       <div>
                         <Trans>Language</Trans>
                       </div>
                       <ChevronRight size={16} opacity={0.6} />
                     </ToggleMenuItem>
-                    <ToggleMenuItem onClick={() => toggleDarkMode()}>
-                    <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
-                    {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
-                  </ToggleMenuItem>
                   </MenuFlyout>
                 </>
               )

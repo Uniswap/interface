@@ -1,0 +1,194 @@
+aliases:
+  - &save-cache-yarn
+    save_cache:
+      key: v1-yarn-packages-{{ checksum "yarn.lock" }}
+      paths:
+        - ~/.cache/yarn
+  - &restore-cache-yarn
+    restore_cache:
+      name: Restore Yarn Package Cache
+      keys:
+        - v1-yarn-packages-{{ checksum "yarn.lock" }}
+  - &save-cache-detox
+    save_cache:
+      key: v1-detox-{{ checksum "yarn.lock"}}
+      paths:
+        - node_modules
+        - ios/Pods
+  - &restore-cache-detox
+    restore_cache:
+      name: Restoring Detox Cache
+      keys:
+        - v1-detox-{{ checksum "yarn.lock"}}
+  - &save-android-build-cache
+    save_cache:
+      paths:
+        - ~/.gradle/caches
+        - ~/.gradle/wrapper
+        - ~/.android/build-cache
+      key: v1-gradle-build-cache-{{ checksum "android/build.gradle" }}-{{ checksum "android/app/build.gradle" }}-{{ checksum "yarn.lock" }}
+      when: always # Ensures build assets are cached even on failed builds
+  - &restore-android-build-cache
+    restore_cache:
+      name: Restoring Android & Gradle cache
+      keys:
+        - v1-gradle-build-cache-{{ checksum "android/build.gradle" }}-{{ checksum "android/app/build.gradle" }}-{{ checksum "yarn.lock" }}
+  - &attach-workspace
+    attach_workspace:
+      at: ~/react-native-url-polyfill
+
+defaults: &defaults
+  working_directory: ~/react-native-url-polyfill
+  docker:
+    - image: circleci/node:14
+
+ios: &ios
+  macos:
+    xcode: 11
+
+android: &android
+  docker:
+    - image: circleci/android:api-28-node
+  environment:
+    JAVA_TOOL_OPTIONS: '-Xmx1536m'
+    GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2'
+
+version: 2.1
+commands:
+  test-detox-ios:
+    steps:
+      - *attach-workspace
+      - *restore-cache-detox
+      - run:
+          name: Yarn version
+          command: yarn -v
+      - run:
+          name: Yarn Install
+          command: |
+            yarn install --frozen-lockfile --no-progress --non-interactive --cache-folder ~/.cache/yarn
+      - run:
+          name: Install Detox
+          command: |
+            brew update
+            brew tap wix/brew
+            brew install applesimutils
+            yarn global add detox-cli
+      - run:
+          name: Clean Detox
+          command: |
+            detox clean-framework-cache && detox build-framework-cache
+      - run:
+          name: Install Pods
+          command: |
+            curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
+            cd ios && pod install --repo-update
+      - run:
+          name: Run Detox on iOS
+          command: yarn e2e:ios
+      - *save-cache-detox
+  test-hermes:
+    steps:
+      - *attach-workspace
+      - *restore-android-build-cache
+      - run:
+          name: Yarn version
+          command: yarn -v
+      - run:
+          name: Yarn Install
+          command: |
+            yarn install --frozen-lockfile --no-progress --non-interactive --cache-folder ~/.cache/yarn
+      - run:
+          name: Enable Hermes
+          command: sed -i "s/enableHermes:\sfalse/enableHermes:\ true/g" android/app/build.gradle
+      - run:
+          name: Build APK
+          command: cd android && ./gradlew assembleRelease
+      - *save-android-build-cache
+
+jobs:
+  checkout:
+    <<: *defaults
+    steps:
+      - checkout
+      - *restore-cache-yarn
+      - run:
+          name: Yarn version
+          command: yarn -v
+      - run:
+          name: Yarn Install
+          command: |
+            yarn install --frozen-lockfile --no-progress --non-interactive --cache-folder ~/.cache/yarn
+      - *save-cache-yarn
+      - persist_to_workspace:
+          root: .
+          paths: .
+  lint:
+    <<: *defaults
+    steps:
+      - *attach-workspace
+      - run:
+          name: Lint
+          command: yarn lint
+  test-js:
+    <<: *defaults
+    steps:
+      - *attach-workspace
+      - run:
+          name: Run Jest
+          command: yarn test
+  rn-0-60-test-ios:
+    <<: *ios
+    working_directory: ~/react-native-url-polyfill/detox/rn-0.60
+    steps:
+      - test-detox-ios
+  rn-0-62-test-ios:
+    <<: *ios
+    working_directory: ~/react-native-url-polyfill/detox/rn-0.62
+    steps:
+      - test-detox-ios
+  rn-0-62-test-hermes:
+    <<: *android
+    working_directory: ~/react-native-url-polyfill/detox/rn-0.62
+    steps:
+      - test-hermes
+  rn-0-63-test-ios:
+    <<: *ios
+    working_directory: ~/react-native-url-polyfill/detox/rn-0.63
+    steps:
+      - test-detox-ios
+  rn-0-63-test-hermes:
+    <<: *android
+    working_directory: ~/react-native-url-polyfill/detox/rn-0.63
+    steps:
+      - test-hermes
+
+workflows:
+  tests:
+    jobs:
+      - checkout
+      - lint:
+          requires:
+            - checkout
+      - test-js:
+          requires:
+            - checkout
+      - rn-0-60-test-ios:
+          requires:
+            - lint
+            - test-js
+      - rn-0-62-test-ios:
+          requires:
+            - lint
+            - test-js
+      - rn-0-62-test-hermes:
+          requires:
+            - lint
+            - test-js
+      - rn-0-63-test-ios:
+          requires:
+            - lint
+            - test-js
+      - rn-0-63-test-hermes:
+          requires:
+            - lint
+            - test-js

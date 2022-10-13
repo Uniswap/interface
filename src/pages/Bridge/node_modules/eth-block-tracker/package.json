@@ -1,0 +1,53 @@
+{
+  "name": "eth-block-tracker",
+  "version": "4.4.3",
+  "description": "A block tracker for the Ethereum blockchain. Keeps track of the latest block.",
+  "main": "src/polling.js",
+  "scripts": {
+    "test": "npm run build && npm run test:unit && npm run test:lint:deps",
+    "test:unit": "node test/index.js",
+    "test:lint:deps": "npx depcheck --ignore-dirs dist --ignores babelify,@babel/runtime,@babel/preset-env,@babel/plugin-transform-runtime",
+    "prepublishOnly": "npm run build",
+    "build": "npm run build:clean && npm run build:es5 && npm run build:bundle && npm run build:validate",
+    "build:clean": "rm -rf ./dist && mkdir -p ./dist",
+    "build:es5": "babel ./src -d dist/es5/",
+    "build:bundle": "npm run build:bundle:polling && npm run build:bundle:base && npm run build:bundle:subscribe",
+    "build:bundle:polling": "browserify -s PollingBlockTracker -e src/polling.js -g babelify > dist/PollingBlockTracker.js",
+    "build:bundle:subscribe": "browserify -s SubscribeBlockTracker -e src/subscribe.js -g babelify > dist/SubscribeBlockTracker.js",
+    "build:bundle:base": "browserify -s BaseBlockTracker -e src/base.js -g babelify > dist/BaseBlockTracker.js",
+    "build:validate": "uglifyjs dist/es5/**.js > /dev/null"
+  },
+  "author": "kumavis",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/runtime": "^7.5.5",
+    "eth-query": "^2.1.0",
+    "json-rpc-random-id": "^1.0.1",
+    "pify": "^3.0.0",
+    "safe-event-emitter": "^1.0.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-regenerator": "^7.4.5",
+    "@babel/preset-env": "^7.5.5",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.0",
+    "eth-json-rpc-infura": "^4.0.2",
+    "ganache-core": "^2.7.0",
+    "tape": "^4.9.0",
+    "uglify-js": "^3.4.10"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kumavis/eth-block-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kumavis/eth-block-tracker/issues"
+  },
+  "homepage": "https://github.com/kumavis/eth-block-tracker#readme"
+}

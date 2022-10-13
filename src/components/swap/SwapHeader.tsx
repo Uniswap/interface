@@ -1,11 +1,11 @@
 import { RowBetween, RowFixed } from '../Row'
+import { StyledInternalLink, TYPE } from '../../theme'
 
 import { Info } from 'react-feather'
 import { Percent } from '@uniswap/sdk-core'
 import React from 'react'
 import SettingsTab from '../Settings'
 import { ShowSellTaxComponent } from 'components/ShowSellTax'
-import { TYPE } from '../../theme'
 import Tooltip from 'components/Tooltip'
 import { TopTokenMovers } from './TopMovers'
 import { Trans } from '@lingui/macro'
@@ -61,10 +61,13 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange,  }: { 
           {<HeaderType  onClick={onBridgeClick} fontWeight={500} fontSize={22} style={{ color: view ==='bridge' ? '#F76C1D' : '', textDecoration: view === 'bridge' ? 'underline' : 'none', cursor: 'pointer' }}>
             <Trans>Bridge</Trans>
           </HeaderType>}
+
     
         </RowFixed>
         {chainId === 1 && (
-        <RowFixed>
+        <RowFixed alignItems="center">
+         {<StyledInternalLink style={{marginRight: 15}} to="/bridge">Crosschain</StyledInternalLink>}
+
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>
         )}

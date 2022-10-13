@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../client/detect-domain-locale.ts"],"names":["detectDomainLocale","args","process","env","__NEXT_I18N_SUPPORT","require"],"mappings":"AAAA;;;;;AAEO,MAAMA,kBAAkB,GAAc,CAAIC,GAAAA,IAAI,GAAK;IACxD,IAAIC,OAAO,CAACC,GAAG,CAACC,mBAAmB,EAAE;QACnC,OAAOC,OAAO,CAAC,yCAAyC,CAAC,CAACL,kBAAkB,IACvEC,IAAI,CACR,CAAA;KACF;CACF;QANYD,kBAAkB,GAAlBA,kBAAkB"}
