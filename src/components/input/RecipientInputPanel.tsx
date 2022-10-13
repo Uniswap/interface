@@ -45,7 +45,9 @@ export function RecipientPrevTransfers({ recipient }: { recipient: string }) {
 
   return (
     <Text color="textSecondary" textAlign="center" variant="caption">
-      {t('{{ prevTxns }} previous transfers', { prevTxns })}
+      {prevTxns === 1
+        ? t('{{ prevTxns }} previous transfer', { prevTxns })
+        : t('{{ prevTxns }} previous transfers', { prevTxns })}
     </Text>
   )
 }
