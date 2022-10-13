@@ -36,6 +36,23 @@ import WalletModal from '../WalletModal'
 // https://stackoverflow.com/a/31617326
 const FULL_BORDER_RADIUS = 9999
 
+const ChevronWrapper = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  padding: 10px 16px 10px 4px;
+
+  :hover {
+    color: ${({ theme }) => theme.accentActionSoft};
+  }
+  :hover,
+  :active,
+  :focus {
+    border: none;
+  }
+`
+
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
@@ -62,14 +79,13 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   }
 `
 
-const Web3StatusConnectButton = styled.button<{ faded?: boolean }>`
+const Web3StatusConnectWrapper = styled.div<{ faded?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   background-color: ${({ theme }) => theme.accentActionSoft};
   border-radius: ${FULL_BORDER_RADIUS}px;
   border: none;
-  cursor: pointer;
-  padding: 0 12px;
+  padding: 0;
   height: 40px;
 
   :hover,
@@ -156,24 +172,35 @@ function Sock() {
 
 const VerticalDivider = styled.div`
   height: 20px;
-  margin: 0px 4px;
+  margin: 0px;
   width: 1px;
   background-color: ${({ theme }) => theme.accentAction};
 `
 
-const StyledConnect = styled.div`
+const StyledConnectButton = styled.button`
+  background-color: transparent;
+  border: none;
+  border-top-left-radius: ${FULL_BORDER_RADIUS}px;
+  border-bottom-left-radius: ${FULL_BORDER_RADIUS}px;
   color: ${({ theme }) => theme.accentAction};
+  cursor: pointer;
   font-weight: 600;
   font-size: 16px;
-  margin-right: 8px;
+  padding: 10px 8px 10px 12px;
 
-  &:hover {
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `${duration.fast} color ${timing.in}`};
+
+  :hover,
+  :active,
+  :focus {
+    border: none;
+  }
+  :hover {
     color: ${({ theme }) => theme.accentActionSoft};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `${duration.fast} color ${timing.in}`};
   }
 `
 
@@ -258,7 +285,6 @@ function Web3StatusInner() {
       ...CHEVRON_PROPS,
       color: theme.accentAction,
       'data-testid': 'navbar-wallet-dropdown',
-      onClick: toggleWalletDropdown,
     }
     return (
       <TraceEvent
@@ -268,13 +294,15 @@ function Web3StatusInner() {
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
         {navbarFlagEnabled ? (
-          <Web3StatusConnectButton faded={!account}>
-            <StyledConnect data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
+          <Web3StatusConnectWrapper faded={!account}>
+            <StyledConnectButton data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
               <Trans>Connect</Trans>
-            </StyledConnect>
+            </StyledConnectButton>
             <VerticalDivider />
-            {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-          </Web3StatusConnectButton>
+            <ChevronWrapper onClick={toggleWalletDropdown}>
+              {walletIsOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
+            </ChevronWrapper>
+          </Web3StatusConnectWrapper>
         ) : (
           <Web3StatusConnect onClick={toggleWallet} faded={!account}>
             <Text>
