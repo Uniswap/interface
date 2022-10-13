@@ -103,7 +103,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useTokenFromNetwork(tokenAddress: string | undefined): Token | null | undefined {
+export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Token | null | undefined {
   const { chainId } = useWeb3React()
 
   const formattedAddress = isAddress(tokenAddress)
@@ -153,7 +153,7 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
   const address = isAddress(tokenAddress)
   const token: Token | undefined = address ? tokens[address] : undefined
 
-  const tokenFromNetwork = useTokenFromNetwork(token ? undefined : address ? address : undefined)
+  const tokenFromNetwork = useTokenFromActiveNetwork(token ? undefined : address ? address : undefined)
 
   return tokenFromNetwork ?? token
 }
