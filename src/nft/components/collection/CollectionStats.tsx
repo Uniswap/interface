@@ -286,6 +286,11 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           {floorPriceStr} ETH
         </StatsItem>
       ) : null}
+      {stats.stats?.one_day_change ? (
+        <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
+          {floorChangeStr}% {arrow}
+        </StatsItem>
+      ) : null}
       {stats.stats?.total_volume ? (
         <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
           {totalVolumeStr} ETH
@@ -294,11 +299,6 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
       {stats.stats?.total_listings && listedPercentageStr > 0 ? (
         <StatsItem label="Listed" isMobile={isMobile ?? false}>
           {listedPercentageStr}%
-        </StatsItem>
-      ) : null}
-      {stats.stats?.one_day_change ? (
-        <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
-          {floorChangeStr}% {arrow}
         </StatsItem>
       ) : null}
     </Row>
