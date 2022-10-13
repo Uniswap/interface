@@ -6,9 +6,9 @@ import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/ic
 import { buttonTextMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks'
+import { useCollectionFilters } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { useCollectionFilters } from 'nft/hooks'
 
 import * as styles from './SortDropdown.css'
 

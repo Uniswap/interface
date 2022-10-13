@@ -3,8 +3,8 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
-import { ReactNode, useEffect, useState } from 'react'
 import { useTraitsOpen } from 'nft/hooks/useTraitsOpen'
+import { ReactNode, useEffect, useState } from 'react'
 
 interface TraitsHeaderProps {
   title: string
@@ -19,21 +19,21 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
   const traitsOpen = useTraitsOpen((state) => state.traitsOpen)
   const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
 
-  const prevTraitIsOpen = props.index !== undefined ? traitsOpen[props.index - 1] : false
+  const prevTraitIsOpen = index !== undefined ? traitsOpen[index - 1] : false
   const showBorderToop = index !== 0
 
   useEffect(() => {
-    if (props.index !== undefined) {
-      setTraitsOpen(props.index, isOpen)
+    if (index !== undefined) {
+      setTraitsOpen(index, isOpen)
     }
-  }, [isOpen])
+  }, [isOpen, index])
 
   return (
     <>
       {showBorderToop && (
         <Box
           className={clsx(subheadSmall, !isOpen && styles.rowHover, styles.detailsOpen)}
-          opacity={!prevTraitIsOpen && isOpen && props.index !== 0 ? '1' : '0'}
+          opacity={!prevTraitIsOpen && isOpen && index !== 0 ? '1' : '0'}
           marginTop={prevTraitIsOpen ? '0' : '8'}
         />
       )}

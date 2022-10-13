@@ -4,7 +4,6 @@ import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
-import { useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { FormEvent, useEffect, useState } from 'react'
 import { FocusEventHandler } from 'react'
@@ -37,7 +36,7 @@ export const PriceRange = () => {
     setMaxPrice('')
     setPriceRangeLow('')
     setPriceRangeHigh('')
-  }, [location.pathname])
+  }, [location.pathname, setMinPrice, setMaxPrice, setPriceRangeLow, setPriceRangeHigh])
 
   const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
     setPlaceholderText(e.currentTarget.placeholder)

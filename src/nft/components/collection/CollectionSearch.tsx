@@ -1,11 +1,9 @@
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
-import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/CollectionSearch.css'
 import { useIsCollectionLoading } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { FormEvent } from 'react'
-import { magicalGradientOnHover } from 'nft/css/common.css'
 
 export const CollectionSearch = () => {
   const setSearchByNameText = useCollectionFilters((state) => state.setSearch)
