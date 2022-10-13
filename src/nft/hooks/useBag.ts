@@ -13,8 +13,10 @@ interface BagState {
   setTotalEthPrice: (totalEthPrice: BigNumber) => void
   totalUsdPrice: number | undefined
   setTotalUsdPrice: (totalUsdPrice: number | undefined) => void
-  addAssetToBag: (asset: UpdatedGenieAsset) => void
+  addAssetToBag: (asset: UpdatedGenieAsset, fromSweep?: boolean) => void
+  addAssetsToBag: (asset: UpdatedGenieAsset[], fromSweep?: boolean) => void
   removeAssetFromBag: (asset: UpdatedGenieAsset) => void
+  removeAssetsFromBag: (assets: UpdatedGenieAsset[]) => void
   markAssetAsReviewed: (asset: UpdatedGenieAsset, toKeep: boolean) => void
   didOpenUnavailableAssets: boolean
   setDidOpenUnavailableAssets: (didOpen: boolean) => void
@@ -76,10 +78,14 @@ export const useBag = create<BagState>()(
         set(() => ({
           totalUsdPrice,
         })),
-      addAssetToBag: (asset) =>
+      addAssetToBag: (asset, fromSweep = false) =>
         set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
-          const assetWithId = { asset: { id: uuidv4(), ...asset }, status: BagItemStatus.ADDED_TO_BAG }
+          const assetWithId = {
+            asset: { id: uuidv4(), ...asset },
+            status: BagItemStatus.ADDED_TO_BAG,
+            inSweep: fromSweep,
+          }
           if (itemsInBag.length === 0)
             return {
               itemsInBag: [assetWithId],
@@ -88,6 +94,29 @@ export const useBag = create<BagState>()(
           else
             return {
               itemsInBag: [...itemsInBag, assetWithId],
+              bagStatus: BagStatus.ADDING_TO_BAG,
+            }
+        }),
+      addAssetsToBag: (assets, fromSweep = false) =>
+        set(({ itemsInBag }) => {
+          if (get().isLocked) return { itemsInBag: get().itemsInBag }
+          const items: BagItem[] = []
+          assets.forEach((asset) => {
+            const assetWithId = {
+              asset: { id: uuidv4(), ...asset },
+              status: BagItemStatus.ADDED_TO_BAG,
+              inSweep: fromSweep,
+            }
+            items.push(assetWithId)
+          })
+          if (itemsInBag.length === 0)
+            return {
+              itemsInBag: items,
+              bagStatus: BagStatus.ADDING_TO_BAG,
+            }
+          else
+            return {
+              itemsInBag: [...itemsInBag, ...items],
               bagStatus: BagStatus.ADDING_TO_BAG,
             }
         }),
@@ -101,6 +130,14 @@ export const useBag = create<BagState>()(
           )
           if (index === -1) return { itemsInBag: get().itemsInBag }
           itemsCopy.splice(index, 1)
+          return { itemsInBag: itemsCopy }
+        })
+      },
+      removeAssetsFromBag: (assets) => {
+        set(({ itemsInBag }) => {
+          if (get().isLocked) return { itemsInBag: get().itemsInBag }
+          if (itemsInBag.length === 0) return { itemsInBag: [] }
+          const itemsCopy = itemsInBag.filter((item) => !assets.some((asset) => asset.id === item.asset.id))
           return { itemsInBag: itemsCopy }
         })
       },

@@ -26,16 +26,16 @@ import { getRarityStatus } from 'nft/utils/asset'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
-import { default as Slider } from 'rc-slider'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
 import { marketPlaceItems } from './MarketplaceSelect'
+import { Sweep } from './Sweep'
 import { TraitChip } from './TraitChip'
 
 interface CollectionNftsProps {
@@ -72,31 +72,14 @@ const SweepButton = styled.div<{ enabled: boolean }>`
   cursor: pointer;
   background: ${({ theme, enabled }) =>
     enabled ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)' : theme.backgroundInteractive};
-`
-
-const SweepContainer = styled.div`
-  display: flex;
-  padding: 16px;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.backgroundModule};
-  justify-content: space-between;
-`
-
-const SweepLeftmostContainer = styled.div`
-  display: flex;
-  width: 100%;
-  gap: 24px;
-  padding: 6px 0px;
-`
-
-const SweepSubContainer = styled.div`
-  display: flex;
-  width: 100%;
-  gap: 12px;
-`
-
-const StyledSlider = styled(Slider)`
-  height: '20px';
+  :hover {
+    background-color: ${({ theme }) => theme.hoverState};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast} background-color ${timing.in}`};
+  }
 `
 
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
@@ -121,7 +104,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const debouncedSearchByNameText = useDebounce(searchByNameText, 500)
 
   const [sweepIsToggled, toggleSweep] = useReducer((s) => !s, false)
-  const theme = useTheme()
 
   const {
     data: collectionAssets,
@@ -392,34 +374,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             ) : null}
           </Row>
         </Box>
-        {sweepIsToggled && (
-          <SweepContainer>
-            <SweepLeftmostContainer>
-              <ThemedText.SubHeaderSmall color="textPrimary" lineHeight="20px">
-                Sweep
-              </ThemedText.SubHeaderSmall>
-              <SweepSubContainer>
-                <StyledSlider
-                  defaultValue={0}
-                  trackStyle={{
-                    background: `radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)`,
-                    marginTop: '1px',
-                    height: '8px',
-                  }}
-                  handleStyle={{
-                    width: '12px',
-                    height: '20px',
-                    backgroundColor: `${theme.textPrimary}`,
-                    borderRadius: '4px',
-                    border: 'none',
-                    boxShadow: `${theme.shallowShadow}`,
-                  }}
-                  railStyle={{ marginTop: '1px', backgroundColor: `${theme.accentActionSoft}`, height: '8px' }}
-                />
-              </SweepSubContainer>
-            </SweepLeftmostContainer>
-          </SweepContainer>
-        )}
+        {sweepIsToggled && <Sweep contractAddress={contractAddress} collectionStats={collectionStats} />}
       </AnimatedBox>
       <InfiniteScroll
         next={fetchNextPage}

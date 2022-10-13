@@ -25,7 +25,7 @@ export const fetchSweep = async ({
       animationUrl: 1,
       notForSale: 1,
     },
-    limit: 99,
+    limit: 50,
     offset: 0,
   }
 
