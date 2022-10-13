@@ -88,7 +88,6 @@ export const store = configureStore({
       ensApi.middleware,
       forceUpgradeApi.middleware,
       gasApi.middleware,
-      sagaMiddleware,
       nftApi.middleware,
       routingApi.middleware,
       sagaMiddleware,

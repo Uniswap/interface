@@ -93,10 +93,10 @@ export function useENSName(address?: Address, chainId: ChainId = ChainId.Mainnet
   )
 }
 
-export function useAddressFromEns(ensName?: string | null, chainId: ChainId = ChainId.Mainnet) {
+export function useAddressFromEns(maybeName: string | null, chainId: ChainId = ChainId.Mainnet) {
   const provider = useProvider(chainId)
   return useAddressQuery(
-    provider && ensName ? { provider, nameOrAddress: ensName, chainId } : skipToken
+    provider && maybeName ? { provider, nameOrAddress: maybeName, chainId } : skipToken
   )
 }
 

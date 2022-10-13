@@ -169,7 +169,7 @@ function PasteButton() {
 function ENSResolver() {
   const { values, setFieldValue } = useFormikContext<FormValues>()
   const input = normalizeTextInput(values.input)
-  const name = isValidEnsName(input) ? input : undefined
+  const name = isValidEnsName(input) ? input : null
   const { data: address, isLoading } = useAddressFromEns(name)
 
   useEffect(() => {
