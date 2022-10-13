@@ -103,17 +103,7 @@ const TraitItem = ({
   )
 }
 
-export const TraitSelect = ({
-  hideBorderTop,
-  traits,
-  type,
-  index,
-}: {
-  hideBorderTop?: boolean
-  traits: Trait[]
-  type: string
-  index: number
-}) => {
+export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: string; index: number }) => {
   const addTrait = useCollectionFilters((state) => state.addTrait)
   const removeTrait = useCollectionFilters((state) => state.removeTrait)
   const selectedTraits = useCollectionFilters((state) => state.traits)
@@ -126,7 +116,7 @@ export const TraitSelect = ({
   )
 
   return traits.length ? (
-    <TraitsHeader index={index} numTraits={traits.length} title={type} hideBorderTop={hideBorderTop}>
+    <TraitsHeader index={index} numTraits={traits.length} title={type}>
       <Input
         value={search}
         onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}

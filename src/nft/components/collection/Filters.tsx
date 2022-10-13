@@ -64,7 +64,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
             color="textSecondary"
             paddingLeft="8"
             marginTop="12"
-            style={{ marginBottom: -4 }}
+            marginBottom="12"
             className={styles.borderTop}
           ></Box>
         )}
@@ -72,7 +72,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
         <Column>
           {Object.entries(traitsByGroup).map(([type, traits], index) => {
             console.log(`index: ${index}`)
-            return <TraitSelect key={type} {...{ type, traits }} index={index} hideBorderTop={index === 0} />
+            return <TraitSelect key={type} {...{ type, traits }} index={index} />
           })}
         </Column>
       </Column>
