@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { X } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -49,18 +51,17 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
 `
-const HeaderText = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+const HeaderText = styled.span`
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
 `
-const Description = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
+
+const Description = styled.span`
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-  width: 75%;
+  width: max(212px, calc(100% - 36px));
 `
 
 export default function TokensBanner() {
@@ -71,27 +72,29 @@ export default function TokensBanner() {
 
   return (
     <BackgroundColor show={showTokensPromoBanner} to={`/tokens/${chainName}`}>
-      <PopupContainer>
-        <Header>
-          <HeaderText>
-            <Trans>Explore Top Tokens on Uniswap</Trans>
-          </HeaderText>
-          <X
-            size={20}
-            color={theme.textSecondary}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              setShowTokensPromoBanner(false)
-            }}
-            style={{ cursor: 'pointer' }}
-          />
-        </Header>
+      <TraceEvent events={[Event.onClick]} name={EventName.EXPLORE_BANNER_CLICKED} element={ElementName.EXPLORE_BANNER}>
+        <PopupContainer>
+          <Header>
+            <HeaderText>
+              <Trans>Explore Top Tokens on Uniswap</Trans>
+            </HeaderText>
+            <X
+              size={20}
+              color={theme.textSecondary}
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setShowTokensPromoBanner(false)
+              }}
+              style={{ cursor: 'pointer' }}
+            />
+          </Header>
 
-        <Description>
-          <Trans>Sort and filter assets across networks on the new Tokens page.</Trans>
-        </Description>
-      </PopupContainer>
+          <Description>
+            <Trans>Sort and filter assets across networks on the new Tokens page.</Trans>
+          </Description>
+        </PopupContainer>
+      </TraceEvent>
     </BackgroundColor>
   )
 }

@@ -24,7 +24,7 @@ export const fetchWalletAssets = async ({
     ? collectionAddresses.reduce((str, collectionAddress) => str + `&assetContractAddresses=${collectionAddress}`, '')
     : ''
   const url = `${
-    process.env.REACT_APP_GENIE_API_URL
+    process.env.REACT_APP_GENIE_V3_API_URL
   }/walletAssets?address=${ownerAddress}${collectionAddressesString}&limit=25&offset=${pageParam * 25}`
 
   const r = await fetch(url, {
@@ -38,7 +38,7 @@ export const fetchWalletAssets = async ({
     return {
       ...asset,
       collectionIsVerified: asset.asset_contract.isVerified,
-      lastPrice: asset.last_sale && formatEther(asset.last_sale.total_price),
+      lastPrice: asset.last_sale.total_price && formatEther(asset.last_sale.total_price),
       floorPrice: asset.collection?.floorPrice,
       creatorPercentage: parseFloat(asset.asset_contract.dev_seller_fee_basis_points) / 10000,
       date_acquired: asset.last_sale ? asset.last_sale.event_timestamp : asset.asset_contract.created_date,

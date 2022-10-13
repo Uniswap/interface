@@ -106,7 +106,7 @@ export default function NetworkFilter() {
       <NetworkFilterOption onClick={toggleMenu} aria-label={`networkFilter`} active={open}>
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={circleLogoUrl ?? logoUrl} /> {label}
+            <Logo src={logoUrl ?? circleLogoUrl} /> {label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -130,7 +130,7 @@ export default function NetworkFilter() {
                 }}
               >
                 <NetworkLabel>
-                  <Logo src={chainInfo.circleLogoUrl ?? chainInfo.logoUrl} />
+                  <Logo src={chainInfo.logoUrl ?? chainInfo.circleLogoUrl} />
                   {chainInfo.label}
                 </NetworkLabel>
                 {network === currentChainName && (
