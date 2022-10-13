@@ -65,7 +65,7 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
       setType(TradeType.EXACT_INPUT)
       setTokens(() => {
         return {
-          [otherField]: token === otherToken ? selectingToken : otherToken,
+          [otherField]: otherToken?.equals(token) ? selectingToken : otherToken,
           [selectingField]: token,
         }
       })
