@@ -345,7 +345,7 @@ export default function Market({ history }: RouteComponentProps) {
   const toggleWalletModal = useWalletModalToggle()
 
   // for expert mode
-  const isGaslessMode = false // useIsGaslessMode() && chainId == SupportedChainId.POLYGON
+  const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
 
   const obj = sessionStorage.getItem('referral')
 
