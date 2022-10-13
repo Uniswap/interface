@@ -264,7 +264,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const totalVolumeStr = ethNumberStandardFormatter(stats.stats?.total_volume)
   const floorPriceStr = ethNumberStandardFormatter(stats.floorPrice)
   const floorChangeStr =
-    stats.stats && stats.stats.one_day_change ? (Math.abs(stats.stats.one_day_change) * 100).toFixed(0) : 0
+    stats.stats && stats.stats.one_day_change ? Math.round(Math.abs(stats.stats.one_day_change) * 100) : 0
   const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_change) : null
 
   const statsLoadingSkeleton = new Array(5).fill(
