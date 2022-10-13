@@ -35,12 +35,13 @@ export function initializeAnalytics() {
 
 /** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
+  const origin = window.location.origin
   if (!API_KEY) {
     console.log(`[analytics(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return
   }
 
-  track(eventName, eventProperties)
+  track(eventName, { ...eventProperties, origin })
 }
 
 type Value = string | number | boolean | string[] | number[]
