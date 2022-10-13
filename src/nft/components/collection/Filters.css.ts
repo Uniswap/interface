@@ -55,8 +55,7 @@ export const detailsOpen = style([
     marginBottom: '8',
   }),
   {
-    borderTop: '1px solid',
-    borderColor: themeVars.colors.backgroundOutline,
+    borderTop: `1px solid ${themeVars.colors.backgroundOutline}`,
   },
 ])
 

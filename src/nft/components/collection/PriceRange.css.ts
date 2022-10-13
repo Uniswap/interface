@@ -52,7 +52,6 @@ export const thumb = style([
   }),
   {
     backgroundColor: vars.color.grey50,
-
     top: -6,
   },
 ])

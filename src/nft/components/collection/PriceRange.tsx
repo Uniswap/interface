@@ -67,21 +67,27 @@ export const PriceRange = () => {
             onChange={(v: FormEvent<HTMLInputElement>) => {
               const [, prevMax] = prevMinMax
 
+              // if there is actually a number, update the slider place
               if (v.currentTarget.value) {
-                const range = parseInt(v.currentTarget.value) - parseInt(priceRangeLow)
-                const newLow = Math.floor(100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow))))
+                // we are calculating the new slider position here
+                const diff = parseInt(v.currentTarget.value) - parseInt(priceRangeLow)
+                const newLow = Math.floor(100 * (diff / (parseInt(priceRangeHigh) - parseInt(priceRangeLow))))
 
-                if (parseInt(v.currentTarget.value) > parseInt(maxPrice)) {
+                // if the slider min value is larger than or equal to the max, we don't want it to move past the max
+                // so we put the sliders on top of each other
+                // if it is less than, we can move it
+                if (parseInt(v.currentTarget.value) >= parseInt(maxPrice)) {
                   setPrevMinMax([prevMax, prevMax])
                 } else {
                   setPrevMinMax([newLow, prevMax])
                 }
               } else {
+                // if there is no number, reset the slider position
                 setPrevMinMax([0, prevMax])
               }
 
+              // set min price for price range querying
               setMinPrice(v.currentTarget.value)
-
               scrollToTop()
             }}
             onFocus={handleFocus}
@@ -114,7 +120,7 @@ export const PriceRange = () => {
                 const range = parseInt(priceRangeHigh) - parseInt(v.currentTarget.value)
                 const newMax = Math.floor(100 - 100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow))))
 
-                if (parseInt(v.currentTarget.value) < parseInt(minPrice)) {
+                if (parseInt(v.currentTarget.value) <= parseInt(minPrice)) {
                   setPrevMinMax([prevMin, prevMin])
                 } else {
                   setPrevMinMax([prevMin, newMax])
@@ -142,31 +148,24 @@ export const PriceRange = () => {
           thumbClassName={styles.thumb}
           onAfterChange={(minMax: Array<number>) => {
             const [newMin, newMax] = minMax
-            const [prevMin, prevMax] = prevMinMax
+
+            // strip commas so parseFloat can parse properly
             const priceRangeHighNumber = parseFloat(priceRangeHigh.replace(/,/g, ''))
             const priceRangeLowNumber = parseFloat(priceRangeLow.replace(/,/g, ''))
-
             const diff = priceRangeHighNumber - priceRangeLowNumber
 
-            // This logic checks to see if the slider was actually moved
-            // Otherwise we don't want to update the minprice
-            // Similar logic for max
-            if (newMin !== prevMin) {
-              const minChange = newMin / 100
-              const newMinPrice = minChange * diff + priceRangeLowNumber
+            // minprice
+            const minChange = newMin / 100
+            const newMinPrice = minChange * diff + priceRangeLowNumber
 
-              setMinPrice(newMinPrice.toFixed(2))
-            }
+            // max price
+            const maxChange = (100 - newMax) / 100
+            const newMaxPrice = priceRangeHighNumber - maxChange * diff
 
-            if (newMax !== prevMax) {
-              const maxChange = (100 - newMax) / 100
-              const newMaxPrice = priceRangeHighNumber - maxChange * diff
+            setMinPrice(newMinPrice.toFixed(2))
+            setMaxPrice(newMaxPrice.toFixed(2))
 
-              setMaxPrice(newMaxPrice.toFixed(2))
-            }
-
-            // if they move the slider back to the beginning and have NOT manually set a value, reset the minprice.
-            // Similar logic for max
+            // set back to placeholder when they move back to end of range
             if (newMin === 0) {
               setMinPrice('')
             }
