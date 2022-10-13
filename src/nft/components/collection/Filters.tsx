@@ -40,7 +40,6 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           paddingRight="16"
           paddingBottom="12"
           paddingLeft="12"
-          height="52"
           cursor="pointer"
           onClick={(e) => {
             e.preventDefault()

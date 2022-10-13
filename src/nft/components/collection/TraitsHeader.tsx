@@ -33,10 +33,8 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
       {showBorderToop && (
         <Box
           className={clsx(subheadSmall, !isOpen && styles.rowHover, styles.detailsOpen)}
-          style={{
-            opacity: !prevTraitIsOpen && isOpen && props.index !== 0 ? 100 : 0,
-            marginTop: prevTraitIsOpen ? 0 : 8,
-          }}
+          opacity={!prevTraitIsOpen && isOpen && props.index !== 0 ? '1' : '0'}
+          marginTop={prevTraitIsOpen ? '0' : '8'}
         />
       )}
 
