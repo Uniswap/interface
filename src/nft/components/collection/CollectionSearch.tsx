@@ -21,9 +21,7 @@ export const CollectionSearch = () => {
       borderRadius="12"
       padding="12"
       backgroundColor="backgroundSurface"
-      style={{
-        width: 332,
-      }}
+      width="332"
       fontSize="16"
       height="44"
       color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
