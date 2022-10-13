@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css'
+import { subheadSmall } from 'nft/css/common.css'
 
 import { sprinkles, vars } from '../../../css/sprinkles.css'
 
@@ -21,14 +22,14 @@ export const ethIcon = style({
 })
 
 export const collectionName = style([
+  subheadSmall,
   sprinkles({
-    fontWeight: 'normal',
     overflow: 'hidden',
     paddingRight: '14',
-  }),
-  {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  }),
+  {
     maxWidth: '180px',
   },
 ])
