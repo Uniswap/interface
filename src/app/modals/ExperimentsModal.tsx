@@ -1,5 +1,4 @@
-import { Experiment } from '@amplitude/experiment-react-native-client'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Switch } from 'src/components/buttons/Switch'
@@ -7,6 +6,8 @@ import { TextInput } from 'src/components/input/TextInput'
 import { Flex } from 'src/components/layout/Flex'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
+import { EMPTY_ARRAY } from 'src/constants/misc'
+import { retrieveRemoteExperiments } from 'src/features/experiments/saga'
 import {
   selectExperimentOverrides,
   selectFeatureFlagOverrides,
@@ -14,22 +15,13 @@ import {
 import {
   addExperimentOverride,
   addFeatureFlagOverride,
-  mergeRemoteConfig,
   resetExperimentOverrides,
   resetFeatureFlagOverrides,
 } from 'src/features/experiments/slice'
+import { Experiment as ExperimentType, FeatureFlag } from 'src/features/experiments/types'
 import { closeModal, selectExperimentsState } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-
-export type FeatureFlag = {
-  name: string
-  enabled: boolean
-}
-
-export type Experiment = {
-  name: string
-  variant: string
-}
+import { useAsyncData } from 'src/utils/hooks'
 
 export function ExperimentsModal() {
   const theme = useAppTheme()
@@ -38,33 +30,7 @@ export function ExperimentsModal() {
 
   const featureFlags = useAppSelector(selectFeatureFlagOverrides)
   const experiments = useAppSelector(selectExperimentOverrides)
-  const [remoteFeatureFlags, setRemoteFeatureFlags] = useState<FeatureFlag[]>([])
-  const [remoteExperiments, setRemoteExperiments] = useState<Experiment[]>([])
-
-  useEffect(() => {
-    const retrieveAndSyncRemoteExperiments = async () => {
-      const fetchedAmplitudeExperiments = await Experiment.all()
-
-      const fetchedFeatureFlags: FeatureFlag[] = []
-      const fetchedExperiments: Experiment[] = []
-
-      Object.keys(fetchedAmplitudeExperiments).map((experimentKey) => {
-        const variant = fetchedAmplitudeExperiments[experimentKey].value
-        if (['on'].includes(variant)) {
-          fetchedFeatureFlags.push({ name: experimentKey, enabled: variant === 'on' })
-        } else {
-          fetchedExperiments.push({ name: experimentKey, variant: variant })
-        }
-      })
-      setRemoteExperiments(fetchedExperiments)
-      setRemoteFeatureFlags(fetchedFeatureFlags)
-      dispatch(
-        mergeRemoteConfig({ experiments: fetchedExperiments, featureFlags: fetchedFeatureFlags })
-      )
-    }
-
-    retrieveAndSyncRemoteExperiments()
-  }, [dispatch])
+  const remoteConfig = useAsyncData(retrieveRemoteExperiments).data
 
   return (
     <BottomSheetModal
@@ -90,7 +56,8 @@ export function ExperimentsModal() {
             emoji="🏴"
             title="Feature Flags"
             onResetPress={() => {
-              dispatch(resetFeatureFlagOverrides(remoteFeatureFlags))
+              if (!remoteConfig) return
+              dispatch(resetFeatureFlagOverrides(remoteConfig.featureFlags))
             }}
           />
           {Object.keys(featureFlags).map((name) => {
@@ -99,7 +66,7 @@ export function ExperimentsModal() {
                 key={name}
                 localFeatureFlags={featureFlags}
                 name={name}
-                remoteFeatureFlags={remoteFeatureFlags}
+                remoteFeatureFlags={remoteConfig?.featureFlags}
               />
             )
           })}
@@ -110,7 +77,7 @@ export function ExperimentsModal() {
             emoji="🧪"
             title="Experiments"
             onResetPress={() => {
-              dispatch(resetExperimentOverrides(remoteExperiments))
+              dispatch(resetExperimentOverrides(remoteConfig?.experiments || EMPTY_ARRAY))
             }}
           />
           {Object.keys(experiments).map((name) => {
@@ -119,7 +86,7 @@ export function ExperimentsModal() {
                 key={name}
                 localExperiments={experiments}
                 name={name}
-                remoteExperiments={remoteExperiments}
+                remoteExperiments={remoteConfig?.experiments}
               />
             )
           })}
@@ -173,7 +140,7 @@ function ExperimentRow({
   localExperiments: {
     [name: string]: string
   }
-  remoteExperiments: Experiment[]
+  remoteExperiments?: ExperimentType[]
 }) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
@@ -182,7 +149,7 @@ function ExperimentRow({
 
   const isExperimentOverridden =
     localExperiments[name] !==
-    remoteExperiments.find((experiment) => experiment.name === name)?.variant
+    remoteExperiments?.find((experiment) => experiment.name === name)?.variant
   return (
     <Flex gap="xs">
       <Flex row alignItems="center" flexWrap="wrap" gap="none" justifyContent="space-between">
@@ -225,12 +192,12 @@ function FeatureFlagRow({
   localFeatureFlags: {
     [name: string]: boolean
   }
-  remoteFeatureFlags: FeatureFlag[]
+  remoteFeatureFlags?: FeatureFlag[]
 }) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const isExperimentOverridden =
-    localFeatureFlags[name] !== remoteFeatureFlags.find((flag) => name === flag.name)?.enabled
+    localFeatureFlags[name] !== remoteFeatureFlags?.find((flag) => name === flag.name)?.enabled
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Text variant="body">{name}</Text>

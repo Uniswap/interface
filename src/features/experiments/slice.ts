@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Experiment, FeatureFlag } from 'src/app/modals/ExperimentsModal'
+import { Experiment, FeatureFlag } from 'src/features/experiments/types'
 
 export interface ExperimentsState {
   experiments: { [name: string]: string }

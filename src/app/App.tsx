@@ -17,12 +17,10 @@ import { useStorageMigrator } from 'src/data/migrateStorage'
 import { RelayEnvironment } from 'src/data/relay'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
-import { initExperiments } from 'src/features/experiments/experiments'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
-import { initAnalytics } from 'src/features/telemetry'
 import { MarkNames } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
@@ -51,8 +49,6 @@ if (!__DEV__) {
 
 initializeRemoteConfig()
 initOneSignal()
-initAnalytics()
-initExperiments()
 
 function App() {
   // TODO(MOB-2795): remove once most devices are migrated
