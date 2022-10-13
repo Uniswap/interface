@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../build/polyfills/object-assign.js"],"names":["assign","Object","bind","module","exports","default"],"mappings":"AAAA;AAAA,IAAIA,MAAM,GAAGC,MAAM,CAACD,MAAM,CAACE,IAAI,CAACD,MAAM,CAAC;AACvCE,MAAM,CAACC,OAAO,GAAGJ,MAAM;AACvBG,MAAM,CAACC,OAAO,CAACC,OAAO,GAAGF,MAAM,CAACC,OAAO"}

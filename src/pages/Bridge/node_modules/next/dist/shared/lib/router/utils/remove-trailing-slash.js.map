@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../../shared/lib/router/utils/remove-trailing-slash.ts"],"names":["removeTrailingSlash","route","replace"],"mappings":"AAOA;;;;QAAgBA,mBAAmB,GAAnBA,mBAAmB;AAA5B,SAASA,mBAAmB,CAACC,KAAa,EAAE;IACjD,OAAOA,KAAK,CAACC,OAAO,QAAQ,EAAE,CAAC,IAAI,GAAG,CAAA;CACvC"}

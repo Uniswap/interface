@@ -1,8 +1,0 @@
-// @flow
-import defaultUnits from './defaultUnits'
-
-export type px = string | Function
-export type ms = string | Function
-export type percent = string | Function
-
-declare export default typeof defaultUnits

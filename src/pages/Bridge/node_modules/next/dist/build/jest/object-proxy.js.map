@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../build/jest/object-proxy.js"],"names":["Proxy","get","getter","target","key"],"mappings":"AA0BA;;;;;eAAe,IAAIA,KAAK,CACtB,EAAE,EACF;IACEC,GAAG,EAAE,SAASC,MAAM,CAACC,MAAM,EAAEC,GAAG,EAAE;QAChC,IAAIA,GAAG,KAAK,YAAY,EAAE;YACxB,OAAO,KAAK,CAAA;SACb;QACD,OAAOA,GAAG,CAAA;KACX;CACF,CACF"}

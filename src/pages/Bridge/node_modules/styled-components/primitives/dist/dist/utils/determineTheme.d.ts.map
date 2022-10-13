@@ -1,1 +1,0 @@
-{"version":3,"file":"determineTheme.d.ts","sourceRoot":"","sources":["../../src/utils/determineTheme.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,UAAU,CAAC;AAG5C,MAAM,CAAC,OAAO,UAAU,cAAc,CACpC,KAAK,EAAE,gBAAgB,EACvB,aAAa,EAAE,GAAG,EAClB,YAAY,GAAE,GAAkB,OAGjC"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"GroupedTag.d.ts","sourceRoot":"","sources":["../src/sheet/GroupedTag.ts"],"names":[],"mappings":"AAEA,OAAO,EAAc,GAAG,EAAE,MAAM,SAAS,CAAC;AAE1C,gEAAgE;AAChE,eAAO,MAAM,cAAc,QAAS,GAAG;gBAOzB,WAAW;YACf,MAAM;SACT,GAAG;wBAQY,MAAM;uBASP,MAAM,SAAS,MAAM,GAAG,MAAM,EAAE;sBAsCjC,MAAM;oBAcR,MAAM;CA5EvB,CAAC"}

@@ -1,5 +1,0 @@
-﻿// @flow
-
-type Escape = string => string
-
-declare export default Escape

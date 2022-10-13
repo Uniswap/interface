@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../build/webpack/plugins/mini-css-extract-plugin.ts"],"names":["NextMiniCssExtractPlugin","MiniCssExtractPlugin","__next_css_remove"],"mappings":"AACA;;;;;AAAiC,IAAA,qBAA4C,kCAA5C,4CAA4C,EAAA;AAE9D,MAAMA,wBAAwB,SAASC,qBAAoB,QAAA;IACxEC,iBAAiB,GAAG,IAAI,CAAA;CACzB;kBAFoBF,wBAAwB"}

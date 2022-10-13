@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../shared/lib/isomorphic/path.js"],"names":["path","process","env","NEXT_RUNTIME","require","module","exports"],"mappings":"AAMA;AANA;;;;GAIG,CAEH,MAAMA,IAAI,GACRC,OAAO,CAACC,GAAG,CAACC,YAAY,KAAK,MAAM,GAC/BC,OAAO,CAAC,oCAAoC,CAAC,GAC7CA,OAAO,CAAC,MAAM,CAAC;AAErBC,MAAM,CAACC,OAAO,GAAGN,IAAI"}

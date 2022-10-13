@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../../../../shared/lib/router/utils/is-bot.ts"],"names":["isBot","userAgent","test"],"mappings":"AAAA;;;;QAAgBA,KAAK,GAALA,KAAK;AAAd,SAASA,KAAK,CAACC,SAAiB,EAAW;IAChD,OAAO,oVAAoVC,IAAI,CAC7VD,SAAS,CACV,CAAA;CACF"}
