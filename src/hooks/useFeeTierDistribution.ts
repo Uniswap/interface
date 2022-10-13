@@ -1,14 +1,14 @@
-import { FeeAmount } from '@uniswap/v3-sdk'
-import { Token, Currency } from '@uniswap/sdk-core'
-import { useFeeTierDistributionQuery } from 'state/data/enhanced'
-import { skipToken } from '@reduxjs/toolkit/query/react'
-import { reduce } from 'lodash'
-import { useBlockNumber } from 'state/application/hooks'
-import ReactGA from 'react-ga'
-import { useMemo } from 'react'
-import { FeeTierDistributionQuery } from 'state/data/generated'
-import ms from 'ms.macro'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { PoolState, usePool } from './usePools'
+
+import { FeeAmount } from '@uniswap/v3-sdk'
+import ReactGA from 'react-ga'
+import ms from 'ms.macro'
+import { reduce } from 'lodash'
+import { skipToken } from '@reduxjs/toolkit/query/react'
+import { useBlockNumber } from 'state/application/hooks'
+import { useFeeTierDistributionQuery } from 'state/data/enhanced'
+import { useMemo } from 'react'
 
 // maximum number of blocks past which we consider the data stale
 const MAX_DATA_BLOCK_AGE = 10
@@ -93,7 +93,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
     }
   )
 
-  const { asToken0, asToken1, _meta } = (data as FeeTierDistributionQuery) ?? {}
+  const { asToken0, asToken1, _meta } = (data as any) ?? {}
 
   return useMemo(() => {
     if (!latestBlock || !_meta || !asToken0 || !asToken1) {
@@ -121,7 +121,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
     const all = asToken0.concat(asToken1)
 
     // sum tvl for token0 and token1 by fee tier
-    const tvlByFeeTer = all.reduce<{ [feeAmount: number]: [number | undefined, number | undefined] }>(
+    const tvlByFeeTer = (all as any[]).reduce<{ [feeAmount: number]: [number | undefined, number | undefined] }>(
       (acc, value) => {
         acc[value.feeTier][0] = (acc[value.feeTier][0] ?? 0) + Number(value.totalValueLockedToken0)
         acc[value.feeTier][1] = (acc[value.feeTier][1] ?? 0) + Number(value.totalValueLockedToken1)
@@ -132,7 +132,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         [FeeAmount.MEDIUM]: [undefined, undefined],
         [FeeAmount.HIGH]: [undefined, undefined],
       }
-    )
+    ) as any
 
     // sum total tvl for token0 and token1
     const [sumToken0Tvl, sumToken1Tvl] = reduce(

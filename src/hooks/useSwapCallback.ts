@@ -275,6 +275,7 @@ export function useSwapCallback(
                 value,
               }
 
+              console.log ( `useSwapCallback[swapCalls.map]`, tx )
           return library
             .estimateGas(tx)
             .then((gasEstimate) => {
@@ -291,37 +292,7 @@ export function useSwapCallback(
               // try once to adjust the tokens output value
 
 
-              const adjustedTrade = trade?.outputAmount?.currency?.isNative ? trade?.inputAmount : trade?.outputAmount;
-              const adjustedIsOutput = trade?.outputAmount?.currency?.isNative == false
-
-              if (adjustedTrade?.toFixed(18).includes('.')) {
-                const amountAdjusted = `${adjustedTrade?.toFixed(18)}99`
-                if (adjustedIsOutput) {
-                  trade = {
-                    ...trade,
-                    outputAmount: tryParseAmount(amountAdjusted, trade?.outputAmount.currency) as any
-                  } as any
-                } else {
-                  trade = {
-                    ...trade,
-                    inputAmount: tryParseAmount(amountAdjusted, trade?.outputAmount.currency) as any
-                  } as any
-                }
-              } else {
-                const amountAdjusted = `${adjustedTrade?.toFixed(18)}.099`;
-                if (adjustedIsOutput) {
-                  trade = {
-                    ...trade,
-                    outputAmount: tryParseAmount(amountAdjusted, trade?.outputAmount.currency) as any
-                  } as any
-                } else {
-                  trade = {
-                    ...trade,
-                    inputAmount: tryParseAmount(amountAdjusted, trade?.outputAmount.currency) as any
-                  } as any
-                }
-              }
-
+ 
               console.log(`Manually adjusting trade to run optimally`, trade);
 
               // re run the swap with a 

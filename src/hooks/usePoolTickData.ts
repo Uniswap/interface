@@ -1,13 +1,13 @@
-import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, tickToPrice, TICK_SPACINGS } from '@uniswap/v3-sdk'
-import JSBI from 'jsbi'
+import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { PoolState, usePool } from './usePools'
-import { useMemo } from 'react'
+
+import { Currency } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
-import { useAllV3TicksQuery } from 'state/data/enhanced'
-import { skipToken } from '@reduxjs/toolkit/query/react'
 import ms from 'ms.macro'
-import { AllV3TicksQuery } from 'state/data/generated'
+import { skipToken } from '@reduxjs/toolkit/query/react'
+import { useAllV3TicksQuery } from 'state/data/enhanced'
+import { useMemo } from 'react'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -44,7 +44,7 @@ export function useAllV3Ticks(
     isUninitialized,
     isError,
     error,
-    ticks: data?.ticks as AllV3TicksQuery['ticks'],
+    ticks: data?.ticks as any
   }
 }
 
@@ -94,7 +94,7 @@ export function usePoolActiveLiquidity(
     // find where the active tick would be to partition the array
     // if the active tick is initialized, the pivot will be an element
     // if not, take the previous tick as pivot
-    const pivot = ticks.findIndex(({ tickIdx }) => tickIdx > activeTick) - 1
+    const pivot = ticks.findIndex(({ tickIdx }:any) => tickIdx > activeTick) - 1
 
     if (pivot < 0) {
       // consider setting a local error
