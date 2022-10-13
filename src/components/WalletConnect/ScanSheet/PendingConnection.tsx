@@ -22,6 +22,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
+  useSignerAccounts,
 } from 'src/features/wallet/hooks'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { settlePendingSession } from 'src/features/walletConnect/WalletConnect'
@@ -88,11 +89,15 @@ const SitePermissions = () => {
 
 type SwitchNetworkProps = {
   selectedChainId: ChainId
-  onPress: () => void
+  setModalState: (state: PendingConnectionModalState.SwitchNetwork) => void
 }
 
-const SwitchNetworkRow = ({ onPress, selectedChainId }: SwitchNetworkProps) => {
+const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps) => {
   const theme = useAppTheme()
+
+  const onPress = useCallback(() => {
+    setModalState(PendingConnectionModalState.SwitchNetwork)
+  }, [setModalState])
 
   return (
     <Button m="none" name={ElementName.WCDappSwitchNetwork} p="none" onPress={onPress}>
@@ -111,14 +116,25 @@ const SwitchNetworkRow = ({ onPress, selectedChainId }: SwitchNetworkProps) => {
 
 type SwitchAccountProps = {
   activeAddress: string
-  onPress: () => void
+  setModalState: (state: PendingConnectionModalState.SwitchAccount) => void
 }
 
-const SwitchAccountRow = ({ activeAddress, onPress }: SwitchAccountProps) => {
+const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps) => {
   const theme = useAppTheme()
+  const signerAccounts = useSignerAccounts()
+  const accountIsSwitchable = signerAccounts.length > 1
+
+  const onPress = useCallback(() => {
+    setModalState(PendingConnectionModalState.SwitchAccount)
+  }, [setModalState])
 
   return (
-    <Button m="none" name={ElementName.WCDappSwitchAccount} p="none" onPress={onPress}>
+    <Button
+      disabled={!accountIsSwitchable}
+      m="none"
+      name={ElementName.WCDappSwitchAccount}
+      p="none"
+      onPress={onPress}>
       <Flex row shrink gap="sm" justifyContent="space-between" p="sm">
         <AddressDisplay
           address={activeAddress}
@@ -131,7 +147,9 @@ const SwitchAccountRow = ({ activeAddress, onPress }: SwitchAccountProps) => {
           <Text color="textSecondary" variant="bodySmall">
             {shortenAddress(activeAddress)}
           </Text>
-          <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="20" />
+          {accountIsSwitchable && (
+            <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="20" />
+          )}
         </Flex>
       </Flex>
     </Button>
@@ -202,15 +220,9 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
         <Flex bg="translucentBackground" borderRadius="lg" gap="xxxs">
           <SitePermissions />
           <Separator />
-          <SwitchNetworkRow
-            selectedChainId={selectedChainId}
-            onPress={() => setModalState(PendingConnectionModalState.SwitchNetwork)}
-          />
+          <SwitchNetworkRow selectedChainId={selectedChainId} setModalState={setModalState} />
           <Separator />
-          <SwitchAccountRow
-            activeAddress={activeAddress}
-            onPress={() => setModalState(PendingConnectionModalState.SwitchAccount)}
-          />
+          <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />
           <Box />
         </Flex>
         <Flex flexDirection="row" gap="xs" justifyContent="space-between">
