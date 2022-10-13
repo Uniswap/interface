@@ -1,126 +1,118 @@
 <!DOCTYPE html>
 <html translate="no">
-  <head>
-    <meta charset="utf-8" />
 
-    <title>Uniswap Interface</title>
-    <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+<head>
+  <meta charset="utf-8" />
 
-    <!--
+  <title>Uniswap Interface</title>
+  <meta name="description" content="Swap or provide liquidity on the Uniswap Protocol" />
+
+  <!--
       %PUBLIC_URL% will be replaced with the URL of the `public` folder during build.
       Only files inside the `public` folder can be referenced from the HTML.
     -->
-    <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/images/192x192_App_Icon.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
+  <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/images/192x192_App_Icon.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#ff007a" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#FC72FF" />
 
-    <!--
+  <!--
       manifest.json provides metadata used when the app is installed as a PWA.
       See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="preconnect" href="https://www.google-analytics.com/" />
+  <link rel="preconnect" href="https://www.google-analytics.com/" />
 
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="%PUBLIC_URL%/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
 
-    <style>
-      * {
-        font-family: 'Inter', sans-serif;
-        box-sizing: border-box;
-      }
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+      box-sizing: border-box;
+    }
 
-      /**
+    /**
           Explicitly load Inter var from public/ so it does not block LCP's critical path.
         */
-      @font-face {
-        font-family: 'Inter custom';
-        font-weight: 100 900;
-        font-style: normal;
-        font-display: block;
-        font-named-instance: 'Regular';
-        src: url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
-          url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2-variations'),
-          url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2');
-      }
+    @font-face {
+      font-family: 'Inter custom';
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: block;
+      font-named-instance: 'Regular';
+      src: url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2 supports variations(gvar)'),
+        url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2-variations'),
+        url(%PUBLIC_URL%/fonts/Inter-roman.var.woff2) format('woff2');
+    }
 
-      @supports (font-variation-settings: normal) {
-        * {
-          font-family: 'Inter custom', sans-serif;
-        }
+    @supports (font-variation-settings: normal) {
+      * {
+        font-family: 'Inter custom', sans-serif;
       }
+    }
 
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-      }
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
 
-      button {
-        user-select: none;
-      }
+    button {
+      user-select: none;
+    }
 
+    html {
+      font-size: 16px;
+      font-variant: none;
+      font-smooth: always;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    #background-radial-gradient {
+      background: linear-gradient(180deg, #202738 0%, #070816 100%);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+      width: 200vw;
+      height: 200vh;
+      transform: translate(-50vw, -100vh);
+      z-index: -1;
+    }
+
+    html {
+      min-height: 100%;
+    }
+
+    @media (prefers-color-scheme: dark) {
       html {
-        font-size: 16px;
-        font-variant: none;
-        font-smooth: always;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        background-color: #212429;
       }
+    }
 
-      #background-radial-gradient {
-        background: linear-gradient(180deg, #202738 0%, #070816 100%);
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        width: 200vw;
-        height: 200vh;
-        transform: translate(-50vw, -100vh);
-        z-index: -1;
-      }
-
+    @media (prefers-color-scheme: light) {
       html {
-        min-height: 100%;
+        background-color: #f7f8fa;
       }
+    }
+  </style>
+</head>
 
-      @media (prefers-color-scheme: dark) {
-        html {
-          background-color: #212429;
-        }
-      }
-      @media (prefers-color-scheme: light) {
-        html {
-          background-color: #f7f8fa;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
 
-    <!-- The root is the container of the app -->
-    <div id="root">
-      <!-- Triggers the font to load immediately and then is replaced by the app -->
-      <div>&emsp;</div>
-    </div>
+  <div id="root">
+    <!-- Triggers the font to load immediately and then is replaced by the app -->
+    <div>&emsp;</div>
+  </div>
 
-    <div id="background-radial-gradient"></div>
+  <div id="background-radial-gradient"></div>
+</body>
 
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
 </html>
