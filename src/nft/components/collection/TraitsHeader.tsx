@@ -26,7 +26,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
     if (index !== undefined) {
       setTraitsOpen(index, isOpen)
     }
-  }, [isOpen, index])
+  }, [isOpen, index, setTraitsOpen])
 
   return (
     <>
