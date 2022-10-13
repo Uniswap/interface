@@ -78,10 +78,11 @@ export default function TokenDetails() {
     currentChainName,
     timePeriod
   )
-  const token = useTokenFromQuery({ ...tokenQueryData, chainId: pageChainId })
+  const queryToken = useTokenFromQuery(isNative ? undefined : { ...tokenQueryData, chainId: pageChainId })
+  const token = isNative ? nativeCurrency : queryToken
 
   const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
-  const tokenBalance = useTokenBalance(account, isNative ? nativeCurrency.wrapped : token ?? undefined)
+  const tokenBalance = useTokenBalance(account, token?.wrapped)
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   const isBlockedToken = tokenWarning?.canProceed === false

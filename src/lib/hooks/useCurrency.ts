@@ -30,11 +30,11 @@ export function useTokenFromQuery({
   project,
 }: {
   address?: string
-  chainId: SupportedChainId
+  chainId?: SupportedChainId
   symbol?: string | null
   name?: string | null
   project?: { logoUrl?: string | null } | null
-}): Token | null | undefined {
+} = {}): Token | null | undefined {
   const { chainId: activeChainId } = useWeb3React()
   const address = isAddress(tokenAddress)
   const [decimals, setDecimals] = useState<number | null | undefined>(null)
