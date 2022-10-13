@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Marquee } from 'nft/components/layout/Marquee'
@@ -254,6 +255,9 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   // round daily volume & floorPrice to 3 decimals or less
   const totalVolumeStr = ethNumberStandardFormatter(stats.stats?.total_volume)
   const floorPriceStr = ethNumberStandardFormatter(stats.floorPrice)
+  const floorChangeStr =
+    stats.stats && stats.stats.one_day_change ? (Math.abs(stats.stats.one_day_change) * 100).toFixed(0) : 0
+  const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_change) : null
 
   const statsLoadingSkeleton = new Array(5).fill(
     <>
@@ -290,6 +294,11 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
       {stats.stats?.total_listings && listedPercentageStr > 0 ? (
         <StatsItem label="Listed" isMobile={isMobile ?? false}>
           {listedPercentageStr}%
+        </StatsItem>
+      ) : null}
+      {stats.stats?.one_day_change ? (
+        <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
+          {floorChangeStr}% {arrow}
         </StatsItem>
       ) : null}
     </Row>
