@@ -130,7 +130,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   const [gaslessMode, toggleGaslessMode] = useGaslessModeManager()
 
   // FIXME enable for Polygon first
-  const isGaslessEnabledForNetwork = chainId == SupportedChainId.POLYGON
+  const isGaslessEnabledForNetwork = false //chainId == SupportedChainId.POLYGON
 
   const [clientSideRouter, setClientSideRouter] = useClientSideRouter()
 

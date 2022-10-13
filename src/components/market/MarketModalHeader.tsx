@@ -115,7 +115,7 @@ export default function MarketModalHeader({
     ? Number(calculateMinimumReceived(allowedSlippage, fee, trade.outputAmount))
     : +trade.minimumAmountOut(allowedSlippage).toSignificant(6)
 
-  const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
+  const isGaslessMode = false // useIsGaslessMode() && chainId == SupportedChainId.POLYGON
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
