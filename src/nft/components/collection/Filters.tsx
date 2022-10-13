@@ -36,10 +36,11 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           className={clsx(styles.rowHover)}
           gap="2"
           borderRadius="12"
-          paddingTop="10"
+          paddingTop="12"
           paddingRight="16"
-          paddingBottom="10"
+          paddingBottom="12"
           paddingLeft="12"
+          height="52"
           cursor="pointer"
           onClick={(e) => {
             e.preventDefault()
@@ -70,10 +71,9 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
         )}
 
         <Column>
-          {Object.entries(traitsByGroup).map(([type, traits], index) => {
-            console.log(`index: ${index}`)
-            return <TraitSelect key={type} {...{ type, traits }} index={index} />
-          })}
+          {Object.entries(traitsByGroup).map(([type, traits], index) => (
+            <TraitSelect key={type} {...{ type, traits }} index={index} />
+          ))}
         </Column>
       </Column>
     </Box>

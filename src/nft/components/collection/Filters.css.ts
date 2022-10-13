@@ -53,7 +53,6 @@ export const detailsOpen = style([
     overflow: 'hidden',
     marginTop: '8',
     marginBottom: '8',
-    opacity: '1',
   }),
   {
     borderTop: '1px solid',

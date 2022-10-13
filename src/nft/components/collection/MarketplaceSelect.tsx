@@ -95,16 +95,16 @@ export const MarketplaceSelect = () => {
   const [isOpen, setOpen] = useState(!!selectedMarkets.length)
   const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
 
+  console.log(isOpen)
+
   return (
     <>
-      <div className={styles.detailsOpen} style={{ marginBottom: 8, marginTop: 8, opacity: isOpen ? 100 : 0 }} />
+      <Box className={styles.detailsOpen} opacity={isOpen ? '1' : '0'} />
       <Box
         as="details"
         className={clsx(subheadSmall, !isOpen && styles.rowHover)}
         open={isOpen}
-        style={{
-          borderRadius: isOpen ? undefined : 12,
-        }}
+        // borderRadius={isOpen ? '0' : '12'}
       >
         <Box
           as="summary"
@@ -114,10 +114,10 @@ export const MarketplaceSelect = () => {
           cursor="pointer"
           alignItems="center"
           fontSize="16"
-          paddingTop="8"
+          paddingTop="12"
           paddingLeft="12"
           paddingRight="16"
-          paddingBottom="8"
+          paddingBottom="12"
           lineHeight="20"
           borderRadius="12"
           onClick={(e) => {
