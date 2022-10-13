@@ -22,7 +22,7 @@ const BackgroundColor = styled(Link)<{ show: boolean }>`
   display: ${({ show }) => (show ? 'block' : 'none')};
   height: 88px;
   position: fixed;
-  right: 16px;
+  right: clamp(0px, 1vw, 16px);
   text-decoration: none;
   width: 320px;
   z-index: ${Z_INDEX.sticky};
