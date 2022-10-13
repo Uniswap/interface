@@ -12,7 +12,10 @@ import { currencyIdToChain } from 'src/utils/currencyId'
  */
 export function useCurrency(currencyId?: string): NullUndefined<Currency> {
   const chainId = currencyIdToChain(currencyId)
-  const isNative = currencyId?.endsWith(NATIVE_ADDRESS) || currencyId?.endsWith(NATIVE_ADDRESS_ALT)
+  const isNative =
+    // We normalize addresses by lowercasing across app,so must lowercase here to be safe
+    currencyId?.toLowerCase()?.endsWith(NATIVE_ADDRESS.toLowerCase()) ||
+    currencyId?.toLowerCase()?.endsWith(NATIVE_ADDRESS_ALT.toLowerCase())
   const token = useTokenInfoFromAddress(
     chainId ?? ChainId.Mainnet,
     isNative ? undefined : currencyId
