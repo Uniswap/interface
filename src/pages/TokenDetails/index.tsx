@@ -133,6 +133,7 @@ export default function TokenDetails() {
             </BreadcrumbNavLink>
             <ChartSection
               token={tokenQueryData}
+              currency={token}
               nativeCurrency={isNative ? nativeCurrency : undefined}
               prices={prices}
             />
