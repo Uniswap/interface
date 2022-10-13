@@ -1,4 +1,7 @@
 import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@uniswap/widgets'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, SectionName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -9,12 +12,20 @@ const EMPTY_AMOUNT = ''
  * Treats the Widget as a controlled component, using the app's own token selector for selection.
  */
 export function useSyncWidgetInputs(defaultToken?: Currency) {
+  const trace = useTrace({ section: SectionName.WIDGET })
+
   const [type, setType] = useState(TradeType.EXACT_INPUT)
   const [amount, setAmount] = useState(EMPTY_AMOUNT)
-  const onAmountChange = useCallback((field: Field, amount: string) => {
-    setType(toTradeType(field))
-    setAmount(amount)
-  }, [])
+  const onAmountChange = useCallback(
+    (field: Field, amount: string, origin?: 'max') => {
+      if (origin === 'max') {
+        sendAnalyticsEvent(EventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED, { ...trace })
+      }
+      setType(toTradeType(field))
+      setAmount(amount)
+    },
+    [trace]
+  )
 
   const [tokens, setTokens] = useState<{ [Field.INPUT]?: Currency; [Field.OUTPUT]?: Currency }>({
     [Field.OUTPUT]: defaultToken,
@@ -30,12 +41,13 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   }, [defaultToken])
 
   const onSwitchTokens = useCallback(() => {
+    sendAnalyticsEvent(EventName.SWAP_TOKENS_REVERSED, { ...trace })
     setType((type) => invertTradeType(type))
     setTokens((tokens) => ({
       [Field.INPUT]: tokens[Field.OUTPUT],
       [Field.OUTPUT]: tokens[Field.INPUT],
     }))
-  }, [])
+  }, [trace])
 
   const [selectingField, setSelectingField] = useState<Field>()
   const otherField = useMemo(() => (selectingField === Field.INPUT ? Field.OUTPUT : Field.INPUT), [selectingField])

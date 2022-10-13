@@ -20,6 +20,11 @@ export interface ITraceContext {
 
 export const TraceContext = createContext<ITraceContext>({})
 
+export function useTrace(trace?: ITraceContext): ITraceContext {
+  const parentTrace = useContext(TraceContext)
+  return useMemo(() => ({ ...parentTrace, ...trace }), [parentTrace, trace])
+}
+
 type TraceProps = {
   shouldLogImpression?: boolean // whether to log impression on mount
   name?: EventName
@@ -31,15 +36,24 @@ type TraceProps = {
  * and propagates the context to child traces.
  */
 export const Trace = memo(
-  ({ shouldLogImpression, name, children, page, section, element, properties }: PropsWithChildren<TraceProps>) => {
-    const parentTrace = useContext(TraceContext)
+  ({
+    shouldLogImpression,
+    name,
+    children,
+    page,
+    section,
+    modal,
+    element,
+    properties,
+  }: PropsWithChildren<TraceProps>) => {
+    const parentTrace = useTrace()
 
     const combinedProps = useMemo(
       () => ({
         ...parentTrace,
-        ...Object.fromEntries(Object.entries({ page, section, element }).filter(([_, v]) => v !== undefined)),
+        ...Object.fromEntries(Object.entries({ page, section, modal, element }).filter(([_, v]) => v !== undefined)),
       }),
-      [element, parentTrace, page, section]
+      [element, parentTrace, page, modal, section]
     )
 
     useEffect(() => {
