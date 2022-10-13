@@ -4,6 +4,7 @@ import React, { StrictMode, Suspense } from 'react'
 import { StatusBar, Text, useColorScheme, View } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
+import { RelayEnvironmentProvider } from 'react-relay'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { AppModals } from 'src/app/modals/AppModals'
@@ -13,7 +14,7 @@ import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
 import { useStorageMigrator } from 'src/data/migrateStorage'
-import { RelayPersistGate } from 'src/data/relay'
+import { RelayEnvironment } from 'src/data/relay'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { initExperiments } from 'src/features/experiments/experiments'
@@ -80,7 +81,7 @@ function App() {
         <SafeAreaProvider>
           <Provider store={store}>
             <Trace startMark={MarkNames.RelayRestore}>
-              <RelayPersistGate loading={null}>
+              <RelayEnvironmentProvider environment={RelayEnvironment}>
                 <Trace endMark={MarkNames.RelayRestore}>
                   <PersistGate loading={null} persistor={persistor}>
                     <DynamicThemeProvider>
@@ -100,7 +101,7 @@ function App() {
                     </DynamicThemeProvider>
                   </PersistGate>
                 </Trace>
-              </RelayPersistGate>
+              </RelayEnvironmentProvider>
             </Trace>
           </Provider>
         </SafeAreaProvider>
