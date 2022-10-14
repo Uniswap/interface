@@ -4,7 +4,7 @@ import { loadQuery, useLazyLoadQuery, usePreloadedQuery } from 'react-relay'
 import NFTRelayEnvironment from './NFTRelayEnvironment'
 
 const assetsQuery = graphql`
-  query MyQuery {
+  query AssetQuery {
     nftAssets(
       address: "0x60e4d786628fea6478f785a6d7e704777c86a7c6"
       orderBy: PRICE
