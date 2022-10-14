@@ -12,6 +12,7 @@ import { DrawerNavigator } from 'src/app/navigation/navigation'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
+import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { config } from 'src/config'
 import { useStorageMigrator } from 'src/data/migrateStorage'
 import { RelayEnvironment } from 'src/data/relay'
@@ -27,7 +28,6 @@ import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
-
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
 
@@ -141,6 +141,7 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
       onReady={(navigationRef) => {
         routingInstrumentation.registerNavigationContainer(navigationRef)
       }}>
+      <OfflineBanner />
       <NotificationToastWrapper>
         <DrawerNavigator />
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />

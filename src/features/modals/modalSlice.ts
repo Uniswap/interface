@@ -82,6 +82,9 @@ export const selectWCModalState = (state: RootState): AppModalState<ScannerModal
 export const selectExperimentsState = (state: RootState): AppModalState<any> => {
   return state.modals[ModalName.Experiments]
 }
+export const selectModalsState = (state: RootState): ModalsState => {
+  return state.modals
+}
 
 export const { openModal, closeModal } = slice.actions
 export const { reducer: modalsReducer, actions: modalsActions } = slice

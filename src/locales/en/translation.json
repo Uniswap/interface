@@ -429,5 +429,6 @@
   "Invalid word: {{word}}": "Invalid word: {{word}}",
   "Recovery phrases must be 12-24 words": "Recovery phrases must be 12-24 words",
   "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
-  "Invalid phrase": "Invalid phrase"
+  "Invalid phrase": "Invalid phrase",
+  "You are in offline mode": "You are in offline mode"
 }

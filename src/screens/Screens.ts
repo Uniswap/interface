@@ -64,3 +64,7 @@ export enum Tabs {
   Profile = 'Profile',
   SwapButton = 'SwapButton',
 }
+
+export enum Stacks {
+  AppStack = 'AppStack',
+}

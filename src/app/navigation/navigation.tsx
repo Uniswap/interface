@@ -62,7 +62,7 @@ import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSe
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { PortfolioTokensScreen } from 'src/screens/PortfolioTokensScreen'
-import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
+import { OnboardingScreens, Screens, Stacks, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
 import { SettingsCloudBackupStatus } from 'src/screens/SettingsCloudBackupStatus'
@@ -93,7 +93,7 @@ const ProfileStack = createNativeStackNavigator<ProfileStackParamList>()
 
 const Drawer = createDrawerNavigator()
 
-const TAB_NAVIGATOR_HEIGHT = 90
+export const TAB_NAVIGATOR_HEIGHT = 90
 
 const NullComponent = () => {
   return null
@@ -285,7 +285,7 @@ export function DrawerNavigator() {
       }}>
       <Drawer.Screen
         component={AppStackNavigator}
-        name="AppStack"
+        name={Stacks.AppStack}
         options={() => ({
           swipeEnabled: getDrawerEnabled(),
           swipeEdgeWidth: SWIPE_WIDTH,
