@@ -380,9 +380,9 @@ export default function WalletModal({
     }
 
     const shouldShowInstallBrave = !isBraveBrowser && pendingWallet === braveInjectedConnector
-    const walletOptionKey = Object.keys(SUPPORTED_WALLETS).find(key => {
+    const pendingWalletOptionKey = Object.keys(SUPPORTED_WALLETS).find(key => {
       const wallet = SUPPORTED_WALLETS[key]
-      return wallet.connector === connector
+      return wallet.connector === pendingWallet
     })
 
     return (
@@ -425,7 +425,7 @@ export default function WalletModal({
         <ContentWrapper>
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView
-              walletOptionKey={walletOptionKey}
+              walletOptionKey={pendingWalletOptionKey}
               hasError={pendingError}
               renderHelperText={() => {
                 if (shouldShowInstallBrave) {
