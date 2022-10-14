@@ -6,8 +6,7 @@ import { headlineMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection } from 'nft/types'
-import { ethNumberStandardFormatter } from 'nft/utils/currency'
-import { putCommas } from 'nft/utils/putCommas'
+import { floorFormatter, quantityFormatter, volumeFormatter } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 
@@ -243,17 +242,17 @@ const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: 
 }
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
-  const numOwnersStr = stats.stats ? putCommas(stats.stats.num_owners) : 0
-  const totalSupplyStr = stats.stats ? putCommas(stats.stats.total_supply) : 0
+  const numOwnersStr = stats.stats ? quantityFormatter(stats.stats.num_owners) : 0
+  const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply) : 0
   const listedPercentageStr =
     stats.stats && stats.stats.total_listings > 0
-      ? ((stats.stats.total_listings / stats.stats.total_supply) * 100).toFixed(0)
+      ? Math.round((stats.stats.total_listings / stats.stats.total_supply) * 100)
       : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   // round daily volume & floorPrice to 3 decimals or less
-  const totalVolumeStr = ethNumberStandardFormatter(stats.stats?.total_volume)
-  const floorPriceStr = ethNumberStandardFormatter(stats.floorPrice)
+  const totalVolumeStr = volumeFormatter(stats.stats?.total_volume)
+  const floorPriceStr = floorFormatter(stats.floorPrice)
 
   const statsLoadingSkeleton = new Array(5).fill(
     <>
