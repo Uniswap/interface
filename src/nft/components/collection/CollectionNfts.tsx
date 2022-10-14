@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { useAssetsPreloadedQuery, useAssetsQuery } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
@@ -137,6 +138,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       refetchInterval: 5000,
     }
   )
+  useAssetsQuery()
+  useAssetsPreloadedQuery()
 
   useEffect(() => {
     setIsCollectionNftsLoading(isLoading)
