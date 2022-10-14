@@ -99,7 +99,7 @@ export default function NetworkFilter() {
   const { chainName } = useParams<{ chainName?: string }>()
   const currentChainName = validateUrlChainParam(chainName)
 
-  const { label, circleLogoUrl = '', logoUrl } = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
+  const { label, circleLogoUrl, logoUrl } = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
 
   return (
     <StyledMenu ref={node}>
