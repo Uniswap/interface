@@ -90,44 +90,50 @@ const assetsQueryReference = loadQuery<AssetQuery>(NFTRelayEnvironment, assetsQu
 
 export function useAssetsQuery() {
   const collectionAssets = usePreloadedQuery<AssetQuery>(assetsQuery, assetsQueryReference).nftAssets?.edges
-  console.log(collectionAssets)
-  // return collectionAssets?.map((queryAsset)=> {
-  //  const asset = queryAsset.node
-  //   return {
-  //   id?: asset.id, // This would be a random id created and assigned by front end
-  // address: asset.nftContract?.address,
-  // notForSale: asset.listings?.edges.length === 0,
-  // collectionName: string,
-  // collectionSymbol: asset.collection?.image?.url,
-  // currentEthPrice: asset.listings?.edges[0].node.price.value,
-  // currentUsdPrice: string,
-  // imageUrl: asset.image?.url,
-  // animationUrl: asset.animationUrl,
-  // marketplace: asset.listings?.edges[0].node.marketplace,
-  // name: asset.name,
-  // priceInfo: PriceInfo,
-  // openseaSusFlag: boolean,
-  // sellorders: SellOrder[],
-  // smallImageUrl: asset.smallImage?.url,
-  // tokenId: asset.tokenId
-  // tokenType: TokenType,
-  // url: string,
-  // totalCount?: number, // The totalCount from the query to /assets
-  // amount?: number,
-  // decimals?: number,
-  // collectionIsVerified?: asset.collection?.isVerified,
-  // rarity?: asset.rarities,
-  // owner: asset.ownerAddress,
-  // creator: OpenSeaUser,
-  // externalLink: string,
-  // traits?: {
-  //   trait_type: string
-  //   value: string
-  //   display_type?: any
-  //   max_value?: any
-  //   trait_count: number
-  //   order?: any
-  // }[]
-  //  }
-  // })
+  return collectionAssets?.map((queryAsset)=> {
+   const asset = queryAsset.node
+    return {
+    id?: asset.id, 
+    address: asset.nftContract?.address,
+    notForSale: asset.listings?.edges.length === 0,
+    collectionName: string, // seems to be missing
+    collectionSymbol: asset.collection?.image?.url,
+    currentEthPrice: asset.listings?.edges[0].node.price.value,
+    currentUsdPrice: string, // FE to start deriving?
+    imageUrl: asset.image?.url,
+    animationUrl: asset.animationUrl,
+    marketplace: asset.listings?.edges[0].node.marketplace,
+    name: asset.name,
+    priceInfo: { // FE to start deriving?
+      ETHPrice: string
+      USDPrice: string
+      baseAsset: string
+      baseDecimals: string
+      basePrice: string
+    }, 
+    openseaSusFlag: boolean, // seems to be missing
+    sellorders: asset.listings.edges,
+    smallImageUrl: asset.smallImage?.url,
+    tokenId: asset.tokenId
+    tokenType: TokenType, // ERC20 || ERC721 || ERC1155 || Dust || Cryptopunk
+    url: string, //deprecate
+    totalCount?: number, // deprecate, requires FE logic change
+    amount?: number, // deprecate
+    decimals?: number, // deprecate
+    collectionIsVerified?: asset.collection?.isVerified,
+    rarity?: asset.rarities,
+    owner: asset.ownerAddress,
+    creator: { // possibly store in the nftContract?
+      profile_img_url: string
+      address: string
+      config: string
+    }, 
+    externalLink: string, // metadata url
+    traits?: { //seems to be missing
+      trait_type: string
+      value: string
+      trait_count: number
+    }[]
+   }
+  })
 }
