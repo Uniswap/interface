@@ -139,7 +139,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     }
   )
   const nftQueryAssets = useAssetsQuery()
-  console.log(nftQueryAssets)
+  // console.log(nftQueryAssets)
   // useAssetsPreloadedQuery()
 
   useEffect(() => {
