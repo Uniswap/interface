@@ -6,12 +6,7 @@ import { sendAnalyticsEvent } from 'analytics'
 import { ElementName, Event, EventName, PageName, SectionName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { TraceEvent } from 'analytics/TraceEvent'
-import {
-  formatPercentInBasisPointsNumber,
-  formatToDecimal,
-  getDurationFromDateMilliseconds,
-  getTokenAddress,
-} from 'analytics/utils'
+import { formatSwapQuoteReceivedEventProperties } from 'analytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
@@ -151,29 +146,6 @@ function largerPercentValue(a?: Percent, b?: Percent) {
     return b
   }
   return undefined
-}
-
-const formatSwapQuoteReceivedEventProperties = (
-  trade: InterfaceTrade<Currency, Currency, TradeType>,
-  fetchingSwapQuoteStartTime: Date | undefined
-) => {
-  return {
-    token_in_symbol: trade.inputAmount.currency.symbol,
-    token_out_symbol: trade.outputAmount.currency.symbol,
-    token_in_address: getTokenAddress(trade.inputAmount.currency),
-    token_out_address: getTokenAddress(trade.outputAmount.currency),
-    price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
-    estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
-    chain_id:
-      trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
-        ? trade.inputAmount.currency.chainId
-        : undefined,
-    token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
-    token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-    quote_latency_milliseconds: fetchingSwapQuoteStartTime
-      ? getDurationFromDateMilliseconds(fetchingSwapQuoteStartTime)
-      : undefined,
-  }
 }
 
 const TRADE_STRING = 'SwapRouter'
@@ -510,7 +482,7 @@ export default function Swap() {
       // Log swap quote.
       sendAnalyticsEvent(
         EventName.SWAP_QUOTE_RECEIVED,
-        formatSwapQuoteReceivedEventProperties(trade, fetchingSwapQuoteStartTime)
+        formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined, fetchingSwapQuoteStartTime)
       )
       // Latest swap quote has just been logged, so we don't need to log the current trade anymore
       // unless user inputs change again and a new trade is in the process of being generated.
@@ -694,12 +666,12 @@ export default function Swap() {
                     properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                     element={ElementName.CONNECT_WALLET_BUTTON}
                   >
-                    <ButtonLight onClick={toggleWalletModal} redesignFlag={redesignFlagEnabled}>
+                    <ButtonLight onClick={toggleWalletModal} redesignFlag={redesignFlagEnabled} fontWeight={600}>
                       <Trans>Connect Wallet</Trans>
                     </ButtonLight>
                   </TraceEvent>
                 ) : showWrap ? (
-                  <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                  <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} fontWeight={600}>
                     {wrapInputError ? (
                       <WrapErrorText wrapInputError={wrapInputError} />
                     ) : wrapType === WrapType.WRAP ? (
@@ -718,6 +690,7 @@ export default function Swap() {
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                     <AutoColumn style={{ width: '100%' }} gap="12px">
                       <ButtonConfirmed
+                        fontWeight={600}
                         onClick={handleApprove}
                         disabled={approveTokenButtonDisabled}
                         width="100%"
@@ -780,7 +753,7 @@ export default function Swap() {
                         }
                         error={isValid && priceImpactSeverity > 2}
                       >
-                        <Text fontSize={16} fontWeight={500}>
+                        <Text fontSize={16} fontWeight={600}>
                           {priceImpactTooHigh ? (
                             <Trans>High Price Impact</Trans>
                           ) : trade && priceImpactSeverity > 2 ? (
@@ -811,7 +784,7 @@ export default function Swap() {
                     disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh || !!swapCallbackError}
                     error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                   >
-                    <Text fontSize={20} fontWeight={500}>
+                    <Text fontSize={20} fontWeight={600}>
                       {swapInputError ? (
                         swapInputError
                       ) : routeIsSyncing || routeIsLoading ? (

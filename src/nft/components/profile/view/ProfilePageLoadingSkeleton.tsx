@@ -75,7 +75,11 @@ export const ProfilePageLoadingSkeleton = () => {
         <FilterButtonSkeleton />
         <SellButtonSkeleton />
       </FilterBarSkeletonWrapper>
-      <div className={assetList}>{new Array(25).fill(<ProfileAssetCardSkeleton />)}</div>
+      <div className={assetList}>
+        {new Array(25).map((_, index) => (
+          <ProfileAssetCardSkeleton key={index} />
+        ))}
+      </div>
     </SkeletonPageWrapper>
   )
 }

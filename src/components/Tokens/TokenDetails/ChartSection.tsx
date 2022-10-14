@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { NativeCurrency, Token } from '@uniswap/sdk-core'
+import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
@@ -70,10 +70,12 @@ export function useTokenLogoURI(
 
 export default function ChartSection({
   token,
+  currency,
   nativeCurrency,
   prices,
 }: {
   token: NonNullable<SingleTokenData>
+  currency?: Currency | null
   nativeCurrency?: Token | NativeCurrency
   prices: PriceDurations
 }) {
@@ -111,7 +113,12 @@ export default function ChartSection({
       <TokenInfoContainer>
         <TokenNameCell>
           <LogoContainer>
-            <CurrencyLogo src={logoSrc} size={'32px'} symbol={nativeCurrency?.symbol ?? token.symbol} />
+            <CurrencyLogo
+              src={logoSrc}
+              size={'32px'}
+              symbol={nativeCurrency?.symbol ?? token.symbol}
+              currency={nativeCurrency ? undefined : currency}
+            />
             <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
           </LogoContainer>
           {nativeCurrency?.name ?? token.name ?? <Trans>Name not found</Trans>}
