@@ -102,7 +102,7 @@ const ELASTIC_FARM_QUERY = gql`
     farms(first: 1000) {
       id
       rewardLocker
-      farmingPools {
+      farmingPools(orderBy: pid, orderDirection: desc) {
         id
         pid
         startTime
