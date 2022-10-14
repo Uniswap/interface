@@ -20,7 +20,7 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { AssetsFetcher } from 'nft/queries'
-import { DropDownOption, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
+import { DropDownOption, GenieAsset, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
@@ -138,7 +138,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       refetchInterval: 5000,
     }
   )
-  useAssetsQuery()
+  const nftQueryAssets = useAssetsQuery()
+  console.log(nftQueryAssets)
   // useAssetsPreloadedQuery()
 
   useEffect(() => {
@@ -154,8 +155,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const collectionNfts = useMemo(() => {
     if (!collectionAssets || !AssetsFetchSuccess) return undefined
 
-    return collectionAssets.pages.flat()
-  }, [collectionAssets, AssetsFetchSuccess])
+    // return collectionAssets.pages.flat()
+    return nftQueryAssets as unknown as GenieAsset[]
+  }, [collectionAssets, AssetsFetchSuccess, nftQueryAssets])
 
   const loadingAssets = useMemo(() => <>{new Array(25).fill(<CollectionAssetLoading />)}</>, [])
   const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts)

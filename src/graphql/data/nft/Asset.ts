@@ -1,4 +1,5 @@
 import graphql from 'babel-plugin-relay/macro'
+import { parseEther } from 'ethers/lib/utils'
 import NFTRelayEnvironment from 'graphql/data/nft/NFTRelayEnvironment'
 import { loadQuery, usePreloadedQuery } from 'react-relay'
 
@@ -27,10 +28,18 @@ const assetsQuery = graphql`
           tokenId
           description
           animationUrl
+          suspiciousFlag
           collection {
+            name
             isVerified
             image {
               url
+            }
+            creator {
+              address
+              profileImage {
+                url
+              }
             }
           }
           listings(pagination: { first: 1 }) {
@@ -67,6 +76,7 @@ const assetsQuery = graphql`
             address
             chain
             id
+            standard
           }
         }
         cursor
@@ -90,50 +100,51 @@ const assetsQueryReference = loadQuery<AssetQuery>(NFTRelayEnvironment, assetsQu
 
 export function useAssetsQuery() {
   const collectionAssets = usePreloadedQuery<AssetQuery>(assetsQuery, assetsQueryReference).nftAssets?.edges
-  return collectionAssets?.map((queryAsset)=> {
-   const asset = queryAsset.node
+  // const collectionAssets = useLazyLoadQuery<AssetQuery>(assetsQuery, {}).nftAssets?.edges
+  return collectionAssets?.map((queryAsset) => {
+    const asset = queryAsset.node
     return {
-    id?: asset.id, 
-    address: asset.nftContract?.address,
-    notForSale: asset.listings?.edges.length === 0,
-    collectionName: string, // seems to be missing
-    collectionSymbol: asset.collection?.image?.url,
-    currentEthPrice: asset.listings?.edges[0].node.price.value,
-    currentUsdPrice: string, // FE to start deriving?
-    imageUrl: asset.image?.url,
-    animationUrl: asset.animationUrl,
-    marketplace: asset.listings?.edges[0].node.marketplace,
-    name: asset.name,
-    priceInfo: { // FE to start deriving?
-      ETHPrice: string
-      USDPrice: string
-      baseAsset: string
-      baseDecimals: string
-      basePrice: string
-    }, 
-    openseaSusFlag: boolean, // seems to be missing
-    sellorders: asset.listings.edges,
-    smallImageUrl: asset.smallImage?.url,
-    tokenId: asset.tokenId
-    tokenType: TokenType, // ERC20 || ERC721 || ERC1155 || Dust || Cryptopunk
-    url: string, //deprecate
-    totalCount?: number, // deprecate, requires FE logic change
-    amount?: number, // deprecate
-    decimals?: number, // deprecate
-    collectionIsVerified?: asset.collection?.isVerified,
-    rarity?: asset.rarities,
-    owner: asset.ownerAddress,
-    creator: { // possibly store in the nftContract?
-      profile_img_url: string
-      address: string
-      config: string
-    }, 
-    externalLink: string, // metadata url
-    traits?: { //seems to be missing
-      trait_type: string
-      value: string
-      trait_count: number
-    }[]
-   }
+      id: asset.id,
+      address: asset.nftContract?.address,
+      notForSale: asset.listings?.edges.length === 0,
+      collectionName: asset.collection?.name, // seems to be missing
+      collectionSymbol: asset.collection?.image?.url,
+      currentEthPrice: parseEther(asset.listings?.edges[0].node.price.value?.toString() ?? '0').toString(),
+      // currentUsdPrice: string, // FE to start deriving?
+      imageUrl: asset.image?.url,
+      animationUrl: asset.animationUrl,
+      marketplace: asset.listings?.edges[0].node.marketplace,
+      name: asset.name,
+      // priceInfo: { // FE to start deriving?
+      //   ETHPrice: asset.listings?.edges[0].node.price.value,
+      //   USDPrice: string
+      //   baseAsset: string
+      //   baseDecimals: string
+      //   basePrice: string
+      // },
+      openseaSusFlag: asset.suspiciousFlag, // seems to be missing
+      sellorders: asset.listings?.edges,
+      smallImageUrl: asset.smallImage?.url,
+      tokenId: asset.tokenId,
+      tokenType: asset.nftContract?.standard, // ERC20 || ERC721 || ERC1155 || Dust || Cryptopunk
+      // url: string, //deprecate
+      // totalCount?: number, // deprecate, requires FE logic change
+      // amount?: number, // deprecate
+      // decimals?: number, // deprecate
+      collectionIsVerified: asset.collection?.isVerified,
+      // rarity: asset.rarities, // TODO
+      owner: asset.ownerAddress,
+      creator: {
+        // possibly store in the nftContract?
+        profile_img_url: asset.collection?.creator?.profileImage?.url,
+        address: asset.collection?.creator?.address,
+      },
+      // externalLink: string, // metadata url TODO
+      // traits?: { //seems to be missing
+      //   trait_type: string
+      //   value: string
+      //   trait_count: number
+      // }[]
+    }
   })
 }
