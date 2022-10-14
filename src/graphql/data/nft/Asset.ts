@@ -1,7 +1,8 @@
 import graphql from 'babel-plugin-relay/macro'
-import { loadQuery, useLazyLoadQuery, usePreloadedQuery } from 'react-relay'
+import NFTRelayEnvironment from 'graphql/data/nft/NFTRelayEnvironment'
+import { loadQuery, usePreloadedQuery } from 'react-relay'
 
-import NFTRelayEnvironment from './NFTRelayEnvironment'
+import { AssetQuery } from './__generated__/AssetQuery.graphql'
 
 const assetsQuery = graphql`
   query AssetQuery {
@@ -80,14 +81,53 @@ const assetsQuery = graphql`
   }
 `
 
+// export function useAssetsQuery() {
+//   const assets = useLazyLoadQuery<AssetQuery>(assetsQuery, {}).nftAssets?.edges
+//   return assets
+// }
+
+const assetsQueryReference = loadQuery<AssetQuery>(NFTRelayEnvironment, assetsQuery, {})
+
 export function useAssetsQuery() {
-  const resp = useLazyLoadQuery(assetsQuery, {})
-  console.log(resp)
-}
-
-const assetsQueryReference = loadQuery(NFTRelayEnvironment, assetsQuery, {})
-
-export function useAssetsPreloadedQuery() {
-  const resp = usePreloadedQuery(assetsQuery, assetsQueryReference)
-  console.log(resp)
+  const collectionAssets = usePreloadedQuery<AssetQuery>(assetsQuery, assetsQueryReference).nftAssets?.edges
+  console.log(collectionAssets)
+  // return collectionAssets?.map((queryAsset)=> {
+  //  const asset = queryAsset.node
+  //   return {
+  //   id?: asset.id, // This would be a random id created and assigned by front end
+  // address: asset.nftContract?.address,
+  // notForSale: asset.listings?.edges.length === 0,
+  // collectionName: string,
+  // collectionSymbol: asset.collection?.image?.url,
+  // currentEthPrice: asset.listings?.edges[0].node.price.value,
+  // currentUsdPrice: string,
+  // imageUrl: asset.image?.url,
+  // animationUrl: asset.animationUrl,
+  // marketplace: asset.listings?.edges[0].node.marketplace,
+  // name: asset.name,
+  // priceInfo: PriceInfo,
+  // openseaSusFlag: boolean,
+  // sellorders: SellOrder[],
+  // smallImageUrl: asset.smallImage?.url,
+  // tokenId: asset.tokenId
+  // tokenType: TokenType,
+  // url: string,
+  // totalCount?: number, // The totalCount from the query to /assets
+  // amount?: number,
+  // decimals?: number,
+  // collectionIsVerified?: asset.collection?.isVerified,
+  // rarity?: asset.rarities,
+  // owner: asset.ownerAddress,
+  // creator: OpenSeaUser,
+  // externalLink: string,
+  // traits?: {
+  //   trait_type: string
+  //   value: string
+  //   display_type?: any
+  //   max_value?: any
+  //   trait_count: number
+  //   order?: any
+  // }[]
+  //  }
+  // })
 }

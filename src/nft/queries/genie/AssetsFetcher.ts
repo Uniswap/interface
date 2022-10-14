@@ -118,6 +118,7 @@ export const AssetsFetcher = async ({
     // Uncomment the lines belo if you want to simulate a delay
     // await (async () => await new Promise((resolve) => setTimeout(resolve, 50000)))();
 
+    console.log('decimals', data.data[0].decimals)
     return data.data
   } catch (e) {
     console.log(e)
