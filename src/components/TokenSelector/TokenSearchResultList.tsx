@@ -3,7 +3,7 @@ import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
-import { AnimatedBox, Box, Flex, Inset } from 'src/components/layout'
+import { Box, Flex, Inset } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { filter } from 'src/components/TokenSelector/filter'
@@ -257,7 +257,8 @@ function _TokenSearchResultList({
         ref={sectionListRef}
         ItemSeparatorComponent={() => <Separator mx="xs" />}
         ListEmptyComponent={
-          <Flex my="xs">
+          <Flex>
+            <SectionHeader title={t('Search results')} />
             <Text color="textTertiary" variant="subheadSmall">
               <Trans t={t}>
                 No results found for <Text color="textPrimary">"{searchFilter}"</Text>
@@ -275,11 +276,9 @@ function _TokenSearchResultList({
         showsVerticalScrollIndicator={false}
         windowSize={5}
       />
-      {sections.length > 0 && (
-        <AnimatedBox position="absolute" right={0}>
-          <NetworkFilter selectedChain={chainFilter} onPressChain={onChangeChainFilter} />
-        </AnimatedBox>
-      )}
+      <Box position="absolute" right={0}>
+        <NetworkFilter selectedChain={chainFilter} onPressChain={onChangeChainFilter} />
+      </Box>
     </Box>
   )
 }
