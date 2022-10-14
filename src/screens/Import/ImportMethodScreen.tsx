@@ -42,16 +42,15 @@ interface ImportMethodOption {
   name: ElementName
 }
 
-const backupOption: ImportMethodOption = {
-  title: (t: TFunction) => t('Restore from iCloud'),
-  blurb: (t: TFunction) => t('Recover a backed-up recovery phrase'),
-  icon: (theme: Theme) => <CloudIcon color={theme.colors.textPrimary} height={16} width={16} />,
-  nav: OnboardingScreens.RestoreCloudBackup,
-  importType: ImportType.Restore,
-  name: ElementName.OnboardingImportBackup,
-}
-
 const options: ImportMethodOption[] = [
+  {
+    title: (t: TFunction) => t('Restore from iCloud'),
+    blurb: (t: TFunction) => t('Recover a backed-up recovery phrase'),
+    icon: (theme: Theme) => <CloudIcon color={theme.colors.textPrimary} height={16} width={16} />,
+    nav: OnboardingScreens.RestoreCloudBackup,
+    importType: ImportType.Restore,
+    name: ElementName.OnboardingImportBackup,
+  },
   {
     title: (t: TFunction) => t('Import a recovery phrase'),
     blurb: (t: TFunction) => t('Enter, paste, or scan your words'),
@@ -170,7 +169,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
   const importOptions =
     entryPoint === OnboardingEntryPoint.Sidebar
       ? options.filter((option) => option.name !== ElementName.OnboardingImportWatchedAccount)
-      : [...(cloudBackups.length > 0 ? [backupOption] : []), ...options]
+      : options
 
   return (
     <OnboardingScreen title={t('Choose how to add your wallet')}>
@@ -179,8 +178,12 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
           <OptionCard
             key={'connection-option-' + title}
             blurb={blurb(t)}
+            disabled={name === ElementName.OnboardingImportBackup && cloudBackups.length === 0}
             icon={icon(theme)}
             name={name}
+            opacity={
+              name === ElementName.OnboardingImportBackup && cloudBackups.length === 0 ? 0.4 : 1
+            }
             title={title(t)}
             onPress={() => handleOnPress(nav, importType)}
           />
@@ -196,12 +199,16 @@ function OptionCard({
   icon,
   onPress,
   name,
+  disabled,
+  opacity,
 }: {
   title: string
   blurb: string
   icon: React.ReactNode
   onPress: () => void
   name: ElementName
+  disabled?: boolean
+  opacity?: number
 }) {
   const theme = useAppTheme()
   return (
@@ -210,7 +217,9 @@ function OptionCard({
       borderColor="backgroundOutline"
       borderRadius="lg"
       borderWidth={1}
+      disabled={disabled}
       name={name}
+      opacity={opacity}
       px="md"
       py="sm"
       testID={name}
