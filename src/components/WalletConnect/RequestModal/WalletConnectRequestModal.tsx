@@ -120,6 +120,18 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     value: request && isTransactionRequest(request) ? request.transaction.value : undefined,
   })
 
+  const checkConfirmEnabled = () => {
+    if (!activeAccount || !request) return false
+
+    if (methodCostsGas(request)) return !!(tx && hasSufficientFunds && gasFeeInfo)
+
+    if (isTransactionRequest(request)) return !!tx
+
+    return true
+  }
+
+  const confirmEnabled = checkConfirmEnabled()
+
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   /**
@@ -139,11 +151,12 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   }
 
   const onConfirm = async () => {
-    if (!activeAccount || !gasFeeInfo || !tx) return
+    if (!confirmEnabled || !activeAccount) return
     if (
       request.type === EthMethod.EthSignTransaction ||
       request.type === EthMethod.EthSendTransaction
     ) {
+      if (!gasFeeInfo) return // appeasing typescript
       dispatch(
         signWcRequestActions.trigger({
           requestInternalId: request.internalId,
@@ -261,9 +274,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
               label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
               name={ElementName.Confirm}
               size={ButtonSize.Medium}
-              state={
-                !activeAccount || !hasSufficientFunds ? ButtonState.Disabled : ButtonState.Enabled
-              }
+              state={confirmEnabled ? ButtonState.Enabled : ButtonState.Disabled}
               onPress={onConfirm}
             />
           </Flex>
