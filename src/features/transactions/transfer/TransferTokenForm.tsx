@@ -15,7 +15,7 @@ import { Warning, WarningAction } from 'src/components/modals/WarningModal/types
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName } from 'src/features/telemetry/constants'
-import { useShouldCompressView } from 'src/features/transactions/hooks'
+import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import { ARROW_SIZE } from 'src/features/transactions/swap/SwapForm'
 import {
@@ -59,7 +59,7 @@ export function TransferTokenForm({
     chainId,
   } = derivedTransferInfo
 
-  const { shouldCompressView, onLayout } = useShouldCompressView()
+  const { showNativeKeyboard, onLayout } = useShouldShowNativeKeyboard()
 
   useUSDTokenUpdater(
     dispatch,
@@ -148,11 +148,13 @@ export function TransferTokenForm({
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
                 isUSDInput={isUSDInput}
                 selection={inputSelection}
-                showSoftInputOnFocus={shouldCompressView}
+                showSoftInputOnFocus={showNativeKeyboard}
                 usdValue={inputCurrencyUSDValue}
                 value={formattedAmounts[CurrencyField.INPUT]}
                 warnings={warnings}
-                onSelectionChange={(start, end) => setInputSelection({ start, end })}
+                onSelectionChange={
+                  showNativeKeyboard ? undefined : (start, end) => setInputSelection({ start, end })
+                }
                 onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
                 onSetMax={onSetMax}
                 onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
@@ -187,7 +189,7 @@ export function TransferTokenForm({
           </Flex>
         </AnimatedFlex>
         <AnimatedFlex exiting={FadeOutDown} gap="xs">
-          {!nftIn && !shouldCompressView && (
+          {!nftIn && !showNativeKeyboard && (
             <DecimalPad
               hasCurrencyPrefix={isUSDInput}
               resetSelection={resetSelection}

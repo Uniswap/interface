@@ -8,6 +8,8 @@ import {
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
+import { FEATURE_FLAGS } from 'src/features/experiments/constants'
+import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import {
   makeSelectAddressTransactions,
@@ -158,23 +160,27 @@ export function useAllTransactionsBetweenAddresses(
 
 const SCREEN_HEIGHT_BUFFER = 0.9
 
-export function useShouldCompressView() {
+export function useShouldShowNativeKeyboard() {
   // use initial content height only to determine native keyboard view
   // because show/hiding the custom keyboard will change the content height
   const [initialContentHeight, setInitialContentHeight] = useState<number | undefined>(undefined)
 
+  // TODO: onLayout doesn't work anymore after some formatting changes T_T
+  // investigate how to fix for smaller phones if we don't move fully to using native keyboards
   const onLayout = (event: LayoutChangeEvent) => {
     const totalHeight = event.nativeEvent.layout.height
     if (initialContentHeight !== undefined) return
 
     setInitialContentHeight(totalHeight)
   }
-
-  const shouldCompressView = Boolean(
+  const swapNativeKeyboardFeatureFlag = useFeatureFlag(FEATURE_FLAGS.SwapNativeKeyboard, false)
+  const isSmallDevice = Boolean(
     initialContentHeight && dimensions.fullHeight * SCREEN_HEIGHT_BUFFER < initialContentHeight
   )
 
-  return { onLayout, shouldCompressView }
+  const showNativeKeyboard = swapNativeKeyboardFeatureFlag || isSmallDevice
+
+  return { onLayout, showNativeKeyboard: showNativeKeyboard }
 }
 
 export function useDynamicFontSizing(maxFontSize: number, minFontSize: number) {
