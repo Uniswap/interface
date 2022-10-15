@@ -14,7 +14,6 @@ import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
-import { CoingeckoOrderBy } from 'src/features/explore/types'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -22,6 +21,7 @@ import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
+import { TokensMetadataDisplayType } from 'src/features/wallet/types'
 import { opacify } from 'src/utils/colors'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
@@ -40,7 +40,7 @@ export type TokenItemData = {
 interface TokenProjectItemProps {
   tokenItemData: TokenItemData
   index?: number
-  metadataDisplayType?: string
+  metadataDisplayType?: TokensMetadataDisplayType
   onCycleMetadata?: () => void
   isPinned?: boolean
   isEditing?: boolean
@@ -156,7 +156,7 @@ export const TokenProjectItem = memo(
                 <TokenMetadata
                   main={formatUSDPrice(price)}
                   sub={
-                    metadataDisplayType === CoingeckoOrderBy.MarketCapDesc ? (
+                    metadataDisplayType === TokensMetadataDisplayType.MarketCap ? (
                       <Text variant="caption">
                         {t('MCap {{marketCap}}', {
                           marketCap: formatNumber(marketCap),

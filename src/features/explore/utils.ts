@@ -1,25 +1,54 @@
 import { TFunction } from 'i18next'
-import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/explore/types'
+import { TokenItemData } from 'src/components/explore/TokenProjectItem'
+import { LocalTokensOrderBy, RemoteTokensOrderBy, TokensOrderBy } from 'src/features/explore/types'
 
-export function getOrderByValues(orderBy: CoingeckoOrderBy | ClientSideOrderBy) {
-  const requiresRemoteOrderBy = Object.values<string>(CoingeckoOrderBy).includes(orderBy)
+export function getOrderByValues(orderBy: TokensOrderBy): {
+  localOrderBy: LocalTokensOrderBy | undefined
+  remoteOrderBy: RemoteTokensOrderBy
+} {
+  const requiresLocalOrderBy = Object.values<string>(LocalTokensOrderBy).includes(orderBy)
+
   return {
-    localOrderBy: !requiresRemoteOrderBy ? (orderBy as ClientSideOrderBy) : undefined,
-    remoteOrderBy: requiresRemoteOrderBy ? (orderBy as CoingeckoOrderBy) : undefined,
+    localOrderBy: requiresLocalOrderBy ? (orderBy as LocalTokensOrderBy) : undefined,
+    remoteOrderBy: requiresLocalOrderBy
+      ? RemoteTokensOrderBy.MarketCapDesc // Use remote order by market cap if doing local sort
+      : (orderBy as RemoteTokensOrderBy),
   }
 }
 
-export function getOrderByLabel(orderBy: CoingeckoOrderBy | ClientSideOrderBy, t: TFunction) {
-  if (!orderBy) return ''
+/**
+ * Returns a compare function to sort tokens
+ *
+ * Market cap and volume use a server-side query and do not require client-side sorting
+ */
+export function getOrderByCompareFn(orderBy: LocalTokensOrderBy) {
+  let compareField: keyof TokenItemData
+  let direction = 0
 
   switch (orderBy) {
-    case CoingeckoOrderBy.MarketCapDesc:
+    case LocalTokensOrderBy.PriceChangePercentage24hAsc:
+      compareField = 'pricePercentChange24h'
+      direction = 1
+      break
+    case LocalTokensOrderBy.PriceChangePercentage24hDesc:
+      compareField = 'pricePercentChange24h'
+      direction = -1
+      break
+  }
+
+  return (a: TokenItemData, b: TokenItemData) =>
+    Number(a[compareField]) - Number(b[compareField]) > 0 ? direction : -1 * direction
+}
+
+export function getOrderByLabel(orderBy: TokensOrderBy, t: TFunction) {
+  switch (orderBy) {
+    case RemoteTokensOrderBy.MarketCapDesc:
       return t('Market cap')
-    case CoingeckoOrderBy.VolumeDesc:
+    case RemoteTokensOrderBy.GlobalVolumeDesc:
       return t('Volume (24h)')
-    case ClientSideOrderBy.PriceChangePercentage24hDesc:
+    case LocalTokensOrderBy.PriceChangePercentage24hDesc:
       return t('Percent change (24h) ↑')
-    case ClientSideOrderBy.PriceChangePercentage24hAsc:
+    case LocalTokensOrderBy.PriceChangePercentage24hAsc:
       return t('Percent change (24h) ↓')
     default:
       throw new Error('Unexpected order by value ' + orderBy)

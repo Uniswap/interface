@@ -1,12 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
-import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/explore/types'
+import { RemoteTokensOrderBy } from 'src/features/explore/types'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
-import { NFTViewType } from 'src/features/wallet/types'
+import { NFTViewType, TokensMetadataDisplayType } from 'src/features/wallet/types'
 import { AccountType, SignerMnemonicAccount } from './accounts/types'
 
-const DEFAULT_TOKENS_ORDER_BY = CoingeckoOrderBy.MarketCapDesc
-const DEFAULT_TOKENS_METADATA_DISPLAY_TYPE = ClientSideOrderBy.PriceChangePercentage24hDesc
+const DEFAULT_TOKENS_ORDER_BY = RemoteTokensOrderBy.MarketCapDesc
+const DEFAULT_TOKENS_METADATA_DISPLAY_TYPE = TokensMetadataDisplayType.PriceChangePercentage24h
 
 export const selectAccounts = (state: RootState) => state.wallet.accounts
 
@@ -71,13 +71,8 @@ export const selectHideSmallBalances = (state: RootState) =>
 export const selectTokensOrderBy = (state: RootState) =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
 
-// Selects tokens metadata with a default
-export const selectTokensMetadataDisplayType = createSelector(
-  selectTokensOrderBy,
-  (state: RootState) => state.wallet.settings.tokensMetadataDisplayType,
-  (tokensOrderBy, tokensMetadataDisplayType) =>
-    tokensMetadataDisplayType ?? DEFAULT_TOKENS_METADATA_DISPLAY_TYPE
-)
+export const selectTokensMetadataDisplayType = (state: RootState) =>
+  state.wallet.settings.tokensMetadataDisplayType ?? DEFAULT_TOKENS_METADATA_DISPLAY_TYPE
 
 export const selectInactiveAccountAddresses = createSelector(
   selectActiveAccountAddress,

@@ -1,16 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/explore/types'
+import { TokensOrderBy } from 'src/features/explore/types'
 import { Account } from 'src/features/wallet/accounts/types'
-import { NFTViewType } from 'src/features/wallet/types'
+import { NFTViewType, TokensMetadataDisplayType } from 'src/features/wallet/types'
 import { areAddressesEqual, getChecksumAddress } from 'src/utils/addresses'
 import { next } from 'src/utils/array'
 
-const tokensMetadataDisplayTypes = [
-  CoingeckoOrderBy.MarketCapDesc,
-  ClientSideOrderBy.PriceChangePercentage24hDesc,
-]
-
 export const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
+
+// Used to cycle through metadata to display on Explore token list
+const TOKENS_METADATA_DISPLAY_TYPES = [
+  TokensMetadataDisplayType.MarketCap,
+  TokensMetadataDisplayType.PriceChangePercentage24h,
+]
 
 interface Wallet {
   accounts: Record<Address, Account>
@@ -25,8 +26,8 @@ interface Wallet {
     nftViewType?: NFTViewType
 
     // Settings used in the top tokens list
-    tokensOrderBy?: CoingeckoOrderBy | ClientSideOrderBy
-    tokensMetadataDisplayType?: CoingeckoOrderBy | ClientSideOrderBy
+    tokensOrderBy?: TokensOrderBy
+    tokensMetadataDisplayType?: TokensMetadataDisplayType
   }
 }
 
@@ -96,9 +97,7 @@ const slice = createSlice({
     },
     setTokensOrderBy: (
       state,
-      {
-        payload: { newTokensOrderBy },
-      }: PayloadAction<{ newTokensOrderBy: CoingeckoOrderBy | ClientSideOrderBy }>
+      { payload: { newTokensOrderBy } }: PayloadAction<{ newTokensOrderBy: TokensOrderBy }>
     ) => {
       state.settings.tokensOrderBy = newTokensOrderBy
 
@@ -107,8 +106,8 @@ const slice = createSlice({
     },
     cycleTokensMetadataDisplayType: (state) => {
       state.settings.tokensMetadataDisplayType =
-        next(tokensMetadataDisplayTypes, state.settings.tokensMetadataDisplayType) ??
-        tokensMetadataDisplayTypes[0]
+        next(TOKENS_METADATA_DISPLAY_TYPES, state.settings.tokensMetadataDisplayType) ??
+        TOKENS_METADATA_DISPLAY_TYPES[0]
     },
     resetWallet: () => initialWalletState,
   },

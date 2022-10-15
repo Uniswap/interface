@@ -57,7 +57,7 @@ export const persistConfig = {
     ensApi.reducerPath,
     nftApi.reducerPath,
   ],
-  version: 22,
+  version: 23,
   migrate: createMigrate(migrations),
 }
 

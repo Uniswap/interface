@@ -1,11 +1,10 @@
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/explore/types'
-
 import { selectTokensMetadataDisplayType } from 'src/features/wallet/selectors'
+import { TokensMetadataDisplayType } from 'src/features/wallet/types'
 import { cycleTokensMetadataDisplayType } from 'src/features/wallet/walletSlice'
 
-export function useTokenMetadataDisplayType(): [CoingeckoOrderBy | ClientSideOrderBy, () => void] {
+export function useTokensMetadataDisplayType(): [TokensMetadataDisplayType, () => void] {
   const dispatch = useAppDispatch()
 
   const metadataDisplayType = useAppSelector(selectTokensMetadataDisplayType)

@@ -313,4 +313,12 @@ export const migrations = {
     delete newState.tokens?.tokenPairs
     return newState
   },
+
+  23: (state: any) => {
+    const newState = { ...state }
+    // Reset values because of changed types for these two optional variables
+    delete newState.wallet.settings?.tokensOrderBy
+    delete newState.wallet.settings?.tokensMetadataDisplayType
+    return newState
+  },
 }

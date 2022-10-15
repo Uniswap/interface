@@ -4,17 +4,17 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppSelector } from 'src/app/hooks'
-import { SortingGroup } from 'src/components/explore/FilterGroup'
 import { useOrderByModal } from 'src/components/explore/Modals'
 import { PinnedTokensGrid } from 'src/components/explore/PinnedTokensGrid'
+import { SortButton } from 'src/components/explore/SortButton'
 import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { TokenItemData, TokenProjectItem } from 'src/components/explore/TokenProjectItem'
 import { Flex } from 'src/components/layout'
-
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { useTokenMetadataDisplayType } from 'src/features/explore/hooks'
+import { useTokensMetadataDisplayType } from 'src/features/explore/hooks'
+import { getOrderByCompareFn, getOrderByValues } from 'src/features/explore/utils'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
@@ -60,17 +60,20 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
   const data = usePreloadedQuery<ExploreTokensTabQuery>(exploreTokensTabQuery, queryRef)
 
   // Sorting and filtering
-  const { setOrderByModalIsVisible, orderByModal } = useOrderByModal()
-  const [tokenMetadataDisplayType, cycleTokenMetadataDisplayType] = useTokenMetadataDisplayType()
+  const { orderBy, setOrderByModalIsVisible, orderByModal } = useOrderByModal()
+  const [tokensMetadataDisplayType, cycleTokensMetadataDisplayType] = useTokensMetadataDisplayType()
+  const { localOrderBy } = getOrderByValues(orderBy)
 
   // Editing pinned tokens
   const [isEditing, setIsEditing] = useState(false)
+  // Monitor the pinned tokens
+  const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
 
-  // TODO: Support client side search (% change).
+  // TODO(spencer): Handle reloading query with remote sort order
   const topTokenItems = useMemo(() => {
     if (!data || !data.topTokenProjects) return EMPTY_ARRAY
 
-    return data.topTokenProjects
+    const topTokens = data.topTokenProjects
       .map((tokenProject) => {
         if (!tokenProject) return null
 
@@ -95,11 +98,14 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
           pricePercentChange24h: markets?.[0]?.pricePercentChange24h?.value ?? undefined,
         } as TokenItemData
       })
-      .filter(Boolean)
-  }, [data])
+      .filter(Boolean) as TokenItemData[]
 
-  // Monitor the pinned tokens
-  const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
+    if (!localOrderBy) return topTokens
+
+    // Apply local sort order
+    const compareFn = getOrderByCompareFn(localOrderBy)
+    return topTokens.sort(compareFn)
+  }, [data, localOrderBy])
 
   const renderItem = useCallback(
     ({ item, index }: ListRenderItemInfo<TokenItemData>) => {
@@ -117,37 +123,44 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
           index={index}
           isEditing={isEditing}
           isPinned={isPinned}
-          metadataDisplayType={tokenMetadataDisplayType}
+          metadataDisplayType={tokensMetadataDisplayType}
           tokenItemData={item}
-          onCycleMetadata={cycleTokenMetadataDisplayType}
+          onCycleMetadata={cycleTokensMetadataDisplayType}
         />
       )
     },
-    [cycleTokenMetadataDisplayType, favoriteCurrencyIdsSet, isEditing, tokenMetadataDisplayType]
+    [cycleTokensMetadataDisplayType, favoriteCurrencyIdsSet, isEditing, tokensMetadataDisplayType]
+  )
+
+  const onPressSortButton = useCallback(
+    () => setOrderByModalIsVisible(true),
+    [setOrderByModalIsVisible]
   )
 
   return (
-    <FlatList
-      ref={listRef}
-      ListHeaderComponent={
-        <Flex mt="sm">
-          <PinnedTokensGrid isEditing={isEditing} setIsEditing={setIsEditing} />
-          <Flex row alignItems="center" justifyContent="space-between" mx="sm">
-            <Text color="textSecondary" variant="smallLabel">
-              {t('Top Tokens')}
-            </Text>
-            <SortingGroup onPressOrderBy={() => setOrderByModalIsVisible(true)} />
+    <>
+      <FlatList
+        ref={listRef}
+        ListHeaderComponent={
+          <Flex mt="sm">
+            <PinnedTokensGrid isEditing={isEditing} setIsEditing={setIsEditing} />
+            <Flex row alignItems="center" justifyContent="space-between" mx="sm">
+              <Text color="textSecondary" variant="smallLabel">
+                {t('Top Tokens')}
+              </Text>
+              <SortButton orderBy={orderBy} onPress={onPressSortButton} />
+            </Flex>
           </Flex>
-          {orderByModal}
-        </Flex>
-      }
-      data={topTokenItems}
-      keyExtractor={tokenKey}
-      renderItem={renderItem}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      windowSize={3}
-    />
+        }
+        data={topTokenItems}
+        keyExtractor={tokenKey}
+        renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        windowSize={5}
+      />
+      {orderByModal}
+    </>
   )
 }
 

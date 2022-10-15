@@ -6,7 +6,7 @@ import Check from 'src/assets/icons/check.svg'
 import { Box, Flex } from 'src/components/layout'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { Text } from 'src/components/Text'
-import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/explore/types'
+import { LocalTokensOrderBy, RemoteTokensOrderBy, TokensOrderBy } from 'src/features/explore/types'
 import { getOrderByLabel } from 'src/features/explore/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { selectTokensOrderBy } from 'src/features/wallet/selectors'
@@ -27,7 +27,7 @@ export function useOrderByModal() {
     () =>
       getOrderByModalOptions(
         orderBy,
-        (newTokensOrderBy: CoingeckoOrderBy | ClientSideOrderBy) => {
+        (newTokensOrderBy: TokensOrderBy) => {
           dispatch(setTokensOrderBy({ newTokensOrderBy }))
           setIsVisible(false)
         },
@@ -75,56 +75,56 @@ function ModalOption({ isSelected, label }: { isSelected: boolean; label: string
 }
 
 const getOrderByModalOptions = (
-  selected: CoingeckoOrderBy | ClientSideOrderBy,
-  setOrderBy: (orderBy: CoingeckoOrderBy | ClientSideOrderBy) => void,
+  selected: TokensOrderBy,
+  setOrderBy: (orderBy: TokensOrderBy) => void,
   t: TFunction
 ) => {
   return [
     {
-      key: CoingeckoOrderBy.MarketCapDesc,
+      key: RemoteTokensOrderBy.MarketCapDesc,
       onPress: () => {
-        setOrderBy(CoingeckoOrderBy.MarketCapDesc)
+        setOrderBy(RemoteTokensOrderBy.MarketCapDesc)
       },
       render: () => (
         <ModalOption
-          isSelected={selected === CoingeckoOrderBy.MarketCapDesc}
-          label={getOrderByLabel(CoingeckoOrderBy.MarketCapDesc, t)}
+          isSelected={selected === RemoteTokensOrderBy.MarketCapDesc}
+          label={getOrderByLabel(RemoteTokensOrderBy.MarketCapDesc, t)}
         />
       ),
     },
     {
-      key: CoingeckoOrderBy.VolumeDesc,
+      key: RemoteTokensOrderBy.GlobalVolumeDesc,
       onPress: () => {
-        setOrderBy(CoingeckoOrderBy.VolumeDesc)
+        setOrderBy(RemoteTokensOrderBy.GlobalVolumeDesc)
       },
       render: () => (
         <ModalOption
-          isSelected={selected === CoingeckoOrderBy.VolumeDesc}
-          label={getOrderByLabel(CoingeckoOrderBy.VolumeDesc, t)}
+          isSelected={selected === RemoteTokensOrderBy.GlobalVolumeDesc}
+          label={getOrderByLabel(RemoteTokensOrderBy.GlobalVolumeDesc, t)}
         />
       ),
     },
     {
-      key: ClientSideOrderBy.PriceChangePercentage24hDesc,
+      key: LocalTokensOrderBy.PriceChangePercentage24hDesc,
       onPress: () => {
-        setOrderBy(ClientSideOrderBy.PriceChangePercentage24hDesc)
+        setOrderBy(LocalTokensOrderBy.PriceChangePercentage24hDesc)
       },
       render: () => (
         <ModalOption
-          isSelected={selected === ClientSideOrderBy.PriceChangePercentage24hDesc}
-          label={getOrderByLabel(ClientSideOrderBy.PriceChangePercentage24hDesc, t)}
+          isSelected={selected === LocalTokensOrderBy.PriceChangePercentage24hDesc}
+          label={getOrderByLabel(LocalTokensOrderBy.PriceChangePercentage24hDesc, t)}
         />
       ),
     },
     {
-      key: ClientSideOrderBy.PriceChangePercentage24hAsc,
+      key: LocalTokensOrderBy.PriceChangePercentage24hAsc,
       onPress: () => {
-        setOrderBy(ClientSideOrderBy.PriceChangePercentage24hAsc)
+        setOrderBy(LocalTokensOrderBy.PriceChangePercentage24hAsc)
       },
       render: () => (
         <ModalOption
-          isSelected={selected === ClientSideOrderBy.PriceChangePercentage24hAsc}
-          label={getOrderByLabel(ClientSideOrderBy.PriceChangePercentage24hAsc, t)}
+          isSelected={selected === LocalTokensOrderBy.PriceChangePercentage24hAsc}
+          label={getOrderByLabel(LocalTokensOrderBy.PriceChangePercentage24hAsc, t)}
         />
       ),
     },
