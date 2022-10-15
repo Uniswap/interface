@@ -40,6 +40,7 @@ export enum Screens {
 export enum OnboardingScreens {
   Backup = 'OnboardingBackup',
   BackupCloud = 'OnboardingBackupCloud',
+  BackupCloudPasswordScreen = 'OnboardingBackupCloudPasswordScreen',
   BackupCloudProcessing = 'OnboardingBackupCloudProcessing',
   BackupManual = 'OnboardingBackupManual',
   Landing = 'OnboardingLanding',

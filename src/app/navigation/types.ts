@@ -80,6 +80,7 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.BackupCloud]: {
     pin?: string
   } & OnboardingStackBaseParams
+  [OnboardingScreens.BackupCloudPasswordScreen]: OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudProcessing]: {
     pin: string | null
   } & OnboardingStackBaseParams
