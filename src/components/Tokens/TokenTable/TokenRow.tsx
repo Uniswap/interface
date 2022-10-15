@@ -346,7 +346,6 @@ export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined>
 /* Get singular header cell for header row */
 function HeaderCell({
   category,
-  sortable,
 }: {
   category: TokenSortMethod // TODO: change this to make it work for trans
   sortable: boolean
@@ -441,7 +440,7 @@ export function HeaderRow() {
 }
 
 /* Loading State: row component with loading bubbles */
-export function LoadingRow() {
+export function LoadingRow(props: { first?: boolean; last?: boolean }) {
   return (
     <TokenRow
       favorited={null}
@@ -459,6 +458,7 @@ export function LoadingRow() {
       tvl={<LoadingBubble />}
       volume={<LoadingBubble />}
       sparkLine={<SparkLineLoadingBubble />}
+      {...props}
     />
   )
 }
