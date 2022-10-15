@@ -333,7 +333,7 @@ export const getPercentChange = (valueNow: any, value24HoursAgo: any) => {
 
 
 export const GET_BLOCK = gql`
-  query blocks($timestampFrom: Int!, $timestampTo: Int!) {
+  query Blocks ($timestampFrom: Int!, $timestampTo: Int!) {
     blocks(
       first: 1
       orderBy: timestamp
@@ -746,7 +746,7 @@ export function keyToFilter(key: string): EventFilter {
 
 
 export const USER_TRANSACTIONS = gql`
-  query transactions($user: Bytes!) {
+  query Transactions ($user: Bytes!) {
     mints(orderBy: timestamp, orderDirection: desc, where: { to: $user }) {
       id
       transaction {
@@ -829,7 +829,7 @@ export const USER_TRANSACTIONS = gql`
 `
 
 export const BNB_USER_TRANSACTIONS = gql`
-query transactions($user: String!) {
+query BscTransactions ($user: String!) {
   mints(orderBy: timestamp, orderDirection: desc, where: { to: $user }) {
     id
     transaction {
@@ -950,13 +950,13 @@ query trackerdata {
       symbol
       name
     }
-        token1 {
+      token1 {
       id
       totalLiquidity
       tradeVolume
       tradeVolumeUSD
-          symbol
-          name
+      symbol
+      name
     }
     volumeToken0
     volumeToken1
@@ -1522,7 +1522,7 @@ export const useUserTransactions = (account?: string | null) => {
 }
 
 export const FILTERED_TRANSACTIONS = gql`
-  query ($allPairs: [Bytes]!) {
+  query FilteredTxns ($allPairs: [Bytes]!) {
     mints(first: 5, where: { pair_in: $allPairs }, orderBy: timestamp, orderDirection: desc) {
       transaction {
         id

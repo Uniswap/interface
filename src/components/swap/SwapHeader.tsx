@@ -11,6 +11,7 @@ import { TopTokenMovers } from './TopMovers'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 import { useEthPrice } from 'state/logs/utils'
+import {useIsMobile} from 'pages/Swap/SelectiveCharting'
 import { useWeb3React } from '@web3-react/core'
 
 const StyledSwapHeader = styled.div`
@@ -46,6 +47,7 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange,  }: { 
   const onBridgeClick = ( ) => onViewChange('bridge');
   const onLimitClick = ( ) => onViewChange('limit');
   const onSwapClick = ( ) => onViewChange('swap') 
+  const isMobile = useIsMobile()
   return (
     <StyledSwapHeader>
       <RowBetween>
@@ -66,7 +68,7 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange,  }: { 
         </RowFixed>
         {chainId === 1 && (
         <RowFixed alignItems="center">
-         {<StyledInternalLink style={{marginRight: 15}} to="/bridge">Crosschain</StyledInternalLink>}
+         {<StyledInternalLink style={{marginRight: isMobile ? 0 : 15}} to="/bridge">Crosschain</StyledInternalLink>}
 
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>

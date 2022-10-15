@@ -4,12 +4,15 @@ import {
     CSSTransition,
     TransitionGroup as ReactCSSTransitionGroup,
 } from "react-transition-group";
+import { Maximize, Minimize } from 'react-feather';
 
 import { ChartComponent } from "./ChartComponent";
 import { Dots } from "components/swap/styleds";
 import { FixedSizeList } from "react-window";
 import Loader from "components/Loader";
 import React from "react";
+import ReactFullscreen from 'react-easyfullscreen';
+import {TYPE} from 'theme'
 // Import React Table
 import _ from "lodash";
 import styled from "styled-components/macro";
@@ -232,7 +235,7 @@ const TableHeader = React.memo(({ headerSymbol, isMobile }: { headerSymbol: stri
             <th>Tx</th>
         </tr>
     </Thead>
-))  
+))
 TableHeader.displayName = "thead"
 
 type _RowProps = {
@@ -242,8 +245,8 @@ type _RowProps = {
 }
 
 const areRowsEqual = (rowProps: _RowProps, newRowProps: _RowProps) => {
-    return rowProps?.highlightedColor?.toLowerCase() === newRowProps.highlightedColor.toLowerCase () && 
-           rowProps?.item?.hash?.toLowerCase() === newRowProps?.item?.hash?.toLowerCase()
+    return rowProps?.highlightedColor?.toLowerCase() === newRowProps.highlightedColor.toLowerCase() &&
+        rowProps?.item?.hash?.toLowerCase() === newRowProps?.item?.hash?.toLowerCase()
 }
 
 const Row = React.memo((props: _RowProps) => {
@@ -589,7 +592,7 @@ const Row = React.memo((props: _RowProps) => {
     }
 }, areRowsEqual)
 
-export const TableInstance = ({ network, tableData, tokenSymbol, headerSymbol }: { network: string,tableData: any[], tokenSymbol: string, headerSymbol: string }) => {
+export const TableInstance = ({ network, tableData, tokenSymbol, headerSymbol }: { network: string, tableData: any[], tokenSymbol: string, headerSymbol: string }) => {
     const { account, chainId } = useActiveWeb3React()
     const darkMode = useIsDarkMode()
     const highlightedColor = React.useMemo(() => darkMode ? "#15223a" : "#afd9bd", [darkMode]);
@@ -601,35 +604,70 @@ export const TableInstance = ({ network, tableData, tokenSymbol, headerSymbol }:
         },
         [chainId, network]
     );
+
+
+    const [isMaxxed, setIsMaxxed] = React.useState(false)
+    const Icon = function (onRequest: () => void, onExit: () => void) {
+        const onClick = () => {
+            const maxxed = !isMaxxed
+            setIsMaxxed(maxxed)
+            if (maxxed) {
+                onRequest()
+            } else {
+                onExit()
+            }
+        }
+        if (isMaxxed) {
+            return <Minimize style={{ cursor: 'pointer' }} onClick={onClick} />
+        } else {
+            return <Maximize style={{ cursor: 'pointer' }} onClick={onClick} />
+        }
+    }
+
     const isMobile = useIsMobile()
     return (
-        <div style={{
-            height: isMobile ? 500 : 600,
-            overflowX: `scroll`,
-            overflowY: `scroll`,
-            width: '100%',
-            marginTop: 5
-        }}>
-            <Table isMobile={isMobile}>
-                <TableHeader isMobile={isMobile} headerSymbol={headerSymbol} />
-                <ReactCSSTransitionGroup
-                    component="tbody">
-                    {tableData?.map((item: any, index: number) => {
-                        return (
-                            <Row
-                                isMobile={isMobile}
-                                account={account}
-                                chainLabel={chainLabel}
-                                highlightedColor={highlightedColor}
-                                index={index}
-                                item={item}
-                                tokenSymbol={tokenSymbol}
-                                key={index} />
-                        )
-                    })}
+        <ReactFullscreen>
+            {({ ref, onRequest, onExit }) => (
+                <div ref={ref as any} style={{
+                    height: isMobile ? 500 : 600,
+                    overflowX: `scroll`,
+                    overflowY: `scroll`,
+                    width: '100%',
+                    marginTop: 5
+                }}>
 
-                </ReactCSSTransitionGroup>
-            </Table>
-        </div>
+                    <Table isMobile={isMobile}>
+                     
+                    <thead>
+                            <tr style={{height: 7,background:'transparent'}}>
+                                <th  style={{height:10, background:'transparent'}} colSpan={7}>
+                                    <div style={{ width: '95%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                        {Icon(onRequest, onExit)}
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <TableHeader isMobile={isMobile} headerSymbol={headerSymbol} />
+                  
+                        <ReactCSSTransitionGroup
+                            component="tbody">
+                            {tableData?.map((item: any, index: number) => {
+                                return (
+                                    <Row
+                                        isMobile={isMobile}
+                                        account={account}
+                                        chainLabel={chainLabel}
+                                        highlightedColor={highlightedColor}
+                                        index={index}
+                                        item={item}
+                                        tokenSymbol={tokenSymbol}
+                                        key={index} />
+                                )
+                            })}
+
+                        </ReactCSSTransitionGroup>
+                    </Table>
+                </div>)}
+        </ReactFullscreen>
     )
 }

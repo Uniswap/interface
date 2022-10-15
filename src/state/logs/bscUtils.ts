@@ -22,23 +22,6 @@ export interface BnbPrices {
 }
 
 
-const BNB_PRICES = gql`
-    query prices($block24: Int!, $block48: Int!, $blockWeek: Int!) {
-      current: bundle(id: "1") {
-        bnbPrice
-      }
-      oneDay: bundle(id: "1", block: { number: $block24 }) {
-        bnbPrice
-      }
-      twoDay: bundle(id: "1", block: { number: $block48 }) {
-        bnbPrice
-      }
-      oneWeek: bundle(id: "1", block: { number: $blockWeek }) {
-        bnbPrice
-      }
-    }
-  `
-
 interface PricesResponse {
   current: {
     bnbPrice: string
@@ -54,36 +37,6 @@ interface PricesResponse {
   }
 }
 
-const POOL_TRANSACTIONS = gql`
-  query poolTransactions($address: Bytes!) {
-   
-    swaps(first: 200, orderBy: timestamp, orderDirection: desc, where: { pair: $address }) {
-      id
-      timestamp
-      transaction {
-        id
-      }
-      pair {
-        token0 {
-          id
-          symbol
-        }
-        token1 {
-          id
-          symbol
-        }
-      }
-      from
-      amount0In
-      amount1In
-      amount0Out
-      amount1Out
-      amountUSD
-    }
-   
-  }
-`
-
 interface TransactionResults {
   mints: any[]
   swaps: any[]
@@ -92,9 +45,7 @@ interface TransactionResults {
 
 const BIT_QUERY_CLIENT = 'https://graphql.bitquery.io';
 
-const QUERY_HOLDERS_BSC = (address: string) => gql`
 
-`
 
 export const fetchBscHolders = async (address: string) => {
   const holders = 0
@@ -114,19 +65,19 @@ export const getDeltaTimestamps = (): [number, number, number, number] => {
 
 export const BLOCKS_CLIENT = 'https://api.thegraph.com/subgraphs/name/pancakeswap/blocks'
 
-const getBlockSubqueries = (timestamps: number[]) =>
-  timestamps?.map((timestamp) => {
-    return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${timestamp + 600
-      } }) {
-      number
-    }`
-  })
+// const getBlockSubqueries = (timestamps: number[]) =>
+//   timestamps?.map((timestamp) => {
+//     return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${timestamp + 600
+//       } }) {
+//       number
+//     }`
+//   })
 
-const blocksQueryConstructor = (subqueries: string[]) => {
-  return gql`query blocks {
-    ${subqueries}
-  }`
-}
+// const blocksQueryConstructor = (subqueries: string[]) => {
+//   return gql`query Blocks {
+//     ${subqueries}
+//   }`
+// }
 
 /**
  * Helper function to get large amount GraphQL subqueries
@@ -182,8 +133,8 @@ export const getBlocksFromTimestamps = async (
   }
 
   const fetchedData: any = await multiQuery(
-    blocksQueryConstructor as any,
-    getBlockSubqueries(timestamps),
+    (args: any) => '',
+    [],
     BLOCKS_CLIENT,
     skipCount,
   )
@@ -567,8 +518,7 @@ export const useBscPairs =  (tokenAddress?: string) => {
   }, [data, pairData, tokenAddressChecked])
 }
 
-const TokenTxns = gql`
-  query ($allPairs: [Bytes]!) {
+const TokenTxns = gql` query TokenTransactions ($allPairs: [Bytes]!) {
   mints(first: 5, where: { pair_in: $allPairs }, orderBy: timestamp, orderDirection: desc) {
     transaction {
       id
@@ -644,40 +594,6 @@ const TokenTxns = gql`
   }
 }`
 
-/**
- * Data to display transaction table on Token page
- */
-const TOKEN_TRANSACTIONS = gql`
-query tokenTransactions($address: Bytes!) {
-    swaps(first: 200, orderBy: timestamp, orderDirection: desc, where: {token0: $address }) {
-      id
-      timestamp
-      transaction {
-          id
-          timestamp
-      }
-      pair {
-        token0 { 
-          id
-          symbol
-        }
-        token1 {
-          id
-          symbol
-        }
-      }
-      from
-      to
-      sender
-      amount0In
-      amount1In
-      amount0Out
-      amount1Out
-      amountUSD
-    }
-  }
-`
-
 interface TransactionResults {
   mintsAs0: any[]
   mintsAs1: any[]
@@ -737,102 +653,3 @@ export function useBscPoocoinTransactions() {
   useInterval(fn, 15000, true);
   return data;
 }
-
-/* eslint-disable no-param-reassign */
-
-
-/**
-* Transactions of the given pool, used on Pool page
-*/
-const BSC_POOL_TRANSACTIONS = gql`
-  query poolTransactions($address: Bytes!) {
-    mints(first: 5, orderBy: timestamp, orderDirection: desc, where: { pair_in: $address }) {
-      id
-      timestamp
-      pair {
-        token0 {
-          id
-          symbol
-        }
-        token1 {
-          id
-          symbol
-        }
-      }
-      to
-      amount0
-      amount1
-      amountUSD
-    }
-    swaps(first: 200, where: { pair: $address }, orderBy: timestamp, orderDirection: asc) {
-      id
-      timestamp
-      pair {
-        token0 {
-          id
-          symbol
-        }
-        token1 {
-          id
-          symbol
-        }
-      }
-      from
-      amount0In
-      amount1In
-      amount0Out
-      amount1Out
-      amountUSD
-    }
-    burns(first: 5, orderBy: timestamp, orderDirection: desc, where: { pair_in: $address }) {
-      id
-      timestamp
-      pair {a
-        token0 {
-          id
-          symbol
-        }
-        token1 {
-          id
-          symbol
-        }
-      }
-      sender
-      amount0
-      amount1
-      amountUSD
-    }
-  }
-`
-
-interface TransactionResults {
-  mints: any[]
-  swaps: any[]
-  burns: any[]
-}
-
-const fetchBscPoolTransactions = async (address: string): Promise<{ data?: any; error: boolean }> => {
-  try {
-    const data = await request<TransactionResults>(INFO_CLIENT, BSC_POOL_TRANSACTIONS, {
-      address
-    })
-    const mints = data.mints.map(mapMints)
-    const burns = data.burns.map(mapBurns)
-    const swaps = data.swaps.map(mapSwaps)
-    return {
-      data:
-      {
-        swaps: [...mints, ...burns, ...swaps].filter(a => a.type === 'swap'),
-        lastFetched: new Date()
-      },
-      error: false
-    }
-  } catch (error) {
-    console.error(`Failed to fetch transactions for pool ${address}`, error)
-    return {
-      error: true,
-    }
-  }
-}
-
-export default fetchBscPoolTransactions

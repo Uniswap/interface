@@ -1,28 +1,29 @@
-import { TransactionResponse } from '@ethersproject/providers'
-import { t } from '@lingui/macro'
-import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
-import { Contract } from 'ethers'
-import { defaultAbiCoder, formatUnits, Interface, isAddress } from 'ethers/lib/utils'
+import { Interface, defaultAbiCoder, formatUnits, isAddress } from 'ethers/lib/utils'
 import request, { gql } from 'graphql-request'
-import snapshot from '@snapshot-labs/snapshot.js';
-import Web3Provider from 'web3'
+import { useCallback, useMemo } from 'react'
 import {
   useGovernanceV0Contract,
   useGovernanceV1Contract,
   useLatestGovernanceContract,
   useUniContract,
 } from 'hooks/useContract'
-import { useActiveWeb3React } from 'hooks/web3'
-import React from 'react'
-import { useCallback, useMemo } from 'react'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { SupportedChainId } from '../../constants/chains'
-import { UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
-import { UNI } from '../../constants/tokens'
-import { useLogs } from '../logs/hooks'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
+
+import { Contract } from 'ethers'
+import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
+import React from 'react'
+import { SupportedChainId } from '../../constants/chains'
+import { TransactionResponse } from '@ethersproject/providers'
+import { UNI } from '../../constants/tokens'
+import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
+import { UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
+import Web3Provider from 'web3'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import snapshot from '@snapshot-labs/snapshot.js';
+import { t } from '@lingui/macro'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useLogs } from '../logs/hooks'
 import { useTransactionAdder } from '../transactions/hooks'
 
 interface ProposalDetail {

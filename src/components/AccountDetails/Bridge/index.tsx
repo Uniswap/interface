@@ -68,7 +68,7 @@ export const Bridge = () => {
                 <Wrapper>
                     <stargate-widget 
                     tenthBps={25} 
-                    partnerId={0x0002} 
+                    partnerId={0} 
                     feeCollector={'0xa2bDF890E70d3468dF5EFB50D1C1117CD937E6E5'} 
                     theme={theme} /></Wrapper>
             </AutoColumn>

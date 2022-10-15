@@ -7,6 +7,7 @@ import Modal from 'components/Modal'
 import Swal from 'sweetalert2'
 import { TYPE } from 'theme'
 import { isAddress } from 'utils'
+import { useIsMobile } from 'pages/Swap/SelectiveCharting'
 import useLocalStorage from './hooks'
 import useTheme from 'hooks/useTheme'
 
@@ -33,17 +34,17 @@ export const AddressManager = (props: AddressManagerProps) => {
     const [addedItem, setAddedItem] = useState<Address>({ label: '', value: '' })
 
     const addNewAddress = (address: Address) => setCurrent([...current, address])
-
+    const isMobile = useIsMobile()
     const removeOldAddress = (address: Address) => setCurrent([...current.filter(add => add.value !== address.value)]);
 
     const AddressRow = (props: { item: Address, isLast: boolean, index: number }) => (
         <div style={{ height: 60, borderBottom: props.isLast ? 'none' : '1px solid #eee', width: '100%', display: 'flex', alignItems: 'center', flexFlow: 'row wrap', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', flexFlow: "column wrap" }}>
-                <div style={{ alignItems: 'center', display: 'grid', gridTemplateColumns: '15% 85%' }}>
+                <div style={{ gap:10, alignItems: 'center', display: 'flex', flexFlow:'row wrap'}}>
                     <small>{props.index + 1}</small>
                     <div>
                         <p style={{ margin: 0 }}>{props.item.label}</p>
-                        <small>{props.item.value}</small>
+                        <div style={{width: isMobile ? 200 : 400, overflow:'hidden', textOverflow:'ellipsis'}}>{props.item.value}</div>
                     </div>
                 </div>
             </div>

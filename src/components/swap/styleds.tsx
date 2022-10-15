@@ -33,7 +33,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   /* transform: rotate(90deg); */
   background: 'transparent';
   svg g g path { fill: ${props => props.theme.text1}; }
-  border: 4px solid ${({ theme }) => theme.bg0};
+  border: 4px solid transparent;
   z-index: 2;
   ${({ clickable }) =>
     clickable

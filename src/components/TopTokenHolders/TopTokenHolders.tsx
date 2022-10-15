@@ -1,6 +1,10 @@
+//eslint-disable
+//tslint-disable
+/*eslint-disable*/
+/*eslint-ignore*/
 import * as axios from 'axios'
 
-import { ArrowDown, ArrowUp, ChevronDown, ChevronUp, ExternalLink as LinkIcon } from 'react-feather';
+import { ArrowDown, ArrowUp, ChevronDown, ChevronUp, ExternalLink as LinkIcon, Maximize, Minimize } from 'react-feather';
 import Badge, { BadgeVariant } from 'components/Badge';
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import React, { FC, useEffect, useMemo, useState } from 'react';
@@ -8,6 +12,8 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { CImage } from '@coreui/react';
 import { DarkCard } from 'components/Card';
 import { ExternalLink } from 'theme';
+import ReactFullscreen from 'react-easyfullscreen';
+import { Style } from 'util';
 import Tooltip from 'components/Tooltip'
 import _ from 'lodash'
 import styled from 'styled-components/macro'
@@ -69,7 +75,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
     }, [address, chainId])
     const tokenInfo = useTokenInfo(chainId, address)
     const deadAddresses = ['0xdEAD000000000000000042069420694206942069'?.toLowerCase(), '0x000000000000000000000000000000000000dead'?.toLowerCase()]
-    const [token,setToken] = React.useState<{name:string; symbol:string;logo:string;decimals:number}>()
+    const [token, setToken] = React.useState<{ name: string; symbol: string; logo: string; decimals: number }>()
     useEffect(() => {
         if (URL && (!chainId || chainId === 1)) {
             axios.default.get<{ holders: TopHolder[] }>(URL).then((response) => {
@@ -81,7 +87,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
 
             axios.default.get<{
                 data: {
-                    items: {logo_url:string, total_supply:string, address: string, contract_name:string, contract_ticker_symbol:string, contract_decimals: number, balance: string }[]
+                    items: { logo_url: string, total_supply: string, address: string, contract_name: string, contract_ticker_symbol: string, contract_decimals: number, balance: string }[]
                 }
             }>(URL).then((response) => {
                 const trueTotalSupply = +response.data.data.items?.[0]?.total_supply / 10 ** response.data.data.items?.[0]?.contract_decimals
@@ -104,7 +110,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                         share: trueTotalSupply / +item.balance / 10 ** item.contract_decimals,
                         total_supply: trueTotalSupply.toString()
                     })))
- 
+
             }).catch(console.error)
             // fetchBscscanTopHolders(address).then((response) => setHolders(response.map((item) => ({
             //     address: item.TokenHolderAddress,
@@ -137,6 +143,10 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
     }, [pairs])
     const [sliceCount, setSliceCount] = React.useState({ start: 0, end: 10 });
 
+    const sliceCountCb = () => {
+        const end = sliceCount.end == holders?.length ? 10 : holders?.length || 0;
+        setSliceCount({ ...sliceCount, end })
+    }
     const [isOpen, setIsOpen] = useState(false)
 
     const getHolderLink = (holder: { address: string }) => {
@@ -144,90 +154,123 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
         if (chainId === 56) return `https://bscscan.com/address/${holder.address}`;
         return ``
     }
+    const [maxxed, setIsMaxxed] = React.useState(false)
     const theme = useTheme()
     console.log(`[useTopTokenHolders]`, holders)
     const node = useMemo(() => isOpen ? <ChevronUp style={{ cursor: "pointer" }} /> : <ChevronDown style={{ cursor: "pointer" }} />, [isOpen]);
-    return topHoldersOwnedPercentComputed > 0 ? (
-        <DarkCard style={{ padding: '.85rem', border: `1px solid ${theme.bg6}`, background: theme.chartSidebar }}>
-            <div style={{display:'flex', justifyContent:'stretch', alignItems:'center', gap:10}}>
-                {Boolean(token) && token?.logo && <CImage style={{maxWidth:30}} fluid  src={token.logo} /> }
-                <p style={{ margin: 0, fontSize: 14 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node}</p>
-            </div>
-            {isOpen && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                {!isMobile && <>
-                    <p style={{ fontSize: 12, margin: 0 }}>Address</p>
-                    <p style={{ fontSize: 12, margin: 0 }}>Balance <span style={{ borderLeft: '1px solid #444', paddingLeft: 10, marginLeft: 10 }}>Share (%)</span></p>
-                </>}
-                {isMobile && <p style={{ margin: 0 }}>Top {tokenInfo?.symbol} token holders</p>}
-            </div>}
-            {isOpen && <div style={{ maxHeight: 380, overflowY: `scroll`, width: '100%', overflow: 'auto' }}>
-                {holders && holders.slice(sliceCount.start, sliceCount.end).map((holder, i) => (
-                    <div key={holder.address} style={{ columnGap: 20, borderBottom: (i == sliceCount.end - 1) ? 'none' : `1px solid #444`, alignItems: 'center', padding: '2px 0px', marginBottom: 1, display: 'flex', rowGap: 10, justifyContent: isMobile ? 'stretch' : 'space-between', flexFlow: 'row wrap' }}>
-                        <AddressLink
-                            hasENS={false}
-                            isENS={false}
-                            href={chainId == 56 ? getHolderLink(holder) : getExplorerLink(chainId || 1, holder.address, ExplorerDataType.ADDRESS)}
-                            style={{
-                                color: theme.text1,
-                                fontSize: 12
-                            }}>
-                            <span style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginRight: 3,
-                                width: 25,
-                                height: 25,
-                                color: theme.text1,
-                                background: theme.backgroundInteractive,
-                                borderRadius: 15
-                            }}>
-                                {i + 1}
-                            </span>
-                            <span style={{ marginRight: 3 }}>{holder?.address?.substring(0, 10)}...{holder.address?.substring(holder?.address?.length - 4, holder?.address?.length)}</span>
-                            <LinkIcon size={16} />
-                            {isUniswapPair(holder.address) &&
-                                <Tooltip text={PairTooltipText(holder.address)} show={showUniTooltip} >
-                                    <img onMouseEnter={() => setShowUniTooltip(true)}
-                                        onMouseLeave={() => setShowUniTooltip(false)}
-                                        src={'https://i2.wp.com/fastandclean.org/wp-content/uploads/2021/01/UniSwap-logo.png?ssl=1'}
-                                        style={{ maxWidth: 30, marginTop: -8 }} />
-                                </Tooltip>
-                            }
-                        </AddressLink>
+    const nodeProps = (onRequest: Promise<void> | any, onExit: Promise<void> | any) => ({
+        onClick: (e: any) => {
+            e && e.preventDefault && e.preventDefault()
+            const maximum = !maxxed
+            let _isOpen = false
+            setIsMaxxed(maximum)
+            if (maximum) {
+                onRequest()
+                setIsOpen(true)
+                sliceCountCb()
+            } else {
+                onExit()
+                setIsOpen(false)
+            }
+        }
+    })
+    //tslint-ignore
+    //eslint-disable
+    //eslint-ignore
+    const maxNode = useMemo(() => {
+        return (onRequest: () => void, onExit: () => void) => {
+            return maxxed ?
+                <Minimize aria-title={"Full Screen"} style={{ cursor: 'pointer', textAlign: 'right', display: 'flex', justifyContent: 'flex-end' }}
+                    onClick={nodeProps(onRequest, onExit).onClick} /> :
+                <Maximize aria-title={"Exit Full Screen"} style={{ cursor: 'pointer', textAlign: 'right', display: 'flex', justifyContent: 'flex-end' }}
+                    onClick={nodeProps(onRequest, onExit).onClick} />
+        }
+    }, [maxxed])
 
-                        <Badge style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant={BadgeVariant.GREY}>
-                             <div style={{
-                                fontSize: 12,
-                                paddingRight: 10,
-                                borderRight: '1px solid #444',
-                                display: 'flex',
-                                gap: 15,
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                color: theme.white
-                            }}>
-                                {chainId == 1 && tokenInfo?.decimals && <span>{Number(holder.balance / 10 ** tokenInfo?.decimals).toLocaleString()}</span>}
-                                {chainId == 56 && <span>{Number(holder.balance).toLocaleString()}</span>}
-                                {((tokenInfo && tokenInfo.symbol) || token && token?.symbol) && <span> {tokenInfo?.symbol}</span>}
-                            </div>
-                            &nbsp;
-                            <span style={{ paddingLeft: 10, fontSize: 12.5, color: 'lightgreen' }}>{holder.share}%</span>
-                        </Badge>
+    return useMemo(() => {
+        return topHoldersOwnedPercentComputed > 0 ? (
+            <ReactFullscreen>
+                {({ ref, onRequest, onExit }: any) => (
 
-                    </div>
-                ))}
+                    <DarkCard ref={ref} style={{ padding: '.85rem', border: `1px solid ${theme.bg6}`, background: theme.chartSidebar }}>
+                        <div style={{ width: '100%', display: 'flex', justifyContent: 'stretch', alignItems: 'center', gap: 10 }}>
+                            {Boolean(token) && token?.logo && <CImage style={{ maxWidth: 30 }} fluid src={token.logo} />}
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> <p style={{ margin: 0, fontSize: 14 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node} </p>  {maxNode(onRequest, onExit)} </div>
+                        </div>
+                        {isOpen && <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            {!isMobile && <>
+                                <p style={{ fontSize: 12, margin: 0 }}>Address</p>
+                                <p style={{ fontSize: 12, margin: 0 }}>Balance <span style={{ borderLeft: '1px solid #444', paddingLeft: 10, marginLeft: 10 }}>Share (%)</span></p>
+                            </>}
+                            {isMobile && <p style={{ margin: 0 }}>Top {tokenInfo?.symbol} token holders</p>}
+                        </div>}
+                        {isOpen && <div style={{ maxHeight: maxxed ? '100vh' : '380px', overflowY: `scroll`, width: '100%', overflow: 'auto' }}>
+                            {holders && holders.slice(sliceCount.start, sliceCount.end).map((holder, i) => (
+                                <div key={holder.address} style={{ columnGap: 20, borderBottom: (i == sliceCount.end - 1) ? 'none' : `1px solid #444`, alignItems: 'center', padding: '2px 0px', marginBottom: 1, display: 'flex', rowGap: 10, justifyContent: isMobile ? 'stretch' : 'space-between', flexFlow: 'row wrap' }}>
+                                    <AddressLink
+                                        hasENS={false}
+                                        isENS={false}
+                                        href={chainId == 56 ? getHolderLink(holder) : getExplorerLink(chainId || 1, holder.address, ExplorerDataType.ADDRESS)}
+                                        style={{
+                                            color: theme.text1,
+                                            fontSize: 12
+                                        }}>
+                                        <span style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            marginRight: 3,
+                                            width: 25,
+                                            height: 25,
+                                            color: theme.text1,
+                                            background: theme.backgroundInteractive,
+                                            borderRadius: 15
+                                        }}>
+                                            {i + 1}
+                                        </span>
+                                        <span style={{ marginRight: 3 }}>{holder?.address?.substring(0, 10)}...{holder.address?.substring(holder?.address?.length - 4, holder?.address?.length)}</span>
+                                        <LinkIcon size={16} />
+                                        {isUniswapPair(holder.address) &&
+                                            <Tooltip text={PairTooltipText(holder.address)} show={showUniTooltip} >
+                                                <img onMouseEnter={() => setShowUniTooltip(true)}
+                                                    onMouseLeave={() => setShowUniTooltip(false)}
+                                                    src={'https://i2.wp.com/fastandclean.org/wp-content/uploads/2021/01/UniSwap-logo.png?ssl=1'}
+                                                    style={{ maxWidth: 30, marginTop: -8 }} />
+                                            </Tooltip>
+                                        }
+                                    </AddressLink>
 
-            </div>}
-            {!!isOpen && <Badge style={{ cursor: 'pointer', alignItems: 'center', color: theme.text1, position: 'relative', width: '100%', bottom: 0, display: 'flex', justifyContent: 'center' }} onClick={() => {
-                const end = sliceCount.end == holders?.length ? 10 : holders?.length || 0;
-                setSliceCount({ ...sliceCount, end })
-            }}>
-                <small style={{ fontSize: 12 }}>{
-                    holders?.length === sliceCount?.end ? 'Hide' : 'Show'} All
-                    {holders?.length !== sliceCount?.end ? <ArrowDown /> : <ArrowUp />}
-                    Top 50</small>
-            </Badge>}
-        </DarkCard>
-    ) : null
+                                    <Badge style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant={BadgeVariant.GREY}>
+                                        <div style={{
+                                            fontSize: 12,
+                                            paddingRight: 10,
+                                            borderRight: '1px solid #444',
+                                            display: 'flex',
+                                            gap: 15,
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            color: theme.white
+                                        }}>
+                                            {chainId == 1 && tokenInfo?.decimals && <span>{Number(holder.balance / 10 ** tokenInfo?.decimals).toLocaleString()}</span>}
+                                            {chainId == 56 && <span>{Number(holder.balance).toLocaleString()}</span>}
+                                            {((tokenInfo && tokenInfo.symbol) || token && token?.symbol) && <span> {tokenInfo?.symbol}</span>}
+                                        </div>
+                                        &nbsp;
+                                        <span style={{ paddingLeft: 10, fontSize: 12.5, color: 'lightgreen' }}>{holder.share}%</span>
+                                    </Badge>
+
+                                </div>
+                            ))}
+
+                        </div>}
+                        {!!isOpen && <Badge style={{ cursor: 'pointer', alignItems: 'center', color: theme.text1, position: 'relative', width: '100%', bottom: 0, display: 'flex', justifyContent: 'center' }} onClick={sliceCountCb}>
+                            <small style={{ fontSize: 12 }}>{
+                                holders?.length === sliceCount?.end ? 'Hide' : 'Show'} All
+                                {holders?.length !== sliceCount?.end ? <ArrowDown /> : <ArrowUp />}
+                                Top 50</small>
+                        </Badge>}
+                    </DarkCard>)}
+            </ReactFullscreen>
+        ) : null
+    }, [holders, setSliceCount, nodeProps, setIsOpen, isMobile, holders?.length, isOpen, burntHolderOwnedPercentComputed, node, sliceCount.start, sliceCount.end, topHoldersOwnedPercentComputed, maxxed])
 }

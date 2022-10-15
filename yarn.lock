@@ -17376,6 +17376,13 @@ react-dom@^17.0.1:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
+react-easyfullscreen@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/react-easyfullscreen/-/react-easyfullscreen-1.1.2.tgz#9bd9121aa1ffc1e22a1061ac4d98909d297bf7fd"
+  integrity sha512-EofAG3a9F1n5Ot1ppq/g/ORbMC2/1aNb5jc165dkQmmRvOnrXKMqwDYeXRbeWbsgdrmMgKbf0KF+IwxQO5e+lA==
+  dependencies:
+    screenfull "^5.0.2"
+
 react-error-overlay@^6.0.9:
   version "6.0.9"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
@@ -17428,6 +17435,11 @@ react-focus-lock@^2.5.1:
     react-clientside-effect "^1.2.5"
     use-callback-ref "^1.2.5"
     use-sidecar "^1.0.5"
+
+react-fullscreen@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-fullscreen/-/react-fullscreen-0.1.0.tgz#aab68d6d34aadb261975959697ad240c8fae1e50"
+  integrity sha512-h6PQLrJpzHHfRbAao2bZJ+M9kT2YI02YyWYNl9buihD6+lqNzJ9BMSWagEqRRNXhu7J1s96CeA4jj/aKBioZHw==
 
 react-ga@^2.5.7:
   version "2.7.0"
@@ -18670,6 +18682,11 @@ schema-utils@^3.0.0:
     "@types/json-schema" "^7.0.7"
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
+
+screenfull@^5.0.2:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/screenfull/-/screenfull-5.2.0.tgz#6533d524d30621fc1283b9692146f3f13a93d1ba"
+  integrity sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==
 
 scrypt-js@3.0.1, scrypt-js@^3.0.0, scrypt-js@^3.0.1:
   version "3.0.1"
@@ -20125,7 +20142,7 @@ to-regex@^3.0.1, to-regex@^3.0.2:
 
 toformat@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.npmjs.org/toformat/-/toformat-2.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/toformat/-/toformat-2.0.0.tgz#7a043fd2dfbe9021a4e36e508835ba32056739d8"
   integrity sha512-03SWBVop6nU8bpyZCx7SodpYznbZF5R4ljwNLBcTQzKOD9xuihRo/psX58llS1BMFhhAI08H3luot5GoXJz2pQ==
 
 toggle-selection@^1.0.6:

@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
-import { api, CHAIN_TAG } from 'state/data/enhanced'
+import { updateBlockNumber, updateChainId } from './actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useCallback, useEffect, useState } from 'react'
+
+import { CHAIN_TAG } from 'state/data/enhanced'
 import { supportedChainId } from 'utils/supportedChainId'
+import { useActiveWeb3React } from '../../hooks/web3'
 import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { updateBlockNumber, updateChainId } from './actions'
 
 function useQueryCacheInvalidator() {
   const dispatch = useAppDispatch()
@@ -16,7 +17,7 @@ function useQueryCacheInvalidator() {
   const chainId = useAppSelector((state) => state.application.chainId)
 
   useEffect(() => {
-    dispatch(api.util.invalidateTags([CHAIN_TAG]))
+    console.log(`queryCacheValidator`)
   }, [chainId, dispatch])
 }
 

@@ -79,7 +79,7 @@ const StyledInfo = styled(Info)`
 
 
 export const SwapTokenForToken = (props: TokenForTokenProps) => {
-  const { account, library } = useActiveWeb3React()
+  const { account, library, chainId } = useActiveWeb3React()
   const theme = React.useContext(ThemeContext)
 
 
@@ -91,6 +91,7 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
 
   // swap state
   const { independentField, typedValue, recipient, useOtherAddress } = useSwapState()
+  const getSwapInfo =  useDerivedSwapInfo
   const {
     v2Trade,
     v3TradeState: { trade: v3Trade, state: v3TradeState },
@@ -100,7 +101,8 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedSwapInfo(toggledVersion)
+  } = getSwapInfo(toggledVersion)
+  
   const {
     wrapType,
     execute: onWrap,
@@ -265,12 +267,14 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
+  const swapCalbackFn = useSwapCallback
+
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
+  const { callback: swapCallback, error: swapCallbackError } = swapCalbackFn(
     trade,
     allowedSlippage,
     recipient,
-    signatureData
+    signatureData 
   )
 
   const [singleHopOnly] = useUserSingleHopOnly()
@@ -284,7 +288,7 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
     }
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm: !isExpertMode, swapErrorMessage: undefined, txHash: undefined })
     swapCallback()
-      .then((hash) => {
+      .then((hash: any) => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm: !isExpertMode, swapErrorMessage: undefined, txHash: hash })
         ReactGA.event({
           category: 'Swap',
@@ -524,9 +528,9 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
           <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
             <RowFixed style={{ padding: '5px 0px' }}>
               {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
-                (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
+                (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade as any) ? (
                   <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
-                ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
+                ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade as any, v3Trade) ? (
                   <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
                 ) : (
                   toggledVersion === Version.v2 && (
@@ -555,7 +559,7 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
                   )
                 ))}
 
-              {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
+              {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade as any, v3Trade) && (
                 <ButtonGray
                   width="fit-content"
                   padding="0.1rem 0.5rem"

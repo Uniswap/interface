@@ -75,6 +75,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useGelatoLimitOrders } from '@gelatonetwork/limit-orders-react'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
+import {useIsMobile} from './SelectiveCharting'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useKiba } from 'pages/Vote/VotePage'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -512,6 +513,8 @@ export default function Swap({ history }: RouteComponentProps) {
   const [showAddressManager, setShowAddressManger] = React.useState(false)
   const dismissAddressManager = () => setShowAddressManger(false)
 
+const isMobile = useIsMobile()
+
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
   }, [maxInputAmount, onUserInput])
@@ -552,10 +555,10 @@ export default function Swap({ history }: RouteComponentProps) {
     onSwitchTokens()
   };
 
-  const removeSend = () => {
-    onChangeRecipient('')
+  const removeSend = React.useCallback(() => {
+    onChangeRecipient(null)
     onSwitchUseChangeRecipient(false)
-  };
+  }, []);
   const onDismiss = () => setShowChart(false);
   const swapBtnClick = () => {
     if (isExpertMode) {
@@ -735,8 +738,8 @@ export default function Swap({ history }: RouteComponentProps) {
                 {!cannotUseFeature && useOtherAddress && !showWrap ? (
                   <>
                     <AutoRow justify="space-between" style={{marginTop:5, padding: '0 1rem' }}>
-                      <ArrowWrapper clickable={false}>
-                        <ArrowDown size="16" color={theme.text2} />
+                     <ArrowWrapper clickable={false}>
+                     {!isMobile &&  <ArrowDown size="16" color={theme.text2} /> }
                       </ArrowWrapper>
                       <LinkStyledButton id="remove-recipient-button" onClick={removeSend}>
                         <Trans>- Remove send</Trans>
