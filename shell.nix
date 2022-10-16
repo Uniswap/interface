@@ -1,7 +1,8 @@
-{ pkgs }:
+with import <nixpkgs> { };
+
 pkgs.mkShell {
-  buildInputs = with pkgs; [
-    nodejs-14_x
-    (yarn.override { nodejs = nodejs-14_x; })
+  buildInputs = [
+    nodejs-16_x
+    yarn
   ];
 }

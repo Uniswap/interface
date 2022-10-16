@@ -84,7 +84,7 @@
   "scripts": {
     "build": "REACT_APP_SENTRY_DSN=$SENTRY_DSN npm run build:local",
     "build:local": "npm run typechain && node --max_old_space_size=1024 node_modules/.bin/craco build",
-    "start": "craco start",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider craco start",
     "clean": "rm -fr src/generated/",
     "start:alfajores": "REACT_APP_CHAIN_ID=44787 craco start",
     "typechain": "typechain --target=ethers-v5 'src/**/abis/**/*.json' --out-dir src/generated/",
