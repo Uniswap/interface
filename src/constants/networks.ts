@@ -69,6 +69,10 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
     // "Safe" URLs
     'https://rinkeby.arbitrum.io/rpc',
   ],
+  [SupportedChainId.ARBITRUM_GOERLI]: [
+    // "Safe" URLs
+    'https://goerli-rollup.arbitrum.io/rpc',
+  ],
   [SupportedChainId.OPTIMISM]: [
     // "Safe" URLs
     'https://mainnet.optimism.io/',
