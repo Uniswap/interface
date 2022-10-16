@@ -7,6 +7,7 @@ import * as axios from 'axios'
 import { ArrowDown, ArrowUp, ChevronDown, ChevronUp, ExternalLink as LinkIcon, Maximize, Minimize } from 'react-feather';
 import Badge, { BadgeVariant } from 'components/Badge';
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
+import { FullScreenIcon, FullScreenWrapper } from 'pages/Swap/ChartTable';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { CImage } from '@coreui/react';
@@ -158,119 +159,107 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
     const theme = useTheme()
     console.log(`[useTopTokenHolders]`, holders)
     const node = useMemo(() => isOpen ? <ChevronUp style={{ cursor: "pointer" }} /> : <ChevronDown style={{ cursor: "pointer" }} />, [isOpen]);
-    const nodeProps = (onRequest: Promise<void> | any, onExit: Promise<void> | any) => ({
-        onClick: (e: any) => {
-            e && e.preventDefault && e.preventDefault()
-            const maximum = !maxxed
-            let _isOpen = false
-            setIsMaxxed(maximum)
-            if (maximum) {
-                onRequest()
-                setIsOpen(true)
-                sliceCountCb()
-            } else {
-                onExit()
+    const [wasOpenedAuto, setWasOpenedAuto] = React.useState(false)
+    const onMaxChange = (maxxed: boolean) => {
+        setIsMaxxed(maxxed)
+        if (maxxed && !isOpen) {
+            setIsOpen(true)
+            setSliceCount({...sliceCount, end: holders?.length ?? 0 })
+            setWasOpenedAuto(true)
+        } else if (!maxxed) {
+            if (wasOpenedAuto) {
                 setIsOpen(false)
             }
         }
-    })
+    }
     //tslint-ignore
     //eslint-disable
     //eslint-ignore
-    const maxNode = useMemo(() => {
-        return (onRequest: () => void, onExit: () => void) => {
-            return maxxed ?
-                <Minimize aria-title={"Full Screen"} style={{ cursor: 'pointer', textAlign: 'right', display: 'flex', justifyContent: 'flex-end' }}
-                    onClick={nodeProps(onRequest, onExit).onClick} /> :
-                <Maximize aria-title={"Exit Full Screen"} style={{ cursor: 'pointer', textAlign: 'right', display: 'flex', justifyContent: 'flex-end' }}
-                    onClick={nodeProps(onRequest, onExit).onClick} />
-        }
-    }, [maxxed])
 
     return useMemo(() => {
         return topHoldersOwnedPercentComputed > 0 ? (
-            <ReactFullscreen>
-                {({ ref, onRequest, onExit }: any) => (
-
-                    <DarkCard ref={ref} style={{ padding: '.85rem', border: `1px solid ${theme.bg6}`, background: theme.chartSidebar }}>
-                        <div style={{ width: '100%', display: 'flex', justifyContent: 'stretch', alignItems: 'center', gap: 10 }}>
-                            {Boolean(token) && token?.logo && <CImage style={{ maxWidth: 30 }} fluid src={token.logo} />}
-                            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> <p style={{ margin: 0, fontSize: 14 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node} </p>  {maxNode(onRequest, onExit)} </div>
+            <FullScreenWrapper onMaxChange={onMaxChange} childrenFn={({ isMaxxed, isEnabled, onToggle, ref, onRequest, onExit }: any) => (
+                <DarkCard ref={ref} style={{ padding: '.85rem', border: `1px solid ${theme.bg6}`, background: theme.chartSidebar }}>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'stretch', alignItems: 'center', gap: 10 }}>
+                        {Boolean(token) && token?.logo && <CImage style={{ maxWidth: 30 }} fluid src={token.logo} />}
+                        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> <p style={{ margin: 0, fontSize: 14 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node} </p>  
+                        {FullScreenIcon(isMaxxed, isEnabled, onToggle, onRequest, onExit)}
                         </div>
-                        {isOpen && <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            {!isMobile && <>
-                                <p style={{ fontSize: 12, margin: 0 }}>Address</p>
-                                <p style={{ fontSize: 12, margin: 0 }}>Balance <span style={{ borderLeft: '1px solid #444', paddingLeft: 10, marginLeft: 10 }}>Share (%)</span></p>
-                            </>}
-                            {isMobile && <p style={{ margin: 0 }}>Top {tokenInfo?.symbol} token holders</p>}
-                        </div>}
-                        {isOpen && <div style={{ maxHeight: maxxed ? '100vh' : '380px', overflowY: `scroll`, width: '100%', overflow: 'auto' }}>
-                            {holders && holders.slice(sliceCount.start, sliceCount.end).map((holder, i) => (
-                                <div key={holder.address} style={{ columnGap: 20, borderBottom: (i == sliceCount.end - 1) ? 'none' : `1px solid #444`, alignItems: 'center', padding: '2px 0px', marginBottom: 1, display: 'flex', rowGap: 10, justifyContent: isMobile ? 'stretch' : 'space-between', flexFlow: 'row wrap' }}>
-                                    <AddressLink
-                                        hasENS={false}
-                                        isENS={false}
-                                        href={chainId == 56 ? getHolderLink(holder) : getExplorerLink(chainId || 1, holder.address, ExplorerDataType.ADDRESS)}
-                                        style={{
-                                            color: theme.text1,
-                                            fontSize: 12
-                                        }}>
-                                        <span style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            marginRight: 3,
-                                            width: 25,
-                                            height: 25,
-                                            color: theme.text1,
-                                            background: theme.backgroundInteractive,
-                                            borderRadius: 15
-                                        }}>
-                                            {i + 1}
-                                        </span>
-                                        <span style={{ marginRight: 3 }}>{holder?.address?.substring(0, 10)}...{holder.address?.substring(holder?.address?.length - 4, holder?.address?.length)}</span>
-                                        <LinkIcon size={16} />
-                                        {isUniswapPair(holder.address) &&
-                                            <Tooltip text={PairTooltipText(holder.address)} show={showUniTooltip} >
-                                                <img onMouseEnter={() => setShowUniTooltip(true)}
-                                                    onMouseLeave={() => setShowUniTooltip(false)}
-                                                    src={'https://i2.wp.com/fastandclean.org/wp-content/uploads/2021/01/UniSwap-logo.png?ssl=1'}
-                                                    style={{ maxWidth: 30, marginTop: -8 }} />
-                                            </Tooltip>
-                                        }
-                                    </AddressLink>
+                    </div>
+                    {isOpen && <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        {!isMobile && <>
+                            <p style={{ fontSize: 12, margin: 0 }}>Address</p>
+                            <p style={{ fontSize: 12, margin: 0 }}>Balance <span style={{ borderLeft: '1px solid #444', paddingLeft: 10, marginLeft: 10 }}>Share (%)</span></p>
+                        </>}
+                        {isMobile && <p style={{ margin: 0 }}>Top {tokenInfo?.symbol} token holders</p>}
+                    </div>}
+                    {isOpen && <div style={{ maxHeight: maxxed ? '100vh' : '380px', overflowY: `scroll`, width: '100%', overflow: 'auto' }}>
+                        {holders && holders.slice(sliceCount.start, sliceCount.end).map((holder, i) => (
+                            <div key={holder.address} style={{ columnGap: 20, borderBottom: (i == sliceCount.end - 1) ? 'none' : `1px solid #444`, alignItems: 'center', padding: '2px 0px', marginBottom: 1, display: 'flex', rowGap: 10, justifyContent: isMobile ? 'stretch' : 'space-between', flexFlow: 'row wrap' }}>
+                                <AddressLink
+                                    hasENS={false}
+                                    isENS={false}
+                                    href={chainId == 56 ? getHolderLink(holder) : getExplorerLink(chainId || 1, holder.address, ExplorerDataType.ADDRESS)}
+                                    style={{
+                                        color: theme.text1,
+                                        fontSize: 12
+                                    }}>
+                                    <span style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginRight: 3,
+                                        width: 25,
+                                        height: 25,
+                                        color: theme.text1,
+                                        background: theme.backgroundInteractive,
+                                        borderRadius: 15
+                                    }}>
+                                        {i + 1}
+                                    </span>
+                                    <span style={{ marginRight: 3 }}>{holder?.address?.substring(0, 10)}...{holder.address?.substring(holder?.address?.length - 4, holder?.address?.length)}</span>
+                                    <LinkIcon size={16} />
+                                    {isUniswapPair(holder.address) &&
+                                        <Tooltip text={PairTooltipText(holder.address)} show={showUniTooltip} >
+                                            <img onMouseEnter={() => setShowUniTooltip(true)}
+                                                onMouseLeave={() => setShowUniTooltip(false)}
+                                                src={'https://i2.wp.com/fastandclean.org/wp-content/uploads/2021/01/UniSwap-logo.png?ssl=1'}
+                                                style={{ maxWidth: 30, marginTop: -8 }} />
+                                        </Tooltip>
+                                    }
+                                </AddressLink>
 
-                                    <Badge style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant={BadgeVariant.GREY}>
-                                        <div style={{
-                                            fontSize: 12,
-                                            paddingRight: 10,
-                                            borderRight: '1px solid #444',
-                                            display: 'flex',
-                                            gap: 15,
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                            color: theme.white
-                                        }}>
-                                            {chainId == 1 && tokenInfo?.decimals && <span>{Number(holder.balance / 10 ** tokenInfo?.decimals).toLocaleString()}</span>}
-                                            {chainId == 56 && <span>{Number(holder.balance).toLocaleString()}</span>}
-                                            {((tokenInfo && tokenInfo.symbol) || token && token?.symbol) && <span> {tokenInfo?.symbol}</span>}
-                                        </div>
-                                        &nbsp;
-                                        <span style={{ paddingLeft: 10, fontSize: 12.5, color: 'lightgreen' }}>{holder.share}%</span>
-                                    </Badge>
+                                <Badge style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant={BadgeVariant.GREY}>
+                                    <div style={{
+                                        fontSize: 12,
+                                        paddingRight: 10,
+                                        borderRight: '1px solid #444',
+                                        display: 'flex',
+                                        gap: 15,
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        color: theme.white
+                                    }}>
+                                        {chainId == 1 && tokenInfo?.decimals && <span>{Number(holder.balance / 10 ** tokenInfo?.decimals).toLocaleString()}</span>}
+                                        {chainId == 56 && <span>{Number(holder.balance).toLocaleString()}</span>}
+                                        {((tokenInfo && tokenInfo.symbol) || token && token?.symbol) && <span> {tokenInfo?.symbol}</span>}
+                                    </div>
+                                    &nbsp;
+                                    <span style={{ paddingLeft: 10, fontSize: 12.5, color: 'lightgreen' }}>{holder.share}%</span>
+                                </Badge>
 
-                                </div>
-                            ))}
+                            </div>
+                        ))}
 
-                        </div>}
-                        {!!isOpen && <Badge style={{ cursor: 'pointer', alignItems: 'center', color: theme.text1, position: 'relative', width: '100%', bottom: 0, display: 'flex', justifyContent: 'center' }} onClick={sliceCountCb}>
-                            <small style={{ fontSize: 12 }}>{
-                                holders?.length === sliceCount?.end ? 'Hide' : 'Show'} All
-                                {holders?.length !== sliceCount?.end ? <ArrowDown /> : <ArrowUp />}
-                                Top 50</small>
-                        </Badge>}
-                    </DarkCard>)}
-            </ReactFullscreen>
+                    </div>}
+                    {!!isOpen && <Badge style={{ cursor: 'pointer', alignItems: 'center', color: theme.text1, position: 'relative', width: '100%', bottom: 0, display: 'flex', justifyContent: 'center' }} onClick={sliceCountCb}>
+                        <small style={{ fontSize: 12 }}>{
+                            holders?.length === sliceCount?.end ? 'Hide' : 'Show'} All
+                            {holders?.length !== sliceCount?.end ? <ArrowDown /> : <ArrowUp />}
+                            Top 50</small>
+                    </Badge>}
+                </DarkCard>)}
+            />
         ) : null
-    }, [holders, setSliceCount, nodeProps, setIsOpen, isMobile, holders?.length, isOpen, burntHolderOwnedPercentComputed, node, sliceCount.start, sliceCount.end, topHoldersOwnedPercentComputed, maxxed])
+    }, [holders, setSliceCount, setIsOpen, isMobile, holders?.length, isOpen, burntHolderOwnedPercentComputed, node, sliceCount.start, sliceCount.end, topHoldersOwnedPercentComputed, maxxed])
 }

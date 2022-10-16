@@ -12,7 +12,7 @@ import { FixedSizeList } from "react-window";
 import Loader from "components/Loader";
 import React from "react";
 import ReactFullscreen from 'react-easyfullscreen';
-import {TYPE} from 'theme'
+import { TYPE } from 'theme'
 // Import React Table
 import _ from "lodash";
 import styled from "styled-components/macro";
@@ -207,7 +207,6 @@ const ChartTableRow = (props: RowProps) => {
     );
 };
 
-ChartComponent.displayName = "CComponent";
 
 const Thead = styled.thead`
   font-size:12px;
@@ -591,6 +590,51 @@ const Row = React.memo((props: _RowProps) => {
         )
     }
 }, areRowsEqual)
+export const FullScreenIcon = function (isMaxxed: boolean, isEnabled: boolean, onToggle: () => void, onRequest: () => void, onExit: () => void, style =  {}) {
+    const onClick = () => {
+        const maxxed = !isMaxxed
+        if (maxxed) {
+            if (!isEnabled) {
+                onRequest()
+            } else {
+                onToggle()
+            }
+        } else {
+            onExit()
+        }
+    }
+    if (isMaxxed) {
+        return <Minimize style={{ ...style, cursor: 'pointer' }} onClick={onClick} />
+    } else {
+        return <Maximize style={{ ...style, cursor: 'pointer' }} onClick={onClick} />
+    }
+}
+
+type Props ={
+    childrenFn: (props: any) => React.ReactNode
+    onMaxChange?: (maxxed: boolean) => void
+}
+export const FullScreenWrapper = (props: Props) => {
+    const [isMaxxed, setIsMaxxed] = React.useState(false)
+    const changeFn = () => {
+        setIsMaxxed(maxxed => !maxxed)
+    }
+
+    React.useEffect(() => {
+        props.onMaxChange && props.onMaxChange(isMaxxed)
+    }, [isMaxxed])
+
+    const {childrenFn} = props
+
+    const children = (propz: any) => <>{childrenFn(propz)}</>
+    return (
+        <ReactFullscreen onChange={changeFn}>
+            {({ ref, onRequest, onExit, isEnabled, onToggle, }) => (
+                <>{children({isMaxxed,ref,onRequest,onExit,isEnabled,onToggle})}</>
+            )}
+        </ReactFullscreen>
+    )
+}
 
 export const TableInstance = ({ network, tableData, tokenSymbol, headerSymbol }: { network: string, tableData: any[], tokenSymbol: string, headerSymbol: string }) => {
     const { account, chainId } = useActiveWeb3React()
@@ -606,68 +650,54 @@ export const TableInstance = ({ network, tableData, tokenSymbol, headerSymbol }:
     );
 
 
-    const [isMaxxed, setIsMaxxed] = React.useState(false)
-    const Icon = function (onRequest: () => void, onExit: () => void) {
-        const onClick = () => {
-            const maxxed = !isMaxxed
-            setIsMaxxed(maxxed)
-            if (maxxed) {
-                onRequest()
-            } else {
-                onExit()
-            }
-        }
-        if (isMaxxed) {
-            return <Minimize style={{ cursor: 'pointer' }} onClick={onClick} />
-        } else {
-            return <Maximize style={{ cursor: 'pointer' }} onClick={onClick} />
-        }
-    }
+    
+
+    const reference = React.useRef()
 
     const isMobile = useIsMobile()
     return (
-        <ReactFullscreen>
-            {({ ref, onRequest, onExit }) => (
-                <div ref={ref as any} style={{
-                    height: isMobile ? 500 : 600,
-                    overflowX: `scroll`,
-                    overflowY: `scroll`,
-                    width: '100%',
-                    marginTop: 5
-                }}>
+        <FullScreenWrapper childrenFn=    {({isMaxxed, ref, onRequest, onExit, isEnabled, onToggle, }) => (
 
-                    <Table isMobile={isMobile}>
-                     
+            <div ref={ref as any} style={{
+                height: isMobile ? 500 : 600,
+                overflowX: `scroll`,
+                overflowY: `scroll`,
+                width: '100%',
+                marginTop: 5
+            }}>
+
+                <Table isMobile={isMobile}>
+
                     <thead>
-                            <tr style={{height: 7,background:'transparent'}}>
-                                <th  style={{height:10, background:'transparent'}} colSpan={7}>
-                                    <div style={{ width: '95%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                                        {Icon(onRequest, onExit)}
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <TableHeader isMobile={isMobile} headerSymbol={headerSymbol} />
-                  
-                        <ReactCSSTransitionGroup
-                            component="tbody">
-                            {tableData?.map((item: any, index: number) => {
-                                return (
-                                    <Row
-                                        isMobile={isMobile}
-                                        account={account}
-                                        chainLabel={chainLabel}
-                                        highlightedColor={highlightedColor}
-                                        index={index}
-                                        item={item}
-                                        tokenSymbol={tokenSymbol}
-                                        key={index} />
-                                )
-                            })}
+                        <tr style={{ height: 7, background: 'transparent' }}>
+                            <th style={{ height: 10, background: 'transparent' }} colSpan={7}>
+                                <div style={{ width: '95%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                    {FullScreenIcon(isMaxxed, isEnabled, onToggle, onRequest, onExit)}
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <TableHeader isMobile={isMobile} headerSymbol={headerSymbol} />
 
-                        </ReactCSSTransitionGroup>
-                    </Table>
-                </div>)}
-        </ReactFullscreen>
+                    <ReactCSSTransitionGroup
+                        component="tbody">
+                        {tableData?.map((item: any, index: number) => {
+                            return (
+                                <Row
+                                    isMobile={isMobile}
+                                    account={account}
+                                    chainLabel={chainLabel}
+                                    highlightedColor={highlightedColor}
+                                    index={index}
+                                    item={item}
+                                    tokenSymbol={tokenSymbol}
+                                    key={index} />
+                            )
+                        })}
+
+                    </ReactCSSTransitionGroup>
+                </Table>
+            </div>)} />
+        
     )
 }

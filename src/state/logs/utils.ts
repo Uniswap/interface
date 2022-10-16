@@ -296,9 +296,9 @@ type PairWithTokens = {
 
 export const useTokensFromPairAddress = (pairAddress: string): { data?: PairWithTokens, loading: boolean, error?: ApolloError } => {
 
-  const query = useQuery<{pairs: PairWithTokens[]}>(TOKENS_BY_PAIR_ADDRESS(pairAddress), {
-    fetchPolicy:"cache-first",
-    
+  const query = useQuery<{ pairs: PairWithTokens[] }>(TOKENS_BY_PAIR_ADDRESS(pairAddress), {
+    fetchPolicy: "cache-first",
+
   })
   return {
     data: query.data?.pairs?.[0],
@@ -587,10 +587,25 @@ export function useTokenTransactions(tokenAddress: string, allPairsFormatted?: a
     variables: {
       allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted?.[0]?.id?.toLowerCase()] : []
     },
-    pollInterval: interval || 5000,
+    //pollInterval: interval || 5000,
     client: client,
 
   });
+  tokenTxns.subscribeToMore({
+    document: FILTERED_TRANSACTIONS,
+    variables: {
+      allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted?.[0]?.id?.toLowerCase()] : []
+    },
+    updateQuery: (prev, { subscriptionData }) => {
+      if (!subscriptionData.data) return prev
+      const updatedTxns = subscriptionData.data
+      const result = Object.assign({}, prev, {
+        swaps: [...updatedTxns.swaps, ...(prev.swaps || []).filter((swap: any) => !updatedTxns.swaps.some((i: any) => i.transaction.id == swap.transaction.id))]
+      })
+      console.log(`token_transactions SUBSCRIPTION`, prev, subscriptionData, result)
+      return result
+    }
+  })
   const data = React.useMemo(() => tokenTxns, [tokenTxns.data, tokenTxns.called, tokenTxns.previousData])
   return { data: data.data, lastFetched: new Date(), loading: tokenTxns.loading };
 }
@@ -713,9 +728,21 @@ export function useTokenData(tokenAddress: string, interval: null | number = nul
   const [ethPrice, ethPriceOld, ethPricePercent] = useEthPrice()
   const [t24h, t48h] = getDeltaTimestamps()
   const blocks = useBlocksFromTimestamps([t24h, t48h])
-  const tokenDataQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), null), {
+  const TOKEN_Q = TOKEN_DATA(tokenAddress?.toLowerCase(), null)
+  const tokenDataQ = useQuery(TOKEN_Q, {
     fetchPolicy: 'cache-and-network',
-    pollInterval: interval || 30000
+  })
+
+  tokenDataQ.subscribeToMore({
+    document: TOKEN_Q,
+    variables: {},
+    updateQuery: (prev, { subscriptionData }) => {
+      if (!subscriptionData.data) return prev;
+      console.log(`subscription data - useTokenData`, subscriptionData.data)
+      return Object.assign({}, prev, {
+        ...(subscriptionData.data || {})
+      })
+    }
   })
 
   const token1DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[0]), { fetchPolicy: 'cache-and-network' })
@@ -723,7 +750,7 @@ export function useTokenData(tokenAddress: string, interval: null | number = nul
 
   return React.useMemo(() => {
     return mapTokenData(tokenDataQ.data, token1DayQ.data, token2DayQ.data, ethPrice as any, ethPriceOld as any)
-  }, [ethPrice, ethPriceOld, token1DayQ, token2DayQ, tokenDataQ])
+  }, [ethPrice, blocks, ethPricePercent, ethPriceOld, token1DayQ, token2DayQ, tokenDataQ])
 }
 /**
  * Convert a filter key to the corresponding filter
