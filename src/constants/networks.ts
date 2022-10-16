@@ -128,6 +128,10 @@ export const RPC_URLS: { [key in SupportedChainId]: string[] } = {
     `https://arbitrum-rinkeby.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.ARBITRUM_RINKEBY],
   ],
+  [SupportedChainId.ARBITRUM_GOERLI]: [
+    `https://arbitrum-goerli.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[SupportedChainId.ARBITRUM_GOERLI],
+  ],
   [SupportedChainId.POLYGON]: [
     `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
     ...FALLBACK_URLS[SupportedChainId.POLYGON],
