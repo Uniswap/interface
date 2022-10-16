@@ -34,7 +34,12 @@ export default function Updater(): null {
     if (chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISM_GOERLI].includes(chainId)) {
       dispatch(enableList(OPTIMISM_LIST))
     }
-    if (chainId && [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)) {
+    if (
+      chainId &&
+      [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY, SupportedChainId.ARBITRUM_GOERLI].includes(
+        chainId
+      )
+    ) {
       dispatch(enableList(ARBITRUM_LIST))
     }
     if (chainId && isCelo(chainId)) {

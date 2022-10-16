@@ -36,6 +36,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.CELO_ALFAJORES]: 'CELO',
   [SupportedChainId.ARBITRUM_ONE]: 'ARBITRUM',
   [SupportedChainId.ARBITRUM_RINKEBY]: 'ARBITRUM',
+  [SupportedChainId.ARBITRUM_GOERLI]: 'ARBITRUM',
   [SupportedChainId.OPTIMISM]: 'OPTIMISM',
   [SupportedChainId.OPTIMISM_GOERLI]: 'OPTIMISM',
 }

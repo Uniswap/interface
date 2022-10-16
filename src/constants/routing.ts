@@ -150,6 +150,10 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(SupportedChainId.ARBITRUM_RINKEBY),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_RINKEBY] as Token,
   ],
+  [SupportedChainId.ARBITRUM_GOERLI]: [
+    nativeOnChain(SupportedChainId.ARBITRUM_GOERLI),
+    WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_GOERLI] as Token,
+  ],
   [SupportedChainId.OPTIMISM]: [
     nativeOnChain(SupportedChainId.OPTIMISM),
     DAI_OPTIMISM,

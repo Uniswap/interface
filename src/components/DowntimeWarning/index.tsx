@@ -64,6 +64,7 @@ export default function DowntimeWarning() {
       )
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.ARBITRUM_RINKEBY:
+    case SupportedChainId.ARBITRUM_GOERLI:
       return (
         <Wrapper>
           <Trans>
