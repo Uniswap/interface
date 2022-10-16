@@ -18,7 +18,6 @@ import * as styles from './CollectionStats.css'
 
 const PercentChange = styled.div`
   display: flex;
-  justify-content: flex-end;
   align-items: center;
   justify-content: center;
 `
@@ -260,12 +259,14 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
       : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
+  console.log(stats)
+
   // round daily volume & floorPrice to 3 decimals or less
   const totalVolumeStr = ethNumberStandardFormatter(stats.stats?.total_volume)
   const floorPriceStr = ethNumberStandardFormatter(stats.floorPrice)
   const floorChangeStr =
-    stats.stats && stats.stats.one_day_change ? Math.round(Math.abs(stats.stats.one_day_change) * 100) : 0
-  const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_change) : null
+    stats.stats && stats.stats.one_day_floor_change ? Math.round(Math.abs(stats.stats.one_day_floor_change) * 100) : 0
+  const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_floor_change) : null
 
   const statsLoadingSkeleton = new Array(5).fill(
     <>
@@ -294,7 +295,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           {floorPriceStr} ETH
         </StatsItem>
       ) : null}
-      {stats.stats?.one_day_change ? (
+      {stats.stats?.one_day_floor_change ? (
         <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
           <PercentChange>
             {floorChangeStr}% {arrow}
