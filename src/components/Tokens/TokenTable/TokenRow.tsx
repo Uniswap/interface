@@ -45,8 +45,6 @@ const Cell = styled.div`
   justify-content: center;
 `
 const StyledTokenRow = styled.div<{
-  first?: boolean
-  last?: boolean
   loading?: boolean
   favoriteTokensEnabled?: boolean
 }>`
@@ -58,11 +56,7 @@ const StyledTokenRow = styled.div<{
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
-  ${({ first, last }) => css`
-    height: ${first || last ? '72px' : '64px'};
-    padding-top: ${first ? '8px' : '0px'};
-    padding-bottom: ${last ? '8px' : '0px'};
-  `}
+  height: 64px;
   padding-left: 12px;
   padding-right: 12px;
   transition: ${({
@@ -78,11 +72,6 @@ const StyledTokenRow = styled.div<{
       !loading &&
       css`
         background-color: ${theme.hoverDefault};
-      `}
-    ${({ last }) =>
-      last &&
-      css`
-        border-radius: 0px 0px 8px 8px;
       `}
   }
 
@@ -375,19 +364,13 @@ function HeaderCell({
   )
 }
 
+const TokenRowContainer = styled.div<{ first?: boolean; last?: boolean }>`
+  padding-top: ${({ first }) => first && '8px'};
+  padding-bottom: ${({ last }) => last && '8px'};
+`
+
 /* Token Row: skeleton row component */
-export function TokenRow({
-  favorited,
-  header,
-  listNumber,
-  tokenInfo,
-  price,
-  percentChange,
-  tvl,
-  volume,
-  sparkLine,
-  ...rest
-}: {
+export function TokenRow(props: {
   favorited: ReactNode
   first?: boolean
   header: boolean
@@ -402,6 +385,8 @@ export function TokenRow({
   last?: boolean
   style?: CSSProperties
 }) {
+  const { favorited, header, listNumber, tokenInfo, price, percentChange, tvl, volume, sparkLine, first, last } = props
+
   const favoriteTokensEnabled = useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled
   const rowCells = (
     <>
@@ -417,9 +402,9 @@ export function TokenRow({
   )
   if (header) return <StyledHeaderRow favoriteTokensEnabled={favoriteTokensEnabled}>{rowCells}</StyledHeaderRow>
   return (
-    <StyledTokenRow favoriteTokensEnabled={favoriteTokensEnabled} {...rest}>
-      {rowCells}
-    </StyledTokenRow>
+    <TokenRowContainer first={first} last={last}>
+      <StyledTokenRow {...props}>{rowCells}</StyledTokenRow>
+    </TokenRowContainer>
   )
 }
 
