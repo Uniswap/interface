@@ -28,7 +28,8 @@ import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { AlertTriangle } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -568,21 +569,55 @@ export function PositionPage() {
       !collectMigrationHash
   )
 
+  const [positionNotValid, setPositionNotValid] = useState<boolean>(false)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setPositionNotValid(!loading && poolState !== PoolState.LOADING && !feeAmount)
+    }, 3000)
+    return () => clearTimeout(handler)
+  }, [loading, poolState, feeAmount])
+
+  const positionLoading = useMemo(() => {
+    return positionNotValid ? (
+      <PageWrapper navBarFlag={navBarFlagEnabled}>
+        <AutoColumn gap="md">
+          <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
+            <HoverText>
+              <Trans>← Back to Pools</Trans>
+            </HoverText>
+          </Link>
+          <DarkCard>
+            <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center" padding={16}>
+              <AlertTriangle strokeWidth={1} width={48} height={48} style={{ marginBottom: '0.5rem' }} />
+              <div>
+                <Trans>Position not valid — Are you on the right network?</Trans>
+              </div>
+            </ThemedText.DeprecatedBody>
+          </DarkCard>
+        </AutoColumn>
+      </PageWrapper>
+    ) : (
+      <LoadingRows>
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+      </LoadingRows>
+    )
+    // eslint-disable-next-line
+  }, [positionNotValid])
+
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
-    <LoadingRows>
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
-    </LoadingRows>
+    positionLoading
   ) : (
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
