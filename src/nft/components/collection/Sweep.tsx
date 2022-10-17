@@ -107,6 +107,9 @@ const NftHolder = styled.div<{ index: number; src: string | undefined }>`
   z-index: ${({ index }) => 3 - index};
 `
 
+const wholeNumberRegex = RegExp(`^(0|[1-9][0-9]*)$`)
+const twoDecimalPlacesRegex = RegExp(`^\\d*\\.?\\d{0,2}$`)
+
 interface NftDisplayProps {
   nfts: GenieAsset[]
 }
@@ -136,7 +139,7 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
   const theme = useTheme()
 
   const [isItemsToggled, toggleSweep] = useReducer((s) => !s, true)
-  const [sweepAmount, setSweepAmount] = useState<number>(0)
+  const [sweepAmount, setSweepAmount] = useState<string>('')
 
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
@@ -264,62 +267,88 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
   }, [itemsInBag, contractAddress])
 
   const clearSweep = () => {
+    setSweepAmount('')
     removeAssetsFromBag(sweepItemsInBag)
+  }
+
+  const handleSweep = (value: number) => {
+    if (sortedAssets) {
+      if (isItemsToggled) {
+        if (sweepItemsInBag.length < value) {
+          addAssetsToBag(sortedAssets.slice(sweepItemsInBag.length, value), true)
+        } else {
+          removeAssetsFromBag(sweepItemsInBag.slice(value, sweepItemsInBag.length))
+        }
+        setSweepAmount(value === 0 ? '' : value.toString())
+      } else {
+        const wishValueInWei = parseEther(value.toString())
+        if (sweepEthPrice.lte(wishValueInWei)) {
+          let curIndex = sweepItemsInBag.length
+          let curTotal = sweepEthPrice
+          const wishAssets: GenieAsset[] = []
+
+          while (
+            curIndex < sortedAssets.length &&
+            curTotal.add(BigNumber.from(sortedAssets[curIndex].priceInfo.ETHPrice)).lte(wishValueInWei)
+          ) {
+            wishAssets.push(sortedAssets[curIndex])
+            curTotal = curTotal.add(BigNumber.from(sortedAssets[curIndex].priceInfo.ETHPrice))
+            curIndex++
+          }
+
+          if (wishAssets.length > 0) {
+            addAssetsToBag(wishAssets, true)
+          }
+        } else {
+          let curIndex = sweepItemsInBag.length - 1
+          let curTotal = sweepEthPrice
+          const wishAssets: GenieAsset[] = []
+
+          while (curIndex >= 0 && curTotal.gt(wishValueInWei)) {
+            wishAssets.push(sweepItemsInBag[curIndex])
+            curTotal = curTotal.sub(BigNumber.from(sweepItemsInBag[curIndex].priceInfo.ETHPrice))
+            curIndex--
+          }
+
+          if (wishAssets.length > 0) {
+            removeAssetsFromBag(wishAssets)
+          }
+        }
+
+        setSweepAmount(value === 0 ? '' : value.toFixed(2))
+      }
+    }
   }
 
   const handleSliderChange = (value: number | number[]) => {
     if (typeof value === 'number') {
       if (sortedAssets) {
         if (isItemsToggled) {
-          if (sweepItemsInBag.length < value) {
-            addAssetsToBag(sortedAssets.slice(sweepItemsInBag.length, value), true)
-          } else {
-            removeAssetsFromBag(sweepItemsInBag.slice(value, sweepItemsInBag.length))
-          }
+          handleSweep(value)
+          setSweepAmount(value === 0 ? '' : value.toString())
         } else {
-          const wishValueInWei = parseEther(value.toString())
-          if (sweepEthPrice.lte(wishValueInWei)) {
-            let curIndex = sweepItemsInBag.length
-            let curTotal = sweepEthPrice
-            const wishAssets: GenieAsset[] = []
-
-            while (
-              curIndex < sortedAssets.length &&
-              curTotal.add(BigNumber.from(sortedAssets[curIndex].priceInfo.ETHPrice)).lte(wishValueInWei)
-            ) {
-              wishAssets.push(sortedAssets[curIndex])
-              curTotal = curTotal.add(BigNumber.from(sortedAssets[curIndex].priceInfo.ETHPrice))
-              curIndex++
-            }
-
-            if (wishAssets.length > 0) {
-              addAssetsToBag(wishAssets, true)
-            }
-          } else {
-            let curIndex = sweepItemsInBag.length - 1
-            let curTotal = sweepEthPrice
-            const wishAssets: GenieAsset[] = []
-
-            while (curIndex >= 0 && curTotal.gt(wishValueInWei)) {
-              wishAssets.push(sweepItemsInBag[curIndex])
-              curTotal = curTotal.sub(BigNumber.from(sweepItemsInBag[curIndex].priceInfo.ETHPrice))
-              curIndex--
-            }
-
-            if (wishAssets.length > 0) {
-              removeAssetsFromBag(wishAssets)
-            }
-          }
+          handleSweep(value)
+          setSweepAmount(value === 0 ? '' : value.toFixed(2))
         }
       }
+    }
+  }
 
+  const handleInput = (value: string) => {
+    if (value === '') {
+      handleSweep(0)
+      setSweepAmount('')
+    } else if (isItemsToggled && wholeNumberRegex.test(value)) {
+      handleSweep(parseFloat(value))
+      setSweepAmount(value)
+    } else if (!isItemsToggled && twoDecimalPlacesRegex.test(value)) {
+      handleSweep(parseFloat(value))
       setSweepAmount(value)
     }
   }
 
   const handleToggleSweep = () => {
     clearSweep()
-    setSweepAmount(0)
     toggleSweep()
   }
 
@@ -333,7 +362,7 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
           <StyledSlider
             defaultValue={0}
             max={isItemsToggled ? sortedAssets?.length ?? 0 : parseFloat(formatEther(sortedAssetsTotalEth).toString())}
-            value={sweepAmount}
+            value={sweepAmount === '' ? 0 : parseFloat(sweepAmount)}
             step={isItemsToggled ? 1 : 0.01}
             trackStyle={{
               top: '3px',
@@ -367,7 +396,10 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
             minLength={1}
             maxLength={79}
             spellCheck="false"
-            value={isItemsToggled ? sweepAmount || '' : sweepAmount > 0 ? sweepAmount.toFixed(2) : ''}
+            value={sweepAmount}
+            onChange={(event) => {
+              handleInput(event.target.value.replace(/,/g, '.'))
+            }}
           />
           <ToggleContainer onClick={handleToggleSweep}>
             <ToggleSwitch active={isItemsToggled}>Items</ToggleSwitch>
