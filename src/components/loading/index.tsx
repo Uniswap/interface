@@ -8,9 +8,10 @@ import { FavoriteLoader } from 'src/components/loading/FavoriteLoader'
 import { HeaderLoader } from 'src/components/loading/HeaderLoader'
 import { Shimmer } from 'src/components/loading/Shimmer'
 import { TokenLoader } from 'src/components/loading/TokenLoader'
+import { WalletLoader } from 'src/components/loading/WalletLoader'
 import GraphCurveArea from './graph-curve-area.svg'
 
-type SkeletonType = 'box' | 'graph' | 'header' | 'token' | 'image' | 'favorite' | 'grid'
+type SkeletonType = 'box' | 'graph' | 'header' | 'token' | 'image' | 'favorite' | 'grid' | 'wallets'
 
 interface LoadingProps {
   type?: SkeletonType
@@ -50,6 +51,16 @@ const useChildFromType = (
             <React.Fragment key={i}>
               <TokenLoader />
               {showSeparator && i !== length - 1 && <Separator />}
+            </React.Fragment>
+          ))}
+        </Box>
+      )
+    case 'wallets':
+      return (
+        <Box>
+          {new Array(repeat).fill(null).map((_, i, { length }) => (
+            <React.Fragment key={i}>
+              <WalletLoader opacity={(length - i) / length} />
             </React.Fragment>
           ))}
         </Box>

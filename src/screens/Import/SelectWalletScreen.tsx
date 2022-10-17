@@ -2,13 +2,13 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense, useCallback, useMemo, useReducer, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
+import { Loading } from 'src/components/loading'
 import { importAccountSagaName } from 'src/features/import/importAccountSaga'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -53,7 +53,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
         'You can import any of your wallet addresses that are associated with your recovery phrase.'
       )}
       title={t('Select addresses to import')}>
-      <Suspense fallback={<ActivityIndicator />}>
+      <Suspense fallback={<Loading repeat={4} type="wallets" />}>
         <WalletPreviewList addresses={addresses} navigation={navigation} params={params} />
       </Suspense>
     </OnboardingScreen>
@@ -146,7 +146,7 @@ function WalletPreviewList({
   return (
     <>
       {loadingAccounts ? (
-        <ActivityIndicator />
+        <Loading repeat={4} type="wallets" />
       ) : (
         <ScrollView>
           <Flex gap="sm">
