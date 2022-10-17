@@ -137,7 +137,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   //   }
   // )
   const {
-    nftAssets: nftQueryAssets,
+    assets: nftQueryAssets,
     loadNext,
     hasNext,
     isLoadingNext,
