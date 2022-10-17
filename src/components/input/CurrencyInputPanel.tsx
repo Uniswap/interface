@@ -125,7 +125,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
               placeholderTextColor={theme.colors.textSecondary}
               px="none"
               py="none"
-              returnKeyType="done"
+              returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
               selection={selection}
               showCurrencySign={isUSDInput}
               showSoftInputOnFocus={showSoftInputOnFocus}
