@@ -52,9 +52,15 @@ export const Bridge = () => {
 
     const theme = React.useMemo(() => isDarkMode ? 'dark' : 'light', [isDarkMode])
     const { stargate } = useScript("https://unpkg.com/@layerzerolabs/stargate-ui@latest/element.js", "stargate")
-
+    let content: JSX.Element;
     if (!stargate) {
-        return <Loader />
+        content = <div style={{display:'flex', justifyContent: 'center', alignItems:'center', height: 300}}> <Loader size={undefined} /> </div>
+    } else {
+        content =  <stargate-widget 
+                        tenthBps={25} 
+                        partnerId={0} 
+                        feeCollector={'0xa2bDF890E70d3468dF5EFB50D1C1117CD937E6E5'} 
+                        theme={theme} />
     }
     
 
@@ -66,11 +72,8 @@ export const Bridge = () => {
                     Kiba Bridge
                 </TYPE.small>
                 <Wrapper>
-                    <stargate-widget 
-                    tenthBps={25} 
-                    partnerId={0} 
-                    feeCollector={'0xa2bDF890E70d3468dF5EFB50D1C1117CD937E6E5'} 
-                    theme={theme} /></Wrapper>
+                    {content}
+                </Wrapper>
             </AutoColumn>
         </AutoColumn>
     </DarkCard>

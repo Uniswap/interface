@@ -25,15 +25,15 @@ const StyledSVG = styled.svg<{ size: string; stroke?: string }>`
  * need ...rest for layered styles on top
  */
 export default function Loader({
-  size = '16px',
+  size = 'sm',
   stroke,
   ...rest
 }: {
-  size?: string
+  size?: 'sm' | undefined | string
   stroke?: string
   [k: string]: any
 }) {
   return (
-    <CSpinner component="span" size="sm" aria-hidden="true"/>
+    <CSpinner {...rest}  component="span" size={size as 'sm' | undefined} aria-hidden="true"/>
   )
 }

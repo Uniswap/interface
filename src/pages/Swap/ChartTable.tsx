@@ -11,6 +11,7 @@ import { Dots } from "components/swap/styleds";
 import { FixedSizeList } from "react-window";
 import Loader from "components/Loader";
 import React from "react";
+import ReactFullScreenComponent from 'react-easyfullscreen';
 import ReactFullscreen from 'react-easyfullscreen';
 import { TYPE } from 'theme'
 // Import React Table
@@ -590,7 +591,7 @@ const Row = React.memo((props: _RowProps) => {
         )
     }
 }, areRowsEqual)
-export const FullScreenIcon = function (isMaxxed: boolean, isEnabled: boolean, onToggle: () => void, onRequest: () => void, onExit: () => void, style =  {}) {
+export const FullScreenIcon = function (isMaxxed: boolean, isEnabled: boolean, onToggle: () => void, onRequest: () => void, onExit: () => void, style = {}) {
     const onClick = () => {
         const maxxed = !isMaxxed
         if (maxxed) {
@@ -610,7 +611,7 @@ export const FullScreenIcon = function (isMaxxed: boolean, isEnabled: boolean, o
     }
 }
 
-type Props ={
+type Props = {
     childrenFn: (props: any) => React.ReactNode
     onMaxChange?: (maxxed: boolean) => void
 }
@@ -621,19 +622,38 @@ export const FullScreenWrapper = (props: Props) => {
     }
 
     React.useEffect(() => {
-        props.onMaxChange && props.onMaxChange(isMaxxed)
-    }, [isMaxxed])
+        props?.onMaxChange && props?.onMaxChange(isMaxxed)
+    }, [props, isMaxxed])
 
-    const {childrenFn} = props
+    let content: JSX.Element
 
-    const children = (propz: any) => <>{childrenFn(propz)}</>
-    return (
-        <ReactFullscreen onChange={changeFn}>
-            {({ ref, onRequest, onExit, isEnabled, onToggle, }) => (
-                <>{children({isMaxxed,ref,onRequest,onExit,isEnabled,onToggle})}</>
-            )}
-        </ReactFullscreen>
-    )
+    const { childrenFn } = props
+    const reportError = () => console.error(`React.FullScreen - errored out`)
+
+    const _childrenFn = (propz: any) => <>{childrenFn(propz)}</>
+
+    const isMobile = useIsMobile()
+
+    const defaultRef = React.useRef()
+
+    const Wrapper = isMobile ?
+        ({children}:{children:any}) => <div>{children}</div>
+        : ReactFullScreenComponent
+
+        document.webkit
+    if (!document?.fullscreenEnabled) {
+        content = <div>
+             <>{childrenFn({ isMaxxed, ref: defaultRef, onRequest: () => { return }, onExit: () => { return }, isEnabled: false, onToggle: () => { return } })}</>
+        </div>
+    } else {
+        content = <ReactFullScreenComponent onChange={changeFn} onError={reportError}>
+                {({ ref, onRequest, onExit, isEnabled, onToggle, }) => (
+                <>{_childrenFn({isMaxxed,ref,onRequest,onExit,isEnabled,onToggle})}</>
+            )}  
+        </ReactFullScreenComponent>
+    }
+
+    return <>{content}</>
 }
 
 export const TableInstance = ({ network, tableData, tokenSymbol, headerSymbol }: { network: string, tableData: any[], tokenSymbol: string, headerSymbol: string }) => {
@@ -650,13 +670,13 @@ export const TableInstance = ({ network, tableData, tokenSymbol, headerSymbol }:
     );
 
 
-    
+
 
     const reference = React.useRef()
 
     const isMobile = useIsMobile()
     return (
-        <FullScreenWrapper childrenFn=    {({isMaxxed, ref, onRequest, onExit, isEnabled, onToggle, }) => (
+        <FullScreenWrapper childrenFn={({ isMaxxed, ref, onRequest, onExit, isEnabled, onToggle, }) => (
 
             <div ref={ref as any} style={{
                 height: isMobile ? 500 : 600,
@@ -698,6 +718,6 @@ export const TableInstance = ({ network, tableData, tokenSymbol, headerSymbol }:
                     </ReactCSSTransitionGroup>
                 </Table>
             </div>)} />
-        
+
     )
 }
