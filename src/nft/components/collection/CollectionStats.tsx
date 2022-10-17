@@ -242,13 +242,15 @@ const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: 
 }
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
-  const numOwnersStr = stats.stats ? quantityFormatter(stats.stats.num_owners) : 0
+  const numOwnersStr = stats.stats ? quantityFormatter((stats.stats.num_owners / stats.stats.total_supply) * 100) : 0
   const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply) : 0
   const listedPercentageStr =
     stats.stats && stats.stats.total_listings > 0
       ? Math.round((stats.stats.total_listings / stats.stats.total_supply) * 100)
       : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
+
+  console.log(stats)
 
   // round daily volume & floorPrice to 3 decimals or less
   const totalVolumeStr = volumeFormatter(stats.stats?.total_volume)
@@ -266,24 +268,24 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   return (
     <Row gap={{ sm: '20', md: '60' }} {...props}>
       {isCollectionStatsLoading && statsLoadingSkeleton}
+      {stats.floorPrice ? (
+        <StatsItem label="Global floor" isMobile={isMobile ?? false}>
+          {floorPriceStr} ETH
+        </StatsItem>
+      ) : null}
+      {stats.stats?.total_volume ? (
+        <StatsItem label="Total volume" isMobile={isMobile ?? false}>
+          {totalVolumeStr} ETH
+        </StatsItem>
+      ) : null}
       {totalSupplyStr ? (
         <StatsItem label="Items" isMobile={isMobile ?? false}>
           {totalSupplyStr}
         </StatsItem>
       ) : null}
       {numOwnersStr ? (
-        <StatsItem label="Owners" isMobile={isMobile ?? false}>
-          {numOwnersStr}
-        </StatsItem>
-      ) : null}
-      {stats.floorPrice ? (
-        <StatsItem label="Floor Price" isMobile={isMobile ?? false}>
-          {floorPriceStr} ETH
-        </StatsItem>
-      ) : null}
-      {stats.stats?.total_volume ? (
-        <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
-          {totalVolumeStr} ETH
+        <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
+          {numOwnersStr}%
         </StatsItem>
       ) : null}
       {stats.stats?.total_listings && listedPercentageStr > 0 ? (
