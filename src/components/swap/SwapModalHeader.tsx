@@ -1,9 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Price } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
-import { formatPercentInBasisPointsNumber } from 'analytics/utils'
+import { getPriceUpdateBasisPoints } from 'analytics/utils'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
@@ -57,15 +56,6 @@ const formatAnalyticsEventProperties = (
   token_out_symbol: trade.outputAmount.currency.symbol,
   price_update_basis_points: priceUpdate,
 })
-
-const getPriceUpdateBasisPoints = (
-  prevPrice: Price<Currency, Currency>,
-  newPrice: Price<Currency, Currency>
-): number => {
-  const changeFraction = newPrice.subtract(prevPrice).divide(prevPrice)
-  const changePercentage = new Percent(changeFraction.numerator, changeFraction.denominator)
-  return formatPercentInBasisPointsNumber(changePercentage)
-}
 
 export default function SwapModalHeader({
   trade,

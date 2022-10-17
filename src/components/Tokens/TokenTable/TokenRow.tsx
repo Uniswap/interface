@@ -190,7 +190,7 @@ const DataCell = styled(Cell)<{ sortable: boolean }>`
     },
   }) => css`background-color ${duration.medium} ${timing.ease}`};
 `
-const MarketCapCell = styled(DataCell)`
+const TvlCell = styled(DataCell)`
   padding-right: 8px;
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     display: none;
@@ -383,7 +383,7 @@ export function TokenRow({
   tokenInfo,
   price,
   percentChange,
-  marketCap,
+  tvl,
   volume,
   sparkLine,
   ...rest
@@ -393,7 +393,7 @@ export function TokenRow({
   header: boolean
   listNumber: ReactNode
   loading?: boolean
-  marketCap: ReactNode
+  tvl: ReactNode
   price: ReactNode
   percentChange: ReactNode
   sparkLine?: ReactNode
@@ -409,7 +409,7 @@ export function TokenRow({
       <NameCell>{tokenInfo}</NameCell>
       <PriceCell sortable={header}>{price}</PriceCell>
       <PercentChangeCell sortable={header}>{percentChange}</PercentChangeCell>
-      <MarketCapCell sortable={header}>{marketCap}</MarketCapCell>
+      <TvlCell sortable={header}>{tvl}</TvlCell>
       <VolumeCell sortable={header}>{volume}</VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
       {favoriteTokensEnabled && <FavoriteCell>{favorited}</FavoriteCell>}
@@ -433,7 +433,7 @@ export function HeaderRow() {
       tokenInfo={<Trans>Token name</Trans>}
       price={<HeaderCell category={TokenSortMethod.PRICE} sortable />}
       percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} sortable />}
-      marketCap={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} sortable />}
+      tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} sortable />}
       volume={<HeaderCell category={TokenSortMethod.VOLUME} sortable />}
       sparkLine={null}
     />
@@ -456,7 +456,7 @@ export function LoadingRow() {
       }
       price={<MediumLoadingBubble />}
       percentChange={<LoadingBubble />}
-      marketCap={<LoadingBubble />}
+      tvl={<LoadingBubble />}
       volume={<LoadingBubble />}
       sparkLine={<SparkLineLoadingBubble />}
     />
@@ -536,9 +536,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           price={
             <ClickableContent>
               <PriceInfoCell>
-                {token.market?.price?.value
-                  ? formatDollar({ num: token.market.price.value, isPrice: true, lessPreciseStablecoinValues: true })
-                  : '-'}
+                {formatDollar({ num: token.market?.price?.value, isPrice: true, lessPreciseStablecoinValues: true })}
                 <PercentChangeInfoCell>
                   {formattedDelta}
                   {arrow}
@@ -552,16 +550,8 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               {arrow}
             </ClickableContent>
           }
-          marketCap={
-            <ClickableContent>
-              {token.market?.totalValueLocked?.value ? formatDollar({ num: token.market.totalValueLocked.value }) : '-'}
-            </ClickableContent>
-          }
-          volume={
-            <ClickableContent>
-              {token.market?.volume?.value ? formatDollar({ num: token.market.volume.value }) : '-'}
-            </ClickableContent>
-          }
+          tvl={<ClickableContent>{formatDollar({ num: token.market?.totalValueLocked?.value })}</ClickableContent>}
+          volume={<ClickableContent>{formatDollar({ num: token.market?.volume?.value })}</ClickableContent>}
           sparkLine={
             <SparkLine>
               <ParentSize>
