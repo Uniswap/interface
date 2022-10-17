@@ -91,27 +91,19 @@ export const quantityFormatter = (n: number): string => {
     return `${Number(Math.round(n).toLocaleString(DEFAULT_LOCALE))}`
   }
   if (n >= 1000) {
-    return abbreviatedKMBT(n)
+    return numbro(n)
+      .format({
+        average: true,
+        mantissa: 1,
+        optionalMantissa: true,
+        abbreviations: {
+          thousand: 'K',
+          million: 'M',
+          billion: 'B',
+          trillion: 'T',
+        },
+      })
+      .toUpperCase()
   }
   return `${Number(n.toFixed(2)).toLocaleString(DEFAULT_LOCALE, { minimumFractionDigits: 2 })}`
-}
-
-export const roundToWholeNumber = (n: number): string => {
-  return Math.round(n).toString()
-}
-
-export const abbreviatedKMBT = (n: number): string => {
-  return numbro(n)
-    .format({
-      average: true,
-      mantissa: 1,
-      optionalMantissa: true,
-      abbreviations: {
-        thousand: 'K',
-        million: 'M',
-        billion: 'B',
-        trillion: 'T',
-      },
-    })
-    .toUpperCase()
 }
