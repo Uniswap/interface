@@ -1,11 +1,8 @@
 import { useNavigation } from '@react-navigation/native'
-import { SpacingProps, SpacingShorthandProps, useTheme } from '@shopify/restyle'
+import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 import { Button } from 'src/components/buttons/Button'
-import { Chevron } from 'src/components/icons/Chevron'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
+import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { Theme } from 'src/styles/theme'
 
 type Props = {
@@ -18,24 +15,11 @@ type Props = {
 
 export function BackButton({ onPressBack, size, color, showButtonLabel, ...rest }: Props) {
   const navigation = useNavigation()
-  const { t } = useTranslation()
-  const theme = useTheme<Theme>()
 
   const goBack = onPressBack ? onPressBack : () => navigation.goBack()
   return (
     <Button onPress={goBack} {...rest}>
-      <Flex row alignItems="center" gap="xs">
-        <Chevron
-          color={color ? theme.colors[color] : theme.colors.textSecondary}
-          height={size}
-          width={size}
-        />
-        {showButtonLabel && (
-          <Text color="textSecondary" variant="subhead">
-            {t('Back')}
-          </Text>
-        )}
-      </Flex>
+      <BackButtonView color={color} showButtonLabel={showButtonLabel} size={size} />
     </Button>
   )
 }
