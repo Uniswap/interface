@@ -1,19 +1,12 @@
 import { Token } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useAppSelector } from 'src/app/hooks'
 import { MATIC_MAINNET_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DAI, nativeOnChain, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { useTokenProjects } from 'src/features/dataApi/tokenProjects'
 import { CurrencyInfo } from 'src/features/dataApi/types'
-import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { currencyId } from 'src/utils/currencyId'
-
-export function useFavoriteCurrencies(): CurrencyInfo[] {
-  const favoriteCurrencyIds = useAppSelector(selectFavoriteTokensSet)
-  return useTokenProjects(Array.from(favoriteCurrencyIds))
-}
 
 // Use Mainnet base token addresses since TokenProjects query returns each token on Arbitrum, Optimism, Polygon
 const baseCurrencies = [

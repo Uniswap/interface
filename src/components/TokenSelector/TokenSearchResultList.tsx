@@ -7,10 +7,7 @@ import { Box, Flex, Inset } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { filter } from 'src/components/TokenSelector/filter'
-import {
-  useAllCommonBaseCurrencies,
-  useFavoriteCurrencies,
-} from 'src/components/TokenSelector/hooks'
+import { useAllCommonBaseCurrencies } from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import { TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
@@ -67,6 +64,7 @@ export function useTokenSectionsByVariation(
 
   const popularTokens = usePopularTokens()
   const portfolioBalancesById = usePortfolioBalances(activeAccount.address)
+  const commonBaseCurrencies = useAllCommonBaseCurrencies()
 
   const portfolioBalances: PortfolioBalance[] = useMemo(() => {
     if (!portfolioBalancesById) return EMPTY_ARRAY
@@ -82,11 +80,7 @@ export function useTokenSectionsByVariation(
       : allPortfolioBalances
   }, [portfolioBalancesById, hideSmallBalances])
 
-  const favoriteCurrencies = useFavoriteCurrencies()
-
-  const commonBaseCurrencies = useAllCommonBaseCurrencies()
-
-  const popularWithoutBalances = useMemo(() => {
+  const popularTokenOptions = useMemo(() => {
     return popularTokens
       .sort((a, b) => {
         if (a.currency.name && b.currency.name) {
@@ -101,15 +95,7 @@ export function useTokenSectionsByVariation(
       })
   }, [popularTokens, portfolioBalancesById])
 
-  const favoritesWithoutBalances = useMemo(() => {
-    return favoriteCurrencies.map((currencyInfo) => {
-      return (
-        portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo)
-      )
-    })
-  }, [favoriteCurrencies, portfolioBalancesById])
-
-  const commonBases = useMemo(() => {
+  const commonBaseTokenOptions = useMemo(() => {
     return commonBaseCurrencies.map((currencyInfo) => {
       return (
         portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo)
@@ -164,7 +150,7 @@ export function useTokenSectionsByVariation(
     }
 
     if (variation === TokenSelectorVariation.BalancesAndPopular) {
-      const popularMinusBalances = difference(popularWithoutBalances, portfolioBalances)
+      const popularMinusBalances = difference(popularTokenOptions, portfolioBalances)
       return [
         {
           title: t('Your tokens'),
@@ -177,26 +163,30 @@ export function useTokenSectionsByVariation(
       ]
     }
 
-    const balancesAndFavorites = [
-      ...commonBases,
-      ...difference(portfolioBalances, commonBases),
-      ...difference(favoritesWithoutBalances, [...portfolioBalances, ...commonBases]),
+    // SuggestedAndPopular variation
+    const balancesAndCommonBases = [
+      ...commonBaseTokenOptions,
+      ...difference(portfolioBalances, commonBaseTokenOptions),
     ]
+    const popularMinusBalancesAndCommonBases = difference(
+      popularTokenOptions,
+      balancesAndCommonBases
+    )
+
     return [
       {
         title: t('Suggested'),
-        data: filter(balancesAndFavorites, chainFilter),
+        data: filter(balancesAndCommonBases, chainFilter),
       },
       {
         title: t('Popular tokens'),
-        data: filter(difference(popularWithoutBalances, balancesAndFavorites), chainFilter),
+        data: filter(popularMinusBalancesAndCommonBases, chainFilter),
       },
     ]
   }, [
-    commonBases,
-    popularWithoutBalances,
     portfolioBalances,
-    favoritesWithoutBalances,
+    popularTokenOptions,
+    commonBaseTokenOptions,
     searchResults,
     t,
     variation,
