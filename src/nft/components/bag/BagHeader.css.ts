@@ -1,9 +1,9 @@
 import { style } from '@vanilla-extract/css'
-import { subhead } from 'nft/css/common.css'
+import { headlineSmall } from 'nft/css/common.css'
 import { sprinkles, vars } from 'nft/css/sprinkles.css'
 
 export const header = style([
-  subhead,
+  headlineSmall,
   sprinkles({
     color: 'textPrimary',
     justifyContent: 'space-between',
