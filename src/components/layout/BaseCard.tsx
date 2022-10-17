@@ -1,5 +1,6 @@
-import { ShadowProps } from '@shopify/restyle'
+import { BoxProps, ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode } from 'react'
+import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -10,6 +11,7 @@ import { Trace } from 'src/features/telemetry/Trace'
 import { Theme } from 'src/styles/theme'
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
+const SHADOW_OFFSET_SMALL: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
 
 // Container
 export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
@@ -28,6 +30,24 @@ export function Container({ children, ...trace }: PropsWithChildren<ComponentPro
         {children}
       </Box>
     </Trace>
+  )
+}
+
+export function Shadow({ children, ...rest }: PropsWithChildren<BoxProps<Theme, true>>) {
+  const isDarkMode = useColorScheme() === 'dark'
+  return (
+    <Box
+      alignItems="center"
+      bg={isDarkMode ? 'backgroundSurface' : 'backgroundBackdrop'}
+      borderRadius="lg"
+      p="sm"
+      shadowColor="black"
+      shadowOffset={SHADOW_OFFSET_SMALL}
+      shadowOpacity={0.05}
+      shadowRadius={6}
+      {...rest}>
+      {children}
+    </Box>
   )
 }
 
@@ -132,4 +152,5 @@ export const BaseCard = {
   Container,
   EmptyState,
   Header,
+  Shadow,
 }

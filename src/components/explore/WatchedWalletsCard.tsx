@@ -1,21 +1,21 @@
 import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
+import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { useEagerUserProfileNavigation } from 'src/app/navigation/hooks'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { ExploreTokenCardEmptyState } from 'src/components/explore/ExploreTokenCardEmptyState'
-import { Box } from 'src/components/layout'
+import { AnimatedFlex, Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
+import { Text } from 'src/components/Text'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
-import { Screens } from 'src/screens/Screens'
+import { theme } from 'src/styles/theme'
 
 /** Renders the favorite tokens card on the Explore page */
 export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () => void }) {
   const { t } = useTranslation()
-  const navigation = useExploreStackNavigation()
   const { preload, navigate } = useEagerUserProfileNavigation()
   const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
   const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])
@@ -24,11 +24,12 @@ export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () =>
     ({ item: address }: ListRenderItemInfo<string>) => {
       return (
         <Button
+          style={{ marginVertical: theme.spacing.sm }}
           onPress={() => {
             navigate(address)
           }}
           onPressIn={() => preload(address)}>
-          <Box mx="sm">
+          <BaseCard.Shadow>
             <AddressDisplay
               showShortenedEns
               address={address}
@@ -36,45 +37,37 @@ export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () =>
               size={40}
               variant="smallLabel"
             />
-          </Box>
+          </BaseCard.Shadow>
         </Button>
       )
     },
     [navigate, preload]
   )
 
-  const hasWatchedWallets = watchedWalletsList.length > 0
-
-  return hasWatchedWallets ? (
-    <BaseCard.Container>
-      <BaseCard.Header
-        title={t('Watched wallets ({{watchedWalletsCount}})', {
-          watchedWalletsCount: watchedWalletsList.length,
-        })}
-        onPress={
-          hasWatchedWallets
-            ? () => {
-                navigation.navigate(Screens.WatchedWallets)
-              }
-            : undefined
+  return (
+    <AnimatedFlex entering={FadeIn} gap="none" mx="xs">
+      <Text color="textSecondary" variant="smallLabel">
+        {t('Pinned')}
+      </Text>
+      <FlatList
+        horizontal
+        ItemSeparatorComponent={ItemSeparator}
+        ListEmptyComponent={
+          <ExploreTokenCardEmptyState
+            buttonLabel={t('Search wallets')}
+            description={t('Watch wallets to keep track of their activity.')}
+            type="watched"
+            onPress={onSearchWallets}
+          />
         }
+        data={watchedWalletsList}
+        keyExtractor={(address) => address}
+        renderItem={renderItem}
       />
-
-      <Box mx="xxs" my="md">
-        <FlatList
-          horizontal
-          data={watchedWalletsList}
-          keyExtractor={(address) => address}
-          renderItem={renderItem}
-        />
-      </Box>
-    </BaseCard.Container>
-  ) : (
-    <ExploreTokenCardEmptyState
-      buttonLabel={t('Search wallets')}
-      description={t('Watch wallets to keep track of their activity.')}
-      type="watched"
-      onPress={onSearchWallets}
-    />
+    </AnimatedFlex>
   )
+}
+
+function ItemSeparator() {
+  return <Box width={theme.spacing.xs} />
 }
