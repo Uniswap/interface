@@ -107,7 +107,10 @@ function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) 
               </TYPE.black>
               <InfoHelper size={14} text={t`Estimated change in price due to the size of your transaction`} />
             </RowFixed>
-            <TYPE.black fontSize={12} color={trade.priceImpact > 5 ? theme.red : theme.text}>
+            <TYPE.black
+              fontSize={12}
+              color={trade.priceImpact > 15 ? theme.red : trade.priceImpact > 5 ? theme.warning : theme.text}
+            >
               {trade.priceImpact === -1
                 ? '--'
                 : trade.priceImpact > 0.01

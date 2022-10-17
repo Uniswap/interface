@@ -254,6 +254,9 @@ export default function Swap({ history }: RouteComponentProps) {
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const trade = showWrap ? undefined : v2Trade
+  const isPriceImpactInvalid = !!trade?.priceImpact && trade?.priceImpact === -1
+  const isPriceImpactHigh = !!trade?.priceImpact && trade?.priceImpact > 5
+  const isPriceImpactVeryHigh = !!trade?.priceImpact && trade?.priceImpact > 15
 
   const parsedAmounts = showWrap
     ? {
@@ -291,7 +294,7 @@ export default function Swap({ history }: RouteComponentProps) {
     onChangeRecipient(value)
   }
 
-  const isValid = !swapInputError
+  const isValidInput = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   const handleTypeInput = useCallback(
@@ -930,22 +933,21 @@ export default function Swap({ history }: RouteComponentProps) {
                       <TrendingSoonTokenBanner currencies={currencies} style={{ marginTop: '24px' }} />
                     )}
 
-                    {trade?.priceImpact === -1 ? (
+                    {isPriceImpactInvalid ? (
                       <PriceImpactHigh>
                         <AlertTriangle color={theme.warning} size={16} style={{ marginRight: '10px' }} />
                         <Trans>Unable to calculate Price Impact</Trans>
                         <InfoHelper text={t`Turn on Advanced Mode to trade`} color={theme.text} />
                       </PriceImpactHigh>
                     ) : (
-                      !!trade?.priceImpact &&
-                      trade.priceImpact > 5 && (
-                        <PriceImpactHigh veryHigh={trade?.priceImpact > 15}>
+                      isPriceImpactHigh && (
+                        <PriceImpactHigh veryHigh={isPriceImpactVeryHigh}>
                           <AlertTriangle
-                            color={trade?.priceImpact > 15 ? theme.red : theme.warning}
+                            color={isPriceImpactVeryHigh ? theme.red : theme.warning}
                             size={16}
                             style={{ marginRight: '10px' }}
                           />
-                          {trade?.priceImpact > 15 ? (
+                          {isPriceImpactVeryHigh ? (
                             <Trans>Price Impact is Very High</Trans>
                           ) : (
                             <Trans>Price Impact is High</Trans>
@@ -1014,10 +1016,18 @@ export default function Swap({ history }: RouteComponentProps) {
                             }}
                             width="48%"
                             id="swap-button"
-                            disabled={!isValid || approval !== ApprovalState.APPROVED}
+                            disabled={!isValidInput || approval !== ApprovalState.APPROVED}
+                            backgroundColor={
+                              isPriceImpactHigh || isPriceImpactInvalid
+                                ? isPriceImpactVeryHigh
+                                  ? theme.red
+                                  : theme.warning
+                                : undefined
+                            }
+                            color={isPriceImpactHigh || isPriceImpactInvalid ? theme.white : undefined}
                           >
                             <Text fontSize={16} fontWeight={500}>
-                              {trade && trade.priceImpact > 5 ? t`Swap Anyway` : t`Swap`}
+                              {isPriceImpactHigh ? t`Swap Anyway` : t`Swap`}
                             </Text>
                           </ButtonError>
                         </RowBetween>
@@ -1047,22 +1057,21 @@ export default function Swap({ history }: RouteComponentProps) {
                           }}
                           id="swap-button"
                           disabled={
-                            !isValid ||
+                            !isValidInput ||
                             !!swapCallbackError ||
                             approval !== ApprovalState.APPROVED ||
-                            (!isExpertMode && trade && (trade.priceImpact > 15 || trade.priceImpact === -1))
+                            (!isExpertMode && (isPriceImpactVeryHigh || isPriceImpactInvalid))
                           }
                           style={{
                             border: 'none',
                             ...(!(
-                              !isValid ||
+                              !isValidInput ||
                               !!swapCallbackError ||
                               approval !== ApprovalState.APPROVED ||
-                              (!isExpertMode && trade && (trade.priceImpact > 15 || trade.priceImpact === -1))
+                              (!isExpertMode && (isPriceImpactVeryHigh || isPriceImpactInvalid))
                             ) &&
-                            trade &&
-                            (trade.priceImpact > 5 || trade.priceImpact === -1)
-                              ? { background: theme.red, color: theme.white }
+                            (isPriceImpactHigh || isPriceImpactInvalid)
+                              ? { background: isPriceImpactVeryHigh ? theme.red : theme.warning, color: theme.white }
                               : {}),
                           }}
                         >
@@ -1071,7 +1080,7 @@ export default function Swap({ history }: RouteComponentProps) {
                               ? swapInputError
                               : approval !== ApprovalState.APPROVED
                               ? t`Checking allowance...`
-                              : trade && (trade.priceImpact > 5 || trade.priceImpact === -1)
+                              : isPriceImpactHigh || isPriceImpactInvalid
                               ? t`Swap Anyway`
                               : t`Swap`}
                           </Text>
