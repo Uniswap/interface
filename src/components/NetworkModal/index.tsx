@@ -1,5 +1,5 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { stringify } from 'qs'
 import { X } from 'react-feather'
 import { useHistory } from 'react-router-dom'
@@ -9,7 +9,6 @@ import styled from 'styled-components'
 import Solana from 'assets/networks/solana-network.svg'
 import { ButtonEmpty } from 'components/Button'
 import Modal from 'components/Modal'
-import { MouseoverTooltip } from 'components/Tooltip'
 import { useActiveWeb3React } from 'hooks'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -167,17 +166,15 @@ export default function NetworkModal(): JSX.Element | null {
               </SelectNetworkButton>
             )
           })}
-          <MouseoverTooltip text={t`Coming Soon`} width="fit-content">
-            <SelectNetworkButton padding="0" disabled>
-              <ListItem>
-                <img src={Solana} alt="Switch Network" style={{ width: '24px', marginRight: '8px' }} />
-                <NetworkLabel>Solana</NetworkLabel>
-                <NewLabel>
-                  <Trans>Coming Soon</Trans>
-                </NewLabel>
-              </ListItem>
-            </SelectNetworkButton>
-          </MouseoverTooltip>
+          <SelectNetworkButton padding="0" disabled>
+            <ListItem>
+              <img src={Solana} alt="Switch Network" style={{ width: '24px', marginRight: '8px' }} />
+              <NetworkLabel>Solana</NetworkLabel>
+              <NewLabel>
+                <Trans>Coming Soon</Trans>
+              </NewLabel>
+            </ListItem>
+          </SelectNetworkButton>
         </NetworkList>
       </Wrapper>
     </Modal>
