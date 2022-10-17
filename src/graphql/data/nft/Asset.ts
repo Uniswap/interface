@@ -3,17 +3,22 @@ import { parseEther } from 'ethers/lib/utils'
 import NFTRelayEnvironment from 'graphql/data/nft/NFTRelayEnvironment'
 import { loadQuery, usePreloadedQuery } from 'react-relay'
 
-import { AssetQuery } from './__generated__/AssetQuery.graphql'
+import {
+  AssetQuery,
+  NftAssetFilterInput,
+  NftAssetSortableField,
+  PaginationInput,
+} from './__generated__/AssetQuery.graphql'
 
 const assetsQuery = graphql`
-  query AssetQuery {
-    nftAssets(
-      address: "0x60e4d786628fea6478f785a6d7e704777c86a7c6"
-      orderBy: PRICE
-      asc: true
-      filter: { buyNow: true }
-      pagination: { first: 25 }
-    ) {
+  query AssetQuery(
+    $address: String!
+    $orderBy: NftAssetSortableField
+    $asc: Boolean
+    $filter: NftAssetFilterInput
+    $pagination: PaginationInput
+  ) {
+    nftAssets(address: $address, orderBy: $orderBy, asc: $asc, filter: $filter, pagination: $pagination) {
       edges {
         node {
           id
@@ -96,9 +101,20 @@ const assetsQuery = graphql`
 //   return assets
 // }
 
-const assetsQueryReference = loadQuery<AssetQuery>(NFTRelayEnvironment, assetsQuery, {})
-
-export function useAssetsQuery() {
+export function useAssetsQuery(
+  address: string,
+  orderBy: NftAssetSortableField,
+  asc: boolean,
+  filter: NftAssetFilterInput,
+  pagination: PaginationInput
+) {
+  const assetsQueryReference = loadQuery<AssetQuery>(NFTRelayEnvironment, assetsQuery, {
+    address,
+    orderBy,
+    asc,
+    filter,
+    pagination,
+  })
   const collectionAssets = usePreloadedQuery<AssetQuery>(assetsQuery, assetsQueryReference).nftAssets?.edges
   // const collectionAssets = useLazyLoadQuery<AssetQuery>(assetsQuery, {}).nftAssets?.edges
   return collectionAssets?.map((queryAsset) => {
@@ -107,7 +123,7 @@ export function useAssetsQuery() {
       id: asset.id,
       address: asset.nftContract?.address,
       notForSale: asset.listings?.edges.length === 0,
-      collectionName: asset.collection?.name, // seems to be missing
+      collectionName: asset.collection?.name,
       collectionSymbol: asset.collection?.image?.url,
       currentEthPrice: parseEther(asset.listings?.edges[0].node.price.value?.toString() ?? '0').toString(),
       // currentUsdPrice: string, // FE to start deriving?
@@ -122,25 +138,24 @@ export function useAssetsQuery() {
       //   baseDecimals: string
       //   basePrice: string
       // },
-      openseaSusFlag: asset.suspiciousFlag, // seems to be missing
+      openseaSusFlag: asset.suspiciousFlag,
       sellorders: asset.listings?.edges,
       smallImageUrl: asset.smallImage?.url,
       tokenId: asset.tokenId,
-      tokenType: asset.nftContract?.standard, // ERC20 || ERC721 || ERC1155 || Dust || Cryptopunk
+      tokenType: asset.nftContract?.standard,
       // url: string, //deprecate
       // totalCount?: number, // deprecate, requires FE logic change
       // amount?: number, // deprecate
       // decimals?: number, // deprecate
       collectionIsVerified: asset.collection?.isVerified,
-      // rarity: asset.rarities, // TODO
+      // rarity: asset.rarities, // TODO format
       owner: asset.ownerAddress,
       creator: {
-        // possibly store in the nftContract?
         profile_img_url: asset.collection?.creator?.profileImage?.url,
         address: asset.collection?.creator?.address,
       },
       // externalLink: string, // metadata url TODO
-      // traits?: { //seems to be missing
+      // traits?: { // TODO make its own call
       //   trait_type: string
       //   value: string
       //   trait_count: number
