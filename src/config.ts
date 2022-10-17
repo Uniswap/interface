@@ -18,7 +18,6 @@ import {
   UNISWAP_APP_URL,
   UNISWAP_GAS_SERVICE_URL,
   VERSION,
-  ZERION_API_KEY,
 } from 'react-native-dotenv'
 import { ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
@@ -45,7 +44,6 @@ export interface Config {
   shakeClientId: string
   shakeClientSecret: string
   version: string
-  zerionApiKey: string
 }
 
 const _config: Config = {
@@ -69,7 +67,6 @@ const _config: Config = {
   shakeClientId: process.env.SHAKE_CLIENT_ID || SHAKE_CLIENT_ID,
   shakeClientSecret: process.env.SHAKE_CLIENT_SECRET || SHAKE_CLIENT_SECRET,
   version: VERSION,
-  zerionApiKey: process.env.ZERION_API_KEY || ZERION_API_KEY,
 }
 
 function parseBoolean(value: string): boolean {

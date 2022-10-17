@@ -20,7 +20,6 @@ declare module 'react-native-dotenv' {
   export const SHAKE_CLIENT_SECRET: string
   export const VERSION: string
   export const ONESIGNAL_APP_ID: string
-  export const ZERION_API_KEY: string
 }
 
 declare module 'babel-plugin-relay/macro' {
