@@ -233,10 +233,10 @@ const CollectionDescription = ({ description }: { description: string }) => {
 const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => {
   return (
     <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
+      <span className={styles.statsValue}>{children}</span>
       <Box as="span" className={styles.statsLabel}>
         {`${label}${isMobile ? ': ' : ''}`}
       </Box>
-      <span className={styles.statsValue}>{children}</span>
     </Box>
   )
 }

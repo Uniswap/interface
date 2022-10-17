@@ -95,6 +95,7 @@ export const quantityFormatter = (n: number): string => {
       .format({
         average: true,
         mantissa: 1,
+        thousandSeparated: true,
         optionalMantissa: true,
         abbreviations: {
           thousand: 'K',
