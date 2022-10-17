@@ -1,15 +1,19 @@
 import { Trans } from '@lingui/macro'
-import { showFavoritesAtom } from 'components/Tokens/state'
-import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
-import { validateUrlChainParam } from 'graphql/data/util'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName } from 'analytics/constants'
+import { filterStringAtom, filterTimeAtom, showFavoritesAtom, sortAscendingAtom } from 'components/Tokens/state'
+import { getChainInfo } from 'constants/chainInfo'
+import { PAGE_SIZE, TopToken, useTopTokens } from 'graphql/data/TopTokens'
+import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL, validateUrlChainParam } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode } from 'react'
+import { PropsWithChildren, ReactNode, useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useParams } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import { Link, useParams } from 'react-router-dom'
+import styled, { css } from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
-import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
+import TokenRow, { LoadingRow } from './TokenRow'
+import { HeaderRow } from './TokenRow/HeaderRow'
 
 const GridContainer = styled.div`
   display: flex;
@@ -79,13 +83,72 @@ export function LoadingTokenTable({ rowCount }: { rowCount?: number }) {
   )
 }
 
+const StyledTokenLink = styled(Link)<{ first?: boolean; last?: boolean }>`
+  text-decoration: none;
+  ${({ first, last }) => css`
+    padding-top: ${first ? '8px' : '0px'};
+    padding-bottom: ${last ? '8px' : '0px'};
+  `}
+
+  &:hover {
+    ${({ theme }) =>
+      css`
+        background-color: ${theme.hoverDefault};
+      `}
+    ${({ last }) =>
+      last &&
+      css`
+        border-radius: 0px 0px 8px 8px;
+      `}
+  }
+`
+type TokenDetailsLinkProps = PropsWithChildren<{
+  token: NonNullable<TopToken>
+  sendAnalytics: () => void
+  isFirst?: boolean
+  isLast?: boolean
+}>
+function TokenDetailsLink({ token, sendAnalytics, isFirst, isLast, children }: TokenDetailsLinkProps) {
+  return (
+    <StyledTokenLink
+      first={isFirst}
+      last={isLast}
+      to={getTokenDetailsURL(token.address, token.chain)}
+      onClick={sendAnalytics}
+    >
+      {children}
+    </StyledTokenLink>
+  )
+}
+
 export default function TokenTable({ setRowCount }: { setRowCount: (c: number) => void }) {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
+  const filterNetwork = validateUrlChainParam(useParams().chainName ?? 'ethereum')
+  const filterString = useAtomValue(filterStringAtom)
+  const timePeriod = useAtomValue(filterTimeAtom)
+  const sortAscending = useAtomValue(sortAscendingAtom)
 
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const { tokens, sparklines } = useTopTokens(chainName)
   setRowCount(tokens?.length ?? PAGE_SIZE)
+  const l2CircleLogo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[filterNetwork]).circleLogoUrl
+
+  const sendRowAnalytics = useCallback(
+    (token: NonNullable<TopToken>, index: number, rank: number) => {
+      sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, {
+        chain_id: filterNetwork,
+        token_address: token.address,
+        token_symbol: token.symbol,
+        token_list_index: index,
+        token_list_rank: rank,
+        token_list_length: tokens?.length,
+        time_frame: timePeriod,
+        search_token_address_input: filterString,
+      })
+    },
+    [filterNetwork, filterString, timePeriod, tokens?.length]
+  )
 
   /* loading and error state */
   if (!tokens) {
@@ -110,18 +173,20 @@ export default function TokenTable({ setRowCount }: { setRowCount: (c: number) =
       <GridContainer>
         <HeaderRow />
         <TokenDataContainer>
-          {tokens.map(
-            (token, index) =>
-              token && (
-                <LoadedRow
-                  key={token?.address}
-                  tokenListIndex={index}
-                  tokenListLength={tokens.length}
-                  token={token}
-                  sparklineMap={sparklines}
-                />
-              )
-          )}
+          {tokens.map((token, index) => {
+            const rank = sortAscending ? tokens.length - index : index + 1
+            return token ? (
+              <TokenDetailsLink
+                key={token.address}
+                token={token}
+                sendAnalytics={() => sendRowAnalytics(token, index, rank)}
+                isFirst={index === 0}
+                isLast={index === tokens.length - 1}
+              >
+                <TokenRow tokenListRank={rank} token={token} sparklineMap={sparklines} l2CircleLogo={l2CircleLogo} />
+              </TokenDetailsLink>
+            ) : null
+          })}
         </TokenDataContainer>
       </GridContainer>
     )

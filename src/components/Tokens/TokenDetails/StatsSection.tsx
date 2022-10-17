@@ -6,7 +6,7 @@ import { textFadeIn } from 'theme/animations'
 import { formatDollar } from 'utils/formatNumbers'
 
 import { TokenSortMethod } from '../state'
-import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow'
+import { HEADER_DESCRIPTIONS } from '../TokenTable/TokenRow/HeaderRow'
 import InfoTip from './InfoTip'
 
 export const StatWrapper = styled.div`
