@@ -4,7 +4,6 @@ import { Trace } from 'analytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
@@ -20,7 +19,6 @@ import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
-import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
 import NavBar from '../components/NavBar'
 import Popups from '../components/Popups'
@@ -59,11 +57,11 @@ const AppWrapper = styled.div<{ redesignFlagEnabled: boolean }>`
     redesignFlagEnabled ? undefined : "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on"};
 `
 
-const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
+const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: ${({ navBarFlag }) => (navBarFlag === NavBarVariant.Enabled ? `72px 0px 0px 0px` : `120px 0px 0px 0px`)};
+  padding: 72px 0px 0px 0px;
   align-items: center;
   flex: 1;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
@@ -116,7 +114,6 @@ const LazyLoadSpinner = () => (
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const tokensFlag = useTokensFlag()
-  const navBarFlag = useNavBarFlag()
   const nftFlag = useNftFlag()
   const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
 
@@ -158,8 +155,10 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper redesignFlagEnabled={redesignFlagEnabled}>
         <Trace page={currentPage}>
-          <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <NavBar /> : <Header />}</HeaderWrapper>
-          <BodyWrapper navBarFlag={navBarFlag}>
+          <HeaderWrapper>
+            <NavBar />
+          </HeaderWrapper>
+          <BodyWrapper>
             <Popups />
             <Polling />
             <TopLevelModals />
