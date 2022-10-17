@@ -45,8 +45,7 @@ const Cell = styled.div`
   justify-content: center;
 `
 const StyledTokenRow = styled.div<{
-  first?: boolean
-  last?: boolean
+  isLast?: boolean
   loading?: boolean
   favoriteTokensEnabled?: boolean
 }>`
@@ -58,11 +57,7 @@ const StyledTokenRow = styled.div<{
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
-  ${({ first, last }) => css`
-    height: ${first || last ? '72px' : '64px'};
-    padding-top: ${first ? '8px' : '0px'};
-    padding-bottom: ${last ? '8px' : '0px'};
-  `}
+  height: 64px;
   padding-left: 12px;
   padding-right: 12px;
   transition: ${({
@@ -79,8 +74,8 @@ const StyledTokenRow = styled.div<{
       css`
         background-color: ${theme.hoverDefault};
       `}
-    ${({ last }) =>
-      last &&
+    ${({ isLast }) =>
+      isLast &&
       css`
         border-radius: 0px 0px 8px 8px;
       `}
@@ -389,7 +384,6 @@ export function TokenRow({
   ...rest
 }: {
   favorited: ReactNode
-  first?: boolean
   header: boolean
   listNumber: ReactNode
   loading?: boolean
@@ -399,7 +393,7 @@ export function TokenRow({
   sparkLine?: ReactNode
   tokenInfo: ReactNode
   volume: ReactNode
-  last?: boolean
+  isLast?: boolean
   style?: CSSProperties
 }) {
   const favoriteTokensEnabled = useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled
@@ -570,8 +564,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
               </ParentSize>
             </SparkLine>
           }
-          first={tokenListIndex === 0}
-          last={tokenListIndex === tokenListLength - 1}
+          isLast={tokenListIndex === tokenListLength - 1}
         />
       </StyledLink>
     </div>
