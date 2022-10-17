@@ -1,11 +1,17 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
-import { usePaginationFragment } from 'react-relay'
+import NFTRelayEnvironment from 'graphql/data/nft/NFTRelayEnvironment'
+import { loadQuery, usePaginationFragment } from 'react-relay'
 
-import { NftAssetFilterInput, NftAssetSortableField, PaginationInput } from './__generated__/AssetQuery.graphql'
+import {
+  AssetQuery,
+  NftAssetFilterInput,
+  NftAssetSortableField,
+  PaginationInput,
+} from './__generated__/AssetQuery.graphql'
 
-const assetsPaginationQuery = graphql`
-  fragment AssetQuery_pagination on NftAsset
+const assetPaginationQuery = graphql`
+  fragment AssetQuery_data_pagination on AssetQuery
   @argumentDefinitions(
     address: { type: "String!" }
     orderBy: { type: "NftAssetSortableField" }
@@ -13,9 +19,88 @@ const assetsPaginationQuery = graphql`
     filter: { type: "NftAssetFilterInput" }
     pagination: { type: "PaginationInput" }
   )
-  @refetchable(queryName: "AssetsPaginationQuery") {
+  @refetchable(queryName: "AssetPaginationQuery") {
     nftAssets(address: $address, orderBy: $orderBy, asc: $asc, filter: $filter, pagination: $pagination)
-      @connection(key: "AssetQuery_pagination") {
+      @connection(key: "AssetQuery_data_pagination") {
+      edges {
+        node {
+          id
+          name
+          ownerAddress
+          image {
+            url
+          }
+          smallImage {
+            url
+          }
+          tokenId
+          description
+          animationUrl
+          suspiciousFlag
+          collection {
+            name
+            isVerified
+            image {
+              url
+            }
+            creator {
+              address
+              profileImage {
+                url
+              }
+            }
+          }
+          listings(pagination: { first: 1 }) {
+            edges {
+              node {
+                address
+                createdAt
+                endAt
+                id
+                maker
+                marketplace
+                marketplaceUrl
+                orderHash
+                price {
+                  currency
+                  value
+                }
+                quantity
+                startAt
+                status
+                taker
+                tokenId
+                type
+              }
+              cursor
+            }
+          }
+          rarities {
+            provider
+            rank
+            score
+          }
+          nftContract {
+            address
+            chain
+            id
+            standard
+          }
+        }
+      }
+    }
+  }
+`
+
+const assetQuery = graphql`
+  query AssetQuery(
+    $address: String!
+    $orderBy: NftAssetSortableField
+    $asc: Boolean
+    $filter: NftAssetFilterInput
+    $pagination: PaginationInput
+  ) {
+    nftAssets(address: $address, orderBy: $orderBy, asc: $asc, filter: $filter, pagination: $pagination) {
       edges {
         node {
           id
@@ -83,17 +168,15 @@ const assetsPaginationQuery = graphql`
         }
         cursor
       }
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-      hasPreviousPage
-      startCursor
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
     }
   }
 `
-
-const assetsQuery = graphql``
 
 // export function useAssetsQuery() {
 //   const assets = useLazyLoadQuery<AssetQuery>(assetsQuery, {}).nftAssets?.edges
@@ -107,8 +190,16 @@ export function useAssetsQuery(
   filter: NftAssetFilterInput,
   pagination: PaginationInput
 ) {
-  const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<AssetsPaginationQuery, _>(
-    assetsPaginationQuery,
+  const assetsQueryReference = loadQuery<AssetQuery>(NFTRelayEnvironment, assetQuery, {
+    address,
+    orderBy,
+    asc,
+    filter,
+    pagination,
+  })
+  // const queryData = usePreloadedQuery<AssetQuery>(assetQuery, assetsQueryReference)
+  const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<AssetPaginationQuery, _>(
+    assetPaginationQuery,
     {
       address,
       orderBy,
@@ -117,15 +208,6 @@ export function useAssetsQuery(
       pagination,
     }
   )
-
-  // const assetsQueryReference = loadQuery<AssetQuery>(NFTRelayEnvironment, assetsQuery, {
-  //   address,
-  //   orderBy,
-  //   asc,
-  //   filter,
-  //   pagination,
-  // })
-  // const collectionAssets = usePreloadedQuery<AssetQuery>(assetsQuery, assetsQueryReference).nftAssets?.edges
   // const collectionAssets = useLazyLoadQuery<AssetQuery>(assetsQuery, {}).nftAssets?.edges
   const assets = data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node
