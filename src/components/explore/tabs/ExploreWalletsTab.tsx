@@ -6,7 +6,6 @@ import { SearchWalletItem } from 'src/components/explore/search/items/SearchWall
 import { TRENDING_WALLETS } from 'src/components/explore/search/SearchEmptySection'
 import { WatchedWalletsCard } from 'src/components/explore/WatchedWalletsCard'
 import { AnimatedBox, Flex } from 'src/components/layout'
-import { Separator } from 'src/components/layout/Separator'
 import { Text } from 'src/components/Text'
 import { WalletSearchResult } from 'src/features/explore/searchHistorySlice'
 
@@ -30,7 +29,6 @@ function ExploreWalletsTab({
     <AnimatedBox entering={FadeIn} exiting={FadeOut}>
       <FlatList
         ref={listRef}
-        ItemSeparatorComponent={() => <Separator mx="xs" />}
         ListHeaderComponent={
           <Flex gap="xs" my="sm">
             <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">

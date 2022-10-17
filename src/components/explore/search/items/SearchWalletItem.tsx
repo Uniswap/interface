@@ -1,7 +1,6 @@
 import React from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useEagerUserProfileNavigation } from 'src/app/navigation/hooks'
-import ProfileIcon from 'src/assets/icons/profile.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout/Flex'
@@ -34,15 +33,14 @@ export function SearchWalletItem({ wallet }: SearchWalletItemProps) {
       testID={`wallet-item-${address}`}
       onPress={onPress}
       onPressIn={onPressIn}>
-      <Flex row alignItems="center" gap="sm" justifyContent="space-between" px="xs" py="sm">
+      <Flex row px="xs" py="sm">
         <AddressDisplay
           showAddressAsSubtitle
           address={address}
-          size={32}
+          size={theme.imageSizes.xl}
           variant="subhead"
           verticalGap="none"
         />
-        <ProfileIcon color={theme.colors.textSecondary} height={24} width={24} />
       </Flex>
     </Button>
   )
