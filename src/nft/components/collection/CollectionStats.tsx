@@ -250,8 +250,6 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
       : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
-  console.log(stats)
-
   // round daily volume & floorPrice to 3 decimals or less
   const totalVolumeStr = volumeFormatter(stats.stats?.total_volume)
   const floorPriceStr = floorFormatter(stats.floorPrice)
