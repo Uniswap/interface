@@ -13,7 +13,6 @@ import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
-import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
 import { formatDollar } from 'utils/formatNumbers'
@@ -183,7 +182,6 @@ const DataCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
   user-select: ${({ sortable }) => (sortable ? 'none' : 'unset')};
-
   transition: ${({
     theme: {
       transition: { duration, timing },
@@ -239,9 +237,10 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   height: 100%;
   justify-content: flex-end;
   width: 100%;
-`
-const HeaderCellText = styled(Text)`
-  ${ClickableStyle}
+
+  &:hover {
+    ${ClickableStyle}
+  }
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -369,7 +368,7 @@ function HeaderCell({
           )}
         </>
       )}
-      <HeaderCellText>{category}</HeaderCellText>
+      {category}
       {description && <InfoTip text={description}></InfoTip>}
     </HeaderCellWrapper>
   )
