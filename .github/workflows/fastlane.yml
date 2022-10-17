@@ -148,7 +148,8 @@ jobs:
           sentry-cli releases deploys $SENTRY_RELEASE new -e production
 
       - name: Create version number PR
-        run: gh pr create -B main -H $branch --title "chore: Bump version number" --body "Created by Github action" -r uniswap/mobile
+        run: |
+          gh pr create -B main -H $branch --title "chore: Bump version number" --body "Created by Github action" -r uniswap/mobile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
