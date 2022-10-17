@@ -15,7 +15,8 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ redesignFlag?: boole
     z-index: ${Z_INDEX.modalBackdrop};
     background-color: transparent;
     overflow: hidden;
-
+    
+    backdrop-filter: blur(24px);
     display: flex;
     align-items: center;
     overflow-y: ${({ scrollOverlay }) => scrollOverlay && 'scroll'};
