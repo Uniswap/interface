@@ -23,6 +23,7 @@ import WarningModal, {
   captionForAccountRemovalWarning,
 } from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
+import { uniswapUrls } from 'src/constants/urls'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -45,7 +46,7 @@ import { setClipboard } from 'src/utils/clipboard'
 import { openUri } from 'src/utils/linking'
 
 const onPressGetHelp = () => {
-  openUri('https://help.uniswap.org')
+  openUri(uniswapUrls.helpUrl)
 }
 
 const UNICON_WIDTH = 36

@@ -18,7 +18,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "postinstall": "patch-package",
     "relay:compile": "relay-compiler",
-    "relay:schema": "get-graphql-schema $(grep UNISWAP_API_URL .env | cut -d '=' -f2) -h X-API-KEY=$(grep UNISWAP_API_KEY .env | cut -d '=' -f2) -h Origin=$(grep UNISWAP_APP_URL .env | cut -d '=' -f2) > ./src/data/schema.graphql",
+    "relay:schema": "get-graphql-schema $(grep UNISWAP_API_BASE_URL .env | cut -d '=' -f2)/v1/graphql -h X-API-KEY=$(grep UNISWAP_API_KEY .env | cut -d '=' -f2) -h Origin=$(grep UNISWAP_APP_URL .env | cut -d '=' -f2) > ./src/data/schema.graphql",
     "start": "NODE_ENV=development yarn relay:compile && react-native start",
     "start:production": "NODE_ENV=production react-native start --reset-cache",
     "storybook": "start-storybook -p 6006",

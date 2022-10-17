@@ -3,12 +3,11 @@ import { TradeType } from '@uniswap/sdk-core'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
+import { uniswapUrls } from 'src/constants/urls'
 import { QuoteResult, TradeQuoteResult } from 'src/features/routing/types'
 import { transformQuoteToTrade } from 'src/features/transactions/swap/routeUtils'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { SwapRouterNativeAssets } from 'src/utils/currencyId'
-
-const ROUTING_API_BASE_URL = 'https://api.uniswap.org/v1'
 
 const protocols: string[] = ['v2', 'v3']
 
@@ -28,7 +27,7 @@ export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: ROUTING_API_BASE_URL,
+    baseUrl: uniswapUrls.routingApiUrl,
     prepareHeaders: (headers) => {
       // TODO remove once routing api officially supports mobile
       // spoof origin to go around server permissions

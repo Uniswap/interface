@@ -13,10 +13,9 @@ import {
   SENTRY_DSN,
   SHAKE_CLIENT_ID,
   SHAKE_CLIENT_SECRET,
+  UNISWAP_API_BASE_URL,
   UNISWAP_API_KEY,
-  UNISWAP_API_URL,
   UNISWAP_APP_URL,
-  UNISWAP_GAS_SERVICE_URL,
   VERSION,
 } from 'react-native-dotenv'
 import { ChainIdTo } from 'src/constants/chains'
@@ -32,9 +31,8 @@ export interface Config {
   coingeckoApiUrl: string
   covalentApiKey: string
   debug: boolean
-  uniswapApiUrl: string
+  uniswapApiBaseUrl: string
   uniswapApiKey: string
-  uniswapGasServiceUrl: string
   uniswapAppUrl: string
   infuraProjectId: string
   logBufferSize: number
@@ -55,9 +53,8 @@ const _config: Config = {
   coingeckoApiUrl: COINGECKO_API_URL,
   covalentApiKey: process.env.COVALENT_API_KEY || COVALENT_API_KEY,
   debug: parseBoolean(DEBUG),
-  uniswapApiUrl: process.env.UNISWAP_API_URL || UNISWAP_API_URL,
+  uniswapApiBaseUrl: process.env.UNISWAP_API_BASE_URL || UNISWAP_API_BASE_URL,
   uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
-  uniswapGasServiceUrl: UNISWAP_GAS_SERVICE_URL,
   uniswapAppUrl: UNISWAP_APP_URL,
   infuraProjectId: process.env.INFURA_PROJECT_ID || INFURA_PROJECT_ID,
   logBufferSize: parseInt(LOG_BUFFER_SIZE, 10),

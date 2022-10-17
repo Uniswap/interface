@@ -8,9 +8,8 @@ declare module 'react-native-dotenv' {
   export const COINGECKO_API_URL: string
   export const COVALENT_API_KEY: string
   export const DEBUG: string
-  export const UNISWAP_API_URL: string
+  export const UNISWAP_API_BASE_URL: string
   export const UNISWAP_API_KEY: string
-  export const UNISWAP_GAS_SERVICE_URL: string
   export const UNISWAP_APP_URL: string
   export const INFURA_PROJECT_ID: string
   export const LOG_BUFFER_SIZE: string

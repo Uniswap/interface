@@ -8,6 +8,7 @@ import {
   Variables,
 } from 'relay-runtime'
 import { config } from 'src/config'
+import { uniswapUrls } from 'src/constants/urls'
 import { RecordSource } from 'src/data/recordSource'
 
 if (__DEV__) {
@@ -29,7 +30,7 @@ const createRelayEnvironment = () => {
      * This is required for polling behavior.
      */
     return Observable.create((sink) => {
-      fetch(config.uniswapApiUrl, {
+      fetch(uniswapUrls.graphQLUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
