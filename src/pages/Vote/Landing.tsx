@@ -13,7 +13,6 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
 import { useState } from 'react'
@@ -33,15 +32,15 @@ import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
 
-const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
-  padding-top: ${({ navBarFlag }) => (navBarFlag ? '68px' : '0px')};
+const PageWrapper = styled(AutoColumn)`
+  padding-top: 68px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+    padding: 48px 8px 0px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+    padding-top: 20px;
   }
 `
 
@@ -120,8 +119,6 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export default function Landing() {
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const theme = useTheme()
   const { account, chainId } = useWeb3React()
 
@@ -149,7 +146,7 @@ export default function Landing() {
   return (
     <>
       <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
-        <PageWrapper gap="lg" justify="center" navBarFlag={navBarFlagEnabled}>
+        <PageWrapper gap="lg" justify="center">
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}
