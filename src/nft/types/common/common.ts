@@ -155,6 +155,7 @@ export interface GenieCollection {
 
 export enum Markets {
   LooksRare = 'looksrare',
+  X2Y2 = 'x2y2',
   NFT20 = 'nft20',
   NFTX = 'nftx',
   Opensea = 'opensea',

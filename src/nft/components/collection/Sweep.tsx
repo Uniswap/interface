@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useBag, useCollectionFilters } from 'nft/hooks'
 import { fetchSweep } from 'nft/queries'
-import { GenieCollection, Markets } from 'nft/types'
-import { calcPoolPrice } from 'nft/utils'
+import { GenieAsset, GenieCollection, Markets } from 'nft/types'
+import { calcPoolPrice, formatWeiToDecimal } from 'nft/utils'
 import { default as Slider } from 'rc-slider'
 import { useMemo, useReducer, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -104,8 +104,11 @@ const NftHolder = styled.div<{ index: number; src: string | undefined }>`
   z-index: ${({ index }) => 3 - index};
 `
 
-export const NftDisplay = () => {
-  const itemsInBag = useBag((s) => s.itemsInBag)
+interface NftDisplayProps {
+  nfts: GenieAsset[]
+}
+
+export const NftDisplay = ({ nfts }: NftDisplayProps) => {
   return (
     <NftDisplayContainer>
       {[...Array(3)].map((_, index) => {
@@ -113,7 +116,7 @@ export const NftDisplay = () => {
           <NftHolder
             key={index}
             index={index}
-            src={itemsInBag.length - 1 >= index ? itemsInBag[index].asset.smallImageUrl : undefined}
+            src={nfts.length - 1 >= index ? nfts[nfts.length - 1 - index].smallImageUrl : undefined}
           />
         )
       })}
@@ -130,7 +133,7 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
   const theme = useTheme()
 
   const [isItemsToggled, toggleSweep] = useReducer((s) => !s, true)
-  const [sweepAmount, setSweepAmount] = useState<number | undefined>()
+  const [sweepAmount, setSweepAmount] = useState<number>(0)
 
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
@@ -141,7 +144,7 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
 
   const getSweepFetcherParams = (market: Markets.NFTX | Markets.NFT20 | 'others') => {
     const isMarketFiltered = !!markets.length
-    const allOtherMarkets = [Markets.Opensea, Markets.NFT20, Markets.LooksRare]
+    const allOtherMarkets = [Markets.Opensea, Markets.X2Y2, Markets.LooksRare]
 
     if (isMarketFiltered) {
       if (market === 'others') {
@@ -203,8 +206,9 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
 
   const allAssetsFetched = isCollectionAssetsFetched && isNftxCollectionAssetsFetched && isNft20CollectionAssetsFetched
 
-  const sortedAssets = useMemo(() => {
-    if (!allAssetsFetched || !collectionAssets || !nftxCollectionAssets || !nft20CollectionAssets) return undefined
+  const { sortedAssets } = useMemo(() => {
+    if (!allAssetsFetched || !collectionAssets || !nftxCollectionAssets || !nft20CollectionAssets)
+      return { sortedAssets: undefined }
 
     let counterNFTX = 0
     let counterNFT20 = 0
@@ -234,22 +238,32 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
       Math.max(collectionAssets.length, nftxCollectionAssets.length, nft20CollectionAssets.length)
     )
 
-    return validAssets
+    return { sortedAssets: validAssets }
   }, [collectionAssets, nftxCollectionAssets, nft20CollectionAssets, allAssetsFetched])
 
-  const sweepItemsInBag = useMemo(() => {
-    return itemsInBag.filter((item) => item.inSweep).map((item) => item.asset)
-  }, [itemsInBag])
+  const { sweepItemsInBag, sweepEthPrice } = useMemo(() => {
+    const sweepItemsInBag = itemsInBag
+      .filter((item) => item.inSweep && item.asset.address === contractAddress)
+      .map((item) => item.asset)
+
+    const sweepEthPrice = sweepItemsInBag.reduce(
+      (total, asset) => total.add(BigNumber.from(asset.priceInfo.ETHPrice)),
+      BigNumber.from(0)
+    )
+
+    return { sweepItemsInBag, sweepEthPrice }
+  }, [itemsInBag, contractAddress])
+
+  const clearSweep = () => {
+    removeAssetsFromBag(sweepItemsInBag)
+  }
 
   const handleSliderChange = (value: number | number[]) => {
     if (typeof value === 'number') {
-      setSweepAmount(value || undefined)
+      if (!isItemsToggled) return
+      setSweepAmount(value)
 
       if (sortedAssets) {
-        console.log('stats')
-        console.log(sweepItemsInBag)
-        console.log(value)
-        console.log()
         if (sweepItemsInBag.length < value) {
           addAssetsToBag(sortedAssets.slice(sweepItemsInBag.length, value), true)
         } else {
@@ -257,6 +271,12 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
         }
       }
     }
+  }
+
+  const handleToggleSweep = () => {
+    clearSweep()
+    setSweepAmount(0)
+    toggleSweep()
   }
 
   return (
@@ -268,6 +288,9 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
         <SweepSubContainer>
           <StyledSlider
             defaultValue={0}
+            max={isItemsToggled ? sortedAssets?.length ?? 0 : 0}
+            value={sweepAmount}
+            step={isItemsToggled ? 1 : 0.001}
             trackStyle={{
               top: '3px',
               height: '8px',
@@ -289,16 +312,28 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
             }}
             onChange={handleSliderChange}
           />
-          <InputContainer placeholder="0" value={sweepAmount ?? ''} />
-          <ToggleContainer onClick={toggleSweep}>
+          <InputContainer
+            inputMode="decimal"
+            autoComplete="off"
+            autoCorrect="off"
+            // text-specific options
+            type="text"
+            pattern="^[0-9]*[.,]?[0-9]*$"
+            placeholder="0"
+            minLength={1}
+            maxLength={79}
+            spellCheck="false"
+            value={sweepAmount || ''}
+          />
+          <ToggleContainer onClick={handleToggleSweep}>
             <ToggleSwitch active={isItemsToggled}>Items</ToggleSwitch>
             <ToggleSwitch active={!isItemsToggled}>ETH</ToggleSwitch>
           </ToggleContainer>
         </SweepSubContainer>
       </SweepLeftmostContainer>
       <SweepRightmostContainer>
-        <div>100 ETH</div>
-        <NftDisplay />
+        {`${formatWeiToDecimal(sweepEthPrice.toString())} ETH`}
+        <NftDisplay nfts={sweepItemsInBag} />
       </SweepRightmostContainer>
     </SweepContainer>
   )

@@ -33,6 +33,8 @@ export const fetchSweep = async ({
     payload.markets = markets
   }
 
+  console.log('these are the markets', markets)
+
   if (traits) {
     payload.filters.traits = formatTraits(traits)
   }
