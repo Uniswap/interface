@@ -640,7 +640,6 @@ export const FullScreenWrapper = (props: Props) => {
         ({children}:{children:any}) => <div>{children}</div>
         : ReactFullScreenComponent
 
-        document.webkit
     if (!document?.fullscreenEnabled) {
         content = <div>
              <>{childrenFn({ isMaxxed, ref: defaultRef, onRequest: () => { return }, onExit: () => { return }, isEnabled: false, onToggle: () => { return } })}</>
