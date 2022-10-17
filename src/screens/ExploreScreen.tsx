@@ -133,7 +133,7 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
             ref={textInputRef}
             showCancelButton
             backgroundColor="backgroundContainer"
-            placeholder={t('Search tokens or addresses')}
+            placeholder={t('Search tokens and wallets')}
             value={searchQuery}
             onCancel={onSearchCancel}
             onChangeText={onChangeSearchFilter}
