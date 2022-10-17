@@ -6,7 +6,6 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
-import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -113,7 +112,6 @@ const LazyLoadSpinner = () => (
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
-  const tokensFlag = useTokensFlag()
   const nftFlag = useNftFlag()
   const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
 
@@ -165,21 +163,17 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  {tokensFlag === TokensVariant.Enabled && (
-                    <>
-                      <Route path="tokens" element={<Tokens />}>
-                        <Route path=":chainName" />
-                      </Route>
-                      <Route
-                        path="tokens/:chainName/:tokenAddress"
-                        element={
-                          <Suspense fallback={<LoadingTokenDetails />}>
-                            <TokenDetails />
-                          </Suspense>
-                        }
-                      />
-                    </>
-                  )}
+                  <Route path="tokens" element={<Tokens />}>
+                    <Route path=":chainName" />
+                  </Route>
+                  <Route
+                    path="tokens/:chainName/:tokenAddress"
+                    element={
+                      <Suspense fallback={<LoadingTokenDetails />}>
+                        <TokenDetails />
+                      </Suspense>
+                    }
+                  />
                   <Route
                     path="vote/*"
                     element={
