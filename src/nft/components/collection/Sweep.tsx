@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { formatEther, parseEther } from '@ethersproject/units'
 import { useBag, useCollectionFilters } from 'nft/hooks'
 import { fetchSweep } from 'nft/queries'
 import { GenieAsset, GenieCollection, Markets } from 'nft/types'
@@ -31,8 +32,10 @@ const SweepLeftmostContainer = styled.div`
 const SweepRightmostContainer = styled.div`
   display: flex;
   flex-shrink: 0;
+  justify-content: flex-end;
   align-items: center;
   gap: 8px;
+  min-width: 160px;
 `
 
 const SweepSubContainer = styled.div`
@@ -206,9 +209,9 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
 
   const allAssetsFetched = isCollectionAssetsFetched && isNftxCollectionAssetsFetched && isNft20CollectionAssetsFetched
 
-  const { sortedAssets } = useMemo(() => {
+  const { sortedAssets, sortedAssetsTotalEth } = useMemo(() => {
     if (!allAssetsFetched || !collectionAssets || !nftxCollectionAssets || !nft20CollectionAssets)
-      return { sortedAssets: undefined }
+      return { sortedAssets: undefined, sortedAssetsTotalEth: BigNumber.from(0) }
 
     let counterNFTX = 0
     let counterNFT20 = 0
@@ -238,7 +241,13 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
       Math.max(collectionAssets.length, nftxCollectionAssets.length, nft20CollectionAssets.length)
     )
 
-    return { sortedAssets: validAssets }
+    return {
+      sortedAssets: validAssets,
+      sortedAssetsTotalEth: validAssets.reduce(
+        (total, asset) => total.add(BigNumber.from(asset.priceInfo.ETHPrice)),
+        BigNumber.from(0)
+      ),
+    }
   }, [collectionAssets, nftxCollectionAssets, nft20CollectionAssets, allAssetsFetched])
 
   const { sweepItemsInBag, sweepEthPrice } = useMemo(() => {
@@ -260,16 +269,51 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
 
   const handleSliderChange = (value: number | number[]) => {
     if (typeof value === 'number') {
-      if (!isItemsToggled) return
-      setSweepAmount(value)
-
       if (sortedAssets) {
-        if (sweepItemsInBag.length < value) {
-          addAssetsToBag(sortedAssets.slice(sweepItemsInBag.length, value), true)
+        if (isItemsToggled) {
+          if (sweepItemsInBag.length < value) {
+            addAssetsToBag(sortedAssets.slice(sweepItemsInBag.length, value), true)
+          } else {
+            removeAssetsFromBag(sweepItemsInBag.slice(value, sweepItemsInBag.length))
+          }
         } else {
-          removeAssetsFromBag(sweepItemsInBag.slice(value, sweepItemsInBag.length))
+          const wishValueInWei = parseEther(value.toString())
+          if (sweepEthPrice.lte(wishValueInWei)) {
+            let curIndex = sweepItemsInBag.length
+            let curTotal = sweepEthPrice
+            const wishAssets: GenieAsset[] = []
+
+            while (
+              curIndex < sortedAssets.length &&
+              curTotal.add(BigNumber.from(sortedAssets[curIndex].priceInfo.ETHPrice)).lte(wishValueInWei)
+            ) {
+              wishAssets.push(sortedAssets[curIndex])
+              curTotal = curTotal.add(BigNumber.from(sortedAssets[curIndex].priceInfo.ETHPrice))
+              curIndex++
+            }
+
+            if (wishAssets.length > 0) {
+              addAssetsToBag(wishAssets, true)
+            }
+          } else {
+            let curIndex = sweepItemsInBag.length - 1
+            let curTotal = sweepEthPrice
+            const wishAssets: GenieAsset[] = []
+
+            while (curIndex >= 0 && curTotal.gt(wishValueInWei)) {
+              wishAssets.push(sweepItemsInBag[curIndex])
+              curTotal = curTotal.sub(BigNumber.from(sweepItemsInBag[curIndex].priceInfo.ETHPrice))
+              curIndex--
+            }
+
+            if (wishAssets.length > 0) {
+              removeAssetsFromBag(wishAssets)
+            }
+          }
         }
       }
+
+      setSweepAmount(value)
     }
   }
 
@@ -288,9 +332,9 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
         <SweepSubContainer>
           <StyledSlider
             defaultValue={0}
-            max={isItemsToggled ? sortedAssets?.length ?? 0 : 0}
+            max={isItemsToggled ? sortedAssets?.length ?? 0 : parseFloat(formatEther(sortedAssetsTotalEth).toString())}
             value={sweepAmount}
-            step={isItemsToggled ? 1 : 0.001}
+            step={isItemsToggled ? 1 : 0.01}
             trackStyle={{
               top: '3px',
               height: '8px',
@@ -323,7 +367,7 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
             minLength={1}
             maxLength={79}
             spellCheck="false"
-            value={sweepAmount || ''}
+            value={isItemsToggled ? sweepAmount || '' : sweepAmount > 0 ? sweepAmount.toFixed(2) : ''}
           />
           <ToggleContainer onClick={handleToggleSweep}>
             <ToggleSwitch active={isItemsToggled}>Items</ToggleSwitch>
@@ -332,7 +376,9 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
         </SweepSubContainer>
       </SweepLeftmostContainer>
       <SweepRightmostContainer>
-        {`${formatWeiToDecimal(sweepEthPrice.toString())} ETH`}
+        <ThemedText.SubHeader font-size="14px">{`${formatWeiToDecimal(
+          sweepEthPrice.toString()
+        )} ETH`}</ThemedText.SubHeader>
         <NftDisplay nfts={sweepItemsInBag} />
       </SweepRightmostContainer>
     </SweepContainer>
