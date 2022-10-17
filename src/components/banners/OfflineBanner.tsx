@@ -10,6 +10,13 @@ export function OfflineBanner() {
   const theme = useAppTheme()
   const netInfo = useNetInfo()
 
+  if (__DEV__) {
+    // do not check in Dev mode since the simulator
+    // gets funky with the network state:
+    // https://github.com/react-native-netinfo/react-native-netinfo/issues/7
+    return null
+  }
+
   if (netInfo.isConnected) {
     return null
   }
