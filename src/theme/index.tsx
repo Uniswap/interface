@@ -92,7 +92,11 @@ function colors(darkMode: boolean): Colors {
     warning: '#971B1C',
 
     // dont wanna forget these blue yet
+
+    // uncomment below to make the background change on select of tokens
+    //blue4: darkMode ? 'linear-gradient(to right, var(--color-output), var(--color-input))' : 'linear-gradient(-45deg, #B9CEF7, #F6FAF9)',
     blue4: darkMode ? 'linear-gradient(-45deg, #8D95AB, #0B0D12)' : 'linear-gradient(-45deg, #B9CEF7, #F6FAF9)',
+
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
 
     // interactive

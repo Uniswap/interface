@@ -33,7 +33,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '5px' : '5px')};
   background-color: ${({ theme, hideInput }) => (hideInput ? theme.bg6 : 'transparent')};
-  background: linear-gradient(135deg, #637EEA, #929292);
+  background: ${props =>  props.theme.blue4};
   z-index: 1;
   border: 0px solid #637EEA;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
@@ -59,7 +59,6 @@ const FixedContainer = styled.div`
 
 const Container = styled.div<{ hideInput: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '4px' : '4px')};
-  background-color: ${({ theme }) => theme.bg6};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   :focus,
   :hover {
@@ -67,7 +66,7 @@ const Container = styled.div<{ hideInput: boolean }>`
   }
 `
 
-const CurrencySelect = styled(ButtonGray)<{isMobile?:boolean, selected: boolean; hideInput?: boolean }>`
+const CurrencySelect = styled(ButtonGray) <{ isMobile?: boolean, selected: boolean; hideInput?: boolean }>`
   align-items: center;
   font-size: ${props => props.isMobile ? '12.5px' : '22px'};
   ${props => props.isMobile ? `margin-left:3px;` : ''}
@@ -78,6 +77,7 @@ const CurrencySelect = styled(ButtonGray)<{isMobile?:boolean, selected: boolean;
   outline: none;
   cursor: pointer;
   user-select: none;
+  ${props => props.isMobile ? 'padding-left:5px; padding-right:5px;' : ''}
   border: none;
   height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.8rem')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
@@ -92,7 +92,7 @@ const CurrencySelect = styled(ButtonGray)<{isMobile?:boolean, selected: boolean;
 const InputRow = styled.div<{ isMobile?: boolean, selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: ${({ selected, isMobile }) => (selected ? (isMobile ? '1rem 1rem 0.75rem 0.05rem' : '1rem 1rem 0.75rem 1rem') : isMobile ? '1rem 1rem 0.75rem 0.05rem'  : '1rem 1rem 0.75rem 1rem')};
+  padding: ${({ selected, isMobile }) => (selected ? (isMobile ? '1rem 1rem 0.75rem 0.05rem' : '1rem 1rem 0.75rem 1rem') : isMobile ? '1rem 1rem 0.75rem 0.05rem' : '1rem 1rem 0.75rem 1rem')};
 `
 
 const LabelRow = styled.div`
@@ -119,28 +119,28 @@ const Aligner = styled.span`
   width: 100%;
 `
 
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
   margin: 0 0.25rem 0 0.35rem;
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.primaryText1 : theme.text1)};
+    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.text1)};
     stroke-width: 1.5px;
   }
 `
 
-const StyledTokenName = styled.span<{ isMobile?:boolean, active?: boolean }>`
+const StyledTokenName = styled.span<{ isMobile?: boolean, active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active, isMobile }) => isMobile ? '14px' : (active ? '20px' : '20px')};
   font-family: ${({ active }) => (active ? 'Poppins' : 'Poppins')};
   font-weight: ${({ active }) => (active ? '700' : '500')};
 `
 
-const StyledBalanceMax = styled.button<{ isMobile?:boolean, disabled?: boolean }>`
+const StyledBalanceMax = styled.button<{ isMobile?: boolean, disabled?: boolean }>`
   background-color: transparent;
   border: none;
   border-radius: 12px;
-  font-size: ${props => props.isMobile? '12px' : '14px'};
+  font-size: ${props => props.isMobile ? '12px' : '14px'};
   font-weight: 700;
   cursor: pointer;
   padding: 0;
@@ -176,7 +176,7 @@ interface CurrencyInputPanelProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
-  showOnlyTrumpCoins?:boolean
+  showOnlyTrumpCoins?: boolean
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
 }
@@ -228,7 +228,7 @@ export default function CurrencyInputPanel({
           </AutoColumn>
         </FixedContainer>
       )}
-      
+
       <Container hideInput={hideInput}>
         <InputRow isMobile={isMobile} style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           <CurrencySelect
@@ -256,24 +256,24 @@ export default function CurrencyInputPanel({
                     {pair?.token0.symbol}:{pair?.token1.symbol}
                   </StyledTokenName>
                 ) : (
-                  <StyledTokenName isMobile={isMobile}  className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                  <StyledTokenName isMobile={isMobile} className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
                     {(currency && currency.symbol && currency.symbol.length > 20
                       ? currency.symbol.slice(0, 4) +
-                        '...' +
-                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || <span style={{fontSize: isMobile ? 12 : 14}}>Select a token</span>}
+                      '...' +
+                      currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                      : currency?.symbol) || <span style={{ fontSize: isMobile ? 12 : 14 }}>Select a token</span>}
                   </StyledTokenName>
                 )}
               </RowFixed>
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
-             
+
             </Aligner>
-            {!!currency && !currency.isNative &&  <StyledInternalLink style={{marginLeft: 5, cursor:'pointer'}} title={`View ${currency?.name} (${currency.symbol} Chart)`} to={`/selective-charts/${currency?.wrapped?.address}/${currency?.symbol}/${currency?.name}/${currency?.decimals}`}> <BarChart2 size={'14px'} /> </StyledInternalLink>}
+            {!!currency && !currency.isNative && <StyledInternalLink style={{ marginLeft: !isMobile ? 5 : 0, cursor: 'pointer' }} title={`View ${currency?.name} (${currency.symbol} Chart)`} to={`/selective-charts/${currency?.wrapped?.address}/${currency?.symbol}/${currency?.name}/${currency?.decimals}`}> <BarChart2 size={'14px'} /> </StyledInternalLink>}
           </CurrencySelect>
           {currency && <RowFixed style={{
-            marginRight:15
+            marginRight: 15
           }}>
-            
+
           </RowFixed>}
           {!hideInput && (
             <>

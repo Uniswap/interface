@@ -12,7 +12,7 @@ import { Link, RouteComponentProps, useParams } from 'react-router-dom'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import Row, { AutoRow, RowFixed } from '../../components/Row'
 import { UseERC20PermitState, useERC20PermitFromTrade } from '../../hooks/useERC20Permit'
-import { getTokenData, useEthPrice, useTokenData } from 'state/logs/utils'
+import { getTokenData, toChecksum, useEthPrice, useTokenData } from 'state/logs/utils'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { useAddUserToken, useExpertModeManager, useSetAutoSlippage, useSetUserSlippageTolerance, useUserDetectRenounced, useUserSingleHopOnly } from '../../state/user/hooks'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
@@ -60,6 +60,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { V3TradeState } from '../../hooks/useBestV3Trade'
+import Vibrant from 'node-vibrant'
 import _ from 'lodash'
 import { borderRadius } from 'polished'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
@@ -67,10 +68,12 @@ import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpa
 import { getMaxes } from 'pages/HoneyPotDetector'
 import { getTokenTaxes } from 'pages/HoneyUtils'
 import { getTradeVersion } from '../../utils/getTradeVersion'
+import {hex}from 'wcag-contrast'
 import { isAddress } from '@ethersproject/address'
 import { isTradeBetter } from '../../utils/isTradeBetter'
 import logo from '../../assets/images/download.png'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { shade } from 'polished'
 import { useActiveWeb3React } from '../../hooks/web3'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useGelatoLimitOrders } from '@gelatonetwork/limit-orders-react'
@@ -301,6 +304,14 @@ export default function Swap({ history }: RouteComponentProps) {
     useAutoSlippage
   ])
 
+  // const inputCurrency = (currencies?.INPUT as any) as Currency
+  // const outputCurrency = (currencies?.OUTPUT as any) as Currency
+
+  // const inputCurrencyColor = useColor(inputCurrency?.wrapped?.address, inputCurrency?.symbol)
+  // const outputCurrencyColor = useColor(outputCurrency?.wrapped?.address, outputCurrency?.symbol)
+
+  // console.log(`colors`, {inputCurrencyColor, outputCurrencyColor})
+
   const isOutputCurrencyRenounced = useContractOwner((currencies?.OUTPUT as any)?.address, useDetectRenounced ? 'eth' : undefined)
   const isInputCurrencyRenounced = useContractOwner((currencies?.INPUT as any)?.address, useDetectRenounced ? 'eth' : undefined)
 
@@ -501,6 +512,33 @@ export default function Swap({ history }: RouteComponentProps) {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
+  //  function useColor(tokenAddress:string | undefined, token: string | undefined) {
+  //   const [color, setColor] = useState('#2172E5')
+  //   if (tokenAddress) {
+  //     const path = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${toChecksum(
+  //       tokenAddress
+  //     )}/logo.png`
+  //     if (path) {
+  //       Vibrant.from(path).getPalette((err:any, palette:any) => {
+  //         if (palette && palette.Vibrant) { 
+  //           let detectedHex = palette.Vibrant.hex
+  //           let AAscore = hex(detectedHex, '#FFF')
+  //           while (AAscore < 3) {
+  //             detectedHex = shade(0.005, detectedHex)
+  //             AAscore = hex(detectedHex, '#FFF')
+  //           }
+  //           if (token === 'DAI') {
+  //             setColor('#FAAB14')
+  //           } else {
+  //             setColor(detectedHex)
+  //           }
+  //         }
+  //       })
+  //     }
+  //   }
+  //   return color
+  // }
+
   const handleInputSelect = useCallback(
     (inputCurrency) => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
@@ -642,6 +680,26 @@ const isMobile = useIsMobile()
     currencies.OUTPUT,
     currencies.INPUT,
   ])
+
+
+  // uncomment to make background change on color of token
+  // useEffect(() => {
+  //   if (inputCurrencyColor) {
+  //     document.documentElement.style.setProperty(
+  //       '--color-input',
+  //       inputCurrencyColor
+  //     );
+  //   }
+  // }, [inputCurrencyColor])
+
+  // useEffect(() => {
+  //   if (outputCurrencyColor) {
+  //     document.documentElement.style.setProperty(
+  //       '--color-output',
+  //       outputCurrencyColor
+  //     );
+  //   }
+  // }, [outputCurrencyColor])
 
   const toggleShowChart = () => setShowChart(!showChart)
   const onViewChangeFn = (view: any) => setView(view)
