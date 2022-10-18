@@ -82,7 +82,7 @@ const CurrencySelect = styled(ButtonGray)<{isMobile?:boolean, selected: boolean;
   height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.8rem')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   justify-content: space-between;
-  margin-right: ${({ hideInput }) => (hideInput ? '0' : '12px')};
+  margin-right: ${({ isMobile, hideInput }) => (hideInput || isMobile ? '0' : '12px')};
   :focus,
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg6 : darken(0.00, theme.bg6))};
@@ -136,11 +136,11 @@ const StyledTokenName = styled.span<{ isMobile?:boolean, active?: boolean }>`
   font-weight: ${({ active }) => (active ? '700' : '500')};
 `
 
-const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
+const StyledBalanceMax = styled.button<{ isMobile?:boolean, disabled?: boolean }>`
   background-color: transparent;
   border: none;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: ${props => props.isMobile? '12px' : '14px'};
   font-weight: 700;
   cursor: pointer;
   padding: 0;
@@ -311,7 +311,7 @@ export default function CurrencyInputPanel({
                     ) : null}
                   </TYPE.body>
                   {showMaxButton && selectedCurrencyBalance ? (
-                    <StyledBalanceMax onClick={onMax}>
+                    <StyledBalanceMax isMobile={isMobile} onClick={onMax}>
                       <Trans>(Max)</Trans>
                     </StyledBalanceMax>
                   ) : null}
@@ -319,7 +319,7 @@ export default function CurrencyInputPanel({
               ) : (
                 <span />
               )}
-              <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
+              <FiatValue isMobile={isMobile} fiatValue={fiatValue} priceImpact={priceImpact} />
             </RowBetween>
           </FiatRow>
         )}
