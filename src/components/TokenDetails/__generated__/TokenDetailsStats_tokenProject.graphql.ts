@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<17e1575318e0b6e9beb2e2f9726d2c51>>
+ * @generated SignedSource<<315174bde922f0d48d639e2bc2058398>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,10 +33,6 @@ export type TokenDetailsStats_tokenProject$data = {
       readonly value: number | null;
     } | null;
     readonly priceLow52W: {
-      readonly currency: Currency | null;
-      readonly value: number | null;
-    } | null;
-    readonly volume24h: {
       readonly currency: Currency | null;
       readonly value: number | null;
     } | null;
@@ -159,22 +155,6 @@ return {
           "storageKey": null
         },
         {
-          "alias": "volume24h",
-          "args": [
-            {
-              "kind": "Literal",
-              "name": "duration",
-              "value": "DAY"
-            }
-          ],
-          "concreteType": "Amount",
-          "kind": "LinkedField",
-          "name": "volume",
-          "plural": false,
-          "selections": (v0/*: any*/),
-          "storageKey": "volume(duration:\"DAY\")"
-        },
-        {
           "alias": "priceHigh52W",
           "args": [
             (v1/*: any*/),
@@ -256,6 +236,6 @@ return {
 };
 })();
 
-(node as any).hash = "06fdfe540839bbb0958c1104f39dcf08";
+(node as any).hash = "6937ba63e5be68a95f6f75c6849aef6f";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<458d6c4464042035b8ab8ea230a9ce42>>
+ * @generated SignedSource<<0607a7edd145a97a77f908f563bc0421>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,6 +21,9 @@ export type TokenDetailsScreenQuery$variables = {
 export type TokenDetailsScreenQuery$data = {
   readonly tokenProjects: ReadonlyArray<{
     readonly " $fragmentSpreads": FragmentRefs<"TokenDetailsScreen_headerPriceLabel" | "TokenDetailsStats_tokenProject">;
+  } | null> | null;
+  readonly tokens: ReadonlyArray<{
+    readonly " $fragmentSpreads": FragmentRefs<"TokenDetailsStats_token">;
   } | null> | null;
 };
 export type TokenDetailsScreenQuery = {
@@ -53,17 +56,18 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "value",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "value",
-    "storageKey": null
-  },
+v4 = [
+  (v2/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -71,9 +75,9 @@ v3 = [
     "name": "currency",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v3/*: any*/)
 ],
-v4 = {
+v5 = {
   "kind": "Literal",
   "name": "duration",
   "value": "YEAR"
@@ -85,6 +89,22 @@ return {
     "metadata": null,
     "name": "TokenDetailsScreenQuery",
     "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "Token",
+        "kind": "LinkedField",
+        "name": "tokens",
+        "plural": true,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "TokenDetailsStats_token"
+          }
+        ],
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": (v1/*: any*/),
@@ -116,6 +136,55 @@ return {
     "kind": "Operation",
     "name": "TokenDetailsScreenQuery",
     "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "Token",
+        "kind": "LinkedField",
+        "name": "tokens",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": [
+              {
+                "kind": "Literal",
+                "name": "currency",
+                "value": "USD"
+              }
+            ],
+            "concreteType": "TokenMarket",
+            "kind": "LinkedField",
+            "name": "market",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": [
+                  {
+                    "kind": "Literal",
+                    "name": "duration",
+                    "value": "DAY"
+                  }
+                ],
+                "concreteType": "Amount",
+                "kind": "LinkedField",
+                "name": "volume",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  (v3/*: any*/)
+                ],
+                "storageKey": "volume(duration:\"DAY\")"
+              },
+              (v3/*: any*/)
+            ],
+            "storageKey": "market(currency:\"USD\")"
+          },
+          (v3/*: any*/)
+        ],
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": (v1/*: any*/),
@@ -175,7 +244,7 @@ return {
                 "kind": "LinkedField",
                 "name": "price",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v4/*: any*/),
                 "storageKey": null
               },
               {
@@ -185,7 +254,7 @@ return {
                 "kind": "LinkedField",
                 "name": "marketCap",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v4/*: any*/),
                 "storageKey": null
               },
               {
@@ -195,29 +264,13 @@ return {
                 "kind": "LinkedField",
                 "name": "fullyDilutedMarketCap",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v4/*: any*/),
                 "storageKey": null
-              },
-              {
-                "alias": "volume24h",
-                "args": [
-                  {
-                    "kind": "Literal",
-                    "name": "duration",
-                    "value": "DAY"
-                  }
-                ],
-                "concreteType": "Amount",
-                "kind": "LinkedField",
-                "name": "volume",
-                "plural": false,
-                "selections": (v3/*: any*/),
-                "storageKey": "volume(duration:\"DAY\")"
               },
               {
                 "alias": "priceHigh52W",
                 "args": [
-                  (v4/*: any*/),
+                  (v5/*: any*/),
                   {
                     "kind": "Literal",
                     "name": "highLow",
@@ -228,13 +281,13 @@ return {
                 "kind": "LinkedField",
                 "name": "priceHighLow",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v4/*: any*/),
                 "storageKey": "priceHighLow(duration:\"YEAR\",highLow:\"HIGH\")"
               },
               {
                 "alias": "priceLow52W",
                 "args": [
-                  (v4/*: any*/),
+                  (v5/*: any*/),
                   {
                     "kind": "Literal",
                     "name": "highLow",
@@ -245,10 +298,10 @@ return {
                 "kind": "LinkedField",
                 "name": "priceHighLow",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v4/*: any*/),
                 "storageKey": "priceHighLow(duration:\"YEAR\",highLow:\"LOW\")"
               },
-              (v2/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": "markets(currencies:[\"USD\"])"
           },
@@ -288,27 +341,27 @@ return {
                 "name": "decimals",
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
-          (v2/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "2ccd47cdf54f2051be73fb25c1bc4265",
+    "cacheID": "399d7c6aeae28761e50e0842781b4d5f",
     "id": null,
     "metadata": {},
     "name": "TokenDetailsScreenQuery",
     "operationKind": "query",
-    "text": "query TokenDetailsScreenQuery(\n  $contract: ContractInput!\n) {\n  tokenProjects(contracts: [$contract]) {\n    ...TokenDetailsStats_tokenProject\n    ...TokenDetailsScreen_headerPriceLabel\n    id\n  }\n}\n\nfragment TokenDetailsScreen_headerPriceLabel on TokenProject {\n  markets(currencies: [USD]) {\n    price {\n      value\n      id\n    }\n    id\n  }\n}\n\nfragment TokenDetailsStats_tokenProject on TokenProject {\n  description\n  homepageUrl\n  twitterName\n  name\n  markets(currencies: [USD]) {\n    price {\n      value\n      currency\n      id\n    }\n    marketCap {\n      value\n      currency\n      id\n    }\n    fullyDilutedMarketCap {\n      value\n      currency\n      id\n    }\n    volume24h: volume(duration: DAY) {\n      value\n      currency\n      id\n    }\n    priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {\n      value\n      currency\n      id\n    }\n    priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {\n      value\n      currency\n      id\n    }\n    id\n  }\n  tokens {\n    chain\n    address\n    symbol\n    decimals\n    id\n  }\n}\n"
+    "text": "query TokenDetailsScreenQuery(\n  $contract: ContractInput!\n) {\n  tokens(contracts: [$contract]) {\n    ...TokenDetailsStats_token\n    id\n  }\n  tokenProjects(contracts: [$contract]) {\n    ...TokenDetailsStats_tokenProject\n    ...TokenDetailsScreen_headerPriceLabel\n    id\n  }\n}\n\nfragment TokenDetailsScreen_headerPriceLabel on TokenProject {\n  markets(currencies: [USD]) {\n    price {\n      value\n      id\n    }\n    id\n  }\n}\n\nfragment TokenDetailsStats_token on Token {\n  market(currency: USD) {\n    volume(duration: DAY) {\n      value\n      id\n    }\n    id\n  }\n}\n\nfragment TokenDetailsStats_tokenProject on TokenProject {\n  description\n  homepageUrl\n  twitterName\n  name\n  markets(currencies: [USD]) {\n    price {\n      value\n      currency\n      id\n    }\n    marketCap {\n      value\n      currency\n      id\n    }\n    fullyDilutedMarketCap {\n      value\n      currency\n      id\n    }\n    priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {\n      value\n      currency\n      id\n    }\n    priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {\n      value\n      currency\n      id\n    }\n    id\n  }\n  tokens {\n    chain\n    address\n    symbol\n    decimals\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "256a81dcaa452a0633d7c5a22a37121e";
+(node as any).hash = "ad402ed7dcdd76824b1205f1001ca4a5";
 
 export default node;

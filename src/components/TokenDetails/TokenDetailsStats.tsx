@@ -8,12 +8,24 @@ import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
+import { TokenDetailsStats_token$key } from 'src/components/TokenDetails/__generated__/TokenDetailsStats_token.graphql'
 import { TokenDetailsStats_tokenProject$key } from 'src/components/TokenDetails/__generated__/TokenDetailsStats_tokenProject.graphql'
 import { currencyAddress } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
 
-export const tokenDetailsStatsFragment = graphql`
+// Fetch Uniswap volume from Token#markets
+export const tokenDetailsStatsTokenFragment = graphql`
+  fragment TokenDetailsStats_token on Token {
+    market(currency: USD) @required(action: LOG) {
+      volume(duration: DAY) @required(action: LOG) {
+        value @required(action: LOG)
+      }
+    }
+  }
+`
+
+const tokenDetailsStatsTokenProjectFragment = graphql`
   fragment TokenDetailsStats_tokenProject on TokenProject {
     description
     homepageUrl
@@ -29,10 +41,6 @@ export const tokenDetailsStatsFragment = graphql`
         currency
       }
       fullyDilutedMarketCap {
-        value
-        currency
-      }
-      volume24h: volume(duration: DAY) {
         value
         currency
       }
@@ -56,14 +64,17 @@ export const tokenDetailsStatsFragment = graphql`
 
 function TokenDetailsStatsInner({
   currency,
+  token,
   tokenProject,
 }: {
   currency: Currency
+  token: TokenDetailsStats_token$key
   tokenProject: TokenDetailsStats_tokenProject$key
 }) {
   const { t } = useTranslation()
 
-  const tokenProjectData = useFragment(tokenDetailsStatsFragment, tokenProject)
+  const tokenData = useFragment(tokenDetailsStatsTokenFragment, token)
+  const tokenProjectData = useFragment(tokenDetailsStatsTokenProjectFragment, tokenProject)
 
   const marketData = tokenProjectData?.markets ? tokenProjectData.markets[0] : null
 
@@ -97,7 +108,7 @@ function TokenDetailsStatsInner({
             <Text color="textSecondary" variant="subheadSmall">
               {t('24h volume')}
             </Text>
-            <Text variant="headlineMedium">{formatNumber(marketData?.volume24h?.value)}</Text>
+            <Text variant="headlineMedium">{formatNumber(tokenData?.market.volume.value)}</Text>
           </Flex>
           <Flex gap="xs">
             <Text color="textSecondary" variant="subheadSmall">
@@ -149,15 +160,17 @@ function TokenDetailsStatsInner({
 
 export function TokenDetailsStats({
   currency,
+  token,
   tokenProject,
 }: {
   currency: Currency
+  token: TokenDetailsStats_token$key | null | undefined
   tokenProject: TokenDetailsStats_tokenProject$key | null | undefined
 }) {
-  if (!tokenProject) return null
+  if (!token || !tokenProject) return null
   return (
     <Suspense fallback={<Loading />}>
-      <TokenDetailsStatsInner currency={currency} tokenProject={tokenProject} />
+      <TokenDetailsStatsInner currency={currency} token={token} tokenProject={tokenProject} />
     </Suspense>
   )
 }

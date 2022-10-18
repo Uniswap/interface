@@ -43,6 +43,10 @@ import { formatUSDPrice } from 'src/utils/format'
 
 export const tokenDetailsScreenQuery = graphql`
   query TokenDetailsScreenQuery($contract: ContractInput!) {
+    tokens(contracts: [$contract]) {
+      ...TokenDetailsStats_token
+    }
+
     tokenProjects(contracts: [$contract]) {
       ...TokenDetailsStats_tokenProject
       ...TokenDetailsScreen_headerPriceLabel
@@ -266,7 +270,11 @@ function TokenDetails({
             otherChainBalances={otherChainBalances}
           />
           <Flex gap="lg" p="md">
-            <TokenDetailsStats currency={currency} tokenProject={data?.tokenProjects?.[0]} />
+            <TokenDetailsStats
+              currency={currency}
+              token={data?.tokens?.[0]}
+              tokenProject={data?.tokenProjects?.[0]}
+            />
             {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
               <TokenWarningCard
                 tokenWarningLevel={tokenWarningLevel}
