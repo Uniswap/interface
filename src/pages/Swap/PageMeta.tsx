@@ -2,7 +2,7 @@ import DocumentMeta from 'react-document-meta'
 const defaultMetadata = {
     title: 'KibaSwap | Swap Tokens, View Charts, New Pairs, and much more',
     description: '',
-    canonical: 'https://kiba.app',
+    canonical: 'https://kibaswap.io',
     meta: {
         charset: 'utf-8',
         name: {
