@@ -19,7 +19,7 @@ import { Text } from 'rebass'
 import { useAllTokenBalances } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
+import { useActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { CloseIcon, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -71,7 +71,7 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
 
-  const allTokens = useAllTokens()
+  const allTokens = useActiveTokens()
 
   // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)

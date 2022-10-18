@@ -11,8 +11,6 @@ import { isCelo } from '../../constants/tokens'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { acceptListUpdate, enableList } from './actions'
-import { useActiveListUrls } from './hooks'
-
 export default function Updater(): null {
   const { chainId, provider } = useWeb3React()
   const dispatch = useAppDispatch()
@@ -20,7 +18,6 @@ export default function Updater(): null {
 
   // get all loaded lists, and the active urls
   const lists = useAllLists()
-  const activeListUrls = useActiveListUrls()
 
   const fetchList = useFetchListCallback()
   const fetchAllListsCallback = useCallback(() => {
@@ -92,7 +89,7 @@ export default function Updater(): null {
         }
       }
     })
-  }, [dispatch, lists, activeListUrls])
+  }, [dispatch, lists])
 
   return null
 }
