@@ -99,14 +99,14 @@ export default function NetworkFilter() {
   const { chainName } = useParams<{ chainName?: string }>()
   const currentChainName = validateUrlChainParam(chainName)
 
-  const { label, circleLogoUrl, logoUrl } = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
+  const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[currentChainName])
 
   return (
     <StyledMenu ref={node}>
       <NetworkFilterOption onClick={toggleMenu} aria-label={`networkFilter`} active={open}>
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={logoUrl ?? circleLogoUrl} /> {label}
+            <Logo src={chainInfo?.logoUrl} /> {chainInfo?.label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? (
@@ -130,7 +130,7 @@ export default function NetworkFilter() {
                 }}
               >
                 <NetworkLabel>
-                  <Logo src={chainInfo.logoUrl ?? chainInfo.circleLogoUrl} />
+                  <Logo src={chainInfo.logoUrl} />
                   {chainInfo.label}
                 </NetworkLabel>
                 {network === currentChainName && (
