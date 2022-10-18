@@ -19,16 +19,19 @@ export function useQueryScheduler<Q extends OperationType>(
   options: QueryOptions
 ) {
   const [queryReference, load] = useQueryLoader<Q>(query)
-  const loaded = useRef(false)
+
+  const paramsRef = useRef(params)
+
+  // will refetch query when params change
+  if (params !== paramsRef.current) {
+    paramsRef.current = params
+  }
 
   useEffect(() => {
-    if (loaded.current) {
-      return
-    }
-
-    loaded.current = true
-    register(priority, () => load(params, options))
-  }, [load, options, params, priority])
+    register(priority, () => load(paramsRef.current, options))
+    // params.current is required since it changes in conditional above
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [load, options, priority, paramsRef.current])
 
   return { queryReference, load }
 }

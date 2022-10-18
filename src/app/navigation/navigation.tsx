@@ -3,7 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import { selectionAsync } from 'expo-haptics'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { PreloadedQuery } from 'react-relay'
@@ -27,10 +27,13 @@ import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { GradientButton } from 'src/components/buttons/GradientButton'
 import { exploreTokensTabQuery } from 'src/components/explore/tabs/ExploreTokensTab'
-import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
+import {
+  ExploreTokensTabQuery,
+  ExploreTokensTabQuery$variables,
+} from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
-import { PollingInterval } from 'src/constants/misc'
+import { NetworkPollConfig } from 'src/constants/misc'
 import { Priority, useQueryScheduler } from 'src/data/useQueryScheduler'
 import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
@@ -99,6 +102,10 @@ const NullComponent = () => {
   return null
 }
 
+const exploreTokensTabParams: ExploreTokensTabQuery$variables = {
+  topTokensOrderBy: 'MARKET_CAP',
+}
+
 function TabNavigator() {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -106,27 +113,23 @@ function TabNavigator() {
 
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
-  const { queryReference: homeScreenQueryRef, load: loadHomeScreenQuery } =
-    useQueryScheduler<HomeScreenQuery>(
-      Priority.Immediate,
-      homeScreenQuery,
-      { owner: activeAccountAddress },
-      { networkCacheConfig: { poll: PollingInterval.Fast } }
-    )
+  const homeScreenQueryParams = useMemo(
+    () => ({ owner: activeAccountAddress }),
+    [activeAccountAddress]
+  )
 
-  useEffect(() => {
-    // reload home query when active account changes
-    loadHomeScreenQuery(
-      { owner: activeAccountAddress },
-      { networkCacheConfig: { poll: PollingInterval.Fast } }
-    )
-  }, [activeAccountAddress, loadHomeScreenQuery])
+  const { queryReference: homeScreenQueryRef } = useQueryScheduler<HomeScreenQuery>(
+    Priority.Immediate,
+    homeScreenQuery,
+    homeScreenQueryParams,
+    NetworkPollConfig.Fast
+  )
 
   const { queryReference: exploreTokensTabQueryRef } = useQueryScheduler<ExploreTokensTabQuery>(
     Priority.Idle,
     exploreTokensTabQuery,
-    { topTokensOrderBy: 'MARKET_CAP' },
-    { networkCacheConfig: { poll: PollingInterval.Slow } }
+    exploreTokensTabParams,
+    NetworkPollConfig.Slow
   )
 
   const HomeStackNavigatorMemo = useCallback(
