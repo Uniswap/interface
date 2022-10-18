@@ -11,7 +11,7 @@ import {
 import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GestureResponderEvent, StyleSheet, View } from 'react-native'
+import { GestureResponderEvent, StyleSheet, useColorScheme, View } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import Animated, {
   AnimateStyle,
@@ -23,7 +23,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import { ONBOARDING_QR_ETCHING_VIDEO } from 'src/assets'
+import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'src/assets'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -62,6 +62,12 @@ export function OnboardingCompleteAnimation({
   const playEtchingAfterSlideIn = () => {
     video.current?.playAsync()
   }
+
+  const isDarkMode = useColorScheme() === 'dark'
+
+  const etchingVideoSource = isDarkMode
+    ? ONBOARDING_QR_ETCHING_VIDEO_DARK
+    : ONBOARDING_QR_ETCHING_VIDEO_LIGHT
 
   // 2. QR slide up and fade in animation
   // the config for this animation is defined in the animations.ts file in the same folder as this component, but because of the callback it made more sense to leave the actual animation definition in this file
@@ -185,7 +191,7 @@ export function OnboardingCompleteAnimation({
               </Animated.View>
               <Animated.View entering={qrScaleIn}>
                 <Box
-                  bg="black"
+                  bg="backgroundBackdrop"
                   borderColor="backgroundOutline"
                   borderRadius="xl"
                   borderWidth={2}
@@ -196,22 +202,30 @@ export function OnboardingCompleteAnimation({
                   <Animated.View entering={realQrFadeIn} style={[styles.qrCodeContainer]}>
                     <Flex
                       alignItems="center"
-                      bg="black"
                       borderRadius="full"
                       height={UNICON_SIZE + UNICON_BG_PADDING}
                       justifyContent="center"
-                      // Unicon seems to be 1px off toward the left
+                      // Unicon seems to be 1px off toward the left and top
                       pl="xxxs"
                       position="absolute"
+                      pt="xxxs"
                       width={UNICON_SIZE + UNICON_BG_PADDING}
                       zIndex="offcanvas">
                       <Unicon address={activeAddress} size={UNICON_SIZE} />
                     </Flex>
                     <QRCode
-                      backgroundColor={theme.colors.black}
+                      backgroundColor={theme.colors.none}
+                      ecl="H"
                       enableLinearGradient={true}
                       gradientDirection={['0%', '0%', '100%', '0%']}
                       linearGradient={[uniconColors.gradientStart, uniconColors.gradientEnd]}
+                      logo={{ uri: '' }}
+                      // this could eventually be set to an SVG version of the Unicon which would ensure it's perfectly centered, but for now we can just use an empty logo image to create a blank circle in the middle of the QR code
+                      // note: this QR code library doesn't actually create a "safe" space in the middle, it just adds the logo on top, so that's why ecl is set to H (high error correction level) to ensure the QR code is still readable even if the middle of the QR code is partially obscured
+                      logoBackgroundColor={theme.colors.backgroundSurface}
+                      logoBorderRadius={theme.borderRadii.full}
+                      logoMargin={UNICON_SIZE / 3}
+                      logoSize={UNICON_SIZE}
                       size={QR_CODE_SIZE}
                       value={activeAddress ?? ''}
                     />
@@ -222,8 +236,8 @@ export function OnboardingCompleteAnimation({
                         <Group transform={[{ translateX: 0 }, { translateY: -100 }]}>
                           <Oval
                             color={uniconColors.glow}
-                            height={200}
-                            opacity={0.65}
+                            height={isDarkMode ? 200 : 110}
+                            opacity={isDarkMode ? 0.6 : 0.4}
                             width={QR_CONTAINER_SIZE}
                           />
                           <Blur blur={25 as unknown as SkiaValue} />
@@ -238,7 +252,7 @@ export function OnboardingCompleteAnimation({
                       ref={video}
                       resizeMode={ResizeMode.CONTAIN}
                       shouldPlay={false}
-                      source={ONBOARDING_QR_ETCHING_VIDEO}
+                      source={etchingVideoSource}
                       style={styles.video}
                       useNativeControls={false}
                     />
@@ -339,6 +353,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
+    zIndex: -1,
+    // to make the glow appear behind the QR code
   },
   textContainer: {
     alignItems: 'center',
