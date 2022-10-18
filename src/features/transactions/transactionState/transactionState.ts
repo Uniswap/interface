@@ -16,6 +16,7 @@ export interface TransactionState {
   exactCurrencyField: CurrencyField
   exactAmountToken: string
   exactAmountUSD?: string
+  focusOnCurrencyField?: CurrencyField
   recipient?: string
   isUSDInput?: boolean
   selectingCurrencyField?: CurrencyField
@@ -34,6 +35,7 @@ export const initialState: Readonly<TransactionState> = {
   [CurrencyField.INPUT]: ETH_TRADEABLE_ASSET,
   [CurrencyField.OUTPUT]: null,
   exactCurrencyField: CurrencyField.INPUT,
+  focusOnCurrencyField: CurrencyField.INPUT,
   exactAmountToken: '',
   exactAmountUSD: '',
   isUSDInput: false,
@@ -105,21 +107,6 @@ const slice = createSlice({
       }
       state.exactAmountToken = amount
     },
-    /* Changes the input field */
-    updateExactCurrencyField: (
-      state,
-      action: PayloadAction<{ currencyField: CurrencyField; newExactAmount: string }>
-    ) => {
-      const { currencyField, newExactAmount } = action.payload
-      if (state.exactCurrencyField === currencyField) return
-
-      state.exactCurrencyField = currencyField
-      if (state.isUSDInput) {
-        state.exactAmountUSD = newExactAmount
-      } else {
-        state.exactAmountToken = newExactAmount
-      }
-    },
     /** Processes a new typed value for the given `field` */
     updateExactAmountUSD: (
       state,
@@ -141,6 +128,9 @@ const slice = createSlice({
     },
     clearRecipient: (state) => {
       state.recipient = undefined
+    },
+    onFocus: (state, action: PayloadAction<CurrencyField>) => {
+      state.focusOnCurrencyField = action.payload
     },
     toggleUSDInput: (state, action: PayloadAction<boolean>) => {
       state.isUSDInput = action.payload

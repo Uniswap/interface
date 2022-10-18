@@ -65,6 +65,7 @@ export function SwapForm({
     exactCurrencyField,
     exactAmountToken,
     exactAmountUSD = '',
+    focusOnCurrencyField,
     formattedDerivedValue,
     trade,
     wrapType,
@@ -72,11 +73,12 @@ export function SwapForm({
   } = derivedSwapInfo
 
   const {
+    onFocusInput,
+    onFocusOutput,
     onSwitchCurrencies,
     onSetAmount,
     onSetMax,
     onCreateTxId,
-    onUpdateExactCurrencyField,
     onShowTokenSelector,
   } = useSwapActionHandlers(dispatch)
 
@@ -113,11 +115,6 @@ export function SwapForm({
     onNext()
   }
 
-  const onCurrencyInputPress = (currencyField: CurrencyField) => () => {
-    const newExactAmount = currencyField === exactCurrencyField ? exactValue : formattedDerivedValue
-    onUpdateExactCurrencyField(currencyField, newExactAmount)
-  }
-
   const [inputSelection, setInputSelection] = useState<TextInputProps['selection']>()
 
   const [outputSelection, setOutputSelection] = useState<TextInputProps['selection']>()
@@ -131,10 +128,10 @@ export function SwapForm({
   const resetSelection = useCallback(
     (start: number, end?: number) => {
       const reset =
-        exactCurrencyField === CurrencyField.INPUT ? setInputSelection : setOutputSelection
+        focusOnCurrencyField === CurrencyField.INPUT ? setInputSelection : setOutputSelection
       reset({ start, end: end ?? start })
     },
-    [exactCurrencyField]
+    [focusOnCurrencyField]
   )
 
   const [showInverseRate, setShowInverseRate] = useState(false)
@@ -169,7 +166,7 @@ export function SwapForm({
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
                 dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
-                focus={exactCurrencyField === CurrencyField.INPUT}
+                focus={focusOnCurrencyField === CurrencyField.INPUT}
                 isUSDInput={isUSDInput}
                 selection={showNativeKeyboard ? undefined : inputSelection}
                 showSoftInputOnFocus={showNativeKeyboard}
@@ -178,7 +175,7 @@ export function SwapForm({
                   exactCurrencyField === CurrencyField.INPUT ? exactValue : formattedDerivedValue
                 }
                 warnings={warnings}
-                onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
+                onPressIn={showNativeKeyboard ? undefined : onFocusInput}
                 onSelectionChange={
                   showNativeKeyboard ? undefined : (start, end) => setInputSelection({ start, end })
                 }
@@ -220,7 +217,7 @@ export function SwapForm({
                   currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
                   currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
                   dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
-                  focus={exactCurrencyField === CurrencyField.OUTPUT}
+                  focus={focusOnCurrencyField === CurrencyField.OUTPUT}
                   isUSDInput={isUSDInput}
                   selection={showNativeKeyboard ? undefined : outputSelection}
                   showNonZeroBalancesOnly={false}
@@ -230,7 +227,7 @@ export function SwapForm({
                     exactCurrencyField === CurrencyField.OUTPUT ? exactValue : formattedDerivedValue
                   }
                   warnings={warnings}
-                  onPressIn={onCurrencyInputPress(CurrencyField.OUTPUT)}
+                  onPressIn={showNativeKeyboard ? undefined : onFocusOutput}
                   onSelectionChange={
                     showNativeKeyboard
                       ? undefined
@@ -318,9 +315,11 @@ export function SwapForm({
             <DecimalPad
               hasCurrencyPrefix={isUSDInput}
               resetSelection={resetSelection}
-              selection={selection[exactCurrencyField]}
-              setValue={(value: string) => onSetAmount(exactCurrencyField, value, isUSDInput)}
-              value={exactValue}
+              selection={selection[focusOnCurrencyField]}
+              setValue={(value: string) => onSetAmount(focusOnCurrencyField, value, isUSDInput)}
+              value={
+                focusOnCurrencyField === exactCurrencyField ? exactValue : formattedDerivedValue
+              }
             />
           )}
           <GradientButton

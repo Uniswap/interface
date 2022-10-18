@@ -70,6 +70,7 @@ export type DerivedSwapInfo<
   currencyBalances: BaseDerivedInfo<TInput>['currencyBalances'] & {
     [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<TOutput>>
   }
+  focusOnCurrencyField: CurrencyField
   formattedDerivedValue: string
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
@@ -87,6 +88,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountUSD,
     exactAmountToken,
     exactCurrencyField,
+    focusOnCurrencyField = CurrencyField.INPUT,
     isUSDInput,
     selectingCurrencyField,
     txId,
@@ -209,6 +211,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       exactAmountToken,
       exactAmountUSD,
       exactCurrencyField,
+      focusOnCurrencyField,
       formattedDerivedValue: getFormattedDerivedValue(),
       trade,
       wrapType,
@@ -225,6 +228,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountToken,
     exactAmountUSD,
     exactCurrencyField,
+    focusOnCurrencyField,
     getFormattedDerivedValue,
     isUSDInput,
     nativeInBalance,
@@ -312,12 +316,6 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     [dispatch]
   )
 
-  const onUpdateExactCurrencyField = useCallback(
-    (currencyField: CurrencyField, newExactAmount: string) =>
-      dispatch(transactionStateActions.updateExactCurrencyField({ currencyField, newExactAmount })),
-    [dispatch]
-  )
-
   const onSetAmount = useCallback(
     (field: CurrencyField, value: string, isUSDInput: boolean) => {
       const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
@@ -357,15 +355,25 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     [dispatch]
   )
 
+  const onFocusInput = useCallback(
+    () => dispatch(transactionStateActions.onFocus(CurrencyField.INPUT)),
+    [dispatch]
+  )
+  const onFocusOutput = useCallback(
+    () => dispatch(transactionStateActions.onFocus(CurrencyField.OUTPUT)),
+    [dispatch]
+  )
+
   return {
     onCreateTxId,
+    onFocusInput,
+    onFocusOutput,
     onHideTokenSelector,
     onSelectCurrency,
     onSwitchCurrencies,
     onToggleUSDInput,
     onSetAmount,
     onSetMax,
-    onUpdateExactCurrencyField,
     onShowTokenSelector,
   }
 }

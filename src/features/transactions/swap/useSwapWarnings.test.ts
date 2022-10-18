@@ -13,13 +13,19 @@ const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
 const emptySwapInfo: Pick<
   DerivedSwapInfo,
-  'exactAmountToken' | 'exactAmountUSD' | 'chainId' | 'wrapType' | 'formattedDerivedValue'
+  | 'exactAmountToken'
+  | 'exactAmountUSD'
+  | 'chainId'
+  | 'wrapType'
+  | 'formattedDerivedValue'
+  | 'focusOnCurrencyField'
 > = {
   chainId: 1,
   wrapType: WrapType.NotApplicable,
   exactAmountToken: '1000',
   exactAmountUSD: '1000',
   formattedDerivedValue: '1000',
+  focusOnCurrencyField: CurrencyField.INPUT,
 }
 
 const swapState: DerivedSwapInfo = {
