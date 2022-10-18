@@ -44,9 +44,9 @@ export function TransactionDetails({
   const warningColor = getAlertColor(warning?.severity)
 
   return (
-    <Flex gap="xs">
+    <Box>
       {showWarning && warning && onShowWarning && (
-        <Button onPress={onShowWarning}>
+        <Button mb="xs" onPress={onShowWarning}>
           <Flex
             row
             alignItems="center"
@@ -73,7 +73,7 @@ export function TransactionDetails({
           </Flex>
         </Button>
       )}
-      {!showWarning && banner}
+      {!showWarning && <Box mb="xs">{banner}</Box>}
       <Flex backgroundColor="backgroundContainer" borderRadius="lg" gap="none">
         {children}
         <NetworkFee chainId={chainId} gasFee={gasFee} />
@@ -84,6 +84,6 @@ export function TransactionDetails({
           <AccountDetails address={userAddress} iconSize={24} />
         </Box>
       </Flex>
-    </Flex>
+    </Box>
   )
 }
