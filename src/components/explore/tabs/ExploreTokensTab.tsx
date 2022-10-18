@@ -15,7 +15,7 @@ import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useTokensMetadataDisplayType } from 'src/features/explore/hooks'
 import { getOrderByCompareFn, getOrderByValues } from 'src/features/explore/utils'
-import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
+import { selectFavoriteTokensSet, selectHasFavoriteTokens } from 'src/features/favorites/selectors'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
@@ -67,6 +67,7 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
   // Editing favorite tokens
   const [isEditing, setIsEditing] = useState(false)
   const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
+  const hasFavoritedTokens = useAppSelector(selectHasFavoriteTokens)
 
   // TODO(spencer): Handle reloading query with remote sort order
   const topTokenItems = useMemo(() => {
@@ -142,8 +143,10 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
         ref={listRef}
         ListHeaderComponent={
           <Flex mt="sm">
-            <FavoriteTokensGrid isEditing={isEditing} setIsEditing={setIsEditing} />
-            <Flex row alignItems="center" justifyContent="space-between" mx="sm">
+            {hasFavoritedTokens ? (
+              <FavoriteTokensGrid isEditing={isEditing} setIsEditing={setIsEditing} />
+            ) : null}
+            <Flex row alignItems="center" justifyContent="space-between" mx="none">
               <Text color="textSecondary" variant="smallLabel">
                 {t('Top Tokens')}
               </Text>

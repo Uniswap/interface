@@ -93,7 +93,7 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
             </Suspense>
           )
         case WALLETS_KEY:
-          return <ExploreWalletsTab onSearchWallets={() => textInputRef.current?.focus()} />
+          return <ExploreWalletsTab />
       }
       return null
     },

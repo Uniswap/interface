@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
+import { useAppSelector } from 'src/app/hooks'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { TRENDING_WALLETS } from 'src/components/explore/search/SearchEmptySection'
+import { Flex } from 'src/components/layout/Flex'
+import { Text } from 'src/components/Text'
 import { WalletSearchResult } from 'src/features/explore/searchHistorySlice'
+import { selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { theme } from 'src/styles/theme'
 
 const renderWalletItem = ({ item: wallet }: ListRenderItemInfo<WalletSearchResult>) => (
@@ -14,24 +19,23 @@ function walletKey(wallet: WalletSearchResult) {
   return wallet.address
 }
 
-function ExploreWalletsTab({
-  onSearchWallets,
-  listRef,
-}: {
-  onSearchWallets: () => void
-  listRef?: React.MutableRefObject<null>
-}) {
+function ExploreWalletsTab({ listRef }: { listRef?: React.MutableRefObject<null> }) {
+  const { t } = useTranslation()
   const [isEditing, setIsEditing] = useState(false)
+  const hasFavoritedWallets = useAppSelector(selectHasWatchedWallets)
 
   return (
     <FlatList
       ref={listRef}
       ListHeaderComponent={
-        <FavoriteWalletsGrid
-          isEditing={isEditing}
-          setIsEditing={setIsEditing}
-          onSearchWallets={onSearchWallets}
-        />
+        <Flex my="sm">
+          {hasFavoritedWallets ? (
+            <FavoriteWalletsGrid isEditing={isEditing} setIsEditing={setIsEditing} />
+          ) : null}
+          <Text color="textSecondary" variant="smallLabel">
+            {t('Suggested wallets')}
+          </Text>
+        </Flex>
       }
       contentContainerStyle={{ paddingVertical: theme.spacing.md }}
       data={TRENDING_WALLETS}

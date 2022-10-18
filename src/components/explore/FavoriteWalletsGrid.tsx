@@ -1,12 +1,10 @@
 import { default as React, useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerUserProfileNavigation } from 'src/app/navigation/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
-import { ExploreTokenCardEmptyState } from 'src/components/explore/ExploreTokenCardEmptyState'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import RemoveButton from 'src/components/explore/RemoveButton'
 
@@ -22,15 +20,12 @@ const ITEM_FLEX = 1 / NUM_COLUMNS
 
 /** Renders the favorite tokens card on the Explore page */
 export function FavoriteWalletsGrid({
-  onSearchWallets,
   isEditing,
   setIsEditing,
 }: {
-  onSearchWallets: () => void
   isEditing: boolean
   setIsEditing: (update: boolean) => void
 }) {
-  const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { preload, navigate } = useEagerUserProfileNavigation()
   const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
@@ -76,14 +71,6 @@ export function FavoriteWalletsGrid({
       <FavoriteHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
       <FlatList
         ItemSeparatorComponent={ItemSeparator}
-        ListEmptyComponent={
-          <ExploreTokenCardEmptyState
-            buttonLabel={t('Search wallets')}
-            description={t('Watch wallets to keep track of their activity.')}
-            type="watched"
-            onPress={onSearchWallets}
-          />
-        }
         data={watchedWalletsList}
         keyExtractor={(address) => address}
         numColumns={NUM_COLUMNS}
