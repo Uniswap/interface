@@ -92,11 +92,12 @@ function colors(darkMode: boolean): Colors {
     warning: '#971B1C',
 
     // dont wanna forget these blue yet
-    blue4: darkMode ? '#153d6f70' : '#C4D9F8',
+    blue4: darkMode ? 'linear-gradient(-45deg, #8D95AB, #0B0D12)' : 'linear-gradient(-45deg, #B9CEF7, #F6FAF9)',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
 
     // interactive
     backgroundInteractive: darkMode ? '#293249' : '#E8ECFB',
+    
 
   }
 }

@@ -64,6 +64,9 @@ import { useDarkModeManager } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
 import { useWeb3React } from '@web3-react/core'
 
+
+
+
 const AppWrapper = styled.div<{ embedModel: EmbedModel }>`
   display: flex;
   flex-flow: column;
@@ -71,8 +74,23 @@ const AppWrapper = styled.div<{ embedModel: EmbedModel }>`
   background-repeat: no-repeat;
   position: absolute;
   height: ${props => props.embedModel.embedMode ? 'auto' : '150vh'}; 
-  width: 100%;
-  background: url(${bg4}) ;
+  background: ${({ theme }) => theme.blue4};
+  background-size: 100% 200%;
+  width:100%;
+  height: 100vh;
+  position: relative;
+  animation: flow 3s ease-in-out alternate infinite;
+}
+
+
+@keyframes flow{
+  from{
+    background-position: 0% 50%;
+  }
+  to{
+    background-position: 100 50%;
+  }
+}
 
   align-items: flex-start;
   > * {

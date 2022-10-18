@@ -277,8 +277,8 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
           honey_data['sellExpected'] = sellExpectedOut;
           honey_data['sellActual'] = sellActualOut;
 
-          honey_data['buyTax'] = taxes?.buy;
-          honey_data['sellTax'] = taxes?.sell;
+          honey_data['buyTax'] = taxes.buy;
+          honey_data['sellTax'] = taxes.sell;
           let maxdiv = '';
           if (maxTXAmount != 0 || maxSell != 0) {
             let n = 'Max TX';
@@ -317,7 +317,7 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
   const hasInvalidPermissions = !account || (!!kibaBalance && +kibaBalance?.toFixed(0) <= 0)
   if (chainId === 56) return <HoneyPotBsc />
   
-  return (<DarkCard style={{ background:'#252632', opacity: '.96',maxWidth: 600, width: '100%', padding: 20 }} id="honeypage">
+  return (<DarkCard style={{ opacity: '.96', maxWidth: '45%', minWidth: 480, padding: 20 }} id="honeypage">
     <div style={{ maxWidth: 600, display:'flex', flexFlow:'column wrap',margin: 'auto', paddingBottom: '1rem' }}>
       <StyledHeader style= {{ fontSize: 30, paddingBottom: 20, paddingTop: 20}}>Honeypot Checker (ETH)</StyledHeader>
       <small style={{marginTop:3, paddingLeft:3, justifyContent: 'center', fontSize: 20, fontFamily: 'Archivo Narrow'}}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
