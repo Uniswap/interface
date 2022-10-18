@@ -7,18 +7,7 @@ import { AssetQuery, NftAssetsFilterInput, NftAssetSortableField } from './__gen
 import NFTRelayEnvironment from './NFTRelayEnvironment'
 
 const assetPaginationQuery = graphql`
-  fragment AssetQuery_nftAssets on Query
-  @argumentDefinitions(
-    address: { type: "String!" }
-    orderBy: { type: "NftAssetSortableField" }
-    asc: { type: "Boolean" }
-    filter: { type: "NftAssetsFilterInput" }
-    first: { type: "Int" }
-    after: { type: "String" }
-    last: { type: "Int" }
-    before: { type: "String" }
-  )
-  @refetchable(queryName: "AssetPaginationQuery") {
+  fragment AssetQuery_nftAssets on Query @refetchable(queryName: "AssetPaginationQuery") {
     nftAssets(
       address: $address
       orderBy: $orderBy
@@ -117,97 +106,7 @@ const assetQuery = graphql`
     $last: Int
     $before: String
   ) {
-    nftAssets(
-      address: $address
-      orderBy: $orderBy
-      asc: $asc
-      filter: $filter
-      first: $first
-      after: $after
-      last: $last
-      before: $before
-    ) {
-      edges {
-        node {
-          id
-          name
-          ownerAddress
-          image {
-            url
-          }
-          smallImage {
-            url
-          }
-          originalImage {
-            url
-          }
-          tokenId
-          description
-          animationUrl
-          suspiciousFlag
-          collection {
-            name
-            isVerified
-            image {
-              url
-            }
-            creator {
-              address
-              profileImage {
-                url
-              }
-              isVerified
-            }
-            nftContracts {
-              address
-              standard
-            }
-          }
-          listings(first: 1) {
-            edges {
-              node {
-                address
-                createdAt
-                endAt
-                id
-                maker
-                marketplace
-                marketplaceUrl
-                orderHash
-                price {
-                  currency
-                  value
-                }
-                quantity
-                startAt
-                status
-                taker
-                tokenId
-                type
-              }
-              cursor
-            }
-          }
-          rarities {
-            provider
-            rank
-            score
-          }
-          nftContract {
-            address
-            chain
-          }
-          metadataUrl
-        }
-        cursor
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-        hasPreviousPage
-        startCursor
-      }
-    }
+    ...AssetQuery_nftAssets
   }
 `
 
