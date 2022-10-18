@@ -306,6 +306,15 @@ export default function TabbedScrollScreen({
           </AnimatedFlex>
         )}
       </GestureDetector>
+      {/* Background for OS status bar, needs higher zindex than contentHeader */}
+      <Box
+        bg="backgroundBackdrop"
+        height={insets.top}
+        position="absolute"
+        top={0}
+        width="100%"
+        zIndex="sticky"
+      />
       {scrollHeader && (
         <AnimatedFlex
           bg="backgroundBackdrop"
