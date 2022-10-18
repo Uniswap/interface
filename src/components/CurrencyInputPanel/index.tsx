@@ -67,9 +67,10 @@ const Container = styled.div<{ hideInput: boolean }>`
   }
 `
 
-const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boolean }>`
+const CurrencySelect = styled(ButtonGray)<{isMobile?:boolean, selected: boolean; hideInput?: boolean }>`
   align-items: center;
-  font-size: 24px;
+  font-size: ${props => props.isMobile ? '12.5px' : '22px'};
+  ${props => props.isMobile ? `margin-left:3px;` : ''}
   font-weight: 500;
   background-color: '${({ selected, theme }) => (selected ? theme.bg6 : theme.bg6)}';
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text4)};
@@ -233,7 +234,7 @@ export default function CurrencyInputPanel({
           <CurrencySelect
             selected={!!currency}
             hideInput={hideInput}
-        
+            isMobile={isMobile}
             className="open-currency-select-button"
             onClick={() => {
               if (onCurrencySelect) {
@@ -260,7 +261,7 @@ export default function CurrencyInputPanel({
                       ? currency.symbol.slice(0, 4) +
                         '...' +
                         currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || <Trans>Select a token</Trans>}
+                      : currency?.symbol) || <span style={{fontSize: isMobile ? 12 : 14}}>Select a token</span>}
                   </StyledTokenName>
                 )}
               </RowFixed>
