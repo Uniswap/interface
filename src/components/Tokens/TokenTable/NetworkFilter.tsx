@@ -121,6 +121,7 @@ export default function NetworkFilter() {
         <MenuTimeFlyout>
           {BACKEND_CHAIN_NAMES.map((network) => {
             const chainInfo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[network])
+            if (!chainInfo) return null
             return (
               <InternalLinkMenuItem
                 key={network}
