@@ -2,16 +2,12 @@ import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
-import TripleDots from 'src/assets/icons/triple-dots.svg'
-import { Button } from 'src/components/buttons/Button'
-import { TextButton } from 'src/components/buttons/TextButton'
+import { useAppSelector } from 'src/app/hooks'
+import { PinnedHeaderRow } from 'src/components/explore/PinnedHeaderRow'
 import PinnedTokenCard from 'src/components/explore/PinnedTokenCard'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Text } from 'src/components/Text'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
-import { ElementName } from 'src/features/telemetry/constants'
 import { flex } from 'src/styles/flex'
 import { theme as FixedTheme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
@@ -54,7 +50,7 @@ export function PinnedTokensGrid({
 
   return (
     <AnimatedFlex entering={FadeIn} gap="sm" mx="xs">
-      <HeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
+      <PinnedHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
       <FlatList
         ItemSeparatorComponent={() => <Box height={GAP_SIZE} />}
         ListEmptyComponent={FavoritesEmptyState}
@@ -68,33 +64,6 @@ export function PinnedTokensGrid({
         showsVerticalScrollIndicator={false}
       />
     </AnimatedFlex>
-  )
-}
-
-function HeaderRow({ isEditing, onPress }: { isEditing: boolean; onPress: () => void }) {
-  const { t } = useTranslation()
-  const theme = useAppTheme()
-  return (
-    <Flex row alignItems="center" justifyContent="space-between">
-      <Text color="textSecondary" variant="subheadSmall">
-        {isEditing ? t('Edit pinned tokens') : t('Pinned tokens')}
-      </Text>
-      {!isEditing ? (
-        <Button name={ElementName.Edit} onPress={onPress}>
-          <TripleDots
-            color={theme.colors.textSecondary}
-            height={12}
-            strokeLinecap="round"
-            strokeWidth="1"
-            width={14}
-          />
-        </Button>
-      ) : (
-        <TextButton textColor="accentActive" textVariant="smallLabel" onPress={onPress}>
-          {t('Done')}
-        </TextButton>
-      )}
-    </Flex>
   )
 }
 

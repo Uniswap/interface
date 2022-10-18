@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { TRENDING_WALLETS } from 'src/components/explore/search/SearchEmptySection'
@@ -21,10 +21,18 @@ function ExploreWalletsTab({
   onSearchWallets: () => void
   listRef?: React.MutableRefObject<null>
 }) {
+  const [isEditing, setIsEditing] = useState(false)
+
   return (
     <FlatList
       ref={listRef}
-      ListHeaderComponent={<WatchedWalletsCard onSearchWallets={onSearchWallets} />}
+      ListHeaderComponent={
+        <WatchedWalletsCard
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
+          onSearchWallets={onSearchWallets}
+        />
+      }
       contentContainerStyle={{ paddingVertical: theme.spacing.md }}
       data={TRENDING_WALLETS}
       keyExtractor={walletKey}

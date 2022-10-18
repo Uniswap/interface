@@ -3,13 +3,12 @@ import React, { memo, Suspense, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType, Image, ImageStyle } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { AnimatedButton, Button, ButtonProps } from 'src/components/buttons/Button'
+import { Button, ButtonProps } from 'src/components/buttons/Button'
+import RemovePinButton from 'src/components/explore/RemovePinButton'
 import { PinnedTokenCardQuery } from 'src/components/explore/__generated__/PinnedTokenCardQuery.graphql'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -145,7 +144,7 @@ function PinnedTokenCardInner({
   return (
     <Button testID={`token-box-${token?.symbol}`} onPress={onPress} onPressIn={onPressIn} {...rest}>
       {isEditing ? (
-        <RemoveFavoriteTokenButton position="absolute" right={-8} top={-8} onPress={onRemove} />
+        <RemovePinButton position="absolute" right={-8} top={-8} onPress={onRemove} />
       ) : null}
       <ContextMenu
         actions={menuActions}
@@ -196,27 +195,6 @@ function PinnedTokenCardInner({
         </BaseCard.Shadow>
       </ContextMenu>
     </Button>
-  )
-}
-
-function RemoveFavoriteTokenButton(props: ButtonProps) {
-  const theme = useAppTheme()
-  return (
-    <AnimatedButton
-      {...props}
-      alignItems="center"
-      backgroundColor="backgroundBackdrop"
-      borderColor="backgroundOutline"
-      borderRadius="full"
-      borderWidth={1}
-      entering={FadeIn}
-      exiting={FadeOut}
-      height={theme.imageSizes.lg}
-      justifyContent="center"
-      width={theme.imageSizes.lg}
-      zIndex="tooltip">
-      <Box backgroundColor="textSecondary" borderRadius="md" height={2} width={12} />
-    </AnimatedButton>
   )
 }
 
