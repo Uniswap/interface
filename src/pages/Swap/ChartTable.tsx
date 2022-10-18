@@ -27,9 +27,10 @@ const Table = styled.table<{ isMobile: boolean }>`
   width: 100%;
   height:100%;
   overflow-y:scroll;
+  overflow-x: scroll;
   border-radius: 20px;
   background: ${(props) => `${props.theme.chartTableBg as string}`};
-  td, th {font-size:${props => props.isMobile ? '12px' : '14px'};}
+  td, th {font-size:${props => props.isMobile ? '9px' : '14px'};}
 `;
 const Tr = styled.tr<{ highlight: string; item?: any; account?: any }>`
 background:

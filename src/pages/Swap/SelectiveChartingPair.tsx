@@ -647,6 +647,8 @@ export const SelectiveChartWithPair = () => {
                             )
                                 ? "1px solid #444"
                                 : "none",
+                        overflow: 'scroll',
+                        maxWidth: `100%`
                     }}
                 >
                     <CardSection style={{ padding: isMobile ? 0 : "" }}>

@@ -697,7 +697,7 @@ export const Chart = () => {
                     </>}
 
                     {accessDenied === false && view === 'chart' && (
-                        <div style={{ display: 'grid', gridTemplateColumns: '100%' }}>
+                        <div style={{ display: 'block'}}>
                             {/* Loading Transaction data for either chain */}
                             {(!isBinance && transactionData?.loading) ||
                                 (isBinance && binanceTransactionData.loading) && (
