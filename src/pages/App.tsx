@@ -73,7 +73,7 @@ const AppWrapper = styled.div<{ embedModel: EmbedModel }>`
   background: ${({ theme }) => theme.blue4};
   background-size: 100% 200%;
   width:100%;
-  height: 100%;
+  height: 100vh;
   position: relative;
   animation: flow 3s ease-in-out alternate infinite;
 }
