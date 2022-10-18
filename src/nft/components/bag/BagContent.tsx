@@ -75,16 +75,19 @@ export const BagContent = () => {
         ))}
       </Column>
       <Column gap="8">
-        {unchangedAssets.map((asset) => (
-          <BagRow
-            key={asset.id}
-            asset={asset}
-            usdPrice={fetchedPriceData}
-            removeAsset={removeAssetFromBag}
-            showRemove={true}
-            isMobile={isMobile}
-          />
-        ))}
+        {unchangedAssets
+          .slice(0)
+          .reverse()
+          .map((asset) => (
+            <BagRow
+              key={asset.id}
+              asset={asset}
+              usdPrice={fetchedPriceData}
+              removeAsset={removeAssetFromBag}
+              showRemove={true}
+              isMobile={isMobile}
+            />
+          ))}
       </Column>
     </>
   )

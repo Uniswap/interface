@@ -5,7 +5,7 @@ import { fetchSweep } from 'nft/queries'
 import { GenieAsset, GenieCollection, Markets } from 'nft/types'
 import { calcPoolPrice, formatWeiToDecimal } from 'nft/utils'
 import { default as Slider } from 'rc-slider'
-import { useMemo, useReducer, useState } from 'react'
+import { useEffect, useMemo, useReducer, useState } from 'react'
 import { useQuery } from 'react-query'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -266,6 +266,10 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
     return { sweepItemsInBag, sweepEthPrice }
   }, [itemsInBag, contractAddress])
 
+  useEffect(() => {
+    if (sweepItemsInBag.length === 0) setSweepAmount('')
+  }, [sweepItemsInBag])
+
   const clearSweep = () => {
     setSweepAmount('')
     removeAssetsFromBag(sweepItemsInBag)
@@ -279,7 +283,7 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
         } else {
           removeAssetsFromBag(sweepItemsInBag.slice(value, sweepItemsInBag.length))
         }
-        setSweepAmount(value === 0 ? '' : value.toString())
+        setSweepAmount(value < 1 ? '' : value.toString())
       } else {
         const wishValueInWei = parseEther(value.toString())
         if (sweepEthPrice.lte(wishValueInWei)) {
@@ -324,8 +328,9 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
     if (typeof value === 'number') {
       if (sortedAssets) {
         if (isItemsToggled) {
-          handleSweep(value)
-          setSweepAmount(value === 0 ? '' : value.toString())
+          if (Math.floor(value) !== Math.floor(sweepAmount !== '' ? parseFloat(sweepAmount) : 0))
+            handleSweep(Math.floor(value))
+          setSweepAmount(value < 1 ? '' : value.toString())
         } else {
           handleSweep(value)
           setSweepAmount(value === 0 ? '' : value.toFixed(2))
@@ -361,8 +366,9 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
         <SweepSubContainer>
           <StyledSlider
             defaultValue={0}
+            min={0}
             max={isItemsToggled ? sortedAssets?.length ?? 0 : parseFloat(formatEther(sortedAssetsTotalEth).toString())}
-            value={sweepAmount === '' ? 0 : parseFloat(sweepAmount)}
+            value={isItemsToggled ? sweepItemsInBag.length : parseFloat(formatWeiToDecimal(sweepEthPrice.toString()))}
             step={isItemsToggled ? 1 : 0.01}
             trackStyle={{
               top: '3px',
@@ -396,7 +402,9 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
             minLength={1}
             maxLength={79}
             spellCheck="false"
-            value={sweepAmount}
+            value={
+              isItemsToggled ? (sweepAmount !== '' ? Math.floor(parseFloat(sweepAmount)) : sweepAmount) : sweepAmount
+            }
             onChange={(event) => {
               handleInput(event.target.value.replace(/,/g, '.'))
             }}

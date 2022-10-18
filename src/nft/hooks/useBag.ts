@@ -13,7 +13,7 @@ interface BagState {
   setTotalEthPrice: (totalEthPrice: BigNumber) => void
   totalUsdPrice: number | undefined
   setTotalUsdPrice: (totalUsdPrice: number | undefined) => void
-  addAssetToBag: (asset: UpdatedGenieAsset, fromSweep?: boolean) => void
+  addAssetToBag: (asset: UpdatedGenieAsset) => void
   addAssetsToBag: (asset: UpdatedGenieAsset[], fromSweep?: boolean) => void
   removeAssetFromBag: (asset: UpdatedGenieAsset) => void
   removeAssetsFromBag: (assets: UpdatedGenieAsset[]) => void
@@ -78,13 +78,13 @@ export const useBag = create<BagState>()(
         set(() => ({
           totalUsdPrice,
         })),
-      addAssetToBag: (asset, fromSweep = false) =>
+      addAssetToBag: (asset) =>
         set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           const assetWithId = {
             asset: { id: uuidv4(), ...asset },
             status: BagItemStatus.ADDED_TO_BAG,
-            inSweep: fromSweep,
+            inSweep: false,
           }
           if (itemsInBag.length === 0)
             return {
@@ -101,13 +101,21 @@ export const useBag = create<BagState>()(
         set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           const items: BagItem[] = []
+          const itemsInBagCopy = [...itemsInBag]
           assets.forEach((asset) => {
-            const assetWithId = {
-              asset: { id: uuidv4(), ...asset },
-              status: BagItemStatus.ADDED_TO_BAG,
-              inSweep: fromSweep,
+            const index = itemsInBag.findIndex(
+              (n) => n.asset.tokenId === asset.tokenId && n.asset.address === asset.address
+            )
+            if (index !== -1) {
+              itemsInBagCopy[index].inSweep = fromSweep
+            } else {
+              const assetWithId = {
+                asset: { id: uuidv4(), ...asset },
+                status: BagItemStatus.ADDED_TO_BAG,
+                inSweep: fromSweep,
+              }
+              items.push(assetWithId)
             }
-            items.push(assetWithId)
           })
           if (itemsInBag.length === 0)
             return {
@@ -116,7 +124,7 @@ export const useBag = create<BagState>()(
             }
           else
             return {
-              itemsInBag: [...itemsInBag, ...items],
+              itemsInBag: [...itemsInBagCopy, ...items],
               bagStatus: BagStatus.ADDING_TO_BAG,
             }
         }),

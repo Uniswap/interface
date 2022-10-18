@@ -15,6 +15,7 @@ import {
   CollectionFilters,
   initialCollectionFilterState,
   SortBy,
+  useBag,
   useCollectionFilters,
   useFiltersExpanded,
   useIsMobile,
@@ -26,7 +27,7 @@ import { getRarityStatus } from 'nft/utils/asset'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
-import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -99,11 +100,14 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const setMin = useCollectionFilters((state) => state.setMinPrice)
   const setMax = useCollectionFilters((state) => state.setMaxPrice)
 
+  const toggleBag = useBag((state) => state.toggleBag)
+  const bagExpanded = useBag((state) => state.bagExpanded)
+
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
   const debouncedSearchByNameText = useDebounce(searchByNameText, 500)
 
-  const [sweepIsToggled, toggleSweep] = useReducer((s) => !s, false)
+  const [sweepIsOpen, setSweepOpen] = useState(false)
 
   const {
     data: collectionAssets,
@@ -236,6 +240,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   useEffect(() => {
     setUniformHeight(UniformHeights.unset)
+    setSweepOpen(false)
     return () => {
       useCollectionFilters.setState(initialCollectionFilterState)
     }
@@ -320,7 +325,16 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               <SortDropdown dropDownOptions={sortDropDownOptions} />
               <CollectionSearch />
             </Row>
-            <SweepButton enabled={sweepIsToggled} onClick={toggleSweep}>
+            <SweepButton
+              enabled={sweepIsOpen}
+              onClick={() => {
+                if (!sweepIsOpen) {
+                  scrollToTop()
+                  if (!bagExpanded) toggleBag()
+                }
+                setSweepOpen(!sweepIsOpen)
+              }}
+            >
               <SweepIcon width="24px" height="24px" />
               <ThemedText.BodyPrimary fontWeight={600} lineHeight="20px" marginTop="2px" marginBottom="2px">
                 Sweep
@@ -374,7 +388,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             ) : null}
           </Row>
         </Box>
-        {sweepIsToggled && <Sweep contractAddress={contractAddress} collectionStats={collectionStats} />}
+        {sweepIsOpen && <Sweep contractAddress={contractAddress} collectionStats={collectionStats} />}
       </AnimatedBox>
       <InfiniteScroll
         next={fetchNextPage}
