@@ -1,9 +1,8 @@
+import { ShadowProps } from '@shopify/restyle'
 import React, { ReactElement } from 'react'
+import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components-uds/TouchableArea'
-
-import { ShadowProps } from '@shopify/restyle'
-import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { ButtonProps } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -61,7 +60,12 @@ export function GradientButton({
         </Box>
       )}
       {/* TODO: fix gradient definition so it fills space properly (right now needs 200% height on rect) */}
-      <Flex borderRadius="md" height="100%" overflow="hidden" position="absolute" width="100%">
+      <Flex
+        borderRadius={rest.borderRadius || 'md'}
+        height="100%"
+        overflow="hidden"
+        position="absolute"
+        width="100%">
         <Svg height="100%" width="100%">
           <Defs>
             <RadialGradient cy="0" id="background" rx="0.5" ry="0.5">

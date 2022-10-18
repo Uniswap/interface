@@ -23,7 +23,6 @@ import {
 } from 'src/app/navigation/types'
 import DiscoverIconFilled from 'src/assets/icons/discover-filled.svg'
 import DiscoverIcon from 'src/assets/icons/discover.svg'
-import SwapIcon from 'src/assets/icons/swap-action-button.svg'
 import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { GradientButton } from 'src/components/buttons/GradientButton'
@@ -33,7 +32,6 @@ import {
   ExploreTokensTabQuery$variables,
 } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Flex } from 'src/components/layout'
 import { NetworkPollConfig } from 'src/constants/misc'
 import { Priority, useQueryScheduler } from 'src/data/useQueryScheduler'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -178,16 +176,10 @@ function TabNavigator({
           tabBarButton: () => {
             return (
               <GradientButton
-                height="100%"
-                icon={
-                  <Flex centered mx="xs" px="xl" py="sm">
-                    <SwapIcon
-                      color={theme.colors.accentTextLightPrimary}
-                      height={24}
-                      style={{ transform: [{ rotate: '135deg' }] }}
-                    />
-                  </Flex>
-                }
+                borderRadius="xxl"
+                label={t('Swap')}
+                px="lg"
+                py="sm"
                 onPress={() => {
                   selectionAsync()
                   dispatch(openModal({ name: ModalName.Swap }))
