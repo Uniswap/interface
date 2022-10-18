@@ -147,9 +147,16 @@ jobs:
           # Create new deploy for this Sentry release
           sentry-cli releases deploys $SENTRY_RELEASE new -e production
 
-      - name: Create version number PR
-        run: |
-          gh pr create -B main -H $branch --title "chore: Bump version number" --body "Created by Github action" -r uniswap/mobile
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@18f7dc018cc2cd597073088f7c7591b9d1c02672
+        with:
+          commit-message: '[bot] Update version number'
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.github.com>
+          signoff: false
+          branch: chore/version-bump
+          branch-suffix: timestamp
+          delete-branch: true
+          title: 'chore: [bot] Update version number'
+          body: Version number has been updated
+          reviewers: leggechr,justindomingue,spenciefy,dalmendray,thomasthachil,danielcolinjames,ianlapham,tarikbellamine,tinaszheng,unipadmini
