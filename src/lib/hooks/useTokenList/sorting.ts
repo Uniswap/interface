@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
+import TokenSafetyLookupTable from 'constants/TokenSafetyLookupTable'
 import { useMemo } from 'react'
 
 /** Sorts currency amounts (descending). */
@@ -28,6 +29,13 @@ export function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
   }
 
   return -1
+}
+
+export function verificationComparator(a: Token, b: Token) {
+  return (
+    TokenSafetyLookupTable.checkToken(a.address.toLowerCase()) -
+    TokenSafetyLookupTable.checkToken(b.address.toLowerCase())
+  )
 }
 
 /** Sorts tokens by query, giving precedence to exact matches and partial matches. */
