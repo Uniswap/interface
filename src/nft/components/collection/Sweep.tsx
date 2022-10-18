@@ -133,9 +133,11 @@ export const NftDisplay = ({ nfts }: NftDisplayProps) => {
 interface SweepProps {
   contractAddress: string
   collectionStats: GenieCollection
+  minPrice: string
+  maxPrice: string
 }
 
-export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
+export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice }: SweepProps) => {
   const theme = useTheme()
 
   const [isItemsToggled, toggleSweep] = useReducer((s) => !s, true)
@@ -162,9 +164,29 @@ export const Sweep = ({ contractAddress, collectionStats }: SweepProps) => {
     switch (market) {
       case Markets.NFTX:
       case Markets.NFT20:
-        return { contractAddress, traits, markets: [market] }
+        return {
+          contractAddress,
+          traits,
+          markets: [market],
+
+          price: {
+            low: minPrice,
+            high: maxPrice,
+            symbol: 'ETH',
+          },
+        }
       case 'others':
-        return { contractAddress, traits, markets: allOtherMarkets }
+        return {
+          contractAddress,
+          traits,
+          markets: allOtherMarkets,
+
+          price: {
+            low: minPrice,
+            high: maxPrice,
+            symbol: 'ETH',
+          },
+        }
     }
   }
 

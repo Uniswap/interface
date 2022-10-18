@@ -388,7 +388,14 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             ) : null}
           </Row>
         </Box>
-        {sweepIsOpen && <Sweep contractAddress={contractAddress} collectionStats={collectionStats} />}
+        {sweepIsOpen && (
+          <Sweep
+            contractAddress={contractAddress}
+            collectionStats={collectionStats}
+            minPrice={debouncedMinPrice}
+            maxPrice={debouncedMaxPrice}
+          />
+        )}
       </AnimatedBox>
       <InfiniteScroll
         next={fetchNextPage}
