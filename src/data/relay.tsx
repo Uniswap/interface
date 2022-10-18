@@ -10,6 +10,8 @@ import {
 import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
 import { RecordSource } from 'src/data/recordSource'
+import { logException, logMessage } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 
 if (__DEV__) {
   // We need to add the plugin before creating `RelayEnvironment`. See discussion here:
@@ -56,6 +58,18 @@ const createRelayEnvironment = () => {
   const newEnvironment = new Environment({
     network: Network.create(fetchRelay),
     store: new Store(recordSource),
+
+    // Reports missing fields events to sentry.
+    requiredFieldLogger: (args) => {
+      switch (args.kind) {
+        case 'missing_field.log':
+          logMessage(LogContext.Relay, `GraphQL field missing: ${args.fieldPath}`)
+          break
+        case 'missing_field.throw':
+          const error = new Error(`GraphQL field missing: ${args.fieldPath}`)
+          logException(LogContext.Relay, error)
+      }
+    },
   })
 
   return newEnvironment

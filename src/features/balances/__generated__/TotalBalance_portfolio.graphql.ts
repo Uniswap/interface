@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b00843973d40d4cd028136c2f09e77d5>>
+ * @generated SignedSource<<ac0f291041979d6d8ed99184a3cc0fc9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,10 +12,10 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type TotalBalance_portfolio$data = {
   readonly tokensTotalDenominatedValue: {
-    readonly value: number | null;
-  } | null;
+    readonly value: number;
+  };
   readonly " $fragmentType": "TotalBalance_portfolio";
-};
+} | null;
 export type TotalBalance_portfolio$key = {
   readonly " $data"?: TotalBalance_portfolio$data;
   readonly " $fragmentSpreads": FragmentRefs<"TotalBalance_portfolio">;
@@ -28,28 +28,38 @@ const node: ReaderFragment = {
   "name": "TotalBalance_portfolio",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "Amount",
-      "kind": "LinkedField",
-      "name": "tokensTotalDenominatedValue",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "value",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
+      "kind": "RequiredField",
+      "field": {
+        "alias": null,
+        "args": null,
+        "concreteType": "Amount",
+        "kind": "LinkedField",
+        "name": "tokensTotalDenominatedValue",
+        "plural": false,
+        "selections": [
+          {
+            "kind": "RequiredField",
+            "field": {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "value",
+              "storageKey": null
+            },
+            "action": "LOG",
+            "path": "tokensTotalDenominatedValue.value"
+          }
+        ],
+        "storageKey": null
+      },
+      "action": "LOG",
+      "path": "tokensTotalDenominatedValue"
     }
   ],
   "type": "Portfolio",
   "abstractKey": null
 };
 
-(node as any).hash = "7f2a9e7f870aba5bd8ec65c8e0cdc8cc";
+(node as any).hash = "9423ec69b0c4b7b7ae1461592be4b5ef";
 
 export default node;

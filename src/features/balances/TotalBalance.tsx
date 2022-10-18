@@ -17,8 +17,8 @@ export function TotalBalance({ portfolio, variant = 'headlineLarge' }: TotalBala
   const data = useFragment(
     graphql`
       fragment TotalBalance_portfolio on Portfolio {
-        tokensTotalDenominatedValue {
-          value
+        tokensTotalDenominatedValue @required(action: LOG) {
+          value @required(action: LOG)
         }
       }
     `,
@@ -29,7 +29,7 @@ export function TotalBalance({ portfolio, variant = 'headlineLarge' }: TotalBala
     <Suspense fallback={<Loading type="header" />}>
       <Flex gap="xxs">
         <Text variant={variant}>{`${formatUSDPrice(
-          data?.tokensTotalDenominatedValue?.value ?? undefined
+          data?.tokensTotalDenominatedValue.value ?? undefined
         )}`}</Text>
       </Flex>
     </Suspense>
