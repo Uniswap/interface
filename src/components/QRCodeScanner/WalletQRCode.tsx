@@ -18,6 +18,7 @@ import { logMessage } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 
 const QR_CODE_SIZE = 220
+const UNICON_SIZE = QR_CODE_SIZE / 4.2
 
 interface Props {
   address?: Address
@@ -48,8 +49,10 @@ export function WalletQRCode({ address }: Props) {
         <UniconThemedRadial
           borderRadius="lg"
           gradientEndColor={gradientData.gradientEnd}
-          gradientStartColor={gradientData.gradientStart}
+          gradientStartColor={gradientData.glow}
+          // we use the glow color here, since otherwise that color doesn't show up at all on the screen, which can look weird if it's a dominant color in the Unicon (the QR code gradient uses the start / end colors but not glow)
         />
+        {/* TODO (MOB-2993): make the background sheet slightly transparent and blurred */}
       </GradientBackground>
       <AnimatedFlex centered grow entering={FadeIn} exiting={FadeOut} py="lg">
         <AddressDisplay
@@ -62,26 +65,33 @@ export function WalletQRCode({ address }: Props) {
         />
         <Flex
           centered
-          backgroundColor="backgroundContainer"
+          backgroundColor="backgroundBackdrop"
           borderRadius="lg"
           gap="none"
           padding="lg">
           <QRCode
-            backgroundColor={theme.colors.backgroundContainer}
-            color={theme.colors.accentTextDarkSecondary}
+            backgroundColor={theme.colors.backgroundBackdrop}
+            ecl="H"
             enableLinearGradient={true}
             linearGradient={[gradientData.gradientStart, gradientData.gradientEnd]}
+            logo={{ uri: '' }}
+            // this could eventually be set to an SVG version of the Unicon which would ensure it's perfectly centered, but for now we can just use an empty logo image to create a blank circle in the middle of the QR code
+            // note: this QR code library doesn't actually create a "safe" space in the middle, it just adds the logo on top, so that's why ecl is set to H (high error correction level) to ensure the QR code is still readable even if the middle of the QR code is partially obscured
+            logoBackgroundColor={theme.colors.backgroundSurface}
+            logoBorderRadius={theme.borderRadii.full}
+            logoMargin={UNICON_SIZE / 3}
+            logoSize={UNICON_SIZE}
             size={QR_CODE_SIZE}
             value={address}
           />
-          {/* TODO: Once unicons are hosted as svgs then pass them as a prop into the QRCode component rather than overlaying the Unicon here. */}
           <Flex
             alignItems="center"
-            backgroundColor="backgroundBackdrop"
+            backgroundColor="none"
             borderRadius="full"
-            padding="sm"
+            paddingLeft="xxxs"
+            paddingTop="xxxs"
             position="absolute">
-            <Unicon address={address} size={24} />
+            <Unicon address={address} size={UNICON_SIZE} />
           </Flex>
         </Flex>
         <Box flexDirection="row">
