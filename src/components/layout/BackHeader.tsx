@@ -8,12 +8,14 @@ const BACK_BUTTON_SIZE = 24
 
 type BackButtonRowProps = {
   alignment?: 'left' | 'center'
+  endAdornment?: JSX.Element
 } & SpacingProps<Theme> &
   SpacingShorthandProps<Theme>
 
 export function BackHeader({
   alignment = 'center',
   children,
+  endAdornment = <Box width={BACK_BUTTON_SIZE} />,
   ...spacingProps
 }: PropsWithChildren<BackButtonRowProps>) {
   return (
@@ -24,7 +26,7 @@ export function BackHeader({
       {...spacingProps}>
       <BackButton size={BACK_BUTTON_SIZE} />
       {children}
-      <Box width={BACK_BUTTON_SIZE} />
+      {endAdornment}
     </Flex>
   )
 }

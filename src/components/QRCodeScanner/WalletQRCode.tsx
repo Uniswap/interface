@@ -14,7 +14,8 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
-import { logger } from 'src/utils/logger'
+import { logMessage } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 
 const QR_CODE_SIZE = 220
 
@@ -35,7 +36,7 @@ export function WalletQRCode({ address }: Props) {
         message: address,
       })
     } catch (e) {
-      logger.error('WalletQRCode', 'onShare', 'Error sharing account address', e)
+      logMessage(LogContext.Share, (e as any as Error).message, { screen: 'WalletQRCode' })
     }
   }
 

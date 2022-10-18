@@ -1,28 +1,24 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Share } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import ShareIcon from 'src/assets/icons/share.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
-import { LinkButton } from 'src/components/buttons/LinkButton'
-import { SendButton } from 'src/components/buttons/SendButton'
-import { TextButton } from 'src/components/buttons/TextButton'
 import { Chevron } from 'src/components/icons/Chevron'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
-import { ChainId } from 'src/constants/chains'
-import { AssetType } from 'src/entities/assets'
 import { useNFT } from 'src/features/nfts/hooks'
-import { ElementName } from 'src/features/telemetry/constants'
-import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { useActiveAccountAddress } from 'src/features/wallet/hooks'
+import { logMessage } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
-import { openUri } from 'src/utils/linking'
 
 const MAX_NFT_IMAGE_SIZE = 512
 
@@ -39,24 +35,36 @@ export function NFTItemScreen({
   const { t } = useTranslation()
 
   const { asset } = useNFT(owner, address, token_id)
-  const accountAddress = useActiveAccountAddress()
 
-  const initialSendState = useMemo(() => {
-    return asset
-      ? {
-          exactCurrencyField: CurrencyField.INPUT,
-          exactAmountToken: '',
-          [CurrencyField.INPUT]: {
-            chainId: ChainId.Mainnet,
-            address: asset.asset_contract.address,
-            tokenId: asset.token_id,
-            type:
-              asset.asset_contract.schema_name === 'ERC1155' ? AssetType.ERC1155 : AssetType.ERC721,
-          },
-          [CurrencyField.OUTPUT]: null,
+  const onShare = useCallback(async () => {
+    if (!asset?.asset_contract.address || !asset?.token_id) return
+    try {
+      await Share.share({
+        message: `${UNISWAP_NFT_BASE_URL}/nfts/asset/${asset.asset_contract.address}/${asset.token_id}`,
+      })
+    } catch (e) {
+      logMessage(LogContext.Share, (e as any as Error).message, { screen: 'NFTItemScreen' })
+    }
+  }, [asset?.asset_contract.address, asset?.token_id])
+
+  const Header = useMemo(
+    () => (
+      <BackHeader
+        endAdornment={
+          <TouchableOpacity onPress={onShare}>
+            <ShareIcon
+              color={theme.colors.textSecondary}
+              height={iconSizes.lg}
+              width={iconSizes.lg}
+            />
+          </TouchableOpacity>
         }
-      : undefined
-  }, [asset])
+        pt="xxs"
+        px="xs"
+      />
+    ),
+    [theme.colors.textSecondary, onShare]
+  )
 
   // TODO: better handle error / loading states
   if (!asset) {
@@ -70,13 +78,9 @@ export function NFTItemScreen({
       slug: asset.collection.slug,
     })
 
-  const isMyNFT = owner && owner === accountAddress
-
-  const assetUrl = `${UNISWAP_NFT_BASE_URL}/nfts/asset/${asset.asset_contract.address}/${asset.token_id}`
-
   return (
     <>
-      <HeaderScrollScreen contentHeader={<BackButton px="md" />} fixedHeader={<BackButton />}>
+      <HeaderScrollScreen contentHeader={<Box px="md">{Header}</Box>} fixedHeader={Header}>
         <Flex mb="xxl" mt="md" pb="xxl">
           <Flex centered>
             <NFTViewer autoplay maxHeight={MAX_NFT_IMAGE_SIZE} uri={asset.image_url} />
@@ -120,7 +124,7 @@ export function NFTItemScreen({
             </Flex>
 
             {/* Action buttons */}
-            {isMyNFT && <SendButton flex={1} initialState={initialSendState} />}
+            {/* TODO(MOB-2841): add back SendButton when we fix Send NFT flow */}
 
             {/* Metadata */}
             {asset.collection.description && (
@@ -139,37 +143,6 @@ export function NFTItemScreen({
           </Flex>
         </Flex>
       </HeaderScrollScreen>
-      <Flex
-        row
-        alignItems="center"
-        bg="backgroundBackdrop"
-        borderTopColor="backgroundOutline"
-        borderTopWidth={1}
-        bottom={0}
-        gap="none"
-        justifyContent="space-between"
-        pb="xl"
-        position="absolute"
-        pt="sm"
-        px="xl">
-        <Flex fill row gap="sm">
-          <Flex centered>
-            <NFTViewer autoplay maxHeight={36} uri={asset.image_url} />
-          </Flex>
-          <Flex gap="none" justifyContent="center">
-            <Text variant="subhead">{asset.name}</Text>
-            <TextButton
-              name={ElementName.NFTAssetViewOnUniswap}
-              testID={ElementName.NFTAssetViewOnUniswap}
-              textColor="textSecondary"
-              textVariant="caption"
-              onPress={() => openUri(assetUrl)}>
-              {t('View on Uniswap.com')}
-            </TextButton>
-          </Flex>
-        </Flex>
-        <LinkButton label="" size={iconSizes.md} url={assetUrl} />
-      </Flex>
     </>
   )
 }

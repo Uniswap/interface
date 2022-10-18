@@ -170,6 +170,7 @@ export const enum LogContext {
   OpenUri = 'OpenUri',
   ProviderManager = 'ProviderManager',
   SecurityConcern = 'SecurityConcern',
+  Share = 'Share',
   ValidateAddress = 'ValidateAddress',
   WrappedTokenInfo = 'WrappedTokenInfo',
 }

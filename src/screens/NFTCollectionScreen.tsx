@@ -1,11 +1,12 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Share, TouchableOpacity } from 'react-native'
+import { useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import ShareIcon from 'src/assets/icons/share.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
-import { GradientButton } from 'src/components/buttons/GradientButton'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -19,21 +20,22 @@ import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery, useNftCollectionQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
-import { ElementName, SectionName } from 'src/features/telemetry/constants'
+import { logMessage } from 'src/features/telemetry'
+import { ElementName, LogContext, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { UNISWAP_NFT_BASE_URL } from 'src/screens/NFTItemScreen'
 import { Screens } from 'src/screens/Screens'
+import { iconSizes } from 'src/styles/sizing'
 import { formatNFTFloorPrice, formatNumber } from 'src/utils/format'
 import { openUri } from 'src/utils/linking'
 
 interface Props {
   collection?: NFTAsset.Collection
   collectionName: string
-  collectionAddress: string
 }
 
-function NFTCollectionHeader({ collection, collectionName, collectionAddress }: Props) {
+function NFTCollectionHeader({ collection, collectionName }: Props) {
   const { t } = useTranslation()
 
   return (
@@ -130,16 +132,6 @@ function NFTCollectionHeader({ collection, collectionName, collectionAddress }: 
               </Button>
             )}
           </Flex>
-          <GradientButton
-            borderColor="backgroundOutline"
-            borderRadius="md"
-            borderWidth={1}
-            label={t('View on Uniswap.com')}
-            name={ElementName.NFTCollectionViewOnUniswap}
-            py="sm"
-            testID={ElementName.NFTCollectionViewOnUniswap}
-            onPress={() => openUri(`${UNISWAP_NFT_BASE_URL}/nfts/collection/${collectionAddress}`)}
-          />
         </Flex>
       </Flex>
     </Trace>
@@ -151,6 +143,7 @@ export function NFTCollectionScreen({
   route,
 }: AppStackScreenProp<Screens.NFTCollection>) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const activeAddress = useActiveAccount()?.address
   const { collectionAddress, slug, owner = activeAddress } = route.params
@@ -194,14 +187,38 @@ export function NFTCollectionScreen({
     [onPressMasonryItem]
   )
 
+  const onShare = useCallback(async () => {
+    try {
+      await Share.share({
+        message: `${UNISWAP_NFT_BASE_URL}/nfts/collection/${collectionAddress}`,
+      })
+    } catch (e) {
+      logMessage(LogContext.Share, (e as any as Error).message, { screen: 'NFTCollectionScreen' })
+    }
+  }, [collectionAddress])
+
+  const Header = useMemo(
+    () => (
+      <BackHeader
+        endAdornment={
+          <TouchableOpacity onPress={onShare}>
+            <ShareIcon
+              color={theme.colors.textSecondary}
+              height={iconSizes.lg}
+              width={iconSizes.lg}
+            />
+          </TouchableOpacity>
+        }
+        pt="xxs"
+        px="xs">
+        <Text variant="subhead">{collection?.name}</Text>
+      </BackHeader>
+    ),
+    [theme.colors.textSecondary, collection?.name, onShare]
+  )
+
   return (
-    <HeaderScrollScreen
-      contentHeader={<BackButton showButtonLabel px="md" />}
-      fixedHeader={
-        <BackHeader>
-          <Text variant="subhead">{collection?.name}</Text>
-        </BackHeader>
-      }>
+    <HeaderScrollScreen contentHeader={<Box px="md">{Header}</Box>} fixedHeader={Header}>
       <Flex gap="lg" mt="lg">
         <Box mx="lg">
           {collectionLoading ? (
@@ -209,11 +226,7 @@ export function NFTCollectionScreen({
               <Loading repeat={4} type="box" />
             </Box>
           ) : (
-            <NFTCollectionHeader
-              collection={collection}
-              collectionAddress={collectionAddress}
-              collectionName={collection?.name ?? ''}
-            />
+            <NFTCollectionHeader collection={collection} collectionName={collection?.name ?? ''} />
           )}
         </Box>
         <Text mx="lg" variant="mediumLabel">
