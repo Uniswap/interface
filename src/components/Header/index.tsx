@@ -162,9 +162,9 @@ const UNIAmount = styled(AccountElement)`
   color: white;
   padding: 4px 8px;
   height: 36px;
-  font-weight: 500;
-  background-color: ${({ theme }) => theme.bg3};
-  background: #252632;
+  font-weight: 600;
+  background-color: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg1};
 `
 
 const getQuery = () => {
@@ -341,7 +341,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   font-size: 1rem;
   width: fit-content;
   margin: 0 12px;
-  font-weight: 500;
+  font-weight: 700;
 
   &.${activeClassName} {
     border-radius: 12px;

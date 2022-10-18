@@ -179,7 +179,7 @@ export function KibaNftAlert() {
   //     <Body>
   //       <Trans>This is an alpha release of Kiba Inu Genesis NFTs <CheckCircle size={'10px'} fontSize={10} /> </Trans>
   //       <DesktopTextBreak /> <Trans> If you have minting access, you can mint yours now.</Trans>{' '}
-  //       <ReadMoreLink href="https://docs.kiba.app/nfts/kiba-inu-nfts/nft-minting">
+  //       <ReadMoreLink href="https://docs.kibaswap.io/nfts/kiba-inu-nfts/nft-minting">
   //         <Trans>Read more</Trans>
   //       </ReadMoreLink>
   //     </Body>

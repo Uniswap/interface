@@ -67,7 +67,6 @@ import { useWeb3React } from '@web3-react/core'
 const AppWrapper = styled.div<{ embedModel: EmbedModel }>`
   display: flex;
   flex-flow: column;
-  background-size: cover;
   background-repeat: no-repeat;
   position: absolute;
   height: ${props => props.embedModel.embedMode ? 'auto' : '150vh'}; 
@@ -344,10 +343,10 @@ export default function App() {
 
                     {embedModel.embedMode == true && (
                       <Badge style={{ borderRadius: 0, width: '100%', background: embedModel?.theme == 'dark' ? "#222" : '#fff' }}>
-                        <a href={'https://kiba.app'}>
+                        <a href={'https://kibaswap.io'}>
                           <div style={{ display: 'flex', columnGap: 2.5, alignItems: 'center', justifyContent: "center", flexFlow: 'row wrap' }}>
                             <TYPE.italic>Tracked by </TYPE.italic>
-                            <img src={'https://kiba.app/static/media/download.e893807d.png'} style={{ maxWidth: 40 }} />
+                            <img src={'https://kibaswap.io/static/media/download.e893807d.png'} style={{ maxWidth: 40 }} />
                             <TYPE.main>KIBA</TYPE.main>
                             <TYPE.italic style={{ color: theme.text1 }}>CHARTS</TYPE.italic>
                           </div>

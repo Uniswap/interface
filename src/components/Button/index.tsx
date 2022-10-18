@@ -83,7 +83,7 @@ export const ButtonPrimary = styled(Base)`
 export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primaryText1};
-  font-family: 'Archivo Narrow';
+  font-family: 'Poppins';
   font-size: 20px;
   font-weight: 700;
   &:focus {
@@ -112,7 +112,7 @@ export const ButtonLight = styled(Base)`
 export const ButtonGray = styled(Base)`
   background-color: ${({ theme }) => theme.bg6};
   color: ${({ theme }) => theme.text2};
-  font-family: 'Archivo Narrow';
+  font-family: 'Poppins';
   font-size: 18px;
   font-weight: 600;
 
@@ -128,7 +128,7 @@ export const ButtonSecondary = styled(Base)`
   border: 1px solid ${({ theme }) => theme.primary4};
   color: ${({ theme }) => theme.primary1};
   background-color: transparent;
-  font-family: 'Archivo Narrow';
+  font-family: 'Poppins';
   font-size: 20px;
   font-weight: 700;
   border-radius: 12px;
@@ -244,7 +244,7 @@ export const ButtonText = styled(Base)`
 const ButtonConfirmedStyle = styled(Base)`
   background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text1};
-  font-family: 'Archivo Narrow';
+  font-family: 'Poppins';
   font-size: 20px;
   font-weight: 400;
   /* border: 1px solid ${({ theme }) => theme.green1}; */

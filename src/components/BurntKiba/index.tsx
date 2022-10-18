@@ -128,7 +128,7 @@ export const BurntKiba = ({ showDetails, style }: { showDetails?: boolean, style
         </ContentWrapper> :
         <StyledInternalLink style={{ ...style }} to="/dashboard">
 
-          <NetworkInfo style={{ alignItems: 'center', justifyContent: 'center' }} chainId={chainId as any}>
+          <NetworkInfo style={{ alignItems: 'center', justifyContent: 'center', paddingRight: '.5rem' }} chainId={chainId as any}>
             <div style={{ marginBottom: 10 }}>
               <Lottie
                 options={defaultOptions}

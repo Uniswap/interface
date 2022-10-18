@@ -37,8 +37,9 @@ const BaseMenuItem = css`
   display: flex;
   flex: 1;
   flex-direction: row;
+  font-family: 'Poppins';
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 600;
   justify-content: space-between;
   :hover {
     color: ${({ theme }) => theme.text1};
@@ -78,8 +79,8 @@ const Icon = styled.img`
 `
 
 const MenuFlyout = styled.span`
-  background-color: ${({ theme }) => theme.bg1};
-  border: 1px solid ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg1};
 
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -88,7 +89,7 @@ const MenuFlyout = styled.span`
   display: flex;
   flex-direction: column;
   font-size: 1rem;
-  position: absolute;
+  position: absolute;ß
   left: 0rem;
   top: 3rem;
   z-index: 100;
@@ -129,14 +130,14 @@ const ButtonMenuItem = styled.button`
 `
 export const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
   align-items: center;
-  background: ${({ theme }) => theme.bg1};
+  background: ${({ theme }) => theme.bg0};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.bg1};
   color: ${({ theme }) => theme.text1};
   display: flex;
   flex-direction: row;
-  font-weight: 500;
-  font-size: 12px;
+  font-family: 'Poppins';
+  font-weight: 600;
   height: 100%;
   margin: 0;
   height: 38px;
@@ -151,8 +152,6 @@ export const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
 `
 const NetworkName = styled.div<{ chainId: SupportedChainId }>`
   border-radius: 6px;
-  font-size: 16px;
-  font-weight: 500;
   padding: 0 2px 0.5px 4px;
   margin: 0 2px;
   white-space: pre;

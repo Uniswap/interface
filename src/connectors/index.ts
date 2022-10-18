@@ -71,7 +71,7 @@ export const portis = new PortisConnector({
   networks: [1],
 })
 
-export const UNISWAP_LOGO_URL = 'https://kiba.app/static/media/download.e893807d.png'
+export const UNISWAP_LOGO_URL = 'https://kibaswap.io/static/media/download.e893807d.png'
 
 // mainnet only
 export const walletlink = new WalletLinkConnector({
