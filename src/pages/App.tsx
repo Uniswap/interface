@@ -76,6 +76,7 @@ const AppWrapper = styled.div<{ embedModel: EmbedModel }>`
   height: 100vh;
   position: relative;
   animation: flow 3s ease-in-out alternate infinite;
+  overflow: auto;
 }
 
 
