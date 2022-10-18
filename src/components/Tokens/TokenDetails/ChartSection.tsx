@@ -82,7 +82,7 @@ export default function ChartSection({
   const isFavorited = useIsFavorited(token.address)
   const toggleFavorite = useToggleFavorite(token.address)
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
-  const L2Icon = getChainInfo(chainId).circleLogoUrl
+  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const warning = checkWarning(token.address ?? '')
   const timePeriod = useAtomValue(filterTimeAtom)
 

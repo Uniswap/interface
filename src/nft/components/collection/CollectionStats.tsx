@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Marquee } from 'nft/components/layout/Marquee'
@@ -9,9 +10,16 @@ import { GenieCollection } from 'nft/types'
 import { floorFormatter, quantityFormatter, volumeFormatter } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import styled from 'styled-components/macro'
 
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
 import * as styles from './CollectionStats.css'
+
+const PercentChange = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
 
 const MobileSocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
   return (
@@ -253,6 +261,9 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   // round daily volume & floorPrice to 3 decimals or less
   const totalVolumeStr = volumeFormatter(stats.stats?.total_volume)
   const floorPriceStr = floorFormatter(stats.floorPrice)
+  const floorChangeStr =
+    stats.stats && stats.stats.one_day_floor_change ? Math.round(Math.abs(stats.stats.one_day_floor_change) * 100) : 0
+  const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_floor_change) : null
 
   const statsLoadingSkeleton = new Array(5).fill(
     <>
@@ -271,6 +282,13 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           {floorPriceStr} ETH
         </StatsItem>
       ) : null}
+      {stats.stats?.one_day_floor_change ? (
+        <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
+          <PercentChange>
+            {floorChangeStr}% {arrow}
+          </PercentChange>
+        </StatsItem>
+      ) : null}
       {stats.stats?.total_volume ? (
         <StatsItem label="Total volume" isMobile={isMobile ?? false}>
           {totalVolumeStr} ETH
@@ -284,6 +302,16 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
       {numOwnersStr ? (
         <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
           {numOwnersStr}%
+        </StatsItem>
+      ) : null}
+      {stats.floorPrice ? (
+        <StatsItem label="Floor Price" isMobile={isMobile ?? false}>
+          {floorPriceStr} ETH
+        </StatsItem>
+      ) : null}
+      {stats.stats?.total_volume ? (
+        <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
+          {totalVolumeStr} ETH
         </StatsItem>
       ) : null}
       {stats.stats?.total_listings && listedPercentageStr > 0 ? (

@@ -1,7 +1,6 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import TokenSafety from 'components/TokenSafety'
-import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import usePrevious from 'hooks/usePrevious'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -59,23 +58,16 @@ export default memo(function CurrencySearchModal({
     setModalView(CurrencyModalView.tokenSafety)
   }
 
-  const tokenSafetyFlag = useTokenSafetyFlag()
-
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
-      if (
-        tokenSafetyFlag === TokenSafetyVariant.Enabled &&
-        hasWarning &&
-        currency.isToken &&
-        !userAddedTokens.find((token) => token.equals(currency))
-      ) {
+      if (hasWarning && currency.isToken && !userAddedTokens.find((token) => token.equals(currency))) {
         showTokenSafetySpeedbump(currency)
       } else {
         onCurrencySelect(currency)
         onDismiss()
       }
     },
-    [onDismiss, onCurrencySelect, tokenSafetyFlag, userAddedTokens]
+    [onDismiss, onCurrencySelect, userAddedTokens]
   )
 
   // for token import view
@@ -121,7 +113,7 @@ export default memo(function CurrencySearchModal({
       break
     case CurrencyModalView.tokenSafety:
       modalHeight = undefined
-      if (tokenSafetyFlag === TokenSafetyVariant.Enabled && warningToken) {
+      if (warningToken) {
         content = (
           <TokenSafety
             tokenAddress={warningToken.address}
@@ -135,9 +127,7 @@ export default memo(function CurrencySearchModal({
     case CurrencyModalView.importToken:
       if (importToken) {
         modalHeight = undefined
-        if (tokenSafetyFlag === TokenSafetyVariant.Enabled) {
-          showTokenSafetySpeedbump(importToken)
-        }
+        showTokenSafetySpeedbump(importToken)
         content = (
           <ImportToken
             tokens={[importToken]}
