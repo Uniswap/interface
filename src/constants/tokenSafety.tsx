@@ -20,7 +20,7 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
           <Plural
             value={plural ? 2 : 1}
             _1="This token isn't traded on leading U.S. centralized exchanges. Please do your own research before trading."
-            other="These tokens aren't verified."
+            other="These tokens aren't traded on leading U.S. centralized exchanges. Please do your own research before trading."
           />
         )
         description = <Trans>Please do your own research before trading.</Trans>
@@ -30,7 +30,7 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
           <Plural
             value={plural ? 2 : 1}
             _1="This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap."
-            other="These tokens aren't verified."
+            other="These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap."
           />
         )
         description = <Trans>Please do your own research before trading.</Trans>
