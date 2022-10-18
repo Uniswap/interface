@@ -5,7 +5,6 @@ import { EventName } from 'analytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -31,9 +30,7 @@ import {
   sortAscendingAtom,
   sortMethodAtom,
   TokenSortMethod,
-  useIsFavorited,
   useSetSortMethod,
-  useToggleFavorite,
 } from '../state'
 import { useTokenLogoURI } from '../TokenDetails/ChartSection'
 import InfoTip from '../TokenDetails/InfoTip'
@@ -48,13 +45,11 @@ const StyledTokenRow = styled.div<{
   first?: boolean
   last?: boolean
   loading?: boolean
-  favoriteTokensEnabled?: boolean
 }>`
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: ${({ favoriteTokensEnabled }) =>
-    favoriteTokensEnabled ? '1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr' : '1fr 7fr 4fr 4fr 4fr 4fr 5fr'};
+  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -111,23 +106,6 @@ const StyledTokenRow = styled.div<{
     }
   }
 `
-export const ClickFavorited = styled.span`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 60%;
-  }
-`
-
-export const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
-  ${ClickableStyle}
-  height: 22px;
-  width: 24px;
-  color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
-  fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : 'transparent')};
-`
 
 const ClickableContent = styled.div`
   display: flex;
@@ -139,15 +117,6 @@ const ClickableContent = styled.div`
 const ClickableName = styled(ClickableContent)`
   gap: 8px;
   max-width: 100%;
-`
-const FavoriteCell = styled(Cell)`
-  min-width: 40px;
-  color: ${({ theme }) => theme.textSecondary};
-  fill: none;
-
-  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    display: none;
-  }
 `
 const StyledHeaderRow = styled(StyledTokenRow)`
   border-bottom: 1px solid;
@@ -377,7 +346,6 @@ function HeaderCell({
 
 /* Token Row: skeleton row component */
 export function TokenRow({
-  favorited,
   header,
   listNumber,
   tokenInfo,
@@ -388,7 +356,6 @@ export function TokenRow({
   sparkLine,
   ...rest
 }: {
-  favorited: ReactNode
   first?: boolean
   header: boolean
   listNumber: ReactNode
@@ -402,7 +369,6 @@ export function TokenRow({
   last?: boolean
   style?: CSSProperties
 }) {
-  const favoriteTokensEnabled = useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled
   const rowCells = (
     <>
       <ListNumberCell header={header}>{listNumber}</ListNumberCell>
@@ -412,15 +378,10 @@ export function TokenRow({
       <TvlCell sortable={header}>{tvl}</TvlCell>
       <VolumeCell sortable={header}>{volume}</VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
-      {favoriteTokensEnabled && <FavoriteCell>{favorited}</FavoriteCell>}
     </>
   )
-  if (header) return <StyledHeaderRow favoriteTokensEnabled={favoriteTokensEnabled}>{rowCells}</StyledHeaderRow>
-  return (
-    <StyledTokenRow favoriteTokensEnabled={favoriteTokensEnabled} {...rest}>
-      {rowCells}
-    </StyledTokenRow>
-  )
+  if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
+  return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
 }
 
 /* Header Row: top header row component for table */
@@ -428,7 +389,6 @@ export function HeaderRow() {
   return (
     <TokenRow
       header={true}
-      favorited={null}
       listNumber="#"
       tokenInfo={<Trans>Token name</Trans>}
       price={<HeaderCell category={TokenSortMethod.PRICE} sortable />}
@@ -444,7 +404,6 @@ export function HeaderRow() {
 export function LoadingRow() {
   return (
     <TokenRow
-      favorited={null}
       header={false}
       listNumber={<SmallLoadingBubble />}
       loading
@@ -476,8 +435,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const tokenAddress = token.address
   const tokenName = token.name
   const tokenSymbol = token.symbol
-  const isFavorited = useIsFavorited(tokenAddress)
-  const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
@@ -510,16 +467,6 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
       >
         <TokenRow
           header={false}
-          favorited={
-            <ClickFavorited
-              onClick={(e) => {
-                e.preventDefault()
-                toggleFavorite()
-              }}
-            >
-              <FavoriteIcon isFavorited={isFavorited} />
-            </ClickFavorited>
-          }
           listNumber={rank}
           tokenInfo={
             <ClickableName>
