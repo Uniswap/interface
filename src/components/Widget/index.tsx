@@ -18,12 +18,14 @@ import { SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
 import { useTrace } from 'analytics/Trace'
 import {
   formatPercentInBasisPointsNumber,
+  formatSwapQuoteReceivedEventProperties,
   formatToDecimal,
+  getDurationFromDateMilliseconds,
   getPriceUpdateBasisPoints,
   getTokenAddress,
 } from 'analytics/utils'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 import { computeRealizedPriceImpact } from 'utils/prices'
@@ -53,8 +55,24 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
 
   const trace = useTrace({ section: SectionName.WIDGET })
 
-  // TODO(lynnshaoyu): add back onInitialSwapQuote logging once widget side logic is fixed
-  // in onInitialSwapQuote handler.
+  const [initialQuoteDate, setInitialQuoteDate] = useState<Date>()
+
+  const onInitialSwapQuote = useCallback(
+    (trade: Trade<Currency, Currency, TradeType>) => {
+      setInitialQuoteDate(new Date())
+      const eventProperties = {
+        // TODO(1416): Include undefined values.
+        ...formatSwapQuoteReceivedEventProperties(
+          trade,
+          /* gasUseEstimateUSD= */ undefined,
+          /* fetchingSwapQuoteStartTime= */ undefined
+        ),
+        ...trace,
+      }
+      sendAnalyticsEvent(EventName.SWAP_QUOTE_RECEIVED, eventProperties)
+    },
+    [trace]
+  )
 
   const onApproveToken = useCallback(() => {
     const input = inputs.value.INPUT
@@ -106,15 +124,13 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
         is_auto_router_api: undefined,
         is_auto_slippage: undefined,
         chain_id: trade.inputAmount.currency.chainId,
-        // duration should be getDurationFromDateMilliseconds(initialQuoteDate) once initialQuoteDate
-        // is made available from TODO above for onInitialSwapQuote logging.
-        duration_from_first_quote_to_swap_submission_milliseconds: undefined,
+        duration_from_first_quote_to_swap_submission_milliseconds: getDurationFromDateMilliseconds(initialQuoteDate),
         swap_quote_block_number: undefined,
         ...trace,
       }
       sendAnalyticsEvent(EventName.SWAP_SUBMITTED_BUTTON_CLICKED, eventProperties)
     },
-    [trace]
+    [initialQuoteDate, trace]
   )
   const onSwitchChain = useCallback(
     // TODO: Widget should not break if this rejects - upstream the catch to ignore it.
@@ -146,6 +162,7 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
         onReviewSwapClick={onReviewSwapClick}
         onSubmitSwapClick={onSubmitSwapClick}
         onSwapApprove={onApproveToken}
+        onInitialSwapQuote={onInitialSwapQuote}
         onSwapPriceUpdateAck={onSwapPriceUpdateAck}
       />
       {tokenSelector}
