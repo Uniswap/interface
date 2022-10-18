@@ -306,11 +306,6 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           {uniqueOwnersPercentage}%
         </StatsItem>
       ) : null}
-      {stats.floorPrice ? (
-        <StatsItem label="Floor Price" isMobile={isMobile ?? false}>
-          {floorPriceStr} ETH
-        </StatsItem>
-      ) : null}
       {stats.stats?.total_volume ? (
         <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
           {totalVolumeStr} ETH

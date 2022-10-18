@@ -46,7 +46,7 @@ export const floorFormatter = (n: number): string => {
       .toUpperCase()
   }
   if (n >= 1e15) {
-    return `${n.toExponential(2)}`
+    return `${n.toExponential(3).replace(/(\.[0-9]*[1-9])0*|(\.0*)/, '$1')}`
   }
   return `${Number(n.toFixed(2)).toLocaleString(DEFAULT_LOCALE, { minimumFractionDigits: 2 })}`
 }
@@ -58,10 +58,7 @@ export const volumeFormatter = (n: number): string => {
     return '<0.01'
   }
   if (n >= 0.01 && n < 1) {
-    return `${parseFloat(n.toFixed(3)).toLocaleString(DEFAULT_LOCALE, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`
+    return `${parseFloat(n.toFixed(2)).toLocaleString(DEFAULT_LOCALE)}`
   }
   if (n >= 1 && n < 1000) {
     return `${Number(Math.round(n).toLocaleString(DEFAULT_LOCALE))}`
