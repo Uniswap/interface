@@ -79,6 +79,7 @@ const dimensions = {
   '292': '292px',
   '386': '386px',
   half: '50%',
+  almostFull: '90%',
   full: '100%',
   min: 'min-content',
   max: 'max-content',
