@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
+import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { TRENDING_WALLETS } from 'src/components/explore/search/SearchEmptySection'
-import { WatchedWalletsCard } from 'src/components/explore/WatchedWalletsCard'
 import { WalletSearchResult } from 'src/features/explore/searchHistorySlice'
 import { theme } from 'src/styles/theme'
 
@@ -27,7 +27,7 @@ function ExploreWalletsTab({
     <FlatList
       ref={listRef}
       ListHeaderComponent={
-        <WatchedWalletsCard
+        <FavoriteWalletsGrid
           isEditing={isEditing}
           setIsEditing={setIsEditing}
           onSearchWallets={onSearchWallets}

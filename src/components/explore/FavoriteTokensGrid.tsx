@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
-import { PinnedHeaderRow } from 'src/components/explore/PinnedHeaderRow'
-import PinnedTokenCard from 'src/components/explore/PinnedTokenCard'
+import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
+import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
+
 import { AnimatedFlex, Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
@@ -17,7 +18,7 @@ const GAP_SIZE = FixedTheme.spacing.xs
 const ITEM_FLEX = 1 / NUM_COLUMNS
 
 /** Renders the favorite tokens card on the Explore page */
-export function PinnedTokensGrid({
+export function FavoriteTokensGrid({
   isEditing,
   setIsEditing,
 }: {
@@ -35,7 +36,7 @@ export function PinnedTokensGrid({
       const lastColumn = (index + 1) % NUM_COLUMNS === 0
       return (
         <>
-          <PinnedTokenCard
+          <FavoriteTokenCard
             currencyId={item}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
@@ -50,14 +51,14 @@ export function PinnedTokensGrid({
 
   return (
     <AnimatedFlex entering={FadeIn} gap="sm" mx="xs">
-      <PinnedHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
+      <FavoriteHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
       <FlatList
         ItemSeparatorComponent={() => <Box height={GAP_SIZE} />}
         ListEmptyComponent={FavoritesEmptyState}
         contentContainerStyle={{ ...flex.grow }}
         data={favoriteCurrencyIds}
         keyExtractor={(item) => item}
-        listKey="explore-pinned-tokens"
+        listKey="explore-favorite-tokens"
         numColumns={NUM_COLUMNS}
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
@@ -69,5 +70,5 @@ export function PinnedTokensGrid({
 
 export function FavoritesEmptyState() {
   const { t } = useTranslation()
-  return <BaseCard.EmptyState description={t('Pin tokens to monitor their prices.')} />
+  return <BaseCard.EmptyState description={t('Favorite tokens to monitor their prices.')} />
 }

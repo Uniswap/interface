@@ -6,8 +6,8 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { Button, ButtonProps } from 'src/components/buttons/Button'
-import RemovePinButton from 'src/components/explore/RemovePinButton'
-import { PinnedTokenCardQuery } from 'src/components/explore/__generated__/PinnedTokenCardQuery.graphql'
+import RemoveButton from 'src/components/explore/RemoveButton'
+import { FavoriteTokenCardQuery } from 'src/components/explore/__generated__/FavoriteTokenCardQuery.graphql'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Flex } from 'src/components/layout/Flex'
 import { Loading } from 'src/components/loading'
@@ -34,9 +34,9 @@ const BOX_TOKEN_LOGO_SIZE = 36
 const boxTokenLogoStyle: ImageStyle = { width: BOX_TOKEN_LOGO_SIZE, height: BOX_TOKEN_LOGO_SIZE }
 
 // Do one query per item to avoid suspense on entire screen / container
-// @TODO: Find way to load at the root of explore without a rerender when pinned token state changes
-export const pinnedTokenCardQuery = graphql`
-  query PinnedTokenCardQuery($contracts: [ContractInput!]!) {
+// @TODO: Find way to load at the root of explore without a rerender when favorite token state changes
+export const favoriteTokenCardQuery = graphql`
+  query FavoriteTokenCardQuery($contracts: [ContractInput!]!) {
     tokenProjects(contracts: $contracts) {
       tokens {
         chain
@@ -60,34 +60,34 @@ export const pinnedTokenCardQuery = graphql`
 
 export const TOKEN_ITEM_BOX_MINWIDTH = 137
 
-type PinnedTokenCardProps = {
+type FavoriteTokenCardProps = {
   currencyId: CurrencyId
   isEditing?: boolean
   setIsEditing: (update: boolean) => void
 } & ButtonProps
 
-function PinnedTokenCard(props: PinnedTokenCardProps) {
+function FavoriteTokenCard(props: FavoriteTokenCardProps) {
   return (
     <Suspense fallback={<Loading />}>
-      <PinnedTokenCardInner {...props} />
+      <FavoriteTokenCardInner {...props} />
     </Suspense>
   )
 }
 
-function PinnedTokenCardInner({
+function FavoriteTokenCardInner({
   currencyId,
   isEditing,
   setIsEditing,
   ...rest
-}: PinnedTokenCardProps) {
+}: FavoriteTokenCardProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const queryInput = useMemo(() => [currencyIdToContractInput(currencyId)], [currencyId])
 
-  const data = useLazyLoadQuery<PinnedTokenCardQuery>(
-    pinnedTokenCardQuery,
+  const data = useLazyLoadQuery<FavoriteTokenCardQuery>(
+    favoriteTokenCardQuery,
     {
       contracts: queryInput,
     },
@@ -125,8 +125,8 @@ function PinnedTokenCardInner({
 
   const menuActions = useMemo(() => {
     return [
-      { title: t('Remove pin'), systemIcon: 'pin' },
-      { title: t('Edit pins'), systemIcon: 'square.and.pencil' },
+      { title: t('Remove favorite'), systemIcon: 'minus' },
+      { title: t('Edit favorites'), systemIcon: 'square.and.pencil' },
       { title: t('Swap'), systemIcon: 'arrow.2.squarepath' },
     ]
   }, [t])
@@ -144,14 +144,14 @@ function PinnedTokenCardInner({
   return (
     <Button testID={`token-box-${token?.symbol}`} onPress={onPress} onPressIn={onPressIn} {...rest}>
       {isEditing ? (
-        <RemovePinButton position="absolute" right={-8} top={-8} onPress={onRemove} />
+        <RemoveButton position="absolute" right={-8} top={-8} onPress={onRemove} />
       ) : null}
       <ContextMenu
         actions={menuActions}
         disabled={isEditing}
         onPress={(e) => {
           // Emitted index based on order of menu action array
-          // remove pin action
+          // remove favorite action
           if (e.nativeEvent.index === 0) {
             onRemove()
           }
@@ -222,4 +222,4 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
   )
 }
 
-export default memo(PinnedTokenCard)
+export default memo(FavoriteTokenCard)

@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppSelector } from 'src/app/hooks'
+import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { useOrderByModal } from 'src/components/explore/Modals'
-import { PinnedTokensGrid } from 'src/components/explore/PinnedTokensGrid'
 import { SortButton } from 'src/components/explore/SortButton'
 import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { TokenItemData, TokenProjectItem } from 'src/components/explore/TokenProjectItem'
@@ -64,9 +64,8 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
   const [tokensMetadataDisplayType, cycleTokensMetadataDisplayType] = useTokensMetadataDisplayType()
   const { localOrderBy } = getOrderByValues(orderBy)
 
-  // Editing pinned tokens
+  // Editing favorite tokens
   const [isEditing, setIsEditing] = useState(false)
-  // Monitor the pinned tokens
   const favoriteCurrencyIdsSet = useAppSelector(selectFavoriteTokensSet)
 
   // TODO(spencer): Handle reloading query with remote sort order
@@ -109,20 +108,20 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
 
   const renderItem = useCallback(
     ({ item, index }: ListRenderItemInfo<TokenItemData>) => {
-      // Disable the row if editing and already pinned.
+      // Disable the row if editing and already favorited.
       // Avoid doing this within TokenProjectItem so we can memoize
       // (referencing favorites within item will cause rerenders for each item as we add/remove favorites)
       const { chainId, address } = item
       const _currencyId = address
         ? buildCurrencyId(chainId, address)
         : buildNativeCurrencyId(chainId)
-      const isPinned = favoriteCurrencyIdsSet.has(_currencyId.toLocaleLowerCase())
+      const isFavorited = favoriteCurrencyIdsSet.has(_currencyId.toLocaleLowerCase())
 
       return (
         <TokenProjectItem
           index={index}
           isEditing={isEditing}
-          isPinned={isPinned}
+          isFavorited={isFavorited}
           metadataDisplayType={tokensMetadataDisplayType}
           tokenItemData={item}
           onCycleMetadata={cycleTokensMetadataDisplayType}
@@ -143,7 +142,7 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
         ref={listRef}
         ListHeaderComponent={
           <Flex mt="sm">
-            <PinnedTokensGrid isEditing={isEditing} setIsEditing={setIsEditing} />
+            <FavoriteTokensGrid isEditing={isEditing} setIsEditing={setIsEditing} />
             <Flex row alignItems="center" justifyContent="space-between" mx="sm">
               <Text color="textSecondary" variant="smallLabel">
                 {t('Top Tokens')}

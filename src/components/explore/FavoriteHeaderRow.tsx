@@ -8,7 +8,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 
-export function PinnedHeaderRow({
+export function FavoriteHeaderRow({
   isEditing,
   onPress,
 }: {
@@ -20,7 +20,7 @@ export function PinnedHeaderRow({
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Text color="textSecondary" variant="subheadSmall">
-        {isEditing ? t('Edit pins') : t('Pinned')}
+        {isEditing ? t('Edit favorites') : t('Favorites')}
       </Text>
       {!isEditing ? (
         <Button name={ElementName.Edit} onPress={onPress}>

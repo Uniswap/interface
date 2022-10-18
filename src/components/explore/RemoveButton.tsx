@@ -3,7 +3,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { AnimatedButton, ButtonProps } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 
-export default function RemovePinButton(props: ButtonProps) {
+export default function RemoveButton(props: ButtonProps) {
   const theme = useAppTheme()
   return (
     <AnimatedButton

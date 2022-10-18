@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ef5b6494b1a5f3dda64ffca85556fc9e>>
+ * @generated SignedSource<<7b3d15d3c5d32653200f5a961163821d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,10 +15,10 @@ export type ContractInput = {
   address?: string | null;
   chain: Chain;
 };
-export type PinnedTokenCardQuery$variables = {
+export type FavoriteTokenCardQuery$variables = {
   contracts: ReadonlyArray<ContractInput>;
 };
-export type PinnedTokenCardQuery$data = {
+export type FavoriteTokenCardQuery$data = {
   readonly tokenProjects: ReadonlyArray<{
     readonly logoUrl: string | null;
     readonly markets: ReadonlyArray<{
@@ -38,9 +38,9 @@ export type PinnedTokenCardQuery$data = {
     }>;
   } | null> | null;
 };
-export type PinnedTokenCardQuery = {
-  response: PinnedTokenCardQuery$data;
-  variables: PinnedTokenCardQuery$variables;
+export type FavoriteTokenCardQuery = {
+  response: FavoriteTokenCardQuery$data;
+  variables: FavoriteTokenCardQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -128,7 +128,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "PinnedTokenCardQuery",
+    "name": "FavoriteTokenCardQuery",
     "selections": [
       {
         "alias": null,
@@ -195,7 +195,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "PinnedTokenCardQuery",
+    "name": "FavoriteTokenCardQuery",
     "selections": [
       {
         "alias": null,
@@ -260,16 +260,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4c9d4cfcb5de88c2f675781ac217dd33",
+    "cacheID": "f33f1504da4cba8ec16f1b3f909c42ec",
     "id": null,
     "metadata": {},
-    "name": "PinnedTokenCardQuery",
+    "name": "FavoriteTokenCardQuery",
     "operationKind": "query",
-    "text": "query PinnedTokenCardQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    tokens {\n      chain\n      address\n      symbol\n      id\n    }\n    logoUrl\n    markets(currencies: USD) {\n      price {\n        currency\n        value\n        id\n      }\n      pricePercentChange24h {\n        currency\n        value\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query FavoriteTokenCardQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    tokens {\n      chain\n      address\n      symbol\n      id\n    }\n    logoUrl\n    markets(currencies: USD) {\n      price {\n        currency\n        value\n        id\n      }\n      pricePercentChange24h {\n        currency\n        value\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7f13aa046f39225697b1396122afb3df";
+(node as any).hash = "762057b17e48ba8cc9a9ba44f6bd9b49";
 
 export default node;

@@ -42,7 +42,7 @@ interface TokenProjectItemProps {
   index?: number
   metadataDisplayType?: TokensMetadataDisplayType
   onCycleMetadata?: () => void
-  isPinned?: boolean
+  isFavorited?: boolean
   isEditing?: boolean
 }
 
@@ -52,7 +52,7 @@ export const TokenProjectItem = memo(
     index,
     metadataDisplayType,
     onCycleMetadata,
-    isPinned,
+    isFavorited,
     isEditing,
   }: TokenProjectItemProps) => {
     const { t } = useTranslation()
@@ -64,13 +64,13 @@ export const TokenProjectItem = memo(
       tokenItemData
     const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
 
-    const togglePinToken = useCallback(() => {
-      if (isPinned) {
+    const toggleFavoriteToken = useCallback(() => {
+      if (isFavorited) {
         dispatch(removeFavoriteToken({ currencyId: _currencyId }))
       } else {
         dispatch(addFavoriteToken({ currencyId: _currencyId }))
       }
-    }, [_currencyId, dispatch, isPinned])
+    }, [_currencyId, dispatch, isFavorited])
 
     const navigateToSwapSell = useCallback(() => {
       if (!address) return
@@ -89,25 +89,25 @@ export const TokenProjectItem = memo(
     }, [address, chainId, dispatch])
 
     const menuActions = useMemo(() => {
-      return isPinned
+      return isFavorited
         ? [
-            { title: t('Remove pin'), systemIcon: 'pin' },
+            { title: t('Remove favorite'), systemIcon: 'minus' },
             { title: t('Swap'), systemIcon: 'arrow.2.squarepath' },
           ]
         : [
-            { title: 'Pin Token', systemIcon: 'pin' },
+            { title: 'Favorite token', systemIcon: 'star' },
             { title: 'Swap', systemIcon: 'arrow.2.squarepath' },
           ]
-    }, [isPinned, t])
+    }, [isFavorited, t])
 
     return (
       <ContextMenu
         actions={menuActions}
         onPress={(e) => {
-          // EMitted native index is based on order of options in the action array
-          // Toggle pin action
+          // Emitted native index is based on order of options in the action array
+          // Toggle favorite action
           if (e.nativeEvent.index === 0) {
-            togglePinToken()
+            toggleFavoriteToken()
           }
           // Swap action
           if (e.nativeEvent.index === 1) {
@@ -116,7 +116,7 @@ export const TokenProjectItem = memo(
         }}>
         <Button
           disabled={isEditing}
-          opacity={isPinned && isEditing ? 0.3 : 1}
+          opacity={isFavorited && isEditing ? 0.3 : 1}
           testID={`token-item-${name}`}
           onPress={() => {
             if (isEditing) return
@@ -169,7 +169,7 @@ export const TokenProjectItem = memo(
                 />
               </Button>
               {isEditing ? (
-                <PinButton disabled={Boolean(isPinned)} onPress={togglePinToken} />
+                <FavoriteButton disabled={Boolean(isFavorited)} onPress={toggleFavoriteToken} />
               ) : null}
             </Flex>
           </AnimatedFlex>
@@ -203,7 +203,7 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
   )
 }
 
-function PinButton({ disabled, ...rest }: { disabled: boolean } & ButtonProps) {
+function FavoriteButton({ disabled, ...rest }: { disabled: boolean } & ButtonProps) {
   const theme = useAppTheme()
   return (
     <Box opacity={disabled ? 0 : 1}>
@@ -218,6 +218,7 @@ function PinButton({ disabled, ...rest }: { disabled: boolean } & ButtonProps) {
           backgroundColor: opacify(5, theme.colors.magentaVibrant),
           borderColor: opacify(20, theme.colors.magentaVibrant),
         }}>
+        {/* @TODO: replace with updated icon from designs */}
         <PinIcon color={theme.colors.magentaVibrant} height={14} strokeWidth={2} width={14} />
       </AnimatedButton>
     </Box>

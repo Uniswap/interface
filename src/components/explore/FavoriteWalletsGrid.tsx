@@ -7,8 +7,9 @@ import { useEagerUserProfileNavigation } from 'src/app/navigation/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { ExploreTokenCardEmptyState } from 'src/components/explore/ExploreTokenCardEmptyState'
-import { PinnedHeaderRow } from 'src/components/explore/PinnedHeaderRow'
-import RemovePinButton from 'src/components/explore/RemovePinButton'
+import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
+import RemoveButton from 'src/components/explore/RemoveButton'
+
 import { AnimatedFlex, Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
@@ -20,7 +21,7 @@ const GAP_SIZE = theme.spacing.xs
 const ITEM_FLEX = 1 / NUM_COLUMNS
 
 /** Renders the favorite tokens card on the Explore page */
-export function WatchedWalletsCard({
+export function FavoriteWalletsGrid({
   onSearchWallets,
   isEditing,
   setIsEditing,
@@ -53,7 +54,7 @@ export function WatchedWalletsCard({
             onPressIn={() => preload(address)}>
             <BaseCard.Shadow>
               {isEditing ? (
-                <RemovePinButton
+                <RemoveButton
                   position="absolute"
                   right={-8}
                   top={-8}
@@ -72,7 +73,7 @@ export function WatchedWalletsCard({
 
   return (
     <AnimatedFlex entering={FadeIn} gap="none" mx="xs">
-      <PinnedHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
+      <FavoriteHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
       <FlatList
         ItemSeparatorComponent={ItemSeparator}
         ListEmptyComponent={
