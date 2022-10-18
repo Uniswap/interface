@@ -55,8 +55,6 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
 
   const trace = useTrace({ section: SectionName.WIDGET })
 
-  // TODO(lynnshaoyu): add back onInitialSwapQuote logging once widget side logic is fixed
-  // in onInitialSwapQuote handler.
   const [initialQuoteDate, setInitialQuoteDate] = useState<Date>()
 
   const onInitialSwapQuote = useCallback(
@@ -126,8 +124,6 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
         is_auto_router_api: undefined,
         is_auto_slippage: undefined,
         chain_id: trade.inputAmount.currency.chainId,
-        // duration should be getDurationFromDateMilliseconds(initialQuoteDate) once initialQuoteDate
-        // is made available from TODO above for onInitialSwapQuote logging.
         duration_from_first_quote_to_swap_submission_milliseconds: getDurationFromDateMilliseconds(initialQuoteDate),
         swap_quote_block_number: undefined,
         ...trace,
