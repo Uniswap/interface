@@ -11,6 +11,7 @@ import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
 import { WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal from 'src/components/modals/WarningModal/WarningModal'
+import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
@@ -29,6 +30,8 @@ enum View {
 export function ManualBackupScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+
+  useLockScreenOnBlur()
 
   const activeAccount = useActiveAccount()
   const mnemonicId = (activeAccount as SignerMnemonicAccount)?.mnemonicId

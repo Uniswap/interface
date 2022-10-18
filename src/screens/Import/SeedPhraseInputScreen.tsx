@@ -6,6 +6,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
+import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
@@ -20,6 +21,8 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+
+  useLockScreenOnBlur()
 
   const [focused, setFocused] = useState(false)
   const [value, setValue] = useState<string | undefined>(undefined)
