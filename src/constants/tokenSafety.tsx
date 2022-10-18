@@ -14,17 +14,36 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
   let heading = null,
     description = null
   if (warning) {
-    if (warning.canProceed) {
-      heading = <Plural value={plural ? 2 : 1} _1="This token isn't verified." other="These tokens aren't verified." />
-      description = <Trans>Please do your own research before trading.</Trans>
-    } else {
-      description = (
-        <Plural
-          value={plural ? 2 : 1}
-          _1="You can't trade this token using the Uniswap App."
-          other="You can't trade these tokens using the Uniswap App."
-        />
-      )
+    switch (warning.level) {
+      case WARNING_LEVEL.MEDIUM:
+        heading = (
+          <Plural
+            value={plural ? 2 : 1}
+            _1="This token isn't traded on leading U.S. centralized exchanges. Please do your own research before trading."
+            other="These tokens aren't verified."
+          />
+        )
+        description = <Trans>Please do your own research before trading.</Trans>
+        break
+      case WARNING_LEVEL.UNKNOWN:
+        heading = (
+          <Plural
+            value={plural ? 2 : 1}
+            _1="This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap."
+            other="These tokens aren't verified."
+          />
+        )
+        description = <Trans>Please do your own research before trading.</Trans>
+        break
+      case WARNING_LEVEL.BLOCKED:
+        description = (
+          <Plural
+            value={plural ? 2 : 1}
+            _1="You can't trade this token using the Uniswap App."
+            other="You can't trade these tokens using the Uniswap App."
+          />
+        )
+        break
     }
   }
   return { heading, description }

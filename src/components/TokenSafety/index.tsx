@@ -255,10 +255,9 @@ export default function TokenSafety({
           <ShortColumn>
             <SafetyLabel warning={displayWarning} />
           </ShortColumn>
-          <ShortColumn>{heading && <InfoText fontSize="20px">{heading}</InfoText>}</ShortColumn>
           <ShortColumn>
             <InfoText>
-              {description}{' '}
+              {heading} {description}{' '}
               <StyledExternalLink href={TOKEN_SAFETY_ARTICLE}>
                 <Trans>Learn more</Trans>
               </StyledExternalLink>

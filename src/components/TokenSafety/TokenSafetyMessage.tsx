@@ -9,7 +9,7 @@ import { Color } from 'theme/styled'
 
 const Label = styled.div<{ color: Color }>`
   width: 100%;
-  padding: 12px 20px;
+  padding: 12px 20px 16px;
   background-color: ${({ color }) => color + '1F'};
   border-radius: 16px;
   color: ${({ color }) => color};
@@ -31,6 +31,7 @@ const Title = styled(Text)`
 const DetailsRow = styled.div`
   margin-top: 8px;
   font-size: 12px;
+  line-height: 16px;
   color: ${({ theme }) => theme.textSecondary};
 `
 
