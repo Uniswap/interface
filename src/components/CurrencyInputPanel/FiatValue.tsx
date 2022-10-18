@@ -10,10 +10,12 @@ import { warningSeverity } from '../../utils/prices'
 export function FiatValue({
   fiatValue,
   priceImpact,
+  isMobile = false,
   style = {}
 }: {
   fiatValue: CurrencyAmount<Currency> | null | undefined
   priceImpact?: Percent,
+  isMobile?:boolean,
   style?: any
 }) {
   const theme = useTheme()
@@ -27,7 +29,7 @@ export function FiatValue({
   }, [priceImpact, theme.green1, theme.red1, theme.text3, theme.yellow1])
 
   return (
-    <TYPE.body style={{...style}} fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
+    <TYPE.body style={{...style}} fontSize={isMobile ? 11.5 : 14} color={fiatValue ? theme.text2 : theme.text4}>
       {fiatValue ? (
         <Trans>
           ~$ <HoverInlineText text={fiatValue?.toSignificant(6, { groupSeparator: ',' })} />

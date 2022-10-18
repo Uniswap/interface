@@ -64,9 +64,6 @@ import { useDarkModeManager } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
 import { useWeb3React } from '@web3-react/core'
 
-
-
-
 const AppWrapper = styled.div<{ embedModel: EmbedModel }>`
   display: flex;
   flex-flow: column;
@@ -77,7 +74,7 @@ const AppWrapper = styled.div<{ embedModel: EmbedModel }>`
   background: ${({ theme }) => theme.blue4};
   background-size: 100% 200%;
   width:100%;
-  height: 100vh;
+  height: 100%;
   position: relative;
   animation: flow 3s ease-in-out alternate infinite;
 }
