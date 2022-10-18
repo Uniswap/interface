@@ -2,11 +2,10 @@ import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { FadeInRight } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import PinIcon from 'src/assets/icons/pin.svg'
-import { AnimatedButton, Button, ButtonProps } from 'src/components/buttons/Button'
+import { Button } from 'src/components/buttons/Button'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
+import { FavoriteButton } from 'src/components/explore/FavoriteButton'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
@@ -22,7 +21,6 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { TokensMetadataDisplayType } from 'src/features/wallet/types'
-import { opacify } from 'src/utils/colors'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 
@@ -200,27 +198,5 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
         )}
       </Flex>
     </Flex>
-  )
-}
-
-function FavoriteButton({ disabled, ...rest }: { disabled: boolean } & ButtonProps) {
-  const theme = useAppTheme()
-  return (
-    <Box opacity={disabled ? 0 : 1}>
-      <AnimatedButton
-        borderRadius="full"
-        borderWidth={1}
-        entering={FadeInRight}
-        justifyContent="center"
-        padding="xs"
-        {...rest}
-        style={{
-          backgroundColor: opacify(5, theme.colors.magentaVibrant),
-          borderColor: opacify(20, theme.colors.magentaVibrant),
-        }}>
-        {/* @TODO: replace with updated icon from designs */}
-        <PinIcon color={theme.colors.magentaVibrant} height={14} strokeWidth={2} width={14} />
-      </AnimatedButton>
-    </Box>
   )
 }

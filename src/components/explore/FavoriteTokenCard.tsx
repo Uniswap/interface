@@ -1,11 +1,12 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { memo, Suspense, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlexAlignType, Image, ImageStyle } from 'react-native'
+import { FlexAlignType, Image, ImageStyle, ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { Button, ButtonProps } from 'src/components/buttons/Button'
+import { AnimatedButton } from 'src/components/buttons/Button'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { FavoriteTokenCardQuery } from 'src/components/explore/__generated__/FavoriteTokenCardQuery.graphql'
 import { BaseCard } from 'src/components/layout/BaseCard'
@@ -64,7 +65,7 @@ type FavoriteTokenCardProps = {
   currencyId: CurrencyId
   isEditing?: boolean
   setIsEditing: (update: boolean) => void
-} & ButtonProps
+} & ViewProps
 
 function FavoriteTokenCard(props: FavoriteTokenCardProps) {
   return (
@@ -142,28 +143,36 @@ function FavoriteTokenCardInner({
   }
 
   return (
-    <Button testID={`token-box-${token?.symbol}`} onPress={onPress} onPressIn={onPressIn} {...rest}>
-      {isEditing ? (
-        <RemoveButton position="absolute" right={-8} top={-8} onPress={onRemove} />
-      ) : null}
-      <ContextMenu
-        actions={menuActions}
-        disabled={isEditing}
-        onPress={(e) => {
-          // Emitted index based on order of menu action array
-          // remove favorite action
-          if (e.nativeEvent.index === 0) {
-            onRemove()
-          }
-          // Edit mode toggle action
-          if (e.nativeEvent.index === 1) {
-            setIsEditing(true)
-          }
-          // Swap token action
-          if (e.nativeEvent.index === 2) {
-            navigateToSwapSell()
-          }
-        }}>
+    <ContextMenu
+      actions={menuActions}
+      disabled={isEditing}
+      style={{ borderRadius: theme.borderRadii.lg }}
+      onPress={(e) => {
+        // Emitted index based on order of menu action array
+        // remove favorite action
+        if (e.nativeEvent.index === 0) {
+          onRemove()
+        }
+        // Edit mode toggle action
+        if (e.nativeEvent.index === 1) {
+          setIsEditing(true)
+        }
+        // Swap token action
+        if (e.nativeEvent.index === 2) {
+          navigateToSwapSell()
+        }
+      }}
+      {...rest}>
+      <AnimatedButton
+        borderRadius="lg"
+        entering={FadeIn}
+        exiting={FadeOut}
+        testID={`token-box-${token?.symbol}`}
+        onPress={onPress}
+        onPressIn={onPressIn}>
+        {isEditing ? (
+          <RemoveButton position="absolute" right={-8} top={-8} onPress={onRemove} />
+        ) : null}
         <BaseCard.Shadow px="xs">
           <Flex alignItems="center" gap="xxs">
             {tokenData?.logoUrl && (
@@ -193,8 +202,8 @@ function FavoriteTokenCardInner({
             />
           </Flex>
         </BaseCard.Shadow>
-      </ContextMenu>
-    </Button>
+      </AnimatedButton>
+    </ContextMenu>
   )
 }
 
