@@ -3,12 +3,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import { selectionAsync } from 'expo-haptics'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { PreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
+import { usePreloadedHomeScreenQuery } from 'src/app/navigation/hooks'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import {
   AccountStackParamList,
@@ -39,13 +40,12 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
-import { HomeScreen, homeScreenQuery } from 'src/screens/HomeScreen'
+import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { RestoreCloudBackupPinScreen } from 'src/screens/Import/RestoreCloudBackupPinScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
@@ -106,24 +106,14 @@ const exploreTokensTabParams: ExploreTokensTabQuery$variables = {
   topTokensOrderBy: 'MARKET_CAP',
 }
 
-function TabNavigator() {
+function TabNavigator({
+  homeScreenQueryRef,
+}: {
+  homeScreenQueryRef: NullUndefined<PreloadedQuery<HomeScreenQuery>>
+}) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
-
-  const homeScreenQueryParams = useMemo(
-    () => ({ owner: activeAccountAddress }),
-    [activeAccountAddress]
-  )
-
-  const { queryReference: homeScreenQueryRef } = useQueryScheduler<HomeScreenQuery>(
-    Priority.Immediate,
-    homeScreenQuery,
-    homeScreenQueryParams,
-    NetworkPollConfig.Fast
-  )
 
   const { queryReference: exploreTokensTabQueryRef } = useQueryScheduler<ExploreTokensTabQuery>(
     Priority.Idle,
@@ -310,13 +300,14 @@ function getDrawerEnabled() {
 }
 
 export function HomeStackNavigator({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuery> }) {
+  const homeScreenMemo = useCallback(() => <HomeScreen queryRef={queryRef} />, [queryRef])
   return (
     <HomeStack.Navigator
       initialRouteName={Screens.Home}
       screenOptions={{
         ...navOptions.noHeader,
       }}>
-      <HomeStack.Screen children={() => <HomeScreen queryRef={queryRef} />} name={Screens.Home} />
+      <HomeStack.Screen component={homeScreenMemo} name={Screens.Home} />
 
       {/* Tokens */}
       <HomeStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
@@ -423,10 +414,20 @@ export function OnboardingStackNavigator() {
 
 export function AppStackNavigator() {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
+
+  // preload home screen query before `finishedOnboarding` is truthy
+  // this helps load the home screen fast from a fresh install
+  const homeScreenQueryRef = usePreloadedHomeScreenQuery()
+
+  const tabNavigator = useCallback(
+    () => <TabNavigator homeScreenQueryRef={homeScreenQueryRef} />,
+    [homeScreenQueryRef]
+  )
+
   return (
     <AppStack.Navigator screenOptions={{ headerShown: false }}>
       {finishedOnboarding && (
-        <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
+        <AppStack.Screen children={tabNavigator} name={Screens.TabNavigator} />
       )}
       <AppStack.Screen
         component={OnboardingStackNavigator}
@@ -459,6 +460,7 @@ export function AppStackNavigator() {
     </AppStack.Navigator>
   )
 }
+
 const navOptions = {
   noHeader: { headerShown: false },
   presentationModal: { presentation: 'modal' },

@@ -1,11 +1,15 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
+import { useQueryLoader } from 'react-relay'
 import { useEagerNavigation, useEagerRootNavigation } from 'src/app/navigation/useEagerNavigation'
 import { PollingInterval } from 'src/constants/misc'
 import { preloadMapping } from 'src/data/preloading'
+import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { activityScreenQuery } from 'src/screens/ActivityScreen'
+import { homeScreenQuery } from 'src/screens/HomeScreen'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { userScreenQuery } from 'src/screens/UserScreen'
 import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
+import { HomeScreenQuery } from 'src/screens/__generated__/HomeScreenQuery.graphql'
 import { UserScreenQuery } from 'src/screens/__generated__/UserScreenQuery.graphql'
 
 /**
@@ -83,4 +87,24 @@ export function useEagerUserProfileRootNavigation() {
   )
 
   return { preload, navigate }
+}
+
+/** Preloaded home screen query ref that re-loads on active account change. */
+export function usePreloadedHomeScreenQuery() {
+  const activeAccountAddress = useActiveAccountAddress()
+  const [homeScreenQueryRef, loadHomeScreenQuery] = useQueryLoader<HomeScreenQuery>(homeScreenQuery)
+
+  useEffect(() => {
+    if (!activeAccountAddress) {
+      return
+    }
+
+    // reload home query when active account changes
+    loadHomeScreenQuery(
+      { owner: activeAccountAddress },
+      { networkCacheConfig: { poll: PollingInterval.Fast } }
+    )
+  }, [activeAccountAddress, loadHomeScreenQuery])
+
+  return homeScreenQueryRef
 }
