@@ -79,6 +79,7 @@ export enum PageName {
   POOL_PAGE = 'pool-page',
   SWAP_PAGE = 'swap-page',
   VOTE_PAGE = 'vote-page',
+  NFT_COLLECTION_PAGE = 'nft-collection-page',
   // alphabetize additional page names.
 }
 
