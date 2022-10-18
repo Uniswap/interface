@@ -141,7 +141,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     loadNext,
     hasNext,
     isLoadingNext,
-  } = useAssetsQuery(contractAddress, 'PRICE', true, { buyNow: true }, { first: 25 })
+  } = useAssetsQuery(contractAddress, 'PRICE', true, { listed: true }, 25)
   // console.log(nftQueryAssets)
   // useAssetsPreloadedQuery()
 
