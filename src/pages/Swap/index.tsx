@@ -738,7 +738,7 @@ const isMobile = useIsMobile()
 
               <small style={{ color: theme.text1, cursor: 'pointer', display: 'flex', marginBottom: 5, alignItems: 'center', justifyContent: 'flex-end' }} onClick={openGasSettings}>Customize Gas <ArrowUpRight /></small>
               <AutoColumn gap={'xs'}>
-                {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge variant={BadgeVariant.DEFAULT}>
+                {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge style={{marginBottom:3}} variant={BadgeVariant.DEFAULT}>
                   Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}
                 <div style={{ display: 'relative' }}>
                   <CurrencyInputPanel
