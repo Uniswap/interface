@@ -69,7 +69,7 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange,  }: { 
         </RowFixed>
         {chainId === 1 && (
         <RowFixed alignItems="center">
-         {<StyledInternalLink style={{marginRight: isMobile ? 0 : 15}} to="/bridge">Crosschain</StyledInternalLink>}
+         {<StyledInternalLink style={{fontSize: isMobile ? 12 : 14 ,marginRight: isMobile ? 0 : 15}} to="/bridge">Crosschain</StyledInternalLink>}
 
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>

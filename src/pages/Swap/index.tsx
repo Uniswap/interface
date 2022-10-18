@@ -730,7 +730,7 @@ const isMobile = useIsMobile()
                   {Boolean(useDetectRenounced && currencies.OUTPUT?.symbol && !currencies?.OUTPUT?.isNative) && <Badge style={{ color: theme.text1, fontSize: 12, display: 'flex', margin: 0 }}>renounced? &nbsp;<Circle fontSize={8} fill={isOutputRenounced ? 'green' : 'red'} /></Badge>}
 
                   {isExpertMode && showTrySetMax && (
-                    <TYPE.link style={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }} onClick={trySetMaxTx}>{!gettingMax ? 'Buy Max Tx Amount' : <>Loading maxes &nbsp; <Loader /></>} </TYPE.link>
+                    <TYPE.link style={{ marginTop:2, display: 'flex', fontSize: isMobile ? 12 : 14, justifyContent: 'flex-end', cursor: 'pointer' }} onClick={trySetMaxTx}>{!gettingMax ? 'Buy Max Tx Amount' : <>Loading maxes &nbsp; <Loader /></>} </TYPE.link>
                   )}
                 </div>
 
