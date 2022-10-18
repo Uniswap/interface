@@ -7,7 +7,7 @@ import { headlineMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection } from 'nft/types'
-import { floorFormatter, quantityFormatter, volumeFormatter } from 'nft/utils/numbers'
+import { floorFormatter, quantityFormatter, roundWholePercentage, volumeFormatter } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styled from 'styled-components/macro'
@@ -250,11 +250,13 @@ const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: 
 }
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
-  const numOwnersStr = stats.stats ? quantityFormatter((stats.stats.num_owners / stats.stats.total_supply) * 100) : 0
+  const uniqueOwnersPercentage = stats.stats
+    ? roundWholePercentage((stats.stats.num_owners / stats.stats.total_supply) * 100)
+    : 0
   const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply) : 0
   const listedPercentageStr =
     stats.stats && stats.stats.total_listings > 0
-      ? Math.round((stats.stats.total_listings / stats.stats.total_supply) * 100)
+      ? roundWholePercentage((stats.stats.total_listings / stats.stats.total_supply) * 100)
       : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
@@ -299,9 +301,9 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           {totalSupplyStr}
         </StatsItem>
       ) : null}
-      {numOwnersStr ? (
+      {uniqueOwnersPercentage ? (
         <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
-          {numOwnersStr}%
+          {uniqueOwnersPercentage}%
         </StatsItem>
       ) : null}
       {stats.floorPrice ? (
