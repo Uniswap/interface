@@ -21,8 +21,9 @@ const StyledSwapHeader = styled.div`
   border-bottom: 1px solid #444;
 `
 
-const HeaderType = styled(TYPE.black)`
+const HeaderType = styled(TYPE.black)<{isMobile:boolean}>`
 font-family:'Open Sans';
+font-size:${props => props.isMobile ? '14px' : '18px'};
 &:hover {
   transition: all ease 0.2s;
   color:#F76C1D;
@@ -52,15 +53,15 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange,  }: { 
     <StyledSwapHeader>
       <RowBetween>
         <RowFixed style={{gap: 10, display:'flex', alignItems:'center'}}>
-          <HeaderType  onClick={onSwapClick} fontWeight={500} fontSize={22} style={{ color: view ==='swap' ? '#F76C1D' : '', textDecoration: view === 'swap' ? 'underline' : 'none', cursor: 'pointer'}}>
+          <HeaderType isMobile={isMobile}  onClick={onSwapClick} fontWeight={500} fontSize={isMobile ? 14 : 22} style={{ color: view ==='swap' ? '#F76C1D' : '', textDecoration: view === 'swap' ? 'underline' : 'none', cursor: 'pointer'}}>
             <Trans>Swap</Trans>
           </HeaderType>
           
-          {<HeaderType  onClick={onLimitClick} fontWeight={500} fontSize={22} style={{  color: view ==='limit' ? '#F76C1D' : '',textDecoration: view === 'limit' ? 'underline' : 'none', cursor: 'pointer'}}>
+          {<HeaderType isMobile={isMobile}  onClick={onLimitClick} fontWeight={500} fontSize={isMobile ? 14 : 22} style={{  color: view ==='limit' ? '#F76C1D' : '',textDecoration: view === 'limit' ? 'underline' : 'none', cursor: 'pointer'}}>
             <Trans>Limit</Trans>
           </HeaderType>}
                     
-          {<HeaderType  onClick={onBridgeClick} fontWeight={500} fontSize={22} style={{ color: view ==='bridge' ? '#F76C1D' : '', textDecoration: view === 'bridge' ? 'underline' : 'none', cursor: 'pointer' }}>
+          {<HeaderType isMobile={isMobile}  onClick={onBridgeClick} fontWeight={500} fontSize={isMobile ? 14 : 22} style={{ color: view ==='bridge' ? '#F76C1D' : '', textDecoration: view === 'bridge' ? 'underline' : 'none', cursor: 'pointer' }}>
             <Trans>Bridge</Trans>
           </HeaderType>}
 

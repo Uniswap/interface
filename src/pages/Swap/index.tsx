@@ -687,6 +687,7 @@ const isMobile = useIsMobile()
                     label={
                       independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                     }
+                    
                     value={formattedAmounts[Field.INPUT]}
                     showMaxButton={showMaxButton}
                     currency={currencies[Field.INPUT]}

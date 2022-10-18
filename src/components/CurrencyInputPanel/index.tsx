@@ -25,6 +25,7 @@ import styled from 'styled-components/macro'
 import { useActiveWeb3React } from '../../hooks/web3'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useIsMobile } from 'pages/Swap/SelectiveCharting'
 import useTheme from '../../hooks/useTheme'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
@@ -85,10 +86,10 @@ const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boole
   }
 `
 
-const InputRow = styled.div<{ selected: boolean }>`
+const InputRow = styled.div<{ isMobile?: boolean, selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: ${({ selected }) => (selected ? ' 1rem 1rem 0.75rem 1rem' : '1rem 1rem 0.75rem 1rem')};
+  padding: ${({ selected, isMobile }) => (selected ? (isMobile ? '1rem 1rem 0.75rem 0.05rem' : '1rem 1rem 0.75rem 1rem') : isMobile ? '1rem 1rem 0.75rem 0.05rem'  : '1rem 1rem 0.75rem 1rem')};
 `
 
 const LabelRow = styled.div`
@@ -125,9 +126,9 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   }
 `
 
-const StyledTokenName = styled.span<{ active?: boolean }>`
+const StyledTokenName = styled.span<{ isMobile?:boolean, active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active }) => (active ? '20px' : '20px')};
+  font-size:  ${({ active, isMobile }) => isMobile ? '14px' : (active ? '20px' : '20px')};
   font-family: ${({ active }) => (active ? 'Archivo Narrow' : 'Archivo Narrow')};
   font-weight: ${({ active }) => (active ? '700' : '500')};
 `
@@ -208,6 +209,8 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
+  const isMobile = useIsMobile()
+
   const { addToken, success } = useAddTokenToMetamask(currency as Currency | undefined)
   const [showMetaTip, setShowMetaTip] = React.useState(false)
   return (
@@ -224,7 +227,7 @@ export default function CurrencyInputPanel({
       )}
       
       <Container hideInput={hideInput}>
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
+        <InputRow isMobile={isMobile} style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           <CurrencySelect
             selected={!!currency}
             hideInput={hideInput}
@@ -246,11 +249,11 @@ export default function CurrencyInputPanel({
                   <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size={'30px'} />
                 ) : null}
                 {pair ? (
-                  <StyledTokenName className="pair-name-container" >
+                  <StyledTokenName isMobile={isMobile} className="pair-name-container" >
                     {pair?.token0.symbol}:{pair?.token1.symbol}
                   </StyledTokenName>
                 ) : (
-                  <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                  <StyledTokenName isMobile={isMobile}  className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
                     {(currency && currency.symbol && currency.symbol.length > 20
                       ? currency.symbol.slice(0, 4) +
                         '...' +
@@ -262,7 +265,7 @@ export default function CurrencyInputPanel({
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
              
             </Aligner>
-            {!!currency && !currency.isNative &&  <StyledInternalLink style={{marginLeft: 5, cursor:'pointer'}} title={`View ${currency?.name} (${currency.symbol} Chart)`} to={`/selective-charts/${currency?.wrapped?.address}/${currency?.symbol}/${currency?.name}/${currency?.decimals}`}> <BarChart2 /> </StyledInternalLink>}
+            {!!currency && !currency.isNative &&  <StyledInternalLink style={{marginLeft: 5, cursor:'pointer'}} title={`View ${currency?.name} (${currency.symbol} Chart)`} to={`/selective-charts/${currency?.wrapped?.address}/${currency?.symbol}/${currency?.name}/${currency?.decimals}`}> <BarChart2 size={'14px'} /> </StyledInternalLink>}
           </CurrencySelect>
           {currency && <RowFixed style={{
             marginRight:15
