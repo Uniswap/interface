@@ -1,7 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { createSlice } from '@reduxjs/toolkit'
 
-interface Dex {
+export interface Dex {
   name: string
   logoURL: string
   id: string
