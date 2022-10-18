@@ -8,10 +8,10 @@ import { ChainId } from 'src/constants/chains'
 import { useUSDGasPrice } from 'src/features/gas/hooks'
 import { formatUSDGasPrice } from 'src/utils/format'
 
-export function NetworkFee({ chainId, gasFee }: { chainId?: ChainId; gasFee?: string }) {
+export function NetworkFee({ chainId, gasFee }: { chainId: ChainId; gasFee?: string }) {
   const { t } = useTranslation()
   const gasFeeUSD = formatUSDGasPrice(useUSDGasPrice(chainId, gasFee))
-  const showNetworkPill = chainId && chainId !== ChainId.Mainnet
+  const showNetworkPill = chainId !== ChainId.Mainnet
 
   return (
     <Flex row alignContent="center" justifyContent="space-between" p="md">

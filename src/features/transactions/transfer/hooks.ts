@@ -24,7 +24,7 @@ export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
   currencyIn: Currency | undefined
   nftIn: NFTAsset.Asset | undefined
-  chainId: ChainId | undefined
+  chainId: ChainId
   exactCurrencyField: CurrencyField.INPUT
   formattedAmounts: {
     [CurrencyField.INPUT]: string
@@ -45,7 +45,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   } = state
 
   const activeAccount = useActiveAccount()
-  const chainId = tradeableAsset?.chainId
+  const chainId = tradeableAsset?.chainId ?? ChainId.Mainnet
 
   const currencyIn = useCurrency(
     tradeableAsset?.type === AssetType.Currency

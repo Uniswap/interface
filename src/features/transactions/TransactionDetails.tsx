@@ -18,7 +18,7 @@ const ALERT_ICONS_SIZE = 18
 
 interface TransactionDetailsProps {
   banner?: ReactNode
-  chainId?: ChainId
+  chainId: ChainId
   gasFee?: string
   showWarning?: boolean
   warning?: Warning

@@ -48,6 +48,7 @@ export function SwapReview({
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
 
   const {
+    chainId,
     currencies,
     currencyAmounts,
     formattedDerivedValue,
@@ -127,7 +128,6 @@ export function SwapReview({
 
   const getTransactionDetails = () => {
     if (isWrapAction(wrapType)) {
-      const chainId = currencies[CurrencyField.INPUT]?.chainId
       return (
         <TransactionDetails
           chainId={chainId}
