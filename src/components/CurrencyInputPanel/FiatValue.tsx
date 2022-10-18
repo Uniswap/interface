@@ -11,6 +11,7 @@ export function FiatValue({
   fiatValue,
   priceImpact,
   style = {}
+  
 }: {
   fiatValue: CurrencyAmount<Currency> | null | undefined
   priceImpact?: Percent,

@@ -114,7 +114,7 @@ const Badge = styled.div<PropsWithChildren<BadgeProps>>`
   padding: 4px 6px;
   justify-content: center;
   font-weight: ${({ theme, variant }) => pickFontWeight(variant, theme)};
-  font-family: 'Archivo Narrow';
+  font-family: 'Poppins';
 `
 
 export default Badge

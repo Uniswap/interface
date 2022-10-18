@@ -70,7 +70,6 @@ import { useWeb3React } from '@web3-react/core'
 const AppWrapper = styled.div<{ embedModel: EmbedModel }>`
   display: flex;
   flex-flow: column;
-  background-size: cover;
   background-repeat: no-repeat;
   position: absolute;
   height: ${props => props.embedModel.embedMode ? 'auto' : '150vh'}; 

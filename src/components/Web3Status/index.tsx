@@ -97,7 +97,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric) <{ pending?: boolean }>`
     border-radius: inherit; /* !importanté */
   }
   color: ${({ pending, theme }) => (pending ? theme.bg4 : theme.text1)};
-  font-family: 'Archivo Narrow';
+  font-family: 'Poppins';
   font-size: 16px;
   font-weight: 600;
   :hover,
@@ -118,7 +118,7 @@ const Text = styled.p`
   margin: 0 0.5rem 0 0.25rem;
   font-size: 1rem;
   width: fit-content;
-  font-family: 'Archivo Narrow';
+  font-family: 'Poppins';
   font-size: 16px;
   font-weight: 600;
 `

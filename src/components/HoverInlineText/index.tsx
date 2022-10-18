@@ -6,6 +6,7 @@ const TextWrapper = styled.span<{ margin: boolean; link?: boolean; fontSize?: st
   margin-left: ${({ margin }) => margin && '4px'};
   color: ${({ theme, link }) => (link ? theme.blue1 : theme.text1)};
   font-size: ${({ fontSize }) => fontSize ?? 'inherit'};
+  font-family: 'Poppins';
 
   @media screen and (max-width: 600px) {
     font-size: ${({ adjustSize }) => adjustSize && '12px'};

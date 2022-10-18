@@ -4,7 +4,6 @@ import { ReactNode, useCallback, useState } from 'react'
 import { RowBetween, RowFixed } from '../Row'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { darken, lighten, opacify } from 'polished'
-
 import { AutoColumn } from 'components/Column'
 import { ButtonGray } from '../Button'
 import CurrencyLogo from '../CurrencyLogo'
@@ -30,10 +29,13 @@ import useTheme from '../../hooks/useTheme'
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '5px')};
-  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.bg6)};
+  border-radius: ${({ hideInput }) => (hideInput ? '5px' : '5px')};
+  background-color: ${({ theme, hideInput }) => (hideInput ? theme.bg6 : 'transparent')};
+  background: linear-gradient(135deg, #637EEA, #929292);
   z-index: 1;
+  border: 0px solid #637EEA;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  box-shadow: 0px 0px 3px rgba(99, 126, 234, 1);
 `
 const StyledLogo = styled.img`
   height: 16px;
@@ -44,7 +46,7 @@ const FixedContainer = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  border-radius: 20px;
+  border-radius: 0px;
   background-color: ${({ theme }) => theme.bg0};
   opacity: 0.95;
   display: flex;
@@ -54,8 +56,7 @@ const FixedContainer = styled.div`
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '5px')};
-  border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : ' transparent' )};
+  border-radius: ${({ hideInput }) => (hideInput ? '4px' : '4px')};
   background-color: ${({ theme }) => theme.bg6};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   :focus,
@@ -89,6 +90,7 @@ const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   padding: ${({ selected }) => (selected ? ' 1rem 1rem 0.75rem 1rem' : '1rem 1rem 0.75rem 1rem')};
+
 `
 
 const LabelRow = styled.div`
@@ -128,7 +130,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active }) => (active ? '20px' : '20px')};
-  font-family: ${({ active }) => (active ? 'Archivo Narrow' : 'Archivo Narrow')};
+  font-family: ${({ active }) => (active ? 'Poppins' : 'Poppins')};
   font-weight: ${({ active }) => (active ? '700' : '500')};
 `
 
@@ -224,7 +226,7 @@ export default function CurrencyInputPanel({
       )}
       
       <Container hideInput={hideInput}>
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
+        <InputRow style={hideInput ? { padding: '0' } : {}} selected={!onCurrencySelect}>
           <CurrencySelect
             selected={!!currency}
             hideInput={hideInput}
@@ -273,7 +275,7 @@ export default function CurrencyInputPanel({
             <>
               <NumericalInput
                 className="token-amount-input"
-                style={{ backgroundColor: theme.bg6 }}
+                style={{ backgroundColor: 'transparent' }}
                 value={value}
                 onUserInput={(val) => {
                   onUserInput(val)

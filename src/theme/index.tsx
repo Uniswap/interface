@@ -47,7 +47,7 @@ function colors(darkMode: boolean): Colors {
     text1: darkMode ? '#fff' : '#18181E',
     text2: darkMode ? '#fff' : '#565A69',
     text3: darkMode ? '#fff' : '#6E727D',
-    text4: darkMode ? '#fff' : '#F76C1D',
+    text4: darkMode ? '#fff' : '#18181E',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
@@ -57,7 +57,7 @@ function colors(darkMode: boolean): Colors {
     bg3: darkMode ? '#40444F' : '#fff',
     bg4: darkMode ? '#848484' : '#fff',
     bg5: darkMode ? '#4F4F62' : '#fff',
-    bg6: darkMode ? '#30313D' : '#FFF',
+    bg6: darkMode ? '#30313D' : 'rgba(255,255,255,0.8)',
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
@@ -67,15 +67,15 @@ function colors(darkMode: boolean): Colors {
     primary2: darkMode ? '#222' : '#c11d20',
     primary3: darkMode ? '#eee' : '#d9dc51',
     primary4: darkMode ? 'rgb(170, 64, 88)' : '#F6DDE8',
-    primary5: darkMode ? '#FFF' : '#ec2023',
+    primary5: darkMode ? '#FFF' : '#5288F4',
 
     // color text
-    primaryText1: darkMode ? '#252632' : '#252632', 
+    primaryText1: darkMode ? '#252632' : '#FFFFFF', 
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#00203d',
     secondary2: darkMode ? '#17000b26' : '#F6DDE8',
-    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+    secondary3: darkMode ? '#17000b26' : '#5288F4',
 
     // other
     red1: darkMode ? '#FF4343' : '#DA2D2B',
@@ -176,7 +176,7 @@ export const TYPE = {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
   },
   mediumHeader(props: TextProps) {
-    return <TextWrapper font={'"Open Sans";'} fontWeight={500} fontSize={20} {...props} />
+    return <TextWrapper font={'"Poppins";'} fontWeight={500} fontSize={20} {...props} />
   },
   subHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} color={'text1'} fontSize={14} {...props} />
