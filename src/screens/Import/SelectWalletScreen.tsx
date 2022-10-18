@@ -98,22 +98,14 @@ function WalletPreviewList({
       : undefined
   }, [allAddressBalances])
 
-  const maxBalanceAccount = useMemo(() => {
-    return initialShownAccounts?.reduce((prev, curr) =>
-      prev?.tokensTotalDenominatedValue?.value &&
-      curr?.tokensTotalDenominatedValue?.value &&
-      prev.tokensTotalDenominatedValue.value > curr.tokensTotalDenominatedValue.value
-        ? prev
-        : curr
-    )
-  }, [initialShownAccounts])
-
   const [selectedAddresses, setSelectedAddresses] = useReducer(
     (currentAddresses: string[], addressToProcess: string) =>
       currentAddresses.includes(addressToProcess)
         ? currentAddresses.filter((a: string) => a !== addressToProcess)
         : [...currentAddresses, addressToProcess],
-    maxBalanceAccount ? [maxBalanceAccount.ownerAddress] : []
+    initialShownAccounts
+      ?.filter((a) => a != null && a?.ownerAddress != null)
+      .map((a) => a!.ownerAddress) ?? []
   )
 
   const onPress = (address: string) => {
