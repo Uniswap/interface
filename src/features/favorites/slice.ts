@@ -1,5 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CurrencyId } from 'src/utils/currencyId'
+import { Ether } from '@uniswap/sdk-core'
+import { ChainId } from 'src/constants/chains'
+import { WBTC } from 'src/constants/tokens'
+import { CurrencyId, currencyId as idFromCurrency } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 
 export interface FavoritesState {
@@ -8,8 +11,12 @@ export interface FavoritesState {
   // add other types of assets here, e.g. nfts
 }
 
+// Default currency ids
+const WBTC_CURRENCY_ID = idFromCurrency(WBTC)
+const ETH_CURRENCY_ID = idFromCurrency(Ether.onChain(ChainId.Mainnet))
+
 export const initialFavoritesState: FavoritesState = {
-  tokens: [],
+  tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
   watchedAddresses: [],
 }
 

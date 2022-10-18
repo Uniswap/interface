@@ -164,7 +164,7 @@ function FavoriteTokenCardInner({
             navigateToSwapSell()
           }
         }}>
-        <BaseCard.Shadow>
+        <BaseCard.Shadow px="xs">
           <Flex alignItems="center" gap="xxs">
             {tokenData?.logoUrl && (
               <Image
