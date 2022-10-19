@@ -19,8 +19,8 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
         heading = (
           <Plural
             value={plural ? 2 : 1}
-            _1="This token isn't traded on leading U.S. centralized exchanges. Please do your own research before trading."
-            other="These tokens aren't traded on leading U.S. centralized exchanges. Please do your own research before trading."
+            _1="This token isn't traded on leading U.S. centralized exchanges."
+            other="These tokens aren't traded on leading U.S. centralized exchanges."
           />
         )
         description = <Trans>Please do your own research before trading.</Trans>
