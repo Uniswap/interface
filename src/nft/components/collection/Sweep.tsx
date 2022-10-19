@@ -10,8 +10,8 @@ import { useQuery } from 'react-query'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
-const SweepContainer = styled.div`
-  display: flex;
+const SweepContainer = styled.div<{ showSweep: boolean }>`
+  display: ${({ showSweep }) => (showSweep ? 'flex' : 'none')};
   gap: 60px;
   margin-top: 20px;
   padding: 16px;
@@ -136,9 +136,10 @@ interface SweepProps {
   collectionStats: GenieCollection
   minPrice: string
   maxPrice: string
+  showSweep: boolean
 }
 
-export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice }: SweepProps) => {
+export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice, showSweep }: SweepProps) => {
   const theme = useTheme()
 
   const [isItemsToggled, toggleSweep] = useReducer((state) => !state, true)
@@ -386,7 +387,7 @@ export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice }: 
   }
 
   return (
-    <SweepContainer>
+    <SweepContainer showSweep={showSweep}>
       <SweepLeftmostContainer>
         <ThemedText.SubHeaderSmall color="textPrimary" lineHeight="20px" paddingTop="6px" paddingBottom="6px">
           Sweep

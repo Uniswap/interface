@@ -344,14 +344,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               </SweepButton>
             )}
           </ActionsContainer>
-          {sweepIsOpen && buyNow && !hasErc1155s && (
-            <Sweep
-              contractAddress={contractAddress}
-              collectionStats={collectionStats}
-              minPrice={debouncedMinPrice}
-              maxPrice={debouncedMaxPrice}
-            />
-          )}
+          <Sweep
+            contractAddress={contractAddress}
+            collectionStats={collectionStats}
+            minPrice={debouncedMinPrice}
+            maxPrice={debouncedMaxPrice}
+            showSweep={sweepIsOpen && buyNow && !hasErc1155s}
+          />
           <Row
             paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
             gap="8"
