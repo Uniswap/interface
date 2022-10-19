@@ -39,8 +39,7 @@ export enum Screens {
 
 export enum OnboardingScreens {
   Backup = 'OnboardingBackup',
-  BackupCloud = 'OnboardingBackupCloud',
-  BackupCloudPasswordScreen = 'OnboardingBackupCloudPasswordScreen',
+  BackupCloudPassword = 'OnboardingBackupCloudPassword',
   BackupCloudProcessing = 'OnboardingBackupCloudProcessing',
   BackupManual = 'OnboardingBackupManual',
   Landing = 'OnboardingLanding',
@@ -54,7 +53,7 @@ export enum OnboardingScreens {
   ImportMethod = 'ImportMethod',
   SeedPhraseInput = 'SeedPhraseInput',
   RestoreCloudBackup = 'RestoreCloudBackup',
-  RestoreCloudBackupPin = 'RestoreCloudBackupPin',
+  RestoreCloudBackupPassword = 'RestoreCloudBackupPassword',
   SelectWallet = 'SelectWallet',
   WatchWallet = 'WatchWallet',
 }

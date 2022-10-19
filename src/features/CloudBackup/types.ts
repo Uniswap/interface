@@ -8,6 +8,5 @@ export interface ICloudBackupsManagerError {
 
 export interface ICloudMnemonicBackup {
   mnemonicId: string
-  isPinEncrypted: string
   createdAt: number
 }

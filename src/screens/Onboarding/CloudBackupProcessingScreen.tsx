@@ -8,13 +8,14 @@ import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { backupMnemonicToICloud } from 'src/lib/RNEthersRs'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { logger } from 'src/utils/logger'
+
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
   OnboardingScreens.BackupCloudProcessing
@@ -24,7 +25,7 @@ type Props = NativeStackScreenProps<
 export function CloudBackupProcessingScreen({
   navigation,
   route: {
-    params: { pin, importType },
+    params: { password, importType },
   },
 }: Props) {
   const { t } = useTranslation()
@@ -72,7 +73,7 @@ export function CloudBackupProcessingScreen({
 
     const backup = async () => {
       try {
-        await backupMnemonicToICloud(activeAccount.address, pin ?? '')
+        await backupMnemonicToICloud(activeAccount.address, password)
         dispatch(
           editAccountActions.trigger({
             type: EditAccountAction.AddBackupMethod,
@@ -87,7 +88,7 @@ export function CloudBackupProcessingScreen({
     }
 
     backup()
-  }, [activeAccount?.address, dispatch, handleBackupError, pin])
+  }, [activeAccount?.address, dispatch, handleBackupError, password])
 
   return (
     <Screen>

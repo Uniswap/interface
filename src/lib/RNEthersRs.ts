@@ -5,7 +5,6 @@ const { RNEthersRS } = NativeModules
 export enum RNEthersRSErrorType {
   StoreMnemonicError = 'storeMnemonicError',
   RetrieveMnemonicError = 'retrieveMnemonicError',
-  ICloudError = 'iCloudError',
 }
 
 export function getMnemonicIds(): Promise<string[]> {
@@ -32,14 +31,6 @@ export function generateAndStorePrivateKey(
   derivationIndex: number
 ): Promise<string> {
   return RNEthersRS.generateAndStorePrivateKey(mnemonicId, derivationIndex)
-}
-
-export function backupMnemonicToICloud(mnemonicId: string, pin: string): Promise<boolean> {
-  return RNEthersRS.backupMnemonicToICloud(mnemonicId, pin)
-}
-
-export function restoreMnemonicFromICloud(mnemonicId: string, pin: string): Promise<boolean> {
-  return RNEthersRS.restoreMnemonicFromICloud(mnemonicId, pin)
 }
 
 export function signTransactionHashForAddress(

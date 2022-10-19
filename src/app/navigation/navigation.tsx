@@ -46,7 +46,7 @@ import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
-import { RestoreCloudBackupPinScreen } from 'src/screens/Import/RestoreCloudBackupPinScreen'
+import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
@@ -55,8 +55,8 @@ import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTItemScreen } from 'src/screens/NFTItemScreen'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
+import { CloudBackupPasswordScreen } from 'src/screens/Onboarding/CloudBackupPasswordScreen'
 import { CloudBackupProcessingScreen } from 'src/screens/Onboarding/CloudBackupProcessingScreen'
-import { CloudBackupScreen } from 'src/screens/Onboarding/CloudBackupScreen'
 import { EditNameScreen } from 'src/screens/Onboarding/EditNameScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
 import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
@@ -362,12 +362,12 @@ export function OnboardingStackNavigator() {
         />
         <OnboardingStack.Screen component={OutroScreen} name={OnboardingScreens.Outro} />
         <OnboardingStack.Screen
-          component={CloudBackupScreen}
-          name={OnboardingScreens.BackupCloud}
-        />
-        <OnboardingStack.Screen
           component={CloudBackupProcessingScreen}
           name={OnboardingScreens.BackupCloudProcessing}
+        />
+        <OnboardingStack.Screen
+          component={CloudBackupPasswordScreen}
+          name={OnboardingScreens.BackupCloudPassword}
         />
         <OnboardingStack.Screen
           component={ImportMethodScreen}
@@ -378,8 +378,8 @@ export function OnboardingStackNavigator() {
           name={OnboardingScreens.RestoreCloudBackup}
         />
         <OnboardingStack.Screen
-          component={RestoreCloudBackupPinScreen}
-          name={OnboardingScreens.RestoreCloudBackupPin}
+          component={RestoreCloudBackupPasswordScreen}
+          name={OnboardingScreens.RestoreCloudBackupPassword}
         />
         <OnboardingStack.Screen
           component={SeedPhraseInputScreen}

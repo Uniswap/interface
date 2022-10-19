@@ -6,19 +6,23 @@
 //
 
 import Foundation
+import CryptoKit
 
 struct ICloudMnemonicBackup: Codable {
   let mnemonicId: String
-  let mnemonic: String
-  let isPinEncrypted: Bool
+  let encryptedMnemonic: String
   let encryptionSalt: String
   let createdAt: Double
 }
 
 enum ICloudBackupError: String, Error  {
-  case iCloudContainerError = "iCloudContainerError"
-  case deleteBackupError = "deleteBackupError"
   case backupNotFoundError = "backupNotFoundError"
+  case backupEncryptionError = "backupEncryptionError"
+  case backupDecryptionError = "backupDecryptionError"
+  case backupIncorrectPasswordError = "backupIncorrectPasswordError"
+  case deleteBackupError = "deleteBackupError"
+  case iCloudContainerError = "iCloudContainerError"
+  case iCloudError = "iCloudError"
 }
 
 enum ICloudManagerEventType: String, CaseIterable {
@@ -29,6 +33,8 @@ enum ICloudManagerEventType: String, CaseIterable {
 class RNICloudBackupsManager: RCTEventEmitter {
   
   private let backupsQuery = NSMetadataQuery()
+  
+  let rnEthersRS = RNEthersRS()
   
   @objc override static func requiresMainQueueSetup() -> Bool {
     return false
@@ -53,6 +59,102 @@ class RNICloudBackupsManager: RCTEventEmitter {
       return resolve(true)
     }
   }
+  
+  /**
+  Stores mnemonic to iCloud Documents
+  
+  - parameter mnemonicId: key string associated with mnemonic to backup
+  - parameter password: user provided password to encrypt the mnemonic
+  - returns: true if successful, otherwise throws an error
+  */
+ @objc(backupMnemonicToICloud:password:resolve:reject:)
+ func backupMnemonicToICloud(
+   mnemonicId: String, password: String, resolve: RCTPromiseResolveBlock,
+   reject: RCTPromiseRejectBlock
+ ) {
+   guard let mnemonic = rnEthersRS.retrieveMnemonic(mnemonicId: mnemonicId) else {
+     return reject(RNEthersRSError.retrieveMnemonicError.rawValue, "Failed to retrieve mnemonic", RNEthersRSError.retrieveMnemonicError)
+   }
+   
+   // Access Uniswap iCloud Documents container
+   guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
+     return reject(ICloudBackupError.iCloudError.rawValue, "Failed to find iCloud container", ICloudBackupError.iCloudError)
+   }
+   
+   // Create iCloud container if empty
+   if !FileManager.default.fileExists(atPath: containerUrl.path, isDirectory: nil) {
+     do {
+       try FileManager.default.createDirectory(at: containerUrl, withIntermediateDirectories: true, attributes: nil)
+     } catch {
+       return reject(ICloudBackupError.iCloudError.rawValue, "Failed to create iCloud container", ICloudBackupError.iCloudError)
+     }
+   }
+   
+   let encryptedMnemonic: String
+   let encryptionSalt: String
+   do {
+     encryptionSalt = generateSalt(length: 16)
+     encryptedMnemonic = try encrypt(secret: mnemonic, password: password, salt: encryptionSalt)
+   } catch {
+     return reject(ICloudBackupError.backupEncryptionError.rawValue, "Failed to password encrypt mnemonic", ICloudBackupError.backupEncryptionError)
+   }
+   
+   // Write backup file to iCloud
+   let iCloudFileURL = containerUrl.appendingPathComponent("\(mnemonicId).json")
+   do {
+     let backup = ICloudMnemonicBackup(mnemonicId: mnemonicId, encryptedMnemonic: encryptedMnemonic, encryptionSalt: encryptionSalt, createdAt: Date().timeIntervalSince1970)
+     try JSONEncoder().encode(backup).write(to: iCloudFileURL)
+     return resolve(true)
+   } catch {
+     return reject(ICloudBackupError.iCloudError.rawValue, "Failed to write backup file to iCloud", ICloudBackupError.iCloudError)
+   }
+ }
+ 
+ /**
+  
+  Attempts to restore mnemonic into native keychain from iCloud backup file. Assumes that the backup file `[mnemonicId].json` has already been downloaded from iCloud Documents using `RNICloudBackupsManager`
+  
+  - parameter mnemonicId: key string associated with JSON backup file stored in iCloud
+  - parameter password: user inputted password used to decrypt backup
+  - returns: true if mnemonic successfully restored, otherwise a relevant error will be thrown
+  */
+ @objc(restoreMnemonicFromICloud:password:resolve:reject:)
+ func restoreMnemonicFromICloud(mnemonicId: String, password: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock
+ ) {
+   // Access Uniswap iCloud Documents container
+   guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
+     return reject(ICloudBackupError.iCloudError.rawValue, "Failed to find iCloud container", ICloudBackupError.iCloudError)
+   }
+   
+   // Fetch backup file from iCloud
+   let iCloudFileURL = containerUrl.appendingPathComponent("\(mnemonicId).json")
+   
+   guard FileManager.default.fileExists(atPath: iCloudFileURL.path) else {
+     return reject(ICloudBackupError.iCloudError.rawValue, "Failed to locate iCloud backup", ICloudBackupError.iCloudError)
+   }
+   
+   let data = try? Data(contentsOf: iCloudFileURL)
+   guard let backup = try? JSONDecoder().decode(ICloudMnemonicBackup.self, from: data!)  else {
+     return reject(ICloudBackupError.iCloudError.rawValue, "Failed to load iCloud backup", ICloudBackupError.iCloudError)
+   }
+   
+   let decryptedMnemonic: String
+   do {
+     decryptedMnemonic = try decrypt(encryptedSecret: backup.encryptedMnemonic, password: password, salt: backup.encryptionSalt)
+   } catch CryptoKitError.authenticationFailure {
+     return reject(ICloudBackupError.backupIncorrectPasswordError.rawValue, "Invalid password. Please try again.", ICloudBackupError.backupIncorrectPasswordError)
+   } catch {
+     return reject(ICloudBackupError.backupDecryptionError.rawValue, "Failed to password decrypt mnemonic", ICloudBackupError.backupDecryptionError)
+   }
+   
+   // Restore mnemonic from backup into native keychain
+   let res = rnEthersRS.storeNewMnemonic(mnemonic: decryptedMnemonic, address: backup.mnemonicId)
+   if res == nil {
+     return reject(RNEthersRSError.storeMnemonicError.rawValue, "Failed to restore mnemonic into native keychain", RNEthersRSError.storeMnemonicError)
+   }
+   
+   return resolve(true)
+ }
   
   /**
    Deletes mnemonic backup in iCloud Documents container
@@ -151,7 +253,7 @@ class RNICloudBackupsManager: RCTEventEmitter {
   func handleDownloadedBackup(url: URL) {
     let data = try? Data(contentsOf: url)
     if let backup = try? JSONDecoder().decode(ICloudMnemonicBackup.self, from: data!) {
-      sendEvent(withName: ICloudManagerEventType.foundCloudBackup.rawValue, body: ["mnemonicId": backup.mnemonicId, "isPinEncrypted": backup.isPinEncrypted, "createdAt": backup.createdAt ])
+      sendEvent(withName: ICloudManagerEventType.foundCloudBackup.rawValue, body: ["mnemonicId": backup.mnemonicId, "createdAt": backup.createdAt ])
     } else {
       print("Error decoding iCloud backup JSON at \(url)")
     }

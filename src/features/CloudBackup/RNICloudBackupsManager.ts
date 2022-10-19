@@ -17,3 +17,11 @@ export function startFetchingICloudBackups() {
 export function stopFetchingICloudBackups() {
   return RNICloudBackupsManager.stopFetchingICloudBackups()
 }
+
+export function backupMnemonicToICloud(mnemonicId: string, password: string): Promise<boolean> {
+  return RNICloudBackupsManager.backupMnemonicToICloud(mnemonicId, password)
+}
+
+export function restoreMnemonicFromICloud(mnemonicId: string, password: string): Promise<boolean> {
+  return RNICloudBackupsManager.restoreMnemonicFromICloud(mnemonicId, password)
+}

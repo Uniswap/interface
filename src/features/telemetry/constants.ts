@@ -42,7 +42,6 @@ export const enum ModalName {
   TermsModal = 'terms-modal',
   RecoveryWarning = 'recovery-warning',
   ICloudBackupInfo = 'icloud-backup-info-modal',
-  ICloudSkipPinWarning = 'icloud-skip-pin-warning',
   ScreenshotWarning = 'screenshot-warning',
   Send = 'send-modal',
   SendWarning = 'send-warning-modal',

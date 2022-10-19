@@ -27,16 +27,6 @@ RCT_EXTERN_METHOD(generateAndStorePrivateKey: (NSString *)mnemonicId
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(backupMnemonicToICloud: (NSString *)mnemonicId
-                  pin: (NSString *)pin
-                  resolve: (RCTPromiseResolveBlock)resolve
-                  reject: (RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(restoreMnemonicFromICloud: (NSString *)mnemonicId
-                  pin: (NSString *)pin
-                  resolve: (RCTPromiseResolveBlock)resolve
-                  reject: (RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(signTransactionHashForAddress: (NSString *)address
                   hash: (NSString *)hash
                   chainId: NSNumber

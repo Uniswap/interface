@@ -346,6 +346,7 @@ PODS:
   - AmplitudeExperiment (1.7.3):
     - AnalyticsConnector (~> 1.0.0)
   - AnalyticsConnector (1.0.0)
+  - Argon2Swift (1.0.3)
   - boost (1.76.0)
   - BoringSSL-GRPC (0.0.7):
     - BoringSSL-GRPC/Implementation (= 0.0.7)
@@ -997,6 +998,7 @@ PODS:
 
 DEPENDENCIES:
   - "amplitude-react-native (from `../node_modules/@amplitude/react-native`)"
+  - Argon2Swift
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - "EthersRS (from `../node_modules/@uniswap/ethers-rs-mobile`)"
@@ -1087,6 +1089,7 @@ SPEC REPOS:
     - Amplitude
     - AmplitudeExperiment
     - AnalyticsConnector
+    - Argon2Swift
     - BoringSSL-GRPC
     - CryptoSwift
     - Firebase
@@ -1290,6 +1293,7 @@ SPEC CHECKSUMS:
   amplitude-react-native: 985b13211d36cf03131289fb10e0e23bed98a409
   AmplitudeExperiment: ebcd6fa2743578438f01b642d41a89ded27915b0
   AnalyticsConnector: 4c386d5972ac9da86e22d668564dbbac97558754
+  Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   CryptoSwift: a0799ee936271bd2253a006f1e4523df21845000
@@ -1406,6 +1410,6 @@ SPEC CHECKSUMS:
   WalletConnectSwift: 1fbff8f5315bd8d41596773ca1b384aa873b6824
   Yoga: 2f6a78c58dcc2963bd8e34d96a4246d9dff2e3a7
 
-PODFILE CHECKSUM: 06ca01798a5852f9afb2885b70b43441d1016bd2
+PODFILE CHECKSUM: 1a68bbee62e5d28981856ef59a9dbd02b6d5cad9
 
 COCOAPODS: 1.11.3

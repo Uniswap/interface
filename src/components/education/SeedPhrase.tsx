@@ -74,7 +74,7 @@ export const SeedPhraseEducationContent = () => [
         <Trans>
           Instead of memorizing your recovery phrase,{' '}
           <Text color="accentAction">you can back it up to iCloud</Text> and protect it by setting a
-          PIN.
+          password.
         </Trans>
       </Text>
     }

@@ -57,8 +57,10 @@ export function SettingsCloudBackupStatus({
           backupMethod: BackupType.Cloud,
         })
       )
+      setShowBackupDeleteWarning(false)
       navigation.navigate(Screens.SettingsWallet, { address })
     } catch (error) {
+      setShowBackupDeleteWarning(false)
       const err = error as Error
       Alert.alert(t('iCloud error'), err.message, [
         {
@@ -67,8 +69,6 @@ export function SettingsCloudBackupStatus({
         },
       ])
     }
-
-    setShowBackupDeleteWarning(false)
   }
 
   const { requiredForTransactions } = useBiometricAppSettings()

@@ -13,6 +13,16 @@
 RCT_EXTERN_METHOD(isICloudAvailable: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(backupMnemonicToICloud: (NSString *)mnemonicId
+                  password: (NSString *)password
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(restoreMnemonicFromICloud: (NSString *)mnemonicId
+                  password: (NSString *)password
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(deleteICloudMnemonicBackup: (NSString *)mnemonicId
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)

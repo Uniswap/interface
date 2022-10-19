@@ -137,7 +137,7 @@ function BackupOptions({
           }
 
           navigate({
-            name: OnboardingScreens.BackupCloud,
+            name: OnboardingScreens.BackupCloudPassword,
             params: { importType: params?.importType },
             merge: true,
           })

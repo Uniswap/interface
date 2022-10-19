@@ -77,14 +77,11 @@ export type OnboardingStackBaseParams =
   | undefined
 
 export type OnboardingStackParamList = {
-  [OnboardingScreens.BackupCloud]: {
-    pin?: string
-  } & OnboardingStackBaseParams
-  [OnboardingScreens.BackupCloudPasswordScreen]: OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudProcessing]: {
-    pin: string | null
+    password: string
   } & OnboardingStackBaseParams
   [OnboardingScreens.BackupManual]: OnboardingStackBaseParams
+  [OnboardingScreens.BackupCloudPassword]: OnboardingStackBaseParams
   [OnboardingScreens.Backup]: OnboardingStackBaseParams
   [OnboardingScreens.Landing]: OnboardingStackBaseParams
   [OnboardingScreens.EditName]: OnboardingStackBaseParams
@@ -96,7 +93,7 @@ export type OnboardingStackParamList = {
   // import
   [OnboardingScreens.ImportMethod]: OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackup]: OnboardingStackBaseParams
-  [OnboardingScreens.RestoreCloudBackupPin]: {
+  [OnboardingScreens.RestoreCloudBackupPassword]: {
     mnemonicId: string
   } & OnboardingStackBaseParams
   [OnboardingScreens.SeedPhraseInput]: OnboardingStackBaseParams

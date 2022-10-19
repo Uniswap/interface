@@ -1,7 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -12,18 +11,14 @@ import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { ICloudMnemonicBackup } from 'src/features/CloudBackup/types'
-import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
-import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'src/features/wallet/pendingAcccountsSaga'
-import { restoreMnemonicFromICloud } from 'src/lib/RNEthersRs'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 import { formatDate } from 'src/utils/format'
-import { logger } from 'src/utils/logger'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
 
@@ -38,36 +33,11 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
     // Clear any existing pending accounts
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
 
-    if (backup.isPinEncrypted) {
-      navigation.navigate({
-        name: OnboardingScreens.RestoreCloudBackupPin,
-        params: { ...params, mnemonicId: backup.mnemonicId },
-        merge: true,
-      })
-      return
-    }
-
-    try {
-      await restoreMnemonicFromICloud(backup.mnemonicId, '')
-      dispatch(
-        importAccountActions.trigger({
-          type: ImportAccountType.RestoreBackup,
-          mnemonicId: backup.mnemonicId,
-          indexes: Array.from(Array(IMPORT_WALLET_AMOUNT).keys()),
-        })
-      )
-
-      navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
-    } catch (error) {
-      const err = error as Error
-      logger.debug('RestoreCloudBackupScreen', 'restoreMnemonicFromICloud', 'Error', error)
-      Alert.alert(t('iCloud error'), err.message, [
-        {
-          text: t('OK'),
-          style: 'default',
-        },
-      ])
-    }
+    navigation.navigate({
+      name: OnboardingScreens.RestoreCloudBackupPassword,
+      params: { ...params, mnemonicId: backup.mnemonicId },
+      merge: true,
+    })
   }
 
   return (

@@ -11,7 +11,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>((props,
   const theme = useAppTheme()
   const [showPassword, setShowPassword] = useState(false)
 
-  const { value, placeholder, onChangeText, returnKeyType, onSubmitEditing } = props
+  const { value, placeholder, onChangeText, returnKeyType, onSubmitEditing, ...rest } = props
 
   const onPressEyeIcon = () => {
     setShowPassword(!showPassword)
@@ -46,6 +46,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>((props,
           value={value}
           onChangeText={onChangeText}
           onSubmitEditing={onSubmitEditing}
+          {...rest} // apply any textinputprops
         />
         <AnimatedFlex mx="sm">
           <IconButton

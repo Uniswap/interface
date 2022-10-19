@@ -12,6 +12,7 @@ type OnboardingScreenProps = {
   subtitle?: string
   title: string
   paddingTop?: keyof Theme['spacing']
+  keyboardAvoidingViewEnabled?: boolean
 }
 
 export function OnboardingScreen({
@@ -19,6 +20,7 @@ export function OnboardingScreen({
   subtitle,
   children,
   paddingTop = 'none',
+  keyboardAvoidingViewEnabled = true,
 }: PropsWithChildren<OnboardingScreenProps>) {
   const headerHeight = useHeaderHeight()
   const insets = useSafeAreaInsets()
@@ -27,6 +29,7 @@ export function OnboardingScreen({
     <Screen edges={['right', 'left']} style={{ paddingTop: headerHeight }}>
       <KeyboardAvoidingView
         behavior="padding"
+        enabled={keyboardAvoidingViewEnabled}
         style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
         <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} pb="md" px="md">
           {/* Text content */}

@@ -6,6 +6,7 @@
 //
 
 import CryptoKit
+import Argon2Swift
 
 /**
  Encrypts given secret using AES-GCM cipher secured by symmetric key derived from given password.
@@ -50,58 +51,25 @@ func decrypt(encryptedSecret: String, password: String, salt: String) throws -> 
 }
 
 /**
- Generate encryption key from user specified password and randomized salt using PBKDF2
+ Generate encryption key from user specified password and randomized salt using argon2id.
  
- PBKDF2 requires a number of iterations, where the higher the iterations the higher the entropy of the derived key.
- - Uses 310,000 iterations, a recommended value from Open Web Application Security Project written in 2021: https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#pbkdf2
- - 1Password uses 100,000 iterations for PBKDF2: https://support.1password.com/pbkdf2/
- - The performance tradeoff for 310,000 versus 100,000 is less than 0.2 seconds as tested in EncryptionHelperTests
+ The parameters used for Argon2 are based on recommended values from the security audit and the Argon2 RFC (https://datatracker.ietf.org/doc/rfc9106/)
+ The memory and iterations values are tuned based on benchmark timing tests to take ~1s (see EncryptionHelperTests)
+ - Mode: argon2id
+ - Parallelism: 4
+ - Memory: 128MiB (2^17 KiB)
+ - Hash length: 32 bytes
+ - Iterations: 3
  
  - parameter password: password to generate encryption key
  - parameter salt: randomized data string used with password to generate encryption key
  - returns: SymmetricKey to be used with CryptoKit encryption functions
  */
+
 func keyFromPassword(password: String, salt: String) throws -> SymmetricKey {
-  let iterations = 310000
-  let saltData = salt.data(using: .utf8)!
-  let derivedKey = pbkdf2SHA256(password:password, salt:saltData, keyByteCount:32, iterations: iterations)!
-  let key = SymmetricKey(data: derivedKey)
+  let derivedKey = try Argon2Swift.hashPasswordString(password: password, salt: Salt(bytes: Data(salt.utf8)), iterations: 3, memory: 2 << 16, parallelism: 4, length: 32, type: .id)
+  let key = SymmetricKey(data: derivedKey.hashData())
   return key
-}
-
-/**
-  Implementation of PBKDF2 using CommonCrypto, inspired by  https://developer.apple.com/forums/thread/133421
-
- - parameter password: password to generate encryption key
- - parameter salt: randomized data string used with password to generate encryption key
- - parameter keyByteCount: number of bytes desired for derived encryption key
- - parameter iterations: number of iterations to run PBKDF2 (more iterations = more entropy)
- - returns: encryption key data
- */
-func pbkdf2SHA256(password: String, salt: Data, keyByteCount: Int, iterations: Int) -> Data? {
-  guard let passwordData = password.data(using: .utf8) else { return nil }
-
-  var derivedKeyData = Data(repeating: 0, count: keyByteCount)
-  let derivedCount = derivedKeyData.count
-
-  let derivationStatus: OSStatus = derivedKeyData.withUnsafeMutableBytes { derivedKeyBytes in
-    let derivedKeyRawBytes = derivedKeyBytes.bindMemory(to: UInt8.self).baseAddress
-    return salt.withUnsafeBytes { saltBytes in
-      let rawBytes = saltBytes.bindMemory(to: UInt8.self).baseAddress
-      return CCKeyDerivationPBKDF(
-        CCPBKDFAlgorithm(kCCPBKDF2),
-        password,
-        passwordData.count,
-        rawBytes,
-        salt.count,
-        CCPBKDFAlgorithm(kCCPRFHmacAlgSHA256),
-        UInt32(iterations),
-        derivedKeyRawBytes,
-        derivedCount)
-    }
-  }
-
-  return derivationStatus == kCCSuccess ? derivedKeyData : nil
 }
 
 /**
