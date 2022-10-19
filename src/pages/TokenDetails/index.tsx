@@ -179,16 +179,17 @@ export default function TokenDetails() {
                 isNative={isNative}
               />
             )}
-
-            <TokenSafetyModal
-              isOpen={isBlockedToken || !!continueSwap}
-              tokenAddress={tokenQueryData.address}
-              onContinue={() => onResolveSwap(true)}
-              onBlocked={() => navigate(-1)}
-              onCancel={() => onResolveSwap(false)}
-              showCancel={true}
-            />
           </>
+        )}
+        {tokenAddress && (
+          <TokenSafetyModal
+            isOpen={isBlockedToken || !!continueSwap}
+            tokenAddress={tokenAddress}
+            onContinue={() => onResolveSwap(true)}
+            onBlocked={() => navigate(-1)}
+            onCancel={() => onResolveSwap(false)}
+            showCancel={true}
+          />
         )}
       </TokenDetailsLayout>
     </Trace>
