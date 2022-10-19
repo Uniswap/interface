@@ -5,7 +5,6 @@ import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { XOctagon } from 'react-feather'
 import { Check } from 'react-feather'
@@ -133,7 +132,6 @@ export function CurrencyRow({
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
-  const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
 
@@ -147,7 +145,6 @@ export function CurrencyRow({
     >
       <MenuItem
         tabIndex={0}
-        redesignFlag={redesignFlagEnabled}
         style={style}
         className={`token-item-${key}`}
         onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect(!!warning) : null)}
@@ -185,10 +182,9 @@ export function CurrencyRow({
         {showCurrencyAmount ? (
           <RowFixed style={{ justifySelf: 'flex-end' }}>
             {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
-            {redesignFlagEnabled && isSelected && <CheckIcon />}
+            {isSelected && <CheckIcon />}
           </RowFixed>
         ) : (
-          redesignFlagEnabled &&
           isSelected && (
             <RowFixed style={{ justifySelf: 'flex-end' }}>
               <CheckIcon />
