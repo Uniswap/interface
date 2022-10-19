@@ -12,7 +12,6 @@ import { LoadingRows } from 'components/Loader/styled'
 import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
 import { AutoRow, RowBetween } from 'components/Row'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { memo, useState } from 'react'
 import { Plus } from 'react-feather'
@@ -23,12 +22,10 @@ import { Separator, ThemedText } from 'theme'
 
 import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 
-const Wrapper = styled(AutoColumn)<{ darkMode?: boolean; fixedOpen?: boolean; redesignFlag: boolean }>`
+const Wrapper = styled(AutoColumn)<{ darkMode?: boolean; fixedOpen?: boolean }>`
   padding: ${({ fixedOpen }) => (fixedOpen ? '12px' : '12px 8px 12px 12px')};
   border-radius: 16px;
-  border: 1px solid
-    ${({ theme, fixedOpen, redesignFlag }) =>
-      fixedOpen ? 'transparent' : redesignFlag ? theme.backgroundOutline : theme.deprecated_bg2};
+  border: 1px solid ${({ theme, fixedOpen }) => (fixedOpen ? 'transparent' : theme.backgroundOutline)};
   cursor: pointer;
 `
 
@@ -56,8 +53,6 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
   const routes = getTokenPath(trade)
   const [open, setOpen] = useState(false)
   const { chainId } = useWeb3React()
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const [darkMode] = useDarkModeManager()
 
@@ -68,7 +63,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
     : undefined
 
   return (
-    <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen} redesignFlag={redesignFlagEnabled}>
+    <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen}>
       <TraceEvent
         events={[Event.onClick]}
         name={EventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED}

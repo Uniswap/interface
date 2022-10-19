@@ -1,7 +1,3 @@
-// Import fonts.css for the side-effect of loading fonts for @uniswap/widgets.
-// eslint-disable-next-line no-restricted-imports
-import '@uniswap/widgets/dist/fonts.css'
-
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import {
@@ -13,8 +9,7 @@ import {
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
-import { EventName, SectionName } from 'analytics/constants'
-import { SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
+import { EventName, SectionName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
 import { useTrace } from 'analytics/Trace'
 import {
   formatPercentInBasisPointsNumber,
