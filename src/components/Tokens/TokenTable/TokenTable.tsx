@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { showFavoritesAtom } from 'components/Tokens/state'
 import { PAGE_SIZE, useTopTokens } from 'graphql/data/TopTokens'
 import { validateUrlChainParam } from 'graphql/data/util'
-import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
@@ -80,8 +78,6 @@ export function LoadingTokenTable({ rowCount }: { rowCount?: number }) {
 }
 
 export default function TokenTable({ setRowCount }: { setRowCount: (c: number) => void }) {
-  const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
-
   // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const { tokens, sparklines } = useTopTokens(chainName)
@@ -100,11 +96,7 @@ export default function TokenTable({ setRowCount }: { setRowCount: (c: number) =
       />
     )
   } else if (tokens?.length === 0) {
-    return showFavorites ? (
-      <NoTokensState message={<Trans>You have no favorited tokens</Trans>} />
-    ) : (
-      <NoTokensState message={<Trans>No tokens found</Trans>} />
-    )
+    return <NoTokensState message={<Trans>No tokens found</Trans>} />
   } else {
     return (
       <GridContainer>
