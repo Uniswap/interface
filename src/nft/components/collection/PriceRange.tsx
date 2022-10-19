@@ -135,7 +135,6 @@ export const PriceRange = () => {
             style={{
               width: isMobile ? '100%' : '126px',
             }}
-            borderColor={{ default: 'outline', focus: 'textSecondary' }}
             className={styles.priceInput}
             placeholder={priceRangeLow}
             onChange={updateMinPriceRange}
@@ -152,7 +151,6 @@ export const PriceRange = () => {
             style={{
               width: isMobile ? '100%' : '126px',
             }}
-            borderColor={{ default: 'outline', focus: 'textSecondary' }}
             className={styles.priceInput}
             placeholder={priceRangeHigh}
             value={maxPrice}

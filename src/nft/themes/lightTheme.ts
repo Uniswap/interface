@@ -1,4 +1,5 @@
 import { Theme, vars } from 'nft/css/sprinkles.css'
+import { opacify } from 'theme/utils'
 
 export const lightTheme: Theme = {
   colors: {
@@ -18,6 +19,7 @@ export const lightTheme: Theme = {
     modalBackdrop: 'rgba(0, 0, 0, 0.3)',
 
     stateOverlayHover: `rgba(153,161,189,0.08)`,
+    stateOverlayPressed: opacify(24, vars.color.grey200),
     green: vars.color.green400,
     gold: vars.color.gold400,
     violet: vars.color.violet400,
