@@ -22,7 +22,6 @@ const TraitItem = ({
   addTrait: (trait: Trait) => void
   removeTrait: (trait: Trait) => void
   isTraitSelected: boolean
-  showBorderBottom?: boolean
 }) => {
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
   const [hovered, setHovered] = useState(false)
@@ -95,7 +94,7 @@ const TraitItem = ({
           : trait.trait_value}
       </Box>
       <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="textTertiary" minWidth={'8'} paddingTop={'2'} paddingRight={'12'} position={'relative'}>
+        <Box as="span" color="textTertiary" minWidth="8" paddingTop="2" paddingRight="12" position="relative">
           {!showFullTraitName && trait.trait_count}
         </Box>
       </Checkbox>
@@ -133,14 +132,12 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
             ({ trait_type, trait_value }) =>
               trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
           )
-          const showBorderBottom = searchedTraits.length - 1 === index
 
           return (
             <TraitItem
               isTraitSelected={!!isTraitSelected}
               key={trait.trait_value}
               {...{ trait, addTrait, removeTrait }}
-              showBorderBottom={showBorderBottom}
             />
           )
         })}

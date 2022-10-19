@@ -4,8 +4,10 @@ import { MarketplaceSelect } from 'nft/components/collection/MarketplaceSelect'
 import { PriceRange } from 'nft/components/collection/PriceRange'
 import { Column, Row } from 'nft/components/Flex'
 import { Checkbox } from 'nft/components/layout/Checkbox'
+import { subhead } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks'
 import { Trait } from 'nft/hooks/useCollectionFilters'
+import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { groupBy } from 'nft/utils/groupBy'
 import { useMemo } from 'react'
 import { useReducer } from 'react'
@@ -30,14 +32,12 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
       <Column marginTop="8">
         <Row
           justifyContent="space-between"
-          className={styles.rowHover}
+          className={`${styles.row} ${styles.rowHover}`}
           gap="2"
           borderRadius="12"
           paddingTop="12"
-          paddingRight="16"
           paddingBottom="12"
           paddingLeft="12"
-          cursor="pointer"
           onClick={(e) => {
             e.preventDefault()
             handleBuyNowToggle()
@@ -45,10 +45,7 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
           onMouseEnter={toggleBuyNowHover}
           onMouseLeave={toggleBuyNowHover}
         >
-          <Box fontSize="16" fontWeight="medium" as="summary" lineHeight="20">
-            Buy now
-          </Box>
-
+          <Box className={subhead}>Buy now</Box>
           <Checkbox hovered={buyNowHovered} checked={buyNow} onClick={handleBuyNowToggle}>
             <span />
           </Checkbox>
@@ -68,7 +65,8 @@ export const Filters = ({ traits }: { traits: Trait[] }) => {
 
         <Column>
           {Object.entries(traitsByGroup).map(([type, traits], index) => (
-            <TraitSelect key={type} {...{ type, traits }} index={index} />
+            // the index is offset by two because price range and marketplace appear prior to it
+            <TraitSelect key={type} {...{ type, traits }} index={index + TraitPosition.TRAIT_START_INDEX} />
           ))}
         </Column>
       </Column>

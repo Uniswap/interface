@@ -6,6 +6,7 @@ import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { useTraitsOpen } from 'nft/hooks/useTraitsOpen'
+import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { FormEvent, useEffect, useReducer, useState } from 'react'
 
 import { Checkbox } from '../layout/Checkbox'
@@ -62,7 +63,8 @@ const MarketplaceItem = ({
       paddingRight="16"
       borderRadius="12"
       cursor="pointer"
-      style={{ paddingBottom: '22px', paddingTop: '22px', maxHeight: '44px' }}
+      maxHeight="44"
+      style={{ paddingBottom: '22px', paddingTop: '22px' }}
       onMouseEnter={toggleHover}
       onMouseLeave={toggleHover}
       onClick={handleCheckbox}
@@ -106,15 +108,13 @@ export const MarketplaceSelect = () => {
       >
         <Box
           as="summary"
-          className={clsx(isOpen ? styles.rowHoverOpen : styles.rowHover)}
+          className={`${styles.row} ${styles.rowHover}`}
           display="flex"
           justifyContent="space-between"
-          cursor="pointer"
           alignItems="center"
           fontSize="16"
           paddingTop="12"
           paddingLeft="12"
-          paddingRight="16"
           paddingBottom="12"
           lineHeight="20"
           borderRadius="12"
@@ -122,20 +122,15 @@ export const MarketplaceSelect = () => {
           onClick={(e) => {
             e.preventDefault()
             setOpen(!isOpen)
-            setTraitsOpen(-10, !isOpen)
+            setTraitsOpen(TraitPosition.MARKPLACE_INDEX, !isOpen)
           }}
         >
           Marketplaces
           <Box display="flex" alignItems="center">
             <Box
-              color="textSecondary"
-              display="inline-block"
-              transition="250"
-              height="28"
-              width="28"
+              className={styles.chevronContainer}
               style={{
                 transform: `rotate(${isOpen ? 0 : 180}deg)`,
-                marginRight: -1,
               }}
             >
               <ChevronUpIcon className={styles.chevronIcon} />

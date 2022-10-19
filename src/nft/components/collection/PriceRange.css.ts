@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
-import { sprinkles } from 'nft/css/sprinkles.css'
-import { themeVars, vars } from 'nft/css/sprinkles.css'
+import { body } from 'nft/css/common.css'
+import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
 
 // https://www.npmjs.com/package/react-slider
 // https://codesandbox.io/s/peaceful-pine-gqszx6?file=/src/styles.css:587-641
@@ -49,9 +49,20 @@ export const thumb = style([
     borderRadius: '4',
     cursor: 'pointer',
     boxShadow: 'shallow',
+    backgroundColor: 'grey50',
   }),
   {
-    backgroundColor: vars.color.grey50,
     top: -6,
   },
+])
+
+export const priceInput = style([
+  body,
+  sprinkles({
+    backgroundColor: 'transparent',
+    padding: '12',
+    borderRadius: '12',
+    borderStyle: 'solid',
+    borderWidth: '1.5px',
+  }),
 ])

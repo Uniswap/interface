@@ -1,7 +1,7 @@
 import create from 'zustand'
-import { devtools, persist } from 'zustand/middleware'
+import { devtools } from 'zustand/middleware'
 
-interface SearchHistoryProps {
+interface PriceRangeProps {
   priceRangeLow: string
   setPriceRangeLow: (priceRangeLow: string) => void
   priceRangeHigh: string
@@ -10,9 +10,9 @@ interface SearchHistoryProps {
   setPrevMinMax: (prevMinMax: Array<number>) => void
 }
 
-export const usePriceRange = create<SearchHistoryProps>()(
-  persist(
-    devtools((set) => ({
+export const usePriceRange = create<PriceRangeProps>()(
+  devtools(
+    (set) => ({
       priceRangeLow: '',
       setPriceRangeLow: (priceRangeLow: string) => {
         set(() => {
@@ -31,7 +31,7 @@ export const usePriceRange = create<SearchHistoryProps>()(
           return { prevMinMax }
         })
       },
-    })),
+    }),
     { name: 'usePriceRange' }
   )
 )

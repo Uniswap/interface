@@ -3,7 +3,7 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
-import { useTraitsOpen } from 'nft/hooks/useTraitsOpen'
+import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { ReactNode, useEffect, useState } from 'react'
 
 interface TraitsHeaderProps {
@@ -20,7 +20,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
   const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
 
   const prevTraitIsOpen = index !== undefined ? traitsOpen[index - 1] : false
-  const showBorderToop = index !== 0
+  const showBorderTop = index !== TraitPosition.TRAIT_START_INDEX
 
   useEffect(() => {
     if (index !== undefined) {
@@ -30,7 +30,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
 
   return (
     <>
-      {showBorderToop && (
+      {showBorderTop && (
         <Box
           className={clsx(subheadSmall, !isOpen && styles.rowHover, styles.detailsOpen)}
           opacity={!prevTraitIsOpen && isOpen && index !== 0 ? '1' : '0'}
@@ -41,18 +41,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
       <Box as="details" className={clsx(subheadSmall, !isOpen && styles.rowHover)} open={isOpen}>
         <Box
           as="summary"
-          className={clsx(isOpen ? styles.rowHoverOpen : styles.rowHover)}
-          display="flex"
-          justifyContent="space-between"
-          cursor="pointer"
-          alignItems="center"
-          fontSize="16"
-          paddingTop="10"
-          paddingLeft="12"
-          paddingBottom="10"
-          paddingRight="16"
-          borderRadius="12"
-          lineHeight="20"
+          className={`${styles.row} ${styles.rowHover}`}
           onClick={(e) => {
             e.preventDefault()
             setOpen(!isOpen)
@@ -65,14 +54,9 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
               {props.numTraits}
             </Box>
             <Box
-              color="textSecondary"
-              display="inline-block"
-              transition="250"
-              height="28"
-              width="28"
+              className={styles.chevronContainer}
               style={{
                 transform: `rotate(${isOpen ? 0 : 180}deg)`,
-                marginRight: -1,
               }}
             >
               <ChevronUpIcon className={styles.chevronIcon} />

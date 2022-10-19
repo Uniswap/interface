@@ -34,12 +34,19 @@ export const rowHover = style([
   },
 ])
 
-export const rowHoverOpen = style([
-  {
-    ':hover': {
-      background: themeVars.colors.backgroundInteractive,
-    },
-  },
+export const row = style([
+  sprinkles({
+    display: 'flex',
+    paddingRight: '16',
+    cursor: 'pointer',
+    fontSize: '16',
+    lineHeight: '20',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: '12',
+    paddingTop: '10',
+    paddingBottom: '10',
+  }),
 ])
 
 export const subRowHover = style({
@@ -48,15 +55,31 @@ export const subRowHover = style({
   },
 })
 
+const border = sprinkles({
+  borderTopStyle: 'solid',
+  borderTopColor: 'backgroundOutline',
+})
+
+export const borderTop = style([
+  border,
+  {
+    borderTopWidth: '1px',
+  },
+])
+
+export const borderBottom = sprinkles({
+  borderBottomStyle: 'solid',
+  borderBottomColor: 'backgroundOutline',
+  borderBottomWidth: '1px',
+})
+
 export const detailsOpen = style([
+  borderTop,
   sprinkles({
     overflow: 'hidden',
     marginTop: '8',
     marginBottom: '8',
   }),
-  {
-    borderTop: `1px solid ${themeVars.colors.backgroundOutline}`,
-  },
 ])
 
 export const detailsClosed = style([
@@ -67,6 +90,7 @@ export const detailsClosed = style([
 ])
 
 export const filterDropDowns = style([
+  borderBottom,
   sprinkles({
     overflowY: 'scroll',
   }),
@@ -74,19 +98,22 @@ export const filterDropDowns = style([
     maxHeight: '302px',
     '::-webkit-scrollbar': { display: 'none' },
     scrollbarWidth: 'none',
-    borderBottom: '1px solid',
-    borderColor: themeVars.colors.backgroundOutline,
   },
 ])
-
-export const borderTop = style({
-  borderTop: `1px solid ${themeVars.colors.backgroundOutline}`,
-})
-
-export const showBorderBottom = style({
-  borderBottom: `1px solid ${themeVars.colors.backgroundOutline}`,
-})
 
 export const chevronIcon = style({
   marginLeft: -1,
 })
+
+export const chevronContainer = style([
+  sprinkles({
+    color: 'textSecondary',
+    display: 'inline-block',
+    height: '28',
+    width: '28',
+    transition: '250',
+  }),
+  {
+    marginRight: -1,
+  },
+])
