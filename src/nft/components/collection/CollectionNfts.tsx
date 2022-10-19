@@ -1,3 +1,5 @@
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
@@ -279,12 +281,19 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           style={{ backdropFilter: 'blur(24px)' }}
         >
           <Row marginTop="12" gap="12">
-            <FilterButton
-              isMobile={isMobile}
-              isFiltersExpanded={isFiltersExpanded}
-              onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-              collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
-            />
+            <TraceEvent
+              events={[Event.onClick]}
+              element={ElementName.NFT_FILTER_BUTTON}
+              name={EventName.NFT_FILTER_OPENED}
+              properties={{ collection_address: contractAddress, is_opening: !isFiltersExpanded }}
+            >
+              <FilterButton
+                isMobile={isMobile}
+                isFiltersExpanded={isFiltersExpanded}
+                onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
+              />
+            </TraceEvent>
             <SortDropdown dropDownOptions={sortDropDownOptions} />
             <CollectionSearch />
           </Row>
