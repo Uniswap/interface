@@ -44,14 +44,6 @@ interface ImportMethodOption {
 
 const options: ImportMethodOption[] = [
   {
-    title: (t: TFunction) => t('Restore from iCloud'),
-    blurb: (t: TFunction) => t('Recover a backed-up recovery phrase'),
-    icon: (theme: Theme) => <CloudIcon color={theme.colors.textPrimary} height={16} width={16} />,
-    nav: OnboardingScreens.RestoreCloudBackup,
-    importType: ImportType.Restore,
-    name: ElementName.OnboardingImportBackup,
-  },
-  {
     title: (t: TFunction) => t('Import a recovery phrase'),
     blurb: (t: TFunction) => t('Enter, paste, or scan your words'),
     icon: (theme: Theme) => (
@@ -68,6 +60,14 @@ const options: ImportMethodOption[] = [
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
     name: ElementName.OnboardingImportWatchedAccount,
+  },
+  {
+    title: (t: TFunction) => t('Restore from iCloud'),
+    blurb: (t: TFunction) => t('Recover a backed-up recovery phrase'),
+    icon: (theme: Theme) => <CloudIcon color={theme.colors.textPrimary} height={16} width={16} />,
+    nav: OnboardingScreens.RestoreCloudBackup,
+    importType: ImportType.Restore,
+    name: ElementName.OnboardingImportBackup,
   },
 ]
 
