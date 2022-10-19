@@ -471,9 +471,6 @@ PODS:
     - MLKitBarcodeScanning (~> 1.7.0)
   - GoogleMLKit/MLKitCore (2.6.0):
     - MLKitCommon (~> 5.0.0)
-  - GoogleMLKit/TextRecognition (2.6.0):
-    - GoogleMLKit/MLKitCore
-    - MLKitTextRecognition (~> 1.4.0-beta3)
   - GoogleToolboxForMac/DebugUtils (2.3.2):
     - GoogleToolboxForMac/Defines (= 2.3.2)
   - GoogleToolboxForMac/Defines (2.3.2)
@@ -552,13 +549,6 @@ PODS:
     - GoogleUtilitiesComponents (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
     - Protobuf (~> 3.12)
-  - MLKitTextRecognition (1.4.0-beta3):
-    - MLKitCommon (~> 5.0)
-    - MLKitTextRecognitionCommon (= 1.0.0-beta3)
-    - MLKitVision (~> 3.0)
-  - MLKitTextRecognitionCommon (1.0.0-beta3):
-    - MLKitCommon (~> 5.0)
-    - MLKitVision (~> 3.0)
   - MLKitVision (3.0.0):
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
@@ -817,7 +807,7 @@ PODS:
   - react-native-onesignal (4.3.7):
     - OneSignalXCFramework (= 3.10.1)
     - React (< 1.0.0, >= 0.13.0)
-  - react-native-pager-view (6.0.0):
+  - react-native-pager-view (6.0.1):
     - React-Core
   - react-native-restart (0.0.24):
     - React-Core
@@ -980,7 +970,7 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.8.0):
+  - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
   - RNSentry (4.2.4):
@@ -995,9 +985,6 @@ PODS:
   - Starscream (3.1.1)
   - vision-camera-code-scanner (0.1.6):
     - GoogleMLKit/BarcodeScanning
-    - React-Core
-  - vision-camera-ocr (0.1.0):
-    - GoogleMLKit/TextRecognition
     - React-Core
   - VisionCamera (2.12.0):
     - React
@@ -1090,7 +1077,6 @@ DEPENDENCIES:
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - vision-camera-code-scanner (from `../node_modules/vision-camera-code-scanner`)
-  - vision-camera-ocr (from `../node_modules/vision-camera-ocr`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - WalletConnectSwift (= 1.6.0)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -1128,8 +1114,6 @@ SPEC REPOS:
     - MLImage
     - MLKitBarcodeScanning
     - MLKitCommon
-    - MLKitTextRecognition
-    - MLKitTextRecognitionCommon
     - MLKitVision
     - MMKV
     - MMKVCore
@@ -1295,8 +1279,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   vision-camera-code-scanner:
     :path: "../node_modules/vision-camera-code-scanner"
-  vision-camera-ocr:
-    :path: "../node_modules/vision-camera-ocr"
   VisionCamera:
     :path: "../node_modules/react-native-vision-camera"
   Yoga:
@@ -1355,8 +1337,6 @@ SPEC CHECKSUMS:
   MLImage: a454f9f8ecfd537783a12f9488f5be1a68820829
   MLKitBarcodeScanning: b8257854f6afc1c8443d61ec6b98c28b35625df6
   MLKitCommon: 3bc17c6f7d25ce3660f030350b46ae7ec9ebca6e
-  MLKitTextRecognition: 8b0e0023a4babc66ca83d8b82864e57931164445
-  MLKitTextRecognitionCommon: 3e84602c928fe2b775fae81376f2136324cbd763
   MLKitVision: e87dc3f2e456a6ab32361ebd985e078dd2746143
   MMKV: 9c4663aa7ca255d478ff10f2f5cb7d17c1651ccd
   MMKVCore: 89f5c8a66bba2dcd551779dea4d412eeec8ff5bb
@@ -1385,7 +1365,7 @@ SPEC CHECKSUMS:
   react-native-mmkv: 1265a348a4711097ba29c8bcefd5971f48220f2b
   react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
   react-native-onesignal: 7643517fe655b94cfda8e697ec16f9b9135648b8
-  react-native-pager-view: e76d64a5114a152e942caa09136e4e250709378c
+  react-native-pager-view: 3051346698a0ba0c4e13e40097cc11b00ee03cca
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-shake: 0b4da6b51ad566106a26d82e208ce4f03193b7de
@@ -1415,14 +1395,13 @@ SPEC CHECKSUMS:
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
   RNReanimated: f8544cbf23b39b63bb2adb378d66dd11735662bd
-  RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
+  RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSentry: 7495ba091f09f12902d8cf916024efd99b058efe
   RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674
   Sentry: a0d4563fa4ddacba31fdcc35daaa8573d87224d6
   Shake: 08e8dfbdc22838dee8784ab8382f3a58c2516f8d
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   vision-camera-code-scanner: 75a4ac3c9ce9b4605f5d87cc0f0001bb64bfb4de
-  vision-camera-ocr: 4a70ae5bbc6a8ed83b607bfb27bf1ccfbe7fc25d
   VisionCamera: 1ba40d6529005f7985c28983cb4bacce0880a514
   WalletConnectSwift: 1fbff8f5315bd8d41596773ca1b384aa873b6824
   Yoga: 2f6a78c58dcc2963bd8e34d96a4246d9dff2e3a7

@@ -52,6 +52,19 @@ export USE_FLIPPER=1
 
 - Run `yarn` to install packages, then run `yarn pod` in the main directory.
 
+#### Updating and adding packages to the mobile app
+
+To prevent automatic updates on new and old packages we pin the packages' version to the semver we want. This is done for security purposes as a new/upgraded package version may include backdoors or other attacks that may lead to a lost of funds so we want to be intentional about upgrading packages.
+
+Steps to add/upgrade a new package to our app:
+
+**Ask our security team first!** It's important you check with the security team in our #team-security Slack channel before adding or updating packages in the app. Once they give you the green light feel free to follow the next steps:
+
+Upgrade: `yarn upgrade package-name@version`
+
+Add: `yarn add package-name@version`
+
+
 ### Important Libraries
 
 Get familiar with the following (no particular order):
