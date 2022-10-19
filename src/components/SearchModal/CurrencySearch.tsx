@@ -104,20 +104,24 @@ export function CurrencySearch({
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
   const native = useNativeCurrency()
+  const wrapped = native.wrapped
 
-  const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
-    // Use Celo ERC20 Implementation and exclude the native asset
-    if (!native) {
-      return filteredSortedTokens
-    }
-
+  const displayCurrencies: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
-    if (native.symbol?.toLowerCase()?.indexOf(s) !== -1) {
-      // Always bump the native token to the top of the list.
-      return [native, ...filteredSortedTokens.filter((t) => !t.equals(native))]
+    let tokens: Currency[] = filteredSortedTokens
+    if (wrapped.symbol?.toLowerCase()?.indexOf(s) !== -1) {
+      // Always bump the wrapped token to the top of the list.
+      tokens = [wrapped, ...tokens.filter((t) => !t.equals(wrapped))]
     }
-    return filteredSortedTokens
-  }, [debouncedQuery, native, filteredSortedTokens])
+    if (
+      (!disableNonToken && native.symbol?.toLowerCase()?.indexOf(s) !== -1) ||
+      native.name?.toLowerCase()?.indexOf(s) !== -1
+    ) {
+      // Always bump the native token to the top of the list.
+      tokens = [native, ...tokens.filter((t) => !t.equals(native))]
+    }
+    return tokens
+  }, [debouncedQuery, filteredSortedTokens, wrapped, disableNonToken, native])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
@@ -147,17 +151,17 @@ export function CurrencySearch({
         const s = debouncedQuery.toLowerCase().trim()
         if (s === native?.symbol?.toLowerCase()) {
           handleCurrencySelect(native)
-        } else if (filteredSortedTokensWithETH.length > 0) {
+        } else if (displayCurrencies.length > 0) {
           if (
-            filteredSortedTokensWithETH[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
-            filteredSortedTokensWithETH.length === 1
+            displayCurrencies[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
+            displayCurrencies.length === 1
           ) {
-            handleCurrencySelect(filteredSortedTokensWithETH[0])
+            handleCurrencySelect(displayCurrencies[0])
           }
         }
       }
     },
-    [debouncedQuery, native, filteredSortedTokensWithETH, handleCurrencySelect]
+    [debouncedQuery, native, displayCurrencies, handleCurrencySelect]
   )
 
   // menu ui
@@ -229,13 +233,13 @@ export function CurrencySearch({
               )}
             />
           </Column>
-        ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
+        ) : displayCurrencies?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
           <div style={{ flex: '1' }}>
             <AutoSizer disableWidth>
               {({ height }) => (
                 <CurrencyList
                   height={height}
-                  currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
+                  currencies={displayCurrencies}
                   otherListTokens={filteredInactiveTokens}
                   onCurrencySelect={handleCurrencySelect}
                   otherCurrency={otherSelectedCurrency}
