@@ -8,14 +8,12 @@ const formatPrice = (x: number | string) => parseEther(x.toString()).toString()
 
 export const fetchSweep = async ({
   contractAddress,
-  tokenId,
   markets,
   price,
   rarityRange,
   traits,
 }: {
   contractAddress: string
-  tokenId?: string
   markets?: string[]
   price?: { high?: number | string; low?: number | string; symbol: string }
   rarityRange?: Record<string, unknown>
@@ -26,7 +24,6 @@ export const fetchSweep = async ({
     filters: {
       address: contractAddress.toLowerCase(),
       traits: {},
-      tokenId,
       ...rarityRange,
     },
     fields: {

@@ -18,6 +18,7 @@ interface BagState {
   removeAssetFromBag: (asset: UpdatedGenieAsset) => void
   removeAssetsFromBag: (assets: UpdatedGenieAsset[]) => void
   markAssetAsReviewed: (asset: UpdatedGenieAsset, toKeep: boolean) => void
+  lockSweepItems: (contractAddress: string) => void
   didOpenUnavailableAssets: boolean
   setDidOpenUnavailableAssets: (didOpen: boolean) => void
   bagExpanded: boolean
@@ -149,6 +150,21 @@ export const useBag = create<BagState>()(
           return { itemsInBag: itemsCopy }
         })
       },
+      lockSweepItems: (contractAddress) =>
+        set(({ itemsInBag }) => {
+          if (get().isLocked) return { itemsInBag: get().itemsInBag }
+          const itemsInBagCopy = itemsInBag.map((item) =>
+            item.asset.address === contractAddress ? { ...item, inSweep: false } : item
+          )
+          if (itemsInBag.length === 0)
+            return {
+              itemsInBag,
+            }
+          else
+            return {
+              itemsInBag: [...itemsInBagCopy],
+            }
+        }),
       reset: () =>
         set(() => {
           if (!get().isLocked)

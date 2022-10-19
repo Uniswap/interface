@@ -140,12 +140,13 @@ interface SweepProps {
 export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice }: SweepProps) => {
   const theme = useTheme()
 
-  const [isItemsToggled, toggleSweep] = useReducer((s) => !s, true)
+  const [isItemsToggled, toggleSweep] = useReducer((state) => !state, true)
   const [sweepAmount, setSweepAmount] = useState<string>('')
 
-  const addAssetsToBag = useBag((s) => s.addAssetsToBag)
-  const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
-  const itemsInBag = useBag((s) => s.itemsInBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
+  const itemsInBag = useBag((state) => state.itemsInBag)
+  const lockSweepItems = useBag((state) => state.lockSweepItems)
 
   const traits = useCollectionFilters((state) => state.traits)
   const markets = useCollectionFilters((state) => state.markets)
@@ -291,6 +292,10 @@ export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice }: 
   useEffect(() => {
     if (sweepItemsInBag.length === 0) setSweepAmount('')
   }, [sweepItemsInBag])
+
+  useEffect(() => {
+    lockSweepItems(contractAddress)
+  }, [contractAddress, traits, markets, minPrice, maxPrice, lockSweepItems])
 
   const clearSweep = () => {
     setSweepAmount('')

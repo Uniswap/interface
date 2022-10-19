@@ -22,7 +22,7 @@ import {
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { AssetsFetcher } from 'nft/queries'
-import { DropDownOption, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
+import { DropDownOption, GenieCollection, TokenType, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
@@ -64,15 +64,16 @@ const ClearAllButton = styled.button`
   background: none;
 `
 
-const SweepButton = styled.div<{ enabled: boolean }>`
+const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
   display: flex;
   gap: 8px;
   border: none;
   border-radius: 12px;
   padding: 10px 18px 10px 12px;
-  cursor: pointer;
-  background: ${({ theme, enabled }) =>
-    enabled ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)' : theme.backgroundInteractive};
+  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
+  background: ${({ theme, toggled }) =>
+    toggled ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)' : theme.backgroundInteractive};
+  opacity: ${({ disabled }) => (disabled ? 0.4 : 1)};
   :hover {
     background-color: ${({ theme }) => theme.hoverState};
     transition: ${({
@@ -264,6 +265,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     )
 
   const hasNfts = collectionNfts && collectionNfts.length > 0
+  const hasErc1155s = hasNfts && collectionNfts[0] && collectionNfts[0].tokenType === TokenType.ERC1155
 
   const minMaxPriceChipText: string | undefined = useMemo(() => {
     if (debouncedMinPrice && debouncedMaxPrice) {
@@ -326,8 +328,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               <CollectionSearch />
             </Row>
             <SweepButton
-              enabled={sweepIsOpen}
+              toggled={sweepIsOpen}
+              disabled={!buyNow || hasErc1155s}
               onClick={() => {
+                if (!buyNow || hasErc1155s) return
                 if (!sweepIsOpen) {
                   scrollToTop()
                   if (!bagExpanded) toggleBag()
@@ -388,7 +392,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             ) : null}
           </Row>
         </Box>
-        {sweepIsOpen && (
+        {sweepIsOpen && buyNow && !hasErc1155s && (
           <Sweep
             contractAddress={contractAddress}
             collectionStats={collectionStats}
