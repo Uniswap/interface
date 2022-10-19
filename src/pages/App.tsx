@@ -5,9 +5,13 @@ import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import NFTRelayEnvironment from 'graphql/data/nft/NFTRelayEnvironment'
+import RelayEnvironment from 'graphql/data/RelayEnvironment'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
+import { RelayEnvironmentProvider } from 'react-relay'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -113,6 +117,7 @@ const LazyLoadSpinner = () => (
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const nftFlag = useNftFlag()
+  const nftGraphQlFlag = useNftGraphQlFlag()
   const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
 
   const { pathname } = useLocation()
@@ -148,98 +153,102 @@ export default function App() {
   }, [isExpertMode])
 
   return (
-    <ErrorBoundary>
-      <DarkModeQueryParamReader />
-      <ApeModeQueryParamReader />
-      <AppWrapper redesignFlagEnabled={redesignFlagEnabled}>
-        <Trace page={currentPage}>
-          <HeaderWrapper>
-            <NavBar />
-          </HeaderWrapper>
-          <BodyWrapper>
-            <Popups />
-            <Polling />
-            <TopLevelModals />
-            <Suspense fallback={<Loader />}>
-              {isLoaded ? (
-                <Routes>
-                  <Route path="tokens" element={<Tokens />}>
-                    <Route path=":chainName" />
-                  </Route>
-                  <Route
-                    path="tokens/:chainName/:tokenAddress"
-                    element={
-                      <Suspense fallback={<LoadingTokenDetails />}>
-                        <TokenDetails />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="vote/*"
-                    element={
-                      <Suspense fallback={<LazyLoadSpinner />}>
-                        <Vote />
-                      </Suspense>
-                    }
-                  />
-                  <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
-                  <Route path="uni" element={<Earn />} />
-                  <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
+    <RelayEnvironmentProvider
+      environment={nftGraphQlFlag === NftGraphQlVariant.Enabled ? NFTRelayEnvironment : RelayEnvironment}
+    >
+      <ErrorBoundary>
+        <DarkModeQueryParamReader />
+        <ApeModeQueryParamReader />
+        <AppWrapper redesignFlagEnabled={redesignFlagEnabled}>
+          <Trace page={currentPage}>
+            <HeaderWrapper>
+              <NavBar />
+            </HeaderWrapper>
+            <BodyWrapper>
+              <Popups />
+              <Polling />
+              <TopLevelModals />
+              <Suspense fallback={<Loader />}>
+                {isLoaded ? (
+                  <Routes>
+                    <Route path="tokens" element={<Tokens />}>
+                      <Route path=":chainName" />
+                    </Route>
+                    <Route
+                      path="tokens/:chainName/:tokenAddress"
+                      element={
+                        <Suspense fallback={<LoadingTokenDetails />}>
+                          <TokenDetails />
+                        </Suspense>
+                      }
+                    />
+                    <Route
+                      path="vote/*"
+                      element={
+                        <Suspense fallback={<LazyLoadSpinner />}>
+                          <Vote />
+                        </Suspense>
+                      }
+                    />
+                    <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
+                    <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
+                    <Route path="uni" element={<Earn />} />
+                    <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
 
-                  <Route path="send" element={<RedirectPathToSwapOnly />} />
-                  <Route path="swap/:outputCurrency" element={<RedirectToSwap />} />
-                  <Route path="swap" element={<Swap />} />
+                    <Route path="send" element={<RedirectPathToSwapOnly />} />
+                    <Route path="swap/:outputCurrency" element={<RedirectToSwap />} />
+                    <Route path="swap" element={<Swap />} />
 
-                  <Route path="pool/v2/find" element={<PoolFinder />} />
-                  <Route path="pool/v2" element={<PoolV2 />} />
-                  <Route path="pool" element={<Pool />} />
-                  <Route path="pool/:tokenId" element={<PositionPage />} />
+                    <Route path="pool/v2/find" element={<PoolFinder />} />
+                    <Route path="pool/v2" element={<PoolV2 />} />
+                    <Route path="pool" element={<Pool />} />
+                    <Route path="pool/:tokenId" element={<PositionPage />} />
 
-                  <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                  </Route>
-                  <Route path="add" element={<RedirectDuplicateTokenIds />}>
-                    {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
-                  </Route>
+                    <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
+                      <Route path=":currencyIdA" />
+                      <Route path=":currencyIdA/:currencyIdB" />
+                    </Route>
+                    <Route path="add" element={<RedirectDuplicateTokenIds />}>
+                      {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
+                      <Route path=":currencyIdA" />
+                      <Route path=":currencyIdA/:currencyIdB" />
+                      <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
+                    </Route>
 
-                  <Route path="increase" element={<AddLiquidity />}>
-                    <Route path=":currencyIdA" />
-                    <Route path=":currencyIdA/:currencyIdB" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
-                    <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
-                  </Route>
+                    <Route path="increase" element={<AddLiquidity />}>
+                      <Route path=":currencyIdA" />
+                      <Route path=":currencyIdA/:currencyIdB" />
+                      <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
+                      <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
+                    </Route>
 
-                  <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
-                  <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
+                    <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
+                    <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
 
-                  <Route path="migrate/v2" element={<MigrateV2 />} />
-                  <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
+                    <Route path="migrate/v2" element={<MigrateV2 />} />
+                    <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
-                  <Route path="*" element={<RedirectPathToSwapOnly />} />
+                    <Route path="*" element={<RedirectPathToSwapOnly />} />
 
-                  {nftFlag === NftVariant.Enabled && (
-                    <>
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/nfts" element={<NftExplore />} />
-                      <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
-                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
-                      <Route path="/nfts/collection/:contractAddress/activity" element={<Collection />} />
-                    </>
-                  )}
-                </Routes>
-              ) : (
-                <Loader />
-              )}
-            </Suspense>
-            <Marginer />
-          </BodyWrapper>
-        </Trace>
-      </AppWrapper>
-    </ErrorBoundary>
+                    {nftFlag === NftVariant.Enabled && (
+                      <>
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/nfts" element={<NftExplore />} />
+                        <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
+                        <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
+                        <Route path="/nfts/collection/:contractAddress/activity" element={<Collection />} />
+                      </>
+                    )}
+                  </Routes>
+                ) : (
+                  <Loader />
+                )}
+              </Suspense>
+              <Marginer />
+            </BodyWrapper>
+          </Trace>
+        </AppWrapper>
+      </ErrorBoundary>
+    </RelayEnvironmentProvider>
   )
 }
