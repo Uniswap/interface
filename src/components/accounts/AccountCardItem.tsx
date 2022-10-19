@@ -10,7 +10,7 @@ import { AvatarWithVisibilityBadge } from 'src/components/unicons/AvatarWithVisi
 import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
 import { TotalBalance } from 'src/features/balances/TotalBalanceDeprecated'
 import { useENSAvatar } from 'src/features/ens/api'
-import { useSelectAddressNotificationCount } from 'src/features/notifications/hooks'
+import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useDisplayName } from 'src/features/wallet/hooks'
@@ -28,7 +28,7 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
   const theme = useAppTheme()
   const displayName = useDisplayName(address)
   const { data: avatar } = useENSAvatar(address)
-  const notificationCount = useSelectAddressNotificationCount(address)
+  const hasNotifications = useSelectAddressHasNotifications(address)
 
   // Use ENS avatar if found, if not revert to Unicon
   const icon = useMemo(() => {
@@ -44,9 +44,7 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
   return (
     <Button pb="sm" pt="xs" px="lg" onPress={onPress ? () => onPress(address) : undefined}>
       <Flex row alignItems="center" testID={`account_item/${address.toLowerCase()}`}>
-        <NotificationBadge backgroundColor="accentAction" notificationCount={notificationCount}>
-          {icon}
-        </NotificationBadge>
+        <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
         <Flex grow gap="none">
           <Text variant="subhead">{displayName?.name}</Text>
           <TotalBalance owner={address} variant="caption" />

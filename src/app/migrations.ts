@@ -321,4 +321,21 @@ export const migrations = {
     delete newState.wallet.settings?.tokensMetadataDisplayType
     return newState
   },
+
+  24: (state: any) => {
+    const newState = { ...state }
+    const notificationCount = state.notifications?.notificationCount
+    const notificationStatus = Object.keys(notificationCount ?? {}).reduce((obj, address) => {
+      const count = notificationCount[address]
+      if (count) {
+        return { ...obj, [address]: true }
+      }
+
+      return { ...obj, [address]: false }
+    }, {})
+
+    delete newState.notifications?.notificationCount
+    newState.notifications = { ...newState.notifications, notificationStatus }
+    return newState
+  },
 }

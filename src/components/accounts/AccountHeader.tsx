@@ -4,17 +4,16 @@ import React, { useCallback } from 'react'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import NotificationIcon from 'src/assets/icons/bell.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
+import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithStatus'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { usePendingTransactions } from 'src/features/transactions/hooks'
-import { TransactionDetails } from 'src/features/transactions/types'
+import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 
 export function AccountHeader() {
@@ -25,9 +24,7 @@ export function AccountHeader() {
 
   const { preload, navigate } = useEagerActivityNavigation()
 
-  const pendingTransactions: TransactionDetails[] | undefined =
-    usePendingTransactions(activeAddress) ?? []
-  const hasPendingTransactions = pendingTransactions?.length > 0
+  const sortedPendingTransactions = useSortedPendingTransactions(activeAddress)
 
   const onPressAccountHeader = useCallback(() => {
     navigation.dispatch(DrawerActions.openDrawer())
@@ -73,10 +70,10 @@ export function AccountHeader() {
       </Button>
       <Box alignItems="center" flexDirection="row" justifyContent="flex-end">
         <Button onPress={onPressNotifications} onPressIn={onPressInNotifications}>
-          {hasPendingTransactions ? (
-            <PendingNotificationBadge />
+          {sortedPendingTransactions?.length ? (
+            <PendingNotificationBadge sortedPendingTransactions={sortedPendingTransactions} />
           ) : (
-            <NotificationIcon color={theme.colors.textSecondary} height={24} width={24} />
+            <TxHistoryIconWithStatus />
           )}
         </Button>
       </Box>

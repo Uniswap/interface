@@ -3,15 +3,15 @@ import { AppNotification } from 'src/features/notifications/types'
 
 interface NotificationState {
   notificationQueue: AppNotification[]
-  notificationCount: {
-    [userAddress: Address]: number | undefined
+  notificationStatus: {
+    [userAddress: Address]: boolean | undefined
   }
   lastTxNotificationUpdate: { [address: Address]: number | undefined }
 }
 
 export const initialNotificationsState: NotificationState = {
   notificationQueue: [],
-  notificationCount: {},
+  notificationStatus: {},
   lastTxNotificationUpdate: {},
 }
 
@@ -34,14 +34,12 @@ const slice = createSlice({
       }
     },
     resetNotifications: () => initialNotificationsState,
-    addToNotificationCount: (state, action: PayloadAction<{ address: Address; count: number }>) => {
-      const { address, count } = action.payload
-      state.notificationCount[address] = (state.notificationCount[address] ?? 0) + count
-    },
-    clearNotificationCount: (state, action: PayloadAction<{ address: Address | null }>) => {
-      const { address } = action.payload
-      if (!address || !state.notificationCount[address]) return
-      state.notificationCount[address] = 0
+    setNotificationStatus: (
+      state,
+      action: PayloadAction<{ address: Address; hasNotifications: boolean }>
+    ) => {
+      const { address, hasNotifications } = action.payload
+      state.notificationStatus = { ...state.notificationStatus, [address]: hasNotifications }
     },
     setLastTxNotificationUpdate: (
       state,
@@ -57,8 +55,7 @@ export const {
   pushNotification,
   popNotification,
   resetNotifications,
-  addToNotificationCount,
-  clearNotificationCount,
+  setNotificationStatus,
   setLastTxNotificationUpdate,
 } = slice.actions
 

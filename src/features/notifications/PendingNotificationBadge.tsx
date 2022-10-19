@@ -4,23 +4,26 @@ import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import AlertCircle from 'src/assets/icons/alert-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
-import { Box } from 'src/components/layout'
+import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithStatus'
+import { Box } from 'src/components/layout/Box'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { AppNotificationType } from 'src/features/notifications/types'
-import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
-import { TransactionStatus } from 'src/features/transactions/types'
+import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
 const LOADING_SPINNER_SIZE = 26
-const TEXT_OFFSET = 1
 
-export function PendingNotificationBadge({ size = 24 }: { size?: number }) {
+interface Props {
+  size?: number
+  sortedPendingTransactions: TransactionDetails[]
+}
+
+export function PendingNotificationBadge({ size = 24, sortedPendingTransactions }: Props) {
   const theme = useAppTheme()
   const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
-  const pendingTransactions = useSortedPendingTransactions(activeAccountAddress) ?? []
   const notifications = useAppSelector(selectActiveAccountNotifications)
 
   const { preload, navigate } = useEagerActivityNavigation()
@@ -42,13 +45,15 @@ export function PendingNotificationBadge({ size = 24 }: { size?: number }) {
     return <AlertCircle color={theme.colors.accentWarning} height={size} width={size} />
   }
 
-  const pendingTransactionCount = pendingTransactions.length
+  const pendingTransactionCount = sortedPendingTransactions.length
   const txPendingLongerThanLimit =
-    pendingTransactions[0] && Date.now() - pendingTransactions[0].addedTime > PENDING_TX_TIME_LIMIT
+    sortedPendingTransactions[0] &&
+    Date.now() - sortedPendingTransactions[0].addedTime > PENDING_TX_TIME_LIMIT
 
-  // If a transaction has been pending for longer than 5 mins, don't show the spinner anymore
-  if (pendingTransactionCount < 1 || pendingTransactionCount > 99 || txPendingLongerThanLimit)
-    return null
+  // If a transaction has been pending for longer than 5 mins, then show the normal tx history icon
+  if (pendingTransactionCount < 1 || pendingTransactionCount > 99 || txPendingLongerThanLimit) {
+    return <TxHistoryIconWithStatus />
+  }
 
   const countToDisplay = pendingTransactionCount === 1 ? undefined : pendingTransactionCount
 
@@ -61,9 +66,9 @@ export function PendingNotificationBadge({ size = 24 }: { size?: number }) {
         alignItems="center"
         height={size}
         justifyContent="center"
-        left={TEXT_OFFSET}
+        left={1}
         position="absolute"
-        top={TEXT_OFFSET}
+        top={2}
         width={size}
         zIndex="modal">
         <Text textAlign="center" variant="badge">

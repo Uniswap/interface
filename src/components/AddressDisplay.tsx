@@ -27,7 +27,6 @@ type AddressDisplayProps = {
   captionColor?: keyof Theme['colors']
   verticalGap?: keyof Theme['spacing']
   horizontalGap?: keyof Theme['spacing']
-  showNotificationBadge?: boolean
   direction?: 'row' | 'column'
   showCopy?: boolean
   showUnicon?: boolean

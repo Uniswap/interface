@@ -19,6 +19,7 @@ import {
   v20Schema,
   v21Schema,
   v22Schema,
+  v23Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -775,5 +776,23 @@ describe('Redux state migrations', () => {
     const v23 = migrations[23](v22Stub)
     expect(v23.wallet.settings.tokensOrderBy).toBeUndefined()
     expect(v23.wallet.settings.tokensMetadataDisplayType).toBeUndefined()
+  })
+
+  it('migrates from v23 to v24', () => {
+    const dummyAddress1 = '0xDumDum1'
+    const dummyAddress2 = '0xDumDum2'
+    const dummyAddress3 = '0xDumDum3'
+    const v23Stub = {
+      ...v23Schema,
+      notifications: {
+        ...v23Schema.notifications,
+        notificationCount: { [dummyAddress1]: 5, [dummyAddress2]: 0, [dummyAddress3]: undefined },
+      },
+    }
+    const v24 = migrations[24](v23Stub)
+    expect(v24.notifications.notificationCount).toBeUndefined()
+    expect(v24.notifications.notificationStatus[dummyAddress1]).toBe(true)
+    expect(v24.notifications.notificationStatus[dummyAddress2]).toBe(false)
+    expect(v24.notifications.notificationStatus[dummyAddress2]).toBe(false)
   })
 })

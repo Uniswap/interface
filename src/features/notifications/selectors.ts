@@ -14,21 +14,13 @@ export const selectActiveAccountNotifications = createSelector(
   }
 )
 
-const selectNotificationsCount = (state: RootState) => state.notifications.notificationCount
-export const makeSelectAddressNotificationCount = (address: Address | null) =>
-  createSelector(selectNotificationsCount, (notificationsCount) => {
-    if (!address) {
-      return undefined
-    }
+const selectNotificationStatus = (state: RootState) => state.notifications.notificationStatus
+
+export const makeSelectHasNotifications = (address: Address | null) =>
+  createSelector(selectNotificationStatus, (notificationsCount) => {
+    if (!address) return undefined
     return notificationsCount?.[address]
   })
-
-export const selectHasUnreadNotifications = (state: RootState) => {
-  for (const count of Object.values(state.notifications.notificationCount)) {
-    if (count) return true
-  }
-  return false
-}
 
 export const selectLastTxNotificationUpdate = (state: RootState) =>
   state.notifications.lastTxNotificationUpdate

@@ -9,7 +9,6 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import NotificationIcon from 'src/assets/icons/bell.svg'
 import HamburgerIcon from 'src/assets/icons/hamburger.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -20,6 +19,7 @@ import { SendButton } from 'src/components/buttons/SendButton'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Arrow } from 'src/components/icons/Arrow'
+import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithStatus'
 import { Box, Flex } from 'src/components/layout'
 import TabbedScrollScreen, {
   TabViewScrollProps,
@@ -33,8 +33,7 @@ import { useExperimentVariant } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { usePendingTransactions } from 'src/features/transactions/hooks'
-import { TransactionDetails } from 'src/features/transactions/types'
+import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
@@ -84,9 +83,7 @@ function HomeScreenInner({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuer
     preload(activeAccount.address)
   }, [activeAccount.address, preload])
 
-  const pendingTransactions: TransactionDetails[] | undefined =
-    usePendingTransactions(activeAccount.address) ?? []
-  const hasPendingTransactions = pendingTransactions?.length > 0
+  const sortedPendingTransactions = useSortedPendingTransactions(activeAccount.address)
 
   const tabsExperimentVariant = useExperimentVariant(
     EXPERIMENTS.StickyTabsHeader,
@@ -119,10 +116,10 @@ function HomeScreenInner({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuer
             justifyContent="center"
             onPress={onPressNotifications}
             onPressIn={onPressInNotifications}>
-            {hasPendingTransactions ? (
-              <PendingNotificationBadge />
+            {sortedPendingTransactions?.length ? (
+              <PendingNotificationBadge sortedPendingTransactions={sortedPendingTransactions} />
             ) : (
-              <NotificationIcon color={theme.colors.textSecondary} height={24} width={24} />
+              <TxHistoryIconWithStatus />
             )}
           </Button>
         ) : (
@@ -132,7 +129,7 @@ function HomeScreenInner({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuer
     )
   }, [
     activeAccount.address,
-    hasPendingTransactions,
+    sortedPendingTransactions,
     onPressHamburger,
     onPressInNotifications,
     onPressNotifications,

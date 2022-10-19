@@ -12,7 +12,7 @@ import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import TransactionList from 'src/components/TransactionList/TransactionList'
 import SessionsButton from 'src/components/WalletConnect/SessionsButton'
-import { clearNotificationCount } from 'src/features/notifications/notificationSlice'
+import { setNotificationStatus } from 'src/features/notifications/notificationSlice'
 import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
 import { useMergeLocalAndRemoteTransactions } from 'src/features/transactions/hooks'
 import { AccountType } from 'src/features/wallet/accounts/types'
@@ -143,7 +143,7 @@ export function Activity({
   }, [address, navigation])
 
   useEffect(() => {
-    dispatch(clearNotificationCount({ address }))
+    dispatch(setNotificationStatus({ address, hasNotifications: false }))
   }, [dispatch, address])
 
   return (

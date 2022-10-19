@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/core'
 import { useState } from 'react'
 import { checkNotifications } from 'react-native-permissions'
 import { useAppSelector } from 'src/app/hooks'
-import { makeSelectAddressNotificationCount } from 'src/features/notifications/selectors'
+import { makeSelectHasNotifications } from 'src/features/notifications/selectors'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 
 export enum NotificationPermission {
@@ -11,8 +11,8 @@ export enum NotificationPermission {
   Loading = 'loading',
 }
 
-export function useSelectAddressNotificationCount(address: Address | null) {
-  return useAppSelector(makeSelectAddressNotificationCount(address))
+export function useSelectAddressHasNotifications(address: Address | null) {
+  return useAppSelector(makeSelectHasNotifications(address))
 }
 
 export function useNotificationOSPermissionsEnabled() {

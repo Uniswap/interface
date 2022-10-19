@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<839b5d4ea40780a1302d31f697029c01>>
+ * @generated SignedSource<<73fb0908bf92f9478be8378729041bc7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,7 +44,7 @@ v1 = [
   {
     "kind": "Literal",
     "name": "pageSize",
-    "value": 100
+    "value": 1
   }
 ],
 v2 = {
@@ -105,16 +105,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d1a9b5bd923b5894c5e8f83423fb5668",
+    "cacheID": "7ad83a968df1e79b6c4746bf5a741c11",
     "id": null,
     "metadata": {},
     "name": "TransactionHistoryUpdaterQuery",
     "operationKind": "query",
-    "text": "query TransactionHistoryUpdaterQuery(\n  $address: String!\n) {\n  assetActivities(address: $address, pageSize: 100, page: 1) {\n    timestamp\n    id\n  }\n}\n"
+    "text": "query TransactionHistoryUpdaterQuery(\n  $address: String!\n) {\n  assetActivities(address: $address, pageSize: 1, page: 1) {\n    timestamp\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "349de7f8e40654a831c02a83fd926d0b";
+(node as any).hash = "289ae900786cd3acf15aa7150762fc5e";
 
 export default node;

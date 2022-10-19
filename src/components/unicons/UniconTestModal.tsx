@@ -187,7 +187,6 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
               <AddressDisplay
                 showAddressAsSubtitle
                 address="0x3Ec390c6372353703Dfece9755e4CC7Ab59A1372"
-                showNotificationBadge={true}
                 size={36}
                 variant="body"
                 verticalGap="none"

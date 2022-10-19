@@ -3,18 +3,19 @@ import { useEffect } from 'react'
 import { batch } from 'react-redux'
 import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { PollingInterval } from 'src/constants/misc'
 import {
-  addToNotificationCount,
   setLastTxNotificationUpdate,
+  setNotificationStatus,
 } from 'src/features/notifications/notificationSlice'
 import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
 import { TransactionHistoryUpdaterQuery } from 'src/features/transactions/__generated__/TransactionHistoryUpdaterQuery.graphql'
 
-// TODO: replace this query with a more performant one that accepts an array of addresses
-// Setting pageSize = 100 because "99+" is the largest badge count we display
+// TODO(MOB-2922): replace this query with a more performant one that accepts an array of addresses
+// Setting pageSize = 1 because we only need the most recent transaction
 const transactionUpdaterQuery = graphql`
   query TransactionHistoryUpdaterQuery($address: String!) {
-    assetActivities(address: $address, pageSize: 100, page: 1) {
+    assetActivities(address: $address, pageSize: 1, page: 1) {
       timestamp
     }
   }
@@ -22,33 +23,31 @@ const transactionUpdaterQuery = graphql`
 
 export function TransactionHistoryUpdater({ address }: { address: Address }) {
   const dispatch = useAppDispatch()
-  const lastTxNotificationUpdate: number | undefined =
-    useAppSelector(selectLastTxNotificationUpdate)[address] ?? 0
+  const lastTxNotificationUpdate = useAppSelector(selectLastTxNotificationUpdate)[address]
 
-  const data = useLazyLoadQuery<TransactionHistoryUpdaterQuery>(transactionUpdaterQuery, {
-    address,
-  })
+  const data = useLazyLoadQuery<TransactionHistoryUpdaterQuery>(
+    transactionUpdaterQuery,
+    {
+      address,
+    },
+    { networkCacheConfig: { poll: PollingInterval.Fast } }
+  )
 
-  const transactionData = data?.assetActivities
+  const transactionData = data?.assetActivities?.[0]
 
   useEffect(() => {
-    if (!transactionData?.length) return
+    if (!lastTxNotificationUpdate) {
+      dispatch(setLastTxNotificationUpdate({ address, timestamp: Date.now() }))
+      return
+    }
 
-    const { lastUpdatedTime, newTxCount } = transactionData.reduce(
-      (acc, transaction) => {
-        const timestamp = transaction?.timestamp
-        if (!timestamp) return acc
-        if (timestamp > lastTxNotificationUpdate) acc.newTxCount += 1
-        if (timestamp > acc.lastUpdatedTime) acc.lastUpdatedTime = timestamp
-        return acc
-      },
-      { lastUpdatedTime: lastTxNotificationUpdate, newTxCount: 0 }
-    )
+    if (!transactionData) return
 
-    if (newTxCount) {
+    const hasNewTransactions = transactionData.timestamp > lastTxNotificationUpdate
+    if (hasNewTransactions) {
       batch(() => {
-        dispatch(setLastTxNotificationUpdate({ address, timestamp: lastUpdatedTime }))
-        dispatch(addToNotificationCount({ address, count: newTxCount }))
+        dispatch(setLastTxNotificationUpdate({ address, timestamp: transactionData.timestamp }))
+        dispatch(setNotificationStatus({ address, hasNotifications: true }))
       })
     }
   }, [address, dispatch, lastTxNotificationUpdate, transactionData])

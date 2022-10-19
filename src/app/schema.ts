@@ -182,6 +182,15 @@ export const v22Schema = { ...v21Schema }
 // schema did not change, updated the types of wallet.settings.tokensOrderBy and wallet.settings.tokensMetadataDisplayType
 export const v23Schema = { ...v22Schema }
 
+export const v24Schema = {
+  ...v23Schema,
+  notifications: {
+    notificationQueue: [],
+    notificationStatus: {},
+    lastTxNotificationUpdate: {},
+  },
+}
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v23Schema
+export const getSchema = () => v24Schema

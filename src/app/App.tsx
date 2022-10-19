@@ -119,7 +119,7 @@ function AppInner() {
 function DataUpdaters() {
   const accounts = useAccounts()
   const addresses = Object.keys(accounts)
-  // TODO: Once TransactionHistoryUpdaterQuery can accept an array of addresses,
+  // TODO(MOB-2922): Once TransactionHistoryUpdaterQuery can accept an array of addresses,
   // use `useQueryLoader` to load the query within `InteractionManager.runAfterInteractions`
   // and pass the query ref to the `TransactionHistoryUpdater` component
   return (

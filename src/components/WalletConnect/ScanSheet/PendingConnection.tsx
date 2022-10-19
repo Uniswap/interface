@@ -138,7 +138,6 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps) 
       <Flex row shrink gap="sm" justifyContent="space-between" p="sm">
         <AddressDisplay
           address={activeAddress}
-          showNotificationBadge={false}
           size={20}
           variant="subheadSmall"
           verticalGap="none"
