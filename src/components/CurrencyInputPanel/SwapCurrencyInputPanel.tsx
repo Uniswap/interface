@@ -105,7 +105,7 @@ const CurrencySelect = styled(ButtonGray)<{
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
 
-const InputRow = styled.div<{ selected: boolean }>`
+const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: space-between;
@@ -250,8 +250,8 @@ export default function SwapCurrencyInputPanel({
           </AutoColumn>
         </FixedContainer>
       )}
-      <Container hideInput={hideInput} disabled={!chainAllowed}>
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
+      <Container hideInput={hideInput}>
+        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
           {!hideInput && (
             <StyledNumericalInput
               className="token-amount-input"
