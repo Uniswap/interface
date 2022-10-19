@@ -19,7 +19,11 @@ function renderOptionItem(label: string, textColorOverride?: keyof Theme['colors
   return () => (
     <>
       <Separator />
-      <Text color={textColorOverride ?? 'textPrimary'} p="md" textAlign="center" variant="body">
+      <Text
+        color={textColorOverride ?? 'textPrimary'}
+        p="md"
+        textAlign="center"
+        variant="bodyLarge">
         {label}
       </Text>
     </>

@@ -82,7 +82,7 @@ export function RestoreCloudBackupPinScreen({ navigation, route: { params } }: P
       }>
       <Box minHeight={30}>
         {errorMessage && (
-          <Text color="accentFailure" textAlign="center" variant="body">
+          <Text color="accentFailure" textAlign="center" variant="bodyLarge">
             {errorMessage}
           </Text>
         )}

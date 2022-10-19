@@ -91,20 +91,22 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                   <Flex centered row gap="sm">
                     <Unicon address={mnemonicId} size={32} />
                     <Flex gap="none">
-                      <Text numberOfLines={1} variant="body">
+                      <Text numberOfLines={1} variant="bodyLarge">
                         {t('Backup {{backupIndex}}', { backupIndex: index + 1 })}
                       </Text>
-                      <Text color="textSecondary" variant="caption">
+                      <Text color="textSecondary" variant="caption_deprecated">
                         {shortenAddress(mnemonicId)}
                       </Text>
                     </Flex>
                   </Flex>
                   <Flex row gap="sm">
                     <Flex alignItems="flex-end" gap="xxs">
-                      <Text color="textSecondary" variant="caption">
+                      <Text color="textSecondary" variant="caption_deprecated">
                         {t('Backed up on:')}
                       </Text>
-                      <Text variant="caption">{formatDate(new Date(createdAt * 1000))}</Text>
+                      <Text variant="caption_deprecated">
+                        {formatDate(new Date(createdAt * 1000))}
+                      </Text>
                     </Flex>
                     <Chevron color={theme.colors.textPrimary} direction="e" />
                   </Flex>

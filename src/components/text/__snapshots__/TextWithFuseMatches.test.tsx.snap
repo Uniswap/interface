@@ -19,7 +19,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#0E111A",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -34,7 +34,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#0E111A",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -49,7 +49,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -64,7 +64,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -79,7 +79,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#0E111A",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -94,7 +94,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#0E111A",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -109,7 +109,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#0E111A",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -124,7 +124,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#0E111A",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -139,7 +139,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#0E111A",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -154,7 +154,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -169,7 +169,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -184,7 +184,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -199,7 +199,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -214,7 +214,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -229,7 +229,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -244,7 +244,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -259,7 +259,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -274,7 +274,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -289,7 +289,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -304,7 +304,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -319,7 +319,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -334,7 +334,7 @@ exports[`renders text with few matches 1`] = `
         Object {
           "color": "#99A1BD",
           "display": "flex",
-          "fontFamily": "Inter-Regular",
+          "fontFamily": "Inter-Medium",
           "fontSize": 16,
           "lineHeight": 24,
         },
@@ -354,7 +354,7 @@ exports[`renders text without matches 1`] = `
       Object {
         "color": "#0E111A",
         "display": "flex",
-        "fontFamily": "Inter-Regular",
+        "fontFamily": "Inter-Medium",
         "fontSize": 16,
         "lineHeight": 24,
       },

@@ -65,7 +65,12 @@ export default function FavoriteWalletCard({
           {isEditing ? (
             <RemoveButton position="absolute" right={-8} top={-8} onPress={onRemove} />
           ) : null}
-          <AddressDisplay address={address} direction="column" size={40} variant="smallLabel" />
+          <AddressDisplay
+            address={address}
+            direction="column"
+            size={40}
+            variant="buttonLabelSmall"
+          />
         </BaseCard.Shadow>
       </Button>
     </ContextMenu>

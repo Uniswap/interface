@@ -17,13 +17,13 @@ export function SettingsSupportScreen() {
     <SheetScreen px="lg">
       <ScrollView contentContainerStyle={{ ...flex.fill, paddingTop: theme.spacing.xxl }}>
         <BackHeader alignment="left" mb="lg">
-          <Text variant="subhead">{t('Wallet Support')}</Text>
+          <Text variant="subheadLarge">{t('Wallet Support')}</Text>
         </BackHeader>
-        <Text mb="sm" variant="subhead">
+        <Text mb="sm" variant="subheadLarge">
           {t('Recent logs')}
         </Text>
         <ScrollView>
-          <Text mt="md" variant="badge">
+          <Text mt="md" variant="badge_deprecated">
             {recentLogs.join('\n\n')}
           </Text>
         </ScrollView>

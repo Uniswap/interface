@@ -54,7 +54,7 @@ export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalle
             showAddressAsSubtitle
             address={address}
             size={theme.imageSizes.xl}
-            variant="subhead"
+            variant="bodyLarge"
             verticalGap="none"
           />
           {isEditing ? (

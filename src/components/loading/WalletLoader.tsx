@@ -26,7 +26,7 @@ export function WalletLoader({ opacity }: Props) {
         <Flex shrink alignItems="flex-start" gap="xxs" width="100%">
           <Box bg="backgroundAction" borderRadius="xs" height={HIDDEN_TEXT_HEIGHT} width="50%">
             <HiddenFromScreenReaders>
-              <Text color="none" opacity={0} variant="subhead">
+              <Text color="none" opacity={0} variant="subheadLarge">
                 Wallet Nickname
               </Text>
             </HiddenFromScreenReaders>
@@ -34,7 +34,7 @@ export function WalletLoader({ opacity }: Props) {
           <Flex row alignItems="center" height={HIDDEN_TEXT_HEIGHT} width="100%">
             <Box bg="backgroundAction" borderRadius="xs" width="35%">
               <HiddenFromScreenReaders>
-                <Text color="none" opacity={0} variant="caption">
+                <Text color="none" opacity={0} variant="caption_deprecated">
                   Wallet Address
                 </Text>
               </HiddenFromScreenReaders>

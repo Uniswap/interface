@@ -54,9 +54,9 @@ function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWr
 export function AddressDisplay({
   address,
   size = 24,
-  variant = 'body',
+  variant = 'bodyLarge',
   color = 'textPrimary',
-  captionVariant = 'caption',
+  captionVariant = 'subheadSmall',
   captionColor = 'textSecondary',
   verticalGap = 'xxs',
   horizontalGap = 'sm',

@@ -134,7 +134,7 @@ function TokenDetailsStatsInner({
             <LinkButton
               color="accentAction"
               label={t('Website')}
-              textVariant="caption"
+              textVariant="caption_deprecated"
               url={tokenProjectData.homepageUrl}
             />
           )}
@@ -142,14 +142,14 @@ function TokenDetailsStatsInner({
             <LinkButton
               color="accentAction"
               label={t('Twitter')}
-              textVariant="caption"
+              textVariant="caption_deprecated"
               url={getTwitterLink(tokenProjectData.twitterName)}
             />
           )}
           <LinkButton
             color="accentAction"
             label={t('Etherscan')}
-            textVariant="caption"
+            textVariant="caption_deprecated"
             url={explorerLink}
           />
         </Flex>

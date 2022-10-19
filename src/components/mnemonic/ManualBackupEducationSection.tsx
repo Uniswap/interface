@@ -73,11 +73,11 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
         {icon}
       </Flex>
       <Flex flex={1} gap="none">
-        <Text color="textPrimary" variant="subhead">
+        <Text color="textPrimary" variant="subheadLarge">
           {label}
         </Text>
         <Flex pr="xl">
-          <Text color="textSecondary" variant="caption">
+          <Text color="textSecondary" variant="caption_deprecated">
             {sublabel}
           </Text>
         </Flex>

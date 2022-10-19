@@ -22,7 +22,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
 
   const headerText = (
-    <Text color="textPrimary" variant="subhead">
+    <Text color="textPrimary" variant="subheadLarge">
       {t('Manage connections')}
     </Text>
   )
@@ -57,7 +57,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           />
         ) : (
           <Flex fill alignItems="center" gap="xs" style={emptyCardStyle}>
-            <Text color="textPrimary" variant="subhead">
+            <Text color="textPrimary" variant="subheadLarge">
               {t('No sites connected')}
             </Text>
             <Text color="textSecondary" textAlign="center" variant="bodySmall">

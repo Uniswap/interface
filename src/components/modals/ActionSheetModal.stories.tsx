@@ -11,7 +11,7 @@ const options = [
     onPress: () => {},
     render: () => (
       <Flex row flex={1} justifyContent="space-between" p="md">
-        <Text variant="body">Market Cap</Text>
+        <Text variant="bodyLarge">Market Cap</Text>
         <Check height={18} width={18} />
       </Flex>
     ),
@@ -21,7 +21,7 @@ const options = [
     onPress: () => {},
     render: () => (
       <Box p="md">
-        <Text variant="body">Volume</Text>
+        <Text variant="bodyLarge">Volume</Text>
       </Box>
     ),
   },
@@ -30,7 +30,7 @@ const options = [
     onPress: () => {},
     render: () => (
       <Box p="md">
-        <Text variant="body">Percent Change</Text>
+        <Text variant="bodyLarge">Percent Change</Text>
       </Box>
     ),
   },

@@ -100,8 +100,8 @@ export function SettingsFaceIdScreen() {
       <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="sm">
         <Flex row>
           <Flex gap="none">
-            <Text variant="subhead">{text}</Text>
-            <Text color="textSecondary" variant="smallLabel">
+            <Text variant="subheadLarge">{text}</Text>
+            <Text color="textSecondary" variant="buttonLabelSmall">
               {subText}
             </Text>
           </Flex>
@@ -121,7 +121,7 @@ export function SettingsFaceIdScreen() {
     <Screen p="lg">
       <Flex alignItems="center" flexDirection="row" mb="xl">
         <BackButton color="textSecondary" />
-        <Text variant="largeLabel">Face ID</Text>
+        <Text variant="buttonLabelLarge">Face ID</Text>
       </Flex>
 
       <FlatList

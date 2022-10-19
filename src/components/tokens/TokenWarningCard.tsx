@@ -48,7 +48,7 @@ export default function TokenWarningCard({
       <Flex row justifyContent="space-between">
         <Flex alignItems="center" flexDirection="row" gap="xs">
           <WarningIcon height={18} tokenWarningLevel={tokenWarningLevel} width={18} />
-          <Text color={warningColor} variant="smallLabel">
+          <Text color={warningColor} variant="buttonLabelSmall">
             {getTokenWarningHeaderText(tokenWarningLevel, t)}
           </Text>
         </Flex>

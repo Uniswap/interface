@@ -56,9 +56,9 @@ export function SettingsRow({
             {icon}
           </Flex>
           <Flex alignItems="stretch" flex={1} gap="none">
-            <Text variant="subhead">{text}</Text>
+            <Text variant="subheadLarge">{text}</Text>
             {subText && (
-              <Text color="textSecondary" numberOfLines={1} variant="caption">
+              <Text color="textSecondary" numberOfLines={1} variant="caption_deprecated">
                 {subText}
               </Text>
             )}

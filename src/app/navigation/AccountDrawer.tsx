@@ -172,7 +172,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
             borderBottomColor="backgroundOutline"
             borderBottomWidth={1}
             p="md">
-            <Text variant="body">{t('Wallet settings')}</Text>
+            <Text variant="bodyLarge">{t('Wallet settings')}</Text>
           </Box>
         ),
       },
@@ -185,7 +185,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
             borderBottomColor="backgroundOutline"
             borderBottomWidth={shouldHideRemoveOption ? 0 : 1}
             p="md">
-            <Text variant="body">{t('Copy wallet address')}</Text>
+            <Text variant="bodyLarge">{t('Copy wallet address')}</Text>
           </Box>
         ),
       },
@@ -204,7 +204,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         onPress: onPressRemove,
         render: () => (
           <Box alignItems="center" p="md">
-            <Text color="accentFailure" variant="body">
+            <Text color="accentFailure" variant="bodyLarge">
               {t('Remove wallet')}
             </Text>
           </Box>
@@ -271,7 +271,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
             borderBottomColor="backgroundOutline"
             borderBottomWidth={1}
             p="md">
-            <Text variant="body">{t('Create a new wallet')}</Text>
+            <Text variant="bodyLarge">{t('Create a new wallet')}</Text>
           </Box>
         ),
       },
@@ -280,7 +280,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         onPress: onPressAddViewOnlyWallet,
         render: () => (
           <Box alignItems="center" p="md">
-            <Text variant="body">{t('Add a view-only wallet')}</Text>
+            <Text variant="bodyLarge">{t('Add a view-only wallet')}</Text>
           </Box>
         ),
       },
@@ -292,7 +292,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         onPress: onPressImportWallet,
         render: () => (
           <Box alignItems="center" borderTopColor="backgroundOutline" borderTopWidth={1} p="md">
-            <Text variant="body">{t('Import a wallet')}</Text>
+            <Text variant="bodyLarge">{t('Import a wallet')}</Text>
           </Box>
         ),
       })
@@ -366,7 +366,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
                 width={theme.iconSizes.sm}
               />
             </Box>
-            <Text variant="body">{t('Add another wallet')}</Text>
+            <Text variant="bodyLarge">{t('Add another wallet')}</Text>
           </Flex>
         </TextButton>
       ) : (
@@ -431,7 +431,7 @@ function SettingsButton({
             width={theme.iconSizes.lg}
           />
         </Box>
-        <Text color="textSecondary" variant="subhead">
+        <Text color="textSecondary" variant="bodyLarge">
           {label}
         </Text>
       </Flex>

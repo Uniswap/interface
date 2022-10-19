@@ -36,10 +36,10 @@ export default {
     ),
     EmptyComponent: (
       <Flex centered gap="sm" mt="lg" px="lg">
-        <Text color="textSecondary" variant="mediumLabel">
+        <Text color="textSecondary" variant="buttonLabelMedium">
           😔
         </Text>
-        <Text color="textSecondary" variant="mediumLabel">
+        <Text color="textSecondary" variant="buttonLabelMedium">
           No results found
         </Text>
       </Flex>

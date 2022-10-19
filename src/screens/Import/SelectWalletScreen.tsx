@@ -165,7 +165,7 @@ function WalletPreviewList({
         label={t('Continue')}
         name={ElementName.Next}
         testID={ElementName.Next}
-        textVariant="largeLabel"
+        textVariant="buttonLabelLarge"
         variant="onboard"
         onPress={onSubmit}
       />

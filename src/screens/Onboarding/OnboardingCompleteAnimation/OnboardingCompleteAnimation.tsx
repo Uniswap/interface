@@ -290,7 +290,7 @@ export function OnboardingCompleteAnimation({
             <Text pb="sm" variant="headlineSmall">
               {t("You're ready to go!")}
             </Text>
-            <Text color="textSecondary" textAlign="center" variant="body">
+            <Text color="textSecondary" textAlign="center" variant="bodyLarge">
               {isNewWallet
                 ? t(
                     "You've created, nicknamed, and backed up your wallet. Now, you can explore and transact with the sites, tokens, NFTs, and other wallets that make up the world of web3!"

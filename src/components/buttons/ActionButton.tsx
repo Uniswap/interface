@@ -19,7 +19,7 @@ export default function ActionButton({
   disabled,
   label,
   name,
-  textVariant = 'largeLabel',
+  textVariant = 'buttonLabelLarge',
   ...rest
 }: ActionButtonProps) {
   const { trigger: actionButtonTrigger } = useBiometricPrompt(onPress)
@@ -54,7 +54,7 @@ export function GradientActionButton({
   disabled,
   label,
   name,
-  textVariant = 'largeLabel',
+  textVariant = 'buttonLabelLarge',
   ...rest
 }: ActionButtonProps) {
   const { trigger: actionButtonTrigger } = useBiometricPrompt(onPress)

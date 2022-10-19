@@ -56,11 +56,11 @@ export const TokenBalanceItem = memo(
             url={currencyInfo.logoUrl ?? undefined}
           />
           <Flex alignItems="flex-start" flexShrink={1} gap="none">
-            <Text ellipsizeMode="tail" numberOfLines={1} variant="subhead">
+            <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
               {currency.name ?? currency.symbol}
             </Text>
             <Flex row alignItems="center" gap="xs" height={20}>
-              <Text color="textSecondary" numberOfLines={1} variant="caption">
+              <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
                 {`${formatNumberBalance(quantity)}`} {currency.symbol}
               </Text>
             </Flex>
@@ -68,9 +68,9 @@ export const TokenBalanceItem = memo(
         </AnimatedFlex>
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
           <Flex alignItems="flex-end" gap="xxs">
-            <Text variant="body">{formatUSDPrice(portfolioBalance.balanceUSD)}</Text>
-            <Text color="textSecondary" variant="caption">
-              <RelativeChange change={relativeChange24} />
+            <Text variant="bodyLarge">{formatUSDPrice(portfolioBalance.balanceUSD)}</Text>
+            <Text color="textSecondary">
+              <RelativeChange change={relativeChange24} variant="subheadSmall" />
             </Text>
           </Flex>
         </AnimatedFlex>

@@ -32,7 +32,7 @@ const Template: ComponentStory<typeof HeaderScrollScreen> = (args) => {
   return (
     <HeaderScrollScreen {...args}>
       <Flex row bg="backgroundContainer" m="md" p="md">
-        <Text variant="body">Body content</Text>
+        <Text variant="bodyLarge">Body content</Text>
       </Flex>
     </HeaderScrollScreen>
   )

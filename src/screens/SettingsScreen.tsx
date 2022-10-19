@@ -180,12 +180,12 @@ export function SettingsScreen() {
     <HeaderScrollScreen
       contentHeader={
         <BackHeader alignment="left" mx="md" pt="md">
-          <Text variant="subhead">{t('Settings')}</Text>
+          <Text variant="subheadLarge">{t('Settings')}</Text>
         </BackHeader>
       }
       fixedHeader={
         <BackHeader mb="xxs">
-          <Text variant="subhead">{t('Settings')}</Text>
+          <Text variant="subheadLarge">{t('Settings')}</Text>
         </BackHeader>
       }>
       <Flex px="lg" py="lg">
@@ -198,7 +198,7 @@ export function SettingsScreen() {
           renderSectionFooter={() => <Flex pt="lg" />}
           renderSectionHeader={({ section: { subTitle } }) => (
             <Box bg="backgroundBackdrop" pb="sm">
-              <Text color="textSecondary" variant="subhead">
+              <Text color="textSecondary" variant="subheadLarge">
                 {subTitle}
               </Text>
             </Box>
@@ -233,7 +233,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
             <FlashbotsIcon {...iconProps} />
           </Flex>
 
-          <Text ml="md" variant="subhead">
+          <Text ml="md" variant="subheadLarge">
             {t('Onboarding')}
           </Text>
         </Box>
@@ -278,7 +278,7 @@ function WalletSettings() {
   return (
     <Box flexDirection="column" mb="md">
       <Flex row justifyContent="space-between">
-        <Text color="textSecondary" variant="subhead">
+        <Text color="textSecondary" variant="subheadLarge">
           {t('Wallet settings')}
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
@@ -303,7 +303,7 @@ function WalletSettings() {
                 address={account.address}
                 showViewOnly={account.type === AccountType.Readonly}
                 size={36}
-                variant="subhead"
+                variant="subheadLarge"
                 verticalGap="none"
               />
               <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
@@ -319,7 +319,7 @@ function FooterSettings() {
   const buildVersion = DeviceInfo.getBuildNumber()
 
   return (
-    <Text color="textTertiary" marginTop="xs" variant="caption">
+    <Text color="textTertiary" marginTop="xs" variant="caption_deprecated">
       {`Version ${version}.${buildVersion}`}
     </Text>
   )

@@ -107,7 +107,7 @@ export function GenericImportForm({
               onSubmitEditing={handleSubmit}
             />
             {endAdornment && value && !value.includes(endAdornment) && (
-              <Text color="textSecondary" fontSize={18} lineHeight={18} variant="body">
+              <Text color="textSecondary" fontSize={18} lineHeight={18} variant="bodyLarge">
                 {endAdornment}
               </Text>
             )}
@@ -120,12 +120,12 @@ export function GenericImportForm({
               position="absolute"
               top={INPUT_VALUES.topPosition}
               onLayout={(event: any) => setLayout(event.nativeEvent.layout)}>
-              <Text color="textSecondary" variant="body">
+              <Text color="textSecondary" variant="bodyLarge">
                 {t('Type or')}
               </Text>
               <PasteButton onPress={onChange} />
               {placeholderLabel && (
-                <Text color="textSecondary" variant="body">
+                <Text color="textSecondary" variant="bodyLarge">
                   {placeholderLabel}
                 </Text>
               )}
@@ -136,7 +136,7 @@ export function GenericImportForm({
           {error && value && (liveCheck || !focused) && (
             <Flex centered row gap="sm">
               <AlertTriangle color={theme.colors.accentFailure} />
-              <Text color="accentFailure" variant="body">
+              <Text color="accentFailure" variant="bodyLarge">
                 {error}
               </Text>
             </Flex>

@@ -77,7 +77,7 @@ export const TabStyles = StyleSheet.create({
 
 export const renderTabLabel = ({ route, focused }: { route: Route; focused: boolean }) => {
   return (
-    <Text color={focused ? 'textPrimary' : 'textTertiary'} variant="mediumLabel">
+    <Text color={focused ? 'textPrimary' : 'textTertiary'} variant="buttonLabelMedium">
       {route.title}
     </Text>
   )

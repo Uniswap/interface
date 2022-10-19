@@ -238,8 +238,8 @@ function OptionCard({
           </Flex>
 
           <Flex alignItems="flex-start" gap="xxxs" justifyContent="space-around">
-            <Text variant="subhead">{title}</Text>
-            <Text color="textSecondary" variant="caption">
+            <Text variant="subheadLarge">{title}</Text>
+            <Text color="textSecondary" variant="caption_deprecated">
               {blurb}
             </Text>
           </Flex>

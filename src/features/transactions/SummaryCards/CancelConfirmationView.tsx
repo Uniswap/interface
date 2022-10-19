@@ -49,7 +49,7 @@ export function CancelConfirmationView({
         <SlashCircleIcon fill="none" height={24} />
       </Flex>
       <Flex centered gap="xs">
-        <Text variant="mediumLabel">{t('Cancel this transaction?')}</Text>
+        <Text variant="buttonLabelMedium">{t('Cancel this transaction?')}</Text>
         <Text color="textSecondary" textAlign="center" variant="bodySmall">
           {t(
             'If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.'
@@ -88,7 +88,7 @@ export function CancelConfirmationView({
             disabled={false}
             label={t('Confirm')}
             name={ElementName.Cancel}
-            textVariant="mediumLabel"
+            textVariant="buttonLabelMedium"
             onPress={onCancelConfirm}
           />
         </Flex>

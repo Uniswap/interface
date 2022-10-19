@@ -47,7 +47,7 @@ export function TokenDetailsBackButtonRow({
             <Separator />
             <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
               <NetworkLogo chainId={currentChainId} size={24} />
-              <Text color="textPrimary" variant="body">
+              <Text color="textPrimary" variant="bodyLarge">
                 {CHAIN_INFO[currentChainId].label}
               </Text>
               <Box height={24} width={24}>
@@ -73,7 +73,7 @@ export function TokenDetailsBackButtonRow({
               <Separator />
               <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
                 <NetworkLogo chainId={chainId} size={24} />
-                <Text color="textPrimary" variant="body">
+                <Text color="textPrimary" variant="bodyLarge">
                   {info.label}
                 </Text>
                 <Box height={24} width={24} />
@@ -92,7 +92,7 @@ export function TokenDetailsBackButtonRow({
         <ActionSheetModal
           header={
             <Flex centered gap="xxs" py="md">
-              <Text variant="mediumLabel">{t('Switch Network')}</Text>
+              <Text variant="buttonLabelMedium">{t('Switch Network')}</Text>
             </Flex>
           }
           isVisible={showActionModal}
@@ -106,7 +106,7 @@ export function TokenDetailsBackButtonRow({
         <Button disabled={!hasOtherBalances} onPress={() => setShowActionModal(true)}>
           <Flex centered row bg="backgroundContainer" borderRadius="sm" gap="xxs" p="xs">
             <NetworkLogo chainId={currency.chainId} size={16} />
-            <Text color="textSecondary" pl="xxxs" textAlign="center" variant="smallLabel">
+            <Text color="textSecondary" pl="xxxs" textAlign="center" variant="buttonLabelSmall">
               {CHAIN_INFO[currency.chainId].label}
             </Text>
             {hasOtherBalances && (

@@ -77,7 +77,7 @@ export function TokenOptionItem({
             <Flex shrink alignItems="flex-start" gap="none">
               <Flex centered row gap="xs">
                 <Flex shrink>
-                  <Text color="textPrimary" numberOfLines={1} variant="subhead">
+                  <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
                     {currency.name}
                   </Text>
                 </Flex>
@@ -88,7 +88,7 @@ export function TokenOptionItem({
                 />
               </Flex>
               <Flex centered row gap="xs">
-                <Text color="textPrimary" numberOfLines={1} variant="caption">
+                <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
                   {currency.symbol}
                 </Text>
                 {showNetworkPill && <InlineNetworkPill chainId={currency.chainId} height={20} />}
@@ -98,12 +98,12 @@ export function TokenOptionItem({
 
           {tokenWarningLevel === TokenWarningLevel.BLOCKED ? (
             <Flex backgroundColor="translucentBackground" borderRadius="md" padding="sm">
-              <Text variant="mediumLabel">{t('Not available')}</Text>
+              <Text variant="buttonLabelMedium">{t('Not available')}</Text>
             </Flex>
           ) : quantity && quantity !== 0 ? (
             <Box alignItems="flex-end">
-              <Text variant="body">{formatNumberBalance(quantity)}</Text>
-              <Text color="textSecondary" variant="bodySmall">
+              <Text variant="bodyLarge">{formatNumberBalance(quantity)}</Text>
+              <Text color="textSecondary" variant="subheadSmall">
                 {formatUSDPrice(balanceUSD)}
               </Text>
             </Box>

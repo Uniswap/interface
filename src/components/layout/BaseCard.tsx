@@ -84,7 +84,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
           </Flex>
           {subtitle ? (
             typeof subtitle === 'string' ? (
-              <Text variant="subhead">{subtitle}</Text>
+              <Text variant="subheadLarge">{subtitle}</Text>
             ) : (
               subtitle
             )
@@ -117,11 +117,11 @@ function EmptyState({
   return (
     <Flex centered gap="sm" p="sm" width="100%">
       {title && (
-        <Text textAlign="center" variant="subhead">
+        <Text textAlign="center" variant="subheadLarge">
           {title}
         </Text>
       )}
-      <Text color="textSecondary" textAlign="center" variant="caption">
+      <Text color="textSecondary" textAlign="center" variant="caption_deprecated">
         {description}
       </Text>
       {buttonLabel && (
@@ -129,7 +129,7 @@ function EmptyState({
           borderColor="backgroundOutline"
           borderRadius="md"
           label={buttonLabel}
-          textVariant="smallLabel"
+          textVariant="buttonLabelSmall"
           variant="transparent"
           onPress={onPress}
         />
@@ -139,7 +139,7 @@ function EmptyState({
           borderColor="backgroundOutline"
           borderRadius="md"
           label={additionalButtonLabel}
-          textVariant="smallLabel"
+          textVariant="buttonLabelSmall"
           variant="transparent"
           onPress={onPressAdditional}
         />

@@ -191,12 +191,12 @@ function FavoriteTokenCardInner({
             )}
             <TokenMetadata
               align="center"
-              main={<Text variant="body">{formatUSDPrice(usdPrice)}</Text>}
+              main={<Text variant="bodyLarge">{formatUSDPrice(usdPrice)}</Text>}
               sub={
                 <RelativeChange
                   change={pricePercentChange ?? undefined}
                   semanticColor={true}
-                  variant="badge"
+                  variant="badge_deprecated"
                 />
               }
             />
@@ -220,9 +220,9 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
     <Flex row>
       {pre}
       <Flex alignItems={align} gap="xxs" minWidth={70}>
-        <Text variant="body">{main}</Text>
+        <Text variant="bodyLarge">{main}</Text>
         {sub && (
-          <Text color="textSecondary" variant="caption">
+          <Text color="textSecondary" variant="caption_deprecated">
             {sub}
           </Text>
         )}

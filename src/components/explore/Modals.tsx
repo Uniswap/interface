@@ -62,7 +62,7 @@ function ModalOption({ isSelected, label }: { isSelected: boolean; label: string
     <Flex row justifyContent="space-between" p="md">
       {/* fake element to center the label  */}
       <Box height={CheckmarkSize} width={CheckmarkSize} />
-      <Text style={flex.fill} textAlign="center" variant="body">
+      <Text style={flex.fill} textAlign="center" variant="bodyLarge">
         {label}
       </Text>
       <Box height={CheckmarkSize} width={CheckmarkSize}>

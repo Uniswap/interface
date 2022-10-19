@@ -110,7 +110,7 @@ function HomeScreenInner({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuer
         ) : (
           <Box />
         )}
-        <AddressDisplay address={activeAccount.address} variant="subhead" />
+        <AddressDisplay address={activeAccount.address} variant="subheadLarge" />
         {shouldShowActions ? (
           <Button
             justifyContent="center"

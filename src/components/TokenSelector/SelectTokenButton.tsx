@@ -40,7 +40,7 @@ export function SelectTokenButton({
       {selectedCurrency ? (
         <Flex centered row flexDirection="row" gap="xs" pl="xxs" pr="xs" py="xxs">
           <CurrencyLogo currency={selectedCurrency} size={28} />
-          <Text color="textPrimary" variant="largeLabel">
+          <Text color="textPrimary" variant="buttonLabelLarge">
             {selectedCurrency.symbol}
           </Text>
           <Chevron color={theme.colors.textPrimary} direction="e" />
@@ -48,7 +48,7 @@ export function SelectTokenButton({
       ) : (
         <Flex centered row py="xxs">
           <Flex centered row gap="xs" pl="sm" pr="xs" py="xxxs">
-            <Text color="accentTextLightPrimary" variant="largeLabel">
+            <Text color="accentTextLightPrimary" variant="buttonLabelLarge">
               {t('Choose Token')}
             </Text>
             <Chevron color={theme.colors.accentTextLightPrimary} direction="e" />

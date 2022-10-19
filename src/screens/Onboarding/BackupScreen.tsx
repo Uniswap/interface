@@ -60,7 +60,7 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
         <Button alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
           <Flex centered row gap="sm">
             <InfoCircle color={theme.colors.textSecondary} height={32} width={32} />
-            <Text variant="subhead">{t('What’s a recovery phrase?')}</Text>
+            <Text variant="subheadLarge">{t('What’s a recovery phrase?')}</Text>
           </Flex>
         </Button>
         <Flex grow justifyContent="flex-end">
@@ -69,7 +69,7 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
             label={disabled ? t('Add backup to continue') : t('Continue')}
             name={ElementName.Next}
             testID={ElementName.Next}
-            textVariant="mediumLabel"
+            textVariant="buttonLabelMedium"
             variant="onboard"
             onPress={onPressNext}
           />
@@ -203,8 +203,8 @@ function BackupOptionButton({
           <Flex row flexShrink={1} gap="sm">
             <Box>{icon}</Box>
             <Flex flexShrink={1} gap="xxs">
-              <Text variant="subhead">{label}</Text>
-              <Text color="textSecondary" variant="caption">
+              <Text variant="subheadLarge">{label}</Text>
+              <Text color="textSecondary" variant="caption_deprecated">
                 {caption}
               </Text>
             </Flex>

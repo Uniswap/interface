@@ -167,7 +167,7 @@ function UserScreenInner({
           <BackButton showButtonLabel />
           <AddressDisplay
             address={address}
-            captionVariant="mediumLabel"
+            captionVariant="buttonLabelMedium"
             direction="column"
             showAddressAsSubtitle={true}
             showCopy={true}
@@ -178,7 +178,7 @@ function UserScreenInner({
       }
       fixedHeader={
         <BackHeader>
-          <AddressDisplay address={address} captionVariant="subhead" size={16} />
+          <AddressDisplay address={address} captionVariant="subheadLarge" size={16} />
         </BackHeader>
       }>
       <VirtualizedList>

@@ -14,7 +14,7 @@ export function NFTTransfer({ asset, nftSize }: { asset: NFTAsset.Asset; nftSize
         <Box borderRadius="full" height={28} overflow="hidden" width={28}>
           <NFTViewer uri={asset.collection.image_url} />
         </Box>
-        <Text variant="largeLabel">{asset.name}</Text>
+        <Text variant="buttonLabelLarge">{asset.name}</Text>
       </Flex>
     </Flex>
   )

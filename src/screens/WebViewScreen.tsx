@@ -14,7 +14,7 @@ export function WebViewScreen({
   return (
     <Screen edges={['top', 'left', 'right']}>
       <BackHeader alignment="left" mb="md">
-        <Text variant="subhead">{headerTitle}</Text>
+        <Text variant="subheadLarge">{headerTitle}</Text>
       </BackHeader>
       <Separator />
       <WebView

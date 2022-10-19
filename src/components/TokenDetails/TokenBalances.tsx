@@ -75,7 +75,7 @@ export function CurrentChainBalance({
         <Text variant="headlineMedium">
           {`${formatNumberBalance(balance.quantity)}`} {balance.currencyInfo.currency.symbol}
         </Text>
-        <Text variant="body">{formatUSDPrice(balance.balanceUSD)}</Text>
+        <Text variant="bodyLarge">{formatUSDPrice(balance.balanceUSD)}</Text>
       </Flex>
     </Flex>
   )
@@ -87,12 +87,12 @@ function OtherChainBalance({ balance }: { balance: PortfolioBalance }) {
       <Flex row alignItems="center">
         <CurrencyLogo currency={balance.currencyInfo.currency} />
         <Flex alignItems="center">
-          <Text variant="body">
+          <Text variant="bodyLarge">
             {formatNumberBalance(balance.quantity)} {balance.currencyInfo.currency.symbol}
           </Text>
         </Flex>
       </Flex>
-      <Text variant="body">{formatPrice(balance.balanceUSD)}</Text>
+      <Text variant="bodyLarge">{formatPrice(balance.balanceUSD)}</Text>
     </Flex>
   )
 }

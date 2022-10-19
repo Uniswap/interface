@@ -23,7 +23,7 @@ const FixedHeader = (
 const renderItem = ({ item }: ListRenderItemInfo<number>) => {
   return (
     <Flex row gap="sm" p="md">
-      <Text variant="body">Row {item}</Text>
+      <Text variant="bodyLarge">Row {item}</Text>
     </Flex>
   )
 }

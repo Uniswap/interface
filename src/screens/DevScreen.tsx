@@ -105,11 +105,11 @@ export function DevScreen({ navigation }: any) {
               </TextButton>
             ))}
           </Box>
-          <Text mt="sm" textAlign="center" variant="body">
+          <Text mt="sm" textAlign="center" variant="bodyLarge">
             🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀🌀
           </Text>
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text variant="body">Use flashbots for transactions</Text>
+            <Text variant="bodyLarge">Use flashbots for transactions</Text>
             <Switch
               value={flashbotsEnabled}
               onValueChange={() => onToggleFlashbots(!flashbotsEnabled)}

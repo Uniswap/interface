@@ -21,88 +21,102 @@ export const fontFamily = {
 }
 
 export const textVariants = {
-  headlineHero: {
-    fontFamily: fontFamily.sansSerif.regular,
-    fontSize: 48,
+  headlineLarge: {
+    fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 40,
     lineHeight: 48,
     color: 'textPrimary',
-  },
-  headlineLarge: {
-    fontFamily: fontFamily.sansSerif.regular,
-    fontSize: 36,
-    lineHeight: 44,
-    color: 'textPrimary',
+    maxFontSizeMultiplier: 1.2,
   },
   headlineMedium: {
-    fontFamily: fontFamily.sansSerif.regular,
-    fontSize: 28,
-    lineHeight: 36,
+    fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 32,
+    lineHeight: 38,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.2,
   },
   headlineSmall: {
-    fontFamily: fontFamily.sansSerif.regular,
-    fontSize: 20,
+    fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 24,
     lineHeight: 28,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.2,
   },
-  subhead: {
-    fontFamily: fontFamily.sansSerif.semibold,
-    fontSize: 16,
+  subheadLarge: {
+    fontFamily: fontFamily.sansSerif.medium,
+    fontSize: 20,
     lineHeight: 24,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.4,
   },
   subheadSmall: {
-    fontFamily: fontFamily.sansSerif.semibold,
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 14,
     lineHeight: 20,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.4,
   },
-  body: {
-    fontFamily: fontFamily.sansSerif.regular,
+  bodyLarge: {
+    fontFamily: fontFamily.sansSerif.medium,
     fontSize: 16,
     lineHeight: 24,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.4,
   },
   bodySmall: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 14,
     lineHeight: 20,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.4,
   },
-  caption: {
-    fontFamily: fontFamily.sansSerif.regular,
+  caption_deprecated: {
+    fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 12,
     lineHeight: 16,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.2,
   },
-  badge: {
+  badge_deprecated: {
     fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 12,
     lineHeight: 12,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.2,
   },
-  code: {
+  code_deprecated: {
     fontFamily: fontFamily.sansSerif.monospace,
     fontSize: 14,
     lineHeight: 20,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.2,
   },
-  largeLabel: {
+  buttonLabelLarge: {
     fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 20,
     lineHeight: 24,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.2,
   },
-  mediumLabel: {
+  buttonLabelMedium: {
     fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 16,
     lineHeight: 20,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.2,
   },
-  smallLabel: {
+  buttonLabelSmall: {
     fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 14,
+    lineHeight: 20,
+    color: 'textPrimary',
+    maxFontSizeMultiplier: 1.2,
+  },
+  buttonLabelMicro: {
+    fontFamily: fontFamily.sansSerif.semibold,
+    fontSize: 12,
     lineHeight: 16,
     color: 'textPrimary',
+    maxFontSizeMultiplier: 1.2,
   },
 }

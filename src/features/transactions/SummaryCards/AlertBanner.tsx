@@ -48,7 +48,7 @@ export default function AlertBanner({
         )}
         <Text
           color={status === TransactionStatus.FailedCancel ? 'accentWarning' : 'textSecondary'}
-          variant="smallLabel">
+          variant="buttonLabelSmall">
           {copy}
         </Text>
       </Flex>
@@ -77,7 +77,7 @@ export function FailedCancelBadge() {
         height={INLINE_ICON_SIZE}
         width={INLINE_ICON_SIZE}
       />
-      <Text color="accentWarning" variant="caption">
+      <Text color="accentWarning" variant="caption_deprecated">
         {t('Cancel failed')}
       </Text>
     </Flex>

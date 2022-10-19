@@ -39,10 +39,10 @@ ExampleGreen.args = {
   ),
   children: (
     <Flex>
-      <Text color="textSecondary" variant="subhead">
+      <Text color="textSecondary" variant="subheadLarge">
         One paragraph
       </Text>
-      <Text color="textSecondary" variant="body">
+      <Text color="textSecondary" variant="bodyLarge">
         Another paragraph
       </Text>
     </Flex>
@@ -59,7 +59,7 @@ ExampleRed.args = {
   ),
   children: (
     <Flex>
-      <Text color="accentFailure" variant="body">
+      <Text color="accentFailure" variant="bodyLarge">
         Scary red text!
       </Text>
     </Flex>
@@ -74,7 +74,7 @@ ExampleRedWithParagraph.args = {
       <Text color="accentFailure" variant="headlineLarge">
         Scary red text!
       </Text>
-      <Text color="accentFailure" variant="body">
+      <Text color="accentFailure" variant="bodyLarge">
         With a scary warning text body paragraph underneath it no less!
       </Text>
     </>

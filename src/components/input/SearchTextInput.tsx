@@ -177,7 +177,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           style={[cancelButtonStyle, CancelButtonDefaultStyle]}
           onLayout={onCancelLayout}
           onPress={onPressCancel}>
-          <Text variant="subhead">{t('Cancel')}</Text>
+          <Text variant="subheadLarge">{t('Cancel')}</Text>
         </AnimatedButton>
       )}
     </Flex>

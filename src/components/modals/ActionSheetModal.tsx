@@ -33,7 +33,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
       <Flex centered bg="backgroundSurface" borderRadius="lg" gap="none" overflow="hidden">
         {typeof header === 'string' ? (
           <Flex centered gap="xxs" py="md">
-            <Text variant="mediumLabel">{header}</Text>
+            <Text variant="buttonLabelMedium">{header}</Text>
           </Flex>
         ) : (
           header
@@ -65,7 +65,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
             onClose()
           }}>
           <Flex centered bg="backgroundAction" borderRadius="md" py="md">
-            <Text color="textPrimary" variant="subhead">
+            <Text color="textPrimary" variant="subheadLarge">
               {closeButtonLabel}
             </Text>
           </Flex>

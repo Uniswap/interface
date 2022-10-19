@@ -73,7 +73,11 @@ function TokenDetailsHeader({ currency, initialSendState }: TokenDetailsHeaderPr
           <Text numberOfLines={1} style={flex.shrink} variant="headlineSmall">
             {currency.name ?? t('Unknown token')}
           </Text>
-          <Text color="textTertiary" numberOfLines={1} style={flex.shrink} variant="caption">
+          <Text
+            color="textTertiary"
+            numberOfLines={1}
+            style={flex.shrink}
+            variant="caption_deprecated">
             {currency.symbol ?? t('Unknown token')}
           </Text>
         </Box>
@@ -117,7 +121,7 @@ function HeaderPriceLabel({
   )
 
   return (
-    <Text color="textSecondary" variant="caption">
+    <Text color="textSecondary" variant="caption_deprecated">
       {formatUSDPrice(spotPrice?.markets?.[0]?.price?.value) ?? t('Unknown token')}
     </Text>
   )
@@ -135,7 +139,7 @@ function HeaderTitleElement({
     <Flex centered gap="none">
       <Flex centered row gap="xs">
         <CurrencyLogo currency={currency} size={16} />
-        <Text variant="subhead">{currency.name ?? t('Unknown token')}</Text>
+        <Text variant="subheadLarge">{currency.name ?? t('Unknown token')}</Text>
       </Flex>
       {tokenProject && (
         <Suspense fallback={null}>
@@ -299,7 +303,7 @@ function TokenDetails({
           flex={1}
           label={t('Swap')}
           py="md"
-          textVariant="mediumLabel"
+          textVariant="buttonLabelMedium"
           onPress={() => onPressSwap(currentChainBalance ? SwapType.SELL : SwapType.BUY)}
         />
         {currentChainBalance && (

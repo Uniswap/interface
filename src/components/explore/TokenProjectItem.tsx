@@ -135,7 +135,7 @@ export const TokenProjectItem = memo(
               <Flex centered row flexShrink={1} gap="xxs" overflow="hidden">
                 {index !== undefined && (
                   <Box minWidth={16}>
-                    <Text color="textSecondary" variant="badge">
+                    <Text color="textSecondary" variant="badge_deprecated">
                       {index + 1}
                     </Text>
                   </Box>
@@ -143,8 +143,8 @@ export const TokenProjectItem = memo(
                 <TokenLogo size={theme.imageSizes.lg} symbol={symbol} url={logoUrl} />
               </Flex>
               <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
-                <Text variant="subhead">{name}</Text>
-                <Text color="textSecondary" variant="caption">
+                <Text variant="bodyLarge">{name}</Text>
+                <Text color="textSecondary" variant="subheadSmall">
                   {symbol.toUpperCase()}
                 </Text>
               </Flex>
@@ -155,13 +155,13 @@ export const TokenProjectItem = memo(
                   main={formatUSDPrice(price)}
                   sub={
                     metadataDisplayType === TokensMetadataDisplayType.MarketCap ? (
-                      <Text variant="caption">
+                      <Text variant="buttonLabelMicro">
                         {t('MCap {{marketCap}}', {
                           marketCap: formatNumber(marketCap),
                         })}
                       </Text>
                     ) : (
-                      <RelativeChange change={pricePercentChange24h} />
+                      <RelativeChange change={pricePercentChange24h} variant="subheadSmall" />
                     )
                   }
                 />
@@ -190,9 +190,9 @@ function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProp
     <Flex row>
       {pre}
       <Flex alignItems={align} gap="xxs" minWidth={70}>
-        <Text variant="body">{main}</Text>
+        <Text variant="bodyLarge">{main}</Text>
         {sub && (
-          <Text color="textSecondary" variant="caption">
+          <Text color="textSecondary" variant="subheadSmall">
             {sub}
           </Text>
         )}

@@ -150,12 +150,12 @@ export function Activity({
     <HeaderScrollScreen
       contentHeader={
         <BackHeader p="md">
-          <Text variant="mediumLabel">{t('Activity')}</Text>
+          <Text variant="buttonLabelMedium">{t('Activity')}</Text>
         </BackHeader>
       }
       fixedHeader={
         <Flex centered>
-          <AddressDisplay address={address} variant="subhead" />
+          <AddressDisplay address={address} variant="subheadLarge" />
         </Flex>
       }
       maxScrollHeightOverride={MAX_SCROLL_HEIGHT}>
@@ -168,7 +168,7 @@ export function Activity({
         <TransactionList
           emptyStateContent={
             <Flex centered gap="xxl" mt="xl" mx="xl">
-              <Text variant="subhead">{t('No activity yet')}</Text>
+              <Text variant="subheadLarge">{t('No activity yet')}</Text>
               <Text color="textSecondary" variant="bodySmall">
                 {t(
                   'When you make transactions or interact with sites, details of your activity will appear here.'

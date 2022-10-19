@@ -35,9 +35,9 @@ exports[`renders correctly 1`] = `
           Array [
             Object {
               "color": "#0E111A",
-              "fontFamily": "Inter-Regular",
-              "fontSize": 36,
-              "lineHeight": 44,
+              "fontFamily": "Inter-Medium",
+              "fontSize": 40,
+              "lineHeight": 48,
             },
           ],
         ]
@@ -84,7 +84,7 @@ exports[`renders correctly 1`] = `
               Array [
                 Object {
                   "color": "#5E6887",
-                  "fontFamily": "Inter-Regular",
+                  "fontFamily": "Inter-SemiBold",
                   "fontSize": 12,
                   "lineHeight": 16,
                 },
@@ -122,7 +122,7 @@ exports[`renders correctly 1`] = `
               Array [
                 Object {
                   "color": "#0E111A",
-                  "fontFamily": "Inter-Regular",
+                  "fontFamily": "Inter-SemiBold",
                   "fontSize": 12,
                   "lineHeight": 16,
                 },
@@ -164,7 +164,7 @@ exports[`renders correctly 1`] = `
             Array [
               Object {
                 "color": "#5E6887",
-                "fontFamily": "Inter-Regular",
+                "fontFamily": "Inter-SemiBold",
                 "fontSize": 12,
                 "lineHeight": 16,
               },
@@ -480,7 +480,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#0E111A",
               "display": "flex",
-              "fontFamily": "Inter-SemiBold",
+              "fontFamily": "Inter-Medium",
               "fontSize": 14,
               "lineHeight": 20,
               "textAlign": "center",
@@ -528,7 +528,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#0E111A",
               "display": "flex",
-              "fontFamily": "Inter-SemiBold",
+              "fontFamily": "Inter-Medium",
               "fontSize": 14,
               "lineHeight": 20,
               "textAlign": "center",
@@ -576,7 +576,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#0E111A",
               "display": "flex",
-              "fontFamily": "Inter-SemiBold",
+              "fontFamily": "Inter-Medium",
               "fontSize": 14,
               "lineHeight": 20,
               "textAlign": "center",
@@ -624,7 +624,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#0E111A",
               "display": "flex",
-              "fontFamily": "Inter-SemiBold",
+              "fontFamily": "Inter-Medium",
               "fontSize": 14,
               "lineHeight": 20,
               "textAlign": "center",
@@ -672,7 +672,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#0E111A",
               "display": "flex",
-              "fontFamily": "Inter-SemiBold",
+              "fontFamily": "Inter-Medium",
               "fontSize": 14,
               "lineHeight": 20,
               "textAlign": "center",

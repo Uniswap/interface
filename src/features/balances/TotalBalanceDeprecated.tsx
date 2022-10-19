@@ -13,6 +13,7 @@ interface TotalBalanceViewProps {
   owner: Address
   showRelativeChange?: boolean
   variant?: keyof Theme['textVariants']
+  color?: keyof Theme['colors']
 }
 
 /** @deprecated Use TotalBalance.tsx with preloaded queries */
@@ -20,15 +21,21 @@ export function TotalBalance({
   owner,
   showRelativeChange,
   variant = 'headlineLarge',
+  color = 'textPrimary',
 }: TotalBalanceViewProps) {
   return (
     <Suspense fallback={<Loading type="header" />}>
-      <TotalBalanceInner owner={owner} showRelativeChange={showRelativeChange} variant={variant} />
+      <TotalBalanceInner
+        color={color}
+        owner={owner}
+        showRelativeChange={showRelativeChange}
+        variant={variant}
+      />
     </Suspense>
   )
 }
 
-function TotalBalanceInner({ owner, showRelativeChange, variant }: TotalBalanceViewProps) {
+function TotalBalanceInner({ owner, showRelativeChange, variant, color }: TotalBalanceViewProps) {
   const balance = useLazyLoadQuery<TotalBalanceDeprecatedQuery>(
     graphql`
       query TotalBalanceDeprecatedQuery($owner: String!) {
@@ -44,9 +51,9 @@ function TotalBalanceInner({ owner, showRelativeChange, variant }: TotalBalanceV
 
   return (
     <Flex gap="xxs">
-      <Text variant={variant}>{`${formatUSDPrice(
-        balance?.portfolio?.assetsValueUSD ?? undefined
-      )}`}</Text>
+      <Text color={color} variant={variant}>
+        {`${formatUSDPrice(balance?.portfolio?.assetsValueUSD ?? undefined)}`}
+      </Text>
       {showRelativeChange && (
         <RelativeChange
           absoluteChange={balance?.portfolio?.absoluteChange24H ?? undefined}

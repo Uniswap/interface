@@ -105,7 +105,7 @@ export function TransactionFlow({
         <Flex gap="xs" px="md" width="100%">
           {step !== TransactionStep.SUBMITTED && (
             <Flex row alignItems="center" justifyContent="space-between" px="sm">
-              <Text py="xs" textAlign="left" variant="subhead">
+              <Text py="xs" textAlign="left" variant="subheadLarge">
                 {flowName}
               </Text>
               {step === TransactionStep.FORM && (
@@ -115,7 +115,7 @@ export function TransactionFlow({
                   px="sm"
                   py="xs"
                   testID="toggle-usd"
-                  textVariant="smallLabel"
+                  textVariant="buttonLabelSmall"
                   variant={isUSDInput ? 'transparentBlue' : 'transparent'}
                   onPress={() => onToggleUSDInput(!isUSDInput)}
                 />

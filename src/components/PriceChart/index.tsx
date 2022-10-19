@@ -26,7 +26,7 @@ function CurrencyPriceChartInner({ currency }: { currency: Currency }) {
   if (error) {
     return (
       <Flex centered mx="lg" my="md">
-        <Text color="accentFailure" textAlign="center" variant="body">
+        <Text color="accentFailure" textAlign="center" variant="bodyLarge">
           {t('Could not retrieve price history')}
         </Text>
       </Flex>

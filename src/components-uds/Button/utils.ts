@@ -55,13 +55,13 @@ export function getButtonTextColor(emphasis: ButtonProps['emphasis']): keyof The
 export function getButtonTextSizeVariant(size: ButtonSize): keyof Theme['textVariants'] {
   switch (size) {
     case ButtonSize.Large:
-      return 'largeLabel'
+      return 'buttonLabelLarge'
     case ButtonSize.Medium:
-      return 'mediumLabel'
+      return 'buttonLabelMedium'
     case ButtonSize.Small:
-      return 'smallLabel'
+      return 'buttonLabelSmall'
     default:
-      return 'mediumLabel'
+      return 'buttonLabelMedium'
   }
 }
 

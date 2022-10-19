@@ -27,14 +27,14 @@ export function SpendingDetails({
         <Flex grow row alignItems="center" gap="xs">
           <CurrencyLogoOnly currency={currencyAmount.currency} size={32} />
           <Box>
-            <Text variant="subhead">{name}</Text>
+            <Text variant="subheadLarge">{name}</Text>
             <Text color="textSecondary" fontSize={12}>
               {symbol}
             </Text>
           </Box>
         </Flex>
         <Box alignItems="flex-end">
-          <Text variant="body">{currencyAmount?.toExact()}</Text>
+          <Text variant="bodyLarge">{currencyAmount?.toExact()}</Text>
           <Text color="textSecondary" fontSize={12}>
             {formatUSDPrice(usdValue?.toExact())}
           </Text>

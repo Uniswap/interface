@@ -154,7 +154,7 @@ function NftsTabInner({
               />
             </Box>
             <Flex gap="none" py="xs">
-              <Text ellipsizeMode="tail" numberOfLines={1} variant="subhead">
+              <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
                 {asset.name}
               </Text>
               <Flex row alignItems="center" gap="xs" justifyContent="flex-start">

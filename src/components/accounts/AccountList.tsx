@@ -34,7 +34,7 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
         borderBottomColor="backgroundOutline"
         pb="sm">
         <Box flex={1}>
-          <Text color="textPrimary" px="lg" variant="body">
+          <Text color="textPrimary" px="lg" variant="bodyLarge">
             {t('Your wallets')}
           </Text>
         </Box>

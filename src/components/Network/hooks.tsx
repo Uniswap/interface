@@ -29,7 +29,7 @@ export function useNetworkOptions(
               <Separator />
               <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
                 <NetworkLogo chainId={chainId} size={24} />
-                <Text color="textPrimary" variant="body">
+                <Text color="textPrimary" variant="bodyLarge">
                   {info.label}
                 </Text>
                 <Box height={24} width={24}>

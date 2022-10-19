@@ -99,7 +99,7 @@ export function SearchResultsSectionInner({ searchQuery }: { searchQuery: string
   if (noResults) {
     return (
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
-        <Text color="textSecondary" variant="subhead">
+        <Text color="textSecondary" variant="bodyLarge">
           <Trans t={t}>
             No results found for <Text color="textPrimary">"{searchQuery}"</Text>
           </Trans>

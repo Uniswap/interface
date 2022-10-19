@@ -79,12 +79,12 @@ export default function TokenWarningModal({
               borderColor: opacify(60, theme.colors[warningColor]),
             }}>
             <AlertTriangle color={theme.colors[warningColor]} height={14} />
-            <Text color={warningColor} variant="caption">
+            <Text color={warningColor} variant="caption_deprecated">
               {getTokenWarningHeaderText(tokenWarningLevel, t)}
             </Text>
           </Flex>
         </Flex>
-        <Text variant="subhead">
+        <Text variant="subheadLarge">
           {tokenWarningLevel === TokenWarningLevel.BLOCKED
             ? t('Not available')
             : t('This token isn’t verified')}
@@ -109,7 +109,7 @@ export default function TokenWarningModal({
             ellipsizeMode="tail"
             mx="xs"
             numberOfLines={1}
-            variant="caption">
+            variant="caption_deprecated">
             {explorerLink}
           </Text>
           <ExternalLinkIcon fill={theme.colors.accentTextLightSecondary} height={12} width={12} />

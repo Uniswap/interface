@@ -23,10 +23,10 @@ export function SettingsChainsScreen() {
     <SheetScreen pt="lg" px="lg">
       <ScrollView contentContainerStyle={{ ...flex.fill, paddingTop: theme.spacing.xxl }}>
         <BackHeader alignment="left" mb="lg">
-          <Text variant="subhead">{t('Chain Settings')}</Text>
+          <Text variant="subheadLarge">{t('Chain Settings')}</Text>
         </BackHeader>
         <Box px="sm">
-          <Text variant="subhead">{t('Configure active chains (networks)')}</Text>
+          <Text variant="subheadLarge">{t('Configure active chains (networks)')}</Text>
           {ALL_SUPPORTED_CHAIN_IDS.map((chainId) => {
             const isActive = activeChains.includes(chainId)
             return (
@@ -36,7 +36,7 @@ export function SettingsChainsScreen() {
                 flexDirection="row"
                 justifyContent="space-between"
                 mt="lg">
-                <Text variant="body">{CHAIN_INFO[chainId].label}</Text>
+                <Text variant="bodyLarge">{CHAIN_INFO[chainId].label}</Text>
                 <Switch
                   value={isActive}
                   onValueChange={(newValue: boolean) => {

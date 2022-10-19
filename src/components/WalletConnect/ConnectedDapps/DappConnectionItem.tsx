@@ -50,10 +50,14 @@ export function DappConnectionItem({
               />
             </Flex>
           ) : null}
-          <Text numberOfLines={2} textAlign="center" variant="mediumLabel">
+          <Text numberOfLines={2} textAlign="center" variant="buttonLabelMedium">
             {dapp.name}
           </Text>
-          <Text color="accentActive" numberOfLines={1} textAlign="center" variant="caption">
+          <Text
+            color="accentActive"
+            numberOfLines={1}
+            textAlign="center"
+            variant="caption_deprecated">
             {dapp.url}
           </Text>
         </Flex>

@@ -54,7 +54,7 @@ export function GradientButton({
           <Text
             style={{ color: theme.colors[textColor] }}
             textAlign="center"
-            variant={textVariant ?? 'mediumLabel'}>
+            variant={textVariant ?? 'buttonLabelMedium'}>
             {label}
           </Text>
         </Box>

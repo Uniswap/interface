@@ -328,7 +328,7 @@ export function SwapForm({
             label={getReviewActionName(t, wrapType)}
             name={ElementName.ReviewSwap}
             testID={ElementName.ReviewSwap}
-            textVariant="largeLabel"
+            textVariant="buttonLabelLarge"
             onPress={onReview}
           />
         </AnimatedFlex>

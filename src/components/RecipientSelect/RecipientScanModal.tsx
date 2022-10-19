@@ -100,12 +100,16 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
               <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
             )}
             <Flex shrink flexGrow={1} gap="none">
-              <Text color="textPrimary" variant="subhead">
+              <Text color="textPrimary" variant="subheadLarge">
                 {currentScreenState === ScannerModalState.ScanQr
                   ? t('Show my QR code')
                   : t('Scan a QR code')}
               </Text>
-              <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} variant="caption">
+              <Text
+                adjustsFontSizeToFit
+                color="textSecondary"
+                numberOfLines={1}
+                variant="caption_deprecated">
                 {currentScreenState === ScannerModalState.ScanQr
                   ? displayName?.name
                   : t('Scan a wallet address')}

@@ -87,7 +87,7 @@ export default function SwapSummaryItem({
     if (status === TransactionStatus.Failed) {
       if (swapFormState) {
         return (
-          <Text color="accentAction" variant="mediumLabel" onPress={onRetry}>
+          <Text color="accentAction" variant="buttonLabelMedium" onPress={onRetry}>
             {t('Retry')}
           </Text>
         )

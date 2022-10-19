@@ -37,7 +37,7 @@ function WatchedWalletsItem({
             showAddressAsSubtitle
             address={address}
             size={30}
-            variant="subhead"
+            variant="subheadLarge"
             verticalGap="none"
           />
         </Box>
@@ -47,7 +47,7 @@ function WatchedWalletsItem({
           borderRadius="md"
           borderWidth={1}
           p="xs"
-          textVariant="smallLabel"
+          textVariant="buttonLabelSmall"
           onPress={isWatched ? onUnwatch : onWatch}>
           {isWatched ? t('Remove') : t('Watch')}
         </TextButton>
@@ -103,7 +103,7 @@ export function WatchedWalletsScreen() {
       ItemSeparatorComponent={() => <Separator mx="md" />}
       ScrolledScreenHeader={
         <BackHeader>
-          <Text variant="subhead">{headerText}</Text>
+          <Text variant="subheadLarge">{headerText}</Text>
         </BackHeader>
       }
       data={originalWallets.current}

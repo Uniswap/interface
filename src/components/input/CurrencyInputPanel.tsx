@@ -97,7 +97,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   return (
     <Flex gap="xxs" {...transformedProps}>
       {currency && isOutput && (
-        <Text color="textSecondary" pb="xs" variant="caption">
+        <Text color="textSecondary" pb="xs" variant="caption_deprecated">
           {t("You'll receive")}
         </Text>
       )}

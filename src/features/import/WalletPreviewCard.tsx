@@ -60,7 +60,7 @@ export default function WalletPreviewCard({
             verticalGap="none"
           />
         </Flex>
-        <Text color="textSecondary" variant="caption">
+        <Text color="textSecondary" variant="caption_deprecated">
           {formatUSDPrice(balance)}
         </Text>
       </Flex>

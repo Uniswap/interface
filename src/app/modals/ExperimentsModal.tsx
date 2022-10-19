@@ -117,13 +117,13 @@ function SectionHeader({
       justifyContent="space-between"
       py="xs">
       <Flex row gap="sm">
-        <Text variant="subhead">{emoji}</Text>
-        <Text variant="subhead">{title}</Text>
+        <Text variant="subheadLarge">{emoji}</Text>
+        <Text variant="subheadLarge">{title}</Text>
       </Flex>
       <PrimaryButton
         label="Reset"
         p="xs"
-        textVariant="badge"
+        textVariant="badge_deprecated"
         variant="paleOrange"
         onPress={onResetPress}
       />
@@ -153,7 +153,7 @@ function ExperimentRow({
   return (
     <Flex gap="xs">
       <Flex row alignItems="center" flexWrap="wrap" gap="none" justifyContent="space-between">
-        <Text m="none" p="none" variant="body">
+        <Text m="none" p="none" variant="bodyLarge">
           {name}
         </Text>
         <Flex row alignItems="center" gap="none" justifyContent="flex-end">
@@ -170,7 +170,7 @@ function ExperimentRow({
           <PrimaryButton
             label="Override"
             p="xs"
-            textVariant="badge"
+            textVariant="badge_deprecated"
             variant="blue"
             onPress={() => {
               if (!textInput) return
@@ -200,7 +200,7 @@ function FeatureFlagRow({
     localFeatureFlags[name] !== remoteFeatureFlags?.find((flag) => name === flag.name)?.enabled
   return (
     <Flex row alignItems="center" justifyContent="space-between">
-      <Text variant="body">{name}</Text>
+      <Text variant="bodyLarge">{name}</Text>
       <Switch
         thumbColor={isExperimentOverridden ? theme.colors.accentAction : theme.colors.accentActive}
         value={localFeatureFlags[name]}

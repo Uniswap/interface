@@ -27,11 +27,11 @@ export function TabEmptyState({
   return (
     <Flex centered gap="sm" m="sm" style={style} width="100%">
       {title && (
-        <Text textAlign="center" variant="subhead">
+        <Text textAlign="center" variant="subheadLarge">
           {title}
         </Text>
       )}
-      <Text color="textSecondary" textAlign="center" variant="caption">
+      <Text color="textSecondary" textAlign="center" variant="caption_deprecated">
         {description}
       </Text>
       {buttonLabel && (
@@ -39,7 +39,7 @@ export function TabEmptyState({
           borderColor="backgroundOutline"
           borderRadius="md"
           label={buttonLabel}
-          textVariant="smallLabel"
+          textVariant="buttonLabelSmall"
           variant="transparent"
           onPress={onPress}
         />
@@ -49,7 +49,7 @@ export function TabEmptyState({
           borderColor="backgroundOutline"
           borderRadius="md"
           label={additionalButtonLabel}
-          textVariant="smallLabel"
+          textVariant="buttonLabelSmall"
           variant="transparent"
           onPress={onPressAdditional}
         />

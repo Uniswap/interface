@@ -115,7 +115,7 @@ export function CloudBackupPasswordScreen() {
             height={ERROR_ICON_HEIGHT}
             width={ERROR_ICON_HEIGHT}
           />
-          <Text color="accentFailure" textAlign="center" variant="body">
+          <Text color="accentFailure" textAlign="center" variant="bodyLarge">
             {error === PasswordError.InvalidPassword
               ? t('Password must be at least 8 characters')
               : t('Passwords do not match')}
@@ -140,7 +140,7 @@ export function CloudBackupPasswordScreen() {
           label={t('Continue')}
           name={ElementName.Next}
           testID={ElementName.Next}
-          textVariant="mediumLabel"
+          textVariant="buttonLabelMedium"
           variant="onboard"
           onPress={onPressNext}
         />

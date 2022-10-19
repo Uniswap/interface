@@ -19,7 +19,7 @@ function _SortButton({ orderBy, onPress }: FilterGroupProps) {
   return (
     <Button py="xs" onPress={onPress}>
       <Flex centered row bg="backgroundContainer" borderRadius="sm" gap="xxs" p="xs">
-        <Text color="textSecondary" pl="xxxs" textAlign="center" variant="smallLabel">
+        <Text color="textSecondary" pl="xxxs" textAlign="center" variant="buttonLabelSmall">
           {getOrderByLabel(orderBy, t)}
         </Text>
         <Chevron color={theme.colors.textSecondary} direction="s" height={16} width={16} />

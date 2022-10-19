@@ -212,7 +212,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
             label={pendingSession.dapp.url}
             mb="sm"
             p="xs"
-            textVariant="caption"
+            textVariant="caption_deprecated"
             url={pendingSession.dapp.url}
           />
         </Flex>
@@ -235,7 +235,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
             px="md"
             py="sm"
             textAlign="center"
-            textVariant="mediumLabel"
+            textVariant="buttonLabelMedium"
             onPress={() => onPressSettleConnection(false)}>
             {t('Cancel')}
           </TextButton>

@@ -19,7 +19,7 @@ const key = (info: TransactionDetails) => info.hash
 
 const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { title } }) => (
   <Box px="xs" py="md">
-    <Text color="textSecondary" variant="smallLabel">
+    <Text color="textSecondary" variant="buttonLabelSmall">
       {title}
     </Text>
   </Box>

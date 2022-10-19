@@ -131,7 +131,7 @@ export function SettingsCloudBackupScreen({
               onPress={() => {
                 setShowPinWarningModal(true)
               }}>
-              <Text color="textSecondary" variant="smallLabel">
+              <Text color="textSecondary" variant="buttonLabelSmall">
                 {t('Skip')}
               </Text>
             </Button>
@@ -158,7 +158,7 @@ export function SettingsCloudBackupScreen({
               <Box borderColor="accentAction" borderRadius="md" borderWidth={1} padding="sm">
                 <CloudIcon color={theme.colors.accentAction} />
               </Box>
-              <Text textAlign="center" variant="mediumLabel">
+              <Text textAlign="center" variant="buttonLabelMedium">
                 {t('Back up recovery phrase to iCloud?')}
               </Text>
               <Text color="textSecondary" textAlign="center" variant="bodySmall">

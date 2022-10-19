@@ -66,7 +66,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 {t('Items')}
               </Text>
               {collection?.stats.total_supply && (
-                <Text variant="subhead">{formatNumber(collection?.stats.total_supply)}</Text>
+                <Text variant="subheadLarge">{formatNumber(collection?.stats.total_supply)}</Text>
               )}
             </Flex>
             <Flex fill alignItems="center" gap="xxs">
@@ -74,7 +74,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 {t('Owners')}
               </Text>
               {collection?.stats.num_owners && (
-                <Text variant="subhead">{formatNumber(collection?.stats.num_owners)}</Text>
+                <Text variant="subheadLarge">{formatNumber(collection?.stats.num_owners)}</Text>
               )}
             </Flex>
             {collection?.stats.floor_price && (
@@ -82,7 +82,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 <Text color="textTertiary" variant="bodySmall">
                   {t('Floor')}
                 </Text>
-                <Text variant="subhead">
+                <Text variant="subheadLarge">
                   {t('{{price}} ETH', {
                     price: formatNFTFloorPrice(collection?.stats.floor_price),
                   })}
@@ -104,7 +104,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 name={ElementName.NFTCollectionWebsite}
                 testID={ElementName.NFTCollectionWebsite}
                 onPress={() => openUri(collection.external_url)}>
-                <Text color="accentAction" variant="badge">
+                <Text color="accentAction" variant="badge_deprecated">
                   {t('Website ↗')}
                 </Text>
               </Button>
@@ -115,7 +115,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 name={ElementName.NFTCollectionTwitter}
                 testID={ElementName.NFTCollectionTwitter}
                 onPress={() => openUri(`https://twitter.com/${collection?.twitter_username}`)}>
-                <Text color="accentAction" variant="badge">
+                <Text color="accentAction" variant="badge_deprecated">
                   {t('Twitter ↗')}
                 </Text>
               </Button>
@@ -126,7 +126,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 name={ElementName.NFTCollectionDiscord}
                 testID={ElementName.NFTCollectionDiscord}
                 onPress={() => openUri(collection.discord_url)}>
-                <Text color="accentAction" variant="badge">
+                <Text color="accentAction" variant="badge_deprecated">
                   {t('Discord ↗')}
                 </Text>
               </Button>
@@ -211,7 +211,7 @@ export function NFTCollectionScreen({
         }
         pt="xxs"
         px="xs">
-        <Text variant="subhead">{collection?.name}</Text>
+        <Text variant="subheadLarge">{collection?.name}</Text>
       </BackHeader>
     ),
     [theme.colors.textSecondary, collection?.name, onShare]
@@ -229,7 +229,7 @@ export function NFTCollectionScreen({
             <NFTCollectionHeader collection={collection} collectionName={collection?.name ?? ''} />
           )}
         </Box>
-        <Text mx="lg" variant="mediumLabel">
+        <Text mx="lg" variant="buttonLabelMedium">
           {owner === activeAddress
             ? t('Your {{collection}}', { collection: collection?.name ?? '' })
             : t("{{owner}}'s NFTs", { owner: ownerDisplayName?.name ?? 'Unknown' })}

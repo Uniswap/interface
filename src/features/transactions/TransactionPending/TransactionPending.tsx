@@ -41,11 +41,11 @@ export function TransactionPending({
         </Flex>
         <Flex centered gap="sm">
           <Text variant="headlineSmall">{title}</Text>
-          <Text color="textTertiary" textAlign="center" variant="body">
+          <Text color="textTertiary" textAlign="center" variant="bodyLarge">
             {description}
           </Text>
           {transaction?.status === TransactionStatus.Failed ? (
-            <TextButton textColor="accentAction" textVariant="body" onPress={onTryAgain}>
+            <TextButton textColor="accentAction" textVariant="bodyLarge" onPress={onTryAgain}>
               {t('Try again')}
             </TextButton>
           ) : null}

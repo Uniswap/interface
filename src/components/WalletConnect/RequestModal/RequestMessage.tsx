@@ -59,7 +59,7 @@ const MAX_TYPED_DATA_PARSE_DEPTH = 3
 // recursively parses typed data objects and adds margin to left
 const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
   if (depth === MAX_TYPED_DATA_PARSE_DEPTH + 1) {
-    return <Text variant="code">...</Text>
+    return <Text variant="code_deprecated">...</Text>
   }
 
   return (
@@ -70,7 +70,10 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
         if (typeof childValue === 'object') {
           return (
             <Flex gap="xxs">
-              <Text color="textTertiary" style={{ marginLeft: depth * 10 }} variant="code">
+              <Text
+                color="textTertiary"
+                style={{ marginLeft: depth * 10 }}
+                variant="code_deprecated">
                 {objKey}
               </Text>
               {getParsedObjectDisplay(chainId, childValue, depth + 1)}
@@ -81,14 +84,18 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
         if (typeof childValue === 'string') {
           return (
             <Flex row alignItems="flex-start" gap="xs" style={{ marginLeft: depth * 10 }}>
-              <Text color="textTertiary" py="xxs" variant="code">
+              <Text color="textTertiary" py="xxs" variant="code_deprecated">
                 {objKey}
               </Text>
               <Flex flexShrink={1}>
                 {getValidAddress(childValue, true) ? (
-                  <AddressButton address={childValue} chainId={chainId} textVariant="code" />
+                  <AddressButton
+                    address={childValue}
+                    chainId={chainId}
+                    textVariant="code_deprecated"
+                  />
                 ) : (
-                  <Text py="xxs" variant="code">
+                  <Text py="xxs" variant="code_deprecated">
                     {childValue}
                   </Text>
                 )}
@@ -168,7 +175,7 @@ function TransactionMessage({
             px="xs"
             py="xxs"
             style={{ backgroundColor: opacify(20, theme.colors.black) }}>
-            <Text color="textPrimary" variant="code">
+            <Text color="textPrimary" variant="code_deprecated">
               {parsedData.name}
             </Text>
           </Box>

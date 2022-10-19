@@ -78,7 +78,7 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
             testID={ElementName.Skip}
             textAlign="center"
             textColor="textPrimary"
-            textVariant="mediumLabel"
+            textVariant="buttonLabelMedium"
             onPress={onPressNext}>
             {t('Maybe later')}
           </TextButton>

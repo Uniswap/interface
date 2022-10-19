@@ -17,11 +17,11 @@ export function SettingsTestConfigs() {
       <ScrollView contentContainerStyle={{ ...flex.fill, paddingTop: theme.spacing.xxl }}>
         <Flex>
           <BackHeader alignment="left">
-            <Text variant="subhead">Test Configs</Text>
+            <Text variant="subheadLarge">Test Configs</Text>
           </BackHeader>
 
-          <Text variant="body">List of all test configs available to the app</Text>
-          <Text variant="caption">
+          <Text variant="bodyLarge">List of all test configs available to the app</Text>
+          <Text variant="caption_deprecated">
             Remote-only test configs cannot be toggled locally. Use the Firebase console instead.
           </Text>
           <ScrollView>
@@ -30,14 +30,14 @@ export function SettingsTestConfigs() {
 
               return (
                 <Flex key={name} row alignItems="center" justifyContent="space-between">
-                  <Text variant="body">{name}</Text>
+                  <Text variant="bodyLarge">{name}</Text>
                   {configValue.getSource() === 'default' ? (
                     <Switch
                       value={enabled}
                       onValueChange={() => toggleLocalConfig({ config: name, enabled: !enabled })}
                     />
                   ) : (
-                    <Text variant="caption">Remote only</Text>
+                    <Text variant="caption_deprecated">Remote only</Text>
                   )}
                 </Flex>
               )

@@ -102,7 +102,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
           label={t('Continue')}
           name={ElementName.Next}
           testID={ElementName.Next}
-          textVariant="mediumLabel"
+          textVariant="buttonLabelMedium"
           variant="onboard"
           onPress={onPressNext}
         />
@@ -173,7 +173,7 @@ function CustomizationSection({
             </AnimatedButton>
           )}
         </Flex>
-        <Text color="textSecondary" variant="body">
+        <Text color="textSecondary" variant="bodyLarge">
           {shortenAddress(address)}
         </Text>
       </Flex>
@@ -188,7 +188,7 @@ function CustomizationSection({
                 px="md"
                 py="sm"
                 textColor="textPrimary"
-                textVariant="smallLabel"
+                textVariant="buttonLabelSmall"
                 onPress={() => setAccountName(item)}>
                 {item}
               </TextButton>

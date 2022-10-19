@@ -40,7 +40,7 @@ export function ClientDetails({
           mt="xs"
           px="xs"
           py="xxs"
-          textVariant="caption"
+          textVariant="caption_deprecated"
           url={dapp.url}
         />
       </Flex>

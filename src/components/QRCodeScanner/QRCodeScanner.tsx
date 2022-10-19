@@ -143,7 +143,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
             top={0}
             width="100%"
             onLayout={(event: any) => setInfoLayout(event.nativeEvent.layout)}>
-            <Text color="textPrimary" variant="largeLabel">
+            <Text color="textPrimary" variant="buttonLabelLarge">
               {t('Scan a QR code')}
             </Text>
             {isWalletConnectModal ? (
@@ -190,7 +190,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
                 py="sm"
                 style={{ backgroundColor: opacify(40, theme.colors.black) }}>
                 <GlobalIcon color={theme.colors.white} height={20} strokeWidth={2} width={20} />
-                <Text color="white" variant="mediumLabel">
+                <Text color="white" variant="buttonLabelMedium">
                   {props.numConnections === 1
                     ? t('1 site connected')
                     : t('{{numConnections}} sites connected', {

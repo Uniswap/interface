@@ -33,7 +33,7 @@ export function FavoriteHeaderRow({
           />
         </Button>
       ) : (
-        <TextButton textColor="accentActive" textVariant="smallLabel" onPress={onPress}>
+        <TextButton textColor="accentActive" textVariant="buttonLabelSmall" onPress={onPress}>
           {t('Done')}
         </TextButton>
       )}

@@ -44,10 +44,10 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
       <Flex row alignItems="center" gap="sm" px="xs" py="sm">
         <TokenLogo size={theme.imageSizes.lg} symbol={symbol} url={logoUrl ?? undefined} />
         <Flex gap="none">
-          <Text color="textPrimary" variant="subhead">
+          <Text color="textPrimary" variant="bodyLarge">
             {name}
           </Text>
-          <Text color="textSecondary" variant="caption">
+          <Text color="textSecondary" variant="subheadSmall">
             {symbol.toUpperCase() ?? ''}
           </Text>
         </Flex>

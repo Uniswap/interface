@@ -108,7 +108,7 @@ function TransactionSummaryLayout({
             )}
             <Flex grow gap="xxxs">
               <Flex row alignItems="center" gap="xxs">
-                <Text numberOfLines={1} variant="mediumLabel">
+                <Text numberOfLines={1} variant="buttonLabelMedium">
                   {title}
                 </Text>
                 {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} height={16} />}
@@ -117,7 +117,7 @@ function TransactionSummaryLayout({
                 )}
               </Flex>
               {caption && (
-                <Text color="textSecondary" variant="caption">
+                <Text color="textSecondary" variant="caption_deprecated">
                   {caption}
                 </Text>
               )}
@@ -127,7 +127,7 @@ function TransactionSummaryLayout({
             <Flex alignItems="flex-end" gap="xxxs">
               <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
               {queued && (
-                <Text color="textSecondary" variant="badge">
+                <Text color="textSecondary" variant="badge_deprecated">
                   {t('Queued')}
                 </Text>
               )}
@@ -181,11 +181,11 @@ export function AssetUpdateLayout({
 }) {
   return (
     <Flex shrink alignItems="flex-end" gap="xxxs">
-      <Text numberOfLines={1} variant="body">
+      <Text numberOfLines={1} variant="bodyLarge">
         {title}
       </Text>
       {caption && (
-        <Text color="textSecondary" numberOfLines={1} variant="caption">
+        <Text color="textSecondary" numberOfLines={1} variant="caption_deprecated">
           {caption}
         </Text>
       )}

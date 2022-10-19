@@ -83,7 +83,7 @@ export default function WarningModal({
         <Flex centered borderColor={alertColor.text} borderRadius="md" borderWidth={1} p="sm">
           <AlertTriangleIcon color={theme.colors[alertColor.text]} height={24} width={24} />
         </Flex>
-        <Text textAlign="center" variant="mediumLabel">
+        <Text textAlign="center" variant="buttonLabelMedium">
           {title}
         </Text>
         {caption && (

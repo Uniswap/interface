@@ -27,7 +27,7 @@ Primary.args = {
   children: (
     <Flex>
       <BaseCard.Header subtitle="$124.34" title="Tokens" onPress={() => {}} />
-      <Text variant="body">My Content</Text>
+      <Text variant="bodyLarge">My Content</Text>
     </Flex>
   ),
 }

@@ -82,20 +82,20 @@ function UniconOptions({ address, ensName }: { address: string; ensName?: string
   const displayName = useDisplayName(address)
   return (
     <Flex centered gap="sm" p="sm">
-      <Text variant="subhead">
+      <Text variant="subheadLarge">
         {ensName ? ensName : displayName?.name}: {address}
       </Text>
       <Flex row>
         <Flex>
-          <Text variant="subhead">Option 1</Text>
+          <Text variant="subheadLarge">Option 1</Text>
           <Unicon address={address} randomSeed={0} size={50} />
         </Flex>
         <Flex>
-          <Text variant="subhead">Option 2</Text>
+          <Text variant="subheadLarge">Option 2</Text>
           <Unicon address={address} randomSeed={545} size={50} />
         </Flex>
         <Flex>
-          <Text variant="subhead">Option 3</Text>
+          <Text variant="subheadLarge">Option 3</Text>
           <Unicon address={address} randomSeed={424} size={50} />
         </Flex>
       </Flex>
@@ -108,7 +108,7 @@ function AddressSearchResult({ searchQuery }: { searchQuery: string }) {
 
   if (!ensAddress || !ensName) return null
   if (!isEthAddress(ensAddress)) {
-    return <Text variant="subhead">Not a valid address</Text>
+    return <Text variant="subheadLarge">Not a valid address</Text>
   }
 
   return <UniconOptions address={ensAddress} ensName={ensName} />
@@ -155,14 +155,14 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
         {screenState === VisibleUnicons.EmblemContainerCombos &&
           Array.from(Array(UniconNumOptions[UniconAttributes.Shape]).keys()).map((i) => (
             <Flex key={'EmblemContainerCombo' + i}>
-              <Text variant="body">Shape {i + 1}</Text>
+              <Text variant="bodyLarge">Shape {i + 1}</Text>
               <UniconShapeBlock shapeIndex={i} />
             </Flex>
           ))}
         {screenState === VisibleUnicons.ColorCombos &&
           Array.from(Array(UniconNumOptions[UniconAttributes.GradientStart]).keys()).map((i) => (
             <Flex key={'ColorCombo' + i}>
-              <Text variant="body">GradientStart {i + 1}</Text>
+              <Text variant="bodyLarge">GradientStart {i + 1}</Text>
               <UniconGradientStartBlock gradientStartIndex={i} />
             </Flex>
           ))}
@@ -188,7 +188,7 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
                 showAddressAsSubtitle
                 address="0x3Ec390c6372353703Dfece9755e4CC7Ab59A1372"
                 size={36}
-                variant="body"
+                variant="bodyLarge"
                 verticalGap="none"
               />
               <Flex row>

@@ -69,7 +69,12 @@ function PortfolioTokensContent({ owner }: { owner?: string }) {
         <Flex gap="md" my="sm">
           {isOtherOwner ? (
             <BackHeader>
-              <AddressDisplay address={owner} color="textSecondary" size={16} variant="subhead" />
+              <AddressDisplay
+                address={owner}
+                color="textSecondary"
+                size={16}
+                variant="subheadLarge"
+              />
             </BackHeader>
           ) : (
             <BackButton showButtonLabel />
@@ -93,7 +98,7 @@ function PortfolioTokensContent({ owner }: { owner?: string }) {
         <BackHeader>
           <Flex centered gap="none">
             {isOtherOwner ? (
-              <AddressDisplay address={owner} size={16} variant="subhead" />
+              <AddressDisplay address={owner} size={16} variant="subheadLarge" />
             ) : (
               <TotalBalance owner={activeAddress} variant="subheadSmall" />
             )}

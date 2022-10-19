@@ -67,12 +67,12 @@ export function SettingsWalletEdit({
   return (
     <Screen>
       <BackHeader alignment="left" mx="md" pt="md">
-        <Text variant="subhead">{t('Nickname and theme')}</Text>
+        <Text variant="subheadLarge">{t('Nickname and theme')}</Text>
       </BackHeader>
       <Flex gap="xl" px="lg" py="lg">
         <Flex gap="none">
           <Box bg="backgroundBackdrop" pb="md">
-            <Text color="textSecondary" variant="subhead">
+            <Text color="textSecondary" variant="subheadLarge">
               {t('Nickname')}
             </Text>
           </Box>
@@ -124,7 +124,7 @@ export function SettingsWalletEdit({
         </Flex>
         <Flex gap="none">
           <Box bg="backgroundBackdrop" pb="md">
-            <Text color="textSecondary" variant="subhead">
+            <Text color="textSecondary" variant="subheadLarge">
               {t('Theme')}
             </Text>
           </Box>

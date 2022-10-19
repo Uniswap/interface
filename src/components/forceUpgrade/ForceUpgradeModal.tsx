@@ -94,7 +94,7 @@ export function ForceUpgradeModal() {
               <Button onPress={onDismiss}>
                 <BackButtonView size={BACK_BUTTON_SIZE} />
               </Button>
-              <Text variant="subhead">{t('Recovery phrase')}</Text>
+              <Text variant="subheadLarge">{t('Recovery phrase')}</Text>
               <Box width={BACK_BUTTON_SIZE} />
             </Flex>
             <SeedPhraseDisplay mnemonicId={mnemonicId} onDismiss={onDismiss} />

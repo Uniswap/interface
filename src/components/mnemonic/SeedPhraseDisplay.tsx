@@ -66,7 +66,7 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props) {
               name={ElementName.Next}
               py="md"
               testID={ElementName.Next}
-              textVariant="largeLabel"
+              textVariant="buttonLabelLarge"
               variant="gray"
               onPress={() => {
                 setShowSeedPhrase(false)

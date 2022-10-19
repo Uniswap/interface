@@ -13,7 +13,7 @@ export function TokenLoader() {
         <Flex shrink alignItems="flex-start" gap="none" width="100%">
           <Box bg="backgroundAction" borderRadius="xs" width="100%">
             <HiddenFromScreenReaders>
-              <Text color="none" opacity={0} variant="subhead">
+              <Text color="none" opacity={0} variant="subheadLarge">
                 Token Name Placeholder
               </Text>
             </HiddenFromScreenReaders>
@@ -21,7 +21,7 @@ export function TokenLoader() {
           <Flex row alignItems="center" height={TOKEN_SUBHEAD_ROW_HEIGHT} width="100%">
             <Box bg="backgroundAction" borderRadius="xs" width="25%">
               <HiddenFromScreenReaders>
-                <Text color="none" opacity={0} variant="caption">
+                <Text color="none" opacity={0} variant="caption_deprecated">
                   Ticker Placeholder
                 </Text>
               </HiddenFromScreenReaders>

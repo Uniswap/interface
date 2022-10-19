@@ -37,7 +37,7 @@ function ExploreWalletsTab({ listRef }: { listRef?: React.MutableRefObject<null>
           {hasFavoritedWallets ? (
             <FavoriteWalletsGrid isEditing={isEditing} setIsEditing={setIsEditing} />
           ) : null}
-          <Text color="textSecondary" variant="smallLabel">
+          <Text color="textSecondary" variant="buttonLabelSmall">
             {t('Suggested wallets')}
           </Text>
         </Flex>

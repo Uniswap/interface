@@ -77,7 +77,7 @@ export function SettingsCloudBackupStatus({
   return (
     <Screen mt="lg" mx="lg">
       <BackHeader alignment="left" mb="md">
-        <Text variant="subhead">{t('iCloud backup')}</Text>
+        <Text variant="subheadLarge">{t('iCloud backup')}</Text>
       </BackHeader>
 
       <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="md">
@@ -88,9 +88,9 @@ export function SettingsCloudBackupStatus({
             )}
           </Text>
           <Flex row justifyContent="space-between">
-            <Text variant="subhead">{t('Recovery phrase')}</Text>
+            <Text variant="subheadLarge">{t('Recovery phrase')}</Text>
             <Flex row alignItems="center" gap="sm" justifyContent="space-around">
-              <Text color="textSecondary" variant="caption">
+              <Text color="textSecondary" variant="caption_deprecated">
                 {t('Backed up')}
               </Text>
 
@@ -106,7 +106,7 @@ export function SettingsCloudBackupStatus({
             height={56}
             label={t('Delete iCloud backup')}
             name={ElementName.Remove}
-            textVariant="largeLabel"
+            textVariant="buttonLabelLarge"
             variant="failure"
             onPress={() => {
               setShowBackupDeleteWarning(true)
@@ -141,7 +141,7 @@ export function SettingsCloudBackupStatus({
                   showAddressAsSubtitle
                   address={account.address}
                   size={36}
-                  variant="subhead"
+                  variant="subheadLarge"
                   verticalGap="none"
                 />
               ))}

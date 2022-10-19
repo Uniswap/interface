@@ -17,7 +17,7 @@ export const PortfolioBalanceChart = ({ owner }: { owner: Address }) => {
     // TODO(MOB-1553): improve portfolio chart error state
     return (
       <Flex centered mx="lg" my="md">
-        <Text color="accentFailure" textAlign="center" variant="body">
+        <Text color="accentFailure" textAlign="center" variant="bodyLarge">
           {t('Could not retrieve historical portfolio balances')}
         </Text>
       </Flex>
@@ -35,7 +35,7 @@ export const PortfolioBalanceChart = ({ owner }: { owner: Address }) => {
           px="xs"
           py="xxs">
           <NetworkLogo chainId={ChainId.Mainnet} size={16} />
-          <Text color="textTertiary" variant="smallLabel">
+          <Text color="textTertiary" variant="buttonLabelSmall">
             {t('Mainnet balance')}
           </Text>
         </Flex>

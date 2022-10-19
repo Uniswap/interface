@@ -57,10 +57,18 @@ export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
       <StyledReText color="textPrimary" text={priceFormatted} variant="headlineLarge" />
       <Flex row gap="xxs">
         <Flex row gap="none">
-          <StyledReText color="textSecondary" text={percentChangeFormatted} variant="caption" />
-          <StyledReText style={percentChangeIconStyle} text={percentChangeIcon} variant="caption" />
+          <StyledReText
+            color="textSecondary"
+            text={percentChangeFormatted}
+            variant="caption_deprecated"
+          />
+          <StyledReText
+            style={percentChangeIconStyle}
+            text={percentChangeIcon}
+            variant="caption_deprecated"
+          />
         </Flex>
-        <StyledReText color="textSecondary" text={date} variant="caption" />
+        <StyledReText color="textSecondary" text={date} variant="caption_deprecated" />
       </Flex>
     </Box>
   )

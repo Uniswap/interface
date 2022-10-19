@@ -24,7 +24,7 @@ export function BackButtonView({ size, color, showButtonLabel }: Props) {
         width={size}
       />
       {showButtonLabel && (
-        <Text color="textSecondary" variant="subhead">
+        <Text color="textSecondary" variant="subheadLarge">
           {t('Back')}
         </Text>
       )}

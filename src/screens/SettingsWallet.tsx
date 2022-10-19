@@ -227,7 +227,7 @@ export function SettingsWallet({
         <AddressDisplay
           address={address}
           showViewOnly={readonly}
-          variant="subhead"
+          variant="subheadLarge"
           verticalGap="none"
         />
       </BackHeader>
@@ -241,7 +241,7 @@ export function SettingsWallet({
             renderSectionFooter={() => <Flex pt="lg" />}
             renderSectionHeader={({ section: { subTitle } }) => (
               <Box bg="backgroundBackdrop" pb="sm">
-                <Text color="textSecondary" variant="subhead">
+                <Text color="textSecondary" variant="subheadLarge">
                   {subTitle}
                 </Text>
               </Box>
@@ -260,7 +260,7 @@ export function SettingsWallet({
           }}
           testID={ElementName.Remove}
           textColor="accentFailure"
-          textVariant="largeLabel"
+          textVariant="buttonLabelLarge"
           visible={!shouldHideRemoveOption}
           width="100%"
           onPress={() => setShowRemoveWalletModal(true)}

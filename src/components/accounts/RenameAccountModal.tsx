@@ -51,7 +51,7 @@ export function RenameAccountModal({ address, onCancel, onConfirm }: RenameAccou
           width={150}
           onPress={onPressConfirm}
         />
-        <TextButton mt="lg" textColor="white" textVariant="body" onPress={onPressCancel}>
+        <TextButton mt="lg" textColor="white" textVariant="bodyLarge" onPress={onPressCancel}>
           {t('Cancel')}
         </TextButton>
       </CenterBox>

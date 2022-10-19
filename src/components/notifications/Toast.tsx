@@ -37,7 +37,7 @@ export function Toast({ label, variant }: ToastProps) {
       shadowRadius={4}
       style={{ borderColor: opacify(60, color) }}
       testID={`toast-${variant}`}>
-      <Text style={{ color }} variant="body">
+      <Text style={{ color }} variant="bodyLarge">
         {label}
       </Text>
       <ToastIcon variant={variant} />

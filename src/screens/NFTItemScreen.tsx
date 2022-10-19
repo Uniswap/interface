@@ -110,7 +110,7 @@ export function NFTItemScreen({
                       </Box>
                     ) : null}
                     <Flex grow row alignItems="center" flexBasis={0} gap="xs">
-                      <Text color="textPrimary" numberOfLines={1} variant="subhead">
+                      <Text color="textPrimary" numberOfLines={1} variant="subheadLarge">
                         {asset.collection.name}
                       </Text>
                       {asset.collection.safelist_request_status === 'verified' && (

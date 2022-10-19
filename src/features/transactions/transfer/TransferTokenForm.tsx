@@ -204,7 +204,7 @@ export function TransferTokenForm({
             label={t('Review transfer')}
             name={ElementName.ReviewTransfer}
             testID={ElementName.ReviewTransfer}
-            textVariant="largeLabel"
+            textVariant="buttonLabelLarge"
             onPress={onPressReview}
           />
         </AnimatedFlex>

@@ -38,7 +38,7 @@ export function CloudBackupScreen({
             name={ElementName.Skip}
             testID={ElementName.Skip}
             onPress={() => setShowPinWarningModal(true)}>
-            <Text color="textSecondary" variant="smallLabel">
+            <Text color="textSecondary" variant="buttonLabelSmall">
               {t('Skip')}
             </Text>
           </Button>
@@ -116,7 +116,7 @@ export function CloudBackupScreen({
       {/* keep spacing consistent when no errors with minHeight */}
       <Box minHeight={30}>
         {error ? (
-          <Text color="accentFailure" textAlign="center" variant="body">
+          <Text color="accentFailure" textAlign="center" variant="bodyLarge">
             {t('Incorrect order. Please try again.')}
           </Text>
         ) : null}

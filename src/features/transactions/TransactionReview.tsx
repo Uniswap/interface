@@ -68,9 +68,9 @@ export function TransactionReview({
               backgroundColor="none"
               borderWidth={0}
               editable={false}
-              fontFamily={theme.textVariants.headlineHero.fontFamily}
-              fontSize={theme.textVariants.headlineHero.fontSize}
-              height={theme.textVariants.headlineHero.lineHeight}
+              fontFamily={theme.textVariants.headlineLarge.fontFamily}
+              fontSize={theme.textVariants.headlineLarge.fontSize}
+              height={theme.textVariants.headlineLarge.lineHeight}
               px="md"
               py="none"
               showCurrencySign={isUSDInput}
@@ -96,8 +96,8 @@ export function TransactionReview({
                 borderWidth={0}
                 editable={false}
                 fontFamily={theme.textVariants.headlineLarge.fontFamily}
-                fontSize={theme.textVariants.headlineHero.fontSize}
-                height={theme.textVariants.headlineHero.lineHeight}
+                fontSize={theme.textVariants.headlineLarge.fontSize}
+                height={theme.textVariants.headlineLarge.lineHeight}
                 showCurrencySign={isUSDInput}
                 showSoftInputOnFocus={false}
                 testID="amount-input-out"
@@ -109,7 +109,7 @@ export function TransactionReview({
           </Flex>
         ) : recipient ? (
           <Flex centered gap="sm">
-            <Text color="textTertiary" variant="caption">
+            <Text color="textTertiary" variant="caption_deprecated">
               {t('To')}
             </Text>
             <Flex centered gap="xs">
@@ -157,7 +157,7 @@ function CurrencyLogoWithLabel({ currency }: { currency: Currency }) {
   return (
     <Flex centered row gap="xs">
       <CurrencyLogo currency={currency} size={28} />
-      <Text color="textPrimary" variant="largeLabel">
+      <Text color="textPrimary" variant="buttonLabelLarge">
         {currency.symbol}
       </Text>
     </Flex>

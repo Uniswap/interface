@@ -73,7 +73,7 @@ export function ImportAccountForm({ onSuccess }: Props) {
       {({ handleChange, handleBlur, values, touched, errors }) => (
         <Trace section={SectionName.ImportAccountForm}>
           <CenterBox>
-            <Text color="accentWarning" px="md" textAlign="center" variant="body">
+            <Text color="accentWarning" px="md" textAlign="center" variant="bodyLarge">
               {t('Warning: this wallet is still experimental. Use with caution.')}
             </Text>
             <CenterBox
@@ -104,7 +104,7 @@ export function ImportAccountForm({ onSuccess }: Props) {
             </CenterBox>
 
             {touched.input && errors.input && (
-              <Text color="accentFailure" mt="md" variant="body">
+              <Text color="accentFailure" mt="md" variant="bodyLarge">
                 {errors.input}
               </Text>
             )}
@@ -159,7 +159,7 @@ function PasteButton() {
   }
   const { t } = useTranslation()
   return (
-    <TextButton p="md" textColor="accentAction" textVariant="mediumLabel" onPress={onPress}>
+    <TextButton p="md" textColor="accentAction" textVariant="buttonLabelMedium" onPress={onPress}>
       {t('Paste')}
     </TextButton>
   )

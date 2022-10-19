@@ -28,7 +28,7 @@ export function TooltipButton({ title, lines, size, ...rest }: Props) {
       </Button>
       <Modal hide={() => setShowModal(false)} title={title} visible={showModal}>
         {lines.map((l) => (
-          <Text mt="sm" textAlign="center" variant="body">
+          <Text mt="sm" textAlign="center" variant="bodyLarge">
             {l}
           </Text>
         ))}
@@ -60,7 +60,7 @@ export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps) {
         isVisible={showModal}
         name={ModalName.TooltipContent}
         onClose={() => setShowModal(false)}>
-        <Text p="md" variant="body">
+        <Text p="md" variant="bodyLarge">
           {content}
         </Text>
       </BottomSheetDetachedModal>

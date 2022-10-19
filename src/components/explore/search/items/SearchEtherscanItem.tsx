@@ -42,7 +42,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
       <Flex row alignItems="center" gap="sm" justifyContent="space-between" px="xs" py="sm">
         <Flex centered row gap="md">
           <EtherscanLogo height={35} width={35} />
-          <Text variant="mediumLabel">{shortenAddress(address)}</Text>
+          <Text variant="buttonLabelMedium">{shortenAddress(address)}</Text>
         </Flex>
         <Arrow color={theme.colors.textSecondary} direction="ne" size={24} />
       </Flex>

@@ -13,7 +13,7 @@ export function SettingsHelpCenterScreen() {
     <Screen>
       <Box alignItems="center" flexDirection="row" mb="lg" mx="lg">
         <BackButton mr="md" />
-        <Text variant="subhead">{t('Help Center')}</Text>
+        <Text variant="subheadLarge">{t('Help Center')}</Text>
       </Box>
       <WebView source={{ uri: 'https://help.uniswap.org' }} />
     </Screen>

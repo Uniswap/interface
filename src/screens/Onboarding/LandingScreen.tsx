@@ -79,7 +79,7 @@ export function LandingScreen({ navigation }: Props) {
             onPress={onPressImportWallet}>
             <Text
               style={{ color: isDarkMode ? colors.white : colors.magenta300 }}
-              variant="mediumLabel">
+              variant="buttonLabelMedium">
               {t('I already have a wallet')}
             </Text>
           </TextButton>
@@ -91,12 +91,12 @@ export function LandingScreen({ navigation }: Props) {
               pt="sm"
               testID={ElementName.OnboardingExplore}
               onPress={onPressExplore}>
-              <Text variant="caption">{t('Not ready? Try')}</Text>
-              <Text color="accentAction" variant="caption">
+              <Text variant="caption_deprecated">{t('Not ready? Try')}</Text>
+              <Text color="accentAction" variant="caption_deprecated">
                 {' '}
                 {t('Exploring')}{' '}
               </Text>
-              <Text variant="caption">{t('first.')}</Text>
+              <Text variant="caption_deprecated">{t('first.')}</Text>
             </Button>
           </DevelopmentOnly>
         </Flex>

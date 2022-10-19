@@ -45,7 +45,7 @@ export default function SessionsButton({
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex row alignItems="center" gap="sm">
           <OverlayGroup iconSize={ICON_SIZE} icons={sessionIcons} />
-          <Text variant="subhead">
+          <Text variant="subheadLarge">
             {sessions.length + ' ' + i18n.t('{{siteText}} connected', { siteText })}
           </Text>
         </Flex>
