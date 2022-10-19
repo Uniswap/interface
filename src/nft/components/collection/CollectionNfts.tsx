@@ -311,13 +311,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   return (
     <>
-      <AnimatedBox position="sticky" top="72" width="full" zIndex="3">
-        <Box
-          backgroundColor="backgroundFloating"
-          width="full"
-          paddingBottom="8"
-          style={{ backdropFilter: 'blur(24px)' }}
-        >
+      <AnimatedBox position="sticky" top="72" width="full" zIndex="3" marginBottom="20">
+        <Box backgroundColor="backgroundFloating" width="full" style={{ backdropFilter: 'blur(24px)' }}>
           <ActionsContainer>
             <Row gap="12">
               <FilterButton
@@ -349,7 +344,19 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               </SweepButton>
             )}
           </ActionsContainer>
-          <Row paddingTop="12" gap="8" flexWrap="wrap">
+          {sweepIsOpen && buyNow && !hasErc1155s && (
+            <Sweep
+              contractAddress={contractAddress}
+              collectionStats={collectionStats}
+              minPrice={debouncedMinPrice}
+              maxPrice={debouncedMaxPrice}
+            />
+          )}
+          <Row
+            paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
+            gap="8"
+            flexWrap="wrap"
+          >
             {markets.map((market) => (
               <TraitChip
                 key={market}
@@ -384,7 +391,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 }}
               />
             )}
-            {traits.length || markets.length > 0 || minMaxPriceChipText ? (
+            {!!traits.length || !!markets.length || minMaxPriceChipText ? (
               <ClearAllButton
                 onClick={() => {
                   reset()
@@ -396,14 +403,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             ) : null}
           </Row>
         </Box>
-        {sweepIsOpen && buyNow && !hasErc1155s && (
-          <Sweep
-            contractAddress={contractAddress}
-            collectionStats={collectionStats}
-            minPrice={debouncedMinPrice}
-            maxPrice={debouncedMaxPrice}
-          />
-        )}
       </AnimatedBox>
       <InfiniteScroll
         next={fetchNextPage}
