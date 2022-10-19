@@ -1,8 +1,8 @@
 name: Update GraphQL Schema
 on:
   schedule:
-    # “At 12:00 on Monday and Wednesday.”
-    - cron: '0 12 * * 1,3'
+    # “At 12:00 on Wednesday.”
+    - cron: '0 12 * * 3'
 
   # manual trigger
   workflow_dispatch:
