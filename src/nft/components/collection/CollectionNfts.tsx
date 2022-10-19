@@ -14,6 +14,7 @@ import {
   CollectionFilters,
   initialCollectionFilterState,
   SortBy,
+  SortByQueries,
   useCollectionFilters,
   useFiltersExpanded,
   useIsMobile,
@@ -51,6 +52,8 @@ const ClearAllButton = styled.button`
   cursor: pointer;
   background: none;
 `
+
+const DEFAULT_ASSET_QUERY_AMOUNT = 25
 
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
   const traits = useCollectionFilters((state) => state.traits)
@@ -141,7 +144,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     loadNext,
     hasNext,
     isLoadingNext,
-  } = useAssetsQuery(contractAddress, 'PRICE', true, { listed: true }, 25)
+  } = useAssetsQuery(
+    contractAddress,
+    SortByQueries[sortBy].field,
+    SortByQueries[sortBy].asc,
+    { listed: buyNow },
+    DEFAULT_ASSET_QUERY_AMOUNT
+  )
   // console.log(nftQueryAssets)
   // useAssetsPreloadedQuery()
 
