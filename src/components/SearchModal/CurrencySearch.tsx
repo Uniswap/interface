@@ -106,21 +106,14 @@ export function CurrencySearch({
   const native = useNativeCurrency()
   const wrapped = native.wrapped
 
-  const displayCurrencies: Currency[] = useMemo(() => {
+  const searchCurrencies: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
-    let tokens: Currency[] = filteredSortedTokens
-    if (wrapped.symbol?.toLowerCase()?.indexOf(s) !== -1) {
-      // Always bump the wrapped token to the top of the list.
-      tokens = [wrapped, ...tokens.filter((t) => !t.equals(wrapped))]
-    }
-    if (
-      (!disableNonToken && native.symbol?.toLowerCase()?.indexOf(s) !== -1) ||
-      native.name?.toLowerCase()?.indexOf(s) !== -1
-    ) {
-      // Always bump the native token to the top of the list.
-      tokens = [native, ...tokens.filter((t) => !t.equals(native))]
-    }
-    return tokens
+
+    const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
+    const natives = (native.equals(wrapped) ? [native] : [native, wrapped]).filter(
+      (n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1
+    )
+    return [...natives, ...tokens]
   }, [debouncedQuery, filteredSortedTokens, wrapped, disableNonToken, native])
 
   const handleCurrencySelect = useCallback(
@@ -151,17 +144,17 @@ export function CurrencySearch({
         const s = debouncedQuery.toLowerCase().trim()
         if (s === native?.symbol?.toLowerCase()) {
           handleCurrencySelect(native)
-        } else if (displayCurrencies.length > 0) {
+        } else if (searchCurrencies.length > 0) {
           if (
-            displayCurrencies[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
-            displayCurrencies.length === 1
+            searchCurrencies[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
+            searchCurrencies.length === 1
           ) {
-            handleCurrencySelect(displayCurrencies[0])
+            handleCurrencySelect(searchCurrencies[0])
           }
         }
       }
     },
-    [debouncedQuery, native, displayCurrencies, handleCurrencySelect]
+    [debouncedQuery, native, searchCurrencies, handleCurrencySelect]
   )
 
   // menu ui
@@ -233,13 +226,13 @@ export function CurrencySearch({
               )}
             />
           </Column>
-        ) : displayCurrencies?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
+        ) : searchCurrencies?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
           <div style={{ flex: '1' }}>
             <AutoSizer disableWidth>
               {({ height }) => (
                 <CurrencyList
                   height={height}
-                  currencies={displayCurrencies}
+                  currencies={searchCurrencies}
                   otherListTokens={filteredInactiveTokens}
                   onCurrencySelect={handleCurrencySelect}
                   otherCurrency={otherSelectedCurrency}
