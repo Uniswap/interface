@@ -3,7 +3,7 @@ import { formatToDecimal } from 'analytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
-import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatDollarAmt'
+import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatNumbers'
 
 import { BalanceSummaryProps } from './BalanceSummary'
 
@@ -82,7 +82,8 @@ export default function MobileBalanceSummaryFooter({
   tokenAmount,
   nativeCurrencyAmount,
   isNative,
-}: BalanceSummaryProps) {
+  tokenAddress,
+}: BalanceSummaryProps & { tokenAddress: string }) {
   const balanceUsdValue = useStablecoinValue(tokenAmount)
   const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)
 
@@ -97,8 +98,6 @@ export default function MobileBalanceSummaryFooter({
     : undefined
   const nativeBalanceUsd = nativeBalanceUsdValue ? currencyAmountToPreciseFloat(nativeBalanceUsdValue) : undefined
 
-  const outputTokenAddress = tokenAmount?.currency.address ?? nativeCurrencyAmount?.wrapped.currency.address
-
   return (
     <Wrapper>
       {Boolean(formattedBalance !== undefined && !isNative && tokenAmount?.greaterThan(0)) && (
@@ -108,7 +107,7 @@ export default function MobileBalanceSummaryFooter({
             <BalanceValue>
               {formattedBalance} {tokenAmount?.currency?.symbol}
             </BalanceValue>
-            <FiatValue>{formatDollar(balanceUsd, true)}</FiatValue>
+            <FiatValue>{formatDollar({ num: balanceUsd, isPrice: true })}</FiatValue>
           </BalanceTotal>
         </BalanceInfo>
       )}
@@ -119,11 +118,11 @@ export default function MobileBalanceSummaryFooter({
             <BalanceValue>
               {formattedNativeBalance} {nativeCurrencyAmount?.currency?.symbol}
             </BalanceValue>
-            <FiatValue>{formatDollar(nativeBalanceUsd, true)}</FiatValue>
+            <FiatValue>{formatDollar({ num: nativeBalanceUsd, isPrice: true })}</FiatValue>
           </BalanceTotal>
         </BalanceInfo>
       )}
-      <SwapButton to={`/swap?outputCurrency=${outputTokenAddress}`}>
+      <SwapButton to={`/swap?outputCurrency=${tokenAddress}`}>
         <Trans>Swap</Trans>
       </SwapButton>
     </Wrapper>

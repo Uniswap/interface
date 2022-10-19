@@ -100,7 +100,7 @@ export function AboutSection({ address, description, homepageUrl, twitterName }:
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer>
         <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-        <Resource name={'Protocol info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+        <Resource name={'More analytics'} link={`https://info.uniswap.org/#/tokens/${address}`} />
         {homepageUrl && <Resource name={'Website'} link={homepageUrl} />}
         {twitterName && <Resource name={'Twitter'} link={`https://twitter.com/${twitterName}`} />}
       </ResourcesContainer>

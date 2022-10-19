@@ -24,3 +24,7 @@ export const getAssetHref = (asset: GenieAsset | WalletAsset, origin?: DetailsOr
       : (asset as WalletAsset).asset_contract.address
   return `/nfts/asset/${address}/${asset.tokenId}${origin ? `?origin=${origin}` : ''}`
 }
+
+export const getMarketplaceIcon = (marketplace: string) => {
+  return `/nft/svgs/marketplaces/${marketplace}.svg`
+}

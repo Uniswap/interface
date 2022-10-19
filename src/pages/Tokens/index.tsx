@@ -4,12 +4,10 @@ import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
-import FavoriteButton from 'components/Tokens/TokenTable/FavoriteButton'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
-import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { PAGE_SIZE } from 'graphql/data/TopTokens'
 import { chainIdToBackendName, isValidBackendChainName } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
@@ -85,13 +83,13 @@ const Tokens = () => {
 
   useEffect(() => {
     if (!chainNameParam) {
-      navigate(`/tokens/${connectedChainName.toLowerCase()}`)
+      navigate(`/tokens/${connectedChainName.toLowerCase()}`, { replace: true })
     }
   }, [chainNameParam, connectedChainName, navigate])
 
   useOnGlobalChainSwitch((chain) => {
     if (isValidBackendChainName(chain)) {
-      navigate(`/tokens/${chain.toLowerCase()}`)
+      navigate(`/tokens/${chain.toLowerCase()}`, { replace: true })
     }
   })
 
@@ -106,7 +104,6 @@ const Tokens = () => {
         <FiltersWrapper>
           <FiltersContainer>
             <NetworkFilter />
-            {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
             <TimeSelector />
           </FiltersContainer>
           <SearchContainer>
@@ -118,29 +115,6 @@ const Tokens = () => {
         </Suspense>
       </ExploreContainer>
     </Trace>
-  )
-}
-
-export const LoadingTokens = () => {
-  return (
-    <ExploreContainer>
-      <TitleContainer>
-        <ThemedText.LargeHeader>
-          <Trans>Top tokens on Uniswap</Trans>
-        </ThemedText.LargeHeader>
-      </TitleContainer>
-      <FiltersWrapper>
-        <FiltersContainer>
-          <NetworkFilter />
-          {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && <FavoriteButton />}
-          <TimeSelector />
-        </FiltersContainer>
-        <SearchContainer>
-          <SearchBar />
-        </SearchContainer>
-      </FiltersWrapper>
-      <LoadingTokenTable />
-    </ExploreContainer>
   )
 }
 

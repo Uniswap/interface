@@ -22,7 +22,7 @@ import {
   monthYearDayFormatter,
   weekFormatter,
 } from 'utils/formatChartTimes'
-import { formatDollar } from 'utils/formatDollarAmt'
+import { formatDollar } from 'utils/formatNumbers'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
@@ -271,7 +271,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{formatDollar(displayPrice.value, true)}</TokenPrice>
+        <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
         <DeltaContainer>
           {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>

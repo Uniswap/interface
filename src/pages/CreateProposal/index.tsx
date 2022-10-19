@@ -8,7 +8,6 @@ import { Trace } from 'analytics/Trace'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
@@ -34,15 +33,15 @@ import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } f
 import { ProposalEditor } from './ProposalEditor'
 import { ProposalSubmissionModal } from './ProposalSubmissionModal'
 
-const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
-  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
+const PageWrapper = styled(AutoColumn)`
+  padding: 68px 8px 0px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+    padding: 48px 8px 0px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+    padding-top: 20px;
   }
 `
 
@@ -101,8 +100,6 @@ const AutonomousProposalCTA = styled.div`
 `
 
 export default function CreateProposal() {
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const { account, chainId } = useWeb3React()
 
   const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
@@ -243,7 +240,7 @@ ${bodyValue}
 
   return (
     <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
-      <PageWrapper navBarFlag={navBarFlagEnabled}>
+      <PageWrapper>
         <AppBody {...{ maxWidth: '800px' }}>
           <CreateProposalTabs />
           <CreateProposalWrapper>

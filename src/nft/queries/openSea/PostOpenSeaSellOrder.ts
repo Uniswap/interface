@@ -11,6 +11,7 @@ export async function PostOpenSeaSellOrder<T>(
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      'X-API-KEY': process.env.REACT_APP_OPENSEA_API_KEY ?? '',
     },
     ...opts,
   }

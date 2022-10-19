@@ -14,7 +14,7 @@ import { useToggleWalletModal } from 'state/application/hooks'
 
 import * as styles from './sell.css'
 
-const SHOPPING_BAG_WIDTH = 324
+const SHOPPING_BAG_WIDTH = 360
 
 const Profile = () => {
   const sellPageState = useProfilePageState((state) => state.state)

@@ -16,7 +16,12 @@ const fetchQuery = (params: RequestParameters, variables: Variables): Promise<Gr
     variables,
   })
 
-  return fetch(URL, { method: 'POST', body, headers }).then((res) => res.json())
+  return fetch(URL, { method: 'POST', body, headers })
+    .then((res) => res.json())
+    .catch((e) => {
+      console.error(e)
+      return { data: [] }
+    })
 }
 
 export default fetchQuery

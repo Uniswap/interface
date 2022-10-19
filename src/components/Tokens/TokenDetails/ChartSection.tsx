@@ -1,23 +1,21 @@
 import { Trans } from '@lingui/macro'
-import { NativeCurrency, Token } from '@uniswap/sdk-core'
+import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
-import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { PriceDurations, PricePoint, SingleTokenData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import useCurrencyLogoURIs, { getTokenLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
+import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
-import { isAddress } from 'utils'
 
-import { filterTimeAtom, useIsFavorited, useToggleFavorite } from '../state'
-import { ClickFavorited, FavoriteIcon, L2NetworkLogo, LogoContainer } from '../TokenTable/TokenRow'
+import { filterTimeAtom } from '../state'
+import { L2NetworkLogo, LogoContainer } from '../TokenTable/TokenRow'
 import PriceChart from './PriceChart'
 import ShareButton from './ShareButton'
 
@@ -61,28 +59,27 @@ export function useTokenLogoURI(
   token: NonNullable<SingleTokenData> | NonNullable<TopToken>,
   nativeCurrency?: Token | NativeCurrency
 ) {
-  const checksummedAddress = isAddress(token.address)
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
-  return (
-    useCurrencyLogoURIs(nativeCurrency)[0] ??
-    (checksummedAddress && getTokenLogoURI(checksummedAddress, chainId)) ??
-    token.project?.logoUrl
-  )
+  return [
+    ...useCurrencyLogoURIs(nativeCurrency),
+    ...useCurrencyLogoURIs({ ...token, chainId }),
+    token.project?.logoUrl,
+  ][0]
 }
 
 export default function ChartSection({
   token,
+  currency,
   nativeCurrency,
   prices,
 }: {
   token: NonNullable<SingleTokenData>
+  currency?: Currency | null
   nativeCurrency?: Token | NativeCurrency
   prices: PriceDurations
 }) {
-  const isFavorited = useIsFavorited(token.address)
-  const toggleFavorite = useToggleFavorite(token.address)
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
-  const L2Icon = getChainInfo(chainId).circleLogoUrl
+  const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const warning = checkWarning(token.address ?? '')
   const timePeriod = useAtomValue(filterTimeAtom)
 
@@ -113,7 +110,12 @@ export default function ChartSection({
       <TokenInfoContainer>
         <TokenNameCell>
           <LogoContainer>
-            <CurrencyLogo src={logoSrc} size={'32px'} symbol={nativeCurrency?.symbol ?? token.symbol} />
+            <CurrencyLogo
+              src={logoSrc}
+              size={'32px'}
+              symbol={nativeCurrency?.symbol ?? token.symbol}
+              currency={nativeCurrency ? undefined : currency}
+            />
             <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
           </LogoContainer>
           {nativeCurrency?.name ?? token.name ?? <Trans>Name not found</Trans>}
@@ -121,14 +123,7 @@ export default function ChartSection({
           {!warning && <VerifiedIcon size="16px" />}
         </TokenNameCell>
         <TokenActions>
-          {token.name && token.symbol && token.address && (
-            <ShareButton tokenName={token.name} tokenSymbol={token.symbol} tokenAddress={token.address} />
-          )}
-          {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && (
-            <ClickFavorited onClick={toggleFavorite}>
-              <FavoriteIcon isFavorited={isFavorited} />
-            </ClickFavorited>
-          )}
+          {token.name && token.symbol && token.address && <ShareButton token={token} isNative={!!nativeCurrency} />}
         </TokenActions>
       </TokenInfoContainer>
       <ChartContainer>

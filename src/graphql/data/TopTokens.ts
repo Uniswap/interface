@@ -1,9 +1,7 @@
 import graphql from 'babel-plugin-relay/macro'
 import {
-  favoritesAtom,
   filterStringAtom,
   filterTimeAtom,
-  showFavoritesAtom,
   sortAscendingAtom,
   sortMethodAtom,
   TokenSortMethod,
@@ -15,7 +13,7 @@ import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery.graphql'
 import { filterPrices, PricePoint } from './Token'
-import { toHistoryDuration } from './util'
+import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration, unwrapToken } from './util'
 
 const topTokens100Query = graphql`
   query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
@@ -66,13 +64,11 @@ const tokenSparklineQuery = graphql`
 
 export type PrefetchedTopToken = NonNullable<TopTokens100Query['response']['topTokens']>[number]
 
-function useSortedTokens(tokens: TopTokens100Query['response']['topTokens'] | undefined) {
+function useSortedTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
   return useMemo(() => {
-    if (!tokens) return []
-
     let tokenArray = Array.from(tokens)
     switch (sortMethod) {
       case TokenSortMethod.PRICE:
@@ -97,22 +93,13 @@ function useSortedTokens(tokens: TopTokens100Query['response']['topTokens'] | un
   }, [tokens, sortMethod, sortAscending])
 }
 
-function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']>['topTokens']) {
+function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
   const filterString = useAtomValue(filterStringAtom)
-  const favorites = useAtomValue(favoritesAtom)
-  const showFavorites = useAtomValue(showFavoritesAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
   return useMemo(() => {
-    if (!tokens) {
-      return []
-    }
-
     let returnTokens = tokens
-    if (showFavorites) {
-      returnTokens = returnTokens?.filter((token) => token?.address && favorites.includes(token.address))
-    }
     if (lowercaseFilterString) {
       returnTokens = returnTokens?.filter((token) => {
         const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
@@ -122,7 +109,7 @@ function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']>['t
       })
     }
     return returnTokens
-  }, [tokens, showFavorites, lowercaseFilterString, favorites])
+  }, [tokens, lowercaseFilterString])
 }
 
 // Number of items to render in each fetch in infinite scroll.
@@ -136,35 +123,35 @@ interface UseTopTokensReturnValue {
 }
 
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
 
   const environment = useRelayEnvironment()
   const [sparklines, setSparklines] = useState<SparklineMap>({})
-  useMemo(() => {
-    fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, {
-      duration,
-      chain,
-    }).subscribe({
-      next(data) {
-        const map: SparklineMap = {}
-        data.topTokens?.forEach(
-          (current) => current?.address && (map[current.address] = filterPrices(current?.market?.priceHistory))
-        )
-        setSparklines(map)
-      },
-    })
-  }, [chain, duration, environment])
+  useEffect(() => {
+    const subscription = fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, { duration, chain })
+      .map((data) => ({
+        topTokens: data.topTokens?.map((token) => unwrapToken(chainId, token)),
+      }))
+      .subscribe({
+        next(data) {
+          const map: SparklineMap = {}
+          data.topTokens?.forEach(
+            (current) => current?.address && (map[current.address] = filterPrices(current?.market?.priceHistory))
+          )
+          setSparklines(map)
+        },
+      })
+    return () => subscription.unsubscribe()
+  }, [chain, chainId, duration, environment])
 
   useEffect(() => {
     setSparklines({})
   }, [duration])
 
-  const tokens = useFilteredTokens(
-    useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain }).topTokens
-  )
-
-  return {
-    tokens: useSortedTokens(tokens),
-    sparklines,
-  }
+  const { topTokens } = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
+  const mappedTokens = useMemo(() => topTokens?.map((token) => unwrapToken(chainId, token)) ?? [], [chainId, topTokens])
+  const filteredTokens = useFilteredTokens(mappedTokens)
+  const sortedTokens = useSortedTokens(filteredTokens)
+  return useMemo(() => ({ tokens: sortedTokens, sparklines }), [sortedTokens, sparklines])
 }

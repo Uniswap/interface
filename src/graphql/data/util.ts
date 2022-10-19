@@ -1,6 +1,6 @@
-import { NATIVE_CHAIN_ID } from 'analytics/constants'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 
 import { Chain, HistoryDuration } from './__generated__/TokenQuery.graphql'
 
@@ -66,7 +66,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
   OPTIMISM: SupportedChainId.OPTIMISM,
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = ['ARBITRUM', 'CELO', 'ETHEREUM', 'OPTIMISM', 'POLYGON']
+export const BACKEND_CHAIN_NAMES: Chain[] = ['ETHEREUM', 'POLYGON', 'OPTIMISM', 'ARBITRUM', 'CELO']
 
 export function isValidBackendChainName(chainName: string | undefined): chainName is Chain {
   if (!chainName) return false
@@ -86,5 +86,21 @@ export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?:
     return chainName ? `/tokens/${chainName.toLowerCase()}/${address}` : ''
   } else {
     return ''
+  }
+}
+
+export function unwrapToken<T extends { address: string | null } | null>(chainId: number, token: T): T {
+  if (!token?.address) return token
+
+  const address = token.address.toLowerCase()
+  const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+  if (address !== nativeAddress) return token
+
+  const nativeToken = nativeOnChain(chainId)
+  return {
+    ...token,
+    ...nativeToken,
+    address: NATIVE_CHAIN_ID,
+    extensions: undefined, // prevents marking cross-chain wrapped tokens as native
   }
 }
