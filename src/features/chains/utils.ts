@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { appSelect, useAppSelector } from 'src/app/hooks'
-import { ChainId, ChainIdTo } from 'src/constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
 
 export function useActiveChainIds(): ChainId[] {
@@ -13,14 +13,9 @@ export function* selectActiveChainIds() {
   return getSortedActiveChainIds(chains)
 }
 
+// ALL_SUPPORTED_CHAINS is manually sorted by chain TVL
 export function getSortedActiveChainIds(chains: ChainIdTo<ChainState>) {
-  return (
-    Object.keys(chains)
-      .map(Number)
-      .sort()
-      // filter maintains order
-      .filter((n: ChainId) => !!chains[n]?.isActive) as ChainId[]
-  )
+  return ALL_SUPPORTED_CHAIN_IDS.filter((n: ChainId) => !!chains[n]?.isActive) as ChainId[]
 }
 
 export function chainListToStateMap(chainIds: ChainId[]) {

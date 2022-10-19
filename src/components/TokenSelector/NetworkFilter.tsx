@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react'
+import { selectionAsync } from 'expo-haptics'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -10,9 +11,9 @@ import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
+import { useNetworkOptions } from 'src/components/Network/hooks'
 import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
-import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 
 interface NetworkFilterProps {
@@ -22,10 +23,19 @@ interface NetworkFilterProps {
 
 export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProps) {
   const theme = useAppTheme()
-  const activeChains = useActiveChainIds()
-
   const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
+
+  const onPress = useCallback(
+    (chainId: ChainId | null) => {
+      selectionAsync()
+      setShowModal(false)
+      onPressChain(chainId)
+    },
+    [setShowModal, onPressChain]
+  )
+
+  const networkOptions = useNetworkOptions(selectedChain, onPress)
 
   const options = useMemo(
     () =>
@@ -53,35 +63,8 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
             </>
           ),
         },
-      ].concat(
-        activeChains.map((chainId) => {
-          const info = CHAIN_INFO[chainId]
-          return {
-            key: `${ElementName.NetworkButton}-${chainId}`,
-            onPress: () => {
-              setShowModal(false)
-              onPressChain(chainId)
-            },
-            render: () => (
-              <>
-                <Separator />
-                <Flex row alignItems="center" justifyContent="space-between" px="lg" py="md">
-                  <NetworkLogo chainId={chainId} size={24} />
-                  <Text color="textPrimary" variant="body">
-                    {info.label}
-                  </Text>
-                  <Box height={24} width={24}>
-                    {selectedChain === chainId && (
-                      <Check color={theme.colors.accentActive} height={24} width={24} />
-                    )}
-                  </Box>
-                </Flex>
-              </>
-            ),
-          }
-        })
-      ),
-    [activeChains, onPressChain, selectedChain, t, theme.colors.accentActive]
+      ].concat(...networkOptions),
+    [networkOptions, onPressChain, selectedChain, t, theme.colors.accentActive]
   )
 
   return (

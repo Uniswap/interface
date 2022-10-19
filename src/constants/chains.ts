@@ -23,13 +23,13 @@ export enum ChainId {
   PolygonMumbai = 80001,
 }
 
-// Order here determines ordering of token balance sections
+// DON'T CHANGE - order here determines ordering of networks in app
 export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.Mainnet,
-  ChainId.Goerli,
+  ChainId.Polygon,
   ChainId.ArbitrumOne,
   ChainId.Optimism,
-  ChainId.Polygon,
+  ChainId.Goerli,
   ChainId.PolygonMumbai,
 ]
 
