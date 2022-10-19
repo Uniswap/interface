@@ -44,7 +44,7 @@ export function OnboardingScreen({
             ) : null}
           </Flex>
           {/* page content */}
-          <Flex grow justifyContent="space-between">
+          <Flex fill grow justifyContent="space-between">
             {children}
           </Flex>
         </AnimatedFlex>
