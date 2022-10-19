@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { usePreloadedHomeScreenQuery } from 'src/app/navigation/hooks'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
+import { TabBarButton } from 'src/app/navigation/TabBarButton'
 import {
   AccountStackParamList,
   AppStackParamList,
@@ -159,13 +160,12 @@ function TabNavigator({
         options={{
           tabBarLabel: t('Home'),
           tabBarIcon: ({ focused, color }) => (
-            <>
-              {focused ? (
-                <WalletIconFilled color={theme.colors.userThemeColor} height={24} />
-              ) : (
-                <WalletIcon color={color} height={24} />
-              )}
-            </>
+            <TabBarButton
+              Icon={WalletIcon}
+              IconFilled={WalletIconFilled}
+              color={color}
+              focused={focused}
+            />
           ),
         }}
       />
@@ -196,13 +196,12 @@ function TabNavigator({
           tabBarLabel: t('Explore'),
           tabBarShowLabel: false,
           tabBarIcon: ({ focused, color }) => (
-            <>
-              {focused ? (
-                <DiscoverIconFilled color={theme.colors.userThemeColor} height={24} />
-              ) : (
-                <DiscoverIcon color={color} height={24} />
-              )}
-            </>
+            <TabBarButton
+              Icon={DiscoverIcon}
+              IconFilled={DiscoverIconFilled}
+              color={color}
+              focused={focused}
+            />
           ),
         }}
       />
