@@ -10,7 +10,6 @@ import { uriToHttp } from 'src/utils/uriToHttp'
 type Props = {
   autoplay?: boolean
   squareGridView?: boolean
-  borderRadius?: number
   maxHeight?: number
   placeholderContent?: string
   uri: string
