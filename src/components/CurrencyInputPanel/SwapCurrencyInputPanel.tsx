@@ -45,7 +45,7 @@ const FixedContainer = styled.div`
   z-index: 2;
 `
 
-const Container = styled.div<{ hideInput: boolean; disabled: boolean }>`
+const Container = styled.div<{ hideInput: boolean }>`
   min-height: 44px;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
