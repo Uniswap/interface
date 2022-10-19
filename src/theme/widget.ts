@@ -1,10 +1,7 @@
 import { colorsDark, colorsLight } from './colors'
 
 const fonts = {
-  fontFamily: {
-    font: 'Inter custom',
-    variable: 'Inter custom',
-  },
+  fontFamily: 'Inter custom',
 }
 
 export const LIGHT_THEME = {
