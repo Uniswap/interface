@@ -1,7 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { graphql } from 'babel-plugin-relay/macro'
-import React, { Suspense, useMemo } from 'react'
+import React, { Suspense, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ViewStyle } from 'react-native'
+import { Route } from 'react-native-tab-view'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList } from 'src/app/navigation/types'
@@ -11,16 +13,14 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SendButton } from 'src/components/buttons/SendButton'
-import { BlueToDarkRadial } from 'src/components/gradients/BlueToPinkRadial'
-import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
-import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
+import { NftsTab } from 'src/components/home/NftsTab'
+import { TokensTab } from 'src/components/home/TokensTab'
 import { Flex } from 'src/components/layout'
-import { BackHeader } from 'src/components/layout/BackHeader'
-import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { VirtualizedList } from 'src/components/layout/VirtualizedList'
+import TabbedScrollScreen, {
+  TabViewScrollProps,
+} from 'src/components/layout/screens/TabbedScrollScreen'
 import { Loading } from 'src/components/loading'
-import { TransactionListSection } from 'src/components/TransactionList/TransactionListSection'
+import ProfileActivityTab from 'src/components/profile/tabs/ProfileActivityTab'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
 import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
@@ -101,6 +101,10 @@ export const userScreenQuery = graphql`
 
 export type UserScreenQueryResponse = NonNullable<UserScreenQuery$data['assetActivities']>[0]
 
+const TOKENS_KEY = 'profile-tokens'
+const NFTS_KEY = 'profile-nfts'
+const ACTIVITY_KEY = 'profile-activity'
+
 export function UserScreen({
   route: {
     params: { address, preloadedQuery },
@@ -155,36 +159,62 @@ function UserScreenInner({
     }
   }, [address])
 
-  return (
-    <HeaderScrollScreen
-      background={
-        <GradientBackground opacity={1}>
-          <BlueToDarkRadial />
-        </GradientBackground>
+  const tabs = useMemo(
+    () => [
+      { key: ACTIVITY_KEY, title: t('Activity') },
+      { key: NFTS_KEY, title: t('NFTs') },
+      { key: TOKENS_KEY, title: t('Tokens') },
+    ],
+    [t]
+  )
+
+  const renderTab = useCallback(
+    (route: Route, scrollProps: TabViewScrollProps, loadingContainerStyle: ViewStyle) => {
+      switch (route?.key) {
+        case ACTIVITY_KEY:
+          return (
+            <ProfileActivityTab
+              tabViewScrollProps={scrollProps}
+              transactions={formattedTransactions}
+            />
+          )
+        case NFTS_KEY:
+          return (
+            <NftsTab
+              loadingContainerStyle={loadingContainerStyle}
+              owner={address}
+              tabViewScrollProps={scrollProps}
+            />
+          )
+        case TOKENS_KEY:
+          return (
+            <TokensTab
+              loadingContainerStyle={loadingContainerStyle}
+              owner={address}
+              tabViewScrollProps={scrollProps}
+            />
+          )
       }
+      return null
+    },
+    [address, formattedTransactions]
+  )
+
+  return (
+    <TabbedScrollScreen
       contentHeader={
-        <Flex gap="md" mx="md" pt="md">
+        <Flex gap="sm" mb="sm" mx="md">
           <BackButton showButtonLabel />
           <AddressDisplay
             address={address}
-            captionVariant="buttonLabelMedium"
+            captionVariant="subheadLarge"
             direction="column"
             showAddressAsSubtitle={true}
             showCopy={true}
             size={48}
             variant="headlineMedium"
           />
-        </Flex>
-      }
-      fixedHeader={
-        <BackHeader>
-          <AddressDisplay address={address} captionVariant="subheadLarge" size={16} />
-        </BackHeader>
-      }>
-      <VirtualizedList>
-        <Flex gap="lg" mb="md" px="md">
-          {/* profile info */}
-          <Flex centered row flex={1} gap="xs" mt="md" px="xl">
+          <Flex centered row gap="xs" my="md" px="xl">
             <SendButton
               borderRadius="lg"
               flexBasis="49%"
@@ -213,11 +243,10 @@ function UserScreenInner({
               onPress={onWatchPress}
             />
           </Flex>
-          <TransactionListSection transactions={formattedTransactions} />
-          <PortfolioNFTsSection count={4} owner={address} />
-          <PortfolioTokensSection count={3} owner={address} />
         </Flex>
-      </VirtualizedList>
-    </HeaderScrollScreen>
+      }
+      renderTab={renderTab}
+      tabs={tabs}
+    />
   )
 }

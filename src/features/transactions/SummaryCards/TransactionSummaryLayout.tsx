@@ -92,7 +92,7 @@ function TransactionSummaryLayout({
           grow
           row
           alignItems="flex-start"
-          bg={bg ?? 'backgroundContainer'}
+          bg={bg ?? 'backgroundBackdrop'}
           gap="md"
           justifyContent="space-between"
           px="sm"

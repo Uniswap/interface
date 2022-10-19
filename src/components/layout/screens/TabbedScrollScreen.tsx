@@ -184,7 +184,7 @@ export default function TabbedScrollScreen({
             animatedScrollY.value = 0
 
             const found = tabRefs.current.find((e) => e.key === route.key)
-            if (found) {
+            if (found && found.value && found.value.scrollToOffset) {
               // TODO (Thomas): Figure out smooth scrolling for RecyclerListView
               found.value.scrollToOffset(0)
             }
@@ -263,12 +263,15 @@ export default function TabbedScrollScreen({
 
     // If we switch tabs and the next tab hasn't scrolled, we want to avoid showing a blank padding space by scrolling to top on new tab.
     if (newTabRef && !newTabRef?.lastScrollOffset) {
-      newTabRef?.value.scrollToOffset(0)
-      animatedScrollY.value = 0
+      if (newTabRef?.value?.scrollToOffset) {
+        newTabRef?.value.scrollToOffset(0)
+        animatedScrollY.value = 0
+      }
     }
 
     // TODO (Thomas): Handle case where both tabs have scrolled but new tab has scrolled less than the other
   }
+
   return (
     <Screen edges={['top', 'left', 'right']}>
       <TabView

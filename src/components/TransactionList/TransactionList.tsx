@@ -4,6 +4,7 @@ import React, { ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList, SectionListData } from 'react-native'
 import { Box } from 'src/components/layout'
+import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { formatTransactionsByDate } from 'src/features/transactions/history/utils'
@@ -30,10 +31,12 @@ export default function TransactionList({
   transactions,
   readonly,
   emptyStateContent,
+  tabViewScrollProps,
 }: {
   transactions: TransactionDetails[]
   readonly: boolean
   emptyStateContent: ReactElement | null
+  tabViewScrollProps?: TabViewScrollProps
 }) {
   const { t } = useTranslation()
 
@@ -130,10 +133,15 @@ export default function TransactionList({
 
   return (
     <SectionList
+      ref={tabViewScrollProps?.ref}
       keyExtractor={key}
       renderItem={renderItem}
       renderSectionHeader={SectionTitle}
       sections={sectionData}
+      showsVerticalScrollIndicator={false}
+      windowSize={5}
+      onScroll={tabViewScrollProps?.onScroll}
+      {...tabViewScrollProps}
     />
   )
 }
