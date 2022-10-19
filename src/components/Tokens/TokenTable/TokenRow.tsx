@@ -348,7 +348,6 @@ function HeaderCell({
   category,
 }: {
   category: TokenSortMethod // TODO: change this to make it work for trans
-  sortable: boolean
 }) {
   const theme = useTheme()
   const sortAscending = useAtomValue(sortAscendingAtom)
@@ -430,10 +429,10 @@ export function HeaderRow() {
       favorited={null}
       listNumber="#"
       tokenInfo={<Trans>Token name</Trans>}
-      price={<HeaderCell category={TokenSortMethod.PRICE} sortable />}
-      percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} sortable />}
-      tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} sortable />}
-      volume={<HeaderCell category={TokenSortMethod.VOLUME} sortable />}
+      price={<HeaderCell category={TokenSortMethod.PRICE} />}
+      percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} />}
+      tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} />}
+      volume={<HeaderCell category={TokenSortMethod.VOLUME} />}
       sparkLine={null}
     />
   )
