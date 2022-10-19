@@ -11,7 +11,7 @@ const VerifiedContainer = styled.div`
 export const WarningIcon = styled(AlertTriangle)<{ size?: string }>`
   width: ${({ size }) => size ?? '1em'};
   height: ${({ size }) => size ?? '1em'};
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.textTertiary};
 `
 
 export default function TokenSafetyIcon({ warning }: { warning: Warning | null }) {
