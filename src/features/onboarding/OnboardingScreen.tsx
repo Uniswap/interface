@@ -12,6 +12,7 @@ type OnboardingScreenProps = {
   subtitle?: string
   title: string
   paddingTop?: keyof Theme['spacing']
+  childrenGap?: keyof Theme['spacing']
   keyboardAvoidingViewEnabled?: boolean
 }
 

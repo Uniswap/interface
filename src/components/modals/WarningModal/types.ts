@@ -4,6 +4,7 @@ export enum WarningSeverity {
   None = 0,
   Medium = 5,
   High = 10,
+  Critical = 15,
 }
 
 export type WarningColor = {

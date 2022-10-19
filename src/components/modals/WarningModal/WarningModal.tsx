@@ -11,7 +11,7 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 
-type WarningModalProps = {
+export type WarningModalProps = {
   isVisible: boolean
   onClose?: () => void
   onCancel?: () => void
@@ -129,6 +129,12 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
       }
     case WarningSeverity.Medium:
       return { text: 'accentWarning', background: 'accentWarningSoft', confirmButton: 'warning' }
+    case WarningSeverity.Critical:
+      return {
+        text: 'accentWarning',
+        background: 'accentWarningSoft',
+        confirmButton: 'warningDark',
+      }
     default:
       return { text: 'none', background: 'none', confirmButton: 'blue' }
   }

@@ -41,6 +41,7 @@ export const enum ModalName {
   NFTAsset = 'nft-asset',
   TermsModal = 'terms-modal',
   RecoveryWarning = 'recovery-warning',
+  FaceIDWarning = 'face-id-warning',
   ICloudBackupInfo = 'icloud-backup-info-modal',
   ScreenshotWarning = 'screenshot-warning',
   Send = 'send-modal',

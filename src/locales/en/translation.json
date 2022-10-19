@@ -431,5 +431,8 @@
   "Invalid word: {{word}}": "Invalid word: {{word}}",
   "Recovery phrases must be 12-24 words": "Recovery phrases must be 12-24 words",
   "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
-  "Invalid phrase": "Invalid phrase"
+  "Invalid phrase": "Invalid phrase",
+  "Skip Face ID": "Skip Face ID",
+  "If you don't turn on Face ID, anyone who gains access to your device can view your recovery phrase and steal your assets": "If you don't turn on Face ID, anyone who gains access to your device can view your recovery phrase and steal your assets",
+  "Your assets are at risk": "Your assets are at risk"
 }
