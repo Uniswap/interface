@@ -5,10 +5,9 @@ import { sendAnalyticsEvent } from 'analytics'
 import { ModalName } from 'analytics/constants'
 import { EventName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
-import { formatPercentInBasisPointsNumber, formatToDecimal, getTokenAddress } from 'analytics/utils'
+import { formatSwapSignedAnalyticsEventProperties } from 'analytics/utils'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import { computeRealizedPriceImpact } from 'utils/prices'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 import TransactionConfirmationModal, {
@@ -17,27 +16,6 @@ import TransactionConfirmationModal, {
 } from '../TransactionConfirmationModal'
 import SwapModalFooter from './SwapModalFooter'
 import SwapModalHeader from './SwapModalHeader'
-
-const formatAnalyticsEventProperties = ({
-  trade,
-  txHash,
-}: {
-  trade: InterfaceTrade<Currency, Currency, TradeType>
-  txHash: string
-}) => ({
-  transaction_hash: txHash,
-  token_in_address: getTokenAddress(trade.inputAmount.currency),
-  token_out_address: getTokenAddress(trade.outputAmount.currency),
-  token_in_symbol: trade.inputAmount.currency.symbol,
-  token_out_symbol: trade.outputAmount.currency.symbol,
-  token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
-  token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
-  chain_id:
-    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
-      ? trade.inputAmount.currency.chainId
-      : undefined,
-})
 
 export default function ConfirmSwapModal({
   trade,
@@ -149,7 +127,7 @@ export default function ConfirmSwapModal({
 
   useEffect(() => {
     if (!attemptingTxn && isOpen && txHash && trade && txHash !== lastTxnHashLogged) {
-      sendAnalyticsEvent(EventName.SWAP_SIGNED, formatAnalyticsEventProperties({ trade, txHash }))
+      sendAnalyticsEvent(EventName.SWAP_SIGNED, formatSwapSignedAnalyticsEventProperties({ trade, txHash }))
       setLastTxnHashLogged(txHash)
     }
   }, [attemptingTxn, isOpen, txHash, trade, lastTxnHashLogged])

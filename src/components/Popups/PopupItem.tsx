@@ -1,4 +1,3 @@
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { useCallback, useEffect } from 'react'
 import { X } from 'react-feather'
 import { animated } from 'react-spring'
@@ -8,7 +7,6 @@ import styled, { useTheme } from 'styled-components/macro'
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent } from '../../state/application/reducer'
 import FailedNetworkSwitchPopup from './FailedNetworkSwitchPopup'
-import TransactionPopup from './TransactionPopup'
 
 const StyledClose = styled(X)`
   position: absolute;
@@ -58,7 +56,6 @@ export default function PopupItem({
   popKey: string
 }) {
   const removePopup = useRemovePopup()
-  const navbarFlag = useNavBarFlag()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   useEffect(() => {
     if (removeAfterMs === null) return undefined
@@ -80,14 +77,7 @@ export default function PopupItem({
   })
 
   let popupContent
-  if ('txn' in content) {
-    const {
-      txn: { hash },
-    } = content
-    if (navbarFlag === NavBarVariant.Enabled) return null
-
-    popupContent = <TransactionPopup hash={hash} />
-  } else if ('failedSwitchNetwork' in content) {
+  if ('failedSwitchNetwork' in content) {
     popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
   }
 
