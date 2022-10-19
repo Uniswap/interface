@@ -51,10 +51,12 @@ export function useSortTokensByQuery<T extends Token | TokenInfo>(query: string,
     const rest: T[] = []
 
     // sort tokens by exact match -> subtring on symbol match -> rest
+    const trimmedQuery = query.toLowerCase().trim()
     tokens.map((token) => {
-      if (token.symbol?.toLowerCase() === matches[0]) {
+      const symbol = token.symbol?.toLowerCase()
+      if (symbol === matches[0]) {
         return exactMatches.push(token)
-      } else if (token.symbol?.toLowerCase().startsWith(query.toLowerCase().trim())) {
+      } else if (symbol?.startsWith(trimmedQuery)) {
         return symbolSubtrings.push(token)
       } else {
         return rest.push(token)
