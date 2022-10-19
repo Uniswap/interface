@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<20d41ef76d481fab4efa3ce0dffe6769>>
+ * @generated SignedSource<<c278d958c2ceff911ff56c8b590230c1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,18 +9,19 @@
 // @ts-nocheck
 
 import { ConcreteRequest, Query } from 'relay-runtime';
-import { FragmentRefs } from "relay-runtime";
-export type HomeScreenQuery$variables = {
+export type PortfolioBalanceQuery$variables = {
   owner: string;
 };
-export type HomeScreenQuery$data = {
+export type PortfolioBalanceQuery$data = {
   readonly portfolios: ReadonlyArray<{
-    readonly " $fragmentSpreads": FragmentRefs<"TotalBalance_portfolio">;
+    readonly tokensTotalDenominatedValue: {
+      readonly value: number;
+    };
   } | null> | null;
 };
-export type HomeScreenQuery = {
-  response: HomeScreenQuery$data;
-  variables: HomeScreenQuery$variables;
+export type PortfolioBalanceQuery = {
+  response: PortfolioBalanceQuery$data;
+  variables: PortfolioBalanceQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -48,6 +49,13 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "value",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 };
@@ -56,7 +64,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "HomeScreenQuery",
+    "name": "PortfolioBalanceQuery",
     "selections": [
       {
         "alias": null,
@@ -67,9 +75,26 @@ return {
         "plural": true,
         "selections": [
           {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "TotalBalance_portfolio"
+            "kind": "RequiredField",
+            "field": {
+              "alias": null,
+              "args": null,
+              "concreteType": "Amount",
+              "kind": "LinkedField",
+              "name": "tokensTotalDenominatedValue",
+              "plural": false,
+              "selections": [
+                {
+                  "kind": "RequiredField",
+                  "field": (v2/*: any*/),
+                  "action": "LOG",
+                  "path": "portfolios.tokensTotalDenominatedValue.value"
+                }
+              ],
+              "storageKey": null
+            },
+            "action": "LOG",
+            "path": "portfolios.tokensTotalDenominatedValue"
           }
         ],
         "storageKey": null
@@ -82,7 +107,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "HomeScreenQuery",
+    "name": "PortfolioBalanceQuery",
     "selections": [
       {
         "alias": null,
@@ -100,34 +125,28 @@ return {
             "name": "tokensTotalDenominatedValue",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "value",
-                "storageKey": null
-              },
-              (v2/*: any*/)
+              (v2/*: any*/),
+              (v3/*: any*/)
             ],
             "storageKey": null
           },
-          (v2/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "bbb38bedadc5b937ede6ae7f56546a73",
+    "cacheID": "9e94ca76dbced5590eaa4b2fbcc91c4f",
     "id": null,
     "metadata": {},
-    "name": "HomeScreenQuery",
+    "name": "PortfolioBalanceQuery",
     "operationKind": "query",
-    "text": "query HomeScreenQuery(\n  $owner: String!\n) {\n  portfolios(ownerAddresses: [$owner]) {\n    ...TotalBalance_portfolio\n    id\n  }\n}\n\nfragment TotalBalance_portfolio on Portfolio {\n  tokensTotalDenominatedValue {\n    value\n    id\n  }\n}\n"
+    "text": "query PortfolioBalanceQuery(\n  $owner: String!\n) {\n  portfolios(ownerAddresses: [$owner]) {\n    tokensTotalDenominatedValue {\n      value\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e2f0cb814a240dfbb4b5efb53482ff67";
+(node as any).hash = "6b06c283b18a2715a77ecc4ca5e08182";
 
 export default node;

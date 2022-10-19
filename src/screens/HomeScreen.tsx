@@ -1,13 +1,11 @@
 import { DrawerActions } from '@react-navigation/core'
-import { graphql } from 'babel-plugin-relay/macro'
 import { selectionAsync } from 'expo-haptics'
-import React, { Suspense, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
+import { HomeScreenQueries, useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import HamburgerIcon from 'src/assets/icons/hamburger.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
@@ -24,9 +22,8 @@ import { Box, Flex } from 'src/components/layout'
 import TabbedScrollScreen, {
   TabViewScrollProps,
 } from 'src/components/layout/screens/TabbedScrollScreen'
-import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { TotalBalance } from 'src/features/balances/TotalBalance'
+import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { EXPERIMENTS, EXP_VARIANTS } from 'src/features/experiments/constants'
 import { useExperimentVariant } from 'src/features/experiments/hooks'
@@ -38,30 +35,13 @@ import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { HomeScreenQuery } from 'src/screens/__generated__/HomeScreenQuery.graphql'
 
 const TOKENS_KEY = 'tokens'
 const NFTS_KEY = 'nfts'
 
-export const homeScreenQuery = graphql`
-  query HomeScreenQuery($owner: String!) {
-    portfolios(ownerAddresses: [$owner]) {
-      ...TotalBalance_portfolio
-    }
-  }
-`
+type Props = { queryRefs: HomeScreenQueries }
 
-export function HomeScreen({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuery> }) {
-  return (
-    <Suspense fallback={<Loading />}>
-      <HomeScreenInner queryRef={queryRef} />
-    </Suspense>
-  )
-}
-
-function HomeScreenInner({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuery> }) {
-  const data = usePreloadedQuery<HomeScreenQuery>(homeScreenQuery, queryRef)
-
+export function HomeScreen({ queryRefs }: Props) {
   // imports test account for easy development/testing
   useTestAccount()
   useBiometricCheck()
@@ -89,6 +69,23 @@ function HomeScreenInner({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuer
     EXPERIMENTS.StickyTabsHeader,
     EXP_VARIANTS.Tabs
   )
+
+  const contentHeader = useMemo(() => {
+    return (
+      <Flex bg="backgroundBackdrop" gap="sm" pb="md">
+        <AccountHeader />
+        <Flex gap="sm" px="lg">
+          <PortfolioBalance queryRef={queryRefs.portfolioBalanceQueryRef} />
+          {activeAccount.type !== AccountType.Readonly && (
+            <Flex pt="xxs">
+              <QuickActions />
+            </Flex>
+          )}
+        </Flex>
+      </Flex>
+    )
+  }, [activeAccount.type, queryRefs.portfolioBalanceQueryRef])
+
   const scrollHeader = useMemo(() => {
     if (!tabsExperimentVariant || tabsExperimentVariant === EXP_VARIANTS.Tabs) return
 
@@ -164,19 +161,7 @@ function HomeScreenInner({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuer
 
   return (
     <TabbedScrollScreen
-      contentHeader={
-        <Flex bg="backgroundBackdrop" gap="sm" pb="md">
-          <AccountHeader />
-          <Flex gap="sm" px="lg">
-            <TotalBalance portfolio={data?.portfolios?.[0] ?? null} />
-            {activeAccount?.type !== AccountType.Readonly && (
-              <Flex pt="xxs">
-                <QuickActions />
-              </Flex>
-            )}
-          </Flex>
-        </Flex>
-      }
+      contentHeader={contentHeader}
       renderTab={renderTab}
       scrollHeader={scrollHeader}
       tabs={[

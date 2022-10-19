@@ -9,7 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { PreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
-import { usePreloadedHomeScreenQuery } from 'src/app/navigation/hooks'
+import { HomeScreenQueries, usePreloadedHomeScreenQueries } from 'src/app/navigation/hooks'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { TabBarButton } from 'src/app/navigation/TabBarButton'
 import {
@@ -80,7 +80,6 @@ import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { UserScreen } from 'src/screens/UserScreen'
 import { WatchedWalletsScreen } from 'src/screens/WatchedWalletsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
-import { HomeScreenQuery } from 'src/screens/__generated__/HomeScreenQuery.graphql'
 import { dimensions } from 'src/styles/sizing'
 import { darkTheme } from 'src/styles/theme'
 
@@ -105,11 +104,7 @@ const exploreTokensTabParams: ExploreTokensTabQuery$variables = {
   topTokensOrderBy: 'MARKET_CAP',
 }
 
-function TabNavigator({
-  homeScreenQueryRef,
-}: {
-  homeScreenQueryRef: NullUndefined<PreloadedQuery<HomeScreenQuery>>
-}) {
+function TabNavigator({ homeScreenQueries }: { homeScreenQueries: HomeScreenQueries }) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
@@ -122,8 +117,8 @@ function TabNavigator({
   )
 
   const HomeStackNavigatorMemo = useCallback(
-    () => (homeScreenQueryRef ? <HomeStackNavigator queryRef={homeScreenQueryRef} /> : null),
-    [homeScreenQueryRef]
+    () => <HomeStackNavigator queryRefs={homeScreenQueries} />,
+    [homeScreenQueries]
   )
 
   // important to memoize to avoid the entire explore stack from getting re-rendered on tab switch
@@ -290,8 +285,8 @@ function getDrawerEnabled() {
   return routeName ? DRAWER_ENABLED_SCREENS.includes(routeName) : false
 }
 
-export function HomeStackNavigator({ queryRef }: { queryRef: PreloadedQuery<HomeScreenQuery> }) {
-  const homeScreenMemo = useCallback(() => <HomeScreen queryRef={queryRef} />, [queryRef])
+export function HomeStackNavigator({ queryRefs }: { queryRefs: HomeScreenQueries }) {
+  const homeScreenMemo = useCallback(() => <HomeScreen queryRefs={queryRefs} />, [queryRefs])
   return (
     <HomeStack.Navigator
       initialRouteName={Screens.Home}
@@ -406,13 +401,13 @@ export function OnboardingStackNavigator() {
 export function AppStackNavigator() {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
 
-  // preload home screen query before `finishedOnboarding` is truthy
+  // preload home screen queries before `finishedOnboarding` is truthy
   // this helps load the home screen fast from a fresh install
-  const homeScreenQueryRef = usePreloadedHomeScreenQuery()
+  const homeScreenQueries = usePreloadedHomeScreenQueries()
 
   const tabNavigator = useCallback(
-    () => <TabNavigator homeScreenQueryRef={homeScreenQueryRef} />,
-    [homeScreenQueryRef]
+    () => <TabNavigator homeScreenQueries={homeScreenQueries} />,
+    [homeScreenQueries]
   )
 
   return (
