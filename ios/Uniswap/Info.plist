@@ -48,9 +48,13 @@
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Enabling Face ID helps Uniswap keep your assets secure.</string>
+	<string>Enabling Face ID helps $(PRODUCT_NAME) keep your assets secure.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app does not require access to the microphone.</string>
+	<string>$(PRODUCT_NAME) does not require access to the microphone.</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>$(PRODUCT_NAME) does not require access to your location.</string>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>$(PRODUCT_NAME) does not require access to your location.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Inter-Bold.ttf</string>
