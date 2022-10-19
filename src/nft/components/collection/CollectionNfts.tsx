@@ -71,8 +71,10 @@ const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
   border-radius: 12px;
   padding: 10px 18px 10px 12px;
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
-  background: ${({ theme, toggled }) =>
-    toggled ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)' : theme.backgroundInteractive};
+  background: ${({ theme, toggled, disabled }) =>
+    !disabled && toggled
+      ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)'
+      : theme.backgroundInteractive};
   opacity: ${({ disabled }) => (disabled ? 0.4 : 1)};
   :hover {
     background-color: ${({ theme }) => theme.hoverState};
@@ -327,23 +329,25 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               <SortDropdown dropDownOptions={sortDropDownOptions} />
               <CollectionSearch />
             </Row>
-            <SweepButton
-              toggled={sweepIsOpen}
-              disabled={!buyNow || hasErc1155s}
-              onClick={() => {
-                if (!buyNow || hasErc1155s) return
-                if (!sweepIsOpen) {
-                  scrollToTop()
-                  if (!bagExpanded) toggleBag()
-                }
-                setSweepOpen(!sweepIsOpen)
-              }}
-            >
-              <SweepIcon width="24px" height="24px" />
-              <ThemedText.BodyPrimary fontWeight={600} lineHeight="20px" marginTop="2px" marginBottom="2px">
-                Sweep
-              </ThemedText.BodyPrimary>
-            </SweepButton>
+            {!hasErc1155s && (
+              <SweepButton
+                toggled={sweepIsOpen}
+                disabled={!buyNow}
+                onClick={() => {
+                  if (!buyNow || hasErc1155s) return
+                  if (!sweepIsOpen) {
+                    scrollToTop()
+                    if (!bagExpanded) toggleBag()
+                  }
+                  setSweepOpen(!sweepIsOpen)
+                }}
+              >
+                <SweepIcon width="24px" height="24px" />
+                <ThemedText.BodyPrimary fontWeight={600} lineHeight="20px" marginTop="2px" marginBottom="2px">
+                  Sweep
+                </ThemedText.BodyPrimary>
+              </SweepButton>
+            )}
           </ActionsContainer>
           <Row paddingTop="12" gap="8" flexWrap="wrap">
             {markets.map((market) => (

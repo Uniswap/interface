@@ -154,7 +154,7 @@ export const useBag = create<BagState>()(
         set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           const itemsInBagCopy = itemsInBag.map((item) =>
-            item.asset.address === contractAddress ? { ...item, inSweep: false } : item
+            item.asset.address === contractAddress && item.inSweep ? { ...item, inSweep: false } : item
           )
           if (itemsInBag.length === 0)
             return {
