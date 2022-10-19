@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
-import DeviceInfo, { getUniqueId } from 'react-native-device-info'
+import { getUniqueId } from 'react-native-device-info'
 import { config } from 'src/config'
 import { flags } from 'src/features/experiments/flagsConstants'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { logException } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
+import { getFullAppVersion } from 'src/utils/version'
 
 type UpgradeStatusReponse = {
   force_upgrade: {
@@ -71,7 +72,7 @@ const transformResponse = (data: UpgradeStatusReponse) => {
     return UpgradeStatus.NotRequired
   }
 
-  const appVersion = DeviceInfo.getVersion()
+  const appVersion = getFullAppVersion()
   if (appVersion >= minVersion) {
     return UpgradeStatus.NotRequired
   }

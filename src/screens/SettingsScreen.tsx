@@ -2,7 +2,6 @@ import { useTheme } from '@shopify/restyle'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
 import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
 import { useAppDispatch } from 'src/app/hooks'
@@ -39,6 +38,7 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useAccounts } from 'src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
+import { getFullAppVersion } from 'src/utils/version'
 
 export function SettingsScreen() {
   const navigation = useSettingsStackNavigation()
@@ -315,12 +315,9 @@ function WalletSettings() {
 }
 
 function FooterSettings() {
-  const version = DeviceInfo.getVersion()
-  const buildVersion = DeviceInfo.getBuildNumber()
-
   return (
     <Text color="textTertiary" marginTop="xs" variant="caption_deprecated">
-      {`Version ${version}.${buildVersion}`}
+      {`Version ${getFullAppVersion()}`}
     </Text>
   )
 }
