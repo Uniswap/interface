@@ -59,7 +59,7 @@ export const TokenBalanceItem = memo(
             <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
               {currency.name ?? currency.symbol}
             </Text>
-            <Flex row alignItems="center" gap="xs" height={20}>
+            <Flex row alignItems="center" gap="xs" minHeight={20}>
               <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
                 {`${formatNumberBalance(quantity)}`} {currency.symbol}
               </Text>

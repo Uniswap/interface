@@ -2,6 +2,7 @@
 
 exports[`renders a DecimalNumber 1`] = `
 <Text
+  maxFontSizeMultiplier={1.4}
   style={
     Array [
       Object {
@@ -16,6 +17,7 @@ exports[`renders a DecimalNumber 1`] = `
 >
   14,123
   <Text
+    maxFontSizeMultiplier={1.4}
     style={
       Array [
         Object {
@@ -33,6 +35,7 @@ exports[`renders a DecimalNumber 1`] = `
 
 exports[`renders a DecimalNumber without a comma separator 1`] = `
 <Text
+  maxFontSizeMultiplier={1.4}
   style={
     Array [
       Object {
@@ -47,6 +50,7 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
 >
   14
   <Text
+    maxFontSizeMultiplier={1.4}
     style={
       Array [
         Object {
@@ -64,6 +68,7 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
 
 exports[`renders a DecimalNumber without a decimal part 1`] = `
 <Text
+  maxFontSizeMultiplier={1.4}
   style={
     Array [
       Object {

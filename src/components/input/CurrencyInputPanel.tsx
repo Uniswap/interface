@@ -137,6 +137,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
               fontFamily={theme.textVariants.headlineLarge.fontFamily}
               fontSize={fontSize}
               height={MAX_INPUT_FONT_SIZE}
+              maxFontSizeMultiplier={theme.textVariants.headlineLarge.maxFontSizeMultiplier}
               overflow="visible"
               placeholder="0"
               placeholderTextColor={theme.colors.textSecondary}

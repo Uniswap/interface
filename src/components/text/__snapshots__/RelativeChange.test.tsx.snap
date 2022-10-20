@@ -8,12 +8,13 @@ exports[`renders a relative change 1`] = `
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
-        "justifyContent": "flex-start",
+        "justifyContent": "flex-end",
       },
     ]
   }
 >
   <Text
+    maxFontSizeMultiplier={1.4}
     style={
       Array [
         Object {
@@ -70,12 +71,13 @@ exports[`renders placeholders with absolute change 1`] = `
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
-        "justifyContent": "flex-start",
+        "justifyContent": "flex-end",
       },
     ]
   }
 >
   <Text
+    maxFontSizeMultiplier={1.4}
     style={
       Array [
         Object {
@@ -132,12 +134,13 @@ exports[`renders placeholders without a change 1`] = `
         "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
-        "justifyContent": "flex-start",
+        "justifyContent": "flex-end",
       },
     ]
   }
 >
   <Text
+    maxFontSizeMultiplier={1.4}
     style={
       Array [
         Object {

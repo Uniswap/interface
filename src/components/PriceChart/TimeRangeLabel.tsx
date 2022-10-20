@@ -2,7 +2,7 @@ import React from 'react'
 import { interpolateColor, useAnimatedStyle } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AnimatedNumber } from 'src/components/PriceChart/types'
-import { AnimatedText } from 'src/components/Text'
+import { Text } from 'src/components/Text'
 
 interface Props {
   label: string
@@ -29,8 +29,8 @@ export function TimeRangeLabel({ index, label, selectedIndex, transition }: Prop
   })
 
   return (
-    <AnimatedText style={style} textAlign="center" variant="subheadSmall">
+    <Text animated noTextScaling style={style} textAlign="center" variant="subheadSmall">
       {label}
-    </AnimatedText>
+    </Text>
   )
 }

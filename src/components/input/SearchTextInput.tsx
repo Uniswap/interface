@@ -153,6 +153,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           flex={1}
           fontFamily={theme.textVariants.subheadSmall.fontFamily}
           fontSize={theme.textVariants.subheadSmall.fontSize}
+          maxFontSizeMultiplier={theme.textVariants.subheadSmall.maxFontSizeMultiplier}
           placeholder={placeholder}
           placeholderTextColor={theme.colors.textTertiary}
           returnKeyType="done"

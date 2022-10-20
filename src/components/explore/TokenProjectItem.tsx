@@ -126,7 +126,7 @@ export const TokenProjectItem = memo(
           }}>
           <AnimatedFlex
             row
-            alignItems="center"
+            alignItems="flex-start"
             bg="none"
             justifyContent="space-between"
             px="xs"

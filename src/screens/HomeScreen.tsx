@@ -198,6 +198,7 @@ function QuickActions() {
     <Flex centered row gap="xs">
       <SendButton flex={1} />
       <PrimaryButton
+        noTextScaling
         borderRadius="md"
         flex={1}
         icon={
@@ -214,6 +215,7 @@ function QuickActions() {
         onPress={onPressScan}
       />
       <PrimaryButton
+        noTextScaling
         borderRadius="md"
         flex={1}
         icon={<Arrow color={theme.colors.textPrimary} direction="s" size={theme.iconSizes.md} />}

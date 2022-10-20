@@ -45,6 +45,7 @@ interface CommonButtonProps extends ComponentProps<typeof TouchableArea> {
   state: ButtonState
   onPress?: () => void
   onLongPress?: () => void
+  noTextScaling?: boolean
 }
 
 interface ButtonWithLabel extends CommonButtonProps {
@@ -66,6 +67,7 @@ export type ButtonProps = ButtonWithIconAndLabel | ButtonWithIcon | ButtonWithLa
 
 const _Button = ({
   name,
+  noTextScaling = false,
   label,
   icon,
   size = ButtonSize.Medium,
@@ -107,7 +109,11 @@ const _Button = ({
       {...rest}>
       {icon && <Box mr="sm">{icon}</Box>}
       {buttonType !== ButtonType.Icon && (
-        <Text color={textColor} textAlign="center" variant={textVariant}>
+        <Text
+          color={textColor}
+          noTextScaling={noTextScaling}
+          textAlign="center"
+          variant={textVariant}>
           {label}
         </Text>
       )}

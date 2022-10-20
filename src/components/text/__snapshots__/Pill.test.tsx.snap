@@ -21,6 +21,7 @@ exports[`renders a Pill with border 1`] = `
   }
 >
   <Text
+    maxFontSizeMultiplier={1.4}
     style={
       Array [
         Object {
@@ -44,6 +45,7 @@ exports[`renders a Pill with border 1`] = `
     }
   />
   <Text
+    maxFontSizeMultiplier={1.4}
     style={
       Array [
         Object {
@@ -85,6 +87,7 @@ exports[`renders a Pill without image 1`] = `
   }
 >
   <Text
+    maxFontSizeMultiplier={1.4}
     style={
       Array [
         Object {

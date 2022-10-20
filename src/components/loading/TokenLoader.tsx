@@ -3,8 +3,6 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
 
-const TOKEN_SUBHEAD_ROW_HEIGHT = 20
-
 export function TokenLoader() {
   return (
     <Flex row alignItems="center" justifyContent="space-between" overflow="hidden" p="sm">
@@ -14,15 +12,15 @@ export function TokenLoader() {
           <Box bg="backgroundAction" borderRadius="xs" width="100%">
             <HiddenFromScreenReaders>
               <Text color="none" opacity={0} variant="bodyLarge">
-                Token Name Placeholder
+                Token Name
               </Text>
             </HiddenFromScreenReaders>
           </Box>
-          <Flex row alignItems="center" height={TOKEN_SUBHEAD_ROW_HEIGHT} width="100%">
-            <Box bg="backgroundAction" borderRadius="xs" mt="xxs" width="25%">
+          <Flex row alignItems="center" pt="xxs" width="100%">
+            <Box bg="backgroundAction" borderRadius="xs" width="25%">
               <HiddenFromScreenReaders>
                 <Text color="none" opacity={0} variant="subheadSmall">
-                  Ticker Placeholder
+                  Ticker
                 </Text>
               </HiddenFromScreenReaders>
             </Box>

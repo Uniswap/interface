@@ -475,6 +475,7 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1}
         style={
           Array [
             Object {
@@ -523,6 +524,7 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1}
         style={
           Array [
             Object {
@@ -571,6 +573,7 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1}
         style={
           Array [
             Object {
@@ -619,6 +622,7 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1}
         style={
           Array [
             Object {
@@ -667,6 +671,7 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
+        maxFontSizeMultiplier={1}
         style={
           Array [
             Object {

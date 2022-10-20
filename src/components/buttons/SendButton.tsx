@@ -71,6 +71,7 @@ export function SendButton({
     />
   ) : (
     <Button
+      noTextScaling
       emphasis={ButtonEmphasis.Low}
       icon={
         <SendIcon

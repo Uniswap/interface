@@ -17,10 +17,22 @@ type Props = ButtonProps & {
   icon?: ReactElement
   textVariant?: keyof Theme['textVariants']
   textColor?: keyof Theme['colors']
+  noTextScaling?: boolean
 } & SpacingShorthandProps<Theme>
 
 // A rounded, borderless, solid color button with optional icon left of text
-function _PrimaryButton({ label, icon, textVariant, disabled, style, p, px, py, ...rest }: Props) {
+function _PrimaryButton({
+  label,
+  icon,
+  textVariant,
+  disabled,
+  style,
+  p,
+  px,
+  py,
+  noTextScaling,
+  ...rest
+}: Props) {
   const theme = useAppTheme()
 
   // Restyle variants do not have any mechanism for using a variant value on a child
@@ -48,6 +60,7 @@ function _PrimaryButton({ label, icon, textVariant, disabled, style, p, px, py, 
       {...rest}>
       {icon && <Box mr="sm">{icon}</Box>}
       <Text
+        noTextScaling={noTextScaling}
         style={{ color: textColor }}
         textAlign="center"
         variant={textVariant ?? 'buttonLabelMedium'}>

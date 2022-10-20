@@ -23,7 +23,7 @@ export function RelativeChange({
   const isPositiveChange = change ? change > 0 : undefined
 
   return (
-    <Flex row alignItems="center" gap="none">
+    <Flex row alignItems="center" gap="none" justifyContent="flex-end">
       <Text
         color={
           semanticColor ? (isPositiveChange ? 'accentSuccess' : 'accentFailure') : 'textSecondary'

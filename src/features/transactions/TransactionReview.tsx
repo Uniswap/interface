@@ -71,6 +71,7 @@ export function TransactionReview({
               fontFamily={theme.textVariants.headlineLarge.fontFamily}
               fontSize={theme.textVariants.headlineLarge.fontSize}
               height={theme.textVariants.headlineLarge.lineHeight}
+              maxFontSizeMultiplier={theme.textVariants.headlineLarge.maxFontSizeMultiplier}
               px="md"
               py="none"
               showCurrencySign={isUSDInput}
@@ -98,6 +99,7 @@ export function TransactionReview({
                 fontFamily={theme.textVariants.headlineLarge.fontFamily}
                 fontSize={theme.textVariants.headlineLarge.fontSize}
                 height={theme.textVariants.headlineLarge.lineHeight}
+                maxFontSizeMultiplier={theme.textVariants.headlineLarge.maxFontSizeMultiplier}
                 showCurrencySign={isUSDInput}
                 showSoftInputOnFocus={false}
                 testID="amount-input-out"

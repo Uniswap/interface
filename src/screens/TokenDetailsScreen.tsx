@@ -78,7 +78,7 @@ function TokenDetailsHeader({ currency, initialSendState }: TokenDetailsHeaderPr
           </Text>
         </Box>
       </Flex>
-      <Flex row gap="none">
+      <Flex row alignItems="center" gap="none" justifyContent="center">
         <SendButton
           iconOnly
           bg="none"

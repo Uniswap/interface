@@ -137,7 +137,7 @@ export function NFTItemScreen({
                   </Box>
                 ) : null}
                 <Box flexShrink={1}>
-                  <Text color="textTertiary" variant="bodySmall">
+                  <Text color="textTertiary" variant="buttonLabelMicro">
                     {t('Collection')}
                   </Text>
                   <Flex row alignItems="center" gap="xs">

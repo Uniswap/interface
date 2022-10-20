@@ -52,6 +52,7 @@ export function GradientButton({
       {label && (
         <Box px={px || p || 'none'} py={py || p || 'none'}>
           <Text
+            noTextScaling
             style={{ color: theme.colors[textColor] }}
             textAlign="center"
             variant={textVariant ?? 'buttonLabelMedium'}>
