@@ -1,7 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -79,7 +78,6 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
           onBlur={() => setFocused(false)}
           onChange={onChange}
           onFocus={() => setFocused(true)}
-          onSubmit={() => Keyboard.dismiss()}
         />
       </Flex>
       <PrimaryButton
