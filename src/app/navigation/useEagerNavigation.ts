@@ -1,13 +1,12 @@
-import { CommonActions, useNavigation } from '@react-navigation/core'
+import { CommonActions, useFocusEffect, useNavigation } from '@react-navigation/core'
 import { useCallback, useEffect } from 'react'
-import { GraphQLTaggedNode, useQueryLoader } from 'react-relay'
+import { GraphQLTaggedNode, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay'
 import { OperationType } from 'relay-runtime'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { RootParamList } from 'src/app/navigation/types'
 import { PollingInterval } from 'src/constants/misc'
 import { Screens } from 'src/screens/Screens'
-
 /**
  * Utility hook to preload a given query and navigate to a given screen with params.
  *
@@ -44,7 +43,7 @@ export function useEagerNavigation<Q extends OperationType>(
     (screen: Screens, params: any) => {
       navigate(screen, {
         ...params,
-        preloadedQuery,
+        preloadedQuery: preloadedQuery?.isDisposed ? null : preloadedQuery,
       })
     },
     [navigate, preloadedQuery]
@@ -98,4 +97,24 @@ export function useEagerRootNavigation<Q extends OperationType>(
   }, [preloadedQuery])
 
   return { registerNavigationIntent, preloadedNavigate }
+}
+
+/**
+ * Simple wrapper around `usePreloadedQuery` that handles disposing
+ * the query on screen blur.
+ * Useful when `queryRef` is passed to a screen via parameters.
+ */
+export function useEagerLoadedQuery<T extends OperationType>(
+  query: GraphQLTaggedNode,
+  preloadedQuery: PreloadedQuery<T>
+) {
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        preloadedQuery?.dispose()
+      }
+    }, [preloadedQuery])
+  )
+
+  return usePreloadedQuery<T>(query, preloadedQuery)
 }

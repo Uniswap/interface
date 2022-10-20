@@ -4,9 +4,10 @@ import React, { Suspense, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
+import { PreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList } from 'src/app/navigation/types'
+import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
 import EyeOffIcon from 'src/assets/icons/eye-off.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -134,7 +135,7 @@ function ExternalProfileScreenInner({
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
-  const transactionData = usePreloadedQuery<ExternalProfileScreenQuery>(
+  const transactionData = useEagerLoadedQuery<ExternalProfileScreenQuery>(
     externalProfileScreenQuery,
     preloadedQuery
   )

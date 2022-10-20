@@ -2,9 +2,10 @@ import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
+import { PreloadedQuery, useFragment } from 'react-relay'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SendButton } from 'src/components/buttons/SendButton'
@@ -179,7 +180,7 @@ function TokenDetails({
 
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
 
-  const data = usePreloadedQuery<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, preloadedQuery)
+  const data = useEagerLoadedQuery<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, preloadedQuery)
 
   const { tokenWarningLevel, tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(
     currency.wrapped

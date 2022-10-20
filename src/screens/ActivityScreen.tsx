@@ -1,9 +1,10 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
+import { PreloadedQuery } from 'react-relay'
 import { useAppDispatch } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
+import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -123,7 +124,7 @@ export function Activity({
   const readonly = type === AccountType.Readonly
 
   // Parse remote txn data from query and merge with local txn data
-  const transactionData = usePreloadedQuery<ActivityScreenQuery>(
+  const transactionData = useEagerLoadedQuery<ActivityScreenQuery>(
     activityScreenQuery,
     preloadedQuery
   )
