@@ -1,10 +1,9 @@
 import clsx from 'clsx'
-import { useWindowSize } from 'hooks/useWindowSize'
 import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { bodySmall, buttonMedium, headlineLarge } from 'nft/css/common.css'
-import { breakpoints, vars } from 'nft/css/sprinkles.css'
+import { vars } from 'nft/css/sprinkles.css'
 import { ActivityFetcher, fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -14,7 +13,7 @@ import { useEffect, useState } from 'react'
 import { QueryClient, useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
-import ActivityFeed from './ActivityFeed'
+import { CarouselCard } from './CarouselCard'
 import * as styles from './Explore.css'
 
 const queryClient = new QueryClient()
@@ -23,7 +22,6 @@ const Banner = () => {
   /* Sets initially displayed collection to random number between 0 and 4  */
   const [current, setCurrent] = useState(Math.floor(Math.random() * 5))
   const [hovered, setHover] = useState(false)
-  const { width: windowWidth } = useWindowSize()
   const { data: collections } = useQuery(
     ['trendingCollections'],
     () => {
@@ -68,7 +66,7 @@ const Banner = () => {
               <Box className={styles.bannerOverlay} width="full" />
               <Box as="section" className={styles.section} display="flex" flexDirection="row" flexWrap="nowrap">
                 <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
-                {windowWidth && windowWidth > breakpoints.lg && <ActivityFeed address={collections[current].address} />}
+                <CarouselCard collection={collections[current]} />
               </Box>
 
               <CarouselProgress length={collections.length} currentIndex={current} setCurrent={setCurrent} />
