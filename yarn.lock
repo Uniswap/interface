@@ -1350,6 +1350,26 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
+"@datadog/browser-core@4.21.2":
+  version "4.21.2"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-core/-/browser-core-4.21.2.tgz#d6f42a28f6d35e8066ace16d99651965ba877458"
+  integrity sha512-o3UvCPBF0OdCInCbiC9j79K0F7/wThARZFq8+wnAOitZu64VT5XNpHFQqFP+9c+zzcxmwlTIINHmWLdkpKEECg==
+
+"@datadog/browser-rum-core@4.21.2":
+  version "4.21.2"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum-core/-/browser-rum-core-4.21.2.tgz#0e0835db2c20774e352cf81eb8acfd3faf9e1db9"
+  integrity sha512-8hNiNygHY8Jt2APtm4nvciGyRKIEniaupe7Uj5Bq6OFZIFNgf6qj88bRXwOdPsP9ksBNNK18Hol1oI4EdxdkkQ==
+  dependencies:
+    "@datadog/browser-core" "4.21.2"
+
+"@datadog/browser-rum@^4.21.2":
+  version "4.21.2"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum/-/browser-rum-4.21.2.tgz#2a3bacafbdced95205e0628d0c55a602be6b2d71"
+  integrity sha512-qvC7sRrZ5yy7siCHeGPnBsM6sKoU+jc1YGy/5WgRSs24WUt9trgBoRcVR1KwU/aK8xn6hUOKRdEIxkrss5JaiA==
+  dependencies:
+    "@datadog/browser-core" "4.21.2"
+    "@datadog/browser-rum-core" "4.21.2"
+
 "@emotion/cache@^10.0.27":
   version "10.0.29"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.29.tgz#87e7e64f412c060102d589fe7c6dc042e6f9d1e0"

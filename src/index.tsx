@@ -1,3 +1,4 @@
+import { datadogRum } from '@datadog/browser-rum'
 import * as Sentry from '@sentry/react'
 import { BrowserTracing } from '@sentry/tracing'
 import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
@@ -29,6 +30,24 @@ import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
+
+datadogRum.init({
+  applicationId: '5bd0c243-6141-4bab-be21-5dac9b9efa9f',
+  clientToken: 'pub9163f29b2cdb31314b89ae232af37d5a',
+  site: 'datadoghq.eu',
+  service: 'kyberswap-interface',
+
+  // Specify a version number to identify the deployed version of your application in Datadog
+  // version: '1.0.0',
+  sampleRate: 100,
+  sessionReplaySampleRate: 20,
+  trackInteractions: true,
+  trackResources: true,
+  trackLongTasks: true,
+  defaultPrivacyLevel: 'mask-user-input',
+})
+
+datadogRum.startSessionReplayRecording()
 
 AOS.init()
 

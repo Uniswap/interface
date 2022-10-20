@@ -124,6 +124,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@apollo/client": "^3.3.11",
+    "@datadog/browser-rum": "^4.21.2",
     "@kyberswap/ks-sdk-classic": "^0.0.13",
     "@kyberswap/ks-sdk-core": "^0.0.16",
     "@kyberswap/ks-sdk-elastic": "^0.0.43",
@@ -151,8 +152,8 @@
     "react-gtm-module": "^2.0.11",
     "react-helmet": "^6.1.0",
     "react-indiana-drag-scroll": "^2.0.1",
-    "react-loading-skeleton": "^3.1.0",
     "react-infinite-scroll-component": "^6.1.0",
+    "react-loading-skeleton": "^3.1.0",
     "react-use": "^15.3.4",
     "recharts": "^2.1.13",
     "swiper": "8.0.7",
