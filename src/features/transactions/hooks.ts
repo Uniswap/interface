@@ -1,10 +1,6 @@
 import { BigNumberish } from 'ethers'
-import { useMemo, useState } from 'react'
-import {
-  LayoutChangeEvent,
-  NativeSyntheticEvent,
-  TextInputContentSizeChangeEventData,
-} from 'react-native'
+import { useCallback, useMemo, useState } from 'react'
+import { LayoutChangeEvent } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -183,30 +179,44 @@ export function useShouldShowNativeKeyboard() {
   return { onLayout, showNativeKeyboard: showNativeKeyboard }
 }
 
-export function useDynamicFontSizing(maxFontSize: number, minFontSize: number) {
+export function useDynamicFontSizing(
+  maxCharWidthAtMaxFontSize: number,
+  maxFontSize: number,
+  minFontSize: number
+) {
   const [fontSize, setFontSize] = useState(maxFontSize)
-  const [textInputWidth, setTextInputWidth] = useState<number>(0)
+  const [textInputElementWidth, setTextInputElementWidth] = useState<number>(0)
 
-  const onLayout = (event: LayoutChangeEvent) => {
-    if (textInputWidth) return
+  const onLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      if (textInputElementWidth) return
 
-    const width = event.nativeEvent.layout.width
-    setTextInputWidth(width)
-  }
+      const width = event.nativeEvent.layout.width
+      setTextInputElementWidth(width)
+    },
+    [setTextInputElementWidth, textInputElementWidth]
+  )
 
-  const scaleFontSize = (width: number) => {
-    const actualWidth = width + fontSize
-    const scaledSize = fontSize * (textInputWidth / actualWidth)
-    const scaledSizeWithMin = Math.max(scaledSize, minFontSize)
-    const newFontSize = Math.min(maxFontSize, scaledSizeWithMin)
-    setFontSize(newFontSize)
-  }
+  const onSetFontSize = useCallback(
+    (amount: string) => {
+      const stringWidth = getStringWidth(amount, maxCharWidthAtMaxFontSize, fontSize, maxFontSize)
+      const scaledSize = fontSize * (textInputElementWidth / stringWidth)
+      const scaledSizeWithMin = Math.max(scaledSize, minFontSize)
+      const newFontSize = Math.round(Math.min(maxFontSize, scaledSizeWithMin))
+      setFontSize(newFontSize)
+    },
+    [fontSize, maxFontSize, minFontSize, maxCharWidthAtMaxFontSize, textInputElementWidth]
+  )
 
-  const onContentSizeChange = (
-    event: NativeSyntheticEvent<TextInputContentSizeChangeEventData>
-  ) => {
-    scaleFontSize(event.nativeEvent.contentSize.width)
-  }
+  return { onLayout, fontSize, onSetFontSize }
+}
 
-  return { onContentSizeChange, onLayout, fontSize }
+const getStringWidth = (
+  value: string,
+  maxCharWidthAtMaxFontSize: number,
+  currentFontSize: number,
+  maxFontSize: number
+) => {
+  const widthAtMaxFontSize = value.length * maxCharWidthAtMaxFontSize
+  return widthAtMaxFontSize * (currentFontSize / maxFontSize)
 }

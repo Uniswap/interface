@@ -1,6 +1,6 @@
 import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput, TextInputProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -42,6 +42,10 @@ type CurrentInputPanelProps = {
 const MAX_INPUT_FONT_SIZE = 36
 const MIN_INPUT_FONT_SIZE = 18
 
+// if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
+// changes from 36 then width value must be adjusted
+const MAX_CHAR_PIXEL_WIDTH = 23
+
 /** Input panel for a single side of a transfer action. */
 export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   const {
@@ -62,7 +66,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     warnings,
     dimTextColor,
     selection,
-    onSelectionChange,
+    onSelectionChange: selectionChange,
     usdValue,
     ...rest
   } = props
@@ -89,9 +93,27 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     }
   }, [focus, inputRef])
 
-  const { onContentSizeChange, onLayout, fontSize } = useDynamicFontSizing(
+  const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
+    MAX_CHAR_PIXEL_WIDTH,
     MAX_INPUT_FONT_SIZE,
     MIN_INPUT_FONT_SIZE
+  )
+
+  const onChangeText = useCallback(
+    (newAmount: string) => {
+      onSetFontSize(newAmount)
+      onSetAmount(newAmount)
+    },
+    [onSetFontSize, onSetAmount]
+  )
+
+  const onSelectionChange = useCallback(
+    ({
+      nativeEvent: {
+        selection: { start, end },
+      },
+    }) => selectionChange && selectionChange(start, end),
+    [selectionChange]
   )
 
   return (
@@ -126,14 +148,9 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
               showSoftInputOnFocus={showSoftInputOnFocus}
               testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
               value={value}
-              onChangeText={(newAmount: string) => onSetAmount(newAmount)}
-              onContentSizeChange={onContentSizeChange}
+              onChangeText={onChangeText}
               onPressIn={onPressIn}
-              onSelectionChange={({
-                nativeEvent: {
-                  selection: { start, end },
-                },
-              }) => onSelectionChange && onSelectionChange(start, end)}
+              onSelectionChange={onSelectionChange}
             />
           </Flex>
         )}
