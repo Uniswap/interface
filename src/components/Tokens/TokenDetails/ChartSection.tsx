@@ -3,7 +3,6 @@ import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { checkWarning } from 'constants/tokenSafety'
 import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { PriceDurations, PricePoint, SingleTokenData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
@@ -82,7 +81,6 @@ export default function ChartSection({
   const toggleFavorite = useToggleFavorite(token.address)
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
-  const warning = checkWarning(token.address ?? '')
   const timePeriod = useAtomValue(filterTimeAtom)
 
   const logoSrc = useTokenLogoURI(token, nativeCurrency)
