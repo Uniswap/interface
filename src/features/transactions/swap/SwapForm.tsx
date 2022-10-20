@@ -1,7 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, TextInputProps } from 'react-native'
+import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
@@ -108,6 +108,11 @@ export function SwapForm({
 
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
   const swapWarningColor = getAlertColor(swapWarning?.severity)
+
+  const onSwapWarningClick = () => {
+    Keyboard.dismiss()
+    setShowWarningModal(true)
+  }
 
   const onReview = () => {
     const txId = createTransactionId()
@@ -238,7 +243,7 @@ export function SwapForm({
                 />
               </Flex>
               {swapWarning && (
-                <Button onPress={() => setShowWarningModal(true)}>
+                <Button onPress={onSwapWarningClick}>
                   <Flex
                     row
                     alignItems="center"
