@@ -22,7 +22,6 @@ const themeContractValues = {
     modalBackdrop: '',
 
     stateOverlayHover: '',
-    stateOverlayPressed: '',
 
     textPrimary: '',
     textSecondary: '',

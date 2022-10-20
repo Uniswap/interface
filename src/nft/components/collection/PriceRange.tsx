@@ -1,6 +1,7 @@
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
+import { body } from 'nft/css/common.css'
 import { useIsMobile } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
@@ -143,9 +144,7 @@ export const PriceRange = () => {
             onBlur={handleBlur}
           />
         </Row>
-        <Box color="textPrimary" fontSize="16">
-          to
-        </Box>
+        <Box className={body}>to</Box>
         <Row position="relative" flex="1">
           <NumericInput
             style={{

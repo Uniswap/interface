@@ -55,17 +55,11 @@ export const subRowHover = style({
   },
 })
 
-const border = sprinkles({
+export const borderTop = sprinkles({
   borderTopStyle: 'solid',
   borderTopColor: 'backgroundOutline',
+  borderTopWidth: '1px',
 })
-
-export const borderTop = style([
-  border,
-  {
-    borderTopWidth: '1px',
-  },
-])
 
 export const borderBottom = sprinkles({
   borderBottomStyle: 'solid',
@@ -79,13 +73,6 @@ export const detailsOpen = style([
     overflow: 'hidden',
     marginTop: '8',
     marginBottom: '8',
-  }),
-])
-
-export const detailsClosed = style([
-  detailsOpen,
-  sprinkles({
-    opacity: '0',
   }),
 ])
 
