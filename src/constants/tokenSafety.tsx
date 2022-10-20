@@ -1,5 +1,7 @@
 import { Plural, Trans } from '@lingui/macro'
 
+import { ZERO_ADDRESS } from './misc'
+import { NATIVE_CHAIN_ID } from './tokens'
 import WarningCache, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
 
 export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
@@ -76,6 +78,9 @@ const BlockedWarning: Warning = {
 }
 
 export function checkWarning(tokenAddress: string) {
+  if (tokenAddress === NATIVE_CHAIN_ID || tokenAddress === ZERO_ADDRESS) {
+    return null
+  }
   switch (WarningCache.checkToken(tokenAddress.toLowerCase())) {
     case TOKEN_LIST_TYPES.UNI_DEFAULT:
       return null
