@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay'
 import { useEagerNavigation, useEagerRootNavigation } from 'src/app/navigation/useEagerNavigation'
 import { PollingInterval } from 'src/constants/misc'
@@ -112,5 +112,5 @@ export function usePreloadedHomeScreenQueries(): HomeScreenQueries {
     )
   }, [activeAccountAddress, loadPortfolioBalance])
 
-  return { portfolioBalanceQueryRef }
+  return useMemo(() => ({ portfolioBalanceQueryRef }), [portfolioBalanceQueryRef])
 }
