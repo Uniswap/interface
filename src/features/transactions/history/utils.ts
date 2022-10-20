@@ -24,9 +24,8 @@ export interface AllFormattedTransactions {
   combinedTransactionList: TransactionDetails[]
   todayTransactionList: TransactionDetails[]
   monthTransactionList: TransactionDetails[]
-  yearTransactionList: TransactionDetails[]
-  // Maps year <-> TransactionSummaryInfo[] for all priors years
-  priorByYearTransactionList: Record<string, TransactionDetails[]>
+  // Maps year <-> TransactionSummaryInfo[] for all months before current month
+  priorByMonthTransactionList: Record<string, TransactionDetails[]>
   pending: TransactionDetails[]
 }
 
@@ -39,34 +38,27 @@ export function formatTransactionsByDate(
   const msTimestampCutoffYear = dayjs().startOf('year').unix() * 1000
 
   // Segement by time periods.
-  let [
-    pending,
-    todayTransactionList,
-    monthTransactionList,
-    yearTransactionList,
-    beforeCurrentYear,
-  ] = transactions.reduce(
-    (accum: TransactionDetails[][], item) => {
-      if (
-        // Want all incomplete transactions
-        item.status === TransactionStatus.Pending ||
-        item.status === TransactionStatus.Cancelling ||
-        item.status === TransactionStatus.Replacing
-      ) {
-        accum[0].push(item)
-      } else if (item.addedTime > msTimestampCutoffDay) {
-        accum[1].push(item)
-      } else if (item.addedTime > msTimestampCutoffMonth) {
-        accum[2].push(item)
-      } else if (item.addedTime > msTimestampCutoffYear) {
-        accum[3].push(item)
-      } else {
-        accum[4].push(item)
-      }
-      return accum
-    },
-    [[], [], [], [], []]
-  )
+  let [pending, todayTransactionList, monthTransactionList, beforeCurrentMonth] =
+    transactions.reduce(
+      (accum: TransactionDetails[][], item) => {
+        if (
+          // Want all incomplete transactions
+          item.status === TransactionStatus.Pending ||
+          item.status === TransactionStatus.Cancelling ||
+          item.status === TransactionStatus.Replacing
+        ) {
+          accum[0].push(item)
+        } else if (item.addedTime > msTimestampCutoffDay) {
+          accum[1].push(item)
+        } else if (item.addedTime > msTimestampCutoffMonth) {
+          accum[2].push(item)
+        } else {
+          accum[3].push(item)
+        }
+        return accum
+      },
+      [[], [], [], []]
+    )
 
   // sort pending txns based on nonces
   pending = pending.sort((a, b) => {
@@ -75,13 +67,18 @@ export function formatTransactionsByDate(
     return nonceA && nonceB ? (nonceA < nonceB ? -1 : 1) : -1
   })
 
-  // For all transaction before current year, group by years
-  const priorByYearTransactionList = beforeCurrentYear.reduce(
+  // For all transaction before current month, group by month
+  const priorByMonthTransactionList = beforeCurrentMonth.reduce(
     (accum: Record<string, TransactionDetails[]>, item) => {
-      const currentYear = dayjs(item.addedTime).year().toString()
-      const currentYearList = accum[currentYear] ?? []
-      currentYearList.push(item)
-      accum[currentYear] = currentYearList
+      const isPreviousYear = item.addedTime < msTimestampCutoffYear
+      const key = dayjs(item.addedTime)
+        // If in a previous year, append year to key string, else just use month
+        // This key is used as the section title in TransactionList
+        .format(isPreviousYear ? 'MMMM YYYY' : 'MMMM')
+        .toString()
+      const currentMonthList = accum[key] ?? []
+      currentMonthList.push(item)
+      accum[key] = currentMonthList
       return accum
     },
     {}
@@ -92,8 +89,7 @@ export function formatTransactionsByDate(
     pending,
     todayTransactionList,
     monthTransactionList,
-    yearTransactionList,
-    priorByYearTransactionList,
+    priorByMonthTransactionList,
   }
 }
 

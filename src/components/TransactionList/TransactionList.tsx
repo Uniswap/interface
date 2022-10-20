@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,8 +12,7 @@ import { TransactionDetails, TransactionStatus } from 'src/features/transactions
 
 const PENDING_TITLE = (t: TFunction) => t('Pending')
 const TODAY_TITLE = (t: TFunction) => t('Today')
-const MONTH_TITLE = dayjs().format('MMMM')
-const YEAR_TITLE = dayjs().year().toString()
+const MONTH_TITLE = (t: TFunction) => t('This Month')
 
 const key = (info: TransactionDetails) => info.hash
 
@@ -45,8 +43,7 @@ export default function TransactionList({
     pending,
     todayTransactionList,
     monthTransactionList,
-    yearTransactionList,
-    priorByYearTransactionList,
+    priorByMonthTransactionList,
     combinedTransactionList,
   } = useMemo(() => formatTransactionsByDate(transactions), [transactions])
 
@@ -62,21 +59,20 @@ export default function TransactionList({
         ? [{ title: TODAY_TITLE(t), data: todayTransactionList }]
         : []),
       ...(monthTransactionList.length > 0
-        ? [{ title: MONTH_TITLE, data: monthTransactionList }]
+        ? [{ title: MONTH_TITLE(t), data: monthTransactionList }]
         : []),
-      ...(yearTransactionList.length > 0 ? [{ title: YEAR_TITLE, data: yearTransactionList }] : []),
-      // for each year prior, detect length and render if includes transactions
-      ...Object.keys(priorByYearTransactionList).reduce(
+      // for each month prior, detect length and render if includes transactions
+      ...Object.keys(priorByMonthTransactionList).reduce(
         (
           accum: {
             title: string
             data: TransactionDetails[]
           }[],
-          year
+          month
         ) => {
-          const transactionList = priorByYearTransactionList[year]
+          const transactionList = priorByMonthTransactionList[month]
           if (transactionList.length > 0) {
-            accum.push({ title: year, data: transactionList })
+            accum.push({ title: month, data: transactionList })
           }
           return accum
         },
@@ -87,37 +83,23 @@ export default function TransactionList({
     hasTransactions,
     monthTransactionList,
     pending,
-    priorByYearTransactionList,
+    priorByMonthTransactionList,
     t,
     todayTransactionList,
-    yearTransactionList,
   ])
 
   const renderItem = useMemo(() => {
     return ({
       item,
-      index,
-      section,
     }: {
       item: TransactionDetails
       index: number
       section: SectionListData<TransactionDetails>
     }) => {
-      // Logic to render border radius, borders and margins on items within SectionList
-      const aboveItem = index > 0 ? section.data[index - 1] : undefined
-      const aboveIsIsolated = aboveItem?.status === TransactionStatus.Cancelling
       const currentIsIsolated = item?.status === TransactionStatus.Cancelling
-      const radiusTop = aboveIsIsolated || currentIsIsolated || index === 0
-      const radiusBottom = currentIsIsolated || index === section.data.length - 1
-      const borderBottom = !currentIsIsolated && index !== section.data.length - 1
+
       return (
         <TransactionSummaryRouter
-          borderBottomColor={borderBottom ? 'backgroundOutline' : 'none'}
-          borderBottomLeftRadius={radiusBottom ? 'lg' : 'none'}
-          borderBottomRightRadius={radiusBottom ? 'lg' : 'none'}
-          borderBottomWidth={borderBottom ? 0.5 : 0}
-          borderTopLeftRadius={radiusTop ? 'lg' : 'none'}
-          borderTopRightRadius={radiusTop ? 'lg' : 'none'}
           mb={currentIsIsolated ? 'md' : 'none'}
           readonly={readonly}
           showInlineWarning={!currentIsIsolated}
