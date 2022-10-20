@@ -257,7 +257,7 @@ export default function TokenSafety({
           </ShortColumn>
           <ShortColumn>
             <InfoText>
-              {heading} {description}{' '}
+              {`${heading} ${description} `}
               <StyledExternalLink href={TOKEN_SAFETY_ARTICLE}>
                 <Trans>Learn more</Trans>
               </StyledExternalLink>
