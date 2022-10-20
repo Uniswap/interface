@@ -3,6 +3,7 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
+import TopTokensProvider from 'components/TopTokensProvider'
 import { FeatureFlagsProvider } from 'featureFlags'
 import RelayEnvironment from 'graphql/data/RelayEnvironment'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
@@ -58,13 +59,15 @@ createRoot(container).render(
             <LanguageProvider>
               <Web3Provider>
                 <RelayEnvironmentProvider environment={RelayEnvironment}>
-                  <BlockNumberProvider>
-                    <Updaters />
-                    <ThemeProvider>
-                      <ThemedGlobalStyle />
-                      <App />
-                    </ThemeProvider>
-                  </BlockNumberProvider>
+                  <TopTokensProvider>
+                    <BlockNumberProvider>
+                      <Updaters />
+                      <ThemeProvider>
+                        <ThemedGlobalStyle />
+                        <App />
+                      </ThemeProvider>
+                    </BlockNumberProvider>
+                  </TopTokensProvider>
                 </RelayEnvironmentProvider>
               </Web3Provider>
             </LanguageProvider>

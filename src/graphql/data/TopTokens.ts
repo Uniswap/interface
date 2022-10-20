@@ -15,7 +15,7 @@ import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery
 import { filterPrices, PricePoint } from './Token'
 import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration, unwrapToken } from './util'
 
-const topTokens100Query = graphql`
+export const topTokens100Query = graphql`
   query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
     topTokens(pageSize: 100, page: 1, chain: $chain) {
       id @required(action: LOG)
