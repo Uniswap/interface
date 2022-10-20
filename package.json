@@ -169,7 +169,6 @@
     "@web3-react/types": "^8.0.20-beta.0",
     "@web3-react/url": "^8.0.25-beta.0",
     "@web3-react/walletconnect": "^8.0.35-beta.0",
-    "ajv": "^6.12.3",
     "array.prototype.flat": "^1.2.4",
     "array.prototype.flatmap": "^1.2.4",
     "cids": "^1.0.0",

@@ -3,7 +3,6 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'analytics/constants'
 import { getPriceUpdateBasisPoints } from 'analytics/utils'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -24,11 +23,11 @@ import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
-const ArrowWrapper = styled.div<{ redesignFlag: boolean }>`
+const ArrowWrapper = styled.div`
   padding: 4px;
   border-radius: 12px;
-  height: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
-  width: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
+  height: 40px;
+  width: 40px;
   position: relative;
   margin-top: -18px;
   margin-bottom: -18px;
@@ -36,9 +35,9 @@ const ArrowWrapper = styled.div<{ redesignFlag: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg1)};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   border: 4px solid;
-  border-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundModule : theme.deprecated_bg0)};
+  border-color: ${({ theme }) => theme.backgroundModule};
   z-index: 2;
 `
 
@@ -75,8 +74,6 @@ export default function SwapModalHeader({
   onAcceptChanges: () => void
 }) {
   const theme = useTheme()
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
@@ -127,8 +124,8 @@ export default function SwapModalHeader({
           </RowBetween>
         </AutoColumn>
       </LightCard>
-      <ArrowWrapper redesignFlag={redesignFlagEnabled}>
-        <ArrowDown size="16" color={redesignFlagEnabled ? theme.textPrimary : theme.deprecated_text2} />
+      <ArrowWrapper>
+        <ArrowDown size="16" color={theme.textPrimary} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
         <AutoColumn gap={'8px'}>
