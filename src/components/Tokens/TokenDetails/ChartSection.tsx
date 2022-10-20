@@ -3,7 +3,6 @@ import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { PriceDurations, PricePoint, SingleTokenData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
@@ -13,8 +12,8 @@ import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
 
-import { filterTimeAtom, useIsFavorited, useToggleFavorite } from '../state'
-import { ClickFavorited, FavoriteIcon, L2NetworkLogo, LogoContainer } from '../TokenTable/TokenRow'
+import { filterTimeAtom } from '../state'
+import { L2NetworkLogo, LogoContainer } from '../TokenTable/TokenRow'
 import PriceChart from './PriceChart'
 import ShareButton from './ShareButton'
 
@@ -77,8 +76,6 @@ export default function ChartSection({
   nativeCurrency?: Token | NativeCurrency
   prices: PriceDurations
 }) {
-  const isFavorited = useIsFavorited(token.address)
-  const toggleFavorite = useToggleFavorite(token.address)
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
@@ -123,11 +120,6 @@ export default function ChartSection({
         </TokenNameCell>
         <TokenActions>
           {token.name && token.symbol && token.address && <ShareButton token={token} isNative={!!nativeCurrency} />}
-          {useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled && (
-            <ClickFavorited onClick={toggleFavorite}>
-              <FavoriteIcon isFavorited={isFavorited} />
-            </ClickFavorited>
-          )}
         </TokenActions>
       </TokenInfoContainer>
       <ChartContainer>
