@@ -11,7 +11,16 @@ import { TokenLoader } from 'src/components/loading/TokenLoader'
 import { WalletLoader } from 'src/components/loading/WalletLoader'
 import GraphCurveArea from './graph-curve-area.svg'
 
-type SkeletonType = 'box' | 'graph' | 'header' | 'token' | 'image' | 'favorite' | 'grid' | 'wallets'
+type SkeletonType =
+  | 'box'
+  | 'graph'
+  | 'header'
+  | 'token'
+  | 'image'
+  | 'favorite'
+  | 'grid'
+  | 'wallets'
+  | 'text'
 
 interface LoadingProps {
   type?: SkeletonType
@@ -89,6 +98,8 @@ const useChildFromType = (
           ))}
         </Box>
       )
+    case 'text':
+      return <BoxLoader borderRadius="xs" height={16} />
     case 'box':
     default:
       return (
