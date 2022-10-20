@@ -8,7 +8,7 @@ import { Z_INDEX } from 'theme/zIndex'
 
 import { AutoColumn } from '../Column'
 
-export const PageWrapper = styled.div<{ redesignFlag: boolean }>`
+export const PageWrapper = styled.div`
   padding: 68px 8px 0px;
   max-width: 480px;
   width: 100%;
@@ -23,30 +23,27 @@ export const PageWrapper = styled.div<{ redesignFlag: boolean }>`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapper = styled.main<{ margin?: string; maxWidth?: string; redesignFlag: boolean }>`
+export const SwapWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
   position: relative;
-  background: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg0)};
-  border-radius: ${({ redesignFlag }) => (redesignFlag ? '16px' : '24px')};
-  border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : 'transparent')};
+  background: ${({ theme }) => theme.backgroundSurface};
+  border-radius: 16px;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 8px;
   z-index: ${Z_INDEX.deprecated_content};
-  box-shadow: ${({ redesignFlag }) =>
-    !redesignFlag &&
-    '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.01)'};
 `
 
-export const ArrowWrapper = styled.div<{ clickable: boolean; redesignFlag: boolean }>`
+export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   border-radius: 12px;
-  height: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
-  width: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
+  height: 40px;
+  width: 40px;
   position: relative;
-  margin-top: ${({ redesignFlag }) => (redesignFlag ? '-18px' : '-14px')};
-  margin-bottom: ${({ redesignFlag }) => (redesignFlag ? '-18px' : '-14px')};
+  margin-top: -18px;
+  margin-bottom: -18px;
   margin-left: auto;
   margin-right: auto;
-  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundInteractive : theme.deprecated_bg1)};
+  background-color: ${({ theme }) => theme.backgroundInteractive};
   border: 4px solid;
-  border-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg0)};
+  border-color: ${({ theme }) => theme.backgroundSurface};
 
   z-index: 2;
   ${({ clickable }) =>
