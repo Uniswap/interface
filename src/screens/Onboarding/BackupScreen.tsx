@@ -15,6 +15,7 @@ import Check from 'src/assets/icons/check.svg'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import PencilIcon from 'src/assets/icons/pencil.svg'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { EducationContentType } from 'src/components/education'
@@ -23,6 +24,7 @@ import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -38,6 +40,21 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
   const theme = useAppTheme()
 
   const activeAccountBackups = useActiveAccount()?.backups
+
+  useEffect(() => {
+    const shouldOverrideBackButton = params?.importType === ImportType.SeedPhrase
+    if (shouldOverrideBackButton) {
+      navigation.setOptions({
+        headerLeft: () => (
+          <BackButton
+            onPressBack={() => {
+              navigation.pop(2)
+            }}
+          />
+        ),
+      })
+    }
+  })
 
   const onPressNext = () => {
     navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
