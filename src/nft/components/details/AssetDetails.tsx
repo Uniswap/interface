@@ -26,6 +26,7 @@ import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
+import { VerifiedIcon } from '../icons'
 
 import * as styles from './AssetDetails.css'
 
@@ -143,6 +144,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     [asset.rarity]
   )
 
+  console.log(asset)
+
   const assetMediaType = useMemo(() => {
     if (isAudio(asset.animationUrl)) {
       return MediaType.Audio
@@ -179,24 +182,33 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     <AnimatedBox
       style={{
         // @ts-ignore
-        width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
+        // width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
+        width: '100%',
       }}
       className={styles.container}
     >
       <div className={styles.columns}>
-        <Column className={styles.column}>
-          {assetMediaType === MediaType.Image ? (
-            <img
-              className={styles.image}
-              src={asset.imageUrl}
-              alt={asset.name || collection.collectionName}
-              style={{ ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }}
-            />
-          ) : (
-            <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
-          )}
-        </Column>
         <Column className={clsx(styles.column, styles.columnRight)} width="full">
+          <div>
+            {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
+            {/* label="Collection"
+                  avatarUrl={collection.collectionImageUrl}
+                  name={collection.collectionName}
+                  isVerified={collection.isVerified} */}
+          </div>
+          <div>
+            {assetMediaType === MediaType.Image ? (
+              <img
+                className={styles.image}
+                src={asset.imageUrl}
+                alt={asset.name || collection.collectionName}
+                style={{ ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }}
+              />
+            ) : (
+              <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
+            )}
+          </div>
+
           <Column>
             <Row
               marginBottom="8"

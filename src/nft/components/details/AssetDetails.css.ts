@@ -81,8 +81,8 @@ export const columns = style([
 ])
 
 export const column = style({
-  maxWidth: '50%',
-  width: '50%',
+  // maxWidth: '50%',
+  // width: '50%',
   alignSelf: 'center',
   '@media': {
     '(max-width: 1024px)': {

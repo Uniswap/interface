@@ -8,8 +8,6 @@ import styled from 'styled-components/macro'
 
 const AssetContainer = styled.div`
   display: flex;
-  padding-right: 116px;
-  padding-left: 116px;
 `
 
 const Asset = () => {
