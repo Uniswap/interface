@@ -82,7 +82,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
       return (
         <SlashCircleIcon
           color={theme.colors.backgroundOutline}
-          fill={theme.colors.black}
+          fill={theme.colors.backgroundBackdrop}
           fillOpacity={1}
           height={statusSize}
           width={statusSize}

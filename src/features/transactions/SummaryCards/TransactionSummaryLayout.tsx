@@ -108,16 +108,16 @@ function TransactionSummaryLayout({
             )}
             <Flex grow gap="xxxs">
               <Flex row alignItems="center" gap="xxs">
-                <Text numberOfLines={1} variant="buttonLabelMedium">
+                <Text numberOfLines={1} variant="bodyLarge">
                   {title}
                 </Text>
-                {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} height={16} />}
+                {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} height={22} />}
                 {status === TransactionStatus.FailedCancel && showInlineWarning && (
                   <FailedCancelBadge />
                 )}
               </Flex>
               {caption && (
-                <Text color="textSecondary" variant="buttonLabelMicro">
+                <Text color="textTertiary" variant="bodySmall">
                   {caption}
                 </Text>
               )}
@@ -127,7 +127,7 @@ function TransactionSummaryLayout({
             <Flex alignItems="flex-end" gap="xxxs">
               <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
               {queued && (
-                <Text color="textSecondary" variant="buttonLabelMicro">
+                <Text color="textTertiary" variant="bodySmall">
                   {t('Queued')}
                 </Text>
               )}
@@ -185,7 +185,7 @@ export function AssetUpdateLayout({
         {title}
       </Text>
       {caption && (
-        <Text color="textSecondary" numberOfLines={1} variant="buttonLabelMicro">
+        <Text color="textTertiary" numberOfLines={1} variant="bodySmall">
           {caption}
         </Text>
       )}

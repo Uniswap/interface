@@ -19,8 +19,8 @@ const YEAR_TITLE = dayjs().year().toString()
 const key = (info: TransactionDetails) => info.hash
 
 const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { title } }) => (
-  <Box px="xs" py="md">
-    <Text color="textSecondary" variant="buttonLabelSmall">
+  <Box pb="xxxs" pt="sm" px="xs">
+    <Text color="textSecondary" variant="subheadSmall">
       {title}
     </Text>
   </Box>
