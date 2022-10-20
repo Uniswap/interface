@@ -12,7 +12,6 @@ import { Trace } from '../telemetry/Trace'
 
 const INPUT_VALUES = {
   height: 120,
-  topPosition: 42,
 }
 interface Props {
   value: string | undefined
@@ -77,7 +76,7 @@ export function GenericImportForm({
           borderWidth={1}
           flexShrink={1}
           gap="none"
-          height={INPUT_VALUES.height}
+          minHeight={INPUT_VALUES.height}
           p="sm"
           width="100%">
           <Flex row alignItems="flex-end" gap="none">
@@ -118,7 +117,6 @@ export function GenericImportForm({
               row
               gap="xs"
               position="absolute"
-              top={INPUT_VALUES.topPosition}
               onLayout={(event: any) => setLayout(event.nativeEvent.layout)}>
               <Text color="textSecondary" variant="bodyLarge">
                 {t('Type or')}
