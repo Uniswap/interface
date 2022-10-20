@@ -11,7 +11,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
-import { tokenComparator, useSortTokensByQuery, verificationComparator } from 'lib/hooks/useTokenList/sorting'
+import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
@@ -96,10 +96,7 @@ export function CurrencySearch({
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(
-    () =>
-      !balancesAreLoading
-        ? [...filteredTokens].sort(tokenComparator.bind(null, balances)).sort(verificationComparator)
-        : [],
+    () => (!balancesAreLoading ? [...filteredTokens].sort(tokenComparator.bind(null, balances)) : []),
     [balances, filteredTokens, balancesAreLoading]
   )
   const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
