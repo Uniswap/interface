@@ -81,11 +81,11 @@ export default function PopupItem({
     popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
   }
 
-  return (
+  return popupContent ? (
     <Popup>
       <StyledClose color={theme.deprecated_text2} onClick={removeThisPopup} />
       {popupContent}
       {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Popup>
-  )
+  ) : null
 }
