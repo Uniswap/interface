@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { useAssetsQuery } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
@@ -20,6 +21,7 @@ import {
   useIsMobile,
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
+import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieAsset, GenieCollection, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
 import { pluralize } from 'nft/utils/roundAndPluralize'
@@ -27,6 +29,7 @@ import { scrollToTop } from 'nft/utils/scrollToTop'
 import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParams'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -71,88 +74,87 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const reset = useCollectionFilters((state) => state.reset)
   const setMin = useCollectionFilters((state) => state.setMinPrice)
   const setMax = useCollectionFilters((state) => state.setMaxPrice)
+  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
   const debouncedSearchByNameText = useDebounce(searchByNameText, 500)
 
-  // const {
-  //   data: collectionAssets,
-  //   isSuccess: AssetsFetchSuccess,
-  //   isLoading,
-  //   fetchNextPage,
-  //   hasNextPage,
-  // } = useInfiniteQuery(
-  //   [
-  //     'collectionNfts',
-  //     {
-  //       traits,
-  //       contractAddress,
-  //       markets,
-  //       notForSale: !buyNow,
-  //       sortBy,
-  //       debouncedMinPrice,
-  //       debouncedMaxPrice,
-  //       searchText: debouncedSearchByNameText,
-  //     },
-  //   ],
-  //   async ({ pageParam = 0 }) => {
-  //     let sort = undefined
-  //     switch (sortBy) {
-  //       case SortBy.HighToLow: {
-  //         sort = { currentEthPrice: 'desc' }
-  //         break
-  //       }
-  //       case SortBy.RareToCommon: {
-  //         sort = { 'rarity.providers.0.rank': 1 }
-  //         break
-  //       }
-  //       case SortBy.CommonToRare: {
-  //         sort = { 'rarity.providers.0.rank': -1 }
-  //         break
-  //       }
-  //       default:
-  //     }
+  const {
+    data: collectionAssets,
+    isSuccess: AssetsFetchSuccess,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(
+    [
+      'collectionNfts',
+      {
+        traits,
+        contractAddress,
+        markets,
+        notForSale: !buyNow,
+        sortBy,
+        debouncedMinPrice,
+        debouncedMaxPrice,
+        searchText: debouncedSearchByNameText,
+      },
+    ],
+    async ({ pageParam = 0 }) => {
+      let sort = undefined
+      switch (sortBy) {
+        case SortBy.HighToLow: {
+          sort = { currentEthPrice: 'desc' }
+          break
+        }
+        case SortBy.RareToCommon: {
+          sort = { 'rarity.providers.0.rank': 1 }
+          break
+        }
+        case SortBy.CommonToRare: {
+          sort = { 'rarity.providers.0.rank': -1 }
+          break
+        }
+        default:
+      }
 
-  //     return await AssetsFetcher({
-  //       contractAddress,
-  //       sort,
-  //       markets,
-  //       notForSale: !buyNow,
-  //       searchText: debouncedSearchByNameText,
-  //       pageParam,
-  //       traits,
-  //       price: {
-  //         low: debouncedMinPrice,
-  //         high: debouncedMaxPrice,
-  //         symbol: 'ETH',
-  //       },
-  //     })
-  //   },
-  //   {
-  //     getNextPageParam: (lastPage, pages) => {
-  //       return lastPage?.flat().length === 25 ? pages.length : null
-  //     },
-  //     refetchOnReconnect: false,
-  //     refetchOnWindowFocus: false,
-  //     refetchOnMount: false,
-  //     refetchInterval: 5000,
-  //   }
-  // )
+      return await AssetsFetcher({
+        contractAddress,
+        sort,
+        markets,
+        notForSale: !buyNow,
+        searchText: debouncedSearchByNameText,
+        pageParam,
+        traits,
+        price: {
+          low: debouncedMinPrice,
+          high: debouncedMaxPrice,
+          symbol: 'ETH',
+        },
+      })
+    },
+    {
+      getNextPageParam: (lastPage, pages) => {
+        return lastPage?.flat().length === 25 ? pages.length : null
+      },
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchInterval: 5000,
+    }
+  )
   const {
     assets: nftQueryAssets,
     loadNext,
     hasNext,
     isLoadingNext,
   } = useAssetsQuery(
-    contractAddress,
+    isNftGraphQl ? contractAddress : '',
     SortByQueries[sortBy].field,
     SortByQueries[sortBy].asc,
     { listed: buyNow },
     DEFAULT_ASSET_QUERY_AMOUNT
   )
-  // console.log(nftQueryAssets)
-  // useAssetsPreloadedQuery()
 
   useEffect(() => {
     setIsCollectionNftsLoading(isLoadingNext)
@@ -165,11 +167,18 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const isMobile = useIsMobile()
 
   const collectionNfts = useMemo(() => {
-    if (!nftQueryAssets && !isLoadingNext) return undefined
+    if (
+      (isNftGraphQl && !nftQueryAssets && !isLoadingNext) ||
+      (!isNftGraphQl && !collectionAssets) ||
+      !AssetsFetchSuccess
+    )
+      return undefined
 
-    // return collectionAssets.pages.flat()
-    return nftQueryAssets as unknown as GenieAsset[]
-  }, [isLoadingNext, nftQueryAssets])
+    return isNftGraphQl ? (nftQueryAssets as unknown as GenieAsset[]) : collectionAssets?.pages.flat()
+  }, [AssetsFetchSuccess, collectionAssets, isLoadingNext, isNftGraphQl, nftQueryAssets])
+
+  const wrappedLoadingState = isNftGraphQl ? isLoadingNext : isLoading
+  const wrappedHasNext = isNftGraphQl ? hasNext : hasNextPage ?? false
 
   const loadingAssets = useMemo(() => <>{new Array(25).fill(<CollectionAssetLoading />)}</>, [])
   const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts)
@@ -354,18 +363,18 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         </Box>
       </AnimatedBox>
       <InfiniteScroll
-        next={() => loadNext(25)}
-        hasMore={hasNext}
-        loader={hasNext ? loadingAssets : null}
-        dataLength={nftQueryAssets?.length ?? 0}
+        next={() => (isNftGraphQl ? loadNext(25) : fetchNextPage())}
+        hasMore={wrappedHasNext}
+        loader={wrappedHasNext ? loadingAssets : null}
+        dataLength={collectionNfts?.length ?? 0}
         style={{ overflow: 'unset' }}
-        className={hasNfts || isLoadingNext ? styles.assetList : undefined}
+        className={hasNfts || wrappedLoadingState ? styles.assetList : undefined}
       >
         {hasNfts
           ? Nfts
-          : isLoadingNext
+          : wrappedLoadingState
           ? loadingAssets
-          : !isLoadingNext && (
+          : !wrappedLoadingState && (
               <Center width="full" color="textSecondary" style={{ height: '60vh' }}>
                 <div style={{ display: 'block', textAlign: 'center' }}>
                   <p className={headlineMedium}>No NFTS found</p>
