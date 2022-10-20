@@ -22,6 +22,9 @@ const SweepContainer = styled.div<{ showSweep: boolean }>`
 
 const StyledSlider = styled(Slider)`
   cursor: pointer;
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    display: none;
+  }
 `
 
 const SweepLeftmostContainer = styled.div`
@@ -37,6 +40,15 @@ const SweepRightmostContainer = styled.div`
   align-items: center;
   gap: 8px;
   min-width: 160px;
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    display: none;
+  }
+`
+
+const SweepHeaderContainer = styled.div`
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    display: none;
+  }
 `
 
 const SweepSubContainer = styled.div`
@@ -56,6 +68,10 @@ const InputContainer = styled.input`
   font-size: 14px;
   font-weight: 400px;
   line-height: 20px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    width: 100%;
+  }
 
   :hover,
   :focus {
@@ -389,9 +405,11 @@ export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice, sh
   return (
     <SweepContainer showSweep={showSweep}>
       <SweepLeftmostContainer>
-        <ThemedText.SubHeaderSmall color="textPrimary" lineHeight="20px" paddingTop="6px" paddingBottom="6px">
-          Sweep
-        </ThemedText.SubHeaderSmall>
+        <SweepHeaderContainer>
+          <ThemedText.SubHeaderSmall color="textPrimary" lineHeight="20px" paddingTop="6px" paddingBottom="6px">
+            Sweep
+          </ThemedText.SubHeaderSmall>
+        </SweepHeaderContainer>
         <SweepSubContainer>
           <StyledSlider
             defaultValue={0}

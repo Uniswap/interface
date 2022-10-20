@@ -332,7 +332,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                   if (!buyNow || hasErc1155s) return
                   if (!sweepIsOpen) {
                     scrollToTop()
-                    if (!bagExpanded) toggleBag()
+                    if (!bagExpanded && !isMobile) toggleBag()
                   }
                   setSweepOpen(!sweepIsOpen)
                 }}
