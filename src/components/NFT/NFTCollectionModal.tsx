@@ -67,8 +67,8 @@ export function NFTCollectionModal({
             </Flex>
 
             {/* Collection stats */}
-            <Flex flexDirection="row" gap="xxs">
-              <Flex fill alignItems="center" gap="xxs">
+            <Flex row gap="xxs" justifyContent="space-between" px="lg">
+              <Flex alignItems="center" gap="xxs">
                 <Text color="textTertiary" variant="subheadSmall">
                   {t('Items')}
                 </Text>
@@ -76,7 +76,7 @@ export function NFTCollectionModal({
                   <Text variant="bodyLarge">{formatNumber(collection?.stats.total_supply)}</Text>
                 )}
               </Flex>
-              <Flex fill alignItems="center" gap="xxs">
+              <Flex alignItems="center" gap="xxs">
                 <Text color="textTertiary" variant="subheadSmall">
                   {t('Owners')}
                 </Text>
@@ -85,7 +85,7 @@ export function NFTCollectionModal({
                 )}
               </Flex>
               {collection?.stats.floor_price && (
-                <Flex fill alignItems="center" gap="xxs">
+                <Flex alignItems="center" gap="xxs">
                   <Text color="textTertiary" variant="subheadSmall">
                     {t('Floor')}
                   </Text>
@@ -97,7 +97,7 @@ export function NFTCollectionModal({
                 </Flex>
               )}
               {collection?.stats.total_volume && (
-                <Flex fill alignItems="center" gap="xxs">
+                <Flex alignItems="center" gap="xxs">
                   <Text color="textTertiary" variant="subheadSmall">
                     {t('Volume')}
                   </Text>
