@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault, L2ChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import { AlertOctagon, AlertTriangle } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
@@ -13,10 +13,6 @@ const BodyRow = styled.div`
   font-size: 14px;
   line-height: 20px;
 `
-const CautionOctagon = styled(AlertOctagon)`
-  color: ${({ theme }) => theme.deprecated_black};
-`
-
 const CautionTriangle = styled(AlertTriangle)`
   color: ${({ theme }) => theme.accentWarning};
 `
