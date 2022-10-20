@@ -24,6 +24,7 @@ export function LinkButton({
   color,
   isSafeUri = false,
   size = iconSizes.sm,
+  justifyContent = 'center',
   ...rest
 }: LinkButtonProps) {
   const theme = useAppTheme()
@@ -31,7 +32,7 @@ export function LinkButton({
 
   return (
     <Button onPress={() => openUri(url, isSafeUri)} {...rest}>
-      <Flex centered row gap="xxs">
+      <Flex row alignItems="center" gap="xxs" justifyContent={justifyContent}>
         <Text color={color} variant={textVariant}>
           {label}
         </Text>

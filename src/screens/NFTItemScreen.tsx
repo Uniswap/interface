@@ -7,6 +7,7 @@ import { AppStackScreenProp } from 'src/app/navigation/types'
 import ShareIcon from 'src/assets/icons/share.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { Button } from 'src/components/buttons/Button'
+import { LinkButton } from 'src/components/buttons/LinkButton'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -21,6 +22,7 @@ import { useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { shortenAddress } from 'src/utils/addresses'
+import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 
 // TODO {MOB-2827}: replace with `uniswapAppUrl` const when NFT feature is moved off vercel
 export const UNISWAP_NFT_BASE_URL = 'https://interface-6y0ofdy69-uniswap.vercel.app/#'
@@ -66,6 +68,26 @@ export function NFTItemScreen({
     ),
     [theme.colors.textSecondary, onShare]
   )
+
+  const creatorInfo = useMemo(() => {
+    if (!asset) return null
+
+    const creatorAddress = asset.creator.address
+    return {
+      value: asset.creator.user?.username || shortenAddress(creatorAddress),
+      link: getExplorerLink(asset.chainId, creatorAddress, ExplorerDataType.ADDRESS),
+    }
+  }, [asset])
+
+  const contractAddressInfo = useMemo(() => {
+    if (!asset) return null
+
+    const contractAddress = asset.asset_contract.address
+    return {
+      value: shortenAddress(contractAddress),
+      link: getExplorerLink(asset.chainId, contractAddress, ExplorerDataType.ADDRESS),
+    }
+  }, [asset])
 
   // TODO: better handle error / loading states
   if (!asset) {
@@ -163,11 +185,13 @@ export function NFTItemScreen({
           <Flex row flexWrap="wrap">
             <AssetMetadata
               header={t('Creator')}
-              value={asset.creator.user?.username || shortenAddress(asset.creator.address)}
+              link={creatorInfo!.link}
+              value={creatorInfo!.value}
             />
             <AssetMetadata
               header={t('Contract address')}
-              value={shortenAddress(asset.asset_contract.address)}
+              link={contractAddressInfo!.link}
+              value={contractAddressInfo!.value}
             />
             <AssetMetadata header={t('Token ID')} value={asset.token_id} />
             <AssetMetadata header={t('Token standard')} value={asset.asset_contract.schema_name} />
@@ -179,7 +203,7 @@ export function NFTItemScreen({
   )
 }
 
-function AssetMetadata({ header, value }: { header: string; value: string }) {
+function AssetMetadata({ header, value, link }: { header: string; value: string; link?: string }) {
   const itemWidth = '45%' // works with flexWrap to make 2 columns. It needs to be slightly less than 50% to account for padding on the entire section
 
   return (
@@ -187,9 +211,20 @@ function AssetMetadata({ header, value }: { header: string; value: string }) {
       <Text color="textTertiary" variant="subheadSmall">
         {header}
       </Text>
-      <Text numberOfLines={1} variant="bodyLarge">
-        {value}
-      </Text>
+      {link ? (
+        <LinkButton
+          justifyContent="flex-start"
+          label={value}
+          mx="none"
+          px="none"
+          textVariant="bodyLarge"
+          url={link}
+        />
+      ) : (
+        <Text numberOfLines={1} variant="bodyLarge">
+          {value}
+        </Text>
+      )}
     </Flex>
   )
 }
