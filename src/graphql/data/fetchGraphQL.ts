@@ -1,5 +1,5 @@
 import { Variables } from 'react-relay'
-import { GraphQLResponse, RequestParameters } from 'relay-runtime'
+import { CacheConfig, GraphQLResponse, RequestParameters } from 'relay-runtime'
 
 const URL = process.env.REACT_APP_AWS_API_ENDPOINT
 const NFT_URL = process.env.REACT_APP_NFT_AWS_API_ENDPOINT ?? ''
@@ -16,21 +16,18 @@ const nftHeaders = {
   'x-api-key': process.env.REACT_APP_NFT_AWS_X_API_KEY ?? '',
 }
 
-interface CacheConfig {
-  isNFt: boolean
-}
-
 const fetchQuery = (
   params: RequestParameters,
   variables: Variables,
-  cacheConfig: CacheConfig = { isNFt: false }
+  cacheConfig: CacheConfig
 ): Promise<GraphQLResponse> => {
+  const { metadata: { isNFT } = { isNFT: false } } = cacheConfig
   const body = JSON.stringify({
     query: params.text, // GraphQL text from input
     variables,
   })
-  const url = cacheConfig.isNFt ? NFT_URL : URL
-  const headers = cacheConfig.isNFt ? nftHeaders : baseHeaders
+  const url = isNFT ? NFT_URL : URL
+  const headers = isNFT ? nftHeaders : baseHeaders
 
   return fetch(url, { method: 'POST', body, headers })
     .then((res) => res.json())
