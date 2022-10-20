@@ -71,7 +71,7 @@ export function PendingNotificationBadge({ size = 24, sortedPendingTransactions 
         top={2}
         width={size}
         zIndex="modal">
-        <Text textAlign="center" variant="badge_deprecated">
+        <Text textAlign="center" variant="buttonLabelMicro">
           {countToDisplay}
         </Text>
       </Box>

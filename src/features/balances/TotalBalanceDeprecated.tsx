@@ -58,7 +58,7 @@ function TotalBalanceInner({ owner, showRelativeChange, variant, color }: TotalB
         <RelativeChange
           absoluteChange={balance?.portfolio?.absoluteChange24H ?? undefined}
           change={balance?.portfolio?.relativeChange24H ?? undefined}
-          variant="bodySmall"
+          variant="subheadSmall"
         />
       )}
     </Flex>

@@ -44,7 +44,7 @@ export function RecipientPrevTransfers({ recipient }: { recipient: string }) {
   const prevTxns = useAllTransactionsBetweenAddresses(activeAddress, recipient).length
 
   return (
-    <Text color="textSecondary" textAlign="center" variant="caption_deprecated">
+    <Text color="textSecondary" textAlign="center" variant="bodySmall">
       {prevTxns === 1
         ? t('{{ prevTxns }} previous transfer', { prevTxns })
         : t('{{ prevTxns }} previous transfers', { prevTxns })}

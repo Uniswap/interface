@@ -61,20 +61,20 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                   <Flex centered row gap="sm">
                     <Unicon address={mnemonicId} size={32} />
                     <Flex gap="none">
-                      <Text numberOfLines={1} variant="bodyLarge">
+                      <Text numberOfLines={1} variant="subheadSmall">
                         {t('Backup {{backupIndex}}', { backupIndex: index + 1 })}
                       </Text>
-                      <Text color="textSecondary" variant="caption_deprecated">
+                      <Text color="textSecondary" variant="buttonLabelMicro">
                         {shortenAddress(mnemonicId)}
                       </Text>
                     </Flex>
                   </Flex>
                   <Flex row gap="sm">
                     <Flex alignItems="flex-end" gap="xxs">
-                      <Text color="textSecondary" variant="caption_deprecated">
+                      <Text color="textSecondary" variant="buttonLabelMicro">
                         {t('Backed up on:')}
                       </Text>
-                      <Text variant="caption_deprecated">
+                      <Text variant="buttonLabelMicro">
                         {formatDate(new Date(createdAt * 1000))}
                       </Text>
                     </Flex>

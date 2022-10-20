@@ -32,8 +32,8 @@ export function _Palette(colors: Palette) {
           p="sm"
           style={{ backgroundColor: value }}>
           <Flex flexDirection="row" justifyContent="space-between">
-            <Text variant="caption_deprecated">{color}</Text>
-            <Text variant="caption_deprecated">{value}</Text>
+            <Text variant="buttonLabelMicro">{color}</Text>
+            <Text variant="buttonLabelMicro">{value}</Text>
           </Flex>
         </Box>
       ))}

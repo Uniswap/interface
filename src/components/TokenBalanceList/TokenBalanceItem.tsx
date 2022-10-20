@@ -32,7 +32,7 @@ export const TokenBalanceItem = memo(
 
     return (
       <Button
-        alignItems="center"
+        alignItems="flex-start"
         bg="none"
         delayPressIn={150}
         flexDirection="row"

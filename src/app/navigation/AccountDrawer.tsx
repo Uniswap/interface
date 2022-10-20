@@ -316,9 +316,9 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           showAddressAsSubtitle
           showCopy
           address={activeAccountAddress}
-          captionVariant="bodySmall"
+          captionVariant="bodyLarge"
           size={UNICON_WIDTH}
-          variant="headlineSmall"
+          variant="subheadLarge"
           verticalGap="none"
         />
       </Flex>

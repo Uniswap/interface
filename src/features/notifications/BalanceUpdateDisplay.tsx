@@ -65,7 +65,7 @@ function BalanceUpdateInner({
           adjustsFontSizeToFit
           color="textSecondary"
           numberOfLines={1}
-          variant="badge_deprecated">
+          variant="buttonLabelMicro">
           {balanceUpdate.usdValueChange}
         </Text>
       </>

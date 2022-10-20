@@ -23,7 +23,7 @@ export function SettingsSupportScreen() {
           {t('Recent logs')}
         </Text>
         <ScrollView>
-          <Text mt="md" variant="badge_deprecated">
+          <Text mt="md" variant="buttonLabelMicro">
             {recentLogs.join('\n\n')}
           </Text>
         </ScrollView>

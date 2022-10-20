@@ -32,7 +32,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props) => {
             variant="bodyLarge">
             {displayName?.name}
           </Text>
-          <Text color="textSecondary" variant="caption_deprecated">
+          <Text color="textSecondary" variant="subheadSmall">
             {shortenAddress(account.address)}
           </Text>
         </Flex>

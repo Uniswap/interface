@@ -1,7 +1,7 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { memo, Suspense, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlexAlignType, Image, ImageStyle, ViewProps } from 'react-native'
+import { Image, ImageStyle, ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useLazyLoadQuery } from 'react-relay'
@@ -15,6 +15,7 @@ import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { PollingInterval } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
@@ -196,7 +197,7 @@ function FavoriteTokenCardInner({
                 <RelativeChange
                   change={pricePercentChange ?? undefined}
                   semanticColor={true}
-                  variant="badge_deprecated"
+                  variant="subheadSmall"
                 />
               }
             />
@@ -204,30 +205,6 @@ function FavoriteTokenCardInner({
         </BaseCard.Shadow>
       </AnimatedButton>
     </ContextMenu>
-  )
-}
-
-interface TokenMetadataProps {
-  pre?: React.ReactNode
-  main: React.ReactNode
-  sub?: React.ReactNode
-  align?: FlexAlignType
-}
-
-/** Helper component to format rhs metadata for a given token. */
-function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProps) {
-  return (
-    <Flex row>
-      {pre}
-      <Flex alignItems={align} gap="xxs" minWidth={70}>
-        <Text variant="bodyLarge">{main}</Text>
-        {sub && (
-          <Text color="textSecondary" variant="caption_deprecated">
-            {sub}
-          </Text>
-        )}
-      </Flex>
-    </Flex>
   )
 }
 

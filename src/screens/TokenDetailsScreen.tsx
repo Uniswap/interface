@@ -73,11 +73,7 @@ function TokenDetailsHeader({ currency, initialSendState }: TokenDetailsHeaderPr
           <Text numberOfLines={1} style={flex.shrink} variant="headlineSmall">
             {currency.name ?? t('Unknown token')}
           </Text>
-          <Text
-            color="textTertiary"
-            numberOfLines={1}
-            style={flex.shrink}
-            variant="caption_deprecated">
+          <Text color="textTertiary" numberOfLines={1} style={flex.shrink} variant="bodySmall">
             {currency.symbol ?? t('Unknown token')}
           </Text>
         </Box>
@@ -121,7 +117,7 @@ function HeaderPriceLabel({
   )
 
   return (
-    <Text color="textSecondary" variant="caption_deprecated">
+    <Text color="textSecondary" variant="buttonLabelMicro">
       {formatUSDPrice(spotPrice?.markets?.[0]?.price?.value) ?? t('Unknown token')}
     </Text>
   )

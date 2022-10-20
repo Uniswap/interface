@@ -26,7 +26,7 @@ function Page({ text }: { text: ReactNode }) {
           }>
           <Flex centered>
             <Flex row alignItems="center" justifyContent="space-between" px="lg" width={fullWidth}>
-              <Text color="textSecondary" variant="buttonLabelMedium">
+              <Text color="textSecondary" variant="subheadSmall">
                 <Trans>What’s a recovery phrase?</Trans>
               </Text>
               <CloseButton color="textSecondary" onPress={onDismiss} />

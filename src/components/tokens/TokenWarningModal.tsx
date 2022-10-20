@@ -79,7 +79,7 @@ export default function TokenWarningModal({
               borderColor: opacify(60, theme.colors[warningColor]),
             }}>
             <AlertTriangle color={theme.colors[warningColor]} height={14} />
-            <Text color={warningColor} variant="caption_deprecated">
+            <Text color={warningColor} variant="buttonLabelMicro">
               {getTokenWarningHeaderText(tokenWarningLevel, t)}
             </Text>
           </Flex>
@@ -109,7 +109,7 @@ export default function TokenWarningModal({
             ellipsizeMode="tail"
             mx="xs"
             numberOfLines={1}
-            variant="caption_deprecated">
+            variant="buttonLabelMicro">
             {explorerLink}
           </Text>
           <ExternalLinkIcon fill={theme.colors.accentTextLightSecondary} height={12} width={12} />

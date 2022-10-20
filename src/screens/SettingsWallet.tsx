@@ -241,7 +241,7 @@ export function SettingsWallet({
             renderSectionFooter={() => <Flex pt="lg" />}
             renderSectionHeader={({ section: { subTitle } }) => (
               <Box bg="backgroundBackdrop" pb="sm">
-                <Text color="textSecondary" variant="subheadLarge">
+                <Text color="textSecondary" variant="bodyLarge">
                   {subTitle}
                 </Text>
               </Box>

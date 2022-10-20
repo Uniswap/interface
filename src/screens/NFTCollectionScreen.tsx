@@ -104,7 +104,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 name={ElementName.NFTCollectionWebsite}
                 testID={ElementName.NFTCollectionWebsite}
                 onPress={() => openUri(collection.external_url)}>
-                <Text color="accentAction" variant="badge_deprecated">
+                <Text color="accentAction" variant="buttonLabelMicro">
                   {t('Website ↗')}
                 </Text>
               </Button>
@@ -115,7 +115,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 name={ElementName.NFTCollectionTwitter}
                 testID={ElementName.NFTCollectionTwitter}
                 onPress={() => openUri(`https://twitter.com/${collection?.twitter_username}`)}>
-                <Text color="accentAction" variant="badge_deprecated">
+                <Text color="accentAction" variant="buttonLabelMicro">
                   {t('Twitter ↗')}
                 </Text>
               </Button>
@@ -126,7 +126,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 name={ElementName.NFTCollectionDiscord}
                 testID={ElementName.NFTCollectionDiscord}
                 onPress={() => openUri(collection.discord_url)}>
-                <Text color="accentAction" variant="badge_deprecated">
+                <Text color="accentAction" variant="buttonLabelMicro">
                   {t('Discord ↗')}
                 </Text>
               </Button>

@@ -178,7 +178,7 @@ export function WalletConnectModal({
                     adjustsFontSizeToFit
                     color="textSecondary"
                     numberOfLines={1}
-                    variant="caption_deprecated">
+                    variant="buttonLabelMicro">
                     {currentScreenState === ScannerModalState.ScanQr
                       ? displayName?.name
                       : t('Connect to an app with WalletConnect')}

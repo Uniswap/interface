@@ -16,7 +16,7 @@ interface RelativeChangeProps {
 export function RelativeChange({
   absoluteChange,
   change,
-  variant = 'caption_deprecated',
+  variant = 'subheadSmall',
   semanticColor,
 }: RelativeChangeProps) {
   const theme = useAppTheme()

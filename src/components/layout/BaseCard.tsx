@@ -121,7 +121,7 @@ function EmptyState({
           {title}
         </Text>
       )}
-      <Text color="textSecondary" textAlign="center" variant="caption_deprecated">
+      <Text color="textSecondary" textAlign="center" variant="bodySmall">
         {description}
       </Text>
       {buttonLabel && (

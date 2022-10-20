@@ -25,13 +25,13 @@ export function TabEmptyState({
   style,
 }: TabEmptyStateProps) {
   return (
-    <Flex centered gap="sm" m="sm" style={style} width="100%">
+    <Flex centered gap="sm" m="sm" style={style}>
       {title && (
         <Text textAlign="center" variant="subheadLarge">
           {title}
         </Text>
       )}
-      <Text color="textSecondary" textAlign="center" variant="caption_deprecated">
+      <Text color="textSecondary" textAlign="center" variant="bodySmall">
         {description}
       </Text>
       {buttonLabel && (

@@ -143,7 +143,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
             top={0}
             width="100%"
             onLayout={(event: any) => setInfoLayout(event.nativeEvent.layout)}>
-            <Text color="textPrimary" variant="buttonLabelLarge">
+            <Text color="textPrimary" variant="subheadLarge">
               {t('Scan a QR code')}
             </Text>
             {isWalletConnectModal ? (
@@ -159,7 +159,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
                 </DevelopmentOnly>
               </>
             ) : (
-              <Text color="textPrimary" variant="bodySmall">
+              <Text color="textPrimary" variant="buttonLabelMicro">
                 {t('Scan a wallet address to send tokens')}
               </Text>
             )}

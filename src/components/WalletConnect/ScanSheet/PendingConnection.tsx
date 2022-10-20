@@ -212,7 +212,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
             label={pendingSession.dapp.url}
             mb="sm"
             p="xs"
-            textVariant="caption_deprecated"
+            textVariant="buttonLabelMicro"
             url={pendingSession.dapp.url}
           />
         </Flex>

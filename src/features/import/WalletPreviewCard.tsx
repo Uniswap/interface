@@ -56,11 +56,11 @@ export default function WalletPreviewCard({
             showUnicon={!selected}
             size={UNICON_SIZE}
             textAlign="flex-start"
-            variant="subheadSmall"
+            variant="bodyLarge"
             verticalGap="none"
           />
         </Flex>
-        <Text color="textSecondary" variant="caption_deprecated">
+        <Text color="textSecondary" variant="subheadSmall">
           {formatUSDPrice(balance)}
         </Text>
       </Flex>

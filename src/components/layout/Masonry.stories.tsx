@@ -45,7 +45,7 @@ const Template: ComponentStory<typeof Masonry> = () => (
           width: '100%',
           padding: 5,
         }}>
-        <Text color="accentActionSoft" variant="code_deprecated">
+        <Text color="accentActionSoft" variant="monospace">
           {key}
         </Text>
       </View>

@@ -91,12 +91,12 @@ export function LandingScreen({ navigation }: Props) {
               pt="sm"
               testID={ElementName.OnboardingExplore}
               onPress={onPressExplore}>
-              <Text variant="caption_deprecated">{t('Not ready? Try')}</Text>
-              <Text color="accentAction" variant="caption_deprecated">
+              <Text variant="buttonLabelMicro">{t('Not ready? Try')}</Text>
+              <Text color="accentAction" variant="buttonLabelMicro">
                 {' '}
                 {t('Exploring')}{' '}
               </Text>
-              <Text variant="caption_deprecated">{t('first.')}</Text>
+              <Text variant="buttonLabelMicro">{t('first.')}</Text>
             </Button>
           </DevelopmentOnly>
         </Flex>

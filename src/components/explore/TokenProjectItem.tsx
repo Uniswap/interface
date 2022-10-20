@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlexAlignType } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
@@ -11,6 +10,7 @@ import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { addFavoriteToken, removeFavoriteToken } from 'src/features/favorites/slice'
@@ -135,7 +135,7 @@ export const TokenProjectItem = memo(
               <Flex centered row flexShrink={1} gap="xxs" overflow="hidden">
                 {index !== undefined && (
                   <Box minWidth={16}>
-                    <Text color="textSecondary" variant="badge_deprecated">
+                    <Text color="textSecondary" variant="buttonLabelMicro">
                       {index + 1}
                     </Text>
                   </Box>
@@ -176,27 +176,3 @@ export const TokenProjectItem = memo(
     )
   }
 )
-
-interface TokenMetadataProps {
-  pre?: React.ReactNode
-  main: React.ReactNode
-  sub?: React.ReactNode
-  align?: FlexAlignType
-}
-
-/** Helper component to format rhs metadata for a given token. */
-function TokenMetadata({ pre, main, sub, align = 'flex-end' }: TokenMetadataProps) {
-  return (
-    <Flex row>
-      {pre}
-      <Flex alignItems={align} gap="xxs" minWidth={70}>
-        <Text variant="bodyLarge">{main}</Text>
-        {sub && (
-          <Text color="textSecondary" variant="subheadSmall">
-            {sub}
-          </Text>
-        )}
-      </Flex>
-    </Flex>
-  )
-}

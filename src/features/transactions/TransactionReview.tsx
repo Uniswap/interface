@@ -109,7 +109,7 @@ export function TransactionReview({
           </Flex>
         ) : recipient ? (
           <Flex centered gap="sm">
-            <Text color="textTertiary" variant="caption_deprecated">
+            <Text color="textTertiary" variant="bodyLarge">
               {t('To')}
             </Text>
             <Flex centered gap="xs">

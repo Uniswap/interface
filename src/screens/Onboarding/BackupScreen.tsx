@@ -60,7 +60,7 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
         <Button alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
           <Flex centered row gap="sm">
             <InfoCircle color={theme.colors.textSecondary} height={32} width={32} />
-            <Text variant="subheadLarge">{t('What’s a recovery phrase?')}</Text>
+            <Text variant="subheadSmall">{t('What’s a recovery phrase?')}</Text>
           </Flex>
         </Button>
         <Flex grow justifyContent="flex-end">
@@ -203,8 +203,8 @@ function BackupOptionButton({
           <Flex row flexShrink={1} gap="sm">
             <Box>{icon}</Box>
             <Flex flexShrink={1} gap="xxs">
-              <Text variant="subheadLarge">{label}</Text>
-              <Text color="textSecondary" variant="caption_deprecated">
+              <Text variant="subheadSmall">{label}</Text>
+              <Text color="textSecondary" variant="buttonLabelMicro">
                 {caption}
               </Text>
             </Flex>

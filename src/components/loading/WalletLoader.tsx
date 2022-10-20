@@ -24,17 +24,17 @@ export function WalletLoader({ opacity }: Props) {
       <Flex centered row gap="xs">
         <Box bg="backgroundAction" borderRadius="full" height={32} width={32} />
         <Flex shrink alignItems="flex-start" gap="xxs" width="100%">
-          <Box bg="backgroundAction" borderRadius="xs" height={HIDDEN_TEXT_HEIGHT} width="50%">
+          <Box bg="backgroundAction" borderRadius="xs" minHeight={HIDDEN_TEXT_HEIGHT} width="50%">
             <HiddenFromScreenReaders>
-              <Text color="none" opacity={0} variant="subheadLarge">
+              <Text color="none" opacity={0} variant="bodyLarge">
                 Wallet Nickname
               </Text>
             </HiddenFromScreenReaders>
           </Box>
-          <Flex row alignItems="center" height={HIDDEN_TEXT_HEIGHT} width="100%">
+          <Flex row alignItems="center" minHeight={HIDDEN_TEXT_HEIGHT} width="100%">
             <Box bg="backgroundAction" borderRadius="xs" width="35%">
               <HiddenFromScreenReaders>
-                <Text color="none" opacity={0} variant="caption_deprecated">
+                <Text color="none" opacity={0} variant="subheadSmall">
                   Wallet Address
                 </Text>
               </HiddenFromScreenReaders>

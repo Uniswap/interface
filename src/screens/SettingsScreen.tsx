@@ -198,7 +198,7 @@ export function SettingsScreen() {
           renderSectionFooter={() => <Flex pt="lg" />}
           renderSectionHeader={({ section: { subTitle } }) => (
             <Box bg="backgroundBackdrop" pb="sm">
-              <Text color="textSecondary" variant="subheadLarge">
+              <Text color="textSecondary" variant="bodyLarge">
                 {subTitle}
               </Text>
             </Box>
@@ -219,21 +219,18 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
 
   return (
     <Button
-      mt="xs"
       name="DEBUG_Settings_Navigate"
-      pl="xxs"
       onPress={() => {
         navigation.goBack()
         dispatch(resetWallet())
         dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
       }}>
-      <Box alignItems="center" flexDirection="row" justifyContent="space-between">
+      <Box alignItems="center" flexDirection="row" justifyContent="space-between" py="xxs">
         <Box alignItems="center" flexDirection="row">
           <Flex centered height={32} width={32}>
             <FlashbotsIcon {...iconProps} />
           </Flex>
-
-          <Text ml="md" variant="subheadLarge">
+          <Text ml="sm" variant="bodyLarge">
             {t('Onboarding')}
           </Text>
         </Box>
@@ -278,7 +275,7 @@ function WalletSettings() {
   return (
     <Box flexDirection="column" mb="md">
       <Flex row justifyContent="space-between">
-        <Text color="textSecondary" variant="subheadLarge">
+        <Text color="textSecondary" variant="bodyLarge">
           {t('Wallet settings')}
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
@@ -301,9 +298,10 @@ function WalletSettings() {
               <AddressDisplay
                 showAddressAsSubtitle
                 address={account.address}
+                captionVariant="buttonLabelMicro"
                 showViewOnly={account.type === AccountType.Readonly}
                 size={36}
-                variant="subheadLarge"
+                variant="bodyLarge"
                 verticalGap="none"
               />
               <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
@@ -316,7 +314,7 @@ function WalletSettings() {
 
 function FooterSettings() {
   return (
-    <Text color="textTertiary" marginTop="xs" variant="caption_deprecated">
+    <Text color="textTertiary" marginTop="xs" variant="bodySmall">
       {`Version ${getFullAppVersion()}`}
     </Text>
   )

@@ -41,7 +41,7 @@ export function InlineNetworkPill(props: NetworkPillProps) {
       px="xxs"
       py="xxxs"
       showIcon={false}
-      textVariant="badge_deprecated"
+      textVariant="buttonLabelMicro"
       {...props}
     />
   )

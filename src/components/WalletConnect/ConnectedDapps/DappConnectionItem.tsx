@@ -57,7 +57,7 @@ export function DappConnectionItem({
             color="accentActive"
             numberOfLines={1}
             textAlign="center"
-            variant="caption_deprecated">
+            variant="buttonLabelMicro">
             {dapp.url}
           </Text>
         </Flex>

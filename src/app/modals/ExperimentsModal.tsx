@@ -123,7 +123,7 @@ function SectionHeader({
       <PrimaryButton
         label="Reset"
         p="xs"
-        textVariant="badge_deprecated"
+        textVariant="buttonLabelMicro"
         variant="paleOrange"
         onPress={onResetPress}
       />
@@ -170,7 +170,7 @@ function ExperimentRow({
           <PrimaryButton
             label="Override"
             p="xs"
-            textVariant="badge_deprecated"
+            textVariant="buttonLabelMicro"
             variant="blue"
             onPress={() => {
               if (!textInput) return

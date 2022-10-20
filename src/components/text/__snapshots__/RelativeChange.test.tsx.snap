@@ -19,9 +19,9 @@ exports[`renders a relative change 1`] = `
         Object {
           "color": "#5E6887",
           "display": "flex",
-          "fontFamily": "Inter-SemiBold",
-          "fontSize": 12,
-          "lineHeight": 16,
+          "fontFamily": "Inter-Medium",
+          "fontSize": 14,
+          "lineHeight": 20,
         },
       ]
     }
@@ -81,9 +81,9 @@ exports[`renders placeholders with absolute change 1`] = `
         Object {
           "color": "#5E6887",
           "display": "flex",
-          "fontFamily": "Inter-SemiBold",
-          "fontSize": 12,
-          "lineHeight": 16,
+          "fontFamily": "Inter-Medium",
+          "fontSize": 14,
+          "lineHeight": 20,
         },
       ]
     }
@@ -143,9 +143,9 @@ exports[`renders placeholders without a change 1`] = `
         Object {
           "color": "#5E6887",
           "display": "flex",
-          "fontFamily": "Inter-SemiBold",
-          "fontSize": 12,
-          "lineHeight": 16,
+          "fontFamily": "Inter-Medium",
+          "fontSize": 14,
+          "lineHeight": 20,
         },
       ]
     }

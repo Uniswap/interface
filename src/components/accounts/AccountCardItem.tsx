@@ -46,8 +46,8 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
       <Flex row alignItems="center" testID={`account_item/${address.toLowerCase()}`}>
         <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
         <Flex grow gap="none">
-          <Text variant="subheadLarge">{displayName?.name}</Text>
-          <TotalBalance color="textSecondary" owner={address} variant="bodySmall" />
+          <Text variant="bodyLarge">{displayName?.name}</Text>
+          <TotalBalance color="textSecondary" owner={address} variant="subheadSmall" />
         </Flex>
         <Flex row alignItems="center" gap="xs">
           {isActive && (

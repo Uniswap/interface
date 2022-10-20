@@ -109,7 +109,7 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
                 adjustsFontSizeToFit
                 color="textSecondary"
                 numberOfLines={1}
-                variant="caption_deprecated">
+                variant="buttonLabelMicro">
                 {currentScreenState === ScannerModalState.ScanQr
                   ? displayName?.name
                   : t('Scan a wallet address')}

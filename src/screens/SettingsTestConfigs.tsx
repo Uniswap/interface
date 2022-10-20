@@ -21,7 +21,7 @@ export function SettingsTestConfigs() {
           </BackHeader>
 
           <Text variant="bodyLarge">List of all test configs available to the app</Text>
-          <Text variant="caption_deprecated">
+          <Text variant="bodySmall">
             Remote-only test configs cannot be toggled locally. Use the Firebase console instead.
           </Text>
           <ScrollView>
@@ -37,7 +37,7 @@ export function SettingsTestConfigs() {
                       onValueChange={() => toggleLocalConfig({ config: name, enabled: !enabled })}
                     />
                   ) : (
-                    <Text variant="caption_deprecated">Remote only</Text>
+                    <Text variant="bodySmall">Remote only</Text>
                   )}
                 </Flex>
               )

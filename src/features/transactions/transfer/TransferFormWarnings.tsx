@@ -136,7 +136,7 @@ const TransferRecipient = ({ displayName, address, type = 'address' }: TransferR
         {type === 'ens' ? displayName : address}
       </Text>
       {type === 'ens' && (
-        <Text color="textSecondary" textAlign="center" variant="caption_deprecated">
+        <Text color="textSecondary" textAlign="center" variant="buttonLabelMicro">
           {address}
         </Text>
       )}

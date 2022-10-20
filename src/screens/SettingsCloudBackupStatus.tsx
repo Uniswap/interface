@@ -90,7 +90,7 @@ export function SettingsCloudBackupStatus({
           <Flex row justifyContent="space-between">
             <Text variant="subheadLarge">{t('Recovery phrase')}</Text>
             <Flex row alignItems="center" gap="sm" justifyContent="space-around">
-              <Text color="textSecondary" variant="caption_deprecated">
+              <Text color="textSecondary" variant="buttonLabelMicro">
                 {t('Backed up')}
               </Text>
 

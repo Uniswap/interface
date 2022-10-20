@@ -40,7 +40,7 @@ export function ClientDetails({
           mt="xs"
           px="xs"
           py="xxs"
-          textVariant="caption_deprecated"
+          textVariant="buttonLabelMicro"
           url={dapp.url}
         />
       </Flex>
