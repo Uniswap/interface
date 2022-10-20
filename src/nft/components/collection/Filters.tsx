@@ -1,3 +1,5 @@
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName } from 'analytics/constants'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { MarketplaceSelect } from 'nft/components/collection/MarketplaceSelect'
@@ -77,6 +79,7 @@ export const Filters = ({
           onClick={(e) => {
             e.preventDefault()
             handleBuyNowToggle()
+            sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { buyNow: !buyNow })
           }}
           onMouseEnter={toggleBuyNowHover}
           onMouseLeave={toggleBuyNowHover}

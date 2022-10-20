@@ -1,3 +1,5 @@
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName } from 'analytics/constants'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { useIsMobile } from 'nft/hooks'
@@ -30,6 +32,7 @@ export const PriceRange = () => {
   const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
     e.currentTarget.placeholder = placeholderText
     setPlaceholderText('')
+    sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { minPrice, maxPrice })
   }
 
   return (
