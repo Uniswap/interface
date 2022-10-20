@@ -20,7 +20,7 @@ const fetchQuery = async function wrappedFetchQuery(
 
   if (cachedData !== null) return cachedData
 
-  return fetchGraphQL(params, variables, cacheConfig).then((data) => {
+  return fetchGraphQL(params, variables).then((data) => {
     if (params.operationKind !== 'mutation') {
       cache.set(queryID, variables, data)
     }

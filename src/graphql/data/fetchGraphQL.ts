@@ -1,5 +1,5 @@
 import { Variables } from 'react-relay'
-import { CacheConfig, GraphQLResponse, RequestParameters } from 'relay-runtime'
+import { GraphQLResponse, RequestParameters } from 'relay-runtime'
 
 const URL = process.env.REACT_APP_AWS_API_ENDPOINT
 const NFT_URL = process.env.REACT_APP_NFT_AWS_API_ENDPOINT ?? ''
@@ -16,12 +16,13 @@ const nftHeaders = {
   'x-api-key': process.env.REACT_APP_NFT_AWS_X_API_KEY ?? '',
 }
 
-const fetchQuery = (
-  params: RequestParameters,
-  variables: Variables,
-  cacheConfig: CacheConfig
-): Promise<GraphQLResponse> => {
-  const { metadata: { isNFT } = { isNFT: false } } = cacheConfig
+// The issue below prevented using a custom var in metadata to gate which queries are for the nft endpoint vs base endpoint
+// This is a temporary solution before the two endpoints merge
+// https://github.com/relay-tools/relay-hooks/issues/215
+const NFT_QUERIES = ['AssetQuery', 'AssetPaginationQuery']
+
+const fetchQuery = (params: RequestParameters, variables: Variables): Promise<GraphQLResponse> => {
+  const isNFT = NFT_QUERIES.includes(params.name)
   const body = JSON.stringify({
     query: params.text, // GraphQL text from input
     variables,

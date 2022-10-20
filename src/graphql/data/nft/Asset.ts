@@ -1,7 +1,7 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
+import { GenieAsset } from 'nft/types'
 import { loadQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
-import { CacheConfig } from 'relay-runtime'
 
 import RelayEnvironment from '../RelayEnvironment'
 import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
@@ -111,11 +111,6 @@ const assetQuery = graphql`
   }
 `
 
-// export function useAssetsQuery() {
-//   const assets = useLazyLoadQuery<AssetQuery>(assetsQuery, {}).nftAssets?.edges
-//   return assets
-// }
-
 export function useAssetsQuery(
   address: string,
   orderBy: NftAssetSortableField,
@@ -126,29 +121,23 @@ export function useAssetsQuery(
   last?: number,
   before?: string
 ) {
-  const nftConfig: CacheConfig = { metadata: { isNFT: true } }
-  const assetsQueryReference = loadQuery<AssetQuery>(
-    RelayEnvironment,
-    assetQuery,
-    {
-      address,
-      orderBy,
-      asc,
-      filter,
-      first,
-      after,
-      last,
-      before,
-    },
-    { networkCacheConfig: nftConfig }
-  )
+  const assetsQueryReference = loadQuery<AssetQuery>(RelayEnvironment, assetQuery, {
+    address,
+    orderBy,
+    asc,
+    filter,
+    first,
+    after,
+    last,
+    before,
+  })
   const queryData = usePreloadedQuery<AssetQuery>(assetQuery, assetsQueryReference)
   const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<AssetPaginationQuery, any>(
     assetPaginationQuery,
     queryData
   )
-  // const collectionAssets = useLazyLoadQuery<AssetQuery>(assetsQuery, {}).nftAssets?.edges
-  const assets = data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
+
+  const assets: GenieAsset[] = data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node
     return {
       id: asset.id,
@@ -175,7 +164,7 @@ export function useAssetsQuery(
       tokenId: asset.tokenId,
       tokenType: asset.nftContract?.standard,
       // url: string, //deprecate
-      // totalCount?: number, // deprecate, requires FE logic change
+      // totalCount?: number, // TODO waiting for BE changes
       // amount?: number, // deprecate
       // decimals?: number, // deprecate
       collectionIsVerified: asset.collection?.isVerified,
@@ -185,7 +174,7 @@ export function useAssetsQuery(
         profile_img_url: asset.collection?.creator?.profileImage?.url,
         address: asset.collection?.creator?.address,
       },
-      // externalLink: string, // metadata url TODO
+      externalLink: asset.metadataUrl,
       // traits?: { // TODO make its own call
       //   trait_type: string
       //   value: string
