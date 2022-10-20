@@ -10,7 +10,7 @@ import {
   Chain,
   TokenStandard,
 } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
-import { UserScreenQuery$data } from 'src/screens/__generated__/UserScreenQuery.graphql'
+import { ExternalProfileScreenQuery$data } from 'src/screens/__generated__/ExternalProfileScreenQuery.graphql'
 
 interface Asset {
   readonly address: string | null
@@ -102,7 +102,7 @@ export function formatTransactionsByDate(
  * @param data Transaction history data response
  */
 export function parseDataResponseToTransactionDetails(
-  data: ActivityScreenQuery$data | UserScreenQuery$data
+  data: ActivityScreenQuery$data | ExternalProfileScreenQuery$data
 ) {
   if (data.assetActivities) {
     return data.assetActivities.reduce((accum: TransactionDetails[], t) => {

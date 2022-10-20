@@ -27,14 +27,14 @@ import { parseDataResponseToTransactionDetails } from 'src/features/transactions
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 import {
-  UserScreenQuery,
-  UserScreenQuery$data,
-} from 'src/screens/__generated__/UserScreenQuery.graphql'
+  ExternalProfileScreenQuery,
+  ExternalProfileScreenQuery$data,
+} from 'src/screens/__generated__/ExternalProfileScreenQuery.graphql'
 
-type Props = NativeStackScreenProps<ExploreStackParamList, Screens.User>
+type Props = NativeStackScreenProps<ExploreStackParamList, Screens.ExternalProfile>
 
-export const userScreenQuery = graphql`
-  query UserScreenQuery($address: String!) {
+export const externalProfileScreenQuery = graphql`
+  query ExternalProfileScreenQuery($address: String!) {
     assetActivities(address: $address, pageSize: 50, page: 1) {
       timestamp
       type
@@ -99,13 +99,15 @@ export const userScreenQuery = graphql`
   }
 `
 
-export type UserScreenQueryResponse = NonNullable<UserScreenQuery$data['assetActivities']>[0]
+export type ExternalProfileScreenQueryResponse = NonNullable<
+  ExternalProfileScreenQuery$data['assetActivities']
+>[0]
 
 const TOKENS_KEY = 'profile-tokens'
 const NFTS_KEY = 'profile-nfts'
 const ACTIVITY_KEY = 'profile-activity'
 
-export function UserScreen({
+export function ExternalProfileScreen({
   route: {
     params: { address, preloadedQuery },
   },
@@ -116,23 +118,26 @@ export function UserScreen({
 
   return (
     <Suspense fallback={<Loading />}>
-      <UserScreenInner address={address} preloadedQuery={preloadedQuery} />
+      <ExternalProfileScreenInner address={address} preloadedQuery={preloadedQuery} />
     </Suspense>
   )
 }
 
-function UserScreenInner({
+function ExternalProfileScreenInner({
   address,
   preloadedQuery,
 }: {
   address: string
-  preloadedQuery: PreloadedQuery<UserScreenQuery>
+  preloadedQuery: PreloadedQuery<ExternalProfileScreenQuery>
 }) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
-  const transactionData = usePreloadedQuery<UserScreenQuery>(userScreenQuery, preloadedQuery)
+  const transactionData = usePreloadedQuery<ExternalProfileScreenQuery>(
+    externalProfileScreenQuery,
+    preloadedQuery
+  )
   const formattedTransactions = useMemo(
     () => (transactionData ? parseDataResponseToTransactionDetails(transactionData) : []),
     [transactionData]

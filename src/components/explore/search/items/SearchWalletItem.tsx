@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { useEagerUserProfileNavigation } from 'src/app/navigation/hooks'
+import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { FavoriteButton } from 'src/components/explore/FavoriteButton'
@@ -21,7 +21,7 @@ export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalle
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
-  const { preload, navigate } = useEagerUserProfileNavigation()
+  const { preload, navigate } = useEagerExternalProfileNavigation()
 
   const { address } = wallet
 

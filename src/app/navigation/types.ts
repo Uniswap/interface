@@ -12,8 +12,8 @@ import { NFTAsset } from 'src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
+import { ExternalProfileScreenQuery } from 'src/screens/__generated__/ExternalProfileScreenQuery.graphql'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
-import { UserScreenQuery } from 'src/screens/__generated__/UserScreenQuery.graphql'
 
 type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
   Pick<NFTAsset.Asset, 'token_id'>
@@ -34,9 +34,9 @@ export type ExploreStackParamList = {
   [Screens.Explore]: undefined
   [Screens.WatchedWallets]: undefined
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
-  [Screens.User]: {
+  [Screens.ExternalProfile]: {
     address: string
-    preloadedQuery: NullUndefined<PreloadedQuery<UserScreenQuery>>
+    preloadedQuery: NullUndefined<PreloadedQuery<ExternalProfileScreenQuery>>
   }
   [Screens.PortfolioTokens]: { owner: Address | undefined }
 }

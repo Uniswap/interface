@@ -5,11 +5,11 @@ import { nativeOnChain } from 'src/constants/tokens'
 import { parseUSDValueFromAssetChange } from 'src/features/transactions/history/utils'
 import { NFTMintTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
-import { UserScreenQueryResponse } from 'src/screens/UserScreen'
+import { ExternalProfileScreenQueryResponse } from 'src/screens/ExternalProfileScreen'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 export default function parseNFTMintTransaction(
-  transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
+  transaction: ActivityScreenQueryResponse | ExternalProfileScreenQueryResponse
 ): NFTMintTransactionInfo | undefined {
   const nativeCurrency = nativeOnChain(ChainId.Mainnet)
   const tokenChange = transaction?.assetChanges.find(

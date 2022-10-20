@@ -44,6 +44,7 @@ import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
+import { ExternalProfileScreen } from 'src/screens/ExternalProfileScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
@@ -76,7 +77,6 @@ import { SettingsWallet } from 'src/screens/SettingsWallet'
 import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
-import { UserScreen } from 'src/screens/UserScreen'
 import { WatchedWalletsScreen } from 'src/screens/WatchedWalletsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { dimensions } from 'src/styles/sizing'
@@ -317,7 +317,7 @@ export function ExploreStackNavigator({
         )}
         name={Screens.Explore}
       />
-      <ExploreStack.Screen component={UserScreen} name={Screens.User} />
+      <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
       <ExploreStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
       <ExploreStack.Screen component={WatchedWalletsScreen} name={Screens.WatchedWallets} />
     </ExploreStack.Navigator>

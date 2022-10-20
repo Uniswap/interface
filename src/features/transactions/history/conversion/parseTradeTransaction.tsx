@@ -13,11 +13,11 @@ import {
   WrapTransactionInfo,
 } from 'src/features/transactions/types'
 import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
-import { UserScreenQueryResponse } from 'src/screens/UserScreen'
+import { ExternalProfileScreenQueryResponse } from 'src/screens/ExternalProfileScreen'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 export default function parseTradeTransaction(
-  transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
+  transaction: ActivityScreenQueryResponse | ExternalProfileScreenQueryResponse
 ): ExactInputSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
   // for detecting wraps
   const nativeCurrencyID = buildNativeCurrencyId(ChainId.Mainnet).toLocaleLowerCase()

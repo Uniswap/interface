@@ -7,10 +7,10 @@ import { portfolioBalanceQuery } from 'src/features/balances/PortfolioBalance'
 import { PortfolioBalanceQuery } from 'src/features/balances/__generated__/PortfolioBalanceQuery.graphql'
 import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { activityScreenQuery } from 'src/screens/ActivityScreen'
+import { externalProfileScreenQuery } from 'src/screens/ExternalProfileScreen'
 import { Screens, Tabs } from 'src/screens/Screens'
-import { userScreenQuery } from 'src/screens/UserScreen'
 import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
-import { UserScreenQuery } from 'src/screens/__generated__/UserScreenQuery.graphql'
+import { ExternalProfileScreenQuery } from 'src/screens/__generated__/ExternalProfileScreenQuery.graphql'
 
 /**
  * Utility hook to simplify navigating to Activity screen.
@@ -41,11 +41,12 @@ export function useEagerActivityNavigation() {
  * Utility hook to simplify navigating to Activity screen.
  * Preloads query neede to render transaction list.
  */
-export function useEagerUserProfileNavigation() {
-  const { registerNavigationIntent, preloadedNavigate } = useEagerNavigation<UserScreenQuery>(
-    userScreenQuery,
-    PollingInterval.Normal
-  )
+export function useEagerExternalProfileNavigation() {
+  const { registerNavigationIntent, preloadedNavigate } =
+    useEagerNavigation<ExternalProfileScreenQuery>(
+      externalProfileScreenQuery,
+      PollingInterval.Normal
+    )
 
   const preload = (address: string) => {
     registerNavigationIntent(
@@ -56,22 +57,20 @@ export function useEagerUserProfileNavigation() {
   }
 
   const navigate = (address: string) => {
-    preloadedNavigate(Screens.User, { address })
+    preloadedNavigate(Screens.ExternalProfile, { address })
   }
 
   return { preload, navigate }
 }
 
-export function useEagerUserProfileRootNavigation() {
-  const { registerNavigationIntent, preloadedNavigate } = useEagerRootNavigation<UserScreenQuery>(
-    Tabs.Explore,
-    userScreenQuery
-  )
+export function useEagerExternalProfileRootNavigation() {
+  const { registerNavigationIntent, preloadedNavigate } =
+    useEagerRootNavigation<ExternalProfileScreenQuery>(Tabs.Explore, externalProfileScreenQuery)
 
   const preload = useCallback(
     (address: string) => {
       registerNavigationIntent(
-        preloadMapping.user({
+        preloadMapping.externalProfile({
           address,
         })
       )
@@ -81,7 +80,7 @@ export function useEagerUserProfileRootNavigation() {
 
   const navigate = useCallback(
     (address: string, callback?: () => void) => {
-      preloadedNavigate({ screen: Screens.User, params: { address } }, callback)
+      preloadedNavigate({ screen: Screens.ExternalProfile, params: { address } }, callback)
     },
     [preloadedNavigate]
   )

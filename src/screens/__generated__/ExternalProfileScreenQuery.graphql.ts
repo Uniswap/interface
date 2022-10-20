@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25d29558436f9b71edf539a0eab5f79d>>
+ * @generated SignedSource<<57104a12eb1c978a638b2ccbc8483099>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,10 +16,10 @@ export type NftStandard = "ERC1155" | "ERC721" | "NONCOMPLIANT" | "%future added
 export type TokenStandard = "ERC1155" | "ERC20" | "NATIVE" | "%future added value";
 export type TransactionDirection = "IN" | "OUT" | "SELF" | "%future added value";
 export type TransactionStatus = "CONFIRMED" | "FAILED" | "PENDING" | "%future added value";
-export type UserScreenQuery$variables = {
+export type ExternalProfileScreenQuery$variables = {
   address: string;
 };
-export type UserScreenQuery$data = {
+export type ExternalProfileScreenQuery$data = {
   readonly assetActivities: ReadonlyArray<{
     readonly assetChanges: ReadonlyArray<{
       readonly __typename: "NftTransfer";
@@ -84,9 +84,9 @@ export type UserScreenQuery$data = {
     readonly type: ActivityType;
   } | null> | null;
 };
-export type UserScreenQuery = {
-  response: UserScreenQuery$data;
-  variables: UserScreenQuery$variables;
+export type ExternalProfileScreenQuery = {
+  response: ExternalProfileScreenQuery$data;
+  variables: ExternalProfileScreenQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -290,7 +290,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "UserScreenQuery",
+    "name": "ExternalProfileScreenQuery",
     "selections": [
       {
         "alias": null,
@@ -457,7 +457,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "UserScreenQuery",
+    "name": "ExternalProfileScreenQuery",
     "selections": [
       {
         "alias": null,
@@ -642,16 +642,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "32bfef923c98bc7ee6eab281d360d253",
+    "cacheID": "2aa0ce238579cccfe67afaa522081a27",
     "id": null,
     "metadata": {},
-    "name": "UserScreenQuery",
+    "name": "ExternalProfileScreenQuery",
     "operationKind": "query",
-    "text": "query UserScreenQuery(\n  $address: String!\n) {\n  assetActivities(address: $address, pageSize: 50, page: 1) {\n    timestamp\n    type\n    transaction {\n      hash\n      status\n      to\n      from\n      id\n    }\n    assetChanges {\n      __typename\n      ... on TokenTransfer {\n        asset {\n          name\n          symbol\n          address\n          decimals\n          chain\n          id\n        }\n        tokenStandard\n        quantity\n        sender\n        recipient\n        direction\n        transactedValue {\n          currency\n          value\n          id\n        }\n        id\n      }\n      ... on NftTransfer {\n        asset {\n          name\n          nftContract {\n            chain\n            address\n            id\n          }\n          tokenId\n          imageUrl\n          collection {\n            name\n            id\n          }\n          id\n        }\n        nftStandard\n        sender\n        recipient\n        direction\n        id\n      }\n      ... on TokenApproval {\n        asset {\n          name\n          symbol\n          decimals\n          address\n          chain\n          id\n        }\n        tokenStandard\n        approvedAddress\n        quantity\n        id\n      }\n      ... on NftApproval {\n        id\n      }\n      ... on NftApproveForAll {\n        id\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query ExternalProfileScreenQuery(\n  $address: String!\n) {\n  assetActivities(address: $address, pageSize: 50, page: 1) {\n    timestamp\n    type\n    transaction {\n      hash\n      status\n      to\n      from\n      id\n    }\n    assetChanges {\n      __typename\n      ... on TokenTransfer {\n        asset {\n          name\n          symbol\n          address\n          decimals\n          chain\n          id\n        }\n        tokenStandard\n        quantity\n        sender\n        recipient\n        direction\n        transactedValue {\n          currency\n          value\n          id\n        }\n        id\n      }\n      ... on NftTransfer {\n        asset {\n          name\n          nftContract {\n            chain\n            address\n            id\n          }\n          tokenId\n          imageUrl\n          collection {\n            name\n            id\n          }\n          id\n        }\n        nftStandard\n        sender\n        recipient\n        direction\n        id\n      }\n      ... on TokenApproval {\n        asset {\n          name\n          symbol\n          decimals\n          address\n          chain\n          id\n        }\n        tokenStandard\n        approvedAddress\n        quantity\n        id\n      }\n      ... on NftApproval {\n        id\n      }\n      ... on NftApproveForAll {\n        id\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "28a1a0ad798818ad2d23770a86df6e4f";
+(node as any).hash = "741942333b128d6969061dfb88202e32";
 
 export default node;

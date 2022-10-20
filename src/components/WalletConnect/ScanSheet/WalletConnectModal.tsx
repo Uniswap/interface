@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
-import { useEagerUserProfileRootNavigation } from 'src/app/navigation/hooks'
+import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
 import Scan from 'src/assets/icons/qr-simple.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import { Button } from 'src/components/buttons/Button'
@@ -46,7 +46,7 @@ export function WalletConnectModal({
     useState<ScannerModalState>(initialScreenState)
   const { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera } =
     useWCTimeoutError(pendingSession, WC_TIMEOUT_DURATION_MS)
-  const { preload, navigate } = useEagerUserProfileRootNavigation()
+  const { preload, navigate } = useEagerExternalProfileRootNavigation()
 
   const onScanCode = useCallback(
     async (uri: string) => {

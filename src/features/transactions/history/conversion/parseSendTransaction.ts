@@ -5,10 +5,10 @@ import {
 } from 'src/features/transactions/history/utils'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
-import { UserScreenQueryResponse } from 'src/screens/UserScreen'
+import { ExternalProfileScreenQueryResponse } from 'src/screens/ExternalProfileScreen'
 
 export default function parseSendTransaction(
-  transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
+  transaction: ActivityScreenQueryResponse | ExternalProfileScreenQueryResponse
 ): SendTokenTransactionInfo | undefined {
   const change = transaction?.assetChanges[0]
 

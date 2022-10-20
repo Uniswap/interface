@@ -12,7 +12,7 @@ import {
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
 import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
-import { UserScreenQueryResponse } from 'src/screens/UserScreen'
+import { ExternalProfileScreenQueryResponse } from 'src/screens/ExternalProfileScreen'
 
 /**
  * Parses txn API response item and identifies known txn type. Helps strictly
@@ -22,7 +22,7 @@ import { UserScreenQueryResponse } from 'src/screens/UserScreen'
  * @returns Formatted TransactionDetails object.
  */
 export default function extractTransactionDetails(
-  transaction: ActivityScreenQueryResponse | UserScreenQueryResponse
+  transaction: ActivityScreenQueryResponse | ExternalProfileScreenQueryResponse
 ): TransactionDetails | null {
   if (!transaction) return null
 

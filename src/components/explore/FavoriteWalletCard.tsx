@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
-import { useEagerUserProfileNavigation } from 'src/app/navigation/hooks'
+import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import RemoveButton from 'src/components/explore/RemoveButton'
@@ -25,7 +25,7 @@ export default function FavoriteWalletCard({
 }: FavoriteWalletCardProps) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { preload, navigate } = useEagerUserProfileNavigation()
+  const { preload, navigate } = useEagerExternalProfileNavigation()
 
   const onRemove = useCallback(
     () => dispatch(removeWatchedAddress({ address })),

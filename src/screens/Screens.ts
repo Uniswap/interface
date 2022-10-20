@@ -30,7 +30,7 @@ export enum Screens {
   TabNavigator = 'TabNavigator',
   TokenDetails = 'TokenDetails',
   Transfer = 'Transfer',
-  User = 'User',
+  ExternalProfile = 'ExternalProfile',
   WatchedWallets = 'WatchedWallets',
   WebView = 'WebView',
   Welcome = 'Welcome',

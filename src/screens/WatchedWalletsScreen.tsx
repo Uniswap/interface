@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { useEagerUserProfileNavigation } from 'src/app/navigation/hooks'
+import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
@@ -27,7 +27,7 @@ function WatchedWalletsItem({
   onUnwatch: () => void
 }) {
   const { t } = useTranslation()
-  const { navigate, preload } = useEagerUserProfileNavigation()
+  const { navigate, preload } = useEagerExternalProfileNavigation()
 
   return (
     <Button onPress={() => navigate(address)} onPressIn={() => preload(address)}>
