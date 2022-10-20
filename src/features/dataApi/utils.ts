@@ -7,19 +7,15 @@ import { fromGraphQLChain, toGraphQLChain } from 'src/utils/chainId'
 import {
   currencyId,
   CurrencyId,
-  currencyIdToAddress,
   currencyIdToChain,
-  isNativeCurrencyAddress,
+  currencyIdToGraphQLAddress,
 } from 'src/utils/currencyId'
 
+// Converts CurrencyId to ContractInput format for GQL token queries
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
-  const address = currencyIdToAddress(id)
-  const chainId = currencyIdToChain(id)
   return {
-    chain: toGraphQLChain(chainId ?? ChainId.Mainnet) ?? 'ETHEREUM',
-    // TODO: As of 9/12/22, Data API only allows fetching native currency using null address for Ethereum
-    // Should remove the chainId equals Mainnet check when Data API accepts null address value for L2 chains
-    address: isNativeCurrencyAddress(address) && chainId === ChainId.Mainnet ? null : address,
+    chain: toGraphQLChain(currencyIdToChain(id) ?? ChainId.Mainnet) ?? 'ETHEREUM',
+    address: currencyIdToGraphQLAddress(id),
   }
 }
 

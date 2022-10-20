@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b3d15d3c5d32653200f5a961163821d>>
+ * @generated SignedSource<<2f8dd60a6e97a4f71470e96e5b2cfc3b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type ContractInput = {
   chain: Chain;
 };
 export type FavoriteTokenCardQuery$variables = {
-  contracts: ReadonlyArray<ContractInput>;
+  contract: ContractInput;
 };
 export type FavoriteTokenCardQuery$data = {
   readonly tokenProjects: ReadonlyArray<{
@@ -48,14 +48,20 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "contracts"
+    "name": "contract"
   }
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "contracts",
-    "variableName": "contracts"
+    "items": [
+      {
+        "kind": "Variable",
+        "name": "contracts.0",
+        "variableName": "contract"
+      }
+    ],
+    "kind": "ListValue",
+    "name": "contracts"
   }
 ],
 v2 = {
@@ -260,16 +266,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f33f1504da4cba8ec16f1b3f909c42ec",
+    "cacheID": "fdcd2c2db9bc4e5b0584cf9104105589",
     "id": null,
     "metadata": {},
     "name": "FavoriteTokenCardQuery",
     "operationKind": "query",
-    "text": "query FavoriteTokenCardQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    tokens {\n      chain\n      address\n      symbol\n      id\n    }\n    logoUrl\n    markets(currencies: USD) {\n      price {\n        currency\n        value\n        id\n      }\n      pricePercentChange24h {\n        currency\n        value\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query FavoriteTokenCardQuery(\n  $contract: ContractInput!\n) {\n  tokenProjects(contracts: [$contract]) {\n    tokens {\n      chain\n      address\n      symbol\n      id\n    }\n    logoUrl\n    markets(currencies: USD) {\n      price {\n        currency\n        value\n        id\n      }\n      pricePercentChange24h {\n        currency\n        value\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "762057b17e48ba8cc9a9ba44f6bd9b49";
+(node as any).hash = "7dad8301b07f098d3fa90fbac3071cc4";
 
 export default node;

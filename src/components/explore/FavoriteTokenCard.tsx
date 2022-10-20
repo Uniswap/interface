@@ -38,8 +38,8 @@ const boxTokenLogoStyle: ImageStyle = { width: BOX_TOKEN_LOGO_SIZE, height: BOX_
 // Do one query per item to avoid suspense on entire screen / container
 // @TODO: Find way to load at the root of explore without a rerender when favorite token state changes
 export const favoriteTokenCardQuery = graphql`
-  query FavoriteTokenCardQuery($contracts: [ContractInput!]!) {
-    tokenProjects(contracts: $contracts) {
+  query FavoriteTokenCardQuery($contract: ContractInput!) {
+    tokenProjects(contracts: [$contract]) {
       tokens {
         chain
         address
@@ -86,12 +86,12 @@ function FavoriteTokenCardInner({
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
-  const queryInput = useMemo(() => [currencyIdToContractInput(currencyId)], [currencyId])
+  const contractInput = useMemo(() => currencyIdToContractInput(currencyId), [currencyId])
 
   const data = useLazyLoadQuery<FavoriteTokenCardQuery>(
     favoriteTokenCardQuery,
     {
-      contracts: queryInput,
+      contract: contractInput,
     },
     { networkCacheConfig: { poll: PollingInterval.Fast } }
   )
