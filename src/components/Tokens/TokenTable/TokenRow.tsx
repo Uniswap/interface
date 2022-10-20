@@ -314,10 +314,8 @@ export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined>
 /* Get singular header cell for header row */
 function HeaderCell({
   category,
-  sortable,
 }: {
   category: TokenSortMethod // TODO: change this to make it work for trans
-  sortable: boolean
 }) {
   const theme = useTheme()
   const sortAscending = useAtomValue(sortAscendingAtom)
@@ -390,17 +388,17 @@ export function HeaderRow() {
       header={true}
       listNumber="#"
       tokenInfo={<Trans>Token name</Trans>}
-      price={<HeaderCell category={TokenSortMethod.PRICE} sortable />}
-      percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} sortable />}
-      tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} sortable />}
-      volume={<HeaderCell category={TokenSortMethod.VOLUME} sortable />}
+      price={<HeaderCell category={TokenSortMethod.PRICE} />}
+      percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} />}
+      tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} />}
+      volume={<HeaderCell category={TokenSortMethod.VOLUME} />}
       sparkLine={null}
     />
   )
 }
 
 /* Loading State: row component with loading bubbles */
-export function LoadingRow() {
+export function LoadingRow(props: { first?: boolean; last?: boolean }) {
   return (
     <TokenRow
       header={false}
@@ -417,6 +415,7 @@ export function LoadingRow() {
       tvl={<LoadingBubble />}
       volume={<LoadingBubble />}
       sparkLine={<SparkLineLoadingBubble />}
+      {...props}
     />
   )
 }
