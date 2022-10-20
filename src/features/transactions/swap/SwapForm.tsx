@@ -298,7 +298,7 @@ export function SwapForm({
                       width={theme.iconSizes.md}
                     />
                     <Flex row gap="none">
-                      <Text color="textPrimary" variant="bodySmall">
+                      <Text variant="subheadSmall">
                         {getRateToDisplay(trade.trade, showInverseRate)}
                       </Text>
                       <Text color="textSecondary" variant="bodySmall">
