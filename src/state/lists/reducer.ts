@@ -3,7 +3,7 @@ import { getVersionUpgrade, TokenList, VersionUpgrade } from '@uniswap/token-lis
 
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
-import { acceptListUpdate, addList, enableList, fetchTokenList, removeList } from './actions'
+import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
 
 export interface ListsState {
   readonly byUrl: {
@@ -99,11 +99,6 @@ export default createReducer(initialState, (builder) =>
     .addCase(removeList, (state, { payload: url }) => {
       if (state.byUrl[url]) {
         delete state.byUrl[url]
-      }
-    })
-    .addCase(enableList, (state, { payload: url }) => {
-      if (!state.byUrl[url]) {
-        state.byUrl[url] = NEW_LIST_STATE
       }
     })
     .addCase(acceptListUpdate, (state, { payload: url }) => {
