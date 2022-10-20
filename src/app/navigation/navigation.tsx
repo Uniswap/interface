@@ -52,7 +52,6 @@ import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
-import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTItemScreen } from 'src/screens/NFTItemScreen'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { CloudBackupPasswordScreen } from 'src/screens/Onboarding/CloudBackupPasswordScreen'
@@ -427,7 +426,6 @@ export function AppStackNavigator() {
 
       <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
       <AppStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
-      <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
 
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />

@@ -73,9 +73,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
 
   if (!nftAssets[0]) return null
 
-  const { safelist_request_status, name, slug } = nftAssets[0].collection
-  // address is the same for all assets in a collection so just take the address from the first one.
-  const collectionAddress = nftAssets[0].asset_contract.address
+  const { safelist_request_status, name } = nftAssets[0].collection
 
   const isVerified = safelist_request_status === 'verified'
 
@@ -87,13 +85,9 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
       gap="none">
       <Button
         name={ElementName.NFTCollectionItem}
-        onPress={() =>
-          navigation.navigate(Screens.NFTCollection, {
-            collectionAddress: collectionAddress,
-            slug,
-            owner,
-          })
-        }>
+        onPress={() => {
+          // TODO: implement popping up collection modal or check with design on how to handle this
+        }}>
         <Box borderBottomColor="backgroundContainer" borderWidth={0.5} flexDirection="column">
           <Flex row gap="sm" m="md">
             <Flex fill row alignItems="center" gap="xs">

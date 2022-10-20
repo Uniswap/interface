@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Share } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -12,6 +12,7 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { NFTCollectionModal } from 'src/components/NFT/NFTCollectionModal'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { CHAIN_INFO } from 'src/constants/chains'
@@ -28,13 +29,14 @@ import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 export const UNISWAP_NFT_BASE_URL = 'https://interface-6y0ofdy69-uniswap.vercel.app/#'
 
 export function NFTItemScreen({
-  navigation,
   route: {
     params: { owner, address, token_id },
   },
 }: AppStackScreenProp<Screens.NFTItem>) {
   const theme = useAppTheme()
   const { t } = useTranslation()
+
+  const [showCollectionModal, setShowCollectionModal] = useState(false)
 
   const { asset } = useNFT(owner, address, token_id)
   const ownerDisplayName = useDisplayName(owner)
@@ -94,12 +96,8 @@ export function NFTItemScreen({
     return null
   }
 
-  const onPressCollection = () =>
-    navigation.navigate(Screens.NFTCollection, {
-      collectionAddress: asset.asset_contract.address,
-      owner,
-      slug: asset.collection.slug,
-    })
+  const onPressCollection = () => setShowCollectionModal(true)
+  const onCloseCollectionModal = () => setShowCollectionModal(false)
 
   return (
     <>
@@ -114,12 +112,7 @@ export function NFTItemScreen({
               {asset.name}
             </Text>
             <Text color="textSecondary" variant="subheadSmall">
-              {t('Owned by {{owner}}', {
-                owner:
-                  ownerDisplayName?.type === 'address'
-                    ? shortenAddress(ownerDisplayName.name)
-                    : ownerDisplayName?.name,
-              })}
+              {t('Owned by {{owner}}', { owner: ownerDisplayName?.name })}
             </Text>
           </Flex>
 
@@ -150,7 +143,6 @@ export function NFTItemScreen({
                   <Flex row alignItems="center" gap="xs">
                     <Box flexShrink={1}>
                       <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
-                        {asset.collection.name}
                         {asset.collection.name}
                       </Text>
                     </Box>
@@ -199,6 +191,13 @@ export function NFTItemScreen({
           </Flex>
         </Flex>
       </HeaderScrollScreen>
+      {showCollectionModal && (
+        <NFTCollectionModal
+          isVisible
+          slug={asset.collection.slug}
+          onClose={onCloseCollectionModal}
+        />
+      )}
     </>
   )
 }

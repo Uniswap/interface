@@ -119,11 +119,6 @@ export type AppStackParamList = {
     preloadedQuery: NullUndefined<PreloadedQuery<TokenDetailsScreenQuery>>
   }
   [Screens.NFTItem]: NFTItem
-  [Screens.NFTCollection]: {
-    collectionAddress: Address
-    slug: string
-    owner?: Address
-  }
   [Screens.Activity]: {
     preloadedQuery: NullUndefined<PreloadedQuery<ActivityScreenQuery>>
   }
