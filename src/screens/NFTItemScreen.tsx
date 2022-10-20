@@ -144,7 +144,7 @@ export function NFTItemScreen({
                   </Box>
                 ) : null}
                 <Box flexShrink={1}>
-                  <Text color="textTertiary" variant="badge_deprecated">
+                  <Text color="textTertiary" variant="bodySmall">
                     {t('Collection')}
                   </Text>
                   <Flex row alignItems="center" gap="xs">

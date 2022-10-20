@@ -333,16 +333,16 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           onPress={onPressManageConnections}
         />
         <SettingsButton
-          Icon={HelpIcon}
-          label={t('Get help')}
-          name={ElementName.GetHelp}
-          onPress={onPressGetHelp}
-        />
-        <SettingsButton
           Icon={SettingsIcon}
           label={t('Settings')}
           name={ElementName.Settings}
           onPress={onPressSettings}
+        />
+        <SettingsButton
+          Icon={HelpIcon}
+          label={t('Get help')}
+          name={ElementName.GetHelp}
+          onPress={onPressGetHelp}
         />
       </Flex>
 
