@@ -1,10 +1,11 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
 import { loadQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
+import { CacheConfig } from 'relay-runtime'
 
+import RelayEnvironment from '../RelayEnvironment'
 import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
 import { AssetQuery, NftAssetsFilterInput, NftAssetSortableField } from './__generated__/AssetQuery.graphql'
-import NFTRelayEnvironment from './NFTRelayEnvironment'
 
 const assetPaginationQuery = graphql`
   fragment AssetQuery_nftAssets on Query @refetchable(queryName: "AssetPaginationQuery") {
@@ -125,16 +126,22 @@ export function useAssetsQuery(
   last?: number,
   before?: string
 ) {
-  const assetsQueryReference = loadQuery<AssetQuery>(NFTRelayEnvironment, assetQuery, {
-    address,
-    orderBy,
-    asc,
-    filter,
-    first,
-    after,
-    last,
-    before,
-  })
+  const nftConfig: CacheConfig = { metadata: { isNFT: true } }
+  const assetsQueryReference = loadQuery<AssetQuery>(
+    RelayEnvironment,
+    assetQuery,
+    {
+      address,
+      orderBy,
+      asc,
+      filter,
+      first,
+      after,
+      last,
+      before,
+    },
+    { networkCacheConfig: nftConfig }
+  )
   const queryData = usePreloadedQuery<AssetQuery>(assetQuery, assetsQueryReference)
   const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<AssetPaginationQuery, any>(
     assetPaginationQuery,

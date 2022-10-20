@@ -4,7 +4,6 @@ import 'polyfills'
 import 'components/analytics'
 
 import { FeatureFlagsProvider } from 'featureFlags'
-import NFTRelayEnvironment from 'graphql/data/nft/NFTRelayEnvironment'
 import RelayEnvironment from 'graphql/data/RelayEnvironment'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
@@ -60,17 +59,15 @@ createRoot(container).render(
             <LanguageProvider>
               <Web3Provider>
                 <RelayEnvironmentProvider environment={RelayEnvironment}>
-                  <RelayEnvironmentProvider environment={NFTRelayEnvironment}>
-                    <Blocklist>
-                      <BlockNumberProvider>
-                        <Updaters />
-                        <ThemeProvider>
-                          <ThemedGlobalStyle />
-                          <App />
-                        </ThemeProvider>
-                      </BlockNumberProvider>
-                    </Blocklist>
-                  </RelayEnvironmentProvider>
+                  <Blocklist>
+                    <BlockNumberProvider>
+                      <Updaters />
+                      <ThemeProvider>
+                        <ThemedGlobalStyle />
+                        <App />
+                      </ThemeProvider>
+                    </BlockNumberProvider>
+                  </Blocklist>
                 </RelayEnvironmentProvider>
               </Web3Provider>
             </LanguageProvider>
