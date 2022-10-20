@@ -1,6 +1,7 @@
 import 'rc-slider/assets/index.css'
 
 import clsx from 'clsx'
+import { loadingAnimation } from 'components/Loader/styled'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
@@ -84,6 +85,22 @@ const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
       },
     }) => `${duration.fast} background-color ${timing.in}`};
   }
+`
+
+export const LoadingButton = styled.div`
+  border-radius: 12px;
+  height: 44px;
+  width: 114px;
+  animation: ${loadingAnimation} 1.5s infinite;
+  animation-fill-mode: both;
+  background: linear-gradient(
+    to left,
+    ${({ theme }) => theme.backgroundInteractive} 25%,
+    ${({ theme }) => theme.backgroundOutline} 50%,
+    ${({ theme }) => theme.backgroundInteractive} 75%
+  );
+  will-change: background-position;
+  background-size: 400%;
 `
 
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
@@ -324,25 +341,29 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               <SortDropdown dropDownOptions={sortDropDownOptions} />
               <CollectionSearch />
             </Row>
-            {!hasErc1155s && (
-              <SweepButton
-                toggled={sweepIsOpen}
-                disabled={!buyNow}
-                onClick={() => {
-                  if (!buyNow || hasErc1155s) return
-                  if (!sweepIsOpen) {
-                    scrollToTop()
-                    if (!bagExpanded && !isMobile) toggleBag()
-                  }
-                  setSweepOpen(!sweepIsOpen)
-                }}
-              >
-                <SweepIcon width="24px" height="24px" />
-                <ThemedText.BodyPrimary fontWeight={600} lineHeight="20px" marginTop="2px" marginBottom="2px">
-                  Sweep
-                </ThemedText.BodyPrimary>
-              </SweepButton>
-            )}
+            {!hasErc1155s ? (
+              isLoading ? (
+                <LoadingButton />
+              ) : (
+                <SweepButton
+                  toggled={sweepIsOpen}
+                  disabled={!buyNow}
+                  onClick={() => {
+                    if (!buyNow || hasErc1155s) return
+                    if (!sweepIsOpen) {
+                      scrollToTop()
+                      if (!bagExpanded && !isMobile) toggleBag()
+                    }
+                    setSweepOpen(!sweepIsOpen)
+                  }}
+                >
+                  <SweepIcon width="24px" height="24px" />
+                  <ThemedText.BodyPrimary fontWeight={600} lineHeight="20px" marginTop="2px" marginBottom="2px">
+                    Sweep
+                  </ThemedText.BodyPrimary>
+                </SweepButton>
+              )
+            ) : null}
           </ActionsContainer>
           <Sweep
             contractAddress={contractAddress}
