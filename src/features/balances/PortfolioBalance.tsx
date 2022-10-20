@@ -3,7 +3,7 @@ import React, { Suspense } from 'react'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
-import { Text } from 'src/components/Text'
+import { DecimalNumber } from 'src/components/text/DecimalNumber'
 import { PortfolioBalanceQuery } from 'src/features/balances/__generated__/PortfolioBalanceQuery.graphql'
 import { formatUSDPrice } from 'src/utils/format'
 
@@ -38,9 +38,12 @@ function PortfolioBalanceInner({ queryRef }: { queryRef: PreloadedQuery<Portfoli
 
   return (
     <Flex gap="xxs">
-      <Text variant="headlineLarge">{`${formatUSDPrice(
-        data?.portfolios?.[0]?.tokensTotalDenominatedValue.value ?? undefined
-      )}`}</Text>
+      <DecimalNumber
+        number={formatUSDPrice(
+          data?.portfolios?.[0]?.tokensTotalDenominatedValue.value ?? undefined
+        )}
+        variant="headlineLarge"
+      />
     </Flex>
   )
 }
