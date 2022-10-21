@@ -35,13 +35,13 @@ export const checkMark = sprinkles({
   display: 'none',
   height: '24',
   width: '24',
-  color: 'blue400',
+  color: 'white',
 })
 
 export const checkMarkActive = style([
   sprinkles({
     display: 'inline-block',
-    color: 'blue400',
+    color: 'white',
     position: 'absolute',
     top: '0',
     right: '1',
