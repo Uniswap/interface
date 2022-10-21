@@ -20,10 +20,17 @@ export function RelativeChange({
   semanticColor,
 }: RelativeChangeProps) {
   const theme = useAppTheme()
-  const isPositiveChange = change ? change > 0 : undefined
+  const isPositiveChange = change !== undefined ? change >= 0 : undefined
 
   return (
-    <Flex row alignItems="center" gap="none" justifyContent="flex-end">
+    <Flex row alignItems="center" gap="xxs" justifyContent="flex-end">
+      {change !== undefined && (
+        <Arrow
+          color={isPositiveChange ? theme.colors.accentSuccess : theme.colors.accentCritical}
+          direction={isPositiveChange ? 'ne' : 'se'}
+          size={16}
+        />
+      )}
       <Text
         color={
           semanticColor ? (isPositiveChange ? 'accentSuccess' : 'accentCritical') : 'textSecondary'
@@ -32,13 +39,6 @@ export function RelativeChange({
         {change ? `${change.toFixed(2)}%` : '-'}{' '}
         {absoluteChange ? `(${formatPrice(absoluteChange)})` : ''}
       </Text>
-      {isPositiveChange === undefined ? null : (
-        <Arrow
-          color={isPositiveChange ? theme.colors.accentSuccess : theme.colors.accentCritical}
-          direction={isPositiveChange ? 'ne' : 'se'}
-          size={16}
-        />
-      )}
     </Flex>
   )
 }

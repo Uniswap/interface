@@ -13,6 +13,35 @@ exports[`renders a relative change 1`] = `
     ]
   }
 >
+  <svg
+    color="#7BB10C"
+    data-file-name="SvgArrowDown"
+    height={16}
+    strokeWidth={2}
+    style={
+      Object {
+        "transform": Array [
+          Object {
+            "rotate": "225deg",
+          },
+        ],
+      }
+    }
+    width={16}
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "display": "flex",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "height": 4,
+          "width": 4,
+        },
+      ]
+    }
+  />
   <Text
     maxFontSizeMultiplier={1.4}
     style={
@@ -31,35 +60,6 @@ exports[`renders a relative change 1`] = `
      
     
   </Text>
-  <View
-    style={
-      Array [
-        Object {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 0,
-          "width": 0,
-        },
-      ]
-    }
-  />
-  <svg
-    color="#7BB10C"
-    data-file-name="SvgArrowDown"
-    height={16}
-    strokeWidth={2}
-    style={
-      Object {
-        "transform": Array [
-          Object {
-            "rotate": "225deg",
-          },
-        ],
-      }
-    }
-    width={16}
-  />
 </View>
 `;
 
@@ -76,6 +76,35 @@ exports[`renders placeholders with absolute change 1`] = `
     ]
   }
 >
+  <svg
+    color="#7BB10C"
+    data-file-name="SvgArrowDown"
+    height={16}
+    strokeWidth={2}
+    style={
+      Object {
+        "transform": Array [
+          Object {
+            "rotate": "225deg",
+          },
+        ],
+      }
+    }
+    width={16}
+  />
+  <View
+    style={
+      Array [
+        Object {
+          "display": "flex",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "height": 4,
+          "width": 4,
+        },
+      ]
+    }
+  />
   <Text
     maxFontSizeMultiplier={1.4}
     style={
@@ -94,35 +123,6 @@ exports[`renders placeholders with absolute change 1`] = `
      
     ($100.00)
   </Text>
-  <View
-    style={
-      Array [
-        Object {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 0,
-          "width": 0,
-        },
-      ]
-    }
-  />
-  <svg
-    color="#7BB10C"
-    data-file-name="SvgArrowDown"
-    height={16}
-    strokeWidth={2}
-    style={
-      Object {
-        "transform": Array [
-          Object {
-            "rotate": "225deg",
-          },
-        ],
-      }
-    }
-    width={16}
-  />
 </View>
 `;
 
