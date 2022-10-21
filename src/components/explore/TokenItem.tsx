@@ -35,7 +35,7 @@ export type TokenItemData = {
   pricePercentChange24h?: number
 }
 
-interface TokenProjectItemProps {
+interface TokenItemProps {
   tokenItemData: TokenItemData
   index?: number
   metadataDisplayType?: TokensMetadataDisplayType
@@ -44,7 +44,7 @@ interface TokenProjectItemProps {
   isEditing?: boolean
 }
 
-export const TokenProjectItem = memo(
+export const TokenItem = memo(
   ({
     tokenItemData,
     index,
@@ -52,7 +52,7 @@ export const TokenProjectItem = memo(
     onCycleMetadata,
     isFavorited,
     isEditing,
-  }: TokenProjectItemProps) => {
+  }: TokenItemProps) => {
     const { t } = useTranslation()
     const theme = useAppTheme()
     const dispatch = useAppDispatch()
@@ -124,13 +124,7 @@ export const TokenProjectItem = memo(
             if (isEditing) return
             tokenDetailsNavigation.preload(_currencyId)
           }}>
-          <AnimatedFlex
-            row
-            alignItems="flex-start"
-            bg="none"
-            justifyContent="space-between"
-            px="xs"
-            py="sm">
+          <AnimatedFlex row alignItems="flex-start" justifyContent="space-between" p="xs">
             <Flex centered row flexShrink={1} gap="xs" overflow="hidden">
               <Flex centered row gap="xxs" overflow="hidden">
                 {index !== undefined && (
@@ -140,7 +134,7 @@ export const TokenProjectItem = memo(
                     </Text>
                   </Box>
                 )}
-                <TokenLogo size={theme.imageSizes.lg} symbol={symbol} url={logoUrl} />
+                <TokenLogo size={theme.imageSizes.xl} symbol={symbol} url={logoUrl} />
               </Flex>
               <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
                 <Text adjustsFontSizeToFit numberOfLines={1} variant="bodyLarge">
@@ -157,7 +151,7 @@ export const TokenProjectItem = memo(
                   main={formatUSDPrice(price)}
                   sub={
                     metadataDisplayType === TokensMetadataDisplayType.MarketCap ? (
-                      <Text variant="buttonLabelMicro">
+                      <Text color="textSecondary" variant="subheadSmall">
                         {t('MCap {{marketCap}}', {
                           marketCap: formatNumber(marketCap),
                         })}

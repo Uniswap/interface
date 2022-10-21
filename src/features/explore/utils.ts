@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next'
-import { TokenItemData } from 'src/components/explore/TokenProjectItem'
+import { TokenItemData } from 'src/components/explore/TokenItem'
 import { LocalTokensOrderBy, RemoteTokensOrderBy, TokensOrderBy } from 'src/features/explore/types'
 
 export function getOrderByValues(orderBy: TokensOrderBy): {

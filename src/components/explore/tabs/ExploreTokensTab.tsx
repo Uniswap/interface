@@ -8,7 +8,7 @@ import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { useOrderByModal } from 'src/components/explore/Modals'
 import { SortButton } from 'src/components/explore/SortButton'
 import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
-import { TokenItemData, TokenProjectItem } from 'src/components/explore/TokenProjectItem'
+import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
@@ -110,7 +110,7 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
   const renderItem = useCallback(
     ({ item, index }: ListRenderItemInfo<TokenItemData>) => {
       // Disable the row if editing and already favorited.
-      // Avoid doing this within TokenProjectItem so we can memoize
+      // Avoid doing this within TokenItem so we can memoize
       // (referencing favorites within item will cause rerenders for each item as we add/remove favorites)
       const { chainId, address } = item
       const _currencyId = address
@@ -119,7 +119,7 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
       const isFavorited = favoriteCurrencyIdsSet.has(_currencyId.toLocaleLowerCase())
 
       return (
-        <TokenProjectItem
+        <TokenItem
           index={index}
           isEditing={isEditing}
           isFavorited={isFavorited}
