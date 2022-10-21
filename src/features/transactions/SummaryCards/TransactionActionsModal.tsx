@@ -7,6 +7,7 @@ import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModalContent, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
+import { uniswapUrls } from 'src/constants/urls'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -79,10 +80,7 @@ export default function TransactionActionsModal({
       {
         key: ElementName.GetHelp,
         onPress: () => {
-          openUri(
-            `mailto:support@uniswap.org?subject=Help with Uniswap Wallet transaction&body=Transaction ID: ${hash}\n\nPlease tell us how we can help you with this transaction:`,
-            true
-          )
+          openUri(uniswapUrls.helpUrl, true)
           handleClose()
         },
         render: renderOptionItem(t('Get help')),
