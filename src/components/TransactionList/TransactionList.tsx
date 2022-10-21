@@ -120,7 +120,7 @@ export default function TransactionList(props: TransactionListProps) {
     <Suspense
       fallback={
         <Box style={props.tabViewScrollProps?.contentContainerStyle}>
-          <Loading />
+          <Loading type="transactions" />
         </Box>
       }>
       <TransactionListInner {...props} />

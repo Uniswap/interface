@@ -8,6 +8,7 @@ import { FavoriteLoader } from 'src/components/loading/FavoriteLoader'
 import { HeaderLoader } from 'src/components/loading/HeaderLoader'
 import { Shimmer } from 'src/components/loading/Shimmer'
 import { TokenLoader } from 'src/components/loading/TokenLoader'
+import TransactionLoader from 'src/components/loading/TransactionLoader'
 import { WalletLoader } from 'src/components/loading/WalletLoader'
 import GraphCurveArea from './graph-curve-area.svg'
 
@@ -21,6 +22,7 @@ type SkeletonType =
   | 'grid'
   | 'wallets'
   | 'text'
+  | 'transactions'
 
 type LoadingProps = {
   type?: SkeletonType
@@ -89,6 +91,8 @@ const useChildFromType = (
           ))}
         </Flex>
       )
+    case 'transactions':
+      return <TransactionLoader />
     case 'image':
       if (repeat > 1) throw new Error('Loading placeholder for images does not support repeat')
       return <BoxLoader aspectRatio={1} borderRadius="none" />
