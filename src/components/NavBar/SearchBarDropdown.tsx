@@ -1,30 +1,33 @@
 import { Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName } from 'analytics/constants'
+import { usePreloadedTopTokens } from 'components/TopTokensProvider'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { TopToken, topTokens100Query } from 'graphql/data/TopTokens'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
 import { useSearchHistory } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
-import { FungibleToken, GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
+import { GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
+import { usePreloadedQuery } from 'react-relay'
 import { useLocation } from 'react-router-dom'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import * as styles from './SearchBar.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
-function isCollection(suggestion: GenieCollection | FungibleToken | TrendingCollection) {
-  return (suggestion as FungibleToken).decimals === undefined
+function isCollection(suggestion: GenieCollection | TrendingCollection | NonNullable<TopToken>) {
+  return (suggestion as TopToken)?.decimals === undefined
 }
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
-  suggestions: (GenieCollection | FungibleToken)[]
+  suggestions: (GenieCollection | NonNullable<TopToken>)[]
   header: JSX.Element
   headerIcon?: JSX.Element
   hoveredIndex: number | undefined
@@ -74,7 +77,7 @@ export const SearchBarDropdownSection = ({
           ) : (
             <TokenRow
               key={suggestion.address}
-              token={suggestion as FungibleToken}
+              token={suggestion as NonNullable<TopToken>}
               isHovered={hoveredIndex === index + startingIndex}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
@@ -98,7 +101,7 @@ export const SearchBarDropdownSection = ({
 
 interface SearchBarDropdownProps {
   toggleOpen: () => void
-  tokens: FungibleToken[]
+  tokens: NonNullable<TopToken>[]
   collections: GenieCollection[]
   hasInput: boolean
   isLoading: boolean
@@ -117,6 +120,17 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
   const { data: trendingCollectionResults, isLoading: trendingCollectionsAreLoading } = useQuery(
     ['trendingCollections', 'eth', 'twenty_four_hours'],
     () => fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 })
+  )
+
+  const { topTokens } = usePreloadedQuery(topTokens100Query, usePreloadedTopTokens())
+  const trendingTokens = useMemo(
+    () =>
+      topTokens
+        ? Array.from(topTokens)
+            .filter((x): x is NonNullable<TopToken> => !!x)
+            .sort((a, b) => (b?.market?.volume?.value ?? 0) - (a?.market?.volume?.value ?? 0))
+        : [],
+    [topTokens]
   )
 
   const trendingCollections = useMemo(
@@ -151,13 +165,13 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
   }, [trendingTokenResults, updateSearchHistory])
 
   const trendingTokensLength = phase1Flag === NftVariant.Enabled ? (isTokenPage ? 3 : 2) : 4
-  const trendingTokens = useMemo(
-    () =>
-      trendingTokenResults
-        ? trendingTokenResults.slice(0, trendingTokensLength)
-        : [...Array<FungibleToken>(trendingTokensLength)],
-    [trendingTokenResults, trendingTokensLength]
-  )
+  // const trendingTokens = useMemo(
+  //   () =>
+  //     trendingTokenResults
+  //       ? trendingTokenResults.slice(0, trendingTokensLength)
+  //       : [...Array<FungibleToken>(trendingTokensLength)],
+  //   [trendingTokenResults, trendingTokensLength]
+  // )
 
   const totalSuggestions = hasInput
     ? tokens.length + collections.length

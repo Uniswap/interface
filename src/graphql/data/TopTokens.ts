@@ -6,9 +6,10 @@ import {
   sortMethodAtom,
   TokenSortMethod,
 } from 'components/Tokens/state'
+import { usePreloadedTopTokens } from 'components/TopTokensProvider'
 import { useAtomValue } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
-import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
+import { fetchQuery, usePreloadedQuery, useRelayEnvironment } from 'react-relay'
 
 import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery.graphql'
@@ -23,6 +24,7 @@ export const topTokens100Query = graphql`
       chain @required(action: LOG)
       address @required(action: LOG)
       symbol
+      decimals
       market(currency: USD) {
         totalValueLocked {
           value
@@ -43,6 +45,10 @@ export const topTokens100Query = graphql`
       }
       project {
         logoUrl
+        tokens {
+          address
+          chain
+        }
       }
     }
   }
@@ -149,7 +155,8 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     setSparklines({})
   }, [duration])
 
-  const { topTokens } = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
+  //const { topTokens } = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
+  const { topTokens } = usePreloadedQuery(topTokens100Query, usePreloadedTopTokens())
   const mappedTokens = useMemo(() => topTokens?.map((token) => unwrapToken(chainId, token)) ?? [], [chainId, topTokens])
   const filteredTokens = useFilteredTokens(mappedTokens)
   const sortedTokens = useSortedTokens(filteredTokens)

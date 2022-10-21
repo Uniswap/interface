@@ -1,15 +1,16 @@
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
-import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
-import { getTokenDetailsURL } from 'graphql/data/util'
+import { Chain } from 'graphql/data/__generated__/TopTokens100Query.graphql'
+import { TopToken } from 'graphql/data/TopTokens'
+import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { vars } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
-import { FungibleToken, GenieCollection } from 'nft/types'
+import { GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
@@ -38,7 +39,7 @@ export const CollectionRow = ({
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
+    (state: { addItem: (item: NonNullable<TopToken> | GenieCollection) => void }) => state.addItem
   )
   const navigate = useNavigate()
 
@@ -87,7 +88,6 @@ export const CollectionRow = ({
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{collection.name}</Box>
-            {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
           <Box className={styles.secondaryText}>{putCommas(collection.stats.total_supply)} items</Box>
         </Column>
@@ -104,17 +104,20 @@ export const CollectionRow = ({
   )
 }
 
-function useBridgedAddress(token: FungibleToken): [string | undefined, number | undefined, string | undefined] {
+function useBridgedAddress(token: NonNullable<TopToken>): [string | undefined, Chain | undefined, string | undefined] {
   const { chainId: connectedChainId } = useWeb3React()
-  const bridgedAddress = connectedChainId ? token.extensions?.bridgeInfo?.[connectedChainId]?.tokenAddress : undefined
-  if (bridgedAddress && connectedChainId) {
-    return [bridgedAddress, connectedChainId, getChainInfo(connectedChainId)?.circleLogoUrl]
+  const connectedChain = chainIdToBackendName(connectedChainId)
+  const bridgedAddress = connectedChain
+    ? token.project?.tokens?.find((t) => t.chain === connectedChain)?.address
+    : undefined
+  if (bridgedAddress && connectedChain) {
+    return [bridgedAddress, connectedChain, getChainInfo(connectedChainId)?.circleLogoUrl]
   }
   return [undefined, undefined, undefined]
 }
 
 interface TokenRowProps {
-  token: FungibleToken
+  token: NonNullable<TopToken>
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
@@ -126,7 +129,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
+    (state: { addItem: (item: GenieCollection | NonNullable<TopToken>) => void }) => state.addItem
   )
   const navigate = useNavigate()
 
@@ -137,7 +140,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
   }, [addToSearchHistory, toggleOpen, token, traceEvent])
 
   const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
-  const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
+  const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, bridgedChain ?? token.chain)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -163,12 +166,16 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        {!brokenImage && token.logoURI ? (
+        {!brokenImage && token.project?.logoUrl ? (
           <LogoContainer>
             <Box
               as="img"
-              src={token.logoURI.includes('ipfs://') ? uriToHttp(token.logoURI)[0] : token.logoURI}
-              alt={token.name}
+              src={
+                token.project?.logoUrl.includes('ipfs://')
+                  ? uriToHttp(token.project?.logoUrl)[0]
+                  : token.project?.logoUrl
+              }
+              alt={token.name ?? undefined}
               className={clsx(loaded ? styles.suggestionImage : styles.imageHolder)}
               onError={() => setBrokenImage(true)}
               onLoad={() => setLoaded(true)}
@@ -181,21 +188,23 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            {token.onDefaultList && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>
       </Row>
 
       <Column className={styles.suggestionSecondaryContainer}>
-        {token.priceUsd && (
+        {token.market?.price?.value && (
           <Row gap="4">
-            <Box className={styles.primaryText}>{formatDollar({ num: token.priceUsd, isPrice: true })}</Box>
+            <Box className={styles.primaryText}>{formatDollar({ num: token.market.price.value, isPrice: true })}</Box>
           </Row>
         )}
-        {token.price24hChange && (
-          <Box className={styles.secondaryText} color={token.price24hChange >= 0 ? 'green400' : 'red400'}>
-            {token.price24hChange.toFixed(2)}%
+        {token.market?.pricePercentChange?.value && (
+          <Box
+            className={styles.secondaryText}
+            color={token.market.pricePercentChange.value >= 0 ? 'green400' : 'red400'}
+          >
+            {token.market.pricePercentChange.value.toFixed(2)}%
           </Box>
         )}
       </Column>
