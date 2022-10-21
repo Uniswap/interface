@@ -6,7 +6,6 @@ import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionProfile } from 'nft/components/details/CollectionProfile'
 import { Details } from 'nft/components/details/Details'
 import { Traits } from 'nft/components/details/Traits'
-import { Center, Column, Row } from 'nft/components/Flex'
 import { CloseDropDownIcon, CornerDownLeftIcon, Eth2Icon, ShareIcon, SuspiciousIcon } from 'nft/components/icons'
 import { ExpandableText } from 'nft/components/layout/ExpandableText'
 import { badge, bodySmall, caption, headlineMedium, subhead } from 'nft/css/common.css'
@@ -27,8 +26,40 @@ import ReactMarkdown from 'react-markdown'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 import { VerifiedIcon } from '../icons'
+import styled from 'styled-components/macro'
+import InfoContainer from './InfoContainer'
+import TraitsContainer from './TraitsContainer'
+import rarityIcon from './rarity.svg'
 
 import * as styles from './AssetDetails.css'
+
+const CollectionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  line-height: 24px;
+  color: ${({ theme }) => theme.textPrimary};
+`
+
+const AssetHeader = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 36px;
+  line-height: 36px;
+  color: ${({ theme }) => theme.textPrimary};
+`
+
+const MediaContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 56px;
+`
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 
 const AudioPlayer = ({
   imageUrl,
@@ -51,28 +82,6 @@ const AudioPlayer = ({
         }}
       />
     </Box>
-  )
-}
-
-const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
-
-const CountdownTimer = ({ sellOrder }: { sellOrder: SellOrder }) => {
-  const { date, expires } = useMemo(() => {
-    const date = new Date(sellOrder.orderClosingDate)
-    return {
-      date,
-      expires: formatter.format(date),
-    }
-  }, [sellOrder])
-  const [days, hours, minutes, seconds] = useTimeout(date)
-
-  return (
-    <MouseoverTooltip text={<Box fontSize="12">Expires {expires}</Box>}>
-      <Box as="span" fontWeight="normal" className={caption} color="textSecondary">
-        Expires: {days !== 0 ? `${days} days` : ''} {hours !== 0 ? `${hours} hours` : ''} {minutes} minutes {seconds}{' '}
-        seconds
-      </Box>
-    </MouseoverTooltip>
   )
 }
 
@@ -144,8 +153,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     [asset.rarity]
   )
 
-  console.log(asset)
-
   const assetMediaType = useMemo(() => {
     if (isAudio(asset.animationUrl)) {
       return MediaType.Audio
@@ -178,38 +185,42 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   }, [asset, address, provider])
 
-  return (
-    <AnimatedBox
-      style={{
-        // @ts-ignore
-        // width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
-        width: '100%',
-      }}
-      className={styles.container}
-    >
-      <div className={styles.columns}>
-        <Column className={clsx(styles.column, styles.columnRight)} width="full">
-          <div>
-            {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
-            {/* label="Collection"
-                  avatarUrl={collection.collectionImageUrl}
-                  name={collection.collectionName}
-                  isVerified={collection.isVerified} */}
-          </div>
-          <div>
-            {assetMediaType === MediaType.Image ? (
-              <img
-                className={styles.image}
-                src={asset.imageUrl}
-                alt={asset.name || collection.collectionName}
-                style={{ ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }}
-              />
-            ) : (
-              <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
-            )}
-          </div>
+  console.log(asset)
 
-          <Column>
+  return (
+    <Column>
+      <CollectionHeader>
+        {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
+      </CollectionHeader>
+      <AssetHeader>
+        {collection.collectionName} #{asset.tokenId}
+      </AssetHeader>
+      <MediaContainer>
+        {assetMediaType === MediaType.Image ? (
+          <img
+            className={styles.image}
+            src={asset.imageUrl}
+            alt={asset.name || collection.collectionName}
+            style={{ ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }}
+          />
+        ) : (
+          <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
+        )}
+      </MediaContainer>
+      <InfoContainer
+        primaryHeader="Traits"
+        secondaryHeader={
+          rarityProvider ? (
+            <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+              Rarity <img src={rarityIcon} width={16} alt={rarityProvider.provider} />
+            </span>
+          ) : null
+        }
+      >
+        <TraitsContainer asset={asset} collection={collection} />
+      </InfoContainer>
+
+      {/* <Column>
             <Row
               marginBottom="8"
               alignItems="center"
@@ -349,9 +360,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 </a>
               ) : null}
             </Row>
-          </Column>
+          </Column> */}
 
-          {asset.priceInfo && !isOwned ? (
+      {/* {asset.priceInfo && !isOwned ? (
             <Row
               marginTop="8"
               marginBottom="40"
@@ -427,9 +438,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               metadataUrl={asset.externalLink}
               totalSupply={collection.totalSupply}
             />
-          )}
-        </Column>
-      </div>
-    </AnimatedBox>
+          )} */}
+    </Column>
   )
 }

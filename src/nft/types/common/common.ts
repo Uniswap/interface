@@ -75,6 +75,14 @@ export interface Rarity {
   providers: { provider: string; rank: number; url: string; score: number }[]
 }
 
+export interface Trait {
+  trait_type: string
+  value: string
+  display_type?: any
+  max_value?: any
+  trait_count: number
+  order?: any
+}
 export interface GenieAsset {
   id?: string // This would be a random id created and assigned by front end
   address: string
@@ -102,14 +110,7 @@ export interface GenieAsset {
   owner: string
   creator: OpenSeaUser
   externalLink: string
-  traits?: {
-    trait_type: string
-    value: string
-    display_type?: any
-    max_value?: any
-    trait_count: number
-    order?: any
-  }[]
+  traits?: Trait[]
 }
 
 export interface GenieCollection {
