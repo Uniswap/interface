@@ -23,7 +23,7 @@ import { isVideo } from 'nft/utils/isVideo'
 import { fallbackProvider, rarityProviderLogo } from 'nft/utils/rarity'
 import { toSignificant } from 'nft/utils/toSignificant'
 import qs from 'query-string'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useCallback, useReducer, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
@@ -36,6 +36,9 @@ import DetailsContainer from './DetailsContainer'
 import { useQuery } from 'react-query'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { putCommas } from 'nft/utils/putCommas'
+import { marketplace } from './AssetDetails.css'
+import { reduceFilters } from '../collection/Activity'
+import * as activityStyles from 'nft/components/collection/Activity.css'
 
 import * as styles from './AssetDetails.css'
 import { description } from '../collection/CollectionStats.css'
@@ -105,6 +108,13 @@ const AudioPlayer = ({
       />
     </Box>
   )
+}
+
+const initialFilterState = {
+  [ActivityEventType.Listing]: true,
+  [ActivityEventType.Sale]: true,
+  [ActivityEventType.Transfer]: true,
+  [ActivityEventType.CancelListing]: true,
 }
 
 const AssetView = ({
@@ -187,7 +197,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const contractAddress = asset.address
   const token_id = asset.tokenId
 
-  const { data: eventsData } = useQuery<ActivityEventResponse>(
+  const { data: priceData } = useQuery<ActivityEventResponse>(
     [
       'collectionActivity',
       {
@@ -216,8 +226,60 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   )
 
-  const lastSalePrice = eventsData?.events ? eventsData?.events[0].price : null
+  const lastSalePrice = priceData?.events ? priceData?.events[0].price : null
   const formattedPrice = lastSalePrice ? putCommas(formatEthPrice(lastSalePrice)).toString() : null
+  const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
+
+  const Filter = useCallback(
+    function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
+      const isActive = activeFilters[eventType]
+
+      return (
+        <Box
+          className={clsx(activityStyles.filter, isActive && activityStyles.activeFilter)}
+          onClick={() => filtersDispatch({ eventType })}
+          style={{ maxWidth: 150, height: 40, boxSizing: 'border-box' }}
+        >
+          {eventType === ActivityEventType.CancelListing
+            ? 'Cancellation'
+            : eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
+        </Box>
+      )
+    },
+    [activeFilters]
+  )
+
+  const { data: eventsData } = useQuery<ActivityEventResponse>(
+    [
+      'collectionActivity',
+      {
+        contractAddress,
+        activeFilters,
+      },
+    ],
+    async ({ pageParam = '' }) => {
+      return await ActivityFetcher(
+        contractAddress,
+        {
+          token_id,
+          eventTypes: Object.keys(activeFilters)
+            .filter((key) => activeFilters[key as ActivityEventType])
+            .map((key) => key as ActivityEventType),
+        },
+        pageParam,
+        '5'
+      )
+    },
+    {
+      getNextPageParam: (lastPage) => {
+        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
+      },
+      refetchInterval: 15000,
+      refetchIntervalInBackground: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    }
+  )
 
   // useEffect(() => {
   //   if (asset.creator) setCreatorAddress(asset.creator.address)
@@ -280,7 +342,16 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         primaryHeader="Activity"
         secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
       >
-        <AssetActivity contractAddress={asset.address} token_id={asset.tokenId} />
+        <>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: 34 }}>
+            <Filter eventType={ActivityEventType.Listing} />
+            <Filter eventType={ActivityEventType.Sale} />
+            <Filter eventType={ActivityEventType.Transfer} />
+            <Filter eventType={ActivityEventType.CancelListing} />
+          </div>
+
+          <AssetActivity eventsData={eventsData} />
+        </>
       </InfoContainer>
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
         <>
