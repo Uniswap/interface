@@ -97,9 +97,7 @@ export function TokenOptionItem({
           </Flex>
 
           {tokenWarningLevel === TokenWarningLevel.BLOCKED ? (
-            <Flex backgroundColor="translucentBackground" borderRadius="md" padding="sm">
-              <Text variant="buttonLabelMedium">{t('Not available')}</Text>
-            </Flex>
+            <Text variant="bodySmall">{t('Not available')}</Text>
           ) : quantity && quantity !== 0 ? (
             <Box alignItems="flex-end">
               <Text variant="bodyLarge">{formatNumberBalance(quantity)}</Text>
