@@ -132,7 +132,7 @@ export const TokenProjectItem = memo(
             px="xs"
             py="sm">
             <Flex centered row flexShrink={1} gap="xs" overflow="hidden">
-              <Flex centered row flexShrink={1} gap="xxs" overflow="hidden">
+              <Flex centered row gap="xxs" overflow="hidden">
                 {index !== undefined && (
                   <Box minWidth={16}>
                     <Text color="textSecondary" variant="buttonLabelMicro">
@@ -143,7 +143,9 @@ export const TokenProjectItem = memo(
                 <TokenLogo size={theme.imageSizes.lg} symbol={symbol} url={logoUrl} />
               </Flex>
               <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
-                <Text variant="bodyLarge">{name}</Text>
+                <Text adjustsFontSizeToFit numberOfLines={1} variant="bodyLarge">
+                  {name}
+                </Text>
                 <Text color="textSecondary" variant="subheadSmall">
                   {symbol.toUpperCase()}
                 </Text>
