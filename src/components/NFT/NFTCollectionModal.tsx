@@ -67,7 +67,7 @@ export function NFTCollectionModal({
             </Flex>
 
             {/* Collection stats */}
-            <Flex row gap="xxs" justifyContent="space-between" px="lg">
+            <Flex row gap="xxs" justifyContent="space-between">
               <Flex alignItems="center" gap="xxs">
                 <Text color="textTertiary" variant="subheadSmall">
                   {t('Items')}
