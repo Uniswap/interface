@@ -162,6 +162,7 @@ interface EventCellProps {
   eventType: ActivityEventType
   eventTimestamp?: number
   eventTransactionHash?: string
+  eventOnly?: boolean
 }
 
 const renderEventIcon = (eventType: ActivityEventType) => {
@@ -199,14 +200,14 @@ const eventColors = (eventType: ActivityEventType) => {
   return activityEvents[eventType] as 'gold' | 'green' | 'violet' | 'accentFailure'
 }
 
-export const EventCell = ({ eventType, eventTimestamp, eventTransactionHash }: EventCellProps) => {
+export const EventCell = ({ eventType, eventTimestamp, eventTransactionHash, eventOnly }: EventCellProps) => {
   return (
     <Column height="full" justifyContent="center" gap="4">
       <Row className={styles.eventDetail} color={eventColors(eventType)}>
         {renderEventIcon(eventType)}
         {ActivityEventTypeDisplay[eventType]}
       </Row>
-      {eventTimestamp && isValidDate(eventTimestamp) && (
+      {!eventOnly && eventTimestamp && isValidDate(eventTimestamp) && (
         <Row className={styles.eventTime}>
           {getTimeDifference(eventTimestamp.toString())}
           {eventTransactionHash && <ExternalLinkIcon transactionHash={eventTransactionHash} />}

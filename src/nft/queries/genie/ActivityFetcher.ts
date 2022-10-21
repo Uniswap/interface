@@ -10,9 +10,7 @@ export const ActivityFetcher = async (
       ? `&${filters.eventTypes?.map((eventType) => `event_types[]=${eventType}`).join('&')}`
       : ''
 
-  const tokenId = filters?.tokenId ? `&tokenId=${filters?.tokenId}` : ''
-  console.log('HELLLOOOO')
-  console.log(tokenId)
+  const tokenId = filters?.token_id ? `&token_id=${filters?.token_id}` : ''
 
   const url = `${
     process.env.REACT_APP_GENIE_V3_API_URL
