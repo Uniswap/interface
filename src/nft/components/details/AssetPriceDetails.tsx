@@ -1,9 +1,11 @@
+import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
 import { CancelListingIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
-import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft } from 'nft/utils'
+import { ethNumberStandardFormatter, fetchPrice, formatEthPrice, getMarketplaceIcon, timeLeft } from 'nft/utils'
 import { useMemo } from 'react'
+import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -78,6 +80,15 @@ const DiscoveryContainer = styled.div`
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = listing ? new Date(listing.orderClosingDate) : undefined
+  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
+
+  const USDPrice = useMemo(
+    () =>
+      fetchedPriceData &&
+      asset.priceInfo &&
+      (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString(),
+    [asset.priceInfo, fetchedPriceData]
+  )
 
   const navigate = useNavigate()
 
@@ -96,9 +107,11 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
               <ThemedText.MediumHeader fontSize={'28px'} lineHeight={'36px'}>
                 {formatEthPrice(asset.priceInfo.ETHPrice)}
               </ThemedText.MediumHeader>
-              <ThemedText.BodySecondary lineHeight={'24px'}>
-                {ethNumberStandardFormatter(asset.priceInfo.USDPrice, true, true)}
-              </ThemedText.BodySecondary>
+              {USDPrice && (
+                <ThemedText.BodySecondary lineHeight={'24px'}>
+                  {ethNumberStandardFormatter(USDPrice, true, true)}
+                </ThemedText.BodySecondary>
+              )}
             </>
           ) : (
             <ThemedText.BodySecondary fontSize="14px" lineHeight={'20px'}>
@@ -156,6 +169,15 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetToBag = useBag((s) => s.addAssetToBag)
   const removeAssetFromBag = useBag((s) => s.removeAssetFromBag)
+  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
+
+  const USDPrice = useMemo(
+    () =>
+      fetchedPriceData &&
+      asset.priceInfo &&
+      (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString(),
+    [asset.priceInfo, fetchedPriceData]
+  )
 
   const assetInBag = useMemo(() => {
     return itemsInBag.some((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
@@ -182,9 +204,11 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             <ThemedText.MediumHeader fontSize={'28px'} lineHeight={'36px'}>
               {formatEthPrice(asset.priceInfo.ETHPrice)}
             </ThemedText.MediumHeader>
-            <ThemedText.BodySecondary lineHeight={'24px'}>
-              {ethNumberStandardFormatter(asset.priceInfo.USDPrice, true, true)}
-            </ThemedText.BodySecondary>
+            {USDPrice && (
+              <ThemedText.BodySecondary lineHeight={'24px'}>
+                {ethNumberStandardFormatter(USDPrice, true, true)}
+              </ThemedText.BodySecondary>
+            )}
           </PriceRow>
           {expirationDate && (
             <ThemedText.BodySecondary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>

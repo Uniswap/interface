@@ -1,3 +1,4 @@
+import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { MouseoverTooltip } from 'components/Tooltip/index'
@@ -14,6 +15,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
 import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
+import { fetchPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
@@ -24,6 +26,7 @@ import { toSignificant } from 'nft/utils/toSignificant'
 import qs from 'query-string'
 import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import { useQuery } from 'react-query'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 
@@ -129,6 +132,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const [isSelected, setSelected] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const { account: address, provider } = useWeb3React()
+  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
 
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
@@ -174,6 +178,14 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       }).then(setIsOwned)
     }
   }, [asset, address, provider])
+
+  const USDPrice = useMemo(
+    () =>
+      fetchedPriceData &&
+      asset.priceInfo &&
+      (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString(),
+    [asset.priceInfo, fetchedPriceData]
+  )
 
   return (
     <AnimatedBox
@@ -365,9 +377,11 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                   <Row as="span" className={subhead} color="textPrimary">
                     {formatEthPrice(asset.priceInfo.ETHPrice)} <Eth2Icon />
                   </Row>
-                  <Box as="span" color="textSecondary" className={bodySmall}>
-                    ${toSignificant(asset.priceInfo.USDPrice)}
-                  </Box>
+                  {USDPrice && (
+                    <Box as="span" color="textSecondary" className={bodySmall}>
+                      ${toSignificant(USDPrice)}
+                    </Box>
+                  )}
                 </Row>
                 {asset.sellorders?.[0].orderClosingDate ? <CountdownTimer sellOrder={asset.sellorders[0]} /> : null}
               </Column>
