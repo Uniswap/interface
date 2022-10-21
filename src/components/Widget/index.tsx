@@ -34,6 +34,10 @@ export const WIDGET_WIDTH = 360
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
+function useWidgetTheme() {
+  return useIsDarkMode() ? DARK_THEME : LIGHT_THEME
+}
+
 export interface WidgetProps {
   defaultToken?: Currency
   onTokensChange?: (input: Currency | undefined, output: Currency | undefined) => void
@@ -41,10 +45,9 @@ export interface WidgetProps {
 }
 
 export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick }: WidgetProps) {
-  const locale = useActiveLocale()
-  const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
   const { connector, provider } = useWeb3React()
-
+  const locale = useActiveLocale()
+  const theme = useWidgetTheme()
   const { inputs, tokenSelector } = useSyncWidgetInputs(defaultToken)
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
@@ -132,7 +135,7 @@ export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick
   )
 
   if (!inputs.value.INPUT && !inputs.value.OUTPUT) {
-    return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
+    return <WidgetSkeleton />
   }
 
   return (
@@ -161,4 +164,9 @@ export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick
       {tokenSelector}
     </>
   )
+}
+
+export function WidgetSkeleton() {
+  const theme = useWidgetTheme()
+  return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
 }
