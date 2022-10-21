@@ -1,24 +1,22 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay'
 import { useEagerNavigation, useEagerRootNavigation } from 'src/app/navigation/useEagerNavigation'
+import { transactionListQuery } from 'src/components/TransactionList/TransactionList'
+import { TransactionListQuery } from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
 import { PollingInterval } from 'src/constants/misc'
 import { preloadMapping } from 'src/data/preloading'
 import { portfolioBalanceQuery } from 'src/features/balances/PortfolioBalance'
 import { PortfolioBalanceQuery } from 'src/features/balances/__generated__/PortfolioBalanceQuery.graphql'
 import { useActiveAccountAddress } from 'src/features/wallet/hooks'
-import { activityScreenQuery } from 'src/screens/ActivityScreen'
-import { externalProfileScreenQuery } from 'src/screens/ExternalProfileScreen'
 import { Screens, Tabs } from 'src/screens/Screens'
-import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
-import { ExternalProfileScreenQuery } from 'src/screens/__generated__/ExternalProfileScreenQuery.graphql'
 
 /**
  * Utility hook to simplify navigating to Activity screen.
  * Preloads query needed to render transaction list.
  */
 export function useEagerActivityNavigation() {
-  const { registerNavigationIntent, preloadedNavigate } = useEagerNavigation<ActivityScreenQuery>(
-    activityScreenQuery,
+  const { registerNavigationIntent, preloadedNavigate } = useEagerNavigation<TransactionListQuery>(
+    transactionListQuery,
     PollingInterval.Normal
   )
 
@@ -42,11 +40,10 @@ export function useEagerActivityNavigation() {
  * Preloads query neede to render transaction list.
  */
 export function useEagerExternalProfileNavigation() {
-  const { registerNavigationIntent, preloadedNavigate } =
-    useEagerNavigation<ExternalProfileScreenQuery>(
-      externalProfileScreenQuery,
-      PollingInterval.Normal
-    )
+  const { registerNavigationIntent, preloadedNavigate } = useEagerNavigation<TransactionListQuery>(
+    transactionListQuery,
+    PollingInterval.Normal
+  )
 
   const preload = (address: string) => {
     registerNavigationIntent(
@@ -65,7 +62,7 @@ export function useEagerExternalProfileNavigation() {
 
 export function useEagerExternalProfileRootNavigation() {
   const { registerNavigationIntent, preloadedNavigate } =
-    useEagerRootNavigation<ExternalProfileScreenQuery>(Tabs.Explore, externalProfileScreenQuery)
+    useEagerRootNavigation<TransactionListQuery>(Tabs.Explore, transactionListQuery)
 
   const preload = useCallback(
     (address: string) => {

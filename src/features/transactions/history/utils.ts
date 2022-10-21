@@ -1,16 +1,15 @@
 import dayjs from 'dayjs'
 import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
+import {
+  Chain,
+  TokenStandard,
+  TransactionListQuery$data,
+} from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
 import { ChainId } from 'src/constants/chains'
 import { nativeOnChain } from 'src/constants/tokens'
 import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
-import {
-  ActivityScreenQuery$data,
-  Chain,
-  TokenStandard,
-} from 'src/screens/__generated__/ActivityScreenQuery.graphql'
-import { ExternalProfileScreenQuery$data } from 'src/screens/__generated__/ExternalProfileScreenQuery.graphql'
 
 interface Asset {
   readonly address: string | null
@@ -97,9 +96,7 @@ export function formatTransactionsByDate(
  * Transforms api txn data to formatted TransactionDetails array
  * @param data Transaction history data response
  */
-export function parseDataResponseToTransactionDetails(
-  data: ActivityScreenQuery$data | ExternalProfileScreenQuery$data
-) {
+export function parseDataResponseToTransactionDetails(data: TransactionListQuery$data) {
   if (data.assetActivities) {
     return data.assetActivities.reduce((accum: TransactionDetails[], t) => {
       const parsed = extractTransactionDetails(t)

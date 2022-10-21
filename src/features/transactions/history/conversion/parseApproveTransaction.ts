@@ -1,13 +1,12 @@
+import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import {
   ApproveTransactionInfo,
   NFTApproveTransactionInfo,
   TransactionType,
 } from 'src/features/transactions/types'
-import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
-import { ExternalProfileScreenQueryResponse } from 'src/screens/ExternalProfileScreen'
 
 export default function parseApproveTransaction(
-  transaction: ActivityScreenQueryResponse | ExternalProfileScreenQueryResponse
+  transaction: TransactionListQueryResponse
 ): ApproveTransactionInfo | NFTApproveTransactionInfo | undefined {
   const change = transaction?.assetChanges[0]
   if (!change) return undefined

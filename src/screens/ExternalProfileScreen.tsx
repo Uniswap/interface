@@ -1,13 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { graphql } from 'babel-plugin-relay/macro'
-import React, { Suspense, useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
-import { PreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList } from 'src/app/navigation/types'
-import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
 import EyeOffIcon from 'src/assets/icons/eye-off.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -20,89 +17,13 @@ import { Flex } from 'src/components/layout'
 import TabbedScrollScreen, {
   TabViewScrollProps,
 } from 'src/components/layout/screens/TabbedScrollScreen'
-import { Loading } from 'src/components/loading'
 import ProfileActivityTab from 'src/components/profile/tabs/ProfileActivityTab'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
-import { parseDataResponseToTransactionDetails } from 'src/features/transactions/history/utils'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
-import {
-  ExternalProfileScreenQuery,
-  ExternalProfileScreenQuery$data,
-} from 'src/screens/__generated__/ExternalProfileScreenQuery.graphql'
 
 type Props = NativeStackScreenProps<ExploreStackParamList, Screens.ExternalProfile>
-
-export const externalProfileScreenQuery = graphql`
-  query ExternalProfileScreenQuery($address: String!) {
-    assetActivities(address: $address, pageSize: 50, page: 1) {
-      timestamp
-      type
-      transaction {
-        hash
-        status
-        to
-        from
-      }
-      assetChanges {
-        __typename
-        ... on TokenTransfer {
-          asset {
-            name
-            symbol
-            address
-            decimals
-            chain
-          }
-          tokenStandard
-          quantity
-          sender
-          recipient
-          direction
-          transactedValue {
-            currency
-            value
-          }
-        }
-        ... on NftTransfer {
-          asset {
-            name
-            nftContract {
-              chain
-              address
-            }
-            tokenId
-            imageUrl
-            collection {
-              name
-            }
-          }
-          nftStandard
-          sender
-          recipient
-          direction
-        }
-        ... on TokenApproval {
-          asset {
-            name
-            symbol
-            decimals
-            address
-            chain
-          }
-          tokenStandard
-          approvedAddress
-          quantity
-        }
-      }
-    }
-  }
-`
-
-export type ExternalProfileScreenQueryResponse = NonNullable<
-  ExternalProfileScreenQuery$data['assetActivities']
->[0]
 
 const TOKENS_KEY = 'profile-tokens'
 const NFTS_KEY = 'profile-nfts'
@@ -113,36 +34,9 @@ export function ExternalProfileScreen({
     params: { address, preloadedQuery },
   },
 }: Props) {
-  if (!preloadedQuery) {
-    return <Loading />
-  }
-
-  return (
-    <Suspense fallback={<Loading />}>
-      <ExternalProfileScreenInner address={address} preloadedQuery={preloadedQuery} />
-    </Suspense>
-  )
-}
-
-function ExternalProfileScreenInner({
-  address,
-  preloadedQuery,
-}: {
-  address: string
-  preloadedQuery: PreloadedQuery<ExternalProfileScreenQuery>
-}) {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-
-  const transactionData = useEagerLoadedQuery<ExternalProfileScreenQuery>(
-    externalProfileScreenQuery,
-    preloadedQuery
-  )
-  const formattedTransactions = useMemo(
-    () => (transactionData ? parseDataResponseToTransactionDetails(transactionData) : []),
-    [transactionData]
-  )
 
   const isWatching = useAppSelector(selectWatchedAddressSet).has(address)
 
@@ -180,8 +74,9 @@ function ExternalProfileScreenInner({
         case ACTIVITY_KEY:
           return (
             <ProfileActivityTab
+              ownerAddress={address}
+              preloadedQuery={preloadedQuery}
               tabViewScrollProps={scrollProps}
-              transactions={formattedTransactions}
             />
           )
         case NFTS_KEY:
@@ -203,7 +98,7 @@ function ExternalProfileScreenInner({
       }
       return null
     },
-    [address, formattedTransactions]
+    [address, preloadedQuery]
   )
 
   return (

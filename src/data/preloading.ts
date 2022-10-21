@@ -1,8 +1,7 @@
 import { AppStackParamList } from 'src/app/navigation/types'
+import { TransactionListQuery$variables } from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { Screens } from 'src/screens/Screens'
-import { ActivityScreenQuery$variables } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
-import { ExternalProfileScreenQuery$variables } from 'src/screens/__generated__/ExternalProfileScreenQuery.graphql'
 import { TokenDetailsScreenQuery$variables } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 
 /** Helper to map from screen params to query variables. */
@@ -17,12 +16,12 @@ export const preloadMapping = {
       contract: currencyIdToContractInput(currencyId),
     }
   },
-  activity: ({ address }: ActivityScreenQuery$variables) => {
+  activity: ({ address }: TransactionListQuery$variables) => {
     return {
       address,
     }
   },
-  externalProfile: ({ address }: ExternalProfileScreenQuery$variables) => {
+  externalProfile: ({ address }: TransactionListQuery$variables) => {
     return {
       address,
     }

@@ -1,9 +1,9 @@
+import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import { ChainId } from 'src/constants/chains'
 import parseApproveTransaction from 'src/features/transactions/history/conversion/parseApproveTransaction'
 import parseNFTMintTransaction from 'src/features/transactions/history/conversion/parseMintTransaction'
 import parseReceiveTransaction from 'src/features/transactions/history/conversion/parseReceiveTransaction'
 import parseSendTransaction from 'src/features/transactions/history/conversion/parseSendTransaction'
-
 import parseTradeTransaction from 'src/features/transactions/history/conversion/parseTradeTransaction'
 import {
   TransactionDetails,
@@ -11,8 +11,6 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
-import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
-import { ExternalProfileScreenQueryResponse } from 'src/screens/ExternalProfileScreen'
 
 /**
  * Parses txn API response item and identifies known txn type. Helps strictly
@@ -22,7 +20,7 @@ import { ExternalProfileScreenQueryResponse } from 'src/screens/ExternalProfileS
  * @returns Formatted TransactionDetails object.
  */
 export default function extractTransactionDetails(
-  transaction: ActivityScreenQueryResponse | ExternalProfileScreenQueryResponse
+  transaction: TransactionListQueryResponse
 ): TransactionDetails | null {
   if (!transaction) return null
 

@@ -1,16 +1,19 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { PreloadedQuery } from 'react-relay'
 import { Box, Flex } from 'src/components/layout'
 import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { Text } from 'src/components/Text'
 import TransactionList from 'src/components/TransactionList/TransactionList'
-import { TransactionDetails } from 'src/features/transactions/types'
+import { TransactionListQuery } from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
 
 export default function ProfileActivityTab({
-  transactions,
+  ownerAddress,
+  preloadedQuery,
   tabViewScrollProps,
 }: {
-  transactions: TransactionDetails[]
+  ownerAddress: Address
+  preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
   tabViewScrollProps: TabViewScrollProps
 }) {
   const { t } = useTranslation()
@@ -27,9 +30,10 @@ export default function ProfileActivityTab({
             </Text>
           </Flex>
         }
+        ownerAddress={ownerAddress}
+        preloadedQuery={preloadedQuery}
         readonly={true}
         tabViewScrollProps={tabViewScrollProps}
-        transactions={transactions}
       />
     </Box>
   )

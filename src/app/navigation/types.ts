@@ -8,11 +8,10 @@ import {
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { PreloadedQuery } from 'react-relay'
 import { EducationContentType } from 'src/components/education'
+import { TransactionListQuery } from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
-import { ActivityScreenQuery } from 'src/screens/__generated__/ActivityScreenQuery.graphql'
-import { ExternalProfileScreenQuery } from 'src/screens/__generated__/ExternalProfileScreenQuery.graphql'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 
 type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
@@ -36,7 +35,7 @@ export type ExploreStackParamList = {
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
   [Screens.ExternalProfile]: {
     address: string
-    preloadedQuery: NullUndefined<PreloadedQuery<ExternalProfileScreenQuery>>
+    preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
   }
   [Screens.PortfolioTokens]: { owner: Address | undefined }
 }
@@ -120,7 +119,7 @@ export type AppStackParamList = {
   }
   [Screens.NFTItem]: NFTItem
   [Screens.Activity]: {
-    preloadedQuery: NullUndefined<PreloadedQuery<ActivityScreenQuery>>
+    preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
   }
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }

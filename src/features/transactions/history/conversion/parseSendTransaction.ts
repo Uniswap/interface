@@ -1,14 +1,13 @@
+import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import { AssetType } from 'src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
 } from 'src/features/transactions/history/utils'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
-import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
-import { ExternalProfileScreenQueryResponse } from 'src/screens/ExternalProfileScreen'
 
 export default function parseSendTransaction(
-  transaction: ActivityScreenQueryResponse | ExternalProfileScreenQueryResponse
+  transaction: TransactionListQueryResponse
 ): SendTokenTransactionInfo | undefined {
   const change = transaction?.assetChanges[0]
 

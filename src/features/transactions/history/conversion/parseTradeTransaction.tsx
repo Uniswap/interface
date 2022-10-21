@@ -1,4 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import {
@@ -12,12 +13,10 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'src/features/transactions/types'
-import { ActivityScreenQueryResponse } from 'src/screens/ActivityScreen'
-import { ExternalProfileScreenQueryResponse } from 'src/screens/ExternalProfileScreen'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 export default function parseTradeTransaction(
-  transaction: ActivityScreenQueryResponse | ExternalProfileScreenQueryResponse
+  transaction: TransactionListQueryResponse
 ): ExactInputSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
   // for detecting wraps
   const nativeCurrencyID = buildNativeCurrencyId(ChainId.Mainnet).toLocaleLowerCase()
