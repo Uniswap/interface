@@ -174,6 +174,7 @@ export const PriceRange = () => {
           min={0}
           max={100}
           range
+          step={0.0001}
           value={prevMinMax}
           trackStyle={{
             top: '3px',
