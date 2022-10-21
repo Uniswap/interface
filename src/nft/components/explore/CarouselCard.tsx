@@ -1,7 +1,7 @@
 import { VerifiedIcon } from 'nft/components/icons'
 import { TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const CarouselCardContainer = styled.div`
@@ -98,6 +98,8 @@ interface CarouselCardProps {
 }
 
 export const CarouselCard = ({ collection }: CarouselCardProps) => {
+  const theme = useTheme()
+
   return (
     <CarouselCardContainer>
       <CardHeaderContainer src={collection.bannerImageUrl}>
@@ -105,7 +107,7 @@ export const CarouselCard = ({ collection }: CarouselCardProps) => {
           <CollectionImage src={collection.imageUrl} />
           <CardNameRow>
             <CollectionNameContainer>
-              <ThemedText.MediumHeader fontWeight="500" lineHeight="28px">
+              <ThemedText.MediumHeader color={theme.accentTextLightPrimary} fontWeight="500" lineHeight="28px">
                 {collection.name}
               </ThemedText.MediumHeader>
             </CollectionNameContainer>
@@ -120,7 +122,7 @@ export const CarouselCard = ({ collection }: CarouselCardProps) => {
       </CardHeaderContainer>
       <CardBottomContainer>
         <HeaderRow>Uniswap</HeaderRow>
-        <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH</HeaderRow>
+        <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
         <HeaderRow>324 Listings</HeaderRow>
         <TableElement>OpenSea</TableElement>
         <TableElement>7.1 ETH</TableElement>
