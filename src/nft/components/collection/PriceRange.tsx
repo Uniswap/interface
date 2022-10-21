@@ -165,7 +165,7 @@ export const PriceRange = () => {
           disabled={!priceRangeLow || !priceRangeHigh}
           defaultValue={[0, 100]}
           value={prevMinMax}
-          className={isDarktheme ? styles.sliderDark : styles.sliderLight}
+          className={styles.slider}
           trackClassName={styles.tracker}
           thumbClassName={styles.thumb}
           onChange={handleSliderLogic}

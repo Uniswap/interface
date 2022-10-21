@@ -5,19 +5,12 @@ import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
 // https://www.npmjs.com/package/react-slider
 // https://codesandbox.io/s/peaceful-pine-gqszx6?file=/src/styles.css:587-641
 
-export const sliderLight = style([
+export const slider = style([
   sprinkles({
     height: '8',
     marginTop: '20',
     borderRadius: '8',
     width: 'full',
-  }),
-])
-
-export const sliderDark = style([
-  sliderLight,
-  sprinkles({
-    backgroundColor: 'accentAction',
   }),
 ])
 
