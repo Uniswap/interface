@@ -8,6 +8,7 @@ import { CollectionProfile } from 'nft/components/details/CollectionProfile'
 import { Details } from 'nft/components/details/Details'
 import { Traits } from 'nft/components/details/Traits'
 import { CloseDropDownIcon, CornerDownLeftIcon, Eth2Icon, ShareIcon, SuspiciousIcon } from 'nft/components/icons'
+import { ActivityEvent, ActivityEventResponse, ActivityEventType } from 'nft/types'
 import { ExpandableText } from 'nft/components/layout/ExpandableText'
 import { badge, bodySmall, buttonTextMedium, caption, headlineMedium, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
@@ -32,6 +33,9 @@ import InfoContainer from './InfoContainer'
 import TraitsContainer from './TraitsContainer'
 import rarityIcon from './rarity.svg'
 import DetailsContainer from './DetailsContainer'
+import { useQuery } from 'react-query'
+import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
+import { putCommas } from 'nft/utils/putCommas'
 
 import * as styles from './AssetDetails.css'
 import { description } from '../collection/CollectionStats.css'
@@ -180,6 +184,41 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     return MediaType.Image
   }, [asset])
 
+  const contractAddress = asset.address
+  const token_id = asset.tokenId
+
+  const { data: eventsData } = useQuery<ActivityEventResponse>(
+    [
+      'collectionActivity',
+      {
+        contractAddress,
+      },
+    ],
+    async ({ pageParam = '' }) => {
+      return await ActivityFetcher(
+        contractAddress,
+        {
+          token_id,
+          eventTypes: [ActivityEventType.Sale],
+        },
+        pageParam,
+        '1'
+      )
+    },
+    {
+      getNextPageParam: (lastPage) => {
+        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
+      },
+      refetchInterval: 15000,
+      refetchIntervalInBackground: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    }
+  )
+
+  const lastSalePrice = eventsData?.events ? eventsData?.events[0].price : null
+  const formattedPrice = lastSalePrice ? putCommas(formatEthPrice(lastSalePrice)).toString() : null
+
   // useEffect(() => {
   //   if (asset.creator) setCreatorAddress(asset.creator.address)
   //   if (asset.owner) setOwnerAddress(asset.owner)
@@ -237,7 +276,10 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       >
         <TraitsContainer asset={asset} collection={collection} />
       </InfoContainer>
-      <InfoContainer primaryHeader="Activity" secondaryHeader={null}>
+      <InfoContainer
+        primaryHeader="Activity"
+        secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
+      >
         <AssetActivity contractAddress={asset.address} token_id={asset.tokenId} />
       </InfoContainer>
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>

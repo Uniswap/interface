@@ -2,7 +2,7 @@ import { useEffect, useReducer, useCallback, useMemo, useState } from 'react'
 import clsx from 'clsx'
 import { ActivityEvent, ActivityEventResponse, ActivityEventType } from 'nft/types'
 import { Box } from 'nft/components/Box'
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery, useQuery } from 'react-query'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import styled from 'styled-components/macro'
 import { shortenAddress } from 'nft/utils/address'
@@ -60,14 +60,7 @@ const initialFilterState = {
 
 const AssetActivity = ({ contractAddress, token_id }: { contractAddress: string; token_id: string }) => {
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
-  const {
-    data: eventsData,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isSuccess,
-    isLoading,
-  } = useInfiniteQuery<ActivityEventResponse>(
+  const { data: eventsData } = useQuery<ActivityEventResponse>(
     [
       'collectionActivity',
       {
@@ -85,7 +78,7 @@ const AssetActivity = ({ contractAddress, token_id }: { contractAddress: string;
             .map((key) => key as ActivityEventType),
         },
         pageParam,
-        '10'
+        '5'
       )
     },
     {
@@ -105,17 +98,7 @@ const AssetActivity = ({ contractAddress, token_id }: { contractAddress: string;
       .map((key) => key as ActivityEventType)
   )
 
-  const pages = eventsData?.pages
-  const events = pages && pages.length ? pages[0].events : []
-
-  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
-
-  useEffect(() => {
-    fetchPrice().then((price) => {
-      setEthPriceInUSD(price || 0)
-    })
-  }, [])
-
+  const events = eventsData?.events ? eventsData?.events : []
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
       const isActive = activeFilters[eventType]
@@ -134,8 +117,6 @@ const AssetActivity = ({ contractAddress, token_id }: { contractAddress: string;
     },
     [activeFilters]
   )
-
-  console.log(events)
 
   return (
     <div>
