@@ -8,6 +8,7 @@ import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
+import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetails'
 import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
@@ -23,7 +24,7 @@ import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useAtomValue } from 'jotai/utils'
 import { useTokenFromQuery } from 'lib/hooks/useCurrency'
 import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -81,6 +82,7 @@ export default function TokenDetails() {
     chain,
     timePeriod
   )
+  console.log('ZZMP', tokenAddress, tokenQueryData?.address)
   const queryToken = useTokenFromQuery(isNative ? undefined : { ...tokenQueryData, chainId: pageChainId })
   const token = isNative ? nativeCurrency : queryToken
   const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddress
@@ -92,27 +94,34 @@ export default function TokenDetails() {
   const isBlockedToken = tokenWarning?.canProceed === false
 
   const navigate = useNavigate()
-  const navigateToTokenForChain = useCallback(
+  // Wrapping navigate in a transition prevents Suspense from unnecessarily showing fallbacks again.
+  const [isPending, startTransition] = useTransition()
+  const transition = useCallback(
+    // Typechecking requires that we differentiate the string/number overloads.
+    (to: string | number) => startTransition(() => (typeof to === 'string' ? navigate(to) : navigate(to))),
+    [navigate]
+  )
+  const transitionToTokenForChain = useCallback(
     (chain: Chain) => {
       const chainName = chain.toLowerCase()
       const token = tokenQueryData?.project?.tokens.find((token) => token.chain === chain && token.address)
       if (isNative) {
-        navigate(`/tokens/${chainName}/${NATIVE_CHAIN_ID}`)
+        transition(`/tokens/${chainName}/${NATIVE_CHAIN_ID}`)
       } else if (token) {
-        navigate(`/tokens/${chainName}/${token.address}`)
+        transition(`/tokens/${chainName}/${token.address}`)
       }
     },
-    [isNative, navigate, tokenQueryData?.project?.tokens]
+    [isNative, tokenQueryData?.project?.tokens, transition]
   )
-  useOnGlobalChainSwitch(navigateToTokenForChain)
-  const navigateToWidgetSelectedToken = useCallback(
+  useOnGlobalChainSwitch(transitionToTokenForChain)
+  const transitionToWidgetSelectedToken = useCallback(
     (input: Currency | undefined, output: Currency | undefined) => {
       const update = output || input
       if (!token || input?.equals(token) || output?.equals(token) || !update) return
       const address = update.isNative ? NATIVE_CHAIN_ID : update.address
-      navigate(`/tokens/${chainName}/${address}`)
+      transition(`/tokens/${chainName}/${address}`)
     },
-    [chainName, navigate, token]
+    [chainName, token, transition]
   )
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
@@ -135,65 +144,64 @@ export default function TokenDetails() {
   return (
     <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ tokenAddress, tokenName: chainName }} shouldLogImpression>
       <TokenDetailsLayout>
-        {tokenQueryData && (
-          <>
-            <LeftPanel>
-              <BreadcrumbNavLink to={`/tokens/${chainName}`}>
-                <ArrowLeft size={14} /> Tokens
-              </BreadcrumbNavLink>
-              <ChartSection
-                token={tokenQueryData}
-                currency={token}
-                nativeCurrency={isNative ? nativeCurrency : undefined}
-                prices={prices}
-              />
-              <StatsSection
-                TVL={tokenQueryData.market?.totalValueLocked?.value}
-                volume24H={tokenQueryData.market?.volume24H?.value}
-                priceHigh52W={tokenQueryData.market?.priceHigh52W?.value}
-                priceLow52W={tokenQueryData.market?.priceLow52W?.value}
-              />
-              <Hr />
-              <AboutSection
-                address={tokenQueryData.address ?? ''}
-                description={tokenQueryData.project?.description}
-                homepageUrl={tokenQueryData.project?.homepageUrl}
-                twitterName={tokenQueryData.project?.twitterName}
-              />
-              <AddressSection address={tokenQueryData.address ?? ''} />
-            </LeftPanel>
-            <RightPanel>
-              <Widget
-                defaultToken={token === null ? undefined : token ?? nativeCurrency} // a null token is still loading, and should not be overridden.
-                onTokensChange={navigateToWidgetSelectedToken}
-                onReviewSwapClick={onReviewSwapClick}
-              />
-              {tokenWarning && (
-                <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />
-              )}
-              <BalanceSummary
-                tokenAmount={tokenBalance}
-                nativeCurrencyAmount={nativeCurrencyBalance}
-                isNative={isNative}
-              />
-            </RightPanel>
-
-            {tokenQueryAddress && (
-              <MobileBalanceSummaryFooter
-                tokenAmount={tokenBalance}
-                tokenAddress={tokenQueryAddress}
-                nativeCurrencyAmount={nativeCurrencyBalance}
-                isNative={isNative}
-              />
+        {tokenQueryData && !isPending ? (
+          <LeftPanel>
+            <BreadcrumbNavLink to={`/tokens/${chainName}`}>
+              <ArrowLeft size={14} /> Tokens
+            </BreadcrumbNavLink>
+            <ChartSection
+              token={tokenQueryData}
+              currency={token}
+              nativeCurrency={isNative ? nativeCurrency : undefined}
+              prices={prices}
+            />
+            <StatsSection
+              TVL={tokenQueryData.market?.totalValueLocked?.value}
+              volume24H={tokenQueryData.market?.volume24H?.value}
+              priceHigh52W={tokenQueryData.market?.priceHigh52W?.value}
+              priceLow52W={tokenQueryData.market?.priceLow52W?.value}
+            />
+            {!isNative && (
+              <>
+                <Hr />
+                <AboutSection
+                  address={tokenQueryData.address ?? ''}
+                  description={tokenQueryData.project?.description}
+                  homepageUrl={tokenQueryData.project?.homepageUrl}
+                  twitterName={tokenQueryData.project?.twitterName}
+                />
+                <AddressSection address={tokenQueryData.address ?? ''} />
+              </>
             )}
-          </>
+          </LeftPanel>
+        ) : (
+          <LoadingTokenDetail />
         )}
-        {tokenAddress && (
+
+        <RightPanel>
+          <Widget
+            defaultToken={token === null ? undefined : token ?? nativeCurrency} // a null token is still loading, and should not be overridden.
+            onTokensChange={transitionToWidgetSelectedToken}
+            onReviewSwapClick={onReviewSwapClick}
+          />
+          {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress ?? ''} warning={tokenWarning} />}
+          <BalanceSummary tokenAmount={tokenBalance} nativeCurrencyAmount={nativeCurrencyBalance} isNative={isNative} />
+        </RightPanel>
+
+        {tokenQueryAddress && (
+          <MobileBalanceSummaryFooter
+            tokenAmount={tokenBalance}
+            tokenAddress={tokenQueryAddress}
+            nativeCurrencyAmount={nativeCurrencyBalance}
+            isNative={isNative}
+          />
+        )}
+        {tokenQueryAddress && (
           <TokenSafetyModal
             isOpen={isBlockedToken || !!continueSwap}
-            tokenAddress={tokenAddress}
+            tokenAddress={tokenQueryAddress}
             onContinue={() => onResolveSwap(true)}
-            onBlocked={() => navigate(-1)}
+            onBlocked={() => transition(-1)}
             onCancel={() => onResolveSwap(false)}
             showCancel={true}
           />

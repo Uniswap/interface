@@ -1,5 +1,7 @@
 import { WidgetSkeleton } from 'components/Widget'
 import { LeftPanel, RightPanel, TokenDetailsLayout } from 'pages/TokenDetails'
+import { ArrowLeft } from 'react-feather'
+import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { LoadingBubble } from '../loading'
@@ -11,20 +13,21 @@ import { DeltaContainer, TokenPrice } from './PriceChart'
 import { StatPair, StatWrapper, TokenStatsSection } from './StatsSection'
 
 const LoadingChartContainer = styled(ChartContainer)`
-  height: 336px;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  height: 313px;
   overflow: hidden;
 `
 
 /* Loading state bubbles */
 const LoadingDetailBubble = styled(LoadingBubble)`
-  height: 16px;
+  height: 17px;
   width: 180px;
 `
 const TitleLoadingBubble = styled(LoadingDetailBubble)`
   width: 140px;
 `
 const SquareLoadingBubble = styled(LoadingDetailBubble)`
-  height: 32px;
+  height: 34px;
   border-radius: 8px;
   margin-bottom: 10px;
 `
@@ -48,9 +51,11 @@ const StatLoadingBubble = styled(SquareLoadingBubble)`
   width: 116px;
 `
 const StatsLoadingContainer = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  width: 100%;
   display: flex;
-  gap: 24px;
   flex-wrap: wrap;
+  gap: 24px;
 `
 const ChartAnimation = styled.div`
   display: flex;
@@ -81,10 +86,11 @@ export function Wave() {
 
 /* Loading State: row component with loading bubbles */
 export default function LoadingTokenDetail() {
+  const { chainName } = useParams<{ chainName?: string }>()
   return (
     <LeftPanel>
-      <BreadcrumbNavLink to="/explore">
-        <Space heightSize={20} />
+      <BreadcrumbNavLink to={{ chainName } ? `/tokens/${chainName}` : `/explore`}>
+        <ArrowLeft size={14} /> Tokens
       </BreadcrumbNavLink>
       <ChartHeader>
         <TokenInfoContainer>
@@ -110,8 +116,8 @@ export default function LoadingTokenDetail() {
             </ChartAnimation>
           </div>
         </LoadingChartContainer>
-        <Space heightSize={32} />
       </ChartHeader>
+      <Space heightSize={71} />
       <TokenStatsSection>
         <StatsLoadingContainer>
           <StatPair>
@@ -136,6 +142,7 @@ export default function LoadingTokenDetail() {
           </StatPair>
         </StatsLoadingContainer>
       </TokenStatsSection>
+      <Space heightSize={7.5} />
       <AboutContainer>
         <AboutHeader>
           <SquareLoadingBubble />
