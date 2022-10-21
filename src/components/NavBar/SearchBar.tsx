@@ -5,6 +5,7 @@ import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { useTokenSearch } from 'graphql/data/TokenSearch'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { organizeSearchResults } from 'lib/utils/searchBar'
@@ -13,8 +14,7 @@ import { Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { fetchSearchCollections } from 'nft/queries'
-import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
-import { ChangeEvent, useEffect, useReducer, useRef, useState } from 'react'
+import { ChangeEvent, Suspense, useEffect, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
@@ -48,19 +48,20 @@ export const SearchBar = () => {
     }
   )
 
-  const { data: tokens, isLoading: tokensAreLoading } = useQuery(
-    ['searchTokens', debouncedSearchValue],
-    () => fetchSearchTokens(debouncedSearchValue),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  )
+  const tokens = useTokenSearch(debouncedSearchValue)
+  // const { data: tokens, isLoading: tokensAreLoading } = useQuery(
+  //   ['searchTokens', debouncedSearchValue],
+  //   () => fetchSearchTokens(debouncedSearchValue),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     refetchOnMount: false,
+  //     refetchOnReconnect: false,
+  //   }
+  // )
 
   const isNFTPage = pathname.includes('/nfts')
 
-  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
+  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens, collections ?? [])
 
   // close dropdown on escape
   useEffect(() => {
@@ -153,13 +154,15 @@ export const SearchBar = () => {
         </Row>
         <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
           {isOpen && (
-            <SearchBarDropdown
-              toggleOpen={toggleOpen}
-              tokens={reducedTokens}
-              collections={reducedCollections}
-              hasInput={debouncedSearchValue.length > 0}
-              isLoading={tokensAreLoading || (collectionsAreLoading && phase1Flag === NftVariant.Enabled)}
-            />
+            <Suspense>
+              <SearchBarDropdown
+                toggleOpen={toggleOpen}
+                tokens={reducedTokens}
+                collections={reducedCollections}
+                hasInput={debouncedSearchValue.length > 0}
+                isLoading={false || (collectionsAreLoading && phase1Flag === NftVariant.Enabled)}
+              />
+            </Suspense>
           )}
         </Box>
       </Box>

@@ -3,13 +3,13 @@ import { sendAnalyticsEvent } from 'analytics'
 import { EventName } from 'analytics/constants'
 import { usePreloadedTopTokens } from 'components/TopTokensProvider'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { SearchedToken } from 'graphql/data/TokenSearch'
 import { TopToken, topTokens100Query } from 'graphql/data/TopTokens'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
 import { useSearchHistory } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
-import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
 import { GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
@@ -21,13 +21,15 @@ import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import * as styles from './SearchBar.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
-function isCollection(suggestion: GenieCollection | TrendingCollection | NonNullable<TopToken>) {
-  return (suggestion as TopToken)?.decimals === undefined
+function isCollection(
+  suggestion: GenieCollection | TrendingCollection | NonNullable<TopToken> | NonNullable<SearchedToken>
+) {
+  return (suggestion as TopToken | SearchedToken)?.decimals === undefined
 }
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
-  suggestions: (GenieCollection | NonNullable<TopToken>)[]
+  suggestions: (GenieCollection | NonNullable<TopToken> | NonNullable<SearchedToken>)[]
   header: JSX.Element
   headerIcon?: JSX.Element
   hoveredIndex: number | undefined
@@ -101,7 +103,7 @@ export const SearchBarDropdownSection = ({
 
 interface SearchBarDropdownProps {
   toggleOpen: () => void
-  tokens: NonNullable<TopToken>[]
+  tokens: (NonNullable<TopToken> | NonNullable<SearchedToken>)[]
   collections: GenieCollection[]
   hasInput: boolean
   isLoading: boolean
@@ -123,14 +125,16 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
   )
 
   const { topTokens } = usePreloadedQuery(topTokens100Query, usePreloadedTopTokens())
+  const trendingTokensLength = phase1Flag === NftVariant.Enabled ? (isTokenPage ? 3 : 2) : 4
   const trendingTokens = useMemo(
     () =>
       topTokens
         ? Array.from(topTokens)
             .filter((x): x is NonNullable<TopToken> => !!x)
             .sort((a, b) => (b?.market?.volume?.value ?? 0) - (a?.market?.volume?.value ?? 0))
+            .slice(0, trendingTokensLength)
         : [],
-    [topTokens]
+    [topTokens, trendingTokensLength]
   )
 
   const trendingCollections = useMemo(
@@ -151,20 +155,19 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     [isNFTPage, trendingCollectionResults]
   )
 
-  const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(
-    ['trendingTokens'],
-    () => fetchTrendingTokens(4),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  )
-  useEffect(() => {
-    trendingTokenResults?.forEach(updateSearchHistory)
-  }, [trendingTokenResults, updateSearchHistory])
+  // const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(
+  //   ['trendingTokens'],
+  //   () => fetchTrendingTokens(4),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     refetchOnMount: false,
+  //     refetchOnReconnect: false,
+  //   }
+  // )
+  // useEffect(() => {
+  //   trendingTokenResults?.forEach(updateSearchHistory)
+  // }, [trendingTokenResults, updateSearchHistory])
 
-  const trendingTokensLength = phase1Flag === NftVariant.Enabled ? (isTokenPage ? 3 : 2) : 4
   // const trendingTokens = useMemo(
   //   () =>
   //     trendingTokenResults
@@ -279,7 +282,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
                 suggestions={trendingTokens}
                 header={<Trans>Popular tokens</Trans>}
                 headerIcon={<TrendingArrow />}
-                isLoading={trendingTokensAreLoading}
+                isLoading={false}
               />
             )}
             {!isTokenPage && phase1Flag === NftVariant.Enabled && (
@@ -306,7 +309,6 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     trendingCollections,
     trendingCollectionsAreLoading,
     trendingTokens,
-    trendingTokensAreLoading,
     hoveredIndex,
     phase1Flag,
     toggleOpen,
