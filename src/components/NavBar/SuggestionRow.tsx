@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import { getChainInfo } from 'constants/chainInfo'
 import { Chain } from 'graphql/data/__generated__/TopTokens100Query.graphql'
+import { SearchedToken } from 'graphql/data/TokenSearch'
 import { TopToken } from 'graphql/data/TopTokens'
 import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
@@ -117,7 +118,7 @@ function useBridgedAddress(token: NonNullable<TopToken>): [string | undefined, C
 }
 
 interface TokenRowProps {
-  token: NonNullable<TopToken>
+  token: NonNullable<TopToken> | SearchedToken
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
@@ -129,7 +130,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: GenieCollection | NonNullable<TopToken>) => void }) => state.addItem
+    (state: { addItem: (item: GenieCollection | NonNullable<TopToken> | SearchedToken) => void }) => state.addItem
   )
   const navigate = useNavigate()
 
