@@ -142,7 +142,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
       return (
         <OnboardingScreen
           subtitle={t(
-            'Confirm that you correctly wrote down your recovery phrase by selecting the missing words.'
+            'Confirm that you correctly wrote down your recovery phrase. If your phrase is 12 words, select the missing words to continue.'
           )}
           title={t('Confirm your recovery phrase')}>
           <Flex grow>

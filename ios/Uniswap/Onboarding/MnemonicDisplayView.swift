@@ -40,54 +40,87 @@ class MnemonicDisplayView: UIView {
     }
   
     let mnemonicArray = mnemonic.components(separatedBy: " ")
+    
+    if (mnemonicArray.count > 12) {
+      // Show alternate display for >12 word seed phrases
+      let seedPhraseView = UITextView()
+      seedPhraseView.text =  mnemonic
+      seedPhraseView.font = UIFont.init(name: "Inter-Regular", size: 16)
+      seedPhraseView.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+      seedPhraseView.textAlignment = .center
+      seedPhraseView.layer.cornerRadius = 20
+      seedPhraseView.layer.masksToBounds = true
+      seedPhraseView.translatesAutoresizingMaskIntoConstraints = false
+      seedPhraseView.isScrollEnabled = false
+    
+      if traitCollection.userInterfaceStyle == .light {
+        seedPhraseView.backgroundColor = UIColor.init(red: 237/255.0, green: 239/255.0, blue: 247/255.0, alpha: 1.0)
+        seedPhraseView.layer.borderColor = UIColor.init(red: 94/255.0, green: 104/255.0, blue: 135/255.0, alpha: 0.24).cgColor
+        seedPhraseView.textColor = UIColor.black
+      } else {
+        seedPhraseView.backgroundColor = UIColor.init(red: 14/255.0, green: 17/255.0, blue: 26/255.0, alpha: 1.0)
+        seedPhraseView.layer.borderColor = UIColor.init(red: 153/255.0, green: 161/255.0, blue: 189/255.0, alpha: 0.24).cgColor
+        seedPhraseView.textColor = UIColor.white
+      }
 
-    let parentStackView = UIStackView()
-    parentStackView.translatesAutoresizingMaskIntoConstraints = false
-    parentStackView.alignment = .fill
-    parentStackView.axis = .horizontal
-    parentStackView.distribution = .equalSpacing
-    self.addSubview(parentStackView)
-    
-    let leftStackView = UIStackView()
-    leftStackView.translatesAutoresizingMaskIntoConstraints = false
-    leftStackView.alignment = .fill
-    leftStackView.axis = .vertical
-    leftStackView.distribution = .fillEqually
-    leftStackView.spacing = 12
-    parentStackView.addSubview(leftStackView)
-    
-    let rightStackView = UIStackView()
-    rightStackView.translatesAutoresizingMaskIntoConstraints = false
-    rightStackView.alignment = .fill
-    rightStackView.axis = .vertical
-    rightStackView.distribution = .fillEqually
-    rightStackView.spacing = 12
-    parentStackView.addSubview(rightStackView)
-    
-    let halfway = mnemonicArray.count/2
-    for index in 0...halfway-1 {
-      let wordView = MnemonicWordView(index: index+1, word: mnemonicArray[index])
-      leftStackView.addArrangedSubview(wordView)
-    }
-    
-    for index in halfway...mnemonicArray.count-1 {
-      let wordView = MnemonicWordView(index: index+1, word: mnemonicArray[index])
-      rightStackView.addArrangedSubview(wordView)
-    }
-    
-    NSLayoutConstraint.activate([
-      parentStackView.topAnchor.constraint(equalTo: self.topAnchor),
-      parentStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-      parentStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-      parentStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+      self.addSubview(seedPhraseView)
+
+      NSLayoutConstraint.activate([
+        seedPhraseView.topAnchor.constraint(equalTo: self.topAnchor),
+        seedPhraseView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        seedPhraseView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+      ])
       
-      leftStackView.heightAnchor.constraint(equalTo: parentStackView.heightAnchor),
-      rightStackView.heightAnchor.constraint(equalTo: parentStackView.heightAnchor),
-      leftStackView.widthAnchor.constraint(equalTo: rightStackView.widthAnchor),
       
-      leftStackView.trailingAnchor.constraint(equalTo: rightStackView.leadingAnchor, constant: -20),
-      leftStackView.leadingAnchor.constraint(equalTo: parentStackView.leadingAnchor),
-      rightStackView.trailingAnchor.constraint(equalTo: parentStackView.trailingAnchor)
-    ])
+    } else {
+      let parentStackView = UIStackView()
+      parentStackView.translatesAutoresizingMaskIntoConstraints = false
+      parentStackView.alignment = .fill
+      parentStackView.axis = .horizontal
+      parentStackView.distribution = .equalSpacing
+      self.addSubview(parentStackView)
+      
+      let leftStackView = UIStackView()
+      leftStackView.translatesAutoresizingMaskIntoConstraints = false
+      leftStackView.alignment = .fill
+      leftStackView.axis = .vertical
+      leftStackView.distribution = .fillEqually
+      leftStackView.spacing = 12
+      parentStackView.addSubview(leftStackView)
+      
+      let rightStackView = UIStackView()
+      rightStackView.translatesAutoresizingMaskIntoConstraints = false
+      rightStackView.alignment = .fill
+      rightStackView.axis = .vertical
+      rightStackView.distribution = .fillEqually
+      rightStackView.spacing = 12
+      parentStackView.addSubview(rightStackView)
+      
+      let halfway = mnemonicArray.count/2
+      for index in 0...halfway-1 {
+        let wordView = MnemonicWordView(index: index+1, word: mnemonicArray[index])
+        leftStackView.addArrangedSubview(wordView)
+      }
+      
+      for index in halfway...mnemonicArray.count-1 {
+        let wordView = MnemonicWordView(index: index+1, word: mnemonicArray[index])
+        rightStackView.addArrangedSubview(wordView)
+      }
+      
+      NSLayoutConstraint.activate([
+        parentStackView.topAnchor.constraint(equalTo: self.topAnchor),
+        parentStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+        parentStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+        parentStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        
+        leftStackView.heightAnchor.constraint(equalTo: parentStackView.heightAnchor),
+        rightStackView.heightAnchor.constraint(equalTo: parentStackView.heightAnchor),
+        leftStackView.widthAnchor.constraint(equalTo: rightStackView.widthAnchor),
+        
+        leftStackView.trailingAnchor.constraint(equalTo: rightStackView.leadingAnchor, constant: -20),
+        leftStackView.leadingAnchor.constraint(equalTo: parentStackView.leadingAnchor),
+        rightStackView.trailingAnchor.constraint(equalTo: parentStackView.trailingAnchor)
+      ])
+    }
   }
 }

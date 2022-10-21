@@ -366,7 +366,7 @@
   "If you lose your recovery phrase, you’ll lose access to your assets": "If you lose your recovery phrase, you’ll lose access to your assets",
   "Remember to record your words in the same order as they appear below.": "Remember to record your words in the same order as they appear below.",
   "Write down your recovery phrase": "Write down your recovery phrase",
-  "Confirm that you correctly wrote down your recovery phrase by selecting the missing words.": "Confirm that you correctly wrote down your recovery phrase by selecting the missing words.",
+  "Confirm that you correctly wrote down your recovery phrase. If your phrase is 12 words, select the missing words to continue.": "Confirm that you correctly wrote down your recovery phrase. If your phrase is 12 words, select the missing words to continue.",
   "Confirm your recovery phrase": "Confirm your recovery phrase",
   "To receive notifications, turn on notifications for Uniswap Wallet in your device's settings.": "To receive notifications, turn on notifications for Uniswap Wallet in your device's settings.",
   "Get notified when your transfers, swaps, and approvals complete.": "Get notified when your transfers, swaps, and approvals complete.",

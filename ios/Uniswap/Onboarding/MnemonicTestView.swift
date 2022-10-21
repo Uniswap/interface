@@ -57,6 +57,9 @@ struct MnemonicTest: View {
       props.mnemonicWords = mnemonic.components(separatedBy: " ")
       props.scrambledWords = mnemonic.components(separatedBy: " ").shuffled()
     }
+    if (props.mnemonicWords.count > 12) {
+      props.onTestComplete([:])
+    }
   }
   
   func onSuggestionTapped(word: String) {
@@ -91,39 +94,53 @@ struct MnemonicTest: View {
   
   var body: some View {
     VStack(alignment: HorizontalAlignment.leading, spacing: 0) {
-      HStack(alignment: VerticalAlignment.center, spacing: 12) {
-        VStack(alignment: .leading, spacing: 12) {
-          ForEach((0...5), id: \.self) {index in
-            MnemonicTextField(index: index + 1,
-                              initialText: props.typedWords[index],
-                              shouldShowSmallText: props.shouldShowSmallText,
-                              focusState: getLabelFocusState(index: index),
-                              onFieldTapped: onFieldTapped
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
-          }
+      if (props.mnemonicWords.count > 12) {
+        Text(props.mnemonicWords.joined(separator: " "))
+          .font(Font(UIFont(name: "Inter-Regular", size: 16)!))
+          .multilineTextAlignment(TextAlignment.center)
+          .padding(EdgeInsets(top: 20, leading: 24, bottom: 20, trailing: 24))
+          .foregroundColor(Colors.textPrimary)
+          .background(AnyView(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+              .fill(Colors.backgroundSurface)
+          ))
+          .frame(alignment: Alignment.center)
+          .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+      } else {
+        HStack(alignment: VerticalAlignment.center, spacing: 12) {
+          VStack(alignment: .leading, spacing: 12) {
+            ForEach((0...5), id: \.self) {index in
+              MnemonicTextField(index: index + 1,
+                                initialText: props.typedWords[index],
+                                shouldShowSmallText: props.shouldShowSmallText,
+                                focusState: getLabelFocusState(index: index),
+                                onFieldTapped: onFieldTapped
+              )
+              .frame(maxWidth: .infinity, alignment: .leading)
+            }
+          }.frame(maxWidth: .infinity)
+          VStack(alignment: .leading, spacing: 12) {
+            ForEach((6...11), id: \.self) {index in
+              MnemonicTextField(index: index + 1,
+                                initialText: props.typedWords[index],
+                                shouldShowSmallText: props.shouldShowSmallText,
+                                focusState: getLabelFocusState(index: index),
+                                onFieldTapped: onFieldTapped
+              )
+              .frame(maxWidth: .infinity, alignment: .leading)
+              
+            }
+          }.frame(maxWidth: .infinity)
         }.frame(maxWidth: .infinity)
-        VStack(alignment: .leading, spacing: 12) {
-          ForEach((6...11), id: \.self) {index in
-            MnemonicTextField(index: index + 1,
-                              initialText: props.typedWords[index],
-                              shouldShowSmallText: props.shouldShowSmallText,
-                              focusState: getLabelFocusState(index: index),
-                              onFieldTapped: onFieldTapped
-            )
-            .frame(maxWidth: .infinity, alignment: .leading)
-            
-          }
-        }.frame(maxWidth: .infinity)
-      }.frame(maxWidth: .infinity)
-        .padding([.leading, .trailing], 24)
-      
-      MnemonicTestWordBankView(words: props.scrambledWords,
-                               usedWords: props.typedWords,
-                               labelCallback: onSuggestionTapped,
-                               shouldShowSmallText: props.shouldShowSmallText)
-      .frame(maxWidth: .infinity)
-      .padding([.top, .leading, .trailing], 24)
+          .padding([.leading, .trailing], 24)
+        
+        MnemonicTestWordBankView(words: props.scrambledWords,
+                                 usedWords: props.typedWords,
+                                 labelCallback: onSuggestionTapped,
+                                 shouldShowSmallText: props.shouldShowSmallText)
+        .frame(maxWidth: .infinity)
+        .padding([.top, .leading, .trailing], 24)
+      }
     }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
   }
 }
