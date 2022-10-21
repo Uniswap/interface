@@ -9,9 +9,14 @@ export const ActivityFetcher = async (
     filters && filters.eventTypes
       ? `&${filters.eventTypes?.map((eventType) => `event_types[]=${eventType}`).join('&')}`
       : ''
+
+  const tokenId = filters?.tokenId ? `&tokenId=${filters?.tokenId}` : ''
+  console.log('HELLLOOOO')
+  console.log(tokenId)
+
   const url = `${
     process.env.REACT_APP_GENIE_V3_API_URL
-  }/collections/${contractAddress}/activity?limit=25${filterParam}${cursor ? `&cursor=${cursor}` : ''}`
+  }/collections/${contractAddress}/activity?limit=25${filterParam}${cursor ? `&cursor=${cursor}` : ''}${tokenId}`
 
   const r = await fetch(url, {
     method: 'GET',

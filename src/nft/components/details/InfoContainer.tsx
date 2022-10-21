@@ -11,6 +11,7 @@ const Header = styled.div`
   cursor: pointer;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   margin-top: 28px;
+  width: 100%;
 `
 
 const PrimaryHeader = styled.span`
@@ -44,10 +45,10 @@ const InfoContainer = ({
   primaryHeader: string
   secondaryHeader: React.ReactNode
 }) => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <>
+    <div>
       <Header onClick={() => setIsOpen(!isOpen)}>
         <PrimaryHeader>{primaryHeader}</PrimaryHeader>
         <SecondaryHeaderContainer>
@@ -56,7 +57,7 @@ const InfoContainer = ({
         </SecondaryHeaderContainer>
       </Header>
       {isOpen && <ContentContainer>{children}</ContentContainer>}
-    </>
+    </div>
   )
 }
 

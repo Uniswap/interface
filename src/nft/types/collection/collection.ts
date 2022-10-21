@@ -66,6 +66,7 @@ export interface ActivityFilter {
   collectionAddress?: string
   eventTypes?: ActivityEventType[]
   marketplaces?: Markets[]
+  tokenId: string
 }
 
 export interface ActivityEventResponse {

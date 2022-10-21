@@ -14,7 +14,8 @@ interface AssetPriceDetailsProps {
 }
 
 const Container = styled.div`
-  margin-left: 86px;
+  margin-left: 88px;
+  margin-right: 128px;
 `
 
 const BestPriceContainer = styled.div`

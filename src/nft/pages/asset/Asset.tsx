@@ -8,6 +8,7 @@ import styled from 'styled-components/macro'
 
 const AssetContainer = styled.div`
   display: flex;
+  width: 100%;
 `
 
 const Asset = () => {
