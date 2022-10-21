@@ -102,7 +102,7 @@ struct MnemonicTest: View {
           .foregroundColor(Colors.textPrimary)
           .background(AnyView(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-              .fill(Colors.backgroundSurface)
+              .fill(Colors.background1)
           ))
           .frame(alignment: Alignment.center)
           .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
