@@ -132,7 +132,7 @@ export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick
   )
 
   if (!inputs.value.INPUT && !inputs.value.OUTPUT) {
-    return <WidgetSkeleton />
+    return <SwapWidgetSkeleton theme={theme} width={WIDGET_WIDTH} />
   }
 
   return (
@@ -141,9 +141,9 @@ export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick
         disableBranding
         hideConnectionUI
         routerUrl={WIDGET_ROUTER_URL}
-        width={WIDGET_WIDTH}
         locale={locale}
         theme={theme}
+        width={WIDGET_WIDTH}
         // defaultChainId is excluded - it is always inferred from the passed provider
         provider={provider}
         onSwitchChain={onSwitchChain}
@@ -161,8 +161,4 @@ export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick
       {tokenSelector}
     </>
   )
-}
-
-export function WidgetSkeleton() {
-  return <SwapWidgetSkeleton theme={useIsDarkMode() ? DARK_THEME : LIGHT_THEME} width={WIDGET_WIDTH} />
 }
