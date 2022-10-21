@@ -5,7 +5,7 @@ export const container = style([
   sprinkles({
     overflow: 'auto',
     height: 'viewHeight',
-    paddingTop: '24',
+    paddingTop: '4',
   }),
   {
     width: '300px',
@@ -26,57 +26,81 @@ export const container = style([
 ])
 
 export const rowHover = style([
-  sprinkles({
-    borderRadius: '12',
-  }),
   {
     ':hover': {
-      background: themeVars.colors.backgroundSurface,
+      background: themeVars.colors.backgroundInteractive,
+      borderRadius: 12,
     },
   },
 ])
 
-export const rowHoverOpen = style([
+export const row = style([
   sprinkles({
-    borderTopLeftRadius: '12',
-    borderTopRightRadius: '12',
-    borderBottomLeftRadius: '0',
-    borderBottomRightRadius: '0',
+    display: 'flex',
+    paddingRight: '16',
+    cursor: 'pointer',
+    fontSize: '16',
+    lineHeight: '20',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: '12',
+    paddingTop: '10',
+    paddingBottom: '10',
   }),
-  {
-    ':hover': {
-      background: themeVars.colors.backgroundOutline,
-    },
-  },
 ])
 
 export const subRowHover = style({
   ':hover': {
-    background: themeVars.colors.backgroundOutline,
+    background: themeVars.colors.backgroundInteractive,
   },
 })
 
-export const detailsOpen = sprinkles({
-  background: 'backgroundModule',
-  overflow: 'hidden',
-  borderStyle: 'solid',
-  borderWidth: '1px',
-  borderColor: 'backgroundOutline',
+export const borderTop = sprinkles({
+  borderTopStyle: 'solid',
+  borderTopColor: 'backgroundOutline',
+  borderTopWidth: '1px',
 })
 
-export const summaryOpen = sprinkles({
-  borderStyle: 'solid',
-  borderWidth: '1px',
-  borderColor: 'backgroundOutline',
+export const borderBottom = sprinkles({
+  borderBottomStyle: 'solid',
+  borderBottomColor: 'backgroundOutline',
+  borderBottomWidth: '1px',
 })
+
+export const detailsOpen = style([
+  borderTop,
+  sprinkles({
+    overflow: 'hidden',
+    marginTop: '8',
+    marginBottom: '8',
+  }),
+])
 
 export const filterDropDowns = style([
+  borderBottom,
   sprinkles({
     overflowY: 'scroll',
   }),
   {
-    maxHeight: '190px',
+    maxHeight: '302px',
     '::-webkit-scrollbar': { display: 'none' },
     scrollbarWidth: 'none',
+  },
+])
+
+export const chevronIcon = style({
+  marginLeft: -1,
+})
+
+export const chevronContainer = style([
+  sprinkles({
+    color: 'textSecondary',
+    display: 'inline-block',
+    height: '28',
+    width: '28',
+    transition: '250',
+  }),
+  {
+    marginRight: -1,
   },
 ])
