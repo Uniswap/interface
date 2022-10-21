@@ -22,11 +22,18 @@ type SkeletonType =
   | 'wallets'
   | 'text'
 
-interface LoadingProps {
+type LoadingProps = {
   type?: SkeletonType
-  repeat?: number
-  showSeparator?: boolean
-}
+} & (
+  | {
+      repeat: number
+      showSeparator?: boolean
+    }
+  | {
+      repeat?: undefined
+      showSeparator?: undefined
+    }
+)
 
 const useChildFromType = (
   type: SkeletonType,
@@ -58,7 +65,7 @@ const useChildFromType = (
         <Box>
           {new Array(repeat).fill(null).map((_, i, { length }) => (
             <React.Fragment key={i}>
-              <TokenLoader />
+              <TokenLoader opacity={(length - i) / length} />
               {showSeparator && i !== length - 1 && <Separator />}
             </React.Fragment>
           ))}

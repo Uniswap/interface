@@ -6,7 +6,7 @@ import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenRea
 /* Box with a line at the bottom */
 export function HeaderLoader() {
   return (
-    <Flex shrink alignItems="flex-start" gap="xxs">
+    <Flex shrink alignItems="flex-start" gap="xs">
       <Box bg="backgroundAction" borderRadius="xs">
         <HiddenFromScreenReaders>
           <Text color="none" opacity={0} variant="headlineLarge">

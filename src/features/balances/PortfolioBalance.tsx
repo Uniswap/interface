@@ -1,7 +1,7 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense } from 'react'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
 import { PortfolioBalanceQuery } from 'src/features/balances/__generated__/PortfolioBalanceQuery.graphql'
@@ -23,11 +23,20 @@ export const portfolioBalanceQuery = graphql`
 
 export function PortfolioBalance({ queryRef }: PortfolioBalanceProps) {
   if (!queryRef) {
-    return <Loading />
+    return (
+      <Box width="70%">
+        <Loading />
+      </Box>
+    )
   }
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense
+      fallback={
+        <Box width="70%">
+          <Loading />
+        </Box>
+      }>
       <PortfolioBalanceInner queryRef={queryRef} />
     </Suspense>
   )
