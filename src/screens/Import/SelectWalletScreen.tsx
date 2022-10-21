@@ -38,14 +38,8 @@ const selectWalletScreenQuery = graphql`
 export function SelectWalletScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
 
-  const pendingAccounts = usePendingAccounts()
-  const addresses = Object.values(pendingAccounts)
-    .filter((a) => a.type === AccountType.SignerMnemonic)
-    .sort(
-      (a, b) =>
-        (a as SignerMnemonicAccount).derivationIndex - (b as SignerMnemonicAccount).derivationIndex
-    )
-    .map((account) => account.address)
+  const { status } = useSagaStatus(importAccountSagaName)
+  const isLoadingAccounts = status === SagaStatus.Started
 
   return (
     <OnboardingScreen
@@ -54,28 +48,43 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
       )}
       title={t('Select addresses to import')}>
       <Suspense fallback={<Loading repeat={4} type="wallets" />}>
-        <WalletPreviewList addresses={addresses} navigation={navigation} params={params} />
+        <WalletPreviewList
+          isLoadingAccounts={isLoadingAccounts}
+          navigation={navigation}
+          params={params}
+        />
       </Suspense>
     </OnboardingScreen>
   )
 }
 
+const suspend = () => new Promise(() => {})
+
 function WalletPreviewList({
-  addresses,
+  isLoadingAccounts,
   navigation,
   params,
 }: {
-  addresses: string[]
+  isLoadingAccounts: boolean
   navigation: any
   params: any
 }) {
+  // Suspend until all pending accounts to check balances for have been imported
+  if (isLoadingAccounts) {
+    throw suspend()
+  }
+
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
-  const accounts = usePendingAccounts()
-
-  const { status } = useSagaStatus(importAccountSagaName)
-  const loadingAccounts = status === SagaStatus.Started
+  const pendingAccounts = usePendingAccounts()
+  const addresses = Object.values(pendingAccounts)
+    .filter((a) => a.type === AccountType.SignerMnemonic)
+    .sort(
+      (a, b) =>
+        (a as SignerMnemonicAccount).derivationIndex - (b as SignerMnemonicAccount).derivationIndex
+    )
+    .map((account) => account.address)
 
   const data = useLazyLoadQuery<SelectWalletScreenQuery>(selectWalletScreenQuery, {
     ownerAddresses: addresses,
@@ -90,13 +99,13 @@ function WalletPreviewList({
         portfolio.tokensTotalDenominatedValue.value > 0
     )
 
-    // if none of the addresses has a balance then just display the first one
+    // if none of the addresses have a balance then just display the first one
     return filtered?.length
       ? filtered
-      : allAddressBalances?.[0]
+      : allAddressBalances?.length
       ? [allAddressBalances?.[0]]
-      : undefined
-  }, [allAddressBalances])
+      : [{ ownerAddress: addresses[0], tokensTotalDenominatedValue: null }] // if query returned null, fallback to the first address
+  }, [allAddressBalances, addresses])
 
   const [selectedAddresses, setSelectedAddresses] = useReducer(
     (currentAddresses: string[], addressToProcess: string) =>
@@ -122,7 +131,7 @@ function WalletPreviewList({
           editAccountActions.trigger({
             type: EditAccountAction.Remove,
             address,
-            notificationsEnabled: !!accounts[address].pushNotificationsEnabled,
+            notificationsEnabled: !!pendingAccounts[address].pushNotificationsEnabled,
           })
         )
       } else {
@@ -133,33 +142,38 @@ function WalletPreviewList({
       }
     })
     navigation.navigate({ name: OnboardingScreens.Backup, params, merge: true })
-  }, [dispatch, addresses, accounts, navigation, selectedAddresses, isFirstAccountActive, params])
+  }, [
+    dispatch,
+    addresses,
+    pendingAccounts,
+    navigation,
+    selectedAddresses,
+    isFirstAccountActive,
+    params,
+  ])
 
   return (
     <>
-      {loadingAccounts ? (
-        <Loading repeat={4} type="wallets" />
-      ) : (
-        <ScrollView>
-          <Flex gap="sm">
-            {initialShownAccounts?.map((portfolio, i) => {
-              const { ownerAddress, tokensTotalDenominatedValue } = portfolio!
+      <ScrollView>
+        <Flex gap="sm">
+          {initialShownAccounts?.map((portfolio, i) => {
+            const { ownerAddress, tokensTotalDenominatedValue } = portfolio!
 
-              return (
-                <WalletPreviewCard
-                  key={ownerAddress}
-                  address={ownerAddress}
-                  balance={tokensTotalDenominatedValue?.value || 0}
-                  name={ElementName.WalletCard}
-                  selected={selectedAddresses.includes(ownerAddress)}
-                  testID={`${ElementName.WalletCard}-${i + 1}`}
-                  onSelect={onPress}
-                />
-              )
-            })}
-          </Flex>
-        </ScrollView>
-      )}
+            return (
+              <WalletPreviewCard
+                key={ownerAddress}
+                address={ownerAddress}
+                balance={tokensTotalDenominatedValue?.value}
+                name={ElementName.WalletCard}
+                selected={selectedAddresses.includes(ownerAddress)}
+                testID={`${ElementName.WalletCard}-${i + 1}`}
+                onSelect={onPress}
+              />
+            )
+          })}
+        </Flex>
+      </ScrollView>
+
       <PrimaryButton
         disabled={selectedAddresses.length === 0}
         label={t('Continue')}

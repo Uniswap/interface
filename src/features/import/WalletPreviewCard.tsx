@@ -9,7 +9,7 @@ import { formatUSDPrice } from 'src/utils/format'
 interface Props {
   address: string
   selected: boolean
-  balance: number
+  balance?: number | null
   onSelect: (address: string) => void
   name?: string
   testID?: string
