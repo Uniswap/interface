@@ -85,7 +85,7 @@ export function ForceUpgradeModal() {
       {mnemonicId && showSeedPhrase && (
         <BottomSheetModal
           fullScreen
-          backgroundColor={theme.colors.backgroundBackdrop}
+          backgroundColor={theme.colors.background0}
           hideHandlebar={true}
           isVisible={true}
           name={ModalName.ForceUpgradeModal}>

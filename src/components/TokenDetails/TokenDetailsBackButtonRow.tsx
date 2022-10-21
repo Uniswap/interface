@@ -104,7 +104,7 @@ export function TokenDetailsBackButtonRow({
       <Flex row alignItems="center" justifyContent="space-between" pt="sm" px="sm">
         <BackButton />
         <Button disabled={!hasOtherBalances} onPress={() => setShowActionModal(true)}>
-          <Flex centered row bg="backgroundContainer" borderRadius="sm" gap="xxs" p="xs">
+          <Flex centered row bg="background2" borderRadius="sm" gap="xxs" p="xs">
             <NetworkLogo chainId={currency.chainId} size={16} />
             <Text color="textSecondary" pl="xxxs" textAlign="center" variant="buttonLabelSmall">
               {CHAIN_INFO[currency.chainId].label}

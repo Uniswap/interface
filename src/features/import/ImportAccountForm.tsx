@@ -77,7 +77,7 @@ export function ImportAccountForm({ onSuccess }: Props) {
               {t('Warning: this wallet is still experimental. Use with caution.')}
             </Text>
             <CenterBox
-              backgroundColor="backgroundSurface"
+              backgroundColor="background1"
               borderRadius="lg"
               mt="lg"
               pt="lg"
@@ -85,7 +85,7 @@ export function ImportAccountForm({ onSuccess }: Props) {
               width="100%">
               <TextInput
                 autoCapitalize="none"
-                backgroundColor="backgroundSurface"
+                backgroundColor="background1"
                 fontSize={18}
                 height={100}
                 multiline={true}
@@ -104,7 +104,7 @@ export function ImportAccountForm({ onSuccess }: Props) {
             </CenterBox>
 
             {touched.input && errors.input && (
-              <Text color="accentFailure" mt="md" variant="bodyLarge">
+              <Text color="accentCritical" mt="md" variant="bodyLarge">
                 {errors.input}
               </Text>
             )}

@@ -6,15 +6,15 @@ import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenRea
 /* Box with a line at the bottom */
 export function HeaderLoader() {
   return (
-    <Flex shrink alignItems="flex-start" gap="xs">
-      <Box bg="backgroundAction" borderRadius="xs">
+    <Flex shrink alignItems="flex-start" gap="xxs">
+      <Box bg="background3" borderRadius="xs">
         <HiddenFromScreenReaders>
           <Text color="none" opacity={0} variant="headlineLarge">
             $00,000.00
           </Text>
         </HiddenFromScreenReaders>
       </Box>
-      <Box bg="backgroundAction" borderRadius="xs">
+      <Box bg="background3" borderRadius="xs">
         <HiddenFromScreenReaders>
           <Text color="none" opacity={0} variant="bodySmall">
             +000.00%

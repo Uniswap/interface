@@ -121,7 +121,7 @@ export function NFTItemScreen({
             <Flex
               row
               alignItems="center"
-              backgroundColor="backgroundContainer"
+              backgroundColor="background2"
               borderRadius="lg"
               gap="xs"
               px="md"

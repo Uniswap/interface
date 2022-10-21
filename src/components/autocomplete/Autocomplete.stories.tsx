@@ -16,7 +16,7 @@ export default {
   component: Autocomplete,
   decorators: [
     (Story) => (
-      <Box bg="backgroundBackdrop" borderRadius="md" p="lg" width={400}>
+      <Box bg="background0" borderRadius="md" p="lg" width={400}>
         <Story />
       </Box>
     ),

@@ -26,7 +26,7 @@ export default function SessionsButton({
     return session.dapp.icon ? (
       <RemoteImage
         key={session.id}
-        backgroundColor={theme.colors.backgroundAction}
+        backgroundColor={theme.colors.background3}
         borderRadius={theme.borderRadii.full}
         height={ICON_SIZE}
         uri={session.dapp.icon}

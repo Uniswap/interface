@@ -46,28 +46,28 @@ struct MnemonicTextField: View {
     case .focusedNoInput:
       return AnyView(RoundedRectangle(cornerRadius: 20)
         .strokeBorder(Colors.accentActive, lineWidth: 1)
-        .background(Colors.backgroundAction)
+        .background(Colors.background3)
         .cornerRadius(20)
       )
       
     case .focusedWrongInput:
       return AnyView(RoundedRectangle(cornerRadius: 20)
         .strokeBorder(Colors.accentCritical, lineWidth: 2)
-        .background(Colors.backgroundAction)
+        .background(Colors.background3)
         .cornerRadius(20)
       )
       
     case .notFocusedWrongInput:
       return AnyView(RoundedRectangle(cornerRadius: 20)
         .strokeBorder(Colors.accentCritical, lineWidth: 2)
-        .background(Colors.backgroundSurface)
+        .background(Colors.background1)
         .cornerRadius(20)
       )
       
     case .notFocused:
       return AnyView(
         RoundedRectangle(cornerRadius: 20, style: .continuous)
-          .fill(Colors.backgroundSurface)
+          .fill(Colors.background1)
       )
     }
   }

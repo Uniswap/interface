@@ -29,7 +29,7 @@ export function TokenBalances({
   if (!currentChainBalance && !otherChainBalances) return null
 
   return (
-    <Flex bg="backgroundContainer" borderRadius="sm" gap="lg" mx="md" p="md">
+    <Flex bg="background2" borderRadius="sm" gap="lg" mx="md" p="md">
       {currentChainBalance && (
         <CurrentChainBalance
           balance={currentChainBalance}

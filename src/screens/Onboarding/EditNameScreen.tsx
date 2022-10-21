@@ -158,7 +158,7 @@ function CustomizationSection({
           />
           {!focused && (
             <AnimatedButton
-              backgroundColor="backgroundAction"
+              backgroundColor="background3"
               borderRadius="md"
               entering={FadeIn}
               exiting={FadeOut}
@@ -183,7 +183,7 @@ function CustomizationSection({
             {items.map((item) => (
               <TextButton
                 key={item}
-                backgroundColor={accountName === item ? 'backgroundAction' : 'backgroundSurface'}
+                backgroundColor={accountName === item ? 'background3' : 'background1'}
                 borderRadius="xl"
                 px="md"
                 py="sm"

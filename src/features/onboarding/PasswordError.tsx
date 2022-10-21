@@ -16,11 +16,11 @@ export function PasswordError({ errorText, style }: PasswordErrorProps) {
   return (
     <AnimatedFlex row alignItems="center" justifyContent="center" py="sm" style={style}>
       <AlertTriangle
-        color={theme.colors.accentFailure}
+        color={theme.colors.accentCritical}
         height={ERROR_ICON_HEIGHT}
         width={ERROR_ICON_HEIGHT}
       />
-      <Text color="accentFailure" textAlign="center" variant="bodyLarge">
+      <Text color="accentCritical" textAlign="center" variant="bodyLarge">
         {errorText}
       </Text>
     </AnimatedFlex>

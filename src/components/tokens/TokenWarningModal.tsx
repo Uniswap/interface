@@ -112,7 +112,7 @@ export default function TokenWarningModal({
             variant="buttonLabelMicro">
             {explorerLink}
           </Text>
-          <ExternalLinkIcon fill={theme.colors.accentTextLightSecondary} height={12} width={12} />
+          <ExternalLinkIcon fill={theme.colors.textOnBrightSecondary} height={12} width={12} />
         </Button>
         {tokenWarningLevel === TokenWarningLevel.BLOCKED ? (
           <Flex row>

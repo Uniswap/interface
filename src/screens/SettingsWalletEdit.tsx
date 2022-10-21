@@ -71,7 +71,7 @@ export function SettingsWalletEdit({
       </BackHeader>
       <Flex gap="xl" px="lg" py="lg">
         <Flex gap="none">
-          <Box bg="backgroundBackdrop" pb="md">
+          <Box bg="background0" pb="md">
             <Text color="textSecondary" variant="subheadLarge">
               {t('Nickname')}
             </Text>
@@ -104,7 +104,7 @@ export function SettingsWalletEdit({
                 {!ensName && (
                   <Button
                     alignItems="center"
-                    bg="backgroundAction"
+                    bg="background3"
                     borderRadius="md"
                     justifyContent="center"
                     marginLeft="sm"
@@ -123,7 +123,7 @@ export function SettingsWalletEdit({
           </Flex>
         </Flex>
         <Flex gap="none">
-          <Box bg="backgroundBackdrop" pb="md">
+          <Box bg="background0" pb="md">
             <Text color="textSecondary" variant="subheadLarge">
               {t('Theme')}
             </Text>

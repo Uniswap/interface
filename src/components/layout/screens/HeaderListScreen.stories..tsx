@@ -32,7 +32,7 @@ export default {
   component: HeaderListScreen,
   decorators: [
     (Story) => (
-      <Box borderColor="backgroundContainer" borderWidth={1} height={812} width={375}>
+      <Box borderColor="background2" borderWidth={1} height={812} width={375}>
         <Story />
       </Box>
     ),

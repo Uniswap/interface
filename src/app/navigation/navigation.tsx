@@ -138,7 +138,7 @@ function TabNavigator({ homeScreenQueries }: { homeScreenQueries: HomeScreenQuer
         headerShown: false,
         tabBarStyle: {
           alignItems: 'center',
-          backgroundColor: theme.colors.backgroundBackdrop,
+          backgroundColor: theme.colors.background0,
           borderTopColor: theme.colors.backgroundOutline,
           borderStyle: 'solid',
           borderTopWidth: 0.5,

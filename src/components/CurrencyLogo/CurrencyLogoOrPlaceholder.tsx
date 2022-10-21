@@ -12,9 +12,7 @@ export function CurrencyLogoOrPlaceholder({
   size: number
 }) {
   if (!currency) {
-    return (
-      <Box backgroundColor="backgroundContainer" borderRadius="full" height={size} width={size} />
-    )
+    return <Box backgroundColor="background2" borderRadius="full" height={size} width={size} />
   }
 
   return <CurrencyLogoOnly currency={currency} size={size} />
@@ -25,7 +23,7 @@ export function NFTLogoOrPlaceholder(props: { nftImageUrl?: string; size: number
   return (
     <Box
       alignItems="center"
-      backgroundColor="backgroundContainer"
+      backgroundColor="background2"
       borderRadius="xs"
       height={size}
       justifyContent="center"

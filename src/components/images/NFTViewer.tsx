@@ -33,7 +33,7 @@ export function NFTViewer({
       <Box
         alignItems="center"
         aspectRatio={1}
-        bg="backgroundAction"
+        bg="background3"
         justifyContent="center"
         maxHeight={maxHeight ?? '100%'}
         width="100%">

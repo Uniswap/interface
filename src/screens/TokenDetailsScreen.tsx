@@ -286,15 +286,7 @@ function TokenDetails({
         </Flex>
       </HeaderScrollScreen>
 
-      <Flex
-        row
-        bg="backgroundBackdrop"
-        bottom={0}
-        gap="sm"
-        pb="xl"
-        position="absolute"
-        pt="sm"
-        px="sm">
+      <Flex row bg="background0" bottom={0} gap="sm" pb="xl" position="absolute" pt="sm" px="sm">
         <PrimaryButton
           disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}
           flex={1}

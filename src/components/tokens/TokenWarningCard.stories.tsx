@@ -12,7 +12,7 @@ export default {
   },
   decorators: [
     (Story) => (
-      <Box bg="backgroundAction" height={300} width={400}>
+      <Box bg="background3" height={300} width={400}>
         <Story />
       </Box>
     ),

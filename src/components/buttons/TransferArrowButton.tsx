@@ -15,7 +15,7 @@ export function TransferArrowButton({
   name,
   onPress,
   disabled,
-  bg = 'backgroundSurface',
+  bg = 'background1',
   ...rest
 }: ArrowDownButtonProps) {
   const theme = useAppTheme()
@@ -24,7 +24,7 @@ export function TransferArrowButton({
       alignItems="center"
       alignSelf="center"
       bg={bg}
-      borderColor="backgroundSurface"
+      borderColor="background1"
       borderRadius="lg"
       borderWidth={4}
       disabled={disabled}

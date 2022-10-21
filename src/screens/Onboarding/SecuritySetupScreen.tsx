@@ -76,7 +76,7 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
         <Flex grow alignItems="center" justifyContent="space-between">
           <Flex centered grow>
             <Box
-              borderColor="backgroundAction"
+              borderColor="background3"
               borderRadius="xl"
               borderWidth={4}
               style={styles.faceView}>

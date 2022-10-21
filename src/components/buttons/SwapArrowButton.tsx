@@ -13,7 +13,7 @@ export function SwapArrowButton({
   name,
   onPress,
   disabled,
-  bg = 'backgroundSurface',
+  bg = 'background1',
   ...rest
 }: SwapArrowButtonProps) {
   const theme = useAppTheme()
@@ -23,7 +23,7 @@ export function SwapArrowButton({
         alignItems="center"
         alignSelf="center"
         bg={bg}
-        borderColor="backgroundAction"
+        borderColor="background3"
         borderRadius="lg"
         borderWidth={4}
         disabled={disabled}

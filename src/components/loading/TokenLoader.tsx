@@ -17,9 +17,9 @@ export function TokenLoader({ opacity }: TokenLoaderProps) {
       overflow="hidden"
       p="sm">
       <Flex centered row gap="xs">
-        <Box bg="backgroundAction" borderRadius="full" height={32} width={32} />
-        <Flex shrink alignItems="flex-start" gap="xs" width="100%">
-          <Box bg="backgroundAction" borderRadius="xs" width="70%">
+        <Box bg="background3" borderRadius="full" height={32} width={32} />
+        <Flex shrink alignItems="flex-start" gap="none" width="100%">
+          <Box bg="background3" borderRadius="xs" width="100%">
             <HiddenFromScreenReaders>
               <Text color="none" opacity={0} variant="bodyLarge">
                 Token Name
@@ -27,7 +27,7 @@ export function TokenLoader({ opacity }: TokenLoaderProps) {
             </HiddenFromScreenReaders>
           </Box>
           <Flex row alignItems="center" pt="xxs" width="100%">
-            <Box bg="backgroundAction" borderRadius="xs" width="45%">
+            <Box bg="background3" borderRadius="xs" width="25%">
               <HiddenFromScreenReaders>
                 <Text color="none" opacity={0} variant="subheadSmall">
                   Ticker

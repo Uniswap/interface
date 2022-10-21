@@ -50,7 +50,7 @@ function _TokenSelector({
       width="100%">
       <SearchBar
         autoFocus
-        backgroundColor="backgroundContainer"
+        backgroundColor="background2"
         placeholder={t('Search tokens')}
         value={searchFilter ?? ''}
         onBack={onBack}

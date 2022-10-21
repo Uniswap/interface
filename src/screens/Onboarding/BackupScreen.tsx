@@ -206,7 +206,7 @@ function BackupOptionButton({
   return (
     <Box opacity={completed ? 0.4 : 1}>
       <Button
-        backgroundColor="backgroundContainer"
+        backgroundColor="background2"
         borderColor="backgroundOutline"
         borderRadius="md"
         borderWidth={1}

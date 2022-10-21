@@ -204,7 +204,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         onPress: onPressRemove,
         render: () => (
           <Box alignItems="center" p="md">
-            <Text color="accentFailure" variant="bodyLarge">
+            <Text color="accentCritical" variant="bodyLarge">
               {t('Remove wallet')}
             </Text>
           </Box>
@@ -310,7 +310,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   }
 
   return (
-    <Screen bg="backgroundBackdrop" edges={screenEdges}>
+    <Screen bg="background0" edges={screenEdges}>
       <Flex pb="md" pt="lg" px="lg">
         <AddressDisplay
           showAddressAsSubtitle

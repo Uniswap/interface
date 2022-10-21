@@ -19,9 +19,9 @@ export const theme = createTheme({
   },
   colors: {
     // The following two colors are the same to accomodate incorrect colors in dark mode. See comment in the dark mode section
-    translucentBackgroundBackdrop: opacify(50, colorsLight.backgroundBackdrop),
-    translucentBackground: opacify(50, colorsLight.backgroundBackdrop),
-    imageTintBackground: opacify(80, colorsLight.backgroundSurface),
+    translucentBackgroundBackdrop: opacify(50, colorsLight.background0),
+    translucentBackground: opacify(50, colorsLight.background0),
+    imageTintBackground: opacify(80, colorsLight.background1),
     ...colorsLight,
   },
   iconButtonVariants,
@@ -36,12 +36,12 @@ export const theme = createTheme({
 export const darkTheme: Theme = {
   ...theme,
   colors: {
-    translucentBackgroundBackdrop: opacify(5, colorsDark.backgroundBackdrop),
+    translucentBackgroundBackdrop: opacify(5, colorsDark.background0),
     // This color is incorrect for dark mode but we rely on the incorrect color right now.
     // The translucentBackgroundBackdrop is the correct translucent background in dark mode.
     // TODO: come up with a better name for translucentBackground and add it to the theme.
     translucentBackground: opacify(5, colorsDark.white),
-    imageTintBackground: opacify(80, colorsDark.backgroundSurface),
+    imageTintBackground: opacify(80, colorsDark.background1),
     ...colorsDark,
   },
 }

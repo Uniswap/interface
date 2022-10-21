@@ -105,7 +105,7 @@ export function NotificationToast({
   return (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedBox
-        borderColor={useSmallDisplay ? 'none' : 'backgroundAction'}
+        borderColor={useSmallDisplay ? 'none' : 'background3'}
         borderRadius="lg"
         borderWidth={1}
         left={0}
@@ -151,7 +151,7 @@ export function NotificationContent({
   return (
     <Button
       alignItems="center"
-      bg="backgroundBackdrop"
+      bg="background0"
       borderRadius="lg"
       flex={1}
       flexDirection="row"
@@ -200,8 +200,8 @@ export function NotificationContentSmall({
   return (
     <Flex row flexShrink={1} justifyContent="center" pointerEvents="box-none">
       <Button
-        bg="backgroundBackdrop"
-        borderColor="backgroundAction"
+        bg="background0"
+        borderColor="background3"
         borderRadius="full"
         borderWidth={1}
         p="sm"

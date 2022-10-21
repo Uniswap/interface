@@ -108,7 +108,7 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
           indicatorStyle={[TabStyles.indicator]}
           navigationState={{ index: tabIndex, routes: tabs }}
           renderLabel={renderTabLabel}
-          style={[TabStyles.tab, { backgroundColor: theme.colors.backgroundBackdrop }]}
+          style={[TabStyles.tab, { backgroundColor: theme.colors.background0 }]}
         />
       )
     },
@@ -128,11 +128,11 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
   return (
     <Screen edges={['top', 'left', 'right']}>
       <GestureDetector gesture={panHeaderGesture}>
-        <Flex bg="backgroundBackdrop" m="sm">
+        <Flex bg="background0" m="sm">
           <SearchTextInput
             ref={textInputRef}
             showCancelButton
-            backgroundColor="backgroundContainer"
+            backgroundColor="background2"
             placeholder={t('Search tokens and wallets')}
             value={searchQuery}
             onCancel={onSearchCancel}

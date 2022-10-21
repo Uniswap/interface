@@ -69,7 +69,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
       <NFTLogoOrPlaceholder nftImageUrl={props.nftImageUrl} size={currencySize} />
     )
 
-  const fill = theme.colors.backgroundBackdrop
+  const fill = theme.colors.background0
   const gray = theme.colors.textSecondary
   const green = theme.colors.accentSuccess
   const yellow = theme.colors.accentWarning
@@ -82,7 +82,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
       return (
         <SlashCircleIcon
           color={theme.colors.backgroundOutline}
-          fill={theme.colors.backgroundBackdrop}
+          fill={theme.colors.background0}
           fillOpacity={1}
           height={statusSize}
           width={statusSize}
@@ -172,7 +172,7 @@ export function DappLogoWithTxStatus({
   const theme = useAppTheme()
   const green = theme.colors.accentSuccess
   const yellow = theme.colors.accentWarning
-  const fill = theme.colors.backgroundBackdrop
+  const fill = theme.colors.background0
 
   const dappImageSize = size
   const statusSize = dappImageSize * (2 / 3)
@@ -201,7 +201,7 @@ export function DappLogoWithTxStatus({
   ) : statusIcon ? (
     <Box
       alignItems="center"
-      backgroundColor="backgroundContainer"
+      backgroundColor="background2"
       borderRadius="xs"
       height={dappImageSize}
       justifyContent="center"
@@ -233,7 +233,7 @@ export function DappLogoWithWCBadge({
   size: number
 }) {
   const theme = useAppTheme()
-  const fill = theme.colors.backgroundBackdrop
+  const fill = theme.colors.background0
   const gray = theme.colors.textSecondary
   const dappImageSize = size
   const statusSize = dappImageSize * (1 / 2)
@@ -255,7 +255,7 @@ export function DappLogoWithWCBadge({
         {dappImage}
       </Box>
       <Box
-        backgroundColor="backgroundSurface"
+        backgroundColor="background1"
         borderRadius="full"
         bottom={0}
         position="absolute"

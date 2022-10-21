@@ -32,7 +32,7 @@ export function SelectTokenButton({
 
   return (
     <Button
-      bg={selectedCurrency ? 'backgroundAction' : 'accentActive'}
+      bg={selectedCurrency ? 'background3' : 'accentActive'}
       borderRadius="lg"
       name={ElementName.TokenSelectorToggle}
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
@@ -48,10 +48,10 @@ export function SelectTokenButton({
       ) : (
         <Flex centered row py="xxs">
           <Flex centered row gap="xs" pl="sm" pr="xs" py="xxxs">
-            <Text color="accentTextLightPrimary" variant="buttonLabelLarge">
+            <Text color="textOnBrightPrimary" variant="buttonLabelLarge">
               {t('Choose Token')}
             </Text>
-            <Chevron color={theme.colors.accentTextLightPrimary} direction="e" />
+            <Chevron color={theme.colors.textOnBrightPrimary} direction="e" />
           </Flex>
         </Flex>
       )}

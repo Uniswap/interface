@@ -50,13 +50,13 @@ export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps) {
     <>
       <Button onPress={() => setShowModal(true)} {...rest}>
         <InfoCircle
-          color={theme.colors.accentTextLightSecondary}
+          color={theme.colors.textOnBrightSecondary}
           height={size ?? DEFAULT_ICON_SIZE}
           width={size ?? DEFAULT_ICON_SIZE}
         />
       </Button>
       <BottomSheetDetachedModal
-        backgroundColor={theme.colors.backgroundSurface}
+        backgroundColor={theme.colors.background1}
         isVisible={showModal}
         name={ModalName.TooltipContent}
         onClose={() => setShowModal(false)}>

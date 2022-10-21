@@ -21,7 +21,7 @@ type GradientButtonProps = ButtonProps & {
 export function GradientButton({
   icon,
   onPress,
-  textColor = 'accentTextLightPrimary',
+  textColor = 'textOnBrightPrimary',
   label,
   textVariant,
   disabled,

@@ -24,7 +24,7 @@ export function UniconWithVisibilityBadge({ address, size, showViewOnlyBadge }: 
       <Unicon address={address} size={size} />
       <Flex
         centered
-        backgroundColor="backgroundBackdrop"
+        backgroundColor="background0"
         borderRadius="full"
         bottom={-4}
         height={floatingEyeSize}

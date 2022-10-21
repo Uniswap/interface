@@ -17,7 +17,7 @@ export function TransferTokenModal() {
   return (
     <BottomSheetModal
       fullScreen
-      backgroundColor={theme.colors.backgroundSurface}
+      backgroundColor={theme.colors.background1}
       isVisible={modalState.isOpen}
       name={ModalName.Send}
       onClose={onClose}>

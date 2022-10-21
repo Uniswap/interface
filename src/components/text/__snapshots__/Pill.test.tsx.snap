@@ -7,7 +7,7 @@ exports[`renders a Pill with border 1`] = `
       Object {
         "alignItems": "center",
         "backgroundColor": "#FFFFFF",
-        "borderColor": "#40B66B",
+        "borderColor": "#7BB10C",
         "borderRadius": 999999,
         "borderWidth": 1,
         "display": "flex",
@@ -49,7 +49,7 @@ exports[`renders a Pill with border 1`] = `
     style={
       Array [
         Object {
-          "color": "#0E111A",
+          "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 14,
@@ -91,7 +91,7 @@ exports[`renders a Pill without image 1`] = `
     style={
       Array [
         Object {
-          "color": "#0E111A",
+          "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 14,

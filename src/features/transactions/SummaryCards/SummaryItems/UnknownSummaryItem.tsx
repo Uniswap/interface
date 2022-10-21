@@ -38,7 +38,7 @@ export default function UnknownSummaryItem({
       icon={
         <UnknownStatus
           color={theme.colors.textSecondary}
-          fill={theme.colors.backgroundBackdrop}
+          fill={theme.colors.background0}
           height={TXN_HISTORY_ICON_SIZE}
           width={TXN_HISTORY_ICON_SIZE}
         />

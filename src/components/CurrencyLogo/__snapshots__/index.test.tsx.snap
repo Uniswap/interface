@@ -77,7 +77,7 @@ exports[`renders a currency logo without network logo 1`] = `
     style={
       Array [
         Object {
-          "backgroundColor": "#e8ecfb",
+          "backgroundColor": "#E8ECFB",
           "resizeMode": "contain",
         },
         Object {

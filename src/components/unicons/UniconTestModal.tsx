@@ -127,7 +127,7 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
     <BottomSheetModal
       fullScreen
       hideHandlebar
-      backgroundColor={theme.colors.backgroundBackdrop}
+      backgroundColor={theme.colors.background0}
       isVisible={true}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
@@ -169,7 +169,7 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
         {screenState === VisibleUnicons.Default && (
           <>
             <SearchTextInput
-              backgroundColor="backgroundBackdrop"
+              backgroundColor="background0"
               placeholder={t('Input an address or ENS to view its Unicon')}
               value={searchQuery}
               onChangeText={setSearchQuery}

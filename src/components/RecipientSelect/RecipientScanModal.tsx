@@ -74,7 +74,7 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
     <BottomSheetModal
       fullScreen
       hideHandlebar
-      backgroundColor={theme.colors.backgroundBackdrop}
+      backgroundColor={theme.colors.background0}
       isVisible={isVisible}
       name={ModalName.WalletConnectScan}
       onClose={onClose}>
@@ -91,7 +91,7 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
           borderWidth={1}
           name={ElementName.QRCodeModalToggle}
           p="md"
-          style={{ backgroundColor: theme.colors.backgroundContainer }}
+          style={{ backgroundColor: theme.colors.background2 }}
           onPress={onPressBottomToggle}>
           <Flex row alignItems="center" gap="sm">
             {currentScreenState === ScannerModalState.ScanQr ? (

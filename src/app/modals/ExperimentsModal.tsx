@@ -35,9 +35,7 @@ export function ExperimentsModal() {
   return (
     <BottomSheetModal
       backgroundColor={
-        featureFlags['modal-color-test']
-          ? theme.colors.accentBranded
-          : theme.colors.backgroundSurface
+        featureFlags['modal-color-test'] ? theme.colors.accentBranded : theme.colors.background1
       }
       isVisible={modalState.isOpen}
       name={ModalName.Experiments}

@@ -52,7 +52,7 @@ export function Shimmer({ children }: Props) {
         width: layout.width,
         height: layout.height,
       }}>
-      <Box backgroundColor="backgroundContainer" flexGrow={1} overflow="hidden" />
+      <Box backgroundColor="background2" flexGrow={1} overflow="hidden" />
       <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <MaskedView
           maskElement={

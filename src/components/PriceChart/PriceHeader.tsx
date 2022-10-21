@@ -47,7 +47,7 @@ export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
   )
 
   const percentChangeIconStyle = useAnimatedStyle(() => ({
-    color: percentChange.value > 0 ? theme.colors.accentSuccess : theme.colors.accentFailure,
+    color: percentChange.value > 0 ? theme.colors.accentSuccess : theme.colors.accentCritical,
   }))
 
   const percentChangeIcon = useDerivedValue(() => (percentChange.value > 0 ? '↗' : '↘'))

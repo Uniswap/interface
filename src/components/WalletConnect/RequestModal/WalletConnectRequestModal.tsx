@@ -206,7 +206,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
         <ClientDetails permitInfo={permitInfo} request={request} />
         <Flex gap="sm">
           <Flex
-            backgroundColor="backgroundContainer"
+            backgroundColor="background2"
             borderRadius="lg"
             gap="none"
             spacerProps={spacerProps}>

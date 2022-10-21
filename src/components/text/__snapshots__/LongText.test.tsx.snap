@@ -21,7 +21,7 @@ exports[`renders a LongText 1`] = `
     style={
       Array [
         Object {
-          "color": "#0E111A",
+          "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 14,

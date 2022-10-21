@@ -3,10 +3,10 @@ import React, { memo } from 'react'
 import { Image, ImageStyle, StyleSheet, useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import {
-  LANDING_BACKGROUND_LIGHT,
   LANDING_BACKGROUND_DARK,
-  LANDING_BLUR_BACKGROUND_LIGHT,
+  LANDING_BACKGROUND_LIGHT,
   LANDING_BLUR_BACKGROUND_DARK,
+  LANDING_BLUR_BACKGROUND_LIGHT,
 } from 'src/assets'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { opacify } from 'src/utils/colors'
@@ -37,10 +37,7 @@ export const LandingBackground = memo(() => {
       </Box>
       <Box bottom={0} height={255} left={0} position="absolute" right={0}>
         <LinearGradient
-          colors={[
-            opacify(0, theme.colors.backgroundBackdrop),
-            opacify(100, theme.colors.backgroundBackdrop),
-          ]}
+          colors={[opacify(0, theme.colors.background0), opacify(100, theme.colors.background0)]}
           end={{ x: 0.5, y: 0.5 }}
           start={{ x: 0.5, y: 0 }}
           style={StyleSheet.absoluteFill}

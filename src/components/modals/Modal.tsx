@@ -52,7 +52,7 @@ React.PropsWithChildren<Props>) {
         style={dimBackground && style.bgDimmed}
         onPress={dismissable ? hide : undefined}>
         <Box
-          backgroundColor="backgroundBackdrop"
+          backgroundColor="background0"
           style={width === '100%' ? style.modalBoxFullWidth : style.modalBox}
           width={width}>
           {title && (

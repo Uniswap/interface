@@ -8,7 +8,7 @@ export default {
   component: ColorSelector,
   decorators: [
     (Story) => (
-      <Box bg="backgroundAction" p="md" width={400}>
+      <Box bg="background3" p="md" width={400}>
         <Story />
       </Box>
     ),

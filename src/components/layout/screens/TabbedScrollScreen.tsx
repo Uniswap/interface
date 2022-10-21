@@ -169,14 +169,14 @@ export default function TabbedScrollScreen({
         style={[
           TabStyles.tabBar,
           tabBarAnimatedStyle,
-          { backgroundColor: theme.colors.backgroundBackdrop },
+          { backgroundColor: theme.colors.background0 },
         ]}>
         <TabBar
           {...sceneProps}
           indicatorStyle={[TabStyles.indicator]}
           navigationState={{ index: tabIndex, routes }}
           renderLabel={renderTabLabel}
-          style={[TabStyles.tab, { backgroundColor: theme.colors.backgroundBackdrop }]}
+          style={[TabStyles.tab, { backgroundColor: theme.colors.background0 }]}
           onTabPress={({ preventDefault, route }) => {
             if (isListGliding.current) {
               preventDefault()
@@ -311,7 +311,7 @@ export default function TabbedScrollScreen({
       </GestureDetector>
       {/* Background for OS status bar, needs higher zindex than contentHeader */}
       <Box
-        bg="backgroundBackdrop"
+        bg="background0"
         height={insets.top}
         position="absolute"
         top={0}
@@ -320,7 +320,7 @@ export default function TabbedScrollScreen({
       />
       {scrollHeader && (
         <AnimatedFlex
-          bg="backgroundBackdrop"
+          bg="background0"
           style={[TabStyles.header, scrollHeaderAnimatedStyle, { paddingTop: insets.top }]}
           onLayout={(event: LayoutChangeEvent) =>
             setScrollHeaderHeight(event.nativeEvent.layout.height)

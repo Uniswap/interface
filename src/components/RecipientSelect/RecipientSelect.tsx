@@ -52,7 +52,7 @@ export function RecipientSelect({
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm" px="md" width="100%">
         <SearchBar
           autoFocus
-          backgroundColor="backgroundContainer"
+          backgroundColor="background2"
           endAdornment={<QRScannerIconButton size={20} onPress={onPressQRScanner} />}
           hideBackButton={!recipient}
           placeholder={t('Search addresses or ENS names')}

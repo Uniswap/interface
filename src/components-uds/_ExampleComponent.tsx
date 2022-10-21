@@ -8,7 +8,7 @@ type ExampleComponentProps = PropsWithChildren<{
 
 export const ExampleComponent = ({ children, header, success }: ExampleComponentProps) => {
   return (
-    <Box bg={success ? 'accentSuccessSoft' : 'accentFailureSoft'} borderRadius="md" p="md">
+    <Box bg={success ? 'accentSuccessSoft' : 'accentCriticalSoft'} borderRadius="md" p="md">
       <Flex flexDirection="column" gap="md">
         {header}
         {children}

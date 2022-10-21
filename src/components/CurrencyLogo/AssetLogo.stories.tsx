@@ -8,7 +8,7 @@ export default {
   component: AssetLogoWithFallback,
   decorators: [
     (Story) => (
-      <Box bg="backgroundAction" height={300} width={300}>
+      <Box bg="background3" height={300} width={300}>
         <Story />
       </Box>
     ),

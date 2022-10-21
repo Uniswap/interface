@@ -182,7 +182,7 @@ function OptionCard({
   const theme = useAppTheme()
   return (
     <Button
-      backgroundColor="backgroundContainer"
+      backgroundColor="background2"
       borderColor="backgroundOutline"
       borderRadius="lg"
       borderWidth={1}

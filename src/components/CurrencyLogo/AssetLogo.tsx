@@ -17,7 +17,7 @@ export function AssetLogoWithFallback({ name, url }: AssetLogoProps) {
   ) : (
     <Flex
       centered
-      backgroundColor="backgroundContainer"
+      backgroundColor="background2"
       borderRadius="full"
       height={tokenLogoStyle.height}
       width={tokenLogoStyle.width}>

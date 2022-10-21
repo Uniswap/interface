@@ -19,7 +19,7 @@ export function CheckBox({ checked, onCheckPressed, size }: CheckBoxProps) {
   return (
     <IconButton
       alignSelf="flex-start"
-      backgroundColor={checked ? 'accentAction' : 'backgroundBackdrop'}
+      backgroundColor={checked ? 'accentAction' : 'background0'}
       borderColor={checked ? 'accentAction' : 'backgroundOutline'}
       borderRadius="xs"
       borderWidth={BORDER_WIDTH}

@@ -41,7 +41,7 @@ export default {
   component: ActionSheetModalContent,
   decorators: [
     (Story) => (
-      <Box bg="backgroundBackdrop" p="lg" width={300}>
+      <Box bg="background0" p="lg" width={300}>
         <Story />
       </Box>
     ),

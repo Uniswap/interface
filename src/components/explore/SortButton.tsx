@@ -18,7 +18,7 @@ function _SortButton({ orderBy, onPress }: FilterGroupProps) {
   const { t } = useTranslation()
   return (
     <Button py="xs" onPress={onPress}>
-      <Flex centered row bg="backgroundContainer" borderRadius="sm" gap="xxs" p="xs">
+      <Flex centered row bg="background2" borderRadius="sm" gap="xxs" p="xs">
         <Text color="textSecondary" pl="xxxs" textAlign="center" variant="buttonLabelSmall">
           {getOrderByLabel(orderBy, t)}
         </Text>

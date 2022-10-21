@@ -72,7 +72,7 @@ export function HomeScreen({ queryRefs }: Props) {
 
   const contentHeader = useMemo(() => {
     return (
-      <Flex bg="backgroundBackdrop" gap="sm" pb="md">
+      <Flex bg="background0" gap="sm" pb="md">
         <AccountHeader />
         <Flex gap="sm" px="lg">
           <PortfolioBalance queryRef={queryRefs.portfolioBalanceQueryRef} />

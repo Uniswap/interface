@@ -25,7 +25,7 @@ export function Toast({ label, variant }: ToastProps) {
     <Box
       alignContent="center"
       alignSelf="stretch"
-      backgroundColor="backgroundSurface"
+      backgroundColor="background1"
       borderRadius="md"
       borderWidth={1}
       flexDirection="row"
@@ -67,6 +67,6 @@ function useVariantColor(variant: ToastProps['variant']) {
     case ToastVariant.Success:
       return theme.colors.accentSuccess
     case ToastVariant.Failed:
-      return theme.colors.accentFailure
+      return theme.colors.accentCritical
   }
 }

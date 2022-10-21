@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct Colors {
-  static let backgroundAction = Color("backgroundAction")
-  static let backgroundSurface = Color("backgroundSurface")
+  static let background3 = Color("background3")
+  static let background1 = Color("background1")
   static let textPrimary = Color("textPrimary")
   static let textTertiary = Color("textTertiary")
   static let accentActive = Color("accentActive")

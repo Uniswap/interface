@@ -44,7 +44,7 @@ export function CancelConfirmationView({
   }, [cancelationGasFeeInfo, onCancel])
 
   return (
-    <Flex centered grow bg="backgroundSurface" borderRadius="xl" gap="lg" p="lg" pb="xxl">
+    <Flex centered grow bg="background1" borderRadius="xl" gap="lg" p="lg" pb="xxl">
       <Flex centered borderColor="textSecondary" borderRadius="md" borderWidth={1} padding="xs">
         <SlashCircleIcon fill="none" height={24} />
       </Flex>
@@ -56,12 +56,7 @@ export function CancelConfirmationView({
           )}
         </Text>
       </Flex>
-      <Flex
-        bg="backgroundContainer"
-        borderRadius="xl"
-        gap="none"
-        spacerProps={spacerProps}
-        width="100%">
+      <Flex bg="background2" borderRadius="xl" gap="none" spacerProps={spacerProps} width="100%">
         <Flex grow row justifyContent="space-between" p="md">
           <Text variant="bodySmall">{t('Network fee')}</Text>
           {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="bodySmall">{gasFeeUSD}</Text>}

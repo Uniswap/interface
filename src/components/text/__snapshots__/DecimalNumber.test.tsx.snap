@@ -6,7 +6,7 @@ exports[`renders a DecimalNumber 1`] = `
   style={
     Array [
       Object {
-        "color": "#0E111A",
+        "color": "#0D111C",
         "display": "flex",
         "fontFamily": "Inter-Medium",
         "fontSize": 16,
@@ -21,7 +21,7 @@ exports[`renders a DecimalNumber 1`] = `
     style={
       Array [
         Object {
-          "color": "#99A1BD",
+          "color": "#888FAB",
           "display": "flex",
         },
       ]
@@ -39,7 +39,7 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
   style={
     Array [
       Object {
-        "color": "#0E111A",
+        "color": "#0D111C",
         "display": "flex",
         "fontFamily": "Inter-Medium",
         "fontSize": 16,
@@ -54,7 +54,7 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
     style={
       Array [
         Object {
-          "color": "#99A1BD",
+          "color": "#888FAB",
           "display": "flex",
         },
       ]
@@ -72,7 +72,7 @@ exports[`renders a DecimalNumber without a decimal part 1`] = `
   style={
     Array [
       Object {
-        "color": "#0E111A",
+        "color": "#0D111C",
         "display": "flex",
         "fontFamily": "Inter-Medium",
         "fontSize": 16,

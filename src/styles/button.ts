@@ -9,7 +9,7 @@ export const primaryButtonVariants = {
     borderRadius: 'md',
   },
   gray: {
-    backgroundColor: 'backgroundAction',
+    backgroundColor: 'background3',
     color: 'textPrimary',
   },
   green: {
@@ -21,8 +21,8 @@ export const primaryButtonVariants = {
     color: 'white',
   },
   paleOrange: {
-    backgroundColor: 'accentFailureSoft',
-    color: 'accentFailure',
+    backgroundColor: 'accentCriticalSoft',
+    color: 'accentCritical',
   },
   transparent: {
     backgroundColor: 'none',
@@ -54,12 +54,12 @@ export const primaryButtonVariants = {
     color: 'accentWarning',
   },
   failure: {
-    backgroundColor: 'accentFailureSoft',
-    color: 'accentFailure',
+    backgroundColor: 'accentCriticalSoft',
+    color: 'accentCritical',
   },
   warningDark: {
-    backgroundColor: 'accentFailure',
-    color: 'accentTextDarkPrimary',
+    backgroundColor: 'accentCritical',
+    color: 'textOnDimPrimary',
   },
 }
 

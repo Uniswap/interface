@@ -17,7 +17,7 @@ export default function PinInput({ length, setValue, value, disabled }: PinInput
           {[...Array(length)].map((_, i) => (
             <Box
               key={i}
-              bg={i < value.length ? 'textPrimary' : 'backgroundAction'}
+              bg={i < value.length ? 'textPrimary' : 'background3'}
               borderColor="backgroundOutline"
               borderRadius="full"
               borderWidth={1}

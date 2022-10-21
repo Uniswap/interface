@@ -75,7 +75,7 @@ const SitePermissions = () => {
       </Flex>
       <Flex row alignItems="flex-start" gap="xs">
         <Box mt="xxxs">
-          <X color={theme.colors.accentFailure} height={16} width={16} />
+          <X color={theme.colors.accentCritical} height={16} width={16} />
         </Box>
         <Box flex={1}>
           <Text color="textPrimary" variant="bodySmall">
@@ -207,7 +207,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
             </Trans>
           </Text>
           <LinkButton
-            backgroundColor="backgroundContainer"
+            backgroundColor="background2"
             borderRadius="sm"
             label={pendingSession.dapp.url}
             mb="sm"
@@ -227,7 +227,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
         <Flex flexDirection="row" gap="xs" justifyContent="space-between">
           <TextButton
             alignItems="center"
-            backgroundColor="backgroundAction"
+            backgroundColor="background3"
             borderRadius="md"
             flex={1}
             flexDirection="row"

@@ -14,7 +14,7 @@ function _NotificationBadge({ children, showIndicator = true }: Props) {
       {showIndicator && (
         <Box
           backgroundColor="accentAction"
-          borderColor="backgroundBackdrop"
+          borderColor="background0"
           borderRadius="full"
           borderWidth={2}
           height={NOTIFICATION_DOT_SIZE}

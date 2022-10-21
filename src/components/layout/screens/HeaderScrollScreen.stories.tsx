@@ -21,7 +21,7 @@ export default {
   component: HeaderScrollScreen,
   decorators: [
     (Story) => (
-      <Box borderColor="backgroundContainer" borderWidth={1} height={812} width={375}>
+      <Box borderColor="background2" borderWidth={1} height={812} width={375}>
         <Story />
       </Box>
     ),
@@ -31,7 +31,7 @@ export default {
 const Template: ComponentStory<typeof HeaderScrollScreen> = (args) => {
   return (
     <HeaderScrollScreen {...args}>
-      <Flex row bg="backgroundContainer" m="md" p="md">
+      <Flex row bg="background2" m="md" p="md">
         <Text variant="bodyLarge">Body content</Text>
       </Flex>
     </HeaderScrollScreen>

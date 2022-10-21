@@ -10,7 +10,7 @@ export function HiddenMnemonicWordView() {
     <Flex
       row
       alignItems="stretch"
-      bg="backgroundBackdrop"
+      bg="background0"
       height="50%"
       justifyContent="space-evenly"
       mt="md"

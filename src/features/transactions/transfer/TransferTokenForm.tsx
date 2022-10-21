@@ -135,7 +135,7 @@ export function TransferTokenForm({
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
             <Flex
-              backgroundColor="backgroundContainer"
+              backgroundColor="background2"
               borderRadius="xl"
               justifyContent="center"
               pb="md"
@@ -164,16 +164,13 @@ export function TransferTokenForm({
           <Box zIndex="popover">
             <Box alignItems="center" height={ARROW_SIZE} style={StyleSheet.absoluteFill}>
               <Box alignItems="center" bottom={ARROW_SIZE / 2} position="absolute">
-                <TransferArrowButton
-                  disabled
-                  bg={recipient ? 'backgroundAction' : 'backgroundSurface'}
-                />
+                <TransferArrowButton disabled bg={recipient ? 'background3' : 'background1'} />
               </Box>
             </Box>
           </Box>
 
           <Flex
-            backgroundColor={recipient ? 'backgroundContainer' : 'none'}
+            backgroundColor={recipient ? 'background2' : 'none'}
             borderRadius="xl"
             justifyContent="center"
             px="md"

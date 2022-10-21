@@ -42,7 +42,7 @@ function WatchedWalletsItem({
           />
         </Box>
         <TextButton
-          backgroundColor={isWatched ? 'none' : 'backgroundAction'}
+          backgroundColor={isWatched ? 'none' : 'background3'}
           borderColor="backgroundOutline"
           borderRadius="md"
           borderWidth={1}

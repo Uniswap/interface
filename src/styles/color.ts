@@ -7,13 +7,21 @@ export interface GlobalPalette {
   black: string
   gray50: string
   gray100: string
+  gray150: string
   gray200: string
+  gray250: string
   gray300: string
+  gray350: string
   gray400: string
+  gray450: string
   gray500: string
+  gray550: string
   gray600: string
+  gray650: string
   gray700: string
+  gray750: string
   gray800: string
+  gray850: string
   gray900: string
   pink50: string
   pink100: string
@@ -146,17 +154,6 @@ export interface GlobalPalette {
   slate700: string
   slate800: string
   slate900: string
-  purple50: string
-  purple100: string
-  purple200: string
-  purple300: string
-  purple400: string
-  purple500: string
-  purple600: string
-  purple700: string
-  purple800: string
-  purple900: string
-  purpleVibrant: string
   slateVibrant: string
   networkEthereum: string
   networkEthereumSoft: string
@@ -171,17 +168,25 @@ export interface GlobalPalette {
 export const colors: GlobalPalette = {
   white: '#FFFFFF',
   black: '#000000',
-  gray50: '#f5f6fc',
-  gray100: '#e8ecfb',
-  gray200: '#c9d0e7',
-  gray300: '#99A1BD',
-  gray400: '#7C85A2',
-  gray500: '#5E6887',
-  gray600: '#404963',
+  gray50: '#F5F6FC',
+  gray100: '#E8ECFB',
+  gray150: '#D2D9EE',
+  gray200: '#B8C0DC',
+  gray250: '#A6AFCA',
+  gray300: '#98A1C0',
+  gray350: '#888FAB',
+  gray400: '#7780A0',
+  gray450: '#6B7594',
+  gray500: '#5D6785',
+  gray550: '#505A78',
+  gray600: '#404A67',
+  gray650: '#333D59',
   gray700: '#293249',
-  gray800: '#141B2B',
-  gray900: '#0E111A',
-  pink50: '#fff2f7',
+  gray750: '#1B2236',
+  gray800: '#131A2A',
+  gray850: '#0E1524',
+  gray900: '#0D111C',
+  pink50: '#FFF2F7',
   pink100: '#FFD9E4',
   pink200: '#FBA4C0',
   pink300: '#FF6FA3',
@@ -192,18 +197,18 @@ export const colors: GlobalPalette = {
   pink800: '#39061B',
   pink900: '#2B000B',
   pinkVibrant: '#F51A70',
-  red50: '#fef0ee',
+  red50: '#FEF0EE',
   red100: '#FED5CF',
   red200: '#FEA79B',
   red300: '#FD766B',
   red400: '#FA2B39',
   red500: '#C4292F',
   red600: '#891E20',
-  red700: '#530F10',
+  red700: '#530F0F',
   red800: '#380A03',
   red900: '#240800',
   redVibrant: '#F14544',
-  yellow50: '#fef8c4',
+  yellow50: '#FEF8C4',
   yellow100: '#F0E49A',
   yellow200: '#DBBC19',
   yellow300: '#BB9F13',
@@ -214,7 +219,7 @@ export const colors: GlobalPalette = {
   yellow800: '#231902',
   yellow900: '#180F02',
   yellowVibrant: '#FAF40A',
-  gold50: '#fff5e8',
+  gold50: '#FFF5E8',
   gold100: '#F8DEB6',
   gold200: '#EEB317',
   gold300: '#DB900B',
@@ -225,7 +230,7 @@ export const colors: GlobalPalette = {
   gold800: '#29160F',
   gold900: '#161007',
   goldVibrant: '#FEB239',
-  green50: '#edfdf0',
+  green50: '#EDFDF0',
   green100: '#BFEECA',
   green200: '#76D191',
   green300: '#40B66B',
@@ -236,7 +241,7 @@ export const colors: GlobalPalette = {
   green800: '#091F10',
   green900: '#09130B',
   greenVibrant: '#5CFE9D',
-  blue50: '#f3f5fe',
+  blue50: '#F3F5FE',
   blue100: '#DEE1FF',
   blue200: '#ADBCFF',
   blue300: '#869EFF',
@@ -247,7 +252,7 @@ export const colors: GlobalPalette = {
   blue800: '#0B193F',
   blue900: '#040E34',
   blueVibrant: '#587BFF',
-  lime50: '#f2fedb',
+  lime50: '#F2FEDB',
   lime100: '#D3EBA3',
   lime200: '#9BCD46',
   lime300: '#7BB10C',
@@ -258,7 +263,7 @@ export const colors: GlobalPalette = {
   lime800: '#171D00',
   lime900: '#0E1300',
   limeVibrant: '#B1F13C',
-  orange50: '#feede5',
+  orange50: '#FEEDE5',
   orange100: '#FCD9C8',
   orange200: '#FBAA7F',
   orange300: '#F67E3E',
@@ -269,7 +274,7 @@ export const colors: GlobalPalette = {
   orange800: '#2A1505',
   orange900: '#1C0E03',
   orangeVibrant: '#FF6F1E',
-  magenta50: '#fff1fe',
+  magenta50: '#FFF1FE',
   magenta100: '#FAD8F8',
   magenta200: '#F5A1F5',
   magenta300: '#F06DF3',
@@ -280,18 +285,18 @@ export const colors: GlobalPalette = {
   magenta800: '#330733',
   magenta900: '#250225',
   magentaVibrant: '#FC72FF',
-  violet50: '#f1effe',
+  violet50: '#F1EFFE',
   violet100: '#E2DEFD',
   violet200: '#BDB8FA',
   violet300: '#9D99F5',
   violet400: '#7A7BEB',
   violet500: '#515EDC',
   violet600: '#343F9E',
-  violet700: '#121643',
-  violet800: '#0B193F',
+  violet700: '#232969',
+  violet800: '#121643',
   violet900: '#0E0D30',
   violetVibrant: '#5065FD',
-  cyan50: '#d6f5fe',
+  cyan50: '#D6F5FE',
   cyan100: '#B0EDFE',
   cyan200: '#63CDE8',
   cyan300: '#2FB0CC',
@@ -302,7 +307,7 @@ export const colors: GlobalPalette = {
   cyan800: '#011E26',
   cyan900: '#011418',
   cyanVibrant: '#36DBFF',
-  slate50: '#f1fcef',
+  slate50: '#F1FCEF',
   slate100: '#DAE6D8',
   slate200: '#B8C3B7',
   slate300: '#9AA498',
@@ -313,23 +318,12 @@ export const colors: GlobalPalette = {
   slate800: '#181B18',
   slate900: '#0F120E',
   slateVibrant: '#7E887D',
-  purple50: '#f8f1ff',
-  purple100: '#ecddfe',
-  purple200: '#d0b2f3',
-  purple300: '#b98ef4',
-  purple400: '#a26af3',
-  purple500: '#8440f2',
-  purple600: '#5213c2',
-  purple700: '#3a0a8f',
-  purple800: '#22055b',
-  purple900: '#1c0337',
-  purpleVibrant: '#6100ff',
   networkEthereum: '#515EDC',
   networkEthereumSoft: opacify(12, '#515EDC'),
   networkOptimism: '#FA2B39',
   networkOptimismSoft: opacify(12, '#FA2B39'),
   networkPolygon: '#a26af3',
-  networkPolygonSoft: opacify(12, '#a26af3'),
+  networkPolygonSoft: opacify(12, '#A26AF3'),
   networkArbitrum: '#28A0F0',
   networkArbitrumSoft: opacify(12, '#28A0F0'),
 }
@@ -343,11 +337,10 @@ export interface Palette {
   userThemeCyan: string
   userThemeSlate: string
 
-  backgroundBackdrop: string
-  backgroundSurface: string
-  backgroundContainer: string
-  backgroundAction: string
-  backgroundInteractive: string
+  background0: string
+  background1: string
+  background2: string
+  background3: string
   backgroundOutline: string
   backgroundScrim: string
 
@@ -359,23 +352,22 @@ export interface Palette {
   accentActive: string
   accentSuccess: string
   accentWarning: string
-  // TODO: update to accentCritical
-  accentFailure: string
+  accentCritical: string
   accentBranded: string
 
   accentActionSoft: string
   accentActiveSoft: string
   accentSuccessSoft: string
   accentWarningSoft: string
-  accentFailureSoft: string
+  accentCriticalSoft: string
 
-  accentTextDarkPrimary: string
-  accentTextDarkSecondary: string
-  accentTextDarkTertiary: string
+  textOnBrightPrimary: string
+  textOnBrightSecondary: string
+  textOnBrightTertiary: string
 
-  accentTextLightPrimary: string
-  accentTextLightSecondary: string
-  accentTextLightTertiary: string
+  textOnDimPrimary: string
+  textOnDimSecondary: string
+  textOnDimTertiary: string
 
   white: string
   black: string
@@ -407,38 +399,38 @@ export const colorsLight: Palette = {
 
   none: 'transparent',
 
-  backgroundBackdrop: colors.white,
-  backgroundSurface: colors.white,
-  backgroundContainer: colors.gray50,
-  backgroundAction: colors.gray100,
-  backgroundInteractive: colors.gray100,
-  backgroundOutline: opacify(24, colors.gray500),
-  backgroundScrim: opacify(60, colors.gray900),
+  background0: colors.white,
+  background1: colors.white,
+  background2: colors.gray50,
+  background3: colors.gray100,
+  backgroundOutline: colors.gray150,
+  backgroundScrim: opacify(50, colors.gray150),
 
   textPrimary: colors.gray900,
-  textSecondary: colors.gray500,
-  textTertiary: colors.gray300,
+  textSecondary: colors.gray550,
+  textTertiary: colors.gray350,
 
   accentAction: colors.pink400,
   accentActive: colors.blue400,
-  accentSuccess: colors.green300,
-  accentWarning: colors.gold400,
-  accentFailure: colors.red400,
+  accentSuccess: colors.lime300,
+  accentWarning: colors.goldVibrant,
+  accentCritical: colors.red400,
+
   accentBranded: colors.pink200,
 
   accentActionSoft: opacify(12, colors.pink400),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green300),
   accentWarningSoft: opacify(24, colors.gold200),
-  accentFailureSoft: opacify(12, colors.red400),
+  accentCriticalSoft: opacify(12, colors.red400),
 
-  accentTextDarkPrimary: opacify(80, colors.gray900),
-  accentTextDarkSecondary: opacify(60, colors.gray900),
-  accentTextDarkTertiary: opacify(24, colors.gray900),
+  textOnBrightPrimary: colors.white,
+  textOnBrightSecondary: colors.gray50,
+  textOnBrightTertiary: opacify(50, colors.white),
 
-  accentTextLightPrimary: colors.gray50,
-  accentTextLightSecondary: opacify(60, colors.gray50),
-  accentTextLightTertiary: opacify(12, colors.gray50),
+  textOnDimPrimary: colors.gray900,
+  textOnDimSecondary: colors.gray800,
+  textOnDimTertiary: opacify(45, colors.gray900),
 
   white: colors.white,
   black: colors.black,
@@ -467,38 +459,38 @@ export const colorsDark: Palette = {
   userThemeCyan: colors.cyanVibrant,
   userThemeSlate: colors.slateVibrant,
 
-  backgroundBackdrop: colors.black,
-  backgroundSurface: colors.gray900,
-  backgroundContainer: colors.gray800,
-  backgroundAction: colors.gray700,
-  backgroundInteractive: colors.gray700,
-  backgroundOutline: opacify(24, colors.gray300),
-  backgroundScrim: opacify(72, colors.gray900),
+  background0: colors.black,
+  background1: colors.gray900,
+  background2: colors.gray800,
+  background3: colors.gray700,
+  backgroundOutline: colors.gray750,
+  backgroundScrim: opacify(50, colors.gray750),
 
   textPrimary: colors.white,
-  textSecondary: colors.gray300,
-  textTertiary: colors.gray500,
+  textSecondary: colors.gray100,
+  textTertiary: colors.gray400,
 
-  accentAction: colors.blue400,
+  accentAction: colors.pink400,
   accentActive: colors.blue400,
-  accentSuccess: colors.green200,
-  accentWarning: colors.gold200,
-  accentFailure: colors.red300,
+  accentSuccess: colors.lime300,
+  accentWarning: colors.goldVibrant,
+  accentCritical: colors.red400,
+
   accentBranded: colors.pink200,
 
   accentActionSoft: opacify(24, colors.blue400),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green400),
   accentWarningSoft: opacify(24, colors.gold200),
-  accentFailureSoft: opacify(12, colors.red400),
+  accentCriticalSoft: opacify(12, colors.red400),
 
-  accentTextDarkPrimary: opacify(80, colors.gray900),
-  accentTextDarkSecondary: opacify(60, colors.gray900),
-  accentTextDarkTertiary: opacify(24, colors.gray900),
+  textOnBrightPrimary: colors.white,
+  textOnBrightSecondary: colors.gray50,
+  textOnBrightTertiary: opacify(50, colors.white),
 
-  accentTextLightPrimary: colors.gray50,
-  accentTextLightSecondary: opacify(72, colors.gray50),
-  accentTextLightTertiary: opacify(12, colors.gray50),
+  textOnDimPrimary: colors.gray900,
+  textOnDimSecondary: colors.gray800,
+  textOnDimTertiary: opacify(45, colors.gray900),
 
   white: colors.white,
   black: colors.black,

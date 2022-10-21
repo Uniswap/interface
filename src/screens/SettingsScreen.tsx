@@ -197,7 +197,7 @@ export function SettingsScreen() {
           renderItem={renderItem}
           renderSectionFooter={() => <Flex pt="lg" />}
           renderSectionHeader={({ section: { subTitle } }) => (
-            <Box bg="backgroundBackdrop" pb="sm">
+            <Box bg="background0" pb="sm">
               <Text color="textSecondary" variant="bodyLarge">
                 {subTitle}
               </Text>

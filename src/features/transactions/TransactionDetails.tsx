@@ -74,7 +74,7 @@ export function TransactionDetails({
         </Button>
       )}
       {!showWarning && <Box mb="xs">{banner}</Box>}
-      <Flex backgroundColor="backgroundContainer" borderRadius="lg" gap="none">
+      <Flex backgroundColor="background2" borderRadius="lg" gap="none">
         {children}
         <NetworkFee chainId={chainId} gasFee={gasFee} />
         <Box

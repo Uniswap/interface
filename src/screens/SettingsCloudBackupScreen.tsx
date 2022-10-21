@@ -89,7 +89,7 @@ export function SettingsCloudBackupScreen({
       </Flex>
       <CloudBackupSetPassword doneButtonText={t('Back up to iCloud')} onPressDone={onPressNext} />
       <BottomSheetModal
-        backgroundColor={theme.colors.backgroundSurface}
+        backgroundColor={theme.colors.background1}
         isVisible={showCloudBackupInfoModal}
         name={ModalName.ICloudBackupInfo}>
         <Flex gap="none" mb="xl" px="md" py="sm">

@@ -38,7 +38,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
   const { t } = useTranslation()
   const {
     autoFocus,
-    backgroundColor = 'backgroundSurface',
+    backgroundColor = 'background1',
     clearIcon,
     disableClearable,
     endAdornment = <SearchIcon color={theme.colors.textTertiary} height={20} width={20} />,

@@ -51,8 +51,8 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
             return (
               <Button
                 key={backup.mnemonicId}
-                backgroundColor="backgroundContainer"
-                borderColor="backgroundAction"
+                backgroundColor="background2"
+                borderColor="background3"
                 borderRadius="lg"
                 borderWidth={1}
                 p="md"

@@ -59,7 +59,7 @@ ExampleRed.args = {
   ),
   children: (
     <Flex>
-      <Text color="accentFailure" variant="bodyLarge">
+      <Text color="accentCritical" variant="bodyLarge">
         Scary red text!
       </Text>
     </Flex>
@@ -71,10 +71,10 @@ ExampleRedWithParagraph.args = {
   ...ExampleRed.args,
   children: (
     <>
-      <Text color="accentFailure" variant="headlineLarge">
+      <Text color="accentCritical" variant="headlineLarge">
         Scary red text!
       </Text>
-      <Text color="accentFailure" variant="bodyLarge">
+      <Text color="accentCritical" variant="bodyLarge">
         With a scary warning text body paragraph underneath it no less!
       </Text>
     </>

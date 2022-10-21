@@ -25,11 +25,11 @@ export function getButtonColor(emphasis: ButtonProps['emphasis']): keyof Theme['
     case ButtonEmphasis.High:
       return 'accentAction'
     case ButtonEmphasis.Medium:
-      return 'backgroundAction'
+      return 'background3'
     case ButtonEmphasis.Low:
       return 'none'
     case ButtonEmphasis.Destructive:
-      return 'accentFailureSoft'
+      return 'accentCriticalSoft'
     case ButtonEmphasis.Warning:
       return 'accentWarningSoft'
     default:
@@ -44,7 +44,7 @@ export function getButtonTextColor(emphasis: ButtonProps['emphasis']): keyof The
     case ButtonEmphasis.Low:
       return 'textPrimary'
     case ButtonEmphasis.Destructive:
-      return 'accentFailure'
+      return 'accentCritical'
     case ButtonEmphasis.Warning:
       return 'accentWarning'
     default:

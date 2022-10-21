@@ -79,7 +79,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
 
   return (
     <Flex
-      backgroundColor="backgroundContainer"
+      backgroundColor="background2"
       borderTopLeftRadius="lg"
       borderTopRightRadius="lg"
       gap="none">
@@ -88,7 +88,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
         onPress={() => {
           // TODO: implement popping up collection modal or check with design on how to handle this
         }}>
-        <Box borderBottomColor="backgroundContainer" borderWidth={0.5} flexDirection="column">
+        <Box borderBottomColor="background2" borderWidth={0.5} flexDirection="column">
           <Flex row gap="sm" m="md">
             <Flex fill row alignItems="center" gap="xs">
               <Text color="textSecondary" numberOfLines={1} variant="bodySmall">

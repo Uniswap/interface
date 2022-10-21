@@ -92,7 +92,7 @@ export default function TransactionActionsModal({
       transactionActionOptions.push({
         key: ElementName.Cancel,
         onPress: onCancel,
-        render: renderOptionItem(t('Cancel transaction'), 'accentFailure'),
+        render: renderOptionItem(t('Cancel transaction'), 'accentCritical'),
       })
     }
     return transactionActionOptions
@@ -100,7 +100,7 @@ export default function TransactionActionsModal({
 
   return (
     <BottomSheetModal
-      backgroundColor="accentFailure"
+      backgroundColor="accentCritical"
       hideHandlebar={true}
       isVisible={isVisible}
       name={ModalName.TransactionActions}

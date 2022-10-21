@@ -80,7 +80,7 @@ export function SwapDetails({
                 px="xs"
                 py="xs"
                 onPress={onAcceptTrade}>
-                <Text color="accentTextLightPrimary" variant="buttonLabelSmall">
+                <Text color="textOnBrightPrimary" variant="buttonLabelSmall">
                   {t('Accept')}
                 </Text>
               </Button>

@@ -10,7 +10,7 @@ export function FavoriteLoader({ ...props }: BoxProps<Theme, true> & ViewProps) 
   const boxMinHeight = 116
   return (
     <Box
-      backgroundColor="backgroundAction"
+      backgroundColor="background3"
       borderRadius="md"
       minHeight={boxMinHeight}
       width={TOKEN_ITEM_BOX_MINWIDTH}

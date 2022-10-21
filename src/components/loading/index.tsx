@@ -56,8 +56,8 @@ const useChildFromType = (
     case 'graph':
       return (
         <Box overflow="hidden">
-          <GraphCurveArea color={theme.colors.backgroundAction} />
-          <GraphCurveArea fill={theme.colors.backgroundAction} style={StyleSheet.absoluteFill} />
+          <GraphCurveArea color={theme.colors.background3} />
+          <GraphCurveArea fill={theme.colors.background3} style={StyleSheet.absoluteFill} />
         </Box>
       )
     case 'token':

@@ -28,7 +28,7 @@ export default function WalletPreviewCard({
 }: Props) {
   return (
     <Button
-      backgroundColor={selected ? 'backgroundAction' : 'backgroundSurface'}
+      backgroundColor={selected ? 'background3' : 'background1'}
       borderColor={selected ? 'accentActive' : 'none'}
       borderRadius="lg"
       borderWidth={1}

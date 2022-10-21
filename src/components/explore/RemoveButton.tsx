@@ -10,7 +10,7 @@ export default function RemoveButton(props: ButtonProps) {
     <AnimatedButton
       {...props}
       alignItems="center"
-      backgroundColor="backgroundBackdrop"
+      backgroundColor="background0"
       borderColor="backgroundOutline"
       borderRadius="full"
       borderWidth={1}

@@ -30,7 +30,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
 
   return (
     <Flex gap="sm" justifyContent="flex-end">
-      <Flex centered bg="backgroundSurface" borderRadius="lg" gap="none" overflow="hidden">
+      <Flex centered bg="background1" borderRadius="lg" gap="none" overflow="hidden">
         {typeof header === 'string' ? (
           <Flex centered gap="xxs" py="md">
             <Text variant="buttonLabelMedium">{header}</Text>
@@ -58,13 +58,13 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
           </ScrollView>
         </Flex>
       </Flex>
-      <Flex bg="backgroundSurface" borderRadius="md">
+      <Flex bg="background1" borderRadius="md">
         <Button
           onPress={() => {
             selectionAsync()
             onClose()
           }}>
-          <Flex centered bg="backgroundAction" borderRadius="md" py="md">
+          <Flex centered bg="background3" borderRadius="md" py="md">
             <Text color="textPrimary" variant="subheadLarge">
               {closeButtonLabel}
             </Text>

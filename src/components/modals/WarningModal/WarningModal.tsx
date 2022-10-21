@@ -73,7 +73,7 @@ export default function WarningModal({
 
   return (
     <BottomSheetModal
-      backgroundColor={theme.colors.backgroundSurface}
+      backgroundColor={theme.colors.background1}
       hideHandlebar={hideHandlebar}
       isDismissible={isDismissible}
       isVisible={isVisible}
@@ -123,8 +123,8 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
   switch (severity) {
     case WarningSeverity.High:
       return {
-        text: 'accentFailure',
-        background: 'accentFailureSoft',
+        text: 'accentCritical',
+        background: 'accentCriticalSoft',
         confirmButton: 'blue',
       }
     case WarningSeverity.Medium:

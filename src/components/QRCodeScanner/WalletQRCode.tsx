@@ -63,21 +63,16 @@ export function WalletQRCode({ address }: Props) {
           variant="headlineSmall"
           verticalGap="xxs"
         />
-        <Flex
-          centered
-          backgroundColor="backgroundBackdrop"
-          borderRadius="lg"
-          gap="none"
-          padding="lg">
+        <Flex centered backgroundColor="background0" borderRadius="lg" gap="none" padding="lg">
           <QRCode
-            backgroundColor={theme.colors.backgroundBackdrop}
+            backgroundColor={theme.colors.background0}
             ecl="H"
             enableLinearGradient={true}
             linearGradient={[gradientData.gradientStart, gradientData.gradientEnd]}
             logo={{ uri: '' }}
             // this could eventually be set to an SVG version of the Unicon which would ensure it's perfectly centered, but for now we can just use an empty logo image to create a blank circle in the middle of the QR code
             // note: this QR code library doesn't actually create a "safe" space in the middle, it just adds the logo on top, so that's why ecl is set to H (high error correction level) to ensure the QR code is still readable even if the middle of the QR code is partially obscured
-            logoBackgroundColor={theme.colors.backgroundSurface}
+            logoBackgroundColor={theme.colors.background1}
             logoBorderRadius={theme.borderRadii.full}
             logoMargin={UNICON_SIZE / 3}
             logoSize={UNICON_SIZE}

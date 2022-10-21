@@ -165,7 +165,7 @@ export function SwapForm({
       <Flex fill grow gap="xs" justifyContent="space-between" onLayout={onLayout}>
         <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xs">
           <Trace section={SectionName.CurrencyInputPanel}>
-            <Flex backgroundColor="backgroundContainer" borderRadius="xl" pb="md" pt="lg" px="md">
+            <Flex backgroundColor="background2" borderRadius="xl" pb="md" pt="lg" px="md">
               <CurrencyInputPanel
                 currency={currencies[CurrencyField.INPUT]}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
@@ -194,7 +194,7 @@ export function SwapForm({
           <Box zIndex="popover">
             <Box alignItems="center" height={ARROW_SIZE} style={StyleSheet.absoluteFill}>
               <Box alignItems="center" bottom={ARROW_SIZE / 2} position="absolute">
-                <SwapArrowButton bg="backgroundSurface" onPress={onSwitchCurrencies} />
+                <SwapArrowButton bg="background1" onPress={onSwitchCurrencies} />
               </Box>
             </Box>
           </Box>
@@ -202,7 +202,7 @@ export function SwapForm({
           <Trace section={SectionName.CurrencyOutputPanel}>
             <Flex fill gap="none">
               <Flex
-                backgroundColor="backgroundContainer"
+                backgroundColor="background2"
                 borderBottomLeftRadius={swapWarning || showRate ? 'none' : 'xl'}
                 borderBottomRightRadius={swapWarning || showRate ? 'none' : 'xl'}
                 borderTopLeftRadius="xl"
@@ -285,7 +285,7 @@ export function SwapForm({
                     row
                     alignItems="center"
                     alignSelf="stretch"
-                    backgroundColor="backgroundAction"
+                    backgroundColor="background3"
                     borderBottomLeftRadius="lg"
                     borderBottomRightRadius="lg"
                     flexGrow={1}

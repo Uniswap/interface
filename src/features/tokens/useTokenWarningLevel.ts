@@ -108,7 +108,7 @@ export function useTokenWarningLevelColors(tokenWarningLevel: TokenWarningLevel 
     case TokenWarningLevel.LOW:
       return 'accentWarning'
     case TokenWarningLevel.MEDIUM:
-      return 'accentFailure'
+      return 'accentCritical'
     case TokenWarningLevel.BLOCKED:
       return 'textSecondary'
     default:

@@ -48,7 +48,7 @@ exports[`renders a NetworkPill with border 1`] = `
       style={
         Array [
           Object {
-            "backgroundColor": "#e8ecfb",
+            "backgroundColor": "#E8ECFB",
             "resizeMode": "contain",
           },
           Object {
@@ -77,7 +77,7 @@ exports[`renders a NetworkPill with border 1`] = `
     style={
       Array [
         Object {
-          "color": "#0E111A",
+          "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 14,
@@ -142,7 +142,7 @@ exports[`renders a NetworkPill without image 1`] = `
       style={
         Array [
           Object {
-            "backgroundColor": "#e8ecfb",
+            "backgroundColor": "#E8ECFB",
             "resizeMode": "contain",
           },
           Object {
@@ -171,7 +171,7 @@ exports[`renders a NetworkPill without image 1`] = `
     style={
       Array [
         Object {
-          "color": "#0E111A",
+          "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 14,
@@ -217,7 +217,7 @@ exports[`renders an InlineNetworkPill 1`] = `
     style={
       Array [
         Object {
-          "color": "#0E111A",
+          "color": "#0D111C",
           "display": "flex",
           "fontFamily": "Inter-SemiBold",
           "fontSize": 12,

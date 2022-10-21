@@ -26,7 +26,7 @@ export function LockScreenModal() {
         <Flex
           centered
           alignItems="center"
-          backgroundColor="backgroundBackdrop"
+          backgroundColor="background0"
           pointerEvents="none"
           style={{
             width: dimensions.fullWidth,

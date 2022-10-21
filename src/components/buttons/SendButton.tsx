@@ -54,7 +54,7 @@ export function SendButton({
   return iconOnly ? (
     // TODO: Implement iconOnly using the new components-uds Button
     <IconButton
-      bg={bg ?? 'backgroundAction'}
+      bg={bg ?? 'background3'}
       borderRadius="md"
       disabled={sendButtonDisabled}
       icon={

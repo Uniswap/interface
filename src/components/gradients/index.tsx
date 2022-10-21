@@ -32,7 +32,7 @@ export function usePinkToBlueLinearGradient(): Stops {
   const theme = useAppTheme()
 
   return useMemo(
-    () => getStops(theme.colors.accentAction, theme.colors.backgroundSurface),
-    [theme.colors.backgroundSurface, theme.colors.accentAction]
+    () => getStops(theme.colors.accentAction, theme.colors.background1),
+    [theme.colors.background1, theme.colors.accentAction]
   )
 }

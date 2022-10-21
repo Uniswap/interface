@@ -18,7 +18,7 @@ export function Container({ children, ...trace }: PropsWithChildren<ComponentPro
   return (
     <Trace {...trace}>
       <Box
-        bg="backgroundSurface"
+        bg="background1"
         borderColor="backgroundOutline"
         borderRadius="lg"
         borderWidth={0.25}
@@ -38,7 +38,7 @@ export function Shadow({ children, ...rest }: PropsWithChildren<BoxProps<Theme, 
   return (
     <Box
       alignItems="center"
-      bg={isDarkMode ? 'backgroundSurface' : 'backgroundBackdrop'}
+      bg={isDarkMode ? 'background1' : 'background0'}
       borderRadius="lg"
       p="sm"
       shadowColor="black"

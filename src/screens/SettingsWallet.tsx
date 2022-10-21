@@ -240,7 +240,7 @@ export function SettingsWallet({
             renderItem={renderItem}
             renderSectionFooter={() => <Flex pt="lg" />}
             renderSectionHeader={({ section: { subTitle } }) => (
-              <Box bg="backgroundBackdrop" pb="sm">
+              <Box bg="background0" pb="sm">
                 <Text color="textSecondary" variant="bodyLarge">
                   {subTitle}
                 </Text>
@@ -256,10 +256,10 @@ export function SettingsWallet({
           label={t('Remove wallet')}
           name={ElementName.Remove}
           style={{
-            backgroundColor: theme.colors.accentFailureSoft,
+            backgroundColor: theme.colors.accentCriticalSoft,
           }}
           testID={ElementName.Remove}
-          textColor="accentFailure"
+          textColor="accentCritical"
           textVariant="buttonLabelLarge"
           visible={!shouldHideRemoveOption}
           width="100%"

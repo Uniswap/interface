@@ -64,13 +64,13 @@ export function GenericImportForm({
       <Flex gap="md">
         <Flex
           centered
-          backgroundColor="backgroundSurface"
+          backgroundColor="background1"
           borderColor={
             showSuccess
               ? 'accentSuccess'
               : error && (liveCheck || !focused) && value
-              ? 'accentFailure'
-              : 'backgroundContainer'
+              ? 'accentCritical'
+              : 'background2'
           }
           borderRadius="xl"
           borderWidth={1}
@@ -84,7 +84,7 @@ export function GenericImportForm({
               autoFocus
               autoCapitalize="none"
               autoCorrect={false}
-              backgroundColor="backgroundSurface"
+              backgroundColor="background1"
               blurOnSubmit={blurOnSubmit ?? false}
               fontSize={18}
               justifyContent="center"
@@ -133,8 +133,8 @@ export function GenericImportForm({
         <Flex>
           {error && value && (liveCheck || !focused) && (
             <Flex centered row gap="sm">
-              <AlertTriangle color={theme.colors.accentFailure} />
-              <Text color="accentFailure" variant="bodyLarge">
+              <AlertTriangle color={theme.colors.accentCritical} />
+              <Text color="accentCritical" variant="bodyLarge">
                 {error}
               </Text>
             </Flex>

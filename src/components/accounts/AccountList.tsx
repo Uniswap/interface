@@ -27,12 +27,7 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
 
   const ListHeader = useMemo(
     () => (
-      <Flex
-        row
-        alignItems="center"
-        bg="backgroundBackdrop"
-        borderBottomColor="backgroundOutline"
-        pb="sm">
+      <Flex row alignItems="center" bg="background0" borderBottomColor="backgroundOutline" pb="sm">
         <Box flex={1}>
           <Text color="textPrimary" px="lg" variant="bodyLarge">
             {t('Your wallets')}
@@ -86,7 +81,7 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
         stickyHeaderIndices={STICKY_HEADER_INDICES}
       />
       <LinearGradient
-        colors={[theme.colors.translucentBackgroundBackdrop, theme.colors.backgroundBackdrop]}
+        colors={[theme.colors.translucentBackgroundBackdrop, theme.colors.background0]}
         end={{ x: 0, y: 1 }}
         start={{ x: 0, y: 0 }}
         style={ListSheet.gradient}

@@ -173,7 +173,7 @@ export const PriceExplorer = ({
       <Box alignSelf="center" flexDirection="row" width={WIDTH}>
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
-            bg="backgroundSurface"
+            bg="background1"
             borderRadius="xs"
             style={[StyleSheet.absoluteFillObject, sliderStyle]}
             width={LABEL_WIDTH}

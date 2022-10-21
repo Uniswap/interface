@@ -48,7 +48,7 @@ export function TokenLogo({
       ) : (
         <Box
           alignItems="center"
-          bg="backgroundAction"
+          bg="background3"
           height={size}
           justifyContent="center"
           px="xxs"

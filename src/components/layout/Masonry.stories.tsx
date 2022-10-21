@@ -25,7 +25,7 @@ export default {
   component: Masonry,
   decorators: [
     (Story) => (
-      <Box bg="backgroundAction" width={300}>
+      <Box bg="background3" width={300}>
         <Story />
       </Box>
     ),

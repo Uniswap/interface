@@ -26,7 +26,7 @@ export function RelativeChange({
     <Flex row alignItems="center" gap="none" justifyContent="flex-end">
       <Text
         color={
-          semanticColor ? (isPositiveChange ? 'accentSuccess' : 'accentFailure') : 'textSecondary'
+          semanticColor ? (isPositiveChange ? 'accentSuccess' : 'accentCritical') : 'textSecondary'
         }
         variant={variant}>
         {change ? `${change.toFixed(2)}%` : '-'}{' '}
@@ -34,7 +34,7 @@ export function RelativeChange({
       </Text>
       {isPositiveChange === undefined ? null : (
         <Arrow
-          color={isPositiveChange ? theme.colors.accentSuccess : theme.colors.accentFailure}
+          color={isPositiveChange ? theme.colors.accentSuccess : theme.colors.accentCritical}
           direction={isPositiveChange ? 'ne' : 'se'}
           size={16}
         />

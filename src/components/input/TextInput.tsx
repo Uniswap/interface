@@ -47,7 +47,7 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(
     const theme = useTheme<Theme>()
 
     // Set defaults for style values
-    rest.backgroundColor ??= 'backgroundBackdrop'
+    rest.backgroundColor ??= 'background0'
     rest.px ??= 'md'
     rest.py ??= 'sm'
     rest.color ??= 'textPrimary'
