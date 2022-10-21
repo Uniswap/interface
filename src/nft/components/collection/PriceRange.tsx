@@ -1,3 +1,5 @@
+import 'rc-slider/assets/index.css'
+
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -7,14 +9,18 @@ import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { scrollToTop } from 'nft/utils/scrollToTop'
+import { default as Slider } from 'rc-slider'
 import { FormEvent, useEffect, useState } from 'react'
 import { FocusEventHandler } from 'react'
 import { useLocation } from 'react-router-dom'
-import ReactSlider from 'react-slider'
-import { useIsDarkMode } from 'state/user/hooks'
+import styled, { useTheme } from 'styled-components/macro'
 
 import * as styles from './PriceRange.css'
 import { TraitsHeader } from './TraitsHeader'
+
+const StyledSlider = styled(Slider)`
+  cursor: pointer;
+`
 
 export const PriceRange = () => {
   const [placeholderText, setPlaceholderText] = useState('')
@@ -28,7 +34,7 @@ export const PriceRange = () => {
   const setPriceRangeHigh = usePriceRange((statae) => statae.setPriceRangeHigh)
   const prevMinMax = usePriceRange((state) => state.prevMinMax)
   const setPrevMinMax = usePriceRange((state) => state.setPrevMinMax)
-  const isDarktheme = useIsDarkMode()
+  const theme = useTheme()
 
   const isMobile = useIsMobile()
   const location = useLocation()
@@ -97,7 +103,9 @@ export const PriceRange = () => {
     scrollToTop()
   }
 
-  const handleSliderLogic = (minMax: Array<number>) => {
+  const handleSliderLogic = (minMax: number | Array<number>) => {
+    if (typeof minMax === 'number') return
+
     const [newMin, newMax] = minMax
 
     // strip commas so parseFloat can parse properly
@@ -160,14 +168,33 @@ export const PriceRange = () => {
         </Row>
       </Row>
 
-      <Row marginBottom="20" paddingLeft="8" paddingRight="8">
-        <ReactSlider
-          disabled={!priceRangeLow || !priceRangeHigh}
+      <Row marginTop="24" marginBottom="12" paddingLeft="8" paddingRight="8">
+        <StyledSlider
           defaultValue={[0, 100]}
+          min={0}
+          max={100}
+          range
+          step={0.0001}
           value={prevMinMax}
-          className={isDarktheme ? styles.sliderDark : styles.sliderLight}
-          trackClassName={styles.tracker}
-          thumbClassName={styles.thumb}
+          trackStyle={{
+            top: '3px',
+            height: '8px',
+            background: `${theme.accentAction}`,
+          }}
+          handleStyle={{
+            top: '3px',
+            width: '12px',
+            height: '20px',
+            backgroundColor: `${theme.textPrimary}`,
+            borderRadius: '4px',
+            border: 'none',
+            boxShadow: `${theme.shallowShadow.slice(0, -1)}`,
+          }}
+          railStyle={{
+            top: '3px',
+            height: '8px',
+            backgroundColor: `${theme.accentActionSoft}`,
+          }}
           onChange={handleSliderLogic}
         />
       </Row>
