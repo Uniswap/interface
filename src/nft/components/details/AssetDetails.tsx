@@ -269,7 +269,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               </Row>
             </Row>
             <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={headlineMedium}>
-              {asset.openseaSusFlag && (
+              {asset.susFlag && (
                 <Box marginTop="8">
                   <MouseoverTooltip text={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}>
                     <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />
@@ -412,7 +412,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               tokenId={asset.tokenId}
               tokenType={asset.tokenType}
               blockchain="Ethereum"
-              metadataUrl={asset.externalLink}
+              metadataUrl={asset.metadataUrl}
               totalSupply={collection.totalSupply}
             />
           )}

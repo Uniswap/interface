@@ -96,7 +96,7 @@ export const CollectionAsset = ({
           <Card.PrimaryRow>
             <Card.PrimaryDetails>
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
-              {asset.openseaSusFlag && <Card.Suspicious />}
+              {asset.susFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
             {asset.rarity && provider && provider.rank && (
               <Card.Ranking

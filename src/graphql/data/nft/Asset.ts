@@ -146,7 +146,6 @@ export function useAssetsQuery(
       collectionName: asset.collection?.name,
       collectionSymbol: asset.collection?.image?.url,
       currentEthPrice: parseEther(asset.listings?.edges[0].node.price.value?.toString() ?? '0').toString(),
-      // currentUsdPrice: string, // FE to start deriving?
       imageUrl: asset.image?.url,
       animationUrl: asset.animationUrl,
       marketplace: asset.listings?.edges[0].node.marketplace,
@@ -158,15 +157,12 @@ export function useAssetsQuery(
       //   baseDecimals: string
       //   basePrice: string
       // },
-      openseaSusFlag: asset.suspiciousFlag,
+      susFlag: asset.suspiciousFlag,
       sellorders: asset.listings?.edges,
       smallImageUrl: asset.smallImage?.url,
       tokenId: asset.tokenId,
       tokenType: asset.nftContract?.standard,
-      // url: string, //deprecate
       // totalCount?: number, // TODO waiting for BE changes
-      // amount?: number, // deprecate
-      // decimals?: number, // deprecate
       collectionIsVerified: asset.collection?.isVerified,
       // rarity: asset.rarities, // TODO format
       owner: asset.ownerAddress,
@@ -174,12 +170,7 @@ export function useAssetsQuery(
         profile_img_url: asset.collection?.creator?.profileImage?.url,
         address: asset.collection?.creator?.address,
       },
-      externalLink: asset.metadataUrl,
-      // traits?: { // TODO make its own call
-      //   trait_type: string
-      //   value: string
-      //   trait_count: number
-      // }[]
+      metadataUrl: asset.metadataUrl,
     }
   })
   return { assets, hasNext, isLoadingNext, loadNext }
