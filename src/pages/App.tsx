@@ -1,4 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
+import { datadogRum } from '@datadog/browser-rum'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
@@ -105,9 +106,8 @@ export default function App() {
 
   useEffect(() => {
     if (account) {
-      Sentry.setUser({
-        id: account,
-      })
+      Sentry.setUser({ id: account })
+      datadogRum.setUser({ id: account })
     }
   }, [account])
 
