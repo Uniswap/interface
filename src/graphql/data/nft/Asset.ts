@@ -164,7 +164,10 @@ export function useAssetsQuery(
       tokenType: asset.nftContract?.standard,
       // totalCount?: number, // TODO waiting for BE changes
       collectionIsVerified: asset.collection?.isVerified,
-      // rarity: asset.rarities, // TODO format
+      rarity: {
+        primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
+        providers: asset.rarities,
+      },
       owner: asset.ownerAddress,
       creator: {
         profile_img_url: asset.collection?.creator?.profileImage?.url,

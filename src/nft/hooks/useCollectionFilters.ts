@@ -22,8 +22,8 @@ interface QueryInfo {
 export const SortByQueries = {
   [SortBy.HighToLow]: { field: 'PRICE', asc: false } as QueryInfo,
   [SortBy.LowToHigh]: { field: 'PRICE', asc: true } as QueryInfo,
-  [SortBy.RareToCommon]: { field: 'RARITY', asc: false } as QueryInfo,
-  [SortBy.CommonToRare]: { field: 'RARITY', asc: true } as QueryInfo,
+  [SortBy.RareToCommon]: { field: 'RARITY', asc: true } as QueryInfo,
+  [SortBy.CommonToRare]: { field: 'RARITY', asc: false } as QueryInfo,
 }
 
 export type Trait = {

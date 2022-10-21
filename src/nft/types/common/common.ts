@@ -72,7 +72,7 @@ export interface AssetSellOrder {
 
 export interface Rarity {
   primaryProvider: string
-  providers: { provider: string; rank: number; url: string; score: number }[]
+  providers: { provider: string; rank: number; url?: string; score: number }[]
 }
 
 export interface GenieAsset {
