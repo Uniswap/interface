@@ -49,11 +49,12 @@ type RouteItem = {
 }
 
 const buildRouteItem = (item: GenieAsset): RouteItem => {
+  console.log(item)
   return {
     id: item.id,
     symbol: item.priceInfo.baseAsset,
     name: item.name,
-    decimals: 0,
+    decimals: parseFloat(item.priceInfo.baseDecimals),
     address: item.address,
     tokenType: item.tokenType,
     tokenId: item.tokenId,

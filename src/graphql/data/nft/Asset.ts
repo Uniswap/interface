@@ -88,6 +88,7 @@ const assetPaginationQuery = graphql`
           nftContract {
             address
             chain
+            standard
           }
           metadataUrl
         }
@@ -142,21 +143,21 @@ export function useAssetsQuery(
     return {
       id: asset.id,
       address: asset.nftContract?.address,
-      notForSale: asset.listings?.edges.length === 0,
+      notForSale: asset.listings === null,
       collectionName: asset.collection?.name,
       collectionSymbol: asset.collection?.image?.url,
-      currentEthPrice: parseEther(asset.listings?.edges[0].node.price.value?.toString() ?? '0').toString(),
       imageUrl: asset.image?.url,
       animationUrl: asset.animationUrl,
-      marketplace: asset.listings?.edges[0].node.marketplace,
+      marketplace: asset.listings?.edges[0].node.marketplace.toLowerCase(),
       name: asset.name,
-      // priceInfo: { // FE to start deriving?
-      //   ETHPrice: asset.listings?.edges[0].node.price.value,
-      //   USDPrice: string
-      //   baseAsset: string
-      //   baseDecimals: string
-      //   basePrice: string
-      // },
+      priceInfo: asset.listings
+        ? {
+            ETHPrice: parseEther(asset.listings?.edges[0].node.price.value?.toString() ?? '0').toString(),
+            baseAsset: 'ETH',
+            baseDecimals: '18',
+            basePrice: parseEther(asset.listings?.edges[0].node.price.value?.toString() ?? '0').toString(),
+          }
+        : undefined,
       susFlag: asset.suspiciousFlag,
       sellorders: asset.listings?.edges,
       smallImageUrl: asset.smallImage?.url,

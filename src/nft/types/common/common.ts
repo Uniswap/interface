@@ -81,7 +81,6 @@ export interface GenieAsset {
   notForSale: boolean
   collectionName: string
   collectionSymbol: string
-  currentEthPrice: string
   imageUrl: string
   animationUrl: string
   marketplace: Markets

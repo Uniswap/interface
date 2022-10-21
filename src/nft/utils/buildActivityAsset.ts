@@ -14,7 +14,6 @@ export const buildActivityAsset = (event: ActivityEvent, collectionName: string,
   return {
     address: event.collectionAddress,
     collectionName,
-    currentEthPrice: event.price,
     imageUrl: event.tokenMetadata?.imageUrl,
     marketplace: event.marketplace,
     name: event.tokenMetadata?.name,
