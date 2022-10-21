@@ -1,5 +1,6 @@
 import { VerifiedIcon } from 'nft/components/icons'
 import { TrendingCollection } from 'nft/types'
+import { formatWeiToDecimal } from 'nft/utils'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -119,7 +120,7 @@ export const CarouselCard = ({ collection }: CarouselCardProps) => {
       </CardHeaderContainer>
       <CardBottomContainer>
         <HeaderRow>Uniswap</HeaderRow>
-        <HeaderRow>6.9 ETH Floor</HeaderRow>
+        <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH</HeaderRow>
         <HeaderRow>324 Listings</HeaderRow>
         <TableElement>OpenSea</TableElement>
         <TableElement>7.1 ETH</TableElement>
