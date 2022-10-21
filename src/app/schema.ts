@@ -191,6 +191,8 @@ export const v24Schema = {
   },
 }
 
+export const v25Schema = { ...v24Schema, passwordLockout: { passwordAttempts: 0 } }
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v24Schema
+export const getSchema = () => v25Schema

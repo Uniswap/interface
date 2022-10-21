@@ -20,6 +20,7 @@ import {
   v21Schema,
   v22Schema,
   v23Schema,
+  v24Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -37,6 +38,7 @@ import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { BlockState, initialBlockState } from 'src/features/blocks/blocksSlice'
 import { ChainsState, initialChainsState } from 'src/features/chains/chainsSlice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
+import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { initialExperimentsState } from 'src/features/experiments/slice'
 import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
 import { initialFavoritesState } from 'src/features/favorites/slice'
@@ -103,6 +105,7 @@ describe('Redux state migrations', () => {
       favorites: initialFavoritesState,
       modals: initialModalState,
       notifications: initialNotificationsState,
+      passwordLockout: initialPasswordLockoutState,
       providers: initialProvidersState,
       saga: {},
       searchHistory: initialSearchHistoryState,
@@ -794,5 +797,13 @@ describe('Redux state migrations', () => {
     expect(v24.notifications.notificationStatus[dummyAddress1]).toBe(true)
     expect(v24.notifications.notificationStatus[dummyAddress2]).toBe(false)
     expect(v24.notifications.notificationStatus[dummyAddress2]).toBe(false)
+  })
+
+  it('migrates from v24 to v25', () => {
+    const v24Stub = {
+      ...v24Schema,
+    }
+    const v25 = migrations[25](v24Stub)
+    expect(v25.passwordLockout.passwordAttempts).toBe(0)
   })
 })

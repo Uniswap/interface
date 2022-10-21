@@ -8,7 +8,6 @@ export interface CloudBackupState {
 export const initialCloudBackupState: Readonly<CloudBackupState> = {
   backupsFound: [],
 }
-export const PIN_LENGTH = 6
 
 const slice = createSlice({
   name: 'cloudBackup',

@@ -338,4 +338,11 @@ export const migrations = {
     newState.notifications = { ...newState.notifications, notificationStatus }
     return newState
   },
+
+  25: (state: any) => {
+    return {
+      ...state,
+      passwordLockout: { passwordAttempts: 0 },
+    }
+  },
 }
