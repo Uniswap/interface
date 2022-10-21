@@ -52,7 +52,7 @@ export enum ActivityEventTypeDisplay {
   'LISTING' = 'Listed',
   'SALE' = 'Sold',
   'TRANSFER' = 'Transferred',
-  'CANCEL_LISTING' = 'Cancelled',
+  'CANCEL_LISTING' = 'Cancellation',
 }
 
 export enum OrderStatus {
