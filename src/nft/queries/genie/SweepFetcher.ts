@@ -46,10 +46,7 @@ export const fetchSweep = async ({
   if (markets) {
     payload.markets = markets
   }
-  const numberOfTraits = traits?.filter((trait) => trait.trait_type === 'Number of traits')
-  if (numberOfTraits) {
-    payload.filters.numTraits = numberOfTraits.map((el) => ({ traitCount: el.trait_value }))
-  }
+
   if (traits) {
     payload.filters.traits = formatTraits(traits)
   }

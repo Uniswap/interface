@@ -1,5 +1,3 @@
-import 'rc-slider/assets/index.css'
-
 import clsx from 'clsx'
 import { loadingAnimation } from 'components/Loader/styled'
 import useDebounce from 'hooks/useDebounce'
@@ -32,7 +30,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
@@ -72,6 +70,7 @@ const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
   border-radius: 12px;
   padding: 10px 18px 10px 12px;
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
+  color: ${({ toggled, disabled, theme }) => (toggled && !disabled ? theme.white : theme.textPrimary)};
   background: ${({ theme, toggled, disabled }) =>
     !disabled && toggled
       ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)'
@@ -122,6 +121,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const toggleBag = useBag((state) => state.toggleBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
+
+  const theme = useTheme()
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
@@ -358,7 +359,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                   }}
                 >
                   <SweepIcon width="24px" height="24px" />
-                  <ThemedText.BodyPrimary fontWeight={600} lineHeight="20px" marginTop="2px" marginBottom="2px">
+                  <ThemedText.BodyPrimary
+                    fontWeight={600}
+                    color={sweepIsOpen && buyNow ? theme.white : theme.textPrimary}
+                    lineHeight="20px"
+                    marginTop="2px"
+                    marginBottom="2px"
+                  >
                     Sweep
                   </ThemedText.BodyPrimary>
                 </SweepButton>

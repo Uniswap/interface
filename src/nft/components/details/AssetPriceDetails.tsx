@@ -154,8 +154,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = cheapestOrder ? new Date(cheapestOrder.orderClosingDate) : undefined
   const itemsInBag = useBag((s) => s.itemsInBag)
-  const addAssetToBag = useBag((s) => s.addAssetToBag)
-  const removeAssetFromBag = useBag((s) => s.removeAssetFromBag)
+  const addAssetsToBag = useBag((s) => s.addAssetsToBag)
+  const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
 
   const assetInBag = useMemo(() => {
     return itemsInBag.some((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
@@ -193,7 +193,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             assetInBag={assetInBag}
             margin={true}
             useAccentColor={true}
-            onClick={() => (assetInBag ? removeAssetFromBag(asset) : addAssetToBag(asset))}
+            onClick={() => (assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset]))}
           >
             <ThemedText.SubHeader lineHeight={'20px'}>{assetInBag ? 'Remove' : 'Buy Now'}</ThemedText.SubHeader>
           </BuyNowButton>

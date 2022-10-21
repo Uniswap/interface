@@ -1,3 +1,5 @@
+import 'rc-slider/assets/index.css'
+
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
 import { useBag, useCollectionFilters } from 'nft/hooks'

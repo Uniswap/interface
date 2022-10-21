@@ -15,7 +15,7 @@ export const BagContent = () => {
   const setDidOpenUnavailableAssets = useBag((s) => s.setDidOpenUnavailableAssets)
   const uncheckedItemsInBag = useBag((s) => s.itemsInBag)
   const setItemsInBag = useBag((s) => s.setItemsInBag)
-  const removeAssetFromBag = useBag((s) => s.removeAssetFromBag)
+  const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
 
   const isMobile = useIsMobile()
 
@@ -83,7 +83,7 @@ export const BagContent = () => {
               key={asset.id}
               asset={asset}
               usdPrice={fetchedPriceData}
-              removeAsset={removeAssetFromBag}
+              removeAsset={removeAssetsFromBag}
               showRemove={true}
               isMobile={isMobile}
             />

@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from 'nft/types'
+import { BagItem, BagItemStatus, BagStatus, TokenType, UpdatedGenieAsset } from 'nft/types'
 import { v4 as uuidv4 } from 'uuid'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
@@ -13,9 +13,7 @@ interface BagState {
   setTotalEthPrice: (totalEthPrice: BigNumber) => void
   totalUsdPrice: number | undefined
   setTotalUsdPrice: (totalUsdPrice: number | undefined) => void
-  addAssetToBag: (asset: UpdatedGenieAsset) => void
   addAssetsToBag: (asset: UpdatedGenieAsset[], fromSweep?: boolean) => void
-  removeAssetFromBag: (asset: UpdatedGenieAsset) => void
   removeAssetsFromBag: (assets: UpdatedGenieAsset[]) => void
   markAssetAsReviewed: (asset: UpdatedGenieAsset, toKeep: boolean) => void
   lockSweepItems: (contractAddress: string) => void
@@ -79,34 +77,18 @@ export const useBag = create<BagState>()(
         set(() => ({
           totalUsdPrice,
         })),
-      addAssetToBag: (asset) =>
-        set(({ itemsInBag }) => {
-          if (get().isLocked) return { itemsInBag: get().itemsInBag }
-          const assetWithId = {
-            asset: { id: uuidv4(), ...asset },
-            status: BagItemStatus.ADDED_TO_BAG,
-            inSweep: false,
-          }
-          if (itemsInBag.length === 0)
-            return {
-              itemsInBag: [assetWithId],
-              bagStatus: BagStatus.ADDING_TO_BAG,
-            }
-          else
-            return {
-              itemsInBag: [...itemsInBag, assetWithId],
-              bagStatus: BagStatus.ADDING_TO_BAG,
-            }
-        }),
       addAssetsToBag: (assets, fromSweep = false) =>
         set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           const items: BagItem[] = []
           const itemsInBagCopy = [...itemsInBag]
           assets.forEach((asset) => {
-            const index = itemsInBag.findIndex(
-              (n) => n.asset.tokenId === asset.tokenId && n.asset.address === asset.address
-            )
+            let index = -1
+            if (asset.tokenType !== TokenType.ERC1155) {
+              index = itemsInBag.findIndex(
+                (n) => n.asset.tokenId === asset.tokenId && n.asset.address === asset.address
+              )
+            }
             if (index !== -1) {
               itemsInBagCopy[index].inSweep = fromSweep
             } else {
@@ -129,24 +111,18 @@ export const useBag = create<BagState>()(
               bagStatus: BagStatus.ADDING_TO_BAG,
             }
         }),
-      removeAssetFromBag: (asset) => {
-        set(({ itemsInBag }) => {
-          if (get().isLocked) return { itemsInBag: get().itemsInBag }
-          if (itemsInBag.length === 0) return { itemsInBag: [] }
-          const itemsCopy = [...itemsInBag]
-          const index = itemsCopy.findIndex((n) =>
-            asset.id ? n.asset.id === asset.id : n.asset.tokenId === asset.tokenId && n.asset.address === asset.address
-          )
-          if (index === -1) return { itemsInBag: get().itemsInBag }
-          itemsCopy.splice(index, 1)
-          return { itemsInBag: itemsCopy }
-        })
-      },
       removeAssetsFromBag: (assets) => {
         set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           if (itemsInBag.length === 0) return { itemsInBag: [] }
-          const itemsCopy = itemsInBag.filter((item) => !assets.some((asset) => asset.id === item.asset.id))
+          const itemsCopy = itemsInBag.filter(
+            (item) =>
+              !assets.some((asset) =>
+                asset.id
+                  ? asset.id === item.asset.id
+                  : asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+              )
+          )
           return { itemsInBag: itemsCopy }
         })
       },
