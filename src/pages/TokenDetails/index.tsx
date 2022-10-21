@@ -82,7 +82,6 @@ export default function TokenDetails() {
     chain,
     timePeriod
   )
-  console.log('ZZMP', tokenAddress, tokenQueryData?.address)
   const queryToken = useTokenFromQuery(isNative ? undefined : { ...tokenQueryData, chainId: pageChainId })
   const token = isNative ? nativeCurrency : queryToken
   const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddress
