@@ -49,7 +49,6 @@ type RouteItem = {
 }
 
 const buildRouteItem = (item: GenieAsset): RouteItem => {
-  console.log(item)
   return {
     id: item.id,
     symbol: item.priceInfo.baseAsset,

@@ -170,10 +170,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     DEFAULT_ASSET_QUERY_AMOUNT
   )
 
-  useEffect(() => {
-    setIsCollectionNftsLoading(isLoadingNext)
-  }, [isLoadingNext, setIsCollectionNftsLoading])
-
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
@@ -199,6 +195,10 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     () => (isNftGraphQl ? hasNext : hasNextPage ?? false),
     [isNftGraphQl, hasNext, hasNextPage]
   )
+
+  useEffect(() => {
+    setIsCollectionNftsLoading(wrappedLoadingState)
+  }, [wrappedLoadingState, setIsCollectionNftsLoading])
 
   const loadingAssets = useMemo(() => <>{new Array(DEFAULT_ASSET_QUERY_AMOUNT).fill(<CollectionAssetLoading />)}</>, [])
   const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts)
