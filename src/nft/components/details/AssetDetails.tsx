@@ -8,7 +8,7 @@ import { Details } from 'nft/components/details/Details'
 import { Traits } from 'nft/components/details/Traits'
 import { CloseDropDownIcon, CornerDownLeftIcon, Eth2Icon, ShareIcon, SuspiciousIcon } from 'nft/components/icons'
 import { ExpandableText } from 'nft/components/layout/ExpandableText'
-import { badge, bodySmall, caption, headlineMedium, subhead } from 'nft/css/common.css'
+import { badge, bodySmall, buttonTextMedium, caption, headlineMedium, subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
@@ -32,6 +32,7 @@ import TraitsContainer from './TraitsContainer'
 import rarityIcon from './rarity.svg'
 
 import * as styles from './AssetDetails.css'
+import { description } from '../collection/CollectionStats.css'
 
 const CollectionHeader = styled.div`
   display: flex;
@@ -53,12 +54,26 @@ const MediaContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 40px;
-  margin-bottom: 56px;
+  margin-bottom: 28px;
 `
 
 const Column = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 116px;
+`
+
+const AddressText = styled.span`
+  font-weight: 600;
+  color: ${({ theme }) => theme.textTertiary};
+  font-size: 16px;
+  line-height: 20px;
+`
+
+const DescriptionText = styled.div`
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 20px;
 `
 
 const AudioPlayer = ({
@@ -162,10 +177,10 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     return MediaType.Image
   }, [asset])
 
-  useEffect(() => {
-    if (asset.creator) setCreatorAddress(asset.creator.address)
-    if (asset.owner) setOwnerAddress(asset.owner)
-  }, [asset])
+  // useEffect(() => {
+  //   if (asset.creator) setCreatorAddress(asset.creator.address)
+  //   if (asset.owner) setOwnerAddress(asset.owner)
+  // }, [asset])
 
   useEffect(() => {
     setSelected(
@@ -186,15 +201,14 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   }, [asset, address, provider])
 
   console.log(asset)
+  console.log(collection)
 
   return (
     <Column>
       <CollectionHeader>
         {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
       </CollectionHeader>
-      <AssetHeader>
-        {collection.collectionName} #{asset.tokenId}
-      </AssetHeader>
+      <AssetHeader>{asset.name ? asset.name : `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       <MediaContainer>
         {assetMediaType === MediaType.Image ? (
           <img
@@ -207,6 +221,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}
       </MediaContainer>
+
       <InfoContainer
         primaryHeader="Traits"
         secondaryHeader={
@@ -218,6 +233,22 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         }
       >
         <TraitsContainer asset={asset} collection={collection} />
+      </InfoContainer>
+      <InfoContainer primaryHeader="Description" secondaryHeader={null}>
+        <>
+          <div>
+            By: <AddressText className={buttonTextMedium}>{shortenAddress(asset.creator)}</AddressText>
+          </div>
+          <DescriptionText>{collection.collectionDescription}</DescriptionText>
+        </>
+      </InfoContainer>
+      <InfoContainer primaryHeader="Details" secondaryHeader={null}>
+        <>
+          <div>
+            By: <AddressText className={buttonTextMedium}>{shortenAddress(asset.creator)}</AddressText>
+          </div>
+          <DescriptionText>{collection.collectionDescription}</DescriptionText>
+        </>
       </InfoContainer>
 
       {/* <Column>

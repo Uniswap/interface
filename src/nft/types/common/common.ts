@@ -108,7 +108,7 @@ export interface GenieAsset {
   collectionIsVerified?: boolean
   rarity?: Rarity
   owner: string
-  creator: OpenSeaUser
+  creator: string
   externalLink: string
   traits?: Trait[]
 }

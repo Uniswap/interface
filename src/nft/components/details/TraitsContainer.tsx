@@ -51,8 +51,6 @@ const GridItem = ({ trait, totalSupply }: { trait: Trait; totalSupply: number })
 const TraitsContainer = ({ asset, collection }: { asset: GenieAsset; collection: CollectionInfoForAsset }) => {
   const traits = asset.traits
 
-  console.log(collection)
-
   return (
     <Grid>
       {traits?.map((trait) => {

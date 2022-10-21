@@ -10,6 +10,7 @@ const Header = styled.div`
   padding: 14px 20px;
   cursor: pointer;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  margin-top: 28px;
 `
 
 const PrimaryHeader = styled.span`
@@ -39,7 +40,7 @@ const InfoContainer = ({
   primaryHeader,
   secondaryHeader,
 }: {
-  children: React.ReactNode
+  children: JSX.Element
   primaryHeader: string
   secondaryHeader: React.ReactNode
 }) => {
