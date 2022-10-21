@@ -163,7 +163,7 @@ export function SwapForm({
         />
       )}
       <Flex fill grow gap="xs" justifyContent="space-between" onLayout={onLayout}>
-        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xs">
+        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xxxs">
           <Trace section={SectionName.CurrencyInputPanel}>
             <Flex backgroundColor="background2" borderRadius="xl" pb="md" pt="lg" px="md">
               <CurrencyInputPanel
