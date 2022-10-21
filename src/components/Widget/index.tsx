@@ -20,7 +20,7 @@ import {
   getTokenAddress,
 } from 'analytics/utils'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 import { computeRealizedPriceImpact } from 'utils/prices'
@@ -36,10 +36,11 @@ const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export interface WidgetProps {
   defaultToken?: Currency
+  onTokensChange?: (input: Currency | undefined, output: Currency | undefined) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps) {
+export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick }: WidgetProps) {
   const locale = useActiveLocale()
   const theme = useIsDarkMode() ? DARK_THEME : LIGHT_THEME
   const { connector, provider } = useWeb3React()
@@ -47,11 +48,17 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
   const { inputs, tokenSelector } = useSyncWidgetInputs(defaultToken)
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
+  const onSwitchChain = useCallback(
+    // TODO: Widget should not break if this rejects - upstream the catch to ignore it.
+    ({ chainId }: AddEthereumChainParameter) => switchChain(connector, Number(chainId)).catch(() => undefined),
+    [connector]
+  )
+  useEffect(() => {
+    onTokensChange?.(inputs.value.INPUT, inputs.value.OUTPUT)
+  }, [inputs.value.INPUT, inputs.value.OUTPUT, onTokensChange])
 
   const trace = useTrace({ section: SectionName.WIDGET })
-
   const [initialQuoteDate, setInitialQuoteDate] = useState<Date>()
-
   const onInitialSwapQuote = useCallback(
     (trade: Trade<Currency, Currency, TradeType>) => {
       setInitialQuoteDate(new Date())
@@ -68,7 +75,6 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
     },
     [trace]
   )
-
   const onApproveToken = useCallback(() => {
     const input = inputs.value.INPUT
     if (!input) return
@@ -80,11 +86,9 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
     }
     sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
   }, [inputs.value.INPUT, trace])
-
   const onExpandSwapDetails = useCallback(() => {
     sendAnalyticsEvent(EventName.SWAP_DETAILS_EXPANDED, { ...trace })
   }, [trace])
-
   const onSwapPriceUpdateAck = useCallback(
     (stale: Trade<Currency, Currency, TradeType>, update: Trade<Currency, Currency, TradeType>) => {
       const eventProperties = {
@@ -99,7 +103,6 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
     },
     [trace]
   )
-
   const onSubmitSwapClick = useCallback(
     (trade: Trade<Currency, Currency, TradeType>) => {
       const eventProperties = {
@@ -126,11 +129,6 @@ export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps)
       sendAnalyticsEvent(EventName.SWAP_SUBMITTED_BUTTON_CLICKED, eventProperties)
     },
     [initialQuoteDate, trace]
-  )
-  const onSwitchChain = useCallback(
-    // TODO: Widget should not break if this rejects - upstream the catch to ignore it.
-    ({ chainId }: AddEthereumChainParameter) => switchChain(connector, Number(chainId)).catch(() => undefined),
-    [connector]
   )
 
   if (!inputs.value.INPUT && !inputs.value.OUTPUT) {
