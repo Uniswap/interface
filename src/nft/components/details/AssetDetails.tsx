@@ -30,6 +30,7 @@ import styled from 'styled-components/macro'
 import InfoContainer from './InfoContainer'
 import TraitsContainer from './TraitsContainer'
 import rarityIcon from './rarity.svg'
+import DetailsContainer from './DetailsContainer'
 
 import * as styles from './AssetDetails.css'
 import { description } from '../collection/CollectionStats.css'
@@ -244,10 +245,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       </InfoContainer>
       <InfoContainer primaryHeader="Details" secondaryHeader={null}>
         <>
-          <div>
-            By: <AddressText className={buttonTextMedium}>{shortenAddress(asset.creator)}</AddressText>
-          </div>
-          <DescriptionText>{collection.collectionDescription}</DescriptionText>
+          <DetailsContainer asset={asset} collection={collection} />
         </>
       </InfoContainer>
 

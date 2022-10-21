@@ -52,7 +52,7 @@ const InfoContainer = ({
         <PrimaryHeader>{primaryHeader}</PrimaryHeader>
         <SecondaryHeaderContainer>
           <SecondaryHeader>{secondaryHeader}</SecondaryHeader>
-          {isOpen ? <ChevronDown /> : <ChevronUp />}
+          {isOpen ? <ChevronUp /> : <ChevronDown />}
         </SecondaryHeaderContainer>
       </Header>
       {isOpen && <ContentContainer>{children}</ContentContainer>}
