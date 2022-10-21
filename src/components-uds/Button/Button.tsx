@@ -12,6 +12,7 @@ import { TouchableArea } from 'src/components-uds/TouchableArea'
 import { withAnimated } from 'src/components/animated'
 import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { Theme } from 'src/styles/theme'
 
 export enum ButtonType {
   Regular = 'regular',
@@ -46,6 +47,7 @@ interface CommonButtonProps extends ComponentProps<typeof TouchableArea> {
   onPress?: () => void
   onLongPress?: () => void
   noTextScaling?: boolean
+  iconLabelSpacing?: keyof Theme['spacing']
 }
 
 interface ButtonWithLabel extends CommonButtonProps {
@@ -68,6 +70,7 @@ export type ButtonProps = ButtonWithIconAndLabel | ButtonWithIcon | ButtonWithLa
 const _Button = ({
   name,
   noTextScaling = false,
+  iconLabelSpacing,
   label,
   icon,
   size = ButtonSize.Medium,
@@ -107,7 +110,7 @@ const _Button = ({
       onLongPress={onLongPress}
       onPress={onPress}
       {...rest}>
-      {icon && <Box mr="sm">{icon}</Box>}
+      {icon && <Box mr={iconLabelSpacing ?? 'xs'}>{icon}</Box>}
       {buttonType !== ButtonType.Icon && (
         <Text
           color={textColor}

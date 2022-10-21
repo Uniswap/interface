@@ -18,6 +18,7 @@ type Props = ButtonProps & {
   textVariant?: keyof Theme['textVariants']
   textColor?: keyof Theme['colors']
   noTextScaling?: boolean
+  iconLabelSpacing?: keyof Theme['spacing']
 } & SpacingShorthandProps<Theme>
 
 // A rounded, borderless, solid color button with optional icon left of text
@@ -31,6 +32,7 @@ function _PrimaryButton({
   px,
   py,
   noTextScaling,
+  iconLabelSpacing,
   ...rest
 }: Props) {
   const theme = useAppTheme()
@@ -58,7 +60,7 @@ function _PrimaryButton({
       py={p ?? py ?? 'sm'}
       style={style}
       {...rest}>
-      {icon && <Box mr="sm">{icon}</Box>}
+      {icon && <Box mr={iconLabelSpacing ?? 'xs'}>{icon}</Box>}
       <Text
         noTextScaling={noTextScaling}
         style={{ color: textColor }}

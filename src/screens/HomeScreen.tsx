@@ -9,10 +9,10 @@ import { HomeScreenQueries, useEagerActivityNavigation } from 'src/app/navigatio
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import HamburgerIcon from 'src/assets/icons/hamburger.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
+import { Button, ButtonEmphasis, ButtonSize, ButtonState } from 'src/components-uds/Button/Button'
+import { TouchableArea } from 'src/components-uds/TouchableArea'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SendButton } from 'src/components/buttons/SendButton'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
@@ -97,19 +97,19 @@ export function HomeScreen({ queryRefs }: Props) {
     return (
       <Flex row justifyContent="space-between" px="lg" py="xs">
         {shouldShowActions ? (
-          <Button justifyContent="center" onPress={onPressHamburger}>
+          <TouchableArea justifyContent="center" onPress={onPressHamburger}>
             <HamburgerIcon
               color={theme.colors.textSecondary}
               height={theme.iconSizes.md}
               width={theme.iconSizes.md}
             />
-          </Button>
+          </TouchableArea>
         ) : (
           <Box />
         )}
         <AddressDisplay address={activeAccount.address} variant="subheadLarge" />
         {shouldShowActions ? (
-          <Button
+          <TouchableArea
             justifyContent="center"
             onPress={onPressNotifications}
             onPressIn={onPressInNotifications}>
@@ -118,7 +118,7 @@ export function HomeScreen({ queryRefs }: Props) {
             ) : (
               <TxHistoryIconWithStatus />
             )}
-          </Button>
+          </TouchableArea>
         ) : (
           <Box />
         )}
@@ -196,13 +196,13 @@ function QuickActions() {
 
   return (
     <Flex centered row gap="xs">
-      <SendButton flex={1} />
-      <PrimaryButton
+      <SendButton flex={1} iconColor="userThemeColor" />
+      <Button
         noTextScaling
-        borderRadius="md"
+        emphasis={ButtonEmphasis.Low}
         flex={1}
         icon={
-          <ScanQRIcon color={theme.colors.textPrimary} height={20} strokeWidth={2} width={20} />
+          <ScanQRIcon color={theme.colors.userThemeColor} height={20} strokeWidth={2} width={20} />
         }
         label={t('Scan')}
         name={
@@ -210,20 +210,23 @@ function QuickActions() {
           ElementName.NavigateBuy
         }
         py="sm"
+        size={ButtonSize.Medium}
+        state={ButtonState.Enabled}
         testID={ElementName.NavigateBuy}
-        variant="transparent"
         onPress={onPressScan}
       />
-      <PrimaryButton
+      <Button
         noTextScaling
-        borderRadius="md"
+        emphasis={ButtonEmphasis.Low}
         flex={1}
-        icon={<Arrow color={theme.colors.textPrimary} direction="s" size={theme.iconSizes.md} />}
+        icon={<Arrow color={theme.colors.userThemeColor} direction="s" size={theme.iconSizes.md} />}
+        iconLabelSpacing="xxs"
         label={t('Receive')}
         name={ElementName.Receive}
         py="sm"
+        size={ButtonSize.Medium}
+        state={ButtonState.Enabled}
         testID={ElementName.Receive}
-        variant="transparent"
         onPress={onPressReceive}
       />
     </Flex>
