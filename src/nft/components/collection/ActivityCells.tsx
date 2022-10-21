@@ -7,6 +7,7 @@ import {
   ActivitySaleIcon,
   ActivityTransferIcon,
   RarityVerifiedIcon,
+  CancelListingIcon,
 } from 'nft/components/icons'
 import {
   ActivityEvent,
@@ -115,7 +116,7 @@ export const AddressCell = ({ address, desktopLBreakpoint }: AddressCellProps) =
   )
 }
 
-const MarketplaceIcon = ({ marketplace }: { marketplace: Markets }) => {
+export const MarketplaceIcon = ({ marketplace }: { marketplace: Markets }) => {
   return (
     <Box
       as="img"
@@ -173,6 +174,8 @@ const renderEventIcon = (eventType: ActivityEventType) => {
       return <ActivitySaleIcon width={16} height={16} />
     case ActivityEventType.Transfer:
       return <ActivityTransferIcon width={16} height={16} />
+    case ActivityEventType.CancelListing:
+      return <CancelListingIcon width={24} height={24} />
     default:
       return null
   }
@@ -194,7 +197,7 @@ const eventColors = (eventType: ActivityEventType) => {
     [ActivityEventType.Listing]: 'gold',
     [ActivityEventType.Sale]: 'green',
     [ActivityEventType.Transfer]: 'violet',
-    [ActivityEventType.CancelListing]: 'error',
+    [ActivityEventType.CancelListing]: 'accentFailure',
   }
 
   return activityEvents[eventType] as 'gold' | 'green' | 'violet' | 'accentFailure'
