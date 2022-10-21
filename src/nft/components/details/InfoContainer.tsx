@@ -45,7 +45,7 @@ const InfoContainer = ({
   primaryHeader: string
   secondaryHeader: React.ReactNode
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
 
   return (
     <div>

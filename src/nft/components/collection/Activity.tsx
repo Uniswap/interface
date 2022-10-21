@@ -79,7 +79,6 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
           eventTypes: Object.keys(activeFilters)
             .filter((key) => activeFilters[key as ActivityEventType])
             .map((key) => key as ActivityEventType),
-          tokenId: '9215',
         },
         pageParam
       )

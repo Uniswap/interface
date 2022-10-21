@@ -2,6 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { MouseoverTooltip } from 'components/Tooltip/index'
 import useENSName from 'hooks/useENSName'
+import AssetActivity from './AssetActivity'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionProfile } from 'nft/components/details/CollectionProfile'
 import { Details } from 'nft/components/details/Details'
@@ -236,9 +237,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       >
         <TraitsContainer asset={asset} collection={collection} />
       </InfoContainer>
-      {/* <InfoContainer primaryHeader="Activity" secondaryHeader={null}>
-        <TraitsContainer asset={asset} collection={collection} />
-      </InfoContainer> */}
+      <InfoContainer primaryHeader="Activity" secondaryHeader={null}>
+        <AssetActivity contractAddress={asset.address} token_id={asset.tokenId} />
+      </InfoContainer>
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
         <>
           <div>
