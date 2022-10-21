@@ -77,11 +77,13 @@ const Erc1155BuyNowText = styled.div`
   width: 100%;
   padding: 10px 12px;
   justify-content: center;
+  cursor: default;
 `
 
 const Erc1155ChangeButton = styled(Erc1155BuyNowText)<{ remove: boolean }>`
   background-color: ${({ theme, remove }) => (remove ? theme.accentFailureSoft : theme.accentActionSoft)};
   color: ${({ theme, remove }) => (remove ? theme.accentFailure : theme.accentAction)};
+  cursor: pointer;
 
   :hover {
     background-color: ${({ theme, remove }) => (remove ? theme.accentFailure : theme.accentAction)};
