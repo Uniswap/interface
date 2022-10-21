@@ -1,10 +1,10 @@
 import { Variables } from 'react-relay'
 import { GraphQLResponse, RequestParameters } from 'relay-runtime'
 
-const URL = process.env.REACT_APP_AWS_API_ENDPOINT
+const TOKEN_URL = process.env.REACT_APP_AWS_API_ENDPOINT
 const NFT_URL = process.env.REACT_APP_NFT_AWS_API_ENDPOINT ?? ''
 
-if (!URL) {
+if (!TOKEN_URL) {
   throw new Error('AWS URL MISSING FROM ENVIRONMENT')
 }
 
@@ -27,7 +27,7 @@ const fetchQuery = (params: RequestParameters, variables: Variables): Promise<Gr
     query: params.text, // GraphQL text from input
     variables,
   })
-  const url = isNFT ? NFT_URL : URL
+  const url = isNFT ? NFT_URL : TOKEN_URL
   const headers = isNFT ? nftHeaders : baseHeaders
 
   return fetch(url, { method: 'POST', body, headers })
