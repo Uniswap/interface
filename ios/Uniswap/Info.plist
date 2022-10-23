@@ -46,7 +46,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
+	<string>$(PRODUCT_NAME) needs access to your Camera to scan QR codes</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID helps $(PRODUCT_NAME) keep your assets secure.</string>
 	<key>NSMicrophoneUsageDescription</key>
