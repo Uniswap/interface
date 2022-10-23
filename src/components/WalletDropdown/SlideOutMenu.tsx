@@ -86,6 +86,7 @@ const BackSectionContainer = styled.div`
 
 const ChildrenContainer = styled.div`
   margin-top: 40px;
+  height: 50vh;
 `
 
 export const SlideOutMenu = ({
