@@ -8,7 +8,7 @@ type Props = {
   showIndicator?: boolean
 }
 
-function _NotificationBadge({ children, showIndicator = true }: Props) {
+function _NotificationBadge({ children, showIndicator }: Props) {
   return (
     <Box position="relative">
       {showIndicator && (
