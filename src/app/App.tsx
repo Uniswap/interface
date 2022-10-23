@@ -1,7 +1,7 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import React, { StrictMode, Suspense } from 'react'
-import { StatusBar, Text, useColorScheme, View } from 'react-native'
+import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
 import { RelayEnvironmentProvider } from 'react-relay'
@@ -14,7 +14,6 @@ import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { config } from 'src/config'
-import { useStorageMigrator } from 'src/data/migrateStorage'
 import { RelayEnvironment } from 'src/data/relay'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
@@ -51,26 +50,6 @@ initializeRemoteConfig()
 initOneSignal()
 
 function App() {
-  // TODO(MOB-2795): remove once most devices are migrated
-  const hasMigrated = useStorageMigrator()
-
-  if (!hasMigrated) {
-    // show loading while storage is being migrated
-    return (
-      // temporary change
-      // eslint-disable-next-line react-native/no-inline-styles
-      <View style={{ margin: 50, top: 100 }}>
-        <Text
-          style={
-            // eslint-disable-next-line react-native/no-inline-styles
-            { color: 'red', fontSize: 25 }
-          }>
-          Migrating local storage. This may take a few minutes...
-        </Text>
-      </View>
-    )
-  }
-
   return (
     <Trace startMark={MarkNames.AppStartup}>
       <StrictMode>
