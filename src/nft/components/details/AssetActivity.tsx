@@ -5,6 +5,8 @@ import { EventCell } from '../collection/ActivityCells'
 import { getTimeDifference } from 'nft/utils/date'
 import { formatEthPrice } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
+import { getChainInfoOrDefault } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { MarketplaceIcon } from '../collection/ActivityCells'
 
 const TR = styled.tr`
@@ -42,8 +44,14 @@ const PriceContainer = styled.div`
   gap: 8px;
 `
 
+const Link = styled.a`
+  color: ${({ theme }) => theme.textPrimary};
+  text-decoration: none;
+`
+
 const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {
   const events = eventsData === undefined ? [] : eventsData?.events
+  const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
 
   return (
     <div>
@@ -78,7 +86,9 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
                   </PriceContainer>
                 )}
               </TD>
-              <TD>{shortenAddress(event.fromAddress)}</TD>
+              <Link href={`${explorer}/address/${event.fromAddress}`} target="_blank">
+                <TD>{shortenAddress(event.fromAddress, 2, 4)}</TD>
+              </Link>{' '}
               <TD>{event.toAddress && shortenAddress(event.toAddress)}</TD>
               <TD>{event.eventTimestamp && getTimeDifference(event.eventTimestamp.toString())}</TD>
             </TR>

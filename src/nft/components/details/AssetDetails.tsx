@@ -15,6 +15,7 @@ import { isVideo } from 'nft/utils/isVideo'
 import { rarityProviderLogo } from 'nft/utils/rarity'
 import qs from 'query-string'
 import { useEffect, useMemo, useCallback, useReducer, useState } from 'react'
+import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 import { VerifiedIcon } from '../icons'
@@ -26,6 +27,7 @@ import DetailsContainer from './DetailsContainer'
 import { useQuery } from 'react-query'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { putCommas } from 'nft/utils/putCommas'
+import { SupportedChainId } from 'constants/chains'
 import { reduceFilters } from '../collection/Activity'
 import * as activityStyles from 'nft/components/collection/Activity.css'
 
@@ -72,6 +74,11 @@ const DescriptionText = styled.div`
   margin-top: 8px;
   font-size: 14px;
   line-height: 20px;
+`
+
+const Link = styled.a`
+  color: ${({ theme }) => theme.textPrimary};
+  text-decoration: none;
 `
 
 const AudioPlayer = ({
@@ -159,6 +166,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const [isSelected, setSelected] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const { account: address, provider } = useWeb3React()
+
+  const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
 
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
@@ -341,10 +350,13 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           <AssetActivity eventsData={eventsData} />
         </>
       </InfoContainer>
+
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
         <>
           <div>
-            By: <AddressText className={buttonTextMedium}>{shortenAddress(asset.creator)}</AddressText>
+            <Link href={`${explorer}address/${asset.creator}`} target="_blank">
+              By: <AddressText className={buttonTextMedium}>{shortenAddress(asset.creator)}</AddressText>
+            </Link>
           </div>
           <DescriptionText>{collection.collectionDescription}</DescriptionText>
         </>
