@@ -15,6 +15,10 @@ const TR = styled.tr`
   &:nth-child(1) {
     border-bottom: none;
   }
+
+  &:last-child {
+    border-bottom: none;
+  }
 `
 
 const TH = styled.th`
@@ -23,6 +27,18 @@ const TH = styled.th`
   font-size: 14px;
   line-height: 20px;
   width: 20%;
+
+  @media (max-width: 960px) {
+    &:nth-child(4) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    &:nth-child(2) {
+      display: none;
+    }
+  }
 `
 
 const Table = styled.table`
@@ -36,6 +52,18 @@ const TD = styled.td`
   text-align: left;
   padding-top: 16px;
   padding-bottom: 16px;
+
+  @media (max-width: 960px) {
+    &:nth-child(4) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    &:nth-child(2) {
+      display: none;
+    }
+  }
 `
 
 const PriceContainer = styled.div`

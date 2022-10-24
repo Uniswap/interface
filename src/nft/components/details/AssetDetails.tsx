@@ -72,13 +72,8 @@ const AddressText = styled.span`
 
 const DescriptionText = styled.div`
   margin-top: 8px;
-  font-size: 14px;
-  line-height: 20px;
-`
-
-const Link = styled.a`
-  color: ${({ theme }) => theme.textPrimary};
-  text-decoration: none;
+  font-size: 16px;
+  line-height: 24px;
 `
 
 const AudioPlayer = ({
@@ -352,19 +347,10 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       </InfoContainer>
 
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
-        <>
-          <div>
-            <Link href={`${explorer}address/${asset.creator}`} target="_blank">
-              By: <AddressText className={buttonTextMedium}>{shortenAddress(asset.creator)}</AddressText>
-            </Link>
-          </div>
-          <DescriptionText>{collection.collectionDescription}</DescriptionText>
-        </>
+        <DescriptionText>{collection.collectionDescription}</DescriptionText>
       </InfoContainer>
       <InfoContainer primaryHeader="Details" secondaryHeader={null}>
-        <>
-          <DetailsContainer asset={asset} collection={collection} />
-        </>
+        <DetailsContainer asset={asset} collection={collection} />
       </InfoContainer>
     </Column>
   )

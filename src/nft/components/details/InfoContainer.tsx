@@ -2,9 +2,9 @@ import { useState } from 'react'
 import styled from 'styled-components/macro'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
-const Header = styled.div`
+const Header = styled.div<{ isOpen: boolean }>`
   display: flex;
-  border-radius: 16px 16px 0px 0px;
+  border-radius: ${({ isOpen }) => (isOpen ? '16px 16px 0px 0px' : '16px')};
   justify-content: space-between;
   background-color: ${({ theme }) => theme.backgroundSurface};
   padding: 14px 20px;
@@ -12,6 +12,7 @@ const Header = styled.div`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   margin-top: 28px;
   width: 100%;
+  align-items: center;
 `
 
 const PrimaryHeader = styled.span`
@@ -34,6 +35,7 @@ const ContentContainer = styled.div`
   padding: 20px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-top: none;
+  border-radius: 0px 0px 16px 16px;
 `
 
 const InfoContainer = ({
@@ -49,7 +51,7 @@ const InfoContainer = ({
 
   return (
     <div>
-      <Header onClick={() => setIsOpen(!isOpen)}>
+      <Header isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
         <PrimaryHeader>{primaryHeader}</PrimaryHeader>
         <SecondaryHeaderContainer>
           <SecondaryHeader>{secondaryHeader}</SecondaryHeader>
