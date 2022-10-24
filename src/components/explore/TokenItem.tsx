@@ -22,7 +22,7 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { TokensMetadataDisplayType } from 'src/features/wallet/types'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
-import { formatNumber, formatUSDPrice } from 'src/utils/format'
+import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
 export type TokenItemData = {
   name: string
@@ -153,7 +153,7 @@ export const TokenItem = memo(
                     metadataDisplayType === TokensMetadataDisplayType.MarketCap ? (
                       <Text color="textSecondary" variant="subheadSmall">
                         {t('MCap {{marketCap}}', {
-                          marketCap: formatNumber(marketCap),
+                          marketCap: formatNumber(marketCap, NumberType.FiatTokenDetails),
                         })}
                       </Text>
                     ) : (

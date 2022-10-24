@@ -10,7 +10,7 @@ import { formatUSDGasPrice } from 'src/utils/format'
 
 export function NetworkFee({ chainId, gasFee }: { chainId: ChainId; gasFee?: string }) {
   const { t } = useTranslation()
-  const gasFeeUSD = formatUSDGasPrice(useUSDGasPrice(chainId, gasFee))
+  const gasFeeUSD = useUSDGasPrice(chainId, gasFee)
   const showNetworkPill = chainId !== ChainId.Mainnet
 
   return (
@@ -25,7 +25,7 @@ export function NetworkFee({ chainId, gasFee }: { chainId: ChainId; gasFee?: str
                 <Text variant="subheadSmall">•</Text>
               </Flex>
             )}
-            <Text variant="subheadSmall">{gasFeeUSD}</Text>
+            <Text variant="subheadSmall">{formatUSDGasPrice(gasFeeUSD)}</Text>
           </Flex>
         ) : (
           <Flex width="50%">

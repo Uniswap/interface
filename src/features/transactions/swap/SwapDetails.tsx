@@ -13,7 +13,7 @@ import {
   TransactionDetails,
   TRANSACTION_DETAILS_SPACER,
 } from 'src/features/transactions/TransactionDetails'
-import { formatPrice } from 'src/utils/format'
+import { formatPrice, NumberType } from 'src/utils/format'
 
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
@@ -106,8 +106,7 @@ export function SwapDetails({
           <Flex row gap="none">
             <Text variant="subheadSmall">{acceptedRate}</Text>
             <Text color="textSecondary" variant="subheadSmall">
-              {usdcPrice &&
-                ` (${formatPrice(usdcPrice, { maximumFractionDigits: 6, notation: 'standard' })})`}
+              {usdcPrice && ` (${formatPrice(usdcPrice, NumberType.FiatTokenPrice)})`}
             </Text>
           </Flex>
         </TouchableOpacity>

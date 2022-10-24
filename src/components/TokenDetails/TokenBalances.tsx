@@ -6,7 +6,7 @@ import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
-import { formatNumberBalance, formatPrice, formatUSDPrice } from 'src/utils/format'
+import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
 /**
  * Renders token balances for current chain (if any) and other chains (if any).
@@ -73,7 +73,8 @@ export function CurrentChainBalance({
       </Text>
       <Flex row alignItems="center" justifyContent="space-between">
         <Text variant="headlineMedium">
-          {`${formatNumberBalance(balance.quantity)}`} {balance.currencyInfo.currency.symbol}
+          {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
+          {balance.currencyInfo.currency.symbol}
         </Text>
         <Text variant="bodyLarge">{formatUSDPrice(balance.balanceUSD)}</Text>
       </Flex>
@@ -88,11 +89,14 @@ function OtherChainBalance({ balance }: { balance: PortfolioBalance }) {
         <CurrencyLogo currency={balance.currencyInfo.currency} />
         <Flex alignItems="center">
           <Text variant="bodyLarge">
-            {formatNumberBalance(balance.quantity)} {balance.currencyInfo.currency.symbol}
+            {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
+            {balance.currencyInfo.currency.symbol}
           </Text>
         </Flex>
       </Flex>
-      <Text variant="bodyLarge">{formatPrice(balance.balanceUSD)}</Text>
+      <Text variant="bodyLarge">
+        {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
+      </Text>
     </Flex>
   )
 }

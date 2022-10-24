@@ -11,7 +11,7 @@ import { LongText } from 'src/components/text/LongText'
 import { TokenDetailsStats_token$key } from 'src/components/TokenDetails/__generated__/TokenDetailsStats_token.graphql'
 import { TokenDetailsStats_tokenProject$key } from 'src/components/TokenDetails/__generated__/TokenDetailsStats_tokenProject.graphql'
 import { currencyAddress } from 'src/utils/currencyId'
-import { formatNumber, formatUSDPrice } from 'src/utils/format'
+import { formatNumber, NumberType } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
 
 // Fetch Uniswap volume from Token#markets
@@ -94,13 +94,17 @@ function TokenDetailsStatsInner({
             <Text color="textSecondary" variant="subheadSmall">
               {t('Market cap')}
             </Text>
-            <Text variant="headlineMedium">{formatNumber(marketData?.marketCap?.value)}</Text>
+            <Text variant="headlineMedium">
+              {formatNumber(marketData?.marketCap?.value, NumberType.FiatTokenDetails)}
+            </Text>
           </Flex>
           <Flex gap="xs">
             <Text color="textSecondary" variant="subheadSmall">
               {t('52W low')}
             </Text>
-            <Text variant="headlineMedium">{formatUSDPrice(marketData?.priceLow52W?.value)}</Text>
+            <Text variant="headlineMedium">
+              {formatNumber(marketData?.priceLow52W?.value, NumberType.FiatTokenDetails)}
+            </Text>
           </Flex>
         </Flex>
         <Flex flex={1} gap="lg">
@@ -108,13 +112,17 @@ function TokenDetailsStatsInner({
             <Text color="textSecondary" variant="subheadSmall">
               {t('24h volume')}
             </Text>
-            <Text variant="headlineMedium">{formatNumber(tokenData?.market.volume.value)}</Text>
+            <Text variant="headlineMedium">
+              {formatNumber(tokenData?.market.volume.value, NumberType.FiatTokenDetails)}
+            </Text>
           </Flex>
           <Flex gap="xs">
             <Text color="textSecondary" variant="subheadSmall">
               {t('52W high')}
             </Text>
-            <Text variant="headlineMedium">{formatUSDPrice(marketData?.priceHigh52W?.value)}</Text>
+            <Text variant="headlineMedium">
+              {formatNumber(marketData?.priceHigh52W?.value, NumberType.FiatTokenDetails)}
+            </Text>
           </Flex>
         </Flex>
       </Flex>

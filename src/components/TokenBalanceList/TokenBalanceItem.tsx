@@ -8,7 +8,7 @@ import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { CurrencyId } from 'src/utils/currencyId'
-import { formatNumberBalance, formatUSDPrice } from 'src/utils/format'
+import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface TokenBalanceItemProps {
   portfolioBalance: PortfolioBalance
@@ -61,7 +61,7 @@ export const TokenBalanceItem = memo(
             </Text>
             <Flex row alignItems="center" gap="xs" minHeight={20}>
               <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
-                {`${formatNumberBalance(quantity)}`} {currency.symbol}
+                {`${formatNumber(quantity, NumberType.TokenNonTx)}`} {currency.symbol}
               </Text>
             </Flex>
           </Flex>

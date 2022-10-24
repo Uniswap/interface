@@ -7,7 +7,6 @@ import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Box, Flex } from 'src/components/layout'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
-
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TokenOption } from 'src/components/TokenSelector/types'
@@ -17,7 +16,7 @@ import {
   useDismissTokenWarnings,
 } from 'src/features/tokens/useTokenWarningLevel'
 import { currencyId } from 'src/utils/currencyId'
-import { formatNumberBalance, formatUSDPrice } from 'src/utils/format'
+import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface OptionProps {
   option: TokenOption
@@ -100,7 +99,7 @@ export function TokenOptionItem({
             <Text variant="bodySmall">{t('Not available')}</Text>
           ) : quantity && quantity !== 0 ? (
             <Box alignItems="flex-end">
-              <Text variant="bodyLarge">{formatNumberBalance(quantity)}</Text>
+              <Text variant="bodyLarge">{formatNumber(quantity, NumberType.TokenTx)}</Text>
               <Text color="textSecondary" variant="subheadSmall">
                 {formatUSDPrice(balanceUSD)}
               </Text>

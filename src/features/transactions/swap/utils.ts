@@ -12,7 +12,7 @@ import {
 } from 'src/features/transactions/types'
 import { areAddressesEqual } from 'src/utils/addresses'
 import { currencyId } from 'src/utils/currencyId'
-import { formatPrice } from 'src/utils/format'
+import { formatPrice, NumberType } from 'src/utils/format'
 
 export function serializeQueryParams(
   params: Record<string, Parameters<typeof encodeURIComponent>[0]>
@@ -27,7 +27,7 @@ export function serializeQueryParams(
 export function formatExecutionPrice(price: Price<Currency, Currency> | undefined) {
   if (!price) return '-'
 
-  return `1 ${price.quoteCurrency?.symbol} = ${formatPrice(price, { style: 'decimal' })} ${
+  return `1 ${price.quoteCurrency?.symbol} = ${formatPrice(price, NumberType.FiatTokenPrice)} ${
     price?.baseCurrency.symbol
   }`
 }

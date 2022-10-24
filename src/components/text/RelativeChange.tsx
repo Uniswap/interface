@@ -4,7 +4,7 @@ import { Arrow } from 'src/components/icons/Arrow'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
-import { formatPrice } from 'src/utils/format'
+import { formatNumber, NumberType } from 'src/utils/format'
 
 interface RelativeChangeProps {
   change?: number
@@ -37,7 +37,7 @@ export function RelativeChange({
         }
         variant={variant}>
         {change ? `${change.toFixed(2)}%` : '-'}{' '}
-        {absoluteChange ? `(${formatPrice(absoluteChange)})` : ''}
+        {absoluteChange ? `(${formatNumber(absoluteChange, NumberType.FiatTokenPrice)})` : ''}
       </Text>
     </Flex>
   )

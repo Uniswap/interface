@@ -35,7 +35,7 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { createTransactionId } from 'src/features/transactions/utils'
-import { formatPrice } from 'src/utils/format'
+import { formatPrice, NumberType } from 'src/utils/format'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -269,10 +269,7 @@ export function SwapForm({
                       {isPriceImpactWarning(swapWarning) && (
                         <Text color="textSecondary" variant="bodySmall">
                           {rateUnitPrice &&
-                            ` (${formatPrice(rateUnitPrice, {
-                              maximumFractionDigits: 6,
-                              notation: 'standard',
-                            })})`}
+                            ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}
                         </Text>
                       )}
                     </Flex>
@@ -303,10 +300,7 @@ export function SwapForm({
                       </Text>
                       <Text color="textSecondary" variant="bodySmall">
                         {rateUnitPrice &&
-                          ` (${formatPrice(rateUnitPrice, {
-                            maximumFractionDigits: 6,
-                            notation: 'standard',
-                          })})`}
+                          ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}
                       </Text>
                     </Flex>
                   </Flex>
