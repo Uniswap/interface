@@ -71,7 +71,8 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
 
-  const allTokens = useActiveTokens()
+  // Only display 'imported' tokens when the search filter has input
+  const defaultTokens = useActiveTokens(debouncedQuery.length > 0)
 
   // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
@@ -91,8 +92,8 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const filteredTokens: Token[] = useMemo(() => {
-    return Object.values(allTokens).filter(getTokenFilter(debouncedQuery))
-  }, [allTokens, debouncedQuery])
+    return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
+  }, [defaultTokens, debouncedQuery])
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(
