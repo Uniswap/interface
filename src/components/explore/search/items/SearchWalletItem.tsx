@@ -53,7 +53,9 @@ export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalle
           <AddressDisplay
             showAddressAsSubtitle
             address={address}
+            captionColor="textTertiary"
             size={theme.imageSizes.xl}
+            subtitleOverrideText={wallet.category}
             variant="bodyLarge"
             verticalGap="none"
           />

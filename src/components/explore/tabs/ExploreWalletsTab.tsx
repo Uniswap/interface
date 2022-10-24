@@ -4,7 +4,7 @@ import { FlatList, ListRenderItemInfo } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
-import { TRENDING_WALLETS } from 'src/components/explore/search/SearchEmptySection'
+import { SUGGESTED_WALLETS } from 'src/components/explore/search/SearchEmptySection'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { WalletSearchResult } from 'src/features/explore/searchHistorySlice'
@@ -43,7 +43,7 @@ function ExploreWalletsTab({ listRef }: { listRef?: React.MutableRefObject<null>
         </Flex>
       }
       contentContainerStyle={{ paddingVertical: theme.spacing.md }}
-      data={TRENDING_WALLETS}
+      data={SUGGESTED_WALLETS}
       keyExtractor={walletKey}
       listKey="wallets"
       renderItem={renderWalletItem}

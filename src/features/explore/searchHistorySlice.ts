@@ -10,6 +10,14 @@ export enum SearchResultType {
   Etherscan,
 }
 
+// Currently only used for fixed default wallet list
+export enum WalletCategory {
+  DAO = 'DAO',
+  NFTArtist = 'NFT Artist',
+  NFTCollector = 'NFT Collector',
+  Builder = 'Builder',
+}
+
 export interface SearchResultBase {
   type: SearchResultType
   searchId?: string
@@ -19,6 +27,7 @@ export interface WalletSearchResult extends SearchResultBase {
   type: SearchResultType.Wallet
   address: Address
   ensName?: string
+  category?: WalletCategory
 }
 
 export interface TokenSearchResult extends SearchResultBase {

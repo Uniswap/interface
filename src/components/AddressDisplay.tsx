@@ -28,6 +28,7 @@ type AddressDisplayProps = {
   verticalGap?: keyof Theme['spacing']
   horizontalGap?: keyof Theme['spacing']
   direction?: 'row' | 'column'
+  subtitleOverrideText?: string
   showCopy?: boolean
   showUnicon?: boolean
   showViewOnly?: boolean
@@ -61,6 +62,7 @@ export function AddressDisplay({
   verticalGap = 'xxs',
   horizontalGap = 'sm',
   showAddressAsSubtitle,
+  subtitleOverrideText,
   direction = 'row',
   showCopy = false,
   showUnicon = true,
@@ -125,21 +127,30 @@ export function AddressDisplay({
             )}
           </Flex>
         </CopyButtonWrapper>
-        {showAddressAsSubtitle && (
-          <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
-            <Flex centered row gap="sm">
-              <Text color={captionColor} variant={captionVariant}>
-                {sanitizeAddressText(shortenAddress(address))}
-              </Text>
-              {showCopy && (
-                <CopyIcon
-                  color={theme.colors[captionColor]}
-                  height={captionSize}
-                  width={captionSize}
-                />
-              )}
-            </Flex>
-          </CopyButtonWrapper>
+        {/* If subtitle defined show it, otherwise revert to address logic */}
+        {subtitleOverrideText ? (
+          <Flex centered row gap="sm">
+            <Text color={captionColor} variant={captionVariant}>
+              {subtitleOverrideText}
+            </Text>
+          </Flex>
+        ) : (
+          showAddressAsSubtitle && (
+            <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
+              <Flex centered row gap="sm">
+                <Text color={captionColor} variant={captionVariant}>
+                  {sanitizeAddressText(shortenAddress(address))}
+                </Text>
+                {showCopy && (
+                  <CopyIcon
+                    color={theme.colors[captionColor]}
+                    height={captionSize}
+                    width={captionSize}
+                  />
+                )}
+              </Flex>
+            </CopyButtonWrapper>
+          )
         )}
       </Flex>
     </Flex>

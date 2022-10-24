@@ -20,25 +20,46 @@ import {
   SearchResultType,
   selectSearchHistory,
   TokenSearchResult,
+  WalletCategory,
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
 
-// TODO: Update fixed trending wallets
-export const TRENDING_WALLETS: WalletSearchResult[] = [
+export const SUGGESTED_WALLETS: WalletSearchResult[] = [
+  {
+    type: SearchResultType.Wallet,
+    address: '0xf894FeA045ECCB2927e2E0CB15C12debEE9f2BE8',
+    ensName: 'pleasrdao.eth',
+    category: WalletCategory.DAO,
+  },
   {
     type: SearchResultType.Wallet,
     address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     ensName: 'vitalik.eth',
-  },
-  {
-    type: SearchResultType.Wallet,
-    address: '0x11E4857Bb9993a50c685A79AFad4E6F65D518DDa',
-    ensName: 'hayden.eth',
+    category: WalletCategory.Builder,
   },
   {
     type: SearchResultType.Wallet,
     address: '0xD387A6E4e84a6C86bd90C158C6028A58CC8Ac459',
     ensName: 'pranksy.eth',
+    category: WalletCategory.NFTCollector,
+  },
+  {
+    type: SearchResultType.Wallet,
+    address: '0x1a9C8182C09F50C8318d769245beA52c32BE35BC',
+    ensName: 'uniswap.eth',
+    category: WalletCategory.DAO,
+  },
+  {
+    type: SearchResultType.Wallet,
+    address: '0x11E4857Bb9993a50c685A79AFad4E6F65D518DDa',
+    ensName: 'hayden.eth',
+    category: WalletCategory.Builder,
+  },
+  {
+    type: SearchResultType.Wallet,
+    address: '0xF296178d553C8Ec21A2fBD2c5dDa8CA9ac905A00',
+    ensName: 'dom.eth',
+    category: WalletCategory.NFTCollector,
   },
 ]
 
@@ -98,7 +119,7 @@ export function SearchEmptySection() {
             {t('Wallets')}
           </Text>
         }
-        data={TRENDING_WALLETS}
+        data={SUGGESTED_WALLETS}
         keyExtractor={walletKey}
         listKey="wallets"
         renderItem={renderWalletItem}
