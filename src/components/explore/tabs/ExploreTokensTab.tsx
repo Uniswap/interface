@@ -148,7 +148,7 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
             ) : null}
             <Flex row alignItems="center" justifyContent="space-between" mx="none">
               <Text color="textSecondary" variant="buttonLabelSmall">
-                {t('Top Tokens')}
+                {t('Top tokens')}
               </Text>
               <SortButton orderBy={orderBy} onPress={onPressSortButton} />
             </Flex>
