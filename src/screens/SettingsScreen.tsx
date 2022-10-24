@@ -1,21 +1,16 @@
 import { useTheme } from '@shopify/restyle'
-import { default as React, useCallback, useMemo, useState } from 'react'
+import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
-import { useAppDispatch } from 'src/app/hooks'
 import { useSettingsStackNavigation } from 'src/app/navigation/types'
 import BookOpenIcon from 'src/assets/icons/book-open.svg'
 import FaceIdIcon from 'src/assets/icons/faceid.svg'
 import FlashbotsIcon from 'src/assets/icons/flashbots.svg'
-import HelpIcon from 'src/assets/icons/help.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
-import TestnetsIcon from 'src/assets/icons/testnets.svg'
-import TwitterIcon from 'src/assets/logos/twitter.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
-import { Switch } from 'src/components/buttons/Switch'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -27,14 +22,10 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
-import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
 import { useDeviceSupportsFaceId } from 'src/features/biometrics/hooks'
-import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
-import { useActiveChainIds } from 'src/features/chains/utils'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
-import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
@@ -44,27 +35,6 @@ export function SettingsScreen() {
   const navigation = useSettingsStackNavigation()
   const theme = useTheme()
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
-
-  const accounts = useAccounts()
-  const activeChains = useActiveChainIds()
-  const isGoerliActive = activeChains.includes(ChainId.Goerli)
-  const onToggleTestnets = useCallback(() => {
-    // always rely on the state of goerli
-    TESTNET_CHAIN_IDS.forEach((chainId) =>
-      dispatch(setChainActiveStatus({ chainId, isActive: !isGoerliActive }))
-    )
-
-    Object.keys(accounts).forEach((address) => {
-      dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.ToggleTestnetSettings,
-          enabled: !isGoerliActive,
-          address,
-        })
-      )
-    })
-  }, [dispatch, isGoerliActive, accounts])
 
   // check if device supports faceId authentication, if not, hide faceId option
   const deviceSupportsFaceId = useDeviceSupportsFaceId()
@@ -91,27 +61,7 @@ export function SettingsScreen() {
             text: 'Face ID',
             icon: <FaceIdIcon {...iconProps} />,
           },
-          {
-            action: <Switch value={isGoerliActive} onValueChange={onToggleTestnets} />,
-            text: t('Testnets'),
-            subText: t('Allow connections to test networks'),
-            icon: <TestnetsIcon {...iconProps} />,
-          },
-        ],
-      },
-      {
-        subTitle: t('Support and feedback'),
-        data: [
-          {
-            externalLink: 'https://help.uniswap.org',
-            text: t('Help Center'),
-            icon: <HelpIcon {...iconProps} />,
-          },
-          {
-            externalLink: 'https://twitter.com/Uniswap',
-            text: t('Twitter'),
-            icon: <TwitterIcon {...iconProps} />,
-          },
+          // @TODO: add back testnet toggle when Zerion provides data for testnets correctly.
         ],
       },
       {
@@ -166,7 +116,7 @@ export function SettingsScreen() {
         ],
       },
     ]
-  }, [isGoerliActive, onToggleTestnets, t, theme, showDevSettings, deviceSupportsFaceId])
+  }, [t, theme, showDevSettings, deviceSupportsFaceId])
 
   const renderItem = ({
     item,
