@@ -25,6 +25,7 @@ import {
 } from 'src/components/layout/screens/TabbedScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Loading } from 'src/components/loading'
+import { Text } from 'src/components/Text'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { useDebounce } from 'src/utils/timing'
@@ -88,7 +89,7 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
       switch (route?.key) {
         case TOKENS_KEY:
           return (
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<ExploreTokensTabLoader />}>
               <ExploreTokensTab listRef={listRef} queryRef={exploreTokensTabQueryRef} />
             </Suspense>
           )
@@ -177,5 +178,25 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
         />
       </GestureDetector>
     </Screen>
+  )
+}
+
+function ExploreTokensTabLoader() {
+  const { t } = useTranslation()
+  return (
+    <Flex gap="md" mx="xs" my="sm">
+      <Flex gap="sm">
+        <Text color="textSecondary" variant="subheadSmall">
+          {t('Favorites')}
+        </Text>
+        <Loading repeat={3} type="favorite" />
+      </Flex>
+      <Flex gap="sm">
+        <Text color="textSecondary" variant="subheadSmall">
+          {t('Top tokens')}
+        </Text>
+        <Loading repeat={5} type="token" />
+      </Flex>
+    </Flex>
   )
 }

@@ -146,8 +146,8 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
             {hasFavoritedTokens ? (
               <FavoriteTokensGrid isEditing={isEditing} setIsEditing={setIsEditing} />
             ) : null}
-            <Flex row alignItems="center" justifyContent="space-between" mx="none">
-              <Text color="textSecondary" variant="buttonLabelSmall">
+            <Flex row alignItems="center" justifyContent="space-between" mx="xs">
+              <Text color="textSecondary" variant="subheadSmall">
                 {t('Top tokens')}
               </Text>
               <SortButton orderBy={orderBy} onPress={onPressSortButton} />

@@ -11,7 +11,6 @@ import RemoveButton from 'src/components/explore/RemoveButton'
 import { FavoriteTokenCardQuery } from 'src/components/explore/__generated__/FavoriteTokenCardQuery.graphql'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Flex } from 'src/components/layout/Flex'
-import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -60,8 +59,6 @@ export const favoriteTokenCardQuery = graphql`
   }
 `
 
-export const TOKEN_ITEM_BOX_MINWIDTH = 137
-
 type FavoriteTokenCardProps = {
   currencyId: CurrencyId
   isEditing?: boolean
@@ -70,7 +67,7 @@ type FavoriteTokenCardProps = {
 
 function FavoriteTokenCard(props: FavoriteTokenCardProps) {
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<BaseCard.Shadow aspectRatio={1} px="xs" {...props} />}>
       <FavoriteTokenCardInner {...props} />
     </Suspense>
   )

@@ -72,9 +72,9 @@ const useChildFromType = (type: SkeletonType, repeat: number) => {
       )
     case 'favorite':
       return (
-        <Flex row>
-          {new Array(repeat).fill(null).map((_, i) => (
-            <FavoriteLoader key={i} height={50} />
+        <Flex row gap="xs">
+          {new Array(repeat).fill(null).map((_, i, { length }) => (
+            <FavoriteLoader key={i} flex={1 / repeat} opacity={(length - i) / length} />
           ))}
         </Flex>
       )
@@ -105,12 +105,12 @@ const useChildFromType = (type: SkeletonType, repeat: number) => {
             const firstColOpacity = (repeat - ((repeat / 2) * i + 1) + 1) / repeat
             const secondColOpacity = (repeat - ((repeat / 2) * i + 2) + 1) / repeat
             return (
-            <React.Fragment key={i}>
-              <Flex row gap="none" px="xs">
+              <React.Fragment key={i}>
+                <Flex row gap="none" px="xs">
                   <NftCardLoader opacity={firstColOpacity} width="50%" />
                   <NftCardLoader opacity={secondColOpacity} width="50%" />
-              </Flex>
-            </React.Fragment>
+                </Flex>
+              </React.Fragment>
             )
           })}
         </Box>
