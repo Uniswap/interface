@@ -150,9 +150,8 @@ type TokenMap = { [address: string]: Token }
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string | null): Token | null | undefined {
-  const address = isAddress(tokenAddress)
+  const address = isAddress(tokenAddress?.toLowerCase())
   const token: Token | undefined = address ? tokens[address] : undefined
-
   const tokenFromNetwork = useTokenFromActiveNetwork(token ? undefined : address ? address : undefined)
 
   return tokenFromNetwork ?? token
