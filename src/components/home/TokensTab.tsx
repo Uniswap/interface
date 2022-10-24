@@ -2,8 +2,9 @@ import { selectionAsync } from 'expo-haptics'
 import React, { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View, ViewStyle } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
-import { Box } from 'src/components/layout'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { NoTokens } from 'src/components/icons/NoTokens'
+import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { Loading } from 'src/components/loading'
@@ -13,7 +14,6 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { theme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
 
 export function TokensTab({
@@ -25,6 +25,7 @@ export function TokensTab({
   tabViewScrollProps: TabViewScrollProps
   loadingContainerStyle: ViewStyle
 }) {
+  const theme = useAppTheme()
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -62,16 +63,17 @@ export function TokensTab({
         }>
         <TokenBalanceList
           empty={
-            <BaseCard.EmptyState
-              additionalButtonLabel={t('Transfer')}
-              buttonLabel={t('Scan')}
-              description={t(
-                'Fund your wallet by buying tokens with a credit card or transferring from an exchange.'
-              )}
-              title={t('Add tokens')}
-              onPress={onPressScan}
-              onPressAdditional={onPressScan}
-            />
+            <Flex centered flex={1}>
+              <BaseCard.EmptyState
+                buttonLabel={t('Receive tokens')}
+                description={t(
+                  'Transfer tokens from a centralized exchange or another wallet to get started.'
+                )}
+                icon={<NoTokens />}
+                title={t('No tokens yet')}
+                onPress={onPressScan}
+              />
+            </Flex>
           }
           owner={owner}
           tabViewScrollProps={tabViewScrollProps}

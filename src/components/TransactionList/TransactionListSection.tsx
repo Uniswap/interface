@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
+import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
 import TransactionSummaryRouter from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
@@ -35,6 +36,7 @@ export function TransactionListSection({
       {totalTransactionCount === 0 ? (
         <BaseCard.EmptyState
           description={t('Any transactions made by this wallet will appear here.')}
+          icon={<NoTransactions />}
           title={t('No transactions yet')}
         />
       ) : (

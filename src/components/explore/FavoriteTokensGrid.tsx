@@ -1,5 +1,4 @@
 import { default as React, useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
@@ -7,7 +6,6 @@ import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
 
 import { AnimatedFlex, Box } from 'src/components/layout'
-import { BaseCard } from 'src/components/layout/BaseCard'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { flex } from 'src/styles/flex'
 import { theme as FixedTheme } from 'src/styles/theme'
@@ -54,8 +52,7 @@ export function FavoriteTokensGrid({
       <FavoriteHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
       <FlatList
         ItemSeparatorComponent={() => <Box height={GAP_SIZE} />}
-        ListEmptyComponent={FavoritesEmptyState}
-        contentContainerStyle={{ ...flex.grow }}
+        contentContainerStyle={flex.grow}
         data={favoriteCurrencyIds}
         keyExtractor={(item) => item}
         listKey="explore-favorite-tokens"
@@ -66,9 +63,4 @@ export function FavoriteTokensGrid({
       />
     </AnimatedFlex>
   )
-}
-
-export function FavoritesEmptyState() {
-  const { t } = useTranslation()
-  return <BaseCard.EmptyState description={t('Favorite tokens to monitor their prices.')} />
 }

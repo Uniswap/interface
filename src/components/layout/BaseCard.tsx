@@ -3,7 +3,7 @@ import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode } fro
 import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -104,6 +104,7 @@ type EmptyStateProps = {
   onPress?: () => void
   onPressAdditional?: () => void
   title?: string
+  icon?: ReactNode
 }
 
 function EmptyState({
@@ -113,37 +114,38 @@ function EmptyState({
   onPress,
   onPressAdditional,
   title,
+  icon,
 }: EmptyStateProps) {
   return (
-    <Flex centered gap="sm" p="sm" width="100%">
-      {title && (
-        <Text textAlign="center" variant="subheadLarge">
-          {title}
-        </Text>
-      )}
-      <Text color="textSecondary" textAlign="center" variant="bodySmall">
-        {description}
-      </Text>
-      {buttonLabel && (
-        <PrimaryButton
-          borderColor="backgroundOutline"
-          borderRadius="md"
-          label={buttonLabel}
-          textVariant="buttonLabelSmall"
-          variant="transparent"
-          onPress={onPress}
-        />
-      )}
-      {additionalButtonLabel && (
-        <PrimaryButton
-          borderColor="backgroundOutline"
-          borderRadius="md"
-          label={additionalButtonLabel}
-          textVariant="buttonLabelSmall"
-          variant="transparent"
-          onPress={onPressAdditional}
-        />
-      )}
+    <Flex centered gap="lg" p="sm" width="100%">
+      <Flex centered>
+        {icon}
+        <Flex centered gap="xs">
+          {title && (
+            <Text textAlign="center" variant="buttonLabelMedium">
+              {title}
+            </Text>
+          )}
+          <Text color="textSecondary" textAlign="center" variant="bodySmall">
+            {description}
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex row>
+        {buttonLabel && (
+          <TextButton textColor="magentaVibrant" textVariant="buttonLabelSmall" onPress={onPress}>
+            {buttonLabel}
+          </TextButton>
+        )}
+        {additionalButtonLabel && (
+          <TextButton
+            textColor="magentaVibrant"
+            textVariant="buttonLabelSmall"
+            onPress={onPressAdditional}>
+            {additionalButtonLabel}
+          </TextButton>
+        )}
+      </Flex>
     </Flex>
   )
 }

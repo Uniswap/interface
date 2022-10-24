@@ -1,18 +1,25 @@
+import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
+import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import TransactionList from 'src/components/TransactionList/TransactionList'
 import SessionsButton from 'src/components/WalletConnect/SessionsButton'
+import { openModal } from 'src/features/modals/modalSlice'
 import { setNotificationStatus } from 'src/features/notifications/notificationSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
+import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 
 const MAX_SCROLL_HEIGHT = 180
@@ -33,6 +40,16 @@ export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) 
       navigation.navigate(Screens.SettingsWalletManageConnection, { address })
     }
   }, [address, navigation])
+
+  // TODO: remove when buy flow ready
+  const onPressScan = () => {
+    selectionAsync()
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
+    )
+  }
 
   useEffect(() => {
     dispatch(setNotificationStatus({ address, hasNotifications: false }))
@@ -59,13 +76,16 @@ export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) 
       <Flex pb="lg" px="sm">
         <TransactionList
           emptyStateContent={
-            <Flex centered gap="xxl" mt="xl" mx="xl">
-              <Text variant="subheadLarge">{t('No activity yet')}</Text>
-              <Text color="textSecondary" variant="bodySmall">
-                {t(
-                  'When you make transactions or interact with sites, details of your activity will appear here.'
+            <Flex centered flex={1}>
+              <BaseCard.EmptyState
+                buttonLabel={t('Receive tokens or NFTs')}
+                description={t(
+                  'When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.'
                 )}
-              </Text>
+                icon={<NoTransactions />}
+                title={t('No tokens yet')}
+                onPress={onPressScan}
+              />
             </Flex>
           }
           ownerAddress={address}

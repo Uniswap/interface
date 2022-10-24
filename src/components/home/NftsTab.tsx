@@ -1,27 +1,33 @@
 import { graphql } from 'babel-plugin-relay/macro'
+import { selectionAsync } from 'expo-haptics'
 import React, { Suspense, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import { useLazyLoadQuery } from 'react-relay'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
+import NoNFTsIcon from 'src/assets/icons/empty-state-picture.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { Button } from 'src/components/buttons/Button'
-import { TabEmptyState } from 'src/components/home/TabEmptyState'
 import {
   NftsTabQuery,
   NftsTabQuery$data,
 } from 'src/components/home/__generated__/NftsTabQuery.graphql'
 import { NFTViewer } from 'src/components/images/NFTViewer'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { GridRecyclerList } from 'src/components/layout/GridRecyclerList'
 import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { Loading } from 'src/components/loading'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
+import { openModal } from 'src/features/modals/modalSlice'
 import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
+import { ModalName } from 'src/features/telemetry/constants'
+import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { theme as FixedTheme } from 'src/styles/theme'
 
@@ -114,6 +120,7 @@ function NftsTabInner({
   const navigation = useHomeStackNavigation()
   const { t } = useTranslation()
   const theme = useAppTheme()
+  const dispatch = useAppDispatch()
 
   const nftData = useLazyLoadQuery<NftsTabQuery>(
     nftsTabQuery,
@@ -134,6 +141,15 @@ function NftsTabInner({
     },
     [navigation, owner]
   )
+
+  const onPressScan = () => {
+    selectionAsync()
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
+    )
+  }
 
   const renderItem = useCallback(
     (asset: NFTItem) => {
@@ -184,22 +200,24 @@ function NftsTabInner({
     },
     [onPressItem, theme.colors.userThemeMagenta]
   )
-  return (
+  return nftDataItems.length === 0 ? (
+    <Flex centered flex={1} style={loadingContainerStyle}>
+      <BaseCard.EmptyState
+        buttonLabel={t('Receive NFTs')}
+        description={t('Transfer NFTs from another wallet to get started.')}
+        icon={<NoNFTsIcon color={theme.colors.textSecondary} />}
+        title={t('No NFTs yet')}
+        onPress={onPressScan}
+      />
+    </Flex>
+  ) : (
     <View style={styles.tabContentStyle}>
-      {nftDataItems.length === 0 ? (
-        <TabEmptyState
-          description={t('Any NFTs that you receive, mint, or buy will appear here.')}
-          style={loadingContainerStyle}
-          title={t('No NFTs yet')}
-        />
-      ) : (
-        <GridRecyclerList
-          data={nftDataItems}
-          getKey={({ contractAddress, tokenId }) => getNFTAssetKey(contractAddress ?? '', tokenId)}
-          renderItem={renderItem}
-          tabViewScrollProps={tabViewScrollProps}
-        />
-      )}
+      <GridRecyclerList
+        data={nftDataItems}
+        getKey={({ contractAddress, tokenId }) => getNFTAssetKey(contractAddress ?? '', tokenId)}
+        renderItem={renderItem}
+        tabViewScrollProps={tabViewScrollProps}
+      />
     </View>
   )
 }
