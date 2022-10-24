@@ -2,9 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
-import { checkWarning } from 'constants/tokenSafety'
 import { PriceDurations, PricePoint, SingleTokenData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
@@ -80,7 +78,6 @@ export default function ChartSection({
 }) {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
-  const warning = checkWarning(token.address ?? '')
   const timePeriod = useAtomValue(filterTimeAtom)
 
   const logoSrc = useTokenLogoURI(token, nativeCurrency)
@@ -120,7 +117,6 @@ export default function ChartSection({
           </LogoContainer>
           {nativeCurrency?.name ?? token.name ?? <Trans>Name not found</Trans>}
           <TokenSymbol>{nativeCurrency?.symbol ?? token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
-          {!warning && <VerifiedIcon size="16px" />}
         </TokenNameCell>
         <TokenActions>
           {token.name && token.symbol && token.address && <ShareButton token={token} isNative={!!nativeCurrency} />}
