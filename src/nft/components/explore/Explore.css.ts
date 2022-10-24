@@ -8,7 +8,7 @@ export const section = style([
     paddingRight: { sm: '16', xl: '0' },
   }),
   {
-    maxWidth: '1000px',
+    maxWidth: '1100px',
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'row',
