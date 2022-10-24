@@ -137,7 +137,7 @@ export default function TokenTable({ setRowCount }: { setRowCount: (c: number) =
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const { tokens, sparklines } = useTopTokens(chainName)
   setRowCount(tokens?.length ?? PAGE_SIZE)
-  const l2CircleLogo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[filterNetwork]).circleLogoUrl
+  const l2CircleLogo = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[filterNetwork])?.circleLogoUrl
 
   const sendRowAnalytics = useCallback(
     (token: NonNullable<TopToken>, index: number, rank: number) => {
