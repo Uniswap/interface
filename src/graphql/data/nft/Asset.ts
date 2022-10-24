@@ -85,11 +85,6 @@ const assetPaginationQuery = graphql`
             rank
             score
           }
-          nftContract {
-            address
-            chain
-            standard
-          }
           metadataUrl
         }
       }
@@ -142,7 +137,7 @@ export function useAssetsQuery(
     const asset = queryAsset.node
     return {
       id: asset.id,
-      address: asset.nftContract?.address,
+      address: asset.collection.nftContracts[0].address,
       notForSale: asset.listings === null,
       collectionName: asset.collection?.name,
       collectionSymbol: asset.collection?.image?.url,
@@ -162,7 +157,7 @@ export function useAssetsQuery(
       sellorders: asset.listings?.edges,
       smallImageUrl: asset.smallImage?.url,
       tokenId: asset.tokenId,
-      tokenType: asset.nftContract?.standard,
+      tokenType: asset.collection.nftContracts[0].standard,
       // totalCount?: number, // TODO waiting for BE changes
       collectionIsVerified: asset.collection?.isVerified,
       rarity: {
