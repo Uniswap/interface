@@ -72,11 +72,13 @@ export default function ChartSection({
   currency,
   nativeCurrency,
   prices,
+  latestPrice,
 }: {
   token: NonNullable<SingleTokenData>
   currency?: Currency | null
   nativeCurrency?: Token | NativeCurrency
   prices: PriceDurations
+  latestPrice: number | null | undefined
 }) {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
@@ -89,21 +91,11 @@ export default function ChartSection({
   // Thus we need to manually determine latest price point available, and
   // append it to the prices list for every duration.
   useMemo(() => {
-    let latestPricePoint: PricePoint = { value: 0, timestamp: 0 }
-    let latestPricePointTimePeriod: TimePeriod
-    Object.keys(prices).forEach((key) => {
-      const latestPricePointForTimePeriod = prices[key as unknown as TimePeriod]?.slice(-1)[0]
-      if (latestPricePointForTimePeriod && latestPricePointForTimePeriod.timestamp > latestPricePoint.timestamp) {
-        latestPricePoint = latestPricePointForTimePeriod
-        latestPricePointTimePeriod = key as unknown as TimePeriod
-      }
-    })
-    Object.keys(prices).forEach((key) => {
-      if ((key as unknown as TimePeriod) !== latestPricePointTimePeriod) {
-        prices[key as unknown as TimePeriod]?.push(latestPricePoint)
-      }
-    })
-  }, [prices])
+    if (latestPrice) {
+      const latestPricePoint: PricePoint = { value: latestPrice, timestamp: Date.now() / 1000 }
+      Object.values(TimePeriod).forEach((timePeriod) => prices[timePeriod as TimePeriod]?.push(latestPricePoint))
+    }
+  }, [prices, latestPrice])
 
   return (
     <ChartHeader>
@@ -128,7 +120,9 @@ export default function ChartSection({
       </TokenInfoContainer>
       <ChartContainer>
         <ParentSize>
-          {({ width, height }) => prices && <PriceChart prices={prices[timePeriod]} width={width} height={height} />}
+          {({ width, height }) =>
+            prices && <PriceChart prices={prices[timePeriod]} latestPrice={latestPrice} width={width} height={height} />
+          }
         </ParentSize>
       </ChartContainer>
     </ChartHeader>

@@ -139,6 +139,7 @@ export default function TokenDetails() {
                 currency={token}
                 nativeCurrency={isNative ? nativeCurrency : undefined}
                 prices={prices}
+                latestPrice={tokenQueryData.market?.price?.value}
               />
               <StatsSection
                 TVL={tokenQueryData.market?.totalValueLocked?.value}

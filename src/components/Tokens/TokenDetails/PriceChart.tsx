@@ -134,12 +134,14 @@ interface PriceChartProps {
   width: number
   height: number
   prices: PricePoint[] | undefined
+  latestPrice: number | null | undefined
 }
 
-export function PriceChart({ width, height, prices }: PriceChartProps) {
+export function PriceChart({ width, height, prices, latestPrice }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
+  console.log(latestPrice)
 
   // first price point on the x-axis of the current time period's chart
   const startingPrice = prices?.[0] ?? DATA_EMPTY
