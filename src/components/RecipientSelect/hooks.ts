@@ -55,7 +55,7 @@ export function useRecipients() {
         ...(inactiveLocalAccounts.length > 0
           ? [
               {
-                title: t('Your Wallets'),
+                title: t('Your wallets'),
                 data: inactiveLocalAccounts,
               },
             ]
