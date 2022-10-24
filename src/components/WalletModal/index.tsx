@@ -225,7 +225,6 @@ export default function WalletModal({
         setWalletView(WALLET_VIEWS.PENDING)
         dispatch(updateConnectionError({ connectionType, error: undefined }))
 
-        // TODO(zzmp)
         await connector.activate()
 
         dispatch(updateSelectedWallet({ wallet: connectionType }))
