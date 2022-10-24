@@ -25,19 +25,15 @@ export type TabParamList = {
 
 export type HomeStackParamList = {
   [Screens.Home]: undefined
-  [Screens.PortfolioTokens]: { owner: Address | undefined }
-  [Screens.PortfolioNFTs]: { owner: Address | undefined }
 }
 
 export type ExploreStackParamList = {
   [Screens.Explore]: undefined
   [Screens.WatchedWallets]: undefined
-  [Screens.PortfolioNFTs]: { owner: Address | undefined }
   [Screens.ExternalProfile]: {
     address: string
     preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
   }
-  [Screens.PortfolioTokens]: { owner: Address | undefined }
 }
 
 export type AccountStackParamList = {
@@ -61,11 +57,6 @@ export type SettingsStackParamList = {
   [Screens.SettingsCloudBackupStatus]: { address: Address }
   [Screens.SettingsViewSeedPhrase]: { address: Address }
   [OnboardingScreens.Landing]: undefined // temporary to be able to view onboarding from settings
-}
-
-export type ProfileStackParamList = {
-  [Screens.PortfolioTokens]: { Address: string | undefined }
-  [Screens.PortfolioNFTs]: { Address: string | undefined }
 }
 
 export type OnboardingStackBaseParams =
@@ -110,7 +101,6 @@ export type AppStackParamList = {
   [Screens.SettingsWalletManageConnection]: { address: Address }
   [Screens.Notifications]: undefined | { txHash: string }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
-  [Screens.ProfileStack]: NavigatorScreenParams<ProfileStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.TokenDetails]: {
@@ -183,7 +173,6 @@ export type RootParamList = TabParamList &
   HomeStackParamList &
   AccountStackParamList &
   SettingsStackParamList &
-  ProfileStackParamList &
   OnboardingStackParamList &
   AppStackParamList
 

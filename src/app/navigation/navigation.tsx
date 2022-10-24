@@ -18,7 +18,6 @@ import {
   ExploreStackParamList,
   HomeStackParamList,
   OnboardingStackParamList,
-  ProfileStackParamList,
   SettingsStackParamList,
   TabParamList,
 } from 'src/app/navigation/types'
@@ -63,7 +62,6 @@ import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
-import { PortfolioTokensScreen } from 'src/screens/PortfolioTokensScreen'
 import { OnboardingScreens, Screens, Stacks, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
@@ -89,7 +87,6 @@ const HomeStack = createNativeStackNavigator<HomeStackParamList>()
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
 const AccountStack = createNativeStackNavigator<AccountStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
-const ProfileStack = createNativeStackNavigator<ProfileStackParamList>()
 
 const Drawer = createDrawerNavigator()
 
@@ -235,17 +232,6 @@ function SettingsStackGroup() {
   )
 }
 
-function ProfileStackGroup() {
-  return (
-    <ProfileStack.Navigator
-      screenOptions={{
-        gestureEnabled: false,
-      }}>
-      <ProfileStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
-    </ProfileStack.Navigator>
-  )
-}
-
 export function DrawerNavigator() {
   return (
     <Drawer.Navigator
@@ -293,9 +279,6 @@ export function HomeStackNavigator({ queryRefs }: { queryRefs: HomeScreenQueries
         ...navOptions.noHeader,
       }}>
       <HomeStack.Screen component={homeScreenMemo} name={Screens.Home} />
-
-      {/* Tokens */}
-      <HomeStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
     </HomeStack.Navigator>
   )
 }
@@ -318,7 +301,6 @@ export function ExploreStackNavigator({
         name={Screens.Explore}
       />
       <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
-      <ExploreStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
       <ExploreStack.Screen component={WatchedWalletsScreen} name={Screens.WatchedWallets} />
     </ExploreStack.Navigator>
   )
@@ -438,7 +420,6 @@ export function AppStackNavigator() {
         name={Screens.SettingsWalletManageConnection}
       />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
-        <AppStack.Screen component={ProfileStackGroup} name={Screens.ProfileStack} />
         <AppStack.Screen component={EducationScreen} name={Screens.Education} />
       </AppStack.Group>
     </AppStack.Navigator>
