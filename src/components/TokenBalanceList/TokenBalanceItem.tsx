@@ -68,7 +68,9 @@ export const TokenBalanceItem = memo(
         </AnimatedFlex>
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
           <Flex alignItems="flex-end" gap="xxs">
-            <Text variant="bodyLarge">{formatUSDPrice(portfolioBalance.balanceUSD)}</Text>
+            <Text variant="bodyLarge">
+              {formatUSDPrice(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)}
+            </Text>
             <Text color="textSecondary">
               <RelativeChange change={relativeChange24} variant="subheadSmall" />
             </Text>

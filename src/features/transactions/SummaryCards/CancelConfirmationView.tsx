@@ -13,7 +13,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
-import { formatUSDGasPrice } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 const spacerProps: ComponentProps<typeof Box> = {
   borderBottomColor: 'backgroundOutline',
@@ -33,8 +33,9 @@ export function CancelConfirmationView({
   const accountAddress = useActiveAccount()?.address
 
   const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
-  const gasFeeUSD = formatUSDGasPrice(
-    useUSDGasPrice(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee)
+  const gasFeeUSD = formatUSDPrice(
+    useUSDGasPrice(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee),
+    NumberType.FiatGasPrice
   )
 
   const onCancelConfirm = useCallback(() => {

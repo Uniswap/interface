@@ -132,6 +132,9 @@ export enum NumberType {
   // fiat prices everyone except Token Details flow
   FiatTokenPrice = 'fiat-token-price',
 
+  // fiat price of token balances
+  FiatTokenQuantity = 'fiat-token-quantity',
+
   // fiat gas prices
   FiatGasPrice = 'fiat-gas-price',
 }
@@ -139,6 +142,8 @@ export enum NumberType {
 const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatters,
   [NumberType.TokenTx]: tokenTxFormatters,
+  // fiat token quantities follow same rules as gas prices
+  [NumberType.FiatTokenQuantity]: fiatGasPriceFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,
@@ -209,12 +214,11 @@ function formatNumberOrString(price: NullUndefined<number | string>, type: Numbe
   return formatNumber(price, type)
 }
 
-export function formatUSDPrice(price: NullUndefined<number | string>) {
-  return formatNumberOrString(price, NumberType.FiatTokenPrice)
-}
-
-export function formatUSDGasPrice(price: NullUndefined<number | string>) {
-  return formatNumberOrString(price, NumberType.FiatGasPrice)
+export function formatUSDPrice(
+  price: NullUndefined<number | string>,
+  type: NumberType = NumberType.FiatTokenPrice
+) {
+  return formatNumberOrString(price, type)
 }
 
 export function formatNFTFloorPrice(num: NullUndefined<number>) {

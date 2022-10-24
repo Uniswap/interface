@@ -6,7 +6,7 @@ import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useUSDGasPrice } from 'src/features/gas/hooks'
-import { formatUSDGasPrice } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 export function NetworkFee({ chainId, gasFee }: { chainId: ChainId; gasFee?: string }) {
   const { t } = useTranslation()
@@ -25,7 +25,7 @@ export function NetworkFee({ chainId, gasFee }: { chainId: ChainId; gasFee?: str
                 <Text variant="subheadSmall">•</Text>
               </Flex>
             )}
-            <Text variant="subheadSmall">{formatUSDGasPrice(gasFeeUSD)}</Text>
+            <Text variant="subheadSmall">{formatUSDPrice(gasFeeUSD, NumberType.FiatGasPrice)}</Text>
           </Flex>
         ) : (
           <Flex width="50%">
