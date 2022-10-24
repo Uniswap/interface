@@ -12,6 +12,7 @@ const CarouselContainer = styled.div`
 const CarouselCard = styled(a.div)`
   position: absolute;
   display: flex;
+  top: 3px;
   height: 280px;
   will-change: transform;
   justify-content: center;
@@ -20,7 +21,7 @@ const CarouselCard = styled(a.div)`
 const CarouselOverlay = styled.div<{ right?: boolean }>`
   position: absolute;
   display: flex;
-  top: 0px;
+  top: 3px;
   ${({ right }) => (right ? 'right: 0px' : 'left: 0px')};
   width: 40px;
   height: 280px;
