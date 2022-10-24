@@ -35,6 +35,11 @@ const DetailsRow = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 
+const StyledLink = styled(ExternalLink)`
+  color: ${({ theme }) => theme.textSecondary};
+  font-weight: 700;
+`
+
 type TokenWarningMessageProps = {
   warning: Warning
   tokenAddress: string
@@ -57,9 +62,9 @@ export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarn
         {description}
         {Boolean(description) && ' '}
         {tokenAddress && (
-          <ExternalLink href={TOKEN_SAFETY_ARTICLE}>
+          <StyledLink href={TOKEN_SAFETY_ARTICLE}>
             <Trans>Learn more</Trans>
-          </ExternalLink>
+          </StyledLink>
         )}
       </DetailsRow>
     </Label>

@@ -25,7 +25,7 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
             other="These tokens aren't traded on leading U.S. centralized exchanges."
           />
         )
-        description = <Trans>Please do your own research before trading.</Trans>
+        description = <Trans>Always conduct your own research before trading.</Trans>
         break
       case WARNING_LEVEL.UNKNOWN:
         heading = (
@@ -35,7 +35,7 @@ export function getWarningCopy(warning: Warning | null, plural = false) {
             other="These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap."
           />
         )
-        description = <Trans>Please do your own research before trading.</Trans>
+        description = <Trans>Always conduct your own research before trading.</Trans>
         break
       case WARNING_LEVEL.BLOCKED:
         description = (
