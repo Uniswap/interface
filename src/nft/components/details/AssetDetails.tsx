@@ -299,6 +299,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   // console.log(asset)
   // console.log(collection)
 
+  console.log(asset)
+  const rarity = asset.rarity ? asset.rarity?.providers[0].rank : undefined
+
   return (
     <Column>
       <CollectionHeader>
@@ -321,9 +324,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       <InfoContainer
         primaryHeader="Traits"
         secondaryHeader={
-          rarityProvider ? (
+          rarityProvider && rarity ? (
             <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-              Rarity <img src={rarityIcon} width={16} alt={rarityProvider.provider} />
+              Rarity {putCommas(rarity)} <img src={rarityIcon} width={16} alt={rarityProvider.provider} />
             </span>
           ) : null
         }
