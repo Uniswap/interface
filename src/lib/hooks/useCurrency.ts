@@ -116,8 +116,6 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
   const tokenNameBytes32 = useSingleCallResult(tokenContractBytes32, 'name', undefined, NEVER_RELOAD)
   const symbol = useSingleCallResult(tokenContract, 'symbol', undefined, NEVER_RELOAD)
   const symbolBytes32 = useSingleCallResult(tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
-  // so this is where the error occurs... parsedDecimals is undefined because we aren't getting
-  // decimals here via useSingleCallResult... should there be a default decimals fallback?
   const decimals = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD)
 
   const isLoading = useMemo(
