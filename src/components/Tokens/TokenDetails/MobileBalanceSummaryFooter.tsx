@@ -1,11 +1,15 @@
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { formatToDecimal } from 'analytics/utils'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
+import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
 import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatNumbers'
-
-import { BalanceSummaryProps } from './BalanceSummary'
 
 const Wrapper = styled.div`
   align-content: center;
@@ -41,7 +45,7 @@ const BalanceValue = styled.div`
   display: flex;
   gap: 8px;
 `
-const BalanceTotal = styled.div`
+const Balance = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
@@ -78,53 +82,41 @@ const SwapButton = styled(StyledInternalLink)`
   max-width: 100vw;
 `
 
-export default function MobileBalanceSummaryFooter({
-  tokenAmount,
-  nativeCurrencyAmount,
-  isNative,
-  tokenAddress,
-}: BalanceSummaryProps & { tokenAddress: string }) {
-  const balanceUsdValue = useStablecoinValue(tokenAmount)
-  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)
+export default function MobileBalanceSummaryFooter({ token }: { token: Currency }) {
+  const { account } = useWeb3React()
+  const balance = useCurrencyBalance(account, token)
+  const usdValue = useStablecoinValue(balance)
+  const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
 
-  const formattedBalance = tokenAmount
-    ? formatToDecimal(tokenAmount, Math.min(tokenAmount.currency.decimals, 2))
-    : undefined
+  const formattedBalance = useMemo(
+    () => (balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 2)) : undefined),
+    [balance]
+  )
+  const formattedUsd = useMemo(() => {
+    const float = usdValue ? currencyAmountToPreciseFloat(usdValue) : undefined
+    if (!float) return undefined
+    return formatDollar({ num: float, isPrice: true })
+  }, [usdValue])
 
-  const balanceUsd = balanceUsdValue ? currencyAmountToPreciseFloat(balanceUsdValue) : undefined
-
-  const formattedNativeBalance = nativeCurrencyAmount
-    ? formatToDecimal(nativeCurrencyAmount, Math.min(nativeCurrencyAmount.currency.decimals, 2))
-    : undefined
-  const nativeBalanceUsd = nativeBalanceUsdValue ? currencyAmountToPreciseFloat(nativeBalanceUsdValue) : undefined
-
+  if (!account) return null
   return (
     <Wrapper>
-      {Boolean(formattedBalance !== undefined && !isNative && tokenAmount?.greaterThan(0)) && (
+      {Boolean(formattedBalance !== undefined && !token.isNative && balance?.greaterThan(0)) && (
         <BalanceInfo>
-          <Trans>Your {tokenAmount?.currency?.symbol} balance</Trans>
-          <BalanceTotal>
+          <Trans>Your {token.symbol} balance</Trans>
+          <Balance>
             <BalanceValue>
-              {formattedBalance} {tokenAmount?.currency?.symbol}
+              {formattedBalance} {token.symbol}
             </BalanceValue>
-            <FiatValue>{formatDollar({ num: balanceUsd, isPrice: true })}</FiatValue>
-          </BalanceTotal>
+            <FiatValue>{formattedUsd}</FiatValue>
+          </Balance>
         </BalanceInfo>
       )}
-      {Boolean(isNative && nativeCurrencyAmount?.greaterThan(0)) && (
-        <BalanceInfo>
-          <Trans>Your {nativeCurrencyAmount?.currency?.symbol} balance</Trans>
-          <BalanceTotal>
-            <BalanceValue>
-              {formattedNativeBalance} {nativeCurrencyAmount?.currency?.symbol}
-            </BalanceValue>
-            <FiatValue>{formatDollar({ num: nativeBalanceUsd, isPrice: true })}</FiatValue>
-          </BalanceTotal>
-        </BalanceInfo>
-      )}
-      <SwapButton to={`/swap?outputCurrency=${tokenAddress}`}>
-        <Trans>Swap</Trans>
-      </SwapButton>
+      {
+        <SwapButton to={`/swap?chainName=${chain}&outputCurrency=${token.isNative ? NATIVE_CHAIN_ID : token.address}`}>
+          <Trans>Swap</Trans>
+        </SwapButton>
+      }
     </Wrapper>
   )
 }

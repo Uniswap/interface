@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { filterTimeAtom } from 'components/Tokens/state'
@@ -21,7 +20,6 @@ import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useAtomValue } from 'jotai/utils'
 import { useTokenFromQuery } from 'lib/hooks/useCurrency'
-import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { useCallback, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -69,7 +67,6 @@ export const RightPanel = styled.div`
 
 export default function TokenDetails() {
   const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
-  const { account } = useWeb3React()
   const currentChainName = validateUrlChainParam(chainName)
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[currentChainName]
   const nativeCurrency = nativeOnChain(pageChainId)
@@ -83,9 +80,6 @@ export default function TokenDetails() {
   const queryToken = useTokenFromQuery(isNative ? undefined : { ...tokenQueryData, chainId: pageChainId })
   const token = isNative ? nativeCurrency : queryToken
   const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddress
-
-  const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
-  const tokenBalance = useTokenBalance(account, token?.wrapped)
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   const isBlockedToken = tokenWarning?.canProceed === false
@@ -164,21 +158,9 @@ export default function TokenDetails() {
               {tokenWarning && (
                 <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />
               )}
-              <BalanceSummary
-                tokenAmount={tokenBalance}
-                nativeCurrencyAmount={nativeCurrencyBalance}
-                isNative={isNative}
-              />
+              {token && <BalanceSummary token={token} />}
             </RightPanel>
-
-            {tokenQueryAddress && (
-              <MobileBalanceSummaryFooter
-                tokenAmount={tokenBalance}
-                tokenAddress={tokenQueryAddress}
-                nativeCurrencyAmount={nativeCurrencyBalance}
-                isNative={isNative}
-              />
-            )}
+            {token && <MobileBalanceSummaryFooter token={token} />}
           </>
         )}
         {tokenAddress && (

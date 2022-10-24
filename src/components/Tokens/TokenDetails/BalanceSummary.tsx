@@ -1,10 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { formatToDecimal } from 'analytics/utils'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { validateUrlChainParam } from 'graphql/data/util'
+import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import { useParams } from 'react-router-dom'
+import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
+import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
 import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatNumbers'
@@ -29,11 +32,11 @@ const BalancesCard = styled.div`
     display: flex;
   }
 `
-const TotalBalanceSection = styled.div`
+const BalanceSection = styled.div`
   height: fit-content;
   width: 100%;
 `
-const TotalBalance = styled.div`
+const BalanceRow = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
@@ -42,99 +45,69 @@ const TotalBalance = styled.div`
   line-height: 28px;
   margin-top: 12px;
 `
-const TotalBalanceItem = styled.div`
+const BalanceItem = styled.div`
   display: flex;
 `
 
-const BalanceRowLink = styled(StyledInternalLink)`
+const BalanceLink = styled(StyledInternalLink)`
   color: unset;
 `
 
-function BalanceRow({ currency, formattedBalance, usdValue, href }: BalanceRowData) {
+interface BalanceProps {
+  token: Currency
+  amount?: CurrencyAmount<Currency>
+  href?: string
+}
+
+function Balance({ token, amount, href }: BalanceProps) {
+  const formattedBalance = useMemo(
+    () => (amount ? formatToDecimal(amount, Math.min(amount.currency.decimals, 2)) : '-'),
+    [amount]
+  )
+  const usdValue = useStablecoinValue(amount) ?? undefined
+  const formattedUsd = useMemo(() => {
+    const float = currencyAmountToPreciseFloat(usdValue)
+    if (float === 0) return undefined
+    return formatDollar({ num: float, isPrice: true })
+  }, [usdValue])
   const content = (
-    <TotalBalance key={currency.wrapped.address}>
-      <TotalBalanceItem>
-        <CurrencyLogo currency={currency} />
-        &nbsp;{formattedBalance} {currency?.symbol}
-      </TotalBalanceItem>
-      <TotalBalanceItem>{formatDollar({ num: usdValue === 0 ? undefined : usdValue, isPrice: true })}</TotalBalanceItem>
-    </TotalBalance>
+    <BalanceRow>
+      <BalanceItem>
+        <CurrencyLogo currency={token} />
+        &nbsp;{formattedBalance} {token.symbol}
+      </BalanceItem>
+      <BalanceItem>{formattedUsd}</BalanceItem>
+    </BalanceRow>
   )
   if (href) {
-    return <BalanceRowLink to={href}>{content}</BalanceRowLink>
+    return <BalanceLink to={href}>{content}</BalanceLink>
   }
   return content
 }
 
-interface BalanceRowData {
-  currency: Currency
-  formattedBalance: number
-  usdValue: number | undefined
-  href?: string
-}
-export interface BalanceSummaryProps {
-  tokenAmount: CurrencyAmount<Token> | undefined
-  nativeCurrencyAmount: CurrencyAmount<Currency> | undefined
-  isNative: boolean
-}
+export default function BalanceSummary({ token }: { token: Currency }) {
+  const { account } = useWeb3React()
+  const balance = useCurrencyBalance(account, token)
+  const nativeCurrency = nativeOnChain(token.chainId)
+  const nativeBalance = useCurrencyBalance(account, nativeCurrency)
+  const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
 
-export default function BalanceSummary({ tokenAmount, nativeCurrencyAmount, isNative }: BalanceSummaryProps) {
-  const balanceUsdValue = useStablecoinValue(tokenAmount)
-  const nativeBalanceUsdValue = useStablecoinValue(nativeCurrencyAmount)
-
-  const { chainName } = useParams<{ chainName?: string }>()
-  const pageChainName = validateUrlChainParam(chainName).toLowerCase()
-
-  const tokenIsWrappedNative =
-    tokenAmount &&
-    nativeCurrencyAmount &&
-    tokenAmount.currency.address.toLowerCase() === nativeCurrencyAmount.currency.wrapped.address.toLowerCase()
-
-  if (
-    (!tokenAmount && !nativeCurrencyAmount) ||
-    (!tokenAmount && !tokenIsWrappedNative && !isNative) ||
-    (!isNative && !tokenIsWrappedNative && tokenAmount?.equalTo(0)) ||
-    (isNative && tokenAmount?.equalTo(0) && nativeCurrencyAmount?.equalTo(0))
-  ) {
-    return null
-  }
-  const showNative = tokenIsWrappedNative || isNative
-
-  const currencies = []
-
-  if (tokenAmount) {
-    const tokenData: BalanceRowData = {
-      currency: tokenAmount.currency,
-      formattedBalance: formatToDecimal(tokenAmount, Math.min(tokenAmount.currency.decimals, 2)),
-      usdValue: balanceUsdValue ? currencyAmountToPreciseFloat(balanceUsdValue) : undefined,
-    }
-    if (isNative) {
-      tokenData.href = `/tokens/${pageChainName}/${tokenAmount.currency.address}`
-    }
-    currencies.push(tokenData)
-  }
-  if (showNative && nativeCurrencyAmount) {
-    const nativeData: BalanceRowData = {
-      currency: nativeCurrencyAmount.currency,
-      formattedBalance: formatToDecimal(nativeCurrencyAmount, Math.min(nativeCurrencyAmount.currency.decimals, 2)),
-      usdValue: nativeBalanceUsdValue ? currencyAmountToPreciseFloat(nativeBalanceUsdValue) : undefined,
-    }
-    if (isNative) {
-      currencies.unshift(nativeData)
-    } else {
-      nativeData.href = `/tokens/${pageChainName}/NATIVE`
-      currencies.push(nativeData)
-    }
-  }
-
+  if (!account) return null
   return (
     <BalancesCard>
-      <TotalBalanceSection>
+      <BalanceSection>
         <Trans>Your balance</Trans>
-        {currencies.map((props, i) => (
-          <BalanceRow {...props} key={props.currency.wrapped.address + i} />
-        ))}
-      </TotalBalanceSection>
+        {
+          <Balance
+            token={token}
+            amount={balance}
+            href={`/tokens/${chain}/${token.isNative ? NATIVE_CHAIN_ID : token.address}`}
+          />
+        }
+        {!token.equals(nativeCurrency) && (
+          <Balance token={nativeCurrency} amount={nativeBalance} href={`/tokens/${chain}/${NATIVE_CHAIN_ID}`} />
+        )}
+      </BalanceSection>
     </BalancesCard>
   )
 }
