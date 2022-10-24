@@ -5,16 +5,14 @@ import styled from 'styled-components/macro'
 
 const CarouselContainer = styled.div`
   position: relative;
-  height: full;
   width: 100%;
   overflow-x: hidden;
-  border-radius: 20px;
 `
 
 const CarouselCard = styled(a.div)`
   position: absolute;
   display: flex;
-  height: 100%;
+  height: 280px;
   will-change: transform;
   justify-content: center;
 `
@@ -25,7 +23,7 @@ const CarouselOverlay = styled.div<{ right?: boolean }>`
   top: 0px;
   ${({ right }) => (right ? 'right: 0px' : 'left: 0px')};
   width: 40px;
-  height: 100%;
+  height: 280px;
   background: linear-gradient(
     ${({ right }) => (right ? 'to left' : 'to right')},
     ${({ theme }) => theme.backgroundModule} 0%,
@@ -52,7 +50,7 @@ interface CarouselProps {
   carouselWidth?: number
 }
 
-export const Carousel = ({ children, width = 488, carouselWidth = 568 }: CarouselProps) => {
+export const Carousel = ({ children, width = 472, carouselWidth = 568 }: CarouselProps) => {
   const idx = useCallback((x: number, l = children.length) => (x < 0 ? x + l : x) % l, [children])
   const getPos = useCallback(
     (i: number, firstVis: number, firstVisIdx: number) => idx(i - firstVis + firstVisIdx),

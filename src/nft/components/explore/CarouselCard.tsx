@@ -10,8 +10,15 @@ const CarouselCardContainer = styled.div`
   gap: 20px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px;
+  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
   width: 456px;
+  cursor: pointer;
   overflow: hidden;
+
+  :hover {
+    outline: 3px solid ${({ theme }) => theme.backgroundOutline};
+    box-shadow: ${({ theme }) => theme.deepShadow};
+  }
 `
 
 const CardHeaderContainer = styled.div<{ src: string }>`
@@ -95,13 +102,14 @@ const TableElement = styled(ThemedText.SubHeaderSmall)`
 
 interface CarouselCardProps {
   collection: TrendingCollection
+  onClick: () => void
 }
 
-export const CarouselCard = ({ collection }: CarouselCardProps) => {
+export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
   const theme = useTheme()
 
   return (
-    <CarouselCardContainer>
+    <CarouselCardContainer onClick={onClick}>
       <CardHeaderContainer src={collection.bannerImageUrl}>
         <CardHeaderRow>
           <CollectionImage src={collection.imageUrl} />

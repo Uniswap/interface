@@ -1,6 +1,7 @@
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
 import { useQuery } from 'react-query'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { Carousel } from './Carousel'
@@ -9,7 +10,7 @@ import { CarouselCard } from './CarouselCard'
 const BannerContainer = styled.div`
   display: flex;
   width: 100%;
-  height: 280px;
+  height: 300px;
   margin-top: 40px;
   margin-bottom: 40px;
   gap: 36px;
@@ -32,6 +33,8 @@ const HeaderContainer = styled.div`
 `
 
 const Banner = () => {
+  const navigate = useNavigate()
+
   const { data: collections } = useQuery(
     ['trendingCollections'],
     () => {
@@ -53,7 +56,11 @@ const Banner = () => {
       {collections ? (
         <Carousel>
           {collections.map((collection, index) => (
-            <CarouselCard key={index} collection={collection} />
+            <CarouselCard
+              key={collection.address}
+              collection={collection}
+              onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+            />
           ))}
         </Carousel>
       ) : (
