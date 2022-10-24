@@ -100,7 +100,7 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
 
   return (
     <Wrapper>
-      {Boolean(account && !balance) && (
+      {Boolean(account && balance) && (
         <BalanceInfo>
           <Trans>Your {token.symbol} balance</Trans>
           <Balance>
@@ -111,11 +111,9 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
           </Balance>
         </BalanceInfo>
       )}
-      {
-        <SwapButton to={`/swap?chainName=${chain}&outputCurrency=${token.isNative ? NATIVE_CHAIN_ID : token.address}`}>
-          <Trans>Swap</Trans>
-        </SwapButton>
-      }
+      <SwapButton to={`/swap?chainName=${chain}&outputCurrency=${token.isNative ? NATIVE_CHAIN_ID : token.address}`}>
+        <Trans>Swap</Trans>
+      </SwapButton>
     </Wrapper>
   )
 }

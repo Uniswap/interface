@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { formatToDecimal } from 'analytics/utils'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
@@ -53,58 +53,36 @@ const BalanceLink = styled(StyledInternalLink)`
   color: unset;
 `
 
-interface BalanceProps {
-  token: Currency
-  amount?: CurrencyAmount<Currency>
-  href?: string
-}
-
-function Balance({ token, amount, href }: BalanceProps) {
-  const formattedBalance = useMemo(
-    () => (amount ? formatToDecimal(amount, Math.min(amount.currency.decimals, 2)) : undefined),
-    [amount]
-  )
-  const usdValue = useStablecoinValue(amount) ?? undefined
-  const formattedUsd = useMemo(() => {
-    const float = currencyAmountToPreciseFloat(usdValue)
-    if (!float) return undefined
-    return formatDollar({ num: float, isPrice: true })
-  }, [usdValue])
-  const content = (
-    <BalanceRow>
-      <BalanceItem>
-        <CurrencyLogo currency={token} />
-        &nbsp;{formattedBalance} {token.symbol}
-      </BalanceItem>
-      <BalanceItem>{formattedUsd}</BalanceItem>
-    </BalanceRow>
-  )
-  if (href) {
-    return <BalanceLink to={href}>{content}</BalanceLink>
-  }
-  return content
-}
-
 export default function BalanceSummary({ token }: { token: Currency }) {
   const { account } = useWeb3React()
   const balance = useCurrencyBalance(account, token)
-  const nativeCurrency = nativeOnChain(token.chainId)
-  const nativeBalance = useCurrencyBalance(account, nativeCurrency)
+  const usdValue = useStablecoinValue(balance)
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
 
-  if (!account || (!balance && !nativeBalance)) return null
+  const formattedBalance = useMemo(
+    () => (balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 2)) : undefined),
+    [balance]
+  )
+  const formattedUsd = useMemo(() => {
+    const float = usdValue ? currencyAmountToPreciseFloat(usdValue) : undefined
+    if (!float) return undefined
+    return formatDollar({ num: float, isPrice: true })
+  }, [usdValue])
+
+  if (!account || !balance) return null
   return (
     <BalancesCard>
       <BalanceSection>
         <Trans>Your balance</Trans>
-        <Balance
-          token={token}
-          amount={balance}
-          href={`/tokens/${chain}/${token.isNative ? NATIVE_CHAIN_ID : token.address}`}
-        />
-        {!token.equals(nativeCurrency) && (
-          <Balance token={nativeCurrency} amount={nativeBalance} href={`/tokens/${chain}/${NATIVE_CHAIN_ID}`} />
-        )}
+        <BalanceLink to={`/tokens/${chain}/${token.isNative ? NATIVE_CHAIN_ID : token.address}`}>
+          <BalanceRow>
+            <BalanceItem>
+              <CurrencyLogo currency={token} />
+              &nbsp;{formattedBalance} {token.symbol}
+            </BalanceItem>
+            <BalanceItem>{formattedUsd}</BalanceItem>
+          </BalanceRow>
+        </BalanceLink>
       </BalanceSection>
     </BalancesCard>
   )
