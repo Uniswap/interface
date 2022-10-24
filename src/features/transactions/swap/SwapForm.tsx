@@ -13,7 +13,7 @@ import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
-import { LaserLoader } from 'src/components/loading/LaserLoader'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { Text } from 'src/components/Text'
@@ -142,11 +142,7 @@ export function SwapForm({
   const [showInverseRate, setShowInverseRate] = useState(false)
   const price = trade.trade?.executionPrice
   const rateUnitPrice = useUSDCPrice(showInverseRate ? price?.quoteCurrency : price?.baseCurrency)
-  const showRate =
-    trade.trade &&
-    !swapWarning &&
-    currencies[CurrencyField.INPUT] &&
-    currencies[CurrencyField.OUTPUT]
+  const showRate = !swapWarning && (trade.trade || swapDataRefreshing)
 
   return (
     <>
@@ -213,9 +209,6 @@ export function SwapForm({
                 position="relative"
                 pt="lg"
                 px="md">
-                <Box bottom={0} left={0} position="absolute" right={0}>
-                  {swapDataRefreshing && !swapWarning ? <LaserLoader /> : null}
-                </Box>
                 <CurrencyInputPanel
                   isOutput
                   currency={currencies[CurrencyField.OUTPUT]}
@@ -276,7 +269,7 @@ export function SwapForm({
                   </Flex>
                 </Button>
               )}
-              {trade.trade && showRate && (
+              {showRate && (
                 <Button onPress={() => setShowInverseRate(!showInverseRate)}>
                   <Flex
                     row
@@ -289,16 +282,26 @@ export function SwapForm({
                     gap="xs"
                     px="md"
                     py="sm">
-                    <InfoCircle
-                      color={theme.colors.textSecondary}
-                      height={theme.iconSizes.md}
-                      width={theme.iconSizes.md}
-                    />
+                    {swapDataRefreshing ? (
+                      <SpinningLoader size={theme.iconSizes.md} />
+                    ) : (
+                      <InfoCircle
+                        color={theme.colors.textSecondary}
+                        height={theme.iconSizes.md}
+                        width={theme.iconSizes.md}
+                      />
+                    )}
                     <Flex row gap="none">
-                      <Text variant="subheadSmall">
-                        {getRateToDisplay(trade.trade, showInverseRate)}
+                      <Text
+                        color={swapDataRefreshing ? 'textTertiary' : undefined}
+                        variant="subheadSmall">
+                        {trade.trade
+                          ? getRateToDisplay(trade.trade, showInverseRate)
+                          : t('Fetching price...')}
                       </Text>
-                      <Text color="textSecondary" variant="bodySmall">
+                      <Text
+                        color={swapDataRefreshing ? 'textTertiary' : 'textSecondary'}
+                        variant="bodySmall">
                         {rateUnitPrice &&
                           ` (${formatPrice(rateUnitPrice, NumberType.FiatTokenPrice)})`}
                       </Text>

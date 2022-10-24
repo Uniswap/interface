@@ -235,6 +235,7 @@
   "Queued": "Queued",
   "New rate": "New rate",
   "Rate": "Rate",
+  "Fetching price...": "Fetching price...",
   "Unwrap pending": "Unwrap pending",
   "We’ll notify you once your unwrap is complete. You can now safely leave this page.": "We’ll notify you once your unwrap is complete. You can now safely leave this page.",
   "Wrap pending": "Wrap pending",

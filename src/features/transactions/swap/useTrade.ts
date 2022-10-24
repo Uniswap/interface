@@ -56,8 +56,12 @@ export function useTrade(
 ): TradeWithStatus {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
+  // if user clears input (amountSpecified is null or undefined), immediately use that
+  // instead of the debounced value so that there's no lingering loading state on empty inputs
+  const amount = !amountSpecified ? amountSpecified : debouncedAmountSpecified
+
   const { isLoading, isFetching, error, data } = useRouterQuote({
-    amountSpecified: debouncedAmountSpecified,
+    amountSpecified: amount,
     otherCurrency,
     tradeType,
     pollingInterval,
@@ -68,16 +72,26 @@ export function useTrade(
 
     const [currencyIn, currencyOut] =
       tradeType === TradeType.EXACT_INPUT
-        ? [amountSpecified?.currency, otherCurrency]
-        : [otherCurrency, amountSpecified?.currency]
+        ? [amount?.currency, otherCurrency]
+        : [otherCurrency, amount?.currency]
 
     const trade = clearStaleTrades(data.trade, currencyIn, currencyOut)
 
     return {
-      loading: isDebouncing || isLoading,
+      loading: (amountSpecified && isDebouncing) || isLoading,
       isFetching,
       error,
       trade,
     }
-  }, [data, isDebouncing, isLoading, error, isFetching, tradeType, otherCurrency, amountSpecified])
+  }, [
+    data?.trade,
+    isLoading,
+    error,
+    tradeType,
+    amount?.currency,
+    otherCurrency,
+    amountSpecified,
+    isDebouncing,
+    isFetching,
+  ])
 }
