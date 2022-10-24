@@ -5,12 +5,18 @@ import { EventCell } from '../collection/ActivityCells'
 import { getTimeDifference } from 'nft/utils/date'
 import { formatEthPrice } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
+import { getChainInfoOrDefault } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { MarketplaceIcon } from '../collection/ActivityCells'
 
 const TR = styled.tr`
   width: 100%;
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   &:nth-child(1) {
+    border-bottom: none;
+  }
+
+  &:last-child {
     border-bottom: none;
   }
 `
@@ -21,6 +27,18 @@ const TH = styled.th`
   font-size: 14px;
   line-height: 20px;
   width: 20%;
+
+  @media (max-width: 960px) {
+    &:nth-child(4) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    &:nth-child(2) {
+      display: none;
+    }
+  }
 `
 
 const Table = styled.table`
@@ -34,6 +52,18 @@ const TD = styled.td`
   text-align: left;
   padding-top: 16px;
   padding-bottom: 16px;
+
+  @media (max-width: 960px) {
+    &:nth-child(4) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    &:nth-child(2) {
+      display: none;
+    }
+  }
 `
 
 const PriceContainer = styled.div`
@@ -42,8 +72,14 @@ const PriceContainer = styled.div`
   gap: 8px;
 `
 
+const Link = styled.a`
+  color: ${({ theme }) => theme.textPrimary};
+  text-decoration: none;
+`
+
 const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {
   const events = eventsData === undefined ? [] : eventsData?.events
+  const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
 
   return (
     <div>
@@ -78,7 +114,9 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
                   </PriceContainer>
                 )}
               </TD>
-              <TD>{shortenAddress(event.fromAddress)}</TD>
+              <Link href={`${explorer}/address/${event.fromAddress}`} target="_blank">
+                <TD>{shortenAddress(event.fromAddress, 2, 4)}</TD>
+              </Link>{' '}
               <TD>{event.toAddress && shortenAddress(event.toAddress)}</TD>
               <TD>{event.eventTimestamp && getTimeDifference(event.eventTimestamp.toString())}</TD>
             </TR>
