@@ -13,7 +13,10 @@ interface AssetPriceDetailsProps {
   collection: CollectionInfoForAsset
 }
 
-const Container = styled.div``
+const Container = styled.div`
+  max-width: 360px;
+  width: 100%;
+`
 
 const BestPriceContainer = styled.div`
   display: flex;
