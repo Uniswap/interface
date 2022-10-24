@@ -19,12 +19,11 @@ import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration, unwrapToken } from './util'
 export const topTokens100Query = graphql`
   query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
     topTokens(pageSize: 100, page: 1, chain: $chain) {
-      id @required(action: LOG)
       name
       chain @required(action: LOG)
       address @required(action: LOG)
       symbol
-      decimals
+      decimals @required(action: LOG)
       market(currency: USD) {
         totalValueLocked {
           value
@@ -32,15 +31,15 @@ export const topTokens100Query = graphql`
         }
         price {
           value
-          currency
+        }
+        pricePercentChange1D: pricePercentChange(duration: DAY) {
+          value
         }
         pricePercentChange(duration: $duration) {
-          currency
           value
         }
         volume(duration: $duration) {
           value
-          currency
         }
       }
       project {

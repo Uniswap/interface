@@ -13,9 +13,10 @@ const tokenSearchQuery = graphql`
   query TokenSearchQuery($searchQuery: String!, $skip: Boolean!) {
     searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {
       tokens {
-        address @required(action: LOG)
-        chain @required(action: LOG)
         name @required(action: LOG)
+        chain @required(action: LOG)
+        address @required(action: LOG)
+        symbol
         decimals @required(action: LOG)
         market {
           pricePercentChange1D: pricePercentChange(duration: DAY) {

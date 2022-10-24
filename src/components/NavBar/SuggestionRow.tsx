@@ -1,11 +1,9 @@
-import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import { getChainInfo } from 'constants/chainInfo'
-import { Chain } from 'graphql/data/__generated__/TopTokens100Query.graphql'
 import { SearchedToken } from 'graphql/data/TokenSearch'
 import { TopToken } from 'graphql/data/TopTokens'
-import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -105,17 +103,19 @@ export const CollectionRow = ({
   )
 }
 
-function useBridgedAddress(token: NonNullable<TopToken>): [string | undefined, Chain | undefined, string | undefined] {
-  const { chainId: connectedChainId } = useWeb3React()
-  const connectedChain = chainIdToBackendName(connectedChainId)
-  const bridgedAddress = connectedChain
-    ? token.project?.tokens?.find((t) => t.chain === connectedChain)?.address
-    : undefined
-  if (bridgedAddress && connectedChain) {
-    return [bridgedAddress, connectedChain, getChainInfo(connectedChainId)?.circleLogoUrl]
-  }
-  return [undefined, undefined, undefined]
-}
+// function useBridgedAddress(
+//   token: NonNullable<TopToken> | SearchedToken
+// ): [string | undefined, Chain | undefined, string | undefined] {
+//   const { chainId: connectedChainId } = useWeb3React()
+//   const connectedChain = chainIdToBackendName(connectedChainId)
+//   const bridgedAddress = connectedChain
+//     ? token.project?.tokens?.find((t) => t.chain === connectedChain)?.address
+//     : undefined
+//   if (bridgedAddress && connectedChain) {
+//     return [bridgedAddress, connectedChain, getChainInfo(connectedChainId)?.circleLogoUrl]
+//   }
+//   return [undefined, undefined, undefined]
+// }
 
 interface TokenRowProps {
   token: NonNullable<TopToken> | SearchedToken
@@ -140,8 +140,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
     traceEvent()
   }, [addToSearchHistory, toggleOpen, token, traceEvent])
 
-  const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
-  const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, bridgedChain ?? token.chain)
+  // const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
+  const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[token.chain])?.circleLogoUrl
+  const tokenDetailsPath = getTokenDetailsURL(token.address, token.chain)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -200,12 +201,12 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
             <Box className={styles.primaryText}>{formatDollar({ num: token.market.price.value, isPrice: true })}</Box>
           </Row>
         )}
-        {token.market?.pricePercentChange?.value && (
+        {token.market?.pricePercentChange1D?.value && (
           <Box
             className={styles.secondaryText}
-            color={token.market.pricePercentChange.value >= 0 ? 'green400' : 'red400'}
+            color={token.market.pricePercentChange1D.value >= 0 ? 'green400' : 'red400'}
           >
-            {token.market.pricePercentChange.value.toFixed(2)}%
+            {token.market.pricePercentChange1D.value.toFixed(2)}%
           </Box>
         )}
       </Column>
