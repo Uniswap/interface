@@ -1,6 +1,6 @@
 // import { rgba } from 'polished'
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { X } from 'react-feather'
 import { useLocalStorage, useMedia } from 'react-use'
 import { Text } from 'rebass'
@@ -97,9 +97,15 @@ function TopBanner() {
   }, [showBanner])
 
   const renderBanner = (banner: Banner) => {
-    if (show[banner.key] === false || (chainId && !banner.onlyChains.includes(chainId))) return <></>
+    if (show[banner.key] === false || (chainId && !banner.onlyChains.includes(chainId))) {
+      return null
+    }
+
     const now = new Date()
-    if (now < new Date(banner.start) || now > new Date(banner.end)) return <></>
+    if (now < new Date(banner.start) || now > new Date(banner.end)) {
+      return null
+    }
+
     return (
       <BannerWrapper key={banner.key}>
         {!below768 && <div />}
@@ -114,19 +120,21 @@ function TopBanner() {
             flex={1}
             style={{ whiteSpace: 'break-spaces' }}
           >
-            {banner.text.map(textNode =>
-              typeof textNode === 'string' ? (
-                textNode
-              ) : (
-                <ExternalLink
-                  key={textNode.text + '-' + textNode.link}
-                  href={textNode.link}
-                  style={{ color: '#fff', fontWeight: 500, textDecoration: 'underline' }}
-                >
-                  {textNode.text}
-                </ExternalLink>
-              ),
-            )}
+            {banner.text.map((textNode, i) => (
+              <Fragment key={i}>
+                {typeof textNode === 'string' ? (
+                  textNode
+                ) : (
+                  <ExternalLink
+                    key={textNode.text + '-' + textNode.link}
+                    href={textNode.link}
+                    style={{ color: '#fff', fontWeight: 500, textDecoration: 'underline' }}
+                  >
+                    {textNode.text}
+                  </ExternalLink>
+                )}
+              </Fragment>
+            ))}
           </Text>
         </Content>
 

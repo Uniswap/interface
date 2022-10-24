@@ -346,8 +346,8 @@ const Row = ({
 
           <RewardMobileArea>
             <Flex justifyContent="center" alignItems="center" marginBottom="8px" sx={{ gap: '4px' }}>
-              {rewardPendings.map(amount => (
-                <Flex alignItems="center" sx={{ gap: '4px' }} key={amount.currency.symbol}>
+              {rewardPendings.map((amount, i) => (
+                <Flex alignItems="center" sx={{ gap: '4px' }} key={amount.currency.symbol || i}>
                   <HoverInlineText text={amount.toSignificant(6)} maxCharacters={10}></HoverInlineText>
                   <MouseoverTooltip placement="top" text={amount.currency.symbol} width="fit-content">
                     <CurrencyLogo currency={amount.currency} size="16px" />
@@ -618,8 +618,8 @@ const Row = ({
       )}
 
       <Flex flexDirection="column" alignItems="flex-end" sx={{ gap: '8px' }}>
-        {rewardPendings.map(amount => (
-          <Flex alignItems="center" sx={{ gap: '4px' }} key={amount.currency.symbol}>
+        {rewardPendings.map((amount, i) => (
+          <Flex alignItems="center" sx={{ gap: '4px' }} key={amount.currency.symbol || i}>
             <HoverInlineText text={amount.toSignificant(6)} maxCharacters={10}></HoverInlineText>
             <MouseoverTooltip placement="top" text={amount.currency.symbol} width="fit-content">
               <CurrencyLogo currency={amount.currency} size="16px" />

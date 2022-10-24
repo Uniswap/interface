@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { ChevronDown, Edit2, Eye } from 'react-feather'
 import { useMedia } from 'react-use'
@@ -183,7 +183,7 @@ function FarmGuide({ farmType }: { farmType: VERSION }) {
       <GuideWrapper show={show} numOfSteps={guideSteps.length}>
         {guideSteps.map((step, i) => {
           return (
-            <>
+            <Fragment key={i}>
               {i !== 0 && <ChevronRight />}
               <GuideItem>
                 <Flex marginBottom="0.5rem" alignItems="center" sx={{ gap: '8px' }}>
@@ -204,7 +204,7 @@ function FarmGuide({ farmType }: { farmType: VERSION }) {
                 </Flex>
                 {!upToMedium && step.content}
               </GuideItem>
-            </>
+            </Fragment>
           )
         })}
 
