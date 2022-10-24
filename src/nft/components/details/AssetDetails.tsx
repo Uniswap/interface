@@ -81,6 +81,13 @@ const DescriptionText = styled.div`
   line-height: 24px;
 `
 
+const RarityWrap = styled.span`
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.textPrimary};
+  padding: 2px 4px;
+  border-radius: 4px;
+`
+
 const AudioPlayer = ({
   imageUrl,
   animationUrl,
@@ -331,9 +338,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         defaulOpen
         secondaryHeader={
           rarityProvider && rarity ? (
-            <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+            <RarityWrap style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
               Rarity {putCommas(rarity)} <img src={rarityIcon} width={16} alt={rarityProvider.provider} />
-            </span>
+            </RarityWrap>
           ) : null
         }
       >

@@ -29,6 +29,9 @@ const Header = styled.div<{ isOpen: boolean }>`
 `
 
 const PrimaryHeader = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 16px;
   color: ${({ theme }) => theme.textPrimary};
 `
 
@@ -68,11 +71,10 @@ const InfoContainer = ({
   return (
     <div>
       <Header isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
-        <PrimaryHeader>{primaryHeader}</PrimaryHeader>
-        <SecondaryHeaderContainer>
-          <SecondaryHeader>{secondaryHeader}</SecondaryHeader>
-          {isOpen ? <ChevronUp /> : <ChevronDown />}
-        </SecondaryHeaderContainer>
+        <PrimaryHeader>
+          {primaryHeader} <SecondaryHeader>{secondaryHeader}</SecondaryHeader>
+        </PrimaryHeader>
+        <SecondaryHeaderContainer>{isOpen ? <ChevronUp /> : <ChevronDown />}</SecondaryHeaderContainer>
       </Header>
       {isOpen && <ContentContainer>{children}</ContentContainer>}
     </div>
