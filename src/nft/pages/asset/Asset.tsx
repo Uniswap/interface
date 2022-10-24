@@ -9,6 +9,10 @@ import styled from 'styled-components/macro'
 const AssetContainer = styled.div`
   display: flex;
   width: 100%;
+  justify-content: center;
+  gap: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
 `
 
 const Asset = () => {

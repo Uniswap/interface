@@ -57,8 +57,8 @@ const MediaContainer = styled.div`
 const Column = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 116px;
   width: 100%;
+  max-width: 780px;
 `
 
 const AddressText = styled.span`
