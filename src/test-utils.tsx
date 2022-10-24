@@ -3,9 +3,12 @@ import { I18nProvider } from '@lingui/react'
 import { render } from '@testing-library/react'
 import Web3Provider from 'components/Web3Provider'
 import { DEFAULT_LOCALE } from 'constants/locales'
+import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { en } from 'make-plural/plurals'
 import { ReactElement, ReactNode } from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
+import { HashRouter } from 'react-router-dom'
 import store from 'state'
 import ThemeProvider from 'theme'
 
@@ -20,14 +23,21 @@ i18n.loadLocaleData({
 i18n.activate(DEFAULT_LOCALE)
 
 const MockedI18nProvider = ({ children }: any) => <I18nProvider i18n={i18n}>{children}</I18nProvider>
+const queryClient = new QueryClient()
 
 const WithProviders = ({ children }: { children?: ReactNode }) => {
   return (
     <MockedI18nProvider>
       <Provider store={store}>
-        <Web3Provider>
-          <ThemeProvider>{children}</ThemeProvider>
-        </Web3Provider>
+        <QueryClientProvider client={queryClient}>
+          <HashRouter>
+            <Web3Provider>
+              <BlockNumberProvider>
+                <ThemeProvider>{children}</ThemeProvider>
+              </BlockNumberProvider>
+            </Web3Provider>
+          </HashRouter>
+        </QueryClientProvider>
       </Provider>
     </MockedI18nProvider>
   )

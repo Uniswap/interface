@@ -16,7 +16,7 @@ function balanceComparator(a?: CurrencyAmount<Currency>, b?: CurrencyAmount<Curr
 
 type TokenBalances = { [tokenAddress: string]: CurrencyAmount<Token> | undefined }
 
-/** Sorts tokens by currency amount (descending), then symbol (ascending). */
+/** Sorts tokens by currency amount (descending), then safety, then symbol (ascending). */
 export function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
   // Sorts by balances
   const balanceComparison = balanceComparator(balances[a.address], balances[b.address])

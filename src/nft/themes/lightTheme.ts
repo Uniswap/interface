@@ -32,5 +32,6 @@ export const lightTheme: Theme = {
     elevation: '0px 4px 16px rgba(70, 115, 250, 0.4)',
     tooltip: '0px 4px 16px rgba(10, 10, 59, 0.2)',
     deep: '8px 12px 20px rgba(51, 53, 72, 0.04), 4px 6px 12px rgba(51, 53, 72, 0.02), 4px 4px 8px rgba(51, 53, 72, 0.04)',
+    shallow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12)',
   },
 }

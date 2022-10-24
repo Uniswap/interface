@@ -1,8 +1,8 @@
 import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
-import { CancelListingIcon } from 'nft/components/icons'
+import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
-import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
 import { ethNumberStandardFormatter, fetchPrice, formatEthPrice, getMarketplaceIcon, timeLeft } from 'nft/utils'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
@@ -58,6 +58,39 @@ const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccen
   margin-top: ${({ margin }) => (margin ? '12px' : '0px')};
   text-align: center;
   cursor: pointer;
+`
+
+const Erc1155BuyNowButton = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  border-radius: 12px;
+  margin-top: 12px;
+  text-align: center;
+  cursor: pointer;
+  justify-content: space-between;
+  overflow-x: hidden;
+`
+
+const Erc1155BuyNowText = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 10px 12px;
+  justify-content: center;
+  cursor: default;
+`
+
+const Erc1155ChangeButton = styled(Erc1155BuyNowText)<{ remove: boolean }>`
+  background-color: ${({ theme, remove }) => (remove ? theme.accentFailureSoft : theme.accentActionSoft)};
+  color: ${({ theme, remove }) => (remove ? theme.accentFailure : theme.accentAction)};
+  cursor: pointer;
+
+  :hover {
+    background-color: ${({ theme, remove }) => (remove ? theme.accentFailure : theme.accentAction)};
+    color: ${({ theme }) => theme.textPrimary};
+  }
 `
 
 const NotForSaleContainer = styled.div`
@@ -178,10 +211,18 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString(),
     [asset.priceInfo, fetchedPriceData]
   )
+  const isErc1555 = asset.tokenType === TokenType.ERC1155
 
-  const assetInBag = useMemo(() => {
-    return itemsInBag.some((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
-  }, [itemsInBag, asset])
+  const { quantity, assetInBag } = useMemo(() => {
+    return {
+      quantity: itemsInBag.filter(
+        (x) => x.asset.tokenType === 'ERC1155' && x.asset.tokenId === asset.tokenId && x.asset.address === asset.address
+      ).length,
+      assetInBag: itemsInBag.some(
+        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+      ),
+    }
+  }, [asset, itemsInBag])
 
   const isOwner =
     asset.owner && typeof asset.owner === 'string' ? account?.toLowerCase() === asset.owner.toLowerCase() : false
@@ -213,14 +254,28 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           {expirationDate && (
             <ThemedText.BodySecondary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>
           )}
-          <BuyNowButton
-            assetInBag={assetInBag}
-            margin={true}
-            useAccentColor={true}
-            onClick={() => (assetInBag ? removeAssetFromBag(asset) : addAssetToBag(asset))}
-          >
-            <ThemedText.SubHeader lineHeight={'20px'}>{assetInBag ? 'Remove' : 'Buy Now'}</ThemedText.SubHeader>
-          </BuyNowButton>
+          {!isErc1555 || !assetInBag ? (
+            <BuyNowButton
+              assetInBag={assetInBag}
+              margin={true}
+              useAccentColor={true}
+              onClick={() => (assetInBag ? removeAssetFromBag(asset) : addAssetToBag(asset))}
+            >
+              <ThemedText.SubHeader lineHeight={'20px'}>{assetInBag ? 'Remove' : 'Buy Now'}</ThemedText.SubHeader>
+            </BuyNowButton>
+          ) : (
+            <Erc1155BuyNowButton>
+              <Erc1155ChangeButton remove={true} onClick={() => removeAssetFromBag(asset)}>
+                <MinusIcon width="20px" height="20px" />
+              </Erc1155ChangeButton>
+              <Erc1155BuyNowText>
+                <ThemedText.SubHeader lineHeight={'20px'}>{quantity}</ThemedText.SubHeader>
+              </Erc1155BuyNowText>
+              <Erc1155ChangeButton remove={false} onClick={() => addAssetToBag(asset)}>
+                <PlusIcon width="20px" height="20px" />
+              </Erc1155ChangeButton>
+            </Erc1155BuyNowButton>
+          )}
         </BestPriceContainer>
       ) : (
         <NotForSale collection={collection} />
