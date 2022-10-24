@@ -1,3 +1,4 @@
+import { ChevronLeftIcon } from 'nft/components/icons'
 import { ReactNode, useCallback, useRef } from 'react'
 import { a, useSprings } from 'react-spring'
 import styled from 'styled-components/macro'
@@ -7,6 +8,7 @@ const CarouselContainer = styled.div`
   height: full;
   width: 100%;
   overflow-x: hidden;
+  border-radius: 20px;
 `
 
 const CarouselCard = styled(a.div)`
@@ -15,6 +17,33 @@ const CarouselCard = styled(a.div)`
   height: 100%;
   will-change: transform;
   justify-content: center;
+`
+
+const CarouselOverlay = styled.div<{ right?: boolean }>`
+  position: absolute;
+  display: flex;
+  top: 0px;
+  ${({ right }) => (right ? 'right: 0px' : 'left: 0px')};
+  width: 40px;
+  height: 100%;
+  background: linear-gradient(
+    ${({ right }) => (right ? 'to left' : 'to right')},
+    ${({ theme }) => theme.backgroundModule} 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  align-items: center;
+  justify-content: ${({ right }) => (right ? 'start' : 'end')};
+  z-index: 1;
+  cursor: pointer;
+`
+
+const IconContainer = styled.div<{ right?: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  color: ${({ theme }) => theme.textPrimary};
+  ${({ right }) => (right ? 'transform: rotate(180deg)' : undefined)};
 `
 
 interface CarouselProps {
@@ -69,8 +98,18 @@ export const Carousel = ({ children, width = 488, carouselWidth = 568 }: Carouse
 
   return (
     <CarouselContainer>
+      <CarouselOverlay onClick={() => toggleSlide(-1)}>
+        <IconContainer>
+          <ChevronLeftIcon width="16px" height="16px" />
+        </IconContainer>
+      </CarouselOverlay>
+      <CarouselOverlay right onClick={() => toggleSlide(1)}>
+        <IconContainer right>
+          <ChevronLeftIcon width="16px" height="16px" />
+        </IconContainer>
+      </CarouselOverlay>
       {springs.map(({ x }, i) => (
-        <CarouselCard key={i} style={{ width, x }} onClick={() => toggleSlide(-1)}>
+        <CarouselCard key={i} style={{ width, x }}>
           {children[i]}
         </CarouselCard>
       ))}

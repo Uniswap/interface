@@ -1,13 +1,10 @@
-import { ActivityFetcher, fetchTrendingCollections } from 'nft/queries'
+import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
-import { useEffect, useState } from 'react'
-import { QueryClient, useQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import styled from 'styled-components/macro'
 
 import { Carousel } from './Carousel'
 import { CarouselCard } from './CarouselCard'
-
-const queryClient = new QueryClient()
 
 const BannerContainer = styled.div`
   display: flex;
@@ -35,8 +32,6 @@ const HeaderContainer = styled.div`
 `
 
 const Banner = () => {
-  /* Sets initially displayed collection to random number between 0 and 4  */
-  const [current, setCurrent] = useState(Math.floor(Math.random() * 5))
   const { data: collections } = useQuery(
     ['trendingCollections'],
     () => {
@@ -48,23 +43,6 @@ const Banner = () => {
       refetchOnMount: false,
     }
   )
-
-  useEffect(() => {
-    /* Rotate through Top 5 Collections on 15 second interval */
-    const interval = setInterval(async () => {
-      if (collections) {
-        const nextCollectionIndex = (current + 1) % collections.length
-        const nextCollectionAddress = collections[nextCollectionIndex].address
-        setCurrent(nextCollectionIndex)
-        await queryClient.prefetchQuery(['collectionActivity', nextCollectionAddress], () =>
-          ActivityFetcher(nextCollectionAddress as string)
-        )
-      }
-    }, 15_000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [current, collections])
 
   return (
     <BannerContainer>
