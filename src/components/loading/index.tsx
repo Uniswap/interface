@@ -2,7 +2,6 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box, Flex } from 'src/components/layout'
-import { Separator } from 'src/components/layout/Separator'
 import { BoxLoader } from 'src/components/loading/BoxLoader'
 import { FavoriteLoader } from 'src/components/loading/FavoriteLoader'
 import { HeaderLoader } from 'src/components/loading/HeaderLoader'
@@ -28,31 +27,18 @@ type SkeletonType =
 
 type LoadingProps = {
   type?: SkeletonType
-} & (
-  | {
-      repeat: number
-      showSeparator?: boolean
-    }
-  | {
-      repeat?: undefined
-      showSeparator?: undefined
-    }
-)
+  repeat?: number
+}
 
-const useChildFromType = (
-  type: SkeletonType,
-  repeat: number,
-  showSeparator: boolean | undefined
-) => {
+const useChildFromType = (type: SkeletonType, repeat: number) => {
   const theme = useAppTheme()
   switch (type) {
     case 'header':
       return (
         <Box>
-          {new Array(repeat).fill(null).map((_, i: number, { length }) => (
+          {new Array(repeat).fill(null).map((_, i: number) => (
             <React.Fragment key={i}>
               <HeaderLoader />
-              {showSeparator && i !== length - 1 && <Separator />}
             </React.Fragment>
           ))}
         </Box>
@@ -66,14 +52,13 @@ const useChildFromType = (
       )
     case 'token':
       return (
-        <Box>
+        <Flex>
           {new Array(repeat).fill(null).map((_, i, { length }) => (
             <React.Fragment key={i}>
               <TokenLoader opacity={(length - i) / length} />
-              {showSeparator && i !== length - 1 && <Separator />}
             </React.Fragment>
           ))}
-        </Box>
+        </Flex>
       )
     case 'wallets':
       return (
@@ -101,7 +86,7 @@ const useChildFromType = (
     case 'grid':
       return (
         <Box>
-          {new Array(repeat / 2).fill(null).map((_, i, {}) => (
+          {new Array(repeat / 2).fill(null).map((_, i) => (
             <React.Fragment key={i}>
               <Flex row gap="none">
                 <BoxLoader aspectRatio={1} borderRadius="none" m="xxs" width="50%" />
@@ -134,10 +119,9 @@ const useChildFromType = (
     default:
       return (
         <Box>
-          {new Array(repeat).fill(null).map((_, i, { length }) => (
+          {new Array(repeat).fill(null).map((_, i) => (
             <React.Fragment key={i}>
               <BoxLoader height={50} mb="sm" />
-              {showSeparator && i !== length - 1 && <Separator />}
             </React.Fragment>
           ))}
         </Box>
@@ -145,8 +129,8 @@ const useChildFromType = (
   }
 }
 
-export function Loading({ type = 'box', repeat = 1, showSeparator }: LoadingProps) {
-  const child = useChildFromType(type, repeat, showSeparator)
+export function Loading({ type = 'box', repeat = 1 }: LoadingProps) {
+  const child = useChildFromType(type, repeat)
 
   return <Shimmer>{child}</Shimmer>
 }

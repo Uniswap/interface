@@ -1,21 +1,21 @@
 import React from 'react'
-import { Box } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
 
-const HIDDEN_TEXT_HEIGHT = 12
+const HIDDEN_TEXT_HEIGHT = 8
 
 export default function TransactionLoader() {
   return (
-    <Box>
+    <Flex>
       <Box
         bg="background3"
         borderRadius="xs"
         maxHeight={HIDDEN_TEXT_HEIGHT}
-        ml="lg"
+        ml="md"
         my="sm"
-        width="40%">
+        width="30%">
         <HiddenFromScreenReaders>
           <Text color="none" opacity={0} variant="subheadSmall">
             Transaction Section Title
@@ -27,16 +27,16 @@ export default function TransactionLoader() {
         bg="background3"
         borderRadius="xs"
         maxHeight={HIDDEN_TEXT_HEIGHT}
-        ml="lg"
+        ml="md"
         my="sm"
-        width="40%">
+        width="30%">
         <HiddenFromScreenReaders>
           <Text color="none" opacity={0} variant="subheadSmall">
             Transaction Section Title
           </Text>
         </HiddenFromScreenReaders>
       </Box>
-      <Loading repeat={4} type="token" />
-    </Box>
+      <Loading repeat={2} type="token" />
+    </Flex>
   )
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
+import { theme } from 'src/styles/theme'
 
 interface TokenLoaderProps {
   opacity: number
@@ -12,30 +13,31 @@ export function TokenLoader({ opacity }: TokenLoaderProps) {
     <Flex
       row
       alignItems="center"
+      gap="xs"
       justifyContent="space-between"
       opacity={opacity}
-      overflow="hidden"
-      p="sm">
-      <Flex centered row gap="xs">
-        <Box bg="background3" borderRadius="full" height={32} width={32} />
-        <Flex shrink alignItems="flex-start" gap="none" width="100%">
-          <Box bg="background3" borderRadius="xs" width="100%">
-            <HiddenFromScreenReaders>
-              <Text color="none" opacity={0} variant="bodyLarge">
-                Token Name
-              </Text>
-            </HiddenFromScreenReaders>
-          </Box>
-          <Flex row alignItems="center" pt="xxs" width="100%">
-            <Box bg="background3" borderRadius="xs" width="25%">
-              <HiddenFromScreenReaders>
-                <Text color="none" opacity={0} variant="subheadSmall">
-                  Ticker
-                </Text>
-              </HiddenFromScreenReaders>
-            </Box>
-          </Flex>
-        </Flex>
+      overflow="hidden">
+      <Box
+        bg="background3"
+        borderRadius="full"
+        height={theme.imageSizes.xl}
+        width={theme.imageSizes.xl}
+      />
+      <Flex shrink alignItems="flex-start" gap="xs" width="100%">
+        <Box bg="background3" borderRadius="xs" width="80%">
+          <HiddenFromScreenReaders>
+            <Text color="none" opacity={0} variant="bodyLarge">
+              Token Name
+            </Text>
+          </HiddenFromScreenReaders>
+        </Box>
+        <Box bg="background3" borderRadius="xs" width="30%">
+          <HiddenFromScreenReaders>
+            <Text color="none" opacity={0} variant="subheadSmall">
+              Ticker
+            </Text>
+          </HiddenFromScreenReaders>
+        </Box>
       </Flex>
     </Flex>
   )

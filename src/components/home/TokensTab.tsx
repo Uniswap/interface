@@ -3,6 +3,7 @@ import React, { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
+import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { Loading } from 'src/components/loading'
@@ -55,9 +56,9 @@ export function TokensTab({
     <View style={styles.tabContentStyle}>
       <Suspense
         fallback={
-          <View style={loadingContainerStyle}>
-            <Loading showSeparator repeat={4} type="token" />
-          </View>
+          <Box m="sm" style={loadingContainerStyle}>
+            <Loading repeat={4} type="token" />
+          </Box>
         }>
         <TokenBalanceList
           empty={

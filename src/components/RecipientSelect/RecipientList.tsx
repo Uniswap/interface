@@ -4,7 +4,7 @@ import { ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
-import { AnimatedFlex, Box, Inset } from 'src/components/layout'
+import { AnimatedFlex, Inset } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { Text } from 'src/components/Text'
@@ -64,13 +64,11 @@ export function RecipientRow({ recipient, onPress }: RecipientProps) {
 export function RecipientLoadingRow() {
   const { t } = useTranslation()
   return (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+    <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="xs">
       <Text color="textTertiary" variant="bodySmall">
         {t('Search Results')}
       </Text>
-      <Box mx="xs">
-        <Loading type="token" />
-      </Box>
+      <Loading type="token" />
     </AnimatedFlex>
   )
 }

@@ -9,7 +9,7 @@ import { SearchTokenItem } from 'src/components/explore/search/items/SearchToken
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { CloseIcon } from 'src/components/icons/CloseIcon'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex, Flex, Inset } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -82,7 +82,12 @@ export function SearchEmptySection() {
         <Text color="textSecondary" mx="xs" variant="subheadSmall">
           {t('Popular tokens')}
         </Text>
-        <Suspense fallback={<Loading repeat={3} type="token" />}>
+        <Suspense
+          fallback={
+            <Inset all="xs">
+              <Loading repeat={3} type="token" />
+            </Inset>
+          }>
           <SearchPopularTokens />
         </Suspense>
       </Flex>

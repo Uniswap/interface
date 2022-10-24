@@ -8,7 +8,7 @@ import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchE
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
 import { SearchResultsSection_searchTokenProjectsQuery } from 'src/components/explore/search/__generated__/SearchResultsSection_searchTokenProjectsQuery.graphql'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -24,7 +24,7 @@ const MAX_TOKEN_RESULTS_COUNT = 5
 
 export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
   return (
-    <Suspense fallback={<LoadingState />}>
+    <Suspense fallback={<SearchResultsLoader />}>
       <SearchResultsSectionInner searchQuery={searchQuery} />
     </Suspense>
   )
@@ -134,7 +134,9 @@ export function SearchResultsSectionInner({ searchQuery }: { searchQuery: string
               wallet={{ type: SearchResultType.Wallet, address: ensAddress, ensName }}
             />
           ) : (
-            <Loading repeat={1} type="token" />
+            <Box mx="xs">
+              <Loading repeat={1} type="token" />
+            </Box>
           )}
         </AnimatedFlex>
       )}
@@ -152,18 +154,22 @@ export function SearchResultsSectionInner({ searchQuery }: { searchQuery: string
   )
 }
 
-const LoadingState = () => {
+const SearchResultsLoader = () => {
   const { t } = useTranslation()
   return (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs">
-      <Text color="textSecondary" mx="xs" variant="subheadSmall">
-        {t('Tokens')}
-      </Text>
-      <Loading showSeparator repeat={3} type="token" />
-      <Text color="textSecondary" mx="xs" variant="subheadSmall">
-        {t('Wallets')}
-      </Text>
-      <Loading repeat={1} type="token" />
+    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="md" mx="xs">
+      <Flex gap="sm">
+        <Text color="textSecondary" variant="subheadSmall">
+          {t('Tokens')}
+        </Text>
+        <Loading repeat={2} type="token" />
+      </Flex>
+      <Flex gap="sm">
+        <Text color="textSecondary" variant="subheadSmall">
+          {t('Wallets')}
+        </Text>
+        <Loading repeat={1} type="token" />
+      </Flex>
     </AnimatedFlex>
   )
 }
