@@ -52,8 +52,13 @@ const AssetHeader = styled.div`
 const MediaContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 40px;
-  margin-bottom: 28px;
+  margin-bottom: -25px;
+  height: 400px;
+
+  img {
+    height: 90%;
+    width: auto;
+  }
 `
 
 const Column = styled.div`
@@ -323,6 +328,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
 
       <InfoContainer
         primaryHeader="Traits"
+        defaulOpen
         secondaryHeader={
           rarityProvider && rarity ? (
             <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>

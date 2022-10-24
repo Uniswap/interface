@@ -56,12 +56,14 @@ const InfoContainer = ({
   children,
   primaryHeader,
   secondaryHeader,
+  defaulOpen,
 }: {
   children: JSX.Element
   primaryHeader: string
   secondaryHeader: React.ReactNode
+  defaulOpen?: boolean
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(!!defaulOpen)
 
   return (
     <div>

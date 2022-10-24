@@ -13,6 +13,7 @@ const AssetContainer = styled.div`
   gap: 20px;
   padding-left: 40px;
   padding-right: 40px;
+  padding-top: 48px;
 `
 
 const Asset = () => {
