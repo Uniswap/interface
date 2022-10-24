@@ -6,6 +6,7 @@ import { Separator } from 'src/components/layout/Separator'
 import { BoxLoader } from 'src/components/loading/BoxLoader'
 import { FavoriteLoader } from 'src/components/loading/FavoriteLoader'
 import { HeaderLoader } from 'src/components/loading/HeaderLoader'
+import { NftCardLoader } from 'src/components/loading/NftCardLoader'
 import { Shimmer } from 'src/components/loading/Shimmer'
 import { TokenLoader } from 'src/components/loading/TokenLoader'
 import TransactionLoader from 'src/components/loading/TransactionLoader'
@@ -14,15 +15,16 @@ import GraphCurveArea from './graph-curve-area.svg'
 
 type SkeletonType =
   | 'box'
-  | 'graph'
-  | 'header'
-  | 'token'
-  | 'image'
   | 'favorite'
+  | 'graph'
   | 'grid'
-  | 'wallets'
+  | 'header'
+  | 'image'
+  | 'nft'
   | 'text'
+  | 'token'
   | 'transactions'
+  | 'wallets'
 
 type LoadingProps = {
   type?: SkeletonType
@@ -111,6 +113,23 @@ const useChildFromType = (
       )
     case 'text':
       return <BoxLoader borderRadius="xs" height={16} />
+    case 'nft':
+      return (
+        <Box>
+          {new Array(repeat / 2).fill(null).map((_, i) => {
+            const firstColOpacity = (repeat - ((repeat / 2) * i + 1) + 1) / repeat
+            const secondColOpacity = (repeat - ((repeat / 2) * i + 2) + 1) / repeat
+            return (
+            <React.Fragment key={i}>
+              <Flex row gap="none" px="xs">
+                  <NftCardLoader opacity={firstColOpacity} width="50%" />
+                  <NftCardLoader opacity={secondColOpacity} width="50%" />
+              </Flex>
+            </React.Fragment>
+            )
+          })}
+        </Box>
+      )
     case 'box':
     default:
       return (

@@ -92,7 +92,9 @@ export function NftsTab(props: {
     <Suspense
       fallback={
         <View style={props.loadingContainerStyle}>
-          <Loading repeat={6} type="grid" />
+          <Flex pt="sm">
+            <Loading repeat={6} type="nft" />
+          </Flex>
         </View>
       }>
       <NftsTabInner {...props} />
