@@ -13,10 +13,7 @@ interface AssetPriceDetailsProps {
   collection: CollectionInfoForAsset
 }
 
-const Container = styled.div`
-  margin-left: 88px;
-  margin-right: 128px;
-`
+const Container = styled.div``
 
 const BestPriceContainer = styled.div`
   display: flex;
@@ -26,7 +23,6 @@ const BestPriceContainer = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
-  width: 320px;
 `
 
 const HeaderRow = styled.div`

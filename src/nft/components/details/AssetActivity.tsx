@@ -1,20 +1,11 @@
-import { useEffect, useReducer, useCallback, useMemo, useState } from 'react'
-import clsx from 'clsx'
-import { ActivityEvent, ActivityEventResponse, ActivityEventType } from 'nft/types'
-import { Box } from 'nft/components/Box'
-import { useInfiniteQuery, useQuery } from 'react-query'
-import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
+import { ActivityEventResponse } from 'nft/types'
 import styled from 'styled-components/macro'
 import { shortenAddress } from 'nft/utils/address'
-import { fetchPrice } from 'nft/utils/fetchPrice'
 import { EventCell } from '../collection/ActivityCells'
-import { getTimeDifference, isValidDate } from 'nft/utils/date'
+import { getTimeDifference } from 'nft/utils/date'
 import { formatEthPrice } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { MarketplaceIcon } from '../collection/ActivityCells'
-import { marketplace } from './AssetDetails.css'
-import { reduceFilters } from '../collection/Activity'
-import * as styles from 'nft/components/collection/Activity.css'
 
 const TR = styled.tr`
   width: 100%;
@@ -51,82 +42,11 @@ const PriceContainer = styled.div`
   gap: 8px;
 `
 
-const initialFilterState = {
-  [ActivityEventType.Listing]: true,
-  [ActivityEventType.Sale]: true,
-  [ActivityEventType.Transfer]: true,
-  [ActivityEventType.CancelListing]: true,
-}
-
-const AssetActivity = ({ contractAddress, token_id }: { contractAddress: string; token_id: string }) => {
-  const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
-  const { data: eventsData } = useQuery<ActivityEventResponse>(
-    [
-      'collectionActivity',
-      {
-        contractAddress,
-        activeFilters,
-      },
-    ],
-    async ({ pageParam = '' }) => {
-      return await ActivityFetcher(
-        contractAddress,
-        {
-          token_id,
-          eventTypes: Object.keys(activeFilters)
-            .filter((key) => activeFilters[key as ActivityEventType])
-            .map((key) => key as ActivityEventType),
-        },
-        pageParam,
-        '5'
-      )
-    },
-    {
-      getNextPageParam: (lastPage) => {
-        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
-      },
-      refetchInterval: 15000,
-      refetchIntervalInBackground: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    }
-  )
-
-  console.log(
-    Object.keys(activeFilters)
-      .filter((key) => activeFilters[key as ActivityEventType])
-      .map((key) => key as ActivityEventType)
-  )
-
-  const events = eventsData?.events ? eventsData?.events : []
-  const Filter = useCallback(
-    function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
-      const isActive = activeFilters[eventType]
-
-      return (
-        <Box
-          className={clsx(styles.filter, isActive && styles.activeFilter)}
-          onClick={() => filtersDispatch({ eventType })}
-          style={{ maxWidth: 150, height: 40, boxSizing: 'border-box' }}
-        >
-          {eventType === ActivityEventType.CancelListing
-            ? 'Cancellation'
-            : eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
-        </Box>
-      )
-    },
-    [activeFilters]
-  )
+const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {
+  const events = eventsData === undefined ? [] : eventsData?.events
 
   return (
     <div>
-      <div style={{ display: 'flex', gap: '6px', marginBottom: 34 }}>
-        <Filter eventType={ActivityEventType.Listing} />
-        <Filter eventType={ActivityEventType.Sale} />
-        <Filter eventType={ActivityEventType.Transfer} />
-        <Filter eventType={ActivityEventType.CancelListing} />
-      </div>
-
       <Table>
         <TR>
           <TH>Event</TH>

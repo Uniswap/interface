@@ -5,6 +5,9 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 16px;
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 `
 
 const GridItemContainer = styled.div`
