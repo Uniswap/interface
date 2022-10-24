@@ -13,18 +13,17 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Edit } from 'react-feather'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useAllTokenBalances } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
-import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
+import { useActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
+import { CloseIcon, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
-import Row, { RowBetween, RowFixed } from '../Row'
+import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
@@ -37,16 +36,6 @@ const ContentWrapper = styled(Column)<{ redesignFlag?: boolean }>`
   position: relative;
 `
 
-const Footer = styled.div`
-  width: 100%;
-  border-radius: 20px;
-  padding: 20px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
-  border-top: 1px solid ${({ theme }) => theme.deprecated_bg2};
-`
-
 interface CurrencySearchProps {
   isOpen: boolean
   onDismiss: () => void
@@ -56,7 +45,6 @@ interface CurrencySearchProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
-  showManageView: () => void
 }
 
 export function CurrencySearch({
@@ -68,7 +56,6 @@ export function CurrencySearch({
   disableNonToken,
   onDismiss,
   isOpen,
-  showManageView,
 }: CurrencySearchProps) {
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
@@ -84,7 +71,7 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
 
-  const allTokens = useAllTokens()
+  const allTokens = useActiveTokens()
 
   // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
@@ -117,20 +104,17 @@ export function CurrencySearch({
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
   const native = useNativeCurrency()
+  const wrapped = native.wrapped
 
-  const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
-    // Use Celo ERC20 Implementation and exclude the native asset
-    if (!native) {
-      return filteredSortedTokens
-    }
-
+  const searchCurrencies: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
-    if (native.symbol?.toLowerCase()?.indexOf(s) !== -1) {
-      // Always bump the native token to the top of the list.
-      return [native, ...filteredSortedTokens.filter((t) => !t.equals(native))]
-    }
-    return filteredSortedTokens
-  }, [debouncedQuery, native, filteredSortedTokens])
+
+    const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
+    const natives = (disableNonToken || native.equals(wrapped) ? [wrapped] : [native, wrapped]).filter(
+      (n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1
+    )
+    return [...natives, ...tokens]
+  }, [debouncedQuery, filteredSortedTokens, wrapped, disableNonToken, native])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
@@ -160,17 +144,17 @@ export function CurrencySearch({
         const s = debouncedQuery.toLowerCase().trim()
         if (s === native?.symbol?.toLowerCase()) {
           handleCurrencySelect(native)
-        } else if (filteredSortedTokensWithETH.length > 0) {
+        } else if (searchCurrencies.length > 0) {
           if (
-            filteredSortedTokensWithETH[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
-            filteredSortedTokensWithETH.length === 1
+            searchCurrencies[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
+            searchCurrencies.length === 1
           ) {
-            handleCurrencySelect(filteredSortedTokensWithETH[0])
+            handleCurrencySelect(searchCurrencies[0])
           }
         }
       }
     },
-    [debouncedQuery, native, filteredSortedTokensWithETH, handleCurrencySelect]
+    [debouncedQuery, native, searchCurrencies, handleCurrencySelect]
   )
 
   // menu ui
@@ -242,13 +226,13 @@ export function CurrencySearch({
               )}
             />
           </Column>
-        ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
+        ) : searchCurrencies?.length > 0 || filteredInactiveTokens?.length > 0 || isLoading ? (
           <div style={{ flex: '1' }}>
             <AutoSizer disableWidth>
               {({ height }) => (
                 <CurrencyList
                   height={height}
-                  currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
+                  currencies={searchCurrencies}
                   otherListTokens={filteredInactiveTokens}
                   onCurrencySelect={handleCurrencySelect}
                   otherCurrency={otherSelectedCurrency}
@@ -268,26 +252,6 @@ export function CurrencySearch({
               <Trans>No results found.</Trans>
             </ThemedText.DeprecatedMain>
           </Column>
-        )}
-        {!redesignFlagEnabled && (
-          <Footer>
-            <Row justify="center">
-              <ButtonText
-                onClick={showManageView}
-                color={theme.deprecated_primary1}
-                className="list-token-manage-button"
-              >
-                <RowFixed>
-                  <IconWrapper size="16px" marginRight="6px" stroke={theme.deprecated_primaryText1}>
-                    <Edit />
-                  </IconWrapper>
-                  <ThemedText.DeprecatedMain color={theme.deprecated_primaryText1}>
-                    <Trans>Manage Token Lists</Trans>
-                  </ThemedText.DeprecatedMain>
-                </RowFixed>
-              </ButtonText>
-            </Row>
-          </Footer>
         )}
       </Trace>
     </ContentWrapper>

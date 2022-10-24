@@ -1,12 +1,6 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
-import {
-  INVERSE_BASIS_POINTS,
-  OPENSEA_CROSS_CHAIN_CONDUIT,
-  OPENSEA_DEFAULT_FEE,
-  OPENSEA_FEE_ADDRESS,
-} from 'nft/queries/openSea'
+import { LOOKSRARE_MARKETPLACE_CONTRACT, X2Y2_TRANSFER_CONTRACT } from 'nft/queries'
+import { OPENSEA_CROSS_CHAIN_CONDUIT } from 'nft/queries/openSea'
 import { AssetRow, CollectionRow, ListingMarket, ListingRow, ListingStatus, WalletAsset } from 'nft/types'
 import { approveCollection, signListing } from 'nft/utils/listNfts'
 import { Dispatch } from 'react'
@@ -60,9 +54,9 @@ export async function approveCollectionRow(
     marketplace.name === 'OpenSea'
       ? OPENSEA_CROSS_CHAIN_CONDUIT
       : marketplace.name === 'Rarible'
-      ? process.env.REACT_APP_LOOKSRARE_MARKETPLACE_CONTRACT
+      ? LOOKSRARE_MARKETPLACE_CONTRACT
       : marketplace.name === 'X2Y2'
-      ? process.env.REACT_APP_X2Y2_TRANSFER_CONTRACT
+      ? X2Y2_TRANSFER_CONTRACT
       : looksRareAddress
   await approveCollection(spender ?? '', collectionAddress, signer, (newStatus: ListingStatus) =>
     updateStatus({
@@ -265,39 +259,4 @@ export const resetRow = (row: AssetRow, rows: AssetRow[], setRows: Dispatch<Asse
       rows,
       setRows,
     })
-}
-
-const createConsiderationItem = (basisPoints: string, recipient: string): ConsiderationInputItem => {
-  return {
-    amount: basisPoints,
-    recipient,
-  }
-}
-
-export const getConsiderationItems = (
-  asset: WalletAsset,
-  price: BigNumber,
-  signerAddress: string
-): {
-  sellerFee: ConsiderationInputItem
-  openseaFee: ConsiderationInputItem
-  creatorFee?: ConsiderationInputItem
-} => {
-  const openSeaBasisPoints = OPENSEA_DEFAULT_FEE * INVERSE_BASIS_POINTS
-  const creatorFeeBasisPoints = asset.creatorPercentage * INVERSE_BASIS_POINTS
-  const sellerBasisPoints = INVERSE_BASIS_POINTS - openSeaBasisPoints - creatorFeeBasisPoints
-
-  const openseaFee = price.mul(BigNumber.from(openSeaBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
-  const creatorFee = price
-    .mul(BigNumber.from(creatorFeeBasisPoints))
-    .div(BigNumber.from(INVERSE_BASIS_POINTS))
-    .toString()
-  const sellerFee = price.mul(BigNumber.from(sellerBasisPoints)).div(BigNumber.from(INVERSE_BASIS_POINTS)).toString()
-
-  return {
-    sellerFee: createConsiderationItem(sellerFee, signerAddress),
-    openseaFee: createConsiderationItem(openseaFee, OPENSEA_FEE_ADDRESS),
-    creatorFee:
-      creatorFeeBasisPoints > 0 ? createConsiderationItem(creatorFee, asset.asset_contract.payout_address) : undefined,
-  }
 }

@@ -20,6 +20,7 @@ import {
   useIsMobile,
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
+import { usePriceRange } from 'nft/hooks/usePriceRange'
 import { AssetsFetcher } from 'nft/queries'
 import { DropDownOption, GenieCollection, TokenType, UniformHeight, UniformHeights } from 'nft/types'
 import { getRarityStatus } from 'nft/utils/asset'
@@ -112,6 +113,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const setSortBy = useCollectionFilters((state) => state.setSortBy)
   const buyNow = useCollectionFilters((state) => state.buyNow)
+
+  const setPriceRangeLow = usePriceRange((state) => state.setPriceRangeLow)
+  const priceRangeLow = usePriceRange((state) => state.priceRangeLow)
+  const priceRangeHigh = usePriceRange((state) => state.priceRangeHigh)
+  const setPriceRangeHigh = usePriceRange((state) => state.setPriceRangeHigh)
+  const setPrevMinMax = usePriceRange((state) => state.setPrevMinMax)
+
   const setIsCollectionNftsLoading = useIsCollectionLoading((state) => state.setIsCollectionNftsLoading)
   const removeTrait = useCollectionFilters((state) => state.removeTrait)
   const removeMarket = useCollectionFilters((state) => state.removeMarket)
@@ -289,7 +297,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const minMaxPriceChipText: string | undefined = useMemo(() => {
     if (debouncedMinPrice && debouncedMaxPrice) {
-      return `Price: ${debouncedMinPrice}-${debouncedMaxPrice} ETH`
+      return `Price: ${debouncedMinPrice} - ${debouncedMaxPrice} ETH`
     } else if (debouncedMinPrice) {
       return `Min. Price: ${debouncedMinPrice} ETH`
     } else if (debouncedMaxPrice) {
@@ -326,6 +334,21 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       })
     }
   }, [collectionStats, location])
+
+  useEffect(() => {
+    if (collectionStats && collectionStats.floorPrice) {
+      const lowValue = collectionStats.floorPrice
+      const maxValue = 10 * collectionStats.floorPrice
+
+      if (priceRangeLow === '') {
+        setPriceRangeLow(lowValue?.toFixed(2))
+      }
+
+      if (priceRangeHigh === '') {
+        setPriceRangeHigh(maxValue.toFixed(2))
+      }
+    }
+  }, [collectionStats, priceRangeLow, priceRangeHigh, setPriceRangeHigh, setPriceRangeLow])
 
   return (
     <>
@@ -415,6 +438,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                   scrollToTop()
                   setMin('')
                   setMax('')
+                  setPrevMinMax([0, 100])
                 }}
               />
             )}
@@ -422,6 +446,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               <ClearAllButton
                 onClick={() => {
                   reset()
+                  setPrevMinMax([0, 100])
                   scrollToTop()
                 }}
               >

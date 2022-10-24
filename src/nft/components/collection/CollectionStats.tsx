@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Marquee } from 'nft/components/layout/Marquee'
@@ -6,13 +7,19 @@ import { headlineMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection } from 'nft/types'
-import { ethNumberStandardFormatter } from 'nft/utils/currency'
-import { putCommas } from 'nft/utils/putCommas'
+import { floorFormatter, quantityFormatter, roundWholePercentage, volumeFormatter } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import styled from 'styled-components/macro'
 
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
 import * as styles from './CollectionStats.css'
+
+const PercentChange = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
 
 const MobileSocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
   return (
@@ -233,27 +240,32 @@ const CollectionDescription = ({ description }: { description: string }) => {
 
 const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => {
   return (
-    <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
-      <Box as="span" className={styles.statsLabel}>
-        {`${label}${isMobile ? ': ' : ''}`}
-      </Box>
+    <Box display="flex" flexDirection={'column'} alignItems="baseline" gap="2" height="min">
       <span className={styles.statsValue}>{children}</span>
+      <Box as="span" className={styles.statsLabel}>
+        {label}
+      </Box>
     </Box>
   )
 }
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
-  const numOwnersStr = stats.stats ? putCommas(stats.stats.num_owners) : 0
-  const totalSupplyStr = stats.stats ? putCommas(stats.stats.total_supply) : 0
+  const uniqueOwnersPercentage = stats.stats
+    ? roundWholePercentage((stats.stats.num_owners / stats.stats.total_supply) * 100)
+    : 0
+  const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply) : 0
   const listedPercentageStr =
     stats.stats && stats.stats.total_listings > 0
-      ? ((stats.stats.total_listings / stats.stats.total_supply) * 100).toFixed(0)
+      ? roundWholePercentage((stats.stats.total_listings / stats.stats.total_supply) * 100)
       : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   // round daily volume & floorPrice to 3 decimals or less
-  const totalVolumeStr = ethNumberStandardFormatter(stats.stats?.total_volume)
-  const floorPriceStr = ethNumberStandardFormatter(stats.floorPrice)
+  const totalVolumeStr = volumeFormatter(stats.stats?.total_volume)
+  const floorPriceStr = floorFormatter(stats.floorPrice)
+  const floorChangeStr =
+    stats.stats && stats.stats.one_day_floor_change ? Math.round(Math.abs(stats.stats.one_day_floor_change) * 100) : 0
+  const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_floor_change) : null
 
   const statsLoadingSkeleton = new Array(5).fill(
     <>
@@ -267,19 +279,31 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   return (
     <Row gap={{ sm: '20', md: '60' }} {...props}>
       {isCollectionStatsLoading && statsLoadingSkeleton}
+      {stats.floorPrice ? (
+        <StatsItem label="Global floor" isMobile={isMobile ?? false}>
+          {floorPriceStr} ETH
+        </StatsItem>
+      ) : null}
+      {stats.stats?.one_day_floor_change ? (
+        <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
+          <PercentChange>
+            {floorChangeStr}% {arrow}
+          </PercentChange>
+        </StatsItem>
+      ) : null}
+      {stats.stats?.total_volume ? (
+        <StatsItem label="Total volume" isMobile={isMobile ?? false}>
+          {totalVolumeStr} ETH
+        </StatsItem>
+      ) : null}
       {totalSupplyStr ? (
         <StatsItem label="Items" isMobile={isMobile ?? false}>
           {totalSupplyStr}
         </StatsItem>
       ) : null}
-      {numOwnersStr ? (
-        <StatsItem label="Owners" isMobile={isMobile ?? false}>
-          {numOwnersStr}
-        </StatsItem>
-      ) : null}
-      {stats.floorPrice ? (
-        <StatsItem label="Floor Price" isMobile={isMobile ?? false}>
-          {floorPriceStr} ETH
+      {uniqueOwnersPercentage ? (
+        <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
+          {uniqueOwnersPercentage}%
         </StatsItem>
       ) : null}
       {stats.stats?.total_volume ? (

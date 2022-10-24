@@ -6,6 +6,7 @@ import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/ic
 import { buttonTextMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsCollectionLoading } from 'nft/hooks'
+import { useCollectionFilters } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
 
@@ -26,12 +27,17 @@ export const SortDropdown = ({
   top?: number
   left?: number
 }) => {
+  const sortBy = useCollectionFilters((state) => state.sortBy)
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const [isReversed, toggleReversed] = useReducer((s) => !s, false)
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(sortBy)
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   const [maxWidth, setMaxWidth] = useState(0)
+
+  useEffect(() => {
+    setSelectedIndex(sortBy)
+  }, [sortBy])
 
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => isOpen && toggleOpen())
