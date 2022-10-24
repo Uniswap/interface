@@ -187,8 +187,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = cheapestOrder ? new Date(cheapestOrder.orderClosingDate) : undefined
   const itemsInBag = useBag((s) => s.itemsInBag)
-  const addAssetToBag = useBag((s) => s.addAssetToBag)
-  const removeAssetFromBag = useBag((s) => s.removeAssetFromBag)
+  const addAssetsToBag = useBag((s) => s.addAssetsToBag)
+  const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
 
   const { quantity, assetInBag } = useMemo(() => {
@@ -235,19 +235,19 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               assetInBag={assetInBag}
               margin={true}
               useAccentColor={true}
-              onClick={() => (assetInBag ? removeAssetFromBag(asset) : addAssetToBag(asset))}
+              onClick={() => (assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset]))}
             >
               <ThemedText.SubHeader lineHeight={'20px'}>{assetInBag ? 'Remove' : 'Buy Now'}</ThemedText.SubHeader>
             </BuyNowButton>
           ) : (
             <Erc1155BuyNowButton>
-              <Erc1155ChangeButton remove={true} onClick={() => removeAssetFromBag(asset)}>
+              <Erc1155ChangeButton remove={true} onClick={() => removeAssetsFromBag([asset])}>
                 <MinusIcon width="20px" height="20px" />
               </Erc1155ChangeButton>
               <Erc1155BuyNowText>
                 <ThemedText.SubHeader lineHeight={'20px'}>{quantity}</ThemedText.SubHeader>
               </Erc1155BuyNowText>
-              <Erc1155ChangeButton remove={false} onClick={() => addAssetToBag(asset)}>
+              <Erc1155ChangeButton remove={false} onClick={() => addAssetsToBag([asset])}>
                 <PlusIcon width="20px" height="20px" />
               </Erc1155ChangeButton>
             </Erc1155BuyNowButton>

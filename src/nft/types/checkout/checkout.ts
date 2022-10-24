@@ -84,6 +84,7 @@ export enum BagItemStatus {
 export type BagItem = {
   asset: UpdatedGenieAsset
   status: BagItemStatus
+  inSweep?: boolean
 }
 
 export enum BagStatus {

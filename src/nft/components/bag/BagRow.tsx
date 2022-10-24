@@ -46,7 +46,7 @@ const NoContentContainer = () => (
 interface BagRowProps {
   asset: UpdatedGenieAsset
   usdPrice: number | undefined
-  removeAsset: (asset: GenieAsset) => void
+  removeAsset: (assets: GenieAsset[]) => void
   showRemove?: boolean
   grayscale?: boolean
   isMobile: boolean
@@ -72,7 +72,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             onClick={(e: MouseEvent) => {
               e.preventDefault()
               e.stopPropagation()
-              removeAsset(asset)
+              removeAsset([asset])
             }}
             transition="250"
             zIndex="1"
@@ -113,7 +113,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
-              removeAsset(asset)
+              removeAsset([asset])
             }}
           >
             Remove
