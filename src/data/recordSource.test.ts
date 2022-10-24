@@ -23,6 +23,8 @@ describe(RecordSource, () => {
 
   it('dumps to disk', async () => {
     const recordSource = new RecordSource(storage, STORE_KEY)
+    recordSource.toJSON = () => RECORDS
+
     recordSource.dump()
 
     expect(JSON.parse(storage.getString(STORE_KEY) || '')).toEqual(RECORDS)

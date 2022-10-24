@@ -46,8 +46,12 @@ export function usePortfolioBalances(
   const balancesData = useLazyLoadQuery<balancesQuery>(
     query,
     { ownerAddress: address },
-
-    { networkCacheConfig: { poll: PollingInterval.Fast } }
+    {
+      networkCacheConfig: { poll: PollingInterval.Fast },
+      // given the query endpoint and variables are the same as PortfolioBalanceQuery,
+      // ensure a network request issued to ensure we get all the required fields.
+      fetchPolicy: 'store-and-network',
+    }
   )
   const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
 

@@ -12,7 +12,7 @@ const RELAY_STORE_DUMP_THROTTLE_MS = ONE_MINUTE_MS
  * and dumps memory cache to disk after a fetch.
  */
 export class RecordSource extends RelayRecordSource {
-  private dumpTimer: NodeJS.Timeout | null = null
+  private isThrottlingDump = false
 
   constructor(private storage: MMKV, private key: string, records?: RecordMap) {
     super(records)
@@ -31,10 +31,19 @@ export class RecordSource extends RelayRecordSource {
   }
 
   dump() {
-    this.dumpTimer && clearTimeout(this.dumpTimer)
+    if (this.isThrottlingDump) {
+      return
+    }
 
-    this.dumpTimer = setTimeout(() => {
-      this.storage.set(this.key, JSON.stringify(this.toJSON()))
+    this.isThrottlingDump = true
+    const records = this.toJSON()
+
+    logger.debug('relay', 'restore', `Dumping ${Object.keys(records).length} records`)
+
+    this.storage.set(this.key, JSON.stringify(records))
+
+    setTimeout(() => {
+      this.isThrottlingDump = false
     }, RELAY_STORE_DUMP_THROTTLE_MS)
   }
 }
