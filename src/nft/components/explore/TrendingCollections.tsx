@@ -1,24 +1,52 @@
-import clsx from 'clsx'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
+import styled, { useTheme } from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
-import { Box } from '../../components/Box'
-import { Column, Row } from '../../components/Flex'
-import { headlineMedium } from '../../css/common.css'
 import { fetchTrendingCollections } from '../../queries'
 import { CollectionTableColumn, TimePeriod, VolumeType } from '../../types'
 import CollectionTable from './CollectionTable'
-import * as styles from './Explore.css'
 
 const timeOptions: { label: string; value: TimePeriod }[] = [
-  { label: '24 hour', value: TimePeriod.OneDay },
-  { label: '7 day', value: TimePeriod.SevenDays },
-  { label: '30 day', value: TimePeriod.ThirtyDays },
-  { label: 'All time', value: TimePeriod.AllTime },
+  { label: '1D', value: TimePeriod.OneDay },
+  { label: '1W', value: TimePeriod.SevenDays },
+  { label: '1M', value: TimePeriod.ThirtyDays },
+  { label: 'All', value: TimePeriod.AllTime },
 ]
+
+const ExploreContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1100px;
+`
+
+const FiltersRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 36px;
+  margin-bottom: 20px;
+`
+
+const Filter = styled.div`
+  display: flex;
+  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 16px;
+  padding: 4px;
+`
+
+const Selector = styled.div<{ active: boolean }>`
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: ${({ active, theme }) => (active ? theme.backgroundInteractive : 'none')};
+  cursor: pointer;
+`
 
 const TrendingCollections = () => {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.OneDay)
+  const [isEthToggled, setEthToggled] = useState(true)
+
+  const theme = useTheme()
 
   const { isSuccess, data } = useQuery(
     ['trendingCollections', timePeriod],
@@ -63,34 +91,42 @@ const TrendingCollections = () => {
   }, [data, isSuccess])
 
   return (
-    <Box width="full" className={styles.section}>
-      <Column width="full">
-        <Row>
-          <Box as="h2" className={headlineMedium} marginTop="88">
-            Trending Collections
-          </Box>
-        </Row>
-        <Row>
-          <Box className={styles.trendingOptions}>
-            {timeOptions.map((timeOption) => {
-              return (
-                <span
-                  className={clsx(
-                    styles.trendingOption,
-                    timeOption.value === timePeriod && styles.trendingOptionActive
-                  )}
-                  key={timeOption.value}
-                  onClick={() => setTimePeriod(timeOption.value)}
+    <ExploreContainer>
+      <ThemedText.LargeHeader lineHeight="44px">Trending NFT collections</ThemedText.LargeHeader>
+      <FiltersRow>
+        <Filter>
+          {timeOptions.map((timeOption) => {
+            return (
+              <Selector
+                key={timeOption.value}
+                active={timeOption.value === timePeriod}
+                onClick={() => setTimePeriod(timeOption.value)}
+              >
+                <ThemedText.SubHeader
+                  lineHeight="20px"
+                  color={timeOption.value === timePeriod ? theme.textPrimary : theme.textSecondary}
                 >
                   {timeOption.label}
-                </span>
-              )
-            })}
-          </Box>
-        </Row>
-        <Row paddingBottom="52">{data ? <CollectionTable data={trendingCollections} /> : <p>Loading</p>}</Row>
-      </Column>
-    </Box>
+                </ThemedText.SubHeader>
+              </Selector>
+            )
+          })}
+        </Filter>
+        <Filter onClick={() => setEthToggled(!isEthToggled)}>
+          <Selector active={isEthToggled}>
+            <ThemedText.SubHeader lineHeight="20px" color={isEthToggled ? theme.textPrimary : theme.textSecondary}>
+              ETH
+            </ThemedText.SubHeader>
+          </Selector>
+          <Selector active={!isEthToggled}>
+            <ThemedText.SubHeader lineHeight="20px" color={!isEthToggled ? theme.textPrimary : theme.textSecondary}>
+              USD
+            </ThemedText.SubHeader>
+          </Selector>
+        </Filter>
+      </FiltersRow>
+      {data ? <CollectionTable data={trendingCollections} /> : <p>Loading</p>}
+    </ExploreContainer>
   )
 }
 

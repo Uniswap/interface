@@ -215,7 +215,8 @@ export const td = style([
 ])
 
 export const trendingOptions = sprinkles({
-  marginBottom: '32',
+  marginTop: '36',
+  marginBottom: '20',
   height: '44',
   borderRadius: '12',
   borderWidth: '2px',
