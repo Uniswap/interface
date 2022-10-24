@@ -98,10 +98,9 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
     return formatDollar({ num: float, isPrice: true })
   }, [usdValue])
 
-  if (!account) return null
   return (
     <Wrapper>
-      {Boolean(formattedBalance !== undefined && !token.isNative && balance?.greaterThan(0)) && (
+      {Boolean(account && formattedBalance) && (
         <BalanceInfo>
           <Trans>Your {token.symbol} balance</Trans>
           <Balance>

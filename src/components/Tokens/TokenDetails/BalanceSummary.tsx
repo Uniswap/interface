@@ -97,13 +97,11 @@ export default function BalanceSummary({ token }: { token: Currency }) {
     <BalancesCard>
       <BalanceSection>
         <Trans>Your balance</Trans>
-        {
-          <Balance
-            token={token}
-            amount={balance}
-            href={`/tokens/${chain}/${token.isNative ? NATIVE_CHAIN_ID : token.address}`}
-          />
-        }
+        <Balance
+          token={token}
+          amount={balance}
+          href={`/tokens/${chain}/${token.isNative ? NATIVE_CHAIN_ID : token.address}`}
+        />
         {!token.equals(nativeCurrency) && (
           <Balance token={nativeCurrency} amount={nativeBalance} href={`/tokens/${chain}/${NATIVE_CHAIN_ID}`} />
         )}
