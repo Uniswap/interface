@@ -61,13 +61,13 @@ interface BalanceProps {
 
 function Balance({ token, amount, href }: BalanceProps) {
   const formattedBalance = useMemo(
-    () => (amount ? formatToDecimal(amount, Math.min(amount.currency.decimals, 2)) : '-'),
+    () => (amount ? formatToDecimal(amount, Math.min(amount.currency.decimals, 2)) : undefined),
     [amount]
   )
   const usdValue = useStablecoinValue(amount) ?? undefined
   const formattedUsd = useMemo(() => {
     const float = currencyAmountToPreciseFloat(usdValue)
-    if (float === 0) return undefined
+    if (!float) return undefined
     return formatDollar({ num: float, isPrice: true })
   }, [usdValue])
   const content = (
@@ -92,7 +92,7 @@ export default function BalanceSummary({ token }: { token: Currency }) {
   const nativeBalance = useCurrencyBalance(account, nativeCurrency)
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
 
-  if (!account) return null
+  if (!account || (!balance && !nativeBalance)) return null
   return (
     <BalancesCard>
       <BalanceSection>

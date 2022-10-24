@@ -100,7 +100,7 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
 
   return (
     <Wrapper>
-      {Boolean(account && formattedBalance) && (
+      {Boolean(account && !balance) && (
         <BalanceInfo>
           <Trans>Your {token.symbol} balance</Trans>
           <Balance>
