@@ -12,7 +12,6 @@ import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GestureResponderEvent, StyleSheet, useColorScheme, View } from 'react-native'
-import QRCode from 'react-native-qrcode-svg'
 import Animated, {
   AnimateStyle,
   Easing,
@@ -26,8 +25,8 @@ import { useAppTheme } from 'src/app/hooks'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'src/assets'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box, Flex } from 'src/components/layout'
+import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { Text } from 'src/components/Text'
-import { Unicon } from 'src/components/unicons/Unicon'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
@@ -147,9 +146,9 @@ export function OnboardingCompleteAnimation({
   // setting as a constant so that it doesn't get defined by padding and screen size and give us less design control
   const QR_CONTAINER_SIZE = 242
   const QR_CODE_SIZE = 190
+  const QR_GLOW_HEIGHT = 120
 
   const UNICON_SIZE = 48
-  const UNICON_BG_PADDING = 28
 
   // for background glow
   const screenWidth = dimensions.fullWidth
@@ -197,37 +196,17 @@ export function OnboardingCompleteAnimation({
                   borderWidth={2}
                   height={QR_CONTAINER_SIZE}
                   overflow="hidden"
-                  padding="lg"
                   width={QR_CONTAINER_SIZE}>
                   <Animated.View entering={realQrFadeIn} style={[styles.qrCodeContainer]}>
-                    <Flex
-                      alignItems="center"
-                      borderRadius="full"
-                      height={UNICON_SIZE + UNICON_BG_PADDING}
-                      justifyContent="center"
-                      // Unicon seems to be 1px off toward the left and top
-                      pl="xxxs"
-                      position="absolute"
-                      pt="xxxs"
-                      width={UNICON_SIZE + UNICON_BG_PADDING}
-                      zIndex="offcanvas">
-                      <Unicon address={activeAddress} size={UNICON_SIZE} />
-                    </Flex>
-                    <QRCode
-                      backgroundColor={theme.colors.none}
-                      ecl="H"
-                      enableLinearGradient={true}
-                      gradientDirection={['0%', '0%', '100%', '0%']}
-                      linearGradient={[uniconColors.gradientStart, uniconColors.gradientEnd]}
-                      logo={{ uri: '' }}
-                      // this could eventually be set to an SVG version of the Unicon which would ensure it's perfectly centered, but for now we can just use an empty logo image to create a blank circle in the middle of the QR code
-                      // note: this QR code library doesn't actually create a "safe" space in the middle, it just adds the logo on top, so that's why ecl is set to H (high error correction level) to ensure the QR code is still readable even if the middle of the QR code is partially obscured
-                      logoBackgroundColor={theme.colors.background1}
-                      logoBorderRadius={theme.borderRadii.full}
-                      logoMargin={UNICON_SIZE / 3}
+                    <QRCodeDisplay
+                      address={activeAddress}
+                      backgroundColor="none"
+                      containerBackgroundColor="none"
                       logoSize={UNICON_SIZE}
+                      overlayOpacityPercent={10}
+                      safeAreaColor="background0"
+                      safeAreaSize={UNICON_SIZE + UNICON_SIZE / 2}
                       size={QR_CODE_SIZE}
-                      value={activeAddress ?? ''}
                     />
                   </Animated.View>
                   <Animated.View entering={realQrTopGlowFadeIn} style={[styles.qrGlow]}>
@@ -236,7 +215,7 @@ export function OnboardingCompleteAnimation({
                         <Group transform={[{ translateX: 0 }, { translateY: -100 }]}>
                           <Oval
                             color={uniconColors.glow}
-                            height={isDarkMode ? 200 : 110}
+                            height={QR_GLOW_HEIGHT}
                             opacity={isDarkMode ? 0.6 : 0.4}
                             width={QR_CONTAINER_SIZE}
                           />
