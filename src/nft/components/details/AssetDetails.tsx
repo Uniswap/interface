@@ -218,7 +218,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   )
 
-  const lastSalePrice = priceData?.events ? priceData?.events[0].price : null
+  const lastSalePrice = priceData?.events ? priceData?.events[0]?.price : null
   const formattedPrice = lastSalePrice ? putCommas(formatEthPrice(lastSalePrice)).toString() : null
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
