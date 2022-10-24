@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -29,17 +28,17 @@ import { useStakingInfo } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 
-const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
-  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
+const PageWrapper = styled(AutoColumn)`
+  padding: 68px 8px 0px;
   max-width: 640px;
   width: 100%;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+    padding: 48px 8px 0px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+    padding-top: 20px;
   }
 `
 
@@ -98,8 +97,6 @@ const DataRow = styled(RowBetween)`
 `
 
 export default function Manage() {
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const { account } = useWeb3React()
 
@@ -163,7 +160,7 @@ export default function Manage() {
   }, [account, toggleWalletModal])
 
   return (
-    <PageWrapper gap="lg" justify="center" navBarFlag={navBarFlagEnabled}>
+    <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
         <ThemedText.DeprecatedMediumHeader style={{ margin: 0 }}>
           <Trans>

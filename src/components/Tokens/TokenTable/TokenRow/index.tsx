@@ -1,7 +1,6 @@
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { ReactNode } from 'react'
 import { Heart } from 'react-feather'
@@ -16,11 +15,9 @@ import {
   SMALL_MEDIA_BREAKPOINT,
 } from '../../constants'
 import { LoadingBubble } from '../../loading'
-import { useIsFavorited, useToggleFavorite } from '../../state'
 import { useTokenLogoURI } from '../../TokenDetails/ChartSection'
 import { formatDelta, getDeltaArrow } from '../../TokenDetails/PriceChart'
 import {
-  FavoriteCell,
   ListNumberCell,
   NameCell,
   PercentChangeCell,
@@ -37,14 +34,12 @@ import {
 
 export const StyledTokenRow = styled.div<{
   loading?: boolean
-  favoriteTokensEnabled?: boolean
 }>`
   background-color: transparent;
   display: grid;
   font-size: 16px;
   color: ${({ theme }) => theme.textPrimary};
-  grid-template-columns: ${({ favoriteTokensEnabled }) =>
-    favoriteTokensEnabled ? '1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr' : '1fr 7fr 4fr 4fr 4fr 4fr 5fr'};
+  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr;
   line-height: 24px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
@@ -132,7 +127,6 @@ export function TokenRowCells({
   tvl,
   volume,
   sparkline,
-  favorite,
 }: {
   loading?: boolean
   index: ReactNode
@@ -142,7 +136,6 @@ export function TokenRowCells({
   tvl: ReactNode
   volume: ReactNode
   sparkline?: ReactNode
-  favorite?: ReactNode
 }) {
   return (
     <>
@@ -158,7 +151,6 @@ export function TokenRowCells({
       <TvlCell>{tvl}</TvlCell>
       <VolumeCell>{volume}</VolumeCell>
       <SparkLineCell>{sparkline}</SparkLineCell>
-      {favorite && <FavoriteCell>{favorite}</FavoriteCell>}
     </>
   )
 }
@@ -174,12 +166,9 @@ export default function TokenRow({ token, l2CircleLogo, tokenListRank, sparkline
   const delta = token.market?.pricePercentChange?.value
   const arrow = getDeltaArrow(delta)
   const formattedDelta = formatDelta(delta)
-  const favoriteTokensEnabled = useFavoriteTokensFlag() === FavoriteTokensVariant.Enabled
-  const isFavorited = useIsFavorited(token.address)
-  const toggleFavorite = useToggleFavorite(token.address)
 
   return (
-    <StyledTokenRow favoriteTokensEnabled={favoriteTokensEnabled}>
+    <StyledTokenRow>
       <TokenRowCells
         index={tokenListRank}
         name={
@@ -220,18 +209,6 @@ export default function TokenRow({ token, l2CircleLogo, tokenListRank, sparkline
             </ParentSize>
           </SparkLineWrapper>
         }
-        favorite={
-          favoriteTokensEnabled && (
-            <ClickFavorited
-              onClick={(e) => {
-                e.preventDefault()
-                toggleFavorite()
-              }}
-            >
-              <FavoriteIcon isFavorited={isFavorited} />
-            </ClickFavorited>
-          )
-        }
       />
     </StyledTokenRow>
   )
@@ -255,9 +232,9 @@ export const SparkLineLoadingBubble = styled(LongLoadingBubble)`
 `
 
 /* Loading State: row component with loading bubbles */
-export function LoadingRow() {
+export function LoadingRow(props: { first?: boolean; last?: boolean }) {
   return (
-    <StyledTokenRow loading={true}>
+    <StyledTokenRow loading={true} {...props}>
       <TokenRowCells
         index={<SmallLoadingBubble />}
         name={

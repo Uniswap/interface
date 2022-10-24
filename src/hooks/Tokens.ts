@@ -2,12 +2,13 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
+import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
 import { useCurrencyFromMap, useTokenFromMapOrNetwork } from 'lib/hooks/useCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { useMemo } from 'react'
 import { isL2ChainId } from 'utils/chains'
 
-import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
+import { useAllLists, useCombinedActiveList } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { useUserAddedTokens, useUserAddedTokensOnChain } from '../state/user/hooks'
 import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
@@ -52,6 +53,11 @@ function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean):
 export function useAllTokens(): { [address: string]: Token } {
   const allTokens = useCombinedActiveList()
   return useTokensFromMap(allTokens, true)
+}
+
+export function useActiveTokens(): { [address: string]: Token } {
+  const allTokens = useCombinedActiveList()
+  return useTokensFromMap(allTokens, false)
 }
 
 type BridgeInfo = Record<
@@ -109,7 +115,7 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
 
 export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {
   const lists = useAllLists()
-  const inactiveUrls = useInactiveListUrls()
+  const inactiveUrls = DEFAULT_INACTIVE_LIST_URLS
   const { chainId } = useWeb3React()
   const activeTokens = useAllTokens()
   return useMemo(() => {

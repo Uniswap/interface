@@ -5,7 +5,6 @@ import InfoTip from 'components/Tokens/TokenDetails/InfoTip'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp } from 'react-feather'
-import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components/macro'
 import { ClickableStyle } from 'theme'
 
@@ -39,10 +38,10 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   height: 100%;
   justify-content: flex-end;
   width: 100%;
-`
-const HeaderCellText = styled(Text)`
   user-select: none;
-  ${ClickableStyle}
+  &:hover {
+    ${ClickableStyle}
+  }
 `
 
 export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
@@ -76,7 +75,7 @@ function HeaderCell({ category, title }: { category: TokenSortMethod; title: Rea
           )}
         </>
       )}
-      <HeaderCellText>{title}</HeaderCellText>
+      {title}
       {description && <InfoTip text={description}></InfoTip>}
     </HeaderCellWrapper>
   )

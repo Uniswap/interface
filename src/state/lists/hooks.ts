@@ -5,7 +5,7 @@ import sortByListPriority from 'utils/listSort'
 
 import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
 import { AppState } from '../index'
-import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
+import { DEFAULT_ACTIVE_LIST_URLS, UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 
 export type TokenAddressMap = ChainTokenMap
 
@@ -66,25 +66,9 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
   }, [lists, urls])
 }
 
-// filter out unsupported lists
-export function useActiveListUrls(): string[] | undefined {
-  const activeListUrls = useAppSelector((state) => state.lists.activeListUrls)
-  return useMemo(() => activeListUrls?.filter((url) => !UNSUPPORTED_LIST_URLS.includes(url)), [activeListUrls])
-}
-
-export function useInactiveListUrls(): string[] {
-  const lists = useAllLists()
-  const allActiveListUrls = useActiveListUrls()
-  return useMemo(
-    () => Object.keys(lists).filter((url) => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url)),
-    [lists, allActiveListUrls]
-  )
-}
-
 // get all the tokens from active lists, combine with local default tokens
 export function useCombinedActiveList(): TokenAddressMap {
-  const activeListUrls = useActiveListUrls()
-  const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
+  const activeTokens = useCombinedTokenMapFromUrls(DEFAULT_ACTIVE_LIST_URLS)
   return activeTokens
 }
 
@@ -100,6 +84,5 @@ export function useUnsupportedTokenList(): TokenAddressMap {
   return useMemo(() => combineMaps(brokenListMap, loadedUnsupportedListMap), [brokenListMap, loadedUnsupportedListMap])
 }
 export function useIsListActive(url: string): boolean {
-  const activeListUrls = useActiveListUrls()
-  return Boolean(activeListUrls?.includes(url))
+  return Boolean(DEFAULT_ACTIVE_LIST_URLS?.includes(url))
 }

@@ -1,9 +1,7 @@
 import graphql from 'babel-plugin-relay/macro'
 import {
-  favoritesAtom,
   filterStringAtom,
   filterTimeAtom,
-  showFavoritesAtom,
   sortAscendingAtom,
   sortMethodAtom,
   TokenSortMethod,
@@ -97,16 +95,11 @@ function useSortedTokens(tokens: NonNullable<TopTokens100Query['response']['topT
 
 function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
   const filterString = useAtomValue(filterStringAtom)
-  const favorites = useAtomValue(favoritesAtom)
-  const showFavorites = useAtomValue(showFavoritesAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
   return useMemo(() => {
     let returnTokens = tokens
-    if (showFavorites) {
-      returnTokens = returnTokens?.filter((token) => token?.address && favorites.includes(token.address))
-    }
     if (lowercaseFilterString) {
       returnTokens = returnTokens?.filter((token) => {
         const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
@@ -116,7 +109,7 @@ function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']['to
       })
     }
     return returnTokens
-  }, [tokens, showFavorites, lowercaseFilterString, favorites])
+  }, [tokens, lowercaseFilterString])
 }
 
 // Number of items to render in each fetch in infinite scroll.
