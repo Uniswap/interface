@@ -195,14 +195,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     return isNftGraphQl ? nftQueryAssets : collectionAssets?.pages.flat()
   }, [AssetsFetchSuccess, collectionAssets, isLoadingNext, isNftGraphQl, nftQueryAssets])
 
-  const wrappedLoadingState = useMemo(
-    () => (isNftGraphQl ? isLoadingNext : isLoading),
-    [isNftGraphQl, isLoadingNext, isLoading]
-  )
-  const wrappedHasNext = useMemo(
-    () => (isNftGraphQl ? hasNext : hasNextPage ?? false),
-    [isNftGraphQl, hasNext, hasNextPage]
-  )
+  const wrappedLoadingState = isNftGraphQl ? isLoadingNext : isLoading
+  const wrappedHasNext = isNftGraphQl ? hasNext : hasNextPage ?? false
 
   useEffect(() => {
     setIsCollectionNftsLoading(wrappedLoadingState)
