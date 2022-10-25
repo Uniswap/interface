@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import graphql from 'babel-plugin-relay/macro'
 import {
   filterStringAtom,
@@ -9,7 +10,7 @@ import {
 import { usePreloadedTopTokens } from 'components/TopTokensProvider'
 import { useAtomValue } from 'jotai/utils'
 import { useEffect, useMemo, useState } from 'react'
-import { fetchQuery, usePreloadedQuery, useRelayEnvironment } from 'react-relay'
+import { fetchQuery, loadQuery, usePreloadedQuery, useRelayEnvironment } from 'react-relay'
 
 import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery.graphql'
@@ -154,8 +155,15 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     setSparklines({})
   }, [duration])
 
-  //const { topTokens } = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
-  const { topTokens } = usePreloadedQuery(topTokens100Query, usePreloadedTopTokens())
+  // If page chain is different than global chain, use
+  const { chainId: globalChainId } = useWeb3React()
+  const globalTopTokensRef = usePreloadedTopTokens()
+  const pageChainQueryRef =
+    globalChainId !== chainId
+      ? loadQuery<TopTokens100Query>(environment, topTokens100Query, { chain, duration })
+      : globalTopTokensRef
+
+  const { topTokens } = usePreloadedQuery(topTokens100Query, pageChainQueryRef)
   const mappedTokens = useMemo(() => topTokens?.map((token) => unwrapToken(chainId, token)) ?? [], [chainId, topTokens])
   const filteredTokens = useFilteredTokens(mappedTokens)
   const sortedTokens = useSortedTokens(filteredTokens)

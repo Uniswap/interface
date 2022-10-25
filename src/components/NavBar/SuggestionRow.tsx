@@ -142,7 +142,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
 
   // const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
   const L2Icon = getChainInfo(CHAIN_NAME_TO_CHAIN_ID[token.chain])?.circleLogoUrl
-  const tokenDetailsPath = getTokenDetailsURL(token.address, token.chain)
+  const tokenDetailsPath = getTokenDetailsURL(token.address ?? 'NATIVE', token.chain)
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {

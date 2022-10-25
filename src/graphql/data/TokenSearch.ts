@@ -15,7 +15,7 @@ const tokenSearchQuery = graphql`
       tokens {
         name @required(action: LOG)
         chain @required(action: LOG)
-        address @required(action: LOG)
+        address
         symbol
         decimals @required(action: LOG)
         market {
