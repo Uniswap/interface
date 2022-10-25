@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { bodySmall, headlineSmall } from 'nft/css/common.css'
+import { bodySmall, buttonTextSmall, headlineSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
 import { breakpoints, sprinkles } from '../../css/sprinkles.css'
