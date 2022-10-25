@@ -31,7 +31,7 @@ export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
-    background-color: ${({ theme, disabled }) => theme.hoverDefault || (!disabled && theme.deprecated_bg2)};
+    background-color: ${({ theme }) => theme.hoverDefault};
   }
   opacity: ${({ disabled, selected, dim }) => (dim || disabled || selected ? 0.4 : 1)};
 `
