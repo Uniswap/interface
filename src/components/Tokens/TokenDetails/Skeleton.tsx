@@ -12,8 +12,7 @@ import { DeltaContainer, TokenPrice } from './PriceChart'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
 export const Hr = styled.hr`
-  background-color: ${({ theme }) => theme.textSecondary};
-  opacity: 24%;
+  background-color: ${({ theme }) => theme.backgroundOutline};
   border: none;
   height: 0.5px;
 `
