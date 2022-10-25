@@ -21,6 +21,7 @@ import { useModalOpen, useOpenModal } from 'state/application/hooks'
 import { FarmUpdater, useElasticFarms } from 'state/farms/elastic/hooks'
 import { Field } from 'state/mint/proamm/actions'
 import { ProMMPoolData, usePoolDatas, useTopPoolAddresses, useUserProMMPositions } from 'state/prommPools/hooks'
+import { useTokenPrices } from 'state/tokenPrices/hooks'
 
 import ProAmmPoolCardItem from './CardItem'
 import ProAmmPoolListItem from './ListItem'
@@ -92,6 +93,43 @@ export default function ProAmmPoolList({
   const above1000 = useMedia('(min-width: 1000px)')
 
   const { farms } = useElasticFarms()
+  const allRewards = [
+    ...new Set(
+      farms
+        ?.map(farm => farm.pools)
+        .flat()
+        .map(pool => pool.rewardTokens.map(rw => rw.wrapped.address.toLowerCase()))
+        .flat() || [],
+    ),
+  ]
+  const tokenPriceMap = useTokenPrices(allRewards)
+
+  const totalFarmRewardUSDByPoolId = useMemo(
+    () =>
+      farms
+        ?.map(farm => farm.pools)
+        .flat()
+        .filter(pool => pool.endTime > Date.now() / 1000)
+        .map(pool => {
+          const v = pool.totalRewards.reduce((acc, cur, index) => {
+            return acc + Number(cur.toExact()) * tokenPriceMap[cur.currency.wrapped.address]
+          }, 0)
+          const farmDuration = (pool.endTime - pool.startTime) / 86400
+
+          return {
+            poolAddress: pool.poolAddress,
+            value: (v * 365 * 100) / farmDuration,
+          }
+        })
+        .reduce((acc, cur) => {
+          return {
+            ...acc,
+            [cur.poolAddress]: cur.value,
+          }
+        }, {} as { [key: string]: number }) || {},
+
+    [farms, tokenPriceMap],
+  )
 
   const [sortDirection, setSortDirection] = useState(true)
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.TVL)
@@ -118,8 +156,11 @@ export default function ProAmmPoolList({
             ? (sortDirection ? -1 : 1) * 1
             : (sortDirection ? -1 : 1) * -1
         case SORT_FIELD.APR:
-          const a = poolA.apr
-          const b = poolB.apr
+          const aFarmAPR = (totalFarmRewardUSDByPoolId[poolA.address] || 0) / poolA.tvlUSD
+          const bFarmAPR = (totalFarmRewardUSDByPoolId[poolB.address] || 0) / poolB.tvlUSD
+
+          const a = poolA.apr + aFarmAPR
+          const b = poolB.apr + bFarmAPR
           return a > b ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
         default:
           break
@@ -127,7 +168,7 @@ export default function ProAmmPoolList({
 
       return 0
     },
-    [sortDirection, sortedColumn],
+    [sortDirection, sortedColumn, totalFarmRewardUSDByPoolId],
   )
 
   const anyLoading = loading || poolDataLoading || loadingUserPositions
