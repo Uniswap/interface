@@ -56,7 +56,7 @@ export const PriceRange = () => {
   const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
     e.currentTarget.placeholder = placeholderText
     setPlaceholderText('')
-    sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: 'Price Range' })
+    if (minPrice || maxPrice) sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: 'Price Range' })
   }
 
   const updateMinPriceRange = (v: FormEvent<HTMLInputElement>) => {
