@@ -455,7 +455,6 @@ PODS:
     - FirebaseInstallations (~> 8.0)
     - GoogleUtilities/Environment (~> 7.4)
     - "GoogleUtilities/NSData+zlib (~> 7.4)"
-    - Flipper-Folly (~> 2.6)
   - fmt (6.2.1)
   - glog (0.3.5)
   - GoogleAppMeasurement/WithoutAdIdSupport (8.8.0):
@@ -975,14 +974,14 @@ PODS:
   - RNScreens (3.18.2):
     - React-Core
     - React-RCTImage
-  - RNSentry (4.2.4):
+  - RNSentry (4.6.1):
     - React-Core
-    - Sentry (= 7.23.0)
+    - Sentry (= 7.27.1)
   - RNSVG (12.4.4):
     - React-Core
-  - Sentry (7.23.0):
-    - Sentry/Core (= 7.23.0)
-  - Sentry/Core (7.23.0)
+  - Sentry (7.27.1):
+    - Sentry/Core (= 7.27.1)
+  - Sentry/Core (7.27.1)
   - Shake (15.3.0)
   - Starscream (3.1.1)
   - vision-camera-code-scanner (0.1.6):
@@ -1401,9 +1400,9 @@ SPEC CHECKSUMS:
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
   RNReanimated: f8544cbf23b39b63bb2adb378d66dd11735662bd
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
-  RNSentry: 7495ba091f09f12902d8cf916024efd99b058efe
+  RNSentry: f8591057d48d4f6d64196a76cbca67895667b033
   RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674
-  Sentry: a0d4563fa4ddacba31fdcc35daaa8573d87224d6
+  Sentry: bc644307e2eb6a4c9c55cf117a80b895bb2a25a7
   Shake: 08e8dfbdc22838dee8784ab8382f3a58c2516f8d
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   vision-camera-code-scanner: 75a4ac3c9ce9b4605f5d87cc0f0001bb64bfb4de

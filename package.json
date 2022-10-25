@@ -61,7 +61,7 @@
     "@react-navigation/native-stack": "6.7.0",
     "@react-navigation/stack": "6.2.2",
     "@reduxjs/toolkit": "1.8.0",
-    "@sentry/react-native": "4.2.4",
+    "@sentry/react-native": "4.6.1",
     "@shakebugs/react-native-shake": "15.3.0",
     "@shopify/react-native-skia": "0.1.132",
     "@shopify/restyle": "1.6.1",
