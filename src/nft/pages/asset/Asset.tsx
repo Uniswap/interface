@@ -1,3 +1,5 @@
+import { PageName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { fetchSingleAsset } from 'nft/queries'
@@ -29,14 +31,20 @@ const Asset = () => {
 
   return (
     <>
-      {asset && collection ? (
-        <AssetContainer>
-          <AssetDetails collection={collection} asset={asset} />
-          <AssetPriceDetails collection={collection} asset={asset} />
-        </AssetContainer>
-      ) : (
-        <div>Holder for loading ...</div>
-      )}
+      <Trace
+        page={PageName.NFT_DETAILS_PAGE}
+        properties={{ collection_address: contractAddress, token_id: tokenId }}
+        shouldLogImpression
+      >
+        {asset && collection ? (
+          <AssetContainer>
+            <AssetDetails collection={collection} asset={asset} />
+            <AssetPriceDetails collection={collection} asset={asset} />
+          </AssetContainer>
+        ) : (
+          <div>Holder for loading ...</div>
+        )}
+      </Trace>
     </>
   )
 }
