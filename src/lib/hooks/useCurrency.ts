@@ -137,7 +137,6 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
     // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
     if (typeof tokenAddress !== 'string' || !isSupportedChain(chainId) || !formattedAddress) return undefined
     if (isLoading || !chainId) return null
-    if (parsedDecimals == null) return undefined
 
     return new Token(chainId, formattedAddress, parsedDecimals, parsedSymbol, parsedName)
   }, [chainId, tokenAddress, formattedAddress, isLoading, parsedDecimals, parsedSymbol, parsedName])
