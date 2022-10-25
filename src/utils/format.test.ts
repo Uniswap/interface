@@ -39,7 +39,7 @@ it('formats fiat estimates on token details pages correctly', () => {
   expect(formatNumber(0.000000009876, NumberType.FiatTokenDetails)).toBe('$9.88E-9')
 })
 
-it('format fiat estimates for tokens correctly', () => {
+it('formats fiat estimates for tokens correctly', () => {
   expect(formatNumber(1234567.891, NumberType.FiatTokenPrice)).toBe('$1.23M')
   expect(formatNumber(1234.5678, NumberType.FiatTokenPrice)).toBe('$1,234.57')
 
@@ -49,6 +49,16 @@ it('format fiat estimates for tokens correctly', () => {
 
   expect(formatNumber(0.0000001234, NumberType.FiatTokenPrice)).toBe('$1.23E-7')
   expect(formatNumber(0.000000009876, NumberType.FiatTokenPrice)).toBe('$9.88E-9')
+})
+
+it('formats fiat estimates for token stats correctly', () => {
+  expect(formatNumber(1234576, NumberType.FiatTokenStats)).toBe('$1.2M')
+  expect(formatNumber(234567, NumberType.FiatTokenStats)).toBe('$234.6K')
+  expect(formatNumber(123.456, NumberType.FiatTokenStats)).toBe('$123.46')
+  expect(formatNumber(1.23, NumberType.FiatTokenStats)).toBe('$1.23')
+  expect(formatNumber(0.123, NumberType.FiatTokenStats)).toBe('$0.12')
+  expect(formatNumber(0.00123, NumberType.FiatTokenStats)).toBe('<$0.01')
+  expect(formatNumber(0, NumberType.FiatTokenStats)).toBe('-')
 })
 
 it('formats gas USD prices correctly', () => {

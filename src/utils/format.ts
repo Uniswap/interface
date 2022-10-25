@@ -37,15 +37,24 @@ const TWO_DECIMALS_USD = new Intl.NumberFormat('en-US', {
   style: 'currency',
 })
 
-const SHORTHAND = new Intl.NumberFormat('en-US', {
+const SHORTHAND_TWO_DECIMALS = new Intl.NumberFormat('en-US', {
   notation: 'compact',
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 })
 
-const SHORTHAND_USD = new Intl.NumberFormat('en-US', {
+const SHORTHAND_USD_TWO_DECIMALS = new Intl.NumberFormat('en-US', {
   notation: 'compact',
   minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+  currency: 'USD',
+  style: 'currency',
+})
+
+const SHORTHAND_USD_ONE_DECIMAL = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
   currency: 'USD',
   style: 'currency',
 })
@@ -93,7 +102,7 @@ const tokenNonTxFormatter: FormatterRule[] = [
   { upperBound: 0.001, formatter: '<0.001' },
   { upperBound: 1, formatter: THREE_DECIMALS },
   { upperBound: 1e6, formatter: TWO_DECIMALS },
-  { upperBound: 1e15, formatter: SHORTHAND },
+  { upperBound: 1e15, formatter: SHORTHAND_TWO_DECIMALS },
   { upperBound: Infinity, formatter: SCIENTIFIC },
 ]
 
@@ -109,20 +118,28 @@ const fiatTokenDetailsFormatter: FormatterRule[] = [
   { upperBound: 0.1, formatter: THREE_SIG_FIGS_USD },
   { upperBound: 1.05, formatter: THREE_DECIMALS_USD },
   { upperBound: 1e6, formatter: TWO_DECIMALS_USD },
-  { upperBound: Infinity, formatter: SHORTHAND_USD },
+  { upperBound: Infinity, formatter: SHORTHAND_USD_TWO_DECIMALS },
 ]
 
 const fiatTokenPricesFormatter: FormatterRule[] = [
   { upperBound: 0.000001, formatter: SCIENTIFIC_USD },
   { upperBound: 1, formatter: THREE_SIG_FIGS_USD },
   { upperBound: 1e6, formatter: TWO_DECIMALS_USD },
-  { upperBound: Infinity, formatter: SHORTHAND_USD },
+  { upperBound: Infinity, formatter: SHORTHAND_USD_TWO_DECIMALS },
+]
+
+const fiatTokenStatsFormatter: FormatterRule[] = [
+  // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
+  { exact: 0, formatter: '-' },
+  { upperBound: 0.01, formatter: '<$0.01' },
+  { upperBound: 1000, formatter: TWO_DECIMALS_USD },
+  { upperBound: Infinity, formatter: SHORTHAND_USD_ONE_DECIMAL },
 ]
 
 const fiatGasPriceFormatter: FormatterRule[] = [
   { upperBound: 0.01, formatter: '<$0.01' },
   { upperBound: 1e6, formatter: TWO_DECIMALS_USD },
-  { upperBound: Infinity, formatter: SHORTHAND_USD },
+  { upperBound: Infinity, formatter: SHORTHAND_USD_TWO_DECIMALS },
 ]
 
 const fiatTokenQuantityFormatter = [{ exact: 0, formatter: '$0.00' }, ...fiatGasPriceFormatter]
@@ -134,11 +151,14 @@ export enum NumberType {
   // used for token quantities in transaction contexts (e.g. swap, send)
   TokenTx = 'token-tx',
 
-  // fiat prices in any component that belongs in the Token Details flow
+  // fiat prices in any component that belongs in the Token Details flow (except for token stats)
   FiatTokenDetails = 'fiat-token-details',
 
   // fiat prices everyone except Token Details flow
   FiatTokenPrice = 'fiat-token-price',
+
+  // fiat values for market cap, TVL, volume in the Token Details screen
+  FiatTokenStats = 'fiat-token-stats',
 
   // fiat price of token balances
   FiatTokenQuantity = 'fiat-token-quantity',
@@ -153,6 +173,7 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
+  [NumberType.FiatTokenStats]: fiatTokenStatsFormatter,
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,
 }
 

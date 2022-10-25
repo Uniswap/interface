@@ -96,7 +96,7 @@ function TokenDetailsStatsInner({
               {t('Market cap')}
             </Text>
             <Text variant="headlineMedium">
-              {formatNumber(marketData?.marketCap?.value, NumberType.FiatTokenDetails)}
+              {formatNumber(marketData?.marketCap?.value, NumberType.FiatTokenStats)}
             </Text>
           </Flex>
           <Flex gap="xs">
@@ -114,7 +114,7 @@ function TokenDetailsStatsInner({
               {t('24h volume')}
             </Text>
             <Text variant="headlineMedium">
-              {formatNumber(tokenData?.market.volume.value, NumberType.FiatTokenDetails)}
+              {formatNumber(tokenData?.market.volume.value, NumberType.FiatTokenStats)}
             </Text>
           </Flex>
           <Flex gap="xs">
