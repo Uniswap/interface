@@ -89,8 +89,26 @@ module.exports = {
     // https://github.com/facebook/react-native/blob/3cf0291008dfeed4d967ebb95bdccbe2d52c5b81/packages/eslint-config-react-native-community/index.js#L313
     'react-native/no-unused-styles': 'error',
     'react-native/sort-styles': 'error',
+    // Security Linting
+    // Mozilla's No Unsanitized - https://github.com/mozilla/eslint-plugin-no-unsanitized
+    'no-unsanitized/method': 'error',
+    'no-unsanitized/property': 'error',
+    // Generic Security Linting - https://www.npmjs.com/package/eslint-plugin-security
+    'security/detect-unsafe-regex': 'error',
+    'security/detect-buffer-noassert': 'error',
+    'security/detect-child-process': 'error',
+    'security/detect-disable-mustache-escape': 'error',
+    'security/detect-eval-with-expression': 'error',
+    'security/detect-non-literal-fs-filename': 'error',
+    'security/detect-non-literal-regexp': 'error',
+    'security/detect-pseudoRandomBytes': 'error',
+    'security/detect-new-buffer': 'error',
+    // Rules within the standard React plugin
+    'react/no-danger': 'error',
+    'react/no-danger-with-children': 'error',
+    'react/no-unsafe': 'error',
   },
-  plugins: ['detox', 'jest', 'react', 'react-native'],
+  plugins: ['detox', 'jest', 'react', 'react-native', 'no-unsanitized', 'security'],
   overrides: [
     {
       files: ['*.e2e.js'],
