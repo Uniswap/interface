@@ -1,3 +1,4 @@
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
@@ -70,14 +71,14 @@ export const RightPanel = styled.div`
 export default function TokenDetails() {
   const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
   const { account } = useWeb3React()
-  const currentChainName = validateUrlChainParam(chainName)
-  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[currentChainName]
+  const chain = validateUrlChainParam(chainName)
+  const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const nativeCurrency = nativeOnChain(pageChainId)
   const timePeriod = useAtomValue(filterTimeAtom)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
   const [tokenQueryData, prices] = useTokenQuery(
     isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '',
-    currentChainName,
+    chain,
     timePeriod
   )
   const queryToken = useTokenFromQuery(isNative ? undefined : { ...tokenQueryData, chainId: pageChainId })
@@ -91,28 +92,34 @@ export default function TokenDetails() {
   const isBlockedToken = tokenWarning?.canProceed === false
 
   const navigate = useNavigate()
-  const switchChains = useCallback(
-    (newChain: Chain) => {
-      const chainSegment = newChain.toLowerCase()
+  const navigateToTokenForChain = useCallback(
+    (chain: Chain) => {
+      const chainName = chain.toLowerCase()
+      const token = tokenQueryData?.project?.tokens.find((token) => token.chain === chain && token.address)
       if (isNative) {
-        navigate(`/tokens/${chainSegment}/NATIVE`)
-      } else {
-        tokenQueryData?.project?.tokens?.forEach((token) => {
-          if (token.chain === newChain && token.address) {
-            navigate(`/tokens/${chainSegment}/${token.address}`)
-          }
-        })
+        navigate(`/tokens/${chainName}/${NATIVE_CHAIN_ID}`)
+      } else if (token) {
+        navigate(`/tokens/${chainName}/${token.address}`)
       }
     },
     [isNative, navigate, tokenQueryData?.project?.tokens]
   )
-  useOnGlobalChainSwitch(switchChains)
+  useOnGlobalChainSwitch(navigateToTokenForChain)
+  const navigateToWidgetSelectedToken = useCallback(
+    (input: Currency | undefined, output: Currency | undefined) => {
+      const update = output || input
+      if (!token || !update || input?.equals(token) || output?.equals(token)) return
+      const address = update.isNative ? NATIVE_CHAIN_ID : update.address
+      navigate(`/tokens/${chainName}/${address}`)
+    },
+    [chainName, navigate, token]
+  )
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
 
-  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(tokenAddress, pageChainId) && tokenWarning !== null
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
-  const onReviewSwap = useCallback(
+  const shouldShowSpeedbump = !useIsUserAddedTokenOnChain(tokenAddress, pageChainId) && tokenWarning !== null
+  const onReviewSwapClick = useCallback(
     () => new Promise<boolean>((resolve) => (shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true))),
     [shouldShowSpeedbump]
   )
@@ -157,9 +164,9 @@ export default function TokenDetails() {
             </LeftPanel>
             <RightPanel>
               <Widget
-                // A null token is still loading, and should not be overridden.
-                defaultToken={token === null ? undefined : token ?? nativeCurrency}
-                onReviewSwapClick={onReviewSwap}
+                defaultToken={token === null ? undefined : token ?? nativeCurrency} // a null token is still loading, and should not be overridden.
+                onTokensChange={navigateToWidgetSelectedToken}
+                onReviewSwapClick={onReviewSwapClick}
               />
               {tokenWarning && (
                 <TokenSafetyMessage tokenAddress={tokenQueryData.address ?? ''} warning={tokenWarning} />

@@ -34,9 +34,10 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   useEffect(() => {
     // Avoid overwriting tokens if none are specified, so that a loading token does not cause layout flashing.
     if (!defaultToken) return
-    setTokens({
-      [Field.OUTPUT]: defaultToken,
-    })
+    setTokens((tokens) =>
+      // Avoid overwriting tokens if the default is already included, so that the widget does not spuriously reset.
+      Object.values(tokens).some((token) => token?.equals(defaultToken)) ? tokens : { [Field.OUTPUT]: defaultToken }
+    )
     setAmount(EMPTY_AMOUNT)
   }, [defaultToken])
 
