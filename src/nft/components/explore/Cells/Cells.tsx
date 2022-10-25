@@ -138,7 +138,7 @@ export const ChangeCell = ({ change }: { change?: number }) => (
     ) : (
       <SquareArrowDownIcon width="20px" height="20px" />
     )}
-    <ThemedText.BodyPrimary color="currentColor">{change ? Math.round(change) : 0}%</ThemedText.BodyPrimary>
+    <ThemedText.BodyPrimary color="currentColor">{change ? Math.abs(Math.round(change)) : 0}%</ThemedText.BodyPrimary>
   </ChangeCellContainer>
 )
 
