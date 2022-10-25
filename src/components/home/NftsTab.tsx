@@ -127,7 +127,16 @@ function NftsTabInner({
     {
       ownerAddress: owner,
     },
-    { networkCacheConfig: { poll: PollingInterval.Normal } }
+    {
+      networkCacheConfig: { poll: PollingInterval.Normal },
+      // `NFTsTabQuery` has the same key as `PortfolioBalance`, which can cause
+      // race conditions, where `PortfolioBalance` sends a network request first,
+      // but does not pull NFT data. When `NFTsTabQuery` runs, it sees that a query
+      // with the same key was executed recently, and does not try to send a request.
+      // This change forces both a store lookup and a network request.
+      // FIX(MOB-2498): possible fix is to use a fragment here.
+      fetchPolicy: 'store-and-network',
+    }
   )
   const nftDataItems = formatNftItems(nftData)
 
