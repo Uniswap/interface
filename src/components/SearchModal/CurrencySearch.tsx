@@ -18,7 +18,7 @@ import { Text } from 'rebass'
 import { useAllTokenBalances } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
+import { useActiveTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { CloseIcon, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -67,7 +67,8 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
 
-  const allTokens = useAllTokens()
+  // Only display 'imported' tokens when the search filter has input
+  const defaultTokens = useActiveTokens(debouncedQuery.length > 0)
 
   // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
@@ -87,8 +88,8 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const filteredTokens: Token[] = useMemo(() => {
-    return Object.values(allTokens).filter(getTokenFilter(debouncedQuery))
-  }, [allTokens, debouncedQuery])
+    return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
+  }, [defaultTokens, debouncedQuery])
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(
