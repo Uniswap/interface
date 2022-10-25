@@ -30,8 +30,10 @@ export function TokenListUpdater() {
   const fetchList = useFetchListCallback(ChainId.Mainnet)
   const fetchAllListsCallback = useCallback(() => {
     if (!provider || !isReady) return
-    Object.keys(lists).forEach((url) =>
-      fetchList(url).catch((error) =>
+    Object.keys(lists).forEach((url) => {
+      // Skip validation on unsupported lists
+      const isUnsupportedList = UNSUPPORTED_LIST_URLS.includes(url)
+      fetchList(url, true, isUnsupportedList).catch((error) =>
         logger.debug(
           'tokenLists/updater',
           'TokenListUpdater',
@@ -39,7 +41,7 @@ export function TokenListUpdater() {
           error
         )
       )
-    )
+    })
   }, [fetchList, lists, provider, isReady])
 
   // fetch all lists every interval, but only after we initialize library
@@ -50,8 +52,10 @@ export function TokenListUpdater() {
     if (!provider || !isReady) return
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]
+      // Skip validation on unsupported lists
+      const isUnsupportedList = UNSUPPORTED_LIST_URLS.includes(listUrl)
       if (!list.current && !list.loadingRequestId && !list.error) {
-        fetchList(listUrl).catch((error) =>
+        fetchList(listUrl, true, isUnsupportedList).catch((error) =>
           logger.error('tokenLists/updater', 'TokenListUpdater', 'list added fetching error', error)
         )
       }
@@ -64,7 +68,8 @@ export function TokenListUpdater() {
     UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
-        fetchList(listUrl).catch((error) =>
+        // Skip validation on unsupported lists
+        fetchList(listUrl, true, true).catch((error) =>
           logger.error('tokenLists/updater', 'TokenListUpdater', 'list added fetching error', error)
         )
       }

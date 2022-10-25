@@ -1,15 +1,16 @@
 // Originally copied from https://github.com/Uniswap/interface/blob/main/src/constants/lists.ts
 
-const ARBITRUM_LIST = 'https://bridge.arbitrum.io/token-list-42161.json'
+export const UNI_LIST = 'https://tokens.uniswap.org'
+const UNI_UNSUPPORTED_LIST = 'https://unsupportedtokens.uniswap.org'
 const BA_LIST =
   'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
 const COINGECKO_LIST = 'https://tokens.coingecko.com/uniswap/all.json'
 const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
-const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json'
 const WRAPPED_LIST = 'wrapped.tokensoft.eth'
-export const UNI_LIST = 'https://tokens.uniswap.org'
+const ARBITRUM_LIST = 'https://bridge.arbitrum.io/token-list-42161.json'
+const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json'
 
-export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
+export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST, UNI_UNSUPPORTED_LIST]
 
 // this is the default list of lists that are exposed to users
 // lower index == higher priority for token import

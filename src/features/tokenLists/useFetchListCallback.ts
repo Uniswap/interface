@@ -16,7 +16,11 @@ import { logger } from 'src/utils/logger'
 // Relies on getTokenList util to do the actual fetching
 export function useFetchListCallback(
   chainId: ChainId
-): (listUrl: string, sendDispatch?: boolean) => Promise<TokenList | null> {
+): (
+  listUrl: string,
+  sendDispatch?: boolean,
+  skipValidation?: boolean
+) => Promise<TokenList | null> {
   const dispatch = useAppDispatch()
 
   const provider = useProvider(chainId)
@@ -34,12 +38,12 @@ export function useFetchListCallback(
 
   // note: prevent dispatch if using for list search or unsupported list
   return useCallback(
-    (listUrl: string, sendDispatch = true) => {
+    (listUrl: string, sendDispatch = true, skipValidation?: boolean) => {
       return new Promise(async (resolve) => {
         const requestId = nanoid()
         sendDispatch && dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
         try {
-          const tokenList = await getTokenList(listUrl, ensResolver)
+          const tokenList = await getTokenList(listUrl, ensResolver, skipValidation)
           logger.debug('useFetchListCallback', '', 'Fetched list successfully for:', listUrl)
           sendDispatch && dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
           resolve(tokenList)

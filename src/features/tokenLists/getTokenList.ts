@@ -33,10 +33,12 @@ const getTokenListValidator = (() => {
  * Contains the logic for resolving a list URL to a validated token list
  * @param listUrl list url
  * @param resolveENSContentHash resolves an ens name to a contenthash
+ * @param skipValidation skip token list validation
  */
 export async function getTokenList(
   listUrl: string,
-  resolveENSContentHash: (ensName: string) => Promise<string>
+  resolveENSContentHash: (ensName: string) => Promise<string>,
+  skipValidation?: boolean
 ): Promise<TokenList> {
   logger.debug('getTokenList', 'getTokenList', 'Fetching list for:', listUrl)
   const tokenListValidator = getTokenListValidator()
@@ -78,7 +80,7 @@ export async function getTokenList(
     }
 
     const [json, validator] = await Promise.all([response.json(), tokenListValidator])
-    if (!validator(json)) {
+    if (!skipValidation && !validator(json)) {
       const validationErrors: string =
         validator.errors?.reduce<string>((memo, error) => {
           const add = `${error.instancePath} ${error.message ?? ''}`
