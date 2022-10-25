@@ -1,6 +1,12 @@
 import { CommonActions, useFocusEffect, useNavigation } from '@react-navigation/core'
 import { useCallback, useEffect } from 'react'
-import { GraphQLTaggedNode, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay'
+import {
+  GraphQLTaggedNode,
+  PreloadedQuery,
+  PreloadFetchPolicy,
+  usePreloadedQuery,
+  useQueryLoader,
+} from 'react-relay'
 import { OperationType } from 'relay-runtime'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
@@ -22,7 +28,13 @@ import { Screens } from 'src/screens/Screens'
  */
 export function useEagerNavigation<Q extends OperationType>(
   query: GraphQLTaggedNode,
-  pollingInterval?: PollingInterval
+  pollingInterval?: PollingInterval,
+  /**
+   * Without defining this fetch policy, relay will only reference the cache on the
+   * polling interval. To force a new network request on each poll default to store-and-network.
+   * Can override this value if needed.
+   */
+  fetchPolicy: PreloadFetchPolicy = 'store-and-network'
 ) {
   const { navigate } = useNavigation<any>()
 
@@ -34,9 +46,10 @@ export function useEagerNavigation<Q extends OperationType>(
         networkCacheConfig: {
           poll: pollingInterval,
         },
+        fetchPolicy,
       })
     },
-    [load, pollingInterval]
+    [fetchPolicy, load, pollingInterval]
   )
 
   const preloadedNavigate = useCallback(
@@ -64,7 +77,9 @@ export function useEagerNavigation<Q extends OperationType>(
 export function useEagerRootNavigation<Q extends OperationType>(
   screen: keyof RootParamList,
   query: GraphQLTaggedNode,
-  pollingInterval?: PollingInterval
+  pollingInterval?: PollingInterval,
+  // See above for fetch policy notes.
+  fetchPolicy: PreloadFetchPolicy = 'store-and-network'
 ) {
   const [preloadedQuery, load] = useQueryLoader<Q>(query)
 
@@ -74,9 +89,10 @@ export function useEagerRootNavigation<Q extends OperationType>(
         networkCacheConfig: {
           poll: pollingInterval,
         },
+        fetchPolicy,
       })
     },
-    [load, pollingInterval]
+    [fetchPolicy, load, pollingInterval]
   )
 
   const preloadedNavigate = useCallback(
