@@ -362,7 +362,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 events={[Event.onClick]}
                 element={ElementName.NFT_FILTER_BUTTON}
                 name={EventName.NFT_FILTER_OPENED}
-                properties={{ collection_address: contractAddress, is_opening: !isFiltersExpanded }}
+                shouldLogImpression={!isFiltersExpanded}
+                properties={{ collection_address: contractAddress }}
               >
                 <FilterButton
                   isMobile={isMobile}
