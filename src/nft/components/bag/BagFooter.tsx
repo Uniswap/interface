@@ -2,11 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import Loader from 'components/Loader'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { bodySmall, headlineSmall } from 'nft/css/common.css'
+import { bodySmall } from 'nft/css/common.css'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
 import { useModalIsOpen, useToggleWalletModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import { ThemedText } from 'theme'
 
 import * as styles from './BagFooter.css'
 
@@ -62,11 +63,13 @@ export const BagFooter = ({
       >
         <Column gap="4" paddingTop="8" paddingBottom="20">
           <Row justifyContent="space-between">
-            <Box fontWeight="semibold" className={headlineSmall}>
-              Total
+            <Box>
+              <ThemedText.HeadlineSmall>Total</ThemedText.HeadlineSmall>
             </Box>
-            <Box fontWeight="semibold" className={headlineSmall}>
-              {`${formatWeiToDecimal(totalEthPrice.toString())} ETH`}
+            <Box>
+              <ThemedText.HeadlineSmall>
+                {formatWeiToDecimal(totalEthPrice.toString())}&nbsp;ETH
+              </ThemedText.HeadlineSmall>
             </Box>
           </Row>
           <Row justifyContent="flex-end" color="textSecondary" className={bodySmall}>
