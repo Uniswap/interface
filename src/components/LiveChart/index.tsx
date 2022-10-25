@@ -148,10 +148,12 @@ function LiveChart({
   }, [chartData])
 
   useEffect(() => {
+    let currenciesChanged = false
     if (!currencies.INPUT || !currencies.OUTPUT) return
     setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: true })
     checkPairHasDextoolsData(currencies, chainId)
       .then((res: any) => {
+        if (currenciesChanged) return
         if ((res.ver || res.ver === 0) && res.pairAddress) {
           setStateProChart({ hasProChart: true, pairAddress: res.pairAddress, apiVersion: res.ver, loading: false })
         } else {
@@ -163,6 +165,9 @@ function LiveChart({
         setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: false })
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      currenciesChanged = true
+    }
   }, [JSON.stringify(currencies)])
 
   const showingValue = hoverValue ?? (chartData[chartData.length - 1]?.value || 0)
