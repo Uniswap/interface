@@ -1,15 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { formatToDecimal } from 'analytics/utils'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
-import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { StyledInternalLink } from 'theme'
-import { currencyAmountToPreciseFloat, formatDollar } from 'utils/formatNumbers'
+
+import { useFormatBalance, useFormatUsdValue } from './BalanceSummary'
 
 const Wrapper = styled.div`
   align-content: center;
@@ -85,18 +84,10 @@ const SwapButton = styled(StyledInternalLink)`
 export default function MobileBalanceSummaryFooter({ token }: { token: Currency }) {
   const { account } = useWeb3React()
   const balance = useCurrencyBalance(account, token)
+  const formattedBalance = useFormatBalance(balance)
   const usdValue = useStablecoinValue(balance)
+  const formattedUsdValue = useFormatUsdValue(usdValue)
   const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
-
-  const formattedBalance = useMemo(
-    () => (balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 2)) : undefined),
-    [balance]
-  )
-  const formattedUsd = useMemo(() => {
-    const float = usdValue ? currencyAmountToPreciseFloat(usdValue) : undefined
-    if (!float) return undefined
-    return formatDollar({ num: float, isPrice: true })
-  }, [usdValue])
 
   return (
     <Wrapper>
@@ -107,7 +98,7 @@ export default function MobileBalanceSummaryFooter({ token }: { token: Currency 
             <BalanceValue>
               {formattedBalance} {token.symbol}
             </BalanceValue>
-            <FiatValue>{formattedUsd}</FiatValue>
+            <FiatValue>{formattedUsdValue}</FiatValue>
           </Balance>
         </BalanceInfo>
       )}

@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { formatToDecimal } from 'analytics/utils'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -53,21 +53,28 @@ const BalanceLink = styled(StyledInternalLink)`
   color: unset;
 `
 
-export default function BalanceSummary({ token }: { token: Currency }) {
-  const { account } = useWeb3React()
-  const balance = useCurrencyBalance(account, token)
-  const usdValue = useStablecoinValue(balance)
-  const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
-
-  const formattedBalance = useMemo(
+export function useFormatBalance(balance: CurrencyAmount<Currency> | undefined) {
+  return useMemo(
     () => (balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 2)) : undefined),
     [balance]
   )
-  const formattedUsd = useMemo(() => {
+}
+
+export function useFormatUsdValue(usdValue: CurrencyAmount<Token> | null) {
+  return useMemo(() => {
     const float = usdValue ? currencyAmountToPreciseFloat(usdValue) : undefined
     if (!float) return undefined
     return formatDollar({ num: float, isPrice: true })
   }, [usdValue])
+}
+
+export default function BalanceSummary({ token }: { token: Currency }) {
+  const { account } = useWeb3React()
+  const balance = useCurrencyBalance(account, token)
+  const formattedBalance = useFormatBalance(balance)
+  const usdValue = useStablecoinValue(balance)
+  const formattedUsdValue = useFormatUsdValue(usdValue)
+  const chain = CHAIN_ID_TO_BACKEND_NAME[token.chainId].toLowerCase()
 
   if (!account || !balance) return null
   return (
@@ -80,7 +87,7 @@ export default function BalanceSummary({ token }: { token: Currency }) {
               <CurrencyLogo currency={token} />
               &nbsp;{formattedBalance} {token.symbol}
             </BalanceItem>
-            <BalanceItem>{formattedUsd}</BalanceItem>
+            <BalanceItem>{formattedUsdValue}</BalanceItem>
           </BalanceRow>
         </BalanceLink>
       </BalanceSection>
