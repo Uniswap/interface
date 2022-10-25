@@ -1,5 +1,4 @@
 import { formatEther, parseEther } from '@ethersproject/units'
-import { formatEther } from '@ethersproject/units'
 import { GenieAsset } from 'nft/types'
 
 export const formatUsdPrice = (price: number) => {
