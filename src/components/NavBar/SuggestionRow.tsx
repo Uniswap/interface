@@ -89,7 +89,7 @@ export const CollectionRow = ({
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{collection.name}</Box>
           </Row>
-          <Box className={styles.secondaryText}>{putCommas(collection.stats.total_supply)} items</Box>
+          <Box className={styles.secondaryText}>{putCommas(collection.stats?.total_supply)} items</Box>
         </Column>
       </Row>
       {collection.floorPrice ? (

@@ -251,18 +251,18 @@ const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: 
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
   const uniqueOwnersPercentage = stats.stats
-    ? roundWholePercentage((stats.stats.num_owners / stats.stats.total_supply) * 100)
+    ? roundWholePercentage(((stats.stats.num_owners ?? 1) / (stats.stats.total_supply ?? 1)) * 100)
     : 0
-  const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply) : 0
+  const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply ?? 0) : 0
   const listedPercentageStr =
-    stats.stats && stats.stats.total_listings > 0
-      ? roundWholePercentage((stats.stats.total_listings / stats.stats.total_supply) * 100)
+    stats.stats && stats.stats.total_listings
+      ? roundWholePercentage((stats.stats.total_listings / (stats.stats.total_supply ?? 0)) * 100)
       : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   // round daily volume & floorPrice to 3 decimals or less
-  const totalVolumeStr = volumeFormatter(stats.stats?.total_volume)
-  const floorPriceStr = floorFormatter(stats.floorPrice)
+  const totalVolumeStr = volumeFormatter(stats.stats?.total_volume ?? 0)
+  const floorPriceStr = floorFormatter(stats.floorPrice ?? 0)
   const floorChangeStr =
     stats.stats && stats.stats.one_day_floor_change ? Math.round(Math.abs(stats.stats.one_day_floor_change) * 100) : 0
   const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_floor_change) : null
@@ -289,11 +289,6 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           <PercentChange>
             {floorChangeStr}% {arrow}
           </PercentChange>
-        </StatsItem>
-      ) : null}
-      {stats.stats?.total_volume ? (
-        <StatsItem label="Total volume" isMobile={isMobile ?? false}>
-          {totalVolumeStr} ETH
         </StatsItem>
       ) : null}
       {totalSupplyStr ? (
@@ -347,8 +342,8 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       <Box className={styles.statsText}>
         <CollectionName
           collectionStats={stats}
-          name={stats.name}
-          isVerified={stats.isVerified}
+          name={stats.name ?? ''}
+          isVerified={stats.isVerified ?? false}
           isMobile={isMobile}
           collectionSocialsIsOpen={collectionSocialsIsOpen}
           toggleCollectionSocials={toggleCollectionSocials}
@@ -356,7 +351,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
         {!isMobile && (
           <>
             {(stats.description || isCollectionStatsLoading) && (
-              <CollectionDescription description={stats.description} />
+              <CollectionDescription description={stats.description ?? ''} />
             )}
             <StatsRow stats={stats} marginTop="20" />
           </>

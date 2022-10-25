@@ -108,43 +108,43 @@ export interface GenieAsset {
 }
 
 export interface GenieCollection {
-  collectionAddress: string
+  // collectionAddress: string // TODO deprecate
   address: string
-  indexingStatus: string
-  isVerified: boolean
-  name: string
-  description: string
-  standard: string
+  // indexingStatus: string // TODO deprecate
+  isVerified?: boolean
+  name?: string
+  description?: string
+  standard?: string
   bannerImageUrl?: string
-  floorPrice: number
-  stats: {
-    num_owners: number
-    floor_price: number
-    one_day_volume: number
-    one_day_change: number
-    one_day_floor_change: number
-    banner_image_url: string
-    total_supply: number
-    total_listings: number
-    total_volume: number
+  floorPrice?: number // TODO deprecate
+  stats?: {
+    num_owners?: number
+    floor_price?: number
+    one_day_volume?: number
+    one_day_change?: number
+    one_day_floor_change?: number
+    banner_image_url?: string
+    total_supply?: number
+    total_listings?: number
+    total_volume?: number
   }
-  symbol: string
-  traits: {
+  // symbol: string // TODO deprecate
+  traits?: {
     trait_type: string
     trait_value: string
     trait_count: number
     floorSellOrder: PriceInfo
     floorPrice: number
   }[]
-  numTraitsByAmount: { traitCount: number; numWithTrait: number }[]
-  indexingStats: { openSea: { successfulExecutionDate: string; lastRequestedAt: string } }
+  // numTraitsByAmount: { traitCount: number; numWithTrait: number }[] // TODO deprecate
+  // indexingStats: { openSea: { successfulExecutionDate: string; lastRequestedAt: string } } // TODO deprecate
   marketplaceCount?: { marketplace: string; count: number }[]
-  imageUrl: string
+  imageUrl?: string
   twitter?: string
   instagram?: string
   discordUrl?: string
   externalUrl?: string
-  rarityVerified?: boolean
+  rarityVerified?: boolean // TODO move check to individual assets
   isFoundation?: boolean
 }
 

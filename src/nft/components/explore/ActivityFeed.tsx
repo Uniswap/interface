@@ -66,7 +66,7 @@ const ActivityRow = ({ event, index, current }: { event: ActivityEvent; index: n
   const navigate = useNavigate()
 
   const formattedPrice = useMemo(
-    () => (event.price ? putCommas(formatEthPrice(event.price)).toString() : null),
+    () => (event.price ? putCommas(formatEthPrice(event.price))?.toString() : null),
     [event.price]
   )
 
