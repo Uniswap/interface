@@ -1,11 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
+import { notificationAsync } from 'expo-haptics'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { ActionButtonProps, GradientActionButton } from 'src/components/buttons/ActionButton'
 import { Button } from 'src/components/buttons/Button'
+import { GradientButton } from 'src/components/buttons/GradientButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Arrow } from 'src/components/icons/Arrow'
@@ -14,11 +15,12 @@ import { RecipientPrevTransfers } from 'src/components/input/RecipientInputPanel
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { NFTAsset } from 'src/features/nfts/types'
 import { dimensions } from 'src/styles/sizing'
 
 interface BaseReviewProps {
-  actionButtonProps: ActionButtonProps
+  actionButtonProps: { disabled: boolean; label: string; name: string; onPress: () => void }
   isUSDInput: boolean
   transactionDetails?: ReactNode
   nftIn?: NFTAsset.Asset
@@ -57,6 +59,9 @@ export function TransactionReview({
 }: TransactionReviewProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
+
+  const { trigger: actionButtonTrigger } = useBiometricPrompt(actionButtonProps.onPress)
+  const { requiredForTransactions } = useBiometricAppSettings()
 
   return (
     <>
@@ -142,11 +147,19 @@ export function TransactionReview({
             <Arrow color={theme.colors.textPrimary} direction="w" size={20} />
           </Button>
           <Flex grow>
-            <GradientActionButton
+            <GradientButton
               disabled={actionButtonProps.disabled}
               label={actionButtonProps.label}
               name={actionButtonProps.name}
-              onPress={actionButtonProps.onPress}
+              textVariant="buttonLabelLarge"
+              onPress={() => {
+                notificationAsync()
+                if (requiredForTransactions) {
+                  actionButtonTrigger()
+                } else {
+                  actionButtonProps.onPress()
+                }
+              }}
             />
           </Flex>
         </Flex>

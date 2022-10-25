@@ -8,7 +8,6 @@ import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { GradientButton } from 'src/components/buttons/GradientButton'
-import { SwapArrowButton } from 'src/components/buttons/SwapArrowButton'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Flex } from 'src/components/layout'
@@ -27,6 +26,7 @@ import {
   useSwapActionHandlers,
   useUSDTokenUpdater,
 } from 'src/features/transactions/swap/hooks'
+import { SwapArrowButton } from 'src/features/transactions/swap/SwapArrowButton'
 import { isPriceImpactWarning } from 'src/features/transactions/swap/useSwapWarnings'
 import {
   getRateToDisplay,
@@ -326,7 +326,6 @@ export function SwapForm({
           )}
           <GradientButton
             disabled={actionButtonDisabled}
-            height={56}
             label={getReviewActionName(t, wrapType)}
             name={ElementName.ReviewSwap}
             testID={ElementName.ReviewSwap}

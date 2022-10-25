@@ -197,7 +197,6 @@ export function TransferTokenForm({
           )}
           <GradientButton
             disabled={actionButtonDisabled}
-            height={56}
             label={t('Review transfer')}
             name={ElementName.ReviewTransfer}
             testID={ElementName.ReviewTransfer}

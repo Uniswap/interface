@@ -50,7 +50,7 @@ export function GradientButton({
       {...rest}>
       {icon}
       {label && (
-        <Box px={px || p || 'none'} py={py || p || 'none'}>
+        <Box px={px || p || 'md'} py={py || p || 'md'}>
           <Text
             noTextScaling
             style={{ color: theme.colors[textColor] }}

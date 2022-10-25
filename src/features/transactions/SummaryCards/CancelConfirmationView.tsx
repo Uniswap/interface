@@ -1,13 +1,14 @@
 import { providers } from 'ethers'
+import { notificationAsync } from 'expo-haptics'
 import { ComponentProps, default as React, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import ActionButton from 'src/components/buttons/ActionButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useCancelationGasFeeInfo, useUSDGasPrice } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionDetails } from 'src/features/transactions/types'
@@ -43,6 +44,18 @@ export function CancelConfirmationView({
 
     onCancel(cancelationGasFeeInfo.cancelRequest)
   }, [cancelationGasFeeInfo, onCancel])
+
+  const { trigger: actionButtonTrigger } = useBiometricPrompt(onCancelConfirm)
+  const { requiredForTransactions } = useBiometricAppSettings()
+
+  const onPressCancel = useCallback(() => {
+    notificationAsync()
+    if (requiredForTransactions) {
+      actionButtonTrigger()
+    } else {
+      onCancelConfirm()
+    }
+  }, [onCancelConfirm, requiredForTransactions, actionButtonTrigger])
 
   return (
     <Flex centered grow bg="background1" borderRadius="xl" gap="lg" p="lg" pb="xxl">
@@ -80,12 +93,13 @@ export function CancelConfirmationView({
           onPress={onBack}
         />
         <Flex flex={1} flexBasis="50%">
-          <ActionButton
+          <PrimaryButton
             disabled={false}
             label={t('Confirm')}
             name={ElementName.Cancel}
+            testID={ElementName.Cancel}
             textVariant="buttonLabelMedium"
-            onPress={onCancelConfirm}
+            onPress={onPressCancel}
           />
         </Flex>
       </Flex>
