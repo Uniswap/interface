@@ -6,6 +6,7 @@ import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'ana
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
+import { networkConnection } from 'connection'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import usePrevious from 'hooks/usePrevious'
@@ -188,6 +189,13 @@ export default function WalletModal({
       setPendingConnector(undefined)
     }
   }, [pendingConnector, walletView])
+
+  // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
+  useEffect(() => {
+    if (chainId && connector !== networkConnection.connector) {
+      networkConnection.connector.activate(chainId)
+    }
+  }, [chainId, connector])
 
   // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {

@@ -27,8 +27,6 @@ import { formatDollar } from 'utils/formatNumbers'
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
-export const DATA_EMPTY = { value: 0, timestamp: 0 }
-
 export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
   const min = Math.min(...prices)
@@ -134,19 +132,17 @@ interface PriceChartProps {
   width: number
   height: number
   prices: PricePoint[] | undefined
-  latestPrice: number | null | undefined
 }
 
-export function PriceChart({ width, height, prices, latestPrice }: PriceChartProps) {
+export function PriceChart({ width, height, prices }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
-  console.log(latestPrice)
 
   // first price point on the x-axis of the current time period's chart
-  const startingPrice = prices?.[0] ?? DATA_EMPTY
+  const startingPrice = prices?.[0]
   // last price point on the x-axis of the current time period's chart
-  const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
+  const endingPrice = prices?.[prices.length - 1]
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
 
   // set display price to ending price when prices have changed.
@@ -163,7 +159,10 @@ export function PriceChart({ width, height, prices, latestPrice }: PriceChartPro
   // Defining scales
   // x scale
   const timeScale = useMemo(
-    () => scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]),
+    () =>
+      scaleLinear()
+        .domain([startingPrice?.timestamp ?? 0, endingPrice?.timestamp ?? 0])
+        .range([0, width]),
     [startingPrice, endingPrice, width]
   )
   // y scale
@@ -179,9 +178,9 @@ export function PriceChart({ width, height, prices, latestPrice }: PriceChartPro
     timePeriod: TimePeriod,
     locale: string
   ): [TickFormatter<NumberValue>, (v: number) => string, NumberValue[]] {
-    const offsetTime = (endingPrice.timestamp.valueOf() - startingPrice.timestamp.valueOf()) / 24
-    const startDateWithOffset = new Date((startingPrice.timestamp.valueOf() + offsetTime) * 1000)
-    const endDateWithOffset = new Date((endingPrice.timestamp.valueOf() - offsetTime) * 1000)
+    const offsetTime = (endingPrice?.timestamp.valueOf() ?? 0 - (startingPrice?.timestamp.valueOf() ?? 0)) / 24
+    const startDateWithOffset = new Date((startingPrice?.timestamp.valueOf() ?? 0 + offsetTime) * 1000)
+    const endDateWithOffset = new Date((endingPrice?.timestamp.valueOf() ?? 0 - offsetTime) * 1000)
     switch (timePeriod) {
       case TimePeriod.HOUR:
         return [
@@ -253,8 +252,8 @@ export function PriceChart({ width, height, prices, latestPrice }: PriceChartPro
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
-  const delta = calculateDelta(startingPrice.value, displayPrice.value)
-  const formattedDelta = formatDelta(delta)
+  const delta = startingPrice && displayPrice && calculateDelta(startingPrice.value, displayPrice.value)
+  const formattedDelta = delta && formatDelta(delta)
   const arrow = getDeltaArrow(delta)
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
@@ -273,7 +272,7 @@ export function PriceChart({ width, height, prices, latestPrice }: PriceChartPro
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+        <TokenPrice>{displayPrice && formatDollar({ num: displayPrice?.value, isPrice: true })}</TokenPrice>
         <DeltaContainer>
           {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>
@@ -286,91 +285,106 @@ export function PriceChart({ width, height, prices, latestPrice }: PriceChartPro
           message={prices && prices.length === 0 ? <NoV3DataMessage /> : <MissingDataMessage />}
         />
       ) : (
-        <svg width={width} height={graphHeight}>
-          <AnimatedInLineChart
-            data={prices}
-            getX={getX}
-            getY={getY}
-            marginTop={margin.top}
-            curve={curve}
-            strokeWidth={2}
-          />
-          {crosshair !== null ? (
-            <g>
-              <AxisBottom
-                scale={timeScale}
-                stroke={theme.backgroundOutline}
-                tickFormat={tickFormatter}
-                tickStroke={theme.backgroundOutline}
-                tickLength={4}
-                hideTicks={true}
-                tickTransform={'translate(0 -5)'}
-                tickValues={ticks}
-                top={graphHeight - 1}
-                tickLabelProps={() => ({
-                  fill: theme.textSecondary,
-                  fontSize: 12,
-                  textAnchor: 'middle',
-                  transform: 'translate(0 -24)',
-                })}
-              />
-              <text
-                x={crosshair + (crosshairAtEdge ? -4 : 4)}
-                y={margin.crosshair + 10}
-                textAnchor={crosshairAtEdge ? 'end' : 'start'}
-                fontSize={12}
-                fill={theme.textSecondary}
-              >
-                {crosshairDateFormatter(displayPrice.timestamp)}
-              </text>
-              <Line
-                from={{ x: crosshair, y: margin.crosshair }}
-                to={{ x: crosshair, y: graphHeight }}
+        <>
+          <svg width={width} height={graphHeight} style={{ minWidth: '100%' }}>
+            <AnimatedInLineChart
+              data={prices}
+              getX={getX}
+              getY={getY}
+              marginTop={margin.top}
+              curve={curve}
+              strokeWidth={2}
+            />
+            {crosshair !== null ? (
+              <g>
+                <AxisBottom
+                  scale={timeScale}
+                  stroke={theme.backgroundOutline}
+                  tickFormat={tickFormatter}
+                  tickStroke={theme.backgroundOutline}
+                  tickLength={4}
+                  hideTicks={true}
+                  tickTransform={'translate(0 -5)'}
+                  tickValues={ticks}
+                  top={graphHeight - 1}
+                  tickLabelProps={() => ({
+                    fill: theme.textSecondary,
+                    fontSize: 12,
+                    textAnchor: 'middle',
+                    transform: 'translate(0 -24)',
+                  })}
+                />
+                <text
+                  x={crosshair + (crosshairAtEdge ? -4 : 4)}
+                  y={margin.crosshair + 10}
+                  textAnchor={crosshairAtEdge ? 'end' : 'start'}
+                  fontSize={12}
+                  fill={theme.textSecondary}
+                >
+                  {displayPrice && crosshairDateFormatter(displayPrice.timestamp)}
+                </text>
+                <Line
+                  from={{ x: crosshair, y: margin.crosshair }}
+                  to={{ x: crosshair, y: graphHeight }}
+                  stroke={theme.backgroundOutline}
+                  strokeWidth={1}
+                  pointerEvents="none"
+                  strokeDasharray="4,4"
+                />
+                <GlyphCircle
+                  left={crosshair}
+                  top={rdScale(displayPrice?.value ?? 0) + margin.top}
+                  size={50}
+                  fill={theme.accentAction}
+                  stroke={theme.backgroundOutline}
+                  strokeWidth={0.5}
+                />
+              </g>
+            ) : (
+              <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} hideTicks />
+            )}
+            {!width && (
+              // Ensures an axis is drawn even if the width is not yet initialized.
+              <line
+                x1={0}
+                y1={graphHeight - 1}
+                x2="100%"
+                y2={graphHeight - 1}
+                fill="transparent"
+                shapeRendering="crispEdges"
                 stroke={theme.backgroundOutline}
                 strokeWidth={1}
-                pointerEvents="none"
-                strokeDasharray="4,4"
               />
-              <GlyphCircle
-                left={crosshair}
-                top={rdScale(displayPrice.value) + margin.top}
-                size={50}
-                fill={theme.accentAction}
-                stroke={theme.backgroundOutline}
-                strokeWidth={0.5}
-              />
-            </g>
-          ) : (
-            <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} hideTicks />
-          )}
-          <rect
-            x={0}
-            y={0}
-            width={width}
-            height={graphHeight}
-            fill={'transparent'}
-            onTouchStart={handleHover}
-            onTouchMove={handleHover}
-            onMouseMove={handleHover}
-            onMouseLeave={resetDisplay}
-          />
-        </svg>
+            )}
+            <rect
+              x={0}
+              y={0}
+              width={width}
+              height={graphHeight}
+              fill={'transparent'}
+              onTouchStart={handleHover}
+              onTouchMove={handleHover}
+              onMouseMove={handleHover}
+              onMouseLeave={resetDisplay}
+            />
+          </svg>
+          <TimeOptionsWrapper>
+            <TimeOptionsContainer>
+              {ORDERED_TIMES.map((time) => (
+                <TimeButton
+                  key={DISPLAYS[time]}
+                  active={timePeriod === time}
+                  onClick={() => {
+                    setTimePeriod(time)
+                  }}
+                >
+                  {DISPLAYS[time]}
+                </TimeButton>
+              ))}
+            </TimeOptionsContainer>
+          </TimeOptionsWrapper>
+        </>
       )}
-      <TimeOptionsWrapper>
-        <TimeOptionsContainer>
-          {ORDERED_TIMES.map((time) => (
-            <TimeButton
-              key={DISPLAYS[time]}
-              active={timePeriod === time}
-              onClick={() => {
-                setTimePeriod(time)
-              }}
-            >
-              {DISPLAYS[time]}
-            </TimeButton>
-          ))}
-        </TimeOptionsContainer>
-      </TimeOptionsWrapper>
     </>
   )
 }
@@ -382,7 +396,7 @@ const StyledMissingChart = styled.svg`
   }
 `
 
-const chartBottomPadding = 15
+const chartBottomPadding = 5
 
 const NoV3DataMessage = () => (
   <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
@@ -391,9 +405,9 @@ const MissingDataMessage = () => <Trans>Missing chart data</Trans>
 
 function MissingPriceChart({ width, height, message }: { width: number; height: number; message: ReactNode }) {
   const theme = useTheme()
-  const midPoint = height / 2 + 45
+  const midPoint = height / 2
   return (
-    <StyledMissingChart width={width} height={height}>
+    <StyledMissingChart width={width} height={height} style={{ minWidth: '100%' }}>
       <path
         d={`M 0 ${midPoint} Q 104 ${midPoint - 70}, 208 ${midPoint} T 416 ${midPoint}
           M 416 ${midPoint} Q 520 ${midPoint - 70}, 624 ${midPoint} T 832 ${midPoint}`}
@@ -405,12 +419,6 @@ function MissingPriceChart({ width, height, message }: { width: number; height: 
       <text y={height - chartBottomPadding} x="20" fill={theme.textTertiary}>
         {message || <Trans>Missing chart data</Trans>}
       </text>
-      <path
-        d={`M 0 ${height - 1}, ${width} ${height - 1}`}
-        stroke={theme.backgroundOutline}
-        fill="transparent"
-        strokeWidth="1"
-      />
     </StyledMissingChart>
   )
 }

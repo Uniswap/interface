@@ -171,32 +171,3 @@ const tokenPriceQuery = graphql`
     }
   }
 `
-
-const tokenPriceBackupQuery = graphql`
-  query TokenPriceBackupQuery($contract: ContractInput!) {
-    tokens(contracts: [$contract]) {
-      market(currency: USD) {
-        priceHistory1H: priceHistory(duration: HOUR) @skip(if: $skip1H) {
-          timestamp
-          value
-        }
-        priceHistory1D: priceHistory(duration: DAY) @skip(if: $skip1D) {
-          timestamp
-          value
-        }
-        priceHistory1W: priceHistory(duration: WEEK) @skip(if: $skip1W) {
-          timestamp
-          value
-        }
-        priceHistory1M: priceHistory(duration: MONTH) @skip(if: $skip1M) {
-          timestamp
-          value
-        }
-        priceHistory1Y: priceHistory(duration: YEAR) @skip(if: $skip1Y) {
-          timestamp
-          value
-        }
-      }
-    }
-  }
-`

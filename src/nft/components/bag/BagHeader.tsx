@@ -2,6 +2,7 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { BagCloseIcon } from 'nft/components/icons'
 import { roundAndPluralize } from 'nft/utils/roundAndPluralize'
+import { ThemedText } from 'theme'
 
 import * as styles from './BagHeader.css'
 
@@ -16,7 +17,7 @@ export const BagHeader = ({ numberOfAssets, toggleBag, resetFlow, isProfilePage 
   return (
     <Column gap="4" paddingX="32" marginBottom="20">
       <Row className={styles.header}>
-        {isProfilePage ? 'Sell NFTs' : 'My bag'}
+        <ThemedText.HeadlineSmall>{isProfilePage ? 'Sell NFTs' : 'My bag'}</ThemedText.HeadlineSmall>
         <Box display="flex" padding="2" color="textSecondary" cursor="pointer" onClick={toggleBag}>
           <BagCloseIcon />
         </Box>

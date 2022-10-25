@@ -2,9 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
-import { checkWarning } from 'constants/tokenSafety'
 import { PriceDurations, PricePoint, SingleTokenData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
@@ -19,13 +17,13 @@ import { L2NetworkLogo, LogoContainer } from '../TokenTable/TokenRow'
 import PriceChart from './PriceChart'
 import ShareButton from './ShareButton'
 
-export const ChartHeader = styled.div`
+export const ChartHeader = styled.div<{ gap?: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.textPrimary};
   gap: 4px;
-  margin-bottom: 24px;
+  margin-bottom: ${({ gap }) => gap && '24px'};
 `
 export const TokenInfoContainer = styled.div`
   display: flex;
@@ -82,7 +80,6 @@ export default function ChartSection({
 }) {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
-  const warning = checkWarning(token.address ?? '')
   const timePeriod = useAtomValue(filterTimeAtom)
 
   const logoSrc = useTokenLogoURI(token, nativeCurrency)
@@ -97,8 +94,9 @@ export default function ChartSection({
     }
   }, [prices, latestPrice])
 
+  const hasData = !!latestPrice
   return (
-    <ChartHeader>
+    <ChartHeader gap={hasData}>
       <TokenInfoContainer>
         <TokenNameCell>
           <LogoContainer>
@@ -112,7 +110,6 @@ export default function ChartSection({
           </LogoContainer>
           {nativeCurrency?.name ?? token.name ?? <Trans>Name not found</Trans>}
           <TokenSymbol>{nativeCurrency?.symbol ?? token.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
-          {!warning && <VerifiedIcon size="16px" />}
         </TokenNameCell>
         <TokenActions>
           {token.name && token.symbol && token.address && <ShareButton token={token} isNative={!!nativeCurrency} />}
@@ -120,9 +117,7 @@ export default function ChartSection({
       </TokenInfoContainer>
       <ChartContainer>
         <ParentSize>
-          {({ width, height }) =>
-            prices && <PriceChart prices={prices[timePeriod]} latestPrice={latestPrice} width={width} height={height} />
-          }
+          {({ width }) => prices && <PriceChart prices={prices[timePeriod]} width={width} height={436} />}
         </ParentSize>
       </ChartContainer>
     </ChartHeader>

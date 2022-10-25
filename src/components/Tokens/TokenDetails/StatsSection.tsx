@@ -42,9 +42,12 @@ const StatPrice = styled.span`
   color: ${({ theme }) => theme.textPrimary};
 `
 const NoData = styled.div`
+  margin-top: 24px;
+  margin-bottom: 40px;
+  line-height: 24px;
   color: ${({ theme }) => theme.textTertiary};
 `
-const Wrapper = styled.div`
+export const StatsWrapper = styled.div`
   gap: 16px;
   ${textFadeIn}
 `
@@ -82,37 +85,40 @@ type StatsSectionProps = {
 }
 export default function StatsSection(props: StatsSectionProps) {
   const { priceLow52W, priceHigh52W, TVL, volume24H } = props
-  if (TVL || volume24H || priceLow52W || priceHigh52W) {
-    return (
-      <Wrapper>
-        <Header>
-          <Trans>Stats</Trans>
-        </Header>
-        <TokenStatsSection>
-          <StatPair>
-            <Stat
-              value={TVL}
-              description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
-              title={<Trans>TVL</Trans>}
-            />
-            <Stat
-              value={volume24H}
-              description={
-                <Trans>
-                  24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
-                </Trans>
-              }
-              title={<Trans>24H volume</Trans>}
-            />
-          </StatPair>
-          <StatPair>
-            <Stat value={priceLow52W} title={<Trans>52W low</Trans>} isPrice={true} />
-            <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
-          </StatPair>
-        </TokenStatsSection>
-      </Wrapper>
-    )
-  } else {
-    return <NoData>No stats available</NoData>
-  }
+  return (
+    <StatsWrapper>
+      <Header>
+        <Trans>Stats</Trans>
+      </Header>
+
+      <TokenStatsSection>
+        {TVL || volume24H || priceLow52W || priceHigh52W ? (
+          <>
+            <StatPair>
+              <Stat
+                value={TVL}
+                description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
+                title={<Trans>TVL</Trans>}
+              />
+              <Stat
+                value={volume24H}
+                description={
+                  <Trans>
+                    24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+                  </Trans>
+                }
+                title={<Trans>24H volume</Trans>}
+              />
+            </StatPair>
+            <StatPair>
+              <Stat value={priceLow52W} title={<Trans>52W low</Trans>} isPrice={true} />
+              <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
+            </StatPair>
+          </>
+        ) : (
+          <NoData>No stats available</NoData>
+        )}
+      </TokenStatsSection>
+    </StatsWrapper>
+  )
 }
