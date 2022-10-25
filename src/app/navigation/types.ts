@@ -29,11 +29,6 @@ export type HomeStackParamList = {
 
 export type ExploreStackParamList = {
   [Screens.Explore]: undefined
-  [Screens.WatchedWallets]: undefined
-  [Screens.ExternalProfile]: {
-    address: string
-    preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
-  }
 }
 
 export type AccountStackParamList = {
@@ -108,6 +103,10 @@ export type AppStackParamList = {
     preloadedQuery: NullUndefined<PreloadedQuery<TokenDetailsScreenQuery>>
   }
   [Screens.NFTItem]: NFTItem
+  [Screens.ExternalProfile]: {
+    address: string
+    preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
+  }
   [Screens.Activity]: {
     preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
   }

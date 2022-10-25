@@ -40,6 +40,7 @@ type TabbedScrollScreenProps = {
     loadingContainerStyle: ViewStyle
   ) => ReactElement | null
   tabs: { key: string; title: string }[]
+  disableOpenSidebarGesture?: boolean
 }
 
 export type TabViewScrollProps = {
@@ -110,6 +111,7 @@ export default function TabbedScrollScreen({
   scrollHeader,
   renderTab,
   tabs,
+  disableOpenSidebarGesture,
 }: TabbedScrollScreenProps) {
   const insets = useSafeAreaInsets()
   const theme = useAppTheme()
@@ -134,10 +136,13 @@ export default function TabbedScrollScreen({
   }, [navigation])
 
   const panSidebarContainerGesture = useMemo(
-    () => panSidebarContainerGestureAction(openSidebar),
-    [openSidebar]
+    () => (disableOpenSidebarGesture ? undefined : panSidebarContainerGestureAction(openSidebar)),
+    [disableOpenSidebarGesture, openSidebar]
   )
-  const panHeaderGesture = useMemo(() => panHeaderGestureAction(openSidebar), [openSidebar])
+  const panHeaderGesture = useMemo(
+    () => (disableOpenSidebarGesture ? undefined : panHeaderGestureAction(openSidebar)),
+    [disableOpenSidebarGesture, openSidebar]
+  )
 
   const tabBarAnimatedStyle = useAnimatedStyle(() => {
     // If scrollHeader exists, we must account for scrollHeader padding which is equal to insets.top

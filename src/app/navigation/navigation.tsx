@@ -75,7 +75,6 @@ import { SettingsWallet } from 'src/screens/SettingsWallet'
 import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
-import { WatchedWalletsScreen } from 'src/screens/WatchedWalletsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { dimensions } from 'src/styles/sizing'
 import { darkTheme } from 'src/styles/theme'
@@ -300,8 +299,6 @@ export function ExploreStackNavigator({
         )}
         name={Screens.Explore}
       />
-      <ExploreStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
-      <ExploreStack.Screen component={WatchedWalletsScreen} name={Screens.WatchedWallets} />
     </ExploreStack.Navigator>
   )
 }
@@ -405,10 +402,9 @@ export function AppStackNavigator() {
             : OnboardingEntryPoint.FreshInstall.valueOf()
         }
       />
-
+      <AppStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
       <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
       <AppStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
-
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
       </AppStack.Group>

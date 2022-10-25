@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import { ExploreStackParamList } from 'src/app/navigation/types'
+import { AppStackParamList } from 'src/app/navigation/types'
 import EyeOffIcon from 'src/assets/icons/eye-off.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -23,7 +23,7 @@ import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<ExploreStackParamList, Screens.ExternalProfile>
+type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile>
 
 const TOKENS_KEY = 'profile-tokens'
 const NFTS_KEY = 'profile-nfts'
@@ -103,6 +103,7 @@ export function ExternalProfileScreen({
 
   return (
     <TabbedScrollScreen
+      disableOpenSidebarGesture
       contentHeader={
         <Flex gap="sm" mb="sm" mx="md">
           <BackButton showButtonLabel />

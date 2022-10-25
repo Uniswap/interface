@@ -28,7 +28,6 @@ export enum Screens {
   TokenDetails = 'TokenDetails',
   Transfer = 'Transfer',
   ExternalProfile = 'ExternalProfile',
-  WatchedWallets = 'WatchedWallets',
   WebView = 'WebView',
   Welcome = 'Welcome',
 }
