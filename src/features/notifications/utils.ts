@@ -134,7 +134,7 @@ export const formUnknownTxTitle = (
 ) => {
   let addressText
   if (ensName) {
-    addressText = ` ${ensName}`
+    addressText = i18n.t(' with {{ensName}}', { ensName })
   } else if (tokenAddress) {
     const address = shortenAddress(tokenAddress)
     addressText = i18n.t(' with {{address}}', { address })
@@ -143,8 +143,8 @@ export const formUnknownTxTitle = (
   }
 
   return txStatus === TransactionStatus.Success
-    ? i18n.t('Completed contract interaction{{addressText}}.', { addressText })
-    : i18n.t('Failed to complete contract interaction{{addressText}}.', { addressText })
+    ? i18n.t('Transacted{{addressText}}.', { addressText })
+    : i18n.t('Failed to transact{{addressText}}.', { addressText })
 }
 
 const formTransferTxTitle = (
