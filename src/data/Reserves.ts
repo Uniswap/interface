@@ -36,9 +36,11 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         .map(([tokenA, tokenB]) => [tokenA?.address, tokenB?.address]),
     [tokens],
   )
+
   const oldStaticRess = useSingleContractMultipleData(oldStaticContract, 'getPools', callInputs)
   const staticRess = useSingleContractMultipleData(staticContract, 'getPools', callInputs)
   const dynamicRess = useSingleContractMultipleData(dynamicContract, 'getPools', callInputs)
+
   const result: any[] = useMemo(() => {
     const res: any[] = []
     let start = 0
@@ -71,6 +73,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       }, []),
     [result],
   )
+
   const results = useMultipleContractSingleData(pairAddresses, DMM_POOL_INTERFACE, 'getTradeInfo')
   const ampResults = useMultipleContractSingleData(pairAddresses, DMM_POOL_INTERFACE, 'ampBps')
 
@@ -79,12 +82,13 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
     const vv: any[] = []
     lens.forEach((len, index) => {
       vv.push([])
-      const tokenA = tokens[index]?.[0]
-      const tokenB = tokens[index]?.[1]
+      const tokenA = tokens[Math.floor(index / 3)]?.[0]
+      const tokenB = tokens[Math.floor(index / 3)]?.[1]
       if (len > 0) {
         for (let j = 0; j < len; j++) {
           const { result: reserves, loading } = results[start]
           const { result: amp, loading: loadingAmp } = ampResults[start]
+
           if (loading || loadingAmp) {
             vv[vv.length - 1].push([PairState.LOADING, null])
           } else if (!tokenA || !tokenB || tokenA.equals(tokenB)) {
@@ -113,6 +117,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         }
       }
     })
+
     return vv
   }, [results, lens, ampResults, pairAddresses, tokens])
 }
@@ -174,7 +179,8 @@ export function usePairsByAddress(
 }
 
 export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null][] {
-  return usePairs([[tokenA, tokenB]])[0]
+  const res = usePairs([[tokenA, tokenB]])
+  return res.flat()
 }
 
 export function usePairByAddress(

@@ -43,6 +43,7 @@ export default function PoolFinder() {
 
   // pairs: {PairState, Pair, isStaticFeePair}[]
   const pairs: [PairState, Pair | null][] = usePair(currency0 ?? undefined, currency1 ?? undefined)
+
   const addPair = usePairAdderByTokens()
   useEffect(() => {
     if (pairs.length > 0) {
