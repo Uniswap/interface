@@ -100,7 +100,7 @@ export default function TokenDetails() {
   return (
     <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ tokenAddress, tokenName: chainName }} shouldLogImpression>
       <TokenDetailsLayout>
-        {tokenQueryData && !isPending && !isNative ? (
+        {tokenQueryData && !isPending ? (
           <LeftPanel>
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
