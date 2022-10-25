@@ -108,7 +108,7 @@ export default function TokenDetails() {
   const navigateToWidgetSelectedToken = useCallback(
     (input: Currency | undefined, output: Currency | undefined) => {
       const update = output || input
-      if (!token || input?.equals(token) || output?.equals(token) || !update) return
+      if (!token || !update || input?.equals(token) || output?.equals(token)) return
       const address = update.isNative ? NATIVE_CHAIN_ID : update.address
       navigate(`/tokens/${chainName}/${address}`)
     },

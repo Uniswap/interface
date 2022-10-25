@@ -52,7 +52,7 @@ export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
   const onSwitchChain = useCallback(
-    // TODO: Widget should not break if this rejects - upstream the catch to ignore it.
+    // TODO(WEB-1757): Widget should not break if this rejects - upstream the catch to ignore it.
     ({ chainId }: AddEthereumChainParameter) => switchChain(connector, Number(chainId)).catch(() => undefined),
     [connector]
   )
