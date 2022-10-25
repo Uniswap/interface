@@ -232,7 +232,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
         />
       </Box>
       <Box as="span" display={showReadMore ? 'inline' : 'none'} className={styles.readMore} onClick={toggleReadMore}>
-        Show {readMore ? 'less' : 'more'}
+        show {readMore ? 'less' : 'more'}
       </Box>
     </Box>
   )
