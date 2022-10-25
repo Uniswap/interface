@@ -284,7 +284,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           message={prices && prices.length === 0 ? <NoV3DataMessage /> : <MissingDataMessage />}
         />
       ) : (
-        <svg width={width} height={graphHeight}>
+        <svg width={width} height={graphHeight} style={{ minWidth: '100%' }}>
           <AnimatedInLineChart
             data={prices}
             getX={getX}
@@ -341,6 +341,19 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
           ) : (
             <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} hideTicks />
           )}
+          {!width && (
+            // Ensures an axis is drawn even if the width is not yet initialized.
+            <line
+              x1={0}
+              y1={graphHeight - 1}
+              x2="100%"
+              y2={graphHeight - 1}
+              fill="transparent"
+              shapeRendering="crispEdges"
+              stroke={theme.backgroundOutline}
+              strokeWidth={1}
+            />
+          )}
           <rect
             x={0}
             y={0}
@@ -391,7 +404,7 @@ function MissingPriceChart({ width, height, message }: { width: number; height: 
   const theme = useTheme()
   const midPoint = height / 2 + 45
   return (
-    <StyledMissingChart width={width} height={height}>
+    <StyledMissingChart width={width} height={height} style={{ minWidth: '100%' }}>
       <path
         d={`M 0 ${midPoint} Q 104 ${midPoint - 70}, 208 ${midPoint} T 416 ${midPoint}
           M 416 ${midPoint} Q 520 ${midPoint - 70}, 624 ${midPoint} T 832 ${midPoint}`}

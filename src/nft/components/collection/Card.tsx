@@ -572,19 +572,11 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
     </MouseoverTooltip>
   )
 }
+const SUSPICIOUS_TEXT = 'Blocked on OpenSea'
 
 const Suspicious = () => {
   return (
-    <MouseoverTooltip
-      text={
-        <Box className={bodySmall}>
-          Reported for suspicious activity
-          <br />
-          on Opensea
-        </Box>
-      }
-      placement="top"
-    >
+    <MouseoverTooltip text={<Box className={bodySmall}>{SUSPICIOUS_TEXT}</Box>} placement="top">
       <Box display="flex" flexShrink="0" marginLeft="2">
         <SuspiciousIcon20 width="20" height="20" />
       </Box>
@@ -679,6 +671,7 @@ export {
   SecondaryInfo,
   SecondaryRow,
   Suspicious,
+  SUSPICIOUS_TEXT,
   TertiaryInfo,
   Video,
 }
