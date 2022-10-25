@@ -1,9 +1,15 @@
-import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
-import { ethNumberStandardFormatter, fetchPrice, formatEthPrice, getMarketplaceIcon, timeLeft } from 'nft/utils'
+import {
+  ethNumberStandardFormatter,
+  fetchPrice,
+  formatEthPrice,
+  getMarketplaceIcon,
+  getUsdPrice,
+  timeLeft,
+} from 'nft/utils'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
@@ -115,13 +121,7 @@ export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const expirationDate = listing ? new Date(listing.orderClosingDate) : undefined
   const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
 
-  const USDPrice = useMemo(
-    () =>
-      fetchedPriceData &&
-      asset.priceInfo &&
-      (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString(),
-    [asset.priceInfo, fetchedPriceData]
-  )
+  const USDPrice = fetchedPriceData && getUsdPrice(asset, fetchedPriceData)
 
   const navigate = useNavigate()
 
@@ -204,13 +204,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const removeAssetFromBag = useBag((s) => s.removeAssetFromBag)
   const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
 
-  const USDPrice = useMemo(
-    () =>
-      fetchedPriceData &&
-      asset.priceInfo &&
-      (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString(),
-    [asset.priceInfo, fetchedPriceData]
-  )
+  const USDPrice = fetchedPriceData && getUsdPrice(asset, fetchedPriceData)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
 
   const { quantity, assetInBag } = useMemo(() => {

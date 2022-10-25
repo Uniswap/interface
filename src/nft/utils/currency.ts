@@ -1,4 +1,6 @@
 import { formatEther, parseEther } from '@ethersproject/units'
+import { formatEther } from '@ethersproject/units'
+import { GenieAsset } from 'nft/types'
 
 export const formatUsdPrice = (price: number) => {
   if (price > 1000000) {
@@ -62,4 +64,8 @@ export const ethNumberStandardFormatter = (
 export const formatWeiToDecimal = (amount: string, removeZeroes = false) => {
   if (!amount) return '-'
   return ethNumberStandardFormatter(formatEther(amount), false, removeZeroes)
+}
+
+export function getUsdPrice(asset: GenieAsset, fetchedPriceData: number): string {
+  return (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString()
 }

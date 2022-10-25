@@ -40,6 +40,11 @@ import { CollectionAssetLoading } from './CollectionAssetLoading'
 import { marketPlaceItems } from './MarketplaceSelect'
 import { TraitChip } from './TraitChip'
 
+const EmptyCollectionWrapper = styled.div`
+  display: block;
+  textalign: center;
+`
+
 interface CollectionNftsProps {
   contractAddress: string
   collectionStats: GenieCollection
@@ -415,12 +420,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           loadingAssets
         ) : (
           <Center width="full" color="textSecondary" style={{ height: '60vh' }}>
-            <div style={{ display: 'block', textAlign: 'center' }}>
+            <EmptyCollectionWrapper>
               <p className={headlineMedium}>No NFTS found</p>
               <Box className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
                 View full collection
               </Box>
-            </div>
+            </EmptyCollectionWrapper>
           </Center>
         )}
       </InfiniteScroll>

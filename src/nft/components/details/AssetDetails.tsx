@@ -1,4 +1,3 @@
-import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { MouseoverTooltip } from 'components/Tooltip/index'
@@ -17,7 +16,7 @@ import { useTimeout } from 'nft/hooks/useTimeout'
 import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
 import { fetchPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
-import { formatEthPrice } from 'nft/utils/currency'
+import { formatEthPrice, getUsdPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
@@ -179,13 +178,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   }, [asset, address, provider])
 
-  const USDPrice = useMemo(
-    () =>
-      fetchedPriceData &&
-      asset.priceInfo &&
-      (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString(),
-    [asset.priceInfo, fetchedPriceData]
-  )
+  const USDPrice = fetchedPriceData && getUsdPrice(asset, fetchedPriceData)
 
   return (
     <AnimatedBox
