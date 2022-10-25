@@ -28,8 +28,10 @@ import { useQuery } from 'react-query'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { putCommas } from 'nft/utils/putCommas'
 import { SupportedChainId } from 'constants/chains'
+import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { reduceFilters } from '../collection/Activity'
 import * as activityStyles from 'nft/components/collection/Activity.css'
+import { ThemedText } from 'theme'
 
 import * as styles from './AssetDetails.css'
 
@@ -39,6 +41,14 @@ const CollectionHeader = styled.div`
   font-size: 16px;
   line-height: 24px;
   color: ${({ theme }) => theme.textPrimary};
+`
+
+const AssetPriceDetailsContainer = styled.div`
+  margin-top: 20px;
+  display: none;
+  @media (max-width: 960px) {
+    display: block;
+  }
 `
 
 const AssetHeader = styled.div`
@@ -82,6 +92,17 @@ const RarityWrap = styled.span`
   border-radius: 4px;
 `
 
+const EmptyActivitiesContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${({ theme }) => theme.textPrimary};
+  font-size: 28px;
+  line-height: 36px;
+  padding-top: 56px;
+  padding-bottom: 56px;
+`
+
 const AudioPlayer = ({
   imageUrl,
   animationUrl,
@@ -109,8 +130,8 @@ const AudioPlayer = ({
 const initialFilterState = {
   [ActivityEventType.Listing]: true,
   [ActivityEventType.Sale]: true,
-  [ActivityEventType.Transfer]: true,
-  [ActivityEventType.CancelListing]: true,
+  [ActivityEventType.Transfer]: false,
+  [ActivityEventType.CancelListing]: false,
 }
 
 const AssetView = ({
@@ -322,6 +343,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}
       </MediaContainer>
+      <AssetPriceDetailsContainer>
+        <AssetPriceDetails asset={asset} collection={collection} />
+      </AssetPriceDetailsContainer>
 
       <InfoContainer
         primaryHeader="Traits"
@@ -340,16 +364,25 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         primaryHeader="Activity"
         secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
       >
-        <>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: 34 }}>
-            <Filter eventType={ActivityEventType.Listing} />
-            <Filter eventType={ActivityEventType.Sale} />
-            <Filter eventType={ActivityEventType.Transfer} />
-            <Filter eventType={ActivityEventType.CancelListing} />
-          </div>
+        {eventsData && eventsData.events?.length > 0 && false ? (
+          <>
+            <div style={{ display: 'flex', gap: '8px', marginBottom: 34 }}>
+              <Filter eventType={ActivityEventType.Listing} />
+              <Filter eventType={ActivityEventType.Sale} />
+              <Filter eventType={ActivityEventType.Transfer} />
+              <Filter eventType={ActivityEventType.CancelListing} />
+            </div>
 
-          <AssetActivity eventsData={eventsData} />
-        </>
+            <AssetActivity eventsData={eventsData} />
+          </>
+        ) : (
+          <EmptyActivitiesContainer>
+            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+              <div>No activities yet</div>
+              <div>View Full Collection Items</div>{' '}
+            </div>
+          </EmptyActivitiesContainer>
+        )}
       </InfoContainer>
 
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>

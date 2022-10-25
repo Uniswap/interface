@@ -5,7 +5,7 @@ import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft } from 'nft/utils'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 interface AssetPriceDetailsProps {
@@ -14,8 +14,8 @@ interface AssetPriceDetailsProps {
 }
 
 const Container = styled.div`
-  max-width: 360px;
   width: 100%;
+  min-width: 360px;
 `
 
 const BestPriceContainer = styled.div`
@@ -56,6 +56,19 @@ const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccen
   margin-top: ${({ margin }) => (margin ? '12px' : '0px')};
   text-align: center;
   cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.stateOverlayHover};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => css`background-color ${duration.medium} ${timing.ease}`};
+  }
+
+  &:active {
+    background-color: ${({ theme }) => theme.stateOverlayPressed};
+  }
 `
 
 const Erc1155BuyNowButton = styled.div`
@@ -70,6 +83,10 @@ const Erc1155BuyNowButton = styled.div`
   cursor: pointer;
   justify-content: space-between;
   overflow-x: hidden;
+`
+
+const Tertiary = styled(ThemedText.BodySecondary)`
+  color: ${({ theme }) => theme.textTertiary};
 `
 
 const Erc1155BuyNowText = styled.div`
@@ -185,13 +202,12 @@ export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset 
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
   const { account } = useWeb3React()
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = cheapestOrder ? new Date(cheapestOrder.orderClosingDate) : undefined
+  const expirationDate =
+    cheapestOrder && cheapestOrder?.orderClosingDate ? new Date(cheapestOrder.orderClosingDate) : undefined
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
-
-  console.log(cheapestOrder)
 
   const { quantity, assetInBag } = useMemo(() => {
     return {
@@ -225,13 +241,11 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             <ThemedText.MediumHeader fontSize={'28px'} lineHeight={'36px'}>
               {formatEthPrice(asset.priceInfo.ETHPrice)}
             </ThemedText.MediumHeader>
-            <ThemedText.BodySecondary lineHeight={'24px'}>
+            <ThemedText.BodySecondary lineHeight={'26px'}>
               {ethNumberStandardFormatter(asset.priceInfo.USDPrice, true, true)}
             </ThemedText.BodySecondary>
           </PriceRow>
-          {expirationDate && (
-            <ThemedText.BodySecondary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>
-          )}
+          {expirationDate && <Tertiary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</Tertiary>}
           {!isErc1555 || !assetInBag ? (
             <BuyNowButton
               assetInBag={assetInBag}

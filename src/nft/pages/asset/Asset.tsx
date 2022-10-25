@@ -10,10 +10,17 @@ const AssetContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: center;
-  gap: 20px;
+  gap: 60px;
   padding-left: 40px;
   padding-right: 40px;
   padding-top: 48px;
+`
+
+const AssetPriceDetailsContainer = styled.div`
+  width: 360px;
+  @media (max-width: 960px) {
+    display: none;
+  }
 `
 
 const Asset = () => {
@@ -36,7 +43,9 @@ const Asset = () => {
       {asset && collection ? (
         <AssetContainer>
           <AssetDetails collection={collection} asset={asset} />
-          <AssetPriceDetails collection={collection} asset={asset} />
+          <AssetPriceDetailsContainer>
+            <AssetPriceDetails collection={collection} asset={asset} />
+          </AssetPriceDetailsContainer>
         </AssetContainer>
       ) : (
         <div>Holder for loading ...</div>

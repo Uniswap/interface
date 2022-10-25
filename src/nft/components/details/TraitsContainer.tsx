@@ -52,7 +52,7 @@ const GridItem = ({ trait, totalSupply }: { trait: Trait; totalSupply: number })
 }
 
 const TraitsContainer = ({ asset, collection }: { asset: GenieAsset; collection: CollectionInfoForAsset }) => {
-  const traits = asset.traits
+  const traits = asset.traits?.sort((a, b) => a.trait_type.localeCompare(b.trait_type))
 
   return (
     <Grid>
