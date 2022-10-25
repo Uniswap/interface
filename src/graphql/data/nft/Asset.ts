@@ -135,6 +135,7 @@ export function useAssetsQuery(
 
   const assets: GenieAsset[] = data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node
+    const ethPrice = parseEther(asset.listings?.edges[0].node.price.value?.toString() ?? '0').toString()
     return {
       id: asset.id,
       address: asset.collection.nftContracts[0].address,
@@ -147,10 +148,10 @@ export function useAssetsQuery(
       name: asset.name,
       priceInfo: asset.listings
         ? {
-            ETHPrice: parseEther(asset.listings?.edges[0].node.price.value?.toString() ?? '0').toString(),
+            ETHPrice: ethPrice,
             baseAsset: 'ETH',
             baseDecimals: '18',
-            basePrice: parseEther(asset.listings?.edges[0].node.price.value?.toString() ?? '0').toString(),
+            basePrice: ethPrice,
           }
         : undefined,
       susFlag: asset.suspiciousFlag,
