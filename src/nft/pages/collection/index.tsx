@@ -63,7 +63,11 @@ const Collection = () => {
 
   return (
     <>
-      <Trace page={PageName.NFT_COLLECTION_PAGE} shouldLogImpression>
+      <Trace
+        page={PageName.NFT_COLLECTION_PAGE}
+        properties={{ collection_address: contractAddress }}
+        shouldLogImpression
+      >
         <Column width="full">
           {contractAddress ? (
             <>
