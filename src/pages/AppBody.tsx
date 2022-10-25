@@ -14,7 +14,7 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string }>`
   margin-left: auto;
   margin-right: auto;
   z-index: ${Z_INDEX.deprecated_content};
-  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on ' : ' 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
 `
 
 /**
