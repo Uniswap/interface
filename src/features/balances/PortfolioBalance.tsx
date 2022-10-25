@@ -5,7 +5,7 @@ import { Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
 import { PortfolioBalanceQuery } from 'src/features/balances/__generated__/PortfolioBalanceQuery.graphql'
-import { formatUSDPrice } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface PortfolioBalanceProps {
   queryRef: NullUndefined<PreloadedQuery<PortfolioBalanceQuery>>
@@ -49,7 +49,8 @@ function PortfolioBalanceInner({ queryRef }: { queryRef: PreloadedQuery<Portfoli
     <Flex gap="xxs">
       <DecimalNumber
         number={formatUSDPrice(
-          data?.portfolios?.[0]?.tokensTotalDenominatedValue.value ?? undefined
+          data?.portfolios?.[0]?.tokensTotalDenominatedValue.value ?? undefined,
+          NumberType.FiatTokenQuantity
         )}
         variant="headlineLarge"
       />

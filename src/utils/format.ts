@@ -78,12 +78,18 @@ const THREE_SIG_FIGS_USD = new Intl.NumberFormat('en-US', {
 })
 
 type Format = Intl.NumberFormat | string
-type FormatterRule = { upperBound: number; formatter: Format }
+
+// each rule must contain either an `upperBound` or an `exact` value.
+// upperBound => number will use that formatter as long as it is < upperBound
+// exact => number will use that formatter if it is === exact
+type FormatterRule =
+  | { upperBound?: undefined; exact: number; formatter: Format }
+  | { upperBound: number; exact?: undefined; formatter: Format }
 
 // these formatter objects dictate which formatter rule to use based on the interval that
 // the number falls into. for example, based on the rule set below, if your number
 // falls between 1 and 1e6, you'd use TWO_DECIMALS as the formatter.
-const tokenNonTxFormatters: FormatterRule[] = [
+const tokenNonTxFormatter: FormatterRule[] = [
   { upperBound: 0.001, formatter: '<0.001' },
   { upperBound: 1, formatter: THREE_DECIMALS },
   { upperBound: 1e6, formatter: TWO_DECIMALS },
@@ -91,7 +97,7 @@ const tokenNonTxFormatters: FormatterRule[] = [
   { upperBound: Infinity, formatter: SCIENTIFIC },
 ]
 
-const tokenTxFormatters: FormatterRule[] = [
+const tokenTxFormatter: FormatterRule[] = [
   { upperBound: 0.00001, formatter: '<0.00001' },
   { upperBound: 1, formatter: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN },
   { upperBound: 10000, formatter: SIX_SIG_FIGS_TWO_DECIMALS },
@@ -119,6 +125,8 @@ const fiatGasPriceFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatter: SHORTHAND_USD },
 ]
 
+const fiatTokenQuantityFormatter = [{ exact: 0, formatter: '$0.00' }, ...fiatGasPriceFormatter]
+
 export enum NumberType {
   // used for token quantities in non-transaction contexts (e.g. portfolio balances)
   TokenNonTx = 'token-non-tx',
@@ -140,10 +148,9 @@ export enum NumberType {
 }
 
 const TYPE_TO_FORMATTER_RULES = {
-  [NumberType.TokenNonTx]: tokenNonTxFormatters,
-  [NumberType.TokenTx]: tokenTxFormatters,
-  // fiat token quantities follow same rules as gas prices
-  [NumberType.FiatTokenQuantity]: fiatGasPriceFormatter,
+  [NumberType.TokenNonTx]: tokenNonTxFormatter,
+  [NumberType.TokenTx]: tokenTxFormatter,
+  [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,
@@ -152,8 +159,12 @@ const TYPE_TO_FORMATTER_RULES = {
 function getFormatterRule(input: number, type: NumberType) {
   const rules = TYPE_TO_FORMATTER_RULES[type]
   for (let i = 0; i < rules.length; i++) {
-    if (input < rules[i].upperBound) {
-      return rules[i].formatter
+    const rule = rules[i]
+    if (
+      (rule.exact !== undefined && input === rule.exact) ||
+      (rule.upperBound !== undefined && input < rule.upperBound)
+    ) {
+      return rule.formatter
     }
   }
 

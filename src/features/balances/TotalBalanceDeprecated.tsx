@@ -7,7 +7,7 @@ import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { TotalBalanceDeprecatedQuery } from 'src/features/balances/__generated__/TotalBalanceDeprecatedQuery.graphql'
 import { Theme } from 'src/styles/theme'
-import { formatUSDPrice } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface TotalBalanceViewProps {
   owner: Address
@@ -52,7 +52,10 @@ function TotalBalanceInner({ owner, showRelativeChange, variant, color }: TotalB
   return (
     <Flex gap="xxs">
       <Text color={color} variant={variant}>
-        {`${formatUSDPrice(balance?.portfolio?.assetsValueUSD ?? undefined)}`}
+        {formatUSDPrice(
+          balance?.portfolio?.assetsValueUSD ?? undefined,
+          NumberType.FiatTokenQuantity
+        )}
       </Text>
       {showRelativeChange && (
         <RelativeChange
