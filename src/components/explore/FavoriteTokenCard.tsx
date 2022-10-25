@@ -90,7 +90,7 @@ function FavoriteTokenCardInner({
     {
       contract: contractInput,
     },
-    { networkCacheConfig: { poll: PollingInterval.Fast } }
+    { networkCacheConfig: { poll: PollingInterval.Fast }, fetchPolicy: 'store-and-network' }
   )
 
   // Parse token fields from response
