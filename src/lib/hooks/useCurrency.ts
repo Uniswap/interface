@@ -122,10 +122,7 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
     () => decimals.loading || symbol.loading || tokenName.loading,
     [decimals.loading, symbol.loading, tokenName.loading]
   )
-  const parsedDecimals = useMemo(
-    () => (decimals.result ? decimals.result?.[0] : DEFAULT_ERC20_DECIMALS),
-    [decimals.result]
-  )
+  const parsedDecimals = useMemo(() => decimals?.result?.[0] ?? DEFAULT_ERC20_DECIMALS, [decimals.result])
 
   const parsedSymbol = useMemo(
     () => parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
