@@ -12,6 +12,7 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useEffect, useMemo, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
+import { DEFAULT_ERC20_DECIMALS } from '../../constants/tokens'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { getContract, isAddress } from '../../utils'
 import { supportedChainId } from '../../utils/supportedChainId'
@@ -121,7 +122,8 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
     () => decimals.loading || symbol.loading || tokenName.loading,
     [decimals.loading, symbol.loading, tokenName.loading]
   )
-  const parsedDecimals = useMemo(() => decimals.result?.[0], [decimals.result])
+  const parsedDecimals = useMemo(() => decimals?.result?.[0] ?? DEFAULT_ERC20_DECIMALS, [decimals.result])
+
   const parsedSymbol = useMemo(
     () => parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
     [symbol.result, symbolBytes32.result]
@@ -134,9 +136,7 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
   return useMemo(() => {
     // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
     if (typeof tokenAddress !== 'string' || !isSupportedChain(chainId) || !formattedAddress) return undefined
-
     if (isLoading || !chainId) return null
-    if (!parsedDecimals) return undefined
 
     return new Token(chainId, formattedAddress, parsedDecimals, parsedSymbol, parsedName)
   }, [chainId, tokenAddress, formattedAddress, isLoading, parsedDecimals, parsedSymbol, parsedName])
@@ -152,7 +152,6 @@ type TokenMap = { [address: string]: Token }
 export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string | null): Token | null | undefined {
   const address = isAddress(tokenAddress)
   const token: Token | undefined = address ? tokens[address] : undefined
-
   const tokenFromNetwork = useTokenFromActiveNetwork(token ? undefined : address ? address : undefined)
 
   return tokenFromNetwork ?? token

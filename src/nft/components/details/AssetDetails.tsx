@@ -156,8 +156,8 @@ interface AssetDetailsProps {
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const [creatorAddress, setCreatorAddress] = useState('')

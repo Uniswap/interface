@@ -31,8 +31,8 @@ export const CollectionAsset = ({
   setCurrentTokenPlayingMedia,
   rarityVerified,
 }: CollectionAssetProps) => {
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const toggleBag = useBag((state) => state.toggleBag)
@@ -124,12 +124,12 @@ export const CollectionAsset = ({
           selectedChildren={'Remove'}
           onClick={(e: MouseEvent) => {
             e.preventDefault()
-            addAssetToBag(asset)
+            addAssetsToBag([asset])
             !bagExpanded && !isMobile && toggleBag()
           }}
           onSelectedClick={(e: MouseEvent) => {
             e.preventDefault()
-            removeAssetFromBag(asset)
+            removeAssetsFromBag([asset])
           }}
         >
           {'Buy now'}
