@@ -5,6 +5,8 @@ import { Column, Row } from 'nft/components/Flex'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
+import { useTraitsOpen } from 'nft/hooks/useTraitsOpen'
+import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { FormEvent, useEffect, useReducer, useState } from 'react'
 
 import { Checkbox } from '../layout/Checkbox'
@@ -58,9 +60,11 @@ const MarketplaceItem = ({
       fontWeight="normal"
       className={`${subheadSmall} ${styles.subRowHover}`}
       paddingLeft="12"
-      paddingRight="12"
+      paddingRight="16"
+      borderRadius="12"
       cursor="pointer"
-      style={{ paddingBottom: '21px', paddingTop: '21px', maxHeight: '44px' }}
+      maxHeight="44"
+      style={{ paddingBottom: '22px', paddingTop: '22px' }}
       onMouseEnter={toggleHover}
       onMouseLeave={toggleHover}
       onClick={handleCheckbox}
@@ -91,55 +95,60 @@ export const MarketplaceSelect = () => {
   }))
 
   const [isOpen, setOpen] = useState(!!selectedMarkets.length)
+  const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
 
   return (
-    <Box
-      as="details"
-      className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
-      borderRadius="12"
-      open={isOpen}
-    >
+    <>
+      <Box className={styles.detailsOpen} opacity={isOpen ? '1' : '0'} />
       <Box
-        as="summary"
-        className={clsx(isOpen && styles.summaryOpen, isOpen ? styles.rowHoverOpen : styles.rowHover)}
-        display="flex"
-        justifyContent="space-between"
-        cursor="pointer"
-        alignItems="center"
-        fontSize="14"
-        paddingTop="12"
-        paddingLeft="12"
-        paddingRight="12"
-        paddingBottom={isOpen ? '8' : '12'}
-        onClick={(e) => {
-          e.preventDefault()
-          setOpen(!isOpen)
-        }}
+        as="details"
+        className={clsx(subheadSmall, !isOpen && styles.rowHover)}
+        open={isOpen}
+        borderRadius={isOpen ? '0' : '12'}
       >
-        Marketplaces
         <Box
-          color="textSecondary"
-          transition="250"
-          height="28"
-          width="28"
-          style={{
-            transform: `rotate(${isOpen ? 0 : 180}deg)`,
+          as="summary"
+          className={`${styles.row} ${styles.rowHover}`}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          fontSize="16"
+          paddingTop="12"
+          paddingLeft="12"
+          paddingBottom="12"
+          lineHeight="20"
+          borderRadius="12"
+          maxHeight="48"
+          onClick={(e) => {
+            e.preventDefault()
+            setOpen(!isOpen)
+            setTraitsOpen(TraitPosition.MARKPLACE_INDEX, !isOpen)
           }}
         >
-          <ChevronUpIcon />
+          Marketplaces
+          <Box display="flex" alignItems="center">
+            <Box
+              className={styles.chevronContainer}
+              style={{
+                transform: `rotate(${isOpen ? 0 : 180}deg)`,
+              }}
+            >
+              <ChevronUpIcon className={styles.chevronIcon} />
+            </Box>
+          </Box>
         </Box>
+        <Column className={styles.filterDropDowns} paddingBottom="8" paddingLeft="0">
+          {Object.entries(marketPlaceItems).map(([value, title]) => (
+            <MarketplaceItem
+              key={value}
+              title={title}
+              value={value}
+              count={marketCount?.[value] || 0}
+              {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
+            />
+          ))}
+        </Column>
       </Box>
-      <Column className={styles.filterDropDowns} paddingLeft="0">
-        {Object.entries(marketPlaceItems).map(([value, title]) => (
-          <MarketplaceItem
-            key={value}
-            title={title}
-            value={value}
-            count={marketCount?.[value] || 0}
-            {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
-          />
-        ))}
-      </Column>
-    </Box>
+    </>
   )
 }

@@ -2,7 +2,25 @@
 
 exports[`renders currency rows correctly when currencies list is non-empty 1`] = `
 <DocumentFragment>
-  .c7 {
+  .c9 {
+  color: #99A1BD;
+}
+
+.c7 {
+  margin-left: 4px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c8 {
+  width: 1em;
+  height: 1em;
   color: #99A1BD;
 }
 
@@ -55,7 +73,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
   justify-content: space-between;
 }
 
-.c8 {
+.c10 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -111,9 +129,41 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             >
               Dai Stablecoin
             </div>
+            <div
+              class="c7"
+            >
+              <svg
+                class="c8"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                />
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="9"
+                  y2="13"
+                />
+                <line
+                  x1="12"
+                  x2="12.01"
+                  y1="17"
+                  y2="17"
+                />
+              </svg>
+            </div>
           </div>
           <div
-            class="c7 css-1j6a53a"
+            class="c9 css-1j6a53a"
           >
             DAI
           </div>
@@ -122,7 +172,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
           class="c4"
         >
           <div
-            class="c0 c1 c8"
+            class="c0 c1 c10"
             style="justify-self: flex-end;"
           />
         </div>
@@ -150,9 +200,41 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             >
               USD//C
             </div>
+            <div
+              class="c7"
+            >
+              <svg
+                class="c8"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                />
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="9"
+                  y2="13"
+                />
+                <line
+                  x1="12"
+                  x2="12.01"
+                  y1="17"
+                  y2="17"
+                />
+              </svg>
+            </div>
           </div>
           <div
-            class="c7 css-1j6a53a"
+            class="c9 css-1j6a53a"
           >
             USDC
           </div>
@@ -161,7 +243,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
           class="c4"
         >
           <div
-            class="c0 c1 c8"
+            class="c0 c1 c10"
             style="justify-self: flex-end;"
           />
         </div>
@@ -189,9 +271,41 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             >
               Wrapped BTC
             </div>
+            <div
+              class="c7"
+            >
+              <svg
+                class="c8"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                />
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="9"
+                  y2="13"
+                />
+                <line
+                  x1="12"
+                  x2="12.01"
+                  y1="17"
+                  y2="17"
+                />
+              </svg>
+            </div>
           </div>
           <div
-            class="c7 css-1j6a53a"
+            class="c9 css-1j6a53a"
           >
             WBTC
           </div>
@@ -200,7 +314,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
           class="c4"
         >
           <div
-            class="c0 c1 c8"
+            class="c0 c1 c10"
             style="justify-self: flex-end;"
           />
         </div>

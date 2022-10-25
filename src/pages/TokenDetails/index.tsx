@@ -95,32 +95,25 @@ export default function TokenDetails() {
   const navigate = useNavigate()
   // Wrapping navigate in a transition prevents Suspense from unnecessarily showing fallbacks again.
   const [isPending, startTransition] = useTransition()
-  const transition = useCallback(
-    // Typechecking requires that we differentiate the string/number overloads.
-    (to: string | number) => startTransition(() => (typeof to === 'string' ? navigate(to) : navigate(to))),
-    [navigate]
-  )
-  const transitionToTokenForChain = useCallback(
+  const navigateToTokenForChain = useCallback(
     (chain: Chain) => {
       const chainName = chain.toLowerCase()
       const token = tokenQueryData?.project?.tokens.find((token) => token.chain === chain && token.address)
-      if (isNative) {
-        transition(`/tokens/${chainName}/${NATIVE_CHAIN_ID}`)
-      } else if (token) {
-        transition(`/tokens/${chainName}/${token.address}`)
-      }
+      const address = isNative ? NATIVE_CHAIN_ID : token?.address
+      if (!address) return
+      startTransition(() => navigate(`/tokens/${chainName}/${address}`))
     },
-    [isNative, tokenQueryData?.project?.tokens, transition]
+    [isNative, navigate, tokenQueryData?.project?.tokens]
   )
-  useOnGlobalChainSwitch(transitionToTokenForChain)
-  const transitionToWidgetSelectedToken = useCallback(
+  useOnGlobalChainSwitch(navigateToTokenForChain)
+  const navigateToWidgetSelectedToken = useCallback(
     (input: Currency | undefined, output: Currency | undefined) => {
       const update = output || input
       if (!token || !update || input?.equals(token) || output?.equals(token)) return
       const address = update.isNative ? NATIVE_CHAIN_ID : update.address
-      transition(`/tokens/${chainName}/${address}`)
+      startTransition(() => navigate(`/tokens/${chainName}/${address}`))
     },
-    [chainName, token, transition]
+    [chainName, navigate, token]
   )
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
@@ -180,7 +173,7 @@ export default function TokenDetails() {
         <RightPanel>
           <Widget
             defaultToken={token === null ? undefined : token ?? nativeCurrency} // a null token is still loading, and should not be overridden.
-            onTokensChange={transitionToWidgetSelectedToken}
+            onTokensChange={navigateToWidgetSelectedToken}
             onReviewSwapClick={onReviewSwapClick}
           />
           {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress ?? ''} warning={tokenWarning} />}
@@ -200,7 +193,7 @@ export default function TokenDetails() {
             isOpen={isBlockedToken || !!continueSwap}
             tokenAddress={tokenQueryAddress}
             onContinue={() => onResolveSwap(true)}
-            onBlocked={() => transition(-1)}
+            onBlocked={() => navigate(-1)}
             onCancel={() => onResolveSwap(false)}
             showCancel={true}
           />
