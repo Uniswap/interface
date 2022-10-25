@@ -15,7 +15,7 @@ import Foundation
 import CryptoKit
 
 // TODO(cmcewen): move constants to another file
-let prefix = "com.uniswap.mobile.dev"
+let prefix = "com.uniswap.mobile"
 let mnemonicPrefix = ".mnemonic."
 let privateKeyPrefix = ".privateKey."
 let entireMnemonicPrefix = prefix + mnemonicPrefix

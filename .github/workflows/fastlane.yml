@@ -107,9 +107,9 @@ jobs:
           ccache -s
         shell: bash
         env:
-          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER }}
+          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_PROD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_ID: ${{ secrets.APPLE_APP_ID }}
+          APPLE_APP_ID: ${{ secrets.APPLE_APP_ID_PROD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           URL_TO_FASTLANE_CERTIFICATES_REPO: ${{ secrets.URL_TO_FASTLANE_CERTIFICATES_REPO }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
@@ -129,12 +129,13 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER_PROD }}
         run: |
           # Install Sentry CLI
           curl -sL https://sentry.io/get-cli/ | bash
 
           # Create new Sentry release
-          export SENTRY_RELEASE="com.uniswap.mobile.dev@$IOS_VERSION_NUMBER+$IOS_BUILD_NUMBER"
+          export SENTRY_RELEASE="$APP_IDENTIFIER@$IOS_VERSION_NUMBER+$IOS_BUILD_NUMBER"
           sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE --log-level=info
           sentry-cli releases set-commits $SENTRY_RELEASE --auto --ignore-missing --log-level=info
 

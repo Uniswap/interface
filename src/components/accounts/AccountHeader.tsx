@@ -57,8 +57,10 @@ export function AccountHeader() {
         name={ElementName.Manage}
         testID={ElementName.Manage}
         onLongPress={() => {
-          selectionAsync()
-          dispatch(openModal({ name: ModalName.Experiments }))
+          if (__DEV__) {
+            selectionAsync()
+            dispatch(openModal({ name: ModalName.Experiments }))
+          }
         }}
         onPress={onPressAccountHeader}>
         {activeAddress && (
