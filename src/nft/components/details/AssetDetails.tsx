@@ -14,9 +14,9 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
 import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
-import { fetchPrice } from 'nft/utils'
+import { useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
-import { formatEthPrice, getUsdPrice } from 'nft/utils/currency'
+import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
@@ -25,7 +25,6 @@ import { toSignificant } from 'nft/utils/toSignificant'
 import qs from 'query-string'
 import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { useQuery } from 'react-query'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 
@@ -131,7 +130,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const [isSelected, setSelected] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const { account: address, provider } = useWeb3React()
-  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
 
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
@@ -178,7 +176,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   }, [asset, address, provider])
 
-  const USDPrice = fetchedPriceData && getUsdPrice(asset, fetchedPriceData)
+  const USDPrice = useUsdPrice(asset)
 
   return (
     <AnimatedBox
