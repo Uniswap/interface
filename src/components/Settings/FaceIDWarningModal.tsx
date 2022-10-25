@@ -16,13 +16,13 @@ export function FaceIDWarningModal({ onConfirm, onCancel, onClose }: Props) {
     <WarningModal
       isVisible
       caption={t(
-        "If you don't turn on Face ID, anyone who gains access to your device can view your recovery phrase and steal your assets"
+        'If you don’t turn on Face ID, anyone who gains access to your device can open Uniswap Wallet and make transactions.'
       )}
       closeText={t('Back')}
       confirmText={t('Skip Face ID')}
       modalName={ModalName.FaceIDWarning}
-      severity={WarningSeverity.Critical}
-      title={t('Your assets are at risk')}
+      severity={WarningSeverity.Medium}
+      title={t('Are you sure?')}
       onCancel={onCancel}
       onClose={onClose}
       onConfirm={onConfirm}
