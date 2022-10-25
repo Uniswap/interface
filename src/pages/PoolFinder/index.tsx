@@ -162,7 +162,7 @@ export default function PoolFinder() {
         <StyledInternalLink
           to={`/pools/${!!currency0 ? currencyId(currency0, chainId) : undefined}/${
             !!currency1 ? currencyId(currency1, chainId) : undefined
-          }`}
+          }?tab=classic`}
         >
           <Text textAlign="center">
             <Trans>Add liquidity</Trans>
@@ -188,7 +188,7 @@ export default function PoolFinder() {
                   <Text textAlign="center" fontWeight={500}>
                     <Trans>Pool Found!</Trans>
                   </Text>
-                  <StyledInternalLink to={`/myPools`}>
+                  <StyledInternalLink to={`/myPools?tab=classic`}>
                     <Text textAlign="center">
                       <Trans>Manage your pools.</Trans>
                     </Text>
