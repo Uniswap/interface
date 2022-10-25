@@ -50,7 +50,7 @@ const MarketplaceItem = ({
       removeMarket(value)
       setCheckboxSelected(false)
     }
-    sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { marketplace: value, checked: !isCheckboxSelected })
+    sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: 'Marketplace' })
   }
 
   return (
