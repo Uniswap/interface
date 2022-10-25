@@ -77,13 +77,13 @@ export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
  * Known pages in the app. Highest order context.
  */
 export enum PageName {
+  NFT_COLLECTION_PAGE = 'nft-collection-page',
   NFT_DETAILS_PAGE = 'nft-details-page',
   TOKEN_DETAILS_PAGE = 'token-details',
   TOKENS_PAGE = 'tokens-page',
   POOL_PAGE = 'pool-page',
   SWAP_PAGE = 'swap-page',
   VOTE_PAGE = 'vote-page',
-  NFT_COLLECTION_PAGE = 'nft-collection-page',
   // alphabetize additional page names.
 }
 
