@@ -23,6 +23,7 @@
   "Copy": "Copy",
   "Paste": "Paste",
   "Send": "Send",
+  "Network failure": "Network failure",
   "What’s a recovery phrase?": "What’s a recovery phrase?",
   "A recovery phrase is a set of 12 unique words that you can use to access to your wallet—<1>it's like your wallet's secret password.</1>": "A recovery phrase is a set of 12 unique words that you can use to access to your wallet—<1>it's like your wallet's secret password.</1>",
   "You can <2>enter your recovery phrase on a new device to recover your wallet</2> and access your funds.": "You can <2>enter your recovery phrase on a new device to recover your wallet</2> and access your funds.",

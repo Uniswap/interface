@@ -1,6 +1,7 @@
 import { graphql } from 'babel-plugin-relay/macro'
-import React, { Suspense } from 'react'
+import React from 'react'
 import { useLazyLoadQuery } from 'react-relay'
+import { Suspense } from 'src/components/data/Suspense'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'

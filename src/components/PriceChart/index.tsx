@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { ReactNode, Suspense, useMemo } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Suspense } from 'src/components/data/Suspense'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { PriceChartLoading } from 'src/components/PriceChart/PriceChartLoading'

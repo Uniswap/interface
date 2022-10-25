@@ -56,6 +56,11 @@ module.exports = {
             name: '@ethersproject',
             message: "Please import from 'ethers' directly to support tree-shaking.",
           },
+          {
+            name: 'react',
+            importNames: ['Suspense'],
+            message: 'Please use Suspense from src/components/data instead.',
+          },
         ],
       },
     ],

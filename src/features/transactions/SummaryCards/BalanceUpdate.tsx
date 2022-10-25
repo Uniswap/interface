@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { Suspense, useMemo } from 'react'
+import React, { useMemo } from 'react'
+import { Suspense } from 'src/components/data/Suspense'
 import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { AssetUpdateLayout } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'

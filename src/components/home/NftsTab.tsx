@@ -1,6 +1,6 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import { selectionAsync } from 'expo-haptics'
-import React, { Suspense, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import { useLazyLoadQuery } from 'react-relay'
@@ -9,6 +9,7 @@ import { useHomeStackNavigation } from 'src/app/navigation/types'
 import NoNFTsIcon from 'src/assets/icons/empty-state-picture.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { Button } from 'src/components/buttons/Button'
+import { Suspense } from 'src/components/data/Suspense'
 import {
   NftsTabQuery,
   NftsTabQuery$data,

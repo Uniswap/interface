@@ -10,6 +10,7 @@ import {
 import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
 import { RecordSource } from 'src/data/recordSource'
+import { NetworkError, NetworkErrorType } from 'src/data/types'
 import { logException, logMessage } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 
@@ -18,6 +19,25 @@ if (__DEV__) {
   // https://github.com/th3rdwave/flipper-plugin-relay-devtools/issues/10#issuecomment-1135440690
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   require('react-native-flipper-relay-devtools').addPlugin()
+}
+
+function parseNetworkError(status: number): NetworkErrorType {
+  switch (status) {
+    case 401:
+      return NetworkErrorType.Unauthorized
+    case 403:
+      return NetworkErrorType.Forbidden
+    case 404:
+      return NetworkErrorType.NotFound
+    case 429:
+      return NetworkErrorType.TooManyRequests
+    case 500:
+      return NetworkErrorType.InternalServerError
+    case 503:
+      return NetworkErrorType.ServiceUnavailable
+    default:
+      return NetworkErrorType.Unknown
+  }
 }
 
 /**
@@ -45,12 +65,27 @@ const createRelayEnvironment = () => {
           variables,
         }),
       })
-        .then((data) => data.json())
         .then((response) => {
-          sink.next(response)
+          if (response.ok) {
+            return response.json()
+          }
+
+          throw new NetworkError(parseNetworkError(response.status))
+        })
+        .then((data) => {
+          sink.next(data)
           sink.complete()
 
           recordSource.dump()
+        })
+        .catch((error) => {
+          logException(LogContext.Relay, error)
+
+          if (error instanceof NetworkError) {
+            sink.error(error)
+          } else {
+            sink.error(new NetworkError(NetworkErrorType.Unknown))
+          }
         })
     })
   }

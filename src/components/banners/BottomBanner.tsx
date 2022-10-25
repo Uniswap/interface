@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { FadeIn, FadeOut, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { AnimatedFlex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
@@ -17,7 +17,8 @@ export function BottomBanner({ text, icon, backgroundColor, translateY }: Bottom
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: withTiming(translateY ? -1 * translateY : -1 * BANNER_HEIGHT, {
+        // need to check for undefined since 0 is falsy
+        translateY: withTiming(translateY !== undefined ? -1 * translateY : -1 * BANNER_HEIGHT, {
           duration: 200,
         }),
       },
@@ -33,6 +34,8 @@ export function BottomBanner({ text, icon, backgroundColor, translateY }: Bottom
       backgroundColor={backgroundColor ? backgroundColor : 'accentActive'}
       borderRadius="sm"
       bottom={0}
+      entering={FadeIn}
+      exiting={FadeOut}
       gap="sm"
       height={BANNER_HEIGHT}
       justifyContent="flex-start"

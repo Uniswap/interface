@@ -1,8 +1,9 @@
 import { selectionAsync } from 'expo-haptics'
-import React, { Suspense } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, ViewStyle } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { Suspense } from 'src/components/data/Suspense'
 import { NoTokens } from 'src/components/icons/NoTokens'
 import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
@@ -54,7 +55,7 @@ export function TokensTab({
   })
 
   return (
-    <View style={styles.tabContentStyle}>
+    <Flex grow style={styles.tabContentStyle}>
       <Suspense
         fallback={
           <Box m="sm" style={loadingContainerStyle}>
@@ -81,6 +82,6 @@ export function TokensTab({
           onPressTokenIn={onPressTokenIn}
         />
       </Suspense>
-    </View>
+    </Flex>
   )
 }

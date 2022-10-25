@@ -1,6 +1,7 @@
 import { graphql } from 'babel-plugin-relay/macro'
-import React, { Suspense } from 'react'
+import React from 'react'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
+import { Suspense } from 'src/components/data/Suspense'
 import { Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
@@ -32,6 +33,7 @@ export function PortfolioBalance({ queryRef }: PortfolioBalanceProps) {
 
   return (
     <Suspense
+      errorFallback={<DecimalNumber number="-" variant="headlineLarge" />}
       fallback={
         <Box width="70%">
           <Loading />
