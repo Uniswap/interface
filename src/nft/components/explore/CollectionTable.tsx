@@ -1,63 +1,59 @@
 import { CellProps, Column } from 'react-table'
 
 import { CollectionTableColumn } from '../../types'
-import {
-  CollectionTitleCell,
-  CommaWithDayChange,
-  EthWithDayChange,
-  WeiWithDayChange,
-  WithCommaCell,
-} from './Cells/Cells'
+import { ChangeCell, CollectionTitleCell, CommaWithDayChange, EthCell, VolumeCell } from './Cells/Cells'
 import { Table } from './Table'
 
 export enum ColumnHeaders {
   Volume = 'Volume',
+  VolumeChange = 'VolumeChange',
   Floor = 'Floor',
+  FloorChange = 'Floor change',
   Sales = 'Sales',
   Items = 'Items',
-  Owners = 'Owners',
+  Owners = 'Unique Owners',
 }
 
 const columns: Column<CollectionTableColumn>[] = [
   {
-    Header: 'Collection',
+    Header: 'Collection name',
     accessor: 'collection',
     Cell: CollectionTitleCell,
-  },
-  {
-    id: ColumnHeaders.Volume,
-    Header: ColumnHeaders.Volume,
-    accessor: ({ volume }) => volume.value,
-    sortDescFirst: true,
-    Cell: function EthDayChanget(cell: CellProps<CollectionTableColumn>) {
-      return <EthWithDayChange value={cell.row.original.volume} />
-    },
   },
   {
     id: ColumnHeaders.Floor,
     Header: ColumnHeaders.Floor,
     accessor: ({ floor }) => floor.value,
     sortDescFirst: true,
-    Cell: function weiDayChange(cell: CellProps<CollectionTableColumn>) {
-      return <WeiWithDayChange value={cell.row.original.floor} />
+    Cell: function ethCell(cell: CellProps<CollectionTableColumn>) {
+      return <EthCell value={cell.row.original.floor.value} />
     },
   },
   {
-    id: ColumnHeaders.Sales,
-    Header: ColumnHeaders.Sales,
-    accessor: 'sales',
+    id: ColumnHeaders.FloorChange,
+    Header: ColumnHeaders.FloorChange,
+    accessor: ({ floor }) => floor.value,
     sortDescFirst: true,
-    Cell: function withCommaCell(cell: CellProps<CollectionTableColumn>) {
-      return <WithCommaCell value={{ value: cell.row.original.sales }} />
+    Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
+      return <ChangeCell change={cell.row.original.floor.change} />
     },
   },
   {
-    id: ColumnHeaders.Items,
-    Header: ColumnHeaders.Items,
-    accessor: 'totalSupply',
+    id: ColumnHeaders.Volume,
+    Header: ColumnHeaders.Volume,
+    accessor: ({ volume }) => volume.value,
     sortDescFirst: true,
-    Cell: function withCommaCell(cell: CellProps<CollectionTableColumn>) {
-      return <WithCommaCell value={{ value: cell.row.original.totalSupply }} />
+    Cell: function volumeCell(cell: CellProps<CollectionTableColumn>) {
+      return <VolumeCell value={cell.row.original.volume} />
+    },
+  },
+  {
+    id: ColumnHeaders.VolumeChange,
+    Header: ColumnHeaders.VolumeChange,
+    accessor: ({ volume }) => volume.value,
+    sortDescFirst: true,
+    Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
+      return <ChangeCell change={cell.row.original.volume.change} />
     },
   },
   {

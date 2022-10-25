@@ -14,7 +14,7 @@ const BannerContainer = styled.div`
   margin-top: 40px;
   margin-bottom: 20px;
   gap: 36px;
-  max-width: 1100px;
+  max-width: 1200px;
   justify-content: center;
 `
 

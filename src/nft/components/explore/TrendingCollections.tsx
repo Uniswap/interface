@@ -18,7 +18,7 @@ const ExploreContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
 `
 
 const FiltersRow = styled.div`

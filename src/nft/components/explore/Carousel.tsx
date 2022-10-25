@@ -51,7 +51,7 @@ interface CarouselProps {
   carouselWidth?: number
 }
 
-export const Carousel = ({ children, width = 472, carouselWidth = 568 }: CarouselProps) => {
+export const Carousel = ({ children, width = 472, carouselWidth = 664 }: CarouselProps) => {
   const idx = useCallback((x: number, l = children.length) => (x < 0 ? x + l : x) % l, [children])
   const getPos = useCallback(
     (i: number, firstVis: number, firstVisIdx: number) => idx(i - firstVis + firstVisIdx),

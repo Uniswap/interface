@@ -1,10 +1,52 @@
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
+
 import { ethNumberStandardFormatter, formatWeiToDecimal } from '../../../utils/currency'
 import { putCommas } from '../../../utils/putCommas'
 import { formatChange } from '../../../utils/toSignificant'
 import { Box } from '../../Box'
 import { Column, Row } from '../../Flex'
-import { VerifiedIcon } from '../../icons'
+import { SquareArrowDownIcon, SquareArrowUpIcon, VerifiedIcon } from '../../icons'
 import * as styles from './Cells.css'
+
+const CollectionNameContainer = styled.div`
+  display: flex;
+  padding: 14px 0px 14px 8px;
+  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
+
+const CollectionName = styled.div`
+  margin-left: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
+
+const RoundedImage = styled.div<{ src?: string }>`
+  height: 36px;
+  width: 36px;
+  border-radius: 36px;
+  background: ${({ src, theme }) => (src ? `url(${src})` : theme.backgroundModule)};
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+`
+
+const ChangeCellContainer = styled.div<{ change: number }>`
+  display: flex;
+  color: ${({ theme, change }) => (change >= 0 ? theme.accentSuccess : theme.accentFailure)};
+  justify-content: end;
+  align-items: center;
+  gap: 2px;
+`
+
+const EthContainer = styled.div`
+  display: flex;
+  justify-content: end;
+`
 
 interface CellProps {
   value: {
@@ -19,30 +61,47 @@ interface CellProps {
 
 export const CollectionTitleCell = ({ value }: CellProps) => {
   return (
-    <Row as="span" style={{ marginLeft: '52px' }}>
-      <img className={styles.logo} src={value.logo} alt={`${value.name} logo`} height={44} width={44} />
-      <span className={styles.title}>{value.name}</span>
+    <CollectionNameContainer>
+      <RoundedImage src={value.logo} />
+      <CollectionName>
+        <ThemedText.SubHeader>{value.name}</ThemedText.SubHeader>
+      </CollectionName>
       {value.isVerified && (
         <span className={styles.verifiedBadge}>
           <VerifiedIcon />
         </span>
       )}
-    </Row>
+    </CollectionNameContainer>
   )
 }
 
 export const WithCommaCell = ({ value }: CellProps) => <span>{value.value ? putCommas(value.value) : '-'}</span>
 
 export const EthCell = ({ value }: { value: number }) => (
-  <Row justifyContent="flex-end" color="textPrimary">
-    {value ? <>{formatWeiToDecimal(value.toString(), true)} ETH</> : '-'}
-  </Row>
+  <EthContainer>
+    <ThemedText.BodyPrimary>
+      {value ? <>{formatWeiToDecimal(value.toString(), true)} ETH</> : '-'}
+    </ThemedText.BodyPrimary>
+  </EthContainer>
 )
 
 export const VolumeCell = ({ value }: CellProps) => (
-  <Row justifyContent="flex-end" color="textPrimary">
-    {value.value ? <>{ethNumberStandardFormatter(value.value.toString())} ETH</> : '-'}
-  </Row>
+  <EthContainer>
+    <ThemedText.BodyPrimary>
+      {value.value ? <>{ethNumberStandardFormatter(value.value.toString())} ETH</> : '-'}
+    </ThemedText.BodyPrimary>
+  </EthContainer>
+)
+
+export const ChangeCell = ({ change }: { change?: number }) => (
+  <ChangeCellContainer change={change ?? 0}>
+    {!change || change > 0 ? (
+      <SquareArrowUpIcon width="20px" height="20px" />
+    ) : (
+      <SquareArrowDownIcon width="20px" height="20px" />
+    )}
+    <ThemedText.BodyPrimary color="currentColor">{change ? Math.round(change) : 0}%</ThemedText.BodyPrimary>
+  </ChangeCellContainer>
 )
 
 export const EthWithDayChange = ({ value }: CellProps) => (

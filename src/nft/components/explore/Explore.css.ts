@@ -8,7 +8,7 @@ export const section = style([
     paddingRight: { sm: '16', xl: '0' },
   }),
   {
-    maxWidth: '1100px',
+    maxWidth: '1200px',
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'row',
@@ -198,7 +198,6 @@ export const rank = sprinkles({
 export const td = style([
   body,
   {
-    verticalAlign: 'middle',
     selectors: {
       '&:nth-last-child(1)': {
         paddingRight: '20px',
@@ -207,8 +206,7 @@ export const td = style([
   },
   sprinkles({
     maxWidth: '160',
-    paddingTop: '10',
-    paddingBottom: '10',
+    paddingY: '8',
     textAlign: 'right',
     position: 'relative',
   }),
