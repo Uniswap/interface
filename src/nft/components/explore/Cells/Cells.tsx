@@ -1,3 +1,6 @@
+import { formatEther } from '@ethersproject/units'
+import { SquareArrowDownIcon, SquareArrowUpIcon, VerifiedIcon } from 'nft/components/icons'
+import { Denomination } from 'nft/types'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -6,7 +9,6 @@ import { putCommas } from '../../../utils/putCommas'
 import { formatChange } from '../../../utils/toSignificant'
 import { Box } from '../../Box'
 import { Column, Row } from '../../Flex'
-import { SquareArrowDownIcon, SquareArrowUpIcon, VerifiedIcon } from '../../icons'
 import * as styles from './Cells.css'
 
 const CollectionNameContainer = styled.div`
@@ -77,21 +79,57 @@ export const CollectionTitleCell = ({ value }: CellProps) => {
 
 export const WithCommaCell = ({ value }: CellProps) => <span>{value.value ? putCommas(value.value) : '-'}</span>
 
-export const EthCell = ({ value }: { value: number }) => (
-  <EthContainer>
-    <ThemedText.BodyPrimary>
-      {value ? <>{formatWeiToDecimal(value.toString(), true)} ETH</> : '-'}
-    </ThemedText.BodyPrimary>
-  </EthContainer>
-)
+export const EthCell = ({
+  value,
+  denomination,
+  usdPrice,
+}: {
+  value?: number
+  denomination: Denomination
+  usdPrice?: number
+}) => {
+  const denominatedValue =
+    denomination === Denomination.ETH
+      ? value
+      : usdPrice && value
+      ? usdPrice * parseFloat(formatEther(value))
+      : undefined
+  const formattedValue = denominatedValue
+    ? denomination === Denomination.ETH
+      ? formatWeiToDecimal(denominatedValue.toString(), true) + ' ETH'
+      : ethNumberStandardFormatter(denominatedValue, true)
+    : '-'
 
-export const VolumeCell = ({ value }: CellProps) => (
-  <EthContainer>
-    <ThemedText.BodyPrimary>
-      {value.value ? <>{ethNumberStandardFormatter(value.value.toString())} ETH</> : '-'}
-    </ThemedText.BodyPrimary>
-  </EthContainer>
-)
+  return (
+    <EthContainer>
+      <ThemedText.BodyPrimary>{value ? formattedValue : '-'}</ThemedText.BodyPrimary>
+    </EthContainer>
+  )
+}
+
+export const VolumeCell = ({
+  value,
+  denomination,
+  usdPrice,
+}: {
+  value?: number
+  denomination: Denomination
+  usdPrice?: number
+}) => {
+  const denominatedValue = denomination === Denomination.ETH ? value : usdPrice && value ? usdPrice * value : undefined
+
+  const formattedValue = denominatedValue
+    ? denomination === Denomination.ETH
+      ? ethNumberStandardFormatter(denominatedValue.toString()) + ' ETH'
+      : ethNumberStandardFormatter(denominatedValue, true)
+    : '-'
+
+  return (
+    <EthContainer>
+      <ThemedText.BodyPrimary>{value ? formattedValue : '-'}</ThemedText.BodyPrimary>
+    </EthContainer>
+  )
+}
 
 export const ChangeCell = ({ change }: { change?: number }) => (
   <ChangeCellContainer change={change ?? 0}>
@@ -102,24 +140,6 @@ export const ChangeCell = ({ change }: { change?: number }) => (
     )}
     <ThemedText.BodyPrimary color="currentColor">{change ? Math.round(change) : 0}%</ThemedText.BodyPrimary>
   </ChangeCellContainer>
-)
-
-export const EthWithDayChange = ({ value }: CellProps) => (
-  <Column gap="4">
-    <VolumeCell value={{ value: value.value }} />
-    {value.change ? (
-      <Box
-        as="span"
-        color={value.change > 0 ? 'green' : 'accentFailure'}
-        fontWeight="normal"
-        fontSize="12"
-        position="relative"
-      >
-        {value.change > 0 && '+'}
-        {formatChange(value.change)}%
-      </Box>
-    ) : null}
-  </Column>
 )
 
 export const WeiWithDayChange = ({ value }: CellProps) => (

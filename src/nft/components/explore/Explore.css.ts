@@ -155,6 +155,7 @@ export const table = style([
     borderSpacing: '0px 40px',
   },
   sprinkles({
+    background: 'backgroundSurface',
     width: 'full',
     borderRadius: '12',
     borderStyle: 'none',

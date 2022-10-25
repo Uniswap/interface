@@ -6,12 +6,12 @@ import { Table } from './Table'
 
 export enum ColumnHeaders {
   Volume = 'Volume',
-  VolumeChange = 'VolumeChange',
+  VolumeChange = 'Volume change',
   Floor = 'Floor',
   FloorChange = 'Floor change',
   Sales = 'Sales',
   Items = 'Items',
-  Owners = 'Unique Owners',
+  Owners = 'Owners',
 }
 
 const columns: Column<CollectionTableColumn>[] = [
@@ -26,7 +26,13 @@ const columns: Column<CollectionTableColumn>[] = [
     accessor: ({ floor }) => floor.value,
     sortDescFirst: true,
     Cell: function ethCell(cell: CellProps<CollectionTableColumn>) {
-      return <EthCell value={cell.row.original.floor.value} />
+      return (
+        <EthCell
+          value={cell.row.original.floor.value}
+          denomination={cell.row.original.denomination}
+          usdPrice={cell.row.original.usdPrice}
+        />
+      )
     },
   },
   {
@@ -44,7 +50,13 @@ const columns: Column<CollectionTableColumn>[] = [
     accessor: ({ volume }) => volume.value,
     sortDescFirst: true,
     Cell: function volumeCell(cell: CellProps<CollectionTableColumn>) {
-      return <VolumeCell value={cell.row.original.volume} />
+      return (
+        <VolumeCell
+          value={cell.row.original.volume.value}
+          denomination={cell.row.original.denomination}
+          usdPrice={cell.row.original.usdPrice}
+        />
+      )
     },
   },
   {

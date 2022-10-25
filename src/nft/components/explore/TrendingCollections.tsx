@@ -1,10 +1,12 @@
+import ms from 'ms.macro'
+import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
+import { fetchPrice } from 'nft/utils'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { fetchTrendingCollections } from '../../queries'
-import { CollectionTableColumn, TimePeriod, VolumeType } from '../../types'
 import CollectionTable from './CollectionTable'
 
 const timeOptions: { label: string; value: TimePeriod }[] = [
@@ -61,6 +63,13 @@ const TrendingCollections = () => {
     }
   )
 
+  const { data: usdPrice } = useQuery(['fetchPrice', {}], () => fetchPrice(), {
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchInterval: ms`1m`,
+  })
+
   const trendingCollections = useMemo(() => {
     if (isSuccess && data) {
       return data.map((d) => ({
@@ -86,9 +95,11 @@ const TrendingCollections = () => {
         },
         sales: d.sales,
         totalSupply: d.totalSupply,
+        denomination: isEthToggled ? Denomination.ETH : Denomination.USD,
+        usdPrice,
       }))
     } else return [] as CollectionTableColumn[]
-  }, [data, isSuccess])
+  }, [data, isSuccess, isEthToggled, usdPrice])
 
   return (
     <ExploreContainer>
