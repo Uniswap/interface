@@ -1,5 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { filterTimeAtom } from 'components/Tokens/state'
@@ -28,14 +27,12 @@ import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useAtomValue } from 'jotai/utils'
 import { useTokenFromQuery } from 'lib/hooks/useCurrency'
-import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { useCallback, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 
 export default function TokenDetails() {
   const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
-  const { account } = useWeb3React()
   const chain = validateUrlChainParam(chainName)
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const nativeCurrency = nativeOnChain(pageChainId)
@@ -48,10 +45,6 @@ export default function TokenDetails() {
   )
   const queryToken = useTokenFromQuery(isNative ? undefined : { ...tokenQueryData, chainId: pageChainId })
   const token = isNative ? nativeCurrency : queryToken
-  const tokenQueryAddress = isNative ? nativeCurrency.wrapped.address : tokenAddress
-
-  const nativeCurrencyBalance = useCurrencyBalance(account, nativeCurrency)
-  const tokenBalance = useTokenBalance(account, token?.wrapped)
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   const isBlockedToken = tokenWarning?.canProceed === false
@@ -141,21 +134,14 @@ export default function TokenDetails() {
             onReviewSwapClick={onReviewSwapClick}
           />
           {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress ?? ''} warning={tokenWarning} />}
-          <BalanceSummary tokenAmount={tokenBalance} nativeCurrencyAmount={nativeCurrencyBalance} isNative={isNative} />
+          {token && <BalanceSummary token={token} />}
         </RightPanel>
+        {token && <MobileBalanceSummaryFooter token={token} />}
 
-        {tokenQueryAddress && (
-          <MobileBalanceSummaryFooter
-            tokenAmount={tokenBalance}
-            tokenAddress={tokenQueryAddress}
-            nativeCurrencyAmount={nativeCurrencyBalance}
-            isNative={isNative}
-          />
-        )}
-        {tokenQueryAddress && (
+        {tokenAddress && (
           <TokenSafetyModal
             isOpen={isBlockedToken || !!continueSwap}
-            tokenAddress={tokenQueryAddress}
+            tokenAddress={tokenAddress}
             onContinue={() => onResolveSwap(true)}
             onBlocked={() => navigate(-1)}
             onCancel={() => onResolveSwap(false)}
