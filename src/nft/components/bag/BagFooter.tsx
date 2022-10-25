@@ -1,15 +1,41 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Trans } from '@lingui/macro'
 import Loader from 'components/Loader'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { bodySmall } from 'nft/css/common.css'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
+import { AlertTriangle } from 'react-feather'
 import { useModalIsOpen, useToggleWalletModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import * as styles from './BagFooter.css'
+
+const Footer = styled(Column)`
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+  color: ${({ theme }) => theme.textPrimary};
+  padding: 12px 16px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+`
+
+const WarningIcon = styled(AlertTriangle)`
+  width: 14px;
+  margin-right: 4px;
+  color: ${({ theme }) => theme.deprecated_warning};
+`
+const WarningText = styled(ThemedText.BodyPrimary)`
+  align-items: center;
+  color: ${({ theme }) => theme.accentWarning};
+  display: flex;
+  font-size: 14px;
+  justify-content: center;
+  margin: 12px 0 !important;
+  text-align: center;
+`
 
 interface BagFooterProps {
   balance: BigNumber
@@ -49,18 +75,7 @@ export const BagFooter = ({
 
   return (
     <Column className={styles.footerContainer}>
-      {showWarning && (
-        <Row className={styles.warningContainer}>
-          {!sufficientBalance
-            ? `Insufficient funds (${formatWeiToDecimal(balance.toString())} ETH)`
-            : `Something went wrong. Please try again.`}
-        </Row>
-      )}
-      <Column
-        borderTopLeftRadius={showWarning ? '0' : '12'}
-        borderTopRightRadius={showWarning ? '0' : '12'}
-        className={styles.footer}
-      >
+      <Footer borderTopLeftRadius={showWarning ? '0' : '12'} borderTopRightRadius={showWarning ? '0' : '12'}>
         <Column gap="4" paddingTop="8" paddingBottom="20">
           <Row justifyContent="space-between">
             <Box>
@@ -76,6 +91,16 @@ export const BagFooter = ({
             {`${ethNumberStandardFormatter(totalUsdPrice, true)}`}
           </Row>
         </Column>
+        {showWarning && (
+          <WarningText>
+            <WarningIcon />
+            {!sufficientBalance ? (
+              `Insufficient funds (${formatWeiToDecimal(balance.toString())} ETH)`
+            ) : (
+              <Trans>Something went wrong. Please try again.</Trans>
+            )}
+          </WarningText>
+        )}
         <Row
           as="button"
           color="explicitWhite"
@@ -98,7 +123,7 @@ export const BagFooter = ({
             ? 'Transaction pending'
             : 'Pay'}
         </Row>
-      </Column>
+      </Footer>
     </Column>
   )
 }
