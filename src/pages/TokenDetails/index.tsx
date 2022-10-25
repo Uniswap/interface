@@ -8,12 +8,17 @@ import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
-import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetails'
 import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
+import TokenDetailsSkeleton, {
+  Hr,
+  LeftPanel,
+  RightPanel,
+  TokenDetailsLayout,
+} from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import Widget, { WIDGET_WIDTH } from 'components/Widget'
+import Widget from 'components/Widget'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
@@ -27,47 +32,6 @@ import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalanc
 import { useCallback, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
-import styled from 'styled-components/macro'
-
-const Hr = styled.hr`
-  background-color: ${({ theme }) => theme.textSecondary};
-  opacity: 24%;
-  border: none;
-  height: 0.5px;
-`
-export const TokenDetailsLayout = styled.div`
-  display: flex;
-  padding: 0 8px 52px;
-  justify-content: center;
-  width: 100%;
-
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    gap: 16px;
-    padding: 0 16px;
-  }
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-    gap: 20px;
-    padding: 48px 20px;
-  }
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.xl}px) {
-    gap: 40px;
-  }
-`
-export const LeftPanel = styled.div`
-  flex: 1;
-  max-width: 780px;
-  overflow: hidden;
-`
-export const RightPanel = styled.div`
-  display: none;
-  flex-direction: column;
-  gap: 20px;
-  width: ${WIDGET_WIDTH}px;
-
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    display: flex;
-  }
-`
 
 export default function TokenDetails() {
   const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
@@ -136,7 +100,7 @@ export default function TokenDetails() {
   return (
     <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ tokenAddress, tokenName: chainName }} shouldLogImpression>
       <TokenDetailsLayout>
-        {tokenQueryData && !isPending ? (
+        {tokenQueryData && !isPending && !isNative ? (
           <LeftPanel>
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
@@ -167,7 +131,7 @@ export default function TokenDetails() {
             )}
           </LeftPanel>
         ) : (
-          <LoadingTokenDetail />
+          <TokenDetailsSkeleton />
         )}
 
         <RightPanel>
