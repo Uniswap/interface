@@ -52,13 +52,7 @@ const AssetHeader = styled.div`
 const MediaContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: -25px;
-  height: 400px;
-
-  img {
-    height: 90%;
-    width: auto;
-  }
+  margin-top: 20px;
 `
 
 const Column = styled.div`
@@ -308,10 +302,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   }, [asset, address, provider])
 
-  // console.log(asset)
-  // console.log(collection)
-
-  console.log(asset)
   const rarity = asset.rarity ? asset.rarity?.providers[0].rank : undefined
 
   return (

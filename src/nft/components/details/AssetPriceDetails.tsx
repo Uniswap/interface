@@ -191,6 +191,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
 
+  console.log(cheapestOrder)
+
   const { quantity, assetInBag } = useMemo(() => {
     return {
       quantity: itemsInBag.filter(
