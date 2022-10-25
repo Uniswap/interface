@@ -54,25 +54,23 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
-const LoadingRowsWrapper = styled.div`
-  margin-top: 8px;
-`
-
-const LoadingRows = (rowCount: number = PAGE_SIZE) => (
-  <LoadingRowsWrapper>
+const LoadingRows = ({ rowCount }: { rowCount: number }) => (
+  <>
     {Array(rowCount)
       .fill(null)
       .map((_, index) => {
         return <LoadingRow key={index} first={index === 0} last={index === rowCount - 1} />
       })}
-  </LoadingRowsWrapper>
+  </>
 )
 
-export function LoadingTokenTable({ rowCount }: { rowCount?: number }) {
+export function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
   return (
     <GridContainer>
       <HeaderRow />
-      <TokenDataContainer>{LoadingRows(rowCount)}</TokenDataContainer>
+      <TokenDataContainer>
+        <LoadingRows rowCount={rowCount} />
+      </TokenDataContainer>
     </GridContainer>
   )
 }

@@ -1,19 +1,31 @@
-import { Trait } from '../../hooks/useCollectionFilters'
-import { AssetPayload, GenieAsset } from '../../types'
+import { parseEther } from '@ethersproject/units'
+import { Trait } from 'nft/hooks/useCollectionFilters'
+import { AssetPayload, GenieAsset } from 'nft/types'
+
 import { formatTraits } from './AssetsFetcher'
+
+const formatPrice = (x: number | string) => parseEther(x.toString()).toString()
 
 export const fetchSweep = async ({
   contractAddress,
   markets,
-  traits = [],
+  price,
+  rarityRange,
+  traits,
 }: {
   contractAddress: string
   markets?: string[]
+  price?: { high?: number | string; low?: number | string; symbol: string }
+  rarityRange?: Record<string, unknown>
   traits?: Trait[]
 }): Promise<GenieAsset[]> => {
   const url = `${process.env.REACT_APP_GENIE_API_URL}/assets`
   const payload: AssetPayload = {
-    filters: { address: contractAddress.toLowerCase(), traits: {}, notForSale: false },
+    filters: {
+      address: contractAddress.toLowerCase(),
+      traits: {},
+      ...rarityRange,
+    },
     fields: {
       address: 1,
       name: 1,
@@ -24,8 +36,10 @@ export const fetchSweep = async ({
       paymentToken: 1,
       animationUrl: 1,
       notForSale: 1,
+      rarity: 1,
+      tokenId: 1,
     },
-    limit: 99,
+    limit: 50,
     offset: 0,
   }
 
@@ -37,9 +51,19 @@ export const fetchSweep = async ({
     payload.filters.traits = formatTraits(traits)
   }
 
-  const numberOfTraits = traits.filter((trait) => trait.trait_type === 'Number of traits')
-  if (numberOfTraits) {
-    payload.filters.numTraits = numberOfTraits.map((el) => ({ traitCount: el.trait_value }))
+  const low = price?.low ? parseFloat(formatPrice(price.low)) : undefined
+  const high = price?.high ? parseFloat(formatPrice(price.high)) : undefined
+
+  if (low || high) {
+    payload.filters.currentEthPrice = {}
+  }
+
+  if (low && payload.filters.currentEthPrice) {
+    payload.filters.currentEthPrice.$gte = low
+  }
+
+  if (high && payload.filters.currentEthPrice) {
+    payload.filters.currentEthPrice.$lte = high
   }
 
   const r = await fetch(url, {
@@ -49,7 +73,7 @@ export const fetchSweep = async ({
     },
     body: JSON.stringify(payload),
   })
-
   const data = await r.json()
+
   return data.data
 }

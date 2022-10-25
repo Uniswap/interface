@@ -100,8 +100,8 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
   )
 
   const itemsInBag = useBag((state) => state.itemsInBag)
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const cartExpanded = useBag((state) => state.bagExpanded)
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
@@ -167,8 +167,8 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
                 <BuyCell
                   event={event}
                   collectionName={collectionName}
-                  selectAsset={addAssetToBag}
-                  removeAsset={removeAssetFromBag}
+                  selectAsset={addAssetsToBag}
+                  removeAsset={removeAssetsFromBag}
                   itemsInBag={itemsInBag}
                   cartExpanded={cartExpanded}
                   toggleCart={toggleCart}

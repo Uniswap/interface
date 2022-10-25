@@ -243,14 +243,35 @@ const TextWrapper = styled(Text)<{ color: keyof AllColors }>`
  * Preset styles of the Rebass Text component
  */
 export const ThemedText = {
+  BodyPrimary(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={16} color={'textPrimary'} {...props} />
+  },
+  BodySecondary(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={16} color={'textSecondary'} {...props} />
+  },
+  HeadlineSmall(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={20} lineHeight="28px" color={'textPrimary'} {...props} />
+  },
+  LargeHeader(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={36} color={'textPrimary'} {...props} />
+  },
+  Link(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={14} color={'accentAction'} {...props} />
+  },
+  MediumHeader(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={20} color={'textPrimary'} {...props} />
+  },
+  SubHeader(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={16} color={'textPrimary'} {...props} />
+  },
+  SubHeaderSmall(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={14} color={'textSecondary'} {...props} />
+  },
   DeprecatedMain(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_text2'} {...props} />
   },
   DeprecatedLink(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_primary1'} {...props} />
-  },
-  Link(props: TextProps) {
-    return <TextWrapper fontWeight={600} fontSize={14} color={'accentAction'} {...props} />
   },
   DeprecatedLabel(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'deprecated_text1'} {...props} />
@@ -264,32 +285,14 @@ export const ThemedText = {
   DeprecatedBody(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'deprecated_text1'} {...props} />
   },
-  BodySecondary(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color={'textSecondary'} {...props} />
-  },
-  BodyPrimary(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color={'textPrimary'} {...props} />
-  },
   DeprecatedLargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
-  },
-  LargeHeader(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={36} color={'textPrimary'} {...props} />
   },
   DeprecatedMediumHeader(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={20} {...props} />
   },
-  MediumHeader(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={20} color={'textPrimary'} {...props} />
-  },
   DeprecatedSubHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} {...props} />
-  },
-  SubHeader(props: TextProps) {
-    return <TextWrapper fontWeight={600} fontSize={16} color={'textPrimary'} {...props} />
-  },
-  SubHeaderSmall(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={14} color={'textSecondary'} {...props} />
   },
   DeprecatedSmall(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />

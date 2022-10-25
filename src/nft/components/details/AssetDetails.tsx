@@ -52,13 +52,7 @@ const AssetHeader = styled.div`
 const MediaContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: -25px;
-  height: 400px;
-
-  img {
-    height: 90%;
-    width: auto;
-  }
+  margin-top: 20px;
 `
 
 const Column = styled.div`
@@ -156,8 +150,8 @@ interface AssetDetailsProps {
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const [creatorAddress, setCreatorAddress] = useState('')
@@ -308,10 +302,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   }, [asset, address, provider])
 
-  // console.log(asset)
-  // console.log(collection)
-
-  console.log(asset)
   const rarity = asset.rarity ? asset.rarity?.providers[0].rank : undefined
 
   return (
