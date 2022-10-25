@@ -594,7 +594,7 @@ export default function ZapOut({
         </ModalDetailWrapper>
 
         <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
-          <Text fontWeight={500} fontSize={20}>
+          <Text fontWeight={500} fontSize={16}>
             <Trans>Confirm</Trans>
           </Text>
         </ButtonPrimary>
@@ -810,9 +810,8 @@ export default function ZapOut({
                         (priceImpactSeverity > 3 && !expertMode)
                       }
                       margin="0 1rem 0 0"
-                      fontWeight={500}
-                      fontSize={16}
                       padding="16px"
+                      style={{ fontSize: '16px', fontWeight: 500 }}
                     >
                       {approval === ApprovalState.PENDING ? (
                         <Dots>

@@ -250,6 +250,9 @@ export function ConfirmationModalContent({
 
 const ErrorDetail = styled(Section)`
   padding: 12px;
+  word-break: break-word;
+  max-height: 200px;
+  overflow-y: scroll;
   border-radius: 4px;
   margin-top: 12px;
   color: ${({ theme }) => theme.text};
