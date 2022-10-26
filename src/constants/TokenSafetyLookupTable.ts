@@ -1,12 +1,13 @@
 import { TokenInfo } from '@uniswap/token-lists'
 
 import store from '../state'
-import { UNI_EXTENDED_LIST, UNI_LIST, UNSUPPORTED_LIST_URLS } from './lists'
+import { CELO_LIST, UNI_EXTENDED_LIST, UNI_LIST, UNSUPPORTED_LIST_URLS } from './lists'
 import brokenTokenList from './tokenLists/broken.tokenlist.json'
 import { NATIVE_CHAIN_ID } from './tokens'
 
 export enum TOKEN_LIST_TYPES {
   UNI_DEFAULT = 1,
+  CELO,
   UNI_EXTENDED,
   UNKNOWN,
   BLOCKED,
@@ -27,6 +28,11 @@ class TokenSafetyLookupTable {
     // Initialize default tokens second, so that any tokens on both default and extended will display as default (no warning)
     store.getState().lists.byUrl[UNI_LIST].current?.tokens.forEach((token) => {
       dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_DEFAULT
+    })
+
+    // Initialize Celo tokens which are hosted statically on celo-org.github.io and not included in the Uniswap default-token-list
+    store.getState().lists.byUrl[CELO_LIST].current?.tokens.forEach((token) => {
+      dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.CELO
     })
 
     // TODO: Figure out if this list is still relevant

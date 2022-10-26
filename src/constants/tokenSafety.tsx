@@ -83,6 +83,7 @@ export function checkWarning(tokenAddress: string) {
   }
   switch (WarningCache.checkToken(tokenAddress.toLowerCase())) {
     case TOKEN_LIST_TYPES.UNI_DEFAULT:
+    case TOKEN_LIST_TYPES.CELO:
       return null
     case TOKEN_LIST_TYPES.UNI_EXTENDED:
       return MediumWarning
