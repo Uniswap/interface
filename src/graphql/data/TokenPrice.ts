@@ -1,7 +1,9 @@
 import graphql from 'babel-plugin-relay/macro'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { fetchQuery } from 'react-relay'
 
-import { Chain } from './__generated__/TokenPriceQuery.graphql'
+import { Chain, TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
+import environment from './RelayEnvironment'
 import { TimePeriod } from './util'
 
 const tokenPriceQuery = graphql`
@@ -33,8 +35,12 @@ const tokenPriceQuery = graphql`
   }
 `
 
-export type PricePoint = { value: number; timestamp: number }
+export type PricePoint = { timestamp: number; value: number }
 export type PriceDurations = Partial<Record<TimePeriod, PricePoint[]>>
+
+export function isPricePoint(p: { timestamp: number; value: number | null } | null): p is PricePoint {
+  return Boolean(p && p.value)
+}
 
 /*
 export function filterPrices(prices: NonNullable<NonNullable<TokenQueryData>['market']>['priceHistory'] | undefined) {
@@ -44,48 +50,27 @@ export function filterPrices(prices: NonNullable<NonNullable<TokenQueryData>['ma
 
 export function useTokenPriceQuery(address: string, chain: Chain): PriceDurations {
   const contract = useMemo(() => ({ address: address.toLowerCase(), chain }), [address, chain])
-
   const [prices, setPrices] = useState<PriceDurations>({})
-  /*
-  const updatePrices = (response: TokenPriceQuery['response']) => {
-    const priceData = response.tokens?.[0]?.market
-    if (priceData) {
-      setPrices((current) => {
-        return {
-          [TimePeriod.HOUR]: filterPrices(priceData.priceHistory1H) ?? current[TimePeriod.HOUR],
-          [TimePeriod.DAY]: filterPrices(priceData.priceHistory1D) ?? current[TimePeriod.DAY],
-          [TimePeriod.WEEK]: filterPrices(priceData.priceHistory1W) ?? current[TimePeriod.WEEK],
-          [TimePeriod.MONTH]: filterPrices(priceData.priceHistory1M) ?? current[TimePeriod.MONTH],
-          [TimePeriod.YEAR]: filterPrices(priceData.priceHistory1Y) ?? current[TimePeriod.YEAR],
-        }
-      })
-    }
-  }
-  useEffect(() => {
-    fetchQuery<TokenPriceQuery>(environment, tokenPriceQuery, {
-      contract,
-      skip1H: timePeriod === TimePeriod.HOUR,
-      skip1D: timePeriod === TimePeriod.DAY,
-      skip1W: timePeriod === TimePeriod.WEEK,
-      skip1M: timePeriod === TimePeriod.MONTH,
-      skip1Y: timePeriod === TimePeriod.YEAR,
-    })
-  })
-  // Fetch prices & token info in tandem so we can render faster
-  useMemo(
-    () => fetchAllPriceDurations(contract, toHistoryDuration(timePeriod)).subscribe({ next: updatePrices }),
-    [contract, timePeriod]
-  )
 
-  useMemo(
-    () =>
-      setPrices((current) => {
-        current[timePeriod] = filterPrices(token?.market?.priceHistory)
-        return current
-      }),
-    [timePeriod, token?.market?.priceHistory]
-  )
-  */
+  useEffect(() => {
+    const subscription = fetchQuery<TokenPriceQuery>(environment, tokenPriceQuery, { contract }).subscribe({
+      next: (response: TokenPriceQuery['response']) => {
+        const priceData = response.tokens?.[0]?.market
+        const prices = {
+          [TimePeriod.HOUR]: priceData?.priceHistory1H?.filter(isPricePoint),
+          [TimePeriod.DAY]: priceData?.priceHistory1D?.filter(isPricePoint),
+          [TimePeriod.WEEK]: priceData?.priceHistory1W?.filter(isPricePoint),
+          [TimePeriod.MONTH]: priceData?.priceHistory1M?.filter(isPricePoint),
+          [TimePeriod.YEAR]: priceData?.priceHistory1Y?.filter(isPricePoint),
+        }
+        setPrices(prices)
+      },
+    })
+    return () => {
+      setPrices({})
+      subscription.unsubscribe()
+    }
+  }, [contract])
 
   return prices
 }
