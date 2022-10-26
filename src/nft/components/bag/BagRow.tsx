@@ -69,7 +69,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
   const [cardHovered, setCardHovered] = useState(false)
   const handleMouseEnter = useCallback(() => setCardHovered(true), [])
   const handleMouseLeave = useCallback(() => setCardHovered(false), [])
-  const showRemoveButton = true // Boolean(showRemove && cardHovered && !isMobile)
+  const showRemoveButton = Boolean(showRemove && cardHovered && !isMobile)
 
   const assetEthPrice = asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
   const assetEthPriceFormatted = formatWeiToDecimal(assetEthPrice)

@@ -1,4 +1,3 @@
-import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { BagCloseIcon } from 'nft/components/icons'
 import { roundAndPluralize } from 'nft/utils/roundAndPluralize'
@@ -25,6 +24,24 @@ const ControlRow = styled.div`
   flex-direction: row;
   justify-content: space-between;
 `
+const IconWrapper = styled.button`
+  background-color: transparent;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  padding: 2px;
+  transition: 125ms ease background-color;
+  :hover {
+    background-color: ${({ theme }) => theme.stateOverlayHover};
+  }
+  :active {
+    background-color: ${({ theme }) => theme.stateOverlayPressed};
+  }
+`
+const StyledBagCloseIcon = styled(BagCloseIcon)`
+  color: ${({ theme }) => theme.textSecondary};
+`
 interface BagHeaderProps {
   numberOfAssets: number
   toggleBag: () => void
@@ -37,9 +54,9 @@ export const BagHeader = ({ numberOfAssets, toggleBag, resetFlow, isProfilePage 
     <Column gap="4" paddingX="32" marginBottom="20">
       <Row className={styles.header}>
         <ThemedText.HeadlineSmall>{isProfilePage ? 'Sell NFTs' : 'My bag'}</ThemedText.HeadlineSmall>
-        <Box display="flex" padding="2" color="textPrimary" cursor="pointer" onClick={toggleBag}>
-          <BagCloseIcon />
-        </Box>
+        <IconWrapper onClick={toggleBag}>
+          <StyledBagCloseIcon />
+        </IconWrapper>
       </Row>
       {numberOfAssets > 0 && (
         <ControlRow>
