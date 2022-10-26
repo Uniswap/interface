@@ -20,7 +20,7 @@ import {
   getTokenAddress,
 } from 'analytics/utils'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 import { computeRealizedPriceImpact } from 'utils/prices'
@@ -51,14 +51,23 @@ export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick
   const { inputs, tokenSelector } = useSyncWidgetInputs(defaultToken)
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
+
+  const lastValue = useRef([inputs.value.INPUT, inputs.value.OUTPUT])
+  useEffect(() => {
+    const [input, output] = [inputs.value.INPUT, inputs.value.OUTPUT]
+    const [lastInput, lastOutput] = lastValue.current
+    // Avoid calling onTokensChange if only the handler has changed.
+    if (input === lastInput && output === lastOutput) return
+    if (input && lastInput && input.equals(lastInput) && output && lastOutput && lastOutput.equals(lastOutput)) return
+    lastValue.current = [input, output]
+    onTokensChange?.(inputs.value.INPUT, inputs.value.OUTPUT)
+  }, [inputs.value.INPUT, inputs.value.OUTPUT, onTokensChange])
+
   const onSwitchChain = useCallback(
     // TODO(WEB-1757): Widget should not break if this rejects - upstream the catch to ignore it.
     ({ chainId }: AddEthereumChainParameter) => switchChain(connector, Number(chainId)).catch(() => undefined),
     [connector]
   )
-  useEffect(() => {
-    onTokensChange?.(inputs.value.INPUT, inputs.value.OUTPUT)
-  }, [inputs.value.INPUT, inputs.value.OUTPUT, onTokensChange])
 
   const trace = useTrace({ section: SectionName.WIDGET })
   const [initialQuoteDate, setInitialQuoteDate] = useState<Date>()
