@@ -27,6 +27,12 @@ const CollectionName = styled.div`
   text-overflow: ellipsis;
 `
 
+const TruncatedSubHeader = styled(ThemedText.SubHeader)`
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
+
 const RoundedImage = styled.div<{ src?: string }>`
   height: 36px;
   width: 36px;
@@ -66,7 +72,7 @@ export const CollectionTitleCell = ({ value }: CellProps) => {
     <CollectionNameContainer>
       <RoundedImage src={value.logo} />
       <CollectionName>
-        <ThemedText.SubHeader>{value.name}</ThemedText.SubHeader>
+        <TruncatedSubHeader>{value.name}</TruncatedSubHeader>
       </CollectionName>
       {value.isVerified && (
         <span className={styles.verifiedBadge}>
