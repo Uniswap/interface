@@ -11,7 +11,7 @@ import {
 import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GestureResponderEvent, StyleSheet, useColorScheme, View } from 'react-native'
+import { StyleSheet, useColorScheme, View } from 'react-native'
 import Animated, {
   AnimateStyle,
   Easing,
@@ -23,7 +23,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'src/assets'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button } from 'src/components-uds/Button/Button'
 import { Box, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { Text } from 'src/components/Text'
@@ -52,7 +52,7 @@ export function OnboardingCompleteAnimation({
 }: {
   activeAddress: string
   isNewWallet: boolean
-  onPressNext: (event: GestureResponderEvent) => void
+  onPressNext: () => void
 }) {
   const theme = useAppTheme()
   const { t } = useTranslation()
@@ -282,13 +282,7 @@ export function OnboardingCompleteAnimation({
         </Flex>
       </Flex>
       <Animated.View entering={letsGoButtonFadeIn}>
-        <PrimaryButton
-          label={t('Let’s go')}
-          name={ElementName.Next}
-          testID={ElementName.Next}
-          variant="onboard"
-          onPress={onPressNext}
-        />
+        <Button label={t('Let’s go')} name={ElementName.Next} onPress={onPressNext} />
       </Animated.View>
     </Flex>
   )

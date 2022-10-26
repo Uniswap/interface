@@ -5,8 +5,7 @@ import { Alert, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import FaceIcon from 'src/assets/icons/faceid.svg'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { TextButton } from 'src/components/buttons/TextButton'
+import { Button, ButtonEmphasis } from 'src/components-uds/Button/Button'
 import { Box, Flex } from 'src/components/layout'
 import { FaceIDWarningModal } from 'src/components/Settings/FaceIDWarningModal'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
@@ -73,43 +72,24 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
           'Make sure that you’re the only person who can access your app or make transactions by turning on Face ID.'
         )}
         title={t('Protect your wallet')}>
-        <Flex grow alignItems="center" justifyContent="space-between">
-          <Flex centered grow>
-            <Box
-              borderColor="background3"
-              borderRadius="xl"
-              borderWidth={4}
-              style={styles.faceView}>
-              <FaceIcon color={theme.colors.textSecondary} height={58} width={58} />
-            </Box>
-          </Flex>
-          <Flex alignItems="center" justifyContent="flex-end" width="100%">
-            <TextButton
-              alignSelf="stretch"
-              borderColor="backgroundOutline"
-              borderRadius="lg"
-              borderWidth={1}
-              name={ElementName.Skip}
-              px="md"
-              py="md"
-              testID={ElementName.Skip}
-              textAlign="center"
-              textColor="textPrimary"
-              textVariant="buttonLabelMedium"
-              onPress={onMaybeLaterPressed}>
-              {t('Maybe later')}
-            </TextButton>
-
-            <PrimaryButton
-              alignSelf="stretch"
-              label={t('Turn on Face ID')}
-              name={ElementName.Enable}
-              testID={ElementName.Enable}
-              variant="onboard"
-              onPress={onPressEnableSecurity}
-            />
-          </Flex>
+        <Flex centered grow>
+          <Box borderColor="background3" borderRadius="xl" borderWidth={4} style={styles.faceView}>
+            <FaceIcon color={theme.colors.textSecondary} height={58} width={58} />
+          </Box>
         </Flex>
+
+        <Button
+          emphasis={ButtonEmphasis.Tertiary}
+          label={t('Maybe later')}
+          name={ElementName.Skip}
+          onPress={onMaybeLaterPressed}
+        />
+
+        <Button
+          label={t('Turn on Face ID')}
+          name={ElementName.Enable}
+          onPress={onPressEnableSecurity}
+        />
       </OnboardingScreen>
     </>
   )

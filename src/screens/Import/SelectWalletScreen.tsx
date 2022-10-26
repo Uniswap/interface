@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button } from 'src/components-uds/Button/Button'
 import { Suspense } from 'src/components/data/Suspense'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
@@ -175,13 +175,10 @@ function WalletPreviewList({
         </Flex>
       </ScrollView>
 
-      <PrimaryButton
+      <Button
         disabled={selectedAddresses.length === 0}
         label={t('Continue')}
         name={ElementName.Next}
-        testID={ElementName.Next}
-        textVariant="buttonLabelLarge"
-        variant="onboard"
         onPress={onSubmit}
       />
     </>

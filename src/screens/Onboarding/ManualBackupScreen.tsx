@@ -4,7 +4,7 @@ import React, { useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button } from 'src/components-uds/Button/Button'
 import { Flex } from 'src/components/layout'
 import { ManualBackupEducationSection } from 'src/components/mnemonic/ManualBackupEducationSection'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
@@ -93,12 +93,9 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
           <Flex grow justifyContent="space-between" px="xs">
             <ManualBackupEducationSection />
             <Flex justifyContent="flex-end" width="100%">
-              <PrimaryButton
+              <Button
                 label={t('Continue')}
                 name={ElementName.Next}
-                testID={ElementName.Next}
-                textVariant="buttonLabelMedium"
-                variant="onboard"
                 onPress={() => setShowTermsModal(true)}
               />
             </Flex>
@@ -125,14 +122,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
               <MnemonicDisplay mnemonicId={mnemonicId} />
             </Flex>
             <Flex grow justifyContent="flex-end">
-              <PrimaryButton
-                label={t('Continue')}
-                name={ElementName.Next}
-                testID={ElementName.Next}
-                textVariant="buttonLabelMedium"
-                variant="onboard"
-                onPress={nextView}
-              />
+              <Button label={t('Continue')} name={ElementName.Next} onPress={nextView} />
             </Flex>
           </Flex>
         </OnboardingScreen>
@@ -152,13 +142,10 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
             />
           </Flex>
           <Flex justifyContent="flex-end">
-            <PrimaryButton
+            <Button
               disabled={!continueButtonEnabled}
               label={t('Continue')}
               name={ElementName.Continue}
-              testID={ElementName.Continue}
-              textVariant="buttonLabelMedium"
-              variant="onboard"
               onPress={onValidationSuccessful}
             />
           </Flex>

@@ -15,9 +15,9 @@ import Check from 'src/assets/icons/check.svg'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import PencilIcon from 'src/assets/icons/pencil.svg'
+import { Button } from 'src/components-uds/Button/Button'
+import { TouchableArea } from 'src/components-uds/TouchableArea'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Button } from 'src/components/buttons/Button'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { EducationContentType } from 'src/components/education'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
@@ -74,20 +74,17 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
       title={t('Back up your recovery phrase')}>
       <Flex grow>
         <BackupOptions backupMethods={activeAccountBackups} params={params} />
-        <Button alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
+        <TouchableArea alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
           <Flex centered row gap="sm">
             <InfoCircle color={theme.colors.textSecondary} height={32} width={32} />
             <Text variant="subheadSmall">{t('What’s a recovery phrase?')}</Text>
           </Flex>
-        </Button>
+        </TouchableArea>
         <Flex grow justifyContent="flex-end">
-          <PrimaryButton
+          <Button
             disabled={disabled}
             label={disabled ? t('Add backup to continue') : t('Continue')}
             name={ElementName.Next}
-            testID={ElementName.Next}
-            textVariant="buttonLabelMedium"
-            variant="onboard"
             onPress={onPressNext}
           />
         </Flex>
@@ -205,8 +202,8 @@ function BackupOptionButton({
   const theme = useAppTheme()
   return (
     <Box opacity={completed ? 0.4 : 1}>
-      <Button
-        backgroundColor="background2"
+      <TouchableArea
+        backgroundColor="background1"
         borderColor="backgroundOutline"
         borderRadius="md"
         borderWidth={1}
@@ -234,7 +231,7 @@ function BackupOptionButton({
             )}
           </Flex>
         </Flex>
-      </Button>
+      </TouchableArea>
     </Box>
   )
 }

@@ -6,8 +6,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import OnboardingNotificationIcon from 'src/assets/backgrounds/onboarding-notifications-bgicon.svg'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { TextButton } from 'src/components/buttons/TextButton'
+import { Button, ButtonEmphasis } from 'src/components-uds/Button/Button'
 import { Flex } from 'src/components/layout'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
@@ -18,7 +17,6 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useNativeAccountExists } from 'src/features/wallet/hooks'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import { OnboardingScreens } from 'src/screens/Screens'
-
 import { openSettings } from 'src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
@@ -80,38 +78,21 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     <OnboardingScreen
       subtitle={t('Get notified when your transfers, swaps, and approvals complete.')}
       title={t('Turn on push notifications')}>
-      <Flex grow alignItems="center" justifyContent="space-between">
-        <Flex centered grow>
-          <OnboardingNotificationIcon />
-        </Flex>
-        <Flex alignItems="center" gap="sm" justifyContent="flex-end" width="100%">
-          <TextButton
-            alignSelf="stretch"
-            borderColor="backgroundOutline"
-            borderRadius="lg"
-            borderWidth={1}
-            name={ElementName.Skip}
-            px="md"
-            py="md"
-            testID={ElementName.Skip}
-            textAlign="center"
-            textColor="textPrimary"
-            textVariant="buttonLabelMedium"
-            onPress={onPressNext}>
-            {t('Maybe later')}
-          </TextButton>
-
-          <PrimaryButton
-            alignSelf="stretch"
-            label={t('Turn on notifications')}
-            name={ElementName.Enable}
-            testID={ElementName.Enable}
-            textVariant="buttonLabelMedium"
-            variant="onboard"
-            onPress={onPressEnableNotifications}
-          />
-        </Flex>
+      <Flex centered grow>
+        <OnboardingNotificationIcon />
       </Flex>
+      <Button
+        emphasis={ButtonEmphasis.Tertiary}
+        label={t('Maybe later')}
+        name={ElementName.Skip}
+        onPress={onPressNext}
+      />
+
+      <Button
+        label={t('Turn on notifications')}
+        name={ElementName.Enable}
+        onPress={onPressEnableNotifications}
+      />
     </OnboardingScreen>
   )
 }

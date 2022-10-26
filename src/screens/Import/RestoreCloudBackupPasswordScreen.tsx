@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button } from 'src/components-uds/Button/Button'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { Flex } from 'src/components/layout/Flex'
 import {
@@ -22,7 +22,6 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { colors } from 'src/styles/color'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'src/utils/time'
 
 type Props = NativeStackScreenProps<
@@ -159,13 +158,10 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
         />
         {errorMessage && <PasswordError errorText={errorMessage} />}
       </Flex>
-      <PrimaryButton
+      <Button
         disabled={!enteredPassword || isLockedOut}
         label={t('Continue')}
         name={ElementName.Submit}
-        style={{ backgroundColor: colors.magenta300 }}
-        testID={ElementName.Submit}
-        variant="onboard"
         onPress={onContinuePress}
       />
     </OnboardingScreen>

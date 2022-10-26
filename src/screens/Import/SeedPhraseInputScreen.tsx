@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button } from 'src/components-uds/Button/Button'
 import { Flex } from 'src/components/layout'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
@@ -81,13 +81,10 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
           onFocus={() => setFocused(true)}
         />
       </Flex>
-      <PrimaryButton
+      <Button
         disabled={!validWord}
         label={t('Continue')}
         name={ElementName.Next}
-        testID={ElementName.Next}
-        textVariant="buttonLabelLarge"
-        variant="onboard"
         onPress={onSubmit}
       />
     </OnboardingScreen>

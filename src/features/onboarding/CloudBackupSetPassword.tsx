@@ -2,8 +2,8 @@ import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
+import { Button } from 'src/components-uds/Button/Button'
 import { CheckBox } from 'src/components/buttons/CheckBox'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -125,17 +125,12 @@ export function CloudBackupSetPassword({
           </Text>
         </Flex>
       </Flex>
-      <Flex grow justifyContent="flex-end">
-        <PrimaryButton
-          disabled={!consentChecked}
-          label={doneButtonText}
-          name={ElementName.Next}
-          testID={ElementName.Next}
-          textVariant="buttonLabelMedium"
-          variant="onboard"
-          onPress={onPressNext}
-        />
-      </Flex>
+      <Button
+        disabled={!consentChecked}
+        label={doneButtonText}
+        name={ElementName.Next}
+        onPress={onPressNext}
+      />
     </>
   )
 }

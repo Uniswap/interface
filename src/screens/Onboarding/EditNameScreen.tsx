@@ -7,9 +7,13 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import PencilIcon from 'src/assets/icons/pencil-detailed.svg'
+import {
+  AnimatedButton,
+  Button,
+  ButtonEmphasis,
+  ButtonSize,
+} from 'src/components-uds/Button/Button'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { AnimatedButton } from 'src/components/buttons/Button'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
@@ -24,7 +28,6 @@ import {
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
-const EDIT_BUTTON_ICON_SIZE = 10
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>
 
@@ -98,14 +101,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
         )}
       </Box>
       <Flex justifyContent="flex-end">
-        <PrimaryButton
-          label={t('Continue')}
-          name={ElementName.Next}
-          testID={ElementName.Next}
-          textVariant="buttonLabelMedium"
-          variant="onboard"
-          onPress={onPressNext}
-        />
+        <Button label={t('Continue')} name={ElementName.Next} onPress={onPressNext} />
       </Flex>
     </OnboardingScreen>
   )
@@ -158,19 +154,13 @@ function CustomizationSection({
           />
           {!focused && (
             <AnimatedButton
-              backgroundColor="background3"
-              borderRadius="md"
+              IconName={PencilIcon}
+              emphasis={ButtonEmphasis.Secondary}
               entering={FadeIn}
               exiting={FadeOut}
-              p="sm"
-              onPress={focusInputWithKeyboard}>
-              <PencilIcon
-                color={theme.colors.textPrimary}
-                height={EDIT_BUTTON_ICON_SIZE}
-                strokeWidth="1.5"
-                width={EDIT_BUTTON_ICON_SIZE}
-              />
-            </AnimatedButton>
+              size={ButtonSize.Small}
+              onPress={focusInputWithKeyboard}
+            />
           )}
         </Flex>
         <Text color="textSecondary" variant="bodyLarge">

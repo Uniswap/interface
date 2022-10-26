@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
+import { Button } from 'src/components-uds/Button/Button'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
@@ -120,12 +120,10 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
           }}
         />
       </Flex>
-      <PrimaryButton
+      <Button
         disabled={!isValid}
         label={t('Continue')}
         name={ElementName.Next}
-        testID={ElementName.Next}
-        variant="onboard"
         onPress={onSubmit}
       />
     </OnboardingScreen>
