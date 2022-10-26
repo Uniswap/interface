@@ -794,7 +794,7 @@ const isMobile = useIsMobile()
 
 
 
-                {!cannotUseFeature && useOtherAddress && !showWrap ? (
+                {useOtherAddress && !showWrap ? (
                   <>
                     <AutoRow justify="space-between" style={{marginTop:5, padding: '0 1rem' }}>
                      <ArrowWrapper clickable={false}>
@@ -809,13 +809,7 @@ const isMobile = useIsMobile()
                     <AddressInputPanel id="recipient" value={recipient as string} onChange={onChangeRecipient} />
                   </>
                 ) : null}
-
-                {!!cannotUseFeature && useOtherAddress && !showWrap && (
-                  <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                    <p>You must own Kiba Inu tokens to use the <Badge>Swap to Receiver</Badge> feature.</p>
-                  </AutoRow>
-                )}
-
+                
                 {showWrap ? null : (
                   <Row style={{zIndex: 0, justifyContent: !trade ? 'center' : 'space-between' }}>
                     <RowFixed style={{ padding: '5px 0px' }}>
