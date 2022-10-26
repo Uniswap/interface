@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react'
 import { TextInputProps } from 'react-native'
-import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, Box } from 'src/components/layout'
+import { Text } from 'src/components/Text'
 
 enum KeyAction {
   Insert = 'insert',
@@ -170,19 +171,21 @@ function KeyButton({
   }
 
   return (
-    <TextButton
+    <TouchableArea
       alignItems={align}
       disabled={isDisabled}
       justifyContent="center"
       padding="md"
       paddingTop={paddingTop}
       testID={'decimal-pad-' + label}
-      textAlign="center"
-      textColor={isDisabled ? 'textSecondary' : 'textPrimary'}
-      textVariant="headlineMedium"
       width="33%"
       onPress={onPress}>
-      {label}
-    </TextButton>
+      <Text
+        color={isDisabled ? 'textSecondary' : 'textPrimary'}
+        textAlign="center"
+        variant="headlineMedium">
+        {label}
+      </Text>
+    </TouchableArea>
   )
 }

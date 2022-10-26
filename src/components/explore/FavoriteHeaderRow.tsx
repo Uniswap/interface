@@ -2,7 +2,6 @@ import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
-import { TextButton } from 'src/components/buttons/TextButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -33,9 +32,11 @@ export function FavoriteHeaderRow({
           />
         </TouchableArea>
       ) : (
-        <TextButton textColor="accentActive" textVariant="buttonLabelSmall" onPress={onPress}>
-          {t('Done')}
-        </TextButton>
+        <TouchableArea onPress={onPress}>
+          <Text color="accentActive" variant="buttonLabelSmall">
+            {t('Done')}
+          </Text>
+        </TouchableArea>
       )}
     </Flex>
   )

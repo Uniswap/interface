@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Switch } from 'src/components/buttons/Switch'
-import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
@@ -94,15 +94,14 @@ export function DevScreen({ navigation }: any) {
           </Text>
           <Box alignItems="center" flexDirection="row" flexWrap="wrap" justifyContent="center">
             {Object.values(Screens).map((s) => (
-              <TextButton
+              <TouchableArea
                 key={s}
                 m="xs"
                 name={`DEBUG_${s}`}
                 testID={`dev_screen/${s}`}
-                textColor="textPrimary"
                 onPress={() => activateWormhole(s)}>
-                {s}
-              </TextButton>
+                <Text color="textPrimary">{s}</Text>
+              </TouchableArea>
             ))}
           </Box>
           <Text mt="sm" textAlign="center" variant="bodyLarge">
@@ -115,37 +114,24 @@ export function DevScreen({ navigation }: any) {
               onValueChange={() => onToggleFlashbots(!flashbotsEnabled)}
             />
           </Flex>
-          <TextButton mt="md" name="DEBUG_Create" textColor="textPrimary" onPress={onPressCreate}>
-            Create account
-          </TextButton>
-          <TextButton
-            mt="sm"
-            name="DEBUG_ToggleTestnets"
-            textColor="textPrimary"
-            onPress={onPressToggleTestnets}>
-            Toggle testnets
-          </TextButton>
-          <TextButton
+          <TouchableArea mt="md" name="DEBUG_Create" onPress={onPressCreate}>
+            <Text color="textPrimary">Create account</Text>
+          </TouchableArea>
+          <TouchableArea mt="sm" name="DEBUG_ToggleTestnets" onPress={onPressToggleTestnets}>
+            <Text color="textPrimary">Toggle testnets</Text>
+          </TouchableArea>
+          <TouchableArea
             mt="sm"
             name="DEBUG_ResetTokenWarnings"
-            textColor="textPrimary"
             onPress={onPressResetTokenWarnings}>
-            Reset token warnings
-          </TextButton>
-          <TextButton
-            mt="sm"
-            name="DEBUG_ShowError"
-            textColor="textPrimary"
-            onPress={onPressShowError}>
-            Show global error
-          </TextButton>
-          <TextButton
-            mt="sm"
-            name="DEBUG_ResetOnboarding"
-            textColor="textPrimary"
-            onPress={onPressResetOnboarding}>
-            Reset onboarding
-          </TextButton>
+            <Text color="textPrimary">Reset token warnings</Text>
+          </TouchableArea>
+          <TouchableArea mt="sm" name="DEBUG_ShowError" onPress={onPressShowError}>
+            <Text color="textPrimary">Show global error</Text>
+          </TouchableArea>
+          <TouchableArea mt="sm" name="DEBUG_ResetOnboarding" onPress={onPressResetOnboarding}>
+            <Text color="textPrimary">Reset onboarding</Text>
+          </TouchableArea>
           <Text color="textPrimary" mt="xl" textAlign="center">
             {`Active Chains: ${activeChains}`}
           </Text>

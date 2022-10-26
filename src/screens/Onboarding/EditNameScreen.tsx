@@ -9,7 +9,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import PencilIcon from 'src/assets/icons/pencil-detailed.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { AnimatedButton, Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -166,17 +166,17 @@ function CustomizationSection({
         {defaultNames(t).map((items, i) => (
           <Flex key={i} centered row>
             {items.map((item) => (
-              <TextButton
+              <TouchableArea
                 key={item}
                 backgroundColor={accountName === item ? 'background3' : 'background1'}
                 borderRadius="xl"
                 px="md"
                 py="sm"
-                textColor="textPrimary"
-                textVariant="buttonLabelSmall"
                 onPress={() => setAccountName(item)}>
-                {item}
-              </TextButton>
+                <Text color="textPrimary" variant="buttonLabelSmall">
+                  {item}
+                </Text>
+              </TouchableArea>
             ))}
           </Flex>
         ))}

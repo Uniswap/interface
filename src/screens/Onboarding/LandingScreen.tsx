@@ -6,7 +6,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { UNISWAP_LOGO } from 'src/assets'
 import { Button } from 'src/components/buttons/Button'
-import { TextButton } from 'src/components/buttons/TextButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
@@ -70,7 +69,7 @@ export function LandingScreen({ navigation }: Props) {
               onPress={onPressCreateWallet}
             />
           </Box>
-          <TextButton
+          <TouchableArea
             name={ElementName.OnboardingImportWallet}
             testID={ElementName.OnboardingImportWallet}
             onPress={onPressImportWallet}>
@@ -79,7 +78,7 @@ export function LandingScreen({ navigation }: Props) {
               variant="buttonLabelMedium">
               {t('I already have a wallet')}
             </Text>
-          </TextButton>
+          </TouchableArea>
           <DevelopmentOnly>
             <TouchableArea
               flexDirection="row"

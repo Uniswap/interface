@@ -10,10 +10,9 @@ import GlobalIcon from 'src/assets/icons/global.svg'
 import HelpIcon from 'src/assets/icons/help.svg'
 import PlusIcon from 'src/assets/icons/plus.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Separator } from 'src/components/layout/Separator'
@@ -349,8 +348,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       <Separator mb="sm" />
 
       {accountsData.length <= 1 ? (
-        <TextButton ml="lg" mt="sm" onPress={onPressAddWallet}>
-          <Flex centered row>
+        <TouchableArea ml="lg" mt="sm" onPress={onPressAddWallet}>
+          <Flex row alignItems="center">
             <Box
               alignItems="center"
               borderColor="backgroundOutline"
@@ -366,7 +365,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
             </Box>
             <Text variant="bodyLarge">{t('Add another wallet')}</Text>
           </Flex>
-        </TextButton>
+        </TouchableArea>
       ) : (
         <AccountList
           accounts={accountsData}

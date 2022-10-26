@@ -8,7 +8,6 @@ import {
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { TextButton } from 'src/components/buttons/TextButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -180,9 +179,9 @@ export function NotificationContent({
             {balanceUpdate ? (
               balanceUpdate
             ) : actionButton ? (
-              <TextButton px="xs" py="xs" textColor="accentActive" onPress={actionButton.onPress}>
-                {actionButton.title}
-              </TextButton>
+              <TouchableArea p="xs" onPress={actionButton.onPress}>
+                <Text color="accentActive">{actionButton.title}</Text>
+              </TouchableArea>
             ) : null}
           </Flex>
         ) : null}

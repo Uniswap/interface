@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
-import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
@@ -45,9 +45,11 @@ export function TransactionPending({
             {description}
           </Text>
           {transaction?.status === TransactionStatus.Failed ? (
-            <TextButton textColor="accentAction" textVariant="bodyLarge" onPress={onTryAgain}>
-              {t('Try again')}
-            </TextButton>
+            <TouchableArea onPress={onTryAgain}>
+              <Text color="accentAction" variant="bodyLarge">
+                {t('Try again')}
+              </Text>
+            </TouchableArea>
           ) : null}
         </Flex>
       </Flex>

@@ -1,4 +1,3 @@
-import { ResponsiveValue } from '@shopify/restyle'
 import { Transaction, TransactionDescription } from 'no-yolo-signatures'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -33,7 +32,7 @@ const getStrMessage = (request: WalletConnectRequest) => {
 type AddressButtonProps = {
   address: string
   chainId: number
-  textVariant?: ResponsiveValue<keyof Theme['textVariants'], Theme>
+  textVariant?: keyof Theme['textVariants']
 }
 
 const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps) => {

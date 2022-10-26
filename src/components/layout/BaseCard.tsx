@@ -2,7 +2,6 @@ import { BoxProps, ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { TextButton } from 'src/components/buttons/TextButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
@@ -133,17 +132,18 @@ function EmptyState({
       </Flex>
       <Flex row>
         {buttonLabel && (
-          <TextButton textColor="magentaVibrant" textVariant="buttonLabelSmall" onPress={onPress}>
-            {buttonLabel}
-          </TextButton>
+          <TouchableArea onPress={onPress}>
+            <Text color="magentaVibrant" variant="buttonLabelSmall">
+              {buttonLabel}
+            </Text>
+          </TouchableArea>
         )}
         {additionalButtonLabel && (
-          <TextButton
-            textColor="magentaVibrant"
-            textVariant="buttonLabelSmall"
-            onPress={onPressAdditional}>
-            {additionalButtonLabel}
-          </TextButton>
+          <TouchableArea onPress={onPressAdditional}>
+            <Text color="magentaVibrant" variant="buttonLabelSmall">
+              {additionalButtonLabel}
+            </Text>
+          </TouchableArea>
         )}
       </Flex>
     </Flex>
