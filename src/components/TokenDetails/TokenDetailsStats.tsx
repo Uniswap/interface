@@ -88,47 +88,48 @@ function TokenDetailsStatsInner({
   )
 
   return (
-    <Flex gap="xl">
+    <Flex gap="lg">
+      <Text variant="subheadLarge">{t('Stats')}</Text>
       <Flex row justifyContent="space-between">
         <Flex flex={1} gap="lg">
-          <Flex gap="xs">
-            <Text color="textSecondary" variant="subheadSmall">
+          <Flex gap="xxs">
+            <Text color="textTertiary" variant="subheadSmall">
               {t('Market cap')}
             </Text>
-            <Text variant="headlineMedium">
+            <Text variant="bodyLarge">
               {formatNumber(marketData?.marketCap?.value, NumberType.FiatTokenStats)}
             </Text>
           </Flex>
-          <Flex gap="xs">
-            <Text color="textSecondary" variant="subheadSmall">
+          <Flex gap="xxs">
+            <Text color="textTertiary" variant="subheadSmall">
               {t('52W low')}
             </Text>
-            <Text variant="headlineMedium">
+            <Text variant="bodyLarge">
               {formatNumber(marketData?.priceLow52W?.value, NumberType.FiatTokenDetails)}
             </Text>
           </Flex>
         </Flex>
         <Flex flex={1} gap="lg">
-          <Flex gap="xs">
-            <Text color="textSecondary" variant="subheadSmall">
+          <Flex gap="xxs">
+            <Text color="textTertiary" variant="subheadSmall">
               {t('24h volume')}
             </Text>
-            <Text variant="headlineMedium">
+            <Text variant="bodyLarge">
               {formatNumber(tokenData?.market.volume.value, NumberType.FiatTokenStats)}
             </Text>
           </Flex>
-          <Flex gap="xs">
-            <Text color="textSecondary" variant="subheadSmall">
+          <Flex gap="xxs">
+            <Text color="textTertiary" variant="subheadSmall">
               {t('52W high')}
             </Text>
-            <Text variant="headlineMedium">
+            <Text variant="bodyLarge">
               {formatNumber(marketData?.priceHigh52W?.value, NumberType.FiatTokenDetails)}
             </Text>
           </Flex>
         </Flex>
       </Flex>
-      <Flex gap="xs">
-        <Text color="textSecondary" variant="subheadSmall">
+      <Flex gap="xxs">
+        <Text color="textTertiary" variant="subheadSmall">
           {t('About {{ token }}', { token: tokenProjectData.name })}
         </Text>
         {tokenProjectData.description && (
