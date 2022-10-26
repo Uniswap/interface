@@ -19,7 +19,7 @@ const ClearButton = styled(ButtonText)`
     color: ${({ theme }) => theme.accentActive};
   }
 `
-const ControlRow = styled(Row)`
+const ControlRow = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
