@@ -3,7 +3,7 @@ import React, { ComponentProps, PropsWithChildren, useMemo, useRef } from 'react
 import { Trans, useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { Button, ButtonEmphasis, ButtonSize, ButtonState } from 'src/components-uds/Button/Button'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components-uds/Button/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
@@ -260,21 +260,20 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
 
           <Flex row gap="sm">
             <Button
-              emphasis={ButtonEmphasis.Low}
-              flex={1}
+              fill
+              emphasis={ButtonEmphasis.Tertiary}
               label={t('Cancel')}
               name={ElementName.Cancel}
               size={ButtonSize.Medium}
-              state={ButtonState.Enabled}
               onPress={onReject}
             />
             <Button
-              emphasis={ButtonEmphasis.High}
-              flex={1}
+              fill
+              disabled={!confirmEnabled}
+              emphasis={ButtonEmphasis.Primary}
               label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
               name={ElementName.Confirm}
               size={ButtonSize.Medium}
-              state={confirmEnabled ? ButtonState.Enabled : ButtonState.Disabled}
               onPress={onConfirm}
             />
           </Flex>

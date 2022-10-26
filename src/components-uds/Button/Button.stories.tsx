@@ -1,5 +1,6 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react'
 import React from 'react'
+import SendIcon from 'src/assets/icons/send.svg'
 import { Box } from 'src/components/layout'
 import { Button, ButtonEmphasis, ButtonSize } from './Button'
 
@@ -15,24 +16,14 @@ export default {
   ],
   argTypes: {
     emphasis: {
-      options: ['high', 'medium', 'low', 'destructive', 'warning'],
+      options: ['primary', 'secondary', 'tertiary', 'detrimental', 'warning'],
       control: { type: 'radio' },
-      defaultValue: 'high',
-    },
-    state: {
-      options: ['enabled', 'disabled'],
-      control: { type: 'radio' },
-      defaultValue: 'enabled',
+      defaultValue: 'primary',
     },
     size: {
       options: ['large', 'medium', 'small'],
       control: { type: 'radio' },
       defaultValue: 'medium',
-    },
-    type: {
-      options: ['regular', 'icon', 'label'],
-      control: { type: 'radio' },
-      defaultValue: 'label',
     },
   },
 } as ComponentMeta<typeof Button>
@@ -43,27 +34,27 @@ DefaultButton.args = {
   label: 'Default Button',
 }
 
-export const LargeHighEmphasisButton = Template.bind({})
-LargeHighEmphasisButton.args = {
+export const LargePrimaryEmphasisButton = Template.bind({})
+LargePrimaryEmphasisButton.args = {
   ...DefaultButton.args,
   label: 'Large Button',
-  emphasis: ButtonEmphasis.High,
+  emphasis: ButtonEmphasis.Primary,
   size: ButtonSize.Large,
 }
 
-export const MediumMediumEmphasisButton = Template.bind({})
-MediumMediumEmphasisButton.args = {
+export const MediumSecondaryEmphasisButton = Template.bind({})
+MediumSecondaryEmphasisButton.args = {
   ...DefaultButton.args,
-  label: 'Medium Medium Emphasis Button',
-  emphasis: ButtonEmphasis.Medium,
+  label: 'Medium Secondary Emphasis Button',
+  emphasis: ButtonEmphasis.Secondary,
   size: ButtonSize.Medium,
 }
 
-export const SmallLowEmphasisButton = Template.bind({})
-SmallLowEmphasisButton.args = {
+export const SmallTertiaryEmphasisButton = Template.bind({})
+SmallTertiaryEmphasisButton.args = {
   ...DefaultButton.args,
-  label: 'Small Low Emphasis Button',
-  emphasis: ButtonEmphasis.Low,
+  label: 'Small Tertiary Emphasis Button',
+  emphasis: ButtonEmphasis.Tertiary,
   size: ButtonSize.Small,
 }
 
@@ -75,10 +66,16 @@ LargeWarningButton.args = {
   size: ButtonSize.Large,
 }
 
-export const LargeDestructiveButton = Template.bind({})
-LargeDestructiveButton.args = {
+export const LargeDetrimentalButton = Template.bind({})
+LargeDetrimentalButton.args = {
   ...DefaultButton.args,
-  label: 'Destructive Button',
-  emphasis: ButtonEmphasis.Destructive,
+  label: 'Detrimental Button',
+  emphasis: ButtonEmphasis.Detrimental,
   size: ButtonSize.Large,
+}
+
+export const MediumIconButton = Template.bind({})
+MediumIconButton.args = {
+  size: ButtonSize.Medium,
+  IconName: SendIcon,
 }

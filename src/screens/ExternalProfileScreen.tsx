@@ -1,16 +1,17 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
 import EyeOffIcon from 'src/assets/icons/eye-off.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
+import SendIcon from 'src/assets/icons/send.svg'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components-uds/Button/Button'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { SendButton } from 'src/components/buttons/SendButton'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Flex } from 'src/components/layout'
@@ -20,6 +21,8 @@ import TabbedScrollScreen, {
 import ProfileActivityTab from 'src/components/profile/tabs/ProfileActivityTab'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
+import { openModal } from 'src/features/modals/modalSlice'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 
@@ -34,7 +37,6 @@ export function ExternalProfileScreen({
     params: { address, preloadedQuery },
   },
 }: Props) {
-  const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -101,6 +103,16 @@ export function ExternalProfileScreen({
     [address, preloadedQuery]
   )
 
+  const onPressSend = useCallback(() => {
+    selectionAsync()
+    dispatch(
+      openModal({
+        name: ModalName.Send,
+        ...{ initialState: initialSendState },
+      })
+    )
+  }, [dispatch, initialSendState])
+
   return (
     <TabbedScrollScreen
       disableOpenSidebarGesture
@@ -116,32 +128,22 @@ export function ExternalProfileScreen({
             size={48}
             variant="headlineMedium"
           />
-          <Flex centered row gap="xs" my="md" px="xl">
-            <SendButton
-              borderRadius="lg"
-              flexBasis="49%"
-              iconStrokeWidth={3}
-              initialState={initialSendState}
-              px="lg"
+          <Flex centered row gap="md" my="md" px="xl">
+            <Button
+              fill
+              IconName={SendIcon}
+              emphasis={ButtonEmphasis.Tertiary}
+              label={t('Send')}
+              name={ElementName.Send}
+              size={ButtonSize.Medium}
+              onPress={onPressSend}
             />
-            <PrimaryButton
-              borderRadius="lg"
-              flexBasis="49%"
-              icon={
-                isWatching ? (
-                  <EyeOffIcon color={theme.colors.textPrimary} height={20} width={20} />
-                ) : (
-                  <EyeIcon
-                    color={theme.colors.textPrimary}
-                    height={20}
-                    strokeWidth={1.5}
-                    width={20}
-                  />
-                )
-              }
+            <Button
+              fill
+              IconName={isWatching ? EyeOffIcon : EyeIcon}
+              emphasis={ButtonEmphasis.Tertiary}
               label={isWatching ? t('Unwatch') : t('Watch')}
-              px="lg"
-              variant="transparent"
+              size={ButtonSize.Medium}
               onPress={onWatchPress}
             />
           </Flex>

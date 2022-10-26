@@ -1,14 +1,16 @@
 import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
+import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PreloadedQuery, useFragment } from 'react-relay'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
+import SendIcon from 'src/assets/icons/send.svg'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components-uds/Button/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { SendButton } from 'src/components/buttons/SendButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Suspense } from 'src/components/data/Suspense'
 import { Heart } from 'src/components/icons/Heart'
@@ -29,7 +31,7 @@ import { AssetType } from 'src/entities/assets'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { TokenWarningLevel, useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
 import {
@@ -58,10 +60,9 @@ export const tokenDetailsScreenQuery = graphql`
 
 interface TokenDetailsHeaderProps {
   currency: Currency
-  initialSendState: TransactionState
 }
 
-function TokenDetailsHeader({ currency, initialSendState }: TokenDetailsHeaderProps) {
+function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
 
   const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(currencyId(currency))
@@ -81,13 +82,6 @@ function TokenDetailsHeader({ currency, initialSendState }: TokenDetailsHeaderPr
         </Box>
       </Flex>
       <Flex row alignItems="center" gap="none" justifyContent="center">
-        <SendButton
-          iconOnly
-          bg="none"
-          iconColor="textPrimary"
-          iconSize={24}
-          initialState={initialSendState}
-        />
         <IconButton
           icon={<Heart active={isFavoriteToken} size={24} />}
           px="none"
@@ -253,6 +247,11 @@ function TokenDetails({
     [navigateToSwapBuy, navigateToSwapSell, tokenWarningDismissed, tokenWarningLevel]
   )
 
+  const onPressSend = useCallback(() => {
+    selectionAsync()
+    dispatch(openModal({ name: ModalName.Send, ...{ initialState: initialSendState } }))
+  }, [initialSendState, dispatch])
+
   return (
     <>
       <HeaderScrollScreen
@@ -266,7 +265,7 @@ function TokenDetails({
         }>
         <Flex gap="xl" mb="xxl" mt="lg" pb="xxl">
           <Flex gap="md">
-            <TokenDetailsHeader currency={currency} initialSendState={initialSendState} />
+            <TokenDetailsHeader currency={currency} />
             <CurrencyPriceChart currency={currency} />
           </Flex>
 
@@ -302,7 +301,13 @@ function TokenDetails({
           onPress={() => onPressSwap(currentChainBalance ? SwapType.SELL : SwapType.BUY)}
         />
         {currentChainBalance && (
-          <SendButton iconOnly iconStrokeWidth={1.5} initialState={initialSendState} />
+          <Button
+            IconName={SendIcon}
+            emphasis={ButtonEmphasis.Secondary}
+            name={ElementName.Send}
+            size={ButtonSize.Large}
+            onPress={onPressSend}
+          />
         )}
       </Flex>
 

@@ -9,11 +9,11 @@ import { HomeScreenQueries, useEagerActivityNavigation } from 'src/app/navigatio
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import HamburgerIcon from 'src/assets/icons/hamburger.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
-import { Button, ButtonEmphasis, ButtonSize, ButtonState } from 'src/components-uds/Button/Button'
+import SendIcon from 'src/assets/icons/send.svg'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components-uds/Button/Button'
 import { TouchableArea } from 'src/components-uds/TouchableArea'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { SendButton } from 'src/components/buttons/SendButton'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Arrow } from 'src/components/icons/Arrow'
@@ -176,6 +176,7 @@ function QuickActions() {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const activeAccount = useActiveAccountWithThrow()
 
   const onPressReceive = () => {
     selectionAsync()
@@ -194,39 +195,51 @@ function QuickActions() {
     )
   }
 
+  const onPressSend = useCallback(() => {
+    selectionAsync()
+    dispatch(openModal({ name: ModalName.Send }))
+  }, [dispatch])
+
   return (
     <Flex centered row gap="xs">
-      <SendButton flex={1} iconColor="userThemeColor" />
       <Button
+        fill
         noTextScaling
-        emphasis={ButtonEmphasis.Low}
-        flex={1}
-        icon={
+        CustomIcon={
+          <SendIcon color={theme.colors.userThemeColor} height={20} strokeWidth={2} width={20} />
+        }
+        disabled={activeAccount.type === AccountType.Readonly}
+        emphasis={ButtonEmphasis.Tertiary}
+        label={t('Send')}
+        name={ElementName.Send}
+        size={ButtonSize.Medium}
+        onPress={onPressSend}
+      />
+      <Button
+        fill
+        noTextScaling
+        CustomIcon={
           <ScanQRIcon color={theme.colors.userThemeColor} height={20} strokeWidth={2} width={20} />
         }
+        emphasis={ButtonEmphasis.Tertiary}
         label={t('Scan')}
         name={
           // Note. Leaving as buy since scan will be reverted before launch
           ElementName.NavigateBuy
         }
-        py="sm"
         size={ButtonSize.Medium}
-        state={ButtonState.Enabled}
-        testID={ElementName.NavigateBuy}
         onPress={onPressScan}
       />
       <Button
+        fill
         noTextScaling
-        emphasis={ButtonEmphasis.Low}
-        flex={1}
-        icon={<Arrow color={theme.colors.userThemeColor} direction="s" size={theme.iconSizes.md} />}
-        iconLabelSpacing="xxs"
+        CustomIcon={
+          <Arrow color={theme.colors.userThemeColor} direction="s" size={theme.iconSizes.md} />
+        }
+        emphasis={ButtonEmphasis.Tertiary}
         label={t('Receive')}
         name={ElementName.Receive}
-        py="sm"
         size={ButtonSize.Medium}
-        state={ButtonState.Enabled}
-        testID={ElementName.Receive}
         onPress={onPressReceive}
       />
     </Flex>
