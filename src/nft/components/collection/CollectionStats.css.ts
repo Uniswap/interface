@@ -2,7 +2,7 @@ import { globalStyle, style } from '@vanilla-extract/css'
 import { bodySmall, buttonTextSmall, headlineSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
-import { breakpoints, sprinkles } from '../../css/sprinkles.css'
+import { breakpoints, sprinkles, themeVars } from '../../css/sprinkles.css'
 
 export const statsText = style([
   sprinkles({
@@ -68,7 +68,18 @@ export const description = style([
 ])
 
 globalStyle(`${description} a[href]`, {
-  color: 'textSecondary',
+  color: `${themeVars.colors.textSecondary}`,
+  textDecoration: 'none',
+})
+
+globalStyle(`${description} a[href]:hover`, {
+  color: `${themeVars.colors.stateOverlayHover}`,
+  mixBlendMode: 'normal',
+  textDecoration: 'none',
+})
+
+globalStyle(`${description} a[href]:visited`, {
+  color: `${themeVars.colors.textSecondary}`,
   textDecoration: 'none',
 })
 
