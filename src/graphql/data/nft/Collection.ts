@@ -37,6 +37,12 @@ const collectionQuery = graphql`
           traits {
             name
             values
+            stats {
+              name
+              value
+              assets
+              listings
+            }
           }
           markets(currencies: ETH) {
             floorPrice {
@@ -78,7 +84,7 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
     address,
   })
   const queryData = usePreloadedQuery<CollectionQuery>(collectionQuery, collectionQueryReference)
-  console.log(queryData)
+  // console.log(queryData)
 
   const queryCollection = queryData.nftCollections?.edges[0].node
   return {

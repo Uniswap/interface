@@ -1,3 +1,5 @@
+import { Trait } from 'nft/hooks/useCollectionFilters'
+
 import { SellOrder } from '../sell'
 
 export interface OpenSeaCollection {
@@ -97,14 +99,7 @@ export interface GenieAsset {
   owner: string
   creator: OpenSeaUser
   metadataUrl: string
-  traits?: {
-    trait_type: string
-    value: string
-    display_type?: any
-    max_value?: any
-    trait_count: number
-    order?: any
-  }[]
+  traits?: Trait[]
 }
 
 export interface GenieCollection {
@@ -129,13 +124,7 @@ export interface GenieCollection {
     total_volume?: number
   }
   // symbol: string // TODO deprecate
-  traits?: {
-    trait_type: string
-    trait_value: string
-    trait_count: number
-    floorSellOrder: PriceInfo
-    floorPrice: number
-  }[]
+  traits?: Record<string, Trait[]>
   // numTraitsByAmount: { traitCount: number; numWithTrait: number }[] // TODO deprecate
   // indexingStats: { openSea: { successfulExecutionDate: string; lastRequestedAt: string } } // TODO deprecate
   marketplaceCount?: { marketplace: string; count: number }[]

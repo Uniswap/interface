@@ -1,4 +1,5 @@
 import { isAddress } from '@ethersproject/address'
+import { groupBy } from 'nft/utils/groupBy'
 
 import { GenieCollection } from '../../types'
 
@@ -55,5 +56,16 @@ export const CollectionStatsFetcher = async (addressOrName: string, recursive = 
   })
 
   const data = await r.json()
-  return data?.data ? data.data[0] : {}
+  // Need to restructure how traits are formatted to match GraphQL before this endpoint is deprecated
+  const collections = data?.data
+    ? data.data.map((collection: any) => {
+        console.log(collection.traits)
+        console.log(groupBy(collection.traits, 'trait_type'))
+        return {
+          ...collection,
+          traits: collection.traits && groupBy(collection.traits, 'trait_type'),
+        }
+      })
+    : {}
+  return collections[0]
 }
