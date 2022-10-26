@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
@@ -106,6 +107,7 @@ export const LoadingButton = styled.div`
 `
 
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
+  const { chainId } = useWeb3React()
   const traits = useCollectionFilters((state) => state.traits)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
@@ -363,7 +365,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 element={ElementName.NFT_FILTER_BUTTON}
                 name={EventName.NFT_FILTER_OPENED}
                 shouldLogImpression={!isFiltersExpanded}
-                properties={{ collection_address: contractAddress }}
+                properties={{ collection_address: contractAddress, chain_id: chainId }}
               >
                 <FilterButton
                   isMobile={isMobile}

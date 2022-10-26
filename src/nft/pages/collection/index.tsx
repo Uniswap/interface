@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -27,6 +28,7 @@ const Collection = () => {
   const isActivityToggled = pathname.includes('/activity')
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
+  const { chainId } = useWeb3React()
 
   const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
@@ -65,7 +67,7 @@ const Collection = () => {
     <>
       <Trace
         page={PageName.NFT_COLLECTION_PAGE}
-        properties={{ collection_address: contractAddress }}
+        properties={{ collection_address: contractAddress, chain_id: chainId }}
         shouldLogImpression
       >
         <Column width="full">
