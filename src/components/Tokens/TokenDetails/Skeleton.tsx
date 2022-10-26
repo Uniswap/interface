@@ -27,11 +27,11 @@ export const TokenDetailsLayout = styled.div`
     padding: 0 16px;
   }
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-    gap: 20px;
+    gap: 40px;
     padding: 48px 20px;
   }
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.xl}px) {
-    gap: 40px;
+    gap: 60px;
   }
 `
 export const LeftPanel = styled.div`
