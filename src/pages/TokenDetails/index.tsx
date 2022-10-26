@@ -10,7 +10,6 @@ import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBal
 import TokenDetailsSkeleton, {
   Hr,
   LeftPanel,
-  LoadingChart,
   RightPanel,
   TokenDetailsLayout,
 } from 'components/Tokens/TokenDetails/Skeleton'
@@ -95,16 +94,12 @@ export default function TokenDetails() {
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            {prices ? (
-              <ChartSection
-                token={tokenQueryData}
-                currency={token}
-                nativeCurrency={isNative ? nativeCurrency : undefined}
-                prices={prices}
-              />
-            ) : (
-              <LoadingChart />
-            )}
+            <ChartSection
+              token={tokenQueryData}
+              currency={token}
+              nativeCurrency={isNative ? nativeCurrency : undefined}
+              prices={prices}
+            />
             <StatsSection
               TVL={tokenQueryData.market?.totalValueLocked?.value}
               volume24H={tokenQueryData.market?.volume24H?.value}
