@@ -5,12 +5,12 @@ import { Loading } from 'src/components/loading'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { useUSDGasPrice } from 'src/features/gas/hooks'
+import { useUSDValue } from 'src/features/gas/hooks'
 import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 export function NetworkFee({ chainId, gasFee }: { chainId: ChainId; gasFee?: string }) {
   const { t } = useTranslation()
-  const gasFeeUSD = useUSDGasPrice(chainId, gasFee)
+  const gasFeeUSD = useUSDValue(chainId, gasFee)
   const showNetworkPill = chainId !== ChainId.Mainnet
 
   return (

@@ -11,9 +11,7 @@ import { Text } from 'src/components/Text'
 import { AccountDetails } from 'src/components/WalletConnect/RequestModal/AccountDetails'
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
 import { useHasSufficientFunds } from 'src/components/WalletConnect/RequestModal/hooks'
-import { RequestMessage } from 'src/components/WalletConnect/RequestModal/RequestMessage'
-import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
-import { ChainId } from 'src/constants/chains'
+import { RequestDetails } from 'src/components/WalletConnect/RequestModal/RequestDetails'
 import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { GasSpeed } from 'src/features/gas/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -30,7 +28,6 @@ import {
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
-import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 
 const MAX_MODAL_MESSAGE_HEIGHT = 200
 
@@ -67,11 +64,6 @@ const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined =>
     logger.info('WalletConnectRequestModal', 'getPermitInfo', 'invalid JSON message', e)
     return undefined
   }
-}
-
-const getTransactionCurrencyAmount = (chainId: ChainId | undefined, value: string) => {
-  const nativeCurrency = NativeCurrency.onChain(chainId || ChainId.Mainnet)
-  return tryParseRawAmount(value, nativeCurrency)
 }
 
 const VALID_REQUEST_TYPES = [
@@ -191,13 +183,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     }
   }
 
-  const currencyAmount =
-    isTransactionRequest(request) &&
-    request.transaction.value !== undefined &&
-    getTransactionCurrencyAmount(chainId, request.transaction.value)
-  const hasCurrencyAmount = currencyAmount && !currencyAmount.equalTo(0)
   const nativeCurrency = chainId && NativeCurrency.onChain(chainId)
-
   let permitInfo = getPermitInfo(request)
 
   return (
@@ -210,15 +196,11 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             borderRadius="lg"
             gap="none"
             spacerProps={spacerProps}>
-            {hasCurrencyAmount && (
-              <SectionContainer>
-                <SpendingDetails currencyAmount={currencyAmount} />
-              </SectionContainer>
-            )}
-
             {!permitInfo && (
               <SectionContainer style={requestMessageStyle}>
-                <RequestMessage request={request} />
+                <Flex gap="sm">
+                  <RequestDetails request={request} />
+                </Flex>
               </SectionContainer>
             )}
 

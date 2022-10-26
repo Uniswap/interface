@@ -9,7 +9,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { useCancelationGasFeeInfo, useUSDGasPrice } from 'src/features/gas/hooks'
+import { useCancelationGasFeeInfo, useUSDValue } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -35,7 +35,7 @@ export function CancelConfirmationView({
 
   const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
   const gasFeeUSD = formatUSDPrice(
-    useUSDGasPrice(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee),
+    useUSDValue(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee),
     NumberType.FiatGasPrice
   )
 

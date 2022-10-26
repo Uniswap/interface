@@ -7,6 +7,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
 import { EthMethod, EthTransaction } from 'src/features/walletConnect/types'
@@ -104,7 +105,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
   )
 }
 
-function TransactionMessage({
+function TransactionDetails({
   chainId,
   transaction,
 }: {
@@ -118,10 +119,12 @@ function TransactionMessage({
   const [isLoading, setIsLoading] = useState(true)
   const [parsedData, setParsedData] = useState<TransactionDescription | undefined>(undefined)
 
+  const { from, to, value, data } = transaction
+
   useEffect(() => {
     const parseResult = async () => {
       // no-yolo-parser library expects these fields to be defined
-      if (!transaction.from || !transaction.to || !transaction.value || !transaction.data) return
+      if (!from || !to || !value || !data) return
       return parser.parseAsResult(transaction as Transaction).then((result) => {
         if (!result.transactionDescription.ok) {
           throw result.transactionDescription.error
@@ -142,26 +145,27 @@ function TransactionMessage({
       .finally(() => {
         setIsLoading(false)
       })
-  }, [parser, transaction])
+  }, [data, from, parser, to, transaction, value])
 
   return (
-    <Flex gap="xs">
-      {transaction.to ? (
-        <Flex row alignItems="center" gap="xs">
+    <Flex gap="sm">
+      {value ? <SpendingDetails chainId={chainId} value={value} /> : null}
+      {to ? (
+        <Flex row alignItems="center" gap="md">
           <Text color="textSecondary" variant="bodySmall">
-            To:
+            {t('To')}:
           </Text>
-          <AddressButton address={transaction.to} chainId={chainId} />
+          <AddressButton address={to} chainId={chainId} />
         </Flex>
       ) : null}
       {isLoading || !parsedData ? (
-        <Text color="textTertiary" py="xxs" variant="bodySmall">
+        <Text color="textTertiary" variant="bodySmall">
           {isLoading ? ' ' : t('Unable to decode this transaction request')}
         </Text>
       ) : (
-        <Flex row alignItems="center" gap="xs">
-          <Text color="textSecondary" py="xxs" variant="bodySmall">
-            Function:{' '}
+        <Flex row alignItems="center" gap="md">
+          <Text color="textSecondary" variant="bodySmall">
+            {t('Function')}:
           </Text>
           <Box
             borderRadius="xs"
@@ -182,7 +186,7 @@ type Props = {
   request: WalletConnectRequest
 }
 
-function RequestMessageContent({ request }: Props) {
+function RequestDetailsContent({ request }: Props) {
   const { t } = useTranslation()
 
   if (request.type === EthMethod.SignTypedData) {
@@ -196,7 +200,7 @@ function RequestMessageContent({ request }: Props) {
   }
 
   if (isTransactionRequest(request)) {
-    return <TransactionMessage chainId={request.dapp.chain_id} transaction={request.transaction} />
+    return <TransactionDetails chainId={request.dapp.chain_id} transaction={request.transaction} />
   }
 
   const message = getStrMessage(request)
@@ -209,10 +213,10 @@ function RequestMessageContent({ request }: Props) {
   )
 }
 
-export function RequestMessage({ request }: Props) {
+export function RequestDetails({ request }: Props) {
   return (
     <ScrollView>
-      <RequestMessageContent request={request} />
+      <RequestDetailsContent request={request} />
     </ScrollView>
   )
 }

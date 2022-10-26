@@ -49,10 +49,10 @@ export function useTransactionGasFee(
   }, [data, speed])
 }
 
-export function useUSDGasPrice(chainId: ChainId | undefined, gasFee?: string) {
+export function useUSDValue(chainId?: ChainId, ethValueInWei?: string) {
   const currencyAmount =
-    gasFee && chainId
-      ? CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), gasFee)
+    ethValueInWei && chainId
+      ? CurrencyAmount.fromRawAmount(NativeCurrency.onChain(chainId), ethValueInWei)
       : undefined
 
   return useUSDCValue(currencyAmount)?.toExact()
