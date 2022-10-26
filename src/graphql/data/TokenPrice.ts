@@ -59,13 +59,17 @@ export function useTokenPriceQuery(address: string, chain: Chain): PriceDuration
         }
 
         // Ensure the latest price available is available for every TimePeriod.
-        const latest = Object.values(prices)
+        const latests = Object.values(prices)
           .map((prices) => prices?.slice(-1)?.[0] ?? null)
           .filter(isPricePoint)
-          .reduce((latest, pricePoint) => (latest.timestamp > pricePoint.timestamp ? latest : pricePoint))
-        Object.values(prices)
-          .filter((prices) => prices && prices.slice(-1)[0] !== latest)
-          .forEach((prices) => prices?.push(latest))
+        if (latests.length) {
+          const latest = latests.reduce((latest, pricePoint) =>
+            latest.timestamp > pricePoint.timestamp ? latest : pricePoint
+          )
+          Object.values(prices)
+            .filter((prices) => prices && prices.slice(-1)[0] !== latest)
+            .forEach((prices) => prices?.push(latest))
+        }
 
         setPrices(prices)
       },

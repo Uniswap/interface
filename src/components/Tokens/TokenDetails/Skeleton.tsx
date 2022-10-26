@@ -128,7 +128,7 @@ function Wave() {
   )
 }
 
-export function LoadingChart() {
+function LoadingChart() {
   return (
     <ChartHeader>
       <TokenInfoContainer>

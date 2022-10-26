@@ -104,7 +104,7 @@ export default function ChartSection({
       </TokenInfoContainer>
       <ChartContainer>
         <ParentSize>
-          {({ width }) => prices && <PriceChart prices={prices[timePeriod]} width={width} height={436} />}
+          {({ width }) => <PriceChart prices={prices ? prices?.[timePeriod] : null} width={width} height={436} />}
         </ParentSize>
       </ChartContainer>
     </ChartHeader>
