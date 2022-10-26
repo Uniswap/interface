@@ -23,7 +23,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'src/assets'
-import { Button } from 'src/components-uds/Button/Button'
+import { Button } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { Text } from 'src/components/Text'

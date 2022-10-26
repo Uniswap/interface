@@ -3,7 +3,7 @@ import React, { ComponentProps, PropsWithChildren, useMemo, useRef } from 'react
 import { Trans, useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components-uds/Button/Button'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'

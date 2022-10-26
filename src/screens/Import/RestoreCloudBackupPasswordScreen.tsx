@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { Button } from 'src/components-uds/Button/Button'
+import { Button } from 'src/components/buttons/Button'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { Flex } from 'src/components/layout/Flex'
 import {

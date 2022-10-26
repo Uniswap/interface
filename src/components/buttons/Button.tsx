@@ -1,9 +1,9 @@
 import React, { memo, ReactElement } from 'react'
 import Svg, { Defs, RadialGradient, Rect, Stop, SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
-import { getButtonProperties } from 'src/components-uds/Button/utils'
 import { withAnimated } from 'src/components/animated'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { getButtonProperties } from 'src/components/buttons/utils'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 

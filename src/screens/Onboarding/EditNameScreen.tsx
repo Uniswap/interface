@@ -7,13 +7,8 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import PencilIcon from 'src/assets/icons/pencil-detailed.svg'
-import {
-  AnimatedButton,
-  Button,
-  ButtonEmphasis,
-  ButtonSize,
-} from 'src/components-uds/Button/Button'
 import { BackButton } from 'src/components/buttons/BackButton'
+import { AnimatedButton, Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'

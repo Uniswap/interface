@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import PasteIcon from 'src/assets/icons/paste.svg'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components-uds/Button/Button'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { getClipboard } from 'src/utils/clipboard'
 
 export default function PasteButton({ onPress }: { onPress: (text: string) => void }) {

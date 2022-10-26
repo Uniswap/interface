@@ -1,4 +1,4 @@
-import { ButtonEmphasis, ButtonSize } from 'src/components-uds/Button/Button'
+import { ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { Theme } from 'src/styles/theme'
 
 function getButtonColor(emphasis: ButtonEmphasis): keyof Theme['colors'] {
