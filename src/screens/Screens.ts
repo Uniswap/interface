@@ -6,7 +6,6 @@ export enum Screens {
   Education = 'Education',
   Explore = 'Explore',
   Home = 'Home',
-  ImportAccount = 'ImportAccount',
   Notifications = 'Notifications',
   NFTItem = 'NFTItem',
   OnboardingStack = 'OnboardingStack',

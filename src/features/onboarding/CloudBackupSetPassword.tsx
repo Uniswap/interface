@@ -85,7 +85,7 @@ export function CloudBackupSetPassword({
   }
   return (
     <>
-      <Flex gap="xs">
+      <Flex gap="xs" mb="lg">
         <Flex gap="xs">
           <PasswordInput
             placeholder={t('Enter password')}

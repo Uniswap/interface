@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react'
 import { TFunction } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'src/components/modals/WarningModal/types'
@@ -94,22 +94,19 @@ export default function WarningModal({
         {children}
         <Flex centered row gap="sm" pt="lg">
           {closeText && (
-            <PrimaryButton
-              borderRadius="md"
-              flex={1}
+            <Button
+              fill
+              emphasis={ButtonEmphasis.Tertiary}
               label={closeText}
-              variant="transparent"
               onPress={onCancel ?? onClose}
             />
           )}
           {confirmText && (
-            <PrimaryButton
-              borderRadius="md"
-              flex={1}
+            <Button
+              fill
+              emphasis={ButtonEmphasis.Detrimental}
               label={confirmText}
               name={ElementName.Confirm}
-              testID={ElementName.Confirm}
-              variant={alertColor.confirmButton}
               onPress={onPressConfirm}
             />
           )}
@@ -125,17 +122,15 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
       return {
         text: 'accentCritical',
         background: 'accentCriticalSoft',
-        confirmButton: 'blue',
       }
     case WarningSeverity.Medium:
-      return { text: 'accentWarning', background: 'accentWarningSoft', confirmButton: 'warning' }
+      return { text: 'accentWarning', background: 'accentWarningSoft' }
     case WarningSeverity.Critical:
       return {
         text: 'accentWarning',
         background: 'accentWarningSoft',
-        confirmButton: 'warningDark',
       }
     default:
-      return { text: 'none', background: 'none', confirmButton: 'blue' }
+      return { text: 'none', background: 'none' }
   }
 }

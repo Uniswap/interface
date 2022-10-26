@@ -6,7 +6,7 @@ import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
@@ -107,20 +107,16 @@ export function SettingsCloudBackupScreen({
             </Text>
           </Flex>
           <Flex centered row gap="sm" pt="lg">
-            <PrimaryButton
-              borderRadius="md"
-              flex={1}
+            <Button
+              fill
+              emphasis={ButtonEmphasis.Tertiary}
               label={t('Cancel')}
-              variant="transparent"
               onPress={() => navigation.goBack()}
             />
-            <PrimaryButton
-              borderRadius="md"
-              flex={1}
+            <Button
+              fill
               label={t('Back up')}
               name={ElementName.Confirm}
-              testID={ElementName.Confirm}
-              variant="blue"
               onPress={() => setShowCloudBackupInfoModal(false)}
             />
           </Flex>

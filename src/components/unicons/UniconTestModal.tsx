@@ -5,7 +5,7 @@ import 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button } from 'src/components/buttons/Button'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -133,23 +133,17 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
       onClose={onClose}>
       <ScrollView>
         <Flex gap="md">
-          <PrimaryButton label="Close modal" onPress={onClose} />
+          <Button label="Close modal" onPress={onClose} />
           <Flex row gap="sm" justifyContent="space-between">
-            <PrimaryButton
-              flex={1}
+            <Button
               label="Emblem-Container Combos"
               onPress={() => setScreenState(VisibleUnicons.EmblemContainerCombos)}
             />
-            <PrimaryButton
-              flex={1}
+            <Button
               label="Color Combos"
               onPress={() => setScreenState(VisibleUnicons.ColorCombos)}
             />
-            <PrimaryButton
-              flex={1}
-              label="Default"
-              onPress={() => setScreenState(VisibleUnicons.Default)}
-            />
+            <Button label="Default" onPress={() => setScreenState(VisibleUnicons.Default)} />
           </Flex>
         </Flex>
         {screenState === VisibleUnicons.EmblemContainerCombos &&

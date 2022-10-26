@@ -10,7 +10,6 @@ import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
 import SendIcon from 'src/assets/icons/send.svg'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Suspense } from 'src/components/data/Suspense'
 import { Heart } from 'src/components/icons/Heart'
@@ -292,12 +291,11 @@ function TokenDetails({
       </HeaderScrollScreen>
 
       <Flex row bg="background0" bottom={0} gap="sm" pb="xl" position="absolute" pt="sm" px="sm">
-        <PrimaryButton
+        <Button
+          fill
           disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}
-          flex={1}
           label={t('Swap')}
-          py="md"
-          textVariant="buttonLabelMedium"
+          size={ButtonSize.Large}
           onPress={() => onPressSwap(currentChainBalance ? SwapType.SELL : SwapType.BUY)}
         />
         {currentChainBalance && (

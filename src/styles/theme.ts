@@ -1,5 +1,5 @@
 import { createTheme } from '@shopify/restyle'
-import { iconButtonVariants, primaryButtonVariants } from 'src/styles/button'
+import { iconButtonVariants } from 'src/styles/button'
 import { colorsDark, colorsLight } from 'src/styles/color'
 import { textVariants } from 'src/styles/font'
 import { borderRadii, iconSizes, imageSizes, spacing } from 'src/styles/sizing'
@@ -25,7 +25,6 @@ export const theme = createTheme({
     ...colorsLight,
   },
   iconButtonVariants,
-  primaryButtonVariants,
   iconSizes,
   imageSizes,
   spacing,

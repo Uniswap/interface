@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
 import { TextInput } from 'src/components/input/TextInput'
 import { Flex } from 'src/components/layout/Flex'
@@ -118,11 +118,10 @@ function SectionHeader({
         <Text variant="subheadLarge">{emoji}</Text>
         <Text variant="subheadLarge">{title}</Text>
       </Flex>
-      <PrimaryButton
+      <Button
+        emphasis={ButtonEmphasis.Detrimental}
         label="Reset"
-        p="xs"
-        textVariant="buttonLabelMicro"
-        variant="paleOrange"
+        size={ButtonSize.Small}
         onPress={onResetPress}
       />
     </Flex>
@@ -165,11 +164,10 @@ function ExperimentRow({
             }
             onChangeText={(text) => setTextInput(text)}
           />
-          <PrimaryButton
+          <Button
+            emphasis={ButtonEmphasis.Secondary}
             label="Override"
-            p="xs"
-            textVariant="buttonLabelMicro"
-            variant="blue"
+            size={ButtonSize.Small}
             onPress={() => {
               if (!textInput) return
               dispatch(addExperimentOverride({ name: name, variant: textInput }))

@@ -5,9 +5,8 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import Checkmark from 'src/assets/icons/check.svg'
 import X from 'src/assets/icons/x.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { TextButton } from 'src/components/buttons/TextButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -225,27 +224,13 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
           <Box />
         </Flex>
         <Flex flexDirection="row" gap="xs" justifyContent="space-between">
-          <TextButton
-            alignItems="center"
-            backgroundColor="background3"
-            borderRadius="md"
-            flex={1}
-            flexDirection="row"
-            justifyContent="center"
-            px="md"
-            py="sm"
-            textAlign="center"
-            textVariant="buttonLabelMedium"
-            onPress={() => onPressSettleConnection(false)}>
-            {t('Cancel')}
-          </TextButton>
-          <PrimaryButton
-            borderRadius="md"
-            flex={1}
-            label={t('Connect')}
-            variant="blue"
-            onPress={() => onPressSettleConnection(true)}
+          <Button
+            fill
+            emphasis={ButtonEmphasis.Secondary}
+            label={t('Cancel')}
+            onPress={() => onPressSettleConnection(false)}
           />
+          <Button fill label={t('Connect')} onPress={() => onPressSettleConnection(true)} />
         </Flex>
       </AnimatedFlex>
       {modalState === PendingConnectionModalState.SwitchNetwork && (

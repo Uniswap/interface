@@ -33,7 +33,6 @@ export type ExploreStackParamList = {
 
 export type AccountStackParamList = {
   [Screens.Accounts]: undefined
-  [Screens.ImportAccount]: undefined
 }
 
 export type SettingsStackParamList = {

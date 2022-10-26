@@ -3,7 +3,7 @@ import { providers } from 'ethers'
 import React, { Dispatch, ReactElement, useCallback, useEffect } from 'react'
 import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Warning } from 'src/components/modals/WarningModal/types'
 import { Text } from 'src/components/Text'
@@ -109,14 +109,11 @@ export function TransactionFlow({
                 {flowName}
               </Text>
               {step === TransactionStep.FORM && (
-                <PrimaryButton
-                  borderRadius="md"
+                <Button
+                  emphasis={ButtonEmphasis.Tertiary}
                   label="$   USD"
-                  px="sm"
-                  py="xs"
-                  testID="toggle-usd"
-                  textVariant="buttonLabelSmall"
-                  variant={isUSDInput ? 'transparentBlue' : 'transparent'}
+                  name="toggle-usd"
+                  size={ButtonSize.Small}
                   onPress={() => onToggleUSDInput(!isUSDInput)}
                 />
               )}

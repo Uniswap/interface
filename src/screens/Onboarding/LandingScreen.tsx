@@ -5,7 +5,7 @@ import { Image, StyleSheet, useColorScheme } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { UNISWAP_LOGO } from 'src/assets'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
@@ -63,16 +63,13 @@ export function LandingScreen({ navigation }: Props) {
           <Image source={UNISWAP_LOGO} style={styles.logo} />
         </Box>
         <Flex centered gap="lg" mx="md" my="sm">
-          <PrimaryButton
-            flexGrow={1}
-            label={t('Create a wallet')}
-            name={ElementName.OnboardingCreateWallet}
-            style={{ backgroundColor: colors.magenta300 }}
-            testID={ElementName.OnboardingCreateWallet}
-            variant="onboard"
-            width="100%"
-            onPress={onPressCreateWallet}
-          />
+          <Box width="100%">
+            <Button
+              label={t('Create a wallet')}
+              name={ElementName.OnboardingCreateWallet}
+              onPress={onPressCreateWallet}
+            />
+          </Box>
           <TextButton
             name={ElementName.OnboardingImportWallet}
             testID={ElementName.OnboardingImportWallet}

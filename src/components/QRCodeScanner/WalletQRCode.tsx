@@ -2,15 +2,13 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Share } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import ShareIcon from 'src/assets/icons/share.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedRadial } from 'src/components/gradients/UniconThemedRadial'
-import { AnimatedFlex } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import { useUniconColors } from 'src/components/unicons/utils'
 import { logMessage } from 'src/features/telemetry'
@@ -25,7 +23,6 @@ interface Props {
 
 export function WalletQRCode({ address }: Props) {
   const { t } = useTranslation()
-  const theme = useAppTheme()
 
   const gradientData = useUniconColors(address)
 
@@ -70,18 +67,15 @@ export function WalletQRCode({ address }: Props) {
           safeAreaSize={UNICON_SIZE + UNICON_SIZE / 2}
           size={QR_CODE_SIZE}
         />
-        <Box flexDirection="row">
+        <Flex row gap="sm">
           <CopyTextButton copyText={address} />
-          <PrimaryButton
-            borderRadius="md"
-            icon={<ShareIcon color={theme.colors.textPrimary} height={18} width={18} />}
+          <Button
+            IconName={ShareIcon}
+            emphasis={ButtonEmphasis.Tertiary}
             label={t`Share`}
-            marginLeft="sm"
-            textColor="textPrimary"
-            variant="transparent"
             onPress={onShare}
           />
-        </Box>
+        </Flex>
       </AnimatedFlex>
     </>
   )

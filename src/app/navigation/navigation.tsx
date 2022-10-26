@@ -13,7 +13,6 @@ import { HomeScreenQueries, usePreloadedHomeScreenQueries } from 'src/app/naviga
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { TabBarButton } from 'src/app/navigation/TabBarButton'
 import {
-  AccountStackParamList,
   AppStackParamList,
   ExploreStackParamList,
   HomeStackParamList,
@@ -51,7 +50,6 @@ import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupS
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
-import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
 import { NFTItemScreen } from 'src/screens/NFTItemScreen'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { CloudBackupPasswordScreen } from 'src/screens/Onboarding/CloudBackupPasswordScreen'
@@ -84,7 +82,6 @@ const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
 const HomeStack = createNativeStackNavigator<HomeStackParamList>()
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
-const AccountStack = createNativeStackNavigator<AccountStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
 
 const Drawer = createDrawerNavigator()
@@ -405,9 +402,6 @@ export function AppStackNavigator() {
       <AppStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
       <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
       <AppStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
-      <AppStack.Group screenOptions={navOptions.presentationModal}>
-        <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
-      </AppStack.Group>
       <AppStack.Screen component={ActivityScreen} name={Screens.Activity} />
       <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />

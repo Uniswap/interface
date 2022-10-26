@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -52,21 +52,13 @@ export function TransactionPending({
         </Flex>
       </Flex>
       {transaction && isFinalizedState(transaction.status) ? (
-        <PrimaryButton
-          alignSelf="stretch"
+        <Button
+          emphasis={ButtonEmphasis.Tertiary}
           label={t('View transaction')}
-          py="md"
-          variant="transparent"
           onPress={() => openTransactionLink(transaction.hash, chainId)}
         />
       ) : null}
-      <PrimaryButton
-        alignSelf="stretch"
-        label={t('OK')}
-        py="md"
-        testID={ElementName.OK}
-        onPress={onNext}
-      />
+      <Button label={t('OK')} name={ElementName.OK} onPress={onNext} />
     </AnimatedFlex>
   )
 }

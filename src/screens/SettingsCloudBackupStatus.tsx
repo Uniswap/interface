@@ -6,7 +6,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import Checkmark from 'src/assets/icons/check.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
@@ -99,20 +99,14 @@ export function SettingsCloudBackupStatus({
             </Flex>
           </Flex>
         </Flex>
-        <Flex justifyContent="center">
-          <PrimaryButton
-            alignSelf="stretch"
-            borderRadius="lg"
-            height={56}
-            label={t('Delete iCloud backup')}
-            name={ElementName.Remove}
-            textVariant="buttonLabelLarge"
-            variant="failure"
-            onPress={() => {
-              setShowBackupDeleteWarning(true)
-            }}
-          />
-        </Flex>
+        <Button
+          emphasis={ButtonEmphasis.Detrimental}
+          label={t('Delete iCloud backup')}
+          name={ElementName.Remove}
+          onPress={() => {
+            setShowBackupDeleteWarning(true)
+          }}
+        />
       </Flex>
 
       <WarningModal

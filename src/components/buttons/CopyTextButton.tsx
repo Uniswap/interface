@@ -1,18 +1,18 @@
-import React, { PropsWithChildren, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import CheckCircle from 'src/assets/icons/check-circle.svg'
 import CopySheets from 'src/assets/icons/copy-sheets.svg'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { setClipboard } from 'src/utils/clipboard'
 
-interface PrimaryButtonProps {
+interface Props {
   copyText?: string
 }
 
 const ICON_SIZE = 18
 
-export function CopyTextButton({ copyText, children }: PropsWithChildren<PrimaryButtonProps>) {
+export function CopyTextButton({ copyText }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -27,17 +27,14 @@ export function CopyTextButton({ copyText, children }: PropsWithChildren<Primary
 
   const onPress = () => {
     if (copyText) setClipboard(copyText)
-    else if (typeof children === 'string') setClipboard(children)
     setIsCopied(true)
   }
 
   return (
-    <PrimaryButton
-      children={children}
-      icon={isCopied ? copiedIcon : copyIcon}
+    <Button
+      CustomIcon={isCopied ? copiedIcon : copyIcon}
+      emphasis={ButtonEmphasis.Tertiary}
       label={isCopied ? t`Copied` : t`Copy`}
-      textColor="textPrimary"
-      variant="transparent"
       onPress={onPress}
     />
   )

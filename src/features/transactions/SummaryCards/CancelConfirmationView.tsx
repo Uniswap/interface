@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
@@ -85,23 +85,14 @@ export function CancelConfirmationView({
         )}
       </Flex>
       <Flex grow row gap="xs" px="xxs">
-        <PrimaryButton
-          flex={1}
-          flexBasis="50%"
-          label="Back"
-          variant="transparent"
-          onPress={onBack}
+        <Button fill emphasis={ButtonEmphasis.Tertiary} label={t('Back')} onPress={onBack} />
+        <Button
+          fill
+          emphasis={ButtonEmphasis.Detrimental}
+          label={t('Confirm')}
+          name={ElementName.Cancel}
+          onPress={onPressCancel}
         />
-        <Flex flex={1} flexBasis="50%">
-          <PrimaryButton
-            disabled={false}
-            label={t('Confirm')}
-            name={ElementName.Cancel}
-            testID={ElementName.Cancel}
-            textVariant="buttonLabelMedium"
-            onPress={onPressCancel}
-          />
-        </Flex>
       </Flex>
     </Flex>
   )

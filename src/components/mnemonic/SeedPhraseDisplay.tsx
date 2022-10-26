@@ -1,7 +1,7 @@
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout/Flex'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
@@ -59,15 +59,10 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss }: Props) {
             <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>
           <Flex justifyContent="center">
-            <PrimaryButton
-              alignSelf="stretch"
-              borderRadius="md"
+            <Button
+              emphasis={ButtonEmphasis.Secondary}
               label={t('Hide recovery phrase')}
               name={ElementName.Next}
-              py="md"
-              testID={ElementName.Next}
-              textVariant="buttonLabelLarge"
-              variant="gray"
               onPress={() => {
                 setShowSeedPhrase(false)
               }}

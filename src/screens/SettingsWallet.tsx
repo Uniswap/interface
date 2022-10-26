@@ -14,7 +14,7 @@ import EditIcon from 'src/assets/icons/edit.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
 import TrendingUpIcon from 'src/assets/icons/trending-up.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -246,20 +246,14 @@ export function SettingsWallet({
             stickySectionHeadersEnabled={false}
           />
         </Box>
-        <PrimaryButton
-          height={56}
-          label={t('Remove wallet')}
-          name={ElementName.Remove}
-          style={{
-            backgroundColor: theme.colors.accentCriticalSoft,
-          }}
-          testID={ElementName.Remove}
-          textColor="accentCritical"
-          textVariant="buttonLabelLarge"
-          visible={!shouldHideRemoveOption}
-          width="100%"
-          onPress={() => setShowRemoveWalletModal(true)}
-        />
+        {!shouldHideRemoveOption && (
+          <Button
+            emphasis={ButtonEmphasis.Detrimental}
+            label={t('Remove wallet')}
+            name={ElementName.Remove}
+            onPress={() => setShowRemoveWalletModal(true)}
+          />
+        )}
 
         {!!showRemoveWalletModal && !!currentAccount && (
           <WarningModal

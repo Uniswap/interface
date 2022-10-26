@@ -6,7 +6,7 @@ import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg'
 import EtherscanLogo from 'src/assets/logos/etherscan-logo.svg'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Flex } from 'src/components/layout'
@@ -116,29 +116,28 @@ export default function TokenWarningModal({
         </TouchableArea>
         {tokenWarningLevel === TokenWarningLevel.BLOCKED ? (
           <Flex row>
-            <PrimaryButton
-              flexGrow={1}
+            <Button
+              fill
+              emphasis={ButtonEmphasis.Tertiary}
               label={t('Close')}
-              mt="md"
-              testID={ElementName.Cancel}
-              variant="transparent"
+              name={ElementName.Cancel}
               onPress={onClose}
             />
           </Flex>
         ) : (
           <Flex centered row mt="md">
-            <PrimaryButton
-              flex={1}
+            <Button
+              fill
+              emphasis={ButtonEmphasis.Tertiary}
               label={t('Cancel')}
-              testID={ElementName.Cancel}
-              variant="transparent"
+              name={ElementName.Cancel}
               onPress={onClose}
             />
-            <PrimaryButton
-              flex={1}
+            <Button
+              fill
+              emphasis={ButtonEmphasis.Detrimental}
               label={t('I understand')}
-              testID={ElementName.TokenWarningAccept}
-              variant={tokenWarningLevel === TokenWarningLevel.LOW ? 'blue' : 'failure'}
+              name={ElementName.TokenWarningAccept}
               onPress={onAccept}
             />
           </Flex>

@@ -1,6 +1,6 @@
 import React, { ErrorInfo } from 'react'
 import RNRestart from 'react-native-restart'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { logException } from 'src/features/telemetry'
@@ -41,15 +41,13 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
         <Box alignItems="center" flex={1} justifyContent="center">
           <Text variant="headlineLarge">An Error Occurred</Text>
           {error.message && (
-            <Text mt="xl" variant="headlineSmall">
+            <Text mb="lg" mt="xl" variant="headlineSmall">
               {error.message}
             </Text>
           )}
-          <PrimaryButton
-            borderRadius="md"
+          <Button
+            fill
             label="Restart"
-            marginTop="lg"
-            py="sm"
             onPress={() => {
               RNRestart.Restart()
             }}
