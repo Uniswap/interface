@@ -2,20 +2,14 @@
 directive @defer on FIELD
 
 """
-Tells the service this field/object has access authorized by an API key.
+Tells the service this field/object has access authorized by an OIDC token.
 """
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
+Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by sigv4 signing.
@@ -31,9 +25,21 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an OIDC token.
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
 """
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
+
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by a Cognito User Pools token.
@@ -44,15 +50,9 @@ directive @aws_cognito_user_pools(
 ) on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
+Tells the service this field/object has access authorized by an API key.
 """
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 enum ActivityType {
   APPROVE
@@ -93,6 +93,18 @@ type AssetActivity {
 }
 
 union AssetChange = TokenTransfer | NftTransfer | TokenApproval | NftApproval | NftApproveForAll
+
+"""
+The `AWSJSON` scalar type provided by AWS AppSync, represents a JSON string that
+complies with [RFC 8259](https://tools.ietf.org/html/rfc8259).  Maps like
+"**{\\"upvotes\\": 10}**", lists like "**[1,2,3]**", and scalar values like
+"**\\"AWSJSON example string\\"**", "**1**", and "**true**" are accepted as
+valid JSON and will automatically be parsed and loaded in the resolver mapping
+templates as Maps, Lists, or Scalar values rather than as the literal input
+strings.  Invalid JSON strings like "**{a: 1}**", "**{'a': 1}**" and "**Unquoted
+string**" will throw GraphQL validation errors.
+"""
+scalar AWSJSON
 
 enum Chain {
   ARBITRUM
@@ -184,19 +196,61 @@ type NftAsset {
   image: Image
   thumbnail: Image
   smallImage: Image
+  originalImage: Image
   name: String
   nftContract: NftContract
 
+  """  TODO: may need to be array to support erc1155 cases. not needed at the moment so will revisit.
   """
-    TODO: may need to be array to support erc1155 cases. not needed at the moment so will revisit.
-   ownerAddress: String
-  """
+  ownerAddress: String
   tokenId: String
-  traits: [NftAssetTrait]
+
+  """  Resolver to be implemented"""
+  traits: [NftAssetTrait!]
+
+  """  Resolver to be implemented"""
+  rarities: [NftAssetRarity!]
+  listings(asc: Boolean, first: Int, last: Int, after: String, before: String): NftOrderConnection
+  suspiciousFlag: Boolean
+  flaggedBy: String
+  metadataUrl: String
+}
+
+type NftAssetConnection {
+  pageInfo: PageInfo!
+  edges: [NftAssetEdge!]!
+}
+
+type NftAssetEdge {
+  cursor: String!
+  node: NftAsset!
+}
+
+input NftAssetInput {
+  address: String!
+  tokenId: String!
+}
+
+type NftAssetRarity {
+  id: ID!
+  score: Float
+  rank: Int
+  provider: NftRarityProvider
+}
+
+input NftAssetsFilterInput {
+  tokenSearchQuery: String
+  tokenIds: [String!]
+  traits: [NftAssetTraitInput!]
+  listed: Boolean
+  minPrice: String
+  maxPrice: String
+  marketplaces: [NftMarketplace!]
 }
 
 enum NftAssetSortableField {
   PRICE
+  RARITY
 }
 
 type NftAssetTrait {
@@ -206,9 +260,30 @@ type NftAssetTrait {
   value: String
 }
 
+input NftAssetTraitInput {
+  name: String!
+  values: [String!]!
+}
+
 type NftBalance {
   id: ID!
   ownedAsset: NftAsset
+  listedMarketplaces: [NftMarketplace!]
+}
+
+type NftBalanceConnection {
+  pageInfo: PageInfo!
+  edges: [NftBalanceEdge!]!
+}
+
+type NftBalanceEdge {
+  cursor: String!
+  node: NftBalance!
+}
+
+input NftBalancesFilterInput {
+  addresses: [String!]
+  assets: [NftAssetInput!]
 }
 
 type NftCollection {
@@ -227,32 +302,81 @@ type NftCollection {
   imageUrl: String
   image: Image
   instagramName: String
-  markets(currencies: [Currency!]!): [NftCollectionMarket]
+
+  """  Resolver to be implemented"""
+  markets(currencies: [Currency!]!): [NftCollectionMarket!]
   name: String
-  nftContracts: [NftContract]
+  nftContracts: [NftContract!]
   openseaUrl: String
 
-  """
-    TODO: support collection-level traits.
-   traits: [NftCollectionTraits] (not needed yet)
-  """
+  """  Resolver to be implemented"""
+  traits: [NftCollectionTrait!]
   twitterName: String
   isVerified: Boolean
   numAssets: Int
+  creator: NftProfile
+}
+
+type NftCollectionConnection {
+  pageInfo: PageInfo!
+  edges: [NftCollectionEdge!]!
+}
+
+type NftCollectionEdge {
+  cursor: String!
+  node: NftCollection!
 }
 
 type NftCollectionMarket {
   id: ID!
+  nftContracts: [NftContract!]
+
+  """  Resolver to be implemented"""
   floorPrice: Amount
   owners: Int
   volume24h: Amount
   totalVolume: Amount
+
+  """  Resolver to be implemented"""
+  volume(duration: HistoryDuration): Amount
+
+  """  Resolver to be implemented"""
+  volumePercentChange(duration: HistoryDuration): Amount
+
+  """  Resolver to be implemented"""
+  floorPricePercentChange(duration: HistoryDuration): Amount
+
+  """  Resolver to be implemented"""
+  sales(duration: HistoryDuration): Amount
+  listings: Int
+
+  """  Resolver to be implemented"""
+  marketplaces(marketplaces: [NftMarketplace!]): [NftCollectionMarketplace!]
 }
 
-type NftCollectionTraits {
+type NftCollectionMarketplace {
+  id: ID!
+  marketplace: NftMarketplace
+  listings: Int
+}
+
+input NftCollectionsFilterInput {
+  addresses: [String!]
+}
+
+type NftCollectionTrait {
   id: ID!
   name: String
-  values: [String]
+  values: [String!]
+  stats: [NftCollectionTraitStats!]
+}
+
+type NftCollectionTraitStats {
+  id: ID!
+  name: String
+  value: String
+  assets: Int
+  listings: Int
 }
 
 type NftContract implements IContract {
@@ -265,9 +389,62 @@ type NftContract implements IContract {
   totalSupply: Int
 }
 
+enum NftMarketplace {
+  OPENSEA
+  LOOKSRARE
+  X2Y2
+  SUDOSWAP
+  NFTX
+  NFT20
+  FOUNDATION
+  CRYPTOPUNKS
+}
+
 enum NftMarketSortableField {
   VOLUME
   FLOOR_PRICE
+}
+
+type NftOrder {
+  id: ID!
+  address: String!
+  tokenId: String
+  type: OrderType!
+  marketplace: NftMarketplace!
+  marketplaceUrl: String!
+  price: Amount!
+  quantity: Int!
+  orderHash: String
+  status: OrderStatus!
+  createdAt: Float!
+  startAt: Float!
+  endAt: Float
+  maker: String!
+  taker: String
+  auctionType: String
+  protocolParameters: AWSJSON
+}
+
+type NftOrderConnection {
+  pageInfo: PageInfo!
+  edges: [NftOrderEdge!]!
+}
+
+type NftOrderEdge {
+  cursor: String!
+  node: NftOrder!
+}
+
+type NftProfile {
+  id: ID!
+  address: String
+  isVerified: Boolean
+  profileImage: Image
+  username: String
+}
+
+enum NftRarityProvider {
+  RARITY_SNIPER
 }
 
 enum NftStandard {
@@ -285,6 +462,25 @@ type NftTransfer {
   direction: TransactionDirection!
 }
 
+enum OrderStatus {
+  VALID
+  EXECUTED
+  CANCELLED
+  EXPIRED
+}
+
+enum OrderType {
+  LISTING
+  OFFER
+}
+
+type PageInfo {
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+  startCursor: String
+  endCursor: String
+}
+
 type Portfolio {
   id: ID!
   ownerAddress: String!
@@ -297,7 +493,10 @@ type Portfolio {
   totalValue: Float
   absoluteChange24H: Float
   relativeChange24H: Float
+
+  """  TODO: (michael.zhang) replace with paginated query"""
   nftBalances: [NftBalance]
+  assetActivities(page: Int, pageSize: Int): [AssetActivity]
 }
 
 type Query {
@@ -311,6 +510,15 @@ type Query {
   portfolios(ownerAddresses: [String!]!): [Portfolio]
   nftCollectionsById(collectionIds: [String]): [NftCollection]
   topTokens(chain: Chain, page: Int!, pageSize: Int!): [Token]
+
+  """  Resolver to be implemented"""
+  nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, first: Int, last: Int, after: String, before: String): NftAssetConnection
+
+  """  Resolver to be implemented"""
+  nftCollections(filter: NftCollectionsFilterInput, first: Int, last: Int, after: String, before: String): NftCollectionConnection
+
+  """  Resolver to be implemented"""
+  nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, first: Int, last: Int, after: String, before: String): NftBalanceConnection
 }
 
 type TimestampedAmount implements IAmount {
@@ -372,6 +580,8 @@ type TokenProject {
   twitterName: String
   homepageUrl: String
   logoUrl: String
+  logo: Image
+  smallLogo: Image
   markets(currencies: [Currency!]!): [TokenProjectMarket]
 }
 
