@@ -44,9 +44,13 @@ const GridItem = ({ header, body }: { header: string; body: React.ReactNode }) =
   )
 }
 
+const stringShortener = (text: string) => `${text.substring(0, 4)}...${text.substring(text.length - 4, text.length)}`
+
 const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection: CollectionInfoForAsset }) => {
   const { address, tokenId, tokenType, creator } = asset
   const { totalSupply } = collection
+
+  const finalTokenId = tokenId.slice(0, 20)
 
   const [, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
@@ -63,7 +67,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
           </Center>
         }
       />
-      <GridItem header="Token ID" body={tokenId} />
+      <GridItem header="Token ID" body={tokenId.length > 9 ? stringShortener(tokenId) : tokenId} />
       <GridItem header="Token Standard" body={tokenType} />
       <GridItem header="Blockchain" body="Ethereum" />
       <GridItem header="Total Supply" body={`${totalSupply}`} />
