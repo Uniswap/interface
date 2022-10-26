@@ -19,7 +19,7 @@ import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 import { VerifiedIcon } from '../icons'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import InfoContainer from './InfoContainer'
 import TraitsContainer from './TraitsContainer'
 import rarityIcon from './rarity.svg'
@@ -31,7 +31,6 @@ import { SupportedChainId } from 'constants/chains'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { reduceFilters } from '../collection/Activity'
 import * as activityStyles from 'nft/components/collection/Activity.css'
-import { ThemedText } from 'theme'
 
 import * as styles from './AssetDetails.css'
 
@@ -41,6 +40,16 @@ const CollectionHeader = styled.div`
   font-size: 16px;
   line-height: 24px;
   color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+
+  &:hover {
+    color: ${({ theme }) => theme.textSecondary};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => css`color ${duration.medium} ${timing.ease}`};
+  }
 `
 
 const AssetPriceDetailsContainer = styled.div`
@@ -57,6 +66,7 @@ const AssetHeader = styled.div`
   font-size: 36px;
   line-height: 36px;
   color: ${({ theme }) => theme.textPrimary};
+  margin-top: 8px;
 `
 
 const MediaContainer = styled.div`
@@ -72,11 +82,21 @@ const Column = styled.div`
   max-width: 780px;
 `
 
-const AddressText = styled.span`
+const AddressTextLink = styled.a`
   font-weight: 600;
   color: ${({ theme }) => theme.textTertiary};
   font-size: 16px;
   line-height: 20px;
+  text-decoration: none;
+
+  &:hover {
+    color: ${({ theme }) => theme.stateOverlayPressed};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => css`color ${duration.medium} ${timing.ease}`};
+  }
 `
 
 const DescriptionText = styled.div`
@@ -101,6 +121,15 @@ const EmptyActivitiesContainer = styled.div`
   line-height: 36px;
   padding-top: 56px;
   padding-bottom: 56px;
+`
+
+const Link = styled.a`
+  color: ${({ theme }) => theme.accentAction};
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 16px;
+  margin-top: 12px;
+  cursor: pointer;
 `
 
 const AudioPlayer = ({
@@ -327,7 +356,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
 
   return (
     <Column>
-      <CollectionHeader>
+      <CollectionHeader onClick={() => navigate(`/nfts/collection/${asset.address}`)}>
         {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
       </CollectionHeader>
       <AssetHeader>{asset.name ? asset.name : `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
@@ -364,7 +393,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         primaryHeader="Activity"
         secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
       >
-        {eventsData && eventsData.events?.length > 0 && false ? (
+        {eventsData && eventsData.events?.length > 0 ? (
           <>
             <div style={{ display: 'flex', gap: '8px', marginBottom: 34 }}>
               <Filter eventType={ActivityEventType.Listing} />
@@ -379,14 +408,20 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           <EmptyActivitiesContainer>
             <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
               <div>No activities yet</div>
-              <div>View Full Collection Items</div>{' '}
+              <Link href={`#/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
             </div>
           </EmptyActivitiesContainer>
         )}
       </InfoContainer>
 
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
-        <DescriptionText>{collection.collectionDescription}</DescriptionText>
+        <>
+          By{' '}
+          <AddressTextLink href={`${explorer}/address/${asset.creator}`} target="_blank">
+            {asset.creator}
+          </AddressTextLink>
+          <DescriptionText>{collection.collectionDescription}</DescriptionText>
+        </>
       </InfoContainer>
       <InfoContainer primaryHeader="Details" secondaryHeader={null}>
         <DetailsContainer asset={asset} collection={collection} />
