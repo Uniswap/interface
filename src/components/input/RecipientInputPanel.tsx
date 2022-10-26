@@ -32,7 +32,11 @@ export function RecipientInputPanel({
       onPress={onToggleShowRecipientSelector}>
       <Flex gap="xxxs">
         <Flex centered row gap="xxs">
-          <AddressDisplay address={recipientAddress} variant="headlineSmall" />
+          <AddressDisplay
+            hideAddressInSubtitle
+            address={recipientAddress}
+            variant="headlineSmall"
+          />
           <Chevron color={theme.colors.textPrimary} direction="e" />
         </Flex>
         {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}

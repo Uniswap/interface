@@ -137,10 +137,10 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps) 
       onPress={onPress}>
       <Flex row shrink gap="sm" justifyContent="space-between" p="sm">
         <AddressDisplay
+          hideAddressInSubtitle
           address={activeAddress}
           size={20}
           variant="subheadSmall"
-          verticalGap="none"
         />
         <Flex centered row shrink gap="xs">
           <Text color="textSecondary" variant="bodySmall">

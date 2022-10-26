@@ -65,7 +65,11 @@ export function AccountHeader() {
         onPress={onPressAccountHeader}>
         {activeAddress && (
           <Flex row gap="xs">
-            <AddressDisplay address={activeAddress} variant="buttonLabelMedium" />
+            <AddressDisplay
+              hideAddressInSubtitle
+              address={activeAddress}
+              variant="buttonLabelMedium"
+            />
             <Chevron color={theme.colors.textSecondary} direction="s" height={20} width={20} />
           </Flex>
         )}

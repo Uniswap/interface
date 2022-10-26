@@ -77,7 +77,7 @@ export function CancelConfirmationView({
         </Flex>
         {accountAddress && (
           <Flex grow row justifyContent="space-between" padding="md">
-            <AddressDisplay address={transactionDetails.from} />
+            <AddressDisplay hideAddressInSubtitle address={transactionDetails.from} />
             <Text color="textSecondary" variant="bodySmall">
               {shortenAddress(transactionDetails.from)}
             </Text>

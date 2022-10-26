@@ -66,6 +66,7 @@ export default function FavoriteWalletCard({
             <RemoveButton position="absolute" right={-8} top={-8} onPress={onRemove} />
           ) : null}
           <AddressDisplay
+            hideAddressInSubtitle
             address={address}
             direction="column"
             size={40}

@@ -224,12 +224,7 @@ export function SettingsWallet({
   return (
     <Screen>
       <BackHeader alignment="left" mx="md" pt="md">
-        <AddressDisplay
-          address={address}
-          showViewOnly={readonly}
-          variant="subheadLarge"
-          verticalGap="none"
-        />
+        <AddressDisplay hideAddressInSubtitle address={address} variant="subheadLarge" />
       </BackHeader>
 
       <Flex fill p="lg">

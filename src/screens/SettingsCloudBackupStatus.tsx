@@ -137,13 +137,7 @@ export function SettingsCloudBackupStatus({
             </Text>
             <Flex>
               {associatedAccounts.map((account) => (
-                <AddressDisplay
-                  showAddressAsSubtitle
-                  address={account.address}
-                  size={36}
-                  variant="subheadLarge"
-                  verticalGap="none"
-                />
+                <AddressDisplay address={account.address} size={36} variant="subheadLarge" />
               ))}
             </Flex>
           </Flex>

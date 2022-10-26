@@ -313,13 +313,11 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     <Screen bg="background0" edges={screenEdges}>
       <Flex pb="md" pt="lg" px="lg">
         <AddressDisplay
-          showAddressAsSubtitle
           showCopy
           address={activeAccountAddress}
           captionVariant="bodyLarge"
           size={UNICON_WIDTH}
           variant="subheadLarge"
-          verticalGap="none"
         />
       </Flex>
 

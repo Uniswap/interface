@@ -4,7 +4,7 @@ import { FlexAlignType } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { AvatarWithVisibilityBadge } from 'src/components/unicons/AvatarWithVisibilityBadge'
 import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
@@ -12,27 +12,22 @@ import { useENSAvatar } from 'src/features/ens/api'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName } from 'src/features/telemetry/constants'
-import { useDisplayName } from 'src/features/wallet/hooks'
+import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { useAccounts, useDisplayName } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
 import { sanitizeAddressText, shortenAddress } from 'src/utils/addresses'
 import { setClipboard } from 'src/utils/clipboard'
 
 type AddressDisplayProps = {
   address: string
-  showAddressAsSubtitle?: boolean
+  hideAddressInSubtitle?: boolean
   size?: number
   variant?: keyof Theme['textVariants']
-  color?: keyof Theme['colors']
   captionVariant?: keyof Theme['textVariants']
-  captionColor?: keyof Theme['colors']
-  verticalGap?: keyof Theme['spacing']
-  horizontalGap?: keyof Theme['spacing']
   direction?: 'row' | 'column'
   subtitleOverrideText?: string
   showCopy?: boolean
   showUnicon?: boolean
-  showViewOnly?: boolean
-  showShortenedEns?: boolean
   textAlign?: FlexAlignType
 } & LayoutProps<Theme>
 
@@ -56,25 +51,24 @@ export function AddressDisplay({
   address,
   size = 24,
   variant = 'bodyLarge',
-  color = 'textPrimary',
   captionVariant = 'subheadSmall',
-  captionColor = 'textSecondary',
-  verticalGap = 'xxs',
-  horizontalGap = 'sm',
-  showAddressAsSubtitle,
+  hideAddressInSubtitle,
   subtitleOverrideText,
   direction = 'row',
   showCopy = false,
   showUnicon = true,
-  showViewOnly = false,
-  showShortenedEns = false,
   textAlign,
   ...rest
 }: AddressDisplayProps) {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
-  const displayName = useDisplayName(address, showShortenedEns)
+  const displayName = useDisplayName(address)
   const { data: avatar } = useENSAvatar(address)
+  const accounts = useAccounts()
+
+  const showAddressAsSubtitle = !hideAddressInSubtitle && displayName?.type !== 'address'
+  const account: Account | undefined = accounts[address]
+  const isViewOnly = account?.type === AccountType.Readonly
 
   const onPressCopyAddress = () => {
     if (!address) return
@@ -85,36 +79,31 @@ export function AddressDisplay({
   // Extract sizes so copy icon can match font variants
   const mainSize = theme.textVariants[variant].fontSize
   const captionSize = theme.textVariants[captionVariant].fontSize
+  const itemAlignment =
+    textAlign || (!showUnicon || direction === 'column' ? 'center' : 'flex-start')
 
   // Use ENS avatar if found, if not revert to Unicon
   const icon = useMemo(() => {
     if (avatar) {
       return (
-        <AvatarWithVisibilityBadge
-          avatarUri={avatar}
-          showViewOnlyBadge={showViewOnly}
-          size={size}
-        />
+        <AvatarWithVisibilityBadge avatarUri={avatar} showViewOnlyBadge={isViewOnly} size={size} />
       )
     } else {
       return (
-        <UniconWithVisibilityBadge address={address} showViewOnlyBadge={showViewOnly} size={size} />
+        <UniconWithVisibilityBadge address={address} showViewOnlyBadge={isViewOnly} size={size} />
       )
     }
-  }, [address, avatar, showViewOnly, size])
+  }, [address, avatar, isViewOnly, size])
 
   return (
-    <Flex alignItems="center" flexDirection={direction} gap={horizontalGap} {...rest}>
+    <Flex alignItems="center" flexDirection={direction} gap="sm" {...rest}>
       {showUnicon && icon}
-      <Flex
-        alignItems={textAlign || (!showUnicon || direction === 'column' ? 'center' : 'flex-start')}
-        flexShrink={1}
-        gap={verticalGap}>
+      <Box alignItems={itemAlignment} flexShrink={1}>
         <CopyButtonWrapper
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="sm">
             <Text
-              color={color}
+              color="textPrimary"
               ellipsizeMode="tail"
               numberOfLines={1}
               testID={`address-display/name/${displayName?.name}`}
@@ -127,23 +116,21 @@ export function AddressDisplay({
             )}
           </Flex>
         </CopyButtonWrapper>
-        {/* If subtitle defined show it, otherwise revert to address logic */}
+        {/* If subtitle is defined show it, otherwise revert to address logic */}
         {subtitleOverrideText ? (
-          <Flex centered row gap="sm">
-            <Text color={captionColor} variant={captionVariant}>
-              {subtitleOverrideText}
-            </Text>
-          </Flex>
+          <Text color="textTertiary" variant={captionVariant}>
+            {subtitleOverrideText}
+          </Text>
         ) : (
           showAddressAsSubtitle && (
             <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
               <Flex centered row gap="sm">
-                <Text color={captionColor} variant={captionVariant}>
+                <Text color="textSecondary" variant={captionVariant}>
                   {sanitizeAddressText(shortenAddress(address))}
                 </Text>
                 {showCopy && (
                   <CopyIcon
-                    color={theme.colors[captionColor]}
+                    color={theme.colors.textSecondary}
                     height={captionSize}
                     width={captionSize}
                   />
@@ -152,7 +139,7 @@ export function AddressDisplay({
             </CopyButtonWrapper>
           )
         )}
-      </Flex>
+      </Box>
     </Flex>
   )
 }

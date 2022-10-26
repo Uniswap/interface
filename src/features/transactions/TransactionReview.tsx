@@ -120,7 +120,12 @@ export function TransactionReview({
               {t('To')}
             </Text>
             <Flex centered gap="xs">
-              <AddressDisplay address={recipient} size={24} variant="headlineMedium" />
+              <AddressDisplay
+                hideAddressInSubtitle
+                address={recipient}
+                size={24}
+                variant="headlineMedium"
+              />
               <RecipientPrevTransfers recipient={recipient} />
             </Flex>
           </Flex>

@@ -246,13 +246,10 @@ function WalletSettings() {
             onPress={() => handleNavigation(account.address)}>
             <Box alignItems="center" flexDirection="row" justifyContent="space-between">
               <AddressDisplay
-                showAddressAsSubtitle
                 address={account.address}
                 captionVariant="buttonLabelMicro"
-                showViewOnly={account.type === AccountType.Readonly}
                 size={36}
                 variant="bodyLarge"
-                verticalGap="none"
               />
               <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
             </Box>

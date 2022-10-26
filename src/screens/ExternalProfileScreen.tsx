@@ -123,7 +123,6 @@ export function ExternalProfileScreen({
             address={address}
             captionVariant="subheadLarge"
             direction="column"
-            showAddressAsSubtitle={true}
             showCopy={true}
             size={48}
             variant="headlineMedium"

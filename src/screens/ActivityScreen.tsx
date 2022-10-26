@@ -64,7 +64,7 @@ export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) 
       }
       fixedHeader={
         <Flex centered>
-          <AddressDisplay address={address} variant="subheadLarge" />
+          <AddressDisplay hideAddressInSubtitle address={address} variant="subheadLarge" />
         </Flex>
       }
       maxScrollHeightOverride={MAX_SCROLL_HEIGHT}>

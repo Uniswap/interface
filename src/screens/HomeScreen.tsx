@@ -107,7 +107,11 @@ export function HomeScreen({ queryRefs }: Props) {
         ) : (
           <Box />
         )}
-        <AddressDisplay address={activeAccount.address} variant="subheadLarge" />
+        <AddressDisplay
+          hideAddressInSubtitle
+          address={activeAccount.address}
+          variant="subheadLarge"
+        />
         {shouldShowActions ? (
           <TouchableArea
             justifyContent="center"

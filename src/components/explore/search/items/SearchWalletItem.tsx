@@ -51,13 +51,10 @@ export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalle
         onPressIn={onPressIn}>
         <Flex row justifyContent="space-between" px="xs" py="sm">
           <AddressDisplay
-            showAddressAsSubtitle
             address={address}
-            captionColor="textTertiary"
             size={theme.imageSizes.xl}
             subtitleOverrideText={wallet.category}
             variant="bodyLarge"
-            verticalGap="none"
           />
           {isEditing ? (
             <FavoriteButton disabled={Boolean(isFavorited)} onPress={toggleFavoriteWallet} />

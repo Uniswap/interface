@@ -185,11 +185,9 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
           <Box>
             <Flex gap="sm" p="sm">
               <AddressDisplay
-                showAddressAsSubtitle
                 address="0x3Ec390c6372353703Dfece9755e4CC7Ab59A1372"
                 size={36}
                 variant="bodyLarge"
-                verticalGap="none"
               />
               <Flex row>
                 <AccountCardItem
