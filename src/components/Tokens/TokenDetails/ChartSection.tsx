@@ -3,7 +3,8 @@ import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { PriceDurations, PricePoint, SingleTokenData } from 'graphql/data/Token'
+import { TokenQueryData } from 'graphql/data/Token'
+import { PriceDurations, PricePoint } from 'graphql/data/TokenPrice'
 import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -54,7 +55,7 @@ const TokenActions = styled.div`
 `
 
 export function useTokenLogoURI(
-  token: NonNullable<SingleTokenData> | NonNullable<TopToken>,
+  token: NonNullable<TokenQueryData> | NonNullable<TopToken>,
   nativeCurrency?: Token | NativeCurrency
 ) {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
@@ -71,7 +72,7 @@ export default function ChartSection({
   nativeCurrency,
   prices,
 }: {
-  token: NonNullable<SingleTokenData>
+  token: NonNullable<TokenQueryData>
   currency?: Currency | null
   nativeCurrency?: Token | NativeCurrency
   prices: PriceDurations

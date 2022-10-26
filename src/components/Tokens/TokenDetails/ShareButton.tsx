@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { SingleTokenData } from 'graphql/data/Token'
+import { TokenQueryData } from 'graphql/data/Token'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Twitter } from 'react-feather'
@@ -64,7 +64,7 @@ const ShareAction = styled.div`
 `
 
 interface TokenInfo {
-  token: NonNullable<SingleTokenData>
+  token: NonNullable<TokenQueryData>
   isNative: boolean
 }
 

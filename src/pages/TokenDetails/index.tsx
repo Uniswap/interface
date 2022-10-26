@@ -1,7 +1,6 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
-import { filterTimeAtom } from 'components/Tokens/state'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
@@ -22,10 +21,10 @@ import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constant
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
 import { QueryToken, useTokenQuery } from 'graphql/data/Token'
+import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -35,13 +34,9 @@ export default function TokenDetails() {
   const chain = validateUrlChainParam(chainName)
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const nativeCurrency = nativeOnChain(pageChainId)
-  const timePeriod = useAtomValue(filterTimeAtom)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
-  const [tokenQueryData, prices] = useTokenQuery(
-    isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '',
-    chain,
-    timePeriod
-  )
+  const tokenQueryData = useTokenQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
+  const prices = useTokenPriceQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
   const token = useMemo(() => {
     if (!tokenAddress) return undefined
     if (isNative) return nativeCurrency
