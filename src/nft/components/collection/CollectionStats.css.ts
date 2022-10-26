@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 import { bodySmall, buttonTextSmall, headlineSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
@@ -66,6 +66,11 @@ export const description = style([
     lineHeight: '20px',
   },
 ])
+
+globalStyle(`${description} a[href]`, {
+  color: 'textSecondary',
+  textDecoration: 'none',
+})
 
 export const descriptionOpen = style([
   {
