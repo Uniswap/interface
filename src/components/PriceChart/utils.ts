@@ -8,7 +8,11 @@ export const HEIGHT = 180
 export const WIDTH = dimensions.fullWidth
 
 export const NUM_GRAPHS = 5
-export const GRAPH_PRECISION = 20 // number of points in graph
+// number of points in graph
+// will interpolate up or down to the precision
+// 365 is a balance between performance and precision
+// most paths have fewer than or exactly 365 points
+export const GRAPH_PRECISION = 365
 
 export function takeSubset(arr: Array<any> | undefined, end?: number) {
   return arr?.slice(0, end)

@@ -15,6 +15,13 @@ const priceQuery = graphql`
     tokenProjects(contracts: [$contract]) {
       name
       markets(currencies: [USD]) {
+        # Data supported for all durations
+        # - HOUR: 5m interval data
+        # - DAY: 5m interval data
+        # - WEEK: hourly interval data
+        # - MONTH: hourly interval data
+        # - YEAR: daily interval data
+        # - MAX: 5m/hourly/daily depending on history duration
         priceHistory1H: priceHistory(duration: HOUR) {
           timestamp
           close: value
