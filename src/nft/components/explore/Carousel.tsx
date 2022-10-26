@@ -38,11 +38,15 @@ const CarouselOverlay = styled.div<{ right?: boolean }>`
 
 const IconContainer = styled.div<{ right?: boolean }>`
   display: flex;
+  height: 100%;
   justify-content: center;
   align-items: center;
   padding: 8px;
-  color: ${({ theme }) => theme.textPrimary};
   ${({ right }) => (right ? 'transform: rotate(180deg)' : undefined)};
+  color: ${({ theme }) => theme.textPrimary};
+  :hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
 `
 
 interface CarouselProps {

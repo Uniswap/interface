@@ -1,7 +1,7 @@
 import { CellProps, Column } from 'react-table'
 
 import { CollectionTableColumn } from '../../types'
-import { ChangeCell, CollectionTitleCell, CommaWithDayChange, EthCell, VolumeCell, WithCommaCell } from './Cells/Cells'
+import { ChangeCell, CollectionTitleCell, DiscreteNumberCell, EthCell, VolumeCell } from './Cells/Cells'
 import { Table } from './Table'
 
 export enum ColumnHeaders {
@@ -19,6 +19,7 @@ const columns: Column<CollectionTableColumn>[] = [
     Header: 'Collection name',
     accessor: 'collection',
     Cell: CollectionTitleCell,
+    disableSortBy: true,
   },
   {
     id: ColumnHeaders.Floor,
@@ -73,16 +74,16 @@ const columns: Column<CollectionTableColumn>[] = [
     Header: ColumnHeaders.Items,
     accessor: 'totalSupply',
     sortDescFirst: true,
-    Cell: function withCommaCell(cell: CellProps<CollectionTableColumn>) {
-      return <WithCommaCell value={{ value: cell.row.original.totalSupply }} />
+    Cell: function discreteNumberCell(cell: CellProps<CollectionTableColumn>) {
+      return <DiscreteNumberCell value={{ value: cell.row.original.totalSupply }} />
     },
   },
   {
     Header: ColumnHeaders.Owners,
     accessor: ({ owners }) => owners.value,
     sortDescFirst: true,
-    Cell: function commaDayChange(cell: CellProps<CollectionTableColumn>) {
-      return <CommaWithDayChange value={cell.row.original.owners} />
+    Cell: function discreteNumberCell(cell: CellProps<CollectionTableColumn>) {
+      return <DiscreteNumberCell value={cell.row.original.owners} />
     },
   },
 ]

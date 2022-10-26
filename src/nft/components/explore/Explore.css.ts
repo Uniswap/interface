@@ -179,14 +179,11 @@ export const th = style([
     },
   },
   sprinkles({
-    color: { default: 'textSecondary', hover: 'textPrimary' },
-    cursor: 'pointer',
+    color: { default: 'textSecondary' },
     paddingTop: '12',
     paddingBottom: '12',
   }),
 ])
-
-export const tr = sprinkles({ cursor: 'pointer' })
 
 export const rank = sprinkles({
   color: 'textSecondary',

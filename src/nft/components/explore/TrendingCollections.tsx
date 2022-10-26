@@ -42,6 +42,18 @@ const Selector = styled.div<{ active: boolean }>`
   border-radius: 12px;
   background: ${({ active, theme }) => (active ? theme.backgroundInteractive : 'none')};
   cursor: pointer;
+
+  :hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+
+  :active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+`
+
+const StyledSelectorText = styled(ThemedText.SubHeader)<{ active: boolean }>`
+  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
 `
 
 const TrendingCollections = () => {
@@ -113,26 +125,23 @@ const TrendingCollections = () => {
                 active={timeOption.value === timePeriod}
                 onClick={() => setTimePeriod(timeOption.value)}
               >
-                <ThemedText.SubHeader
-                  lineHeight="20px"
-                  color={timeOption.value === timePeriod ? theme.textPrimary : theme.textSecondary}
-                >
+                <StyledSelectorText lineHeight="20px" active={timeOption.value === timePeriod}>
                   {timeOption.label}
-                </ThemedText.SubHeader>
+                </StyledSelectorText>
               </Selector>
             )
           })}
         </Filter>
         <Filter onClick={() => setEthToggled(!isEthToggled)}>
           <Selector active={isEthToggled}>
-            <ThemedText.SubHeader lineHeight="20px" color={isEthToggled ? theme.textPrimary : theme.textSecondary}>
+            <StyledSelectorText lineHeight="20px" active={isEthToggled}>
               ETH
-            </ThemedText.SubHeader>
+            </StyledSelectorText>
           </Selector>
           <Selector active={!isEthToggled}>
-            <ThemedText.SubHeader lineHeight="20px" color={!isEthToggled ? theme.textPrimary : theme.textSecondary}>
+            <StyledSelectorText lineHeight="20px" active={!isEthToggled}>
               USD
-            </ThemedText.SubHeader>
+            </StyledSelectorText>
           </Selector>
         </Filter>
       </FiltersRow>

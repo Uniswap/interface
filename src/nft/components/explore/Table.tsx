@@ -19,6 +19,28 @@ const RankCellContainer = styled.div`
   gap: 12px;
 `
 
+const StyledRow = styled.tr`
+  cursor: pointer;
+  :hover {
+    background: ${({ theme }) => theme.stateOverlayHover};
+  }
+  :active {
+    background: ${({ theme }) => theme.stateOverlayPressed};
+  }
+`
+
+const StyledHeader = styled.th<{ isFirstHeader: boolean }>`
+  ${({ isFirstHeader }) => !isFirstHeader && `cursor: pointer;`}
+
+  :hover {
+    ${({ theme, isFirstHeader }) => !isFirstHeader && `opacity: ${theme.opacity.hover};`}
+  }
+
+  :active {
+    ${({ theme, isFirstHeader }) => !isFirstHeader && `opacity: ${theme.opacity.click};`}
+  }
+`
+
 interface TableProps<D extends Record<string, unknown>> {
   columns: Column<CollectionTableColumn>[]
   data: CollectionTableColumn[]
@@ -69,13 +91,14 @@ export function Table<D extends Record<string, unknown>>({
           <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map((column, index) => {
               return (
-                <th
+                <StyledHeader
                   className={styles.th}
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   style={{
                     textAlign: index === 0 ? 'left' : 'right',
                     paddingLeft: index === 0 ? '52px' : 0,
                   }}
+                  isFirstHeader={index === 0}
                   key={index}
                 >
                   <Box as="span" color="accentAction" position="relative">
@@ -92,7 +115,7 @@ export function Table<D extends Record<string, unknown>>({
                   <Box as="span" paddingLeft={column.isSorted ? '18' : '0'}>
                     {column.render('Header')}
                   </Box>
-                </th>
+                </StyledHeader>
               )
             })}
           </tr>
@@ -103,8 +126,7 @@ export function Table<D extends Record<string, unknown>>({
           prepareRow(row)
 
           return (
-            <tr
-              className={styles.tr}
+            <StyledRow
               {...row.getRowProps()}
               key={i}
               onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
@@ -125,7 +147,7 @@ export function Table<D extends Record<string, unknown>>({
                   </td>
                 )
               })}
-            </tr>
+            </StyledRow>
           )
         })}
       </tbody>

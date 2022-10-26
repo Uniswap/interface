@@ -1,11 +1,11 @@
 import { formatEther } from '@ethersproject/units'
 import { SquareArrowDownIcon, SquareArrowUpIcon, VerifiedIcon } from 'nft/components/icons'
 import { Denomination } from 'nft/types'
+import { volumeFormatter } from 'nft/utils'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { ethNumberStandardFormatter, formatWeiToDecimal } from '../../../utils/currency'
-import { putCommas } from '../../../utils/putCommas'
 import { formatChange } from '../../../utils/toSignificant'
 import { Box } from '../../Box'
 import { Column, Row } from '../../Flex'
@@ -83,7 +83,9 @@ export const CollectionTitleCell = ({ value }: CellProps) => {
   )
 }
 
-export const WithCommaCell = ({ value }: CellProps) => <span>{value.value ? putCommas(value.value) : '-'}</span>
+export const DiscreteNumberCell = ({ value }: CellProps) => (
+  <span>{value.value ? volumeFormatter(value.value) : '-'}</span>
+)
 
 export const EthCell = ({
   value,
@@ -153,24 +155,6 @@ export const WeiWithDayChange = ({ value }: CellProps) => (
     <Row justifyContent="flex-end" color="textPrimary">
       {value && value.value ? <>{formatWeiToDecimal(value.value.toString(), true)} ETH</> : '-'}
     </Row>
-    {value.change ? (
-      <Box
-        as="span"
-        color={value.change > 0 ? 'green' : 'accentFailure'}
-        fontWeight="normal"
-        fontSize="12"
-        position="relative"
-      >
-        {value.change > 0 && '+'}
-        {formatChange(value.change)}%
-      </Box>
-    ) : null}
-  </Column>
-)
-
-export const CommaWithDayChange = ({ value }: CellProps) => (
-  <Column gap="4">
-    <WithCommaCell value={value} />
     {value.change ? (
       <Box
         as="span"
