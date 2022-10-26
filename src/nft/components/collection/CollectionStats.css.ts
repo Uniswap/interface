@@ -73,13 +73,14 @@ globalStyle(`${description} a[href]`, {
 })
 
 globalStyle(`${description} a[href]:hover`, {
-  color: `${themeVars.colors.stateOverlayHover}`,
-  mixBlendMode: 'normal',
+  color: `${themeVars.colors.textSecondary}`,
+  opacity: '0.6',
   textDecoration: 'none',
 })
 
-globalStyle(`${description} a[href]:visited`, {
+globalStyle(`${description} a[href]:active`, {
   color: `${themeVars.colors.textSecondary}`,
+  opacity: '0.4',
   textDecoration: 'none',
 })
 
