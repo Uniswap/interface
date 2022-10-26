@@ -42,9 +42,9 @@ export function isPricePoint(p: { timestamp: number; value: number | null } | nu
   return Boolean(p && p.value)
 }
 
-export function useTokenPriceQuery(address: string, chain: Chain): PriceDurations {
+export function useTokenPriceQuery(address: string, chain: Chain): PriceDurations | undefined {
   const contract = useMemo(() => ({ address: address.toLowerCase(), chain }), [address, chain])
-  const [prices, setPrices] = useState<PriceDurations>({})
+  const [prices, setPrices] = useState<PriceDurations>()
 
   useEffect(() => {
     const subscription = fetchQuery<TokenPriceQuery>(environment, tokenPriceQuery, { contract }).subscribe({
@@ -61,7 +61,7 @@ export function useTokenPriceQuery(address: string, chain: Chain): PriceDuration
       },
     })
     return () => {
-      setPrices({})
+      setPrices(undefined)
       subscription.unsubscribe()
     }
   }, [contract])
