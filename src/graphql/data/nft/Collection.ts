@@ -1,4 +1,5 @@
 import graphql from 'babel-plugin-relay/macro'
+import { Trait } from 'nft/hooks/useCollectionFilters'
 import { GenieCollection } from 'nft/types'
 import { loadQuery, usePreloadedQuery } from 'react-relay'
 
@@ -87,6 +88,18 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
   // console.log(queryData)
 
   const queryCollection = queryData.nftCollections?.edges[0].node
+  const traits = {} as Record<string, Trait[]>
+  if (queryCollection?.traits) {
+    for (const trait of queryCollection?.traits) {
+      traits[trait.name ?? ''] =
+        trait.values?.map((value) => {
+          return {
+            trait_type: trait.name,
+            trait_value: value,
+          } as Trait
+        }) ?? ({} as Trait[])
+    }
+  }
   return {
     // collectionAddress: address,
     address,
@@ -111,13 +124,7 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
         }
       : undefined,
     // symbol: queryCollection.image.url,
-    // traits: { // TODO structure traits
-    //   trait_type: string
-    //   trait_value: string
-    //   trait_count: number
-    //   floorSellOrder: PriceInfo
-    //   floorPrice: number
-    // }[],
+    traits,
     // marketplaceCount: { marketplace: string; count: number }[], // TODO structure
     imageUrl: queryCollection?.image?.url ?? undefined,
     twitter: queryCollection?.twitterName ?? undefined,
