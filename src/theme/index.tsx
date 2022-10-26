@@ -23,7 +23,7 @@ export const MEDIA_WIDTHS = {
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
-    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    ; (accumulator as any)[size] = (a: any, b: any, c: any) => css`
       @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
         ${css(a, b, c)}
       }
@@ -58,6 +58,8 @@ function colors(darkMode: boolean): Colors {
     bg4: darkMode ? '#848484' : '#fff',
     bg5: darkMode ? '#4F4F62' : '#fff',
     bg6: darkMode ? '#30313D' : 'rgba(255,255,255,0.8)',
+    bgSwapHeader: darkMode ? 'rgba(0, 0, 0, 0.1)' : 'rgba(0, 0, 0, 0.08)',
+
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
@@ -70,7 +72,7 @@ function colors(darkMode: boolean): Colors {
     primary5: darkMode ? '#FFF' : '#5288F4',
 
     // color text
-    primaryText1: darkMode ? '#252632' : '#FFFFFF', 
+    primaryText1: darkMode ? '#252632' : '#FFFFFF',
 
     // secondary colors
     secondary1: darkMode ? '#2172E5' : '#00203d',
@@ -101,7 +103,7 @@ function colors(darkMode: boolean): Colors {
 
     // interactive
     backgroundInteractive: darkMode ? '#293249' : '#E8ECFB',
-    
+
 
   }
 }
@@ -118,9 +120,9 @@ function theme(darkMode: boolean): DefaultTheme {
 
     //shadows
     shadow1: darkMode ? '#000' : '#2F80ED',
-    chartTableBg: darkMode ? 'linear-gradient(rgb(35 40 55),rgb(17 19 32))': 'linear-gradient(white, rgb(255 255 255))', 
-    chartSidebar: darkMode ? 'linear-gradient(rgb(27 31 42),rgb(17 19 32))': 'linear-gradient(#f5f5f5,rgb(255 255 255))',
-    
+    chartTableBg: darkMode ? 'linear-gradient(rgb(35 40 55),rgb(17 19 32))' : 'linear-gradient(white, rgb(255 255 255))',
+    chartSidebar: darkMode ? 'linear-gradient(rgb(27 31 42),rgb(17 19 32))' : 'linear-gradient(#f5f5f5,rgb(255 255 255))',
+
     chartBgLight: '#f5f5f5',
     chartBgDark: 'linear-gradient(rgb(35 40 55),rgb(17 19 32))',
     // media queries
@@ -148,7 +150,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
 
 
-const TextWrapper = styled(Text)<{ link?:boolean, font?: string, color: keyof Colors }>`
+const TextWrapper = styled(Text) <{ link?: boolean, font?: string, color: keyof Colors }>`
   color: ${props => ((props as any).theme[props?.color])};
   font-family: ${props => props.font ? props.font : 'inherit'};
   ${props => Boolean(props.link) && `&:hover {
@@ -159,10 +161,10 @@ const TextWrapper = styled(Text)<{ link?:boolean, font?: string, color: keyof Co
 
 export const TYPE = {
   main(props: TextProps) {
-    return <TextWrapper  fontWeight={500} color={'text2'} {...props} />
+    return <TextWrapper fontWeight={500} color={'text2'} {...props} />
   },
   link(props: TextProps) {
-    return <TextWrapper style={{cursor: 'pointer'}} link={true}  fontWeight={500} color={'primary1'} {...props} />
+    return <TextWrapper style={{ cursor: 'pointer' }} link={true} fontWeight={500} color={'primary1'} {...props} />
   },
   label(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'text1'} {...props} />

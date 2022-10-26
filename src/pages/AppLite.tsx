@@ -27,7 +27,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import { RowFixed } from 'components/Row'
 import Swal from 'sweetalert2'
-import SwapLite, {  } from './Swap'
+import SwapLite, { } from './Swap'
 import { TokenBalanceContextProvider } from 'utils/binance.utils'
 import Tooltip from 'components/Tooltip'
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders'
@@ -67,7 +67,7 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   z-index: 1;
-  margin-top:3rem;
+  margin-top: 4rem;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 6rem 16px 16px 16px;
@@ -103,36 +103,36 @@ const VideoWrapper = styled.div`
 
   
 `
-export const isHoneyPot =  (address:string, provider?: any)  => {
+export const isHoneyPot = (address: string, provider?: any) => {
   const web3 = new Web3(provider as any);
 
-    if (!address) {
-      return Promise.resolve(false);
+  if (!address) {
+    return Promise.resolve(false);
+  }
+
+  if (isAddress(address.toLowerCase())) {
+    web3.extend({
+      methods: [{
+        name: 'callWithState',
+        call: 'eth_call',
+        params: 3,
+      }]
+    });
+    const tokenSymbol = '';
+    const tokenDecimals = 0;
+    const maxSell = 0;
+    const maxTXAmount = 0;
+    const bnbIN = 1000000000000000000;
+    const encodedAddress = web3.eth.abi.encodeParameter('address', address);
+    const contractFuncData = '0xd66383cb';
+    const callData = contractFuncData + encodedAddress.substring(2);
+    const bbCode = '0x6080604052600436106100645760003560e01c8063098d32281461017157806362d9a85c1461019a5780638da5cb5b146101cb5780638f0eb6b1146101f35780639eded3f814610213578063d66383cb14610233578063f2fde38b14610273576100ba565b366100ba57600054600160a01b900460ff166100b85760405162461bcd60e51b815260206004820152600e60248201526d7768792073656e6420626e62733f60901b60448201526064015b60405180910390fd5b005b6000546001600160a01b031633146100e45760405162461bcd60e51b81526004016100af90610c12565b600154600160a01b900460ff166101385760405162461bcd60e51b8152602060048201526018602482015277776861742061726520796f75206576656e20646f696e673f60401b60448201526064016100af565b6001546040516001600160a01b039091169036600082376000803683855af43d82016040523d6000833e80801561016d573d83f35b3d83fd5b34801561017d57600080fd5b5061018760001981565b6040519081526020015b60405180910390f35b3480156101a657600080fd5b506001546101bb90600160a01b900460ff1681565b6040519015158152602001610191565b3480156101d757600080fd5b506000546040516001600160a01b039091168152602001610191565b3480156101ff57600080fd5b506100b861020e366004610a40565b610293565b34801561021f57600080fd5b506100b861022e366004610b46565b6102e6565b610246610241366004610a40565b61032e565b604080519687526020870195909552938501929092526060840152608083015260a082015260c001610191565b34801561027f57600080fd5b506100b861028e366004610a40565b610397565b6000546001600160a01b031633146102bd5760405162461bcd60e51b81526004016100af90610c12565b600180546001600160a01b039092166001600160a81b031990921691909117600160a01b179055565b6000546001600160a01b031633146103105760405162461bcd60e51b81526004016100af90610c12565b60008054911515600160a81b0260ff60a81b19909216919091179055565b60008080808080737a250d5630b4cf539739df2c5dacb4c659f2488d818080610358848c34610421565b919450925090506103698b836106c0565b6000806000610379878f876107ed565b979e50959c509a509398509196509294505050505091939550919395565b6000546001600160a01b031633146103c15760405162461bcd60e51b81526004016100af90610c12565b6001600160a01b0381166103ff5760405162461bcd60e51b81526020600482015260056024820152640cae4e462f60db1b60448201526064016100af565b600080546001600160a01b0319166001600160a01b0392909216919091179055565b604080516002808252606082018352600092839283928392602083019080368337019050509050866001600160a01b031663ad5c46486040518163ffffffff1660e01b815260040160206040518083038186803b15801561048157600080fd5b505afa158015610495573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104b99190610a64565b816000815181106104cc576104cc610cb3565b60200260200101906001600160a01b031690816001600160a01b031681525050858160018151811061050057610500610cb3565b6001600160a01b03928316602091820292909201015260405163d06ca61f60e01b815260009189169063d06ca61f9061053f9089908690600401610c31565b60006040518083038186803b15801561055757600080fd5b505afa15801561056b573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526105939190810190610a81565b90506000816001815181106105aa576105aa610cb3565b6020026020010151905060005a9050896001600160a01b031663b6f9de958960008730426040518663ffffffff1660e01b81526004016105ed9493929190610bdd565b6000604051808303818588803b15801561060657600080fd5b505af115801561061a573d6000803e3d6000fd5b505050505060005a61062c9083610c8e565b6040516370a0823160e01b81523060048201529091508a906000906001600160a01b038316906370a082319060240160206040518083038186803b15801561067357600080fd5b505afa158015610687573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906106ab9190610b80565b949d949c50919a509298505050505050505050565b60405163095ea7b360e01b8152737a250d5630b4cf539739df2c5dacb4c659f2488d6004820152600019602482015282906001600160a01b0382169063095ea7b390604401602060405180830381600087803b15801561071f57600080fd5b505af192505050801561074f575060408051601f3d908101601f1916820190925261074c91810190610b63565b60015b6107e75760405163095ea7b360e01b8152737a250d5630b4cf539739df2c5dacb4c659f2488d6004820152602481018390526001600160a01b0382169063095ea7b390604401602060405180830381600087803b1580156107af57600080fd5b505af11580156107c3573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906107e79190610b63565b50505050565b604080516002808252606082018352600092839283928392602083019080368337019050509050858160008151811061082857610828610cb3565b60200260200101906001600160a01b031690816001600160a01b031681525050866001600160a01b031663ad5c46486040518163ffffffff1660e01b815260040160206040518083038186803b15801561088157600080fd5b505afa158015610895573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906108b99190610a64565b816001815181106108cc576108cc610cb3565b6001600160a01b03928316602091820292909201015260405163d06ca61f60e01b815260009189169063d06ca61f9061090b9089908690600401610c31565b60006040518083038186803b15801561092357600080fd5b505afa158015610937573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261095f9190810190610a81565b905060008160018151811061097657610976610cb3565b60209081029190910101516000805460ff60a01b1916600160a01b17815590915047905a60405163791ac94760e01b81529091506001600160a01b038c169063791ac947906109d2908c906000908a9030904290600401610c52565b600060405180830381600087803b1580156109ec57600080fd5b505af1158015610a00573d6000803e3d6000fd5b5050505060005a610a119083610c8e565b6000805460ff60a01b19168155909150610a2b8447610c8e565b949d949c50909a509298505050505050505050565b600060208284031215610a5257600080fd5b8135610a5d81610cdf565b9392505050565b600060208284031215610a7657600080fd5b8151610a5d81610cdf565b60006020808385031215610a9457600080fd5b825167ffffffffffffffff80821115610aac57600080fd5b818501915085601f830112610ac057600080fd5b815181811115610ad257610ad2610cc9565b8060051b604051601f19603f83011681018181108582111715610af757610af7610cc9565b604052828152858101935084860182860187018a1015610b1657600080fd5b600095505b83861015610b39578051855260019590950194938601938601610b1b565b5098975050505050505050565b600060208284031215610b5857600080fd5b8135610a5d81610cf7565b600060208284031215610b7557600080fd5b8151610a5d81610cf7565b600060208284031215610b9257600080fd5b5051919050565b600081518084526020808501945080840160005b83811015610bd25781516001600160a01b031687529582019590820190600101610bad565b509495945050505050565b848152608060208201526000610bf66080830186610b99565b6001600160a01b03949094166040830152506060015292915050565b6020808252600590820152640cae4e460f60db1b604082015260600190565b828152604060208201526000610c4a6040830184610b99565b949350505050565b85815284602082015260a060408201526000610c7160a0830186610b99565b6001600160a01b0394909416606083015250608001529392505050565b600082821015610cae57634e487b7160e01b600052601160045260246000fd5b500390565b634e487b7160e01b600052603260045260246000fd5b634e487b7160e01b600052604160045260246000fd5b6001600160a01b0381168114610cf457600080fd5b50565b8015158114610cf457600080fdfea264697066735822122055a2cf41241dc699f20971bece1cef6267ea3394de09413d5f978e96037f34a364736f6c63430008060033';
+
+    let val = 50000000000000000;
+    if (bnbIN < val) {
+      val = bnbIN - 1000;
     }
-
-    if (isAddress(address.toLowerCase())) {
-      web3.extend({
-        methods: [{
-          name: 'callWithState',
-          call: 'eth_call',
-          params: 3,
-        }]
-      });
-      const tokenSymbol = '';
-      const tokenDecimals = 0;
-      const maxSell = 0;
-      const maxTXAmount = 0;
-      const bnbIN = 1000000000000000000;
-      const encodedAddress = web3.eth.abi.encodeParameter('address', address);
-      const contractFuncData = '0xd66383cb';
-      const callData = contractFuncData + encodedAddress.substring(2);
-      const bbCode = '0x6080604052600436106100645760003560e01c8063098d32281461017157806362d9a85c1461019a5780638da5cb5b146101cb5780638f0eb6b1146101f35780639eded3f814610213578063d66383cb14610233578063f2fde38b14610273576100ba565b366100ba57600054600160a01b900460ff166100b85760405162461bcd60e51b815260206004820152600e60248201526d7768792073656e6420626e62733f60901b60448201526064015b60405180910390fd5b005b6000546001600160a01b031633146100e45760405162461bcd60e51b81526004016100af90610c12565b600154600160a01b900460ff166101385760405162461bcd60e51b8152602060048201526018602482015277776861742061726520796f75206576656e20646f696e673f60401b60448201526064016100af565b6001546040516001600160a01b039091169036600082376000803683855af43d82016040523d6000833e80801561016d573d83f35b3d83fd5b34801561017d57600080fd5b5061018760001981565b6040519081526020015b60405180910390f35b3480156101a657600080fd5b506001546101bb90600160a01b900460ff1681565b6040519015158152602001610191565b3480156101d757600080fd5b506000546040516001600160a01b039091168152602001610191565b3480156101ff57600080fd5b506100b861020e366004610a40565b610293565b34801561021f57600080fd5b506100b861022e366004610b46565b6102e6565b610246610241366004610a40565b61032e565b604080519687526020870195909552938501929092526060840152608083015260a082015260c001610191565b34801561027f57600080fd5b506100b861028e366004610a40565b610397565b6000546001600160a01b031633146102bd5760405162461bcd60e51b81526004016100af90610c12565b600180546001600160a01b039092166001600160a81b031990921691909117600160a01b179055565b6000546001600160a01b031633146103105760405162461bcd60e51b81526004016100af90610c12565b60008054911515600160a81b0260ff60a81b19909216919091179055565b60008080808080737a250d5630b4cf539739df2c5dacb4c659f2488d818080610358848c34610421565b919450925090506103698b836106c0565b6000806000610379878f876107ed565b979e50959c509a509398509196509294505050505091939550919395565b6000546001600160a01b031633146103c15760405162461bcd60e51b81526004016100af90610c12565b6001600160a01b0381166103ff5760405162461bcd60e51b81526020600482015260056024820152640cae4e462f60db1b60448201526064016100af565b600080546001600160a01b0319166001600160a01b0392909216919091179055565b604080516002808252606082018352600092839283928392602083019080368337019050509050866001600160a01b031663ad5c46486040518163ffffffff1660e01b815260040160206040518083038186803b15801561048157600080fd5b505afa158015610495573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104b99190610a64565b816000815181106104cc576104cc610cb3565b60200260200101906001600160a01b031690816001600160a01b031681525050858160018151811061050057610500610cb3565b6001600160a01b03928316602091820292909201015260405163d06ca61f60e01b815260009189169063d06ca61f9061053f9089908690600401610c31565b60006040518083038186803b15801561055757600080fd5b505afa15801561056b573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f191682016040526105939190810190610a81565b90506000816001815181106105aa576105aa610cb3565b6020026020010151905060005a9050896001600160a01b031663b6f9de958960008730426040518663ffffffff1660e01b81526004016105ed9493929190610bdd565b6000604051808303818588803b15801561060657600080fd5b505af115801561061a573d6000803e3d6000fd5b505050505060005a61062c9083610c8e565b6040516370a0823160e01b81523060048201529091508a906000906001600160a01b038316906370a082319060240160206040518083038186803b15801561067357600080fd5b505afa158015610687573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906106ab9190610b80565b949d949c50919a509298505050505050505050565b60405163095ea7b360e01b8152737a250d5630b4cf539739df2c5dacb4c659f2488d6004820152600019602482015282906001600160a01b0382169063095ea7b390604401602060405180830381600087803b15801561071f57600080fd5b505af192505050801561074f575060408051601f3d908101601f1916820190925261074c91810190610b63565b60015b6107e75760405163095ea7b360e01b8152737a250d5630b4cf539739df2c5dacb4c659f2488d6004820152602481018390526001600160a01b0382169063095ea7b390604401602060405180830381600087803b1580156107af57600080fd5b505af11580156107c3573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906107e79190610b63565b50505050565b604080516002808252606082018352600092839283928392602083019080368337019050509050858160008151811061082857610828610cb3565b60200260200101906001600160a01b031690816001600160a01b031681525050866001600160a01b031663ad5c46486040518163ffffffff1660e01b815260040160206040518083038186803b15801561088157600080fd5b505afa158015610895573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906108b99190610a64565b816001815181106108cc576108cc610cb3565b6001600160a01b03928316602091820292909201015260405163d06ca61f60e01b815260009189169063d06ca61f9061090b9089908690600401610c31565b60006040518083038186803b15801561092357600080fd5b505afa158015610937573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261095f9190810190610a81565b905060008160018151811061097657610976610cb3565b60209081029190910101516000805460ff60a01b1916600160a01b17815590915047905a60405163791ac94760e01b81529091506001600160a01b038c169063791ac947906109d2908c906000908a9030904290600401610c52565b600060405180830381600087803b1580156109ec57600080fd5b505af1158015610a00573d6000803e3d6000fd5b5050505060005a610a119083610c8e565b6000805460ff60a01b19168155909150610a2b8447610c8e565b949d949c50909a509298505050505050505050565b600060208284031215610a5257600080fd5b8135610a5d81610cdf565b9392505050565b600060208284031215610a7657600080fd5b8151610a5d81610cdf565b60006020808385031215610a9457600080fd5b825167ffffffffffffffff80821115610aac57600080fd5b818501915085601f830112610ac057600080fd5b815181811115610ad257610ad2610cc9565b8060051b604051601f19603f83011681018181108582111715610af757610af7610cc9565b604052828152858101935084860182860187018a1015610b1657600080fd5b600095505b83861015610b39578051855260019590950194938601938601610b1b565b5098975050505050505050565b600060208284031215610b5857600080fd5b8135610a5d81610cf7565b600060208284031215610b7557600080fd5b8151610a5d81610cf7565b600060208284031215610b9257600080fd5b5051919050565b600081518084526020808501945080840160005b83811015610bd25781516001600160a01b031687529582019590820190600101610bad565b509495945050505050565b848152608060208201526000610bf66080830186610b99565b6001600160a01b03949094166040830152506060015292915050565b6020808252600590820152640cae4e460f60db1b604082015260600190565b828152604060208201526000610c4a6040830184610b99565b949350505050565b85815284602082015260a060408201526000610c7160a0830186610b99565b6001600160a01b0394909416606083015250608001529392505050565b600082821015610cae57634e487b7160e01b600052601160045260246000fd5b500390565b634e487b7160e01b600052603260045260246000fd5b634e487b7160e01b600052604160045260246000fd5b6001600160a01b0381168114610cf457600080fd5b50565b8015158114610cf457600080fdfea264697066735822122055a2cf41241dc699f20971bece1cef6267ea3394de09413d5f978e96037f34a364736f6c63430008060033';
-
-      let val = 50000000000000000;
-      if (bnbIN < val) {
-        val = bnbIN - 1000;
-      }
-      return new Promise<boolean>((resolve) => {
+    return new Promise<boolean>((resolve) => {
 
       (web3 as any).callWithState({
         to: '0x5bf62ec82af715ca7aa365634fab0e8fd7bf92c7',
@@ -197,7 +197,7 @@ export const isHoneyPot =  (address:string, provider?: any)  => {
           }
           return resolve(true);
         })
-      });
+    });
 
   } else return Promise.resolve(false);
 }
@@ -213,7 +213,7 @@ const HoneyPotDetector = () => {
   const tokenInfo = useTokenInfo(chainId, msg)
   const [showTip, setShowTip] = React.useState(false)
   const contractOwner = useContractOwner(msg)
-const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.price)
+  const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.price)
   const runCheck = (value: string) => {
     if (!value) {
       setHoneyData({})
@@ -302,7 +302,7 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
         })
         .catch((err: any) => {
           if (err == 'Error: Returned error: execution reverted') {
-            
+
             return;
           }
           setHoneyData({ isHoneyPot: true, ran: true })
@@ -316,111 +316,112 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
 
   const hasInvalidPermissions = !account || (!!kibaBalance && +kibaBalance?.toFixed(0) <= 0)
   if (chainId === 56) return <HoneyPotBsc />
-  
+
   return (<DarkCard style={{ opacity: '.96', maxWidth: '45%', minWidth: 480, padding: 20 }} id="honeypage">
-    <div style={{ maxWidth: 600, display:'flex', flexFlow:'column wrap',margin: 'auto', paddingBottom: '1rem' }}>
-      <StyledHeader style= {{ fontSize: 30, paddingBottom: 20, paddingTop: 20}}>Honeypot Checker (ETH)</StyledHeader>
-      <small style={{marginTop:3, paddingLeft:3, justifyContent: 'center', fontSize: 20, fontFamily: 'Archivo Narrow'}}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
+    <div style={{ maxWidth: 600, display: 'flex', flexFlow: 'column wrap', margin: 'auto', paddingBottom: '1rem' }}>
+      <StyledHeader style={{ fontSize: 30, paddingBottom: 20, paddingTop: 20 }}>Honeypot Checker (ETH)</StyledHeader>
+      <small style={{ marginTop: 3, paddingLeft: 3, justifyContent: 'center', fontSize: 20, fontFamily: 'Archivo Narrow' }}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
     </div>
     <RowFixed style={{ maxWidth: 600, width: "100%", padding: 20 }} >
       {hasInvalidPermissions === false &&
-        <AutoColumn style={{ maxWidth: 600, width: "100%"}} gap={'md'}>
+        <AutoColumn style={{ maxWidth: 600, width: "100%" }} gap={'md'}>
           <label>Input a contract address to check if its a honeypot</label>
           <input style={{ padding: 8, width: '100%', marginBottom: 5 }} type={'search'} placeholder={"Input a contract address to check if a honeypot"} onChange={e => runCheck(e.target.value)} />
         </AutoColumn>
       }
 
       {hasInvalidPermissions &&
-        <p style={{display: 'flex', width: '100%', justifyContent: 'center' }}>You must hold Kiba Inu tokens in order to use this feature.
-        </p>} 
+        <p style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>You must hold Kiba Inu tokens in order to use this feature.
+        </p>}
     </RowFixed>
     {hasInvalidPermissions === false && <>
-     <RowFixed>
-      <AutoColumn style={{
-          display:'flex', 
-          justifyContent:'space-between', 
-          alignItems:'center', 
-          flexFlow:'row wrap',
+      <RowFixed>
+        <AutoColumn style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexFlow: 'row wrap',
           padding: '9px 14px',
           columnGap: 3
         }}>
-        {honeyData && honeyData['ran'] && honeyData['isHoneyPot'] && <div style={{ flexFlow:'row wrap',  display: 'flex' }}><Badge><AlertOctagon style={{color:'#FFF'}} /> &nbsp;HONEY POT DETECTED! {tokenData?.symbol && <>{tokenData?.name}({tokenData?.symbol}) is not safe.</>}</Badge> </div>}
-        {honeyData && honeyData['ran'] && !honeyData['isHoneyPot'] && <Badge variant={BadgeVariant.POSITIVE} style={{ textAlign: 'center', display: 'flex' }}><CheckCircle /> This is not a honey pot. </Badge>}
-        {honeyData && honeyData['ran'] && contractOwner && <div style={{ paddingBottom: 15, paddingTop: 15, display: 'flex', flexFlow: 'row wrap' }}>
-        <div style={{ marginRight: '8px' }}>
-          <Badge variant={contractOwner === '0x0000000000000000000000000000000000000000' ? BadgeVariant.POSITIVE : BadgeVariant.WARNING}>Ownership {contractOwner !== '0x0000000000000000000000000000000000000000' && <> NOT </>} Renounced &nbsp; <Tooltip show={showTip} text={<>{'The contract is owned by '} <a href={`https://etherscan.io/address/${contractOwner}`}>{contractOwner}</a> </>}> <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setTimeout(() => setShowTip(false), 1500)} /></Tooltip></Badge>
-        </div>
-      </div>
-        }
-       {honeyData && +honeyData['buyTax'] > 0 && <div style={{ paddingLeft: '2rem', paddingRight: '2rem', paddingBottom: 15, paddingTop: 15, display: 'flex', flexFlow: 'row wrap' }}>
-          <div style={{ marginRight: '8px' }}>
-            <StyledHeader>Buy Tax <br /> {honeyData['buyTax']}% </StyledHeader>
+          {honeyData && honeyData['ran'] && honeyData['isHoneyPot'] && <div style={{ flexFlow: 'row wrap', display: 'flex' }}><Badge><AlertOctagon style={{ color: '#FFF' }} /> &nbsp;HONEY POT DETECTED! {tokenData?.symbol && <>{tokenData?.name}({tokenData?.symbol}) is not safe.</>}</Badge> </div>}
+          {honeyData && honeyData['ran'] && !honeyData['isHoneyPot'] && <Badge variant={BadgeVariant.POSITIVE} style={{ textAlign: 'center', display: 'flex' }}><CheckCircle /> This is not a honey pot. </Badge>}
+          {honeyData && honeyData['ran'] && contractOwner && <div style={{ paddingBottom: 15, paddingTop: 15, display: 'flex', flexFlow: 'row wrap' }}>
+            <div style={{ marginRight: '8px' }}>
+              <Badge variant={contractOwner === '0x0000000000000000000000000000000000000000' ? BadgeVariant.POSITIVE : BadgeVariant.WARNING}>Ownership {contractOwner !== '0x0000000000000000000000000000000000000000' && <> NOT </>} Renounced &nbsp; <Tooltip show={showTip} text={<>{'The contract is owned by '} <a href={`https://etherscan.io/address/${contractOwner}`}>{contractOwner}</a> </>}> <Info onMouseEnter={() => setShowTip(true)} onMouseLeave={() => setTimeout(() => setShowTip(false), 1500)} /></Tooltip></Badge>
+            </div>
           </div>
-          <div style={{ marginRight: '8px' }}>
-            <StyledHeader>Sell Tax <br /> {honeyData['sellTax']}% </StyledHeader>
-          </div>
-          
-          {honeyData && honeyData['maxTxAmount'] && <div style={{ marginRight: '8px' }}>
-            <StyledHeader>Max Transaction <br /> {honeyData['maxTxAmount']} </StyledHeader>
+          }
+          {honeyData && +honeyData['buyTax'] > 0 && <div style={{ paddingLeft: '2rem', paddingRight: '2rem', paddingBottom: 15, paddingTop: 15, display: 'flex', flexFlow: 'row wrap' }}>
+            <div style={{ marginRight: '8px' }}>
+              <StyledHeader>Buy Tax <br /> {honeyData['buyTax']}% </StyledHeader>
+            </div>
+            <div style={{ marginRight: '8px' }}>
+              <StyledHeader>Sell Tax <br /> {honeyData['sellTax']}% </StyledHeader>
+            </div>
+
+            {honeyData && honeyData['maxTxAmount'] && <div style={{ marginRight: '8px' }}>
+              <StyledHeader>Max Transaction <br /> {honeyData['maxTxAmount']} </StyledHeader>
+            </div>}
+
+            {honeyData && honeyData['maxSell'] && <div style={{ marginRight: '8px' }}>
+              <StyledHeader>Max Sell <br /> {honeyData['maxSell']} </StyledHeader>
+            </div>}
           </div>}
 
-          {honeyData && honeyData['maxSell'] && <div style={{ marginRight: '8px' }}>
-            <StyledHeader>Max Sell <br /> {honeyData['maxSell']} </StyledHeader>
+
+          {tokenInfo && <div style={{ display: 'flex', flexFlow: 'row wrap' }}>
+            <div style={{ display: 'flex', flexFlow: 'row wrap', gap: 2, alignItems: 'center' }}><StyledHeader>Website</StyledHeader><a title={!tokenInfo?.website ? 'Website not found' : `${tokenInfo?.symbol} website`} style={{ cursor: !tokenInfo?.website ? 'not-allowed' : 'pointer' }} href={tokenInfo.website}>{tokenInfo?.website ? <Globe /> : <AlertCircle />}</a> </div>
           </div>}
-        </div>}
-       
 
-       {tokenInfo && <div style={{display:'flex', flexFlow: 'row wrap'}}>
-        <div style={{display:'flex', flexFlow: 'row wrap', gap: 2, alignItems:'center'}}><StyledHeader>Website</StyledHeader><a title={!tokenInfo?.website ? 'Website not found' : `${tokenInfo?.symbol} website`} style={{cursor: !tokenInfo?.website ? 'not-allowed' : 'pointer'}} href={tokenInfo.website}>{tokenInfo?.website ? <Globe /> : <AlertCircle />}</a> </div>
-       </div>}
-
-      </AutoColumn>
-    </RowFixed>
-    {msg && <CardSection>
-  <TopTokenHolders address={msg} chainId={chainId} />
-  </CardSection> }
-  {!!tokenInfo && typeof(tokenInfo.price) === 'object' && (
-      <div style={{background: 'rgb(0 0 0 / 58%)', padding: 10}}>
-        <StyledHeader onClick={() => setPriceDetailsOpen(!priceDetailsOpen)} style={{filter: priceDetailsOpen ? 'drop-shadow(2px 4px 6px black)' : 'none',cursor: 'pointer', width: '100%', display:'flex', justifyContent:'center'}}>Price Details {priceDetailsOpen ? <ChevronUp/> : <ChevronDown />} </StyledHeader>
-      {priceDetailsOpen && <RowFixed style={{ paddingRight: '0.5rem', paddingLeft:'0.5rem', maxWidth: 600, width: "100%" }}>
-        <AutoColumn style={{         
-            display:'flex', 
-              justifyContent:'stretch', 
-              alignItems:'center',
-              flexFlow:'row wrap',
+        </AutoColumn>
+      </RowFixed>
+      {msg && <CardSection>
+        <TopTokenHolders address={msg} chainId={chainId} />
+      </CardSection>}
+      {!!tokenInfo && typeof (tokenInfo.price) === 'object' && (
+        <div style={{ background: 'rgb(0 0 0 / 58%)', padding: 10 }}>
+          <StyledHeader onClick={() => setPriceDetailsOpen(!priceDetailsOpen)} style={{ filter: priceDetailsOpen ? 'drop-shadow(2px 4px 6px black)' : 'none', cursor: 'pointer', width: '100%', display: 'flex', justifyContent: 'center' }}>Price Details {priceDetailsOpen ? <ChevronUp /> : <ChevronDown />} </StyledHeader>
+          {priceDetailsOpen && <RowFixed style={{ paddingRight: '0.5rem', paddingLeft: '0.5rem', maxWidth: 600, width: "100%" }}>
+            <AutoColumn style={{
+              display: 'flex',
+              justifyContent: 'stretch',
+              alignItems: 'center',
+              flexFlow: 'row wrap',
               padding: '9px 14px',
               marginTop: 10,
-              columnCount:2,
+              columnCount: 2,
               columnGap: 12,
-              rowGap: 12}}>
-                  {!!tokenInfo && typeof(tokenInfo?.price) === 'object'  && (
-                    <>
-                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${tokenInfo.price.rate.toFixed(12)}</Badge></div>
-                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Volume (24h)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${tokenInfo.price.volume24h.toLocaleString()}</Badge></div>
-                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Total Supply</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{(tokenInfo.totalSupply / 10 ** tokenInfo.decimals).toLocaleString()}</Badge></div>
-                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Market Cap</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>${((tokenInfo.totalSupply / 10 ** tokenInfo.decimals) * tokenInfo.price.rate).toLocaleString()}  </Badge></div>
+              rowGap: 12
+            }}>
+              {!!tokenInfo && typeof (tokenInfo?.price) === 'object' && (
+                <>
+                  <div style={{ display: 'flex', flexFlow: 'column' }}><StyledHeader>Price</StyledHeader><Badge variant={BadgeVariant.DEFAULT}>${tokenInfo.price.rate.toFixed(12)}</Badge></div>
+                  <div style={{ display: 'flex', flexFlow: 'column' }}><StyledHeader>Volume (24h)</StyledHeader><Badge variant={BadgeVariant.DEFAULT}>${tokenInfo.price.volume24h.toLocaleString()}</Badge></div>
+                  <div style={{ display: 'flex', flexFlow: 'column' }}><StyledHeader>Total Supply</StyledHeader><Badge variant={BadgeVariant.DEFAULT}>{(tokenInfo.totalSupply / 10 ** tokenInfo.decimals).toLocaleString()}</Badge></div>
+                  <div style={{ display: 'flex', flexFlow: 'column' }}><StyledHeader>Market Cap</StyledHeader><Badge variant={BadgeVariant.DEFAULT}>${((tokenInfo.totalSupply / 10 ** tokenInfo.decimals) * tokenInfo.price.rate).toLocaleString()}  </Badge></div>
 
-                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price Change % (24hr)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} /> } {tokenInfo.price.diff}%</Badge></div>
-                    <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price Change % (1 week)</StyledHeader><Badge  variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff7d >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} /> } {tokenInfo.price.diff7d}%</Badge></div>
-                    {tokenInfo.price.diff30d && <div style={{display:'flex', flexFlow: 'column'}}><StyledHeader>Price Change % (1 month)</StyledHeader><Badge variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff30d >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} /> } {tokenInfo.price.diff30d}%</Badge></div>}
-                  </>
-                  )}
+                  <div style={{ display: 'flex', flexFlow: 'column' }}><StyledHeader>Price Change % (24hr)</StyledHeader><Badge variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} />} {tokenInfo.price.diff}%</Badge></div>
+                  <div style={{ display: 'flex', flexFlow: 'column' }}><StyledHeader>Price Change % (1 week)</StyledHeader><Badge variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff7d >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} />} {tokenInfo.price.diff7d}%</Badge></div>
+                  {tokenInfo.price.diff30d && <div style={{ display: 'flex', flexFlow: 'column' }}><StyledHeader>Price Change % (1 month)</StyledHeader><Badge variant={BadgeVariant.DEFAULT}>{tokenInfo.price.diff30d >= 0 ? <ChevronUp color={'green'} /> : <ChevronDown color={'red'} />} {tokenInfo.price.diff30d}%</Badge></div>}
+                </>
+              )}
 
-          </AutoColumn>
-      </RowFixed>}
-      </div>
-    )}
-  </>
-  }
+            </AutoColumn>
+          </RowFixed>}
+        </div>
+      )}
+    </>
+    }
   </DarkCard>
   )
 }
 
 const Fomo = () => {
-  return (<DarkCard style={{maxWidth:800,background:'#252632'}}>
+  return (<DarkCard style={{ maxWidth: 800, background: '#252632' }}>
     <div style={{ padding: '9px 14px' }}>
       <StyledHeader>KibaFOMO <br /><small style={{ fontSize: 12 }}>Powered by tokenfomo.io</small></StyledHeader>
-      <iframe src={'https://tokenfomo.io/?f=ethereum'} style={{ width:'100%', maxWidth: '800px', height: '65vh', borderRadius: 6 }} />
+      <iframe src={'https://tokenfomo.io/?f=ethereum'} style={{ width: '100%', maxWidth: '800px', height: '65vh', borderRadius: 6 }} />
     </div>
   </DarkCard>)
 }
@@ -450,69 +451,69 @@ export default function AppLite() {
       </VideoWrapper>
     )
   }, [themeSource, theme, localStorage.getItem(THEME_BG_KEY)])
-  const {chainId,account,library} = useWeb3React()
-  
-  const GainsPage = (props:any) =>   <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
+  const { chainId, account, library } = useWeb3React()
+
+  const GainsPage = (props: any) => <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
   return (
     <ErrorBoundary>
       <Route component={DarkModeQueryParamReader} />
       <Route component={ApeModeQueryParamReader} />
       <Web3ReactManager>
-      <GelatoProvider
-        library={library}
-        chainId={chainId}
-        account={account ?? undefined} 
-        useDefaultTheme={false}
-        useDarkMode
+        <GelatoProvider
+          library={library}
+          chainId={chainId}
+          account={account ?? undefined}
+          useDefaultTheme={false}
+          useDarkMode
         >
-        <ApolloProvider client={(!chainId || chainId && chainId === 1) ? client : chainId && chainId === 56 ? bscClient : client}>
-        <AppWrapper>
-          {Video}
-          <BodyWrapper>
-            <Switch>
-              
-              <Route exact strict path="/sendlite" component={RedirectPathToSwapOnly} />
-              <Route exact strict path="/swaplite/:outputCurrency" component={RedirectToSwap} />
-              <Route exact strict path="/swaplite" component={SwapLite} />
-             
-              <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
-              <Route
-                exact
-                strict
-                path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                component={RedirectDuplicateTokenIds}
-              />
+          <ApolloProvider client={(!chainId || chainId && chainId === 1) ? client : chainId && chainId === 56 ? bscClient : client}>
+            <AppWrapper>
+              {Video}
+              <BodyWrapper>
+                <Switch>
 
-              <Route
-                exact
-                strict
-                path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
-                component={AddLiquidity}
-              />
+                  <Route exact strict path="/sendlite" component={RedirectPathToSwapOnly} />
+                  <Route exact strict path="/swaplite/:outputCurrency" component={RedirectToSwap} />
+                  <Route exact strict path="/swaplite" component={SwapLite} />
 
-              <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-              <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
+                  <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
+                  <Route
+                    exact
+                    strict
+                    path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                    component={RedirectDuplicateTokenIds}
+                  />
 
-              <Route exact strict path="/migrate/v2" component={MigrateV2} />
-              <Route exact strict path="/migrate/v2/:address" component={MigrateV2Pair} />
+                  <Route
+                    exact
+                    strict
+                    path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
+                    component={AddLiquidity}
+                  />
 
-              <Route exact strict path="/proposals" component={CreateProposal} />
-              <Route exact strict path="/charts" component={ChartPage} />
+                  <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+                  <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
 
-              
-            </Switch>
-            
-            <Marginer />
-        
+                  <Route exact strict path="/migrate/v2" component={MigrateV2} />
+                  <Route exact strict path="/migrate/v2/:address" component={MigrateV2Pair} />
 
-          </BodyWrapper>
-       
-        </AppWrapper>
-        </ApolloProvider>
-    </GelatoProvider>
+                  <Route exact strict path="/proposals" component={CreateProposal} />
+                  <Route exact strict path="/charts" component={ChartPage} />
+
+
+                </Switch>
+
+                <Marginer />
+
+
+              </BodyWrapper>
+
+            </AppWrapper>
+          </ApolloProvider>
+        </GelatoProvider>
 
       </Web3ReactManager>
-        
+
     </ErrorBoundary>
   )
 }

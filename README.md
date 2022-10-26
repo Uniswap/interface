@@ -11,13 +11,13 @@ Kibaswap was originally forked from Uniswap.
 An Open Source Protocol that allows swapping, charting, nft minting, and much more within one dapp.
 
 - Website: [uniswap.org](https://kibainu.org/)
-- Interface: [kibaswap.io](https://kibaswap.io)
-- Docs: [docs.kibaswap.io](https://docs.kibaswap.io/)
+- Interface: [kiba.tools](https://kiba.tools)
+- Docs: [docs.kiba.tools](https://docs.kiba.tools/)
 
 ## Accessing KibaSwap
 
 To access the KibaSwap,
-visit [kibaswap.io](https://kibaswap.io).
+visit [kiba.tools](https://kiba.tools).
 
 ## Contributions
 

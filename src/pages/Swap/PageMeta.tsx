@@ -2,7 +2,7 @@ import DocumentMeta from 'react-document-meta'
 const defaultMetadata = {
     title: 'KibaSwap | Swap Tokens, View Charts, New Pairs, and much more',
     description: '',
-    canonical: 'https://kibaswap.io',
+    canonical: 'https://kiba.tools',
     meta: {
         charset: 'utf-8',
         name: {
@@ -12,12 +12,12 @@ const defaultMetadata = {
 }
 
 type Metadata = {
-    title:string
+    title: string
     description: string
     canonical: string
-    meta?:{ 
+    meta?: {
         charset: string
-        name:{
+        name: {
             keywords: string
         }
     }
@@ -27,6 +27,6 @@ type PageMetaProps = {
     metadata: Metadata
 }
 export const PageMeta = (props: PageMetaProps) => {
-    const {metadata}=props
+    const { metadata } = props
     return <DocumentMeta {...metadata} />
 }

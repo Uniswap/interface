@@ -286,7 +286,7 @@
     "react-popper": "^2.2.3",
     "react-pro-sidebar": "^0.7.1",
     "react-redux": "^7.2.2",
-    "react-router-dom": "5.2.0",
+    "react-router-dom": "^5.0.0",
     "react-scripts": "^4.0.3",
     "react-select": "^5.5.0",
     "react-spring": "^8.0.27",

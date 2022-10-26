@@ -34,7 +34,6 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
   overflow-y: auto;
 
   &[data-reach-dialog-content] {
-    margin: 0 0 2rem 0;
     background: ${({ theme }) => theme.bg0} !important;
     color: ${props => props.theme.text1} !important;
 
@@ -47,15 +46,15 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
 
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
 
-    max-width: ${({size}) => size || 850}px;
+    max-width: ${({ size }) => size || 850}px;
     ${({ maxHeight }) =>
-      maxHeight &&
-      css`
+    maxHeight &&
+    css`
         max-height: ${maxHeight}vh;
       `}
     ${({ minHeight }) =>
-      minHeight &&
-      css`
+    minHeight &&
+    css`
         min-height: ${minHeight}vh;
       `}
     display: flex;
@@ -68,15 +67,14 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
     `}
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
       width:  100%;
-      ${
-        mobile &&
-        css`
+      ${mobile &&
+    css`
           width: 100vw;
           border-radius: 20px;
           border-bottom-left-radius: 0;
           border-bottom-right-radius: 0;
         `
-      }
+    }
     `}
   }
 `
@@ -88,7 +86,7 @@ interface ModalProps {
   maxHeight?: number
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
-  size?:number;
+  size?: number;
 }
 
 export default function Modal({
@@ -136,9 +134,9 @@ export default function Modal({
               <StyledDialogContent
                 {...(isMobile
                   ? {
-                      ...bind(),
-                      style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
-                    }
+                    ...bind(),
+                    style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
+                  }
                   : {})}
                 aria-label="dialog content"
                 size={size}

@@ -22,11 +22,11 @@ import { useWeb3React } from '@web3-react/core'
 const CardWrapper = styled(StyledInternalLink)`
   min-width: 190px;
   width:100%;
-  margin-right: 16px;
-  padding:3px;
+  padding: 6px;
   :hover {
     cursor: pointer;
     opacity: 0.6;
+    text-decoration: none;
   }
 `
 
@@ -80,7 +80,6 @@ export const ScrollableRow = styled.div`
   width: 100%;
   overflow-x: auto;
   white-space: nowrap;
-
   ::-webkit-scrollbar {
     display: none;
   }
@@ -89,27 +88,27 @@ export const ScrollableRow = styled.div`
 const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: number }) => {
   const token = useToken(tokenData?.id?.toLowerCase());
   const { chainId } = useWeb3React()
-  const theme =useTheme()
+  const theme = useTheme()
   const darkMode = useIsDarkMode()
   const network = chainId == 1 ? 'ethereum' : chainId == 56 ? 'bsc' : 'ethereum'
-  const route = tokenData?.pairAddress ? 
-               '/selective-charts/' + network + '/' + tokenData?.pairAddress :
-               '/selective-charts/' + tokenData?.id + '/' + tokenData?.symbol + '/' + tokenData?.name + '/' + tokenData?.decimals
+  const route = tokenData?.pairAddress ?
+    '/selective-charts/' + network + '/' + tokenData?.pairAddress :
+    '/selective-charts/' + tokenData?.id + '/' + tokenData?.symbol + '/' + tokenData?.name + '/' + tokenData?.decimals
 
   return !tokenData?.id ? null : (
     <CardWrapper to={route}>
       <GreyCard padding="3px">
         <RowFixed>
           <AutoColumn gap="3px" style={{ marginLeft: '3px' }}>
-            <TYPE.small color={darkMode ? 'white' :'text1'} fontSize="12.5px">
+            <TYPE.small color={darkMode ? 'white' : 'text1'} fontSize="12.5px">
               <div style={{ display: 'flex', flexFlow: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <small><Badge style={{ marginRight: "2px" }} variant={BadgeVariant.POSITIVE_OUTLINE}>{index + 1}</Badge></small>
+                <small><Badge style={{ marginRight: "6px" }} variant={BadgeVariant.POSITIVE_OUTLINE}>{index + 1}</Badge></small>
                 <CurrencyLogo style={{ marginRight: "2px" }} currency={(chainId === 1 || !chainId) ? token : tokenData} size="20px" />
                 <HoverInlineText text={chainId === 56 ? tokenData?.symbol : tokenData?.symbol?.substring(0, tokenData?.symbol?.length >= 7 ? 7 : tokenData.symbol.length)} />
                 {!!tokenData?.priceChangeUSD && (
                   <>
-                    {tokenData?.priceChangeUSD < 0 ? 
-                      <ChevronDown color={'red'} /> 
+                    {tokenData?.priceChangeUSD < 0 ?
+                      <ChevronDown color={'red'} />
                       : <ChevronUp color={'green'} />
                     }&nbsp;
                     {parseFloat(tokenData?.priceChangeUSD).toFixed(2)}%
@@ -126,7 +125,7 @@ const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: numb
 DataCard.displayName = 'DataCard';
 
 
- const  _TopTokenMovers = React.memo(() => {
+const _TopTokenMovers = React.memo(() => {
   const allTokenData = useTopPairData()
   const { chainId } = useWeb3React()
   const [allTokens, setAllTokens] = React.useState<any>([])
@@ -153,15 +152,15 @@ DataCard.displayName = 'DataCard';
         allTokenData.data &&
         kibaPair.data &&
         allTokenData.data.pairs &&
-        kibaPair.data.pairs && 
-        ((chainId === 1 && 
+        kibaPair.data.pairs &&
+        ((chainId === 1 &&
           ethPrice &&
-          ethPriceOld || 
-          chainId === 56 && 
-          bnbPrices && 
-          bnbPrices?.current && 
-          bnbPrices?.oneDay) 
-          || 
+          ethPriceOld ||
+          chainId === 56 &&
+          bnbPrices &&
+          bnbPrices?.current &&
+          bnbPrices?.oneDay)
+          ||
           !chainId)) {
         setHasEffectRan(true);
         const blockOne: number = blocks[0].number, blockTwo: number = blocks[1].number;
@@ -206,7 +205,7 @@ DataCard.displayName = 'DataCard';
       (((!chainId || chainId === 1) &&
         ethPriceOld &&
         ethPrice) ||
-      (chainId === 56 && bnbPrices?.current && bnbPrices?.oneDay))
+        (chainId === 56 && bnbPrices?.current && bnbPrices?.oneDay))
     ) {
       fn(false)
     }
@@ -225,9 +224,9 @@ DataCard.displayName = 'DataCard';
     ])
 
   const topPriceIncrease = useMemo(() => {
-    const ourTokens =  [
-      ...allTokens.filter((a:any) => ["kiba"].includes(a?.symbol?.toLowerCase()) || a?.name?.toLowerCase() === 'kiba inu'),
-      ...allTokens.filter((a: any) => cultureTokens.map(a => a?.address?.toLowerCase()).includes(a?.id?.toLowerCase()) || cultureTokens.map(b =>b?.name?.toLowerCase()) .includes(a?.name?.toLowerCase())),
+    const ourTokens = [
+      ...allTokens.filter((a: any) => ["kiba"].includes(a?.symbol?.toLowerCase()) || a?.name?.toLowerCase() === 'kiba inu'),
+      ...allTokens.filter((a: any) => cultureTokens.map(a => a?.address?.toLowerCase()).includes(a?.id?.toLowerCase()) || cultureTokens.map(b => b?.name?.toLowerCase()).includes(a?.name?.toLowerCase())),
     ];
     return _.uniqBy([
       // slot kiba and any paying / partnerships at #1 always
@@ -247,25 +246,24 @@ DataCard.displayName = 'DataCard';
             symbol: string;
             chainId?: number
           }) => !!a?.symbol && a?.symbol !== 'KIBA' &&
-          (a?.chainId === chainId || !chainId))], a=> a.symbol)
+          (a?.chainId === chainId || !chainId))], a => a.symbol)
   }, [allTokens, chainId])
 
   const mappedTokens = topPriceIncrease.filter((a: any) => !a?.symbol?.includes('SCAM') && !a?.symbol?.includes('rebass'));
   return (
-    <DarkGreyCard style={{ 
-      marginBottom:10, 
-      zIndex: 3, 
-      padding: "0px", 
+    <DarkGreyCard style={{
+      marginBottom: 10,
+      zIndex: 3,
+      padding: "0",
       top: 0,
-      margin: 0 
-      }}>
+      margin: 0
+    }}>
       {(allTokens.length > 0) &&
         (
-          <Marquee gradient={false} pauseOnHover
-          >
+          <Marquee gradient={false} pauseOnHover>
             <React.Fragment />
-            <FixedContainer style={{ background: 'rgb(0 0 0 / 0%)' }} gap="xs">
-              <ScrollableRow>
+            <FixedContainer>
+              <ScrollableRow style={{ padding: "4px 50px 4px 0" }}>
                 {mappedTokens.map((entry, i) =>
                   entry ? <DataCard index={i} key={`${i}.${entry.symbol}.${entry.address}`} tokenData={entry} /> : null
                 )}

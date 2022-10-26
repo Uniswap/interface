@@ -42,9 +42,9 @@ export interface ProposalData {
   snapshot: number
   state: string
   author: string
-  space :{
+  space: {
     id: string
-    name:string
+    name: string
   }
   votes?: ProposalVote[]
 }
@@ -174,29 +174,29 @@ query Votes ($proposalId: String!) {
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
   const { chainId } = useActiveWeb3React()
-  const [isLoading ,setIsLoading] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
   const [proposalData, setProposalData] = React.useState<ProposalData[]>()
   React.useEffect(() => {
     const fn = async () => {
       setIsLoading(true)
       try {
-      const proposalData = await request(proposal_client, proposal_query);
-      if (proposalData) setProposalData(proposalData.proposals)
-      setIsLoading(false)
-    } catch {
-      setIsLoading(false)
-    }
+        const proposalData = await request(proposal_client, proposal_query);
+        if (proposalData) setProposalData(proposalData.proposals)
+        setIsLoading(false)
+      } catch {
+        setIsLoading(false)
+      }
     }
     fn()
   }, [])
 
-  React.useEffect(( ) => {
+  React.useEffect(() => {
     const fn = async () => {
       if (proposalData && !proposalData.every(a => !!a.votes)) {
-        const allProposalData = await Promise.all(proposalData.map(async (p ) => {
-            const votesForProposal = await request(proposal_client, votes_query,  { proposalId: p.id});
-            if (votesForProposal) return {...p,votes: votesForProposal.votes }
-            else return p
+        const allProposalData = await Promise.all(proposalData.map(async (p) => {
+          const votesForProposal = await request(proposal_client, votes_query, { proposalId: p.id });
+          if (votesForProposal) return { ...p, votes: votesForProposal.votes }
+          else return p
         }))
         setProposalData(allProposalData)
       }
@@ -205,7 +205,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   }, [proposalData])
   return useMemo(() => {
     if (
-     isLoading
+      isLoading
     ) {
       return { data: [], loading: true }
     }
@@ -290,25 +290,25 @@ export function useVoteCallback(): {
   const { account, chainId, library } = useActiveWeb3React()
 
   const latestGovernanceContract = useLatestGovernanceContract()
-  
+
   const addTransaction = useTransactionAdder()
   const hub = 'https://hub.snapshot.org'; // or https://testnet.snapshot.org for testnet
   const client = new snapshot.Client712(hub);
-  const voteCallback = useCallback( 
+  const voteCallback = useCallback(
     async (proposalId: string | undefined, support: boolean) => {
       const args = [proposalId, support]
       if (library?.provider && account && proposalId) {
-      const web3 = new Web3Provider(library.provider as any)
-      const receipt = await client.vote(library?.provider as unknown as any, account, {
-        space: 'kibaworldwide.eth',
-        proposal: proposalId,
-        type: 'single-choice',
-        choice: support ? "For" : "Against",
-        metadata: JSON.stringify({})
-      });
-      console.dir(receipt)
-      return receipt as any
-    }
+        const web3 = new Web3Provider(library.provider as any)
+        const receipt = await client.vote(library?.provider as unknown as any, account, {
+          space: 'kibaworldwide.eth',
+          proposal: proposalId,
+          type: 'single-choice',
+          choice: support ? "For" : "Against",
+          metadata: JSON.stringify({})
+        });
+        console.dir(receipt)
+        return receipt as any
+      }
     },
     [account, library, chainId]
   )

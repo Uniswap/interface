@@ -25,7 +25,7 @@ const NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.GOERLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.BINANCE]:`https://bsc-dataseed1.defibit.io/`,
+  [SupportedChainId.BINANCE]: `https://bsc-dataseed1.defibit.io/`,
   [SupportedChainId.OPTIMISM]: `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.OPTIMISTIC_KOVAN]: `https://optimism-kovan.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.ARBITRUM_ONE]: `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,
@@ -71,11 +71,11 @@ export const portis = new PortisConnector({
   networks: [1],
 })
 
-export const UNISWAP_LOGO_URL = 'https://kibaswap.io/static/media/download.e893807d.png'
+export const UNISWAP_LOGO_URL = 'https://kiba.tools/static/media/download.e893807d.png'
 
 // mainnet only
 export const walletlink = new WalletLinkConnector({
- supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
+  supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
   url: NETWORK_URLS[SupportedChainId.MAINNET],
   appName: 'KibaSwap',
   appLogoUrl: UNISWAP_LOGO_URL,

@@ -9,6 +9,7 @@ import { transparentize } from 'polished'
 export const Wrapper = styled.div`
   position: relative;
   padding: 40px;
+  overflow: hidden;
 
   > [aria-modal="true"] {
     background: #222;
@@ -76,15 +77,15 @@ export const SectionBreak = styled.div`
   background-color: ${({ theme }) => theme.bg3};
 `
 
-export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
+export const ErrorText = styled(Text) <{ severity?: 0 | 1 | 2 | 3 | 4 }>`
   color: ${({ theme, severity }) =>
     severity === 3 || severity === 4
       ? theme.red1
       : severity === 2
-      ? theme.yellow2
-      : severity === 1
-      ? theme.text1
-      : theme.text2};
+        ? theme.yellow2
+        : severity === 1
+          ? theme.text1
+          : theme.text2};
 `
 
 export const TruncatedText = styled(Text)`

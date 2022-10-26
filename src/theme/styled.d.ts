@@ -21,6 +21,7 @@ export interface Colors {
   bg4: Color
   bg5: Color
   bg6: Color
+  bgSwapHeader: Color
 
   modalBG: Color
   advancedBG: Color
@@ -67,9 +68,9 @@ declare module 'styled-components/macro' {
     shadow1: string
     //chart page
     chartBgDark: string
-    chartBgLight:string
-    
-    chartTableBg:string
+    chartBgLight: string
+
+    chartTableBg: string
     chartSidebar: string
 
     // interactive

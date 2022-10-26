@@ -280,7 +280,7 @@ export default function Menu() {
                       </div>
                       <Info opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href="https://docs.kibaswap.io">
+                    <MenuItem href="https://docs.kiba.tools">
                       <div>
                         <Trans>Docs</Trans>
                       </div>
