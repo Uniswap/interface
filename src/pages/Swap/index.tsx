@@ -12,6 +12,7 @@ import { Link, RouteComponentProps, useParams } from 'react-router-dom'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import Row, { AutoRow, RowFixed } from '../../components/Row'
 import { UseERC20PermitState, useERC20PermitFromTrade } from '../../hooks/useERC20Permit'
+import { borderRadius, transparentize } from 'polished'
 import { getTokenData, toChecksum, useEthPrice, useTokenData } from 'state/logs/utils'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { useAddUserToken, useExpertModeManager, useSetAutoSlippage, useSetUserSlippageTolerance, useUserDetectRenounced, useUserSingleHopOnly } from '../../state/user/hooks'
@@ -62,7 +63,6 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { V3TradeState } from '../../hooks/useBestV3Trade'
 import Vibrant from 'node-vibrant'
 import _ from 'lodash'
-import { borderRadius, transparentize } from 'polished'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { getMaxes } from 'pages/HoneyPotDetector'
@@ -791,7 +791,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
 
 
-                {!cannotUseFeature && useOtherAddress && !showWrap ? (
+                {useOtherAddress && !showWrap ? (
                   <>
                     <AutoRow justify="space-between" style={{ marginTop: 5, padding: '0 1rem' }}>
                       <ArrowWrapper clickable={false}>
@@ -806,12 +806,6 @@ export default function Swap({ history }: RouteComponentProps) {
                     <AddressInputPanel id="recipient" value={recipient as string} onChange={onChangeRecipient} />
                   </>
                 ) : null}
-
-                {!!cannotUseFeature && useOtherAddress && !showWrap && (
-                  <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                    <p>You must own Kiba Inu tokens to use the <Badge>Swap to Receiver</Badge> feature.</p>
-                  </AutoRow>
-                )}
 
                 {showWrap ? null : (
                   <Row style={{ zIndex: 0, justifyContent: !trade ? 'center' : 'space-between' }}>
