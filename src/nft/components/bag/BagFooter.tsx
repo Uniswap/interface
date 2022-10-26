@@ -41,7 +41,6 @@ const WarningText = styled(ThemedText.BodyPrimary)`
 `
 
 interface BagFooterProps {
-  balance: BigNumber
   isConnected: boolean
   sufficientBalance: boolean
   totalEthPrice: BigNumber
@@ -59,7 +58,6 @@ const PENDING_BAG_STATUSES = [
 ]
 
 export const BagFooter = ({
-  balance,
   isConnected,
   sufficientBalance,
   totalEthPrice,
@@ -98,7 +96,7 @@ export const BagFooter = ({
           <WarningText fontSize="14px" lineHeight="20px">
             <WarningIcon />
             {!sufficientBalance ? (
-              `Insufficient funds (${formatWeiToDecimal(balance.toString())} ETH)`
+              <Trans>Insufficient funds</Trans>
             ) : (
               <Trans>Something went wrong. Please try again.</Trans>
             )}
