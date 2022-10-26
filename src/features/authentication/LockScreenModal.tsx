@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image } from 'react-native'
 import { UNISWAP_LOGO } from 'src/assets'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Modal } from 'src/components/modals/Modal'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
@@ -22,7 +22,7 @@ export function LockScreenModal() {
       showCloseButton={false}
       transparent={false}
       visible={isLockScreenVisible}>
-      <Button onPress={trigger}>
+      <TouchableArea onPress={trigger}>
         <Flex
           centered
           alignItems="center"
@@ -34,7 +34,7 @@ export function LockScreenModal() {
           }}>
           <Image source={UNISWAP_LOGO} />
         </Flex>
-      </Button>
+      </TouchableArea>
     </Modal>
   )
 }

@@ -2,7 +2,7 @@ import { providers } from 'ethers'
 import { default as React, ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { Button, ButtonProps } from 'src/components/buttons/Button'
+import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout/Flex'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -39,7 +39,7 @@ function TransactionSummaryLayout({
   endAdornment?: ReactElement
   icon?: ReactElement
   showInlineWarning?: boolean // Show warning inline and not as header banner.
-} & ButtonProps) {
+} & BaseButtonProps) {
   const { t } = useTranslation()
 
   const [showActionsModal, setShowActionsModal] = useState(false)
@@ -84,7 +84,7 @@ function TransactionSummaryLayout({
 
   return (
     <>
-      <Button overflow="hidden" onPress={onPress} {...rest}>
+      <TouchableArea overflow="hidden" onPress={onPress} {...rest}>
         {(canceled || cancelling || failedCancel) && !showInlineWarning && (
           <AlertBanner status={status} />
         )}
@@ -136,7 +136,7 @@ function TransactionSummaryLayout({
             endAdornment
           )}
         </Flex>
-      </Button>
+      </TouchableArea>
       <TransactionActionsModal
         hash={hash}
         isVisible={showActionsModal}

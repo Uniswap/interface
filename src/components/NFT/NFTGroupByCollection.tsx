@@ -3,7 +3,7 @@ import { ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
@@ -56,7 +56,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
   const navigation = useHomeStackNavigation()
 
   const renderItem = ({ item }: ListRenderItemInfo<NFTAsset.Asset>) => (
-    <Button
+    <TouchableArea
       height={NFT_COLLECTION_IMAGE_SIZE}
       marginRight="xxxs"
       width={NFT_COLLECTION_IMAGE_SIZE}
@@ -68,7 +68,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
         })
       }>
       <NFTViewer squareGridView uri={item.image_url} />
-    </Button>
+    </TouchableArea>
   )
 
   if (!nftAssets[0]) return null
@@ -83,7 +83,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
       borderTopLeftRadius="lg"
       borderTopRightRadius="lg"
       gap="none">
-      <Button
+      <TouchableArea
         name={ElementName.NFTCollectionItem}
         onPress={() => {
           // TODO: implement popping up collection modal or check with design on how to handle this
@@ -101,7 +101,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
             <Chevron color={theme.colors.textSecondary} direction="e" height={20} width={20} />
           </Flex>
         </Box>
-      </Button>
+      </TouchableArea>
       <FlatList
         horizontal
         data={nftAssets}

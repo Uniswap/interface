@@ -1,8 +1,8 @@
 import React, { ComponentProps } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg'
-import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { iconSizes } from 'src/styles/sizing'
@@ -31,13 +31,13 @@ export function LinkButton({
   const iconColor = color ? theme.colors[color] : theme.colors.textSecondary
 
   return (
-    <Button onPress={() => openUri(url, isSafeUri)} {...rest}>
+    <TouchableArea onPress={() => openUri(url, isSafeUri)} {...rest}>
       <Flex row alignItems="center" gap="xxs" justifyContent={justifyContent}>
         <Text color={color} variant={textVariant}>
           {label}
         </Text>
         <ExternalLinkIcon fill={iconColor} height={size} width={size} />
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }

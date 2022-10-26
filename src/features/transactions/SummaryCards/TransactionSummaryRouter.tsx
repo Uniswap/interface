@@ -1,5 +1,5 @@
 import React from 'react'
-import { ButtonProps } from 'src/components/buttons/Button'
+import { BaseButtonProps } from 'src/components/buttons/TouchableArea'
 import ApproveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
 import NFTApproveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
 import NFTMintSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
@@ -30,7 +30,7 @@ export type BaseTransactionSummaryProps = {
   transaction: TransactionDetails
   showInlineWarning: boolean
   readonly: boolean
-} & ButtonProps
+} & BaseButtonProps
 
 export default function TransactionSummaryRouter({
   transaction,

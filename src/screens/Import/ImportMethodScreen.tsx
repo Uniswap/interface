@@ -8,7 +8,7 @@ import CloudIcon from 'src/assets/icons/cloud.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
 import SeedPhraseIcon from 'src/assets/icons/pencil.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -181,7 +181,7 @@ function OptionCard({
 }) {
   const theme = useAppTheme()
   return (
-    <Button
+    <TouchableArea
       backgroundColor="background2"
       borderColor="backgroundOutline"
       borderRadius="lg"
@@ -215,6 +215,6 @@ function OptionCard({
         </Flex>
         <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }

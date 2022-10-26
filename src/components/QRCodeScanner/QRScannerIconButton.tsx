@@ -2,7 +2,7 @@ import { selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { ElementName } from 'src/features/telemetry/constants'
 
 export function QRScannerIconButton({
@@ -20,8 +20,8 @@ export function QRScannerIconButton({
   }, [onPress])
 
   return (
-    <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
+    <TouchableArea name={ElementName.WalletConnectScan} onPress={onPressScan}>
       <ScanQRIcon color={theme.colors.textSecondary} height={size} width={size} />
-    </Button>
+    </TouchableArea>
   )
 }

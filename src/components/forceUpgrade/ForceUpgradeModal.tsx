@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
@@ -91,9 +91,9 @@ export function ForceUpgradeModal() {
           name={ModalName.ForceUpgradeModal}>
           <Box flex={1} px="lg" py="lg">
             <Flex row alignItems="center" justifyContent="flex-start">
-              <Button onPress={onDismiss}>
+              <TouchableArea onPress={onDismiss}>
                 <BackButtonView size={BACK_BUTTON_SIZE} />
-              </Button>
+              </TouchableArea>
               <Text variant="subheadLarge">{t('Recovery phrase')}</Text>
               <Box width={BACK_BUTTON_SIZE} />
             </Flex>

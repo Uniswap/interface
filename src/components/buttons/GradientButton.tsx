@@ -2,15 +2,14 @@ import { ShadowProps } from '@shopify/restyle'
 import React, { ReactElement } from 'react'
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
-import { TouchableArea } from 'src/components-uds/TouchableArea'
-import { ButtonProps } from 'src/components/buttons/Button'
+import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
 
-type GradientButtonProps = ButtonProps & {
+type GradientButtonProps = BaseButtonProps & {
   label?: string
   icon?: ReactElement
   textVariant?: keyof Theme['textVariants']

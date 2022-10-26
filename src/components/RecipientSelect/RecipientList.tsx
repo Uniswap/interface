@@ -2,8 +2,8 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
 import { AnimatedFlex, Inset } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
@@ -55,9 +55,9 @@ interface RecipientProps {
 
 export function RecipientRow({ recipient, onPress }: RecipientProps) {
   return (
-    <Button onPress={() => onPress(recipient.address)}>
+    <TouchableArea onPress={() => onPress(recipient.address)}>
       <AddressDisplay showAddressAsSubtitle address={recipient.address} size={35} />
-    </Button>
+    </TouchableArea>
   )
 }
 

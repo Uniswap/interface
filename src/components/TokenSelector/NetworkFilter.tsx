@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
@@ -69,7 +69,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
 
   return (
     <>
-      <Button
+      <TouchableArea
         py="xs"
         onPress={() => {
           Keyboard.dismiss()
@@ -82,7 +82,7 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
           </Text>
           <Chevron color={theme.colors.textSecondary} direction="s" height={16} width={16} />
         </Flex>
-      </Button>
+      </TouchableArea>
 
       <ActionSheetModal
         header={

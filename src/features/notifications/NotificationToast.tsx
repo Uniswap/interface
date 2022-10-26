@@ -8,8 +8,8 @@ import {
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { popNotification } from 'src/features/notifications/notificationSlice'
@@ -149,7 +149,7 @@ export function NotificationContent({
 }: NotificationContentProps) {
   const endAdornment = balanceUpdate || actionButton
   return (
-    <Button
+    <TouchableArea
       alignItems="center"
       bg="background0"
       borderRadius="lg"
@@ -187,7 +187,7 @@ export function NotificationContent({
           </Flex>
         ) : null}
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }
 
@@ -199,7 +199,7 @@ export function NotificationContentSmall({
 }: NotificationContentProps) {
   return (
     <Flex row flexShrink={1} justifyContent="center" pointerEvents="box-none">
-      <Button
+      <TouchableArea
         bg="background0"
         borderColor="background3"
         borderRadius="full"
@@ -213,7 +213,7 @@ export function NotificationContentSmall({
             {title}
           </Text>
         </Flex>
-      </Button>
+      </TouchableArea>
     </Flex>
   )
 }

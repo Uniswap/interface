@@ -4,8 +4,8 @@ import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components-uds/Button/Button'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
 import { GradientButton } from 'src/components/buttons/GradientButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
@@ -135,17 +135,11 @@ export function TransactionReview({
         {transactionDetails}
         <Flex row gap="xs">
           <Button
-            alignItems="center"
-            borderColor="backgroundOutline"
-            borderRadius="lg"
-            borderWidth={1}
-            flexDirection="row"
-            justifyContent="center"
-            px="md"
-            py="sm"
-            onPress={onPrev}>
-            <Arrow color={theme.colors.textPrimary} direction="w" size={20} />
-          </Button>
+            CustomIcon={<Arrow color={theme.colors.textPrimary} direction="w" size={20} />}
+            emphasis={ButtonEmphasis.Tertiary}
+            size={ButtonSize.Large}
+            onPress={onPrev}
+          />
           <Flex grow>
             <GradientButton
               disabled={actionButtonProps.disabled}

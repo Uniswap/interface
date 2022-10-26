@@ -1,11 +1,11 @@
 import React, { ComponentProps, useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import SwapArrow from 'src/assets/icons/swap-arrow.svg'
-import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 
 type SwapArrowButtonProps = Pick<
-  ComponentProps<typeof Button>,
+  ComponentProps<typeof TouchableArea>,
   'disabled' | 'name' | 'onPress' | 'borderColor' | 'bg'
 >
 

@@ -5,9 +5,9 @@ import { Image, StyleSheet, useColorScheme } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { UNISWAP_LOGO } from 'src/assets'
-import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Box, Flex } from 'src/components/layout'
@@ -84,7 +84,7 @@ export function LandingScreen({ navigation }: Props) {
             </Text>
           </TextButton>
           <DevelopmentOnly>
-            <Button
+            <TouchableArea
               flexDirection="row"
               justifyContent="center"
               name={ElementName.OnboardingExplore}
@@ -97,7 +97,7 @@ export function LandingScreen({ navigation }: Props) {
                 {t('Exploring')}{' '}
               </Text>
               <Text variant="buttonLabelMicro">{t('first.')}</Text>
-            </Button>
+            </TouchableArea>
           </DevelopmentOnly>
         </Flex>
       </Box>

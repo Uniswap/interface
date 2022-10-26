@@ -2,8 +2,8 @@ import { BoxProps, ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -57,13 +57,13 @@ type HeaderProps = {
   subtitle?: string | ReactNode
   onPress?: () => void
   icon?: ReactElement
-} & ComponentProps<typeof Button>
+} & ComponentProps<typeof TouchableArea>
 
 function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps) {
   const theme = useAppTheme()
 
   return (
-    <Button
+    <TouchableArea
       borderBottomColor="backgroundOutline"
       borderBottomWidth={0.25}
       px="md"
@@ -92,7 +92,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
         </Flex>
         <Chevron color={theme.colors.textSecondary} direction="e" height={20} />
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }
 

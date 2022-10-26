@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { Text } from 'src/components/Text'
@@ -42,7 +42,7 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
   }, [address, avatar, isViewOnly])
 
   return (
-    <Button pb="sm" pt="xs" px="lg" onPress={onPress ? () => onPress(address) : undefined}>
+    <TouchableArea pb="sm" pt="xs" px="lg" onPress={onPress ? () => onPress(address) : undefined}>
       <Flex row alignItems="center" testID={`account_item/${address.toLowerCase()}`}>
         <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
         <Flex grow gap="none">
@@ -58,7 +58,7 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
             />
           )}
           {onPressEdit && (
-            <Button name={ElementName.Edit} onPress={() => onPressEdit(address)}>
+            <TouchableArea name={ElementName.Edit} onPress={() => onPressEdit(address)}>
               <TripleDots
                 color={theme.colors.textSecondary}
                 height={12}
@@ -66,10 +66,10 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
                 strokeWidth="1"
                 width={20}
               />
-            </Button>
+            </TouchableArea>
           )}
         </Flex>
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }

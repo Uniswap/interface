@@ -1,6 +1,6 @@
 import { default as React } from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -35,7 +35,7 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
   }
 
   return (
-    <Button
+    <TouchableArea
       name={ElementName.SearchTokenItem}
       onPress={onPress}
       onPressIn={() => {
@@ -52,6 +52,6 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
           </Text>
         </Flex>
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }

@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Box, Flex } from 'src/components/layout'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
@@ -61,7 +61,7 @@ export function TokenOptionItem({
 
   return (
     <>
-      <Button
+      <TouchableArea
         opacity={tokenWarningLevel === TokenWarningLevel.BLOCKED ? 0.5 : 1}
         testID={`token-option-${currency.chainId}-${currency.symbol}`}
         onPress={onPressTokenOption}>
@@ -106,7 +106,7 @@ export function TokenOptionItem({
             </Box>
           ) : null}
         </Flex>
-      </Button>
+      </TouchableArea>
 
       {showWarningModal ? (
         <TokenWarningModal

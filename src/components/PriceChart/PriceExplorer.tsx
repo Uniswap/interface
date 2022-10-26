@@ -11,7 +11,7 @@ import Animated, {
 import { mixPath, useVector } from 'react-native-redash'
 import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
-import { TouchableArea } from 'src/components-uds/TouchableArea'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Cursor } from 'src/components/PriceChart/Cursor'
 import { PriceHeader } from 'src/components/PriceChart/PriceHeader'

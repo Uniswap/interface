@@ -6,13 +6,13 @@ import {
 } from '@shopify/restyle'
 import React, { ComponentProps, ReactElement, useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import { Button, ButtonProps } from 'src/components/buttons/Button'
+import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 import { flattenStyleProp } from 'src/styles/utils'
 
-type Props = ButtonProps & {
+type Props = BaseButtonProps & {
   label: string
   icon?: ReactElement
   textVariant?: keyof Theme['textVariants']
@@ -49,7 +49,7 @@ function _PrimaryButton({
   )
 
   return (
-    <Button
+    <TouchableArea
       alignItems="center"
       borderRadius="lg"
       disabled={disabled}
@@ -68,7 +68,7 @@ function _PrimaryButton({
         variant={textVariant ?? 'buttonLabelMedium'}>
         {label}
       </Text>
-    </Button>
+    </TouchableArea>
   )
 }
 

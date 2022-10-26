@@ -10,7 +10,7 @@ import FaceIdIcon from 'src/assets/icons/faceid.svg'
 import FlashbotsIcon from 'src/assets/icons/flashbots.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -168,7 +168,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
   const navigation = useSettingsStackNavigation()
 
   return (
-    <Button
+    <TouchableArea
       name="DEBUG_Settings_Navigate"
       onPress={() => {
         navigation.goBack()
@@ -186,7 +186,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
         </Box>
         <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
       </Box>
-    </Button>
+    </TouchableArea>
   )
 }
 
@@ -229,17 +229,17 @@ function WalletSettings() {
           {t('Wallet settings')}
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
-          <Button onPress={toggleViewAll}>
+          <TouchableArea onPress={toggleViewAll}>
             <Text color="textSecondary" mb="sm" variant="subheadSmall">
               {showAll ? t('View less') : t('View all')}
             </Text>
-          </Button>
+          </TouchableArea>
         )}
       </Flex>
       {allAccounts
         .slice(0, showAll ? allAccounts.length : DEFAULT_ACCOUNTS_TO_DISPLAY)
         .map((account) => (
-          <Button
+          <TouchableArea
             key={account.address}
             pl="xxs"
             py="sm"
@@ -256,7 +256,7 @@ function WalletSettings() {
               />
               <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
             </Box>
-          </Button>
+          </TouchableArea>
         ))}
     </Box>
   )

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Suspense } from 'src/components/data/Suspense'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
@@ -85,14 +85,14 @@ export function SearchEmptySection() {
                 <Text color="textSecondary" variant="subheadSmall">
                   {t('Recent searches')}
                 </Text>
-                <Button onPress={onPressClearSearchHistory}>
+                <TouchableArea onPress={onPressClearSearchHistory}>
                   <Flex centered row gap="xxs">
                     <Text color="textSecondary" variant="subheadSmall">
                       {t('Clear all')}
                     </Text>
                     <CloseIcon color="textSecondary" size={18} />
                   </Flex>
-                </Button>
+                </TouchableArea>
               </Flex>
             }
             data={searchHistory}

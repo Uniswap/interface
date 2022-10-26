@@ -1,10 +1,10 @@
 import { ResponsiveValue, TextProps } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
-import { Button, ButtonProps } from 'src/components/buttons/Button'
+import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 
-interface Props extends ButtonProps {
+interface Props extends BaseButtonProps {
   textVariant?: ResponsiveValue<keyof Theme['textVariants'], Theme>
   textColor?: ResponsiveValue<keyof Theme['colors'], Theme>
   textAlign?: 'left' | 'center' | 'right'
@@ -20,10 +20,10 @@ export function TextButton({
   ...rest
 }: PropsWithChildren<Props>) {
   return (
-    <Button {...rest}>
+    <TouchableArea {...rest}>
       <Text color={textColor} fontWeight={fontWeight} textAlign={textAlign} variant={textVariant}>
         {children}
       </Text>
-    </Button>
+    </TouchableArea>
   )
 }

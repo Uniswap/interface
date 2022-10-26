@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
@@ -103,7 +103,7 @@ export function TokenDetailsBackButtonRow({
       )}
       <Flex row alignItems="center" justifyContent="space-between" pt="sm" px="sm">
         <BackButton />
-        <Button disabled={!hasOtherBalances} onPress={() => setShowActionModal(true)}>
+        <TouchableArea disabled={!hasOtherBalances} onPress={() => setShowActionModal(true)}>
           <Flex centered row bg="background2" borderRadius="sm" gap="xxs" p="xs">
             <NetworkLogo chainId={currency.chainId} size={16} />
             <Text color="textSecondary" pl="xxxs" textAlign="center" variant="buttonLabelSmall">
@@ -113,7 +113,7 @@ export function TokenDetailsBackButtonRow({
               <Chevron color={theme.colors.textSecondary} direction="s" height={16} width={16} />
             )}
           </Flex>
-        </Button>
+        </TouchableArea>
       </Flex>
     </>
   )

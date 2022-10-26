@@ -5,10 +5,10 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import Checkmark from 'src/assets/icons/check.svg'
 import X from 'src/assets/icons/x.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
@@ -100,7 +100,7 @@ const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps
   }, [setModalState])
 
   return (
-    <Button m="none" name={ElementName.WCDappSwitchNetwork} p="none" onPress={onPress}>
+    <TouchableArea m="none" name={ElementName.WCDappSwitchNetwork} p="none" onPress={onPress}>
       <Flex row shrink alignItems="center" gap="sm" justifyContent="space-between" p="sm">
         <Flex row shrink gap="sm">
           <NetworkLogo chainId={selectedChainId} size={20} />
@@ -110,7 +110,7 @@ const SwitchNetworkRow = ({ selectedChainId, setModalState }: SwitchNetworkProps
         </Flex>
         <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="20" />
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }
 
@@ -129,7 +129,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps) 
   }, [setModalState])
 
   return (
-    <Button
+    <TouchableArea
       disabled={!accountIsSwitchable}
       m="none"
       name={ElementName.WCDappSwitchAccount}
@@ -151,7 +151,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps) 
           )}
         </Flex>
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }
 

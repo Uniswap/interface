@@ -10,9 +10,9 @@ import GlobalIcon from 'src/assets/icons/global.svg'
 import HelpIcon from 'src/assets/icons/help.svg'
 import PlusIcon from 'src/assets/icons/plus.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
@@ -422,7 +422,7 @@ function SettingsButton({
   const theme = useAppTheme()
 
   return (
-    <Button name={name} testID={name} onPress={onPress}>
+    <TouchableArea name={name} testID={name} onPress={onPress}>
       <Flex row alignItems="center" gap="sm">
         <Box alignItems="center" width={UNICON_WIDTH}>
           <Icon
@@ -435,6 +435,6 @@ function SettingsButton({
           {label}
         </Text>
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }

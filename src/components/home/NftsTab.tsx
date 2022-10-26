@@ -8,7 +8,7 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import NoNFTsIcon from 'src/assets/icons/empty-state-picture.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Suspense } from 'src/components/data/Suspense'
 import {
   NftsTabQuery,
@@ -165,7 +165,7 @@ function NftsTabInner({
     (asset: NFTItem) => {
       return (
         <Box flex={1} justifyContent="flex-start" m="xs">
-          <Button activeOpacity={1} onPress={() => onPressItem(asset)}>
+          <TouchableArea activeOpacity={1} onPress={() => onPressItem(asset)}>
             <Box
               alignItems="center"
               aspectRatio={1}
@@ -204,7 +204,7 @@ function NftsTabInner({
                 1.23 ETH
               </Text>
             </Flex>
-          </Button>
+          </TouchableArea>
         </Box>
       )
     },

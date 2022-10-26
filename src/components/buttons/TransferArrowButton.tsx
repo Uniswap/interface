@@ -1,13 +1,13 @@
 import React, { ComponentProps } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
 
 const ICON_SIZE = 20
 
 type ArrowDownButtonProps = Pick<
-  ComponentProps<typeof Button>,
+  ComponentProps<typeof TouchableArea>,
   'disabled' | 'name' | 'onPress' | 'borderColor' | 'bg'
 >
 

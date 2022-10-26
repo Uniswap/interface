@@ -6,9 +6,9 @@ import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import PencilIcon from 'src/assets/icons/pencil.svg'
-import { Button } from 'src/components/buttons/Button'
+import { Button, ButtonEmphasis, ButtonSize } from 'src/components-uds/Button/Button'
 import { TextInput } from 'src/components/input/TextInput'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
@@ -18,8 +18,6 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useAccounts } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
 import { Screens } from './Screens'
-
-const EDIT_BUTTON_ICON_SIZE = 16
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWalletEdit>
 
@@ -85,21 +83,14 @@ export function SettingsWalletEdit({
                   {nickname || shortenAddress(address)}
                 </Text>
                 {!ensName && (
-                  <Button
-                    alignItems="center"
-                    bg="background3"
-                    borderRadius="md"
-                    justifyContent="center"
-                    marginLeft="sm"
-                    p="xs"
-                    onPress={onPressShowEditInput}>
-                    <PencilIcon
-                      color={theme.colors.textPrimary}
-                      height={EDIT_BUTTON_ICON_SIZE}
-                      strokeWidth="1.5"
-                      width={EDIT_BUTTON_ICON_SIZE}
+                  <Box ml="sm">
+                    <Button
+                      IconName={PencilIcon}
+                      emphasis={ButtonEmphasis.Secondary}
+                      size={ButtonSize.Small}
+                      onPress={onPressShowEditInput}
                     />
-                  </Button>
+                  </Box>
                 )}
               </>
             )}

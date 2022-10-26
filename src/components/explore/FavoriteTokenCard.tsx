@@ -6,7 +6,7 @@ import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { AnimatedButton } from 'src/components/buttons/Button'
+import { AnimatedTouchableArea } from 'src/components/buttons/TouchableArea'
 import { Suspense } from 'src/components/data/Suspense'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { FavoriteTokenCardQuery } from 'src/components/explore/__generated__/FavoriteTokenCardQuery.graphql'
@@ -162,7 +162,7 @@ function FavoriteTokenCardInner({
         }
       }}
       {...rest}>
-      <AnimatedButton
+      <AnimatedTouchableArea
         borderRadius="lg"
         entering={FadeIn}
         exiting={FadeOut}
@@ -201,7 +201,7 @@ function FavoriteTokenCardInner({
             />
           </Flex>
         </BaseCard.Shadow>
-      </AnimatedButton>
+      </AnimatedTouchableArea>
     </ContextMenu>
   )
 }

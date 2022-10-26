@@ -1,7 +1,8 @@
 import Fuse from 'fuse.js'
-import { AutocompleteOption } from 'src/components/autocomplete/Autocomplete'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { unique } from 'src/utils/array'
+
+type AutocompleteOption<T> = { data: T; key: string }
 
 const defaultOptions: Fuse.IFuseOptions<AutocompleteOption<SearchableRecipient>> = {
   includeMatches: true,

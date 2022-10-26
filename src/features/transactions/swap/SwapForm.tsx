@@ -6,8 +6,8 @@ import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
-import { Button } from 'src/components/buttons/Button'
 import { GradientButton } from 'src/components/buttons/GradientButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Flex } from 'src/components/layout'
@@ -235,8 +235,9 @@ export function SwapForm({
                   onShowTokenSelector={() => onShowTokenSelector(CurrencyField.OUTPUT)}
                 />
               </Flex>
+              {/* TODO: this could use the Button component instead. */}
               {swapWarning && (
-                <Button onPress={onSwapWarningClick}>
+                <TouchableArea onPress={onSwapWarningClick}>
                   <Flex
                     row
                     alignItems="center"
@@ -267,10 +268,10 @@ export function SwapForm({
                       )}
                     </Flex>
                   </Flex>
-                </Button>
+                </TouchableArea>
               )}
               {showRate && (
-                <Button onPress={() => setShowInverseRate(!showInverseRate)}>
+                <TouchableArea onPress={() => setShowInverseRate(!showInverseRate)}>
                   <Flex
                     row
                     alignItems="center"
@@ -307,7 +308,7 @@ export function SwapForm({
                       </Text>
                     </Flex>
                   </Flex>
-                </Button>
+                </TouchableArea>
               )}
             </Flex>
           </Trace>

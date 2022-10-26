@@ -73,7 +73,7 @@ export function WalletQRCode({ address }: Props) {
           size={QR_CODE_SIZE}
         />
         <Box flexDirection="row">
-          <CopyTextButton borderRadius="md" borderWidth={1} copyText={address} />
+          <CopyTextButton copyText={address} />
           <PrimaryButton
             borderRadius="md"
             icon={<ShareIcon color={theme.colors.textPrimary} height={18} width={18} />}

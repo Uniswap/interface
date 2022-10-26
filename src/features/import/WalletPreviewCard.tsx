@@ -1,7 +1,7 @@
 import React from 'react'
 import Check from 'src/assets/icons/check.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { formatUSDPrice } from 'src/utils/format'
@@ -27,7 +27,7 @@ export default function WalletPreviewCard({
   ...rest
 }: Props) {
   return (
-    <Button
+    <TouchableArea
       backgroundColor={selected ? 'background3' : 'background1'}
       borderColor={selected ? 'accentActive' : 'none'}
       borderRadius="lg"
@@ -64,6 +64,6 @@ export default function WalletPreviewCard({
           {formatUSDPrice(balance)}
         </Text>
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }

@@ -2,7 +2,7 @@ import { default as React } from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import EtherscanLogo from 'src/assets/logos/etherscan-logo.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -38,7 +38,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
   }
 
   return (
-    <Button name={ElementName.SearchEtherscanItem} onPress={onPressViewEtherscan}>
+    <TouchableArea name={ElementName.SearchEtherscanItem} onPress={onPressViewEtherscan}>
       <Flex row alignItems="center" gap="sm" justifyContent="space-between" px="xs" py="sm">
         <Flex centered row gap="md">
           <EtherscanLogo height={35} width={35} />
@@ -46,6 +46,6 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
         </Flex>
         <Arrow color={theme.colors.textSecondary} direction="ne" size={24} />
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }

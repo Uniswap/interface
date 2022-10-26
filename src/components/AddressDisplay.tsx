@@ -3,7 +3,7 @@ import { default as React, PropsWithChildren, useMemo } from 'react'
 import { FlexAlignType } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { AvatarWithVisibilityBadge } from 'src/components/unicons/AvatarWithVisibilityBadge'
@@ -43,9 +43,9 @@ type CopyButtonWrapperProps = {
 function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWrapperProps>) {
   if (onPress)
     return (
-      <Button name={ElementName.Copy} testID={ElementName.Copy} onPress={onPress}>
+      <TouchableArea name={ElementName.Copy} testID={ElementName.Copy} onPress={onPress}>
         {children}
-      </Button>
+      </TouchableArea>
     )
 
   return <>{children}</>

@@ -1,8 +1,8 @@
 import { ResponsiveValue } from '@shopify/restyle'
 import React from 'react'
 import { Modal as BaseModal, ModalProps, StyleSheet, View } from 'react-native'
-import { Button } from 'src/components/buttons/Button'
 import { CloseButton } from 'src/components/buttons/CloseButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
@@ -45,7 +45,7 @@ React.PropsWithChildren<Props>) {
       presentationStyle={presentationStyle}
       transparent={transparent} /* {...rest} */
       visible={visible}>
-      <Button
+      <TouchableArea
         alignItems="center"
         flexGrow={1}
         justifyContent={justifyContent}
@@ -67,7 +67,7 @@ React.PropsWithChildren<Props>) {
           )}
           {children}
         </Box>
-      </Button>
+      </TouchableArea>
     </BaseModal>
   )
 }

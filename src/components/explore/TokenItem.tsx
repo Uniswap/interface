@@ -2,7 +2,7 @@ import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { FavoriteButton } from 'src/components/explore/FavoriteButton'
 import { Box } from 'src/components/layout/Box'
@@ -112,7 +112,7 @@ export const TokenItem = memo(
             navigateToSwapSell()
           }
         }}>
-        <Button
+        <TouchableArea
           disabled={isEditing}
           opacity={isFavorited && isEditing ? 0.3 : 1}
           testID={`token-item-${name}`}
@@ -146,7 +146,7 @@ export const TokenItem = memo(
               </Flex>
             </Flex>
             <Flex row alignItems="center" justifyContent="flex-end">
-              <Button disabled={!onCycleMetadata} onPress={onCycleMetadata}>
+              <TouchableArea disabled={!onCycleMetadata} onPress={onCycleMetadata}>
                 <TokenMetadata
                   main={formatUSDPrice(price)}
                   sub={
@@ -161,13 +161,13 @@ export const TokenItem = memo(
                     )
                   }
                 />
-              </Button>
+              </TouchableArea>
               {isEditing ? (
                 <FavoriteButton disabled={Boolean(isFavorited)} onPress={toggleFavoriteToken} />
               ) : null}
             </Flex>
           </AnimatedFlex>
-        </Button>
+        </TouchableArea>
       </ContextMenu>
     )
   }

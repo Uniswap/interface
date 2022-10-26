@@ -2,7 +2,7 @@ import React from 'react'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import AlertCircle from 'src/assets/icons/alert-circle.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithStatus'
 import { Box } from 'src/components/layout/Box'
@@ -58,7 +58,7 @@ export function PendingNotificationBadge({ size = 24, sortedPendingTransactions 
   const countToDisplay = pendingTransactionCount === 1 ? undefined : pendingTransactionCount
 
   return (
-    <Button
+    <TouchableArea
       position="relative"
       onPress={() => (activeAccountAddress ? navigate(activeAccountAddress) : null)}
       onPressIn={() => (activeAccountAddress ? preload(activeAccountAddress) : null)}>
@@ -76,6 +76,6 @@ export function PendingNotificationBadge({ size = 24, sortedPendingTransactions 
         </Text>
       </Box>
       <SpinningLoader size={LOADING_SPINNER_SIZE} />
-    </Button>
+    </TouchableArea>
   )
 }

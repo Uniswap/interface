@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { RemoteImage } from 'src/components/images/RemoteImage'
@@ -38,7 +38,7 @@ export function DappConnectionItem({
       mb="sm"
       p="md"
       width="48%">
-      <Button name={ElementName.WCOpenDapp} onPress={() => openUri(dapp.url)}>
+      <TouchableArea name={ElementName.WCOpenDapp} onPress={() => openUri(dapp.url)}>
         <Flex centered gap="xs">
           {dapp.icon ? (
             <Flex>
@@ -61,8 +61,8 @@ export function DappConnectionItem({
             {dapp.url}
           </Text>
         </Flex>
-      </Button>
-      <Button name={ElementName.WCDappSwitchNetwork} onPress={onPressChangeNetwork}>
+      </TouchableArea>
+      <TouchableArea name={ElementName.WCDappSwitchNetwork} onPress={onPressChangeNetwork}>
         <Flex
           row
           shrink
@@ -88,7 +88,7 @@ export function DappConnectionItem({
           )}
           <Chevron color={theme.colors.textTertiary} direction="s" height="20" width="20" />
         </Flex>
-      </Button>
+      </TouchableArea>
     </Flex>
   )
 }

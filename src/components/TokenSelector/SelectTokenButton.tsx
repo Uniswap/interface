@@ -3,7 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { selectionAsync } from 'expo-haptics'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
@@ -31,8 +31,8 @@ export function SelectTokenButton({
   }
 
   return (
-    <Button
-      bg={selectedCurrency ? 'background3' : 'accentActive'}
+    <TouchableArea
+      bg={selectedCurrency ? 'background3' : 'userThemeMagenta'}
       borderRadius="lg"
       name={ElementName.TokenSelectorToggle}
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
@@ -55,6 +55,6 @@ export function SelectTokenButton({
           </Flex>
         </Flex>
       )}
-    </Button>
+    </TouchableArea>
   )
 }

@@ -1,7 +1,7 @@
 import { BaseTheme } from '@shopify/restyle'
 import React, { ReactElement } from 'react'
 import { SettingsStackNavigationProp, SettingsStackParamList } from 'src/app/navigation/types'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
@@ -49,7 +49,7 @@ export function SettingsRow({
     }
   }
   return (
-    <Button disabled={Boolean(action)} name="DEBUG_Settings_Navigate" onPress={handleRow}>
+    <TouchableArea disabled={Boolean(action)} name="DEBUG_Settings_Navigate" onPress={handleRow}>
       <Flex row alignItems="center" minHeight={40}>
         <Flex grow row alignItems={subText ? 'flex-start' : 'center'} flexBasis={0} gap="sm">
           <Flex centered height={32} width={32}>
@@ -72,6 +72,6 @@ export function SettingsRow({
           action
         )}
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }

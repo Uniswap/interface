@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithStatus'
 import { Flex } from 'src/components/layout'
@@ -50,7 +50,7 @@ export function AccountHeader() {
       mx="lg"
       my="sm"
       testID="account-header">
-      <Button
+      <TouchableArea
         alignItems="center"
         flex={1}
         flexDirection="row"
@@ -69,15 +69,15 @@ export function AccountHeader() {
             <Chevron color={theme.colors.textSecondary} direction="s" height={20} width={20} />
           </Flex>
         )}
-      </Button>
+      </TouchableArea>
       <Box alignItems="center" flexDirection="row" justifyContent="flex-end">
-        <Button onPress={onPressNotifications} onPressIn={onPressInNotifications}>
+        <TouchableArea onPress={onPressNotifications} onPressIn={onPressInNotifications}>
           {sortedPendingTransactions?.length ? (
             <PendingNotificationBadge sortedPendingTransactions={sortedPendingTransactions} />
           ) : (
             <TxHistoryIconWithStatus />
           )}
-        </Button>
+        </TouchableArea>
       </Box>
     </Box>
   )

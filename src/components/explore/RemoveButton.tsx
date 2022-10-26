@@ -1,13 +1,13 @@
 import React from 'react'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
-import { AnimatedButton, ButtonProps } from 'src/components/buttons/Button'
+import { AnimatedTouchableArea, BaseButtonProps } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
 
-export default function RemoveButton(props: ButtonProps) {
+export default function RemoveButton(props: BaseButtonProps) {
   const theme = useAppTheme()
   return (
-    <AnimatedButton
+    <AnimatedTouchableArea
       {...props}
       alignItems="center"
       backgroundColor="background0"
@@ -21,6 +21,6 @@ export default function RemoveButton(props: ButtonProps) {
       width={theme.imageSizes.lg}
       zIndex="tooltip">
       <Box backgroundColor="textSecondary" borderRadius="md" height={2} width={12} />
-    </AnimatedButton>
+    </AnimatedTouchableArea>
   )
 }

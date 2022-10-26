@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -49,7 +49,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
           {sortedBackups.map((backup, index) => {
             const { mnemonicId, createdAt } = backup
             return (
-              <Button
+              <TouchableArea
                 key={backup.mnemonicId}
                 backgroundColor="background2"
                 borderColor="background3"
@@ -81,7 +81,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                     <Chevron color={theme.colors.textPrimary} direction="e" />
                   </Flex>
                 </Flex>
-              </Button>
+              </TouchableArea>
             )
           })}
         </Flex>

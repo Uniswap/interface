@@ -2,7 +2,7 @@ import { selectionAsync } from 'expo-haptics'
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
@@ -43,7 +43,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
           <ScrollView bounces={false} style={flex.grow}>
             {options.map(({ key, onPress, render }) => {
               return (
-                <Button
+                <TouchableArea
                   key={key}
                   name={key}
                   testID={key}
@@ -52,14 +52,14 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
                     onPress()
                   }}>
                   {render()}
-                </Button>
+                </TouchableArea>
               )
             })}
           </ScrollView>
         </Flex>
       </Flex>
       <Flex bg="background1" borderRadius="md">
-        <Button
+        <TouchableArea
           onPress={() => {
             selectionAsync()
             onClose()
@@ -69,7 +69,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
               {closeButtonLabel}
             </Text>
           </Flex>
-        </Button>
+        </TouchableArea>
       </Flex>
     </Flex>
   )

@@ -2,7 +2,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout/Flex'
 import { Warning } from 'src/components/modals/WarningModal/types'
 import { Text } from 'src/components/Text'
@@ -74,7 +74,7 @@ export function SwapDetails({
               </TouchableOpacity>
             </Flex>
             <Flex centered row gap="none">
-              <Button
+              <TouchableArea
                 backgroundColor="accentActive"
                 borderRadius="sm"
                 px="xs"
@@ -83,7 +83,7 @@ export function SwapDetails({
                 <Text color="textOnBrightPrimary" variant="buttonLabelSmall">
                   {t('Accept')}
                 </Text>
-              </Button>
+              </TouchableArea>
             </Flex>
           </Flex>
         ) : null

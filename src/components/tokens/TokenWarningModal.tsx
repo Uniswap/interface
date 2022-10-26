@@ -6,8 +6,8 @@ import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg'
 import EtherscanLogo from 'src/assets/logos/etherscan-logo.svg'
-import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -95,7 +95,7 @@ export default function TokenWarningModal({
           </Text>
           <Text color="accentActive">{t('Learn more')}</Text>
         </Flex>
-        <Button
+        <TouchableArea
           alignItems="center"
           bg="accentActiveSoft"
           borderRadius="sm"
@@ -113,7 +113,7 @@ export default function TokenWarningModal({
             {explorerLink}
           </Text>
           <ExternalLinkIcon fill={theme.colors.textOnBrightSecondary} height={12} width={12} />
-        </Button>
+        </TouchableArea>
         {tokenWarningLevel === TokenWarningLevel.BLOCKED ? (
           <Flex row>
             <PrimaryButton

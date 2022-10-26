@@ -5,8 +5,8 @@ import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-
 import { useAppTheme } from 'src/app/hooks'
 import X from 'src/assets/icons/x.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { AnimatedButton } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
+import { AnimatedTouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -174,12 +174,12 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         )}
       </AnimatedFlex>
       {showCancelButton && (
-        <AnimatedButton
+        <AnimatedTouchableArea
           style={[cancelButtonStyle, CancelButtonDefaultStyle]}
           onLayout={onCancelLayout}
           onPress={onPressCancel}>
           <Text variant="buttonLabelMedium">{t('Cancel')}</Text>
-        </AnimatedButton>
+        </AnimatedTouchableArea>
       )}
     </Flex>
   )

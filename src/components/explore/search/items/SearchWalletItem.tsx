@@ -4,7 +4,7 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { FavoriteButton } from 'src/components/explore/FavoriteButton'
 import { Flex } from 'src/components/layout/Flex'
 import { addToSearchHistory, WalletSearchResult } from 'src/features/explore/searchHistorySlice'
@@ -44,7 +44,7 @@ export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalle
 
   return (
     <ContextMenu actions={menuActions} onPress={toggleFavoriteWallet}>
-      <Button
+      <TouchableArea
         name={ElementName.SearchWalletItem}
         testID={`wallet-item-${address}`}
         onPress={onPress}
@@ -63,7 +63,7 @@ export function SearchWalletItem({ wallet, isEditing, isFavorited }: SearchWalle
             <FavoriteButton disabled={Boolean(isFavorited)} onPress={toggleFavoriteWallet} />
           ) : null}
         </Flex>
-      </Button>
+      </TouchableArea>
     </ContextMenu>
   )
 }

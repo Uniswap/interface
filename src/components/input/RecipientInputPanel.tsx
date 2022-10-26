@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -26,7 +26,10 @@ export function RecipientInputPanel({
   const theme = useAppTheme()
 
   return (
-    <Button name={ElementName.SelectRecipient} p="xs" onPress={onToggleShowRecipientSelector}>
+    <TouchableArea
+      name={ElementName.SelectRecipient}
+      p="xs"
+      onPress={onToggleShowRecipientSelector}>
       <Flex gap="xxxs">
         <Flex centered row gap="xxs">
           <AddressDisplay address={recipientAddress} variant="headlineSmall" />
@@ -34,7 +37,7 @@ export function RecipientInputPanel({
         </Flex>
         {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }
 

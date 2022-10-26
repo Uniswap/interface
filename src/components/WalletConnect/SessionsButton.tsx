@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
 import { OverlayGroup } from 'src/components/icons/OverlayIcon'
 import { RemoteImage } from 'src/components/images/RemoteImage'
@@ -36,7 +36,7 @@ export default function SessionsButton({
   })
 
   return (
-    <Button
+    <TouchableArea
       backgroundColor="translucentBackground"
       borderRadius="lg"
       px="md"
@@ -51,6 +51,6 @@ export default function SessionsButton({
         </Flex>
         <Arrow color={theme.colors.textSecondary} size={SMALL_ICON_SIZE} />
       </Flex>
-    </Button>
+    </TouchableArea>
   )
 }

@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import { SpacingProps, SpacingShorthandProps } from '@shopify/restyle'
 import React from 'react'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { Theme } from 'src/styles/theme'
 
@@ -18,8 +18,8 @@ export function BackButton({ onPressBack, size, color, showButtonLabel, ...rest 
 
   const goBack = onPressBack ? onPressBack : () => navigation.goBack()
   return (
-    <Button onPress={goBack} {...rest}>
+    <TouchableArea onPress={goBack} {...rest}>
       <BackButtonView color={color} showButtonLabel={showButtonLabel} size={size} />
-    </Button>
+    </TouchableArea>
   )
 }

@@ -6,8 +6,8 @@ import { useAppTheme } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import ShareIcon from 'src/assets/icons/share.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
-import { Button } from 'src/components/buttons/Button'
 import { LinkButton } from 'src/components/buttons/LinkButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -117,7 +117,7 @@ export function NFTItemScreen({
           </Flex>
 
           {/* Collection info */}
-          <Button onPress={onPressCollection}>
+          <TouchableArea onPress={onPressCollection}>
             <Flex
               row
               alignItems="center"
@@ -154,7 +154,7 @@ export function NFTItemScreen({
                 {/* TODO(MOB-2788): add floor price */}
               </Flex>
             </Flex>
-          </Button>
+          </TouchableArea>
 
           {/* Action buttons */}
           {/* TODO(MOB-2841): add back SendButton when we fix Send NFT flow */}

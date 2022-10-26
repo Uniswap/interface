@@ -1,6 +1,6 @@
 import React from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { SearchTextInput, SearchTextInputProps } from 'src/components/input/SearchTextInput'
 import { Flex } from 'src/components/layout'
@@ -17,9 +17,9 @@ export function SearchBar({ onBack, hideBackButton, ...rest }: SearchBarProps) {
   return (
     <Flex centered row gap="sm" mx="md">
       {!hideBackButton && (
-        <Button name={ElementName.Back} testID={ElementName.Back} onPress={onBack}>
+        <TouchableArea name={ElementName.Back} testID={ElementName.Back} onPress={onBack}>
           <Chevron color={theme.colors.textPrimary} />
-        </Button>
+        </TouchableArea>
       )}
       <SearchTextInput {...rest} />
     </Flex>

@@ -2,7 +2,7 @@ import React, { PropsWithChildren, ReactNode } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Warning } from 'src/components/modals/WarningModal/types'
@@ -46,7 +46,7 @@ export function TransactionDetails({
   return (
     <Box>
       {showWarning && warning && onShowWarning && (
-        <Button mb="xs" onPress={onShowWarning}>
+        <TouchableArea mb="xs" onPress={onShowWarning}>
           <Flex
             row
             alignItems="center"
@@ -71,7 +71,7 @@ export function TransactionDetails({
               width={ALERT_ICONS_SIZE}
             />
           </Flex>
-        </Button>
+        </TouchableArea>
       )}
       {!showWarning && <Box mb="xs">{banner}</Box>}
       <Flex backgroundColor="background2" borderRadius="lg" gap="none">

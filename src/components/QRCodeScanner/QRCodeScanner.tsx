@@ -13,13 +13,12 @@ import { useAppTheme } from 'src/app/hooks'
 import CameraScan from 'src/assets/icons/camera-scan.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
-import { Button } from 'src/components/buttons/Button'
+import { Button, ButtonEmphasis } from 'src/components-uds/Button/Button'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
-import { opacify } from 'src/utils/colors'
 import { openSettings } from 'src/utils/linking'
 import { Barcode, BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner'
 
@@ -58,7 +57,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
   const [barcodes, setBarcodes] = useState<Barcode[]>([])
   const data = barcodes[0]?.content.data
   const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
-  const [connectionLayout, setConnectionLayout] = useState<LayoutRectangle | null>()
 
   useEffect(() => {
     async function getPermissionStatuses() {
@@ -171,34 +169,20 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
             width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
           />
           {isWalletConnectModal && props.numConnections > 0 && (
-            <Button
-              bottom={0}
-              position="absolute"
-              style={{
-                transform: [
-                  { translateY: connectionLayout ? connectionLayout.height + theme.spacing.lg : 0 },
-                ],
-              }}
-              onLayout={(event: any) => setConnectionLayout(event.nativeEvent.layout)}
-              onPress={props.onPressConnections}>
-              <Flex
-                row
-                alignItems="center"
-                borderRadius="md"
-                gap="xs"
-                px="md"
-                py="sm"
-                style={{ backgroundColor: opacify(40, theme.colors.black) }}>
-                <GlobalIcon color={theme.colors.white} height={20} strokeWidth={2} width={20} />
-                <Text color="white" variant="buttonLabelMedium">
-                  {props.numConnections === 1
+            <Box mt="md">
+              <Button
+                IconName={GlobalIcon}
+                emphasis={ButtonEmphasis.Secondary}
+                label={
+                  props.numConnections === 1
                     ? t('1 site connected')
                     : t('{{numConnections}} sites connected', {
                         numConnections: props.numConnections,
-                      })}
-                </Text>
-              </Flex>
-            </Button>
+                      })
+                }
+                onPress={props.onPressConnections}
+              />
+            </Box>
           )}
         </Flex>
       </Flex>

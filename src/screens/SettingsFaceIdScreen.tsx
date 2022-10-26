@@ -4,8 +4,8 @@ import { Alert, ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { Button } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
@@ -106,13 +106,13 @@ export function SettingsFaceIdScreen() {
             </Text>
           </Flex>
         </Flex>
-        <Button
+        <TouchableArea
           activeOpacity={1}
           onPress={() => {
             onValueChange(!value)
           }}>
           <Switch pointerEvents="none" value={value} onValueChange={onValueChange} />
-        </Button>
+        </TouchableArea>
       </Box>
     )
   }

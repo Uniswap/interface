@@ -1,19 +1,18 @@
-import React, { ComponentProps, useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import CheckCircle from 'src/assets/icons/check-circle.svg'
 import CopySheets from 'src/assets/icons/copy-sheets.svg'
-import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { setClipboard } from 'src/utils/clipboard'
 
-interface PrimaryButtonProps extends ComponentProps<typeof Button> {
+interface PrimaryButtonProps {
   copyText?: string
 }
 
 const ICON_SIZE = 18
 
-export function CopyTextButton({ copyText, children, ...rest }: PrimaryButtonProps) {
+export function CopyTextButton({ copyText, children }: PropsWithChildren<PrimaryButtonProps>) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -40,7 +39,6 @@ export function CopyTextButton({ copyText, children, ...rest }: PrimaryButtonPro
       textColor="textPrimary"
       variant="transparent"
       onPress={onPress}
-      {...rest}
     />
   )
 }

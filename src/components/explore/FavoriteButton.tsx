@@ -2,14 +2,14 @@ import React from 'react'
 import { FadeInRight } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import PlusIcon from 'src/assets/icons/plus.svg'
-import { AnimatedButton, ButtonProps } from 'src/components/buttons/Button'
+import { AnimatedTouchableArea, BaseButtonProps } from 'src/components/buttons/TouchableArea'
 import { Box } from 'src/components/layout/Box'
 
-export function FavoriteButton({ disabled, ...rest }: { disabled: boolean } & ButtonProps) {
+export function FavoriteButton({ disabled, ...rest }: { disabled: boolean } & BaseButtonProps) {
   const theme = useAppTheme()
   return (
     <Box opacity={disabled ? 0 : 1}>
-      <AnimatedButton
+      <AnimatedTouchableArea
         borderRadius="full"
         borderWidth={1}
         disabled={disabled}
@@ -22,7 +22,7 @@ export function FavoriteButton({ disabled, ...rest }: { disabled: boolean } & Bu
           borderColor: theme.colors.backgroundOutline,
         }}>
         <PlusIcon color={theme.colors.textSecondary} height={14} strokeWidth={2} width={14} />
-      </AnimatedButton>
+      </AnimatedTouchableArea>
     </Box>
   )
 }

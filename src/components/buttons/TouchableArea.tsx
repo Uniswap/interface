@@ -7,17 +7,19 @@ import { TraceEvent } from 'src/features/telemetry/TraceEvent'
 import { defaultHitslopInset } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 
-const ButtonActionProps = (({ onPress, onLongPress }) => ({ onPress, onLongPress }))(ActionProps)
+const TouchableAreaActionProps = (({ onPress, onLongPress }) => ({ onPress, onLongPress }))(
+  ActionProps
+)
 
 export const TouchableBox = createBox<Theme, TouchableOpacityProps>(TouchableOpacity)
 
-export type ButtonProps = PropsWithChildren<
+export type BaseButtonProps = PropsWithChildren<
   ComponentProps<typeof TouchableBox> & {
     name?: ElementName | string
   }
 >
 
-export function Button({ children, name: elementName, ...rest }: ButtonProps) {
+export function TouchableArea({ children, name: elementName, ...rest }: BaseButtonProps) {
   const baseProps = { hitSlop: defaultHitslopInset, ...rest }
 
   if (!elementName) {
@@ -25,10 +27,13 @@ export function Button({ children, name: elementName, ...rest }: ButtonProps) {
   }
 
   return (
-    <TraceEvent actionProps={ButtonActionProps} elementName={elementName} elementType="button">
+    <TraceEvent
+      actionProps={TouchableAreaActionProps}
+      elementName={elementName}
+      elementType="button">
       <TouchableBox {...baseProps}>{children}</TouchableBox>
     </TraceEvent>
   )
 }
 
-export const AnimatedButton = withAnimated(Button)
+export const AnimatedTouchableArea = withAnimated(TouchableArea)

@@ -7,7 +7,7 @@ import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
 import Scan from 'src/assets/icons/qr-simple.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -135,9 +135,9 @@ export function WalletConnectModal({
           {currentScreenState === ScannerModalState.ConnectedDapps && (
             <ConnectedDappsList
               backButton={
-                <Button onPress={onPressShowScanQr}>
+                <TouchableArea onPress={onPressShowScanQr}>
                   <Chevron color={theme.colors.textSecondary} height={24} width={24} />
-                </Button>
+                </TouchableArea>
               }
               sessions={sessions}
             />
@@ -154,7 +154,7 @@ export function WalletConnectModal({
             <WalletQRCode address={activeAddress} />
           )}
           <Flex mb="xl" mt="md" mx="md">
-            <Button
+            <TouchableArea
               borderColor="backgroundOutline"
               borderRadius="lg"
               borderWidth={1}
@@ -186,7 +186,7 @@ export function WalletConnectModal({
                 </Flex>
                 <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="15" />
               </Flex>
-            </Button>
+            </TouchableArea>
           </Flex>
         </>
       )}

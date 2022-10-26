@@ -6,7 +6,7 @@ import 'react-native-reanimated'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import Scan from 'src/assets/icons/qr-simple.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -85,7 +85,7 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
         <WalletQRCode address={activeAddress} />
       )}
       <Flex mb="xl" mt="md" mx="md">
-        <Button
+        <TouchableArea
           borderColor="backgroundOutline"
           borderRadius="lg"
           borderWidth={1}
@@ -117,7 +117,7 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
             </Flex>
             <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="15" />
           </Flex>
-        </Button>
+        </TouchableArea>
       </Flex>
       <Flex centered mt="md" position="absolute" width="100%">
         <Box bg="backgroundOutline" borderRadius="sm" height={4} width={40} />

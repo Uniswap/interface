@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import Tooltip from 'src/assets/icons/tooltip.svg'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
 import { Modal } from 'src/components/modals/Modal'
 import { Text } from 'src/components/Text'
@@ -23,9 +23,9 @@ export function TooltipButton({ title, lines, size, ...rest }: Props) {
   const [showModal, setShowModal] = useState(false)
   return (
     <>
-      <Button onPress={() => setShowModal(true)} {...rest}>
+      <TouchableArea onPress={() => setShowModal(true)} {...rest}>
         <Tooltip height={size ?? DEFAULT_ICON_SIZE} width={size ?? DEFAULT_ICON_SIZE} />
-      </Button>
+      </TouchableArea>
       <Modal hide={() => setShowModal(false)} title={title} visible={showModal}>
         {lines.map((l) => (
           <Text mt="sm" textAlign="center" variant="bodyLarge">
@@ -48,13 +48,13 @@ export function TooltipInfoButton({ size, content, ...rest }: InfoButtonProps) {
   const [showModal, setShowModal] = useState(false)
   return (
     <>
-      <Button onPress={() => setShowModal(true)} {...rest}>
+      <TouchableArea onPress={() => setShowModal(true)} {...rest}>
         <InfoCircle
           color={theme.colors.textOnBrightSecondary}
           height={size ?? DEFAULT_ICON_SIZE}
           width={size ?? DEFAULT_ICON_SIZE}
         />
-      </Button>
+      </TouchableArea>
       <BottomSheetDetachedModal
         backgroundColor={theme.colors.background1}
         isVisible={showModal}

@@ -2,8 +2,8 @@ import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
-import { Button } from 'src/components/buttons/Button'
 import { TextButton } from 'src/components/buttons/TextButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -23,7 +23,7 @@ export function FavoriteHeaderRow({
         {isEditing ? t('Edit favorites') : t('Favorites')}
       </Text>
       {!isEditing ? (
-        <Button name={ElementName.Edit} onPress={onPress}>
+        <TouchableArea name={ElementName.Edit} onPress={onPress}>
           <TripleDots
             color={theme.colors.textSecondary}
             height={12}
@@ -31,7 +31,7 @@ export function FavoriteHeaderRow({
             strokeWidth="1"
             width={14}
           />
-        </Button>
+        </TouchableArea>
       ) : (
         <TextButton textColor="accentActive" textVariant="buttonLabelSmall" onPress={onPress}>
           {t('Done')}

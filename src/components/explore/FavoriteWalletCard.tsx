@@ -5,7 +5,7 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { removeWatchedAddress } from 'src/features/favorites/slice'
@@ -57,7 +57,7 @@ export default function FavoriteWalletCard({
         }
       }}
       {...rest}>
-      <Button
+      <TouchableArea
         borderRadius="lg"
         onPress={() => navigate(address)}
         onPressIn={() => preload(address)}>
@@ -72,7 +72,7 @@ export default function FavoriteWalletCard({
             variant="buttonLabelSmall"
           />
         </BaseCard.Shadow>
-      </Button>
+      </TouchableArea>
     </ContextMenu>
   )
 }
