@@ -1,7 +1,7 @@
 import { config } from 'src/config'
 
 export const uniswapUrls = {
-  helpUrl: 'https://help.uniswap.org',
+  helpUrl: 'https://support.uniswap.org',
   apiBaseUrl: getUniswapApiBaseUrl(),
   gasServiceUrl: getUniswapGasServiceUrl(),
   routingApiUrl: getUniswapRoutingApiUrl(),

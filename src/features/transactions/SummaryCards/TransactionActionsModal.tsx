@@ -80,7 +80,7 @@ export default function TransactionActionsModal({
       {
         key: ElementName.GetHelp,
         onPress: () => {
-          openUri(uniswapUrls.helpUrl, true)
+          openUri(`${uniswapUrls.helpUrl}/hc/en-us/requests/new`, true)
           handleClose()
         },
         render: renderOptionItem(t('Get help')),
