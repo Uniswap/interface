@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { Column, Row } from 'nft/components/Flex'
@@ -17,6 +18,8 @@ export const marketPlaceItems = {
   nftx: 'NFTX',
   opensea: 'OpenSea',
   x2y2: 'X2Y2',
+  cryptopunks: 'LarvaLabs',
+  sudoswap: 'SudoSwap',
 }
 
 const MarketplaceItem = ({
@@ -96,6 +99,8 @@ export const MarketplaceSelect = () => {
 
   const [isOpen, setOpen] = useState(!!selectedMarkets.length)
   const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
+  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
+  const graphQlMarkets = ['cryptopunks', 'sudoswap']
 
   return (
     <>
@@ -138,15 +143,17 @@ export const MarketplaceSelect = () => {
           </Box>
         </Box>
         <Column className={styles.filterDropDowns} paddingBottom="8" paddingLeft="0">
-          {Object.entries(marketPlaceItems).map(([value, title]) => (
-            <MarketplaceItem
-              key={value}
-              title={title}
-              value={value}
-              count={marketCount?.[value] || 0}
-              {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
-            />
-          ))}
+          {Object.entries(marketPlaceItems)
+            .filter(([value]) => isNftGraphQl || !graphQlMarkets.includes(value))
+            .map(([value, title]) => (
+              <MarketplaceItem
+                key={value}
+                title={title}
+                value={value}
+                count={marketCount?.[value] || 0}
+                {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
+              />
+            ))}
         </Column>
       </Box>
     </>
