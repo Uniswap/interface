@@ -1,4 +1,6 @@
-import { CellProps, Column } from 'react-table'
+import { BigNumber } from '@ethersproject/bignumber'
+import { useMemo } from 'react'
+import { CellProps, Column, Row } from 'react-table'
 
 import { CollectionTableColumn } from '../../types'
 import { ChangeCell, CollectionTitleCell, DiscreteNumberCell, EthCell, VolumeCell } from './Cells/Cells'
@@ -14,81 +16,115 @@ export enum ColumnHeaders {
   Owners = 'Owners',
 }
 
-const columns: Column<CollectionTableColumn>[] = [
-  {
-    Header: 'Collection name',
-    accessor: 'collection',
-    Cell: CollectionTitleCell,
-    disableSortBy: true,
-  },
-  {
-    id: ColumnHeaders.Floor,
-    Header: ColumnHeaders.Floor,
-    accessor: ({ floor }) => floor.value,
-    sortDescFirst: true,
-    Cell: function ethCell(cell: CellProps<CollectionTableColumn>) {
-      return (
-        <EthCell
-          value={cell.row.original.floor.value}
-          denomination={cell.row.original.denomination}
-          usdPrice={cell.row.original.usdPrice}
-        />
-      )
-    },
-  },
-  {
-    id: ColumnHeaders.FloorChange,
-    Header: ColumnHeaders.FloorChange,
-    accessor: ({ floor }) => floor.value,
-    sortDescFirst: true,
-    Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
-      return <ChangeCell change={cell.row.original.floor.change} />
-    },
-  },
-  {
-    id: ColumnHeaders.Volume,
-    Header: ColumnHeaders.Volume,
-    accessor: ({ volume }) => volume.value,
-    sortDescFirst: true,
-    Cell: function volumeCell(cell: CellProps<CollectionTableColumn>) {
-      return (
-        <VolumeCell
-          value={cell.row.original.volume.value}
-          denomination={cell.row.original.denomination}
-          usdPrice={cell.row.original.usdPrice}
-        />
-      )
-    },
-  },
-  {
-    id: ColumnHeaders.VolumeChange,
-    Header: ColumnHeaders.VolumeChange,
-    accessor: ({ volume }) => volume.value,
-    sortDescFirst: true,
-    Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
-      return <ChangeCell change={cell.row.original.volume.change} />
-    },
-  },
-  {
-    id: ColumnHeaders.Items,
-    Header: ColumnHeaders.Items,
-    accessor: 'totalSupply',
-    sortDescFirst: true,
-    Cell: function discreteNumberCell(cell: CellProps<CollectionTableColumn>) {
-      return <DiscreteNumberCell value={{ value: cell.row.original.totalSupply }} />
-    },
-  },
-  {
-    Header: ColumnHeaders.Owners,
-    accessor: ({ owners }) => owners.value,
-    sortDescFirst: true,
-    Cell: function discreteNumberCell(cell: CellProps<CollectionTableColumn>) {
-      return <DiscreteNumberCell value={cell.row.original.owners} />
-    },
-  },
-]
-
 const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
+  const floorSort = useMemo(() => {
+    return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
+      const aFloor = BigNumber.from(rowA.original.floor.value)
+      const bFloor = BigNumber.from(rowB.original.floor.value)
+
+      return aFloor.gte(bFloor) ? 1 : -1
+    }
+  }, [])
+
+  const floorChangeSort = useMemo(() => {
+    return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
+      return Math.round(rowA.original.floor.change * 100000) >= Math.round(rowB.original.floor.change * 100000) ? 1 : -1
+    }
+  }, [])
+
+  const volumeSort = useMemo(() => {
+    return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
+      return Math.round(rowA.original.volume.value * 100000) >= Math.round(rowB.original.volume.value * 100000) ? 1 : -1
+    }
+  }, [])
+
+  const volumeChangeSort = useMemo(() => {
+    return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
+      return Math.round(rowA.original.volume.change * 100000) >= Math.round(rowB.original.volume.change * 100000)
+        ? 1
+        : -1
+    }
+  }, [])
+
+  const columns: Column<CollectionTableColumn>[] = useMemo(
+    () => [
+      {
+        Header: 'Collection name',
+        accessor: 'collection',
+        Cell: CollectionTitleCell,
+        disableSortBy: true,
+      },
+      {
+        id: ColumnHeaders.Floor,
+        Header: ColumnHeaders.Floor,
+        accessor: ({ floor }) => floor.value,
+        sortType: floorSort,
+        Cell: function ethCell(cell: CellProps<CollectionTableColumn>) {
+          return (
+            <EthCell
+              value={cell.row.original.floor.value}
+              denomination={cell.row.original.denomination}
+              usdPrice={cell.row.original.usdPrice}
+            />
+          )
+        },
+      },
+      {
+        id: ColumnHeaders.FloorChange,
+        Header: ColumnHeaders.FloorChange,
+        accessor: ({ floor }) => floor.value,
+        sortDescFirst: true,
+        sortType: floorChangeSort,
+        Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
+          return <ChangeCell change={cell.row.original.floor.change} />
+        },
+      },
+      {
+        id: ColumnHeaders.Volume,
+        Header: ColumnHeaders.Volume,
+        accessor: ({ volume }) => volume.value,
+        sortDescFirst: true,
+        sortType: volumeSort,
+        Cell: function volumeCell(cell: CellProps<CollectionTableColumn>) {
+          return (
+            <VolumeCell
+              value={cell.row.original.volume.value}
+              denomination={cell.row.original.denomination}
+              usdPrice={cell.row.original.usdPrice}
+            />
+          )
+        },
+      },
+      {
+        id: ColumnHeaders.VolumeChange,
+        Header: ColumnHeaders.VolumeChange,
+        accessor: ({ volume }) => volume.value,
+        sortDescFirst: true,
+        sortType: volumeChangeSort,
+        Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
+          return <ChangeCell change={cell.row.original.volume.change} />
+        },
+      },
+      {
+        id: ColumnHeaders.Items,
+        Header: ColumnHeaders.Items,
+        accessor: 'totalSupply',
+        sortDescFirst: true,
+        Cell: function discreteNumberCell(cell: CellProps<CollectionTableColumn>) {
+          return <DiscreteNumberCell value={{ value: cell.row.original.totalSupply }} />
+        },
+      },
+      {
+        Header: ColumnHeaders.Owners,
+        accessor: ({ owners }) => owners.value,
+        sortDescFirst: true,
+        Cell: function discreteNumberCell(cell: CellProps<CollectionTableColumn>) {
+          return <DiscreteNumberCell value={cell.row.original.owners} />
+        },
+      },
+    ],
+    []
+  )
   return (
     <>
       <Table
