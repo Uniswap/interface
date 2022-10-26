@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { bodySmall, buttonTextSmall } from 'nft/css/common.css'
+import { bodySmall } from 'nft/css/common.css'
 import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const bagRow = style([
@@ -110,17 +110,6 @@ export const removeButton = style([
       background: `linear-gradient(rgba(76, 130, 251, 0.24), rgba(76, 130, 251, .24)), linear-gradient(${vars.color.backgroundInteractive}, ${vars.color.backgroundInteractive})`,
     },
   },
-])
-
-export const removeBagRowButton = style([
-  buttonTextSmall,
-  sprinkles({
-    background: 'backgroundInteractive',
-    color: 'textPrimary',
-    paddingX: '14',
-    paddingY: '12',
-    borderRadius: '12',
-  }),
 ])
 
 export const bagRowImage = sprinkles({
