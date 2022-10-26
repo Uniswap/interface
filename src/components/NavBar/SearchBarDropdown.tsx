@@ -79,7 +79,7 @@ export const SearchBarDropdownSection = ({
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               traceEvent={() =>
-                sendAnalyticsEvent(EventName.NAVBAR_SEARCH_EXITED, {
+                sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, {
                   position: index,
                   selected_type: 'token',
                   suggestion_count: suggestions.length,
