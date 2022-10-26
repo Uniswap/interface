@@ -67,8 +67,8 @@ export default function TokenDetails() {
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
   const navigateToWidgetSelectedToken = useCallback(
-    (update: Currency) => {
-      const address = update.isNative ? NATIVE_CHAIN_ID : update.address
+    (token: Currency) => {
+      const address = token.isNative ? NATIVE_CHAIN_ID : token.address
       startTransition(() => navigate(`/tokens/${chainName}/${address}`))
     },
     [chainName, navigate]

@@ -44,7 +44,6 @@ export interface WidgetProps {
   onReviewSwapClick?: OnReviewSwapClick
 }
 
-/** A widget locked to a token (if provided). */
 export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
   const { connector, provider } = useWeb3React()
   const locale = useActiveLocale()

@@ -28,15 +28,14 @@ export function useSyncWidgetInputs({
   const [amount, setAmount] = useState<SwapValue['amount']>(EMPTY_AMOUNT)
   const [tokens, setTokens] = useState<SwapTokens>({ [Field.OUTPUT]: defaultToken })
 
-  const hasDefaultToken = useCallback(
-    (tokens: SwapTokens) => !defaultToken || Object.values(tokens).some((token) => token?.equals(defaultToken)),
+  const shouldDefault = useCallback(
+    (tokens: SwapTokens) => defaultToken && !Object.values(tokens).some((token) => token?.equals(defaultToken)),
     [defaultToken]
   )
-  useEffect(() => {
-    if (!hasDefaultToken(tokens)) {
-      setTokens({ [Field.OUTPUT]: defaultToken })
-    }
-  }, [defaultToken, hasDefaultToken, tokens])
+  useEffect(
+    () => setTokens((tokens) => (shouldDefault(tokens) ? { [Field.OUTPUT]: defaultToken } : tokens)),
+    [defaultToken, shouldDefault]
+  )
 
   const onAmountChange = useCallback(
     (field: Field, amount: string, origin?: 'max') => {
@@ -76,12 +75,12 @@ export function useSyncWidgetInputs({
         [selectingField]: token,
         [otherField]: otherToken,
       }
-      if (!hasDefaultToken(update)) {
+      if (shouldDefault(update)) {
         onTokenChange?.(update[Field.OUTPUT] || update[Field.INPUT] || token)
       }
       setTokens(update)
     },
-    [hasDefaultToken, onTokenChange, selectingField, tokens]
+    [onTokenChange, selectingField, shouldDefault, tokens]
   )
   const tokenSelector = (
     <CurrencySearchModal
@@ -97,9 +96,9 @@ export function useSyncWidgetInputs({
     () => ({
       type,
       amount,
-      ...(!hasDefaultToken(tokens) ? { [Field.OUTPUT]: defaultToken } : tokens),
+      ...tokens,
     }),
-    [amount, defaultToken, hasDefaultToken, tokens, type]
+    [amount, tokens, type]
   )
   const valueHandlers: SwapEventHandlers = useMemo(
     () => ({ onAmountChange, onSwitchTokens, onTokenSelectorClick }),
