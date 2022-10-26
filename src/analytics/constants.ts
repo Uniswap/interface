@@ -16,7 +16,7 @@ export enum EventName {
   NAVBAR_SEARCH_EXITED = 'Navbar Search Exited',
   NFT_ACTIVITY_SELECTED = 'NFT Activity Selected',
   NFT_FILTER_OPENED = 'NFT Collection Filter Opened',
-  NFT_FILTER_SELECTED = 'NFT Filter selected',
+  NFT_FILTER_SELECTED = 'NFT Filter Selected',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
   SWAP_MAX_TOKEN_AMOUNT_SELECTED = 'Swap Max Token Amount Selected',
