@@ -28,19 +28,18 @@ const IconWrapper = styled.button`
   background-color: transparent;
   border-radius: 8px;
   border: none;
+  color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
   display: flex;
   padding: 2px;
-  transition: 125ms ease background-color;
+  opacity: 1;
+  transition: 125ms ease opacity;
   :hover {
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+    opacity: 0.6;
   }
   :active {
-    background-color: ${({ theme }) => theme.stateOverlayPressed};
+    opacity: 0.4;
   }
-`
-const StyledBagCloseIcon = styled(BagCloseIcon)`
-  color: ${({ theme }) => theme.textSecondary};
 `
 interface BagHeaderProps {
   numberOfAssets: number
@@ -55,7 +54,7 @@ export const BagHeader = ({ numberOfAssets, toggleBag, resetFlow, isProfilePage 
       <Row className={styles.header}>
         <ThemedText.HeadlineSmall>{isProfilePage ? 'Sell NFTs' : 'My bag'}</ThemedText.HeadlineSmall>
         <IconWrapper onClick={toggleBag}>
-          <StyledBagCloseIcon />
+          <BagCloseIcon />
         </IconWrapper>
       </Row>
       {numberOfAssets > 0 && (
