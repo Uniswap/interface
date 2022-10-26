@@ -22,6 +22,7 @@ interface Props {
   showSuccess?: boolean // show succes indicator
   endAdornment?: string //text to auto to end of input string
   liveCheck?: boolean
+  autoCorrect?: boolean
   onBlur?: () => void
   onFocus?: () => void
   blurOnSubmit?: boolean
@@ -36,6 +37,7 @@ export function GenericImportForm({
   showSuccess,
   endAdornment,
   liveCheck,
+  autoCorrect,
   onBlur,
   onFocus,
   blurOnSubmit,
@@ -83,7 +85,7 @@ export function GenericImportForm({
             <TextInput
               autoFocus
               autoCapitalize="none"
-              autoCorrect={false}
+              autoCorrect={Boolean(autoCorrect)}
               backgroundColor="background1"
               blurOnSubmit={blurOnSubmit ?? false}
               fontSize={18}

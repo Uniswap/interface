@@ -70,6 +70,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
       title={t('Enter your recovery phrase')}>
       <Flex pt="lg">
         <GenericImportForm
+          autoCorrect
           liveCheck
           error={error}
           placeholderLabel={t('recovery phrase')}
