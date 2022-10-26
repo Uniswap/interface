@@ -3,7 +3,7 @@ import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft
 import { fetchPrice } from 'nft/utils'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { fetchTrendingCollections } from '../../queries'
@@ -59,8 +59,6 @@ const StyledSelectorText = styled(ThemedText.SubHeader)<{ active: boolean }>`
 const TrendingCollections = () => {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.OneDay)
   const [isEthToggled, setEthToggled] = useState(true)
-
-  const theme = useTheme()
 
   const { isSuccess, data } = useQuery(
     ['trendingCollections', timePeriod],

@@ -123,7 +123,7 @@ const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
         },
       },
     ],
-    []
+    [floorChangeSort, floorSort, volumeChangeSort, volumeSort]
   )
   return (
     <>
