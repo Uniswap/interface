@@ -14,24 +14,27 @@ import { ThemedText } from 'theme'
 
 import * as styles from './BagFooter.css'
 
-const Footer = styled(Column)`
+const Footer = styled.div<{ $showWarning: boolean }>`
   border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
   color: ${({ theme }) => theme.textPrimary};
+  display: flex;
+  flex-direction: column;
   padding: 12px 16px;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
+  border-top-left-radius: ${({ $showWarning }) => ($showWarning ? '0' : '12')}px;
+  border-top-right-radius: ${({ $showWarning }) => ($showWarning ? '0' : '12')}px;
 `
 
 const WarningIcon = styled(AlertTriangle)`
   width: 14px;
   margin-right: 4px;
-  color: ${({ theme }) => theme.deprecated_warning};
+  color: ${({ theme }) => theme.accentWarning};
 `
 const WarningText = styled(ThemedText.BodyPrimary)`
   align-items: center;
   color: ${({ theme }) => theme.accentWarning};
   display: flex;
-  font-size: 14px;
   justify-content: center;
   margin: 12px 0 !important;
   text-align: center;
@@ -75,7 +78,7 @@ export const BagFooter = ({
 
   return (
     <Column className={styles.footerContainer}>
-      <Footer borderTopLeftRadius={showWarning ? '0' : '12'} borderTopRightRadius={showWarning ? '0' : '12'}>
+      <Footer $showWarning={showWarning}>
         <Column gap="4" paddingTop="8" paddingBottom="20">
           <Row justifyContent="space-between">
             <Box>
@@ -92,7 +95,7 @@ export const BagFooter = ({
           </Row>
         </Column>
         {showWarning && (
-          <WarningText>
+          <WarningText fontSize="14px" lineHeight="20px">
             <WarningIcon />
             {!sufficientBalance ? (
               `Insufficient funds (${formatWeiToDecimal(balance.toString())} ETH)`
