@@ -48,7 +48,7 @@ import { useWeb3React } from '@web3-react/core'
 
 type SortStateKey = 'asc' | 'desc' | undefined;
 
-const PAIRS_API = process.env.NODE_ENV == 'development' ? 'http://localhost:3001/api/pairs?network=' :  `https://kiba-api.vercel.app/api/pairs?network=`
+const PAIRS_API = process.env.NODE_ENV == 'development' ? 'http://localhost:3001/api/pairs?network=' : `https://kiba-api.vercel.app/api/pairs?network=`
 type SortState = {
   network: SortStateKey,
   symbol: SortStateKey
@@ -181,7 +181,7 @@ export const LimitOrders = () => {
   const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId]);
   const src = React.useMemo(() =>
     isBinance ? 'https://cashewnutz.github.io/flape/index.html' : 'https://cashewnutz.github.io/flap/index.html', [isBinance])
-  return <div style={{ width: '100%' }}>
+  return <div style={{ maxWidth: 480, margin: '0 auto' }}>
     <GelatoLimitOrderPanel />
     <GelatoLimitOrdersHistoryPanel />
   </div>
@@ -211,7 +211,7 @@ interface Pair {
     address: string;
     name: string;
     symbol: string;
-    };
+  };
   priceNative: string;
   priceUsd?: string;
   txns: {
@@ -262,7 +262,7 @@ export interface Token {
   safe?: boolean;
   buyTax?: number | null;
   sellTax?: number | null;
-  error?:string // error that occurred when trying to swap the token
+  error?: string // error that occurred when trying to swap the token
   liquidity: {
     eth?: number
     usd?: number
@@ -270,7 +270,7 @@ export interface Token {
   screenerToken?: Pair;
   pairs?: Pair[];
   pairAddress?: string
-  lastUpdated?:number
+  lastUpdated?: number
 }
 
 const StyledDiv = styled.div`
@@ -314,8 +314,8 @@ export const LockedLiquidity = ({ symbol, ...rest }: Token) => {
   return null
 }
 
-const Row = styled.tr<{item: Token}>`
-  ${props => [props.item.sellTax, props.item.buyTax].some((tax) => Boolean(tax) && Boolean((tax ?? 0) > 50)) ? 
+const Row = styled.tr<{ item: Token }>`
+  ${props => [props.item.sellTax, props.item.buyTax].some((tax) => Boolean(tax) && Boolean((tax ?? 0) > 50)) ?
     `
      filter: blur(0.85px);
      opacity:0.5;
@@ -397,7 +397,7 @@ export const FomoPage = () => {
         || a?.symbol.toLowerCase().includes(searchValue?.toLowerCase());
       return true;
     });
-    if (shouldFlagSafe) 
+    if (shouldFlagSafe)
       sorted = sorted.filter(i => !!i.safe)
     const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
     const endIndex = startIndex + AMT_PER_PAGE;
@@ -482,7 +482,7 @@ export const FomoPage = () => {
 
       return fetch
         (
-         `${PAIRS_API}${networkString}`,
+          `${PAIRS_API}${networkString}`,
           { method: "GET", redirect: 'follow' }
         ).then(async (response) => {
           const dataV = await response.json()
@@ -494,7 +494,7 @@ export const FomoPage = () => {
             [
               ...sorted.filter((item: any) => item.network?.toLowerCase() === networkString?.toLowerCase() && !data?.some((i: any) => item?.addr === i?.addr))
             ],
-            item => item[activeSort?.key || 'timestamp'] ,
+            item => item[activeSort?.key || 'timestamp'],
             activeSort?.direction || 'desc'
           );
           const nonExistingItems = newDataValue.filter(item => !data?.some(dataItem => dataItem.addr == item.addr))
@@ -524,7 +524,7 @@ export const FomoPage = () => {
         })
         .catch(finallyErrorClause)
         .finally(finallyClause)
-        
+
     } else {
       return Promise.resolve()
     }
@@ -536,15 +536,15 @@ export const FomoPage = () => {
       const existingtoken = data?.find(item => item.addr == token.addr)
       if (existingtoken && existingtoken.screenerToken) {
         let screenerToken = existingtoken.screenerToken
-        if(token.screenerToken) {
+        if (token.screenerToken) {
           screenerToken = (existingtoken?.lastUpdated || 0) < (token?.lastUpdated || 0) ? token.screenerToken : existingtoken.screenerToken
         }
         return {
-        ...existingtoken,
-        ...token,
-        screenerToken
+          ...existingtoken,
+          ...token,
+          screenerToken
+        }
       }
-    }
       else if (!existingtoken || token.screenerToken) {
         return token;
       }
@@ -554,8 +554,8 @@ export const FomoPage = () => {
 
 
   React.useEffect(() => {
-    setLoading (true)
-    
+    setLoading(true)
+
     const interval = setInterval(async () => {
       await getData()
     }, 120000)
@@ -571,7 +571,7 @@ export const FomoPage = () => {
 
   const fetchedText = React.useMemo(() => lastFetched ? moment(lastFetched).fromNow() : undefined, [moment(lastFetched).fromNow()])
   const kibaBalance = useKiba(account)
-  
+
 
 
   const onSortClick = (key: keyof Token) => {
@@ -592,13 +592,13 @@ export const FomoPage = () => {
     if (activeKey && activeKey?.key !== key) {
       setSortState({
         ...sortState,
-        [key]: (sortState as any)[key] !== undefined &&  (sortState as any)[key] === 'asc' ? 'desc' : 'asc',
+        [key]: (sortState as any)[key] !== undefined && (sortState as any)[key] === 'asc' ? 'desc' : 'asc',
         [activeKey.key]: undefined
       })
     } else {
       setSortState({
         ...sortState,
-        [key]:  (sortState as any)[key] !== undefined &&  (sortState as any)[key] === 'asc' ? 'desc' : 'asc',
+        [key]: (sortState as any)[key] !== undefined && (sortState as any)[key] === 'asc' ? 'desc' : 'asc',
       })
     }
   }
@@ -650,7 +650,7 @@ export const FomoPage = () => {
     }
   }
 
-  const liquidityString = React.useMemo(() => 
+  const liquidityString = React.useMemo(() =>
     (item: Token) => {
       let liquidity: number | undefined = undefined
       if (item?.liquidity?.usd) {
@@ -661,139 +661,139 @@ export const FomoPage = () => {
       return liquidity?.toFixed(2)
     }, [data])
 
-const getChartLink = (item: Token)  => {
-  const network = item.network.toLowerCase() == 'eth' ? 'ethereum' : item?.network?.toLowerCase()
-  if (network && item.screenerToken?.pairAddress) return `/selective-charts/${network}/${item.screenerToken?.pairAddress}`
-  if (network && item.pairAddress) return `/selective-charts/${network}/${item.pairAddress}s`
+  const getChartLink = (item: Token) => {
+    const network = item.network.toLowerCase() == 'eth' ? 'ethereum' : item?.network?.toLowerCase()
+    if (network && item.screenerToken?.pairAddress) return `/selective-charts/${network}/${item.screenerToken?.pairAddress}`
+    if (network && item.pairAddress) return `/selective-charts/${network}/${item.pairAddress}s`
 
 
-  return `/selective-charts/${item.addr}/${item.name}/${item.symbol}/18`
-}
+    return `/selective-charts/${item.addr}/${item.name}/${item.symbol}/18`
+  }
 
 
   const TableMemo = React.useCallback(() => (
-    !data?.length && !pagedData?.length && !searchValue && !loading ? 
-    RefetchNode : 
-    !loading && !!pagedData?.length && pagedData.map((item, index) => (
-      <CSSTransition
-        style={{postion:'relative'}}
-        key={`row_${index}_${item.addr}`}
-        in={index <= 3}
-        classNames={"alert"}
-        timeout={600}
-      >
-        <Row item={item}>
- 
-          <React.Fragment>
-          <td style={{ fontSize: 12 }}>
-            <span>{item.name}</span>
-            {[item.sellTax, item.buyTax].some((tax) => Boolean(tax) && Boolean((tax ?? 0) > 50)) && (
-              <div className="rug-overlay">
-                RUG PULLED
-              </div>
-            )}
-          </td>
-          <td style={{ width: '3%' }}>{item.symbol}</td>
-          {/* CONTRACT ADDRESS AND LINKS */}
-          <td>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-              <small>{item.addr}</small>
-              {/* Etherscan / Explorer Link */}
-              <ExternalLinkIcon
-                color={iconColor}
-                style={{ stroke:iconColor, color: iconColor, fill: theme.backgroundInteractive }}
-                href={getNetworkLink(item)} />
+    !data?.length && !pagedData?.length && !searchValue && !loading ?
+      RefetchNode :
+      !loading && !!pagedData?.length && pagedData.map((item, index) => (
+        <CSSTransition
+          style={{ postion: 'relative' }}
+          key={`row_${index}_${item.addr}`}
+          in={index <= 3}
+          classNames={"alert"}
+          timeout={600}
+        >
+          <Row item={item}>
 
-              {/* Chart Link */}
-              {(network === 'eth' || network =='bsc') && <StyledInternalLink to={getChartLink(item)}>
-                <BarChart2 style={{ color: '#F76C1D' }} />
-              </StyledInternalLink>}
+            <React.Fragment>
+              <td style={{ fontSize: 12 }}>
+                <span>{item.name}</span>
+                {[item.sellTax, item.buyTax].some((tax) => Boolean(tax) && Boolean((tax ?? 0) > 50)) && (
+                  <div className="rug-overlay">
+                    RUG PULLED
+                  </div>
+                )}
+              </td>
+              <td style={{ width: '3%' }}>{item.symbol}</td>
+              {/* CONTRACT ADDRESS AND LINKS */}
+              <td>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                  <small>{item.addr}</small>
+                  {/* Etherscan / Explorer Link */}
+                  <ExternalLinkIcon
+                    color={iconColor}
+                    style={{ stroke: iconColor, color: iconColor, fill: theme.backgroundInteractive }}
+                    href={getNetworkLink(item)} />
 
-              {/* Buy Link */}
-              {network === 'eth' && <span >
-                <DollarSign onClick={() => setShowModal(item)} style={{ cursor:'pointer', color: '#779681' }} />
-              </span>}
+                  {/* Chart Link */}
+                  {(network === 'eth' || network == 'bsc') && <StyledInternalLink to={getChartLink(item)}>
+                    <BarChart2 style={{ color: '#F76C1D' }} />
+                  </StyledInternalLink>}
 
-              {network === 'bsc' &&
-                <ExternalLink href={`https://kibaswapbsc.app/#/swap?outputCurrency=${item.addr}`}>
-                  <DollarSign style={{ color: '#779681' }} />
-                </ExternalLink>}
-            </div>
-          </td>
+                  {/* Buy Link */}
+                  {network === 'eth' && <span >
+                    <DollarSign onClick={() => setShowModal(item)} style={{ cursor: 'pointer', color: '#779681' }} />
+                  </span>}
 
-          {(<td style={{  textAlign: "center" }}>
-          <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-            {['bsc', 'eth'].includes(network) && <>
-              {item?.safe === undefined && <Loader />}
-              {item?.safe === true && <CheckCircle fontSize={'18px'} fill={'green'} fillOpacity={0.7} />}
-              {item?.safe === false && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />}
-            </>}
+                  {network === 'bsc' &&
+                    <ExternalLink href={`https://kibaswapbsc.app/#/swap?outputCurrency=${item.addr}`}>
+                      <DollarSign style={{ color: '#779681' }} />
+                    </ExternalLink>}
+                </div>
+              </td>
 
-            {item?.error && <ItemTooltip error={item.error} /> }
-            {!['bsc', 'eth'].includes(item.network?.toLowerCase()) && <p>Switch networks to use this feature</p>}
-            </div>
-          </td>)}
-          {accessDenied === false && (network === 'eth' || network ==='bsc') && (
-            <td>
-              <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
-             {Boolean(liquidityString(item)) && <Badge variant={BadgeVariant.PRIMARY}>{`$${abbreviateNumber(liquidityString(item))}`}</Badge>}
-                {['bsc', 'eth'].includes(item.network.toLowerCase()) &&
-                  <>
-                    {!modalShowing &&
-                      <LinkStyledButton style={{ fontSize: 10, fontFamily: 'Archivo Narrow', borderRadius: 10, fontWeight: 600, padding: 8, color: '#4F4F62' }}
-                        onClick={(e: any) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          setModalShowing(item);
-                        }}>More
-                      </LinkStyledButton>
+              {(<td style={{ textAlign: "center" }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                  {['bsc', 'eth'].includes(network) && <>
+                    {item?.safe === undefined && <Loader />}
+                    {item?.safe === true && <CheckCircle fontSize={'18px'} fill={'green'} fillOpacity={0.7} />}
+                    {item?.safe === false && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />}
+                  </>}
+
+                  {item?.error && <ItemTooltip error={item.error} />}
+                  {!['bsc', 'eth'].includes(item.network?.toLowerCase()) && <p>Switch networks to use this feature</p>}
+                </div>
+              </td>)}
+              {accessDenied === false && (network === 'eth' || network === 'bsc') && (
+                <td>
+                  <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
+                    {Boolean(liquidityString(item)) && <Badge variant={BadgeVariant.PRIMARY}>{`$${abbreviateNumber(liquidityString(item))}`}</Badge>}
+                    {['bsc', 'eth'].includes(item.network.toLowerCase()) &&
+                      <>
+                        {!modalShowing &&
+                          <LinkStyledButton style={{ fontSize: 10, fontFamily: 'Archivo Narrow', borderRadius: 10, fontWeight: 600, padding: 8, color: '#4F4F62' }}
+                            onClick={(e: any) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setModalShowing(item);
+                            }}>More
+                          </LinkStyledButton>
+                        }
+                        {!!modalShowing && modalShowing?.addr === item.addr && (
+                          <DetailsModal
+                            token={item}
+                            address={item.addr}
+                            isOpen={modalShowing}
+                            onDismiss={() => setModalShowing(undefined)}
+                            network={item.network.toLowerCase() as 'bsc' | 'eth'}
+                            symbol={item.symbol} />
+                        )}
+                      </>
                     }
-                    {!!modalShowing && modalShowing?.addr === item.addr && (
-                      <DetailsModal 
-                        token={item}
-                        address={item.addr}
-                        isOpen={modalShowing}
-                        onDismiss={() => setModalShowing(undefined)}
-                        network={item.network.toLowerCase() as 'bsc' | 'eth'}
-                        symbol={item.symbol} />
-                    )}
-                  </>
-                }
-              </div>
-            </td>
-          )}
-          {['bsc', 'eth'].includes(network) && (
-            <td>
-              {(item?.buyTax || item?.buyTax === 0) && <Badge style={{ fontSize: 14 }} variant={BadgeVariant.POSITIVE}>
+                  </div>
+                </td>
+              )}
+              {['bsc', 'eth'].includes(network) && (
+                <td>
+                  {(item?.buyTax || item?.buyTax === 0) && <Badge style={{ fontSize: 14 }} variant={BadgeVariant.POSITIVE}>
 
-                {<small>{item.buyTax}% buy</small>}
-              </Badge>}
-              {(!item.buyTax && item?.buyTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
-            </td>
-          )}
-          {['bsc', 'eth'].includes(network) && (
-            <td>
-              {(item?.sellTax || item?.sellTax === 0) && <Badge style={{ fontSize: 14, color: theme.text1 }} color={theme.text1} variant={BadgeVariant.NEGATIVE}>
+                    {<small>{item.buyTax}% buy</small>}
+                  </Badge>}
+                  {(!item.buyTax && item?.buyTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
+                </td>
+              )}
+              {['bsc', 'eth'].includes(network) && (
+                <td>
+                  {(item?.sellTax || item?.sellTax === 0) && <Badge style={{ fontSize: 14, color: theme.text1 }} color={theme.text1} variant={BadgeVariant.NEGATIVE}>
 
-                {<small>{item.sellTax}% sell</small>}
+                    {<small>{item.sellTax}% sell</small>}
 
-              </Badge>}
-              {(!item?.sellTax && item?.sellTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
-            </td>
-          )}
-          <td>{moment(+item.timestamp * 1000).fromNow()}</td>
-          </React.Fragment>
-        </Row>
-      </CSSTransition>
-    ))), [data, setShowModal, showModal, modalShowing, RefetchNode, setModalShowing, pagedData, error, searchValue, loading])
+                  </Badge>}
+                  {(!item?.sellTax && item?.sellTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
+                </td>
+              )}
+              <td>{moment(+item.timestamp * 1000).fromNow()}</td>
+            </React.Fragment>
+          </Row>
+        </CSSTransition>
+      ))), [data, setShowModal, showModal, modalShowing, RefetchNode, setModalShowing, pagedData, error, searchValue, loading])
 
   React.useEffect(() => {
     const active = getActiveSort()
@@ -820,7 +820,7 @@ const getChartLink = (item: Token)  => {
 
   return (
     <DarkCard style={{ maxWidth: 1200 }}>
-    <SwapTokenForTokenModal item={showModal as Token} isOpen={Boolean(showModal && showModal.addr)} onDismiss={() => setShowModal(undefined)} />
+      <SwapTokenForTokenModal item={showModal as Token} isOpen={Boolean(showModal && showModal.addr)} onDismiss={() => setShowModal(undefined)} />
       <Wrapper style={{ color: theme.text1, overflow: 'auto', padding: '9px 14px' }}>
         <div style={{ marginBottom: 10 }}>
           <h1 style={{ fontFamily: 'Open Sans', fontWeight: 'normal' }}>KibaFomo &nbsp;
@@ -853,7 +853,7 @@ const getChartLink = (item: Token)  => {
             }} variant={network === 'ftm' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>FTM</Badge>
             <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => {
               if (network == 'poly' || loading) return;
-              setLoading(true );
+              setLoading(true);
               setNetwork('poly')
             }} variant={network === 'poly' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>POLY</Badge>
             <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => {
@@ -895,7 +895,7 @@ const getChartLink = (item: Token)  => {
             type={'search'}
           />
         </div>
-        {accessDenied === false && <ul style={{ display:'flex', flexFlow: 'row', justifyContent: 'center', alignItems: 'center', listStyle: 'none' }}>
+        {accessDenied === false && <ul style={{ display: 'flex', flexFlow: 'row', justifyContent: 'center', alignItems: 'center', listStyle: 'none' }}>
           {getPaginationGroup().map((number) => (
             <li style={{
               color: number === page ? theme.secondary1 : theme.text1,
@@ -950,10 +950,10 @@ const getChartLink = (item: Token)  => {
                 <Info onMouseEnter={() => setShowHpInfo(true)} onMouseLeave={() => setShowHpInfo(false)} />
               </Tooltip>
             </th>}
-           
+
             {accessDenied === false && ['bsc', 'eth'].includes(network) && (
               <>
- { <th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>Liquidity
+                {<th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>Liquidity
                   {getActiveSort()?.key === 'liquidity' && <>
                     {getActiveSort()?.direction === 'asc' && <ChevronUp />}
                     {getActiveSort()?.direction === 'desc' && <ChevronDown />}

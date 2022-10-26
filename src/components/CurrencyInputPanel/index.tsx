@@ -33,7 +33,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '5px' : '5px')};
   background-color: ${({ theme, hideInput }) => (hideInput ? theme.bg6 : 'transparent')};
-  background: ${props =>  props.theme.blue4};
+  background: ${props => props.theme.blue4};
   z-index: 1;
   border: 0px solid #637EEA;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
@@ -49,7 +49,7 @@ const FixedContainer = styled.div`
   height: 100%;
   position: absolute;
   border-radius: 0px;
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.bg0} !important;
   opacity: 0.95;
   display: flex;
   align-items: center;
@@ -130,9 +130,10 @@ const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
 `
 
 const StyledTokenName = styled.span<{ isMobile?: boolean, active?: boolean }>`
+  color: ${({ theme }) => (theme.text1)}},
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active, isMobile }) => isMobile ? '14px' : (active ? '20px' : '20px')};
-  font-family: ${({ active }) => (active ? 'Poppins' : 'Poppins')};
+  font-family: 'Poppins';
   font-weight: ${({ active }) => (active ? '700' : '500')};
 `
 

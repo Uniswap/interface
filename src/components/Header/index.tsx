@@ -24,8 +24,8 @@ import useTheme from 'hooks/useTheme'
 export type EmbedModel = {
   showTrending?: boolean
   showChartInfo?: boolean
-  showChartTrades?:boolean
-  embedMode:boolean
+  showChartTrades?: boolean
+  embedMode: boolean
   theme?: string
 }
 
@@ -41,7 +41,7 @@ export const useIsEmbedMode = (): EmbedModel => {
     const model = {
       showChartInfo: info == '0' ? false : Boolean(info),
       showTrending: trending == '0' ? false : Boolean(trending),
-      showChartTrades: trades =='0' ? false : Boolean(trades),
+      showChartTrades: trades == '0' ? false : Boolean(trades),
       embedMode: true,
       theme
     }
@@ -361,7 +361,7 @@ export default function Header() {
   const [width, setWidth] = useState<number>(window.innerWidth)
   const [showGasTt, setShowGasTt] = React.useState(false)
   const onMouseEnterGasIcon = () => setShowGasTt(true);
-  const onMouseExitGasIcon = () => setShowGasTt(false)  
+  const onMouseExitGasIcon = () => setShowGasTt(false)
   const [showETHValue, setShowETHValue] = React.useState(!!localStorage.getItem('show_balance'))
   const setEThVisible = () => setEthBalanceVisisbleCallback(!showETHValue);
   const isMobile: boolean = width <= 768
@@ -369,7 +369,7 @@ export default function Header() {
   const [showNotify, setShowNotify] = React.useState(!!localStorage.getItem('subscribed') && localStorage.getItem('subscribed') !== 'false');
   const dateString = localStorage.getItem('notificationDate') as string;
   const [lastNotified, setLastNotified] = React.useState<Date | undefined>(dateString ? new Date(+dateString) : undefined)
- 
+
   // side effect
   React.useEffect(() => {
     const dateMath = lastNotified ? new Date(lastNotified?.getTime() + 5 * 60000) : undefined
@@ -405,7 +405,7 @@ export default function Header() {
       .then((response) => {
         setGas(response.result)
       }).catch(error)
-  },[])
+  }, [])
 
   const handleWindowSizeChange = React.useCallback(() => {
     setWidth(window.innerWidth)
@@ -418,7 +418,7 @@ export default function Header() {
       showConfirmButton: true,
       confirmButtonText: showNotify ? 'Unsubscribe' : "Subscribe",
       showCancelButton: true,
-      icon: showNotify ? 'info' :  'question',
+      icon: showNotify ? 'info' : 'question',
     }).then(({ isConfirmed }) => {
       if (showNotify && isConfirmed) {
         setShowNotify(() => false)
@@ -441,7 +441,7 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account?.toLowerCase() ?? '']
   const [darkMode] = useDarkModeManager()
-  const theme =useTheme()
+  const theme = useTheme()
 
   return (
     <>
@@ -479,13 +479,14 @@ export default function Header() {
             </StyledNavLink>
           )}
 
-          <StyledNavLink   isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/selective') ||
-              pathname.startsWith('/selective-charts') ||
-              pathname.startsWith('/selective-charting')
-            } id={`chart-nav-link`} to={'/selective-charting'}>
-            <Trans>Charts <sub>↗</sub></Trans>
+          <StyledNavLink isActive={(match, { pathname }) =>
+            Boolean(match) ||
+            pathname.startsWith('/selective') ||
+            pathname.startsWith('/selective-charts') ||
+            pathname.startsWith('/selective-charting')
+          } id={`chart-nav-link`} to={'/selective-charting'}>
+            <Trans>Charts</Trans>
+            {/* <Trans>Charts <sub>↗</sub></Trans> */}
           </StyledNavLink>
 
           <div
@@ -500,7 +501,7 @@ export default function Header() {
           >
             {' '}
             <span style={{ cursor: 'pointer', display: 'flex', flexFlow: 'row wrap', alignItems: 'center' }}>
-              <img   style={{ borderRadius:'50%', maxWidth: 25,  }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgDCqNz9Kfr-ktZgHR_z8EwmZAkPeX4s6ifw&usqp=CAU'}
+              <img style={{ borderRadius: '50%', maxWidth: 25, }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgDCqNz9Kfr-ktZgHR_z8EwmZAkPeX4s6ifw&usqp=CAU'}
               />
               {gas && (
                 <span style={{ color: theme.text1, marginLeft: 5, fontSize: 14, fontWeight: 'bold' }}>
@@ -531,8 +532,8 @@ export default function Header() {
         </HeaderLinks>
         <HeaderControls>
           <HeaderElement>
-          {!!account ? <NetworkCard /> : ''}
-            <BurntKiba style={{margin:'0px'}} />
+            {!!account ? <NetworkCard /> : ''}
+            <BurntKiba style={{ margin: '0px' }} />
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {!isMobile && (account && userEthBalance ? <small style={{ position: 'relative', left: 5, cursor: 'pointer' }}>
                 {showETHValue && <Eye style={{ width: 19, height: 19 }} onClick={setEThVisible} />}

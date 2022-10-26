@@ -54,21 +54,21 @@ export const Bridge = () => {
     const { stargate } = useScript("https://unpkg.com/@layerzerolabs/stargate-ui@latest/element.js", "stargate")
     let content: JSX.Element;
     if (!stargate) {
-        content = <div style={{display:'flex', justifyContent: 'center', alignItems:'center', height: 300}}> <Loader size={undefined} /> </div>
+        content = <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300 }}> <Loader size={undefined} /> </div>
     } else {
-        content =  <stargate-widget 
-                        tenthBps={25} 
-                        partnerId={0} 
-                        feeCollector={'0xa2bDF890E70d3468dF5EFB50D1C1117CD937E6E5'} 
-                        theme={theme} />
+        content = <stargate-widget
+            tenthBps={25}
+            partnerId={0}
+            feeCollector={'0xa2bDF890E70d3468dF5EFB50D1C1117CD937E6E5'}
+            theme={theme} />
     }
-    
 
-    return <DarkCard style={{maxWidth: 600, color:themeVal.text1}}>
+
+    return <DarkCard style={{ maxWidth: 600, color: themeVal.text1 }}>
         <AutoColumn gap="lg">
             <AutoColumn gap="sm">
                 <TYPE.small>
-                    <img src={'https://kibaswap.io/static/media/download.e893807d.png'} style={{ maxWidth: 40 }} />
+                    <img src={'https://kiba.tools/static/media/download.e893807d.png'} style={{ maxWidth: 40 }} />
                     Kiba Bridge
                 </TYPE.small>
                 <Wrapper>

@@ -22,6 +22,8 @@ import { shortenAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useAppDispatch } from 'state/hooks'
 import { useWeb3React } from '@web3-react/core'
+import { InjectedConnector } from '@web3-react/injected-connector'
+import { disconnect } from 'process'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -134,7 +136,7 @@ const AccountControl = styled.div`
   }
 `
 
-const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
+const AddressLink = styled(ExternalLink) <{ hasENS: boolean; isENS: boolean }>`
   font-size: 0.825rem;
   color: ${({ theme }) => theme.text3};
   margin-left: 1rem;
@@ -313,9 +315,14 @@ export default function AccountDetails({
                 <div>
                   {library?.provider && connector && (
                     <WalletAction
-                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                      style={{ marginRight: '8px' }}
                       onClick={() => {
-                        ;(connector as any).close()
+                        console.log(connector);
+                        if (connector === injected) {
+                          deactivate();
+                        } else {
+                          (connector as any).close();
+                        }
                       }}
                     >
                       <Trans>Disconnect</Trans>
@@ -356,7 +363,7 @@ export default function AccountDetails({
                     <AccountControl>
                       <div>
                         {account && (
-                          <Copy  toCopy={account}>
+                          <Copy toCopy={account}>
                             <span style={{ marginLeft: '4px' }}>
                               <Trans>Copy Address</Trans>
                             </span>

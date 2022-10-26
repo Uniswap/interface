@@ -103,7 +103,7 @@ const BodyWrapper = styled.div<{ embed: boolean }>`
   align-items: center;
   flex: 1;
   z-index: 1;
-  margin-top:${(props) => props.embed ? '0px' : window.location.href.includes('charts') || window.location.href.includes('charting') ? '0.5rem' : '3rem'};
+  margin-top:${(props) => props.embed ? '0px' : window.location.href.includes('charts') || window.location.href.includes('charting') ? '1.2rem' : '4rem'};
 
   ${({ theme, embed }) => theme.mediaWidth.upToSmall`
     padding:${embed ? '1px' : '6rem 16px 16px 16px'};
@@ -142,7 +142,7 @@ const StyledDiv = styled.div`
 export default function App() {
   const theme = useTheme()
   const [darkMode, toggleDarkMode] = useDarkModeManager()
-  
+
   const [style, setStyle] = useState({ background: '#333' })
   const Video = React.useMemo(() => {
     return (
@@ -273,7 +273,7 @@ export default function App() {
                         boxShadow:
                           'rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
                         position: 'relative',
-                        padding: '9px 14px',
+                        padding: '10px 0',
                         justifyContent: 'end',
                         backgroundColor: theme.bg0,
                         color: theme.text1,
@@ -281,7 +281,7 @@ export default function App() {
                         width: 'flex',
                         minWidth: '45%'
                       }}>
-                        <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '10px', paddingTop: '10px' }}>Kibaswap Featured Sponsors
+                        <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px 0', fontFamily: 'Poppins', fontWeight: 500 }}>Kibaswap Featured Sponsors
                         </StyledDiv>
                         <Marquee direction={'ltr'}
                           resetAfterTries={200}
@@ -290,15 +290,15 @@ export default function App() {
                           onFinish={noop}
                           velocity={10}>
                           <></>
-                          <FixedContainer style={{ paddingTop: 10, paddingBottom: 10, backgroundColor: 'transparent', width: '100%' }} gap="xs">
-                            <ScrollableRow style={{ paddingTop: 10, paddingBottom: 10 }} background={theme.chartSidebar}>
+                          <FixedContainer style={{ backgroundColor: 'transparent', width: '100%' }} gap="xs">
+                            <ScrollableRow style={{ padding: 10, background: 'transparent' }}>
                               {[
                                 {
                                   title: "Kiba Inu",
                                   img: logo,
                                   text: "Kiba Inu is a token infused with Kiba Swap",
                                   link: '#',
-                                  style: {}
+                                  style: { maxHeight: '100px' }
                                 },
                                 {
                                   title: "CryptoCart",
@@ -322,17 +322,9 @@ export default function App() {
                                   style: {}
                                 }].map((sponsor) => (
                                   <CardWrapper title={sponsor.text} key={sponsor.title} href={sponsor.link}>
-                                    <DarkGreyCard style={{height:90,  backgroundColor: !darkMode ? '#eee' : '', padding: 3 }}>
-                                      <Flex flexDirection="column" alignItems={'center'} justifyContent={'center'}>
-                                        <Flex alignItems={'center'} flexDirection={'row'}>
-
-                                        </Flex>
-                                        <Flex style={{ height: 'flex', padding: '5' }} alignItems={'center'} justifyContent={'space-between'}>
-                                          <a href={sponsor.link}>
-                                            <img style={{ maxWidth: 80, ...sponsor?.style }} src={sponsor.img} />
-                                          </a>
-                                          <TYPE.small alignItems={'center'} justifyContent={'center'}></TYPE.small>
-                                        </Flex>
+                                    <DarkGreyCard style={{ height: 90, padding: 0, background: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgb(37, 38, 50)' }}>
+                                      <Flex height={'100%'} flexDirection="column" alignItems={'center'} justifyContent={'center'}>
+                                        <img style={{ maxHeight: 70, ...sponsor?.style }} src={sponsor.img} />
                                       </Flex>
                                     </DarkGreyCard>
                                   </CardWrapper>
@@ -344,10 +336,10 @@ export default function App() {
 
                     {embedModel.embedMode == true && (
                       <Badge style={{ borderRadius: 0, width: '100%', background: embedModel?.theme == 'dark' ? "#222" : '#fff' }}>
-                        <a href={'https://kibaswap.io'}>
+                        <a href={'https://kiba.tools'}>
                           <div style={{ display: 'flex', columnGap: 2.5, alignItems: 'center', justifyContent: "center", flexFlow: 'row wrap' }}>
                             <TYPE.italic>Tracked by </TYPE.italic>
-                            <img src={'https://kibaswap.io/static/media/download.e893807d.png'} style={{ maxWidth: 40 }} />
+                            <img src={'https://kiba.tools/static/media/download.e893807d.png'} style={{ maxWidth: 40 }} />
                             <TYPE.main>KIBA</TYPE.main>
                             <TYPE.italic style={{ color: theme.text1 }}>CHARTS</TYPE.italic>
                           </div>

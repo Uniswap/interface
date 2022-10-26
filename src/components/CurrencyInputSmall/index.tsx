@@ -55,7 +55,7 @@ const FixedContainer = styled.div`
 
 const Container = styled.div<{ hideInput: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '5px')};
-  border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : ' transparent' )};
+  border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : ' transparent')};
   background-color: ${({ theme }) => theme.bg6};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   :focus,
@@ -64,7 +64,7 @@ const Container = styled.div<{ hideInput: boolean }>`
   }
 `
 
-const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boolean }>`
+const CurrencySelect = styled(ButtonGray) <{ selected: boolean; hideInput?: boolean }>`
   align-items: center;
   font-size: 24px;
   font-weight: 500;
@@ -115,7 +115,7 @@ const Aligner = styled.span`
   width: 100%;
 `
 
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
   margin: 0 0.25rem 0 0.35rem;
   height: 35%;
 
@@ -172,7 +172,7 @@ interface CurrencyInputPanelProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
-  showOnlyTrumpCoins?:boolean
+  showOnlyTrumpCoins?: boolean
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
 }
@@ -222,7 +222,7 @@ export default function CurrencyInputPanelSmall({
           </AutoColumn>
         </FixedContainer>
       )}
-      
+
       <Container hideInput={hideInput}>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           <CurrencySelect
@@ -252,21 +252,21 @@ export default function CurrencyInputPanelSmall({
                   <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
                     {(currency && currency.symbol && currency.symbol.length > 20
                       ? currency.symbol.slice(0, 4) +
-                        '...' +
-                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                      '...' +
+                      currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
                       : currency?.symbol) || <Trans>Select a token</Trans>}
                   </StyledTokenName>
                 )}
               </RowFixed>
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
-             
+
             </Aligner>
-            {!!currency && !currency.isNative &&  <StyledInternalLink style={{marginLeft: 5, cursor:'pointer'}} title={`View ${currency?.name} (${currency.symbol} Chart)`} to={`/selective-charts/${currency?.wrapped?.address}/${currency?.symbol}/${currency?.name}/${currency?.decimals}`}> <BarChart2 /> </StyledInternalLink>}
+            {!!currency && !currency.isNative && <StyledInternalLink style={{ marginLeft: 5, cursor: 'pointer' }} title={`View ${currency?.name} (${currency.symbol} Chart)`} to={`/selective-charts/${currency?.wrapped?.address}/${currency?.symbol}/${currency?.name}/${currency?.decimals}`}> <BarChart2 /> </StyledInternalLink>}
           </CurrencySelect>
           {currency && <RowFixed style={{
-            marginRight:15
+            marginRight: 15
           }}>
-            
+
           </RowFixed>}
           {!hideInput && (
             <>

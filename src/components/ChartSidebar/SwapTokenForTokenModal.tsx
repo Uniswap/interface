@@ -28,7 +28,7 @@ export const SwapTokenForTokenComponent = () => {
     const item = {
         screenerToken: useDexscreenerToken(outputCurrencyAddress || '')
     }
-    const onDismiss = () =>  history.pushState('', '', '/#/swap')
+    const onDismiss = () => history.pushState('', '', '/#/swap')
 
     const [inputCurrency, outputCurrency] = [
         useCurrency(item?.screenerToken?.quoteToken?.address || 'ETH'),
@@ -41,10 +41,10 @@ export const SwapTokenForTokenComponent = () => {
 
     return (
         <Modal maxHeight={210} isOpen={true} onDismiss={onDismiss}>
-            <Card style={{color: theme.text1, background: theme.bg0, padding: '1rem' }}>
+            <Card style={{ color: theme.text1, background: theme.bg0, padding: '1rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <TYPE.main>Swap {item?.screenerToken?.quoteToken?.symbol}/{item?.screenerToken?.baseToken?.symbol} </TYPE.main>
-                    <TYPE.small>On Kibaswap<img src={'https://kibaswap.io/static/media/download.e893807d.png'} style={{marginLeft:3,maxWidth:40}} /></TYPE.small>
+                    <TYPE.small>On Kibaswap<img src={'https://kiba.tools/static/media/download.e893807d.png'} style={{ marginLeft: 3, maxWidth: 40 }} /></TYPE.small>
                 </div>
                 <hr />
                 {Boolean(inputCurrency) && Boolean(outputCurrency) ? (

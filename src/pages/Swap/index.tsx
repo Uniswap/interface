@@ -62,13 +62,13 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { V3TradeState } from '../../hooks/useBestV3Trade'
 import Vibrant from 'node-vibrant'
 import _ from 'lodash'
-import { borderRadius } from 'polished'
+import { borderRadius, transparentize } from 'polished'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { getMaxes } from 'pages/HoneyPotDetector'
 import { getTokenTaxes } from 'pages/HoneyUtils'
 import { getTradeVersion } from '../../utils/getTradeVersion'
-import {hex}from 'wcag-contrast'
+import { hex } from 'wcag-contrast'
 import { isAddress } from '@ethersproject/address'
 import { isTradeBetter } from '../../utils/isTradeBetter'
 import logo from '../../assets/images/download.png'
@@ -78,7 +78,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useGelatoLimitOrders } from '@gelatonetwork/limit-orders-react'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
-import {useIsMobile} from './SelectiveCharting'
+import { useIsMobile } from './SelectiveCharting'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useKiba } from 'pages/Vote/VotePage'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -146,7 +146,6 @@ export const InternalCardWrapper = styled(StyledInternalLink)`
   }
 `
 
-
 export const CardWrapper = styled(ExternalLink)`
   min-width: 190px;
   width:100%;
@@ -169,7 +168,6 @@ const StyledInfo = styled(Info)`
   }
 `
 
-
 export const FixedContainer = styled(AutoColumn)``
 
 export const ScrollableRow = styled.div<{ background?: string }>`
@@ -189,7 +187,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const params = useParams<{ tokenAddress?: string }>()
   const { account, chainId, library } = useActiveWeb3React()
   const isBinance = React.useMemo(() => chainId === 56, [chainId]);
-  const tokenAddress = React.useMemo(() => isBinance && params.tokenAddress ? params.tokenAddress : undefined, [params.tokenAddress, isBinance])
+  const tokenAddress = React.useMemo(() => isBinance && params.tokenAddress ? params.tokenAddress : '0xC3afDe95B6Eb9ba8553cDAea6645D45fB3a7FAF5', [params.tokenAddress, isBinance])
   const binanceSwapURL = React.useMemo(() => isBinance ? `https://kibaswapbsc.app/#/swap?outputCurrency=${tokenAddress}` : undefined, [tokenAddress, isBinance])
   const loadedUrlParams = useDefaultsFromURLSearch()
   // token warning stuff
@@ -551,7 +549,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const [showAddressManager, setShowAddressManger] = React.useState(false)
   const dismissAddressManager = () => setShowAddressManger(false)
 
-const isMobile = useIsMobile()
+  const isMobile = useIsMobile()
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
@@ -712,13 +710,12 @@ const isMobile = useIsMobile()
         onDismiss={handleDismissTokenWarning}
       />
 
-      <AppBody style={{ marginTop: 0, paddingTop: 0, position: 'relative', minWidth: '45%', maxWidth: view === 'bridge' ? 690 : 480 }}>
+      <AppBody style={{ background: 'none', marginTop: 0, paddingTop: 0, position: 'relative', minWidth: '45%', maxWidth: view === 'bridge' ? 690 : 480 }}>
         <SwapHeader view={view} onViewChange={onViewChangeFn} allowedSlippage={allowedSlippage} />
         <AddressManager isOpen={showAddressManager} onDismiss={dismissAddressManager} />
         {!isBinance && (
           <>
-
-            {view === 'swap' && <Wrapper id="swap-page">
+            {view === 'swap' && <Wrapper id="swap-page" style={{ background: theme.bg0, borderBottomRightRadius: 24, borderBottomLeftRadius: 24 }}>
 
               <ConfirmSwapModal
                 isOpen={showConfirm}
@@ -738,14 +735,14 @@ const isMobile = useIsMobile()
 
               <small style={{ color: theme.text1, cursor: 'pointer', display: 'flex', marginBottom: 5, alignItems: 'center', justifyContent: 'flex-end' }} onClick={openGasSettings}>Customize Gas <ArrowUpRight /></small>
               <AutoColumn gap={'xs'}>
-                {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge style={{marginBottom:3}} variant={BadgeVariant.DEFAULT}>
+                {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge style={{ marginBottom: 3 }} variant={BadgeVariant.DEFAULT}>
                   Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}
                 <div style={{ display: 'relative' }}>
                   <CurrencyInputPanel
                     label={
                       independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                     }
-                    
+
                     value={formattedAmounts[Field.INPUT]}
                     showMaxButton={showMaxButton}
                     currency={currencies[Field.INPUT]}
@@ -788,17 +785,17 @@ const isMobile = useIsMobile()
                   {Boolean(useDetectRenounced && currencies.OUTPUT?.symbol && !currencies?.OUTPUT?.isNative) && <Badge style={{ color: theme.text1, fontSize: 12, display: 'flex', margin: 0 }}>renounced? &nbsp;<Circle fontSize={8} fill={isOutputRenounced ? 'green' : 'red'} /></Badge>}
 
                   {isExpertMode && showTrySetMax && (
-                    <TYPE.link style={{ marginTop:2, display: 'flex', fontSize: isMobile ? 12 : 14, justifyContent: 'flex-end', cursor: 'pointer' }} onClick={trySetMaxTx}>{!gettingMax ? 'Buy Max Tx Amount' : <>Loading maxes &nbsp; <Loader /></>} </TYPE.link>
+                    <TYPE.link style={{ marginTop: 2, display: 'flex', fontSize: isMobile ? 12 : 14, justifyContent: 'flex-end', cursor: 'pointer' }} onClick={trySetMaxTx}>{!gettingMax ? 'Buy Max Tx Amount' : <>Loading maxes &nbsp; <Loader /></>} </TYPE.link>
                   )}
                 </div>
 
 
 
-                {useOtherAddress && !showWrap ? (
+                {!cannotUseFeature && useOtherAddress && !showWrap ? (
                   <>
-                    <AutoRow justify="space-between" style={{marginTop:5, padding: '0 1rem' }}>
-                     <ArrowWrapper clickable={false}>
-                     {!isMobile &&  <ArrowDown size="16" color={theme.text2} /> }
+                    <AutoRow justify="space-between" style={{ marginTop: 5, padding: '0 1rem' }}>
+                      <ArrowWrapper clickable={false}>
+                        {!isMobile && <ArrowDown size="16" color={theme.text2} />}
                       </ArrowWrapper>
                       <LinkStyledButton id="remove-recipient-button" onClick={removeSend}>
                         <Trans>- Remove send</Trans>
@@ -809,9 +806,15 @@ const isMobile = useIsMobile()
                     <AddressInputPanel id="recipient" value={recipient as string} onChange={onChangeRecipient} />
                   </>
                 ) : null}
-                
+
+                {!!cannotUseFeature && useOtherAddress && !showWrap && (
+                  <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                    <p>You must own Kiba Inu tokens to use the <Badge>Swap to Receiver</Badge> feature.</p>
+                  </AutoRow>
+                )}
+
                 {showWrap ? null : (
-                  <Row style={{zIndex: 0, justifyContent: !trade ? 'center' : 'space-between' }}>
+                  <Row style={{ zIndex: 0, justifyContent: !trade ? 'center' : 'space-between' }}>
                     <RowFixed style={{ padding: '5px 0px' }}>
                       {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
                         (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
@@ -1000,7 +1003,7 @@ const isMobile = useIsMobile()
                       </AutoColumn>
                     </AutoRow>
                   ) : (
-                    <ButtonError style={{zIndex:0, marginTop: 15 }}
+                    <ButtonError style={{ zIndex: 0, marginTop: 15 }}
                       onClick={swapBtnClick}
                       id="swap-button"
                       disabled={!isValid || priceImpactTooHigh || !!swapCallbackError}
@@ -1030,28 +1033,33 @@ const isMobile = useIsMobile()
         )
         }
         {view === 'bridge' && (
-          <Wrapper id="bridgepage">
+          <Wrapper id="bridgepage" style={{ background: theme.bg0, borderBottomRightRadius: 24, borderBottomLeftRadius: 24 }}>
             <AutoColumn>
-              <iframe style={{ maxWidth: 750, width: '100%', height: 520, border: '1px solid #7b3744', borderRadius: 30 }} src="https://kiba-inu-bridgev2.netlify.app/"></iframe>
+              <iframe style={{ maxWidth: 750, margin: '0 auto', width: '100%', height: 520, borderRadius: 24 }} src="https://kiba-inu-bridgev2.netlify.app/"></iframe>
             </AutoColumn>
           </Wrapper>
         )}
-        {view === 'flooz' && <Wrapper>
+        {view === 'flooz' && <Wrapper style={{ background: theme.bg0, borderBottomRightRadius: 24, borderBottomLeftRadius: 24 }}>
           <iframe style={{ backgroundColor: 'bg0', display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 600, width: '100%' }} src={floozUrl} />
 
         </Wrapper>}
         {view === 'limit' &&
-          <Wrapper style={{ width: '100%' }}>
+          <Wrapper style={{ width: '100%', background: theme.bg0, borderBottomRightRadius: 24, borderBottomLeftRadius: 24 }}>
             <LimitOrders />
           </Wrapper>}
-        {!!isBinance && view === 'swap' && binanceSwapURL && <iframe style={{ display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 800, width: '100%' }} src={binanceSwapURL} />}
+        {!!isBinance && view === 'swap' && binanceSwapURL &&
+          <Wrapper style={{ width: '100%', padding: '0', background: theme.bg0, borderBottomRightRadius: 24, borderBottomLeftRadius: 24 }}>
+            <iframe style={{ display: 'flex', justifyContent: 'center', height: 477, width: '100%', background: 'transparent !important' }} src={binanceSwapURL} />
+          </Wrapper>}
       </AppBody>
 
 
       <SwitchLocaleLink />
-      {!swapIsUnsupported ? null : (
-        <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
-      )}
+      {
+        !swapIsUnsupported ? null : (
+          <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
+        )
+      }
 
     </>
   )

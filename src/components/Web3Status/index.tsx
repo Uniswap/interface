@@ -87,7 +87,6 @@ const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
 
 const Web3StatusConnected = styled(Web3StatusGeneric) <{ pending?: boolean }>`
   background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
-  border: 3px solid transparent;
   :before {
     content: '';
     position: absolute;
@@ -198,7 +197,7 @@ function Web3StatusInner() {
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <RowBetween>
-            <Text color={'#fff'  }>
+            <Text color={'#fff'}>
               <Trans>{pending?.length} Pending</Trans>
             </Text>{' '}
             <Loader stroke="white" />
@@ -246,7 +245,7 @@ export default function Web3Status() {
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
 
-  
+
   if (!contextNetwork.active && !active) {
     return null
   }
