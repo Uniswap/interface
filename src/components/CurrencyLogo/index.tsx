@@ -81,69 +81,65 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
     )
   }
 
-  // TODO(#95): Currently just uses the first URL in the source because unclear when we want to use a different one
-
-  if (srcs.length > 0) {
-    const src = srcs[0].toLowerCase()
-    if (src.includes('.svg')) {
-      return (
-        <SvgUri
-          height={size}
-          style={[
-            style.image,
-            {
-              backgroundColor: theme.colors.textTertiary,
-              width: size,
-              height: size,
-              borderRadius: size / 2,
-              borderColor: theme.colors.backgroundOutline,
-              borderWidth: THIN_BORDER,
-            },
-          ]}
-          uri={srcs[0]}
-          width={size}
-        />
-      )
-    }
-    if (!imageError) {
-      return (
-        <Image
-          source={srcs.map((uri) => {
-            return {
-              uri: uriToHttp(uri)[0],
-            }
-          })}
-          style={[
-            style.image,
-            {
-              backgroundColor: theme.colors.textTertiary,
-              width: size,
-              height: size,
-              borderRadius: size / 2,
-              borderColor: theme.colors.backgroundOutline,
-              borderWidth: THIN_BORDER,
-            },
-          ]}
-          onError={() => onImageNotFound()}
-        />
-      )
-    } else {
-      return (
-        <Box
-          alignItems="center"
-          bg="background3"
-          height={size}
-          justifyContent="center"
-          px="xxs"
-          style={{ borderRadius: size / 2 }}
-          width={size}>
-          <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} textAlign="center">
-            {currency.symbol?.slice(0, 5).toUpperCase()}
-          </Text>
-        </Box>
-      )
-    }
+  if (srcs.length === 0 || imageError) {
+    return (
+      <Box
+        alignItems="center"
+        bg="background3"
+        height={size}
+        justifyContent="center"
+        px="xxs"
+        style={{ borderRadius: size / 2 }}
+        width={size}>
+        <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} textAlign="center">
+          {currency.symbol?.slice(0, 5).toUpperCase()}
+        </Text>
+      </Box>
+    )
   }
 
-  return null
+  // TODO(#95): Currently just uses the first URL in the source because unclear when we want to use a different one
+  const src = srcs[0].toLowerCase()
+  if (src.includes('.svg')) {
+    return (
+      <SvgUri
+        height={size}
+        style={[
+          style.image,
+          {
+            backgroundColor: theme.colors.textTertiary,
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            borderColor: theme.colors.backgroundOutline,
+            borderWidth: THIN_BORDER,
+          },
+        ]}
+        uri={srcs[0]}
+        width={size}
+      />
+    )
+  }
+
+  return (
+    <Image
+      source={srcs.map((uri) => {
+        return {
+          uri: uriToHttp(uri)[0],
+        }
+      })}
+      style={[
+        style.image,
+        {
+          backgroundColor: theme.colors.textTertiary,
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderColor: theme.colors.backgroundOutline,
+          borderWidth: THIN_BORDER,
+        },
+      ]}
+      onError={onImageNotFound}
+    />
+  )
 }

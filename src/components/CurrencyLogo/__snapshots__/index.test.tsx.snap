@@ -18,6 +18,41 @@ exports[`renders a currency logo with network logo 1`] = `
     style={
       Array [
         Object {
+          "alignItems": "center",
+          "backgroundColor": "#E8ECFB",
+          "display": "flex",
+          "height": 20,
+          "justifyContent": "center",
+          "paddingHorizontal": 4,
+          "width": 20,
+        },
+        Object {
+          "borderRadius": 10,
+        },
+      ]
+    }
+  >
+    <Text
+      adjustsFontSizeToFit={true}
+      maxFontSizeMultiplier={1.4}
+      numberOfLines={1}
+      style={
+        Array [
+          Object {
+            "color": "#505A78",
+            "display": "flex",
+            "textAlign": "center",
+          },
+        ]
+      }
+    >
+      UNI
+    </Text>
+  </View>
+  <View
+    style={
+      Array [
+        Object {
           "bottom": 0,
           "display": "flex",
           "position": "absolute",

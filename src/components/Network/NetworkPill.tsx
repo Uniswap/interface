@@ -7,12 +7,14 @@ import { useNetworkColors } from 'src/utils/colors'
 export type NetworkPillProps = {
   chainId: ChainId
   height?: number
+  showBackgroundColor?: boolean
   showBorder?: boolean
   showIcon?: boolean
 } & ComponentProps<typeof Pill>
 
 export function NetworkPill({
   chainId,
+  showBackgroundColor = true,
   showBorder,
   showIcon = true,
   height = 36,
@@ -23,7 +25,7 @@ export function NetworkPill({
 
   return (
     <Pill
-      customBackgroundColor={colors?.background}
+      customBackgroundColor={showBackgroundColor ? colors?.background : undefined}
       customBorderColor={showBorder ? colors.foreground : 'transparent'}
       foregroundColor={colors.foreground}
       height={height}

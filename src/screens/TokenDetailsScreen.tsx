@@ -264,25 +264,30 @@ function TokenDetails({
             <HeaderTitleElement currency={currency} tokenProject={data?.tokenProjects?.[0]} />
           </BackHeader>
         }>
-        <Flex gap="md" mb="xxl" mt="lg" pb="xxl">
-          <TokenDetailsHeader currency={currency} initialSendState={initialSendState} />
-          <CurrencyPriceChart currency={currency} />
-          <TokenBalances
-            currentChainBalance={currentChainBalance}
-            otherChainBalances={otherChainBalances}
-          />
-          <Flex gap="lg" p="md">
-            <TokenDetailsStats
-              currency={currency}
-              token={data?.tokens?.[0]}
-              tokenProject={data?.tokenProjects?.[0]}
+        <Flex gap="xl" mb="xxl" mt="lg" pb="xxl">
+          <Flex gap="md">
+            <TokenDetailsHeader currency={currency} initialSendState={initialSendState} />
+            <CurrencyPriceChart currency={currency} />
+          </Flex>
+
+          <Flex gap="lg">
+            <TokenBalances
+              currentChainBalance={currentChainBalance}
+              otherChainBalances={otherChainBalances}
             />
-            {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
-              <TokenWarningCard
-                tokenWarningLevel={tokenWarningLevel}
-                onDismiss={warningDismissCallback}
+            <Flex gap="lg" mx="md">
+              <TokenDetailsStats
+                currency={currency}
+                token={data?.tokens?.[0]}
+                tokenProject={data?.tokenProjects?.[0]}
               />
-            )}
+              {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
+                <TokenWarningCard
+                  tokenWarningLevel={tokenWarningLevel}
+                  onDismiss={warningDismissCallback}
+                />
+              )}
+            </Flex>
           </Flex>
         </Flex>
       </HeaderScrollScreen>

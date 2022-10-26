@@ -1,12 +1,15 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Flex } from 'src/components/layout'
+import { Separator } from 'src/components/layout/Separator'
+import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
-import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
+import { formatNumber, NumberType } from 'src/utils/format'
 
 /**
  * Renders token balances for current chain (if any) and other chains (if any).
@@ -26,10 +29,13 @@ export function TokenBalances({
   const displayName = useDisplayName(activeAccount?.address)?.name
   const isReadonly = accountType === AccountType.Readonly
 
-  if (!currentChainBalance && !otherChainBalances) return null
+  const hasCurrentChainBalances = Boolean(currentChainBalance)
+  const hasOtherChainBalances = Boolean(otherChainBalances && otherChainBalances.length > 0)
+
+  if (!hasCurrentChainBalances && !hasOtherChainBalances) return null
 
   return (
-    <Flex bg="background2" borderRadius="sm" gap="lg" mx="md" p="md">
+    <Flex borderRadius="sm" gap="lg" px="md">
       {currentChainBalance && (
         <CurrentChainBalance
           balance={currentChainBalance}
@@ -37,20 +43,21 @@ export function TokenBalances({
           isReadonly={isReadonly}
         />
       )}
-      {otherChainBalances && otherChainBalances.length > 0 && (
+      {hasOtherChainBalances && (
         <Flex>
-          <Text color="textSecondary" variant="subheadSmall">
-            {isReadonly
-              ? t("{{owner}}'s balance on other chains", { owner: displayName })
-              : t('Your balance on other chains')}
+          <Text color="textTertiary" variant="subheadSmall">
+            {t('Balances on other networks')}
           </Text>
-          {otherChainBalances.map((balance) => {
-            return (
-              <OtherChainBalance key={balance.currencyInfo.currency.chainId} balance={balance} />
-            )
-          })}
+          <Flex gap="sm">
+            {otherChainBalances!.map((balance) => {
+              return (
+                <OtherChainBalance key={balance.currencyInfo.currency.chainId} balance={balance} />
+              )
+            })}
+          </Flex>
         </Flex>
       )}
+      <Separator mx="md" />
     </Flex>
   )
 }
@@ -68,34 +75,44 @@ export function CurrentChainBalance({
 
   return (
     <Flex gap="xs">
-      <Text color="textSecondary" variant="subheadSmall">
+      <Text color="textTertiary" variant="subheadSmall">
         {isReadonly ? t("{{owner}}'s balance", { owner: displayName }) : t('Your balance')}
       </Text>
-      <Flex row alignItems="center" justifyContent="space-between">
-        <Text variant="headlineMedium">
-          {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
-          {balance.currencyInfo.currency.symbol}
+      <Flex row alignItems="center" gap="xs">
+        <Text variant="subheadLarge">
+          {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
         </Text>
-        <Text variant="bodyLarge">{formatUSDPrice(balance.balanceUSD)}</Text>
+        <Text color="textSecondary" variant="subheadLarge">
+          ({formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
+          {balance.currencyInfo.currency.symbol})
+        </Text>
       </Flex>
     </Flex>
   )
 }
 
 function OtherChainBalance({ balance }: { balance: PortfolioBalance }) {
+  const theme = useAppTheme()
   return (
     <Flex row alignItems="center" justifyContent="space-between">
-      <Flex row alignItems="center">
-        <CurrencyLogo currency={balance.currencyInfo.currency} />
-        <Flex alignItems="center">
+      <Flex row alignItems="center" gap="xs">
+        <CurrencyLogo currency={balance.currencyInfo.currency} size={theme.imageSizes.xl} />
+        <Flex alignItems="center" gap="none">
           <Text variant="bodyLarge">
-            {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
-            {balance.currencyInfo.currency.symbol}
+            {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
           </Text>
+          <InlineNetworkPill
+            chainId={balance.currencyInfo.currency.chainId}
+            height={16}
+            py="none"
+            showBackgroundColor={false}
+            textVariant="buttonLabelMicro"
+          />
         </Flex>
       </Flex>
-      <Text variant="bodyLarge">
-        {formatNumber(balance.balanceUSD, NumberType.FiatTokenDetails)}
+      <Text color="textSecondary" variant="bodyLarge">
+        {formatNumber(balance.quantity, NumberType.TokenNonTx)}{' '}
+        {balance.currencyInfo.currency.symbol}
       </Text>
     </Flex>
   )
