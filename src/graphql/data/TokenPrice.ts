@@ -42,12 +42,6 @@ export function isPricePoint(p: { timestamp: number; value: number | null } | nu
   return Boolean(p && p.value)
 }
 
-/*
-export function filterPrices(prices: NonNullable<NonNullable<TokenQueryData>['market']>['priceHistory'] | undefined) {
-  return prices?.filter((p): p is PricePoint => Boolean(p && p.value))
-}
-*/
-
 export function useTokenPriceQuery(address: string, chain: Chain): PriceDurations {
   const contract = useMemo(() => ({ address: address.toLowerCase(), chain }), [address, chain])
   const [prices, setPrices] = useState<PriceDurations>({})
