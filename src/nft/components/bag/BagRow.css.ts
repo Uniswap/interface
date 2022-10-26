@@ -16,7 +16,7 @@ export const bagRow = style([
     marginLeft: '-4px',
     marginRight: '-4px',
     ':hover': {
-      background: themeVars.colors.backgroundModule,
+      background: themeVars.colors.stateOverlayHover,
     },
   },
 ])
