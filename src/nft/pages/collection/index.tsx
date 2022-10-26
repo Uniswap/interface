@@ -15,6 +15,7 @@ import { useSpring } from 'react-spring'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
+export const DEFAULT_ASSET_QUERY_AMOUNT = 25
 
 const Collection = () => {
   const { contractAddress } = useParams()

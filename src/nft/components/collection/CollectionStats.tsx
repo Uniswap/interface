@@ -315,6 +315,54 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   )
 }
 
+export const CollectionStatsLoading = ({ isMobile }: { isMobile: boolean }) => {
+  return (
+    <Box
+      display="flex"
+      marginTop={isMobile ? '20' : '0'}
+      justifyContent="center"
+      position="relative"
+      flexDirection="column"
+      width="full"
+    >
+      <Box as="div" borderRadius="round" position="absolute" className={styles.collectionImageIsLoadingBackground} />
+      <Box
+        as="div"
+        background="explicitWhite"
+        borderRadius="round"
+        position="absolute"
+        className={styles.collectionImageIsLoading}
+      />
+      <Box className={styles.statsText}>
+        {/* <CollectionName
+          collectionStats={stats}
+          name={stats.name ?? ''}
+          isVerified={stats.isVerified ?? false}
+          isMobile={isMobile}
+          collectionSocialsIsOpen={collectionSocialsIsOpen}
+          toggleCollectionSocials={toggleCollectionSocials}
+        />
+        {!isMobile && (
+          <>
+            {(stats.description || isCollectionStatsLoading) && (
+              <CollectionDescription description={stats.description ?? ''} />
+            )}
+            <StatsRow stats={stats} marginTop="20" />
+          </>
+        )} */}
+      </Box>
+      {/* {isMobile && (
+        <>
+          <Box marginBottom="12">{stats.description && <CollectionDescription description={stats.description} />}</Box>
+          <Marquee>
+            <StatsRow stats={stats} marginLeft="6" marginRight="6" marginBottom="28" isMobile />
+          </Marquee>
+        </>
+      )} */}
+    </Box>
+  )
+}
+
 export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; isMobile: boolean }) => {
   const [collectionSocialsIsOpen, toggleCollectionSocials] = useReducer((state) => !state, false)
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
