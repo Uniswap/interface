@@ -1,7 +1,7 @@
 import 'rc-slider/assets/index.css'
 
 import { sendAnalyticsEvent } from 'analytics'
-import { EventName } from 'analytics/constants'
+import { EventName, FilterTypes } from 'analytics/constants'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -56,7 +56,8 @@ export const PriceRange = () => {
   const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
     e.currentTarget.placeholder = placeholderText
     setPlaceholderText('')
-    if (minPrice || maxPrice) sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: 'Price Range' })
+    if (minPrice || maxPrice)
+      sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: FilterTypes.PRICE_RANGE })
   }
 
   const updateMinPriceRange = (v: FormEvent<HTMLInputElement>) => {

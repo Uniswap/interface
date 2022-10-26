@@ -1,5 +1,5 @@
 import { sendAnalyticsEvent } from 'analytics'
-import { EventName } from 'analytics/constants'
+import { EventName, FilterTypes } from 'analytics/constants'
 import useDebounce from 'hooks/useDebounce'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -55,7 +55,7 @@ const TraitItem = ({
       removeTrait(trait)
       setCheckboxSelected(false)
     }
-    sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: 'Trait' })
+    sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: FilterTypes.TRAIT })
   }
 
   const showFullTraitName = shouldShow && trait_type === trait.trait_type && trait_value === trait.trait_value

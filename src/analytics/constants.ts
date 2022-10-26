@@ -144,3 +144,12 @@ export enum Event {
   onSelect = 'onSelect',
   // alphabetize additional events.
 }
+
+/**
+ * Known Filter Types for NFTs
+ */
+export enum FilterTypes {
+  MARKETPLACE = 'Marketplace',
+  PRICE_RANGE = 'Price Range',
+  TRAIT = 'Trait',
+}
