@@ -1,7 +1,7 @@
 import { CellProps, Column } from 'react-table'
 
 import { CollectionTableColumn } from '../../types'
-import { ChangeCell, CollectionTitleCell, CommaWithDayChange, EthCell, VolumeCell } from './Cells/Cells'
+import { ChangeCell, CollectionTitleCell, CommaWithDayChange, EthCell, VolumeCell, WithCommaCell } from './Cells/Cells'
 import { Table } from './Table'
 
 export enum ColumnHeaders {
@@ -66,6 +66,15 @@ const columns: Column<CollectionTableColumn>[] = [
     sortDescFirst: true,
     Cell: function changeCell(cell: CellProps<CollectionTableColumn>) {
       return <ChangeCell change={cell.row.original.volume.change} />
+    },
+  },
+  {
+    id: ColumnHeaders.Items,
+    Header: ColumnHeaders.Items,
+    accessor: 'totalSupply',
+    sortDescFirst: true,
+    Cell: function withCommaCell(cell: CellProps<CollectionTableColumn>) {
+      return <WithCommaCell value={{ value: cell.row.original.totalSupply }} />
     },
   },
   {
