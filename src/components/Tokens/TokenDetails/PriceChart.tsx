@@ -14,6 +14,7 @@ import { useAtom } from 'jotai'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { textFadeIn } from 'theme/animations'
 import {
   dayHourFormatter,
   hourFormatter,
@@ -69,6 +70,7 @@ export function formatDelta(delta: number | null | undefined) {
 
 export const ChartHeader = styled.div`
   position: absolute;
+  ${textFadeIn}
 `
 export const TokenPrice = styled.span`
   font-size: 36px;
