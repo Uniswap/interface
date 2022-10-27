@@ -198,6 +198,10 @@ const CollectionName = ({
   )
 }
 
+const CollectionDescriptionLoading = () => (
+  <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading} />
+)
+
 const CollectionDescription = ({ description }: { description: string }) => {
   const [showReadMore, setShowReadMore] = useState(false)
   const [readMore, toggleReadMore] = useReducer((state) => !state, false)
@@ -218,7 +222,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   }, [descriptionRef, baseRef, isCollectionStatsLoading])
 
   return isCollectionStatsLoading ? (
-    <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}></Box>
+    <CollectionDescriptionLoading />
   ) : (
     <Box ref={baseRef} marginTop={{ sm: '12', md: '16' }} style={{ maxWidth: '680px' }}>
       <Box
@@ -249,6 +253,16 @@ const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: 
   )
 }
 
+const statsLoadingSkeleton = (isMobile: boolean) =>
+  new Array(5).fill(
+    <>
+      <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
+        <div className={styles.statsLabelLoading} />
+        <span className={styles.statsValueLoading} />
+      </Box>
+    </>
+  )
+
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
   const uniqueOwnersPercentage = stats.stats
     ? roundWholePercentage((stats.stats.num_owners / stats.stats.total_supply) * 100)
@@ -278,45 +292,92 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 
   return (
     <Row gap={{ sm: '36', md: '60' }} {...props}>
-      {isCollectionStatsLoading && statsLoadingSkeleton}
-      {stats.floorPrice ? (
-        <StatsItem label="Global floor" isMobile={isMobile ?? false}>
-          {floorPriceStr} ETH
-        </StatsItem>
-      ) : null}
-      {stats.stats?.one_day_floor_change ? (
-        <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
-          <PercentChange>
-            {floorChangeStr}% {arrow}
-          </PercentChange>
-        </StatsItem>
-      ) : null}
-      {stats.stats?.total_volume ? (
-        <StatsItem label="Total volume" isMobile={isMobile ?? false}>
-          {totalVolumeStr} ETH
-        </StatsItem>
-      ) : null}
-      {totalSupplyStr ? (
-        <StatsItem label="Items" isMobile={isMobile ?? false}>
-          {totalSupplyStr}
-        </StatsItem>
-      ) : null}
-      {uniqueOwnersPercentage ? (
-        <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
-          {uniqueOwnersPercentage}%
-        </StatsItem>
-      ) : null}
-      {stats.stats?.total_volume ? (
-        <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
-          {totalVolumeStr} ETH
-        </StatsItem>
-      ) : null}
-      {stats.stats?.total_listings && listedPercentageStr > 0 ? (
-        <StatsItem label="Listed" isMobile={isMobile ?? false}>
-          {listedPercentageStr}%
-        </StatsItem>
-      ) : null}
+      {isCollectionStatsLoading ? (
+        statsLoadingSkeleton
+      ) : (
+        <>
+          {stats.floorPrice ? (
+            <StatsItem label="Global floor" isMobile={isMobile ?? false}>
+              {floorPriceStr} ETH
+            </StatsItem>
+          ) : null}
+          {stats.stats?.one_day_floor_change ? (
+            <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
+              <PercentChange>
+                {floorChangeStr}% {arrow}
+              </PercentChange>
+            </StatsItem>
+          ) : null}
+          {stats.stats?.total_volume ? (
+            <StatsItem label="Total volume" isMobile={isMobile ?? false}>
+              {totalVolumeStr} ETH
+            </StatsItem>
+          ) : null}
+          {totalSupplyStr ? (
+            <StatsItem label="Items" isMobile={isMobile ?? false}>
+              {totalSupplyStr}
+            </StatsItem>
+          ) : null}
+          {uniqueOwnersPercentage ? (
+            <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
+              {uniqueOwnersPercentage}%
+            </StatsItem>
+          ) : null}
+          {stats.stats?.total_volume ? (
+            <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
+              {totalVolumeStr} ETH
+            </StatsItem>
+          ) : null}
+          {stats.stats?.total_listings && listedPercentageStr > 0 ? (
+            <StatsItem label="Listed" isMobile={isMobile ?? false}>
+              {listedPercentageStr}%
+            </StatsItem>
+          ) : null}
+        </>
+      )}
     </Row>
+  )
+}
+
+export const CollectionStatsLoading = ({ isMobile }: { isMobile: boolean }) => {
+  return (
+    <Box
+      display="flex"
+      marginTop={isMobile ? '20' : '0'}
+      justifyContent="center"
+      position="relative"
+      flexDirection="column"
+      width="full"
+    >
+      <Box as="div" borderRadius="round" position="absolute" className={styles.collectionImageIsLoadingBackground} />
+      <Box
+        as="div"
+        background="explicitWhite"
+        borderRadius="round"
+        position="absolute"
+        className={styles.collectionImageIsLoading}
+      />
+      <Box className={styles.statsText}>
+        <Box className={styles.nameTextLoading} />
+        {!isMobile && (
+          <>
+            <CollectionDescriptionLoading />
+            <Row gap={{ sm: '20', md: '60' }} marginTop="20">
+              {statsLoadingSkeleton(isMobile)}
+            </Row>
+          </>
+        )}
+      </Box>
+      {isMobile && (
+        <>
+          <Marquee>
+            <Row gap={{ sm: '20', md: '60' }} marginX="6" marginY="28">
+              {statsLoadingSkeleton(isMobile)}
+            </Row>
+          </Marquee>
+        </>
+      )}
+    </Box>
   )
 }
 
