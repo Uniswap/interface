@@ -1,8 +1,9 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, WETH } from '@kyberswap/ks-sdk-core'
 import { getAddress } from 'ethers/lib/utils'
 
 import { NETWORKS_INFO } from 'constants/networks'
 import { MAP_TOKEN_HAS_MULTI_BY_NETWORK, WHITE_LIST_TOKEN_INFO_PAIR } from 'constants/tokenLists/token-info'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 /**
  * hard code: ex: usdt => usdt_e, ... if network has multi symbol same name base on network
@@ -49,4 +50,14 @@ export const getFormattedAddress = (address?: string, fallback?: string): string
   } catch (e) {
     return fallback || address || ''
   }
+}
+
+export const isTokenNative = (currency: Currency | WrappedTokenInfo | undefined, chainId: ChainId | undefined) => {
+  if (currency?.isNative) return true
+  // case multichain token
+  return chainId
+    ? WETH[chainId]?.address === currency?.address &&
+        currency instanceof WrappedTokenInfo &&
+        currency.multichainInfo?.tokenType === 'NATIVE'
+    : false
 }

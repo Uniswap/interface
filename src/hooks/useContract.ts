@@ -3,6 +3,10 @@ import { ChainId, WETH } from '@kyberswap/ks-sdk-core'
 import { useMemo } from 'react'
 
 import IUniswapV2PairABI from 'constants/abis/IUniswapV2PairABI.json'
+import RouterSwapAction from 'constants/abis/bridge/RouterSwapAction.json'
+import RouterSwapActionV2 from 'constants/abis/bridge/RouterSwapActionV2.json'
+import swapBTCABI from 'constants/abis/bridge/swapBTCABI.json'
+import swapETHABI from 'constants/abis/bridge/swapETHABI.json'
 import ZAP_STATIC_FEE_ABI from 'constants/abis/zap-static-fee.json'
 import ZAP_ABI from 'constants/abis/zap.json'
 import { NETWORKS_INFO } from 'constants/networks'
@@ -53,8 +57,10 @@ export function useContractForReading(
   address: string | undefined,
   ABI: any,
   withSignerIfPossible = true,
+  customChainId?: ChainId,
 ): Contract | null {
-  const { chainId } = useActiveWeb3React()
+  const { chainId: curChainId } = useActiveWeb3React()
+  const chainId = customChainId || curChainId
   return useMemo(() => {
     if (!address || !chainId) return null
     const provider = providers[chainId]
@@ -154,9 +160,10 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
   return useContract(pairAddress, IUniswapV2PairABI.abi, withSignerIfPossible)
 }
 
-export function useMulticallContract(): Contract | null {
-  const { chainId } = useActiveWeb3React()
-  return useContractForReading(chainId && MULTICALL_NETWORKS[chainId], MULTICALL_ABI, false)
+export function useMulticallContract(customChainId?: ChainId): Contract | null {
+  const { chainId: curChainId } = useActiveWeb3React()
+  const chainId = customChainId || curChainId
+  return useContractForReading(chainId && MULTICALL_NETWORKS[chainId], MULTICALL_ABI, false, customChainId)
 }
 
 export function useSocksController(): Contract | null {
@@ -335,4 +342,20 @@ export function useProAmmTickReader(withSignerIfPossible?: boolean): Contract | 
 export function useProAmmQuoter() {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && NETWORKS_INFO[chainId].elastic.quoter, QuoterABI.abi)
+}
+
+// bridge
+export function useSwapBTCContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(tokenAddress, swapBTCABI, withSignerIfPossible)
+}
+
+export function useSwapETHContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(tokenAddress, swapETHABI, withSignerIfPossible)
+}
+export function useBridgeContract(routerToken?: any, version?: any, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(
+    routerToken ? routerToken : undefined,
+    version ? RouterSwapActionV2 : RouterSwapAction,
+    withSignerIfPossible,
+  )
 }

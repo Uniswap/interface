@@ -164,10 +164,10 @@ function LiveChart({
         console.log(error)
         setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: false })
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     return () => {
       currenciesChanged = true
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(currencies)])
 
   const showingValue = hoverValue ?? (chartData[chartData.length - 1]?.value || 0)

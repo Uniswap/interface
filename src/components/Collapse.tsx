@@ -11,8 +11,6 @@ const ItemWrapper = styled.div`
 
 const Header = styled.div`
   width: 100%;
-  height: 32px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -57,9 +55,17 @@ type Props = {
   children: ReactNode
   onExpand?: () => void
   className?: string
+  arrowComponent?: ReactNode
 }
 
-export const CollapseItem: React.FC<Props> = ({ header, children, expandedOnMount = false, style = {}, className }) => {
+export const CollapseItem: React.FC<Props> = ({
+  header,
+  arrowComponent,
+  children,
+  expandedOnMount = false,
+  style = {},
+  className,
+}) => {
   const [isExpanded, setExpanded] = useState(expandedOnMount)
 
   return (
@@ -70,9 +76,7 @@ export const CollapseItem: React.FC<Props> = ({ header, children, expandedOnMoun
         }}
       >
         {header}
-        <ArrowWrapper data-expanded={isExpanded}>
-          <ChevronUp />
-        </ArrowWrapper>
+        <ArrowWrapper data-expanded={isExpanded}>{arrowComponent || <ChevronUp />}</ArrowWrapper>
       </Header>
       <ContentWrapper data-expanded={isExpanded}>{children}</ContentWrapper>
     </ItemWrapper>

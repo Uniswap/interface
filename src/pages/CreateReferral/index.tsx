@@ -10,7 +10,6 @@ import styled from 'styled-components'
 import { ButtonPrimary } from 'components/Button'
 import Divider from 'components/Divider'
 import InfoHelper from 'components/InfoHelper'
-import NetworkModal from 'components/NetworkModal'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
 import { NETWORKS_INFO } from 'constants/networks'
@@ -419,7 +418,6 @@ export default function CreateReferral() {
           </Flex>
         </Flex>
       </BodyWrapper>
-      <NetworkModal />
       <ShareLinkModal
         isOpen={isShowShareLinkModal}
         onDismiss={() => setIsShowShareLinkModal(false)}

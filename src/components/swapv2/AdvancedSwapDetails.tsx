@@ -1,7 +1,7 @@
 import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import React, { useMemo, useState } from 'react'
-import { Text } from 'rebass'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
@@ -9,6 +9,7 @@ import Divider from 'components/Divider'
 import InfoHelper from 'components/InfoHelper'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 import useTheme from 'hooks/useTheme'
+import { OutputBridgeInfo, useBridgeState } from 'state/bridge/hooks'
 import { Field } from 'state/swap/actions'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { TYPE } from 'theme'
@@ -131,19 +132,6 @@ function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) 
               </TYPE.black>
             </RowBetween>
           )}
-          {/* <RowBetween>
-              <RowFixed>
-                <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
-                  <Trans>Route</Trans>
-                </TYPE.black>
-              </RowFixed>
-              <ButtonEmpty padding="0" width="max-content" onClick={toggleRoute}>
-                <Text fontSize={12} marginRight="4px">
-                  <Trans>View your trade route</Trans>
-                </Text>
-                <Eye size={16} />
-              </ButtonEmpty>
-            </RowBetween> */}
         </ContentWrapper>
       </AutoColumn>
     </>
@@ -159,4 +147,112 @@ export function AdvancedSwapDetails({ trade, feeConfig }: AdvancedSwapDetailsPro
   const [allowedSlippage] = useUserSlippageTolerance()
 
   return trade ? <TradeSummary trade={trade} feeConfig={feeConfig} allowedSlippage={allowedSlippage} /> : null
+}
+
+export function TradeSummaryBridge({ outputInfo }: { outputInfo: OutputBridgeInfo }) {
+  const theme = useTheme()
+  const [{ tokenInfoOut }] = useBridgeState()
+
+  const [show, setShow] = useState(true)
+  const fee = formattedNum(outputInfo?.fee?.toString(), false, 5)
+  return (
+    <>
+      <AutoColumn>
+        <RowBetween style={{ cursor: 'pointer' }} onClick={() => setShow(prev => !prev)} role="button">
+          <Text fontSize={12} fontWeight={500} color={theme.text}>
+            <Trans>MORE INFORMATION</Trans>
+          </Text>
+          <IconWrapper show={show}>
+            <DropdownSVG></DropdownSVG>
+          </IconWrapper>
+        </RowBetween>
+        <ContentWrapper show={show} gap="0.75rem">
+          <Divider />
+          <RowBetween>
+            <RowFixed>
+              <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
+                {t`Estimated Processing Time`}
+              </TYPE.black>
+              <InfoHelper
+                size={14}
+                text={
+                  tokenInfoOut &&
+                  t`Crosschain amount larger than ${formattedNum(tokenInfoOut?.BigValueThreshold?.toString() ?? '0')} ${
+                    tokenInfoOut?.symbol
+                  } could take up to 12 hours`
+                }
+              />
+            </RowFixed>
+            <RowFixed>
+              <TYPE.black color={theme.text} fontSize={12}>
+                {tokenInfoOut ? outputInfo.time : '--'}
+              </TYPE.black>
+            </RowFixed>
+          </RowBetween>
+          <RowBetween>
+            <RowFixed>
+              <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
+                <Trans>Transaction Fee</Trans>
+              </TYPE.black>
+
+              <InfoHelper
+                size={14}
+                text={
+                  !tokenInfoOut ? (
+                    t`Estimated network fee for your transaction`
+                  ) : (
+                    <>
+                      <Text color={theme.text}>
+                        <Trans>{tokenInfoOut?.SwapFeeRatePerMillion}% Transaction Fee</Trans>
+                      </Text>
+                      {tokenInfoOut?.MinimumSwapFee === tokenInfoOut?.MaximumSwapFee ? (
+                        outputInfo.fee && (
+                          <Text marginTop={'5px'}>
+                            <Trans>
+                              Gas Fee: {`${fee} ${tokenInfoOut.symbol} `}
+                              for your cross-chain transaction on destination chain
+                            </Trans>
+                          </Text>
+                        )
+                      ) : (
+                        <Text marginTop={'5px'}>
+                          <Trans>
+                            Min Transaction Fee is {formattedNum(tokenInfoOut.MinimumSwapFee)} {tokenInfoOut.symbol}{' '}
+                            <br />
+                            Max Transaction Fee is {formattedNum(tokenInfoOut.MaximumSwapFee)} {tokenInfoOut.symbol}
+                          </Trans>
+                        </Text>
+                      )}
+                    </>
+                  )
+                }
+              />
+            </RowFixed>
+            <TYPE.black color={theme.text} fontSize={12}>
+              {tokenInfoOut && outputInfo.fee ? `${fee} ${tokenInfoOut?.symbol}` : '--'}
+            </TYPE.black>
+          </RowBetween>
+
+          <RowBetween style={{ alignItems: 'flex-start' }}>
+            <RowFixed>
+              <TYPE.black fontSize={12} fontWeight={400} color={theme.subText}>
+                <Trans>Required Amount</Trans>
+              </TYPE.black>
+            </RowFixed>
+
+            <TYPE.black fontSize={12} color={theme.text} textAlign="right">
+              {tokenInfoOut ? (
+                <Flex flexDirection={'column'} style={{ gap: 10 }}>
+                  <div>{t`Min ${formattedNum(tokenInfoOut?.MinimumSwap)} ${tokenInfoOut?.symbol}`}</div>
+                  <div> {t`Max ${formattedNum(tokenInfoOut?.MaximumSwap)} ${tokenInfoOut?.symbol}`}</div>
+                </Flex>
+              ) : (
+                '--'
+              )}
+            </TYPE.black>
+          </RowBetween>
+        </ContentWrapper>
+      </AutoColumn>
+    </>
+  )
 }

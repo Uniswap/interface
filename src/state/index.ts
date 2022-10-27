@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { load, save } from 'redux-localstorage-simple'
 
 import application from './application/reducer'
+import bridge from './bridge/reducer'
 import burnProAmm from './burn/proamm/reducer'
 import burn from './burn/reducer'
 import campaigns from './campaigns/reducer'
@@ -44,6 +45,7 @@ const store = configureStore({
     // [dataApi.reducerPath]: dataApi.reducer
     campaigns,
     tutorial,
+    bridge,
     customizeDexes,
     elasticFarm,
     tokenPrices,

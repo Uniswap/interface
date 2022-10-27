@@ -1,8 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { OutputBridgeInfo } from 'state/bridge/hooks'
+
 import { useLastTruthy } from '../../hooks/useLast'
-import { AdvancedSwapDetails, AdvancedSwapDetailsProps } from './AdvancedSwapDetails'
+import { AdvancedSwapDetails, AdvancedSwapDetailsProps, TradeSummaryBridge } from './AdvancedSwapDetails'
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   padding: ${({ show }) => (show ? '12px 16px' : '0')};
@@ -25,6 +27,14 @@ export default function AdvancedSwapDetailsDropdown({ trade, ...rest }: Advanced
   return (
     <AdvancedDetailsFooter show={Boolean(trade)}>
       <AdvancedSwapDetails {...rest} trade={trade ?? lastTrade ?? undefined} />
+    </AdvancedDetailsFooter>
+  )
+}
+
+export function AdvancedSwapDetailsDropdownBridge({ outputInfo }: { outputInfo: OutputBridgeInfo }) {
+  return (
+    <AdvancedDetailsFooter show={true} style={{ marginTop: 0 }}>
+      <TradeSummaryBridge outputInfo={outputInfo} />
     </AdvancedDetailsFooter>
   )
 }

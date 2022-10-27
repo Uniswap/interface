@@ -8,7 +8,7 @@ import { CardinalOrientation, OrientationCoords, WalktourLogic } from 'walktour'
 import { ButtonPrimary } from 'components/Button'
 import useTheme from 'hooks/useTheme'
 
-import { StepCustom, TOTAL_STEP } from './constant'
+import { StepCustom, TutorialNumbers } from './constant'
 
 const PopupWrapper = styled.div<{ center: boolean }>`
   background-color: ${({ theme }) => theme.tableHeader};
@@ -152,7 +152,7 @@ export default function CustomPopup(props: WalktourLogic | undefined): JSX.Eleme
     center = false,
     stopPropagationMouseDown,
   } = stepContent as StepCustom
-  const isLastStep = stepIndex - 1 === TOTAL_STEP
+  const isLastStep = stepIndex - 1 === TutorialNumbers.TOTAL_STEP
   return (
     <PopupWrapper
       center={center}

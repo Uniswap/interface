@@ -4,10 +4,12 @@ import React, { useCallback, useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components'
 
+import { Z_INDEXS } from 'constants/styles'
+
 import useInterval from '../../hooks/useInterval'
 
 const PopoverContainer = styled.div<{ show: boolean }>`
-  z-index: 9999;
+  z-index: ${Z_INDEXS.POPOVER_CONTAINER};
 
   visibility: ${props => (props.show ? 'visible' : 'hidden')};
   opacity: ${props => (props.show ? 0.95 : 0)};
@@ -27,13 +29,13 @@ const ReferenceElement = styled.div`
 const Arrow = styled.div`
   width: 12px;
   height: 12px;
-  z-index: 9998;
+  z-index: ${Z_INDEXS.POPOVER_CONTAINER - 1};
 
   ::before {
     position: absolute;
     width: 12px;
     height: 12px;
-    z-index: 9998;
+    z-index: ${Z_INDEXS.POPOVER_CONTAINER - 1};
 
     content: '';
     border: 1px solid transparent;
@@ -81,9 +83,17 @@ export interface PopoverProps {
   children: React.ReactNode
   placement?: Placement
   noArrow?: boolean
+  style?: React.CSSProperties
 }
 
-export default function Popover({ content, show, children, placement = 'auto', noArrow = false }: PopoverProps) {
+export default function Popover({
+  content,
+  show,
+  children,
+  placement = 'auto',
+  noArrow = false,
+  style = {},
+}: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
@@ -104,7 +114,12 @@ export default function Popover({ content, show, children, placement = 'auto', n
     <>
       <ReferenceElement ref={setReferenceElement as any}>{children}</ReferenceElement>
       <Portal>
-        <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
+        <PopoverContainer
+          show={show}
+          ref={setPopperElement as any}
+          style={{ ...styles.popper, ...style }}
+          {...attributes.popper}
+        >
           {content}
           {noArrow || (
             <Arrow

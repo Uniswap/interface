@@ -1,66 +1,35 @@
 import { Token } from '@kyberswap/ks-sdk-core'
-import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
+import { TokenInfo, TokenList } from '@uniswap/token-lists'
+
+import { MultiChainTokenInfo } from 'pages/Bridge/type'
 
 import { isAddress } from '../../utils'
 
-type TagDetails = Tags[keyof Tags]
-interface TagInfo extends TagDetails {
-  id: string
-}
 /**
  * Token instances created from token info on a token list.
  */
 
 export type LiteTokenList = Omit<TokenList, 'tokens'>
 
-const LIST_DEFAULT = {
-  name: '',
-  timestamp: '',
-  version: { major: 0, minor: 0, patch: 0 },
-  keywords: [],
-  tags: [] as unknown as Tags,
-  logoURI: '',
-}
-
 export class WrappedTokenInfo extends Token {
   public readonly isNative: false = false
   public readonly isToken: true = true
-  public readonly list: LiteTokenList
-  public readonly isWhitelisted: boolean = false
-
   public readonly tokenInfo: TokenInfo
 
-  constructor(tokenInfo: TokenInfo & { isWhitelisted?: boolean }, list: LiteTokenList = LIST_DEFAULT) {
-    super(
-      tokenInfo.chainId,
-      isAddress(tokenInfo.address) || tokenInfo.address,
-      tokenInfo.decimals,
-      tokenInfo.symbol,
-      tokenInfo.name,
-    )
+  public readonly isWhitelisted: boolean = false // from backend
+  public readonly multichainInfo: MultiChainTokenInfo | undefined = undefined // from multichain api
+
+  constructor(tokenInfo: TokenInfo & { isWhitelisted?: boolean; multichainInfo?: MultiChainTokenInfo }) {
+    const { isWhitelisted, multichainInfo, chainId, decimals, symbol, name, address } = tokenInfo
+    super(chainId, isAddress(address) || address, decimals, symbol, name)
     this.tokenInfo = tokenInfo
-    if (tokenInfo.isWhitelisted) this.isWhitelisted = tokenInfo.isWhitelisted
-    const { name, timestamp, version, keywords, tags, logoURI } = list
-    this.list = { name, timestamp, version, keywords, tags, logoURI }
+
+    if (isWhitelisted) this.isWhitelisted = isWhitelisted
+    if (multichainInfo) this.multichainInfo = multichainInfo
   }
 
   public get logoURI(): string | undefined {
     return this.tokenInfo.logoURI
-  }
-
-  private _tags: TagInfo[] | null = null
-  public get tags(): TagInfo[] {
-    if (this._tags !== null) return this._tags
-    if (!this.tokenInfo.tags) return (this._tags = [])
-    const listTags = this.list.tags
-    if (!listTags) return (this._tags = [])
-
-    return (this._tags = this.tokenInfo.tags.map(tagId => {
-      return {
-        ...listTags[tagId],
-        id: tagId,
-      }
-    }))
   }
 
   equals(other: Token): boolean {

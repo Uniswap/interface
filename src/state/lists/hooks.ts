@@ -61,7 +61,7 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
     if (tokenMap[tokenInfo.chainId][formattedAddress] !== undefined || !isAddress(tokenInfo.address)) {
       return tokenMap
     }
-    const token = new WrappedTokenInfo(tokenInfo, list)
+    const token = new WrappedTokenInfo(tokenInfo)
     tokenMap[tokenInfo.chainId][formattedAddress] = token
     return tokenMap
   }, EMPTY_LIST())

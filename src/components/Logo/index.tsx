@@ -1,6 +1,10 @@
-import React, { useState } from 'react'
+import { ChainId } from '@kyberswap/ks-sdk-core'
+import React, { CSSProperties, useState } from 'react'
 import { HelpCircle } from 'react-feather'
 import { ImageProps } from 'rebass'
+
+import { NETWORKS_INFO } from 'constants/networks'
+import { useIsDarkMode } from 'state/user/hooks'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
@@ -31,4 +35,13 @@ export default function Logo({ srcs, alt, ...rest }: LogoProps) {
   }
 
   return <HelpCircle {...rest} />
+}
+
+export function NetworkLogo({ chainId, style = {} }: { chainId: ChainId | undefined; style?: CSSProperties }) {
+  const isDarkMode = useIsDarkMode()
+  if (!chainId) return null
+  const { iconDark, icon } = NETWORKS_INFO[chainId]
+  const iconSrc = isDarkMode && iconDark ? iconDark : icon
+  if (!iconSrc) return null
+  return <img src={iconSrc} alt="Switch Network" style={style} />
 }

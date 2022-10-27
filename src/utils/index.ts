@@ -28,7 +28,6 @@ import ROUTER_STATIC_FEE_ABI from '../constants/abis/dmm-router-static-fee.json'
 import KS_ROUTER_STATIC_FEE_ABI from '../constants/abis/ks-router-static-fee.json'
 import ROUTER_PRO_AMM from '../constants/abis/v2/ProAmmRouter.json'
 import ZAP_ABI from '../constants/abis/zap.json'
-import { TokenAddressMap } from '../state/lists/hooks'
 import { getAuroraTokenLogoURL } from './auroraTokenMapping'
 import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
 import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
@@ -201,11 +200,6 @@ export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-  if (currency?.isNative) return true
-  return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
-}
-
 export const toK = (num: string) => {
   return Numeral(num).format('0.[00]a')
 }
@@ -217,7 +211,7 @@ export const toKInChart = (num: string, unit?: string) => {
 }
 
 // using a currency library here in case we want to add more in future
-export const formatDollarFractionAmount = (num: number, digits: number) => {
+const formatDollarFractionAmount = (num: number, digits: number) => {
   const formatter = new Intl.NumberFormat(['en-US'], {
     style: 'currency',
     currency: 'USD',
@@ -227,7 +221,7 @@ export const formatDollarFractionAmount = (num: number, digits: number) => {
   return formatter.format(num)
 }
 
-export const formatDollarSignificantAmount = (num: number, minDigits: number, maxDigits?: number) => {
+const formatDollarSignificantAmount = (num: number, minDigits: number, maxDigits?: number) => {
   const formatter = new Intl.NumberFormat(['en-US'], {
     style: 'currency',
     currency: 'USD',

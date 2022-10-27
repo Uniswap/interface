@@ -27,6 +27,10 @@ interface Window {
   chrome?: any
   opr?: any
   recaptchaOptions?: any
+
+  mozIndexedDB?: any
+  webkitIndexedDB?: any
+  msIndexedDB?: any
 }
 
 declare module 'content-hash' {

@@ -25,3 +25,9 @@ export const getNetworkSlug = (chainId: ChainId | undefined) => {
 export const isInEnum = <T extends Record<string, string>>(str: string, enumParam: T): str is T[keyof T] => {
   return Object.values(enumParam).includes(str)
 }
+
+// hello world => hello...
+export const shortString = (str: string, n: number) => {
+  if (!str) return ''
+  return str.length <= n ? str : str.substring(0, n) + '...'
+}

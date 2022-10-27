@@ -81,7 +81,7 @@ const StyledDialogContent = styled(
 
 export interface ModalProps {
   isOpen: boolean
-  onDismiss: () => void
+  onDismiss?: () => void
   minHeight?: number | false
   maxHeight?: number | string
   maxWidth?: number | string
@@ -99,7 +99,9 @@ export interface ModalProps {
 
 export default function Modal({
   isOpen,
-  onDismiss,
+  onDismiss = () => {
+    // when not pass prop onDismiss, we stop close Modal when click outside Modal
+  },
   minHeight = false,
   margin = '',
   maxHeight = 90,

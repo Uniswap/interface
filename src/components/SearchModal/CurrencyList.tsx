@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import { rgba } from 'polished'
-import React, { CSSProperties, memo, useCallback } from 'react'
+import React, { CSSProperties, ReactNode, memo, useCallback } from 'react'
 import { Star, Trash } from 'react-feather'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Flex, Text } from 'rebass'
@@ -79,10 +79,10 @@ const DescText = styled.div`
 `
 export const getDisplayTokenInfo = (currency: any) => {
   return {
-    symbol: currency.isNative ? currency.symbol : currency.wrapped.symbol,
+    symbol: currency.isNative ? currency.symbol : currency?.wrapped?.symbol || currency.symbol,
   }
 }
-function CurrencyRow({
+export function CurrencyRow({
   currency,
   isImportedTab,
   currencyBalance,
@@ -92,19 +92,26 @@ function CurrencyRow({
   style,
   handleClickFavorite,
   removeImportedToken,
+  showFavoriteIcon = true,
+  showBalance = true,
+  customName,
+  poolLiquidity,
 }: {
-  isImportedTab: boolean
+  isImportedTab?: boolean
+  showBalance?: boolean
+  showFavoriteIcon?: boolean
   currency: Currency
   currencyBalance: CurrencyAmount<Currency>
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
   style: CSSProperties
-  handleClickFavorite: (e: React.MouseEvent, currency: Currency) => void
-  removeImportedToken: (token: Token) => void
+  handleClickFavorite?: (e: React.MouseEvent, currency: Currency) => void
+  removeImportedToken?: (token: Token) => void
+  customName?: ReactNode
+  poolLiquidity?: number | string | undefined
 }) {
   const { chainId, account } = useActiveWeb3React()
-  const balance = currencyBalance
 
   const nativeCurrency = useCurrencyConvertedToNative(currency || undefined)
   // only show add or remove buttons if not on selected list
@@ -112,7 +119,7 @@ function CurrencyRow({
   const { favoriteTokens } = useUserFavoriteTokens(chainId)
   const onClickRemove = (e: React.MouseEvent) => {
     e.stopPropagation()
-    removeImportedToken(currency as Token)
+    removeImportedToken?.(currency as Token)
   }
 
   const isFavorite = (() => {
@@ -132,7 +139,7 @@ function CurrencyRow({
 
     return false
   })()
-  const balanceComponent = balance ? <Balance balance={balance} /> : account ? <Loader /> : null
+  const balanceComponent = currencyBalance ? <Balance balance={currencyBalance} /> : account ? <Loader /> : null
   const { symbol } = getDisplayTokenInfo(currency)
   return (
     <CurrencyRowWrapper style={style} onClick={() => onSelect()} data-selected={isSelected || otherSelected}>
@@ -140,14 +147,23 @@ function CurrencyRow({
         <CurrencyLogo currency={currency} size={'24px'} />
         <Column>
           <Text title={currency.name} fontWeight={500}>
-            {symbol}
+            {customName || symbol}
           </Text>
           <DescText>{isImportedTab ? balanceComponent : nativeCurrency?.name}</DescText>
         </Column>
       </Flex>
+
       <RowFixed style={{ justifySelf: 'flex-end', gap: 15 }}>
-        {isImportedTab ? <DeleteButton onClick={onClickRemove} /> : balanceComponent}
-        <FavoriteButton onClick={e => handleClickFavorite(e, currency)} data-active={isFavorite} />
+        {isImportedTab ? (
+          <DeleteButton onClick={onClickRemove} />
+        ) : showBalance ? (
+          balanceComponent
+        ) : poolLiquidity ? (
+          poolLiquidity
+        ) : null}
+        {showFavoriteIcon && (
+          <FavoriteButton onClick={e => handleClickFavorite?.(e, currency)} data-active={isFavorite} />
+        )}
       </RowFixed>
     </CurrencyRowWrapper>
   )
@@ -271,5 +287,4 @@ function CurrencyList({
     </InfiniteScroll>
   )
 }
-
 export default memo(CurrencyList)

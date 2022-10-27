@@ -39,6 +39,11 @@ export const SUMMARY: {
     pending: summary => 'Approving ' + summary,
     failure: summary => 'Error approving ' + summary,
   },
+  Bridge: {
+    success: summary => 'Transferred ' + summary,
+    pending: summary => 'Transferring ' + summary,
+    failure: summary => 'Error Transferring ' + summary,
+  },
   Swap: {
     success: summary => 'Swapped ' + summary,
     pending: summary => 'Swapping ' + summary,

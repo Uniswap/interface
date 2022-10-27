@@ -154,6 +154,15 @@ export default function Updater(): null {
                     }
                     break
                   }
+                  case 'Bridge': {
+                    if (transaction.arbitrary) {
+                      mixpanelHandler(MIXPANEL_TYPE.BRIDGE_TRANSACTION_SUBMIT, {
+                        ...transaction.arbitrary,
+                        tx_hash: hash,
+                      })
+                    }
+                    break
+                  }
                   case 'Collect fee': {
                     if (transaction.arbitrary) {
                       mixpanelHandler(MIXPANEL_TYPE.ELASTIC_COLLECT_FEES_COMPLETED, transaction.arbitrary)

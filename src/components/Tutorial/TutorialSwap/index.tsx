@@ -21,7 +21,7 @@ import { ExternalLink } from 'theme'
 import CustomMask from './CustomMask'
 import CustomPopup from './CustomPopup'
 import TutorialMobile from './TutorialMobile'
-import { LIST_TITLE, StepCustom, TOTAL_STEP, TutorialIds } from './constant'
+import { LIST_TITLE, StepCustom, TutorialIds, TutorialNumbers } from './constant'
 
 const isMobile = window.innerWidth < 1200 // best resolution for this tutorial
 
@@ -45,7 +45,7 @@ const Title = ({ stepNumber }: { stepNumber: number }) => {
     <Heading style={{ display: 'flex', alignItems: 'flex-end' }}>
       <Trans>
         <span>Step: {stepNumber}/</span>
-        <span style={{ color: theme.subText, fontSize: '0.85em' }}>{TOTAL_STEP}</span>
+        <span style={{ color: theme.subText, fontSize: '0.85em' }}>{TutorialNumbers.TOTAL_STEP}</span>
       </Trans>
     </Heading>
   )
@@ -344,9 +344,25 @@ const getListSteps = (isLogin: boolean) => {
       maskPadding: 10,
     },
     {
-      selector: TutorialIds.EARNING_LINKS,
-      title: isMobile ? LIST_TITLE.EARN : <Title stepNumber={5} />,
+      selector: TutorialIds.BRIDGE_LINKS,
+      title: isMobile ? LIST_TITLE.BRIDGE : <Title stepNumber={5} />,
       stepNumber: 5,
+      description: (
+        <Layout title={LIST_TITLE.BRIDGE}>
+          <Desc>
+            <Trans>
+              You can <b>Buy crypto easily with over 50+ currencies using a wide range of payment options!</b> or{' '}
+              <b>Easily transfer tokens from one chain to another</b>
+            </Trans>
+          </Desc>
+        </Layout>
+      ),
+      orientationPreferences: [CardinalOrientation.SOUTH],
+    },
+    {
+      selector: TutorialIds.EARNING_LINKS,
+      title: isMobile ? LIST_TITLE.EARN : <Title stepNumber={6} />,
+      stepNumber: 6,
       description: (
         <Layout title={LIST_TITLE.EARN}>
           <Desc>
@@ -361,8 +377,8 @@ const getListSteps = (isLogin: boolean) => {
     },
     {
       selector: TutorialIds.CAMPAIGN_LINK,
-      title: isMobile ? LIST_TITLE.CAMPAIGN : <Title stepNumber={6} />,
-      stepNumber: 6,
+      title: isMobile ? LIST_TITLE.CAMPAIGN : <Title stepNumber={7} />,
+      stepNumber: 7,
       description: (
         <Layout title={LIST_TITLE.CAMPAIGN}>
           <Desc>
@@ -376,8 +392,8 @@ const getListSteps = (isLogin: boolean) => {
     },
     {
       selector: TutorialIds.DISCOVER_LINK,
-      title: isMobile ? LIST_TITLE.DISCOVER : <Title stepNumber={7} />,
-      stepNumber: 7,
+      title: isMobile ? LIST_TITLE.DISCOVER : <Title stepNumber={8} />,
+      stepNumber: 8,
       description: (
         <Layout title={LIST_TITLE.DISCOVER}>
           <Desc>
@@ -394,8 +410,8 @@ const getListSteps = (isLogin: boolean) => {
     },
     {
       selector: TutorialIds.BUTTON_VIEW_GUIDE_SWAP,
-      title: isMobile ? LIST_TITLE.VIEW_GUIDE : <Title stepNumber={8} />,
-      stepNumber: 8,
+      title: isMobile ? LIST_TITLE.VIEW_GUIDE : <Title stepNumber={9} />,
+      stepNumber: 9,
       maskPadding: 10,
       requiredClickSelector: '#' + TutorialIds.BUTTON_SETTING,
       stopPropagationMouseDown: true,
@@ -497,7 +513,7 @@ export default memo(function TutorialSwap() {
 
   const onNext = (logic: WalktourLogic) => {
     const { stepIndex, close } = logic
-    if (stepIndex - 1 === TOTAL_STEP) {
+    if (stepIndex - 1 === TutorialNumbers.TOTAL_STEP) {
       onFinished()
       close()
       return

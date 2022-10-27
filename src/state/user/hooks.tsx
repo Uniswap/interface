@@ -47,24 +47,20 @@ function serializeToken(token: Token | WrappedTokenInfo): SerializedToken {
     decimals: token.decimals,
     symbol: token.symbol,
     name: token.name,
-    list: token instanceof WrappedTokenInfo ? token.list : undefined,
     logoURI: token instanceof WrappedTokenInfo ? token.tokenInfo.logoURI : undefined,
   }
 }
 
 function deserializeToken(serializedToken: SerializedToken): Token {
   return serializedToken?.logoURI && serializedToken?.list
-    ? new WrappedTokenInfo(
-        {
-          chainId: serializedToken.chainId,
-          address: serializedToken.address,
-          name: serializedToken.name ?? '',
-          symbol: serializedToken.symbol ?? '',
-          decimals: serializedToken.decimals,
-          logoURI: serializedToken.logoURI,
-        },
-        serializedToken.list,
-      )
+    ? new WrappedTokenInfo({
+        chainId: serializedToken.chainId,
+        address: serializedToken.address,
+        name: serializedToken.name ?? '',
+        symbol: serializedToken.symbol ?? '',
+        decimals: serializedToken.decimals,
+        logoURI: serializedToken.logoURI,
+      })
     : new Token(
         serializedToken.chainId,
         serializedToken.address,

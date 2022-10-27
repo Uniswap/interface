@@ -4,22 +4,27 @@ import { darken } from 'polished'
 import { useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { Flex } from 'rebass'
-import styled, { keyframes } from 'styled-components'
+import { Flex, Text } from 'rebass'
+import styled, { css, keyframes } from 'styled-components'
 
 import { ReactComponent as MasterCard } from 'assets/buy-crypto/master-card.svg'
 import { ReactComponent as Visa } from 'assets/buy-crypto/visa.svg'
+import MultichainLogoDark from 'assets/images/multichain_black.png'
+import MultichainLogoLight from 'assets/images/multichain_white.png'
+import { ReactComponent as BridgeIcon } from 'assets/svg/bridge_icon.svg'
 import { ReactComponent as Dollar } from 'assets/svg/dollar.svg'
 import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import Menu, { NewLabel } from 'components/Menu'
 import Settings from 'components/Settings'
-import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
+import { TutorialIds, TutorialNumbers } from 'components/Tutorial/TutorialSwap/constant'
 import Web3Network from 'components/Web3Network'
 import { AGGREGATOR_ANALYTICS_URL, PROMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useWindowSize } from 'hooks/useWindowSize'
+import { AppPaths } from 'pages/App'
+import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
 import { ExternalLink } from 'theme/components'
 
@@ -293,8 +298,23 @@ const Dropdown = styled.div`
 const DropdownIcon = styled(DropdownSVG)`
   transition: transform 300ms;
 `
+const cssDropDown = css`
+  color: ${({ theme }) => darken(0.1, theme.primary)};
 
-const HoverDropdown = styled.div<{ active: boolean }>`
+  ${Dropdown} {
+    display: flex;
+    flex-direction: column;
+
+    ${StyledNavLink} {
+      margin: 0;
+    }
+  }
+
+  ${DropdownIcon} {
+    transform: rotate(-180deg);
+  }
+`
+const HoverDropdown = styled.div<{ active: boolean; forceShowDropdown?: boolean }>`
   position: relative;
   display: inline-block;
   cursor: pointer;
@@ -308,25 +328,16 @@ const HoverDropdown = styled.div<{ active: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 8px 2px 8px 6px;
   `}
-
+  ${({ forceShowDropdown }) => forceShowDropdown && cssDropDown}
   :hover {
-    color: ${({ theme }) => darken(0.1, theme.primary)};
-
-    ${Dropdown} {
-      display: flex;
-      flex-direction: column;
-
-      ${StyledNavLink} {
-        margin: 0;
-      }
-    }
-
-    ${DropdownIcon} {
-      transform: rotate(-180deg);
-    }
+    ${cssDropDown}
   }
 `
-
+const StyledBridgeIcon = styled(BridgeIcon)`
+  path {
+    fill: currentColor;
+  }
+`
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
 
@@ -335,7 +346,7 @@ export default function Header() {
   const [isHoverSlide, setIsHoverSlide] = useState(false)
 
   const { width } = useWindowSize()
-
+  const [{ show: isShowTutorial = false, step }] = useTutorialSwapGuide()
   const under369 = width && width < 369
   const under500 = width && width < 500
   const { mixpanelHandler } = useMixpanel()
@@ -348,7 +359,10 @@ export default function Header() {
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <HoverDropdown active={pathname.includes('/swap') || pathname === '/buy-crypto'}>
+          <HoverDropdown
+            forceShowDropdown={isShowTutorial && step === TutorialNumbers.STEP_BRIDGE}
+            active={pathname.includes('/swap') || pathname === '/buy-crypto'}
+          >
             <Flex alignItems="center">
               <Trans>Swap</Trans>
               <DropdownIcon />
@@ -361,28 +375,51 @@ export default function Header() {
                 isActive={match => Boolean(match)}
                 style={{ flexDirection: 'column' }}
               >
-                <Flex alignItems="center" sx={{ gap: '10px' }}>
+                <Flex alignItems="center" sx={{ gap: '13px' }}>
                   <Repeat size={16} />
                   <Trans>Swap</Trans>
                 </Flex>
-              </StyledNavLink>{' '}
-              <StyledNavLink
-                id={`buy-crypto-nav-link`}
-                to={'/buy-crypto'}
-                isActive={match => Boolean(match)}
-                onClick={() => {
-                  mixpanelHandler(MIXPANEL_TYPE.SWAP_BUY_CRYPTO_CLICKED)
-                }}
-              >
-                <Flex alignItems="center" sx={{ gap: '8px' }}>
-                  <Dollar />
-                  <Trans>Buy Crypto</Trans>
-                  <Flex sx={{ gap: '8px' }}>
-                    <VisaSVG width="20" height="20" />
-                    <MasterCard width="20" height="20" />
-                  </Flex>
-                </Flex>
               </StyledNavLink>
+              <div id={TutorialIds.BRIDGE_LINKS}>
+                <StyledNavLink
+                  id={`buy-crypto-nav-link`}
+                  to={'/buy-crypto'}
+                  isActive={match => Boolean(match)}
+                  onClick={() => {
+                    mixpanelHandler(MIXPANEL_TYPE.SWAP_BUY_CRYPTO_CLICKED)
+                  }}
+                >
+                  <Flex alignItems="center" sx={{ gap: '8px' }}>
+                    <Flex sx={{ gap: '10px' }}>
+                      <Dollar style={{ marginLeft: -1 }} />
+                      <Trans>Buy Crypto</Trans>
+                    </Flex>
+                    <Flex sx={{ gap: '8px' }}>
+                      <VisaSVG width="20" height="20" />
+                      <MasterCard width="20" height="20" />
+                    </Flex>
+                  </Flex>
+                </StyledNavLink>
+                <StyledNavLink
+                  to={AppPaths.BRIDGE}
+                  isActive={match => Boolean(match)}
+                  style={{ flexDirection: 'column', width: '100%' }}
+                >
+                  <Flex alignItems="center" sx={{ gap: '10px' }} justifyContent="space-between">
+                    <StyledBridgeIcon height={15} />
+                    <Flex alignItems={'center'} style={{ flex: 1 }} justifyContent={'space-between'}>
+                      <Text>
+                        <Trans>Bridge</Trans>
+                      </Text>
+                      <img
+                        src={isDark ? MultichainLogoLight : MultichainLogoDark}
+                        alt="kyberswap with multichain"
+                        height={10}
+                      />
+                    </Flex>
+                  </Flex>
+                </StyledNavLink>
+              </div>
             </Dropdown>
           </HoverDropdown>
 

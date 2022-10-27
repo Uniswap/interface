@@ -1,0 +1,547 @@
+[{
+	"inputs": [{
+		"internalType": "address",
+		"name": "_factory",
+		"type": "address"
+	}, {
+		"internalType": "address",
+		"name": "_wNATIVE",
+		"type": "address"
+	}, {
+		"internalType": "address",
+		"name": "_mpc",
+		"type": "address"
+	}],
+	"stateMutability": "nonpayable",
+	"type": "constructor"
+}, {
+	"anonymous": false,
+	"inputs": [{
+		"indexed": true,
+		"internalType": "bytes32",
+		"name": "txhash",
+		"type": "bytes32"
+	}, {
+		"indexed": true,
+		"internalType": "address",
+		"name": "token",
+		"type": "address"
+	}, {
+		"indexed": true,
+		"internalType": "address",
+		"name": "to",
+		"type": "address"
+	}, {
+		"indexed": false,
+		"internalType": "uint256",
+		"name": "amount",
+		"type": "uint256"
+	}, {
+		"indexed": false,
+		"internalType": "uint256",
+		"name": "fromChainID",
+		"type": "uint256"
+	}, {
+		"indexed": false,
+		"internalType": "uint256",
+		"name": "toChainID",
+		"type": "uint256"
+	}],
+	"name": "LogAnySwapIn",
+	"type": "event"
+}, {
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "txs",
+		"type": "bytes32"
+	}, {
+		"internalType": "uint256",
+		"name": "amountIn",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "amountOutMin",
+		"type": "uint256"
+	}, {
+		"internalType": "address[]",
+		"name": "path",
+		"type": "address[]"
+	}, {
+		"internalType": "address",
+		"name": "to",
+		"type": "address"
+	}, {
+		"internalType": "uint256",
+		"name": "deadline",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "fromChainID",
+		"type": "uint256"
+	}],
+	"name": "anySwapInExactTokensForNative",
+	"outputs": [{
+		"internalType": "uint256[]",
+		"name": "amounts",
+		"type": "uint256[]"
+	}],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "token",
+		"type": "address"
+	}, {
+		"internalType": "string",
+		"name": "to",
+		"type": "string"
+	}, {
+		"internalType": "uint256",
+		"name": "amount",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "toChainID",
+		"type": "uint256"
+	}],
+	"name": "anySwapOut",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "amountIn",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "amountOutMin",
+		"type": "uint256"
+	}, {
+		"internalType": "address[]",
+		"name": "path",
+		"type": "address[]"
+	}, {
+		"internalType": "address",
+		"name": "to",
+		"type": "address"
+	}, {
+		"internalType": "uint256",
+		"name": "deadline",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "toChainID",
+		"type": "uint256"
+	}],
+	"name": "anySwapOutExactTokensForNative",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "amountIn",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "amountOutMin",
+		"type": "uint256"
+	}, {
+		"internalType": "address[]",
+		"name": "path",
+		"type": "address[]"
+	}, {
+		"internalType": "address",
+		"name": "to",
+		"type": "address"
+	}, {
+		"internalType": "uint256",
+		"name": "deadline",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "toChainID",
+		"type": "uint256"
+	}],
+	"name": "anySwapOutExactTokensForNativeUnderlying",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "amountIn",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "amountOutMin",
+		"type": "uint256"
+	}, {
+		"internalType": "address[]",
+		"name": "path",
+		"type": "address[]"
+	}, {
+		"internalType": "address",
+		"name": "to",
+		"type": "address"
+	}, {
+		"internalType": "uint256",
+		"name": "deadline",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "toChainID",
+		"type": "uint256"
+	}],
+	"name": "anySwapOutExactTokensForTokens",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "amountIn",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "amountOutMin",
+		"type": "uint256"
+	}, {
+		"internalType": "address[]",
+		"name": "path",
+		"type": "address[]"
+	}, {
+		"internalType": "address",
+		"name": "to",
+		"type": "address"
+	}, {
+		"internalType": "uint256",
+		"name": "deadline",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "toChainID",
+		"type": "uint256"
+	}],
+	"name": "anySwapOutExactTokensForTokensUnderlying",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "token",
+		"type": "address"
+	}, {
+		"internalType": "string",
+		"name": "to",
+		"type": "string"
+	}, {
+		"internalType": "uint256",
+		"name": "toChainID",
+		"type": "uint256"
+	}],
+	"name": "anySwapOutNative",
+	"outputs": [],
+	"stateMutability": "payable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "token",
+		"type": "address"
+	}, {
+		"internalType": "string",
+		"name": "to",
+		"type": "string"
+	}, {
+		"internalType": "uint256",
+		"name": "amount",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "toChainID",
+		"type": "uint256"
+	}],
+	"name": "anySwapOutUnderlying",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+},  {
+	"inputs": [{
+		"internalType": "address",
+		"name": "token",
+		"type": "address"
+	}],
+	"name": "applyMinter",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "cID",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "newMPC",
+		"type": "address"
+	}],
+	"name": "changeMPC",
+	"outputs": [{
+		"internalType": "bool",
+		"name": "",
+		"type": "bool"
+	}],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "token",
+		"type": "address"
+	}, {
+		"internalType": "address",
+		"name": "newVault",
+		"type": "address"
+	}],
+	"name": "changeVault",
+	"outputs": [{
+		"internalType": "bool",
+		"name": "",
+		"type": "bool"
+	}],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "token",
+		"type": "address"
+	}, {
+		"internalType": "address",
+		"name": "to",
+		"type": "address"
+	}],
+	"name": "depositNative",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"stateMutability": "payable",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "enableSwapTrade",
+	"outputs": [{
+		"internalType": "bool",
+		"name": "",
+		"type": "bool"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "factory",
+	"outputs": [{
+		"internalType": "address",
+		"name": "",
+		"type": "address"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "amountOut",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "reserveIn",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "reserveOut",
+		"type": "uint256"
+	}],
+	"name": "getAmountIn",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "amountIn",
+		"type": "uint256"
+	}],
+	"stateMutability": "pure",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "amountIn",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "reserveIn",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "reserveOut",
+		"type": "uint256"
+	}],
+	"name": "getAmountOut",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "amountOut",
+		"type": "uint256"
+	}],
+	"stateMutability": "pure",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "amountOut",
+		"type": "uint256"
+	}, {
+		"internalType": "address[]",
+		"name": "path",
+		"type": "address[]"
+	}],
+	"name": "getAmountsIn",
+	"outputs": [{
+		"internalType": "uint256[]",
+		"name": "amounts",
+		"type": "uint256[]"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "amountIn",
+		"type": "uint256"
+	}, {
+		"internalType": "address[]",
+		"name": "path",
+		"type": "address[]"
+	}],
+	"name": "getAmountsOut",
+	"outputs": [{
+		"internalType": "uint256[]",
+		"name": "amounts",
+		"type": "uint256[]"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "mpc",
+	"outputs": [{
+		"internalType": "address",
+		"name": "",
+		"type": "address"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "uint256",
+		"name": "amountA",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "reserveA",
+		"type": "uint256"
+	}, {
+		"internalType": "uint256",
+		"name": "reserveB",
+		"type": "uint256"
+	}],
+	"name": "quote",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "amountB",
+		"type": "uint256"
+	}],
+	"stateMutability": "pure",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "token",
+		"type": "address"
+	}, {
+		"internalType": "address",
+		"name": "_auth",
+		"type": "address"
+	}],
+	"name": "revokeMinter",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "bool",
+		"name": "enable",
+		"type": "bool"
+	}],
+	"name": "setEnableSwapTrade",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "token",
+		"type": "address"
+	}, {
+		"internalType": "address",
+		"name": "_auth",
+		"type": "address"
+	}],
+	"name": "setMinter",
+	"outputs": [],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"inputs": [],
+	"name": "wNATIVE",
+	"outputs": [{
+		"internalType": "address",
+		"name": "",
+		"type": "address"
+	}],
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"inputs": [{
+		"internalType": "address",
+		"name": "token",
+		"type": "address"
+	}, {
+		"internalType": "uint256",
+		"name": "amount",
+		"type": "uint256"
+	}, {
+		"internalType": "address",
+		"name": "to",
+		"type": "address"
+	}],
+	"name": "withdrawNative",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"stateMutability": "payable",
+	"type": "receive"
+}]

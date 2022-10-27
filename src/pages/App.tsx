@@ -30,6 +30,7 @@ import DarkModeQueryParamReader from 'theme/DarkModeQueryParamReader'
 import { isAddressString, shortenAddress } from 'utils'
 
 import { RedirectDuplicateTokenIds } from './AddLiquidityV2/redirects'
+import Bridge from './Bridge'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import ProAmmSwap from './SwapProAmm'
@@ -99,7 +100,13 @@ const BodyWrapper = styled.div`
 
   ${isMobile && `overflow-x: hidden;`}
 `
-export const AppPaths = { SWAP_LEGACY: '/swap-legacy', ABOUT: '/about', SWAP: '/swap', CAMPAIGN: '/campaigns' }
+export const AppPaths = {
+  SWAP_LEGACY: '/swap-legacy',
+  ABOUT: '/about',
+  SWAP: '/swap',
+  CAMPAIGN: '/campaigns',
+  BRIDGE: '/bridge',
+}
 
 export default function App() {
   const { account, chainId } = useActiveWeb3React()
@@ -256,6 +263,7 @@ export default function App() {
                     <Route exact path="/discover" component={TrueSight} />
                     <Route exact path="/buy-crypto" component={BuyCrypto} />
                     <Route exact path={`${AppPaths.CAMPAIGN}/:slug?`} component={Campaign} />
+                    <Route exact path={AppPaths.BRIDGE} component={Bridge} />
 
                     <Route component={RedirectPathToSwapOnly} />
                   </Switch>

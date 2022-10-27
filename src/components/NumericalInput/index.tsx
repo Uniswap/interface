@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { escapeRegExp } from '../../utils'
 
 const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.text)};
   width: 0;
   position: relative;
   font-weight: 500;
@@ -15,7 +14,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   background-color: ${({ theme }) => theme.buttonBlack};
   font-size: ${({ fontSize }) => fontSize ?? '24px'};
   text-align: ${({ align }) => align && align};
-  color: ${({ disabled, theme }) => (disabled ? theme.disableText : theme.text)};
+  color: ${({ disabled, theme, error }) => (error ? theme.red1 : disabled ? theme.disableText : theme.text)};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

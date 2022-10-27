@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 
 import { EMPTY_ARRAY, EMPTY_OBJECT } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
+import { isTokenNative } from 'utils/tokenInfo'
 
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useActiveWeb3React } from '../../hooks'
@@ -15,9 +16,10 @@ import { useMultipleContractSingleData, useSingleContractMultipleData } from '..
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
-export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
+export type ETHBalance = {
   [address: string]: CurrencyAmount<Currency> | undefined
-} {
+}
+export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): ETHBalance {
   const multicallContract = useMulticallContract()
   const { chainId } = useActiveWeb3React()
 
@@ -118,13 +120,19 @@ export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[],
 ): (CurrencyAmount<Currency> | undefined)[] {
+  const { chainId } = useActiveWeb3React()
+
   const tokens = useMemo(() => {
-    const result = currencies?.filter((currency): currency is Token => currency?.isToken ?? false)
+    const result = currencies?.filter(currency => !isTokenNative(currency, chainId))
     return result?.length ? result : EMPTY_ARRAY
-  }, [currencies])
+  }, [currencies, chainId])
 
   const tokenBalances = useTokenBalances(account, tokens)
-  const containsETH: boolean = useMemo(() => currencies?.some(currency => currency?.isNative) ?? false, [currencies])
+  const containsETH: boolean = useMemo(
+    () => currencies?.some(currency => isTokenNative(currency, chainId)) ?? false,
+    [currencies, chainId],
+  )
+
   const accounts = useMemo(() => (containsETH ? [account] : EMPTY_ARRAY), [containsETH, account])
   const ethBalance = useETHBalances(accounts)
 
@@ -132,10 +140,10 @@ export function useCurrencyBalances(
     () =>
       currencies?.map(currency => {
         if (!account || !currency) return undefined
-        if (currency?.isNative) return ethBalance[account]
-        return tokenBalances[currency.address]
+        if (isTokenNative(currency, chainId)) return ethBalance[account]
+        return tokenBalances[(currency as Token).address]
       }) ?? EMPTY_ARRAY,
-    [account, currencies, ethBalance, tokenBalances],
+    [account, currencies, ethBalance, tokenBalances, chainId],
   )
 }
 

@@ -14,7 +14,10 @@ export interface StepCustom extends Step {
   callbackEndStep?: () => void
 }
 
-export const TOTAL_STEP = 8
+export const TutorialNumbers = {
+  TOTAL_STEP: 9,
+  STEP_BRIDGE: 6,
+}
 
 // please do not remove TutorialIds.xxxxxx in some where to make sure tutorial work well
 export const TutorialIds = {
@@ -30,6 +33,7 @@ export const TutorialIds = {
   BUTTON_SETTING_SWAP_FORM: 'btnSettingSwapForm',
 
   EARNING_LINKS: 'earningLinks',
+  BRIDGE_LINKS: 'bridgeLinks',
   DISCOVER_LINK: 'discoverLink',
   CAMPAIGN_LINK: 'campaignLink',
   BUTTON_VIEW_GUIDE_SWAP: 'btnViewGuideSwap',
@@ -45,4 +49,5 @@ export const LIST_TITLE = {
   DISCOVER: t`Discover trending soon tokens`,
   CAMPAIGN: t`Participate in our campaigns`,
   VIEW_GUIDE: t`View our KyberSwap Guide again`,
+  BRIDGE: t`Buy Crypto or Bridge Tokens`,
 }

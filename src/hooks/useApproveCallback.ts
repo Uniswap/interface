@@ -110,9 +110,9 @@ export function useApproveCallback(
       .then((response: TransactionResponse) => {
         addTransactionWithType(response, {
           type: 'Approve',
-          summary: amountToApprove.currency.isNative
+          summary: amountToApprove?.currency?.isNative
             ? nativeOnChain(chainId as ChainId).symbol
-            : amountToApprove.currency.symbol,
+            : amountToApprove?.currency?.symbol,
           approval: { tokenAddress: token.address, spender: spender },
         })
       })
