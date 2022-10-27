@@ -3,12 +3,13 @@ import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft } from 'nft/utils'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Upload } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { shortenAddress } from 'nft/utils/address'
+import useCopyClipboard from 'hooks/useCopyClipboard'
 
 interface AssetPriceDetailsProps {
   asset: GenieAsset
@@ -109,6 +110,7 @@ const Erc1155ChangeButton = styled(Erc1155BuyNowText)<{ remove: boolean }>`
 
 const UploadLink = styled.a`
   color: ${({ theme }) => theme.textSecondary};
+  cursor: pointer;
 
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};
@@ -138,9 +140,21 @@ const DiscoveryContainer = styled.div`
   align-items: center;
 `
 
-const OwnerText = styled.span`
+const OwnerText = styled.a`
   font-size: 14px;
   line-height: 20px;
+  color: ${({ theme }) => theme.textSecondary};
+  text-decoration: none;
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
 `
 
 const OwnerInformationContainer = styled.div`
@@ -234,6 +248,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
+  const [isCopied, setCopied] = useCopyClipboard()
 
   const { quantity, assetInBag } = useMemo(() => {
     return {
@@ -259,8 +274,15 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   return (
     <Container>
       <OwnerInformationContainer>
-        <OwnerText>{asset.tokenType === 'ERC1155' ? '' : <span>{isOwner ? 'you' : shortAddress}</span>}</OwnerText>
-        <UploadLink href={`https://etherscan.io/address/${uploadLink}`} target="_blank">
+        <OwnerText target="_blank" href={`https://etherscan.io/address/${asset.owner}`}>
+          {asset.tokenType === 'ERC1155' ? '' : <span>{isOwner ? 'you' : shortAddress}</span>}
+        </OwnerText>
+        <UploadLink
+          onClick={() => {
+            setCopied(window.location.href)
+          }}
+          target="_blank"
+        >
           <Upload size={20} strokeWidth={2} />
         </UploadLink>
       </OwnerInformationContainer>
