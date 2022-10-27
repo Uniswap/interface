@@ -224,7 +224,14 @@ export default function App() {
                       <Route path="/profile" element={<Profile />} />
                       <Route path="/nfts" element={<NftExplore />} />
                       <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
-                      <Route path="/nfts/collection/:contractAddress" element={<CollectionPageLoading />} />
+                      <Route
+                        path="/nfts/collection/:contractAddress"
+                        element={
+                          <Suspense fallback={<CollectionPageLoading />}>
+                            <Collection />
+                          </Suspense>
+                        }
+                      />
                       <Route
                         path="/nfts/collection/:contractAddress/activity"
                         element={
