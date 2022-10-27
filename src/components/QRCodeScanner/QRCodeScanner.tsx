@@ -57,6 +57,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
   const [barcodes, setBarcodes] = useState<Barcode[]>([])
   const data = barcodes[0]?.content.data
   const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
+  const [connectionLayout, setConnectionLayout] = useState<LayoutRectangle | null>()
 
   useEffect(() => {
     async function getPermissionStatuses() {
@@ -169,7 +170,17 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
             width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
           />
           {isWalletConnectModal && props.numConnections > 0 && (
-            <Box mt="md">
+            <Box
+              bottom={0}
+              position="absolute"
+              style={{
+                transform: [
+                  {
+                    translateY: connectionLayout ? connectionLayout.height + theme.spacing.lg : 0,
+                  },
+                ],
+              }}
+              onLayout={(event: any) => setConnectionLayout(event.nativeEvent.layout)}>
               <Button
                 IconName={GlobalIcon}
                 emphasis={ButtonEmphasis.Secondary}
