@@ -14,6 +14,8 @@ module.exports = function (api) {
         allowUndefined: false,
       },
     ],
+    // https://github.com/software-mansion/react-native-reanimated/issues/3364#issuecomment-1268591867
+    '@babel/plugin-proposal-export-namespace-from',
     [
       'react-native-reanimated/plugin',
       {
