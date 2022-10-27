@@ -7,6 +7,7 @@ import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useUSDValue } from 'src/features/gas/hooks'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { textVariants } from 'src/styles/font'
 import { iconSizes, spacing } from 'src/styles/sizing'
 import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'src/utils/format'
 import { tryParseRawAmount } from 'src/utils/tryParseAmount'
@@ -30,10 +31,12 @@ export function SpendingDetails({ value, chainId }: { value: string; chainId: Ch
         </Text>
         {!usdValue ? (
           <Flex width={spacing.xxl}>
-            <Loading type="text" />
+            <Loading height={textVariants.bodySmall.lineHeight} type="text" />
           </Flex>
         ) : (
-          <Text color="textSecondary">({formatUSDPrice(usdValue)})</Text>
+          <Text color="textSecondary" variant="bodySmall">
+            ({formatUSDPrice(usdValue)})
+          </Text>
         )}
       </Flex>
     </Flex>

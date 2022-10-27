@@ -1,9 +1,11 @@
+import { BigNumber } from 'ethers'
 import { Transaction, TransactionDescription } from 'no-yolo-signatures'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Box, Flex } from 'src/components/layout'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
 import { ChainId } from 'src/constants/chains'
@@ -13,6 +15,7 @@ import {
   isTransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
 import { getValidAddress, shortenAddress } from 'src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
@@ -143,7 +146,9 @@ function TransactionDetails({
 
   return (
     <Flex gap="sm">
-      {value ? <SpendingDetails chainId={chainId} value={value} /> : null}
+      {value && !BigNumber.from(value).eq(0) ? (
+        <SpendingDetails chainId={chainId} value={value} />
+      ) : null}
       {to ? (
         <Flex row alignItems="center" gap="md">
           <Text color="textSecondary" variant="bodySmall">
@@ -152,22 +157,27 @@ function TransactionDetails({
           <AddressButton address={to} chainId={chainId} />
         </Flex>
       ) : null}
-      {isLoading || !parsedData ? (
-        <Text color="textTertiary" variant="bodySmall">
-          {isLoading ? ' ' : t('Unable to decode this transaction request')}
+      <Flex row alignItems="center" gap="md">
+        <Text color="textSecondary" variant="bodySmall">
+          {t('Function')}:
         </Text>
-      ) : (
-        <Flex row alignItems="center" gap="md">
-          <Text color="textSecondary" variant="bodySmall">
-            {t('Function')}:
-          </Text>
-          <Box backgroundColor="backgroundOutline" borderRadius="xs" px="xs" py="xxs">
-            <Text color="textPrimary" variant="monospace">
-              {parsedData.name}
+        {isLoading ? (
+          <Flex py="xxs" width="20%">
+            <Loading height={textVariants.bodySmall.lineHeight} type="text" />
+          </Flex>
+        ) : (
+          <Flex row alignItems="center" gap="md">
+            <Text color="textSecondary" variant="bodySmall">
+              {t('Function')}:
             </Text>
-          </Box>
-        </Flex>
-      )}
+            <Box backgroundColor="backgroundOutline" borderRadius="xs" px="xs" py="xxs">
+              <Text color="textPrimary" variant="monospace">
+                {parsedData ? parsedData.name : t('Unknown')}
+              </Text>
+            </Box>
+          </Flex>
+        )}
+      </Flex>
     </Flex>
   )
 }

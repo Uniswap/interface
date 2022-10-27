@@ -6,6 +6,7 @@ import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useUSDValue } from 'src/features/gas/hooks'
+import { textVariants } from 'src/styles/font'
 import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 export function NetworkFee({ chainId, gasFee }: { chainId: ChainId; gasFee?: string }) {
@@ -29,7 +30,7 @@ export function NetworkFee({ chainId, gasFee }: { chainId: ChainId; gasFee?: str
           </Flex>
         ) : (
           <Flex width="50%">
-            <Loading type="text" />
+            <Loading height={textVariants.subheadSmall.lineHeight} type="text" />
           </Flex>
         )}
       </Flex>

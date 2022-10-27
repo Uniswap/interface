@@ -28,9 +28,10 @@ type SkeletonType =
 type LoadingProps = {
   type?: SkeletonType
   repeat?: number
+  height?: number
 }
 
-const useChildFromType = (type: SkeletonType, repeat: number) => {
+const useChildFromType = (type: SkeletonType, repeat: number, height?: number) => {
   const theme = useAppTheme()
   switch (type) {
     case 'header':
@@ -97,7 +98,7 @@ const useChildFromType = (type: SkeletonType, repeat: number) => {
         </Box>
       )
     case 'text':
-      return <BoxLoader borderRadius="xs" height={16} />
+      return <BoxLoader borderRadius="xs" height={height ?? 16} />
     case 'nft':
       return (
         <Box>
@@ -129,8 +130,8 @@ const useChildFromType = (type: SkeletonType, repeat: number) => {
   }
 }
 
-export function Loading({ type = 'box', repeat = 1 }: LoadingProps) {
-  const child = useChildFromType(type, repeat)
+export function Loading({ type = 'box', repeat = 1, height }: LoadingProps) {
+  const child = useChildFromType(type, repeat, height)
 
   return <Shimmer>{child}</Shimmer>
 }
