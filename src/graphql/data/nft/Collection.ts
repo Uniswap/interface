@@ -128,6 +128,6 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
     discordUrl: queryCollection?.discordUrl ?? undefined,
     externalUrl: queryCollection?.homepageUrl ?? undefined,
     // rarityVerified: boolean, // TODO move check to individual assets
-    // isFoundation: boolean, // TODO ask backend how to derive
+    // isFoundation: boolean, // TODO ask backend to add
   }
 }
