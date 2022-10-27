@@ -127,7 +127,7 @@ export interface GenieCollection {
   instagram?: string
   discordUrl?: string
   externalUrl?: string
-  rarityVerified?: boolean // TODO move check to individual assets
+  rarityVerified?: boolean
   isFoundation?: boolean
 }
 

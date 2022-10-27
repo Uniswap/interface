@@ -126,7 +126,7 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
     instagram: queryCollection?.instagramName ?? undefined,
     discordUrl: queryCollection?.discordUrl ?? undefined,
     externalUrl: queryCollection?.homepageUrl ?? undefined,
-    // rarityVerified: boolean, // TODO move check to individual assets
+    rarityVerified: false, // TODO update when backend supports
     // isFoundation: boolean, // TODO ask backend to add
   }
 }
