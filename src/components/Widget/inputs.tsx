@@ -104,8 +104,8 @@ export function useSyncWidgetInputs({
     () => ({
       type,
       amount,
-      // If the default has not yet been handled, preemptively return it.
-      ...(token && tokens.default?.equals(token) ? tokens : { [Field.OUTPUT]: token }),
+      // If the default has not yet been handled, preemptively disable the widget by passing no tokens.
+      ...(token && tokens.default?.equals(token) ? tokens : undefined),
     }),
     [amount, token, tokens, type]
   )
