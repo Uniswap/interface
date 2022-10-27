@@ -156,6 +156,7 @@ function NftsTabInner({
         owner: owner,
         address: asset.contractAddress ?? '',
         token_id: asset.tokenId ?? '',
+        floorPrice: asset.floorPrice, // TODO(MOB-3018): Change when switching over to GQL API on this screen
       })
     },
     [navigation, owner]

@@ -23,6 +23,7 @@ import { useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { shortenAddress } from 'src/utils/addresses'
+import { formatNFTFloorPrice } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 
 // TODO {MOB-2827}: replace with `uniswapAppUrl` const when NFT feature is moved off vercel
@@ -30,7 +31,7 @@ export const UNISWAP_NFT_BASE_URL = 'https://interface-6y0ofdy69-uniswap.vercel.
 
 export function NFTItemScreen({
   route: {
-    params: { owner, address, token_id },
+    params: { owner, address, token_id, floorPrice },
   },
 }: AppStackScreenProp<Screens.NFTItem>) {
   const theme = useAppTheme()
@@ -151,7 +152,19 @@ export function NFTItemScreen({
                     )}
                   </Flex>
                 </Box>
-                {/* TODO(MOB-2788): add floor price */}
+                {floorPrice && (
+                  <Box>
+                    <Text
+                      color="textTertiary"
+                      numberOfLines={1}
+                      textAlign="right"
+                      variant="buttonLabelMicro">
+                      {t('Floor: {{floorPrice}} ETH', {
+                        floorPrice: formatNFTFloorPrice(floorPrice),
+                      })}
+                    </Text>
+                  </Box>
+                )}
               </Flex>
             </Flex>
           </TouchableArea>

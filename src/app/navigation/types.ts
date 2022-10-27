@@ -15,7 +15,7 @@ import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 
 type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
-  Pick<NFTAsset.Asset, 'token_id'>
+  Pick<NFTAsset.Asset, 'token_id'> & { floorPrice?: number }
 
 export type TabParamList = {
   [Tabs.Home]: undefined
