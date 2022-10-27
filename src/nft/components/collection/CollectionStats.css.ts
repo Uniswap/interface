@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { body, bodySmall } from 'nft/css/common.css'
+import { bodySmall, buttonTextSmall, headlineSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
 import { breakpoints, sprinkles } from '../../css/sprinkles.css'
@@ -85,11 +85,11 @@ export const readMore = style([
     verticalAlign: 'top',
     lineHeight: '20px',
   },
+  buttonTextSmall,
   sprinkles({
-    color: 'blue400',
+    color: 'textSecondary',
     cursor: 'pointer',
     marginLeft: '4',
-    fontSize: '14',
   }),
 ])
 
@@ -106,7 +106,7 @@ export const statsLabel = style([
 ])
 
 export const statsValue = style([
-  body,
+  headlineSmall,
   sprinkles({
     fontWeight: 'medium',
   }),

@@ -1,4 +1,3 @@
-import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { MouseoverTooltip } from 'components/Tooltip/index'
@@ -15,7 +14,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
 import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
-import { fetchPrice } from 'nft/utils'
+import { useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
@@ -26,10 +25,10 @@ import { toSignificant } from 'nft/utils/toSignificant'
 import qs from 'query-string'
 import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { useQuery } from 'react-query'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 
+import { SUSPICIOUS_TEXT } from '../collection/Card'
 import * as styles from './AssetDetails.css'
 
 const AudioPlayer = ({
@@ -115,8 +114,8 @@ interface AssetDetailsProps {
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const [creatorAddress, setCreatorAddress] = useState('')
@@ -132,7 +131,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const [isSelected, setSelected] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const { account: address, provider } = useWeb3React()
-  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
 
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
@@ -179,13 +177,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   }, [asset, address, provider])
 
-  const USDPrice = useMemo(
-    () =>
-      fetchedPriceData &&
-      asset.priceInfo &&
-      (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString(),
-    [asset.priceInfo, fetchedPriceData]
-  )
+  const USDPrice = useUsdPrice(asset)
 
   return (
     <AnimatedBox
@@ -283,7 +275,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={headlineMedium}>
               {asset.susFlag && (
                 <Box marginTop="8">
-                  <MouseoverTooltip text={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}>
+                  <MouseoverTooltip text={<Box fontWeight="normal">{SUSPICIOUS_TEXT}</Box>}>
                     <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />
                   </MouseoverTooltip>
                 </Box>
@@ -401,8 +393,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 boxShadow={{ hover: 'elevation' }}
                 onClick={() => {
                   if (isSelected) {
-                    removeAssetFromBag(asset)
-                  } else addAssetToBag(asset)
+                    removeAssetsFromBag([asset])
+                  } else addAssetsToBag([asset])
                   setSelected((x) => !x)
                 }}
               >

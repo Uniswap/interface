@@ -52,17 +52,25 @@ export const gnosisSafeConnection: Connection = {
   type: ConnectionType.GNOSIS_SAFE,
 }
 
-const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnect>(
-  (actions) =>
-    new WalletConnect({
-      actions,
-      options: {
-        rpc: RPC_URLS,
-        qrcode: true,
-      },
-      onError,
-    })
-)
+const [web3WalletConnect, web3WalletConnectHooks] = initializeConnector<WalletConnect>((actions) => {
+  // Avoid testing for the best URL by only passing a single URL per chain.
+  // Otherwise, WC will not initialize until all URLs have been tested (see getBestUrl in web3-react).
+  const RPC_URLS_WITHOUT_FALLBACKS = Object.entries(RPC_URLS).reduce(
+    (map, [chainId, urls]) => ({
+      ...map,
+      [chainId]: urls[0],
+    }),
+    {}
+  )
+  return new WalletConnect({
+    actions,
+    options: {
+      rpc: RPC_URLS_WITHOUT_FALLBACKS,
+      qrcode: true,
+    },
+    onError,
+  })
+})
 export const walletConnectConnection: Connection = {
   connector: web3WalletConnect,
   hooks: web3WalletConnectHooks,

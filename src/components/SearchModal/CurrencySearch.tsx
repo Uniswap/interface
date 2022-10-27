@@ -5,7 +5,6 @@ import { useWeb3React } from '@web3-react/core'
 import { EventName, ModalName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { sendEvent } from 'components/analytics'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
@@ -29,8 +28,8 @@ import { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
 import CurrencyList from './CurrencyList'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
-const ContentWrapper = styled(Column)<{ redesignFlag?: boolean }>`
-  background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.backgroundSurface};
+const ContentWrapper = styled(Column)`
+  background-color: ${({ theme }) => theme.backgroundSurface};
   width: 100%;
   flex: 1 1;
   position: relative;
@@ -57,9 +56,6 @@ export function CurrencySearch({
   onDismiss,
   isOpen,
 }: CurrencySearchProps) {
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
-
   const { chainId } = useWeb3React()
   const theme = useTheme()
 
@@ -71,7 +67,8 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
 
-  const allTokens = useActiveTokens()
+  // Only display 'imported' tokens when the search filter has input
+  const defaultTokens = useActiveTokens(debouncedQuery.length > 0)
 
   // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
@@ -91,8 +88,8 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const filteredTokens: Token[] = useMemo(() => {
-    return Object.values(allTokens).filter(getTokenFilter(debouncedQuery))
-  }, [allTokens, debouncedQuery])
+    return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
+  }, [defaultTokens, debouncedQuery])
 
   const [balances, balancesAreLoading] = useAllTokenBalances()
   const sortedTokens: Token[] = useMemo(
@@ -176,7 +173,7 @@ export function CurrencySearch({
   }, [])
 
   return (
-    <ContentWrapper redesignFlag={redesignFlagEnabled}>
+    <ContentWrapper>
       <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression>
         <PaddedColumn gap="16px">
           <RowBetween>
@@ -191,7 +188,6 @@ export function CurrencySearch({
               id="token-search-input"
               placeholder={t`Search name or paste address`}
               autoComplete="off"
-              redesignFlag={redesignFlagEnabled}
               value={searchQuery}
               ref={inputRef as RefObject<HTMLInputElement>}
               onChange={handleInput}
@@ -208,7 +204,7 @@ export function CurrencySearch({
             />
           )}
         </PaddedColumn>
-        <Separator redesignFlag={redesignFlagEnabled} />
+        <Separator />
         {searchToken && !searchTokenIsAdded ? (
           <Column style={{ padding: '20px 0', height: '100%' }}>
             <CurrencyRow

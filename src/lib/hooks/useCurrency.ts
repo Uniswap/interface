@@ -2,89 +2,16 @@ import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import ERC20_ABI from 'abis/erc20.json'
-import { Erc20 } from 'abis/types'
-import { isSupportedChain, SupportedChainId } from 'constants/chains'
-import { RPC_PROVIDERS } from 'constants/providers'
+import { isSupportedChain } from 'constants/chains'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useEffect, useMemo, useState } from 'react'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { useMemo } from 'react'
 
+import { DEFAULT_ERC20_DECIMALS } from '../../constants/tokens'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
-import { getContract, isAddress } from '../../utils'
+import { isAddress } from '../../utils'
 import { supportedChainId } from '../../utils/supportedChainId'
-
-/**
- * Returns a Token from query data.
- * Data should already include all fields except decimals, or it will be considered invalid.
- * Returns null if the token is loading or null was passed.
- * Returns undefined if invalid or the token does not exist.
- */
-export function useTokenFromQuery({
-  address: tokenAddress,
-  chainId,
-  symbol,
-  name,
-  project,
-}: {
-  address?: string
-  chainId?: SupportedChainId
-  symbol?: string | null
-  name?: string | null
-  project?: { logoUrl?: string | null } | null
-} = {}): Token | null | undefined {
-  const { chainId: activeChainId } = useWeb3React()
-  const address = isAddress(tokenAddress)
-  const [decimals, setDecimals] = useState<number | null | undefined>(null)
-
-  const tokenContract = useTokenContract(chainId === activeChainId ? (address ? address : undefined) : undefined, false)
-  const { loading, result: [decimalsResult] = [] } = useSingleCallResult(
-    tokenContract,
-    'decimals',
-    undefined,
-    NEVER_RELOAD
-  )
-
-  useEffect(() => {
-    if (loading) {
-      setDecimals(null)
-    } else if (decimalsResult) {
-      setDecimals(decimalsResult)
-    } else if (!address || !chainId || chainId === activeChainId) {
-      setDecimals(undefined)
-    } else {
-      setDecimals(null)
-
-      // Load decimals from a cross-chain RPC provider.
-      const provider = RPC_PROVIDERS[chainId]
-      const contract = getContract(address, ERC20_ABI, provider) as Erc20
-      contract
-        .decimals()
-        .then((value) => {
-          if (!stale) setDecimals(value)
-        })
-        .catch(() => undefined)
-    }
-
-    let stale = false
-    return () => {
-      stale = true
-    }
-  }, [activeChainId, address, chainId, decimalsResult, loading])
-
-  return useMemo(() => {
-    if (!chainId || !address) return undefined
-    if (decimals === null || decimals === undefined) return decimals
-    if (!symbol || !name) {
-      return new Token(chainId, address, decimals, symbol ?? undefined, name ?? undefined)
-    } else {
-      const logoURI = project?.logoUrl ?? undefined
-      return new WrappedTokenInfo({ chainId, address, decimals, symbol, name, logoURI })
-    }
-  }, [address, chainId, decimals, name, project?.logoUrl, symbol])
-}
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
@@ -121,7 +48,8 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
     () => decimals.loading || symbol.loading || tokenName.loading,
     [decimals.loading, symbol.loading, tokenName.loading]
   )
-  const parsedDecimals = useMemo(() => decimals.result?.[0], [decimals.result])
+  const parsedDecimals = useMemo(() => decimals?.result?.[0] ?? DEFAULT_ERC20_DECIMALS, [decimals.result])
+
   const parsedSymbol = useMemo(
     () => parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
     [symbol.result, symbolBytes32.result]
@@ -134,9 +62,7 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Tok
   return useMemo(() => {
     // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
     if (typeof tokenAddress !== 'string' || !isSupportedChain(chainId) || !formattedAddress) return undefined
-
     if (isLoading || !chainId) return null
-    if (!parsedDecimals) return undefined
 
     return new Token(chainId, formattedAddress, parsedDecimals, parsedSymbol, parsedName)
   }, [chainId, tokenAddress, formattedAddress, isLoading, parsedDecimals, parsedSymbol, parsedName])
@@ -152,7 +78,6 @@ type TokenMap = { [address: string]: Token }
 export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string | null): Token | null | undefined {
   const address = isAddress(tokenAddress)
   const token: Token | undefined = address ? tokens[address] : undefined
-
   const tokenFromNetwork = useTokenFromActiveNetwork(token ? undefined : address ? address : undefined)
 
   return tokenFromNetwork ?? token

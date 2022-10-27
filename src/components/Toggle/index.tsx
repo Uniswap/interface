@@ -1,23 +1,16 @@
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { darken } from 'polished'
 import { useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
 
-const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean; redesignFlag: boolean }>`
+const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   align-items: center;
-  background: ${({ isActive, theme, redesignFlag }) =>
-    redesignFlag && isActive
-      ? theme.accentActionSoft
-      : redesignFlag && !isActive
-      ? 'transparent'
-      : theme.deprecated_bg1};
-  border: ${({ redesignFlag, theme, isActive }) =>
-    redesignFlag && !isActive ? `1px solid ${theme.backgroundOutline}` : 'none'};
+  background: ${({ isActive, theme }) => (isActive ? theme.accentActionSoft : 'transparent')};
+  border: ${({ theme, isActive }) => (isActive ? 'none' : `1px solid ${theme.backgroundOutline}`)};
   border-radius: 20px;
   cursor: pointer;
   display: flex;
   outline: none;
-  padding: ${({ redesignFlag }) => (redesignFlag ? '4px' : '0.4rem 0.4rem')};
+  padding: 4px;
   width: fit-content;
 `
 
@@ -64,8 +57,8 @@ const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string; isInit
   :hover {
     ${({ bgColor, theme, isActive }) => ToggleElementHoverStyle(!!bgColor, theme, isActive)}
   }
-  margin-left: ${({ isActive }) => (isActive ? '2.2em' : '0em')};
-  margin-right: ${({ isActive }) => (!isActive ? '2.2em' : '0em')};
+  margin-left: ${({ isActive }) => isActive && '2.2em'};
+  margin-right: ${({ isActive }) => !isActive && '2.2em'};
   width: 24px;
 `
 
@@ -78,8 +71,6 @@ interface ToggleProps {
 
 export default function Toggle({ id, bgColor, isActive, toggle }: ToggleProps) {
   const [isInitialToggleLoad, setIsInitialToggleLoad] = useState(true)
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const switchToggle = () => {
     toggle()
@@ -87,7 +78,7 @@ export default function Toggle({ id, bgColor, isActive, toggle }: ToggleProps) {
   }
 
   return (
-    <Wrapper id={id} isActive={isActive} onClick={switchToggle} redesignFlag={redesignFlagEnabled}>
+    <Wrapper id={id} isActive={isActive} onClick={switchToggle}>
       <ToggleElement isActive={isActive} bgColor={bgColor} isInitialToggleLoad={isInitialToggleLoad} />
     </Wrapper>
   )

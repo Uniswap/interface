@@ -45,8 +45,8 @@ const formatListingStatus = (status: OrderStatus): string => {
 interface BuyCellProps {
   event: ActivityEvent
   collectionName: string
-  selectAsset: (asset: GenieAsset) => void
-  removeAsset: (asset: GenieAsset) => void
+  selectAsset: (assets: GenieAsset[]) => void
+  removeAsset: (assets: GenieAsset[]) => void
   itemsInBag: BagItem[]
   cartExpanded: boolean
   toggleCart: () => void
@@ -81,7 +81,7 @@ export const BuyCell = ({
           className={event.orderStatus === OrderStatus.VALID && isSelected ? styles.removeCell : styles.buyCell}
           onClick={(e: MouseEvent) => {
             e.preventDefault()
-            isSelected ? removeAsset(asset) : selectAsset(asset)
+            isSelected ? removeAsset([asset]) : selectAsset([asset])
             !isSelected && !cartExpanded && !isMobile && toggleCart()
           }}
           disabled={event.orderStatus !== OrderStatus.VALID}
