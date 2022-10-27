@@ -97,6 +97,7 @@ export const SearchBar = () => {
 
   const navbarSearchEventProperties = {
     navbar_search_input_text: debouncedSearchValue,
+    hasInput: debouncedSearchValue.length > 0,
   }
 
   return (
@@ -157,6 +158,7 @@ export const SearchBar = () => {
               toggleOpen={toggleOpen}
               tokens={reducedTokens}
               collections={reducedCollections}
+              queryText={debouncedSearchValue}
               hasInput={debouncedSearchValue.length > 0}
               isLoading={tokensAreLoading || (collectionsAreLoading && phase1Flag === NftVariant.Enabled)}
             />
