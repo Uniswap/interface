@@ -281,19 +281,10 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
     stats.stats && stats.stats.one_day_floor_change ? Math.round(Math.abs(stats.stats.one_day_floor_change) * 100) : 0
   const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_floor_change) : null
 
-  const statsLoadingSkeleton = new Array(5).fill(
-    <>
-      <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
-        <div className={styles.statsLabelLoading} />
-        <span className={styles.statsValueLoading} />
-      </Box>
-    </>
-  )
-
   return (
     <Row gap={{ sm: '36', md: '60' }} {...props}>
       {isCollectionStatsLoading ? (
-        statsLoadingSkeleton
+        statsLoadingSkeleton(isMobile ?? false)
       ) : (
         <>
           {stats.floorPrice ? (
@@ -341,22 +332,9 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 
 export const CollectionStatsLoading = ({ isMobile }: { isMobile: boolean }) => {
   return (
-    <Box
-      display="flex"
-      marginTop={isMobile ? '20' : '0'}
-      justifyContent="center"
-      position="relative"
-      flexDirection="column"
-      width="full"
-    >
-      <Box as="div" borderRadius="round" position="absolute" className={styles.collectionImageIsLoadingBackground} />
-      <Box
-        as="div"
-        background="explicitWhite"
-        borderRadius="round"
-        position="absolute"
-        className={styles.collectionImageIsLoading}
-      />
+    <Column marginTop={isMobile ? '20' : '0'} position="relative" width="full">
+      <Box className={styles.collectionImageIsLoadingBackground} />
+      <Box className={styles.collectionImageIsLoading} />
       <Box className={styles.statsText}>
         <Box className={styles.nameTextLoading} />
         {!isMobile && (
@@ -377,7 +355,7 @@ export const CollectionStatsLoading = ({ isMobile }: { isMobile: boolean }) => {
           </Marquee>
         </>
       )}
-    </Box>
+    </Column>
   )
 }
 
