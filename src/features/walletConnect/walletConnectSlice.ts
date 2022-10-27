@@ -21,8 +21,7 @@ interface BaseRequest {
   account: string
   dapp: DappInfo
 }
-
-interface SignRequest extends BaseRequest {
+export interface SignRequest extends BaseRequest {
   type: EthSignMethod
   message: string | null
   rawMessage: string
@@ -33,7 +32,13 @@ export interface TransactionRequest extends BaseRequest {
   transaction: EthTransaction
 }
 
-export type WalletConnectRequest = SignRequest | TransactionRequest
+export interface SwitchChainRequest extends BaseRequest {
+  type: EthMethod.SwitchChain
+  sessionId: string
+  newChainId: number
+}
+
+export type WalletConnectRequest = SignRequest | TransactionRequest | SwitchChainRequest
 
 export const isTransactionRequest = (
   request: WalletConnectRequest

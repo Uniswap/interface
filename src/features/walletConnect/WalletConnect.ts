@@ -31,6 +31,10 @@ export const rejectRequest = (requestInternalId: string) => {
   RNWalletConnect.rejectRequest(requestInternalId)
 }
 
+export const confirmSwitchChainRequest = (requestInternalId: string) => {
+  RNWalletConnect.confirmSwitchChainRequest(requestInternalId)
+}
+
 export const sendSignature = (requestInternalId: string, signature: string) => {
   RNWalletConnect.sendSignature(requestInternalId, signature)
 }

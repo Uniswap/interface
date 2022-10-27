@@ -27,6 +27,7 @@ enum EventType: String, CaseIterable {
   case networkChanged = "network_changed"
   case sessionDisconnected = "session_disconnected"
   case sessionPending = "session_pending"
+  case switchChainRequest = "switch_chain_request"
 }
 
 enum ErrorType: String {
@@ -124,7 +125,6 @@ class RNWalletConnect: RCTEventEmitter {
 
   @objc
   func isValidWCUrl(_ url: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-    print(url)
     guard let wcUrl = WCURL(url) else {
       return resolve(false)
     }
@@ -150,6 +150,11 @@ class RNWalletConnect: RCTEventEmitter {
     guard let session: Session = self.serverWrapper.topicToSession[topic] else { return }
     
     self.serverWrapper.switchChainId(session: session, chainId: chainId)
+  }
+  
+  @objc
+  func confirmSwitchChainRequest(_ requestInternalId: String) {
+    self.serverWrapper.confirmSwitchChainRequest(requestInternalId: requestInternalId)
   }
   
   @objc

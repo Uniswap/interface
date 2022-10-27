@@ -196,9 +196,7 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
         px="lg"
         py="xxxl">
         <Flex alignItems="center" flex={1} gap="md" justifyContent="flex-end">
-          <Box>
-            <HeaderIcon dapp={pendingSession.dapp} showChain={false} />
-          </Box>
+          <HeaderIcon dapp={pendingSession.dapp} showChain={false} />
           <Text textAlign="center" variant="headlineSmall">
             <Trans t={t}>
               <Text fontWeight="bold">{{ dapp: pendingSession.dapp.name }}</Text> wants to connect

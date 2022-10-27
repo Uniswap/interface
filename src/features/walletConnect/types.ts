@@ -5,6 +5,7 @@ export enum EthMethod {
   EthSendTransaction = 'eth_sendTransaction',
   SignTypedData = 'eth_signTypedData',
   SignTypedDataV4 = 'eth_signTypedData_v4',
+  SwitchChain = 'wallet_switchEthereumChain',
   PersonalSign = 'personal_sign',
 }
 
@@ -29,6 +30,7 @@ export enum WCEventType {
   Error = 'error',
   SignRequest = 'sign_request',
   TransactionRequest = 'transaction_request',
+  SwitchChainRequest = 'switch_chain_request',
 }
 
 export type EthSignMethod =
@@ -97,6 +99,15 @@ export interface SignRequestEvent {
   raw_message: string
   message: string | null
   request_internal_id: string
+  dapp: DappInfo
+}
+
+export interface SwitchChainRequestEvent {
+  account: string
+  type: EthMethod.SwitchChain
+  request_internal_id: string
+  session_id: string
+  new_chain_id: number
   dapp: DappInfo
 }
 

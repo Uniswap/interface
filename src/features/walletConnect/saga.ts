@@ -28,6 +28,7 @@ import {
   SessionPendingEvent,
   SessionUpdatedEvent,
   SignRequestEvent,
+  SwitchChainRequestEvent,
   TransactionRequestEvent,
   WCError,
   WCErrorType,
@@ -175,6 +176,22 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       )
     }
 
+    const switchChainHandler = (req: SwitchChainRequestEvent) => {
+      emit(
+        addRequest({
+          account: req.account,
+          request: {
+            type: req.type,
+            account: req.account,
+            dapp: req.dapp,
+            sessionId: req.session_id,
+            internalId: req.request_internal_id,
+            newChainId: req.new_chain_id,
+          },
+        })
+      )
+    }
+
     const errorHandler = (req: WCError) => {
       switch (req.type) {
         case WCErrorType.UnsupportedChainError:
@@ -198,6 +215,7 @@ function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
       { type: WCEventType.SessionPending, handler: sessionPendingHandler },
       { type: WCEventType.SignRequest, handler: signRequestHandler },
       { type: WCEventType.TransactionRequest, handler: transactionRequestHandler },
+      { type: WCEventType.SwitchChainRequest, handler: switchChainHandler },
       { type: WCEventType.Error, handler: errorHandler },
     ]
 

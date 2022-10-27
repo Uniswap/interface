@@ -34,7 +34,7 @@ class WalletConnectServerWrapper {
     
     self.server.register(handler: WalletConnectSignRequestHandler(eventEmitter: eventEmitter, serverWrapper: self))
     self.server.register(handler: WalletConnectSignTransactionHandler(eventEmitter: eventEmitter, serverWrapper: self))
-    self.server.register(handler: WalletConnectSwitchChainHandler(eventEmitter: eventEmitter, serverWrapper: self))
+    self.server.register(handler: WalletConnectSwitchChainHandler(eventEmitter: eventEmitter, serverWrapper: self, supportedChainIds: supportedChainIds))
     self.server.register(handler: WalletConnectAddChainHandler(eventEmitter: eventEmitter, serverWrapper: self))
   }
   
@@ -169,6 +169,38 @@ class WalletConnectServerWrapper {
         ]
       )
     }
+  }
+  
+  func confirmSwitchChainRequest(requestInternalId: String) {
+    guard let request = self.pendingRequests[requestInternalId] else {
+      return self.eventEmitter.sendEvent(
+        withName: EventType.error.rawValue,
+        body: [
+          "type": ErrorType.invalidRequestId.rawValue,
+          "message": "Are you sure you are using request_internal_id and not request.id?"
+        ]
+      )
+    }
+
+    do {
+      let session = try self.getSessionFromTopic(request.url.topic)
+      let chainIdRequest = try request.parameter(of: WalletSwitchEthereumChainObject.self, at: 0)
+      let chainId = try chainIdRequest.toInt()
+    
+      switchChainId(session: session, chainId: chainId)
+
+      // TODO: Should be responding to wallet_switchEthereumChain requests with null based on https://eips.ethereum.org/EIPS/eip-3326, but Response requires non-null value
+      try self.server.send(Response(url: request.url, value: chainId, id: request.id!))
+    } catch {
+      self.eventEmitter.sendEvent(
+        withName: EventType.error.rawValue,
+        body: [
+          "type": ErrorType.wcSwitchChainError.rawValue,
+        ]
+      )
+    }
+    
+    self.pendingRequests.removeValue(forKey: requestInternalId)
   }
   
   func rejectRequest(requestInternalId: String) {

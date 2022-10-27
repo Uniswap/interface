@@ -23,6 +23,7 @@ import { EthMethod, isPrimaryTypePermit, PermitMessage } from 'src/features/wall
 import { rejectRequest } from 'src/features/walletConnect/WalletConnect'
 import {
   isTransactionRequest,
+  SignRequest,
   TransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
@@ -36,7 +37,7 @@ const MAX_MODAL_MESSAGE_HEIGHT = 200
 interface Props {
   isVisible: boolean
   onClose: () => void
-  request: WalletConnectRequest
+  request: SignRequest | TransactionRequest
 }
 
 const isPotentiallyUnsafe = (request: WalletConnectRequest) =>

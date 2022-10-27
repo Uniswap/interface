@@ -24,9 +24,7 @@ export function ClientDetails({
 
   return (
     <Flex centered gap="md">
-      <Flex row alignItems="center" gap="md">
-        <HeaderIcon dapp={dapp} permitCurrency={permitCurrency} />
-      </Flex>
+      <HeaderIcon dapp={dapp} permitCurrency={permitCurrency} />
       <Flex centered gap="sm">
         <HeaderText
           permitAmount={permitInfo?.amount}

@@ -1,10 +1,12 @@
 import React, { useCallback } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { WalletConnectRequestModal } from 'src/components/WalletConnect/RequestModal/WalletConnectRequestModal'
+import { WalletConnectSwitchChainModal } from 'src/components/WalletConnect/RequestModal/WalletConnectSwitchChainModal'
 import { WalletConnectModal } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { EthMethod } from 'src/features/walletConnect/types'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { removePendingSession, removeRequest } from 'src/features/walletConnect/walletConnectSlice'
 
@@ -37,9 +39,12 @@ export function WalletConnectModals() {
           onClose={onClose}
         />
       )}
-      {currRequest && (
-        <WalletConnectRequestModal isVisible request={currRequest} onClose={onCloseRequest} />
-      )}
+      {currRequest &&
+        (currRequest.type === EthMethod.SwitchChain ? (
+          <WalletConnectSwitchChainModal isVisible request={currRequest} onClose={onCloseRequest} />
+        ) : (
+          <WalletConnectRequestModal isVisible request={currRequest} onClose={onCloseRequest} />
+        ))}
     </>
   )
 }
