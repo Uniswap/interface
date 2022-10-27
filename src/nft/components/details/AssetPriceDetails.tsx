@@ -51,6 +51,7 @@ const MarketplaceIcon = styled.img`
 
 const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccentColor: boolean }>`
   width: 100%;
+
   background-color: ${({ theme, assetInBag, useAccentColor }) =>
     assetInBag ? theme.accentFailure : useAccentColor ? theme.accentAction : theme.backgroundInteractive};
   border-radius: 12px;
@@ -60,16 +61,12 @@ const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccen
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme }) => theme.stateOverlayHover};
+    background-color: ${({ theme }) => theme.accentActionSoft};
     transition: ${({
       theme: {
         transition: { duration, timing },
       },
     }) => css`background-color ${duration.medium} ${timing.ease}`};
-  }
-
-  &:active {
-    background-color: ${({ theme }) => theme.stateOverlayPressed};
   }
 `
 

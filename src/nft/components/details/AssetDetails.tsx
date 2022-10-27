@@ -83,18 +83,13 @@ const AddressTextLink = styled.a`
   word-wrap: break-word;
 
   &:hover {
-    color: ${({ theme }) => theme.stateOverlayPressed};
+    opacity: 0.6;
     transition: ${({
       theme: {
         transition: { duration, timing },
       },
-    }) => css`color ${duration.medium} ${timing.ease}`};
+    }) => css`opacity ${duration.medium} ${timing.ease}`};
   }
-
-  // @media (max-width: 680px) {
-  //   width: 400px;
-  //   word-wrap: break-word;
-  // }
 `
 
 const DescriptionText = styled.div`
