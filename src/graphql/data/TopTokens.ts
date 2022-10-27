@@ -12,7 +12,7 @@ import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
 import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
 import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery.graphql'
-import { filterPrices, PricePoint } from './Token'
+import { isPricePoint, PricePoint } from './TokenPrice'
 import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration, unwrapToken } from './util'
 
 const topTokens100Query = graphql`
@@ -137,7 +137,8 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
         next(data) {
           const map: SparklineMap = {}
           data.topTokens?.forEach(
-            (current) => current?.address && (map[current.address] = filterPrices(current?.market?.priceHistory))
+            (current) =>
+              current?.address && (map[current.address] = current?.market?.priceHistory?.filter(isPricePoint))
           )
           setSparklines(map)
         },
