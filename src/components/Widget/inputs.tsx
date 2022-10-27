@@ -104,7 +104,8 @@ export function useSyncWidgetInputs({
     () => ({
       type,
       amount,
-      // If the default has not yet been handled, preemptively disable the widget by passing no tokens.
+      // If the default has not yet been handled, preemptively disable the widget by passing no tokens. Effectively,
+      // this resets the widget - avoiding rendering stale state - because with no tokens the skeleton will be rendered.
       ...(token && tokens.default?.equals(token) ? tokens : undefined),
     }),
     [amount, token, tokens, type]
