@@ -1,4 +1,5 @@
-import { Identify, identify, init, track } from '@amplitude/analytics-browser'
+import { add, AmplitudeBrowser, Identify, identify, init, track } from '@amplitude/analytics-browser'
+import { webAttributionPlugin } from '@amplitude/plugin-web-attribution-browser'
 import { isProductionEnv } from 'utils/env'
 
 const API_KEY = isProductionEnv() ? process.env.REACT_APP_AMPLITUDE_KEY : process.env.REACT_APP_AMPLITUDE_TEST_KEY
@@ -15,6 +16,7 @@ export function initializeAnalytics() {
     console.error(`${keyName} is undefined, Amplitude analytics will not run.`)
     return
   }
+  add(webAttributionPlugin(AmplitudeBrowser))
   init(
     API_KEY,
     /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID

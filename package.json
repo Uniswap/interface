@@ -117,6 +117,7 @@
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^1.1.4",
+    "@amplitude/plugin-web-attribution-browser": "^0.2.4",
     "@coinbase/wallet-sdk": "^3.3.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",

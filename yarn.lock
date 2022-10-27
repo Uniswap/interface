@@ -48,6 +48,16 @@
     "@amplitude/ua-parser-js" "^0.7.31"
     tslib "^2.3.1"
 
+"@amplitude/analytics-client-common@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-client-common/-/analytics-client-common-0.3.4.tgz#3243a10773feec443217cce811375d365d544cd6"
+  integrity sha512-3xm1QKE5jhdJ7XzlOhKjfSEL9Cg0VxB09/pAqQtb6LlbRhztWa41/mW32iNYj9awqpoYg+4atuQy37CDFS5BSg==
+  dependencies:
+    "@amplitude/analytics-connector" "^1.4.5"
+    "@amplitude/analytics-core" "^0.9.7"
+    "@amplitude/analytics-types" "^0.11.0"
+    tslib "^2.3.1"
+
 "@amplitude/analytics-connector@^1.4.5":
   version "1.4.5"
   resolved "https://registry.yarnpkg.com/@amplitude/analytics-connector/-/analytics-connector-1.4.5.tgz#07e9375101332bd8b6f15e39e70f31f287e87ad0"
@@ -63,10 +73,32 @@
     "@amplitude/analytics-types" "^0.6.2"
     tslib "^2.3.1"
 
+"@amplitude/analytics-core@^0.9.7":
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-core/-/analytics-core-0.9.7.tgz#ef0073c0c8320af3b37a605dd40f65864071a8a8"
+  integrity sha512-IQ8/tjLwv88Fqus9ORz+/cp5J/lIXsOryBnf4aGfAbzNKcMYlvhxMk6K5Zdz3tAXs9hBRu5XqoqqGPAn6uRQCQ==
+  dependencies:
+    "@amplitude/analytics-types" "^0.11.0"
+    tslib "^2.3.1"
+
+"@amplitude/analytics-types@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-types/-/analytics-types-0.11.0.tgz#20efb8e36e44729a235e075bec6690346678138d"
+  integrity sha512-xvqGwF9Ga1zd41AcJdfSL7HFqfv/us25gotzxc3N9a3KsRwAkrcYRfsx0baaD4iLUQDNFfFq3OCW83T/UK4lgw==
+
 "@amplitude/analytics-types@^0.6.2":
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@amplitude/analytics-types/-/analytics-types-0.6.2.tgz#6fd97af97414fa2c6861c30aac3e24ce22152890"
   integrity sha512-9tCIY5kF6e3nPLUZC7h3rTANK6uZJvMFmF8R59TrkTbmmsT2bpYS869LMEaZBp4AybxAi15oNkAJ4JE+CkPkFg==
+
+"@amplitude/plugin-web-attribution-browser@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@amplitude/plugin-web-attribution-browser/-/plugin-web-attribution-browser-0.2.4.tgz#16b04f322ecdda70000904cc10963a5bcebedd41"
+  integrity sha512-KWxe12D3qHqzTd+L440S47qg05nCGMFadcMWxMD1a/yawlfMU3+4O+OE3VTi2Xr/jeWpfnEO/8mEMIYragxhaA==
+  dependencies:
+    "@amplitude/analytics-client-common" "^0.3.4"
+    "@amplitude/analytics-types" "^0.11.0"
+    tslib "^2.3.1"
 
 "@amplitude/ua-parser-js@0.7.31", "@amplitude/ua-parser-js@^0.7.31":
   version "0.7.31"
