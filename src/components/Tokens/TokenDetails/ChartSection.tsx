@@ -3,12 +3,12 @@ import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { PriceDurations, PricePoint, SingleTokenData } from 'graphql/data/Token'
+import { TokenQueryData } from 'graphql/data/Token'
+import { PriceDurations } from 'graphql/data/TokenPrice'
 import { TopToken } from 'graphql/data/TopTokens'
-import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod } from 'graphql/data/util'
+import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
-import { useMemo } from 'react'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
 
@@ -54,7 +54,7 @@ const TokenActions = styled.div`
 `
 
 export function useTokenLogoURI(
-  token: NonNullable<SingleTokenData> | NonNullable<TopToken>,
+  token: NonNullable<TokenQueryData> | NonNullable<TopToken>,
   nativeCurrency?: Token | NativeCurrency
 ) {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
@@ -71,36 +71,16 @@ export default function ChartSection({
   nativeCurrency,
   prices,
 }: {
-  token: NonNullable<SingleTokenData>
+  token: NonNullable<TokenQueryData>
   currency?: Currency | null
   nativeCurrency?: Token | NativeCurrency
-  prices: PriceDurations
+  prices?: PriceDurations
 }) {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
 
   const logoSrc = useTokenLogoURI(token, nativeCurrency)
-
-  // Backend doesn't always return latest price point for every duration.
-  // Thus we need to manually determine latest price point available, and
-  // append it to the prices list for every duration.
-  useMemo(() => {
-    let latestPricePoint: PricePoint = { value: 0, timestamp: 0 }
-    let latestPricePointTimePeriod: TimePeriod
-    Object.keys(prices).forEach((key) => {
-      const latestPricePointForTimePeriod = prices[key as unknown as TimePeriod]?.slice(-1)[0]
-      if (latestPricePointForTimePeriod && latestPricePointForTimePeriod.timestamp > latestPricePoint.timestamp) {
-        latestPricePoint = latestPricePointForTimePeriod
-        latestPricePointTimePeriod = key as unknown as TimePeriod
-      }
-    })
-    Object.keys(prices).forEach((key) => {
-      if ((key as unknown as TimePeriod) !== latestPricePointTimePeriod) {
-        prices[key as unknown as TimePeriod]?.push(latestPricePoint)
-      }
-    })
-  }, [prices])
 
   return (
     <ChartHeader>
@@ -124,7 +104,7 @@ export default function ChartSection({
       </TokenInfoContainer>
       <ChartContainer>
         <ParentSize>
-          {({ width }) => prices && <PriceChart prices={prices[timePeriod]} width={width} height={436} />}
+          {({ width }) => <PriceChart prices={prices ? prices?.[timePeriod] : null} width={width} height={436} />}
         </ParentSize>
       </ChartContainer>
     </ChartHeader>

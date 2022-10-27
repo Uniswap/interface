@@ -1,7 +1,6 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
-import { filterTimeAtom } from 'components/Tokens/state'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
@@ -18,16 +17,15 @@ import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
-import { useTokenQuery } from 'graphql/data/Token'
+import { QueryToken, useTokenQuery } from 'graphql/data/Token'
+import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useAtomValue } from 'jotai/utils'
-import { useTokenFromQuery } from 'lib/hooks/useCurrency'
-import { useCallback, useState, useTransition } from 'react'
+import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -36,15 +34,15 @@ export default function TokenDetails() {
   const chain = validateUrlChainParam(chainName)
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const nativeCurrency = nativeOnChain(pageChainId)
-  const timePeriod = useAtomValue(filterTimeAtom)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
-  const [tokenQueryData, prices] = useTokenQuery(
-    isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '',
-    chain,
-    timePeriod
-  )
-  const queryToken = useTokenFromQuery(isNative ? undefined : { ...tokenQueryData, chainId: pageChainId })
-  const token = isNative ? nativeCurrency : queryToken
+  const tokenQueryData = useTokenQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
+  const prices = useTokenPriceQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
+  const token = useMemo(() => {
+    if (!tokenAddress) return undefined
+    if (isNative) return nativeCurrency
+    if (tokenQueryData) return new QueryToken(tokenQueryData)
+    return new Token(pageChainId, tokenAddress, DEFAULT_ERC20_DECIMALS)
+  }, [isNative, nativeCurrency, pageChainId, tokenAddress, tokenQueryData])
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   const isBlockedToken = tokenWarning?.canProceed === false
@@ -64,13 +62,11 @@ export default function TokenDetails() {
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
   const navigateToWidgetSelectedToken = useCallback(
-    (input: Currency | undefined, output: Currency | undefined) => {
-      const update = output || input
-      if (!token || !update || input?.equals(token) || output?.equals(token)) return
-      const address = update.isNative ? NATIVE_CHAIN_ID : update.address
+    (token: Currency) => {
+      const address = token.isNative ? NATIVE_CHAIN_ID : token.address
       startTransition(() => navigate(`/tokens/${chainName}/${address}`))
     },
-    [chainName, navigate, token]
+    [chainName, navigate]
   )
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
@@ -129,8 +125,8 @@ export default function TokenDetails() {
 
         <RightPanel>
           <Widget
-            defaultToken={token === null ? undefined : token ?? nativeCurrency} // a null token is still loading, and should not be overridden.
-            onTokensChange={navigateToWidgetSelectedToken}
+            token={token ?? nativeCurrency}
+            onTokenChange={navigateToWidgetSelectedToken}
             onReviewSwapClick={onReviewSwapClick}
           />
           {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress ?? ''} warning={tokenWarning} />}

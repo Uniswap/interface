@@ -14,6 +14,9 @@ export enum EventName {
   PAGE_VIEWED = 'Page Viewed',
   NAVBAR_SEARCH_SELECTED = 'Navbar Search Selected',
   NAVBAR_SEARCH_EXITED = 'Navbar Search Exited',
+  NFT_ACTIVITY_SELECTED = 'NFT Activity Selected',
+  NFT_FILTER_OPENED = 'NFT Collection Filter Opened',
+  NFT_FILTER_SELECTED = 'NFT Filter Selected',
   NFT_TRENDING_ROW_SELECTED = 'Trending Row Selected',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
@@ -75,6 +78,7 @@ export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
  * Known pages in the app. Highest order context.
  */
 export enum PageName {
+  NFT_COLLECTION_PAGE = 'nft-collection-page',
   NFT_DETAILS_PAGE = 'nft-details-page',
   NFT_EXPLORE_PAGE = 'nft-explore-page',
   TOKEN_DETAILS_PAGE = 'token-details',
@@ -118,6 +122,9 @@ export enum ElementName {
   IMPORT_TOKEN_BUTTON = 'import-token-button',
   MAX_TOKEN_AMOUNT_BUTTON = 'max-token-amount-button',
   NAVBAR_SEARCH_INPUT = 'navbar-search-input',
+  NFT_ACTIVITY_TAB = 'nft-activity-tab',
+  NFT_FILTER_BUTTON = 'nft-filter-button',
+  NFT_FILTER_OPTION = 'nft-filter-option',
   NFT_TRENDING_ROW = 'nft-trending-row',
   PRICE_UPDATE_ACCEPT_BUTTON = 'price-update-accept-button',
   SWAP_BUTTON = 'swap-button',
@@ -139,4 +146,13 @@ export enum Event {
   onKeyPress = 'onKeyPress',
   onSelect = 'onSelect',
   // alphabetize additional events.
+}
+
+/**
+ * Known Filter Types for NFTs
+ */
+export enum FilterTypes {
+  MARKETPLACE = 'Marketplace',
+  PRICE_RANGE = 'Price Range',
+  TRAIT = 'Trait',
 }

@@ -7,7 +7,7 @@ import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
-import { PricePoint } from 'graphql/data/Token'
+import { PricePoint } from 'graphql/data/TokenPrice'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
@@ -59,7 +59,7 @@ export function getDeltaArrow(delta: number | null | undefined) {
 
 export function formatDelta(delta: number | null | undefined) {
   // Null-check not including zero
-  if (delta === null || delta === undefined) {
+  if (delta === null || delta === undefined || delta === Infinity || isNaN(delta)) {
     return '-'
   }
   let formattedDelta = delta.toFixed(2) + '%'
@@ -133,7 +133,7 @@ const timeOptionsHeight = 44
 interface PriceChartProps {
   width: number
   height: number
-  prices: PricePoint[] | undefined
+  prices: PricePoint[] | undefined | null
 }
 
 export function PriceChart({ width, height, prices }: PriceChartProps) {
@@ -281,7 +281,15 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
         <MissingPriceChart
           width={width}
           height={graphHeight}
-          message={prices && prices.length === 0 ? <NoV3DataMessage /> : <MissingDataMessage />}
+          message={
+            prices === null ? (
+              <Trans>Loading chart data</Trans>
+            ) : prices?.length === 0 ? (
+              <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
+            ) : (
+              <Trans>Missing chart data</Trans>
+            )
+          }
         />
       ) : (
         <svg width={width} height={graphHeight} style={{ minWidth: '100%' }}>
@@ -394,11 +402,6 @@ const StyledMissingChart = styled.svg`
 `
 
 const chartBottomPadding = 15
-
-const NoV3DataMessage = () => (
-  <Trans>This token doesn&apos;t have chart data because it hasn&apos;t been traded on Uniswap v3</Trans>
-)
-const MissingDataMessage = () => <Trans>Missing chart data</Trans>
 
 function MissingPriceChart({ width, height, message }: { width: number; height: number; message: ReactNode }) {
   const theme = useTheme()

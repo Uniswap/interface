@@ -44,7 +44,7 @@ export const MobileHoverBag = () => {
         </Box>
         <Column>
           <Box className={body} fontWeight="semibold">
-            {roundAndPluralize(itemsInBag.length, 'item')}
+            {roundAndPluralize(itemsInBag.length, 'NFT')}
           </Box>
           <Row gap="8">
             <Box className={body}>{`${formatWeiToDecimal(totalEthPrice.toString())}`}</Box>

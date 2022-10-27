@@ -123,11 +123,9 @@ const Bag = () => {
     return { totalEthPrice, totalUsdPrice }
   }, [itemsInBag, fetchedPriceData])
 
-  const { balance, sufficientBalance } = useMemo(() => {
-    const balance: BigNumber = parseEther(balanceInEth.toString())
-    const sufficientBalance = isConnected ? BigNumber.from(balance).gte(totalEthPrice) : true
-
-    return { balance, sufficientBalance }
+  const sufficientBalance = useMemo(() => {
+    const balance = parseEther(balanceInEth.toString())
+    return isConnected ? BigNumber.from(balance).gte(totalEthPrice) : true
   }, [balanceInEth, totalEthPrice, isConnected])
 
   const purchaseAssets = async (routingData: RouteResponse) => {
@@ -278,7 +276,6 @@ const Bag = () => {
                 <ScrollingIndicator show={userCanScroll && scrollProgress < 100} />
                 {hasAssetsToShow && !isProfilePage && (
                   <BagFooter
-                    balance={balance}
                     sufficientBalance={sufficientBalance}
                     isConnected={isConnected}
                     totalEthPrice={totalEthPrice}

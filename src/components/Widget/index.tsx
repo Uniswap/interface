@@ -20,7 +20,7 @@ import {
   getTokenAddress,
 } from 'analytics/utils'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 import { computeRealizedPriceImpact } from 'utils/prices'
@@ -39,26 +39,24 @@ function useWidgetTheme() {
 }
 
 export interface WidgetProps {
-  defaultToken?: Currency
-  onTokensChange?: (input: Currency | undefined, output: Currency | undefined) => void
+  token?: Currency
+  onTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick }: WidgetProps) {
+export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
   const { connector, provider } = useWeb3React()
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
-  const { inputs, tokenSelector } = useSyncWidgetInputs(defaultToken)
+  const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
+
   const onSwitchChain = useCallback(
     // TODO(WEB-1757): Widget should not break if this rejects - upstream the catch to ignore it.
     ({ chainId }: AddEthereumChainParameter) => switchChain(connector, Number(chainId)).catch(() => undefined),
     [connector]
   )
-  useEffect(() => {
-    onTokensChange?.(inputs.value.INPUT, inputs.value.OUTPUT)
-  }, [inputs.value.INPUT, inputs.value.OUTPUT, onTokensChange])
 
   const trace = useTrace({ section: SectionName.WIDGET })
   const [initialQuoteDate, setInitialQuoteDate] = useState<Date>()
@@ -134,7 +132,7 @@ export default function Widget({ defaultToken, onTokensChange, onReviewSwapClick
     [initialQuoteDate, trace]
   )
 
-  if (!inputs.value.INPUT && !inputs.value.OUTPUT) {
+  if (!(inputs.value.INPUT || inputs.value.OUTPUT)) {
     return <WidgetSkeleton />
   }
 

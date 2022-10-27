@@ -1,3 +1,5 @@
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useIsCollectionLoading } from 'nft/hooks'
@@ -27,13 +29,19 @@ export const ActivitySwitcher = ({
           >
             Items
           </Box>
-          <Box
-            as="button"
-            className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
-            onClick={() => !showActivity && toggleActivity()}
+          <TraceEvent
+            events={[Event.onClick]}
+            element={ElementName.NFT_ACTIVITY_TAB}
+            name={EventName.NFT_ACTIVITY_SELECTED}
           >
-            Activity
-          </Box>
+            <Box
+              as="button"
+              className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
+              onClick={() => !showActivity && toggleActivity()}
+            >
+              Activity
+            </Box>
+          </TraceEvent>
         </>
       )}
     </Row>
