@@ -61,7 +61,7 @@ const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccen
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme }) => theme.accentActionSoft};
+    background-color: ${({ theme, assetInBag }) => (assetInBag ? theme.accentFailureSoft : theme.accentActionSoft)};
     transition: ${({
       theme: {
         transition: { duration, timing },
@@ -289,7 +289,9 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               useAccentColor={true}
               onClick={() => (assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset]))}
             >
-              <ThemedText.SubHeader lineHeight={'20px'}>{assetInBag ? 'Remove' : 'Buy Now'}</ThemedText.SubHeader>
+              <ThemedText.SubHeader lineHeight={'20px'}>
+                <span style={{ color: 'white' }}>{assetInBag ? 'Remove' : 'Buy Now'}</span>
+              </ThemedText.SubHeader>
             </BuyNowButton>
           ) : (
             <Erc1155BuyNowButton>
