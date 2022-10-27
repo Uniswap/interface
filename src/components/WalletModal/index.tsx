@@ -139,66 +139,66 @@ export default function WalletModal({
   confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
-   // important that these are destructed from the account-specific web3-react context
-   const { active, account, connector, activate, error } = useWeb3React()
+  // important that these are destructed from the account-specific web3-react context
+  const { active, account, connector, activate, error } = useWeb3React()
 
-   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
-   const previousWalletView = usePrevious(walletView)
- 
-   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
- 
-   const [pendingError, setPendingError] = useState<boolean>()
- 
-   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
-   const toggleWalletModal = useWalletModalToggle()
- 
-   const previousAccount = usePrevious(account)
- 
-  
-   // close on connection, when logged out before
-   useEffect(() => {
-     if (account && !previousAccount && walletModalOpen) {
-       toggleWalletModal()
-     }
-   }, [account, previousAccount, toggleWalletModal, walletModalOpen])
- 
-   // always reset to account view
-   useEffect(() => {
-     if (walletModalOpen) {
-       setPendingError(false)
-       setWalletView(WALLET_VIEWS.ACCOUNT)
-     }
-   }, [walletModalOpen])
- 
-   // close modal when a connection is successful
-   const activePrevious = usePrevious(active)
-   const connectorPrevious = usePrevious(connector)
-   useEffect(() => {
-     if (walletModalOpen && ((active && !activePrevious) || (connector && connector !== connectorPrevious && !error))) {
-       setWalletView(WALLET_VIEWS.ACCOUNT)
-     }
-   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
- 
-   const tryActivation = async (connector: AbstractConnector | undefined) => {
-     let name = ''
-     Object.keys(SUPPORTED_WALLETS).map((key) => {
-       if (connector === SUPPORTED_WALLETS[key].connector) {
-         return (name = SUPPORTED_WALLETS[key].name)
-       }
-       return true
-     })
-     // log selected wallet
-     ReactGA.event({
-       category: 'Wallet',
-       action: 'Change Wallet',
-       label: name,
-     })
-  
+  const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
+  const previousWalletView = usePrevious(walletView)
+
+  const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
+
+  const [pendingError, setPendingError] = useState<boolean>()
+
+  const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
+  const toggleWalletModal = useWalletModalToggle()
+
+  const previousAccount = usePrevious(account)
+
+
+  // close on connection, when logged out before
+  useEffect(() => {
+    if (account && !previousAccount && walletModalOpen) {
+      toggleWalletModal()
+    }
+  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
+
+  // always reset to account view
+  useEffect(() => {
+    if (walletModalOpen) {
+      setPendingError(false)
+      setWalletView(WALLET_VIEWS.ACCOUNT)
+    }
+  }, [walletModalOpen])
+
+  // close modal when a connection is successful
+  const activePrevious = usePrevious(active)
+  const connectorPrevious = usePrevious(connector)
+  useEffect(() => {
+    if (walletModalOpen && ((active && !activePrevious) || (connector && connector !== connectorPrevious && !error))) {
+      setWalletView(WALLET_VIEWS.ACCOUNT)
+    }
+  }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
+
+  const tryActivation = async (connector: AbstractConnector | undefined) => {
+    let name = ''
+    Object.keys(SUPPORTED_WALLETS).map((key) => {
+      if (connector === SUPPORTED_WALLETS[key].connector) {
+        return (name = SUPPORTED_WALLETS[key].name)
+      }
+      return true
+    })
+    // log selected wallet
+    ReactGA.event({
+      category: 'Wallet',
+      action: 'Change Wallet',
+      label: name,
+    })
+
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
 
     // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-    
+
     console.dir(connector)
     if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
       connector.walletConnectProvider = undefined
@@ -358,34 +358,34 @@ export default function WalletModal({
           </HeaderRow>
         ) : (
           <HeaderRow style={{ fontFamily: 'Open Sans', fontSize: 24, letterSpacing: 2 }}>
-            
-              <Trans>Connect to a wallet</Trans>
-            
+
+            <Trans>Connect to a wallet</Trans>
+
           </HeaderRow>
         )}
 
         <ContentWrapper>
-          <LightCard style={{ marginBottom: '12px', fontFamily: 'Open Sans'}}>
-            <InternalHeaderRow style={{ justifyContent: 'center', fontFamily: 'Open Sans', fontSize: 14, letterSpacing: 1}}>
+          <LightCard style={{ marginBottom: '12px', fontFamily: 'Open Sans' }}>
+            <InternalHeaderRow style={{ justifyContent: 'center', fontFamily: 'Open Sans', fontSize: 14, letterSpacing: 1 }}>
               <Trans>Switching networks &nbsp; <QuestionHelper size={18} text={" To use BSC select Smart Chain prior to connecting. If your wallet lets you change network on the fly (MetaMask does) then you can change at any time. If your wallet does not then disconnect and reconnect to switch networks."} /></Trans>
             </InternalHeaderRow>
-            <AutoRow style={{justifyContent:'center', alignItems:'center', flexWrap: 'nowrap' }}>
-              <TYPE.main textAlign="center" style={{display:'flex'}} fontSize={14}>
+            <AutoRow style={{ justifyContent: 'center', alignItems: 'center', flexWrap: 'nowrap' }}>
+              <TYPE.main textAlign="center" style={{ display: 'flex' }} fontSize={14}>
                 <Trans>
-                  <div style={{ width:'100%',justifyContent:'center', flexFlow: 'row',display:'flex',alignItems:'center', gap: 10}}>
+                  <div style={{ width: '100%', justifyContent: 'center', flexFlow: 'row', display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div>
-                    The Network you are using is controlled by your wallet.
+                      The Network you are using is controlled by your wallet.
                     </div>
-                    <div style={{display:'flex', alignItems:'center', gap: 10, flexFlow:'row wrap'}}>
-                    
-                    <ExternalLink href="https://kibainu.org/networkhelp/">Click here for help.</ExternalLink> 
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexFlow: 'row wrap' }}>
+
+                      <ExternalLink href="https://kibainu.org/networkhelp/">Click here for help.</ExternalLink>
                     </div>
                   </div>
                 </Trans>
               </TYPE.main>
             </AutoRow>
           </LightCard>
-          <LightCard style={{ marginBottom: '12px', fontFamily: 'Open Sans', lineHeight: '22px', borderColor: '#18181E'  }}>
+          <LightCard style={{ marginBottom: '12px', fontFamily: 'Open Sans', lineHeight: '22px', borderColor: '#18181E' }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
               <TYPE.main fontSize={14}>
                 <Trans>
@@ -393,7 +393,7 @@ export default function WalletModal({
                   <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
                   acknowledge that you have read and understand the {' '}
                   <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer.</ExternalLink>
-                  <small style={{fontSize:14}}>&nbsp;In addition, you are agreeing to using any Custom Contract implementations that may have been or will be put in place to enhance the performance of KibaSwap.</small>
+                  <small style={{ fontSize: 14 }}>&nbsp;In addition, you are agreeing to using any Custom Contract implementations that may have been or will be put in place to enhance the performance of KibaSwap.</small>
                 </Trans>
               </TYPE.main>
             </AutoRow>

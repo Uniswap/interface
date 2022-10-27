@@ -304,7 +304,7 @@ export function useVoteCallback(): {
           proposal: proposalId,
           type: 'single-choice',
           choice: support ? "For" : "Against",
-          metadata: JSON.stringify({})
+          //metadata: JSON.stringify({})
         });
         console.dir(receipt)
         return receipt as any

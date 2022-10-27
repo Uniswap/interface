@@ -12,6 +12,7 @@
     "alwaysStrict": true,
     "strictNullChecks": true,
     "noUnusedLocals": false,
+    "useUnknownInCatchVariables": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitThis": true,

@@ -18,6 +18,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
 import { useToken } from 'hooks/Tokens'
 import { useWeb3React } from '@web3-react/core'
+import { rgba } from 'polished'
 
 const CardWrapper = styled(StyledInternalLink)`
   min-width: 190px;
@@ -96,13 +97,42 @@ const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: numb
     '/selective-charts/' + tokenData?.id + '/' + tokenData?.symbol + '/' + tokenData?.name + '/' + tokenData?.decimals
 
   return !tokenData?.id ? null : (
-    <CardWrapper to={route}>
-      <GreyCard padding="3px">
+    <CardWrapper to={route} style={{
+      width: 'auto',
+      minWidth: 120
+    }}>
+      <GreyCard padding="3px 7px" style={{
+        boxShadow: '0 0 1px rgb(0 0 0 / 10%), 0 2px 2px rgb(0 0 0 / 14%)',
+        borderRadius: '20px'
+      }}>
         <RowFixed>
-          <AutoColumn gap="3px" style={{ marginLeft: '3px' }}>
-            <TYPE.small color={darkMode ? 'white' : 'text1'} fontSize="12.5px">
-              <div style={{ display: 'flex', flexFlow: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <small><Badge style={{ marginRight: "6px" }} variant={BadgeVariant.POSITIVE_OUTLINE}>{index + 1}</Badge></small>
+          <AutoColumn style={{
+            minHeight: '26px'
+          }}>
+            <TYPE.small color={darkMode ? 'white' : 'text1'} fontSize="12.5px" style={{
+              display: 'flex',
+              alignContent: 'center'
+            }}>
+              <div style={{
+                display: 'flex',
+                flexFlow: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+                <Badge
+                  style={{
+                    marginRight: "8px",
+                    height: '22px',
+                    width: '22px',
+                    borderRadius: '12px',
+                    border: 'none',
+                    fontWeight: 'bold',
+                    background: rgba(0, 0, 0, 0.5),
+                    color: 'white'
+                  }}
+                  variant={BadgeVariant.POSITIVE_OUTLINE}>
+                  {index + 1}
+                </Badge>
                 <CurrencyLogo style={{ marginRight: "2px" }} currency={(chainId === 1 || !chainId) ? token : tokenData} size="20px" />
                 <HoverInlineText text={chainId === 56 ? tokenData?.symbol : tokenData?.symbol?.substring(0, tokenData?.symbol?.length >= 7 ? 7 : tokenData.symbol.length)} />
                 {!!tokenData?.priceChangeUSD && (
@@ -252,9 +282,10 @@ const _TopTokenMovers = React.memo(() => {
   const mappedTokens = topPriceIncrease.filter((a: any) => !a?.symbol?.includes('SCAM') && !a?.symbol?.includes('rebass'));
   return (
     <DarkGreyCard style={{
-      marginBottom: 10,
       zIndex: 3,
-      padding: "0",
+      padding: 0,
+      borderRadius: 0,
+      boxShadow: 'inset 0 0 4px rgba(0, 0, 0, 0.4)',
       top: 0,
       margin: 0
     }}>
@@ -263,7 +294,7 @@ const _TopTokenMovers = React.memo(() => {
           <Marquee gradient={false} pauseOnHover>
             <React.Fragment />
             <FixedContainer>
-              <ScrollableRow style={{ padding: "4px 50px 4px 0" }}>
+              <ScrollableRow style={{ padding: "4px 50px 6px 20px" }}>
                 {mappedTokens.map((entry, i) =>
                   entry ? <DataCard index={i} key={`${i}.${entry.symbol}.${entry.address}`} tokenData={entry} /> : null
                 )}
