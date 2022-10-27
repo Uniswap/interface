@@ -4,6 +4,8 @@ import { useIsCollectionLoading } from 'nft/hooks'
 
 import * as styles from './ActivitySwitcher.css'
 
+export const ActivitySwitcherLoading = new Array(2).fill(<div className={styles.styledLoading} />)
+
 export const ActivitySwitcher = ({
   showActivity,
   toggleActivity,
@@ -12,12 +14,11 @@ export const ActivitySwitcher = ({
   toggleActivity: () => void
 }) => {
   const isLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-  const loadingVals = new Array(2).fill(<div className={styles.styledLoading} />)
 
   return (
     <Row gap="24" marginBottom="28">
       {isLoading ? (
-        loadingVals
+        ActivitySwitcherLoading
       ) : (
         <>
           <Box
