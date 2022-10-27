@@ -31,6 +31,7 @@ import { reduceFilters } from '../collection/Activity'
 import * as activityStyles from 'nft/components/collection/Activity.css'
 
 import * as styles from './AssetDetails.css'
+import { shortenAddress } from 'utils'
 
 const CollectionHeader = styled.div`
   display: flex;
@@ -72,11 +73,14 @@ const Column = styled.div`
 `
 
 const AddressTextLink = styled.a`
+  display: inline-block;
   font-weight: 600;
   color: ${({ theme }) => theme.textTertiary};
   font-size: 16px;
   line-height: 20px;
   text-decoration: none;
+  max-width: 100%;
+  word-wrap: break-word;
 
   &:hover {
     color: ${({ theme }) => theme.stateOverlayPressed};
@@ -86,6 +90,11 @@ const AddressTextLink = styled.a`
       },
     }) => css`color ${duration.medium} ${timing.ease}`};
   }
+
+  // @media (max-width: 680px) {
+  //   width: 400px;
+  //   word-wrap: break-word;
+  // }
 `
 
 const DescriptionText = styled.div`
