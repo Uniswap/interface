@@ -277,7 +277,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   )
 
   return (
-    <Row gap={{ sm: '20', md: '60' }} {...props}>
+    <Row gap={{ sm: '36', md: '60' }} {...props}>
       {isCollectionStatsLoading && statsLoadingSkeleton}
       {stats.floorPrice ? (
         <StatsItem label="Global floor" isMobile={isMobile ?? false}>
