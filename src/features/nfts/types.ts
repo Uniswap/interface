@@ -224,4 +224,5 @@ export type NFTItem = {
   imageUrl?: string
   collectionName?: string
   isVerifiedCollection?: boolean
+  floorPrice?: number
 }

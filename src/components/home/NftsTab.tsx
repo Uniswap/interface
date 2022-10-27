@@ -31,6 +31,7 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { theme as FixedTheme } from 'src/styles/theme'
+import { formatNFTFloorPrice } from 'src/utils/format'
 
 const MAX_NFT_IMAGE_SIZE = 375
 
@@ -52,8 +53,15 @@ const nftsTabQuery = graphql`
           collection {
             name
             isVerified
+            markets(currencies: [ETH]) {
+              floorPrice {
+                value
+              }
+            }
           }
-          smallImageUrl
+          image {
+            url
+          }
           name
           tokenId
           description
@@ -82,9 +90,10 @@ function formatNftItems(data: NftsTabQuery$data | null | undefined): NFTItem[] {
         description: item?.ownedAsset?.description ?? undefined,
         contractAddress: item?.ownedAsset?.nftContract?.address ?? undefined,
         tokenId: item?.ownedAsset?.tokenId ?? undefined,
-        imageUrl: item?.ownedAsset?.smallImageUrl ?? undefined,
+        imageUrl: item?.ownedAsset?.image?.url ?? undefined,
         collectionName: item?.ownedAsset?.collection?.name ?? undefined,
         isVerifiedCollection: item?.ownedAsset?.collection?.isVerified ?? undefined,
+        floorPrice: item?.ownedAsset?.collection?.markets?.[0]?.floorPrice?.value ?? undefined,
       }
     })
   return nfts
@@ -195,14 +204,15 @@ function NftsTabInner({
                   <VerifiedIcon color={theme.colors.userThemeMagenta} height={16} width={16} />
                 )}
               </Flex>
-              <Text
-                color="textSecondary"
-                ellipsizeMode="tail"
-                numberOfLines={1}
-                variant="bodySmall">
-                {/* TODO (Thomas): Update when floor price is available from API */}
-                1.23 ETH
-              </Text>
+              {asset.floorPrice && (
+                <Text
+                  color="textSecondary"
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
+                  variant="bodySmall">
+                  {formatNFTFloorPrice(asset.floorPrice)} ETH
+                </Text>
+              )}
             </Flex>
           </TouchableArea>
         </Box>

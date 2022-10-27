@@ -2,11 +2,6 @@
 directive @defer on FIELD
 
 """
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
 directive @aws_lambda on OBJECT | FIELD_DEFINITION
@@ -16,13 +11,21 @@ Tells the service this field/object has access authorized by sigv4 signing.
 """
 directive @aws_iam on OBJECT | FIELD_DEFINITION
 
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
 ) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -35,10 +38,12 @@ directive @aws_publish(
   subscriptions: [String]
 ) on FIELD_DEFINITION
 
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
 ) on FIELD_DEFINITION
 
 """
@@ -48,11 +53,6 @@ directive @aws_cognito_user_pools(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 enum ActivityType {
   APPROVE
@@ -302,14 +302,10 @@ type NftCollection {
   imageUrl: String
   image: Image
   instagramName: String
-
-  """  Resolver to be implemented"""
   markets(currencies: [Currency!]!): [NftCollectionMarket!]
   name: String
   nftContracts: [NftContract!]
   openseaUrl: String
-
-  """  Resolver to be implemented"""
   traits: [NftCollectionTrait!]
   twitterName: String
   isVerified: Boolean
@@ -330,27 +326,15 @@ type NftCollectionEdge {
 type NftCollectionMarket {
   id: ID!
   nftContracts: [NftContract!]
-
-  """  Resolver to be implemented"""
   floorPrice: Amount
   owners: Int
   volume24h: Amount
   totalVolume: Amount
-
-  """  Resolver to be implemented"""
   volume(duration: HistoryDuration): Amount
-
-  """  Resolver to be implemented"""
   volumePercentChange(duration: HistoryDuration): Amount
-
-  """  Resolver to be implemented"""
   floorPricePercentChange(duration: HistoryDuration): Amount
-
-  """  Resolver to be implemented"""
   sales(duration: HistoryDuration): Amount
   listings: Int
-
-  """  Resolver to be implemented"""
   marketplaces(marketplaces: [NftMarketplace!]): [NftCollectionMarketplace!]
 }
 
@@ -513,8 +497,6 @@ type Query {
 
   """  Resolver to be implemented"""
   nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, first: Int, last: Int, after: String, before: String): NftAssetConnection
-
-  """  Resolver to be implemented"""
   nftCollections(filter: NftCollectionsFilterInput, first: Int, last: Int, after: String, before: String): NftCollectionConnection
 
   """  Resolver to be implemented"""
