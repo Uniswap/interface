@@ -112,7 +112,6 @@ const HeaderElement = styled.div`
 const HeaderLinks = styled(Row)`
   justify-self: center;
   background-color: ${({ theme }) => theme.bg0};
-  border: 0.01px solid ${({ theme }) => theme.bg1};
   width: fit-content;
   padding: 3px;
   border-radius: 16px;
@@ -121,24 +120,29 @@ const HeaderLinks = styled(Row)`
   grid-gap: 5px;
   overflow: auto;
   align-items: center;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.05);
+
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    justify-self: start;  
+    justify-self: start;
+    margin-left: 30px;
     `};
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-self: center;
   `};
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: row;
     justify-content: space-between;
     justify-self: center;
     z-index: 99;
     position: fixed;
-    bottom: 0; right: 50%;
-    transform: translate(50%,-50%);
+    bottom: 20px; 
+    right: 20px;
+    left: 20px;
     margin: 0 auto;
     background-color: ${({ theme }) => theme.bg0};
     border: 1px solid ${({ theme }) => theme.bg2};
-    box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
   `};
 `
 
@@ -234,9 +238,11 @@ const Title = styled.a`
   pointer-events: auto;
   justify-self: flex-start;
   margin-right: 12px;
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
+
   :hover {
     cursor: pointer;
   }
@@ -295,6 +301,12 @@ const StyledNavLink = styled(NavLink).attrs({
   word-break: break-word;
   overflow: hidden;
   white-space: nowrap;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 6px;
+    font-size: 0.9rem;
+  `};
+
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
@@ -453,13 +465,13 @@ export default function Header() {
               src={logo}
               alt="logo"
             />
-
           </UniIcon>
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             <Trans>Swap</Trans>
           </StyledNavLink>
+
           <StyledNavLink
             id={`pool-nav-link`}
             to={'/pool'}
@@ -473,6 +485,7 @@ export default function Header() {
           >
             <Trans>Pool</Trans>
           </StyledNavLink>
+
           {chainId && [SupportedChainId.MAINNET, SupportedChainId.BINANCE].includes(chainId) && (
             <StyledNavLink id={`stake-nav-link`} to={'/dashboard'}>
               <Trans>Stats</Trans>
@@ -525,11 +538,13 @@ export default function Header() {
                 onClick={onNotify}
                 style={{
                   cursor: 'pointer',
-                  marginLeft: 5
+                  marginLeft: 5,
+                  display: width <= 400 ? 'none' : 'inline-block'
                 }} />
             }
           </div>
         </HeaderLinks>
+
         <HeaderControls>
           <HeaderElement>
             {!!account ? <NetworkCard /> : ''}
