@@ -139,8 +139,8 @@ const AuthenticatedHeader = () => {
 
   return (
     <AuthenticatedHeaderWrapper>
-      <HeaderWrapper>
-        <StatusWrapper>
+      <HeaderWrapper className="header-wrapper">
+        <StatusWrapper className="something">
           <FlexContainer>
             <StatusIcon connectionType={connectionType} size={24} />
             <Text fontSize={16} fontWeight={600} marginTop="2.5px">
