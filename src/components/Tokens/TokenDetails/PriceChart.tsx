@@ -27,8 +27,6 @@ import { formatDollar } from 'utils/formatNumbers'
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
-export const DATA_EMPTY = { value: 0, timestamp: 0 }
-
 export function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
   const min = Math.min(...prices)
@@ -133,26 +131,28 @@ const timeOptionsHeight = 44
 interface PriceChartProps {
   width: number
   height: number
+  price: number | undefined | null
   prices: PricePoint[] | undefined | null
 }
 
-export function PriceChart({ width, height, prices }: PriceChartProps) {
+export function PriceChart({ width, height, price, prices }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
 
+  const DATA_EMPTY = useMemo(() => ({ timestamp: 0, value: price ?? 0 }), [price])
   // first price point on the x-axis of the current time period's chart
   const startingPrice = prices?.[0] ?? DATA_EMPTY
   // last price point on the x-axis of the current time period's chart
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
-  const [displayPrice, setDisplayPrice] = useState(startingPrice)
+  const [displayIndex, setDisplayIndex] = useState(-1)
+  const getDisplayPrice = useCallback(() => {
+    if (!prices) return DATA_EMPTY
+    return prices[displayIndex === -1 ? prices.length - 1 : displayIndex] ?? DATA_EMPTY
+  }, [DATA_EMPTY, displayIndex, prices])
 
-  // set display price to ending price when prices have changed.
-  useEffect(() => {
-    if (prices) {
-      setDisplayPrice(endingPrice)
-    }
-  }, [prices, endingPrice])
+  // set display index to ending price when prices have changed.
+  useEffect(() => setDisplayIndex(-1), [])
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
   const graphHeight = height - timeOptionsHeight > 0 ? height - timeOptionsHeight : 0
@@ -222,7 +222,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
 
       const { x } = localPoint(event) || { x: 0 }
       const x0 = timeScale.invert(x) // get timestamp from the scalexw
-      const index = bisect(
+      let index = bisect(
         prices.map((x) => x.timestamp),
         x0,
         1
@@ -230,16 +230,16 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
 
       const d0 = prices[index - 1]
       const d1 = prices[index]
-      let pricePoint = d0
+      index -= 1
 
       const hasPreviousData = d1 && d1.timestamp
-      if (hasPreviousData) {
-        pricePoint = x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf() ? d1 : d0
+      if (hasPreviousData && x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf()) {
+        index += 1
       }
 
-      if (pricePoint) {
-        setCrosshair(timeScale(pricePoint.timestamp))
-        setDisplayPrice(pricePoint)
+      if (prices[index]) {
+        setCrosshair(timeScale(prices[index].timestamp))
+        setDisplayIndex(index)
       }
     },
     [timeScale, prices]
@@ -247,11 +247,11 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
 
   const resetDisplay = useCallback(() => {
     setCrosshair(null)
-    setDisplayPrice(endingPrice)
-  }, [setCrosshair, setDisplayPrice, endingPrice])
+    setDisplayIndex(-1)
+  }, [])
 
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(timePeriod, locale)
-  const delta = calculateDelta(startingPrice.value, displayPrice.value)
+  const delta = calculateDelta(startingPrice.value, getDisplayPrice().value)
   const formattedDelta = formatDelta(delta)
   const arrow = getDeltaArrow(delta)
   const crosshairEdgeMax = width * 0.85
@@ -271,7 +271,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{formatDollar({ num: displayPrice.value, isPrice: true })}</TokenPrice>
+        <TokenPrice>{formatDollar({ num: getDisplayPrice().value, isPrice: true })}</TokenPrice>
         <DeltaContainer>
           {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>
@@ -327,7 +327,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
                 fontSize={12}
                 fill={theme.textSecondary}
               >
-                {crosshairDateFormatter(displayPrice.timestamp)}
+                {crosshairDateFormatter(getDisplayPrice().timestamp)}
               </text>
               <Line
                 from={{ x: crosshair, y: margin.crosshair }}
@@ -339,7 +339,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
               />
               <GlyphCircle
                 left={crosshair}
-                top={rdScale(displayPrice.value) + margin.top}
+                top={rdScale(getDisplayPrice().value) + margin.top}
                 size={50}
                 fill={theme.accentAction}
                 stroke={theme.backgroundOutline}

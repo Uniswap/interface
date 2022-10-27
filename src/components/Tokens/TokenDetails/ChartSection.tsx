@@ -69,11 +69,13 @@ export default function ChartSection({
   token,
   currency,
   nativeCurrency,
+  price,
   prices,
 }: {
   token: NonNullable<TokenQueryData>
   currency?: Currency | null
   nativeCurrency?: Token | NativeCurrency
+  price?: number | null
   prices?: PriceDurations
 }) {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
@@ -104,7 +106,9 @@ export default function ChartSection({
       </TokenInfoContainer>
       <ChartContainer>
         <ParentSize>
-          {({ width }) => <PriceChart prices={prices ? prices?.[timePeriod] : null} width={width} height={436} />}
+          {({ width }) => (
+            <PriceChart price={price} prices={prices ? prices?.[timePeriod] : null} width={width} height={436} />
+          )}
         </ParentSize>
       </ChartContainer>
     </ChartHeader>

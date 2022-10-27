@@ -98,6 +98,7 @@ export default function TokenDetails() {
               token={tokenQueryData}
               currency={token}
               nativeCurrency={isNative ? nativeCurrency : undefined}
+              price={tokenQueryData?.market?.price?.value}
               prices={prices}
             />
             <StatsSection
