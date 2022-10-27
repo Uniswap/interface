@@ -15,14 +15,14 @@ export function NetworkFee({ chainId, gasFee }: { chainId: ChainId; gasFee?: str
   const showNetworkPill = chainId !== ChainId.Mainnet
 
   return (
-    <Flex row alignContent="center" justifyContent="space-between" p="md">
+    <Flex row alignItems="center" justifyContent="space-between" p="md">
       <Text variant="subheadSmall">{t('Network fee')}</Text>
       <Flex row gap="none" justifyContent="flex-end">
         {gasFeeUSD ? (
           <Flex row alignItems="center" gap="xs">
             {showNetworkPill && (
               <Flex row alignItems="center" gap="xs">
-                <InlineNetworkPill chainId={chainId} height={20} />
+                <InlineNetworkPill chainId={chainId} />
                 <Text variant="subheadSmall">•</Text>
               </Flex>
             )}

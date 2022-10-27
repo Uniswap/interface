@@ -103,7 +103,6 @@ function OtherChainBalance({ balance }: { balance: PortfolioBalance }) {
           </Text>
           <InlineNetworkPill
             chainId={balance.currencyInfo.currency.chainId}
-            height={16}
             py="none"
             showBackgroundColor={false}
             textVariant="buttonLabelMicro"

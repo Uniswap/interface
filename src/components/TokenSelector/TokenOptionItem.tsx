@@ -90,7 +90,7 @@ export function TokenOptionItem({
                 <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
                   {currency.symbol}
                 </Text>
-                {showNetworkPill && <InlineNetworkPill chainId={currency.chainId} height={20} />}
+                {showNetworkPill && <InlineNetworkPill chainId={currency.chainId} />}
               </Flex>
             </Flex>
           </Flex>

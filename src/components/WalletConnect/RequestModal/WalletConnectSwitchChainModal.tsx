@@ -92,7 +92,7 @@ export function WalletConnectSwitchChainModal({ isVisible, onClose, request }: P
             spacerProps={spacerProps}>
             <Flex row alignItems="center" justifyContent="space-between" p="md">
               <Text variant="subheadSmall">{t('Network')}</Text>
-              <InlineNetworkPill chainId={newChainId} height={20} />
+              <InlineNetworkPill chainId={newChainId} />
             </Flex>
             <Box p="md">
               <AccountDetails address={request.account} />

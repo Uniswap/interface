@@ -6,7 +6,6 @@ import { useNetworkColors } from 'src/utils/colors'
 
 export type NetworkPillProps = {
   chainId: ChainId
-  height?: number
   showBackgroundColor?: boolean
   showBorder?: boolean
   showIcon?: boolean
@@ -17,7 +16,6 @@ export function NetworkPill({
   showBackgroundColor = true,
   showBorder,
   showIcon = true,
-  height = 36,
   ...rest
 }: NetworkPillProps) {
   const info = CHAIN_INFO[chainId]
@@ -28,7 +26,6 @@ export function NetworkPill({
       customBackgroundColor={showBackgroundColor ? colors?.background : undefined}
       customBorderColor={showBorder ? colors.foreground : 'transparent'}
       foregroundColor={colors.foreground}
-      height={height}
       icon={showIcon ? <NetworkLogo chainId={chainId} mr="xs" size={16} /> : null}
       label={info.label}
       {...rest}
