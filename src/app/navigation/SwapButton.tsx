@@ -1,71 +1,37 @@
 import { ShadowProps } from '@shopify/restyle'
-import React, { ReactElement } from 'react'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
-import { BaseButtonProps, TouchableArea } from 'src/components/buttons/TouchableArea'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
 
-type GradientButtonProps = BaseButtonProps & {
-  label?: string
-  icon?: ReactElement
-  textVariant?: keyof Theme['textVariants']
-  textColor?: keyof Theme['colors']
-}
-
-// TODO: make this a more extensible component for use throughout the app
-export function GradientButton({
-  icon,
-  onPress,
-  textColor = 'textOnBrightPrimary',
-  label,
-  textVariant,
-  disabled,
-  height,
-  p,
-  px,
-  py,
-  ...rest
-}: GradientButtonProps) {
+export function SwapButton({ onPress }: { onPress: () => void }) {
+  const { t } = useTranslation()
   const theme = useAppTheme()
 
   return (
     <TouchableArea
       alignItems="center"
       bg="userThemeColor"
-      borderRadius="md"
-      disabled={disabled}
-      height={height}
+      borderRadius="xxl"
       justifyContent="center"
-      opacity={disabled ? 0.6 : 1}
       shadowColor="black"
       shadowOffset={SHADOW_OFFSET}
       shadowOpacity={0.1}
       shadowRadius={24}
-      onPress={onPress}
-      {...rest}>
-      {icon}
-      {label && (
-        <Box px={px || p || 'md'} py={py || p || 'md'}>
-          <Text
-            noTextScaling
-            style={{ color: theme.colors[textColor] }}
-            textAlign="center"
-            variant={textVariant ?? 'buttonLabelMedium'}>
-            {label}
-          </Text>
-        </Box>
-      )}
+      onPress={onPress}>
+      <Box px="lg" py="sm">
+        <Text noTextScaling textAlign="center" variant="buttonLabelMedium">
+          {t('Swap')}
+        </Text>
+      </Box>
       {/* TODO: fix gradient definition so it fills space properly (right now needs 200% height on rect) */}
-      <Flex
-        borderRadius={rest.borderRadius || 'md'}
-        height="100%"
-        overflow="hidden"
-        position="absolute"
-        width="100%">
+      <Flex borderRadius="xxl" height="100%" overflow="hidden" position="absolute" width="100%">
         <Svg height="100%" width="100%">
           <Defs>
             <RadialGradient cy="0" id="background" rx="0.5" ry="0.5">

@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { HomeScreenQueries, usePreloadedHomeScreenQueries } from 'src/app/navigation/hooks'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
+import { SwapButton } from 'src/app/navigation/SwapButton'
 import { TabBarButton } from 'src/app/navigation/TabBarButton'
 import {
   AppStackParamList,
@@ -24,7 +25,6 @@ import DiscoverIconFilled from 'src/assets/icons/discover-filled.svg'
 import DiscoverIcon from 'src/assets/icons/discover.svg'
 import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
-import { GradientButton } from 'src/components/buttons/GradientButton'
 import { exploreTokensTabQuery } from 'src/components/explore/tabs/ExploreTokensTab'
 import {
   ExploreTokensTabQuery,
@@ -162,11 +162,7 @@ function TabNavigator({ homeScreenQueries }: { homeScreenQueries: HomeScreenQuer
         options={{
           tabBarButton: () => {
             return (
-              <GradientButton
-                borderRadius="xxl"
-                label={t('Swap')}
-                px="lg"
-                py="sm"
+              <SwapButton
                 onPress={() => {
                   selectionAsync()
                   dispatch(openModal({ name: ModalName.Swap }))

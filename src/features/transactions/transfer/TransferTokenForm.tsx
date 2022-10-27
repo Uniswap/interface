@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { GradientButton } from 'src/components/buttons/GradientButton'
+import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { Suspense } from 'src/components/data/Suspense'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
@@ -196,12 +196,11 @@ export function TransferTokenForm({
               value={formattedAmounts[CurrencyField.INPUT]}
             />
           )}
-          <GradientButton
+          <Button
             disabled={actionButtonDisabled}
             label={t('Review transfer')}
             name={ElementName.ReviewTransfer}
-            testID={ElementName.ReviewTransfer}
-            textVariant="buttonLabelLarge"
+            size={ButtonSize.Large}
             onPress={onPressReview}
           />
         </AnimatedFlex>

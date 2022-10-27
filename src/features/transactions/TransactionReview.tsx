@@ -6,7 +6,6 @@ import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { GradientButton } from 'src/components/buttons/GradientButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Arrow } from 'src/components/icons/Arrow'
@@ -145,27 +144,28 @@ export function TransactionReview({
         {transactionDetails}
         <Flex row gap="xs">
           <Button
-            CustomIcon={<Arrow color={theme.colors.textPrimary} direction="w" size={20} />}
+            CustomIcon={
+              <Arrow color={theme.colors.textPrimary} direction="w" size={theme.iconSizes.lg} />
+            }
             emphasis={ButtonEmphasis.Tertiary}
             size={ButtonSize.Large}
             onPress={onPrev}
           />
-          <Flex grow>
-            <GradientButton
-              disabled={actionButtonProps.disabled}
-              label={actionButtonProps.label}
-              name={actionButtonProps.name}
-              textVariant="buttonLabelLarge"
-              onPress={() => {
-                notificationAsync()
-                if (requiredForTransactions) {
-                  actionButtonTrigger()
-                } else {
-                  actionButtonProps.onPress()
-                }
-              }}
-            />
-          </Flex>
+          <Button
+            fill
+            disabled={actionButtonProps.disabled}
+            label={actionButtonProps.label}
+            name={actionButtonProps.name}
+            size={ButtonSize.Large}
+            onPress={() => {
+              notificationAsync()
+              if (requiredForTransactions) {
+                actionButtonTrigger()
+              } else {
+                actionButtonProps.onPress()
+              }
+            }}
+          />
         </Flex>
       </AnimatedFlex>
     </>

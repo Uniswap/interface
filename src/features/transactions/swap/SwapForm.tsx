@@ -6,7 +6,7 @@ import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
-import { GradientButton } from 'src/components/buttons/GradientButton'
+import { Button, ButtonSize } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
@@ -325,12 +325,11 @@ export function SwapForm({
               }
             />
           )}
-          <GradientButton
+          <Button
             disabled={actionButtonDisabled}
             label={getReviewActionName(t, wrapType)}
             name={ElementName.ReviewSwap}
-            testID={ElementName.ReviewSwap}
-            textVariant="buttonLabelLarge"
+            size={ButtonSize.Large}
             onPress={onReview}
           />
         </AnimatedFlex>
