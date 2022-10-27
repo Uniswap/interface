@@ -16,7 +16,7 @@ import Menu, { NewLabel } from 'components/Menu'
 import Settings from 'components/Settings'
 import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import Web3Network from 'components/Web3Network'
-import { PROMM_ANALYTICS_URL } from 'constants/index'
+import { AGGREGATOR_ANALYTICS_URL, PROMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useWindowSize } from 'hooks/useWindowSize'
@@ -134,6 +134,8 @@ const AccountElement = styled.div<{ active: boolean }>`
 `
 
 const AnalyticsWrapper = styled.span`
+  display: flex;
+  align-items: center;
   @media (max-width: 1320px) {
     display: none;
   }
@@ -464,14 +466,27 @@ export default function Header() {
           </DiscoverWrapper>
 
           <AnalyticsWrapper>
-            <StyledNavExternalLink
-              onClick={() => {
-                mixpanelHandler(MIXPANEL_TYPE.ANALYTICS_MENU_CLICKED)
-              }}
-              href={PROMM_ANALYTICS_URL[chainId as ChainId] + '/home'}
-            >
-              <Trans>Analytics</Trans>
-            </StyledNavExternalLink>
+            <HoverDropdown active={false}>
+              <Flex alignItems="center">
+                <Trans>Analytics</Trans>
+                <DropdownIcon />
+              </Flex>
+              <Dropdown>
+                <StyledNavExternalLink
+                  onClick={() => {
+                    mixpanelHandler(MIXPANEL_TYPE.ANALYTICS_MENU_CLICKED)
+                  }}
+                  target="_blank"
+                  href={PROMM_ANALYTICS_URL[chainId as ChainId] + '/home'}
+                >
+                  <Trans>Liquidity</Trans>
+                </StyledNavExternalLink>
+
+                <StyledNavExternalLink target="_blank" href={AGGREGATOR_ANALYTICS_URL}>
+                  <Trans>Aggregator</Trans>
+                </StyledNavExternalLink>
+              </Dropdown>
+            </HoverDropdown>
           </AnalyticsWrapper>
 
           <AboutWrapper>

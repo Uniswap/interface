@@ -129,19 +129,23 @@ export default function App() {
   useGlobalMixpanelEvents()
   const { pathname } = window.location
   const showFooter = !pathname.includes(AppPaths.ABOUT)
+  // const feedbackId = isDarkTheme ? 'W5TeOyyH' : 'K0dtSO0v'
+  const feedbackId = isDarkTheme ? 'cHvlUe5l' : 'K7NUkCCU' // support our event
 
   return (
     <ErrorBoundary>
       {width && width >= 768 ? (
         <Sidetab
-          id={isDarkTheme ? 'W5TeOyyH' : 'K0dtSO0v'}
-          buttonText="Feedback"
+          id={feedbackId}
+          width={800} // todo revert when event end
+          // buttonText="Feedback"
+          buttonText="Feedback & Win!"
           buttonColor={theme.primary}
           customIcon={isDarkTheme ? 'https://i.imgur.com/iTOOKnr.png' : 'https://i.imgur.com/aPCpnGg.png'}
         />
       ) : (
         <Popover
-          id={isDarkTheme ? 'W5TeOyyH' : 'K0dtSO0v'}
+          id={feedbackId}
           customIcon={isDarkTheme ? 'https://i.imgur.com/iTOOKnr.png' : 'https://i.imgur.com/aPCpnGg.png'}
         />
       )}

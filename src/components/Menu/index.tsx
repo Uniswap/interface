@@ -7,6 +7,7 @@ import {
   BookOpen,
   Edit,
   FileText,
+  Info,
   Menu as MenuIcon,
   MessageCircle,
   PieChart,
@@ -19,13 +20,15 @@ import { useMedia } from 'react-use'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
+import { ReactComponent as LightIcon } from 'assets/svg/light.svg'
+import { ReactComponent as RoadMapIcon } from 'assets/svg/roadmap.svg'
 import { ButtonPrimary } from 'components/Button'
 import { SlideToUnlock } from 'components/Header'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import Faucet from 'components/Icons/Faucet'
 import Loader from 'components/Loader'
 import MenuFlyout from 'components/MenuFlyout'
-import { DMM_ANALYTICS_URL } from 'constants/index'
+import { AGGREGATOR_ANALYTICS_URL, DMM_ANALYTICS_URL } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useClaimReward from 'hooks/useClaimReward'
@@ -35,9 +38,9 @@ import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ExternalLink } from 'theme'
 
-import AboutPageDropwdown from './AboutPageDropDown'
 import ClaimRewardModal from './ClaimRewardModal'
 import FaucetModal from './FaucetModal'
+import NavDropDown from './NavDropDown'
 
 const sharedStylesMenuItem = css`
   flex: 1;
@@ -63,6 +66,17 @@ const sharedStylesMenuItem = css`
 const StyledMenuIcon = styled(MenuIcon)`
   path {
     stroke: ${({ theme }) => theme.text};
+  }
+`
+
+const StyledRoadMapIcon = styled(RoadMapIcon)`
+  path {
+    stroke: ${({ theme }) => theme.subText};
+  }
+`
+const StyledLightIcon = styled(LightIcon)`
+  path {
+    stroke: ${({ theme }) => theme.subText};
   }
 `
 
@@ -110,7 +124,7 @@ export const NavMenuItem = styled(NavLink)`
   ${sharedStylesMenuItem}
 `
 
-const MenuItem = styled(ExternalLink)`
+export const ExternalNavMenuItem = styled(ExternalLink)`
   ${sharedStylesMenuItem}
 `
 
@@ -122,14 +136,14 @@ const MenuFlyoutBrowserStyle = css`
   min-width: unset;
   right: -8px;
 
-  & ${MenuItem}:nth-child(1),
+  & ${ExternalNavMenuItem}:nth-child(1),
   & ${NavMenuItem}:nth-child(1) {
     padding-top: 0.75rem;
   }
 `
 
 const MenuFlyoutMobileStyle = css`
-  & ${MenuItem}:nth-child(1),
+  & ${ExternalNavMenuItem}:nth-child(1),
   & ${NavMenuItem}:nth-child(1) {
     padding-top: 0.75rem;
   }
@@ -200,12 +214,12 @@ export default function Menu() {
         )}
 
         {bridgeLink && (
-          <MenuItem href={bridgeLink}>
+          <ExternalNavMenuItem href={bridgeLink}>
             <Share2 size={14} />
             <Text width="max-content">
               <Trans>Bridge Assets</Trans>
             </Text>
-          </MenuItem>
+          </ExternalNavMenuItem>
         )}
 
         {!above768 && (
@@ -228,42 +242,73 @@ export default function Menu() {
             <Trans>Campaigns</Trans>
           </NavMenuItem>
         )}
-
-        {under1440 && <AboutPageDropwdown />}
+        {under1440 && (
+          <NavDropDown
+            icon={<Info size={14} />}
+            title={'About'}
+            link={'/about'}
+            options={[
+              { link: '/about/kyberswap', label: 'Kyberswap' },
+              { link: '/about/knc', label: 'KNC' },
+            ]}
+          />
+        )}
 
         <NavMenuItem to="/referral" onClick={toggle}>
           <UserPlus size={14} />
           <Trans>Referral</Trans>
         </NavMenuItem>
+
         {!above1321 && (
-          <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
-            <PieChart size={14} />
-            <Trans>Analytics</Trans>
-          </MenuItem>
+          <NavDropDown
+            icon={<PieChart size={14} />}
+            link="#"
+            title={'Analytics'}
+            options={[
+              { link: DMM_ANALYTICS_URL[chainId as ChainId], label: 'Liquidity', external: true },
+              {
+                link: AGGREGATOR_ANALYTICS_URL,
+                label: 'Aggregator',
+                external: true,
+              },
+            ]}
+          />
         )}
-        <MenuItem id="link" href="https://docs.kyberswap.com">
+        <ExternalNavMenuItem href="https://docs.kyberswap.com">
           <BookOpen size={14} />
           <Trans>Docs</Trans>
-        </MenuItem>
-        <MenuItem id="link" href="https://gov.kyber.org">
+        </ExternalNavMenuItem>
+
+        <ExternalNavMenuItem href="https://request.kyberswap.com" onClick={toggle}>
+          <StyledLightIcon />
+          <Trans>Feature Request</Trans>
+        </ExternalNavMenuItem>
+
+        <ExternalNavMenuItem href="https://request.kyberswap.com/roadmap" onClick={toggle}>
+          <StyledRoadMapIcon />
+          <Trans>Roadmap</Trans>
+        </ExternalNavMenuItem>
+
+        <ExternalNavMenuItem href="https://gov.kyber.org">
           <MessageCircle size={14} />
           <Trans>Forum</Trans>
-        </MenuItem>
+        </ExternalNavMenuItem>
 
-        <MenuItem id="link" href="/15022022KyberSwapTermsofUse.pdf">
+        <ExternalNavMenuItem href="/15022022KyberSwapTermsofUse.pdf">
           <FileText size={14} />
           <Trans>Terms</Trans>
-        </MenuItem>
+        </ExternalNavMenuItem>
         {process.env.REACT_APP_MAINNET_ENV !== 'production' && (
           <NavMenuItem to="/swap-legacy" onClick={toggle}>
             <Triangle size={14} />
             <Trans>Swap Legacy</Trans>
           </NavMenuItem>
         )}
-        <MenuItem id="link" href="https://forms.gle/gLiNsi7iUzHws2BY8">
+
+        <ExternalNavMenuItem href="https://forms.gle/gLiNsi7iUzHws2BY8">
           <Edit size={14} />
           <Trans>Contact Us</Trans>
-        </MenuItem>
+        </ExternalNavMenuItem>
         <ClaimRewardButton
           disabled={!account || (!!chainId && NETWORKS_INFO[chainId].classic.claimReward === '') || pendingTx}
           onClick={() => {
