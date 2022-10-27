@@ -1,6 +1,7 @@
+import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { TFunction } from 'i18next'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -18,9 +19,13 @@ import {
   startFetchingICloudBackups,
   stopFetchingICloudBackups,
 } from 'src/features/CloudBackup/RNICloudBackupsManager'
+import { importAccountActions } from 'src/features/import/importAccountSaga'
+import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
+import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { useAccounts, usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -74,6 +79,41 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
   const cloudBackups = useCloudBackups()
   const entryPoint = params?.entryPoint
+
+  const accounts = useAccounts()
+  const pendingAccounts = usePendingAccounts()
+  const initialViewOnlyWallets = useRef<Account[]>( // Hold onto reference of view-only wallets before importing more wallets
+    Object.values(accounts).filter((a) => a.type === AccountType.Readonly)
+  )
+
+  useFocusEffect(() => {
+    if (params?.importType !== ImportType.SeedPhrase) return
+
+    /**
+     * When we go back and exit onboarding, we re-add any initial view-only wallets
+     * that were overwritten during the import flow. (Due to how our redux account store is setup,
+     * with the key being the address, when the mnemonic version of the wallet is imported,
+     * it overwrites the view-only wallet.)
+     */
+
+    const unmodifiedWalletCleanup = () => {
+      if (!initialViewOnlyWallets.current) return
+      const pendingAccountAddresses = Object.keys(pendingAccounts)
+      for (const viewOnlyWallet of initialViewOnlyWallets.current) {
+        if (pendingAccountAddresses.includes(viewOnlyWallet.address)) {
+          dispatch(
+            importAccountActions.trigger({
+              type: ImportAccountType.Address,
+              address: viewOnlyWallet.address,
+            })
+          )
+          dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
+        }
+      }
+    }
+    navigation.addListener('beforeRemove', unmodifiedWalletCleanup)
+    return () => navigation.removeListener('beforeRemove', unmodifiedWalletCleanup)
+  })
 
   useEffect(() => {
     const shouldRenderBackButton = navigation.getState().index === 0
