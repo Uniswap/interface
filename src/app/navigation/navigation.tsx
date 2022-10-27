@@ -1,18 +1,16 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
-import { selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { PreloadedQuery } from 'react-relay'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { HomeScreenQueries, usePreloadedHomeScreenQueries } from 'src/app/navigation/hooks'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
-import { SwapButton } from 'src/app/navigation/SwapButton'
-import { TabBarButton } from 'src/app/navigation/TabBarButton'
+import { SwapTabBarButton, TabBarButton, TAB_NAVIGATOR_HEIGHT } from 'src/app/navigation/TabBar'
 import {
   AppStackParamList,
   ExploreStackParamList,
@@ -31,12 +29,11 @@ import {
   ExploreTokensTabQuery$variables,
 } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { Chevron } from 'src/components/icons/Chevron'
+import { Box } from 'src/components/layout'
 import { NetworkPollConfig } from 'src/constants/misc'
 import { Priority, useQueryScheduler } from 'src/data/useQueryScheduler'
-import { openModal } from 'src/features/modals/modalSlice'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { ModalName } from 'src/features/telemetry/constants'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { ActivityScreen } from 'src/screens/ActivityScreen'
 import { DevScreen } from 'src/screens/DevScreen'
@@ -86,8 +83,6 @@ const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
 
 const Drawer = createDrawerNavigator()
 
-export const TAB_NAVIGATOR_HEIGHT = 90
-
 const NullComponent = () => {
   return null
 }
@@ -99,7 +94,6 @@ const exploreTokensTabParams: ExploreTokensTabQuery$variables = {
 function TabNavigator({ homeScreenQueries }: { homeScreenQueries: HomeScreenQueries }) {
   const { t } = useTranslation()
   const theme = useAppTheme()
-  const dispatch = useAppDispatch()
 
   const { queryReference: exploreTokensTabQueryRef } = useQueryScheduler<ExploreTokensTabQuery>(
     Priority.Idle,
@@ -131,20 +125,39 @@ function TabNavigator({ homeScreenQueries }: { homeScreenQueries: HomeScreenQuer
         headerShown: false,
         tabBarStyle: {
           alignItems: 'center',
-          backgroundColor: theme.colors.background0,
-          borderTopColor: theme.colors.backgroundOutline,
-          borderStyle: 'solid',
-          borderTopWidth: 0.5,
+          paddingBottom: 0,
+          backgroundColor: 'textPrimary',
+          borderTopWidth: 0,
           display: 'flex',
           height: TAB_NAVIGATOR_HEIGHT,
           justifyContent: 'center',
-          paddingTop: theme.spacing.md,
         },
-      }}>
+      }}
+      tabBar={(props) => (
+        <Box
+          bottom={0}
+          left={0}
+          position="absolute"
+          right={0}
+          shadowColor="backgroundOutline"
+          // adds a consistent shadow across tab bar
+          shadowOffset={{ width: 0, height: 0 }}
+          shadowOpacity={1}
+          shadowRadius={1}>
+          {/* given the tab bar has a transparent background, and tab bar buttons have their own background (solid, or
+          svg for center button), we need to add a background to the safe area on iOS  */}
+          <Box bg="background0" bottom={0} height={20} left={0} position="absolute" right={0} />
+
+          <BottomTabBar {...props} />
+        </Box>
+      )}>
       <Tab.Screen
         children={HomeStackNavigatorMemo}
         name={Tabs.Home}
         options={{
+          tabBarItemStyle: {
+            backgroundColor: theme.colors.background0,
+          },
           tabBarLabel: t('Home'),
           tabBarIcon: ({ focused, color }) => (
             <TabBarButton
@@ -152,6 +165,8 @@ function TabNavigator({ homeScreenQueries }: { homeScreenQueries: HomeScreenQuer
               IconFilled={WalletIconFilled}
               color={color}
               focused={focused}
+              // swap takes `xxs` more space than other buttons
+              pl="lg"
             />
           ),
         }}
@@ -160,22 +175,14 @@ function TabNavigator({ homeScreenQueries }: { homeScreenQueries: HomeScreenQuer
         component={NullComponent}
         name={Tabs.SwapButton}
         options={{
-          tabBarButton: () => {
-            return (
-              <SwapButton
-                onPress={() => {
-                  selectionAsync()
-                  dispatch(openModal({ name: ModalName.Swap }))
-                }}
-              />
-            )
-          },
+          tabBarButton: () => <SwapTabBarButton />,
         }}
       />
       <Tab.Screen
         component={ExploreStackNavigatorMemo}
         name={Tabs.Explore}
         options={{
+          tabBarItemStyle: { backgroundColor: theme.colors.background0 },
           tabBarLabel: t('Explore'),
           tabBarShowLabel: false,
           tabBarIcon: ({ focused, color }) => (
@@ -184,6 +191,8 @@ function TabNavigator({ homeScreenQueries }: { homeScreenQueries: HomeScreenQuer
               IconFilled={DiscoverIconFilled}
               color={color}
               focused={focused}
+              // swap takes `xxs` more space than other buttons
+              pr="lg"
             />
           ),
         }}

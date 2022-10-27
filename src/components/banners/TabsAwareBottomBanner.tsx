@@ -1,7 +1,7 @@
 import { useNavigationState } from '@react-navigation/core'
 import React, { useEffect } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { TAB_NAVIGATOR_HEIGHT } from 'src/app/navigation/navigation'
+import { SWAP_BUTTON_HEIGHT, TAB_NAVIGATOR_HEIGHT } from 'src/app/navigation/TabBar'
 import { BANNER_HEIGHT, BottomBanner, BottomBannerProps } from 'src/components/banners/BottomBanner'
 import { selectModalsState } from 'src/features/modals/modalSlice'
 import { Stacks } from 'src/screens/Screens'
@@ -30,7 +30,9 @@ export function TabsAwareBottomBanner({ icon, text, ...rest }: BottomBannerProps
     }
 
     setBannerTranslateY(
-      isTabsNavVisible ? TAB_NAVIGATOR_HEIGHT + EXTRA_MARGIN : BANNER_HEIGHT - EXTRA_MARGIN
+      isTabsNavVisible
+        ? TAB_NAVIGATOR_HEIGHT + SWAP_BUTTON_HEIGHT / 2 + EXTRA_MARGIN
+        : BANNER_HEIGHT - EXTRA_MARGIN
     )
   }, [modalStates, routes])
 
