@@ -67,13 +67,11 @@ export default function TokenDetails() {
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
   const navigateToWidgetSelectedToken = useCallback(
-    (input: Currency | undefined, output: Currency | undefined) => {
-      const update = output || input
-      if (!token || !update || input?.equals(token) || output?.equals(token)) return
-      const address = update.isNative ? NATIVE_CHAIN_ID : update.address
+    (token: Currency) => {
+      const address = token.isNative ? NATIVE_CHAIN_ID : token.address
       startTransition(() => navigate(`/tokens/${chainName}/${address}`))
     },
-    [chainName, navigate, token]
+    [chainName, navigate]
   )
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
@@ -132,8 +130,8 @@ export default function TokenDetails() {
 
         <RightPanel>
           <Widget
-            defaultToken={token ?? nativeCurrency}
-            onTokensChange={navigateToWidgetSelectedToken}
+            token={token ?? nativeCurrency}
+            onTokenChange={navigateToWidgetSelectedToken}
             onReviewSwapClick={onReviewSwapClick}
           />
           {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress ?? ''} warning={tokenWarning} />}
