@@ -54,7 +54,7 @@ export function WalletQRCode({ address }: Props) {
         <AddressDisplay
           address={address}
           captionVariant="bodySmall"
-          showUnicon={false}
+          showAccountIcon={false}
           variant="headlineSmall"
         />
         <QRCodeDisplay

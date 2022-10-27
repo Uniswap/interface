@@ -51,7 +51,7 @@ export default function WalletPreviewCard({
           {/* TODO(MOB-1994): show ENS name AND truncated Ethereum address */}
           <AddressDisplay
             address={address}
-            showUnicon={!selected}
+            showAccountIcon={!selected}
             size={UNICON_SIZE}
             textAlign="flex-start"
             variant="bodyLarge"

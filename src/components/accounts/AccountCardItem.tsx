@@ -2,12 +2,11 @@ import React, { useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
 import TripleDots from 'src/assets/icons/triple-dots.svg'
+import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { Text } from 'src/components/Text'
-import { AvatarWithVisibilityBadge } from 'src/components/unicons/AvatarWithVisibilityBadge'
-import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
 import { TotalBalance } from 'src/features/balances/TotalBalanceDeprecated'
 import { useENSAvatar } from 'src/features/ens/api'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
@@ -30,15 +29,10 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
   const { data: avatar } = useENSAvatar(address)
   const hasNotifications = useSelectAddressHasNotifications(address)
 
-  // Use ENS avatar if found, if not revert to Unicon
   const icon = useMemo(() => {
-    if (avatar) {
-      return (
-        <AvatarWithVisibilityBadge avatarUri={avatar} showViewOnlyBadge={isViewOnly} size={36} />
-      )
-    }
-
-    return <UniconWithVisibilityBadge address={address} showViewOnlyBadge={isViewOnly} size={36} />
+    return (
+      <AccountIcon address={address} avatarUri={avatar} showViewOnlyBadge={isViewOnly} size={36} />
+    )
   }, [address, avatar, isViewOnly])
 
   return (

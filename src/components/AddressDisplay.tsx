@@ -3,11 +3,10 @@ import { default as React, PropsWithChildren, useMemo } from 'react'
 import { FlexAlignType } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
+import { AccountIcon } from 'src/components/AccountIcon'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { AvatarWithVisibilityBadge } from 'src/components/unicons/AvatarWithVisibilityBadge'
-import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
 import { useENSAvatar } from 'src/features/ens/api'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
@@ -27,7 +26,7 @@ type AddressDisplayProps = {
   direction?: 'row' | 'column'
   subtitleOverrideText?: string
   showCopy?: boolean
-  showUnicon?: boolean
+  showAccountIcon?: boolean
   textAlign?: FlexAlignType
 } & LayoutProps<Theme>
 
@@ -56,7 +55,7 @@ export function AddressDisplay({
   subtitleOverrideText,
   direction = 'row',
   showCopy = false,
-  showUnicon = true,
+  showAccountIcon = true,
   textAlign,
   ...rest
 }: AddressDisplayProps) {
@@ -80,24 +79,22 @@ export function AddressDisplay({
   const mainSize = theme.textVariants[variant].fontSize
   const captionSize = theme.textVariants[captionVariant].fontSize
   const itemAlignment =
-    textAlign || (!showUnicon || direction === 'column' ? 'center' : 'flex-start')
+    textAlign || (!showAccountIcon || direction === 'column' ? 'center' : 'flex-start')
 
-  // Use ENS avatar if found, if not revert to Unicon
   const icon = useMemo(() => {
-    if (avatar) {
-      return (
-        <AvatarWithVisibilityBadge avatarUri={avatar} showViewOnlyBadge={isViewOnly} size={size} />
-      )
-    } else {
-      return (
-        <UniconWithVisibilityBadge address={address} showViewOnlyBadge={isViewOnly} size={size} />
-      )
-    }
+    return (
+      <AccountIcon
+        address={address}
+        avatarUri={avatar}
+        showViewOnlyBadge={isViewOnly}
+        size={size}
+      />
+    )
   }, [address, avatar, isViewOnly, size])
 
   return (
     <Flex alignItems="center" flexDirection={direction} gap="sm" {...rest}>
-      {showUnicon && icon}
+      {showAccountIcon && icon}
       <Box alignItems={itemAlignment} flexShrink={1}>
         <CopyButtonWrapper
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
