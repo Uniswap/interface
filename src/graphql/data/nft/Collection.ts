@@ -45,7 +45,7 @@ const collectionQuery = graphql`
               listings
             }
           }
-          markets(currencies: ETH) {
+          markets(currencies: USD) {
             floorPrice {
               currency
               value
@@ -56,7 +56,7 @@ const collectionQuery = graphql`
               currency
             }
             listings
-            volume(duration: DAY) {
+            volume(duration: MAX) {
               value
               currency
             }
@@ -85,7 +85,6 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
     address,
   })
   const queryData = usePreloadedQuery<CollectionQuery>(collectionQuery, collectionQueryReference)
-  // console.log(queryData)
 
   const queryCollection = queryData.nftCollections?.edges[0].node
   const traits = {} as Record<string, Trait[]>
@@ -101,9 +100,7 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
     }
   }
   return {
-    // collectionAddress: address,
     address,
-    // indexingStatus: string,
     isVerified: queryCollection?.isVerified ?? undefined,
     name: queryCollection?.name ?? undefined,
     description: queryCollection?.description ?? undefined,
@@ -114,18 +111,17 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
       ? {
           num_owners: queryCollection?.markets[0].owners ?? undefined,
           floor_price: queryCollection?.markets[0].floorPrice?.value ?? undefined,
-          one_day_volume: queryCollection?.markets[0].volume?.value ?? undefined,
+          // one_day_volume: queryCollection?.markets[0].volume?.value ?? undefined, TODO add back when totalVolume does not return null
           one_day_change: queryCollection?.markets[0].volumePercentChange?.value ?? undefined,
           one_day_floor_change: queryCollection?.markets[0].floorPricePercentChange?.value ?? undefined,
           banner_image_url: queryCollection?.bannerImage?.url ?? undefined,
           total_supply: queryCollection?.numAssets ?? undefined,
           total_listings: queryCollection?.markets[0].listings ?? undefined,
-          total_volume: queryCollection?.markets[0].totalVolume?.value ?? undefined,
+          total_volume: queryCollection?.markets[0].volume?.value ?? undefined,
         }
       : undefined,
-    // symbol: queryCollection.image.url,
     traits,
-    // marketplaceCount: { marketplace: string; count: number }[], // TODO structure
+    // marketplaceCount: { marketplace: string; count: number }[], // TODO add when backend supports
     imageUrl: queryCollection?.image?.url ?? undefined,
     twitter: queryCollection?.twitterName ?? undefined,
     instagram: queryCollection?.instagramName ?? undefined,
