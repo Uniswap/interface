@@ -83,7 +83,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   const showInsufficientBalanceWarning = insufficientBalanceWarning && !isOutput
 
   const formattedUSDValue = usdValue
-    ? formatNumber(parseFloat(usdValue?.toExact()), NumberType.FiatTokenPrice)
+    ? formatNumber(parseFloat(usdValue?.toExact()), NumberType.FiatTokenQuantity)
     : '$0'
   const formattedCurrencyAmount = currencyAmount
     ? formatCurrencyAmount(currencyAmount, NumberType.TokenTx)

@@ -18,6 +18,7 @@ import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { NFTAsset } from 'src/features/nfts/types'
 import { dimensions } from 'src/styles/sizing'
+import { formatNumber, NumberType } from 'src/utils/format'
 
 interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: string; onPress: () => void }
@@ -83,7 +84,11 @@ export function TransactionReview({
               showSoftInputOnFocus={false}
               testID="amount-input-in"
               textAlign="center"
-              value={formattedAmountIn}
+              value={
+                formattedAmountIn
+                  ? formatNumber(parseFloat(formattedAmountIn), NumberType.TokenTx)
+                  : undefined
+              }
             />
             <CurrencyLogoWithLabel currency={currencyIn} />
           </Flex>
@@ -109,7 +114,7 @@ export function TransactionReview({
                 showSoftInputOnFocus={false}
                 testID="amount-input-out"
                 textAlign="center"
-                value={formattedAmountOut}
+                value={formatNumber(parseFloat(formattedAmountOut), NumberType.TokenTx)}
               />
               <CurrencyLogoWithLabel currency={currencyOut} />
             </Flex>

@@ -90,20 +90,12 @@ export function requireAcceptNewTrade(
   return oldTrade?.quote?.methodParameters?.calldata !== newTrade?.quote?.methodParameters?.calldata
 }
 
-const getFormattedPrice = (price: Price<Currency, Currency>, showInverseRate: boolean) => {
-  try {
-    return showInverseRate ? price.toSignificant(4) : price.invert()?.toSignificant(4) ?? '-'
-  } catch (error) {
-    return '-'
-  }
-}
-
 export const getRateToDisplay = (trade: Trade, showInverseRate: boolean) => {
-  const price = trade.executionPrice
-  const formattedPrice = getFormattedPrice(price, false)
-  const formattedInversePrice = getFormattedPrice(price, true)
-  const rate = `1 ${price.quoteCurrency?.symbol} = ${formattedPrice} ${price.baseCurrency?.symbol}`
-  const inverseRate = `1 ${price.baseCurrency?.symbol} = ${formattedInversePrice} ${price.quoteCurrency?.symbol}`
+  const price = showInverseRate ? trade.executionPrice.invert() : trade.executionPrice
+  const formattedPrice = formatPrice(price, NumberType.TokenTx)
+  const { quoteCurrency, baseCurrency } = trade.executionPrice
+  const rate = `1 ${quoteCurrency.symbol} = ${formattedPrice} ${baseCurrency.symbol}`
+  const inverseRate = `1 ${baseCurrency.symbol} = ${formattedPrice} ${quoteCurrency.symbol}`
   return showInverseRate ? rate : inverseRate
 }
 
