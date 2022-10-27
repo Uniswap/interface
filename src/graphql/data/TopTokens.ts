@@ -54,8 +54,8 @@ const tokenSparklineQuery = graphql`
       address
       market(currency: USD) {
         priceHistory(duration: $duration) {
-          timestamp
-          value
+          timestamp @required(action: LOG)
+          value @required(action: LOG)
         }
       }
     }

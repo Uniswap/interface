@@ -1,7 +1,7 @@
 import graphql from 'babel-plugin-relay/macro'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
-import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay'
+import { useEffect, useMemo } from 'react'
+import { loadQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import { Chain } from './__generated__/TokenPriceQuery.graphql'
@@ -16,7 +16,7 @@ The difference between Token and TokenProject:
     TokenMarket is per-chain market data for contracts pulled from the graph.
     TokenProjectMarket is aggregated market data (aggregated over multiple dexes and centralized exchanges) that we get from coingecko.
 */
-const tokenQuery = graphql`
+export const tokenQuery = graphql`
   query TokenQuery($contract: ContractInput!) {
     tokens(contracts: [$contract]) {
       id @required(action: LOG)
@@ -60,6 +60,18 @@ const tokenQuery = graphql`
 `
 
 export type TokenQueryData = NonNullable<TokenQuery$data['tokens']>[number]
+
+export function useLoadTokenQuery(address: string, chain: Chain) {
+  const contract = useMemo(() => ({ address: address.toLowerCase(), chain }), [address, chain])
+  const environment = useRelayEnvironment()
+  const queryReference = loadQuery<TokenQuery>(environment, tokenQuery, { contract })
+
+  useEffect(() => {
+    return () => queryReference.dispose()
+  })
+
+  return queryReference
+}
 
 export function useTokenQuery(address: string, chain: Chain): TokenQueryData | undefined {
   const contract = useMemo(() => ({ address: address.toLowerCase(), chain }), [address, chain])

@@ -1,6 +1,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
+import { filterTimeAtom } from 'components/Tokens/state'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
@@ -10,6 +11,7 @@ import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBal
 import TokenDetailsSkeleton, {
   Hr,
   LeftPanel,
+  LoadingChart,
   RightPanel,
   TokenDetailsLayout,
 } from 'components/Tokens/TokenDetails/Skeleton'
@@ -19,14 +21,16 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
 import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
-import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
-import { QueryToken, useTokenQuery } from 'graphql/data/Token'
-import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
+import { Chain, TokenQuery } from 'graphql/data/__generated__/TokenQuery.graphql'
+import { QueryToken, tokenQuery, useLoadTokenQuery } from 'graphql/data/Token'
+import { useLoadTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useCallback, useMemo, useState, useTransition } from 'react'
+import { useAtomValue } from 'jotai/utils'
+import { Suspense, useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { usePreloadedQuery } from 'react-relay'
 import { useNavigate, useParams } from 'react-router-dom'
 
 export default function TokenDetails() {
@@ -35,8 +39,15 @@ export default function TokenDetails() {
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const nativeCurrency = nativeOnChain(pageChainId)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
-  const tokenQueryData = useTokenQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
-  const prices = useTokenPriceQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
+  const timePeriod = useAtomValue(filterTimeAtom)
+  //const tokenQueryData = useTokenQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
+  const tokenQueryReference = useLoadTokenQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
+  const priceQueryReference = useLoadTokenPriceQuery(
+    isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '',
+    chain,
+    timePeriod
+  )
+  const tokenQueryData = usePreloadedQuery<TokenQuery>(tokenQuery, tokenQueryReference).tokens?.[0]
   const token = useMemo(() => {
     if (!tokenAddress) return undefined
     if (isNative) return nativeCurrency
@@ -94,12 +105,14 @@ export default function TokenDetails() {
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            <ChartSection
-              token={tokenQueryData}
-              currency={token}
-              nativeCurrency={isNative ? nativeCurrency : undefined}
-              prices={prices}
-            />
+            <Suspense fallback={<LoadingChart />}>
+              <ChartSection
+                token={tokenQueryData}
+                currency={token}
+                nativeCurrency={isNative ? nativeCurrency : undefined}
+                priceQueryReference={priceQueryReference}
+              />
+            </Suspense>
             <StatsSection
               TVL={tokenQueryData.market?.totalValueLocked?.value}
               volume24H={tokenQueryData.market?.volume24H?.value}

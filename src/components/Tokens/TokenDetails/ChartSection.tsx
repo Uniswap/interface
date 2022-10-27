@@ -3,16 +3,16 @@ import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
+import { TokenPriceQuery } from 'graphql/data/__generated__/TokenPriceQuery.graphql'
 import { TokenQueryData } from 'graphql/data/Token'
-import { PriceDurations } from 'graphql/data/TokenPrice'
+import { usePreloadedTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
-import { useAtomValue } from 'jotai/utils'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
+import { PreloadedQuery } from 'react-relay'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
 
-import { filterTimeAtom } from '../state'
 import { L2NetworkLogo, LogoContainer } from '../TokenTable/TokenRow'
 import PriceChart from './PriceChart'
 import ShareButton from './ShareButton'
@@ -69,16 +69,16 @@ export default function ChartSection({
   token,
   currency,
   nativeCurrency,
-  prices,
+  priceQueryReference,
 }: {
   token: NonNullable<TokenQueryData>
   currency?: Currency | null
   nativeCurrency?: Token | NativeCurrency
-  prices?: PriceDurations
+  priceQueryReference: PreloadedQuery<TokenPriceQuery>
 }) {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
-  const timePeriod = useAtomValue(filterTimeAtom)
+  const prices = usePreloadedTokenPriceQuery(priceQueryReference)
 
   const logoSrc = useTokenLogoURI(token, nativeCurrency)
 
@@ -103,9 +103,7 @@ export default function ChartSection({
         </TokenActions>
       </TokenInfoContainer>
       <ChartContainer>
-        <ParentSize>
-          {({ width }) => <PriceChart prices={prices ? prices?.[timePeriod] : null} width={width} height={436} />}
-        </ParentSize>
+        <ParentSize>{({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} />}</ParentSize>
       </ChartContainer>
     </ChartHeader>
   )
