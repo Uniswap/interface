@@ -262,7 +262,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 
   // round daily volume & floorPrice to 3 decimals or less
   const totalVolumeStr = volumeFormatter(stats.stats?.total_volume ?? 0)
-  const floorPriceStr = floorFormatter(stats.floorPrice ?? 0)
+  const floorPriceStr = floorFormatter(stats.stats?.floor_price ?? 0)
   const floorChangeStr =
     stats.stats && stats.stats.one_day_floor_change ? Math.round(Math.abs(stats.stats.one_day_floor_change) * 100) : 0
   const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_floor_change) : null
@@ -279,7 +279,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   return (
     <Row gap={{ sm: '36', md: '60' }} {...props}>
       {isCollectionStatsLoading && statsLoadingSkeleton}
-      {stats.floorPrice ? (
+      {stats.stats?.floor_price ? (
         <StatsItem label="Global floor" isMobile={isMobile ?? false}>
           {floorPriceStr} ETH
         </StatsItem>

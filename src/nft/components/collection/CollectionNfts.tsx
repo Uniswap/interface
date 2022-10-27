@@ -385,9 +385,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }, [collectionStats, location])
 
   useEffect(() => {
-    if (collectionStats && collectionStats.floorPrice) {
-      const lowValue = collectionStats.floorPrice
-      const maxValue = 10 * collectionStats.floorPrice
+    if (collectionStats && collectionStats.stats?.floor_price) {
+      const lowValue = collectionStats.stats?.floor_price
+      const maxValue = 10 * collectionStats.stats?.floor_price
 
       if (priceRangeLow === '') {
         setPriceRangeLow(lowValue?.toFixed(2))

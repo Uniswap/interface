@@ -103,15 +103,12 @@ export interface GenieAsset {
 }
 
 export interface GenieCollection {
-  // collectionAddress: string // TODO deprecate
   address: string
-  // indexingStatus: string // TODO deprecate
   isVerified?: boolean
   name?: string
   description?: string
   standard?: string
   bannerImageUrl?: string
-  floorPrice?: number // TODO deprecate
   stats?: {
     num_owners?: number
     floor_price?: number
@@ -123,10 +120,7 @@ export interface GenieCollection {
     total_listings?: number
     total_volume?: number
   }
-  // symbol: string // TODO deprecate
   traits?: Record<string, Trait[]>
-  // numTraitsByAmount: { traitCount: number; numWithTrait: number }[] // TODO deprecate
-  // indexingStats: { openSea: { successfulExecutionDate: string; lastRequestedAt: string } } // TODO deprecate
   marketplaceCount?: { marketplace: string; count: number }[]
   imageUrl?: string
   twitter?: string

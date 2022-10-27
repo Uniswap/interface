@@ -141,7 +141,7 @@ export const ProfilePage = () => {
     if (ownerCollections?.length && collectionStats?.length) {
       const ownerCollectionsCopy = [...ownerCollections]
       for (const collection of ownerCollectionsCopy) {
-        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.floorPrice
+        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.stats?.floor_price
         collection.floorPrice = roundFloorPrice(floorPrice)
       }
       setWalletCollections(ownerCollectionsCopy)
@@ -152,7 +152,7 @@ export const ProfilePage = () => {
     if (ownerCollections?.length && collectionStats?.length) {
       const ownerCollectionsCopy = [...ownerCollections]
       for (const collection of ownerCollectionsCopy) {
-        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.floorPrice
+        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.stats?.floor_price //TODO update when changing walletStats endpoint to gql
         collection.floorPrice = floorPrice ? Math.round(floorPrice * 1000 + Number.EPSILON) / 1000 : 0 //round to at most 3 digits
       }
       setWalletCollections(ownerCollectionsCopy)

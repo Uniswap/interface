@@ -100,9 +100,6 @@ const urlParamsUtils = {
       clonedQuery['traits'] = clonedQuery['traits'].map((queryTrait: string) => {
         const modifiedTrait = trimTraitStr(queryTrait.replace(/(")/g, ''))
         const [trait_type, trait_value] = modifiedTrait.split(',')
-        // const traitInStats = collectionStats.traits?.find(
-        //   ([type, traits]) => type === trait_type && traits.find((trait) => trait.trait_value === trait_value)
-        // )
         const traitInStats =
           collectionStats.traits &&
           collectionStats.traits[trait_type].find((trait) => trait.trait_value === trait_value)

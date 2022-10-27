@@ -17,7 +17,6 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
     buyNow: state.buyNow,
     setBuyNow: state.setBuyNow,
   }))
-  // const traitsByGroup: Record<string, Trait[]> = useMemo(() => (traits ? groupBy(traits, 'trait_type') : {}), [traits])
   const [buyNowHovered, toggleBuyNowHover] = useReducer((state) => !state, false)
 
   const handleBuyNowToggle = () => {

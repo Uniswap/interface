@@ -92,10 +92,10 @@ export const CollectionRow = ({
           <Box className={styles.secondaryText}>{putCommas(collection.stats?.total_supply)} items</Box>
         </Column>
       </Row>
-      {collection.floorPrice ? (
+      {collection.stats?.floor_price ? (
         <Column className={styles.suggestionSecondaryContainer}>
           <Row gap="4">
-            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.floorPrice)} ETH</Box>
+            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.stats?.floor_price)} ETH</Box>
           </Row>
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>

@@ -56,7 +56,6 @@ export const CollectionStatsFetcher = async (addressOrName: string, recursive = 
   })
 
   const data = await r.json()
-  // Need to restructure how traits are formatted to match GraphQL before this endpoint is deprecated
   const collections = data?.data
     ? data.data.map((collection: any) => {
         console.log(collection.traits)
