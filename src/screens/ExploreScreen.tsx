@@ -185,17 +185,19 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
 function ExploreTokensTabLoader() {
   const { t } = useTranslation()
   return (
-    <Flex gap="md" mx="xs" my="sm">
+    <Flex gap="lg" mx="xs" my="sm">
       <Flex gap="sm">
         <Text color="textSecondary" variant="subheadSmall">
           {t('Favorites')}
         </Text>
         <Loading repeat={3} type="favorite" />
       </Flex>
-      <Flex gap="sm">
-        <Text color="textSecondary" variant="subheadSmall">
-          {t('Top tokens')}
-        </Text>
+      <Flex gap="md">
+        <Flex row alignItems="center" justifyContent="space-between" py="sm">
+          <Text color="textSecondary" variant="subheadSmall">
+            {t('Top tokens')}
+          </Text>
+        </Flex>
         <Loading repeat={5} type="token" />
       </Flex>
     </Flex>
