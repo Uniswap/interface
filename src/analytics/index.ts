@@ -1,5 +1,5 @@
 import { add, Identify, identify, init, track } from '@amplitude/analytics-browser'
-import client from '@amplitude/analytics-browser'
+import * as client from '@amplitude/analytics-browser'
 import { webAttributionPlugin } from '@amplitude/plugin-web-attribution-browser'
 import { isProductionEnv } from 'utils/env'
 
