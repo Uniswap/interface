@@ -1,7 +1,6 @@
 import React, { ComponentProps, useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import SwapArrow from 'src/assets/icons/swap-arrow.svg'
-import { IconButton } from 'src/components/buttons/IconButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 
 type SwapArrowButtonProps = Pick<
@@ -19,7 +18,7 @@ export function SwapArrowButton({
   const theme = useAppTheme()
   return useMemo(
     () => (
-      <IconButton
+      <TouchableArea
         alignItems="center"
         alignSelf="center"
         bg={bg}
@@ -27,18 +26,17 @@ export function SwapArrowButton({
         borderRadius="lg"
         borderWidth={4}
         disabled={disabled}
-        icon={
-          <SwapArrow
-            color={theme.colors.textSecondary}
-            height={theme.iconSizes.md}
-            width={theme.iconSizes.md}
-          />
-        }
         justifyContent="center"
         name={name}
+        p="xs"
         onPress={onPress}
-        {...rest}
-      />
+        {...rest}>
+        <SwapArrow
+          color={theme.colors.textSecondary}
+          height={theme.iconSizes.md}
+          width={theme.iconSizes.md}
+        />
+      </TouchableArea>
     ),
     [bg, onPress, disabled, name, rest, theme.colors.textSecondary, theme.iconSizes.md]
   )

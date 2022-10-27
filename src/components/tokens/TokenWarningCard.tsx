@@ -2,7 +2,7 @@ import { TFunction } from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { IconButton } from 'src/components/buttons/IconButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CloseIcon } from 'src/components/icons/CloseIcon'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -53,16 +53,17 @@ export default function TokenWarningCard({
           </Text>
         </Flex>
         {tokenWarningLevel !== TokenWarningLevel.BLOCKED && (
-          <IconButton
+          <TouchableArea
             alignItems="center"
             borderRadius="full"
             height={18}
-            icon={<CloseIcon size={8} />}
             justifyContent="center"
+            p="xs"
             style={{ backgroundColor: opacify(5, theme.colors.white) }}
             width={18}
-            onPress={onDismiss}
-          />
+            onPress={onDismiss}>
+            <CloseIcon size={8} />
+          </TouchableArea>
         )}
       </Flex>
       <Flex>

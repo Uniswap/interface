@@ -3,7 +3,7 @@ import { TextInput as NativeTextInput } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import EyeOffIcon from 'src/assets/icons/eye-off.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
-import { IconButton } from 'src/components/buttons/IconButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 
@@ -49,26 +49,21 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>((props,
           {...rest} // apply any textinputprops
         />
         <AnimatedFlex mx="sm">
-          <IconButton
-            color="textSecondary"
-            icon={
-              showPassword ? (
-                <EyeIcon
-                  color={theme.colors.textSecondary}
-                  height={theme.iconSizes.sm}
-                  width={theme.iconSizes.sm}
-                />
-              ) : (
-                <EyeOffIcon
-                  color={theme.colors.textSecondary}
-                  height={theme.iconSizes.sm}
-                  width={theme.iconSizes.sm}
-                />
-              )
-            }
-            p="xxs"
-            onPress={onPressEyeIcon}
-          />
+          <TouchableArea p="xxs" onPress={onPressEyeIcon}>
+            {showPassword ? (
+              <EyeIcon
+                color={theme.colors.textSecondary}
+                height={theme.iconSizes.sm}
+                width={theme.iconSizes.sm}
+              />
+            ) : (
+              <EyeOffIcon
+                color={theme.colors.textSecondary}
+                height={theme.iconSizes.sm}
+                width={theme.iconSizes.sm}
+              />
+            )}
+          </TouchableArea>
         </AnimatedFlex>
       </AnimatedFlex>
     </Flex>

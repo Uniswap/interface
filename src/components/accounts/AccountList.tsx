@@ -5,7 +5,7 @@ import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import PlusIcon from 'src/assets/icons/plus.svg'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
-import { IconButton } from 'src/components/buttons/IconButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
@@ -33,20 +33,19 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
             {t('Your wallets')}
           </Text>
         </Box>
-        <IconButton
+        <TouchableArea
           borderColor="backgroundOutline"
           borderRadius="full"
           borderWidth={1}
-          icon={
-            <PlusIcon
-              color={theme.colors.textSecondary}
-              height={theme.iconSizes.sm}
-              width={theme.iconSizes.sm}
-            />
-          }
           mr="md"
-          onPress={onAddWallet}
-        />
+          p="xs"
+          onPress={onAddWallet}>
+          <PlusIcon
+            color={theme.colors.textSecondary}
+            height={theme.iconSizes.sm}
+            width={theme.iconSizes.sm}
+          />
+        </TouchableArea>
       </Flex>
     ),
     [t, theme, onAddWallet]

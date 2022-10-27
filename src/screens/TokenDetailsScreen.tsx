@@ -9,7 +9,7 @@ import { AppStackScreenProp } from 'src/app/navigation/types'
 import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
 import SendIcon from 'src/assets/icons/send.svg'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { IconButton } from 'src/components/buttons/IconButton'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Suspense } from 'src/components/data/Suspense'
 import { Heart } from 'src/components/icons/Heart'
@@ -81,12 +81,9 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
         </Box>
       </Flex>
       <Flex row alignItems="center" gap="none" justifyContent="center">
-        <IconButton
-          icon={<Heart active={isFavoriteToken} size={24} />}
-          px="none"
-          variant="transparent"
-          onPress={onFavoritePress}
-        />
+        <TouchableArea onPress={onFavoritePress}>
+          <Heart active={isFavoriteToken} size={24} />
+        </TouchableArea>
       </Flex>
     </Flex>
   )

@@ -5,8 +5,7 @@ import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-
 import { useAppTheme } from 'src/app/hooks'
 import X from 'src/assets/icons/x.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { IconButton } from 'src/components/buttons/IconButton'
-import { AnimatedTouchableArea } from 'src/components/buttons/TouchableArea'
+import { AnimatedTouchableArea, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -202,12 +201,12 @@ function ClearButton(props: ClearButtonProps) {
     props
 
   return (
-    <IconButton
-      bg="backgroundOutline"
+    <TouchableArea
+      backgroundColor="backgroundOutline"
       borderRadius="full"
-      icon={clearIcon}
       p="xxs"
-      onPress={onPress}
-    />
+      onPress={onPress}>
+      {clearIcon}
+    </TouchableArea>
   )
 }

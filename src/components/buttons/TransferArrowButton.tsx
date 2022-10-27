@@ -1,6 +1,5 @@
 import React, { ComponentProps } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import { IconButton } from 'src/components/buttons/IconButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Arrow } from 'src/components/icons/Arrow'
 
@@ -20,7 +19,7 @@ export function TransferArrowButton({
 }: ArrowDownButtonProps) {
   const theme = useAppTheme()
   return (
-    <IconButton
+    <TouchableArea
       alignItems="center"
       alignSelf="center"
       bg={bg}
@@ -28,11 +27,12 @@ export function TransferArrowButton({
       borderRadius="lg"
       borderWidth={4}
       disabled={disabled}
-      icon={<Arrow color={theme.colors.textSecondary} direction="s" size={ICON_SIZE} />}
       justifyContent="center"
       name={name}
+      p="xs"
       onPress={onPress}
-      {...rest}
-    />
+      {...rest}>
+      <Arrow color={theme.colors.textSecondary} direction="s" size={ICON_SIZE} />
+    </TouchableArea>
   )
 }
