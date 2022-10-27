@@ -70,6 +70,13 @@ export const textVariants = {
     color: 'textPrimary',
     maxFontSizeMultiplier: 1.4,
   },
+  bodyMicro: {
+    fontFamily: fontFamily.sansSerif.regular,
+    fontSize: 12,
+    lineHeight: 16,
+    color: 'textPrimary',
+    maxFontSizeMultiplier: 1.4,
+  },
   buttonLabelLarge: {
     fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 20,

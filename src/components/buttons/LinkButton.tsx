@@ -13,6 +13,7 @@ interface LinkButtonProps extends Omit<BaseButtonProps, 'onPress'> {
   url: string
   isSafeUri?: boolean
   color?: keyof Theme['colors']
+  iconColor?: keyof Theme['colors']
   size?: number
   textVariant?: keyof Theme['textVariants']
 }
@@ -22,21 +23,28 @@ export function LinkButton({
   label,
   textVariant,
   color,
+  iconColor,
   isSafeUri = false,
   size = iconSizes.sm,
   justifyContent = 'center',
   ...rest
 }: LinkButtonProps) {
   const theme = useAppTheme()
-  const iconColor = color ? theme.colors[color] : theme.colors.textSecondary
-
   return (
     <TouchableArea onPress={() => openUri(url, isSafeUri)} {...rest}>
-      <Flex row alignItems="center" gap="xxs" justifyContent={justifyContent}>
+      <Flex row alignItems="center" gap="xs" justifyContent={justifyContent}>
         <Text color={color} variant={textVariant}>
           {label}
         </Text>
-        <ExternalLinkIcon fill={iconColor} height={size} width={size} />
+        <ExternalLinkIcon
+          fill={
+            (iconColor && theme.colors[iconColor]) ??
+            (color && theme.colors[color]) ??
+            theme.colors.textSecondary
+          }
+          height={size}
+          width={size}
+        />
       </Flex>
     </TouchableArea>
   )

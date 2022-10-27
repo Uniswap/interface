@@ -231,7 +231,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
                 height={iconSizes.sm}
                 width={iconSizes.sm}
               />
-              <Text color="textSecondary" fontStyle="italic" variant="buttonLabelMicro">
+              <Text color="textSecondary" fontStyle="italic" variant="bodyMicro">
                 {t('Be careful: this {{ requestType }} authorizes assets', {
                   requestType: isTransactionRequest(request) ? 'transaction' : 'message',
                 })}

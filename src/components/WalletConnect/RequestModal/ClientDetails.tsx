@@ -34,13 +34,15 @@ export function ClientDetails({
           request={request}
         />
         <LinkButton
-          backgroundColor="background2"
-          borderRadius="xs"
+          backgroundColor="accentActiveSoft"
+          borderRadius="sm"
+          color="blue300"
+          iconColor="textSecondary"
           label={dapp.url}
           mt="xs"
           px="xs"
           py="xxs"
-          textVariant="buttonLabelMicro"
+          textVariant="bodyMicro"
           url={dapp.url}
         />
       </Flex>

@@ -2,7 +2,6 @@ import { Transaction, TransactionDescription } from 'no-yolo-signatures'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
-import { useAppTheme } from 'src/app/hooks'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -16,7 +15,6 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Theme } from 'src/styles/theme'
 import { getValidAddress, shortenAddress } from 'src/utils/addresses'
-import { opacify } from 'src/utils/colors'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
@@ -37,16 +35,14 @@ type AddressButtonProps = {
 
 const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps) => {
   const { name } = useENS(chainId, address, false)
-  const theme = useAppTheme()
   return (
     <LinkButton
       isSafeUri
+      backgroundColor="backgroundOutline"
       borderRadius="xs"
       label={name || shortenAddress(address)}
       px="xs"
       py="xxs"
-      // TODO: sync this to design theme, use color name instead of hardcoded value
-      style={{ backgroundColor: opacify(20, theme.colors.black) }}
       textVariant="bodySmall"
       url={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}
       {...rest}
@@ -112,7 +108,6 @@ function TransactionDetails({
   transaction: EthTransaction
 }) {
   const { t } = useTranslation()
-  const theme = useAppTheme()
   const parser = useNoYoloParser(chainId)
 
   const [isLoading, setIsLoading] = useState(true)
@@ -166,11 +161,7 @@ function TransactionDetails({
           <Text color="textSecondary" variant="bodySmall">
             {t('Function')}:
           </Text>
-          <Box
-            borderRadius="xs"
-            px="xs"
-            py="xxs"
-            style={{ backgroundColor: opacify(20, theme.colors.black) }}>
+          <Box backgroundColor="backgroundOutline" borderRadius="xs" px="xs" py="xxs">
             <Text color="textPrimary" variant="monospace">
               {parsedData.name}
             </Text>
