@@ -127,6 +127,13 @@ const _Button = ({
   )
 }
 
+/**
+ * Standard design system Button. By default emphasis is Primary and size is Medium.
+ * The Figma designs will have the emphasis and size as part of the component properties.
+ * If the Figma design has a button that looks similar to one of the variants but is not exactly the same please flag to designers before creating a button different from this one.
+ *
+ * This button handles Label + Icon, Label only, and Icon only. Pass the relevant props and it will handle the rendering for each case.
+ */
 export const Button = memo(_Button)
 
 export const AnimatedButton = withAnimated(Button)

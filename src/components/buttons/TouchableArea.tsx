@@ -19,6 +19,13 @@ export type BaseButtonProps = PropsWithChildren<
   }
 >
 
+/**
+ * This component wraps children in a TouchableBox and adds tracking. If you are trying to implement a standard button DO NOT USE this component. Use the Button component instead with the desired size and emphasis.
+ * Examples of when to use this are:
+ *  - clickable text
+ *  - clickable icons (different from an icon button which has a bg color, border radius, and a border)
+ *  - custom elements that are clickable (e.g. rows, cards, headers)
+ */
 export function TouchableArea({ children, name: elementName, ...rest }: BaseButtonProps) {
   const baseProps = { hitSlop: defaultHitslopInset, ...rest }
 
