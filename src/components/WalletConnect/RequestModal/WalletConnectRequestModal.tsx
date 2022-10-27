@@ -36,7 +36,7 @@ const MAX_MODAL_MESSAGE_HEIGHT = 200
 interface Props {
   isVisible: boolean
   onClose: () => void
-  request: WalletConnectRequest | null
+  request: WalletConnectRequest
 }
 
 const isPotentiallyUnsafe = (request: WalletConnectRequest) =>
@@ -95,10 +95,10 @@ const spacerProps: ComponentProps<typeof Box> = {
 
 export function WalletConnectRequestModal({ isVisible, onClose, request }: Props) {
   const theme = useAppTheme()
-  const chainId = toSupportedChainId(request?.dapp.chain_id) ?? undefined
+  const chainId = toSupportedChainId(request.dapp.chain_id) ?? undefined
 
   const tx: providers.TransactionRequest | null = useMemo(() => {
-    if (!chainId || !request || !isTransactionRequest(request)) {
+    if (!chainId || !isTransactionRequest(request)) {
       return null
     }
 
@@ -109,14 +109,14 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   const hasMultipleAccounts = useSignerAccounts().length > 1
   const gasFeeInfo = useTransactionGasFee(tx, GasSpeed.Urgent)
   const hasSufficientFunds = useHasSufficientFunds({
-    account: request?.account,
+    account: request.account,
     chainId,
     gasFeeInfo,
-    value: request && isTransactionRequest(request) ? request.transaction.value : undefined,
+    value: isTransactionRequest(request) ? request.transaction.value : undefined,
   })
 
   const checkConfirmEnabled = () => {
-    if (!activeAccount || !request) return false
+    if (!activeAccount) return false
 
     if (methodCostsGas(request)) return !!(tx && hasSufficientFunds && gasFeeInfo)
 
@@ -135,7 +135,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
    */
   const rejectOnCloseRef = useRef(true)
 
-  if (!request?.type || !VALID_REQUEST_TYPES.includes(request?.type)) {
+  if (!VALID_REQUEST_TYPES.includes(request.type)) {
     return null
   }
 
