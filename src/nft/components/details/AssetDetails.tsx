@@ -7,7 +7,6 @@ import { ActivityEventResponse, ActivityEventType } from 'nft/types'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
-import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
 import { isAudio } from 'nft/utils/isAudio'
@@ -16,8 +15,7 @@ import { rarityProviderLogo } from 'nft/utils/rarity'
 import qs from 'query-string'
 import { useEffect, useMemo, useCallback, useReducer, useState } from 'react'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useSpring } from 'react-spring'
+import { useNavigate } from 'react-router-dom'
 import { VerifiedIcon } from '../icons'
 import styled, { css } from 'styled-components/macro'
 import InfoContainer from './InfoContainer'
@@ -41,15 +39,7 @@ const CollectionHeader = styled.div`
   line-height: 24px;
   color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => theme.textSecondary};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => css`color ${duration.medium} ${timing.ease}`};
-  }
+  margin-top: 28px;
 `
 
 const AssetPriceDetailsContainer = styled.div`
@@ -198,22 +188,12 @@ interface AssetDetailsProps {
 }
 
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
-  const { pathname, search } = useLocation()
   const navigate = useNavigate()
-  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
-  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
-  const bagExpanded = useBag((state) => state.bagExpanded)
-  const [creatorAddress, setCreatorAddress] = useState('')
-  const [ownerAddress, setOwnerAddress] = useState('')
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
-  const creatorEnsName = useENSName(creatorAddress)
-  const ownerEnsName = useENSName(ownerAddress)
-  const parsed = qs.parse(search)
-  const { gridWidthOffset } = useSpring({
-    gridWidthOffset: bagExpanded ? 324 : 0,
-  })
-  const [showTraits, setShowTraits] = useState(true)
+  // const creatorEnsName = useENSName(creatorAddress)
+  // const ownerEnsName = useENSName(ownerAddress)
+
   const [isSelected, setSelected] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const { account: address, provider } = useWeb3React()
@@ -356,22 +336,22 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
 
   return (
     <Column>
-      <CollectionHeader onClick={() => navigate(`/nfts/collection/${asset.address}`)}>
-        {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
-      </CollectionHeader>
-      <AssetHeader>{asset.name ? asset.name : `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       <MediaContainer>
         {assetMediaType === MediaType.Image ? (
           <img
             className={styles.image}
             src={asset.imageUrl}
             alt={asset.name || collection.collectionName}
-            style={{ ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }}
+            style={{ boxShadow: `0px 4px 4px 0px #00000040` }}
           />
         ) : (
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}
       </MediaContainer>
+      <CollectionHeader>
+        {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
+      </CollectionHeader>
+      <AssetHeader>{asset.name ? asset.name : `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       <AssetPriceDetailsContainer>
         <AssetPriceDetails asset={asset} collection={collection} />
       </AssetPriceDetailsContainer>
@@ -417,7 +397,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
         <>
           By{' '}
-          <AddressTextLink href={`${explorer}/address/${asset.creator}`} target="_blank">
+          <AddressTextLink href={`https://etherscan.io/address/${asset.creator}`} target="_blank">
             {asset.creator}
           </AddressTextLink>
           <DescriptionText>{collection.collectionDescription}</DescriptionText>

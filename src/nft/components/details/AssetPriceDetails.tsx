@@ -5,8 +5,10 @@ import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft } from 'nft/utils'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Upload } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
+import { shortenAddress } from 'nft/utils/address'
 
 interface AssetPriceDetailsProps {
   asset: GenieAsset
@@ -108,6 +110,10 @@ const Erc1155ChangeButton = styled(Erc1155BuyNowText)<{ remove: boolean }>`
   }
 `
 
+const UploadLink = styled.a`
+  color: ${({ theme }) => theme.textSecondary};
+`
+
 const NotForSaleContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -123,6 +129,19 @@ const DiscoveryContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`
+
+const OwnerText = styled.span`
+  font-size: 14px;
+  line-height: 20px;
+`
+
+const OwnerInformationContainer = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
+  margin-bottom: 40px;
 `
 
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
@@ -227,8 +246,18 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     return <OwnerContainer asset={asset} />
   }
 
+  const shortAddress = shortenAddress(asset.owner ?? '')
+  const uploadLink = asset.tokenType === 'ERC1155' ? asset.creator : asset.owner
+
   return (
     <Container>
+      <OwnerInformationContainer>
+        <OwnerText>{asset.tokenType === 'ERC1155' ? '' : <span>{isOwner ? 'you' : shortAddress}</span>}</OwnerText>
+        <UploadLink href={`https://etherscan.io/address/${uploadLink}`} target="_blank">
+          <Upload size={20} strokeWidth={2} />
+        </UploadLink>
+      </OwnerInformationContainer>
+
       {cheapestOrder && asset.priceInfo ? (
         <BestPriceContainer>
           <HeaderRow>
