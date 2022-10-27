@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
-import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PreloadedQuery, useFragment } from 'react-relay'
@@ -224,7 +223,6 @@ function TokenDetails({
   )
 
   const onPressSend = useCallback(() => {
-    selectionAsync()
     dispatch(openModal({ name: ModalName.Send, ...{ initialState: initialSendState } }))
   }, [initialSendState, dispatch])
 

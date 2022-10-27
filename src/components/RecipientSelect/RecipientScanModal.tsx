@@ -62,7 +62,6 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
   }
 
   const onPressBottomToggle = () => {
-    selectionAsync()
     if (currentScreenState === ScannerModalState.ScanQr) {
       setCurrentScreenState(ScannerModalState.WalletQr)
     } else {
@@ -86,6 +85,7 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
       )}
       <Flex mb="xl" mt="md" mx="md">
         <TouchableArea
+          hapticFeedback
           borderColor="backgroundOutline"
           borderRadius="lg"
           borderWidth={1}

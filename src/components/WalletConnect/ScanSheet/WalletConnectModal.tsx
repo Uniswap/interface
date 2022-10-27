@@ -100,7 +100,6 @@ export function WalletConnectModal({
   )
 
   const onPressBottomToggle = () => {
-    selectionAsync()
     if (currentScreenState === ScannerModalState.ScanQr) {
       setCurrentScreenState(ScannerModalState.WalletQr)
     } else {
@@ -109,12 +108,10 @@ export function WalletConnectModal({
   }
 
   const onPressShowConnectedDapps = () => {
-    selectionAsync()
     setCurrentScreenState(ScannerModalState.ConnectedDapps)
   }
 
   const onPressShowScanQr = () => {
-    selectionAsync()
     setCurrentScreenState(ScannerModalState.ScanQr)
   }
 
@@ -135,7 +132,7 @@ export function WalletConnectModal({
           {currentScreenState === ScannerModalState.ConnectedDapps && (
             <ConnectedDappsList
               backButton={
-                <TouchableArea onPress={onPressShowScanQr}>
+                <TouchableArea hapticFeedback onPress={onPressShowScanQr}>
                   <Chevron color={theme.colors.textSecondary} height={24} width={24} />
                 </TouchableArea>
               }
@@ -155,6 +152,7 @@ export function WalletConnectModal({
           )}
           <Flex mb="xl" mt="md" mx="md">
             <TouchableArea
+              hapticFeedback
               borderColor="backgroundOutline"
               borderRadius="lg"
               borderWidth={1}

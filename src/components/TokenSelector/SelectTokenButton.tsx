@@ -1,6 +1,5 @@
 import { useTheme } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
-import { selectionAsync } from 'expo-haptics'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -25,18 +24,14 @@ export function SelectTokenButton({
   const { t } = useTranslation()
   const theme = useTheme<Theme>()
 
-  const selectCurrency = () => {
-    selectionAsync()
-    onPress()
-  }
-
   return (
     <TouchableArea
+      hapticFeedback
       bg={selectedCurrency ? 'background3' : 'userThemeMagenta'}
       borderRadius="lg"
       name={ElementName.TokenSelectorToggle}
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
-      onPress={selectCurrency}>
+      onPress={onPress}>
       {selectedCurrency ? (
         <Flex centered row flexDirection="row" gap="xs" pl="xxs" pr="xs" py="xxs">
           <CurrencyLogo currency={selectedCurrency} size={28} />

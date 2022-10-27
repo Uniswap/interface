@@ -36,7 +36,7 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
   }, [address, avatar, isViewOnly])
 
   return (
-    <TouchableArea pb="sm" pt="xs" px="lg" onPress={onPress ? () => onPress(address) : undefined}>
+    <TouchableArea hapticFeedback pb="sm" pt="xs" px="lg" onPress={() => onPress?.(address)}>
       <Flex row alignItems="center" testID={`account_item/${address.toLowerCase()}`}>
         <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
         <Flex grow gap="none">

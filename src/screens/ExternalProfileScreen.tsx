@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
@@ -104,7 +103,6 @@ export function ExternalProfileScreen({
   )
 
   const onPressSend = useCallback(() => {
-    selectionAsync()
     dispatch(
       openModal({
         name: ModalName.Send,

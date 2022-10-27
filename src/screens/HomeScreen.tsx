@@ -1,5 +1,4 @@
 import { DrawerActions } from '@react-navigation/core'
-import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
@@ -183,7 +182,6 @@ function QuickActions() {
   const activeAccount = useActiveAccountWithThrow()
 
   const onPressReceive = () => {
-    selectionAsync()
     dispatch(
       openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
     )
@@ -191,7 +189,6 @@ function QuickActions() {
 
   // TODO: remove when buy flow ready
   const onPressScan = () => {
-    selectionAsync()
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
     dispatch(
@@ -200,7 +197,6 @@ function QuickActions() {
   }
 
   const onPressSend = useCallback(() => {
-    selectionAsync()
     dispatch(openModal({ name: ModalName.Send }))
   }, [dispatch])
 

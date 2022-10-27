@@ -1,5 +1,4 @@
 import { graphql } from 'babel-plugin-relay/macro'
-import { selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View, ViewStyle } from 'react-native'
@@ -163,7 +162,6 @@ function NftsTabInner({
   )
 
   const onPressScan = () => {
-    selectionAsync()
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
     dispatch(

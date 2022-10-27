@@ -1,4 +1,3 @@
-import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -174,7 +173,6 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
 
   const onPressSettleConnection = useCallback(
     (approved: boolean) => {
-      selectionAsync()
       settlePendingSession(selectedChainId, activeAddress, approved)
       if (approved) {
         onClose()

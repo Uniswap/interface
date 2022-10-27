@@ -1,3 +1,4 @@
+import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, ReactElement } from 'react'
 import Svg, { Defs, RadialGradient, Rect, Stop, SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
@@ -33,6 +34,8 @@ interface ButtonProps {
   disabled?: boolean
   fill?: boolean // flex=1
   noTextScaling?: boolean
+  hapticFeedback?: boolean
+  hapticStyle?: ImpactFeedbackStyle
   onPress?: () => void
   onPressIn?: () => void
   onLongPress?: () => void
@@ -48,6 +51,8 @@ const _Button = ({
   emphasis = ButtonEmphasis.Primary,
   disabled = false,
   fill,
+  hapticFeedback = true,
+  hapticStyle,
   onPress,
   onPressIn,
   onLongPress,
@@ -65,6 +70,15 @@ const _Button = ({
     iconPadding,
     iconSize,
   } = getButtonProperties(emphasis, size)
+
+  const onPressHandler = () => {
+    if (!onPress) return
+
+    if (hapticFeedback) {
+      impactAsync(hapticStyle)
+    }
+    onPress()
+  }
 
   const icon = IconName ? (
     <IconName
@@ -90,7 +104,7 @@ const _Button = ({
       opacity={!disabled ? 1 : 0.4}
       testID={name}
       onLongPress={onLongPress}
-      onPress={onPress}
+      onPress={onPressHandler}
       onPressIn={onPressIn}>
       <Flex centered row gap={iconPadding} px={paddingX} py={paddingY}>
         {icon}

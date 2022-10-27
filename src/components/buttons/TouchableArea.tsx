@@ -1,6 +1,7 @@
 import { createBox } from '@shopify/restyle'
-import React, { ComponentProps, PropsWithChildren } from 'react'
-import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
+import React, { ComponentProps, PropsWithChildren, useCallback } from 'react'
+import { GestureResponderEvent, TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { withAnimated } from 'src/components/animated'
 import { ActionProps, ElementName } from 'src/features/telemetry/constants'
 import { TraceEvent } from 'src/features/telemetry/TraceEvent'
@@ -16,6 +17,8 @@ export const TouchableBox = createBox<Theme, TouchableOpacityProps>(TouchableOpa
 export type BaseButtonProps = PropsWithChildren<
   ComponentProps<typeof TouchableBox> & {
     name?: ElementName | string
+    hapticFeedback?: boolean
+    hapticStyle?: ImpactFeedbackStyle
   }
 >
 
@@ -26,8 +29,27 @@ export type BaseButtonProps = PropsWithChildren<
  *  - clickable icons (different from an icon button which has a bg color, border radius, and a border)
  *  - custom elements that are clickable (e.g. rows, cards, headers)
  */
-export function TouchableArea({ children, name: elementName, ...rest }: BaseButtonProps) {
-  const baseProps = { hitSlop: defaultHitslopInset, ...rest }
+export function TouchableArea({
+  hapticFeedback = false,
+  hapticStyle,
+  onPress,
+  children,
+  name: elementName,
+  ...rest
+}: BaseButtonProps) {
+  const onPressHandler = useCallback(
+    (event: GestureResponderEvent) => {
+      if (!onPress) return
+
+      if (hapticFeedback) {
+        impactAsync(hapticStyle)
+      }
+      onPress(event)
+    },
+    [onPress, hapticStyle, hapticFeedback]
+  )
+
+  const baseProps = { onPress: onPressHandler, hitSlop: defaultHitslopInset, ...rest }
 
   if (!elementName) {
     return <TouchableBox {...baseProps}>{children}</TouchableBox>

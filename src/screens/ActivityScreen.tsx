@@ -1,4 +1,3 @@
-import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
@@ -43,7 +42,6 @@ export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) 
 
   // TODO: remove when buy flow ready
   const onPressScan = () => {
-    selectionAsync()
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
     dispatch(

@@ -132,7 +132,7 @@ function EmptyState({
       </Flex>
       <Flex row>
         {buttonLabel && (
-          <TouchableArea onPress={onPress}>
+          <TouchableArea hapticFeedback onPress={onPress}>
             <Text color="magentaVibrant" variant="buttonLabelSmall">
               {buttonLabel}
             </Text>
