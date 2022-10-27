@@ -99,6 +99,7 @@ type FormatterRule =
 // the number falls into. for example, based on the rule set below, if your number
 // falls between 1 and 1e6, you'd use TWO_DECIMALS as the formatter.
 const tokenNonTxFormatter: FormatterRule[] = [
+  { exact: 0, formatter: '0' },
   { upperBound: 0.001, formatter: '<0.001' },
   { upperBound: 1, formatter: THREE_DECIMALS },
   { upperBound: 1e6, formatter: TWO_DECIMALS },
@@ -107,6 +108,7 @@ const tokenNonTxFormatter: FormatterRule[] = [
 ]
 
 const tokenTxFormatter: FormatterRule[] = [
+  { exact: 0, formatter: '0' },
   { upperBound: 0.00001, formatter: '<0.00001' },
   { upperBound: 1, formatter: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN },
   { upperBound: 10000, formatter: SIX_SIG_FIGS_TWO_DECIMALS },

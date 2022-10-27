@@ -7,6 +7,7 @@ it('formats token reference numbers correctly', () => {
   expect(formatNumber(0.00909, NumberType.TokenNonTx)).toBe('0.009')
   expect(formatNumber(0.09001, NumberType.TokenNonTx)).toBe('0.090')
   expect(formatNumber(0.00099, NumberType.TokenNonTx)).toBe('<0.001')
+  expect(formatNumber(0, NumberType.TokenNonTx)).toBe('0')
 })
 
 it('formats token transaction numbers correctly', () => {
@@ -25,6 +26,7 @@ it('formats token transaction numbers correctly', () => {
   expect(formatNumber(0.9, NumberType.TokenTx)).toBe('0.90')
   expect(formatNumber(0.901000123, NumberType.TokenTx)).toBe('0.901')
   expect(formatNumber(0.000000001, NumberType.TokenTx)).toBe('<0.00001')
+  expect(formatNumber(0, NumberType.TokenTx)).toBe('0')
 })
 
 it('formats fiat estimates on token details pages correctly', () => {

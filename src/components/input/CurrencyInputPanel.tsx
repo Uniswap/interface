@@ -184,7 +184,8 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
 
             {currency && !showInsufficientBalanceWarning && (
               <Text color="textSecondary" variant="bodySmall">
-                {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
+                {t('Balance')}: {formatCurrencyAmount(currencyBalance, NumberType.TokenTx)}{' '}
+                {currency.symbol}
               </Text>
             )}
 
