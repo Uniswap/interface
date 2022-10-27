@@ -20,6 +20,10 @@ const CarouselCard = styled(a.div)`
   height: 280px;
   will-change: transform;
   justify-content: center;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    height: 296px;
+  }
 `
 
 const CarouselOverlay = styled.div<{ right?: boolean }>`

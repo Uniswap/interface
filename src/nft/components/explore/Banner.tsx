@@ -8,33 +8,58 @@ import styled from 'styled-components/macro'
 import { Carousel } from './Carousel'
 import { CarouselCard } from './CarouselCard'
 
-const BannerContainer = styled.div<{ isMobile: boolean }>`
+const BannerContainer = styled.div`
   display: flex;
-  flex-direction: ${({ isMobile }) => (isMobile ? 'column' : 'row')};
+  flex-direction: row;
   width: 100%;
-  height: 300px;
-  margin-top: 40px;
-  margin-bottom: 20px;
+  height: 320px;
+  margin-top: 24px;
   gap: 36px;
   max-width: 1200px;
   justify-content: space-between;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    flex-direction: column;
+    height: 100%;
+    gap: 14px;
+    margin-top: 4px;
+    margin-bottom: 30px;
+  }
 `
 
-const HeaderContainer = styled.div<{ isMobile: boolean }>`
+const HeaderContainer = styled.div`
   display: flex;
   max-width: 500px;
   font-weight: 500;
-  font-size: ${({ isMobile }) => (isMobile ? '20px' : '60px')};
-  line-height: ${({ isMobile }) => (isMobile ? '28px' : '73px')};
-  justify-content: ${({ isMobile }) => (isMobile ? 'center' : 'start')};
-  align-items: ${({ isMobile }) => (isMobile ? 'center' : 'start')};
-  padding-top: ${({ isMobile }) => (isMobile ? 'none' : '40px')};
+  font-size: 60px;
+  line-height: 73px;
+  justify-content: start;
+  align-items: start;
+  padding-top: 40px;
   flex-shrink: 0;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%), #fc72ff;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    font-size: 48px;
+    line-height: 67px;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    font-size: 36px;
+    line-height: 50px;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    font-size: 20px;
+    line-height: 28px;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0px;
+  }
 `
 
 const Banner = () => {
@@ -54,8 +79,8 @@ const Banner = () => {
   )
 
   return (
-    <BannerContainer isMobile={isMobile}>
-      <HeaderContainer isMobile={isMobile}>
+    <BannerContainer>
+      <HeaderContainer>
         Best price. {!isMobile && <br />}
         Every listing.
       </HeaderContainer>

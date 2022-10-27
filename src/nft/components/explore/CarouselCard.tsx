@@ -95,12 +95,22 @@ const CardBottomContainer = styled.div`
   }
 `
 
-const HeaderRow = styled(ThemedText.SubHeader)`
+const HeaderRow = styled.div`
   color: ${({ theme }) => theme.userThemeColor};
+  font-size: 16px;
   line-height: 24px;
+  font-weight: 500;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    row-gap: 12px;
+    font-size: 14px;
+    line-height: 20px;
+  }
 `
 
-const TableElement = styled(ThemedText.SubHeaderSmall)`
+const TableElement = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
   font-weight: 400;
   line-height: 20px;
 `
