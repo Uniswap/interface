@@ -1,8 +1,9 @@
 import { providers } from 'ethers'
 import React, { ComponentProps, PropsWithChildren, useMemo, useRef } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -25,6 +26,7 @@ import {
   TransactionRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { iconSizes } from 'src/styles/sizing'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
@@ -92,6 +94,7 @@ const spacerProps: ComponentProps<typeof Box> = {
 }
 
 export function WalletConnectRequestModal({ isVisible, onClose, request }: Props) {
+  const theme = useAppTheme()
   const chainId = toSupportedChainId(request?.dapp.chain_id) ?? undefined
 
   const tx: providers.TransactionRequest | null = useMemo(() => {
@@ -204,24 +207,6 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
               </SectionContainer>
             )}
 
-            {isPotentiallyUnsafe(request) && (
-              <SectionContainer>
-                <Text color="accentWarning" variant="bodySmall">
-                  {isTransactionRequest(request) ? (
-                    <Trans t={t}>
-                      <Text fontWeight="bold">Be careful:</Text> Accepting this request could allow
-                      the requesting app to perform any action with your wallet and its contents.
-                    </Trans>
-                  ) : (
-                    <Trans t={t}>
-                      <Text fontWeight="bold">Be careful:</Text> Signing this message could allow
-                      the requesting app to perform any action with your wallet and its contents.
-                    </Trans>
-                  )}
-                </Text>
-              </SectionContainer>
-            )}
-
             {methodCostsGas(request) && chainId && (
               <NetworkFee chainId={chainId} gasFee={gasFeeInfo?.gasFee} />
             )}
@@ -239,7 +224,20 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
               </SectionContainer>
             )}
           </Flex>
-
+          {isPotentiallyUnsafe(request) ? (
+            <Flex centered row alignSelf="center" gap="xs">
+              <AlertTriangle
+                color={theme.colors.accentWarning}
+                height={iconSizes.sm}
+                width={iconSizes.sm}
+              />
+              <Text color="textSecondary" fontStyle="italic" variant="buttonLabelMicro">
+                {t('Be careful: this {{ requestType }} authorizes assets', {
+                  requestType: isTransactionRequest(request) ? 'transaction' : 'message',
+                })}
+              </Text>
+            </Flex>
+          ) : null}
           <Flex row gap="sm">
             <Button
               fill
