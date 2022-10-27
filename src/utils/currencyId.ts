@@ -88,7 +88,7 @@ export function currencyIdToGraphQLAddress(_currencyId: string): Address | null 
     return null
   }
 
-  return address
+  return address.toLowerCase()
 }
 
 export function currencyIdToChain(_currencyId?: string): ChainId | null {
