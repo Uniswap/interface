@@ -1,4 +1,5 @@
-import { add, AmplitudeBrowser, Identify, identify, init, track } from '@amplitude/analytics-browser'
+import { add, Identify, identify, init, track } from '@amplitude/analytics-browser'
+import client from '@amplitude/analytics-browser'
 import { webAttributionPlugin } from '@amplitude/plugin-web-attribution-browser'
 import { isProductionEnv } from 'utils/env'
 
@@ -16,7 +17,7 @@ export function initializeAnalytics() {
     console.error(`${keyName} is undefined, Amplitude analytics will not run.`)
     return
   }
-  add(webAttributionPlugin(AmplitudeBrowser))
+  add(webAttributionPlugin(client))
   init(
     API_KEY,
     /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
