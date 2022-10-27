@@ -11,7 +11,7 @@ const CarouselCardContainer = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 20px;
   outline: 1px solid ${({ theme }) => theme.backgroundOutline};
-  width: 456px;
+  width: 100%;
   cursor: pointer;
   overflow: hidden;
 
