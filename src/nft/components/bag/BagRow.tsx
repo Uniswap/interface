@@ -17,7 +17,7 @@ import { bodySmall } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
 import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal, getAssetHref } from 'nft/utils'
-import { MouseEvent, useEffect, useReducer, useRef, useState } from 'react'
+import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import * as styles from './BagRow.css'
@@ -46,25 +46,31 @@ const NoContentContainer = () => (
 interface BagRowProps {
   asset: UpdatedGenieAsset
   usdPrice: number | undefined
-  removeAsset: (asset: GenieAsset) => void
+  removeAsset: (assets: GenieAsset[]) => void
   showRemove?: boolean
   grayscale?: boolean
   isMobile: boolean
 }
 
 export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, isMobile }: BagRowProps) => {
-  const [cardHovered, setCardHovered] = useState(false)
   const [loadedImage, setImageLoaded] = useState(false)
   const [noImageAvailable, setNoImageAvailable] = useState(!asset.smallImageUrl)
-  const handleCardHover = () => setCardHovered(!cardHovered)
-  const assetCardRef = useRef<HTMLDivElement>(null)
+
+  const [cardHovered, setCardHovered] = useState(false)
+  const handleMouseEnter = useCallback(() => setCardHovered(true), [])
+  const handleMouseLeave = useCallback(() => setCardHovered(false), [])
   const showRemoveButton = showRemove && cardHovered
 
-  if (cardHovered && assetCardRef.current && assetCardRef.current.matches(':hover') === false) setCardHovered(false)
+  const assetEthPrice = asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
+  const assetEthPriceFormatted = formatWeiToDecimal(assetEthPrice)
+  const assetUSDPriceFormatted = ethNumberStandardFormatter(
+    usdPrice ? parseFloat(formatEther(assetEthPrice)) * usdPrice : usdPrice,
+    true
+  )
 
   return (
     <Link to={getAssetHref(asset)} style={{ textDecoration: 'none' }}>
-      <Row ref={assetCardRef} className={styles.bagRow} onMouseEnter={handleCardHover} onMouseLeave={handleCardHover}>
+      <Row className={styles.bagRow} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <Box position="relative" display="flex">
           <Box
             display={showRemove && isMobile ? 'block' : 'none'}
@@ -72,7 +78,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             onClick={(e: MouseEvent) => {
               e.preventDefault()
               e.stopPropagation()
-              removeAsset(asset)
+              removeAsset([asset])
             }}
             transition="250"
             zIndex="1"
@@ -113,29 +119,19 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
-              removeAsset(asset)
+              removeAsset([asset])
             }}
           >
             Remove
           </Box>
         )}
         {(!showRemoveButton || isMobile) && (
-          <Column flexShrink="0">
+          <Column flexShrink="0" alignItems="flex-end">
             <Box className={styles.bagRowPrice}>
-              {`${formatWeiToDecimal(
-                asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
-              )} ETH`}
+              {assetEthPriceFormatted}
+              &nbsp;ETH
             </Box>
-            <Box className={styles.collectionName}>
-              {`${ethNumberStandardFormatter(
-                usdPrice
-                  ? parseFloat(
-                      formatEther(asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice)
-                    ) * usdPrice
-                  : usdPrice,
-                true
-              )}`}
-            </Box>
+            <Box className={styles.collectionName}>{assetUSDPriceFormatted}</Box>
           </Column>
         )}
       </Row>

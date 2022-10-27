@@ -1,11 +1,9 @@
-import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
-import { ethNumberStandardFormatter, fetchPrice, formatEthPrice, getMarketplaceIcon, timeLeft } from 'nft/utils'
+import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
 import { useMemo } from 'react'
-import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -113,15 +111,7 @@ const DiscoveryContainer = styled.div`
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = listing ? new Date(listing.orderClosingDate) : undefined
-  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
-
-  const USDPrice = useMemo(
-    () =>
-      fetchedPriceData &&
-      asset.priceInfo &&
-      (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString(),
-    [asset.priceInfo, fetchedPriceData]
-  )
+  const USDPrice = useUsdPrice(asset)
 
   const navigate = useNavigate()
 
@@ -200,17 +190,10 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = cheapestOrder ? new Date(cheapestOrder.orderClosingDate) : undefined
   const itemsInBag = useBag((s) => s.itemsInBag)
-  const addAssetToBag = useBag((s) => s.addAssetToBag)
-  const removeAssetFromBag = useBag((s) => s.removeAssetFromBag)
-  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
+  const addAssetsToBag = useBag((s) => s.addAssetsToBag)
+  const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
 
-  const USDPrice = useMemo(
-    () =>
-      fetchedPriceData &&
-      asset.priceInfo &&
-      (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString(),
-    [asset.priceInfo, fetchedPriceData]
-  )
+  const USDPrice = useUsdPrice(asset)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
 
   const { quantity, assetInBag } = useMemo(() => {
@@ -259,19 +242,19 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               assetInBag={assetInBag}
               margin={true}
               useAccentColor={true}
-              onClick={() => (assetInBag ? removeAssetFromBag(asset) : addAssetToBag(asset))}
+              onClick={() => (assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset]))}
             >
               <ThemedText.SubHeader lineHeight={'20px'}>{assetInBag ? 'Remove' : 'Buy Now'}</ThemedText.SubHeader>
             </BuyNowButton>
           ) : (
             <Erc1155BuyNowButton>
-              <Erc1155ChangeButton remove={true} onClick={() => removeAssetFromBag(asset)}>
+              <Erc1155ChangeButton remove={true} onClick={() => removeAssetsFromBag([asset])}>
                 <MinusIcon width="20px" height="20px" />
               </Erc1155ChangeButton>
               <Erc1155BuyNowText>
                 <ThemedText.SubHeader lineHeight={'20px'}>{quantity}</ThemedText.SubHeader>
               </Erc1155BuyNowText>
-              <Erc1155ChangeButton remove={false} onClick={() => addAssetToBag(asset)}>
+              <Erc1155ChangeButton remove={false} onClick={() => addAssetsToBag([asset])}>
                 <PlusIcon width="20px" height="20px" />
               </Erc1155ChangeButton>
             </Erc1155BuyNowButton>

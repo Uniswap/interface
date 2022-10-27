@@ -5,7 +5,6 @@ import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { CollectionPageLoading } from 'nft/components/collection/CollectionPageLoading'
 import { lazy, Suspense, useEffect } from 'react'
@@ -22,7 +21,7 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
-import { LoadingTokenDetails } from '../components/Tokens/TokenDetails/LoadingTokenDetails'
+import { TokenDetailsPageSkeleton } from '../components/Tokens/TokenDetails/Skeleton'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
@@ -49,12 +48,10 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
-const AppWrapper = styled.div<{ redesignFlagEnabled: boolean }>`
+const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
-  font-feature-settings: ${({ redesignFlagEnabled }) =>
-    redesignFlagEnabled ? undefined : "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on"};
 `
 
 const BodyWrapper = styled.div`
@@ -114,7 +111,6 @@ const LazyLoadSpinner = () => (
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const nftFlag = useNftFlag()
-  const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -152,7 +148,7 @@ export default function App() {
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
-      <AppWrapper redesignFlagEnabled={redesignFlagEnabled}>
+      <AppWrapper>
         <Trace page={currentPage}>
           <HeaderWrapper>
             <NavBar />
@@ -170,7 +166,7 @@ export default function App() {
                   <Route
                     path="tokens/:chainName/:tokenAddress"
                     element={
-                      <Suspense fallback={<LoadingTokenDetails />}>
+                      <Suspense fallback={<TokenDetailsPageSkeleton />}>
                         <TokenDetails />
                       </Suspense>
                     }

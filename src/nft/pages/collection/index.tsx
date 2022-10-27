@@ -1,3 +1,6 @@
+import { useWeb3React } from '@web3-react/core'
+import { PageName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
 import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { useCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -31,6 +34,7 @@ const Collection = () => {
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
+  const { chainId } = useWeb3React()
 
   const { data: queryCollection, isLoading } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
@@ -74,11 +78,15 @@ const Collection = () => {
 
   return (
     <>
-      <Column width="full">
-        {contractAddress ? (
-          <>
-            {' '}
-            <Box width="full" height="160">
+      <Trace
+        page={PageName.NFT_COLLECTION_PAGE}
+        properties={{ collection_address: contractAddress, chain_id: chainId }}
+        shouldLogImpression
+      >
+        <Column width="full">
+          {contractAddress ? (
+            <>
+              {' '}
               <Box width="full" height="160">
                 {isLoading ? (
                   <CollectionBannerLoading />
@@ -93,58 +101,58 @@ const Collection = () => {
                   />
                 )}
               </Box>
-            </Box>
-            <Column paddingX="32">
-              {(isLoading || collectionStats !== undefined) && (
-                <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
-              )}
+              <Column paddingX="32">
+                {(isLoading || collectionStats !== undefined) && (
+                  <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
+                )}
 
-              <ActivitySwitcher
-                showActivity={isActivityToggled}
-                toggleActivity={() => {
-                  isFiltersExpanded && setFiltersExpanded(false)
-                  toggleActivity()
-                }}
-              />
-            </Column>
-            <Row alignItems="flex-start" position="relative" paddingX="48">
-              <Box position="sticky" top="72" width="0">
-                {isFiltersExpanded && <Filters traitsByGroup={collectionStats?.traits ?? {}} />}
-              </Box>
+                <ActivitySwitcher
+                  showActivity={isActivityToggled}
+                  toggleActivity={() => {
+                    isFiltersExpanded && setFiltersExpanded(false)
+                    toggleActivity()
+                  }}
+                />
+              </Column>
+              <Row alignItems="flex-start" position="relative" paddingX="48">
+                <Box position="sticky" top="72" width="0">
+                  {isFiltersExpanded && <Filters traitsByGroup={collectionStats?.traits ?? {}} />}
+                </Box>
 
-              {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-              <AnimatedBox
-                style={{
-                  transform: gridX.to((x) => `translate(${x as number}px)`),
-                  width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
-                }}
-              >
-                {isActivityToggled
-                  ? contractAddress && (
-                      <Activity
-                        contractAddress={contractAddress}
-                        rarityVerified={collectionStats?.rarityVerified ?? false}
-                        collectionName={collectionStats?.name ?? ''}
-                      />
-                    )
-                  : contractAddress &&
-                    (isLoading || collectionStats !== undefined) && (
-                      <Suspense fallback={<CollectionNftsAndMenuLoading />}>
-                        <CollectionNfts
-                          collectionStats={collectionStats || ({} as GenieCollection)}
+                {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
+                <AnimatedBox
+                  style={{
+                    transform: gridX.to((x) => `translate(${x as number}px)`),
+                    width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
+                  }}
+                >
+                  {isActivityToggled
+                    ? contractAddress && (
+                        <Activity
                           contractAddress={contractAddress}
-                          rarityVerified={queryCollection?.rarityVerified}
+                          rarityVerified={collectionStats?.rarityVerified ?? false}
+                          collectionName={collectionStats?.name ?? ''}
                         />
-                      </Suspense>
-                    )}
-              </AnimatedBox>
-            </Row>
-          </>
-        ) : (
-          // TODO: Put no collection asset page here
-          !isLoading && <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
-        )}
-      </Column>
+                      )
+                    : contractAddress &&
+                      (isLoading || collectionStats !== undefined) && (
+                        <Suspense fallback={<CollectionNftsAndMenuLoading />}>
+                          <CollectionNfts
+                            collectionStats={collectionStats || ({} as GenieCollection)}
+                            contractAddress={contractAddress}
+                            rarityVerified={queryCollection?.rarityVerified}
+                          />
+                        </Suspense>
+                      )}
+                </AnimatedBox>
+              </Row>
+            </>
+          ) : (
+            // TODO: Put no collection asset page here
+            !isLoading && <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
+          )}
+        </Column>
+      </Trace>
       <MobileHoverBag />
     </>
   )

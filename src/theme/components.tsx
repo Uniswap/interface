@@ -22,8 +22,8 @@ import { Color } from './styled'
 
 // TODO: Break this file into a components folder
 
-export const CloseIcon = styled(X)<{ onClick: () => void; redesignFlag?: boolean }>`
-  color: ${({ redesignFlag, theme }) => redesignFlag && theme.textSecondary};
+export const CloseIcon = styled(X)<{ onClick: () => void }>`
+  color: ${({ theme }) => theme.textSecondary};
   cursor: pointer;
 `
 
@@ -461,8 +461,8 @@ export const SmallOnly = styled.span`
   `};
 `
 
-export const Separator = styled.div<{ redesignFlag?: boolean }>`
+export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : theme.deprecated_bg2)};
+  background-color: ${({ theme }) => theme.backgroundOutline};
 `

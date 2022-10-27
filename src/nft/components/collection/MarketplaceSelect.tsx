@@ -1,3 +1,5 @@
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, FilterTypes } from 'analytics/constants'
 import clsx from 'clsx'
 import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { Box } from 'nft/components/Box'
@@ -51,6 +53,7 @@ const MarketplaceItem = ({
       removeMarket(value)
       setCheckboxSelected(false)
     }
+    sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: FilterTypes.MARKETPLACE })
   }
 
   return (

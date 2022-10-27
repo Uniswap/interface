@@ -55,9 +55,9 @@ export function useAllTokens(): { [address: string]: Token } {
   return useTokensFromMap(allTokens, true)
 }
 
-export function useActiveTokens(): { [address: string]: Token } {
+export function useActiveTokens(includeUserAdded: boolean): { [address: string]: Token } {
   const allTokens = useCombinedActiveList()
-  return useTokensFromMap(allTokens, false)
+  return useTokensFromMap(allTokens, includeUserAdded)
 }
 
 type BridgeInfo = Record<
