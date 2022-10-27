@@ -251,7 +251,7 @@ const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: 
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
   const uniqueOwnersPercentage = stats.stats
-    ? roundWholePercentage(((stats.stats.num_owners ?? 1) / (stats.stats.total_supply ?? 1)) * 100)
+    ? roundWholePercentage(((stats.stats.num_owners ?? 1) / (stats.stats.total_supply ?? 0)) * 100)
     : 0
   const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply ?? 0) : 0
   const listedPercentageStr =
