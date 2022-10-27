@@ -153,7 +153,7 @@ export function NFTItemScreen({
                   </Flex>
                 </Box>
                 {floorPrice && (
-                  <Box>
+                  <Box flexGrow={1}>
                     <Text
                       color="textTertiary"
                       numberOfLines={1}
