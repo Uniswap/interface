@@ -133,7 +133,7 @@ export const SortDropdown = ({
       </Box>
       <Box
         position="absolute"
-        zIndex="2"
+        zIndex="3"
         width={inFilters ? 'auto' : 'inherit'}
         right={inFilters ? '16' : 'auto'}
         paddingBottom="8"

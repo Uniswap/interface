@@ -1,3 +1,6 @@
+import { useWeb3React } from '@web3-react/core'
+import { PageName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
@@ -25,6 +28,7 @@ const Collection = () => {
   const isActivityToggled = pathname.includes('/activity')
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
+  const { chainId } = useWeb3React()
 
   const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
@@ -61,75 +65,81 @@ const Collection = () => {
 
   return (
     <>
-      <Column width="full">
-        {contractAddress ? (
-          <>
-            {' '}
-            <Box width="full" height="160">
+      <Trace
+        page={PageName.NFT_COLLECTION_PAGE}
+        properties={{ collection_address: contractAddress, chain_id: chainId }}
+        shouldLogImpression
+      >
+        <Column width="full">
+          {contractAddress ? (
+            <>
+              {' '}
               <Box width="full" height="160">
-                {isLoading ? (
-                  <Box height="full" width="full" className={styles.loadingBanner} />
-                ) : (
-                  <Box
-                    as="img"
-                    height="full"
-                    width="full"
-                    src={collectionStats?.bannerImageUrl}
-                    className={isLoading ? styles.loadingBanner : styles.bannerImage}
-                    background="none"
-                  />
+                <Box width="full" height="160">
+                  {isLoading ? (
+                    <Box height="full" width="full" className={styles.loadingBanner} />
+                  ) : (
+                    <Box
+                      as="img"
+                      height="full"
+                      width="full"
+                      src={collectionStats?.bannerImageUrl}
+                      className={isLoading ? styles.loadingBanner : styles.bannerImage}
+                      background="none"
+                    />
+                  )}
+                </Box>
+              </Box>
+              <Column paddingX="32">
+                {(isLoading || collectionStats !== undefined) && (
+                  <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
                 )}
-              </Box>
-            </Box>
-            <Column paddingX="32">
-              {(isLoading || collectionStats !== undefined) && (
-                <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
-              )}
 
-              <ActivitySwitcher
-                showActivity={isActivityToggled}
-                toggleActivity={() => {
-                  isFiltersExpanded && setFiltersExpanded(false)
-                  toggleActivity()
-                }}
-              />
-            </Column>
-            <Row alignItems="flex-start" position="relative" paddingX="48">
-              <Box position="sticky" top="72" width="0">
-                {isFiltersExpanded && <Filters traits={collectionStats?.traits ?? []} />}
-              </Box>
+                <ActivitySwitcher
+                  showActivity={isActivityToggled}
+                  toggleActivity={() => {
+                    isFiltersExpanded && setFiltersExpanded(false)
+                    toggleActivity()
+                  }}
+                />
+              </Column>
+              <Row alignItems="flex-start" position="relative" paddingX="48">
+                <Box position="sticky" top="72" width="0">
+                  {isFiltersExpanded && <Filters traits={collectionStats?.traits ?? []} />}
+                </Box>
 
-              {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-              <AnimatedBox
-                style={{
-                  transform: gridX.to((x) => `translate(${x as number}px)`),
-                  width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
-                }}
-              >
-                {isActivityToggled
-                  ? contractAddress && (
-                      <Activity
-                        contractAddress={contractAddress}
-                        rarityVerified={collectionStats?.rarityVerified ?? false}
-                        collectionName={collectionStats?.name ?? ''}
-                      />
-                    )
-                  : contractAddress &&
-                    (isLoading || collectionStats !== undefined) && (
-                      <CollectionNfts
-                        collectionStats={collectionStats || ({} as GenieCollection)}
-                        contractAddress={contractAddress}
-                        rarityVerified={collectionStats?.rarityVerified}
-                      />
-                    )}
-              </AnimatedBox>
-            </Row>
-          </>
-        ) : (
-          // TODO: Put no collection asset page here
-          !isLoading && <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
-        )}
-      </Column>
+                {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
+                <AnimatedBox
+                  style={{
+                    transform: gridX.to((x) => `translate(${x as number}px)`),
+                    width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
+                  }}
+                >
+                  {isActivityToggled
+                    ? contractAddress && (
+                        <Activity
+                          contractAddress={contractAddress}
+                          rarityVerified={collectionStats?.rarityVerified ?? false}
+                          collectionName={collectionStats?.name ?? ''}
+                        />
+                      )
+                    : contractAddress &&
+                      (isLoading || collectionStats !== undefined) && (
+                        <CollectionNfts
+                          collectionStats={collectionStats || ({} as GenieCollection)}
+                          contractAddress={contractAddress}
+                          rarityVerified={collectionStats?.rarityVerified}
+                        />
+                      )}
+                </AnimatedBox>
+              </Row>
+            </>
+          ) : (
+            // TODO: Put no collection asset page here
+            !isLoading && <div className={styles.noCollectionAssets}>No collection assets exist at this address</div>
+          )}
+        </Column>
+      </Trace>
       <MobileHoverBag />
     </>
   )
