@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -12,6 +12,7 @@ import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/feature
 import { biometricAuthenticationSuccessful } from 'src/features/biometrics/hooks'
 import { setRequiredForTransactions } from 'src/features/biometrics/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ImportType } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
@@ -25,16 +26,20 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 
-  const onMaybeLaterPressed = () => {
-    setShowWarningModal(true)
-  }
-
-  const onPressNext = () => {
+  const onPressNext = useCallback(() => {
     setShowWarningModal(false)
     navigation.navigate({ name: OnboardingScreens.Outro, params, merge: true })
-  }
+  }, [navigation, params])
 
-  const onPressEnableSecurity = async () => {
+  const onMaybeLaterPressed = useCallback(() => {
+    if (params?.importType === ImportType.Watch) {
+      onPressNext()
+    } else {
+      setShowWarningModal(true)
+    }
+  }, [onPressNext, params?.importType])
+
+  const onPressEnableSecurity = useCallback(async () => {
     const authStatus = await tryLocalAuthenticate({
       disableDeviceFallback: true,
     })
@@ -45,9 +50,7 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
     ) {
       Alert.alert(t('Face ID is disabled'), t('To use Face ID, allow access in system settings'), [
         { text: t('Go to settings'), onPress: openSettings },
-        {
-          text: t('Not now'),
-        },
+        { text: t('Not now') },
       ])
     }
 
@@ -55,17 +58,13 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
       dispatch(setRequiredForTransactions(true))
       onPressNext()
     }
-  }
+  }, [onPressNext, dispatch, t])
+
+  const onCloseModal = useCallback(() => setShowWarningModal(false), [])
 
   return (
     <>
-      {showWarningModal && (
-        <FaceIDWarningModal
-          onCancel={() => setShowWarningModal(false)}
-          onClose={() => setShowWarningModal(false)}
-          onConfirm={onPressNext}
-        />
-      )}
+      {showWarningModal && <FaceIDWarningModal onClose={onCloseModal} onConfirm={onPressNext} />}
       <OnboardingScreen
         childrenGap="none"
         subtitle={t(

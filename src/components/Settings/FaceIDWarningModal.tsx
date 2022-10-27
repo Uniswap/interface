@@ -6,11 +6,10 @@ import { ModalName } from 'src/features/telemetry/constants'
 
 type Props = {
   onConfirm: WarningModalProps['onConfirm']
-  onCancel?: WarningModalProps['onCancel']
-  onClose?: WarningModalProps['onClose']
+  onClose: WarningModalProps['onClose']
 }
 
-export function FaceIDWarningModal({ onConfirm, onCancel, onClose }: Props) {
+export function FaceIDWarningModal({ onConfirm, onClose }: Props) {
   const { t } = useTranslation()
   return (
     <WarningModal
@@ -23,7 +22,6 @@ export function FaceIDWarningModal({ onConfirm, onCancel, onClose }: Props) {
       modalName={ModalName.FaceIDWarning}
       severity={WarningSeverity.Medium}
       title={t('Are you sure?')}
-      onCancel={onCancel}
       onClose={onClose}
       onConfirm={onConfirm}
     />
