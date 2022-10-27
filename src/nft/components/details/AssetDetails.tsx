@@ -139,10 +139,30 @@ const ActivitySelectContainer = styled.div`
   }
 `
 
-const FilterBox = styled.div`
+// borderWidth: '1px',
+// borderStyle: 'solid',
+// borderColor: 'genieBlue',
+
+const FilterBox = styled.div<{ isActive?: boolean }>`
   max-width: 150;
   height: 40;
   box-sizing: border-box;
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.textPrimary};
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: ${({ isActive, theme }) => (isActive ? `1px solid ${theme.accentActive}` : undefined)};
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
 `
 
 const AudioPlayer = ({
@@ -286,16 +306,11 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       const isActive = activeFilters[eventType]
 
       return (
-        <Box
-          className={clsx(activityStyles.filter, isActive && activityStyles.activeFilter)}
-          onClick={() => filtersDispatch({ eventType })}
-        >
-          <FilterBox>
-            {eventType === ActivityEventType.CancelListing
-              ? 'Cancellation'
-              : eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
-          </FilterBox>
-        </Box>
+        <FilterBox isActive={isActive} onClick={() => filtersDispatch({ eventType })}>
+          {eventType === ActivityEventType.CancelListing
+            ? 'Cancellations'
+            : eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
+        </FilterBox>
       )
     },
     [activeFilters]
