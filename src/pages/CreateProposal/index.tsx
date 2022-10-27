@@ -51,9 +51,9 @@ const CreateProposalButton = ({
 }) => {
   const formattedProposalThreshold = proposalThreshold
     ? JSBI.divide(
-        proposalThreshold.quotient,
-        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(proposalThreshold.currency.decimals))
-      ).toLocaleString()
+      proposalThreshold.quotient,
+      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(proposalThreshold.currency.decimals))
+    ).toLocaleString()
     : undefined
 
   return (
@@ -101,7 +101,7 @@ export default function CreateProposal() {
   const latestProposalData = useProposalData(0, latestProposalId)
   const { votes: availableVotes } = useUserVotes()
   const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
-  const proposalSource = React.useMemo(() => chainId && chainId === 56 ? 'kinainubsc.eth' : chainId && chainId === 1 ? 'kibaworldwide.eth' : '',[chainId])
+  const proposalSource = React.useMemo(() => chainId && chainId === 56 ? 'kinainubsc.eth' : chainId && chainId === 1 ? 'kibaworldwide.eth' : '', [chainId])
   const [modalOpen, setModalOpen] = useState(false)
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
@@ -166,16 +166,16 @@ export default function CreateProposal() {
     },
     [setBodyValue]
   )
-    const lastblock = useBlockNumber()
+  const lastblock = useBlockNumber()
   const isFormInvalid = useMemo(
     () =>
       Boolean(
         !proposalAction ||
-          !utils.isAddress(toAddressValue) ||
-          !currencyValue?.isToken ||
-          amountValue === '' ||
-          titleValue === '' ||
-          bodyValue === ''
+        !utils.isAddress(toAddressValue) ||
+        !currencyValue?.isToken ||
+        amountValue === '' ||
+        titleValue === '' ||
+        bodyValue === ''
       ),
     [proposalAction, toAddressValue, currencyValue, amountValue, titleValue, bodyValue]
   )
@@ -204,35 +204,35 @@ ${bodyValue}
 
     let types: string[][]
     let values: string[][]
-    
+
     createProposalData.calldatas = []
- 
+
     if (account) {
       const start = lastblock as number;
       const end = await getBlockFromTimestamp(moment(new Date()).add('days', 7).unix())
-   
-    const hash =  await client.proposal(web3 as any, account, {
-      space: 'kibaworldwide.eth',
-      type: 'single-choice',
-      title: titleValue,
-      body: bodyValue,
-      choices,
-      start: lastblock as number,
-      end: end,
-      snapshot: lastblock as number,
-      network: '1',
-      strategies: JSON.stringify([]),
-      plugins: JSON.stringify({}),
-      metadata: JSON.stringify({ app: 'snapshot.js' })
-    })
-  ?.catch(() => {
-      setAttempting(false)
-    })
 
-    if (hash) setHash(hash as any)
+      // const hash = await client.proposal(web3 as any, account, {
+      //   space: 'kibaworldwide.eth',
+      //   type: 'single-choice',
+      //   title: titleValue,
+      //   body: bodyValue,
+      //   choices,
+      //   start: lastblock as number,
+      //   end: end,
+      //   snapshot: lastblock as number,
+      //   //network: '1',
+      //   //strategies: JSON.stringify([]),
+      //   plugins: JSON.stringify({}),
+      //   //metadata: JSON.stringify({ app: 'snapshot.js' })
+      // })
+      //   ?.catch(() => {
+      //     setAttempting(false)
+      //   })
+
+      // if (hash) setHash(hash as any)
+    }
   }
-}
-const theme = useTheme()
+  const theme = useTheme()
 
   return (
     <AppBody {...{ maxWidth: '800px' }}>
@@ -292,8 +292,8 @@ const theme = useTheme()
         onProposalActionSelect={(proposalAction: ProposalAction) => handleActionChange(proposalAction)}
       />
       <ProposalSubmissionModal isOpen={attempting} hash={hash} onDismiss={handleDismissSubmissionModal} />
-  */}  
-  <iframe src={`https://snapshot.org/#/${proposalSource}`} style={{width:'100%', height:'100vh', background:'transparent', border: `1px solid ${theme.primary1}`}} />
-   </AppBody>
+  */}
+      <iframe src={`https://snapshot.org/#/${proposalSource}`} style={{ width: '100%', height: '100vh', background: 'transparent', border: `1px solid ${theme.primary1}` }} />
+    </AppBody>
   )
 }
