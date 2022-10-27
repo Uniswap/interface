@@ -60,8 +60,6 @@ const ActionsContainer = styled.div`
 
 const EmptyCollectionWrapper = styled.div`
   display: block;
-  display: block;
-  textalign: center;
   textalign: center;
 `
 
