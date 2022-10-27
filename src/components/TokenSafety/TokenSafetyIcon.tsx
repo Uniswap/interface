@@ -1,5 +1,5 @@
-import { ReactComponent as Verified } from 'assets/svg/verified.svg'
-import { Warning } from 'constants/tokenSafety'
+import { Warning, WARNING_LEVEL } from 'constants/tokenSafety'
+import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 const VerifiedContainer = styled.div`
@@ -8,17 +8,17 @@ const VerifiedContainer = styled.div`
   justify-content: center;
 `
 
-export const VerifiedIcon = styled(Verified)<{ size?: string }>`
+export const WarningIcon = styled(AlertTriangle)<{ size?: string }>`
   width: ${({ size }) => size ?? '1em'};
   height: ${({ size }) => size ?? '1em'};
-  color: ${({ theme }) => theme.accentAction};
+  color: ${({ theme }) => theme.textTertiary};
 `
 
 export default function TokenSafetyIcon({ warning }: { warning: Warning | null }) {
-  if (warning) return null
+  if (warning?.level !== WARNING_LEVEL.UNKNOWN) return null
   return (
     <VerifiedContainer>
-      <VerifiedIcon />
+      <WarningIcon />
     </VerifiedContainer>
   )
 }

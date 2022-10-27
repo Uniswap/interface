@@ -14,7 +14,7 @@ import { Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { fetchSearchCollections } from 'nft/queries'
-import { ChangeEvent, Suspense, useEffect, useReducer, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
@@ -48,16 +48,17 @@ export const SearchBar = () => {
     }
   )
 
-  const tokens = useTokenSearch(debouncedSearchValue)
-  // const { data: tokens, isLoading: tokensAreLoading } = useQuery(
-  //   ['searchTokens', debouncedSearchValue],
-  //   () => fetchSearchTokens(debouncedSearchValue),
-  //   {
-  //     refetchOnWindowFocus: false,
-  //     refetchOnMount: false,
-  //     refetchOnReconnect: false,
-  //   }
-  // )
+  const { data: tokens, isLoading: tokensAreLoading } = useTokenSearch(debouncedSearchValue)
+  // const tokens = tokenSearch(debouncedSearchValue)
+  // // const { data: tokens, isLoading: tokensAreLoading } = useQuery(
+  // //   ['searchTokens', debouncedSearchValue],
+  // //   () => fetchSearchTokens(debouncedSearchValue),
+  // //   {
+  // //     refetchOnWindowFocus: false,
+  // //     refetchOnMount: false,
+  // //     refetchOnReconnect: false,
+  // //   }
+  // // )
 
   const isNFTPage = pathname.includes('/nfts')
 
@@ -154,15 +155,13 @@ export const SearchBar = () => {
         </Row>
         <Box className={clsx(isOpen ? styles.visible : styles.hidden)}>
           {isOpen && (
-            <Suspense>
-              <SearchBarDropdown
-                toggleOpen={toggleOpen}
-                tokens={reducedTokens}
-                collections={reducedCollections}
-                hasInput={debouncedSearchValue.length > 0}
-                isLoading={false || (collectionsAreLoading && phase1Flag === NftVariant.Enabled)}
-              />
-            </Suspense>
+            <SearchBarDropdown
+              toggleOpen={toggleOpen}
+              tokens={reducedTokens}
+              collections={reducedCollections}
+              hasInput={debouncedSearchValue.length > 0}
+              isLoading={tokensAreLoading || (collectionsAreLoading && phase1Flag === NftVariant.Enabled)}
+            />
           )}
         </Box>
       </Box>

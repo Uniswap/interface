@@ -27,6 +27,7 @@ import ReactMarkdown from 'react-markdown'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 
+import { SUSPICIOUS_TEXT } from '../collection/Card'
 import * as styles from './AssetDetails.css'
 
 const AudioPlayer = ({
@@ -112,8 +113,8 @@ interface AssetDetailsProps {
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const [creatorAddress, setCreatorAddress] = useState('')
@@ -271,7 +272,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={headlineMedium}>
               {asset.openseaSusFlag && (
                 <Box marginTop="8">
-                  <MouseoverTooltip text={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}>
+                  <MouseoverTooltip text={<Box fontWeight="normal">{SUSPICIOUS_TEXT}</Box>}>
                     <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />
                   </MouseoverTooltip>
                 </Box>
@@ -387,8 +388,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 boxShadow={{ hover: 'elevation' }}
                 onClick={() => {
                   if (isSelected) {
-                    removeAssetFromBag(asset)
-                  } else addAssetToBag(asset)
+                    removeAssetsFromBag([asset])
+                  } else addAssetsToBag([asset])
                   setSelected((x) => !x)
                 }}
               >
