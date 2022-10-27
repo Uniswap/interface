@@ -217,7 +217,7 @@ exports[`renders correctly 1`] = `
             ]
           }
           stroke={4294644110}
-          strokeWidth={1.5}
+          strokeWidth={3}
         />
         <RNSVGDefs>
           <RNSVGLinearGradient
@@ -238,23 +238,6 @@ exports[`renders correctly 1`] = `
             y2="100%"
           />
         </RNSVGDefs>
-        <RNSVGPath
-          fill={
-            Array [
-              1,
-              "gradient",
-            ]
-          }
-          propList={
-            Array [
-              "fill",
-              "stroke",
-              "strokeWidth",
-            ]
-          }
-          stroke={0}
-          strokeWidth={3}
-        />
       </RNSVGGroup>
     </RNSVGSvgView>
     <View
@@ -421,10 +404,10 @@ exports[`renders correctly 1`] = `
         style={
           Array [
             Object {
-              "backgroundColor": "#FFFFFF",
-              "borderRadius": 4,
+              "backgroundColor": "#E8ECFB",
+              "borderRadius": 20,
               "display": "flex",
-              "width": 102,
+              "width": 110,
             },
             Array [
               Object {
@@ -437,7 +420,7 @@ exports[`renders correctly 1`] = `
               Object {
                 "transform": Array [
                   Object {
-                    "translateX": 174,
+                    "translateX": 170,
                   },
                 ],
               },
@@ -469,7 +452,7 @@ exports[`renders correctly 1`] = `
         Object {
           "display": "flex",
           "opacity": 1,
-          "padding": 8,
+          "padding": 4,
           "width": 150,
         }
       }
@@ -481,7 +464,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#0D111C",
               "display": "flex",
-              "fontFamily": "Inter-Medium",
+              "fontFamily": "Inter-SemiBold",
               "fontSize": 14,
               "lineHeight": 20,
               "textAlign": "center",
@@ -518,7 +501,7 @@ exports[`renders correctly 1`] = `
         Object {
           "display": "flex",
           "opacity": 1,
-          "padding": 8,
+          "padding": 4,
           "width": 150,
         }
       }
@@ -530,7 +513,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#0D111C",
               "display": "flex",
-              "fontFamily": "Inter-Medium",
+              "fontFamily": "Inter-SemiBold",
               "fontSize": 14,
               "lineHeight": 20,
               "textAlign": "center",
@@ -567,7 +550,7 @@ exports[`renders correctly 1`] = `
         Object {
           "display": "flex",
           "opacity": 1,
-          "padding": 8,
+          "padding": 4,
           "width": 150,
         }
       }
@@ -579,7 +562,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#0D111C",
               "display": "flex",
-              "fontFamily": "Inter-Medium",
+              "fontFamily": "Inter-SemiBold",
               "fontSize": 14,
               "lineHeight": 20,
               "textAlign": "center",
@@ -616,7 +599,7 @@ exports[`renders correctly 1`] = `
         Object {
           "display": "flex",
           "opacity": 1,
-          "padding": 8,
+          "padding": 4,
           "width": 150,
         }
       }
@@ -628,7 +611,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#0D111C",
               "display": "flex",
-              "fontFamily": "Inter-Medium",
+              "fontFamily": "Inter-SemiBold",
               "fontSize": 14,
               "lineHeight": 20,
               "textAlign": "center",
@@ -665,7 +648,7 @@ exports[`renders correctly 1`] = `
         Object {
           "display": "flex",
           "opacity": 1,
-          "padding": 8,
+          "padding": 4,
           "width": 150,
         }
       }
@@ -677,7 +660,7 @@ exports[`renders correctly 1`] = `
             Object {
               "color": "#0D111C",
               "display": "flex",
-              "fontFamily": "Inter-Medium",
+              "fontFamily": "Inter-SemiBold",
               "fontSize": 14,
               "lineHeight": 20,
               "textAlign": "center",

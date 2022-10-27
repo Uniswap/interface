@@ -29,7 +29,7 @@ export function TimeRangeLabel({ index, label, selectedIndex, transition }: Prop
   })
 
   return (
-    <Text animated noTextScaling style={style} textAlign="center" variant="subheadSmall">
+    <Text animated noTextScaling style={style} textAlign="center" variant="buttonLabelSmall">
       {label}
     </Text>
   )

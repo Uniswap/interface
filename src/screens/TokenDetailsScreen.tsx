@@ -4,18 +4,15 @@ import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PreloadedQuery, useFragment } from 'react-relay'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
 import SendIcon from 'src/assets/icons/send.svg'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Suspense } from 'src/components/data/Suspense'
-import { Heart } from 'src/components/icons/Heart'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { Box } from 'src/components/layout/Box'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loading } from 'src/components/loading'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
@@ -27,8 +24,6 @@ import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats
 import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import { AssetType } from 'src/entities/assets'
-import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
-import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
@@ -41,7 +36,7 @@ import { Screens } from 'src/screens/Screens'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 import { TokenDetailsScreen_headerPriceLabel$key } from 'src/screens/__generated__/TokenDetailsScreen_headerPriceLabel.graphql'
 import { flex } from 'src/styles/flex'
-import { currencyAddress, currencyId } from 'src/utils/currencyId'
+import { currencyAddress } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
 export const tokenDetailsScreenQuery = graphql`
@@ -64,27 +59,12 @@ interface TokenDetailsHeaderProps {
 function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
 
-  const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(currencyId(currency))
-  const onFavoritePress = useToggleFavoriteCallback(currencyId(currency))
-
   return (
-    <Flex row justifyContent="space-between" mx="md">
-      <Flex centered row flexShrink={1} gap="xs">
-        <CurrencyLogo currency={currency} size={36} />
-        <Box flexShrink={1}>
-          <Text numberOfLines={1} style={flex.shrink} variant="headlineSmall">
-            {currency.name ?? t('Unknown token')}
-          </Text>
-          <Text color="textTertiary" numberOfLines={1} style={flex.shrink} variant="bodySmall">
-            {currency.symbol ?? t('Unknown token')}
-          </Text>
-        </Box>
-      </Flex>
-      <Flex row alignItems="center" gap="none" justifyContent="center">
-        <TouchableArea onPress={onFavoritePress}>
-          <Heart active={isFavoriteToken} size={24} />
-        </TouchableArea>
-      </Flex>
+    <Flex mx="md">
+      <CurrencyLogo currency={currency} size={36} />
+      <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="subheadLarge">
+        {currency.name ?? t('Unknown token')}
+      </Text>
     </Flex>
   )
 }

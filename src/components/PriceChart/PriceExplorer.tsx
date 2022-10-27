@@ -18,11 +18,10 @@ import { PriceHeader } from 'src/components/PriceChart/PriceHeader'
 import { TimeRangeLabel } from 'src/components/PriceChart/TimeRangeLabel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/utils'
-import { theme as styles } from 'src/styles/theme'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 
-const BUTTON_PADDING = styles.spacing.lg
+const BUTTON_PADDING = 20
 const BUTTON_WIDTH = WIDTH / NUM_GRAPHS
 const LABEL_WIDTH = BUTTON_WIDTH - BUTTON_PADDING * 2
 
@@ -68,17 +67,6 @@ export const PriceExplorer = ({
       d: mixPath(transition.value, previousPath, currentPath),
     }
     return d
-  })
-  const graphTransitionClosedAnimatedProps = useAnimatedProps(() => {
-    const previousPath = graphs[previousGraphIndex.value].data.path
-    const currentPath = currentIndexData.value.path
-    return {
-      d: `${mixPath(
-        transition.value,
-        previousPath,
-        currentPath
-      )} L ${WIDTH} ${HEIGHT} L 0 ${HEIGHT}`,
-    }
   })
 
   // animates slider (time range label background) on press
@@ -146,7 +134,7 @@ export const PriceExplorer = ({
             animatedProps={graphTransitionAnimatedProps}
             fill="transparent"
             stroke={theme.colors.accentAction}
-            strokeWidth={1.5}
+            strokeWidth={3}
           />
 
           <Defs>
@@ -155,13 +143,6 @@ export const PriceExplorer = ({
               <Stop offset="100%" stopColor={theme.colors.accentAction} stopOpacity="0" />
             </LinearGradient>
           </Defs>
-
-          <AnimatedPath
-            animatedProps={graphTransitionClosedAnimatedProps}
-            fill="url(#gradient)"
-            stroke="transparent"
-            strokeWidth={3}
-          />
         </Svg>
         <Cursor
           graphs={graphs}
@@ -173,8 +154,8 @@ export const PriceExplorer = ({
       <Box alignSelf="center" flexDirection="row" width={WIDTH}>
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
-            bg="background1"
-            borderRadius="xs"
+            bg="background3"
+            borderRadius="xl"
             style={[StyleSheet.absoluteFillObject, sliderStyle]}
             width={LABEL_WIDTH}
           />
@@ -183,7 +164,7 @@ export const PriceExplorer = ({
           return (
             <TouchableArea
               key={graph.label}
-              p="xs"
+              p="xxs"
               width={BUTTON_WIDTH}
               onPress={() => {
                 previousGraphIndex.value = currentGraphIndex.value
