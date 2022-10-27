@@ -12,6 +12,7 @@ import {
   TransferNFTNotification,
   UnknownTxNotification,
   WCNotification,
+  WrapNotification,
 } from 'src/features/notifications/Notifications'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'
@@ -46,6 +47,8 @@ export function NotificationToastRouter({ notification }: { notification: AppNot
           return <ApproveNotification notification={notification} />
         case TransactionType.Swap:
           return <SwapNotification notification={notification} />
+        case TransactionType.Wrap:
+          return <WrapNotification notification={notification} />
         case TransactionType.Send:
         case TransactionType.Receive:
           const { assetType } = notification

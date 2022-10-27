@@ -1,3 +1,4 @@
+import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useCallback, useMemo, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
@@ -11,7 +12,11 @@ import {
   makeSelectAddressTransactions,
   makeSelectTransaction,
 } from 'src/features/transactions/selectors'
-import createSwapFromStateFromDetails from 'src/features/transactions/swap/createSwapFromStateFromDetails'
+import {
+  createSwapFromStateFromDetails,
+  createWrapFormStateFromDetails,
+} from 'src/features/transactions/swap/createSwapFromStateFromDetails'
+
 import {
   TransactionDetails,
   TransactionStatus,
@@ -85,6 +90,28 @@ export function useCreateSwapFormState(
     }
 
     return createSwapFromStateFromDetails({
+      transactionDetails: transaction,
+      inputCurrency,
+      outputCurrency,
+    })
+  }, [chainId, inputCurrency, outputCurrency, transaction, txId])
+}
+
+export function useCreateWrapFormState(
+  address: Address | undefined,
+  chainId: ChainId | undefined,
+  txId: string | undefined,
+  inputCurrency: Currency,
+  outputCurrency: Currency
+) {
+  const transaction = useSelectTransaction(address, chainId, txId)
+
+  return useMemo(() => {
+    if (!chainId || !txId || !transaction) {
+      return undefined
+    }
+
+    return createWrapFormStateFromDetails({
       transactionDetails: transaction,
       inputCurrency,
       outputCurrency,

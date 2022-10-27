@@ -61,6 +61,17 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         })
       )
       break
+    case TransactionType.Wrap:
+      yield* put(
+        pushNotification({
+          ...baseNotificationData,
+          type: AppNotificationType.Transaction,
+          txType: TransactionType.Wrap,
+          currencyAmountRaw: typeInfo.currencyAmountRaw,
+          unwrapped: typeInfo.unwrapped,
+        })
+      )
+      break
     case TransactionType.Send:
       if (typeInfo?.assetType === AssetType.Currency && typeInfo?.currencyAmountRaw) {
         yield* put(

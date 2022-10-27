@@ -66,6 +66,12 @@ export interface SwapTxNotification extends TransactionNotificationBase {
   tradeType: TradeType
 }
 
+export interface WrapTxNotification extends TransactionNotificationBase {
+  txType: TransactionType.Wrap
+  currencyAmountRaw: string
+  unwrapped: boolean
+}
+
 interface TransferCurrencyTxNotificationBase extends TransactionNotificationBase {
   txType: TransactionType.Send | TransactionType.Receive
   assetType: AssetType.Currency
@@ -113,6 +119,7 @@ export type TransferNFTTxNotification = SendNFTNotification | ReceiveNFTNotifica
 export type TransactionNotification =
   | ApproveTxNotification
   | SwapTxNotification
+  | WrapTxNotification
   | TransferCurrencyTxNotification
   | TransferNFTTxNotification
   | UnknownTxNotification

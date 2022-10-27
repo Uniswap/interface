@@ -12,6 +12,7 @@ import {
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { CHAIN_INFO } from 'src/constants/chains'
+import { nativeOnChain } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
 import { useENS } from 'src/features/ens/useENS'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
@@ -29,6 +30,7 @@ import {
   TransferCurrencyTxNotification,
   TransferNFTTxNotification,
   WalletConnectNotification,
+  WrapTxNotification,
 } from 'src/features/notifications/types'
 import {
   formApproveNotificationTitle,
@@ -37,10 +39,11 @@ import {
   formTransferNFTNotificationTitle,
   formUnknownTxTitle,
   formWCNotificationTitle,
+  formWrapNotificationTitle,
 } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { useCreateSwapFormState } from 'src/features/transactions/hooks'
+import { useCreateSwapFormState, useCreateWrapFormState } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
@@ -206,6 +209,86 @@ export function SwapNotification({
       balanceUpdate={
         <BalanceUpdateDisplay
           amountRaw={outputCurrencyAmountRaw}
+          currency={outputCurrency}
+          transactionStatus={txStatus}
+          transactionType={txType}
+        />
+      }
+      hideDelay={hideDelay}
+      icon={icon}
+      title={title}
+      onPress={onPress}
+      onPressIn={onPressIn}
+    />
+  )
+}
+
+export function WrapNotification({
+  notification: {
+    txId,
+    txType,
+    txStatus,
+    currencyAmountRaw,
+    address,
+    hideDelay,
+    unwrapped,
+    chainId,
+  },
+}: {
+  notification: WrapTxNotification
+}) {
+  const nativeCurrency = nativeOnChain(chainId)
+  const wrappedNativeCurrency = nativeCurrency?.wrapped
+  const inputCurrency = unwrapped ? wrappedNativeCurrency : nativeCurrency
+  const outputCurrency = unwrapped ? nativeCurrency : wrappedNativeCurrency
+
+  const title = formWrapNotificationTitle(
+    txStatus,
+    inputCurrency,
+    outputCurrency,
+    currencyAmountRaw,
+    unwrapped
+  )
+
+  const wrapFormState = useCreateWrapFormState(
+    address,
+    chainId,
+    txId,
+    inputCurrency,
+    outputCurrency
+  )
+
+  const dispatch = useAppDispatch()
+  const { t } = useTranslation()
+  const retryButton =
+    txStatus === TransactionStatus.Failed
+      ? {
+          title: t('Retry'),
+          onPress: () => {
+            dispatch(closeModal({ name: ModalName.Swap }))
+            dispatch(openModal({ name: ModalName.Swap, initialState: wrapFormState ?? undefined }))
+          },
+        }
+      : undefined
+
+  const { onPress, onPressIn } = useNavigateToProfileTab(address)
+
+  const icon = (
+    <SwapLogoOrLogoWithTxStatus
+      inputCurrency={inputCurrency}
+      outputCurrency={outputCurrency}
+      size={NOTIFICATION_ICON_SIZE}
+      txStatus={txStatus}
+    />
+  )
+
+  return (
+    <NotificationToast
+      actionButton={retryButton}
+      address={address}
+      balanceUpdate={
+        <BalanceUpdateDisplay
+          amountRaw={currencyAmountRaw}
           currency={outputCurrency}
           transactionStatus={txStatus}
           transactionType={txType}

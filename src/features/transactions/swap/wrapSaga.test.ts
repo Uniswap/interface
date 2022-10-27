@@ -30,7 +30,7 @@ const params: Params = {
   account,
   txRequest: transaction,
   inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-    NativeCurrency.onChain(ChainId.Goerli),
+    NativeCurrency.onChain(ChainId.Mainnet),
     '200000'
   ),
 }
@@ -41,7 +41,7 @@ describe(wrap, () => {
       .next()
       .call(sendTransaction, {
         txId: '1',
-        chainId: ChainId.Goerli,
+        chainId: ChainId.Mainnet,
         account: params.account,
         typeInfo: wrapTxInfo,
         options: { request: transaction },
@@ -54,7 +54,7 @@ describe(wrap, () => {
     const unwrapParams: Params = {
       ...params,
       inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-        NativeCurrency.onChain(ChainId.Goerli).wrapped,
+        NativeCurrency.onChain(ChainId.Mainnet).wrapped,
         '200000'
       ),
     }
@@ -62,7 +62,7 @@ describe(wrap, () => {
       .next()
       .call(sendTransaction, {
         txId: '1',
-        chainId: ChainId.Goerli,
+        chainId: ChainId.Mainnet,
         account: params.account,
         typeInfo: unwrapTxInfo,
         options: { request: transaction },

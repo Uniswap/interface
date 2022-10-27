@@ -100,6 +100,50 @@ export const formSwapNotificationTitle = (
       })
 }
 
+export const formWrapNotificationTitle = (
+  txStatus: TransactionStatus,
+  inputCurrency: NullUndefined<Currency>,
+  outputCurrency: NullUndefined<Currency>,
+  currencyAmountRaw: string,
+  unwrapped: boolean
+) => {
+  const inputCurrencySymbol = inputCurrency?.symbol
+  const outputCurrencySymbol = outputCurrency?.symbol
+
+  const inputAmount = getFormattedCurrencyAmount(inputCurrency, currencyAmountRaw)
+  const outputAmount = getFormattedCurrencyAmount(outputCurrency, currencyAmountRaw)
+
+  const inputAssetInfo = `${inputAmount}${inputCurrencySymbol}`
+  const outputAssetInfo = `${outputAmount}${outputCurrencySymbol}`
+
+  if (unwrapped) {
+    return txStatus === TransactionStatus.Success
+      ? i18n.t('Unwrapped {{inputAssetInfo}} and received {{outputAssetInfo}}.', {
+          inputAssetInfo,
+          outputAssetInfo,
+        })
+      : txStatus === TransactionStatus.Cancelled
+      ? i18n.t('Canceled {{inputCurrencySymbol}} unwrap.', {
+          inputCurrencySymbol,
+        })
+      : i18n.t('Failed to unwrap {{inputAssetInfo}}.', {
+          inputAssetInfo,
+        })
+  }
+  return txStatus === TransactionStatus.Success
+    ? i18n.t('Wrapped {{inputAssetInfo}} and received {{outputAssetInfo}}.', {
+        inputAssetInfo,
+        outputAssetInfo,
+      })
+    : txStatus === TransactionStatus.Cancelled
+    ? i18n.t('Canceled {{inputCurrencySymbol}} wrap.', {
+        inputCurrencySymbol,
+      })
+    : i18n.t('Failed to wrap {{inputAssetInfo}}.', {
+        inputAssetInfo,
+      })
+}
+
 export const formTransferCurrencyNotificationTitle = (
   txType: TransactionType,
   txStatus: TransactionStatus,

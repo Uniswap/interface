@@ -5,7 +5,7 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
-import { currencyIdToAddress } from 'src/utils/currencyId'
+import { currencyAddress, currencyIdToAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 
@@ -18,7 +18,7 @@ interface props {
 /**
  * Used to synchronously create swap form state given a transaction and relevant currencies.
  */
-export default function createSwapFromStateFromDetails({
+export function createSwapFromStateFromDetails({
   transactionDetails,
   inputCurrency,
   outputCurrency,
@@ -79,6 +79,61 @@ export default function createSwapFromStateFromDetails({
     return swapFormState
   } catch (error: any) {
     logger.info('hooks', 'useRecreateSwapFormState', error?.message)
+    return undefined
+  }
+}
+
+/**
+ * Used to synchronously create wrap form state given a transaction and relevant currencies.
+ */
+export function createWrapFormStateFromDetails({
+  transactionDetails,
+  inputCurrency,
+  outputCurrency,
+}: props) {
+  const txHash = transactionDetails?.hash
+  const chainId = transactionDetails?.chainId
+
+  if (!chainId || !txHash || !inputCurrency || !outputCurrency) return undefined
+
+  try {
+    const { typeInfo } = transactionDetails
+
+    if (typeInfo.type !== TransactionType.Wrap) {
+      throw new Error(
+        `Tx hash ${txHash} does not correspond to a wrap tx. It is of type ${typeInfo.type}`
+      )
+    }
+
+    const currencyAmountRaw = typeInfo.currencyAmountRaw
+
+    const inputAddress = currencyAddress(inputCurrency)
+    const outputAddress = currencyAddress(outputCurrency)
+
+    const inputAsset: CurrencyAsset = {
+      address: inputAddress,
+      chainId,
+      type: AssetType.Currency,
+    }
+
+    const outputAsset: CurrencyAsset = {
+      address: outputAddress,
+      chainId,
+      type: AssetType.Currency,
+    }
+
+    const exactAmount = tryParseRawAmount(currencyAmountRaw, inputCurrency)
+
+    const swapFormState: TransactionState = {
+      [CurrencyField.INPUT]: inputAsset,
+      [CurrencyField.OUTPUT]: outputAsset,
+      exactCurrencyField: CurrencyField.INPUT,
+      exactAmountToken: exactAmount?.toExact() ?? '',
+    }
+
+    return swapFormState
+  } catch (error: any) {
+    logger.info('hooks', 'useCreateWrapFormState', error?.message)
     return undefined
   }
 }
