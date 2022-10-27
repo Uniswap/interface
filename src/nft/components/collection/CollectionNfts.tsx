@@ -1,3 +1,6 @@
+import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
 import { loadingAnimation } from 'components/Loader/styled'
 import useDebounce from 'hooks/useDebounce'
@@ -104,6 +107,7 @@ export const LoadingButton = styled.div`
 `
 
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
+  const { chainId } = useWeb3React()
   const traits = useCollectionFilters((state) => state.traits)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
@@ -356,12 +360,20 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         <Box backgroundColor="backgroundFloating" width="full" style={{ backdropFilter: 'blur(24px)' }}>
           <ActionsContainer>
             <Row gap="12">
-              <FilterButton
-                isMobile={isMobile}
-                isFiltersExpanded={isFiltersExpanded}
-                onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-                collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
-              />
+              <TraceEvent
+                events={[Event.onClick]}
+                element={ElementName.NFT_FILTER_BUTTON}
+                name={EventName.NFT_FILTER_OPENED}
+                shouldLogImpression={!isFiltersExpanded}
+                properties={{ collection_address: contractAddress, chain_id: chainId }}
+              >
+                <FilterButton
+                  isMobile={isMobile}
+                  isFiltersExpanded={isFiltersExpanded}
+                  onClick={() => setFiltersExpanded(!isFiltersExpanded)}
+                  collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
+                />
+              </TraceEvent>
               <SortDropdown dropDownOptions={sortDropDownOptions} />
               <CollectionSearch />
             </Row>
