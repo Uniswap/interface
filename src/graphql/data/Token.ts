@@ -1,11 +1,13 @@
 import graphql from 'babel-plugin-relay/macro'
+import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
 import { useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery } from 'react-relay'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import { Chain, TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
 import { ContractInput, HistoryDuration, TokenQuery, TokenQuery$data } from './__generated__/TokenQuery.graphql'
 import environment from './RelayEnvironment'
-import { TimePeriod, toHistoryDuration } from './util'
+import { CHAIN_NAME_TO_CHAIN_ID, TimePeriod, toHistoryDuration } from './util'
 
 /*
 The difference between Token and TokenProject:
@@ -19,6 +21,7 @@ const tokenQuery = graphql`
   query TokenQuery($contract: ContractInput!, $duration: HistoryDuration!) {
     tokens(contracts: [$contract]) {
       id @required(action: LOG)
+      decimals
       name
       chain @required(action: LOG)
       address @required(action: LOG)
@@ -55,6 +58,42 @@ const tokenQuery = graphql`
         tokens {
           chain
           address
+        }
+      }
+    }
+  }
+`
+
+const tokenPriceQuery = graphql`
+  query TokenPriceQuery(
+    $contract: ContractInput!
+    $skip1H: Boolean!
+    $skip1D: Boolean!
+    $skip1W: Boolean!
+    $skip1M: Boolean!
+    $skip1Y: Boolean!
+  ) {
+    tokens(contracts: [$contract]) {
+      market(currency: USD) {
+        priceHistory1H: priceHistory(duration: HOUR) @skip(if: $skip1H) {
+          timestamp
+          value
+        }
+        priceHistory1D: priceHistory(duration: DAY) @skip(if: $skip1D) {
+          timestamp
+          value
+        }
+        priceHistory1W: priceHistory(duration: WEEK) @skip(if: $skip1W) {
+          timestamp
+          value
+        }
+        priceHistory1M: priceHistory(duration: MONTH) @skip(if: $skip1M) {
+          timestamp
+          value
+        }
+        priceHistory1Y: priceHistory(duration: YEAR) @skip(if: $skip1Y) {
+          timestamp
+          value
         }
       }
     }
@@ -130,44 +169,22 @@ export function useTokenQuery(
         current[originalTimePeriod] = filterPrices(token?.market?.priceHistory)
         return current
       }),
-    [token, originalTimePeriod]
+    [originalTimePeriod, token?.market?.priceHistory]
   )
 
   return [token, prices]
 }
 
-const tokenPriceQuery = graphql`
-  query TokenPriceQuery(
-    $contract: ContractInput!
-    $skip1H: Boolean!
-    $skip1D: Boolean!
-    $skip1W: Boolean!
-    $skip1M: Boolean!
-    $skip1Y: Boolean!
-  ) {
-    tokens(contracts: [$contract]) {
-      market(currency: USD) {
-        priceHistory1H: priceHistory(duration: HOUR) @skip(if: $skip1H) {
-          timestamp
-          value
-        }
-        priceHistory1D: priceHistory(duration: DAY) @skip(if: $skip1D) {
-          timestamp
-          value
-        }
-        priceHistory1W: priceHistory(duration: WEEK) @skip(if: $skip1W) {
-          timestamp
-          value
-        }
-        priceHistory1M: priceHistory(duration: MONTH) @skip(if: $skip1M) {
-          timestamp
-          value
-        }
-        priceHistory1Y: priceHistory(duration: YEAR) @skip(if: $skip1Y) {
-          timestamp
-          value
-        }
-      }
-    }
+// TODO: Return a QueryToken from useTokenQuery instead of SingleTokenData to make it more usable in Currency-centric interfaces.
+export class QueryToken extends WrappedTokenInfo {
+  constructor(data: NonNullable<SingleTokenData>) {
+    super({
+      chainId: CHAIN_NAME_TO_CHAIN_ID[data.chain],
+      address: data.address,
+      decimals: data.decimals ?? DEFAULT_ERC20_DECIMALS,
+      symbol: data.symbol ?? '',
+      name: data.name ?? '',
+      logoURI: data.project?.logoUrl ?? undefined,
+    })
   }
-`
+}

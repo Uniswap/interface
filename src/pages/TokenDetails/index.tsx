@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { filterTimeAtom } from 'components/Tokens/state'
@@ -18,16 +18,15 @@ import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
-import { useTokenQuery } from 'graphql/data/Token'
+import { QueryToken, useTokenQuery } from 'graphql/data/Token'
 import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useAtomValue } from 'jotai/utils'
-import { useTokenFromQuery } from 'lib/hooks/useCurrency'
-import { useCallback, useState, useTransition } from 'react'
+import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -43,8 +42,12 @@ export default function TokenDetails() {
     chain,
     timePeriod
   )
-  const queryToken = useTokenFromQuery(isNative ? undefined : { ...tokenQueryData, chainId: pageChainId })
-  const token = isNative ? nativeCurrency : queryToken
+  const token = useMemo(() => {
+    if (!tokenAddress) return undefined
+    if (isNative) return nativeCurrency
+    if (tokenQueryData) return new QueryToken(tokenQueryData)
+    return new Token(pageChainId, tokenAddress, DEFAULT_ERC20_DECIMALS)
+  }, [isNative, nativeCurrency, pageChainId, tokenAddress, tokenQueryData])
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   const isBlockedToken = tokenWarning?.canProceed === false
@@ -129,7 +132,7 @@ export default function TokenDetails() {
 
         <RightPanel>
           <Widget
-            defaultToken={token === null ? undefined : token ?? nativeCurrency} // a null token is still loading, and should not be overridden.
+            defaultToken={token ?? nativeCurrency}
             onTokensChange={navigateToWidgetSelectedToken}
             onReviewSwapClick={onReviewSwapClick}
           />
