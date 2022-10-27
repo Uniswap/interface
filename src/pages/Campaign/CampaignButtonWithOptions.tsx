@@ -123,7 +123,8 @@ export default function CampaignButtonWithOptions({
       wallet: account.toLowerCase(),
       chainId: campaign.rewardChainIds,
       clientCode: 'campaign',
-      ref: refs.join(','),
+      // ref: refs.join(','),
+      ref: '',
     }
     let response: any
     try {
