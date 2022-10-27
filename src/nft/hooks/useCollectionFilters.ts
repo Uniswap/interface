@@ -1,3 +1,4 @@
+import { NftAssetSortableField } from 'graphql/data/nft/__generated__/AssetPaginationQuery.graphql'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -13,6 +14,16 @@ export const SortByPointers = {
   [SortBy.LowToHigh]: 'lowest',
   [SortBy.RareToCommon]: 'rare',
   [SortBy.CommonToRare]: 'common',
+}
+interface QueryInfo {
+  field: NftAssetSortableField
+  asc: boolean
+}
+export const SortByQueries = {
+  [SortBy.HighToLow]: { field: 'PRICE', asc: false } as QueryInfo,
+  [SortBy.LowToHigh]: { field: 'PRICE', asc: true } as QueryInfo,
+  [SortBy.RareToCommon]: { field: 'RARITY', asc: true } as QueryInfo,
+  [SortBy.CommonToRare]: { field: 'RARITY', asc: false } as QueryInfo,
 }
 
 export type Trait = {
@@ -84,7 +95,7 @@ export const useCollectionFilters = create<CollectionFilters>()(
         set(({ traits }) => ({
           traits: traits.filter((x) => JSON.stringify(x) !== JSON.stringify(trait)),
         })),
-      reset: () => set(() => ({ traits: [], minRarity: '', maxRarity: '', markets: [] })),
+      reset: () => set(() => ({ traits: [], minRarity: '', maxRarity: '', markets: [], minPrice: '', maxPrice: '' })),
       setMinPrice: (price) => set(() => ({ minPrice: price })),
       setMaxPrice: (price) => set(() => ({ maxPrice: price })),
       setMinRarity: (range) => set(() => ({ minRarity: range })),

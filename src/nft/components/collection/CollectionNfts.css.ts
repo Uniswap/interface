@@ -5,7 +5,6 @@ import { sprinkles } from '../../css/sprinkles.css'
 export const assetList = style([
   sprinkles({
     display: 'grid',
-    marginTop: '24',
     gap: { sm: '8', md: '12', lg: '20' },
   }),
   {

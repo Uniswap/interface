@@ -6,12 +6,7 @@ import { sendAnalyticsEvent } from 'analytics'
 import { ElementName, Event, EventName, PageName, SectionName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { TraceEvent } from 'analytics/TraceEvent'
-import {
-  formatPercentInBasisPointsNumber,
-  formatToDecimal,
-  getDurationFromDateMilliseconds,
-  getTokenAddress,
-} from 'analytics/utils'
+import { formatSwapQuoteReceivedEventProperties } from 'analytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
@@ -20,8 +15,6 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -33,7 +26,8 @@ import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
+import { currencyAmountToPreciseFloat, formatTransactionAmount } from 'utils/formatNumbers'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -47,7 +41,6 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import TokenWarningModal from '../../components/TokenWarningModal'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -81,56 +74,51 @@ const ArrowContainer = styled.div`
   height: 100%;
 `
 
-const SwapSection = styled.div<{ redesignFlag: boolean }>`
+const SwapSection = styled.div`
   position: relative;
+  background-color: ${({ theme }) => theme.backgroundModule};
+  border-radius: 12px;
+  padding: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
 
-  ${({ redesignFlag }) =>
-    redesignFlag &&
-    css`
-      background-color: ${({ theme }) => theme.backgroundModule};
-      border-radius: 12px;
-      padding: 16px;
-      color: ${({ theme }) => theme.textSecondary};
-      font-size: 14px;
-      line-height: 20px;
-      font-weight: 500;
+  &:before {
+    box-sizing: border-box;
+    background-size: 100%;
+    border-radius: inherit;
 
-      &:before {
-        box-sizing: border-box;
-        background-size: 100%;
-        border-radius: inherit;
+    position: absolute;
+    top: 0;
+    left: 0;
 
-        position: absolute;
-        top: 0;
-        left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    content: '';
+    border: 1px solid ${({ theme }) => theme.backgroundModule};
+  }
 
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        content: '';
-        border: 1px solid ${({ theme }) => theme.backgroundModule};
-      }
+  &:hover:before {
+    border-color: ${({ theme }) => theme.stateOverlayHover};
+  }
 
-      &:hover:before {
-        border-color: ${({ theme }) => theme.stateOverlayHover};
-      }
-
-      &:focus-within:before {
-        border-color: ${({ theme }) => theme.stateOverlayPressed};
-      }
-    `}
+  &:focus-within:before {
+    border-color: ${({ theme }) => theme.stateOverlayPressed};
+  }
 `
 
 const OutputSwapSection = styled(SwapSection)<{ showDetailsDropdown: boolean }>`
-  border-bottom: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundSurface}`};
-  border-bottom-left-radius: ${({ redesignFlag, showDetailsDropdown }) => redesignFlag && showDetailsDropdown && '0'};
-  border-bottom-right-radius: ${({ redesignFlag, showDetailsDropdown }) => redesignFlag && showDetailsDropdown && '0'};
+  border-bottom: ${({ theme }) => `1px solid ${theme.backgroundSurface}`};
+  border-bottom-left-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
+  border-bottom-right-radius: ${({ showDetailsDropdown }) => showDetailsDropdown && '0'};
 `
 
 const DetailsSwapSection = styled(SwapSection)`
   padding: 0;
-  border-top-left-radius: ${({ redesignFlag }) => redesignFlag && '0'};
-  border-top-right-radius: ${({ redesignFlag }) => redesignFlag && '0'};
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 `
 
 export function getIsValidSwapQuote(
@@ -152,37 +140,10 @@ function largerPercentValue(a?: Percent, b?: Percent) {
   return undefined
 }
 
-const formatSwapQuoteReceivedEventProperties = (
-  trade: InterfaceTrade<Currency, Currency, TradeType>,
-  fetchingSwapQuoteStartTime: Date | undefined
-) => {
-  return {
-    token_in_symbol: trade.inputAmount.currency.symbol,
-    token_out_symbol: trade.outputAmount.currency.symbol,
-    token_in_address: getTokenAddress(trade.inputAmount.currency),
-    token_out_address: getTokenAddress(trade.outputAmount.currency),
-    price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
-    estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
-    chain_id:
-      trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
-        ? trade.inputAmount.currency.chainId
-        : undefined,
-    token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
-    token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-    quote_latency_milliseconds: fetchingSwapQuoteStartTime
-      ? getDurationFromDateMilliseconds(fetchingSwapQuoteStartTime)
-      : undefined,
-  }
-}
-
 const TRADE_STRING = 'SwapRouter'
 
 export default function Swap() {
   const navigate = useNavigate()
-  const navBarFlag = useNavBarFlag()
-  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
@@ -319,7 +280,7 @@ export default function Swap() {
       [independentField]: typedValue,
       [dependentField]: showWrap
         ? parsedAmounts[independentField]?.toExact() ?? ''
-        : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+        : formatTransactionAmount(currencyAmountToPreciseFloat(parsedAmounts[dependentField])),
     }),
     [dependentField, independentField, parsedAmounts, showWrap, typedValue]
   )
@@ -509,7 +470,7 @@ export default function Swap() {
       // Log swap quote.
       sendAnalyticsEvent(
         EventName.SWAP_QUOTE_RECEIVED,
-        formatSwapQuoteReceivedEventProperties(trade, fetchingSwapQuoteStartTime)
+        formatSwapQuoteReceivedEventProperties(trade, trade.gasUseEstimateUSD ?? undefined, fetchingSwapQuoteStartTime)
       )
       // Latest swap quote has just been logged, so we don't need to log the current trade anymore
       // unless user inputs change again and a new trade is in the process of being generated.
@@ -541,25 +502,16 @@ export default function Swap() {
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
-        {redesignFlagEnabled ? (
-          <TokenSafetyModal
-            isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-            tokenAddress={importTokensNotInDefault[0]?.address}
-            secondTokenAddress={importTokensNotInDefault[1]?.address}
-            onContinue={handleConfirmTokenWarning}
-            onCancel={handleDismissTokenWarning}
-            showCancel={true}
-          />
-        ) : (
-          <TokenWarningModal
-            isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-            tokens={importTokensNotInDefault}
-            onConfirm={handleConfirmTokenWarning}
-            onDismiss={handleDismissTokenWarning}
-          />
-        )}
-        <PageWrapper redesignFlag={redesignFlagEnabled} navBarFlag={navBarFlagEnabled}>
-          <SwapWrapper id="swap-page" redesignFlag={redesignFlagEnabled}>
+        <TokenSafetyModal
+          isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+          tokenAddress={importTokensNotInDefault[0]?.address}
+          secondTokenAddress={importTokensNotInDefault[1]?.address}
+          onContinue={handleConfirmTokenWarning}
+          onCancel={handleDismissTokenWarning}
+          showCancel={true}
+        />
+        <PageWrapper>
+          <SwapWrapper id="swap-page">
             <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
               isOpen={showConfirm}
@@ -579,7 +531,7 @@ export default function Swap() {
             />
 
             <div style={{ display: 'relative' }}>
-              <SwapSection redesignFlag={redesignFlagEnabled}>
+              <SwapSection>
                 <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
                   <SwapCurrencyInputPanel
                     label={
@@ -603,7 +555,7 @@ export default function Swap() {
                   />
                 </Trace>
               </SwapSection>
-              <ArrowWrapper clickable={isSupportedChain(chainId)} redesignFlag={redesignFlagEnabled}>
+              <ArrowWrapper clickable={isSupportedChain(chainId)}>
                 <TraceEvent
                   events={[Event.onClick]}
                   name={EventName.SWAP_TOKENS_REVERSED}
@@ -628,9 +580,9 @@ export default function Swap() {
                 </TraceEvent>
               </ArrowWrapper>
             </div>
-            <AutoColumn gap={redesignFlagEnabled ? '12px' : '8px'}>
+            <AutoColumn gap={'12px'}>
               <div>
-                <OutputSwapSection redesignFlag={redesignFlagEnabled} showDetailsDropdown={showDetailsDropdown}>
+                <OutputSwapSection showDetailsDropdown={showDetailsDropdown}>
                   <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                     <SwapCurrencyInputPanel
                       value={formattedAmounts[Field.OUTPUT]}
@@ -654,7 +606,7 @@ export default function Swap() {
                   {recipient !== null && !showWrap ? (
                     <>
                       <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                        <ArrowWrapper clickable={false} redesignFlag={redesignFlagEnabled}>
+                        <ArrowWrapper clickable={false}>
                           <ArrowDown size="16" color={theme.deprecated_text2} />
                         </ArrowWrapper>
                         <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
@@ -666,7 +618,7 @@ export default function Swap() {
                   ) : null}
                 </OutputSwapSection>
                 {showDetailsDropdown && (
-                  <DetailsSwapSection redesignFlag={redesignFlagEnabled}>
+                  <DetailsSwapSection>
                     <SwapDetailsDropdown
                       trade={trade}
                       syncing={routeIsSyncing}
@@ -693,12 +645,12 @@ export default function Swap() {
                     properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                     element={ElementName.CONNECT_WALLET_BUTTON}
                   >
-                    <ButtonLight onClick={toggleWalletModal} redesignFlag={redesignFlagEnabled}>
+                    <ButtonLight onClick={toggleWalletModal} fontWeight={600}>
                       <Trans>Connect Wallet</Trans>
                     </ButtonLight>
                   </TraceEvent>
                 ) : showWrap ? (
-                  <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                  <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap} fontWeight={600}>
                     {wrapInputError ? (
                       <WrapErrorText wrapInputError={wrapInputError} />
                     ) : wrapType === WrapType.WRAP ? (
@@ -717,6 +669,7 @@ export default function Swap() {
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                     <AutoColumn style={{ width: '100%' }} gap="12px">
                       <ButtonConfirmed
+                        fontWeight={600}
                         onClick={handleApprove}
                         disabled={approveTokenButtonDisabled}
                         width="100%"
@@ -779,7 +732,7 @@ export default function Swap() {
                         }
                         error={isValid && priceImpactSeverity > 2}
                       >
-                        <Text fontSize={16} fontWeight={500}>
+                        <Text fontSize={16} fontWeight={600}>
                           {priceImpactTooHigh ? (
                             <Trans>High Price Impact</Trans>
                           ) : trade && priceImpactSeverity > 2 ? (
@@ -810,7 +763,7 @@ export default function Swap() {
                     disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh || !!swapCallbackError}
                     error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                   >
-                    <Text fontSize={20} fontWeight={500}>
+                    <Text fontSize={20} fontWeight={600}>
                       {swapInputError ? (
                         swapInputError
                       ) : routeIsSyncing || routeIsLoading ? (

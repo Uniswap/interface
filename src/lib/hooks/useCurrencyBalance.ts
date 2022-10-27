@@ -56,9 +56,10 @@ export function useTokenBalancesWithLoadingIndicator(
   address?: string,
   tokens?: (Token | undefined)[]
 ): [{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }, boolean] {
+  const { chainId } = useWeb3React() // we cannot fetch balances cross-chain
   const validatedTokens: Token[] = useMemo(
-    () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
-    [tokens]
+    () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false && t?.chainId === chainId) ?? [],
+    [chainId, tokens]
   )
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
 
@@ -116,6 +117,7 @@ export function useCurrencyBalances(
     [currencies]
   )
 
+  const { chainId } = useWeb3React()
   const tokenBalances = useTokenBalances(account, tokens)
   const containsETH: boolean = useMemo(() => currencies?.some((currency) => currency?.isNative) ?? false, [currencies])
   const ethBalance = useNativeCurrencyBalances(useMemo(() => (containsETH ? [account] : []), [containsETH, account]))
@@ -123,12 +125,12 @@ export function useCurrencyBalances(
   return useMemo(
     () =>
       currencies?.map((currency) => {
-        if (!account || !currency) return undefined
+        if (!account || !currency || currency.chainId !== chainId) return undefined
         if (currency.isToken) return tokenBalances[currency.address]
         if (currency.isNative) return ethBalance[account]
         return undefined
       }) ?? [],
-    [account, currencies, ethBalance, tokenBalances]
+    [account, chainId, currencies, ethBalance, tokenBalances]
   )
 }
 

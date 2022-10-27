@@ -40,7 +40,7 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
     return
   }
 
-  track(eventName, eventProperties)
+  track(eventName, { ...eventProperties, origin })
 }
 
 type Value = string | number | boolean | string[] | number[]

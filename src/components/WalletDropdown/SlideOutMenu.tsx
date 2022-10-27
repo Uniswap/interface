@@ -6,6 +6,7 @@ const Menu = styled.div`
   height: 100%;
   font-size: 16px;
   overflow: auto;
+  max-height: 450px;
 
   // Firefox scrollbar styling
   scrollbar-width: thin;

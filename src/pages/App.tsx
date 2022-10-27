@@ -4,10 +4,7 @@ import { Trace } from 'analytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
-import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -20,11 +17,10 @@ import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
-import Header from '../components/Header'
-import Polling from '../components/Header/Polling'
 import NavBar from '../components/NavBar'
+import Polling from '../components/Polling'
 import Popups from '../components/Popups'
-import { LoadingTokenDetails } from '../components/Tokens/TokenDetails/LoadingTokenDetails'
+import { TokenDetailsPageSkeleton } from '../components/Tokens/TokenDetails/Skeleton'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
@@ -42,7 +38,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import Tokens, { LoadingTokens } from './Tokens'
+import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
@@ -51,19 +47,17 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
-const AppWrapper = styled.div<{ redesignFlagEnabled: boolean }>`
+const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
-  font-feature-settings: ${({ redesignFlagEnabled }) =>
-    redesignFlagEnabled ? undefined : "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on"};
 `
 
-const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
+const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: ${({ navBarFlag }) => (navBarFlag === NavBarVariant.Enabled ? `72px 0px 0px 0px` : `120px 0px 0px 0px`)};
+  padding: 72px 0px 0px 0px;
   align-items: center;
   flex: 1;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
@@ -115,10 +109,7 @@ const LazyLoadSpinner = () => (
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
-  const tokensFlag = useTokensFlag()
-  const navBarFlag = useNavBarFlag()
   const nftFlag = useNftFlag()
-  const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -156,36 +147,29 @@ export default function App() {
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
-      <AppWrapper redesignFlagEnabled={redesignFlagEnabled}>
+      <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <NavBar /> : <Header />}</HeaderWrapper>
-          <BodyWrapper navBarFlag={navBarFlag}>
+          <HeaderWrapper>
+            <NavBar />
+          </HeaderWrapper>
+          <BodyWrapper>
             <Popups />
             <Polling />
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  {tokensFlag === TokensVariant.Enabled && (
-                    <>
-                      <Route
-                        path="/tokens/:chainName"
-                        element={
-                          <Suspense fallback={<LoadingTokens />}>
-                            <Tokens />
-                          </Suspense>
-                        }
-                      />
-                      <Route
-                        path="/tokens/:chainName/:tokenAddress"
-                        element={
-                          <Suspense fallback={<LoadingTokenDetails />}>
-                            <TokenDetails />
-                          </Suspense>
-                        }
-                      />
-                    </>
-                  )}
+                  <Route path="tokens" element={<Tokens />}>
+                    <Route path=":chainName" />
+                  </Route>
+                  <Route
+                    path="tokens/:chainName/:tokenAddress"
+                    element={
+                      <Suspense fallback={<TokenDetailsPageSkeleton />}>
+                        <TokenDetails />
+                      </Suspense>
+                    }
+                  />
                   <Route
                     path="vote/*"
                     element={

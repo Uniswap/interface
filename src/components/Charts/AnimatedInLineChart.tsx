@@ -8,6 +8,8 @@ import { useTheme } from 'styled-components/macro'
 
 import { LineChartProps } from './LineChart'
 
+type AnimatedInLineChartProps<T> = Omit<LineChartProps<T>, 'height' | 'width' | 'children'>
+
 const config = {
   duration: 800,
   easing: easeCubicInOut,
@@ -23,10 +25,7 @@ function AnimatedInLineChart<T>({
   curve,
   color,
   strokeWidth,
-  width,
-  height,
-  children,
-}: LineChartProps<T>) {
+}: AnimatedInLineChartProps<T>) {
   const lineRef = useRef<SVGPathElement>(null)
   const [lineLength, setLineLength] = useState(0)
   const [shouldAnimate, setShouldAnimate] = useState(false)
@@ -41,49 +40,54 @@ function AnimatedInLineChart<T>({
     },
   })
 
-  const effectDependency = lineRef.current
+  // We need to check to see after the "invisble" line has been drawn
+  // what the length is to be able to animate in the line for the first time
+  // This will run on each render to see if there is a new line length
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (lineRef.current) {
-      setLineLength(lineRef.current.getTotalLength())
-      setShouldAnimate(true)
+      const length = lineRef.current.getTotalLength()
+      if (length !== lineLength) {
+        setLineLength(length)
+      }
+      if (length > 0 && !shouldAnimate && !hasAnimatedIn) {
+        setShouldAnimate(true)
+      }
     }
-  }, [effectDependency])
+  })
   const theme = useTheme()
   const lineColor = color ?? theme.accentAction
 
   return (
-    <svg width={width} height={height}>
-      <Group top={marginTop}>
-        <LinePath curve={curve} x={getX} y={getY}>
-          {({ path }) => {
-            const d = path(data) || ''
-            return (
-              <>
+    <Group top={marginTop}>
+      <LinePath curve={curve} x={getX} y={getY}>
+        {({ path }) => {
+          const d = path(data) || ''
+          return (
+            <>
+              <animated.path
+                d={d}
+                ref={lineRef}
+                strokeWidth={strokeWidth}
+                strokeOpacity={hasAnimatedIn ? 1 : 0}
+                fill="none"
+                stroke={lineColor}
+              />
+              {shouldAnimate && lineLength !== 0 && (
                 <animated.path
                   d={d}
-                  ref={lineRef}
                   strokeWidth={strokeWidth}
-                  strokeOpacity={hasAnimatedIn ? 1 : 0}
                   fill="none"
                   stroke={lineColor}
+                  strokeDashoffset={spring.frame.to((v) => v * lineLength)}
+                  strokeDasharray={lineLength}
                 />
-                {shouldAnimate && lineLength !== 0 && (
-                  <animated.path
-                    d={d}
-                    strokeWidth={strokeWidth}
-                    fill="none"
-                    stroke={lineColor}
-                    strokeDashoffset={spring.frame.to((v) => v * lineLength)}
-                    strokeDasharray={lineLength}
-                  />
-                )}
-              </>
-            )
-          }}
-        </LinePath>
-      </Group>
-      {children}
-    </svg>
+              )}
+            </>
+          )
+        }}
+      </LinePath>
+    </Group>
   )
 }
 

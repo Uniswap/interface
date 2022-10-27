@@ -1,10 +1,14 @@
+import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
+import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
-import { getTokenDetailsURL, useGlobalChainId } from 'graphql/data/util'
+import { checkWarning } from 'constants/tokenSafety'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
 import { FungibleToken, GenieCollection } from 'nft/types'
@@ -12,8 +16,8 @@ import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { formatDollar } from 'utils/formatNumbers'
 
-import { VerifiedIcon } from '../../nft/components/icons'
 import * as styles from './SearchBar.css'
 
 interface CollectionRowProps {
@@ -103,10 +107,10 @@ export const CollectionRow = ({
 }
 
 function useBridgedAddress(token: FungibleToken): [string | undefined, number | undefined, string | undefined] {
-  const globalChainId = useGlobalChainId()
-  const bridgedAddress = globalChainId ? token.extensions?.bridgeInfo?.[globalChainId]?.tokenAddress : undefined
-  if (bridgedAddress && globalChainId) {
-    return [bridgedAddress, globalChainId, getChainInfo(globalChainId)?.circleLogoUrl]
+  const { chainId: connectedChainId } = useWeb3React()
+  const bridgedAddress = connectedChainId ? token.extensions?.bridgeInfo?.[connectedChainId]?.tokenAddress : undefined
+  if (bridgedAddress && connectedChainId) {
+    return [bridgedAddress, connectedChainId, getChainInfo(connectedChainId)?.circleLogoUrl]
   }
   return [undefined, undefined, undefined]
 }
@@ -179,7 +183,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            {token.onDefaultList && <VerifiedIcon className={styles.suggestionIcon} />}
+            <TokenSafetyIcon warning={checkWarning(token.address)} />
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>
@@ -188,7 +192,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
       <Column className={styles.suggestionSecondaryContainer}>
         {token.priceUsd && (
           <Row gap="4">
-            <Box className={styles.primaryText}>{ethNumberStandardFormatter(token.priceUsd, true)}</Box>
+            <Box className={styles.primaryText}>{formatDollar({ num: token.priceUsd, isPrice: true })}</Box>
           </Row>
         )}
         {token.price24hChange && (

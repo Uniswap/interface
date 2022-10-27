@@ -34,7 +34,7 @@ Cypress.Commands.overwrite(
     cy.intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 }).then(() => {
       original({
         ...options,
-        url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=rinkeby',
+        url: (url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url) + '?chain=goerli',
         onBeforeLoad(win) {
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()

@@ -53,13 +53,13 @@ const buildRouteItem = (item: GenieAsset): RouteItem => {
     id: item.id,
     symbol: item.priceInfo.baseAsset,
     name: item.name,
-    decimals: item.decimals || 0, // 0 for fungible items
+    decimals: parseFloat(item.priceInfo.baseDecimals),
     address: item.address,
     tokenType: item.tokenType,
     tokenId: item.tokenId,
     marketplace: item.marketplace,
     collectionName: item.collectionName,
-    amount: item.amount || 1, // default 1 for a single asset
+    amount: 1,
     priceInfo: {
       basePrice: item.priceInfo.basePrice,
       baseAsset: item.priceInfo.baseAsset,

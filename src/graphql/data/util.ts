@@ -1,7 +1,8 @@
 import { SupportedChainId } from 'constants/chains'
-import { useAppSelector } from 'state/hooks'
+import { ZERO_ADDRESS } from 'constants/misc'
+import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 
-import { Chain, HistoryDuration } from './__generated__/TokenQuery.graphql'
+import { Chain, HistoryDuration } from './__generated__/TopTokens100Query.graphql'
 
 export enum TimePeriod {
   HOUR,
@@ -39,13 +40,10 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: Chain } = {
   [SupportedChainId.OPTIMISM_GOERLI]: 'OPTIMISM',
 }
 
-export function useGlobalChainId() {
-  return useAppSelector((state) => state.application.chainId)
-}
-
-export function useGlobalChainName() {
-  const chainId = useGlobalChainId()
-  return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId] ? CHAIN_ID_TO_BACKEND_NAME[chainId] : 'ETHEREUM'
+export function chainIdToBackendName(chainId: number | undefined) {
+  return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
+    ? CHAIN_ID_TO_BACKEND_NAME[chainId]
+    : CHAIN_ID_TO_BACKEND_NAME[SupportedChainId.MAINNET]
 }
 
 export const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: Chain } = {
@@ -68,7 +66,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
   OPTIMISM: SupportedChainId.OPTIMISM,
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = ['ARBITRUM', 'CELO', 'ETHEREUM', 'OPTIMISM', 'POLYGON']
+export const BACKEND_CHAIN_NAMES: Chain[] = ['ETHEREUM', 'POLYGON', 'OPTIMISM', 'ARBITRUM', 'CELO']
 
 export function isValidBackendChainName(chainName: string | undefined): chainName is Chain {
   if (!chainName) return false
@@ -79,12 +77,30 @@ export function isValidBackendChainName(chainName: string | undefined): chainNam
 }
 
 export function getTokenDetailsURL(address: string, chainName?: Chain, chainId?: number) {
-  if (chainName) {
+  if (address === ZERO_ADDRESS && chainId && chainId === SupportedChainId.MAINNET) {
+    return `/tokens/${CHAIN_ID_TO_BACKEND_NAME[chainId].toLowerCase()}/${NATIVE_CHAIN_ID}`
+  } else if (chainName) {
     return `/tokens/${chainName.toLowerCase()}/${address}`
   } else if (chainId) {
     const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
     return chainName ? `/tokens/${chainName.toLowerCase()}/${address}` : ''
   } else {
     return ''
+  }
+}
+
+export function unwrapToken<T extends { address: string | null } | null>(chainId: number, token: T): T {
+  if (!token?.address) return token
+
+  const address = token.address.toLowerCase()
+  const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+  if (address !== nativeAddress) return token
+
+  const nativeToken = nativeOnChain(chainId)
+  return {
+    ...token,
+    ...nativeToken,
+    address: NATIVE_CHAIN_ID,
+    extensions: undefined, // prevents marking cross-chain wrapped tokens as native
   }
 }

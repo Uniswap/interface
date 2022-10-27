@@ -1,24 +1,19 @@
 import graphql from 'babel-plugin-relay/macro'
 import {
-  favoritesAtom,
   filterStringAtom,
   filterTimeAtom,
-  showFavoritesAtom,
   sortAscendingAtom,
   sortMethodAtom,
+  TokenSortMethod,
 } from 'components/Tokens/state'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { fetchQuery, useRelayEnvironment } from 'react-relay'
+import { useEffect, useMemo, useState } from 'react'
+import { fetchQuery, useLazyLoadQuery, useRelayEnvironment } from 'react-relay'
 
-import {
-  Chain,
-  ContractInput,
-  HistoryDuration,
-  TopTokens_TokensQuery,
-} from './__generated__/TopTokens_TokensQuery.graphql'
-import type { TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
-import { toHistoryDuration } from './util'
+import type { Chain, TopTokens100Query } from './__generated__/TopTokens100Query.graphql'
+import { TopTokensSparklineQuery } from './__generated__/TopTokensSparklineQuery.graphql'
+import { isPricePoint, PricePoint } from './TokenPrice'
+import { CHAIN_NAME_TO_CHAIN_ID, toHistoryDuration, unwrapToken } from './util'
 
 const topTokens100Query = graphql`
   query TopTokens100Query($duration: HistoryDuration!, $chain: Chain!) {
@@ -46,26 +41,34 @@ const topTokens100Query = graphql`
           currency
         }
       }
+      project {
+        logoUrl
+      }
     }
   }
 `
 
-export enum TokenSortMethod {
-  PRICE = 'Price',
-  PERCENT_CHANGE = 'Change',
-  TOTAL_VALUE_LOCKED = 'TVL',
-  VOLUME = 'Volume',
-}
+const tokenSparklineQuery = graphql`
+  query TopTokensSparklineQuery($duration: HistoryDuration!, $chain: Chain!) {
+    topTokens(pageSize: 100, page: 1, chain: $chain) {
+      address
+      market(currency: USD) {
+        priceHistory(duration: $duration) {
+          timestamp
+          value
+        }
+      }
+    }
+  }
+`
 
 export type PrefetchedTopToken = NonNullable<TopTokens100Query['response']['topTokens']>[number]
 
-function useSortedTokens(tokens: TopTokens100Query['response']['topTokens'] | undefined) {
+function useSortedTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
   return useMemo(() => {
-    if (!tokens) return []
-
     let tokenArray = Array.from(tokens)
     switch (sortMethod) {
       case TokenSortMethod.PRICE:
@@ -90,22 +93,13 @@ function useSortedTokens(tokens: TopTokens100Query['response']['topTokens'] | un
   }, [tokens, sortMethod, sortAscending])
 }
 
-function useFilteredTokens(tokens: PrefetchedTopToken[]) {
+function useFilteredTokens(tokens: NonNullable<TopTokens100Query['response']['topTokens']>) {
   const filterString = useAtomValue(filterStringAtom)
-  const favorites = useAtomValue(favoritesAtom)
-  const showFavorites = useAtomValue(showFavoritesAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
   return useMemo(() => {
-    if (!tokens) {
-      return []
-    }
-
     let returnTokens = tokens
-    if (showFavorites) {
-      returnTokens = returnTokens?.filter((token) => token?.address && favorites.includes(token.address))
-    }
     if (lowercaseFilterString) {
       returnTokens = returnTokens?.filter((token) => {
         const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
@@ -115,211 +109,50 @@ function useFilteredTokens(tokens: PrefetchedTopToken[]) {
       })
     }
     return returnTokens
-  }, [tokens, showFavorites, lowercaseFilterString, favorites])
+  }, [tokens, lowercaseFilterString])
 }
 
 // Number of items to render in each fetch in infinite scroll.
 export const PAGE_SIZE = 20
 
-function toContractInput(token: PrefetchedTopToken) {
-  return {
-    address: token?.address ?? '',
-    chain: token?.chain ?? 'ETHEREUM',
-  }
-}
-
-// Map of key: ${HistoryDuration} and value: another Map, of key:${chain} + ${address} and value: TopToken object.
-// Acts as a local cache.
-
-const tokensWithPriceHistoryCache: Record<HistoryDuration, Record<string, TopToken>> = {
-  DAY: {},
-  HOUR: {},
-  MAX: {},
-  MONTH: {},
-  WEEK: {},
-  YEAR: {},
-  '%future added value': {},
-}
-
-const checkIfAllTokensCached = (duration: HistoryDuration, tokens: PrefetchedTopToken[]) => {
-  let everyTokenInCache = true
-  const cachedTokens: TopToken[] = []
-
-  const checkCache = (token: PrefetchedTopToken) => {
-    const tokenCacheKey = !!token ? `${token.chain}${token.address}` : ''
-    if (tokenCacheKey in tokensWithPriceHistoryCache[duration]) {
-      cachedTokens.push(tokensWithPriceHistoryCache[duration][tokenCacheKey])
-      return true
-    } else {
-      everyTokenInCache = false
-      cachedTokens.length = 0
-      return false
-    }
-  }
-  tokens.every((token) => checkCache(token))
-  return { everyTokenInCache, cachedTokens }
-}
-
-export type TopToken = NonNullable<TopTokens_TokensQuery['response']['tokens']>[number]
+export type TopToken = NonNullable<NonNullable<TopTokens100Query['response']>['topTokens']>[number]
+export type SparklineMap = { [key: string]: PricePoint[] | undefined }
 interface UseTopTokensReturnValue {
-  error: Error | undefined
-  loading: boolean
   tokens: TopToken[] | undefined
-  hasMore: boolean
-  loadMoreTokens: () => void
-  loadingRowCount: number
+  sparklines: SparklineMap
 }
+
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
+  const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
-  const [loadingTokensWithoutPriceHistory, setLoadingTokensWithoutPriceHistory] = useState(true)
-  const [loadingTokensWithPriceHistory, setLoadingTokensWithPriceHistory] = useState(true)
-  const [tokens, setTokens] = useState<TopToken[]>()
-  const [page, setPage] = useState(0)
-  const [error, setError] = useState<Error | undefined>()
-  const [prefetchedData, setPrefetchedData] = useState<PrefetchedTopToken[]>()
-  const prefetchedSelectedTokensWithoutPriceHistory = useFilteredTokens(useSortedTokens(prefetchedData))
-  const loading = Boolean(loadingTokensWithPriceHistory || loadingTokensWithoutPriceHistory)
-  // loadingRowCount defaults to PAGE_SIZE when no prefetchedData is available yet because the initial load
-  // count will always be PAGE_SIZE.
-  const loadingRowCount = useMemo(
-    () => (prefetchedData ? Math.min(prefetchedSelectedTokensWithoutPriceHistory.length, PAGE_SIZE) : PAGE_SIZE),
-    [prefetchedSelectedTokensWithoutPriceHistory, prefetchedData]
-  )
 
-  const hasMore = !tokens || tokens.length < prefetchedSelectedTokensWithoutPriceHistory.length
   const environment = useRelayEnvironment()
-
-  const loadTokensWithoutPriceHistory = useCallback(
-    ({ duration, chain }: { duration: HistoryDuration; chain: Chain }) => {
-      fetchQuery<TopTokens100Query>(
-        environment,
-        topTokens100Query,
-        { duration, chain },
-        { fetchPolicy: 'store-or-network' }
-      ).subscribe({
-        next: (data) => {
-          if (data?.topTokens) setPrefetchedData([...data?.topTokens])
-        },
-        error: setError,
-        complete: () => setLoadingTokensWithoutPriceHistory(false),
-      })
-    },
-    [environment]
-  )
-
-  // TopTokens should ideally be fetched with usePaginationFragment. The backend does not current support graphql cursors;
-  // in the meantime, fetchQuery is used, as other relay hooks do not allow the refreshing and lazy loading we need
-  const loadTokensWithPriceHistory = useCallback(
-    ({
-      contracts,
-      appendingTokens,
-      page,
-      tokens,
-    }: {
-      contracts: ContractInput[]
-      appendingTokens: boolean
-      page: number
-      tokens?: TopToken[]
-    }) => {
-      fetchQuery<TopTokens_TokensQuery>(
-        environment,
-        tokensQuery,
-        { contracts, duration },
-        { fetchPolicy: 'store-or-network' }
-      ).subscribe({
-        next: (data) => {
-          if (data?.tokens) {
-            const priceHistoryCacheForCurrentDuration = tokensWithPriceHistoryCache[duration]
-            data.tokens.map((token) =>
-              !!token ? (priceHistoryCacheForCurrentDuration[`${token.chain}${token.address}`] = token) : null
-            )
-            appendingTokens ? setTokens([...(tokens ?? []), ...data.tokens]) : setTokens([...data.tokens])
-            setLoadingTokensWithPriceHistory(false)
-            setPage(page + 1)
-          }
-        },
-        error: setError,
-        complete: () => setLoadingTokensWithPriceHistory(false),
-      })
-    },
-    [duration, environment]
-  )
-
-  const loadMoreTokens = useCallback(() => {
-    setLoadingTokensWithPriceHistory(true)
-    const contracts = prefetchedSelectedTokensWithoutPriceHistory
-      .slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
-      .map(toContractInput)
-    loadTokensWithPriceHistory({ contracts, appendingTokens: true, page, tokens })
-  }, [prefetchedSelectedTokensWithoutPriceHistory, page, loadTokensWithPriceHistory, tokens])
-
-  // Reset count when filters are changed
-  useLayoutEffect(() => {
-    const { everyTokenInCache, cachedTokens } = checkIfAllTokensCached(
-      duration,
-      prefetchedSelectedTokensWithoutPriceHistory
-    )
-    if (everyTokenInCache) {
-      setTokens(cachedTokens)
-      setLoadingTokensWithPriceHistory(false)
-    } else {
-      setLoadingTokensWithPriceHistory(true)
-      setTokens([])
-      const contracts = prefetchedSelectedTokensWithoutPriceHistory.slice(0, PAGE_SIZE).map(toContractInput)
-      loadTokensWithPriceHistory({ contracts, appendingTokens: false, page: 0 })
-    }
-  }, [loadTokensWithPriceHistory, prefetchedSelectedTokensWithoutPriceHistory, duration])
-
-  // Trigger fetching top 100 tokens without price history on first load, and on
-  // each change of chain or duration.
+  const [sparklines, setSparklines] = useState<SparklineMap>({})
   useEffect(() => {
-    setLoadingTokensWithoutPriceHistory(true)
-    loadTokensWithoutPriceHistory({ duration, chain })
-  }, [chain, duration, loadTokensWithoutPriceHistory])
+    const subscription = fetchQuery<TopTokensSparklineQuery>(environment, tokenSparklineQuery, { duration, chain })
+      .map((data) => ({
+        topTokens: data.topTokens?.map((token) => unwrapToken(chainId, token)),
+      }))
+      .subscribe({
+        next(data) {
+          const map: SparklineMap = {}
+          data.topTokens?.forEach(
+            (current) =>
+              current?.address && (map[current.address] = current?.market?.priceHistory?.filter(isPricePoint))
+          )
+          setSparklines(map)
+        },
+      })
+    return () => subscription.unsubscribe()
+  }, [chain, chainId, duration, environment])
 
-  return {
-    error,
-    loading,
-    tokens,
-    hasMore,
-    loadMoreTokens,
-    loadingRowCount,
-  }
+  useEffect(() => {
+    setSparklines({})
+  }, [duration])
+
+  const { topTokens } = useLazyLoadQuery<TopTokens100Query>(topTokens100Query, { duration, chain })
+  const mappedTokens = useMemo(() => topTokens?.map((token) => unwrapToken(chainId, token)) ?? [], [chainId, topTokens])
+  const filteredTokens = useFilteredTokens(mappedTokens)
+  const sortedTokens = useSortedTokens(filteredTokens)
+  return useMemo(() => ({ tokens: sortedTokens, sparklines }), [sortedTokens, sparklines])
 }
-
-export const tokensQuery = graphql`
-  query TopTokens_TokensQuery($contracts: [ContractInput!]!, $duration: HistoryDuration!) {
-    tokens(contracts: $contracts) {
-      id @required(action: LOG)
-      name
-      chain @required(action: LOG)
-      address @required(action: LOG)
-      symbol
-      market(currency: USD) {
-        totalValueLocked {
-          value
-          currency
-        }
-        priceHistory(duration: $duration) {
-          timestamp
-          value
-        }
-        price {
-          value
-          currency
-        }
-        volume(duration: $duration) {
-          value
-          currency
-        }
-        pricePercentChange(duration: $duration) {
-          currency
-          value
-        }
-      }
-      project {
-        logoUrl
-      }
-    }
-  }
-`

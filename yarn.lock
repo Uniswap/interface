@@ -1074,10 +1074,10 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@>=7.17.0", "@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
-  version "7.18.9"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.9.tgz#b4fcfce55db3d2e5e080d2490f608a3b9f407f4a"
-  integrity sha512-lkqXDcvlFT5rvEjiu6+QYO+1GXrEHRo2LOtS7E4GtX5ESIZOgepqsZBVIj6Pv+a6zqsya9VCgiK1KAK4BvJDAw==
+"@babel/runtime@>=7.17.0", "@babel/runtime@^7.0.0", "@babel/runtime@^7.10.1", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+  version "7.19.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.19.4.tgz#a42f814502ee467d55b38dd1c256f53a7b885c78"
+  integrity sha512-EXpLCrk55f+cYqmHsSR+yD/0gAIMxxA9QK9lnQWzhMCvt+YmoBN7Zx94s++Kv0+unHk39vxNO8t+CMA2WSS3wA==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -4144,12 +4144,12 @@
   resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/redux-multicall@^1.1.1", "@uniswap/redux-multicall@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.5.tgz#7c097047d489c1624038c0fbbd3d76dc705bf153"
-  integrity sha512-RSMhfuAX2rPimnevvAAiwoyV2bCGTIKhVHEBOLTMF+oVxYcKKe9hCwx/cffY12t/usXWHlEJ//V7JoxTKI1Lyg==
+"@uniswap/redux-multicall@^1.1.1", "@uniswap/redux-multicall@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.6.tgz#27e52d97e359b6de06410fbc6d0699b9e6422707"
+  integrity sha512-B7kR63dtIJzr9iGITsNYAh8ktDfKEi9Ilsfq0oKxSzAChZmkq9Ss/EZ6/VKSvq1m4rPe+b9CPxZIBdRzpmf2/w==
 
-"@uniswap/router-sdk@^1.0.3", "@uniswap/router-sdk@^1.3.0":
+"@uniswap/router-sdk@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.3.0.tgz#8c17e957f65099a18dda536cd05fc34e779628aa"
   integrity sha512-T6kXQFXrAkIHfCCmhyW+0xgUyuFVepL9rlwG9+MjnfVtmGIBssbMzyFKGk5HGQYlk6WQrm630W1j87kdfXpZ/Q==
@@ -4172,7 +4172,7 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^2.10.0", "@uniswap/smart-order-router@^2.5.26":
+"@uniswap/smart-order-router@^2.10.0":
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.10.0.tgz#f9f13bd9a940fc2ee123a6dbe6c64a6fab19a365"
   integrity sha512-7dfFlPbg36goZOWlRowTDDrRc1vWwKLhAuhftf6sN+ECJ4CeqRgDDZgxw/ZJhfDSl1RC6IYN71CfEcmhnbRDlw==
@@ -4305,10 +4305,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.9.2.tgz#3ab5e84fc61fb62c3635b52526a67febfcdbb081"
-  integrity sha512-4NNckJJ3jaOubIwU0hzfcPbdjNzlO6n8WIIcAScyc+WGpb1S9iBUjJ0EFMCEUhP/zsNK0+I5qv1ytjPF4XZTog==
+"@uniswap/widgets@^2.16.2":
+  version "2.16.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.16.2.tgz#2f37265d8844f73ef4f2b21afaa372f5a6756932"
+  integrity sha512-9rxf1qhR8MvjVWXKDT6GWCB4Be1d+/3qNaOKkMn5eqLjvYjE5BHz//pYb0TG41RYBCjNdydXoegH6w9d1yisgg==
   dependencies:
     "@babel/runtime" ">=7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
@@ -4316,9 +4316,9 @@
     "@popperjs/core" "^2.4.4"
     "@reduxjs/toolkit" "^1.6.1"
     "@uniswap/redux-multicall" "^1.1.1"
-    "@uniswap/router-sdk" "^1.0.3"
+    "@uniswap/router-sdk" "^1.3.0"
     "@uniswap/sdk-core" "^3.0.1"
-    "@uniswap/smart-order-router" "^2.5.26"
+    "@uniswap/smart-order-router" "^2.10.0"
     "@uniswap/token-lists" "^1.0.0-beta.30"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.8.2"
@@ -4330,9 +4330,10 @@
     "@web3-react/types" "8.0.20-beta.0"
     "@web3-react/url" "8.0.25-beta.0"
     "@web3-react/walletconnect" "8.0.35-beta.0"
-    ajv "^6.12.3"
+    ajv "^8.11.0"
+    ajv-formats "^2.1.1"
     cids "^1.0.0"
-    ethers "^5.1.4"
+    ethers "^5.6.1"
     immer "^9.0.6"
     jotai "^1.3.7"
     jsbi "^3.1.4"
@@ -5197,6 +5198,13 @@ ajv-errors@^1.0.0:
   resolved "https://registry.yarnpkg.com/ajv-errors/-/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"
   integrity sha512-DCRfO/4nQ+89p/RK43i8Ezd41EqdGIU4ld7nGF8OQ14oc/we5rEntLCUa7+jrn3nn83BosfwZA0wb4pon2o8iQ==
 
+ajv-formats@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ajv-formats/-/ajv-formats-2.1.1.tgz#6e669400659eb74973bbf2e33327180a0996b520"
+  integrity sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==
+  dependencies:
+    ajv "^8.0.0"
+
 ajv-keywords@^3.1.0, ajv-keywords@^3.4.1, ajv-keywords@^3.5.2:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.5.2.tgz#31f29da5ab6e00d1c2d329acf7b5929614d5014d"
@@ -5212,7 +5220,7 @@ ajv@6.5.3:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.3, ajv@^6.12.4, ajv@^6.12.5:
+ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.4, ajv@^6.12.5:
   version "6.12.6"
   resolved "https://registry.npmjs.org/ajv/-/ajv-6.12.6.tgz"
   integrity sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==
@@ -5222,7 +5230,7 @@ ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.3, ajv@^6.12.4, ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^8.0.1:
+ajv@^8.0.0, ajv@^8.0.1, ajv@^8.11.0:
   version "8.11.0"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.11.0.tgz#977e91dd96ca669f54a11e23e378e33b884a565f"
   integrity sha512-wGgprdCvMalC0BztXvitD2hC04YffAvtsUn93JbGXYLAtCUO4xd17mCCZQxUOItiBwZvJScWo8NIvQMQ71rdpg==
@@ -6662,10 +6670,10 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
-  integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
+classnames@^2.2.5, classnames@^2.3.1:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
+  integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
 
 clean-css@^4.2.3:
   version "4.2.3"
@@ -8657,12 +8665,12 @@ eslint-plugin-prettier@^3.1.3:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-eslint-plugin-react-hooks@^4.0.0, eslint-plugin-react-hooks@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.npmjs.org/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.2.0.tgz"
-  integrity sha512-623WEiZJqxR7VdxFCKLI6d6LLpwJkGPYKODnkH3D7WpOG5KM8yWueBd8TLsNAetEJNF5iJmolaAKO3F8yzyVBQ==
+eslint-plugin-react-hooks@^4.2.0, eslint-plugin-react-hooks@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.6.0.tgz#4c3e697ad95b77e93f8646aaa1630c1ba607edd3"
+  integrity sha512-oFc7Itz9Qxh2x4gNHStv3BqJq54ExXmfC+a1NjAta66IAN87Wu0R/QArgIS9qKzX3dXKPI9H5crl9QchNMY9+g==
 
-eslint-plugin-react@^7.19.0, eslint-plugin-react@^7.21.5:
+eslint-plugin-react@^7.21.5:
   version "7.24.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.24.0.tgz#eadedfa351a6f36b490aa17f4fa9b14e842b9eb4"
   integrity sha512-KJJIx2SYx7PBx3ONe/mEeMz4YE0Lcr7feJTCMyyKb/341NcjuAgim3Acgan89GfPv7nxXK2+0slu0CWXYM4x+Q==
@@ -14711,6 +14719,25 @@ raw-body@2.4.0:
     http-errors "1.7.2"
     iconv-lite "0.4.24"
     unpipe "1.0.0"
+
+rc-slider@^10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-10.0.1.tgz#7058c68ff1e1aa4e7c3536e5e10128bdbccb87f9"
+  integrity sha512-igTKF3zBet7oS/3yNiIlmU8KnZ45npmrmHlUUio8PNbIhzMcsh+oE/r2UD42Y6YD2D/s+kzCQkzQrPD6RY435Q==
+  dependencies:
+    "@babel/runtime" "^7.10.1"
+    classnames "^2.2.5"
+    rc-util "^5.18.1"
+    shallowequal "^1.1.0"
+
+rc-util@^5.18.1:
+  version "5.24.4"
+  resolved "https://registry.yarnpkg.com/rc-util/-/rc-util-5.24.4.tgz#a4126f01358c86f17c1bf380a1d83d6c9155ae65"
+  integrity sha512-2a4RQnycV9eV7lVZPEJ7QwJRPlZNc06J7CwcwZo4vIHr3PfUqtYgl1EkUV9ETAc6VRRi8XZOMFhYG63whlIC9Q==
+  dependencies:
+    "@babel/runtime" "^7.18.3"
+    react-is "^16.12.0"
+    shallowequal "^1.1.0"
 
 rc@^1.0.1, rc@^1.1.6:
   version "1.2.8"
