@@ -9,6 +9,14 @@ const Details = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 40px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media (max-width: 450px) {
+    grid-template-columns: 1fr 1fr;
+  }
 `
 
 const Header = styled.div`

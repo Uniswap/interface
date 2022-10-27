@@ -38,7 +38,6 @@ const CollectionHeader = styled.div`
   font-size: 16px;
   line-height: 24px;
   color: ${({ theme }) => theme.textPrimary};
-  cursor: pointer;
   margin-top: 28px;
 `
 
@@ -96,10 +95,13 @@ const DescriptionText = styled.div`
 `
 
 const RarityWrap = styled.span`
+  display: flex;
   background-color: ${({ theme }) => theme.backgroundInteractive};
   color: ${({ theme }) => theme.textPrimary};
   padding: 2px 4px;
   border-radius: 4px;
+  alignitems: center;
+  gap: 20px;
 `
 
 const EmptyActivitiesContainer = styled.div`
@@ -120,6 +122,23 @@ const Link = styled.a`
   line-height: 16px;
   margin-top: 12px;
   cursor: pointer;
+`
+
+const ActivitySelectContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 34px;
+
+  @media (max-width: 520px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+`
+
+const FilterBox = styled.div`
+  max-width: 150;
+  height: 40;
+  box-sizing: border-box;
 `
 
 const AudioPlayer = ({
@@ -266,11 +285,12 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         <Box
           className={clsx(activityStyles.filter, isActive && activityStyles.activeFilter)}
           onClick={() => filtersDispatch({ eventType })}
-          style={{ maxWidth: 150, height: 40, boxSizing: 'border-box' }}
         >
-          {eventType === ActivityEventType.CancelListing
-            ? 'Cancellation'
-            : eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
+          <FilterBox>
+            {eventType === ActivityEventType.CancelListing
+              ? 'Cancellation'
+              : eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
+          </FilterBox>
         </Box>
       )
     },
@@ -361,7 +381,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         defaulOpen
         secondaryHeader={
           rarityProvider && rarity ? (
-            <RarityWrap style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+            <RarityWrap>
               Rarity {putCommas(rarity)} <img src={rarityIcon} width={16} alt={rarityProvider.provider} />
             </RarityWrap>
           ) : null
@@ -375,12 +395,12 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       >
         {eventsData && eventsData.events?.length > 0 ? (
           <>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: 34 }}>
+            <ActivitySelectContainer>
               <Filter eventType={ActivityEventType.Listing} />
               <Filter eventType={ActivityEventType.Sale} />
               <Filter eventType={ActivityEventType.Transfer} />
               <Filter eventType={ActivityEventType.CancelListing} />
-            </div>
+            </ActivitySelectContainer>
 
             <AssetActivity eventsData={eventsData} />
           </>
