@@ -21,7 +21,15 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
-  useLockScreenOnBlur()
+  /**
+   * If paste permission modal is open, we need to manually disable the splash screen that appears on blur,
+   * since the modal triggers the same `inactive` app state as does going to app switcher
+   *
+   * Technically seed phrase will be blocked if user pastes from keyboard,
+   * but that is an extreme edge case.
+   **/
+  const [pastePermissionModalOpen, setPastePermissionModalOpen] = useState(false)
+  useLockScreenOnBlur(pastePermissionModalOpen)
 
   const [focused, setFocused] = useState(false)
   const [value, setValue] = useState<string | undefined>(undefined)
@@ -72,6 +80,8 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
         <GenericImportForm
           autoCorrect
           liveCheck
+          afterPasteButtonPress={() => setPastePermissionModalOpen(false)}
+          beforePasteButtonPress={() => setPastePermissionModalOpen(true)}
           error={error}
           placeholderLabel={t('recovery phrase')}
           showSuccess={isValid}

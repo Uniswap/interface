@@ -34,6 +34,7 @@ interface ButtonProps {
   fill?: boolean // flex=1
   noTextScaling?: boolean
   onPress?: () => void
+  onPressIn?: () => void
   onLongPress?: () => void
 }
 
@@ -48,6 +49,7 @@ const _Button = ({
   disabled = false,
   fill,
   onPress,
+  onPressIn,
   onLongPress,
 }: ButtonProps) => {
   const theme = useAppTheme()
@@ -88,7 +90,8 @@ const _Button = ({
       opacity={!disabled ? 1 : 0.4}
       testID={name}
       onLongPress={onLongPress}
-      onPress={onPress}>
+      onPress={onPress}
+      onPressIn={onPressIn}>
       <Flex centered row gap={iconPadding} px={paddingX} py={paddingY}>
         {icon}
         {label && (

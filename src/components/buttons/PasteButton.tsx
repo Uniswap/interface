@@ -4,9 +4,19 @@ import PasteIcon from 'src/assets/icons/paste.svg'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { getClipboard } from 'src/utils/clipboard'
 
-export default function PasteButton({ onPress }: { onPress: (text: string) => void }) {
+export default function PasteButton({
+  onPress,
+  beforePress,
+  afterClipboardReceived,
+}: {
+  onPress: (text: string) => void
+  beforePress?: () => void
+  afterClipboardReceived?: () => void
+}) {
   const onPressButton = async () => {
     const clipboard = await getClipboard()
+    // Since paste may trigger OS permission modal, the following callback is used to control other behavior such as blocking views that need to be shown/hidden.
+    afterClipboardReceived?.()
     if (clipboard) {
       onPress(clipboard)
     }
@@ -20,6 +30,7 @@ export default function PasteButton({ onPress }: { onPress: (text: string) => vo
       label={t('Paste')}
       size={ButtonSize.Small}
       onPress={onPressButton}
+      onPressIn={beforePress}
     />
   )
 }

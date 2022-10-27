@@ -25,6 +25,8 @@ interface Props {
   autoCorrect?: boolean
   onBlur?: () => void
   onFocus?: () => void
+  beforePasteButtonPress?: () => void
+  afterPasteButtonPress?: () => void
   blurOnSubmit?: boolean
 }
 
@@ -40,6 +42,8 @@ export function GenericImportForm({
   autoCorrect,
   onBlur,
   onFocus,
+  beforePasteButtonPress,
+  afterPasteButtonPress,
   blurOnSubmit,
 }: Props) {
   const { t } = useTranslation()
@@ -123,7 +127,11 @@ export function GenericImportForm({
               <Text color="textSecondary" variant="bodyLarge">
                 {t('Type or')}
               </Text>
-              <PasteButton onPress={onChange} />
+              <PasteButton
+                afterClipboardReceived={afterPasteButtonPress}
+                beforePress={beforePasteButtonPress}
+                onPress={onChange}
+              />
               {placeholderLabel && (
                 <Text color="textSecondary" variant="bodyLarge">
                   {placeholderLabel}

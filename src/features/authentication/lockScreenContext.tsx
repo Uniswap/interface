@@ -51,20 +51,20 @@ export function useLockScreenContext(): LockScreenContextValue {
   return useContext(LockScreenContext)
 }
 
-export function useLockScreenOnBlur() {
+export function useLockScreenOnBlur(isDisabled?: boolean) {
   // Show splash screen if app switcher is opened
   const { setIsLockScreenVisible } = useLockScreenContext()
   const isFocused = useIsFocused()
   useAppStateTrigger('inactive', 'active', () => {
-    if (!isFocused) return
+    if (!isFocused || isDisabled) return
     setIsLockScreenVisible(false)
   })
   useAppStateTrigger('active', 'inactive', () => {
-    if (!isFocused) return
+    if (!isFocused || isDisabled) return
     setIsLockScreenVisible(true)
   })
   useAppStateTrigger('background', 'active', () => {
-    if (!isFocused) return
+    if (!isFocused || isDisabled) return
     setIsLockScreenVisible(false)
   })
 }
