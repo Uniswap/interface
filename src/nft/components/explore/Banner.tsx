@@ -1,3 +1,4 @@
+import { useIsMobile } from 'nft/hooks'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod } from 'nft/types'
 import { useQuery } from 'react-query'
@@ -7,23 +8,27 @@ import styled from 'styled-components/macro'
 import { Carousel } from './Carousel'
 import { CarouselCard } from './CarouselCard'
 
-const BannerContainer = styled.div`
+const BannerContainer = styled.div<{ isMobile: boolean }>`
   display: flex;
+  flex-direction: ${({ isMobile }) => (isMobile ? 'column' : 'row')};
   width: 100%;
   height: 300px;
   margin-top: 40px;
   margin-bottom: 20px;
   gap: 36px;
   max-width: 1200px;
-  justify-content: center;
+  justify-content: space-between;
 `
 
-const HeaderContainer = styled.div`
-  width: 500px;
+const HeaderContainer = styled.div<{ isMobile: boolean }>`
+  display: flex;
+  max-width: 500px;
   font-weight: 500;
-  font-size: 60px;
-  line-height: 73px;
-  padding-top: 40px;
+  font-size: ${({ isMobile }) => (isMobile ? '20px' : '60px')};
+  line-height: ${({ isMobile }) => (isMobile ? '28px' : '73px')};
+  justify-content: ${({ isMobile }) => (isMobile ? 'center' : 'start')};
+  align-items: ${({ isMobile }) => (isMobile ? 'center' : 'start')};
+  padding-top: ${({ isMobile }) => (isMobile ? 'none' : '40px')};
   flex-shrink: 0;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%), #fc72ff;
   -webkit-background-clip: text;
@@ -34,6 +39,7 @@ const HeaderContainer = styled.div`
 
 const Banner = () => {
   const navigate = useNavigate()
+  const isMobile = useIsMobile()
 
   const { data: collections } = useQuery(
     ['trendingCollections'],
@@ -48,21 +54,31 @@ const Banner = () => {
   )
 
   return (
-    <BannerContainer>
-      <HeaderContainer>
-        Best price. <br />
+    <BannerContainer isMobile={isMobile}>
+      <HeaderContainer isMobile={isMobile}>
+        Best price. {!isMobile && <br />}
         Every listing.
       </HeaderContainer>
       {collections ? (
-        <Carousel>
-          {collections.map((collection, index) => (
+        <>
+          {isMobile ? (
             <CarouselCard
-              key={collection.address}
-              collection={collection}
-              onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+              key={collections[0].address}
+              collection={collections[0]}
+              onClick={() => navigate(`/nfts/collection/${collections[0].address}`)}
             />
-          ))}
-        </Carousel>
+          ) : (
+            <Carousel>
+              {collections.map((collection, index) => (
+                <CarouselCard
+                  key={collection.address}
+                  collection={collection}
+                  onClick={() => navigate(`/nfts/collection/${collection.address}`)}
+                />
+              ))}
+            </Carousel>
+          )}
+        </>
       ) : (
         <>
           {/* TODO: Improve Loading State */}

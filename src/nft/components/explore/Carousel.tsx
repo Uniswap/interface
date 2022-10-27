@@ -5,6 +5,7 @@ import { a, useSprings } from 'react-spring'
 import styled from 'styled-components/macro'
 
 const CarouselContainer = styled.div`
+  max-width: 592px;
   position: relative;
   width: 100%;
   overflow-x: hidden;

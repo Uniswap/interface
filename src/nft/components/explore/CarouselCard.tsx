@@ -84,10 +84,15 @@ const CardBottomContainer = styled.div`
   display: grid;
   grid-template-columns: auto auto auto;
   row-gap: 16px;
+  column-gap: 20px;
   padding-right: 28px;
   padding-left: 28px;
   padding-bottom: 20px;
   justify-content: space-between;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    row-gap: 12px;
+  }
 `
 
 const HeaderRow = styled(ThemedText.SubHeader)`

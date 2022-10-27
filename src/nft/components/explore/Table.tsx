@@ -1,10 +1,10 @@
 import clsx from 'clsx'
+import { useWindowSize } from 'hooks/useWindowSize'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Column, IdType, useSortBy, useTable } from 'react-table'
-import styled from 'styled-components/macro'
+import { Column, useSortBy, useTable } from 'react-table'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { isMobile } from 'utils/userAgent'
 
 import { Box } from '../../components/Box'
 import { CollectionTableColumn } from '../../types'
@@ -44,19 +44,15 @@ const StyledHeader = styled.th<{ isFirstHeader: boolean }>`
 interface TableProps<D extends Record<string, unknown>> {
   columns: Column<CollectionTableColumn>[]
   data: CollectionTableColumn[]
-  hiddenColumns: IdType<D>[]
   classNames?: {
     td: string
   }
 }
 
-export function Table<D extends Record<string, unknown>>({
-  columns,
-  data,
-  hiddenColumns,
-  classNames,
-  ...props
-}: TableProps<D>) {
+export function Table<D extends Record<string, unknown>>({ columns, data, classNames, ...props }: TableProps<D>) {
+  const theme = useTheme()
+  const { width } = useWindowSize()
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
     {
       columns,
@@ -77,12 +73,29 @@ export function Table<D extends Record<string, unknown>>({
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (hiddenColumns && isMobile) {
-      setHiddenColumns(hiddenColumns)
+    if (!width) return
+
+    if (width < theme.breakpoint.sm) {
+      setHiddenColumns([
+        ColumnHeaders.Items,
+        ColumnHeaders.FloorChange,
+        ColumnHeaders.Volume,
+        ColumnHeaders.VolumeChange,
+        ColumnHeaders.Owners,
+      ])
+    } else if (width < theme.breakpoint.md) {
+      setHiddenColumns([
+        ColumnHeaders.Items,
+        ColumnHeaders.FloorChange,
+        ColumnHeaders.VolumeChange,
+        ColumnHeaders.Owners,
+      ])
+    } else if (width < theme.breakpoint.lg) {
+      setHiddenColumns([ColumnHeaders.Items, ColumnHeaders.Owners])
     } else {
       setHiddenColumns([])
     }
-  }, [hiddenColumns, setHiddenColumns])
+  }, [width, setHiddenColumns, theme.breakpoint])
 
   return (
     <table {...getTableProps()} className={styles.table}>
