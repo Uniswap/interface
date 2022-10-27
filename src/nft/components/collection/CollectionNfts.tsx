@@ -3,7 +3,10 @@ import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
 import { loadingAnimation } from 'components/Loader/styled'
+import { parseEther } from 'ethers/lib/utils'
 import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
+import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/nft/__generated__/AssetQuery.graphql'
+import { useAssetsQuery } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
@@ -19,6 +22,7 @@ import {
   CollectionFilters,
   initialCollectionFilterState,
   SortBy,
+  SortByQueries,
   useBag,
   useCollectionFilters,
   useFiltersExpanded,
@@ -232,7 +236,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
     },
     {
       getNextPageParam: (lastPage, pages) => {
-        return lastPage?.flat().length === 25 ? pages.length : null
+        return lastPage?.flat().length === DEFAULT_ASSET_QUERY_AMOUNT ? pages.length : null
       },
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
@@ -240,10 +244,30 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       refetchInterval: 5000,
     }
   )
-
-  useEffect(() => {
-    setIsCollectionNftsLoading(isLoading)
-  }, [isLoading, setIsCollectionNftsLoading])
+  const {
+    assets: nftQueryAssets,
+    loadNext,
+    hasNext,
+    isLoadingNext,
+  } = useAssetsQuery(
+    isNftGraphQl ? contractAddress : '',
+    SortByQueries[sortBy].field,
+    SortByQueries[sortBy].asc,
+    {
+      listed: buyNow,
+      marketplaces: markets.length > 0 ? markets.map((market) => market.toUpperCase() as NftMarketplace) : undefined,
+      maxPrice: debouncedMaxPrice ? parseEther(debouncedMaxPrice).toString() : undefined,
+      minPrice: debouncedMinPrice ? parseEther(debouncedMinPrice).toString() : undefined,
+      tokenSearchQuery: debouncedSearchByNameText,
+      traits:
+        traits.length > 0
+          ? traits.map((trait) => {
+              return { name: trait.trait_type, values: [trait.trait_value] } as unknown as NftAssetTraitInput
+            })
+          : undefined,
+    },
+    DEFAULT_ASSET_QUERY_AMOUNT
+  )
 
   const [uniformHeight, setUniformHeight] = useState<UniformHeight>(UniformHeights.unset)
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
@@ -252,10 +276,22 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const isMobile = useIsMobile()
 
   const collectionNfts = useMemo(() => {
-    if (!collectionAssets || !AssetsFetchSuccess) return undefined
+    if (
+      (isNftGraphQl && !nftQueryAssets && !isLoadingNext) ||
+      (!isNftGraphQl && !collectionAssets) ||
+      !AssetsFetchSuccess
+    )
+      return undefined
 
-    return collectionAssets.pages.flat()
-  }, [collectionAssets, AssetsFetchSuccess])
+    return isNftGraphQl ? nftQueryAssets : collectionAssets?.pages.flat()
+  }, [AssetsFetchSuccess, collectionAssets, isLoadingNext, isNftGraphQl, nftQueryAssets])
+
+  const wrappedLoadingState = isNftGraphQl ? isLoadingNext : isLoading
+  const wrappedHasNext = isNftGraphQl ? hasNext : hasNextPage ?? false
+
+  useEffect(() => {
+    setIsCollectionNftsLoading(wrappedLoadingState)
+  }, [wrappedLoadingState, setIsCollectionNftsLoading])
 
   const hasRarity = getRarityStatus(rarityStatusCache, collectionStats?.address, collectionNfts)
 
@@ -503,12 +539,12 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         </Box>
       </AnimatedBox>
       <InfiniteScroll
-        next={fetchNextPage}
-        hasMore={hasNextPage ?? false}
-        loader={hasNextPage && hasNfts ? loadingAssets : null}
+        next={() => (isNftGraphQl ? loadNext(DEFAULT_ASSET_QUERY_AMOUNT) : fetchNextPage())}
+        hasMore={wrappedHasNext}
+        loader={wrappedHasNext && hasNfts ? loadingAssets : null}
         dataLength={collectionNfts?.length ?? 0}
         style={{ overflow: 'unset' }}
-        className={hasNfts || isLoading ? styles.assetList : undefined}
+        className={hasNfts || wrappedLoadingState ? styles.assetList : undefined}
       >
         {hasNfts ? (
           Nfts
