@@ -83,12 +83,12 @@ const AddressTextLink = styled.a`
   word-wrap: break-word;
 
   &:hover {
-    opacity: 0.6;
+    opacity: ${({ theme }) => theme.opacity.hover};
     transition: ${({
       theme: {
         transition: { duration, timing },
       },
-    }) => css`opacity ${duration.medium} ${timing.ease}`};
+    }) => `opacity ${duration.medium} ${timing.ease}`};
   }
 `
 

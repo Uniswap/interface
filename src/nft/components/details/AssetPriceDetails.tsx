@@ -6,7 +6,7 @@ import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLef
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Upload } from 'react-feather'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 import { shortenAddress } from 'nft/utils/address'
 
@@ -66,7 +66,7 @@ const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccen
       theme: {
         transition: { duration, timing },
       },
-    }) => css`background-color ${duration.medium} ${timing.ease}`};
+    }) => `background-color ${duration.medium} ${timing.ease}`};
   }
 `
 
@@ -109,6 +109,16 @@ const Erc1155ChangeButton = styled(Erc1155BuyNowText)<{ remove: boolean }>`
 
 const UploadLink = styled.a`
   color: ${({ theme }) => theme.textSecondary};
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
 `
 
 const NotForSaleContainer = styled.div`
