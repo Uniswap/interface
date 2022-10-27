@@ -412,7 +412,7 @@ export const colorsLight: Palette = {
 
   accentAction: colors.pink400,
   accentActive: colors.blue400,
-  accentSuccess: colors.lime300,
+  accentSuccess: colors.green300,
   accentWarning: colors.goldVibrant,
   accentCritical: colors.red400,
 
@@ -472,7 +472,7 @@ export const colorsDark: Palette = {
 
   accentAction: colors.pink400,
   accentActive: colors.blue400,
-  accentSuccess: colors.lime300,
+  accentSuccess: colors.green300,
   accentWarning: colors.goldVibrant,
   accentCritical: colors.red400,
 

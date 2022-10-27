@@ -14,7 +14,7 @@ exports[`renders a relative change 1`] = `
   }
 >
   <svg
-    color="#7BB10C"
+    color="#40B66B"
     data-file-name="SvgArrowDown"
     height={16}
     strokeWidth={2}
@@ -77,7 +77,7 @@ exports[`renders placeholders with absolute change 1`] = `
   }
 >
   <svg
-    color="#7BB10C"
+    color="#40B66B"
     data-file-name="SvgArrowDown"
     height={16}
     strokeWidth={2}
