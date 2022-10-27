@@ -45,7 +45,7 @@ const collectionQuery = graphql`
               listings
             }
           }
-          markets(currencies: USD) {
+          markets(currencies: ETH) {
             floorPrice {
               currency
               value
@@ -56,7 +56,7 @@ const collectionQuery = graphql`
               currency
             }
             listings
-            volume(duration: MAX) {
+            volume(duration: DAY) {
               value
               currency
             }
@@ -111,13 +111,13 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
       ? {
           num_owners: queryCollection?.markets[0].owners ?? undefined,
           floor_price: queryCollection?.markets[0].floorPrice?.value ?? undefined,
-          // one_day_volume: queryCollection?.markets[0].volume?.value ?? undefined, TODO add back when totalVolume does not return null
+          one_day_volume: queryCollection?.markets[0].volume?.value ?? undefined,
           one_day_change: queryCollection?.markets[0].volumePercentChange?.value ?? undefined,
           one_day_floor_change: queryCollection?.markets[0].floorPricePercentChange?.value ?? undefined,
           banner_image_url: queryCollection?.bannerImage?.url ?? undefined,
           total_supply: queryCollection?.numAssets ?? undefined,
           total_listings: queryCollection?.markets[0].listings ?? undefined,
-          total_volume: queryCollection?.markets[0].volume?.value ?? undefined,
+          total_volume: queryCollection?.markets[0].totalVolume?.value ?? undefined,
         }
       : undefined,
     traits,
