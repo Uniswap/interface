@@ -68,10 +68,11 @@ const BodyWrapper = styled.div`
 const HeaderWrapper = styled.div<{ scrolledState?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   background-color: ${({ theme, scrolledState }) => scrolledState && theme.backgroundSurface};
-  border: ${({ theme, scrolledState }) => scrolledState && `1px solid ${theme.backgroundOutline}`};
+  border-bottom: ${({ theme, scrolledState }) => scrolledState && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
+  transition: background-color ${({ theme }) => theme.transition.duration.fast} ease-in-out;
   top: 0;
   z-index: ${Z_INDEX.sticky};
 `
