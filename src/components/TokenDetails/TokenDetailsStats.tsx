@@ -112,7 +112,7 @@ function TokenDetailsStatsInner({
         <Flex flex={1} gap="lg">
           <Flex gap="xxs">
             <Text color="textTertiary" variant="subheadSmall">
-              {t('24h volume')}
+              {t('24h Uniswap volume')}
             </Text>
             <Text variant="bodyLarge">
               {formatNumber(tokenData?.market.volume.value, NumberType.FiatTokenStats)}
