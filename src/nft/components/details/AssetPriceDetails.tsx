@@ -19,8 +19,11 @@ interface AssetPriceDetailsProps {
 
 const Container = styled.div`
   width: 100%;
-  width: 360px;
-  position: fixed;
+
+  @media (min-width: 960px) {
+    position: fixed;
+    width: 360px;
+  }
 `
 
 const BestPriceContainer = styled.div`
