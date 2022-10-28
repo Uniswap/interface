@@ -113,18 +113,18 @@ export const addressCell = style([
 ])
 
 globalStyle(`${addressCell} a[href]`, {
-  color: `${themeVars.colors.textSecondary}`,
+  color: `${themeVars.colors.textPrimary}`,
   textDecoration: 'none',
 })
 
 globalStyle(`${addressCell} a[href]:hover`, {
-  color: `${themeVars.colors.textSecondary}`,
+  color: `${themeVars.colors.textPrimary}`,
   opacity: `${themeVars.opacity.hover}`,
   textDecoration: 'none',
 })
 
 globalStyle(`${addressCell} a[href]:active`, {
-  color: `${themeVars.colors.textSecondary}`,
+  color: `${themeVars.colors.textPrimary}`,
   opacity: `${themeVars.opacity.pressed}`,
   textDecoration: 'none',
 })
