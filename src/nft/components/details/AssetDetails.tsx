@@ -386,6 +386,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
 
   const rarity = asset.rarity ? asset.rarity?.providers[0].rank : undefined
 
+  console.log(asset)
+
   return (
     <Column>
       <MediaContainer>

@@ -23,6 +23,7 @@ const Container = styled.div`
   @media (min-width: 960px) {
     position: fixed;
     width: 360px;
+    margin-top: -6px;
   }
 `
 

@@ -79,6 +79,24 @@ const PriceContainer = styled.div`
 const Link = styled.a`
   color: ${({ theme }) => theme.textPrimary};
   text-decoration: none;
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
 `
 
 const ActivityContainer = styled.div`
