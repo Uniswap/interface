@@ -8,6 +8,7 @@ import { AppStackScreenProp } from 'src/app/navigation/types'
 import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
 import SendIcon from 'src/assets/icons/send.svg'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Suspense } from 'src/components/data/Suspense'
 import { Box, Flex } from 'src/components/layout'
@@ -20,8 +21,8 @@ import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
-import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
+import WarningIcon from 'src/components/tokens/WarningIcon'
 import { AssetType } from 'src/entities/assets'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -35,6 +36,7 @@ import { Screens } from 'src/screens/Screens'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 import { TokenDetailsScreen_headerPriceLabel$key } from 'src/screens/__generated__/TokenDetailsScreen_headerPriceLabel.graphql'
 import { flex } from 'src/styles/flex'
+import { theme } from 'src/styles/theme'
 import { currencyAddress } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
@@ -53,17 +55,35 @@ export const tokenDetailsScreenQuery = graphql`
 
 interface TokenDetailsHeaderProps {
   currency: Currency
+  tokenWarningLevel: TokenWarningLevel
+  onPressWarningIcon: () => void
 }
 
-function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
+function TokenDetailsHeader({
+  currency,
+  tokenWarningLevel,
+  onPressWarningIcon,
+}: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
-
   return (
     <Flex mx="sm">
       <CurrencyLogo currency={currency} size={36} />
-      <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="subheadLarge">
-        {currency.name ?? t('Unknown token')}
-      </Text>
+      <Flex row alignItems="center" gap="xs">
+        <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="subheadLarge">
+          {currency.name ?? t('Unknown token')}
+        </Text>
+        {/* Suppress warning icon on low warning level */}
+        {(tokenWarningLevel === TokenWarningLevel.MEDIUM ||
+          tokenWarningLevel === TokenWarningLevel.BLOCKED) && (
+          <TouchableArea onPress={onPressWarningIcon}>
+            <WarningIcon
+              height={theme.iconSizes.md}
+              tokenWarningLevel={tokenWarningLevel}
+              width={theme.imageSizes.sm}
+            />
+          </TouchableArea>
+        )}
+      </Flex>
     </Flex>
   )
 }
@@ -117,9 +137,10 @@ function HeaderTitleElement({
   )
 }
 
-enum SwapType {
+enum TransactionType {
   BUY,
   SELL,
+  SEND,
 }
 
 export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
@@ -147,18 +168,15 @@ function TokenDetails({
 }) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
-
   const data = useEagerLoadedQuery<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, preloadedQuery)
-
+  // set if attempting buy or sell, use for warning modal
+  const [activeTransactionType, setActiveTransactionType] = useState<TransactionType | undefined>(
+    undefined
+  )
+  const [showWarningModal, setShowWarningModal] = useState(false)
   const { tokenWarningLevel, tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(
     currency.wrapped
-  )
-
-  // set if attempting buy or sell, use for warning modal
-  const [activeSwapAttemptType, setActiveSwapAttemptType] = useState<SwapType | undefined>(
-    undefined
   )
 
   const initialSendState = useMemo((): TransactionState => {
@@ -176,7 +194,7 @@ function TokenDetails({
   }, [currency])
 
   const navigateToSwapBuy = useCallback(() => {
-    setActiveSwapAttemptType(undefined)
+    setActiveTransactionType(undefined)
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.OUTPUT,
       exactAmountToken: '0',
@@ -191,7 +209,7 @@ function TokenDetails({
   }, [currency, dispatch])
 
   const navigateToSwapSell = useCallback(() => {
-    setActiveSwapAttemptType(undefined)
+    setActiveTransactionType(undefined)
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
       exactAmountToken: '0',
@@ -206,15 +224,16 @@ function TokenDetails({
   }, [currency, dispatch])
 
   const onPressSwap = useCallback(
-    (swapType: SwapType) => {
+    (swapType: TransactionType.BUY | TransactionType.SELL) => {
       // show warning modal speedbump if token has a warning level and user has not dismissed
       if (tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed) {
-        setActiveSwapAttemptType(swapType)
+        setActiveTransactionType(swapType)
+        setShowWarningModal(true)
       } else {
-        if (swapType === SwapType.BUY) {
+        if (swapType === TransactionType.BUY) {
           navigateToSwapBuy()
         }
-        if (swapType === SwapType.SELL) {
+        if (swapType === TransactionType.SELL) {
           navigateToSwapSell()
         }
         return
@@ -224,8 +243,34 @@ function TokenDetails({
   )
 
   const onPressSend = useCallback(() => {
-    dispatch(openModal({ name: ModalName.Send, ...{ initialState: initialSendState } }))
-  }, [initialSendState, dispatch])
+    // show warning modal speedbump if token has a warning level and user has not dismissed
+    if (tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed) {
+      setActiveTransactionType(TransactionType.SEND)
+      setShowWarningModal(true)
+    } else {
+      dispatch(openModal({ name: ModalName.Send, ...{ initialState: initialSendState } }))
+    }
+  }, [tokenWarningLevel, tokenWarningDismissed, dispatch, initialSendState])
+
+  const onAcceptWarning = useCallback(() => {
+    warningDismissCallback()
+    setShowWarningModal(false)
+    if (activeTransactionType === TransactionType.BUY) {
+      navigateToSwapBuy()
+    } else if (activeTransactionType === TransactionType.SELL) {
+      navigateToSwapSell()
+    } else if (activeTransactionType === TransactionType.SEND) {
+      navigateToSwapSell()
+      dispatch(openModal({ name: ModalName.Send, ...{ initialState: initialSendState } }))
+    }
+  }, [
+    activeTransactionType,
+    dispatch,
+    initialSendState,
+    navigateToSwapBuy,
+    navigateToSwapSell,
+    warningDismissCallback,
+  ])
 
   return (
     <Box flex={1} mb="md">
@@ -240,10 +285,13 @@ function TokenDetails({
         }>
         <Flex gap="xl" my="md">
           <Flex gap="xxs">
-            <TokenDetailsHeader currency={currency} />
+            <TokenDetailsHeader
+              currency={currency}
+              tokenWarningLevel={tokenWarningLevel}
+              onPressWarningIcon={() => setShowWarningModal(true)}
+            />
             <CurrencyPriceChart currency={currency} />
           </Flex>
-
           <Flex gap="lg">
             <TokenBalances
               currentChainBalance={currentChainBalance}
@@ -255,17 +303,10 @@ function TokenDetails({
                 token={data?.tokens?.[0]}
                 tokenProject={data?.tokenProjects?.[0]}
               />
-              {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
-                <TokenWarningCard
-                  tokenWarningLevel={tokenWarningLevel}
-                  onDismiss={warningDismissCallback}
-                />
-              )}
             </Flex>
           </Flex>
         </Flex>
       </HeaderScrollScreen>
-
       <Flex
         row
         bg="background0"
@@ -277,10 +318,11 @@ function TokenDetails({
         px="lg">
         <Button
           fill
-          disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}
           label={t('Swap')}
           size={ButtonSize.Large}
-          onPress={() => onPressSwap(currentChainBalance ? SwapType.SELL : SwapType.BUY)}
+          onPress={() =>
+            onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
+          }
         />
         {currentChainBalance && (
           <Button
@@ -292,16 +334,17 @@ function TokenDetails({
           />
         )}
       </Flex>
-
-      {activeSwapAttemptType === SwapType.BUY || activeSwapAttemptType === SwapType.SELL ? (
-        <TokenWarningModal
-          isVisible
-          currency={currency}
-          tokenWarningLevel={tokenWarningLevel}
-          onAccept={activeSwapAttemptType === SwapType.BUY ? navigateToSwapBuy : navigateToSwapSell}
-          onClose={() => setActiveSwapAttemptType(undefined)}
-        />
-      ) : null}
+      <TokenWarningModal
+        currency={currency}
+        disableAccept={!activeTransactionType || tokenWarningLevel === TokenWarningLevel.BLOCKED}
+        isVisible={showWarningModal}
+        tokenWarningLevel={tokenWarningLevel}
+        onAccept={onAcceptWarning}
+        onClose={() => {
+          setActiveTransactionType(undefined)
+          setShowWarningModal(false)
+        }}
+      />
     </Box>
   )
 }

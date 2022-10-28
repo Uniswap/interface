@@ -23,3 +23,6 @@ function getUniswapGasServiceUrl() {
 function getUniswapGraphQLUrl() {
   return `${config.uniswapApiBaseUrl}/v1/graphql`
 }
+
+export const TOKEN_WARNING_HELP_PAGE_URL =
+  'https://support.uniswap.org/hc/en-us/articles/8723118437133-What-are-token-warnings-'

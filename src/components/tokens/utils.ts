@@ -8,6 +8,6 @@ export function getTokenWarningHeaderText(tokenWarningLevel: TokenWarningLevel, 
     case TokenWarningLevel.MEDIUM:
       return t('Warning')
     case TokenWarningLevel.BLOCKED:
-      return t('Blocked')
+      return t('Not available')
   }
 }
