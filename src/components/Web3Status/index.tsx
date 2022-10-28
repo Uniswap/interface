@@ -40,6 +40,7 @@ const Web3StatusGeneric = styled(ButtonOutlined)`
   align-items: center;
   padding: 0.35rem;
   border-radius: 10px;
+  border-width: 0 !important;
   cursor: pointer;
   user-select: none;
   :focus {
@@ -58,35 +59,32 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric) <{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.primary4};
+  background: ${({ theme }) => theme.primary5};
   border: none;
-
+  padding: 7px;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
 
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-    color: ${({ theme }) => theme.primaryText1};
+    border: none !Important;
+    background-color: ${({ theme }) => darken(0.05, theme.primary5)};
+    box-shadow: none;
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.primary5};
-      border: 1px solid ${({ theme }) => theme.primary5};
       color: ${({ theme }) => theme.primaryText1};
 
       :hover,
       :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
         color: ${({ theme }) => darken(0.05, theme.primaryText1)};
       }
     `}
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric) <{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
   :before {
     content: '';
     position: absolute;

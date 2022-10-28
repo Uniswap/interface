@@ -139,20 +139,20 @@ const useIntervalAsync = (fn: () => Promise<unknown>, ms: number) => {
     const timeout = useRef<number>();
     const mountedRef = useRef(false);
     const run = useCallback(async () => {
-      await fn();
-      if (mountedRef.current) {
-        timeout.current = window.setTimeout(run, ms);
-      }
+        await fn();
+        if (mountedRef.current) {
+            timeout.current = window.setTimeout(run, ms);
+        }
     }, [fn, ms]);
     useEffect(() => {
-      mountedRef.current = true;
-      run();
-    return () => {
-        mountedRef.current = false;
-        window.clearTimeout(timeout.current);
-      };
+        mountedRef.current = true;
+        run();
+        return () => {
+            mountedRef.current = false;
+            window.clearTimeout(timeout.current);
+        };
     }, [run]);
-  };
+};
 export const useDexscreenerToken = (address?: string) => {
     const [data, setData] = React.useState<Pair>()
 
@@ -166,7 +166,7 @@ export const useDexscreenerToken = (address?: string) => {
             setData(dataSet)
         }
     }, [address])
-    
+
     useIntervalAsync(getData, 15000)
 
     if (!address) return
@@ -697,7 +697,7 @@ export const Chart = () => {
                     </>}
 
                     {accessDenied === false && view === 'chart' && (
-                        <div style={{ display: 'block'}}>
+                        <div style={{ display: 'block' }}>
                             {/* Loading Transaction data for either chain */}
                             {(!isBinance && transactionData?.loading) ||
                                 (isBinance && binanceTransactionData.loading) && (

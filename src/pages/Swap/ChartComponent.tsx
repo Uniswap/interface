@@ -51,11 +51,10 @@ export const ChartComponent = (props: ChartProps) => {
     return `https://dexscreener.com/${network}/${toChecksum(pairAddress)}?embed=1&trades=0&info=0`
   }, [chainId, networkProvided, pairAddress])
 
-  const darkMode = useIsDarkMode()
   const theme = useTheme()
   const [isMaxxed, setIsMaxxed] = React.useState(false)
-  const heightForChart = !isMaxxed ? (height ? height : 410) : '100vh'
-  const changeFn = ( newMaxxed: boolean ) => setIsMaxxed(newMaxxed)
+  const heightForChart = !isMaxxed ? (height ? height : 500) : '100vh'
+  const changeFn = (newMaxxed: boolean) => setIsMaxxed(newMaxxed)
   if (!pairAddress) {
     return (
       <div style={{ color: theme.text1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
@@ -65,14 +64,15 @@ export const ChartComponent = (props: ChartProps) => {
     )
   }
 
-
   return (
     <FullScreenWrapper onMaxChange={changeFn} childrenFn={({ isMaxxed, ref, onRequest, onExit, isEnabled, onToggle, }) => (
       <Wrapper ref={ref} style={{ overflow: 'hidden', height: heightForChart }}>
         <div style={{ height: 0, width: '100%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          {FullScreenIcon(isMaxxed, isEnabled, onToggle, onRequest, onExit, {position:'relative', color: '#ccc', top: 20, right: 100})}
+          {FullScreenIcon(isMaxxed, isEnabled, onToggle, onRequest, onExit, {
+            position: 'relative', color: '#ccc', top: 20, right: 88
+          })}
         </div>
-        <iframe src={chartURL} style={{ zIndex: 1, background: 'transparent', border: '1px solid transparent', height: (typeof heightForChart == 'number' ? heightForChart + 40 : '105vh'), borderRadius: 4, width: '100%' }} />
+        <iframe src={chartURL} style={{ zIndex: 1, background: 'transparent', border: '1px solid transparent', height: (typeof heightForChart == 'number' ? heightForChart + 40 : 'calc(100vh + 40px)'), borderRadius: 4, width: '100%' }} />
       </Wrapper>
     )} />
   );

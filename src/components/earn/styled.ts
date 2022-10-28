@@ -5,7 +5,7 @@ import uImage from '../../assets/images/big_unicorn.png'
 import xlUnicorn from '../../assets/images/xl_uni.png'
 import noise from '../../assets/images/noise.png'
 
-export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
+export const DataCard = styled(AutoColumn) <{ disabled?: boolean }>`
   background: #252632;
   border-radius: 12px;
   width: 100%;
@@ -37,7 +37,6 @@ export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
   left: -300px;
   opacity: 0.4;
   user-select: none;
-
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}
 `
 
@@ -55,8 +54,14 @@ export const CardNoise = styled.span`
   user-select: none;
 `
 
-export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`
+export const CardSection = styled(AutoColumn) <{ disabled?: boolean }>`
   padding: 1rem;
+  z-index: 1;
+  opacity: ${({ disabled }) => disabled && '0.4'};
+`
+
+export const ChartWrapper = styled(AutoColumn) <{ disabled?: boolean }>`
+  padding: 0 1rem;
   z-index: 1;
   opacity: ${({ disabled }) => disabled && '0.4'};
 `
