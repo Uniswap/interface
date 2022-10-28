@@ -101,7 +101,7 @@ export const eventTime = style([
 ])
 
 export const addressCell = style([
-  subhead,
+  buttonTextMedium,
   sprinkles({
     color: 'textPrimary',
     height: 'full',
@@ -123,7 +123,7 @@ globalStyle(`${addressCell} a[href]:hover`, {
   textDecoration: 'none',
 })
 
-globalStyle(`${addressCell} a[href]:active`, {
+globalStyle(`${addressCell} a[href]:focus`, {
   color: `${themeVars.colors.textPrimary}`,
   opacity: `${themeVars.opacity.pressed}`,
   textDecoration: 'none',

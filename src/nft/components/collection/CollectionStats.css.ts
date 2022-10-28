@@ -78,7 +78,7 @@ globalStyle(`${description} a[href]:hover`, {
   textDecoration: 'none',
 })
 
-globalStyle(`${description} a[href]:active`, {
+globalStyle(`${description} a[href]:focus`, {
   color: `${themeVars.colors.textSecondary}`,
   opacity: `${themeVars.opacity.pressed}`,
   textDecoration: 'none',
