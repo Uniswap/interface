@@ -1,12 +1,14 @@
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
-import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
+import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
+import { checkWarning } from 'constants/tokenSafety'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
 import { FungibleToken, GenieCollection } from 'nft/types'
@@ -181,7 +183,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            {token.onDefaultList && <VerifiedIcon className={styles.suggestionIcon} />}
+            <TokenSafetyIcon warning={checkWarning(token.address)} />
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>

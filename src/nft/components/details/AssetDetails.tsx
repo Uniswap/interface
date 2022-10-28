@@ -14,6 +14,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
 import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
+import { useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
@@ -27,6 +28,7 @@ import ReactMarkdown from 'react-markdown'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 
+import { SUSPICIOUS_TEXT } from '../collection/Card'
 import * as styles from './AssetDetails.css'
 
 const AudioPlayer = ({
@@ -112,8 +114,8 @@ interface AssetDetailsProps {
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const [creatorAddress, setCreatorAddress] = useState('')
@@ -174,6 +176,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       }).then(setIsOwned)
     }
   }, [asset, address, provider])
+
+  const USDPrice = useUsdPrice(asset)
 
   return (
     <AnimatedBox
@@ -269,9 +273,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               </Row>
             </Row>
             <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={headlineMedium}>
-              {asset.openseaSusFlag && (
+              {asset.susFlag && (
                 <Box marginTop="8">
-                  <MouseoverTooltip text={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}>
+                  <MouseoverTooltip text={<Box fontWeight="normal">{SUSPICIOUS_TEXT}</Box>}>
                     <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />
                   </MouseoverTooltip>
                 </Box>
@@ -365,9 +369,11 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                   <Row as="span" className={subhead} color="textPrimary">
                     {formatEthPrice(asset.priceInfo.ETHPrice)} <Eth2Icon />
                   </Row>
-                  <Box as="span" color="textSecondary" className={bodySmall}>
-                    ${toSignificant(asset.priceInfo.USDPrice)}
-                  </Box>
+                  {USDPrice && (
+                    <Box as="span" color="textSecondary" className={bodySmall}>
+                      ${toSignificant(USDPrice)}
+                    </Box>
+                  )}
                 </Row>
                 {asset.sellorders?.[0].orderClosingDate ? <CountdownTimer sellOrder={asset.sellorders[0]} /> : null}
               </Column>
@@ -387,8 +393,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 boxShadow={{ hover: 'elevation' }}
                 onClick={() => {
                   if (isSelected) {
-                    removeAssetFromBag(asset)
-                  } else addAssetToBag(asset)
+                    removeAssetsFromBag([asset])
+                  } else addAssetsToBag([asset])
                   setSelected((x) => !x)
                 }}
               >
@@ -412,7 +418,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               tokenId={asset.tokenId}
               tokenType={asset.tokenType}
               blockchain="Ethereum"
-              metadataUrl={asset.externalLink}
+              metadataUrl={asset.metadataUrl}
               totalSupply={collection.totalSupply}
             />
           )}

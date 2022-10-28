@@ -6,11 +6,9 @@ import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
-import { Center, Column } from 'nft/components/Flex'
-import { LargeBagIcon, LargeTagIcon } from 'nft/components/icons'
+import { Column } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
-import { buttonTextMedium, commonButtonStyles, subhead } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
+import { buttonTextMedium, commonButtonStyles } from 'nft/css/common.css'
 import {
   useBag,
   useIsMobile,
@@ -34,38 +32,8 @@ import { useLocation } from 'react-router-dom'
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
+import EmptyState from './EmptyContent'
 import { ProfileBagContent } from './profile/ProfileBagContent'
-
-const EmptyState = () => {
-  const { pathname } = useLocation()
-  const isProfilePage = pathname.startsWith('/profile')
-
-  return (
-    <Center height="full">
-      <Column gap={isProfilePage ? '16' : '12'}>
-        <Center>
-          {isProfilePage ? (
-            <LargeTagIcon color={themeVars.colors.textTertiary} />
-          ) : (
-            <LargeBagIcon color={themeVars.colors.textTertiary} />
-          )}
-        </Center>
-        {isProfilePage ? (
-          <span className={subhead}>No NFTs Selected</span>
-        ) : (
-          <Column gap="16">
-            <Center className={subhead} style={{ lineHeight: '24px' }}>
-              Your bag is empty
-            </Center>
-            <Center fontSize="12" fontWeight="normal" color="textSecondary" style={{ lineHeight: '16px' }}>
-              Selected NFTs will appear here
-            </Center>
-          </Column>
-        )}
-      </Column>
-    </Center>
-  )
-}
 
 interface SeparatorProps {
   top?: boolean
@@ -155,11 +123,9 @@ const Bag = () => {
     return { totalEthPrice, totalUsdPrice }
   }, [itemsInBag, fetchedPriceData])
 
-  const { balance, sufficientBalance } = useMemo(() => {
-    const balance: BigNumber = parseEther(balanceInEth.toString())
-    const sufficientBalance = isConnected ? BigNumber.from(balance).gte(totalEthPrice) : true
-
-    return { balance, sufficientBalance }
+  const sufficientBalance = useMemo(() => {
+    const balance = parseEther(balanceInEth.toString())
+    return isConnected ? BigNumber.from(balance).gte(totalEthPrice) : true
   }, [balanceInEth, totalEthPrice, isConnected])
 
   const purchaseAssets = async (routingData: RouteResponse) => {
@@ -282,6 +248,13 @@ const Bag = () => {
     setScrollProgress(scrollTop ? ((scrollTop + containerHeight) / scrollHeight) * 100 : 0)
   }
 
+  const isBuyingAssets = itemsInBag.length > 0
+  const isSellingAssets = sellAssets.length > 0
+
+  const shouldRenderEmptyState = Boolean(
+    (!isProfilePage && !isBuyingAssets && bagStatus === BagStatus.ADDING_TO_BAG) || (isProfilePage && !isSellingAssets)
+  )
+
   return (
     <>
       {bagExpanded && shouldShowBag ? (
@@ -295,8 +268,7 @@ const Bag = () => {
                   resetFlow={isProfilePage ? resetSellAssets : reset}
                   isProfilePage={isProfilePage}
                 />
-                {(!isProfilePage && itemsInBag.length === 0 && bagStatus === BagStatus.ADDING_TO_BAG) ||
-                  (isProfilePage && sellAssets.length === 0 && <EmptyState />)}
+                {shouldRenderEmptyState && <EmptyState />}
                 <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
                 <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
                   {isProfilePage ? <ProfileBagContent /> : <BagContent />}
@@ -304,7 +276,6 @@ const Bag = () => {
                 <ScrollingIndicator show={userCanScroll && scrollProgress < 100} />
                 {hasAssetsToShow && !isProfilePage && (
                   <BagFooter
-                    balance={balance}
                     sufficientBalance={sufficientBalance}
                     isConnected={isConnected}
                     totalEthPrice={totalEthPrice}
@@ -314,7 +285,7 @@ const Bag = () => {
                     assetsAreInReview={itemsInBag.some((item) => item.status === BagItemStatus.REVIEWING_PRICE_CHANGE)}
                   />
                 )}
-                {sellAssets.length !== 0 && isProfilePage && (
+                {isSellingAssets && isProfilePage && (
                   <Box
                     marginTop="32"
                     marginX="28"

@@ -31,8 +31,8 @@ export const CollectionAsset = ({
   setCurrentTokenPlayingMedia,
   rarityVerified,
 }: CollectionAssetProps) => {
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const toggleBag = useBag((state) => state.toggleBag)
@@ -52,7 +52,7 @@ export const CollectionAsset = ({
     let notForSale = true
     let assetMediaType = AssetMediaType.Image
 
-    notForSale = asset.notForSale || BigNumber.from(asset.currentEthPrice ? asset.currentEthPrice : 0).lt(0)
+    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo.ETHPrice ? asset.priceInfo.ETHPrice : 0).lt(0)
     if (isAudio(asset.animationUrl)) {
       assetMediaType = AssetMediaType.Audio
     } else if (isVideo(asset.animationUrl)) {
@@ -96,7 +96,7 @@ export const CollectionAsset = ({
           <Card.PrimaryRow>
             <Card.PrimaryDetails>
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
-              {asset.openseaSusFlag && <Card.Suspicious />}
+              {asset.susFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
             {asset.rarity && provider && provider.rank && (
               <Card.Ranking
@@ -110,7 +110,7 @@ export const CollectionAsset = ({
           <Card.SecondaryRow>
             <Card.SecondaryDetails>
               <Card.SecondaryInfo>
-                {notForSale ? '' : `${formatWeiToDecimal(asset.currentEthPrice, true)} ETH`}
+                {notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`}
               </Card.SecondaryInfo>
               {(asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) && <Card.Pool />}
             </Card.SecondaryDetails>
@@ -124,12 +124,12 @@ export const CollectionAsset = ({
           selectedChildren={'Remove'}
           onClick={(e: MouseEvent) => {
             e.preventDefault()
-            addAssetToBag(asset)
+            addAssetsToBag([asset])
             !bagExpanded && !isMobile && toggleBag()
           }}
           onSelectedClick={(e: MouseEvent) => {
             e.preventDefault()
-            removeAssetFromBag(asset)
+            removeAssetsFromBag([asset])
           }}
         >
           {'Buy now'}

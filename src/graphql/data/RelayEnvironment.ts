@@ -1,6 +1,6 @@
 import ms from 'ms.macro'
 import { Variables } from 'react-relay'
-import { CacheConfig, Environment, Network, RecordSource, RequestParameters, Store } from 'relay-runtime'
+import { Environment, Network, RecordSource, RequestParameters, Store } from 'relay-runtime'
 import RelayQueryResponseCache from 'relay-runtime/lib/network/RelayQueryResponseCache'
 
 import fetchGraphQL from './fetchGraphQL'
@@ -10,17 +10,13 @@ const size = 250
 const ttl = ms`5m`
 export const cache = new RelayQueryResponseCache({ size, ttl })
 
-const fetchQuery = async function wrappedFetchQuery(
-  params: RequestParameters,
-  variables: Variables,
-  cacheConfig: CacheConfig
-) {
+const fetchQuery = async function wrappedFetchQuery(params: RequestParameters, variables: Variables) {
   const queryID = params.name
   const cachedData = cache.get(queryID, variables)
 
   if (cachedData !== null) return cachedData
 
-  return fetchGraphQL(params, variables, cacheConfig).then((data) => {
+  return fetchGraphQL(params, variables).then((data) => {
     if (params.operationKind !== 'mutation') {
       cache.set(queryID, variables, data)
     }

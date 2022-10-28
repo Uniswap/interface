@@ -14,14 +14,15 @@ export const CollectionSearch = () => {
     <Box
       as="input"
       borderColor={{ default: 'backgroundOutline', focus: 'genieBlue' }}
-      borderWidth="1px"
+      borderWidth="1.5px"
       borderStyle="solid"
       borderRadius="12"
       padding="12"
       backgroundColor="backgroundSurface"
+      width="332"
       fontSize="16"
       height="44"
-      color={{ placeholder: 'textSecondary', default: 'textPrimary' }}
+      color={{ placeholder: 'textTertiary', default: 'textPrimary' }}
       value={searchByNameText}
       placeholder={iscollectionStatsLoading ? '' : 'Search by name'}
       className={clsx(iscollectionStatsLoading && styles.filterButtonLoading)}

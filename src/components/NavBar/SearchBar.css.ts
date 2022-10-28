@@ -103,8 +103,10 @@ export const suggestionImage = sprinkles({
 export const suggestionPrimaryContainer = style([
   sprinkles({
     alignItems: 'flex-start',
-    width: 'full',
   }),
+  {
+    width: '90%',
+  },
 ])
 
 export const suggestionSecondaryContainer = sprinkles({
