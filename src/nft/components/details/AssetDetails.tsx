@@ -31,7 +31,6 @@ import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { reduceFilters } from '../collection/Activity'
 import * as activityStyles from 'nft/components/collection/Activity.css'
 
-import { SUSPICIOUS_TEXT } from '../collection/Card'
 import * as styles from './AssetDetails.css'
 import { shortenAddress } from 'utils'
 
@@ -64,7 +63,6 @@ const AssetHeader = styled.div`
 const MediaContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
 `
 
 const Column = styled.div`
@@ -92,17 +90,25 @@ const AddressTextLink = styled.a`
       },
     }) => `opacity ${duration.medium} ${timing.ease}`};
   }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
 `
 
 const DescriptionText = styled.div`
   margin-top: 8px;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 20px;
 `
 
 const RarityWrap = styled.span`
   display: flex;
-  background-color: ${({ theme }) => theme.backgroundInteractive};
   color: ${({ theme }) => theme.textPrimary};
   padding: 2px 4px;
   border-radius: 4px;
@@ -128,6 +134,15 @@ const Link = styled.a`
   line-height: 16px;
   margin-top: 12px;
   cursor: pointer;
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
 `
 
 const ActivitySelectContainer = styled.div`
@@ -140,10 +155,6 @@ const ActivitySelectContainer = styled.div`
     grid-template-columns: 1fr 1fr;
   }
 `
-
-// borderWidth: '1px',
-// borderStyle: 'solid',
-// borderColor: 'genieBlue',
 
 const FilterBox = styled.div<{ isActive?: boolean }>`
   max-width: 150;
@@ -336,7 +347,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             .map((key) => key as ActivityEventType),
         },
         pageParam,
-        '5'
+        '25'
       )
     },
     {
@@ -383,7 +394,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             className={styles.image}
             src={asset.imageUrl}
             alt={asset.name || collection.collectionName}
-            style={{ boxShadow: `0px 4px 4px 0px #00000040` }}
+            style={{ boxShadow: `0px 4px 4px 0px #00000040`, backgroundColor: 'white' }}
           />
         ) : (
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
@@ -414,32 +425,32 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         primaryHeader="Activity"
         secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
       >
-        {eventsData && eventsData.events?.length > 0 ? (
-          <>
-            <ActivitySelectContainer>
-              <Filter eventType={ActivityEventType.Listing} />
-              <Filter eventType={ActivityEventType.Sale} />
-              <Filter eventType={ActivityEventType.Transfer} />
-              <Filter eventType={ActivityEventType.CancelListing} />
-            </ActivitySelectContainer>
-
+        <>
+          <ActivitySelectContainer>
+            <Filter eventType={ActivityEventType.Listing} />
+            <Filter eventType={ActivityEventType.Sale} />
+            <Filter eventType={ActivityEventType.Transfer} />
+            <Filter eventType={ActivityEventType.CancelListing} />
+          </ActivitySelectContainer>
+          {eventsData && eventsData.events?.length > 0 ? (
             <AssetActivity eventsData={eventsData} />
-          </>
-        ) : (
-          <EmptyActivitiesContainer>
-            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-              <div>No activities yet</div>
-              <Link href={`#/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
-            </div>
-          </EmptyActivitiesContainer>
-        )}
+          ) : (
+            <EmptyActivitiesContainer>
+              <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+                <div>No activities yet</div>
+                <Link href={`#/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
+              </div>
+            </EmptyActivitiesContainer>
+          )}
+        </>
       </InfoContainer>
 
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
         <>
-          By{' '}
+          <span style={{ fontSize: 14, lineHeight: '20px' }}>By </span>
+
           <AddressTextLink href={`https://etherscan.io/address/${asset.creator}`} target="_blank">
-            {asset.creator}
+            {shortenAddress(asset.creator)}
           </AddressTextLink>
           <DescriptionText>{collection.collectionDescription}</DescriptionText>
         </>

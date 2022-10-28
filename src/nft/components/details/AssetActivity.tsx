@@ -12,6 +12,7 @@ import { MarketplaceIcon } from '../collection/ActivityCells'
 const TR = styled.tr`
   width: 100%;
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+
   &:nth-child(1) {
     border-bottom: none;
   }
@@ -77,12 +78,34 @@ const Link = styled.a`
   text-decoration: none;
 `
 
+const ActivityContainer = styled.div`
+  max-height: 340px;
+  overflow: auto;
+
+  // Firefox scrollbar styling
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
+
+  // safari and chrome scrollbar styling
+  ::-webkit-scrollbar {
+    background: transparent;
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    margin-top: 40px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.backgroundOutline};
+    border-radius: 8px;
+  }
+`
+
 const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {
   const events = eventsData === undefined ? [] : eventsData?.events
   const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
 
   return (
-    <div>
+    <ActivityContainer>
       <Table>
         <TR>
           <TH>Event</TH>
@@ -123,7 +146,7 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
           )
         })}
       </Table>
-    </div>
+    </ActivityContainer>
   )
 }
 

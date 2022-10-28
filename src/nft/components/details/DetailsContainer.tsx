@@ -4,6 +4,7 @@ import { Copy } from 'react-feather'
 import styled from 'styled-components/macro'
 import { shortenAddress } from 'nft/utils/address'
 import useCopyClipboard from 'hooks/useCopyClipboard'
+import { putCommas } from 'nft/utils'
 
 const Details = styled.div`
   display: grid;
@@ -68,7 +69,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
   return (
     <Details>
       <GridItem
-        header="Contract Address"
+        header="Contract address"
         body={
           <Center>
             {shortenAddress(address, 2, 4)} <CopyIcon onClick={copy} size={13} />
@@ -76,9 +77,9 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
         }
       />
       <GridItem header="Token ID" body={tokenId.length > 9 ? stringShortener(tokenId) : tokenId} />
-      <GridItem header="Token Standard" body={tokenType} />
+      <GridItem header="Token standard" body={tokenType} />
       <GridItem header="Blockchain" body="Ethereum" />
-      <GridItem header="Total Supply" body={`${totalSupply}`} />
+      <GridItem header="Total supply" body={`${putCommas(totalSupply)}`} />
       <GridItem header="Creator" body={shortenAddress(creator, 2, 4)} />
     </Details>
   )

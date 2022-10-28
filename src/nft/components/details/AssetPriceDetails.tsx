@@ -63,7 +63,16 @@ const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccen
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme, assetInBag }) => (assetInBag ? theme.accentFailureSoft : theme.accentActionSoft)};
+    background-color: ${({ theme }) => theme.stateOverlayHover};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `background-color ${duration.medium} ${timing.ease}`};
+  }
+
+  &:active {
+    background-color: ${({ theme, assetInBag }) => theme.stateOverlayPressed};
     transition: ${({
       theme: {
         transition: { duration, timing },
@@ -303,7 +312,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           </HeaderRow>
           <PriceRow>
             <ThemedText.MediumHeader fontSize={'28px'} lineHeight={'36px'}>
-              {formatEthPrice(asset.priceInfo.ETHPrice)}
+              {formatEthPrice(asset.priceInfo.ETHPrice)} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight={'24px'}>

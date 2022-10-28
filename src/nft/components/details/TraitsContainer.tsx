@@ -11,7 +11,7 @@ const Grid = styled.div`
 `
 
 const GridItemContainer = styled.div`
-  background-color: ${({ theme }) => theme.backgroundModule};
+  background-color: ${({ theme }) => theme.backgroundInteractive};
   padding: 12px;
   border-radius: 12px;
 `
