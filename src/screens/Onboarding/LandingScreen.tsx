@@ -7,7 +7,6 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { UNISWAP_LOGO } from 'src/assets'
 import { Button } from 'src/components/buttons/Button'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
@@ -19,7 +18,6 @@ import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'src/features/wallet/pendingAcccountsSaga'
-import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { colors } from 'src/styles/color'
 
@@ -44,14 +42,6 @@ export function LandingScreen({ navigation }: Props) {
   const onPressImportWallet = () => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     navigation.navigate(OnboardingScreens.ImportMethod)
-  }
-
-  // Explore is no longer in spec. Keeping for dev purposes.
-  const onPressExplore = () => {
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
-    dispatch(createAccountActions.trigger())
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
-    dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
   }
 
   return (
@@ -79,22 +69,6 @@ export function LandingScreen({ navigation }: Props) {
               {t('I already have a wallet')}
             </Text>
           </TouchableArea>
-          <DevelopmentOnly>
-            <TouchableArea
-              flexDirection="row"
-              justifyContent="center"
-              name={ElementName.OnboardingExplore}
-              pt="sm"
-              testID={ElementName.OnboardingExplore}
-              onPress={onPressExplore}>
-              <Text variant="buttonLabelMicro">{t('Not ready? Try')}</Text>
-              <Text color="accentAction" variant="buttonLabelMicro">
-                {' '}
-                {t('Exploring')}{' '}
-              </Text>
-              <Text variant="buttonLabelMicro">{t('first.')}</Text>
-            </TouchableArea>
-          </DevelopmentOnly>
         </Flex>
       </Box>
     </Screen>

@@ -103,7 +103,6 @@ export const enum ElementName {
   Notifications = 'notifications',
   OK = 'ok',
   OnboardingCreateWallet = 'onboarding-create-wallet',
-  OnboardingExplore = 'onboarding-explore',
   OnboardingImportBackup = 'onboarding-import-backup',
   OnboardingImportSeedPhrase = 'onboarding-import-seed-phrase',
   OnboardingImportWallet = 'onboarding-import-wallet',
