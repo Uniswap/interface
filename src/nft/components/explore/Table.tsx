@@ -1,3 +1,4 @@
+import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
@@ -28,6 +29,7 @@ export function Table<D extends Record<string, unknown>>({
   classNames,
   ...props
 }: TableProps<D>) {
+  const { chainId } = useWeb3React()
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
     {
       columns,
@@ -99,7 +101,7 @@ export function Table<D extends Record<string, unknown>>({
             <TraceEvent
               events={[Event.onClick]}
               name={EventName.NFT_TRENDING_ROW_SELECTED}
-              properties={{ collection_address: row.original.collection.address }}
+              properties={{ collection_address: row.original.collection.address, chain_id: chainId }}
               element={ElementName.NFT_TRENDING_ROW}
               key={i}
             >
