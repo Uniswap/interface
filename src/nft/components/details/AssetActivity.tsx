@@ -82,7 +82,7 @@ const Link = styled.a`
 `
 
 const ActivityContainer = styled.div`
-  max-height: 340px;
+  max-height: 310px;
   overflow: auto;
 
   // Firefox scrollbar styling
