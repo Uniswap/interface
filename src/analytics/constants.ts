@@ -17,6 +17,7 @@ export enum EventName {
   NFT_ACTIVITY_SELECTED = 'NFT Activity Selected',
   NFT_FILTER_OPENED = 'NFT Collection Filter Opened',
   NFT_FILTER_SELECTED = 'NFT Filter Selected',
+  NFT_TRENDING_ROW_SELECTED = 'Trending Row Selected',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
   SWAP_MAX_TOKEN_AMOUNT_SELECTED = 'Swap Max Token Amount Selected',
@@ -79,6 +80,7 @@ export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
 export enum PageName {
   NFT_COLLECTION_PAGE = 'nft-collection-page',
   NFT_DETAILS_PAGE = 'nft-details-page',
+  NFT_EXPLORE_PAGE = 'nft-explore-page',
   TOKEN_DETAILS_PAGE = 'token-details',
   TOKENS_PAGE = 'tokens-page',
   POOL_PAGE = 'pool-page',
@@ -123,6 +125,7 @@ export enum ElementName {
   NFT_ACTIVITY_TAB = 'nft-activity-tab',
   NFT_FILTER_BUTTON = 'nft-filter-button',
   NFT_FILTER_OPTION = 'nft-filter-option',
+  NFT_TRENDING_ROW = 'nft-trending-row',
   PRICE_UPDATE_ACCEPT_BUTTON = 'price-update-accept-button',
   SWAP_BUTTON = 'swap-button',
   SWAP_DETAILS_DROPDOWN = 'swap-details-dropdown',
