@@ -42,6 +42,10 @@ const CarouselOverlay = styled.div<{ right?: boolean }>`
   justify-content: ${({ right }) => (right ? 'start' : 'end')};
   z-index: 1;
   cursor: pointer;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    height: 296px;
+  }
 `
 
 const IconContainer = styled.div<{ right?: boolean }>`

@@ -94,7 +94,7 @@ const Banner = () => {
             />
           ) : (
             <Carousel>
-              {collections.map((collection, index) => (
+              {collections.map((collection) => (
                 <CarouselCard
                   key={collection.address}
                   collection={collection}

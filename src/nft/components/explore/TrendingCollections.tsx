@@ -23,11 +23,28 @@ const ExploreContainer = styled.div`
   max-width: 1200px;
 `
 
+const StyledHeader = styled.div`
+  color: ${({ theme }) => theme.textPrimary};
+  font-size: 36px;
+  line-height: 44px;
+  weight: 500;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    font-size: 20px;
+    line-height: 28px;
+  }
+`
+
 const FiltersRow = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 36px;
   margin-bottom: 20px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    margin-bottom: 16px;
+    margin-top: 16px;
+  }
 `
 
 const Filter = styled.div`
@@ -113,7 +130,7 @@ const TrendingCollections = () => {
 
   return (
     <ExploreContainer>
-      <ThemedText.LargeHeader lineHeight="44px">Trending NFT collections</ThemedText.LargeHeader>
+      <StyledHeader>Trending NFT collections</StyledHeader>
       <FiltersRow>
         <Filter>
           {timeOptions.map((timeOption) => {
