@@ -43,9 +43,9 @@ export interface OpenSeaAsset {
 
 interface OpenSeaUser {
   user?: null
-  profile_img_url: string
-  address: string
-  config: string
+  profile_img_url?: string
+  address?: string
+  config?: string
 }
 
 export enum TokenType {
@@ -58,7 +58,7 @@ export enum TokenType {
 
 export interface PriceInfo {
   ETHPrice: string
-  USDPrice: string
+  USDPrice?: string
   baseAsset: string
   baseDecimals: string
   basePrice: string
@@ -79,24 +79,24 @@ export interface GenieAsset {
   id?: string // This would be a random id created and assigned by front end
   address: string
   notForSale: boolean
-  collectionName: string
-  collectionSymbol: string
-  imageUrl: string
-  animationUrl: string
+  collectionName?: string
+  collectionSymbol?: string
+  imageUrl?: string
+  animationUrl?: string
   marketplace: Markets
-  name: string
-  priceInfo: PriceInfo
-  susFlag: boolean
+  name?: string
+  priceInfo?: PriceInfo
+  susFlag?: boolean
   sellorders: SellOrder[]
-  smallImageUrl: string
+  smallImageUrl?: string
   tokenId: string
   tokenType: TokenType
   totalCount?: number // The totalCount from the query to /assets
   collectionIsVerified?: boolean
   rarity?: Rarity
-  owner: string
+  owner?: string
   creator: OpenSeaUser
-  metadataUrl: string
+  metadataUrl?: string
   traits?: {
     trait_type: string
     value: string

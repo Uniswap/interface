@@ -21,12 +21,12 @@ export interface AssetPayload {
 }
 
 export interface CollectionInfoForAsset {
-  collectionSymbol: string
-  collectionDescription: string | null
-  collectionImageUrl: string
-  collectionName: string
-  isVerified: boolean
-  totalSupply: number
+  // collectionSymbol: string //TODO deprecate
+  collectionDescription?: string | null
+  collectionImageUrl?: string
+  collectionName?: string
+  isVerified?: boolean
+  totalSupply?: number
 }
 
 export type CollectionSort = Record<
