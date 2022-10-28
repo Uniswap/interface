@@ -125,6 +125,8 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
   const events = eventsData === undefined ? [] : eventsData?.events
   const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
 
+  console.log(events)
+
   return (
     <ActivityContainer>
       <Table>
@@ -161,7 +163,7 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
                 )}
               </TD>
               <Link href={`${explorer}/address/${event.fromAddress}`} target="_blank">
-                <TD>{shortenAddress(event.fromAddress, 2, 4)}</TD>
+                <TD>{event && event.fromAddress && shortenAddress(event.fromAddress, 2, 4)}</TD>
               </Link>{' '}
               <TD>{event.toAddress && shortenAddress(event.toAddress)}</TD>
               <TD>{event.eventTimestamp && getTimeDifference(event.eventTimestamp.toString())}</TD>
