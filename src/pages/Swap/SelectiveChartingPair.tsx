@@ -3,20 +3,17 @@
 import "./transitions.css";
 
 import {
-    ArrowDownRight,
     ArrowUpRight,
-    ChevronLeft,
     Code,
     TrendingDown,
     TrendingUp,
 } from "react-feather";
 import { ButtonOutlined, ButtonSecondary } from "components/Button"
 import { Currency, Token } from "@uniswap/sdk-core";
-import { DarkCard, LightCard } from "components/Card";
+import { DarkCard } from "components/Card";
 import { EmbedModel, useIsEmbedMode } from "components/Header";
 import React, { useEffect, useState } from "react";
-import { StyledInternalLink, TYPE } from "theme";
-import { darken, lighten } from "polished";
+import { TYPE } from "theme";
 import styled, { useTheme } from "styled-components/macro";
 import {
     toChecksum,
@@ -33,7 +30,7 @@ import { useIsDarkMode, useUserChartHistoryManager } from "state/user/hooks";
 import { useLocation, useParams } from "react-router";
 
 import BarChartLoaderSVG from "components/swap/BarChartLoader";
-import { CardSection } from "components/earn/styled";
+import { ChartWrapper } from "components/earn/styled";
 import { ChartComponent } from "./ChartComponent";
 import { ChartSearchModal } from "pages/Charts/ChartSearchModal";
 import { ChartSidebar } from "components/ChartSidebar";
@@ -41,21 +38,17 @@ import { LoadingSkeleton } from "pages/Pool/styleds";
 import { PageMeta } from "./PageMeta";
 import ReactGA from "react-ga";
 import { RecentlyViewedCharts } from "./RecentViewedCharts";
-import { Redirect } from "./redirects";
 import { SelectiveChartEmbedModal } from './SelectiveChartEmbed'
-import { SelectiveChartWithPairBsc } from "./SelectiveChartingPairBsc";
 import Swal from 'sweetalert2'
 import { TableQuery } from "./TableQuery";
 import TokenSocials from "./TokenSocials";
 import { TokenStats } from "./TokenStats";
 import { TopTokenHolders } from "components/TopTokenHolders/TopTokenHolders";
 import _ from "lodash";
-import { isAddress } from "utils";
 import { useBuySellTax } from "pages/Charts/hooks";
 import { useConvertTokenAmountToUsdString } from "pages/Vote/VotePage";
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useHistory } from "react-router-dom";
-import useLast from "hooks/useLast";
 import { useTokenBalance } from "state/wallet/hooks";
 import { useWeb3React } from "@web3-react/core";
 
@@ -98,12 +91,6 @@ const StyledDiv = styled.div<{ isMobile?: boolean }>`
   flex-flow: ${(props) => (props.isMobile ? "column wrap" : "row wrap")};
 `;
 
-const BackLink = styled(StyledDiv)`
-  &:hover {
-    color: ${props => lighten(0.2, props.theme.text1)};
-  }
-`;
-
 const WrapperCard = styled(DarkCard) <{ embedModel: EmbedModel, darkMode?: boolean, gridTemplateColumns: string, isMobile: boolean }>`
   background: ${props => props.darkMode ? props.theme.chartBgDark : !props.darkMode ? props.theme.chartBgLight : props.theme.chartTableBg};
   max-width: 100%;
@@ -141,12 +128,12 @@ export const SelectiveChartWithPair = () => {
     } as Token), [pairedTokens?.data?.token0])
     const theAddress = React.useMemo(() => {
         return screenerPair?.baseToken?.address ?
-        screenerPair?.baseToken?.address :
-        fallbackFromPair?.address
+            screenerPair?.baseToken?.address :
+            fallbackFromPair?.address
     }, [screenerPair, fallbackFromPair])
-    const mainnetCurrency = useCurrency (
-         theAddress
-    ) 
+    const mainnetCurrency = useCurrency(
+        theAddress
+    )
     const bscTransactionData = useBscTokenTransactions(
         params?.network == 'bsc' ? screenerPair?.baseToken?.address || '' : '',
         network,
@@ -155,7 +142,7 @@ export const SelectiveChartWithPair = () => {
     )
     const prebuiltCurrency = React.useMemo(
         () => mainnetCurrency ? mainnetCurrency : fallbackFromPair,
-        [mainnetCurrency,fallbackFromPair]
+        [mainnetCurrency, fallbackFromPair]
     );
     const tokenAddressSupplied = React.useMemo(
         () =>
@@ -407,12 +394,12 @@ export const SelectiveChartWithPair = () => {
     const LogoMemo = React.useMemo(() => {
         return Boolean(!!hasSelectedData) ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 20, justifyContent: 'space-between' }}>
-                {network == 'ethereum' && ethPrice && 
+                {network == 'ethereum' && ethPrice &&
                     <TYPE.small fontSize={12}>
-                        <Badge>ETH ${parseFloat(parseFloat(ethPrice.toString()).toFixed(2)).toLocaleString()}</Badge> 
+                        <Badge>ETH ${parseFloat(parseFloat(ethPrice.toString()).toFixed(2)).toLocaleString()}</Badge>
                     </TYPE.small>
                 }
-                {network === 'bsc' && prices && prices.current && 
+                {network === 'bsc' && prices && prices.current &&
                     <TYPE.small fontSize={12}>
                         <Badge>BNB ${parseFloat(parseFloat(prices?.current.toString()).toFixed(2)).toLocaleString()}</Badge>
                     </TYPE.small>
@@ -437,7 +424,7 @@ export const SelectiveChartWithPair = () => {
                             currency1={mainnetCurrency ? mainnetCurrency : fallbackFromPair}
                         />
                     )}
-                    {network === 'bsc' && 
+                    {network === 'bsc' &&
                         <Badge style={{ marginLeft: 3, marginRight: 3 }}>
                             <TYPE.italic>{screenerPair?.baseToken?.symbol}/{screenerPair?.quoteToken?.symbol}</TYPE.italic>
                         </Badge>
@@ -651,7 +638,7 @@ export const SelectiveChartWithPair = () => {
                         maxWidth: `100%`
                     }}
                 >
-                    <CardSection style={{ padding: isMobile ? 0 : "" }}>
+                    <ChartWrapper>
                         <StyledDiv
                             isMobile={isMobile}
                             style={{
@@ -660,8 +647,6 @@ export const SelectiveChartWithPair = () => {
                                     : !isMobile
                                         ? "space-between"
                                         : "",
-                                paddingBottom: 2,
-                                marginTop: 10,
                                 marginBottom: 5,
                             }}
                         >
@@ -673,7 +658,9 @@ export const SelectiveChartWithPair = () => {
                             >
                                 {!loadingNewData && (
                                     <>
-                                        <ButtonOutlined padding={`3px`} style={{ padding: '3px !important', marginRight: 16 }} size={'sm'} onClick={shareClick}>Share</ButtonOutlined>
+                                        <ButtonOutlined padding={`3px`} style={{ padding: '3px !important', marginRight: 16 }} size={'sm'} onClick={shareClick}>
+                                            Share
+                                        </ButtonOutlined>
                                     </>
                                 )}
                             </span>
@@ -750,7 +737,6 @@ export const SelectiveChartWithPair = () => {
                             {Boolean(!hasSelectedData && userChartHistory.length) && (
                                 <RecentlyViewedCharts />
                             )}
-
                         </StyledDiv>
 
                         {loadingNewData ? (
@@ -778,7 +764,6 @@ export const SelectiveChartWithPair = () => {
                                     ) ? (
                                         <>
                                             <ChartComponent
-
                                                 networkProvided={network}
                                                 pairAddress={pairAddress}
                                                 pairData={pairs}
@@ -817,8 +802,7 @@ export const SelectiveChartWithPair = () => {
                                     <Code style={{ fontSize: 12 }} /> &nbsp; Embed this chart
                                 </TYPE.link>
                             )}
-
-                    </CardSection>
+                    </ChartWrapper>
                 </div>
             </WrapperCard>
         </React.Suspense>

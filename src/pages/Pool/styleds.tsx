@@ -7,6 +7,7 @@ import Skeleton from 'react-loading-skeleton'
 import { Text } from 'rebass'
 import done from './done.json'
 import useTheme from 'hooks/useTheme'
+import { darken } from 'polished'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -21,8 +22,7 @@ export const ClickableText = styled(Text)`
 `
 export const MaxButton = styled.button<{ width: string }>`
   padding: 0.5rem 1rem;
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
+  background: ${({ theme }) => theme.primary5};
   border-radius: 0.5rem;
   font-size: 1rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -34,29 +34,26 @@ export const MaxButton = styled.button<{ width: string }>`
   overflow: hidden;
   color: ${({ theme }) => theme.primary1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
     outline: none;
+    background: ${({ theme }) => darken(0.1, theme.primary5)};
   }
 `
 
 
 
-const Loading = ({count}:any) => {
+const Loading = ({ count }: any) => {
   const theme = useTheme()
   return (
-    <Skeleton wrapper={({children}: any) => <Wrapper style={{padding:15}}>{children}</Wrapper>} height={30}  enableAnimation baseColor={theme.bg1} highlightColor="#444" count={count} />
+    <Skeleton wrapper={({ children }: any) => <Wrapper style={{ padding: 15 }}>{children}</Wrapper>} height={30} enableAnimation baseColor={theme.bg1} highlightColor="#444" count={count} />
   )
 }
 
 type LoadingSkelProps = {
   count: number;
-  borderRadius?:number
+  borderRadius?: number
 }
-export const LoadingSkeleton = (props: LoadingSkelProps  ) =>  (
-<Loading count={props.count} borderRadius={props.borderRadius ? props.borderRadius : 10} />
+export const LoadingSkeleton = (props: LoadingSkelProps) => (
+  <Loading count={props.count} borderRadius={props.borderRadius ? props.borderRadius : 10} />
 )
 export const Dots = styled.span`
   &::after {

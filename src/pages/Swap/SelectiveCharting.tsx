@@ -2,9 +2,7 @@
 import "./transitions.css";
 
 import {
-  ArrowDownRight,
   ArrowUpRight,
-  ChevronLeft,
   TrendingDown,
   TrendingUp,
 } from "react-feather";
@@ -28,14 +26,13 @@ import { useDexscreenerToken, useTokenInfo } from "components/swap/ChartPage";
 import { useLocation, useParams } from "react-router";
 
 import BarChartLoaderSVG from "components/swap/BarChartLoader";
-import { CardSection } from "components/earn/styled";
+import { ChartWrapper } from "components/earn/styled";
 import { ChartComponent } from "./ChartComponent";
 import { ChartSearchModal } from "pages/Charts/ChartSearchModal";
 import { ChartSidebar } from "components/ChartSidebar";
 import { LoadingSkeleton } from "pages/Pool/styleds";
 import ReactGA from "react-ga";
 import { RecentlyViewedCharts } from "./RecentViewedCharts";
-import { SelectiveChartBsc } from "./SelectiveChartingBsc";
 import Swal from 'sweetalert2'
 import { TableQuery } from "./TableQuery";
 import TokenSocials from "./TokenSocials";
@@ -67,7 +64,6 @@ export const useIsMobile = () => {
 }
 
 const CurrencyInputPanel = React.lazy(() => import("components/CurrencyInputPanel"));
-const CurrencyLogo = React.lazy(() => import("components/CurrencyLogo"));
 
 const Badge = React.lazy(() => import("components/Badge"));
 
@@ -81,19 +77,12 @@ export function useLocationEffect(callback: (location?: any) => any) {
   }, [location, callback]);
 }
 const StyledDiv = styled.div<{ isMobile?: boolean }>`
-  font-family: "Open Sans";
   font-size: 14px;
   display: flex;
   gap: 12px;
   align-items: ${props => props.isMobile ? "stretch" : "center"};
   padding: 3px 8px;
   flex-flow: ${(props) => (props.isMobile ? "column wrap" : "row wrap")};
-`;
-
-const BackLink = styled(StyledDiv)`
-  &:hover {
-    color: ${props => lighten(0.2, props.theme.text1)};
-  }
 `;
 
 const WrapperCard = styled(DarkCard) <{ gridTemplateColumns: string, isMobile: boolean }>`
@@ -116,7 +105,7 @@ export const SelectiveChart = () => {
     tokenSymbol?: string;
     name?: string;
     decimals?: string;
-    pairAddress?:string;
+    pairAddress?: string;
   }>();
   const isMobile = useIsMobile()
   const mainnetCurrency = useCurrency(
@@ -331,27 +320,27 @@ export const SelectiveChart = () => {
 
   const shareClick = () => {
     if (navigator && navigator.share) {
-        navigator.share({
-            title: `KibaCharts - ${token?.symbol} / ${pairCurrency?.symbol}`,
-            url: window.location.href
-        }).then(() => {
-            console.log(`[navigator.share]`, 'Thanks for sharing!');
-        })
-            .catch(console.error);
+      navigator.share({
+        title: `KibaCharts - ${token?.symbol} / ${pairCurrency?.symbol}`,
+        url: window.location.href
+      }).then(() => {
+        console.log(`[navigator.share]`, 'Thanks for sharing!');
+      })
+        .catch(console.error);
     } else {
-        copy(window.location.href)
+      copy(window.location.href)
 
-        Swal.fire({
-            toast: true,
-            position: isMobile ? 'top-start' : 'bottom-end',
-            timer: 5000,
-            showConfirmButton: false,
-            timerProgressBar: true,
-            icon: 'success',
-            title: `Successfully copied link to clipboard`
-        })
+      Swal.fire({
+        toast: true,
+        position: isMobile ? 'top-start' : 'bottom-end',
+        timer: 5000,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        icon: 'success',
+        title: `Successfully copied link to clipboard`
+      })
     }
-}
+  }
   const formatPriceLabel = (key: string) => {
     switch (key) {
       case "h24":
@@ -536,7 +525,7 @@ export const SelectiveChart = () => {
 
   const pairAddress = React.useMemo(() => {
     if (params?.pairAddress) return params?.pairAddress;
-    let pairAddress =  screenerToken?.pairAddress ? screenerToken?.pairAddress : pairs?.[0]?.id
+    let pairAddress = screenerToken?.pairAddress ? screenerToken?.pairAddress : pairs?.[0]?.id
     if (pairAddress) return pairAddress
     if (_pairs) {
       pairAddress = _pairs[0]?.id
@@ -606,7 +595,7 @@ export const SelectiveChart = () => {
                 : "none",
           }}
         >
-          <CardSection style={{ padding: isMobile ? 0 : "" }}>
+          <ChartWrapper>
             <StyledDiv
               isMobile={isMobile}
               style={{
@@ -615,8 +604,6 @@ export const SelectiveChart = () => {
                   : !isMobile
                     ? "space-between"
                     : "",
-                paddingBottom: 2,
-                marginTop: 10,
                 marginBottom: 5,
               }}
             >
@@ -627,10 +614,9 @@ export const SelectiveChart = () => {
                 }}
               >
                 {!loadingNewData && (
-                  <>
-                      <ButtonOutlined padding={`3px`} style={{padding: '3px !important', marginRight: 16}} size={'sm'} onClick={shareClick}>Share</ButtonOutlined>
-
-                  </>
+                  <ButtonOutlined padding={`3px`} style={{ padding: '3px !important', marginRight: 16 }} size={'sm'} onClick={shareClick}>
+                    Share
+                  </ButtonOutlined>
                 )}
               </span>
 
@@ -679,7 +665,7 @@ export const SelectiveChart = () => {
                                 : 10,
                             borderRight:
                               _.last(
-                                Object.keys(screenerToken?.priceChange|| {})
+                                Object.keys(screenerToken?.priceChange || {})
                               ) == key
                                 ? "none"
                                 : "1px solid #444",
@@ -707,7 +693,6 @@ export const SelectiveChart = () => {
               {Boolean(!hasSelectedData && userChartHistory.length) && (
                 <RecentlyViewedCharts />
               )}
-
             </StyledDiv>
 
             {loadingNewData ? (
@@ -751,12 +736,12 @@ export const SelectiveChart = () => {
                           (params?.tokenSymbol ? params?.tokenSymbol : token?.symbol) as string
                         }
                         address={address as string}
-                        pairs={pairAddress ? [{id: pairAddress}, ...pairs] : pairs} />
+                        pairs={pairAddress ? [{ id: pairAddress }, ...pairs] : pairs} />
                     </>
                   ) : null}
                 </React.Fragment>
               )}
-          </CardSection>
+          </ChartWrapper>
         </div>
       </WrapperCard>
     </React.Suspense>

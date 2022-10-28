@@ -70,23 +70,18 @@ export const BurntKiba = ({ showDetails, style }: { showDetails?: boolean, style
   const currencyBalance = useCurrencyBalance('0x000000000000000000000000000000000000dead', kibaCurrency ?? undefined)
   const burntValue = useUSDCValue(currencyBalance)
   const bscBurntValue = useKibaBalanceUSD('0x000000000000000000000000000000000000dead', chainId)
-
-
   const {
     volumeInEth,
     volumeInEthBn,
     volumeInUsd,
     volumeInUsdFormatted
   } = useTotalSwapVolume()
-
-
-
   const floorPriceForGenesisCollection = useFloorPrice()
   const [volume, setVolume] = useTotalSwapVolumeBnbToUsd()
   const FloorPrice = Boolean(floorPriceForGenesisCollection) ? (
-    <div style={{width: '100%', borderTop: isMobile ? 'none' : "1px solid #444",padding:'1rem', gap:5, display:'flex', alignItems:'center', flexFlow:'column wrap'}}>
-              <div style={{height:50, padding:15}}><TYPE.subHeader>Kiba Inu Genesis NFT Collection</TYPE.subHeader></div>
-      <div style={{width: '100%', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+    <div style={{ width: '100%', borderTop: isMobile ? 'none' : "1px solid #444", padding: '1rem', gap: 5, display: 'flex', alignItems: 'center', flexFlow: 'column wrap' }}>
+      <div style={{ height: 50, padding: 15 }}><TYPE.subHeader>Kiba Inu Genesis NFT Collection</TYPE.subHeader></div>
+      <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Badge>
           {`${floorPriceForGenesisCollection} ETH Floor Price`}
         </Badge>
@@ -99,11 +94,13 @@ export const BurntKiba = ({ showDetails, style }: { showDetails?: boolean, style
         <ContentWrapper gap="lg" style={{ maxWidth: 550, overflow: 'hidden' }}>
           <CardBGImage desaturate />
           <CardNoise />
-          <DarkCard  style={{display:'flex', rowGap: 15,  flexFlow: 'row wrap', justifyContent:'space-between', padding:5, columnGap: 5, alignItems:'start', width:'100%'}}> 
-          <div style={{width: 250, borderRight: isMobile ? 'none' : "1px solid #444",padding:'1rem', gap:5, display:'flex', alignItems:'center', flexFlow:'column wrap'}}>
-              <div style={{height:50, padding:15}}><TYPE.subHeader>Burnt Kiba {isBinance ? "(BSC)" : "(ETH)"}</TYPE.subHeader></div>
+          <DarkCard style={{ display: 'flex', rowGap: 15, flexFlow: 'row wrap', justifyContent: 'space-between', padding: 5, columnGap: 5, alignItems: 'start', width: '100%' }}>
+            <div style={{ width: 250, borderRight: isMobile ? 'none' : "1px solid #444", padding: '1rem', gap: 5, display: 'flex', alignItems: 'center', flexFlow: 'column wrap' }}>
+              <div style={{ height: 50, padding: 15 }}>
+                <TYPE.subHeader>Burnt Kiba {isBinance ? "(BSC)" : "(ETH)"}</TYPE.subHeader>
+              </div>
 
-              <p style={{ textAlign:'center', color: '#F76C1D' }}><h1 style={{ display: 'block', margin: 0, color: '#F76C1D', fontWeight: 'bold' }}>{abbreviateNumber(+deadWalletKibaBalance.toFixed(2))}</h1>   <small>({(Number(+deadWalletKibaBalance.toFixed(18)).toLocaleString())}) Tokens</small></p>
+              <p style={{ textAlign: 'center', color: '#F76C1D' }}><h1 style={{ display: 'block', margin: 0, color: '#F76C1D', fontWeight: 'bold' }}>{abbreviateNumber(+deadWalletKibaBalance.toFixed(2))}</h1>   <small>({(Number(+deadWalletKibaBalance.toFixed(18)).toLocaleString())}) Tokens</small></p>
               {burntValue && isBinance === false && <p style={{ color: '#F76C1D' }}><Badge>Burnt Value ${Number(burntValue?.toFixed(2)).toLocaleString()} USD</Badge></p>}
               {bscBurntValue && isBinance === true && <p style={{ color: '#F76C1D' }}><Badge>Burnt Value ${bscBurntValue} USD</Badge></p>}
               <small style={{ marginTop: 5 }}>
@@ -111,9 +108,9 @@ export const BurntKiba = ({ showDetails, style }: { showDetails?: boolean, style
               </small>
             </div>
             {true && (
-              <div style={{width: 225, padding:'1rem', gap:5, display:'flex', alignItems:'center', flexFlow:'column wrap'}}>
-                <div style={{height:50, padding:15}}><TYPE.subHeader style={{whiteSpace:'nowrap'}}>Total Swap Volume (in {isBinance ? "BNB" : "ETH"})</TYPE.subHeader></div>
-                <p style={{ color: '#F76C1D' }}><h1 style={{ display: 'block', margin: 0, color: '#F76C1D', fontWeight: 'bold' }}>{abbreviateNumber(parseFloat(volumeInEth as string)?.toFixed(2))} {!isBinance ? <>Ξ</> : <>BNB</>} </h1>   <small style={{}}>({(Number(parseFloat(volumeInEth as string)?.toFixed(18)).toLocaleString())}) {isBinance ? 'BNB': 'ETH'}</small></p>
+              <div style={{ width: 225, padding: '1rem', gap: 5, display: 'flex', alignItems: 'center', flexFlow: 'column wrap' }}>
+                <div style={{ height: 50, padding: 15 }}><TYPE.subHeader style={{ whiteSpace: 'nowrap' }}>Total Swap Volume (in {isBinance ? "BNB" : "ETH"})</TYPE.subHeader></div>
+                <p style={{ color: '#F76C1D' }}><h1 style={{ display: 'block', margin: 0, color: '#F76C1D', fontWeight: 'bold' }}>{abbreviateNumber(parseFloat(volumeInEth as string)?.toFixed(2))} {!isBinance ? <>Ξ</> : <>BNB</>} </h1>   <small style={{}}>({(Number(parseFloat(volumeInEth as string)?.toFixed(18)).toLocaleString())}) {isBinance ? 'BNB' : 'ETH'}</small></p>
 
                 <p><Badge> Total Volume Value
                   {!isBinance && <>{volumeInUsd && volumeInUsd !== 0 && volumeInUsdFormatted && <> (${volumeInUsdFormatted} USD)</>}</>}
