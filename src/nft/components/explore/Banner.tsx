@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { Carousel } from './Carousel'
-import { CarouselCard } from './CarouselCard'
+import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
 
 const BannerContainer = styled.div`
   display: flex;
@@ -61,6 +61,7 @@ const HeaderContainer = styled.div`
     padding-top: 0px;
   }
 `
+const DEFAULT_ASSET_QUERY_AMOUNT = 5
 
 const Banner = () => {
   const navigate = useNavigate()
@@ -88,7 +89,6 @@ const Banner = () => {
         <>
           {isMobile ? (
             <CarouselCard
-              key={collections[0].address}
               collection={collections[0]}
               onClick={() => navigate(`/nfts/collection/${collections[0].address}`)}
             />
@@ -106,8 +106,15 @@ const Banner = () => {
         </>
       ) : (
         <>
-          {/* TODO: Improve Loading State */}
-          <p>Loading</p>
+          {isMobile ? (
+            <LoadingCarouselCard />
+          ) : (
+            <Carousel>
+              {[...Array(DEFAULT_ASSET_QUERY_AMOUNT)].map((index) => (
+                <LoadingCarouselCard key={'carouselCard' + index} />
+              ))}
+            </Carousel>
+          )}
         </>
       )}
     </BannerContainer>

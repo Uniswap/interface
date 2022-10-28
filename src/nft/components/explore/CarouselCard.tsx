@@ -1,3 +1,5 @@
+import { loadingAnimation } from 'components/Loader/styled'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { VerifiedIcon } from 'nft/components/icons'
 import { TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
@@ -34,6 +36,26 @@ const CardHeaderContainer = styled.div<{ src: string }>`
   background-position: center;
 `
 
+const LoadingCardHeaderContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 108px;
+  padding-top: 32px;
+  padding-bottom: 16px;
+  padding-left: 28px;
+  padding-right: 28px;
+  animation: ${loadingAnimation} 1.5s infinite;
+  animation-fill-mode: both;
+  background: linear-gradient(
+    to left,
+    ${({ theme }) => theme.backgroundInteractive} 25%,
+    ${({ theme }) => theme.backgroundOutline} 50%,
+    ${({ theme }) => theme.backgroundInteractive} 75%
+  );
+  will-change: background-position;
+  background-size: 400%;
+`
+
 const CardHeaderRow = styled.div`
   position: relative;
   z-index: 1;
@@ -62,6 +84,10 @@ const CollectionNameContainer = styled.div`
   text-overflow: ellipsis;
 `
 
+const LoadingCollectionNameContainer = styled(LoadingBubble)`
+  width: 50%;
+`
+
 const HeaderOverlay = styled.div`
   position: absolute;
   height: 108px;
@@ -78,6 +104,22 @@ const CollectionImage = styled.img`
   background: ${({ theme }) => theme.accentTextLightPrimary};
   border: 2px solid ${({ theme }) => theme.accentTextLightPrimary};
   border-radius: 100px;
+`
+
+const LoadingCollectionImage = styled.div`
+  width: 60px;
+  height: 60px;
+  border-radius: 100px;
+  animation: ${loadingAnimation} 1.5s infinite;
+  animation-fill-mode: both;
+  background: linear-gradient(
+    to left,
+    ${({ theme }) => theme.backgroundInteractive} 25%,
+    ${({ theme }) => theme.backgroundOutline} 50%,
+    ${({ theme }) => theme.backgroundInteractive} 75%
+  );
+  will-change: background-position;
+  background-size: 400%;
 `
 
 const CardBottomContainer = styled.div`
@@ -106,6 +148,10 @@ const HeaderRow = styled.div`
     font-size: 14px;
     line-height: 20px;
   }
+`
+
+const LoadingTableElement = styled(LoadingBubble)`
+  width: 50px;
 `
 
 const TableElement = styled.div`
@@ -156,6 +202,34 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
         <TableElement>LooksRare</TableElement>
         <TableElement>6.9 ETH</TableElement>
         <TableElement>12</TableElement>
+      </CardBottomContainer>
+    </CarouselCardContainer>
+  )
+}
+
+export const LoadingCarouselCard = () => {
+  return (
+    <CarouselCardContainer>
+      <LoadingCardHeaderContainer>
+        <CardHeaderRow>
+          <LoadingCollectionImage />
+          <LoadingCollectionNameContainer />
+        </CardHeaderRow>
+        <HeaderOverlay />
+      </LoadingCardHeaderContainer>
+      <CardBottomContainer>
+        <LoadingTableElement />
+        <LoadingTableElement />
+        <LoadingTableElement />
+        <LoadingTableElement />
+        <LoadingTableElement />
+        <LoadingTableElement />
+        <LoadingTableElement />
+        <LoadingTableElement />
+        <LoadingTableElement />
+        <LoadingTableElement />
+        <LoadingTableElement />
+        <LoadingTableElement />
       </CardBottomContainer>
     </CarouselCardContainer>
   )
