@@ -25,7 +25,7 @@ const TraitType = styled.div`
 
 const TraitValue = styled.div`
   color: ${({ theme }) => theme.textPrimary};
-  font-size: 16px;
+  font-size: 12px;
   line-height: 24px;
   margin-top: 4px;
 `
