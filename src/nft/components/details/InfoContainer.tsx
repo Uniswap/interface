@@ -33,6 +33,9 @@ const PrimaryHeader = styled.span`
   align-items: center;
   gap: 16px;
   color: ${({ theme }) => theme.textPrimary};
+  font-weight: 500;
+  line-height: 28px;
+  font-size: 20px;
 `
 
 const SecondaryHeader = styled.span`
@@ -53,6 +56,7 @@ const ContentContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-top: none;
   border-radius: 0px 0px 16px 16px;
+  background-color: ${({ theme }) => theme.backgroundSurface}; ;
 `
 
 const InfoContainer = ({

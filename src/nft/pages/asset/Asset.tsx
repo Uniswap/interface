@@ -19,7 +19,9 @@ const AssetContainer = styled.div`
 `
 
 const AssetPriceDetailsContainer = styled.div`
-  width: 360px;
+  min-width: 360px;
+  position: relative;
+  padding-right: 100px;
   @media (max-width: 960px) {
     display: none;
   }

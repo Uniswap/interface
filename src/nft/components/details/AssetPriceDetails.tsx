@@ -19,7 +19,8 @@ interface AssetPriceDetailsProps {
 
 const Container = styled.div`
   width: 100%;
-  min-width: 360px;
+  width: 360px;
+  position: fixed;
 `
 
 const BestPriceContainer = styled.div`
@@ -172,7 +173,7 @@ const OwnerInformationContainer = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0 8px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `
 
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
@@ -290,7 +291,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     <Container>
       <OwnerInformationContainer>
         <OwnerText target="_blank" href={`https://etherscan.io/address/${asset.owner}`}>
-          {asset.tokenType === 'ERC1155' ? '' : <span>{isOwner ? 'you' : shortAddress}</span>}
+          Seller: {asset.tokenType === 'ERC1155' ? '' : <span>{isOwner ? 'you' : shortAddress}</span>}
         </OwnerText>
         <UploadLink
           onClick={() => {
