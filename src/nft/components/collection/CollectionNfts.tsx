@@ -62,7 +62,6 @@ const rarityStatusCache = new Map<string, boolean>()
 
 const ActionsContainer = styled.div`
   display: flex;
-  margin-top: 12px;
   justify-content: space-between;
 `
 
@@ -402,7 +401,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   return (
     <>
       <AnimatedBox position="sticky" top="72" width="full" zIndex="3" marginBottom="20">
-        <Box backgroundColor="backgroundFloating" width="full" style={{ backdropFilter: 'blur(24px)' }}>
+        <Box backgroundColor="backgroundBackdrop" width="full" padding="16">
           <ActionsContainer>
             <Row gap="12">
               <TraceEvent
