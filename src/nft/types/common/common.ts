@@ -72,7 +72,7 @@ export interface AssetSellOrder {
 
 export interface Rarity {
   primaryProvider: string
-  providers: { provider: string; rank: number; url: string; score: number }[]
+  providers: { provider: string; rank: number; url?: string; score: number }[]
 }
 
 export interface GenieAsset {
@@ -81,27 +81,22 @@ export interface GenieAsset {
   notForSale: boolean
   collectionName: string
   collectionSymbol: string
-  currentEthPrice: string
-  currentUsdPrice: string
   imageUrl: string
   animationUrl: string
   marketplace: Markets
   name: string
   priceInfo: PriceInfo
-  openseaSusFlag: boolean
+  susFlag: boolean
   sellorders: SellOrder[]
   smallImageUrl: string
   tokenId: string
   tokenType: TokenType
-  url: string
   totalCount?: number // The totalCount from the query to /assets
-  amount?: number
-  decimals?: number
   collectionIsVerified?: boolean
   rarity?: Rarity
   owner: string
   creator: OpenSeaUser
-  externalLink: string
+  metadataUrl: string
   traits?: {
     trait_type: string
     value: string

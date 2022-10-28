@@ -8,6 +8,7 @@ import { getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
 import { FungibleToken, GenieCollection } from 'nft/types'
@@ -88,6 +89,7 @@ export const CollectionRow = ({
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{collection.name}</Box>
+            {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
           <Box className={styles.secondaryText}>{putCommas(collection.stats.total_supply)} items</Box>
         </Column>

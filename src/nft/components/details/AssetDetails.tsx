@@ -14,6 +14,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
 import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
+import { useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
@@ -176,6 +177,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   }, [asset, address, provider])
 
+  const USDPrice = useUsdPrice(asset)
+
   return (
     <AnimatedBox
       style={{
@@ -270,7 +273,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               </Row>
             </Row>
             <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={headlineMedium}>
-              {asset.openseaSusFlag && (
+              {asset.susFlag && (
                 <Box marginTop="8">
                   <MouseoverTooltip text={<Box fontWeight="normal">{SUSPICIOUS_TEXT}</Box>}>
                     <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />
@@ -366,9 +369,11 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                   <Row as="span" className={subhead} color="textPrimary">
                     {formatEthPrice(asset.priceInfo.ETHPrice)} <Eth2Icon />
                   </Row>
-                  <Box as="span" color="textSecondary" className={bodySmall}>
-                    ${toSignificant(asset.priceInfo.USDPrice)}
-                  </Box>
+                  {USDPrice && (
+                    <Box as="span" color="textSecondary" className={bodySmall}>
+                      ${toSignificant(USDPrice)}
+                    </Box>
+                  )}
                 </Row>
                 {asset.sellorders?.[0].orderClosingDate ? <CountdownTimer sellOrder={asset.sellorders[0]} /> : null}
               </Column>
@@ -413,7 +418,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               tokenId={asset.tokenId}
               tokenType={asset.tokenType}
               blockchain="Ethereum"
-              metadataUrl={asset.externalLink}
+              metadataUrl={asset.metadataUrl}
               totalSupply={collection.totalSupply}
             />
           )}

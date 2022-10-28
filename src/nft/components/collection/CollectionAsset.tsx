@@ -52,7 +52,7 @@ export const CollectionAsset = ({
     let notForSale = true
     let assetMediaType = AssetMediaType.Image
 
-    notForSale = asset.notForSale || BigNumber.from(asset.currentEthPrice ? asset.currentEthPrice : 0).lt(0)
+    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo.ETHPrice ? asset.priceInfo.ETHPrice : 0).lt(0)
     if (isAudio(asset.animationUrl)) {
       assetMediaType = AssetMediaType.Audio
     } else if (isVideo(asset.animationUrl)) {
@@ -96,7 +96,7 @@ export const CollectionAsset = ({
           <Card.PrimaryRow>
             <Card.PrimaryDetails>
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
-              {asset.openseaSusFlag && <Card.Suspicious />}
+              {asset.susFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
             {asset.rarity && provider && provider.rank && (
               <Card.Ranking
@@ -110,7 +110,7 @@ export const CollectionAsset = ({
           <Card.SecondaryRow>
             <Card.SecondaryDetails>
               <Card.SecondaryInfo>
-                {notForSale ? '' : `${formatWeiToDecimal(asset.currentEthPrice, true)} ETH`}
+                {notForSale ? '' : `${formatWeiToDecimal(asset.priceInfo.ETHPrice, true)} ETH`}
               </Card.SecondaryInfo>
               {(asset.marketplace === Markets.NFTX || asset.marketplace === Markets.NFT20) && <Card.Pool />}
             </Card.SecondaryDetails>
