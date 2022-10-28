@@ -14,7 +14,6 @@
 		1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */; };
 		158BE978A06245FDA665B4CE /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E23718F30E2E4B749C40C8F2 /* Inter-SemiBold.ttf */; };
 		30564088BB6685F4F099D444 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 816850AA5E2EE808CDC32BCA /* libPods-OneSignalNotificationServiceExtension.a */; };
-		6C0E0FE728256CAA00A975BF /* WalletConnectAddChainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E0FE628256CAA00A975BF /* WalletConnectAddChainHandler.swift */; };
 		6C13E36A28185E550065DBB1 /* WalletConnectAccountServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */; };
 		6C13E36C28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */; };
 		6C13E36E28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */; };
@@ -95,7 +94,6 @@
 		1834199AFFB04D91B05FFB64 /* InputMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "InputMono-Regular.ttf"; path = "../src/assets/fonts/InputMono-Regular.ttf"; sourceTree = "<group>"; };
 		3155C0CF238C4436932B207D /* Inter-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Regular.ttf"; path = "../src/assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; };
 		4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		6C0E0FE628256CAA00A975BF /* WalletConnectAddChainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectAddChainHandler.swift; sourceTree = "<group>"; };
 		6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectAccountServer.swift; sourceTree = "<group>"; };
 		6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSwitchChainHandler.swift; sourceTree = "<group>"; };
 		6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectSignRequestHandler.swift; sourceTree = "<group>"; };
@@ -266,7 +264,6 @@
 				6C13E36928185E550065DBB1 /* WalletConnectAccountServer.swift */,
 				6C13E36D28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift */,
 				6C13E36B28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift */,
-				6C0E0FE628256CAA00A975BF /* WalletConnectAddChainHandler.swift */,
 				D63452442821BD540018ED83 /* WalletConnectSignTransactionHandler.swift */,
 			);
 			name = WalletConnect;
@@ -704,7 +701,6 @@
 				6C13E36E28185ECF0065DBB1 /* WalletConnectSignRequestHandler.swift in Sources */,
 				6C84F05F283DB7150071FA2E /* MnemonicWordView.swift in Sources */,
 				FDB23E4F289D935800248737 /* RNMnemonicTestManager.m in Sources */,
-				6C0E0FE728256CAA00A975BF /* WalletConnectAddChainHandler.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				A3F0A5B3272B1E9A00895B25 /* RNEthersRS.swift in Sources */,
 				FD7304CC28A364EF0085BDEA /* MnemonicTextField.swift in Sources */,

@@ -20,7 +20,8 @@ class WalletConnectSwitchChainHandler: RequestHandler {
   }
   
   func canHandle(request: Request) -> Bool {
-    return request.method == EthMethod.switchChain.rawValue
+    // Handle both wallet_switchEthereumChain and wallet_addEthereumChain by prompting network switch request if the network is supported. Can use WalletSwitchEthereumChainObject because chainId is the first param of wallet_addEthereumChain.
+    return request.method == EthMethod.switchChain.rawValue || request.method == EthMethod.addChain.rawValue
   }
   
   func handle(request: Request) {
