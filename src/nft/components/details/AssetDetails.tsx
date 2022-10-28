@@ -146,16 +146,16 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   )
 
   const assetMediaType = useMemo(() => {
-    if (isAudio(asset.animationUrl)) {
+    if (isAudio(asset.animationUrl ?? '')) {
       return MediaType.Audio
-    } else if (isVideo(asset.animationUrl)) {
+    } else if (isVideo(asset.animationUrl ?? '')) {
       return MediaType.Video
     }
     return MediaType.Image
   }, [asset])
 
   useEffect(() => {
-    if (asset.creator) setCreatorAddress(asset.creator.address)
+    if (asset.creator) setCreatorAddress(asset.creator.address ?? '')
     if (asset.owner) setOwnerAddress(asset.owner)
   }, [asset])
 
@@ -343,7 +343,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             </Row>
           </Column>
 
-          {asset.priceInfo && !isOwned ? (
+          {asset.priceInfo && asset.sellorders && !isOwned ? (
             <Row
               marginTop="8"
               marginBottom="40"

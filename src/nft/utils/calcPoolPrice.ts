@@ -4,6 +4,7 @@ import { BagItem, BagItemStatus, GenieAsset, Markets, UpdatedGenieAsset } from '
 export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   let amountToBuy: BigNumber = BigNumber.from(0)
   let marginalBuy: BigNumber = BigNumber.from(0)
+  if (!asset.sellorders) return ''
   const nft = asset.sellorders[0]
   const decimals = BigNumber.from(1).mul(10).pow(18)
   const ammFee = nft.ammFeePercent ? (100 + nft.ammFeePercent) * 100 : 110 * 100

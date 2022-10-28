@@ -1,6 +1,6 @@
 import { parseEther } from '@ethersproject/units'
 import graphql from 'babel-plugin-relay/macro'
-import { CollectionInfoForAsset, GenieAsset, Markets, SellOrder, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, PriceInfo, SellOrder, TokenType } from 'nft/types'
 import { loadQuery, usePreloadedQuery } from 'react-relay'
 
 import RelayEnvironment from '../RelayEnvironment'
@@ -102,6 +102,8 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
 
   if (!asset) return undefined
 
+  console.log(asset.listings?.edges as unknown as SellOrder[])
+
   return [
     {
       id: asset?.id,
@@ -111,7 +113,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       collectionSymbol: asset.collection?.image?.url ?? undefined,
       imageUrl: asset.image?.url ?? undefined,
       animationUrl: asset.animationUrl ?? undefined,
-      marketplace: asset.listings?.edges[0].node.marketplace.toLowerCase() as Markets,
+      marketplace: asset.listings?.edges[0].node.marketplace.toLowerCase() as any,
       name: asset.name ?? undefined,
       priceInfo: asset.listings
         ? {
@@ -120,13 +122,14 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
             baseDecimals: '18',
             basePrice: ethPrice,
           }
-        : undefined,
+        : ({} as PriceInfo),
       susFlag: asset.suspiciousFlag ?? undefined,
-      sellorders: asset.listings?.edges as unknown as SellOrder[],
+      sellorders: asset.listings?.edges.map((listingNode) => {
+        return listingNode.node as unknown as SellOrder
+      }),
       smallImageUrl: asset.smallImage?.url ?? undefined,
       tokenId,
       tokenType: (asset.collection?.nftContracts && asset?.collection.nftContracts[0].standard) as TokenType,
-      // totalCount?: number, // TODO waiting for BE changes
       collectionIsVerified: asset.collection?.isVerified ?? undefined,
       rarity: {
         primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
@@ -138,6 +141,9 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
         address: asset.collection?.creator?.address ?? undefined,
       },
       metadataUrl: asset.metadataUrl ?? undefined,
+      traits: asset.traits?.map((trait) => {
+        return { trait_type: trait.name, value: trait.value } as any
+      }),
     },
     {
       collectionDescription: collection?.description ?? undefined,

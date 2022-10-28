@@ -85,9 +85,9 @@ export interface GenieAsset {
   animationUrl?: string
   marketplace: Markets
   name?: string
-  priceInfo?: PriceInfo
+  priceInfo: PriceInfo
   susFlag?: boolean
-  sellorders: SellOrder[]
+  sellorders?: SellOrder[]
   smallImageUrl?: string
   tokenId: string
   tokenType: TokenType
@@ -102,7 +102,7 @@ export interface GenieAsset {
     value: string
     display_type?: any
     max_value?: any
-    trait_count: number
+    trait_count?: number
     order?: any
   }[]
 }

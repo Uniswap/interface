@@ -52,11 +52,13 @@ export const CollectionAsset = ({
     let notForSale = true
     let assetMediaType = AssetMediaType.Image
 
-    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo.ETHPrice ? asset.priceInfo.ETHPrice : 0).lt(0)
-    if (isAudio(asset.animationUrl)) {
-      assetMediaType = AssetMediaType.Audio
-    } else if (isVideo(asset.animationUrl)) {
-      assetMediaType = AssetMediaType.Video
+    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
+    if (asset.animationUrl) {
+      if (isAudio(asset.animationUrl)) {
+        assetMediaType = AssetMediaType.Audio
+      } else if (isVideo(asset.animationUrl)) {
+        assetMediaType = AssetMediaType.Video
+      }
     }
 
     return {
