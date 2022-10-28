@@ -14,6 +14,7 @@ export const lightTheme: Theme = {
     backgroundModule: vars.color.grey50,
     backgroundOutline: `rgba(94,104,135,0.24)`,
     backgroundSurface: '#FFFFFF',
+    backgroundBackdrop: '#FFF',
 
     modalBackdrop: 'rgba(0, 0, 0, 0.3)',
 

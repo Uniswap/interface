@@ -1,3 +1,7 @@
+import { formatEther } from '@ethersproject/units'
+import { GenieAsset } from 'nft/types'
+import { useQuery } from 'react-query'
+
 export enum Currency {
   ETH = 'ETH',
   LOOKS = 'LOOKS',
@@ -12,4 +16,9 @@ export const fetchPrice = async (currency: Currency = Currency.ETH): Promise<num
     console.error(e)
     return
   }
+}
+
+export function useUsdPrice(asset: GenieAsset): string {
+  const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
+  return fetchedPriceData ? (parseFloat(formatEther(asset.priceInfo.ETHPrice)) * fetchedPriceData).toString() : ''
 }

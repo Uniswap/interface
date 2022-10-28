@@ -20,7 +20,7 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
-import { LoadingTokenDetails } from '../components/Tokens/TokenDetails/LoadingTokenDetails'
+import { TokenDetailsPageSkeleton } from '../components/Tokens/TokenDetails/Skeleton'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
@@ -165,7 +165,7 @@ export default function App() {
                   <Route
                     path="tokens/:chainName/:tokenAddress"
                     element={
-                      <Suspense fallback={<LoadingTokenDetails />}>
+                      <Suspense fallback={<TokenDetailsPageSkeleton />}>
                         <TokenDetails />
                       </Suspense>
                     }

@@ -1,11 +1,12 @@
 import graphql from 'babel-plugin-relay/macro'
-import { useMemo, useState } from 'react'
-import { fetchQuery, useLazyLoadQuery } from 'react-relay'
+import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
+import { useMemo } from 'react'
+import { useLazyLoadQuery } from 'react-relay'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import { Chain, TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
-import { ContractInput, HistoryDuration, TokenQuery, TokenQuery$data } from './__generated__/TokenQuery.graphql'
-import environment from './RelayEnvironment'
-import { TimePeriod, toHistoryDuration } from './util'
+import { Chain } from './__generated__/TokenPriceQuery.graphql'
+import { TokenQuery, TokenQuery$data } from './__generated__/TokenQuery.graphql'
+import { CHAIN_NAME_TO_CHAIN_ID } from './util'
 
 /*
 The difference between Token and TokenProject:
@@ -16,9 +17,10 @@ The difference between Token and TokenProject:
     TokenProjectMarket is aggregated market data (aggregated over multiple dexes and centralized exchanges) that we get from coingecko.
 */
 const tokenQuery = graphql`
-  query TokenQuery($contract: ContractInput!, $duration: HistoryDuration!) {
+  query TokenQuery($contract: ContractInput!) {
     tokens(contracts: [$contract]) {
       id @required(action: LOG)
+      decimals
       name
       chain @required(action: LOG)
       address @required(action: LOG)
@@ -27,10 +29,6 @@ const tokenQuery = graphql`
         totalValueLocked {
           value
           currency
-        }
-        priceHistory(duration: $duration) {
-          timestamp
-          value
         }
         price {
           value
@@ -61,113 +59,24 @@ const tokenQuery = graphql`
   }
 `
 
-export type PricePoint = { value: number; timestamp: number }
-export function filterPrices(prices: NonNullable<NonNullable<SingleTokenData>['market']>['priceHistory'] | undefined) {
-  return prices?.filter((p): p is PricePoint => Boolean(p && p.value))
+export type TokenQueryData = NonNullable<TokenQuery$data['tokens']>[number]
+
+export function useTokenQuery(address: string, chain: Chain): TokenQueryData | undefined {
+  const contract = useMemo(() => ({ address: address.toLowerCase(), chain }), [address, chain])
+  const token = useLazyLoadQuery<TokenQuery>(tokenQuery, { contract }).tokens?.[0]
+  return token
 }
 
-export type PriceDurations = Record<TimePeriod, PricePoint[] | undefined>
-function fetchAllPriceDurations(contract: ContractInput, originalDuration: HistoryDuration) {
-  return fetchQuery<TokenPriceQuery>(environment, tokenPriceQuery, {
-    contract,
-    skip1H: originalDuration === 'HOUR',
-    skip1D: originalDuration === 'DAY',
-    skip1W: originalDuration === 'WEEK',
-    skip1M: originalDuration === 'MONTH',
-    skip1Y: originalDuration === 'YEAR',
-  })
-}
-
-export type SingleTokenData = NonNullable<TokenQuery$data['tokens']>[number]
-export function useTokenQuery(
-  address: string,
-  chain: Chain,
-  timePeriod: TimePeriod
-): [SingleTokenData | undefined, PriceDurations] {
-  const [prices, setPrices] = useState<PriceDurations>({
-    [TimePeriod.HOUR]: undefined,
-    [TimePeriod.DAY]: undefined,
-    [TimePeriod.WEEK]: undefined,
-    [TimePeriod.MONTH]: undefined,
-    [TimePeriod.YEAR]: undefined,
-  })
-
-  const contract = useMemo(() => {
-    return { address: address.toLowerCase(), chain }
-  }, [address, chain])
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const originalTimePeriod = useMemo(() => timePeriod, [contract])
-
-  const updatePrices = (response: TokenPriceQuery['response']) => {
-    const priceData = response.tokens?.[0]?.market
-    if (priceData) {
-      setPrices((current) => {
-        return {
-          [TimePeriod.HOUR]: filterPrices(priceData.priceHistory1H) ?? current[TimePeriod.HOUR],
-          [TimePeriod.DAY]: filterPrices(priceData.priceHistory1D) ?? current[TimePeriod.DAY],
-          [TimePeriod.WEEK]: filterPrices(priceData.priceHistory1W) ?? current[TimePeriod.WEEK],
-          [TimePeriod.MONTH]: filterPrices(priceData.priceHistory1M) ?? current[TimePeriod.MONTH],
-          [TimePeriod.YEAR]: filterPrices(priceData.priceHistory1Y) ?? current[TimePeriod.YEAR],
-        }
-      })
-    }
+// TODO: Return a QueryToken from useTokenQuery instead of TokenQueryData to make it more usable in Currency-centric interfaces.
+export class QueryToken extends WrappedTokenInfo {
+  constructor(data: NonNullable<TokenQueryData>) {
+    super({
+      chainId: CHAIN_NAME_TO_CHAIN_ID[data.chain],
+      address: data.address,
+      decimals: data.decimals ?? DEFAULT_ERC20_DECIMALS,
+      symbol: data.symbol ?? '',
+      name: data.name ?? '',
+      logoURI: data.project?.logoUrl ?? undefined,
+    })
   }
-
-  // Fetch prices & token info in tandem so we can render faster
-  useMemo(
-    () => fetchAllPriceDurations(contract, toHistoryDuration(originalTimePeriod)).subscribe({ next: updatePrices }),
-    [contract, originalTimePeriod]
-  )
-  const token = useLazyLoadQuery<TokenQuery>(tokenQuery, {
-    contract,
-    duration: toHistoryDuration(originalTimePeriod),
-  }).tokens?.[0]
-
-  useMemo(
-    () =>
-      setPrices((current) => {
-        current[originalTimePeriod] = filterPrices(token?.market?.priceHistory)
-        return current
-      }),
-    [token, originalTimePeriod]
-  )
-
-  return [token, prices]
 }
-
-const tokenPriceQuery = graphql`
-  query TokenPriceQuery(
-    $contract: ContractInput!
-    $skip1H: Boolean!
-    $skip1D: Boolean!
-    $skip1W: Boolean!
-    $skip1M: Boolean!
-    $skip1Y: Boolean!
-  ) {
-    tokens(contracts: [$contract]) {
-      market(currency: USD) {
-        priceHistory1H: priceHistory(duration: HOUR) @skip(if: $skip1H) {
-          timestamp
-          value
-        }
-        priceHistory1D: priceHistory(duration: DAY) @skip(if: $skip1D) {
-          timestamp
-          value
-        }
-        priceHistory1W: priceHistory(duration: WEEK) @skip(if: $skip1W) {
-          timestamp
-          value
-        }
-        priceHistory1M: priceHistory(duration: MONTH) @skip(if: $skip1M) {
-          timestamp
-          value
-        }
-        priceHistory1Y: priceHistory(duration: YEAR) @skip(if: $skip1Y) {
-          timestamp
-          value
-        }
-      }
-    }
-  }
-`
