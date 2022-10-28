@@ -132,36 +132,38 @@ function TokenDetailsStatsInner({
         <Text color="textTertiary" variant="subheadSmall">
           {t('About {{ token }}', { token: tokenProjectData.name })}
         </Text>
-        {tokenProjectData.description && (
-          <LongText
-            gap="xxxs"
-            initialDisplayedLines={5}
-            text={tokenProjectData.description.trim()}
-          />
-        )}
-        <Flex row>
-          {tokenProjectData.homepageUrl && (
-            <LinkButton
-              color="accentAction"
-              label={t('Website')}
-              textVariant="buttonLabelMicro"
-              url={tokenProjectData.homepageUrl}
+        <Flex gap="sm">
+          {tokenProjectData.description && (
+            <LongText
+              gap="xxxs"
+              initialDisplayedLines={5}
+              text={tokenProjectData.description.trim()}
             />
           )}
-          {tokenProjectData.twitterName && (
+          <Flex row>
+            {tokenProjectData.homepageUrl && (
+              <LinkButton
+                color="accentAction"
+                label={t('Website')}
+                textVariant="buttonLabelMicro"
+                url={tokenProjectData.homepageUrl}
+              />
+            )}
+            {tokenProjectData.twitterName && (
+              <LinkButton
+                color="accentAction"
+                label={t('Twitter')}
+                textVariant="buttonLabelMicro"
+                url={getTwitterLink(tokenProjectData.twitterName)}
+              />
+            )}
             <LinkButton
               color="accentAction"
-              label={t('Twitter')}
+              label={t('Etherscan')}
               textVariant="buttonLabelMicro"
-              url={getTwitterLink(tokenProjectData.twitterName)}
+              url={explorerLink}
             />
-          )}
-          <LinkButton
-            color="accentAction"
-            label={t('Etherscan')}
-            textVariant="buttonLabelMicro"
-            url={explorerLink}
-          />
+          </Flex>
         </Flex>
       </Flex>
     </Flex>

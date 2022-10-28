@@ -15,7 +15,7 @@ exports[`renders correctly 1`] = `
       Array [
         Object {
           "display": "flex",
-          "marginHorizontal": 16,
+          "marginHorizontal": 12,
         },
       ]
     }
@@ -72,44 +72,6 @@ exports[`renders correctly 1`] = `
         <TextInput
           animatedProps={
             Object {
-              "text": "-50%",
-            }
-          }
-          editable={false}
-          style={
-            Array [
-              Object {
-                "color": "black",
-              },
-              Array [
-                Object {
-                  "color": "#505A78",
-                  "fontFamily": "Inter-Regular",
-                  "fontSize": 14,
-                  "lineHeight": 20,
-                },
-              ],
-            ]
-          }
-          underlineColorAndroid="transparent"
-          value="-50%"
-        />
-        <View
-          style={
-            Array [
-              Object {
-                "display": "flex",
-                "flexGrow": 0,
-                "flexShrink": 0,
-                "height": 0,
-                "width": 0,
-              },
-            ]
-          }
-        />
-        <TextInput
-          animatedProps={
-            Object {
               "text": "↘",
             }
           }
@@ -134,6 +96,47 @@ exports[`renders correctly 1`] = `
           }
           underlineColorAndroid="transparent"
           value="↘"
+        />
+        <View
+          style={
+            Array [
+              Object {
+                "display": "flex",
+                "flexGrow": 0,
+                "flexShrink": 0,
+                "height": 2,
+                "width": 2,
+              },
+            ]
+          }
+        />
+        <TextInput
+          animatedProps={
+            Object {
+              "text": "-50%",
+            }
+          }
+          editable={false}
+          style={
+            Array [
+              Object {
+                "color": "black",
+              },
+              Array [
+                Object {
+                  "color": "#0D111C",
+                  "fontFamily": "Inter-Regular",
+                  "fontSize": 14,
+                  "lineHeight": 20,
+                },
+                Object {
+                  "color": "#FA2B39",
+                },
+              ],
+            ]
+          }
+          underlineColorAndroid="transparent"
+          value="-50%"
         />
       </View>
       <View
@@ -181,7 +184,7 @@ exports[`renders correctly 1`] = `
       Array [
         Object {
           "display": "flex",
-          "marginVertical": 16,
+          "marginVertical": 24,
         },
       ]
     }

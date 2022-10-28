@@ -123,7 +123,7 @@ export const PriceExplorer = ({
   return (
     <Box>
       <PriceHeader date={date} percentChange={percentChange} price={price} />
-      <Box my="md">
+      <Box my="lg">
         <Svg height={HEIGHT} width={WIDTH}>
           {customChartLabel && (
             <AnimatedBox flexDirection="row" mx="md" style={labelStyle}>

@@ -46,21 +46,21 @@ export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
     isNaN(percentChange.value) ? '-' : `${round(percentChange.value, 2)}%`
   )
 
-  const percentChangeIconStyle = useAnimatedStyle(() => ({
+  const percentChangeStyles = useAnimatedStyle(() => ({
     color: percentChange.value > 0 ? theme.colors.accentSuccess : theme.colors.accentCritical,
   }))
 
   const percentChangeIcon = useDerivedValue(() => (percentChange.value > 0 ? '↗' : '↘'))
 
   return (
-    <Box mx="md">
+    <Box mx="sm">
       <StyledReText color="textPrimary" text={priceFormatted} variant="headlineLarge" />
       <Flex row gap="xxs">
-        <Flex row gap="none">
-          <StyledReText color="textSecondary" text={percentChangeFormatted} variant="bodySmall" />
+        <Flex row gap="xxxs">
+          <StyledReText style={percentChangeStyles} text={percentChangeIcon} variant="bodySmall" />
           <StyledReText
-            style={percentChangeIconStyle}
-            text={percentChangeIcon}
+            style={percentChangeStyles}
+            text={percentChangeFormatted}
             variant="bodySmall"
           />
         </Flex>

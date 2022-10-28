@@ -10,7 +10,7 @@ import SendIcon from 'src/assets/icons/send.svg'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Suspense } from 'src/components/data/Suspense'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loading } from 'src/components/loading'
@@ -59,7 +59,7 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
 
   return (
-    <Flex mx="md">
+    <Flex mx="sm">
       <CurrencyLogo currency={currency} size={36} />
       <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="subheadLarge">
         {currency.name ?? t('Unknown token')}
@@ -228,7 +228,7 @@ function TokenDetails({
   }, [initialSendState, dispatch])
 
   return (
-    <>
+    <Box flex={1} mb="md">
       <HeaderScrollScreen
         contentHeader={
           <TokenDetailsBackButtonRow currency={currency} otherChainBalances={otherChainBalances} />
@@ -238,8 +238,8 @@ function TokenDetails({
             <HeaderTitleElement currency={currency} tokenProject={data?.tokenProjects?.[0]} />
           </BackHeader>
         }>
-        <Flex gap="xl" mb="xxl" mt="lg" pb="xxl">
-          <Flex gap="md">
+        <Flex gap="xl" my="md">
+          <Flex gap="xxs">
             <TokenDetailsHeader currency={currency} />
             <CurrencyPriceChart currency={currency} />
           </Flex>
@@ -266,7 +266,15 @@ function TokenDetails({
         </Flex>
       </HeaderScrollScreen>
 
-      <Flex row bg="background0" bottom={0} gap="sm" pb="xl" position="absolute" pt="sm" px="sm">
+      <Flex
+        row
+        bg="background0"
+        borderTopColor="backgroundOutline"
+        borderTopWidth={1}
+        gap="xs"
+        pb="md"
+        pt="sm"
+        px="lg">
         <Button
           fill
           disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}
@@ -294,6 +302,6 @@ function TokenDetails({
           onClose={() => setActiveSwapAttemptType(undefined)}
         />
       ) : null}
-    </>
+    </Box>
   )
 }
