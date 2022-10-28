@@ -21,7 +21,6 @@ export interface AssetPayload {
 }
 
 export interface CollectionInfoForAsset {
-  // collectionSymbol: string //TODO deprecate
   collectionDescription?: string | null
   collectionImageUrl?: string
   collectionName?: string
