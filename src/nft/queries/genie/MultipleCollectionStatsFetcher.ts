@@ -5,7 +5,7 @@ export const fetchMultipleCollectionStats = async ({
 }: {
   addresses: string[]
 }): Promise<GenieCollection[]> => {
-  const url = `${process.env.REACT_APP_GENIE_API_URL}/searchCollections`
+  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/searchCollections`
   const filters = {
     address: { $in: addresses },
   }
