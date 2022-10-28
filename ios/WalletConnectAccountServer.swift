@@ -35,7 +35,6 @@ class WalletConnectServerWrapper {
     self.server.register(handler: WalletConnectSignRequestHandler(eventEmitter: eventEmitter, serverWrapper: self))
     self.server.register(handler: WalletConnectSignTransactionHandler(eventEmitter: eventEmitter, serverWrapper: self))
     self.server.register(handler: WalletConnectSwitchChainHandler(eventEmitter: eventEmitter, serverWrapper: self, supportedChainIds: supportedChainIds))
-    self.server.register(handler: WalletConnectAddChainHandler(eventEmitter: eventEmitter, serverWrapper: self))
   }
   
   func disconnect(_ topic: String) {
