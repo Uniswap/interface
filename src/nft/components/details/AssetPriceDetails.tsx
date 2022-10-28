@@ -265,6 +265,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
+  const toggleBag = useBag((s) => s.toggleBag)
 
   const USDPrice = useUsdPrice(asset)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
@@ -281,7 +282,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     }
   }, [asset, itemsInBag])
 
-  const isOwner = asset.owner ? account?.toLowerCase() === asset.owner.address.toLowerCase() : false
+  const isOwner = asset.owner ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
 
   if (isOwner) {
     return <OwnerContainer asset={asset} />
@@ -330,7 +331,10 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               assetInBag={assetInBag}
               margin={true}
               useAccentColor={true}
-              onClick={() => (assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset]))}
+              // toggleBag
+              onClick={() => {
+                assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+              }}
             >
               <ThemedText.SubHeader lineHeight={'20px'}>
                 <span style={{ color: 'white' }}>{assetInBag ? 'Remove' : 'Buy Now'}</span>

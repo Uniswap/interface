@@ -44,18 +44,12 @@ const GridItem = ({ trait, totalSupply }: { trait: Trait; totalSupply: number })
     <GridItemContainer>
       <TraitType>{trait.trait_type}</TraitType>
       <TraitValue>{trait.value}</TraitValue>
-      <TraitPercentage>
-        {percentage}% ({trait.trait_count}) have this
-      </TraitPercentage>
     </GridItemContainer>
   )
 }
 
 const TraitsContainer = ({ asset, collection }: { asset: GenieAsset; collection: CollectionInfoForAsset }) => {
   const traits = asset.traits?.sort((a, b) => a.trait_type.localeCompare(b.trait_type))
-
-  console.log(traits)
-  console.log(collection)
 
   return (
     <Grid>
