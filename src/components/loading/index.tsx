@@ -63,13 +63,13 @@ const useChildFromType = (type: SkeletonType, repeat: number, height?: number) =
       )
     case 'wallets':
       return (
-        <Box>
+        <Flex gap="sm">
           {new Array(repeat).fill(null).map((_, i, { length }) => (
             <React.Fragment key={i}>
               <WalletLoader opacity={(length - i) / length} />
             </React.Fragment>
           ))}
-        </Box>
+        </Flex>
       )
     case 'favorite':
       return (

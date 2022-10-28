@@ -48,7 +48,13 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
         'You can import any of your wallet addresses that are associated with your recovery phrase.'
       )}
       title={t('Select addresses to import')}>
-      <Suspense fallback={<Loading repeat={4} type="wallets" />}>
+      <Suspense
+        fallback={
+          <Flex grow justifyContent="space-between">
+            <Loading repeat={4} type="wallets" />
+            <Button disabled label={t('Continue')} name={ElementName.Next} />
+          </Flex>
+        }>
         <WalletPreviewList
           isLoadingAccounts={isLoadingAccounts}
           navigation={navigation}

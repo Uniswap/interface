@@ -15,7 +15,7 @@ interface Props {
   testID?: string
 }
 
-const ADDRESS_WRAPPER_HEIGHT = 36
+export const ADDRESS_WRAPPER_HEIGHT = 36
 const UNICON_SIZE = 32
 const CHECK_ICON_SIZE = 24
 
@@ -48,7 +48,6 @@ export default function WalletPreviewCard({
               <Check height={CHECK_ICON_SIZE} width={CHECK_ICON_SIZE} />
             </Flex>
           )}
-          {/* TODO(MOB-1994): show ENS name AND truncated Ethereum address */}
           <AddressDisplay
             address={address}
             showAccountIcon={!selected}
