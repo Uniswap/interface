@@ -105,13 +105,19 @@ interface AddressCellProps {
 }
 
 export const AddressCell = ({ address, desktopLBreakpoint }: AddressCellProps) => {
-  console.log('make  changes here')
   return (
     <Column
       display={{ sm: 'none', xl: desktopLBreakpoint ? 'none' : 'flex', xxl: 'flex' }}
       className={styles.addressCell}
     >
-      <Box>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
+      <a
+        target="_blank"
+        rel="noreferrer"
+        href={`https://etherscan.io/address/${address}`}
+        style={{ textDecoration: 'none' }}
+      >
+        <Box onClick={(e) => e.stopPropagation()}>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
+      </a>
     </Column>
   )
 }

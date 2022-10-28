@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 import { body, buttonTextMedium, subhead, subheadSmall } from 'nft/css/common.css'
 import { breakpoints, sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
@@ -111,6 +111,23 @@ export const addressCell = style([
     lineHeight: '24px',
   },
 ])
+
+globalStyle(`${addressCell} a[href]`, {
+  color: `${themeVars.colors.textSecondary}`,
+  textDecoration: 'none',
+})
+
+globalStyle(`${addressCell} a[href]:hover`, {
+  color: `${themeVars.colors.textSecondary}`,
+  opacity: `${themeVars.opacity.hover}`,
+  textDecoration: 'none',
+})
+
+globalStyle(`${addressCell} a[href]:active`, {
+  color: `${themeVars.colors.textSecondary}`,
+  opacity: `${themeVars.opacity.pressed}`,
+  textDecoration: 'none',
+})
 
 export const baseBuyCell = style([
   buttonTextMedium,

@@ -74,13 +74,13 @@ globalStyle(`${description} a[href]`, {
 
 globalStyle(`${description} a[href]:hover`, {
   color: `${themeVars.colors.textSecondary}`,
-  opacity: '0.6',
+  opacity: `${themeVars.opacity.hover}`,
   textDecoration: 'none',
 })
 
 globalStyle(`${description} a[href]:active`, {
   color: `${themeVars.colors.textSecondary}`,
-  opacity: '0.4',
+  opacity: `${themeVars.opacity.pressed}`,
   textDecoration: 'none',
 })
 
