@@ -65,15 +65,19 @@ const BodyWrapper = styled.div`
   `};
 `
 
-const HeaderWrapper = styled.div<{ scrolledState?: boolean }>`
+const HeaderWrapper = styled.div<{ scrolledState?: boolean; nftFlagEnabled?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
-  background-color: ${({ theme, scrolledState }) => scrolledState && theme.backgroundSurface};
-  border-bottom: ${({ theme, scrolledState }) => scrolledState && `1px solid ${theme.backgroundOutline}`};
+  background-color: ${({ theme, nftFlagEnabled, scrolledState }) =>
+    scrolledState && nftFlagEnabled && theme.backgroundSurface};
+  border-bottom: ${({ theme, nftFlagEnabled, scrolledState }) =>
+    scrolledState && nftFlagEnabled && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  transition: background-color ${({ theme }) => theme.transition.duration.fast} ease-in-out,
-    border-width ${({ theme }) => theme.transition.duration.fast} ease-in-out;
+  transition: ${({ theme, nftFlagEnabled }) =>
+    nftFlagEnabled &&
+    `background-color ${theme.transition.duration.fast} ease-in-out,
+    border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
   z-index: ${Z_INDEX.sticky};
 `
@@ -167,7 +171,7 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper scrolledState={scrolledState}>
+          <HeaderWrapper scrolledState={scrolledState} nftFlagEnabled={nftFlag === NftVariant.Enabled}>
             <NavBar />
           </HeaderWrapper>
           <BodyWrapper>
