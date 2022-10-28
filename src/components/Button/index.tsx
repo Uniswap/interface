@@ -365,3 +365,34 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
     )
   }
 }
+
+export const MediumButton = styled.button`
+  align-items: center;
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  border-radius: 16px;
+  border: 0;
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  font-weight: 600;
+  gap: 12px;
+  justify-content: center;
+  padding: 16px;
+  transition: 150ms ease background-color opacity;
+
+  :disabled {
+    background-color: ${({ theme }) => theme.backgroundInteractive};
+    cursor: default;
+    opacity: 0.6;
+  }
+  :hover {
+    background-color: ${({ theme }) => theme.stateOverlayHover};
+  }
+  :active {
+    background-color: ${({ theme }) => theme.stateOverlayPressed};
+  }
+  :focus {
+    background-color: ${({ theme }) => theme.stateOverlayPressed};
+  }
+`

@@ -1,29 +1,29 @@
 import { Identify, identify, init, track } from '@amplitude/analytics-browser'
 import { isProductionEnv } from 'utils/env'
 
-const API_KEY = isProductionEnv() ? process.env.REACT_APP_AMPLITUDE_KEY : process.env.REACT_APP_AMPLITUDE_TEST_KEY
+const DUMMY_KEY = '00000000000000000000000000000000'
+const PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
 
 /**
- * Initializes Amplitude with API key for project.
- *
- * Uniswap has two Amplitude projects: test and production. You must be a
- * member of the organization on Amplitude to view details.
+ * Initializes Amplitude SDK and configures it to send events to a Uniswap reverse proxy,
+ * which relays to events to relevant Amplitude endpoints. You must be a
+ * member of the organization on Amplitude to view logged events.
  */
 export function initializeAnalytics() {
-  if (typeof API_KEY === 'undefined') {
-    const keyName = isProductionEnv() ? 'REACT_APP_AMPLITUDE_KEY' : 'REACT_APP_AMPLITUDE_TEST_KEY'
-    console.error(`${keyName} is undefined, Amplitude analytics will not run.`)
+  if (typeof PROXY_URL === 'undefined') {
+    console.error('REACT_APP_AMPLITUDE_PROXY_URL is undefined, Amplitude analytics will not run.')
     return
   }
   init(
-    API_KEY,
+    DUMMY_KEY,
     /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
     /* options= */
     {
+      // Configure the SDK to work with alternate endpoint
+      serverUrl: PROXY_URL,
       // Disable tracking of private user information by Amplitude
       trackingOptions: {
-        // IP is being dropped before ingestion on Amplitude side, only being used to determine country.
-        ipAddress: isProductionEnv() ? false : true,
+        ipAddress: false,
         carrier: false,
         city: false,
         region: false,
@@ -35,8 +35,7 @@ export function initializeAnalytics() {
 
 /** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
-  const origin = window.location.origin
-  if (!API_KEY) {
+  if (!PROXY_URL) {
     console.log(`[analytics(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return
   }

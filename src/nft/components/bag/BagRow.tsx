@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import clsx from 'clsx'
+import { MediumButton } from 'components/Button'
 import { TimedLoader } from 'nft/components/bag/TimedLoader'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -19,8 +20,17 @@ import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal, getAssetHref } from 'nft/utils'
 import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components/macro'
 
 import * as styles from './BagRow.css'
+
+const RemoveButton = styled(MediumButton)`
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 16px;
+  margin-left: 16px;
+  padding: 12px 14px;
+`
 
 const NoContentContainer = () => (
   <Box position="relative" background="loadingBackground" className={styles.bagRowImage}>
@@ -59,13 +69,22 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
   const [cardHovered, setCardHovered] = useState(false)
   const handleMouseEnter = useCallback(() => setCardHovered(true), [])
   const handleMouseLeave = useCallback(() => setCardHovered(false), [])
-  const showRemoveButton = showRemove && cardHovered
+  const showRemoveButton = Boolean(showRemove && cardHovered && !isMobile)
 
   const assetEthPrice = asset.updatedPriceInfo ? asset.updatedPriceInfo.ETHPrice : asset.priceInfo.ETHPrice
   const assetEthPriceFormatted = formatWeiToDecimal(assetEthPrice)
   const assetUSDPriceFormatted = ethNumberStandardFormatter(
     usdPrice ? parseFloat(formatEther(assetEthPrice)) * usdPrice : usdPrice,
     true
+  )
+
+  const handleRemoveClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      removeAsset([asset])
+    },
+    [asset, removeAsset]
   )
 
   return (
@@ -75,11 +94,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
           <Box
             display={showRemove && isMobile ? 'block' : 'none'}
             className={styles.removeAssetOverlay}
-            onClick={(e: MouseEvent) => {
-              e.preventDefault()
-              e.stopPropagation()
-              removeAsset([asset])
-            }}
+            onClick={handleRemoveClick}
             transition="250"
             zIndex="1"
           >
@@ -112,19 +127,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
           </Row>
         </Column>
-        {showRemoveButton && !isMobile && (
-          <Box
-            marginLeft="16"
-            className={styles.removeBagRowButton}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              removeAsset([asset])
-            }}
-          >
-            Remove
-          </Box>
-        )}
+        {showRemoveButton && <RemoveButton onClick={handleRemoveClick}>Remove</RemoveButton>}
         {(!showRemoveButton || isMobile) && (
           <Column flexShrink="0" alignItems="flex-end">
             <Box className={styles.bagRowPrice}>
@@ -212,7 +215,7 @@ const UnavailableAssetsPreview = ({ assets }: UnavailableAssetsPreviewProps) => 
   >
     {assets.map((asset, index) => (
       <Box
-        key={`preview${index}`}
+        key={`${asset.address}-${asset.tokenId}`}
         as="img"
         src={asset.smallImageUrl}
         width="32"
@@ -287,7 +290,7 @@ export const UnavailableAssetsHeaderRow = ({
                 color="textPrimary"
                 justifyContent="center"
                 cursor="pointer"
-                onClick={() => clearUnavailableAssets()}
+                onClick={clearUnavailableAssets}
               >
                 <TimedLoader />
                 <CloseTimerIcon />

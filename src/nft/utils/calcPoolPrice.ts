@@ -113,7 +113,7 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
 
       if (isPriceChangedAsset && item.asset.updatedPriceInfo)
         item.asset.updatedPriceInfo.ETHPrice = item.asset.updatedPriceInfo.basePrice = calculatedPrice
-      else item.asset.currentEthPrice = item.asset.priceInfo.ETHPrice = calculatedPrice
+      else item.asset.priceInfo.ETHPrice = calculatedPrice
     }
   })
 
