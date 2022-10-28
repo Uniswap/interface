@@ -275,9 +275,7 @@ function TokenDetails({
   return (
     <Box flex={1} mb="md">
       <HeaderScrollScreen
-        contentHeader={
-          <TokenDetailsBackButtonRow currency={currency} otherChainBalances={otherChainBalances} />
-        }
+        contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
         fixedHeader={
           <BackHeader>
             <HeaderTitleElement currency={currency} tokenProject={data?.tokenProjects?.[0]} />
