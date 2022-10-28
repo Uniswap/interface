@@ -383,6 +383,7 @@ export const MediumButton = styled.button`
 
   :disabled {
     background-color: ${({ theme }) => theme.backgroundInteractive};
+    cursor: default;
     opacity: 0.6;
   }
   :hover {
