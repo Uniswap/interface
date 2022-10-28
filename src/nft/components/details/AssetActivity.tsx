@@ -51,8 +51,11 @@ const Table = styled.table`
 const TD = styled.td`
   width: 20%;
   text-align: left;
-  padding-top: 16px;
-  padding-bottom: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  height: 56px;
+
+  vertical-align: middle;
 
   @media (max-width: 960px) {
     &:nth-child(4) {
@@ -122,12 +125,14 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
           return (
             <TR key={index}>
               <TD>
-                <EventCell
-                  eventType={event.eventType}
-                  eventTimestamp={event.eventTimestamp}
-                  eventTransactionHash={event.transactionHash}
-                  eventOnly
-                />
+                <div style={{ marginTop: 5 }}>
+                  <EventCell
+                    eventType={event.eventType}
+                    eventTimestamp={event.eventTimestamp}
+                    eventTransactionHash={event.transactionHash}
+                    eventOnly
+                  />
+                </div>
               </TD>
               <TD>
                 {formattedPrice && (
