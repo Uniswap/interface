@@ -105,6 +105,7 @@ interface AddressCellProps {
 }
 
 export const AddressCell = ({ address, desktopLBreakpoint }: AddressCellProps) => {
+  console.log('make  changes here')
   return (
     <Column
       display={{ sm: 'none', xl: desktopLBreakpoint ? 'none' : 'flex', xxl: 'flex' }}
