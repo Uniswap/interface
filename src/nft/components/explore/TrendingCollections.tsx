@@ -160,7 +160,7 @@ const TrendingCollections = () => {
           </Selector>
         </Filter>
       </FiltersRow>
-      {data ? <CollectionTable data={trendingCollections} /> : <p>Loading</p>}
+      <CollectionTable data={trendingCollections} />
     </ExploreContainer>
   )
 }

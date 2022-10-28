@@ -210,6 +210,23 @@ export const td = style([
   }),
 ])
 
+export const loadingTd = style([
+  body,
+  {
+    selectors: {
+      '&:nth-last-child(1)': {
+        paddingRight: '20px',
+      },
+    },
+  },
+  sprinkles({
+    maxWidth: '160',
+    paddingY: '8',
+    textAlign: 'right',
+    position: 'relative',
+  }),
+])
+
 export const trendingOptions = sprinkles({
   marginTop: '36',
   marginBottom: '20',
