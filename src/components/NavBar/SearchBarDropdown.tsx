@@ -66,8 +66,8 @@ export const SearchBarDropdownSection = ({
               traceEvent={() =>
                 sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, {
                   position: index + startingIndex,
-                  selected_name: suggestion.name,
-                  selected_address: suggestion.address,
+                  selected_search_result_name: suggestion.name,
+                  selected_search_result_address: suggestion.address,
                   ...eventProperties,
                 })
               }
@@ -83,8 +83,8 @@ export const SearchBarDropdownSection = ({
               traceEvent={() =>
                 sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, {
                   position: index + startingIndex,
-                  selected_name: suggestion.name,
-                  selected_address: suggestion.address,
+                  selected_search_result_name: suggestion.name,
+                  selected_search_result_address: suggestion.address,
                   ...eventProperties,
                 })
               }
@@ -201,7 +201,7 @@ export const SearchBarDropdown = ({
   }, [toggleOpen, hoveredIndex, totalSuggestions])
 
   useEffect(() => {
-    const eventProperties = { totalSuggestions, queryText }
+    const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText }
     if (!isLoading) {
       const tokenSearchResults =
         tokens.length > 0 ? (
@@ -212,7 +212,7 @@ export const SearchBarDropdown = ({
             toggleOpen={toggleOpen}
             suggestions={tokens}
             eventProperties={{
-              suggestionType: NavBarSearchTypes.TOKEN_SUGGESTION,
+              suggestion_type: NavBarSearchTypes.TOKEN_SUGGESTION,
               ...eventProperties,
             }}
             header={<Trans>Tokens</Trans>}
@@ -233,7 +233,7 @@ export const SearchBarDropdown = ({
               toggleOpen={toggleOpen}
               suggestions={collections}
               eventProperties={{
-                suggestionType: NavBarSearchTypes.COLLECTION_SUGGESTION,
+                suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
                 ...eventProperties,
               }}
               header={<Trans>NFT Collections</Trans>}
@@ -270,7 +270,7 @@ export const SearchBarDropdown = ({
                 toggleOpen={toggleOpen}
                 suggestions={shortenedHistory}
                 eventProperties={{
-                  suggestionType: NavBarSearchTypes.RECENT_SEARCH,
+                  suggestion_type: NavBarSearchTypes.RECENT_SEARCH,
                   ...eventProperties,
                 }}
                 header={<Trans>Recent searches</Trans>}
@@ -285,7 +285,7 @@ export const SearchBarDropdown = ({
                 toggleOpen={toggleOpen}
                 suggestions={trendingTokens}
                 eventProperties={{
-                  suggestionType: NavBarSearchTypes.TOKEN_TRENDING,
+                  suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
                   ...eventProperties,
                 }}
                 header={<Trans>Popular tokens</Trans>}
@@ -301,7 +301,7 @@ export const SearchBarDropdown = ({
                 toggleOpen={toggleOpen}
                 suggestions={trendingCollections as unknown as GenieCollection[]}
                 eventProperties={{
-                  suggestionType: NavBarSearchTypes.COLLECTION_TRENDING,
+                  suggestion_type: NavBarSearchTypes.COLLECTION_TRENDING,
                   ...eventProperties,
                 }}
                 header={<Trans>Popular NFT collections</Trans>}

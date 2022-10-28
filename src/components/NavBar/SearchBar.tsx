@@ -97,7 +97,7 @@ export const SearchBar = () => {
 
   const navbarSearchEventProperties = {
     navbar_search_input_text: debouncedSearchValue,
-    hasInput: debouncedSearchValue.length > 0,
+    hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
   }
 
   return (
