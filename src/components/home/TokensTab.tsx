@@ -22,8 +22,8 @@ export function TokensTab({
   loadingContainerStyle,
 }: {
   owner: string
-  tabViewScrollProps: TabViewScrollProps
-  loadingContainerStyle: ViewStyle
+  tabViewScrollProps?: TabViewScrollProps
+  loadingContainerStyle?: ViewStyle
 }) {
   const theme = useAppTheme()
   const { t } = useTranslation()

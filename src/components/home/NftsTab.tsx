@@ -100,7 +100,7 @@ function formatNftItems(data: NftsTabQuery$data | null | undefined): NFTItem[] {
 
 export function NftsTab(props: {
   owner: string
-  tabViewScrollProps: TabViewScrollProps
+  tabViewScrollProps?: TabViewScrollProps
   loadingContainerStyle?: ViewStyle
 }) {
   return (
@@ -123,7 +123,7 @@ function NftsTabInner({
   loadingContainerStyle,
 }: {
   owner: string
-  tabViewScrollProps: TabViewScrollProps
+  tabViewScrollProps?: TabViewScrollProps
   loadingContainerStyle?: ViewStyle
 }) {
   const navigation = useHomeStackNavigation()

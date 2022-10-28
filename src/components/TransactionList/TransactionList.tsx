@@ -6,7 +6,6 @@ import { SectionList, SectionListData } from 'react-native'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { Suspense } from 'src/components/data/Suspense'
 import { Box } from 'src/components/layout'
-import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import {
@@ -111,7 +110,6 @@ interface TransactionListProps {
   preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
   readonly: boolean
   emptyStateContent: ReactElement | null
-  tabViewScrollProps?: TabViewScrollProps
 }
 
 const suspend = () => new Promise(() => {})
@@ -120,7 +118,7 @@ export default function TransactionList(props: TransactionListProps) {
   return (
     <Suspense
       fallback={
-        <Box style={props.tabViewScrollProps?.contentContainerStyle}>
+        <Box>
           <Loading type="transactions" />
         </Box>
       }>
@@ -135,7 +133,6 @@ function TransactionListInner({
   preloadedQuery,
   readonly,
   emptyStateContent,
-  tabViewScrollProps,
 }: TransactionListProps) {
   // force a fallback if the query is not yet loaded
   if (!preloadedQuery) {
@@ -232,15 +229,13 @@ function TransactionListInner({
 
   return (
     <SectionList
-      ref={tabViewScrollProps?.ref}
       keyExtractor={key}
       renderItem={renderItem}
       renderSectionHeader={SectionTitle}
       sections={sectionData}
       showsVerticalScrollIndicator={false}
+      stickySectionHeadersEnabled={false}
       windowSize={5}
-      onScroll={tabViewScrollProps?.onScroll}
-      {...tabViewScrollProps}
     />
   )
 }
