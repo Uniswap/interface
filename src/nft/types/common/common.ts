@@ -102,10 +102,14 @@ export interface GenieAsset {
   totalCount?: number // The totalCount from the query to /assets
   collectionIsVerified?: boolean
   rarity?: Rarity
-  owner: string
-  creator: string
+  owner: {
+    address: string
+  }
   externalLink: string
   metadataUrl: string
+  creator: {
+    address: string
+  }
   traits?: {
     trait_type: string
     value: string

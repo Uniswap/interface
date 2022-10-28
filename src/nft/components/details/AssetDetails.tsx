@@ -366,6 +366,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   //   if (asset.owner) setOwnerAddress(asset.owner)
   // }, [asset])
 
+  console.log(asset)
+
   useEffect(() => {
     setSelected(
       !!itemsInBag.find((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
@@ -448,9 +450,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
         <>
           <span style={{ fontSize: 14, lineHeight: '20px' }}>By </span>
-
-          <AddressTextLink href={`https://etherscan.io/address/${asset.creator}`} target="_blank">
-            {shortenAddress(asset.creator)}
+          <AddressTextLink href={`https://etherscan.io/address/${asset.creator.address}`} target="_blank">
+            {shortenAddress(asset.creator.address)}
           </AddressTextLink>
           <DescriptionText>{collection.collectionDescription}</DescriptionText>
         </>

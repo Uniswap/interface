@@ -281,14 +281,13 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     }
   }, [asset, itemsInBag])
 
-  const isOwner =
-    asset.owner && typeof asset.owner === 'string' ? account?.toLowerCase() === asset.owner.toLowerCase() : false
+  const isOwner = asset.owner ? account?.toLowerCase() === asset.owner.address.toLowerCase() : false
 
   if (isOwner) {
     return <OwnerContainer asset={asset} />
   }
 
-  const shortAddress = shortenAddress(asset.owner ?? '')
+  const shortAddress = shortenAddress(asset.owner.address ?? '')
   const uploadLink = asset.tokenType === 'ERC1155' ? asset.creator : asset.owner
 
   return (
