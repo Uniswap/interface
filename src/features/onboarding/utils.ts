@@ -43,12 +43,8 @@ export function getFlow(
   isInitialOnboarding: boolean
 ): OnboardingScreens[] {
   let flows = FLOWS[importType]
-  if (isBiometricAuthEnabled && !isInitialOnboarding) {
+  if ((isBiometricAuthEnabled || hasSeedPhrase) && !isInitialOnboarding) {
     flows = flows.filter((screen) => screen !== OnboardingScreens.Security)
-  }
-
-  if (importType !== ImportType.SeedPhrase && hasSeedPhrase) {
-    flows = flows.filter((screen) => screen !== OnboardingScreens.Backup)
   }
   return flows
 }

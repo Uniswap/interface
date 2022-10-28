@@ -53,7 +53,7 @@ describe(getFlow, () => {
   })
 
   it('correctly returns length of onboarding create flow with seed phrase existing without add security screen', () => {
-    expect(getFlow(ImportType.Create, true, true, true)).toHaveLength(3)
+    expect(getFlow(ImportType.Create, true, true, true)).toHaveLength(4)
   })
 
   it('correctly returns length of add account create flow showing add security screen and seed phrase does not exist', () => {
