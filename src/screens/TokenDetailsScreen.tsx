@@ -171,6 +171,7 @@ function TokenDetails({
         type: AssetType.Currency,
       },
       [CurrencyField.OUTPUT]: null,
+      showRecipientSelector: true,
     }
   }, [currency])
 
