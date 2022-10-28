@@ -4,7 +4,7 @@ import { GenieCollection } from '../../types'
 
 export const CollectionStatsFetcher = async (addressOrName: string, recursive = false): Promise<GenieCollection> => {
   const isName = !isAddress(addressOrName.toLowerCase())
-  const url = `${process.env.REACT_APP_GENIE_API_URL}/collections`
+  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/collections`
 
   if (!isName && !recursive) {
     try {
