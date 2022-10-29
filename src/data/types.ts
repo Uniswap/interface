@@ -1,5 +1,6 @@
 export enum NetworkErrorType {
   Forbidden = 'Forbidden',
+  GatewayTimeout = 'GatewayTimeout',
   InternalServerError = 'InternalServerError',
   NotFound = 'NotFound',
   ServiceUnavailable = 'ServiceUnavailable',

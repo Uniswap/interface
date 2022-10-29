@@ -35,6 +35,8 @@ function parseNetworkError(status: number): NetworkErrorType {
       return NetworkErrorType.InternalServerError
     case 503:
       return NetworkErrorType.ServiceUnavailable
+    case 504:
+      return NetworkErrorType.GatewayTimeout
     default:
       return NetworkErrorType.Unknown
   }
