@@ -273,7 +273,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               </Row>
             </Row>
             <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={headlineMedium}>
-              {asset.susFlag && (
+              {asset.openseaSusFlag && (
                 <Box marginTop="8">
                   <MouseoverTooltip text={<Box fontWeight="normal">{SUSPICIOUS_TEXT}</Box>}>
                     <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />

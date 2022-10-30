@@ -8,6 +8,7 @@ export const card = style([
     borderStyle: 'solid',
     borderWidth: '1px',
     paddingBottom: '12',
+    boxShadow: 'shallow',
   }),
   {
     boxSizing: 'border-box',
@@ -20,9 +21,6 @@ export const card = style([
           background: vars.color.lightGrayOverlay,
         },
       },
-    },
-    ':hover': {
-      boxShadow: themeVars.shadows.deep,
     },
   },
 ])

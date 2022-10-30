@@ -265,7 +265,7 @@ export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice, sh
     let jointCollections = [...nftxCollectionAssets, ...nft20CollectionAssets]
 
     jointCollections.forEach((asset) => {
-      if (!asset.susFlag) {
+      if (!asset.openseaSusFlag) {
         const isNFTX = asset.marketplace === Markets.NFTX
         asset.priceInfo.ETHPrice = calcPoolPrice(asset, isNFTX ? counterNFTX : counterNFT20)
         BigNumber.from(asset.priceInfo.ETHPrice).gte(0) && (isNFTX ? counterNFTX++ : counterNFT20++)
@@ -279,7 +279,7 @@ export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice, sh
     })
 
     let validAssets = jointCollections.filter(
-      (asset) => BigNumber.from(asset.priceInfo.ETHPrice).gte(0) && !asset.susFlag
+      (asset) => BigNumber.from(asset.priceInfo.ETHPrice).gte(0) && !asset.openseaSusFlag
     )
 
     validAssets = validAssets.slice(

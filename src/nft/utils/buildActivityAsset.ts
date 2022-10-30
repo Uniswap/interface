@@ -18,7 +18,7 @@ export const buildActivityAsset = (event: ActivityEvent, collectionName: string,
     marketplace: event.marketplace,
     name: event.tokenMetadata?.name,
     tokenId: event.tokenId,
-    susFlag: event.tokenMetadata?.suspiciousFlag,
+    openseaSusFlag: event.tokenMetadata?.suspiciousFlag,
     smallImageUrl: event.tokenMetadata?.smallImageUrl,
     collectionSymbol: event.symbol,
     priceInfo: {

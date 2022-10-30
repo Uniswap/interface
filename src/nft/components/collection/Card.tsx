@@ -4,6 +4,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import {
+  ChevronRightIcon,
   MinusIconLarge,
   PauseButtonIcon,
   PlayButtonIcon,
@@ -28,6 +29,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import styled from 'styled-components/macro'
 
 import * as styles from './Card.css'
 
@@ -49,6 +51,19 @@ const useCardContext = () => {
 }
 
 const baseHref = (asset: GenieAsset) => `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
+
+const DetailsLinkContainer = styled.a`
+  display: flex;
+  text-decoration: none;
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
+  line-height: 20px;
+  weight: 400;
+
+  :hover {
+    color: ${({ theme }) => theme.accentAction};
+  }
+`
 
 /* -------- ASSET CARD -------- */
 interface CardProps {
@@ -370,7 +385,11 @@ const InfoContainer = ({ children }: { children: ReactNode }) => {
   )
 }
 
-const PrimaryRow = ({ children }: { children: ReactNode }) => <Row justifyContent="space-between">{children}</Row>
+const PrimaryRow = ({ children }: { children: ReactNode }) => (
+  <Row gap="8" justifyContent="space-between">
+    {children}
+  </Row>
+)
 
 const PrimaryDetails = ({ children }: { children: ReactNode }) => (
   <Row overflow="hidden" whiteSpace="nowrap">
@@ -538,6 +557,22 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
   )
 }
 
+const DetailsLink = () => {
+  const { asset } = useCardContext()
+
+  return (
+    <DetailsLinkContainer
+      href={baseHref(asset)}
+      onClick={(e: MouseEvent) => {
+        e.stopPropagation()
+      }}
+    >
+      Details
+      <ChevronRightIcon width="20px" height="20px" />
+    </DetailsLinkContainer>
+  )
+}
+
 /* -------- RANKING CARD -------- */
 interface RankingProps {
   rarity: Rarity
@@ -664,6 +699,7 @@ export {
   Button,
   Container,
   DetailsContainer,
+  DetailsLink,
   Image,
   InfoContainer,
   MarketplaceIcon,
