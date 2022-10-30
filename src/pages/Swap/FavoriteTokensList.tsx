@@ -14,6 +14,8 @@ import {toChecksum} from 'state/logs/utils'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCurrency } from 'hooks/Tokens'
 import { useDexscreenerToken } from 'components/swap/ChartPage'
+import {useIsDarkMode} from 'state/user/hooks'
+import useTheme from 'hooks/useTheme'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 
 type Tab = {
@@ -72,13 +74,13 @@ const FavoriteTokenRow = (props: { account?: string | null, token: any, removeFr
 
 export const TabsList = (props: TabsListProps) => {
     const { tabs, onActiveChanged } = props
-
+    const theme = useTheme()
     return (
         <React.Fragment>
             <CNav variant="tabs" role="tablist">
                 {tabs?.map(tab => (
                     <CNavItem key={tab.label}>
-                        <CNavLink href={'javascript:void(0);'}
+                        <CNavLink style={{color: tab.active == false ? theme.text1 : ''}} href={'javascript:void(0);'}
                             active={tab.active}
                             onClick={() => onActiveChanged(tab)}>
                             {tab.label}
@@ -100,7 +102,7 @@ export const TabsList = (props: TabsListProps) => {
 export const FavoriteTokensList = () => {
     const [favoriteTokens] = useUserFavoritesManager()
     const { removeFromFavorites } = useAddPairToFavorites()
-
+    const isDarkMode = useIsDarkMode()
     const favTokens = useMemo(
         () => favoriteTokens || []
         , [favoriteTokens]
@@ -108,12 +110,13 @@ export const FavoriteTokensList = () => {
 
     const { account } = useActiveWeb3React()
 
+    const theme = useTheme()
     return (
         <DarkCard>
             <AutoColumn gap="md">
                 <TYPE.mediumHeader style={{ cursor: 'pointer' }}>Favorited Tokens </TYPE.mediumHeader>
                 <AutoColumn>
-                    <CTable hover>
+                    <CTable style={{color:theme.text1}} hover={!isDarkMode}>
                         <CTableHead>
                             <CTableRow>
                                 <CTableHeaderCell scope="col">Name</CTableHeaderCell>
