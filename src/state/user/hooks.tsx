@@ -1,6 +1,7 @@
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
 import { Pair, computePairAddress } from '@uniswap/v2-sdk'
 import { Percent, Token } from '@uniswap/sdk-core'
+import { SearchPreferenceState, TokenFavorite } from './reducer'
 import {
   SerializedPair,
   SerializedToken,
@@ -8,6 +9,7 @@ import {
   addSerializedToken,
   removeSerializedToken,
   updateArbitrumAlphaAcknowledged,
+  updateFavoritedTokens,
   updateHideClosedPositions,
   updateUseAutoSlippage,
   updateUserChartHistory,
@@ -29,9 +31,9 @@ import { AppState } from '../index'
 import JSBI from 'jsbi'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
-import { SearchPreferenceState } from './reducer'
 import { SupportedLocale } from 'constants/locales'
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
+import _ from 'lodash'
 import flatMap from 'lodash.flatmap'
 import { shallowEqual } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -78,6 +80,46 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
+}
+
+export function useUserFavoritesManager(): [TokenFavorite[], (favorites: TokenFavorite[]) => void] {
+  const dispatch = useAppDispatch()
+  const favorites = useAppSelector((state) => state.user.favorites)
+
+  const updateUserFavorites = useCallback((_favorites: TokenFavorite[]) => {
+    dispatch(updateFavoritedTokens({newFavorites: _favorites}))
+  }, [favorites, dispatch])
+
+  return [favorites, updateUserFavorites]
+}
+
+export function useAddPairToFavorites () {
+  const [current,updateFavorites] = useUserFavoritesManager()
+
+  const addToFavorites = useCallback((pairAddress: string, network: string, tokenAddress: string, tokenName: string, tokenSymbol: string) => {
+    const updated = _.uniqBy([...(current || []), {pairAddress, network, tokenName, tokenSymbol, tokenAddress}], pair => pair.pairAddress)
+
+    updateFavorites(updated)
+  }, [current, updateFavorites])
+
+
+  const removeFromFavorites = useCallback((pairAddress:string) => {
+    const updated = [...(current || []).filter(pair => pair.pairAddress !== pairAddress)]
+    updateFavorites(updated)
+  }, [ current, updateFavorites ])
+
+  return {
+    addToFavorites,
+    removeFromFavorites
+  }
+}
+
+export function useIsPairFavorited (pairAddress: string) {
+  const [favorites,] = useUserFavoritesManager()
+
+  return useMemo(() => {
+    return favorites?.some((favorite) => favorite.pairAddress.toLowerCase() == pairAddress.toLowerCase())
+  }, [favorites])
 }
 
 export function useUserLocale(): SupportedLocale | null {

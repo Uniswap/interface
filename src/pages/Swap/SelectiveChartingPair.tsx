@@ -10,10 +10,9 @@ import {
 } from "react-feather";
 import { ButtonOutlined, ButtonSecondary } from "components/Button"
 import { Currency, Token } from "@uniswap/sdk-core";
-import { DarkCard } from "components/Card";
 import { EmbedModel, useIsEmbedMode } from "components/Header";
+import { FavoriteTokensList, TabsList } from './FavoriteTokensList'
 import React, { useEffect, useState } from "react";
-import { TYPE } from "theme";
 import styled, { useTheme } from "styled-components/macro";
 import {
     toChecksum,
@@ -30,16 +29,18 @@ import { useIsDarkMode, useUserChartHistoryManager } from "state/user/hooks";
 import { useLocation, useParams } from "react-router";
 
 import BarChartLoaderSVG from "components/swap/BarChartLoader";
-import { ChartWrapper } from "components/earn/styled";
 import { ChartComponent } from "./ChartComponent";
 import { ChartSearchModal } from "pages/Charts/ChartSearchModal";
 import { ChartSidebar } from "components/ChartSidebar";
+import { ChartWrapper } from "components/earn/styled";
+import { DarkCard } from "components/Card";
 import { LoadingSkeleton } from "pages/Pool/styleds";
 import { PageMeta } from "./PageMeta";
 import ReactGA from "react-ga";
 import { RecentlyViewedCharts } from "./RecentViewedCharts";
 import { SelectiveChartEmbedModal } from './SelectiveChartEmbed'
 import Swal from 'sweetalert2'
+import { TYPE } from "theme";
 import { TableQuery } from "./TableQuery";
 import TokenSocials from "./TokenSocials";
 import { TokenStats } from "./TokenStats";
@@ -294,6 +295,15 @@ export const SelectiveChartWithPair = () => {
     }, [])
 
     useSetTitle(title)
+
+    const defaultTabs = [
+        { label: 'Recently Viewed Charts', active: true, content: <RecentlyViewedCharts /> },
+        { label: 'Favorited Tokens', active: false, content: <FavoriteTokensList /> }
+    ]
+
+    const [tabs, setTabs] = React.useState(defaultTabs)
+
+    const onActiveChange = (tab: any) => setTabs(old => old.map(oldTab => oldTab.label == tab.label ? { ...oldTab, active: true } : {...oldTab, active: false }))
 
     const pageMeta = React.useMemo(function () {
         const data = screenerToken ? screenerToken : screenerPair
@@ -733,10 +743,10 @@ export const SelectiveChartWithPair = () => {
                                 )}
 
                             {PanelMemo}
+                            {Boolean(!hasSelectedData) && <div style={{ width: "100%", marginTop: 15, marginBottom: 15 }}>
+                                <TabsList tabs={tabs} onActiveChanged={onActiveChange} />
+                            </div>}
 
-                            {Boolean(!hasSelectedData && userChartHistory.length) && (
-                                <RecentlyViewedCharts />
-                            )}
                         </StyledDiv>
 
                         {loadingNewData ? (

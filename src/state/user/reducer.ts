@@ -6,6 +6,7 @@ import {
   removeSerializedPair,
   removeSerializedToken,
   updateArbitrumAlphaAcknowledged,
+  updateFavoritedTokens,
   updateHideClosedPositions,
   updateMatchesDarkMode,
   updateUseAutoSlippage,
@@ -29,6 +30,14 @@ import { createReducer } from '@reduxjs/toolkit'
 import { updateVersion } from '../global/actions'
 
 const currentTimestamp = () => new Date().getTime()
+
+export type TokenFavorite = {
+  pairAddress: string;
+  network: string;
+  tokenAddress: string;
+  tokenSymbol: string;
+  tokenName: string;
+}
 
 export interface UserState {
   arbitrumAlphaAcknowledged: boolean
@@ -81,6 +90,7 @@ export interface UserState {
   }
   chartHistory?: any[] 
   searchPreferences: SearchPreferenceState
+  favorites: TokenFavorite[]
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -122,6 +132,7 @@ export const initialState: UserState = {
     custom: 0
   },
   chartHistory: [],
+  favorites: [],
   searchPreferences: {
     networks: [
       {chainId: 1, network: 'ethereum', includeInResults: true}, 
@@ -134,6 +145,10 @@ export default createReducer(initialState, (builder) =>
   builder
     .addCase(updateUserSearchPreferences, (state, action) => {
       state.searchPreferences = action.payload.newPreferences;
+    })
+    .addCase(updateFavoritedTokens, (state, action) => {
+      state.favorites = action.payload.newFavorites
+      state.timestamp = currentTimestamp()
     })
     .addCase(updateUserChartHistory, (state, action) => {
       state.chartHistory = _.orderBy(

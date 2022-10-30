@@ -1,7 +1,7 @@
-import { SearchPreferenceState } from './reducer'
+import { SearchPreferenceState, TokenFavorite } from './reducer'
+
 import { SupportedLocale } from 'constants/locales'
 import { createAction } from '@reduxjs/toolkit'
-
 export interface SerializedToken {
   chainId: number
   address: string
@@ -19,6 +19,8 @@ export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>(
 export const updateArbitrumAlphaAcknowledged = createAction<{ arbitrumAlphaAcknowledged: boolean }>(
   'user/updateArbitrumAlphaAcknowledged'
 )
+
+export const updateFavoritedTokens = createAction<{newFavorites: TokenFavorite[]}>('user/updateFavorites')
 export const updateUserChartHistory = createAction<{ chartHistory:any[] }>('user/addHistory')
 
 export const updateUserFrontRunProtection = createAction<{ useFrontrunProtection: boolean }>('user/updateUserFrontrunProtection')

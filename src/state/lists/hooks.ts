@@ -124,7 +124,7 @@ export function useCombinedActiveList(): TokenAddressMap {
   const {chainId} = useActiveWeb3React()
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
-  const list = defaultMap[chainId ? chainId : 1]
+  const list = Boolean(defaultMap[chainId ? chainId : 1]) ? defaultMap[chainId ? chainId : 1] : {}
   return combineMaps(activeTokens, list)
 }
 

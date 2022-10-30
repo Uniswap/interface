@@ -15,6 +15,7 @@ import { Pair, PairSearch } from 'pages/Charts/PairSearch';
 import { RowBetween, RowFixed } from 'components/Row';
 import { darken, lighten } from 'polished'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
+import { useAddPairToFavorites, useIsDarkMode, useIsPairFavorited } from 'state/user/hooks';
 import { useBscToken, useCurrency, useToken } from 'hooks/Tokens';
 import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/swap/ChartPage'
 
@@ -157,7 +158,16 @@ const _ChartSidebar = (props: ChartSidebarProps)  => {
     // the token the chart is viewing
     const tokenCurrency = _tokenCurrency ? _tokenCurrency : token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : {} as Token
 
-
+    const isPairFavorited = useIsPairFavorited(screenerToken?.pairAddress || '')
+    const favoritesFactory = useAddPairToFavorites()
+    
+    const onFavoritesClick = () => {
+        if (isPairFavorited && screenerToken?.pairAddress) {
+            favoritesFactory.removeFromFavorites(screenerToken?.pairAddress)
+        } else if (screenerToken?.pairAddress) {
+            favoritesFactory.addToFavorites(screenerToken?.pairAddress, screenerToken?.chainId, screenerToken?.baseToken?.address, screenerToken?.baseToken.name, screenerToken?.baseToken?.symbol)
+        }
+    }
     // hooks
     const { account } = useWeb3React()
     const totalSupply = useTotalSupply(tokenCurrency)
@@ -325,6 +335,7 @@ const _ChartSidebar = (props: ChartSidebarProps)  => {
         }
     }
 
+    const isDarkMode = useIsDarkMode()
     console.log(`[chart-side-bar]`, marketCap, screenerToken, tokenData)
 
     return (
@@ -390,6 +401,8 @@ const _ChartSidebar = (props: ChartSidebarProps)  => {
                                                                     <TYPE.small>Copy Address</TYPE.small>
                                                                 </span>
                                                             </Copy>
+
+                                                            <Heart onClick={onFavoritesClick} color={isPairFavorited ? theme.success : !isDarkMode ? '#ccc' : theme.backgroundInteractive} />
                                                         </RowFixed>
                                                     )}
                                                 </RowBetween>
