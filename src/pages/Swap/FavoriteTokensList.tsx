@@ -1,4 +1,4 @@
-import { CNav, CNavItem, CNavLink, CTabContent, CTabPane, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
+import { CNav, CNavItem, CNavLink, CTabContent, CTabPane, CTable, CTableBody, CTableCaption, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import { ChevronDown, ChevronUp, MinusCircle } from 'react-feather'
 import React, { useMemo } from 'react'
 import { StyledInternalLink, TYPE } from 'theme'
@@ -67,7 +67,6 @@ const FavoriteTokenRow = (props: { account?: string | null, token: any, removeFr
                     Remove  <MinusCircle />
                 </ButtonError>
             </CTableDataCell>
-
         </CTableRow>
     )
 }
@@ -114,9 +113,10 @@ export const FavoriteTokensList = () => {
     return (
         <DarkCard>
             <AutoColumn gap="md">
-                <TYPE.mediumHeader style={{ cursor: 'pointer' }}>Favorited Tokens </TYPE.mediumHeader>
                 <AutoColumn>
-                    <CTable style={{color:theme.text1}} hover={!isDarkMode}>
+                    <CTable caption="top" responsive style={{color:theme.text1}} hover={!isDarkMode}>
+                    <CTableCaption style={{color: theme.text1}}>Favorited Tokens</CTableCaption>
+
                         <CTableHead>
                             <CTableRow>
                                 <CTableHeaderCell scope="col">Name</CTableHeaderCell>
