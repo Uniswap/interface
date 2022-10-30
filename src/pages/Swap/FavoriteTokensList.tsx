@@ -1,6 +1,6 @@
 import { CNav, CNavItem, CNavLink, CTabContent, CTabPane, CTable, CTableBody, CTableCaption, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import { ChevronDown, ChevronUp, MinusCircle } from 'react-feather'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { StyledInternalLink, TYPE } from 'theme'
 import { useAddPairToFavorites, useUserFavoritesManager } from 'state/user/hooks'
 import { useConvertTokenAmountToUsdString, useKiba } from 'pages/Vote/VotePage';
@@ -10,11 +10,13 @@ import { AutoColumn } from 'components/Column'
 import { ButtonError } from 'components/Button'
 import { DarkCard } from 'components/Card'
 import Loader from 'components/Loader';
+import { abbreviateNumber } from 'components/BurntKiba'
 import {toChecksum} from 'state/logs/utils'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCurrency } from 'hooks/Tokens'
 import { useDexscreenerToken } from 'components/swap/ChartPage'
 import {useIsDarkMode} from 'state/user/hooks'
+import useLast from 'hooks/useLast'
 import useTheme from 'hooks/useTheme'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
 
@@ -47,11 +49,18 @@ const FavoriteTokenRow = (props: { account?: string | null, token: any, removeFr
         }), [pair, token]),
         []
     )
+
+    useEffect(() => {
+        if (pair?.priceUsd) {
+            usdcAndEthFormatted.refetch()
+        }
+    }, [pair?.priceUsd])
+
     return (
         <CTableRow align="center" key={token.pairAddress}>
             <CTableDataCell>{token.tokenName}</CTableDataCell>
             <CTableDataCell>{token.tokenSymbol}</CTableDataCell>
-            <CTableDataCell>{pair?.priceUsd ?? 'Not available'}</CTableDataCell>
+            <CTableDataCell>${pair?.priceUsd ?? 'Not available'} / ${abbreviateNumber(pair?.fdv) ?? 'Not available'}</CTableDataCell>
             <CTableDataCell>
                 <TYPE.main>{currencyBalance ? Number(currencyBalance?.toFixed(2)).toLocaleString() + ' ' + token.tokenSymbol + ' / ' : <Loader />} 
 
@@ -122,7 +131,7 @@ export const FavoriteTokensList = () => {
                             <CTableRow>
                                 <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Symbol</CTableHeaderCell>
-                                <CTableHeaderCell scope="col">Price</CTableHeaderCell>
+                                <CTableHeaderCell scope="col">Price / Market Cap</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Current Balance</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
 
