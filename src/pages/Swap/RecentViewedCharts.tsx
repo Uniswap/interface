@@ -6,6 +6,7 @@ import { useIsDarkMode, useUserChartHistoryManager } from "state/user/hooks"
 
 import CurrencyLogo from "components/CurrencyLogo"
 import Marquee from "react-fast-marquee";
+import React from 'react'
 import _ from "lodash"
 import { darken } from 'polished'
 import styled from 'styled-components/macro'
@@ -42,6 +43,10 @@ export const RecentlyViewedCharts = () => {
     const [userChartHistory] = useUserChartHistoryManager()
     const darkmode = useIsDarkMode()
     const theme = useTheme()
+    const [play, setPlay] = React.useState(false)
+    React.useEffect(() => {
+        setPlay(true)
+    }, [])
     const chainMap: Record<number, string> = {
         1: 'ethereum',
         56: 'bsc'
@@ -70,7 +75,7 @@ export const RecentlyViewedCharts = () => {
             </TYPE.black>
         </div>
 
-        <Marquee direction="right" speed={50} gradientWidth={7} gradient={false} pauseOnHover>
+        <Marquee  play={play} direction="right" speed={50} gradientWidth={7} gradient={false} pauseOnHover>
             <FixedContainer style={{ marginBottom: 15}}>
                 <ScrollableRow style={{ paddingBottom:15, paddingTop: 15, display: 'flex', gap: 30, alignItems: 'center' }}>
 

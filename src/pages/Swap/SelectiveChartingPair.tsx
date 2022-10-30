@@ -297,8 +297,8 @@ export const SelectiveChartWithPair = () => {
     useSetTitle(title)
 
     const defaultTabs = [
-        { label: 'Recently Viewed Charts', active: true, content: <RecentlyViewedCharts /> },
-        { label: 'Favorited Tokens', active: false, content: <FavoriteTokensList /> }
+        { label: 'Recently Viewed Charts', active: false, content: <RecentlyViewedCharts /> },
+        { label: 'Favorited Tokens', active: true, content: <FavoriteTokensList /> }
     ]
 
     const [tabs, setTabs] = React.useState(defaultTabs)

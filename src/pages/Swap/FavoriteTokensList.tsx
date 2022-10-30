@@ -87,7 +87,7 @@ export const TabsList = (props: TabsListProps) => {
                 ))}
             </CNav>
             <CTabContent>
-                {tabs?.map(tab => (
+                {tabs?.filter(a => a.active).map(tab => (
                     <CTabPane key={`tab-pane-${tab.label}`} role="tabpanel" visible={tab.active}>
                         {tab.content}
                     </CTabPane>
