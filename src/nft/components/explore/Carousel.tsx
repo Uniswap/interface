@@ -5,7 +5,13 @@ import { a, useSprings } from 'react-spring'
 import styled from 'styled-components/macro'
 
 const CarouselContainer = styled.div`
+  display: flex;
   max-width: 592px;
+  width: 100%;
+`
+
+const CarouselCardContainer = styled.div`
+  max-width: 512px;
   position: relative;
   width: 100%;
   overflow-x: hidden;
@@ -13,8 +19,8 @@ const CarouselContainer = styled.div`
 
 const CarouselCard = styled(a.div)`
   position: absolute;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
   display: flex;
   top: 3px;
   height: 280px;
@@ -26,38 +32,22 @@ const CarouselCard = styled(a.div)`
   }
 `
 
-const CarouselOverlay = styled.div<{ right?: boolean }>`
-  position: absolute;
-  display: flex;
-  top: 3px;
-  ${({ right }) => (right ? 'right: 0px' : 'left: 0px')};
-  width: 40px;
-  height: 280px;
-  background: linear-gradient(
-    ${({ right }) => (right ? 'to left' : 'to right')},
-    ${({ theme }) => theme.backgroundModule} 0%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  align-items: center;
-  justify-content: ${({ right }) => (right ? 'start' : 'end')};
-  z-index: 1;
-  cursor: pointer;
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    height: 296px;
-  }
-`
-
 const IconContainer = styled.div<{ right?: boolean }>`
   display: flex;
-  height: 100%;
+  height: 280px;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
   padding: 8px;
   ${({ right }) => (right ? 'transform: rotate(180deg)' : undefined)};
   color: ${({ theme }) => theme.textPrimary};
+
   :hover {
     opacity: ${({ theme }) => theme.opacity.hover};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    height: 296px;
   }
 `
 
@@ -65,17 +55,17 @@ interface CarouselProps {
   children: ReactNode[]
 }
 
-const FIRST_CARD_OFFSET = 40
-const MAX_CARD_WIDTH = 480
+const FIRST_CARD_OFFSET = 0
+const MAX_CARD_WIDTH = 512
 
 export const Carousel = ({ children }: CarouselProps) => {
   const { width } = useWindowSize()
-  const carouselContainerRef = useRef<HTMLDivElement>(null)
+  const carouselCardContainerRef = useRef<HTMLDivElement>(null)
   const [cardWidth, setCardWidth] = useState(MAX_CARD_WIDTH)
 
   useEffect(() => {
-    if (carouselContainerRef.current) {
-      setCardWidth(Math.min(carouselContainerRef.current.offsetWidth - 80 - 32, MAX_CARD_WIDTH))
+    if (carouselCardContainerRef.current) {
+      setCardWidth(Math.min(carouselCardContainerRef.current.offsetWidth, MAX_CARD_WIDTH))
     }
   }, [width])
 
@@ -127,28 +117,26 @@ export const Carousel = ({ children }: CarouselProps) => {
   }
 
   return (
-    <CarouselContainer ref={carouselContainerRef}>
-      <CarouselOverlay onClick={() => toggleSlide(-1)}>
-        <IconContainer>
-          <ChevronLeftIcon width="16px" height="16px" />
-        </IconContainer>
-      </CarouselOverlay>
-      <CarouselOverlay right onClick={() => toggleSlide(1)}>
-        <IconContainer right>
-          <ChevronLeftIcon width="16px" height="16px" />
-        </IconContainer>
-      </CarouselOverlay>
-      {springs.map(({ x }, i) => (
-        <CarouselCard
-          key={i}
-          style={{
-            width: cardWidth,
-            x,
-          }}
-        >
-          {children[i]}
-        </CarouselCard>
-      ))}
+    <CarouselContainer>
+      <IconContainer onClick={() => toggleSlide(-1)}>
+        <ChevronLeftIcon width="16px" height="16px" />
+      </IconContainer>
+      <CarouselCardContainer ref={carouselCardContainerRef}>
+        {springs.map(({ x }, i) => (
+          <CarouselCard
+            key={i}
+            style={{
+              width: cardWidth,
+              x,
+            }}
+          >
+            {children[i]}
+          </CarouselCard>
+        ))}
+      </CarouselCardContainer>
+      <IconContainer right onClick={() => toggleSlide(1)}>
+        <ChevronLeftIcon width="16px" height="16px" />
+      </IconContainer>
     </CarouselContainer>
   )
 }
