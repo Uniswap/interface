@@ -684,7 +684,7 @@ const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
         width="full"
         style={{
           paddingTop: '100%',
-          background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
+          background: `linear-gradient(90deg, ${themeVars.colors.backgroundSurface} 0%, ${themeVars.colors.backgroundInteractive} 95.83%)`,
         }}
       >
         <Box
