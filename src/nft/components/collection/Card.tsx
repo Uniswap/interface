@@ -11,7 +11,6 @@ import {
   PlusIconLarge,
   PoolIcon,
   RarityVerifiedIcon,
-  SuspiciousIcon20,
 } from 'nft/components/icons'
 import { body, bodySmall, subheadSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
@@ -29,6 +28,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import * as styles from './Card.css'
@@ -54,6 +54,7 @@ const baseHref = (asset: GenieAsset) => `/#/nfts/asset/${asset.address}/${asset.
 
 const DetailsLinkContainer = styled.a`
   display: flex;
+  flex-shrink: 0;
   text-decoration: none;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
@@ -63,6 +64,12 @@ const DetailsLinkContainer = styled.a`
   :hover {
     color: ${({ theme }) => theme.accentAction};
   }
+`
+
+const SuspiciousIcon = styled(AlertTriangle)`
+  width: 16px;
+  height: 16px;
+  color: ${({ theme }) => theme.accentFailure};
 `
 
 /* -------- ASSET CARD -------- */
@@ -392,7 +399,7 @@ const PrimaryRow = ({ children }: { children: ReactNode }) => (
 )
 
 const PrimaryDetails = ({ children }: { children: ReactNode }) => (
-  <Row overflow="hidden" whiteSpace="nowrap">
+  <Row justifyItems="center" overflow="hidden" whiteSpace="nowrap">
     {children}
   </Row>
 )
@@ -617,8 +624,8 @@ const SUSPICIOUS_TEXT = 'Blocked on OpenSea'
 const Suspicious = () => {
   return (
     <MouseoverTooltip text={<Box className={bodySmall}>{SUSPICIOUS_TEXT}</Box>} placement="top">
-      <Box display="flex" flexShrink="0" marginLeft="2">
-        <SuspiciousIcon20 width="20" height="20" />
+      <Box display="flex" flexShrink="0" marginLeft="4">
+        <SuspiciousIcon />
       </Box>
     </MouseoverTooltip>
   )

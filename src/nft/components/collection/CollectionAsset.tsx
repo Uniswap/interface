@@ -84,6 +84,14 @@ export const CollectionAsset = ({
         removeAssetsFromBag([asset])
       }}
     >
+      {asset.rarity && provider && provider.rank && (
+        <Card.Ranking
+          rarity={asset.rarity}
+          provider={provider}
+          rarityVerified={!!rarityVerified}
+          rarityLogo={rarityLogo}
+        />
+      )}
       {assetMediaType === AssetMediaType.Image ? (
         <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
       ) : assetMediaType === AssetMediaType.Video ? (
