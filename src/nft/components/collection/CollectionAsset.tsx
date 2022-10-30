@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, UniformHeight } from 'nft/types'
 import { formatWeiToDecimal, isAudio, isVideo, rarityProviderLogo } from 'nft/utils'
-import { useMemo } from 'react'
+import { MouseEvent, useMemo } from 'react'
 
 import * as Card from './Card'
 
@@ -87,11 +87,14 @@ export const CollectionAsset = ({
       <Card.ImageContainer>
         {asset.tokenType === 'ERC1155' && quantity > 0 && (
           <Card.Erc1155Controls
-            addAssetToBag={() => {
+            quantity={quantity.toString()}
+            addAssetToBag={(e: MouseEvent) => {
+              e.stopPropagation()
               addAssetsToBag([asset])
               !bagExpanded && !isMobile && toggleBag()
             }}
-            removeAssetFromBag={() => {
+            removeAssetFromBag={(e: MouseEvent) => {
+              e.stopPropagation()
               removeAssetsFromBag([asset])
             }}
           />

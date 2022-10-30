@@ -507,18 +507,19 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
 }
 
 interface Erc1155ControlsInterface {
-  addAssetToBag: () => void
-  removeAssetFromBag: () => void
+  quantity: string
+  addAssetToBag: (e: MouseEvent) => void
+  removeAssetFromBag: (e: MouseEvent) => void
 }
 
-const Erc1155Controls = ({ addAssetToBag, removeAssetFromBag }: Erc1155ControlsInterface) => {
+const Erc1155Controls = ({ addAssetToBag, removeAssetFromBag, quantity }: Erc1155ControlsInterface) => {
   return (
     <Erc1155ControlsRow>
       <Erc1155ControlsContainer>
         <Erc1155ControlsInput subtract onClick={removeAssetFromBag}>
           <MinusIconLarge width="24px" height="24px" />
         </Erc1155ControlsInput>
-        <Erc1155ControlsDisplay>1</Erc1155ControlsDisplay>
+        <Erc1155ControlsDisplay>{quantity}</Erc1155ControlsDisplay>
         <Erc1155ControlsInput onClick={addAssetToBag}>
           <PlusIconLarge width="24px" height="24px" />
         </Erc1155ControlsInput>
