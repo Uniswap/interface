@@ -84,31 +84,44 @@ export const CollectionAsset = ({
         removeAssetsFromBag([asset])
       }}
     >
-      {asset.rarity && provider && provider.rank && (
-        <Card.Ranking
-          rarity={asset.rarity}
-          provider={provider}
-          rarityVerified={!!rarityVerified}
-          rarityLogo={rarityLogo}
-        />
-      )}
-      {assetMediaType === AssetMediaType.Image ? (
-        <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
-      ) : assetMediaType === AssetMediaType.Video ? (
-        <Card.Video
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-        />
-      ) : (
-        <Card.Audio
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-        />
-      )}
+      <Card.ImageContainer>
+        {asset.tokenType === 'ERC1155' && quantity > 0 && (
+          <Card.Erc1155Controls
+            addAssetToBag={() => {
+              addAssetsToBag([asset])
+              !bagExpanded && !isMobile && toggleBag()
+            }}
+            removeAssetFromBag={() => {
+              removeAssetsFromBag([asset])
+            }}
+          />
+        )}
+        {asset.rarity && provider && provider.rank && (
+          <Card.Ranking
+            rarity={asset.rarity}
+            provider={provider}
+            rarityVerified={!!rarityVerified}
+            rarityLogo={rarityLogo}
+          />
+        )}
+        {assetMediaType === AssetMediaType.Image ? (
+          <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
+        ) : assetMediaType === AssetMediaType.Video ? (
+          <Card.Video
+            uniformHeight={uniformHeight}
+            setUniformHeight={setUniformHeight}
+            shouldPlay={mediaShouldBePlaying}
+            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+          />
+        ) : (
+          <Card.Audio
+            uniformHeight={uniformHeight}
+            setUniformHeight={setUniformHeight}
+            shouldPlay={mediaShouldBePlaying}
+            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+          />
+        )}
+      </Card.ImageContainer>
       <Card.DetailsContainer>
         <Card.InfoContainer>
           <Card.PrimaryRow>

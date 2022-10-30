@@ -1,5 +1,4 @@
 import clsx from 'clsx'
-import Column from 'components/Column'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
@@ -12,7 +11,7 @@ import {
   PoolIcon,
   RarityVerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall, subheadSmall } from 'nft/css/common.css'
+import { body, bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, UniformHeight, UniformHeights } from 'nft/types'
@@ -30,6 +29,7 @@ import {
 } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import * as styles from './Card.css'
 
@@ -70,6 +70,47 @@ const SuspiciousIcon = styled(AlertTriangle)`
   width: 16px;
   height: 16px;
   color: ${({ theme }) => theme.accentFailure};
+`
+
+const Erc1155ControlsRow = styled.div`
+  position: absolute;
+  display: flex;
+  width: 100%;
+  bottom: 12px;
+  z-index: 2;
+  justify-content: center;
+`
+
+const Erc1155ControlsContainer = styled.div`
+  display: flex;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+`
+
+const Erc1155ControlsDisplay = styled(ThemedText.HeadlineSmall)`
+  display: flex;
+  padding: 6px 8px;
+  width: 60px;
+  background: ${({ theme }) => theme.backgroundBackdrop};
+  justify-content: center;
+  cursor: default;
+`
+
+const Erc1155ControlsInput = styled.div<{ subtract?: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  border-radius: ${({ theme, subtract }) => (subtract ? '12px 0px 0px 12px' : '0px 12px 12px 0px')};
+  background: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.textPrimary};
+
+  :hover {
+    color: ${({ theme }) => theme.accentAction};
+  }
+`
+
+const StyledImageContainer = styled.div`
+  position: relative;
 `
 
 /* -------- ASSET CARD -------- */
@@ -130,6 +171,10 @@ const Container = ({ asset, selected, addToBag, removeFromBag, children }: CardP
     </CardContext.Provider>
   )
 }
+
+const ImageContainer = ({ children }: { children: ReactNode }) => (
+  <StyledImageContainer>{children}</StyledImageContainer>
+)
 
 /* -------- CARD IMAGE -------- */
 interface ImageProps {
@@ -461,100 +506,24 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   )
 }
 
-interface ButtonProps {
-  children: ReactNode
-  quantity: number
-  selectedChildren: ReactNode
-  onClick: (e: MouseEvent) => void
-  onSelectedClick: (e: MouseEvent) => void
+interface Erc1155ControlsInterface {
+  addAssetToBag: () => void
+  removeAssetFromBag: () => void
 }
 
-const Button = ({ children, quantity, selectedChildren, onClick, onSelectedClick }: ButtonProps) => {
-  const [buttonHovered, toggleButtonHovered] = useReducer((s) => !s, false)
-  const { asset, selected, setHref } = useCardContext()
-  const buttonRef = useRef<HTMLDivElement>(null)
-  const isMobile = useIsMobile()
-
-  useLayoutEffect(() => {
-    if (buttonHovered && buttonRef.current?.matches(':hover') === false) toggleButtonHovered()
-  }, [buttonHovered])
-
+const Erc1155Controls = ({ addAssetToBag, removeAssetFromBag }: Erc1155ControlsInterface) => {
   return (
-    <>
-      {!selected || asset.tokenType !== 'ERC1155' ? (
-        <Box
-          as="button"
-          ref={buttonRef}
-          color={
-            buttonHovered || isMobile
-              ? 'explicitWhite'
-              : selected
-              ? 'accentFailure'
-              : asset.notForSale
-              ? 'textTertiary'
-              : 'accentAction'
-          }
-          background={
-            buttonHovered || isMobile
-              ? asset.notForSale
-                ? 'backgroundInteractive'
-                : selected
-                ? 'accentFailure'
-                : 'accentAction'
-              : asset.notForSale
-              ? 'backgroundModule'
-              : selected
-              ? 'accentFailureSoft'
-              : 'accentActionSoft'
-          }
-          className={clsx(styles.button, subheadSmall)}
-          onClick={(e) =>
-            selected
-              ? onSelectedClick(e)
-              : asset.notForSale
-              ? () => {
-                  return true
-                }
-              : onClick(e)
-          }
-          onMouseEnter={() => {
-            !asset.notForSale && setHref('')
-            !buttonHovered && toggleButtonHovered()
-          }}
-          onMouseLeave={() => {
-            !asset.notForSale && setHref(baseHref(asset))
-            buttonHovered && toggleButtonHovered()
-          }}
-          transition="250"
-        >
-          {selected
-            ? selectedChildren
-            : asset.notForSale
-            ? buttonHovered || isMobile
-              ? 'See details'
-              : 'Not for sale'
-            : children}
-        </Box>
-      ) : (
-        <Row className={styles.erc1155ButtonRow}>
-          <Column
-            as="button"
-            className={styles.erc1155MinusButton}
-            onClick={(e: MouseEvent<Element, globalThis.MouseEvent>) => onSelectedClick(e)}
-          >
-            <MinusIconLarge width="32" height="32" />
-          </Column>
-          <Box className={`${styles.erc1155QuantityText} ${subheadSmall}`}>{quantity.toString()}</Box>
-          <Column
-            as="button"
-            className={styles.erc1155PlusButton}
-            onClick={(e: MouseEvent<Element, globalThis.MouseEvent>) => onClick(e)}
-          >
-            <PlusIconLarge width="32" height="32" />
-          </Column>
-        </Row>
-      )}
-    </>
+    <Erc1155ControlsRow>
+      <Erc1155ControlsContainer>
+        <Erc1155ControlsInput subtract onClick={removeAssetFromBag}>
+          <MinusIconLarge width="24px" height="24px" />
+        </Erc1155ControlsInput>
+        <Erc1155ControlsDisplay>1</Erc1155ControlsDisplay>
+        <Erc1155ControlsInput onClick={addAssetToBag}>
+          <PlusIconLarge width="24px" height="24px" />
+        </Erc1155ControlsInput>
+      </Erc1155ControlsContainer>
+    </Erc1155ControlsRow>
   )
 }
 
@@ -708,11 +677,12 @@ const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
 
 export {
   Audio,
-  Button,
   Container,
   DetailsContainer,
   DetailsLink,
+  Erc1155Controls,
   Image,
+  ImageContainer,
   InfoContainer,
   MarketplaceIcon,
   Pool,

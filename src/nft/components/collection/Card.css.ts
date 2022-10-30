@@ -162,6 +162,7 @@ export const rarityInfo = style([
     fontSize: '10',
     fontWeight: 'semibold',
     paddingX: '4',
+    zIndex: '2',
   }),
   {
     lineHeight: '12px',
