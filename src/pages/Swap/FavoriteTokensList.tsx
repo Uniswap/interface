@@ -48,16 +48,17 @@ const FavoriteTokenRow = (props: { account?: string | null, token: any, removeFr
         []
     )
     return (
-        <CTableRow key={token.pairAddress}>
+        <CTableRow align="center" key={token.pairAddress}>
             <CTableDataCell>{token.tokenName}</CTableDataCell>
             <CTableDataCell>{token.tokenSymbol}</CTableDataCell>
             <CTableDataCell>{pair?.priceUsd ?? 'Not available'}</CTableDataCell>
             <CTableDataCell>
-                {currencyBalance ? Number(currencyBalance?.toFixed(2)).toLocaleString() + ' ' + token.tokenSymbol : <Loader />} 
+                <TYPE.main>{currencyBalance ? Number(currencyBalance?.toFixed(2)).toLocaleString() + ' ' + token.tokenSymbol + ' / ' : <Loader />} 
 
-                {tokenBalanceUsd && <span style={{marginLeft: 5}}>| ${Number(tokenBalanceUsd.toFixed(2)).toLocaleString()} USD </span>}
+                {tokenBalanceUsd && <span style={{marginLeft: 5}}> ${Number(tokenBalanceUsd.toFixed(2)).toLocaleString()} USD </span>}
 
-                {!tokenBalanceUsd && currencyBalance && currencyBalance?.toFixed(0) != '0' && usdcAndEthFormatted && <span style={{borderLeft: '1px solid #eee', marginLeft:5}}>| ${usdcAndEthFormatted.value[0]} USD</span>}
+                {!tokenBalanceUsd && currencyBalance && currencyBalance?.toFixed(0) != '0' && usdcAndEthFormatted && <span style={{ marginLeft:5}}>${usdcAndEthFormatted.value[0]} USD</span>}
+                </TYPE.main>
             </CTableDataCell>
             <CTableDataCell>
                 <StyledInternalLink to={`/charts/${token.network}/${token.pairAddress}`}>View Chart</StyledInternalLink>
@@ -123,7 +124,7 @@ export const FavoriteTokensList = () => {
                                 <CTableHeaderCell scope="col">Symbol</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Price</CTableHeaderCell>
                                 <CTableHeaderCell scope="col">Current Balance</CTableHeaderCell>
-                                <CTableHeaderCell scope="col">Chart</CTableHeaderCell>
+                                <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
 
                                 <CTableHeaderCell scope="col"></CTableHeaderCell>
                             </CTableRow>
