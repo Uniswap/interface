@@ -114,10 +114,15 @@ const Container = ({ asset, selected, addToBag, removeFromBag, children }: CardP
         onMouseEnter={() => toggleHovered()}
         onMouseLeave={() => toggleHovered()}
         transition="250"
-        cursor={'pointer'}
+        cursor={asset.notForSale ? 'default' : 'pointer'}
         onClick={(e: MouseEvent) => {
-          e.preventDefault()
-          !selected ? addToBag() : removeFromBag()
+          if (!asset.notForSale) {
+            e.preventDefault()
+            !selected ? addToBag() : removeFromBag()
+            return true
+          } else {
+            return false
+          }
         }}
       >
         {children}
