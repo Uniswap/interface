@@ -54,10 +54,12 @@ const baseHref = (asset: GenieAsset) => `/#/nfts/asset/${asset.address}/${asset.
 interface CardProps {
   asset: GenieAsset
   selected: boolean
+  addToBag: () => void
+  removeFromBag: () => void
   children: ReactNode
 }
 
-const Container = ({ asset, selected, children }: CardProps) => {
+const Container = ({ asset, selected, addToBag, removeFromBag, children }: CardProps) => {
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
@@ -82,16 +84,19 @@ const Container = ({ asset, selected, children }: CardProps) => {
   return (
     <CardContext.Provider value={providerValue}>
       <Box
-        as="a"
-        href={href ? href : baseHref(asset)}
         position={'relative'}
         ref={assetRef}
         borderRadius={'20'}
-        className={styles.notSelectedCard}
+        className={selected ? styles.selectedCard : styles.notSelectedCard}
         draggable={false}
         onMouseEnter={() => toggleHovered()}
         onMouseLeave={() => toggleHovered()}
         transition="250"
+        cursor={'pointer'}
+        onClick={(e: MouseEvent) => {
+          e.preventDefault()
+          !selected ? addToBag() : removeFromBag()
+        }}
       >
         {children}
       </Box>

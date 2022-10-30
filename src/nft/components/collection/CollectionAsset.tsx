@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, UniformHeight } from 'nft/types'
 import { formatWeiToDecimal, isAudio, isVideo, rarityProviderLogo } from 'nft/utils'
-import { MouseEvent, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import * as Card from './Card'
 
@@ -73,7 +73,17 @@ export const CollectionAsset = ({
   }, [asset])
 
   return (
-    <Card.Container asset={asset} selected={isSelected}>
+    <Card.Container
+      asset={asset}
+      selected={isSelected}
+      addToBag={() => {
+        addAssetsToBag([asset])
+        !bagExpanded && !isMobile && toggleBag()
+      }}
+      removeFromBag={() => {
+        removeAssetsFromBag([asset])
+      }}
+    >
       {assetMediaType === AssetMediaType.Image ? (
         <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
       ) : assetMediaType === AssetMediaType.Video ? (
@@ -119,21 +129,6 @@ export const CollectionAsset = ({
             )}
           </Card.SecondaryRow>
         </Card.InfoContainer>
-        <Card.Button
-          quantity={quantity}
-          selectedChildren={'Remove'}
-          onClick={(e: MouseEvent) => {
-            e.preventDefault()
-            addAssetsToBag([asset])
-            !bagExpanded && !isMobile && toggleBag()
-          }}
-          onSelectedClick={(e: MouseEvent) => {
-            e.preventDefault()
-            removeAssetsFromBag([asset])
-          }}
-        >
-          {'Buy now'}
-        </Card.Button>
       </Card.DetailsContainer>
     </Card.Container>
   )
