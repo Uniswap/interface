@@ -18,6 +18,7 @@ import { Style } from 'util';
 import Tooltip from 'components/Tooltip'
 import _ from 'lodash'
 import styled from 'styled-components/macro'
+import {useIsDarkMode} from 'state/user/hooks'
 import { useIsMobile } from 'pages/Swap/SelectiveChartingBsc';
 import { usePairs } from 'state/logs/utils';
 import useTheme from 'hooks/useTheme'
@@ -119,7 +120,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
             // }))))
         }
     }, [URL, chainId, address])
-
+    const isDarkMode = useIsDarkMode()
     const burntHolderOwnedPercentComputed = useMemo(() => {
         if (!holders) return 0;
         if (!holders.some(a => deadAddresses.includes(a.address?.toLowerCase()))) return 0;
@@ -261,5 +262,5 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                 </DarkCard>)}
             />
         ) : null
-    }, [holders, setSliceCount, setIsOpen, isMobile, holders?.length, isOpen, burntHolderOwnedPercentComputed, node, sliceCount.start, sliceCount.end, topHoldersOwnedPercentComputed, maxxed])
+    }, [holders, theme, isDarkMode, setSliceCount, setIsOpen, isMobile, holders?.length, isOpen, burntHolderOwnedPercentComputed, node, sliceCount.start, sliceCount.end, topHoldersOwnedPercentComputed, maxxed])
 }

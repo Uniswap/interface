@@ -10,6 +10,7 @@ import { BurntKiba, abbreviateNumber } from 'components/BurntKiba';
 import { Currency, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core';
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import { ExternalLink, StyledInternalLink, TYPE, } from 'theme';
+import { Link, useParams } from 'react-router-dom';
 import { Menu, MenuItem, ProSidebar, SidebarContent, SidebarFooter, SidebarHeader, SubMenu } from 'react-pro-sidebar';
 import { Pair, PairSearch } from 'pages/Charts/PairSearch';
 import { RowBetween, RowFixed } from 'components/Row';
@@ -26,7 +27,6 @@ import Card from 'components/Card';
 import Copy from '../AccountDetails/Copy'
 import CurrencyLogo from 'components/CurrencyLogo';
 import { FiatValue } from '../../components/CurrencyInputPanel/FiatValue'
-import { Link } from 'react-router-dom';
 import { LoadingSkeleton } from 'pages/Pool/styleds';
 import React from 'react';
 import { SwapTokenForToken } from 'pages/Swap/SwapTokenForToken';
@@ -157,15 +157,15 @@ const _ChartSidebar = (props: ChartSidebarProps)  => {
     const [swapOpen, setSwapOpen] = React.useState(isMobile ? true : false)
     // the token the chart is viewing
     const tokenCurrency = _tokenCurrency ? _tokenCurrency : token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : {} as Token
-
-    const isPairFavorited = useIsPairFavorited(screenerToken?.pairAddress || '')
+    const params = useParams<{pairAddress: string}>()
+    const isPairFavorited = useIsPairFavorited(params?.pairAddress)
     const favoritesFactory = useAddPairToFavorites()
     
     const onFavoritesClick = () => {
-        if (isPairFavorited && screenerToken?.pairAddress) {
-            favoritesFactory.removeFromFavorites(screenerToken?.pairAddress)
+        if (isPairFavorited) {
+            favoritesFactory.removeFromFavorites(params?.pairAddress)
         } else if (screenerToken?.pairAddress) {
-            favoritesFactory.addToFavorites(screenerToken?.pairAddress, screenerToken?.chainId, screenerToken?.baseToken?.address, screenerToken?.baseToken.name, screenerToken?.baseToken?.symbol)
+            favoritesFactory.addToFavorites(params?.pairAddress, screenerToken?.chainId, screenerToken?.baseToken?.address, screenerToken?.baseToken.name, screenerToken?.baseToken?.symbol)
         }
     }
     // hooks
@@ -206,7 +206,7 @@ const _ChartSidebar = (props: ChartSidebarProps)  => {
         }
         if (totalSupply) {
             let result = totalSupply.toFixed(2)
-            if (token.symbol.toLowerCase() == 'kiba' && chainId == 56) {
+            if (token?.symbol?.toLowerCase() == 'kiba' && chainId == 56) {
                 result = +result / 10 ** 9
             }
             return parseFloat(result)
@@ -402,7 +402,7 @@ const _ChartSidebar = (props: ChartSidebarProps)  => {
                                                                 </span>
                                                             </Copy>
 
-                                                            <Heart onClick={onFavoritesClick} color={isPairFavorited ? theme.success : !isDarkMode ? '#ccc' : theme.backgroundInteractive} />
+                                                            <Heart fill={isPairFavorited ? theme.success : 'transparent'} onClick={onFavoritesClick} color={isPairFavorited ? theme.success : !isDarkMode ? '#ccc' : theme.backgroundInteractive} />
                                                         </RowFixed>
                                                     )}
                                                 </RowBetween>

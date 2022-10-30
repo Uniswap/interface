@@ -118,7 +118,7 @@ export function useIsPairFavorited (pairAddress: string) {
   const [favorites,] = useUserFavoritesManager()
 
   return useMemo(() => {
-    return favorites?.some((favorite) => favorite.pairAddress.toLowerCase() == pairAddress.toLowerCase())
+    return favorites?.some((favorite) => favorite?.pairAddress?.toLowerCase() == pairAddress?.toLowerCase())
   }, [favorites])
 }
 
