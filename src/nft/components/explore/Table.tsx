@@ -75,7 +75,7 @@ const StyledRankHolder = styled(LoadingBubble)`
 const DEFAULT_ASSET_QUERY_AMOUNT = 10
 const MAX_COLUMNS = 7
 
-interface TableProps<D extends Record<string, unknown>> {
+interface TableProps {
   columns: Column<CollectionTableColumn>[]
   data: CollectionTableColumn[]
   classNames?: {
@@ -83,7 +83,7 @@ interface TableProps<D extends Record<string, unknown>> {
   }
 }
 
-export function Table<D extends Record<string, unknown>>({ columns, data, classNames, ...props }: TableProps<D>) {
+export function Table({ columns, data, classNames, ...props }: TableProps) {
   const theme = useTheme()
   const { width } = useWindowSize()
   const [maxCols, setMaxCols] = useState(MAX_COLUMNS)
