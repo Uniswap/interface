@@ -105,7 +105,7 @@ export const EthCell = ({
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
       ? formatWeiToDecimal(denominatedValue.toString(), true) + ' ETH'
-      : ethNumberStandardFormatter(denominatedValue, true)
+      : ethNumberStandardFormatter(denominatedValue, true, false, true)
     : '-'
 
   return (
@@ -128,8 +128,8 @@ export const VolumeCell = ({
 
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
-      ? ethNumberStandardFormatter(denominatedValue.toString()) + ' ETH'
-      : ethNumberStandardFormatter(denominatedValue, true)
+      ? ethNumberStandardFormatter(denominatedValue.toString(), false, false, true) + ' ETH'
+      : ethNumberStandardFormatter(denominatedValue, true, false, true)
     : '-'
 
   return (
