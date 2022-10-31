@@ -364,6 +364,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
       {
         contractAddress,
         activeFilters,
+        token_id,
       },
     ],
     async ({ pageParam = '' }) => {
