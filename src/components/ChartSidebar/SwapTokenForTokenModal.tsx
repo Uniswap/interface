@@ -70,12 +70,12 @@ export const SwapTokenForTokenModal = (props: Props) => {
     const [inputCurrency, outputCurrency] = [
         useCurrency(item?.screenerToken?.quoteToken?.address || 'ETH'),
         useCurrency(item?.screenerToken?.baseToken?.address || item?.addr)
-    ]
+]
 
     const buySellTax = useBuySellTax(item?.screenerToken?.baseToken?.address as string, item?.network)
 
     return isOpen ? (
-        <Modal maxHeight={210} isOpen={isOpen} onDismiss={onDismiss}>
+        <Modal maxHeight={250} isOpen={isOpen} onDismiss={onDismiss}>
             <Card style={{ padding: '1rem' }}>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

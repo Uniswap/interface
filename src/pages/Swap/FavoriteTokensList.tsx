@@ -10,12 +10,13 @@ import { AutoColumn } from 'components/Column'
 import { ButtonError } from 'components/Button'
 import { DarkCard } from 'components/Card'
 import Loader from 'components/Loader';
+import { SwapTokenForTokenModal } from 'components/ChartSidebar/SwapTokenForTokenModal'
 import { abbreviateNumber } from 'components/BurntKiba'
-import {toChecksum} from 'state/logs/utils'
+import { toChecksum } from 'state/logs/utils'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useCurrency } from 'hooks/Tokens'
 import { useDexscreenerToken } from 'components/swap/ChartPage'
-import {useIsDarkMode} from 'state/user/hooks'
+import { useIsDarkMode } from 'state/user/hooks'
 import useLast from 'hooks/useLast'
 import useTheme from 'hooks/useTheme'
 import { useUSDCValue } from 'hooks/useUSDCPrice'
@@ -30,10 +31,17 @@ type TabsListProps = {
     onActiveChanged: (newActive: Tab) => void
 }
 
-const FavoriteTokenRow = (props: { account?: string | null, token: any, removeFromFavorites: (token: any) => void }) => {
-    const { token, removeFromFavorites, account } = props
+const FavoriteTokenRow = (
+    props: {
+        account?: string | null,
+        token: any,
+        removeFromFavorites: (token: any) => void,
+        setTokenModal: (token: any) => void
+    }
+) => {
+    const { token, removeFromFavorites, account, setTokenModal } = props
     const currency = useCurrency(toChecksum(token.tokenAddress))
-    const currencyBalance = useCurrencyBalance( account ?? undefined, currency ?? undefined)
+    const currencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
     const tokenBalanceUsd = useUSDCValue(currencyBalance)
     const pair = useDexscreenerToken(token.tokenAddress)
     const usdcAndEthFormatted = useConvertTokenAmountToUsdString(
@@ -50,6 +58,13 @@ const FavoriteTokenRow = (props: { account?: string | null, token: any, removeFr
         []
     )
 
+    const tokenModal = {
+        ...token,
+        screenerToken: pair
+    }
+
+    const openTokenModal = () => setTokenModal(tokenModal)
+
     useEffect(() => {
         if (pair?.priceUsd) {
             usdcAndEthFormatted.refetch()
@@ -62,20 +77,23 @@ const FavoriteTokenRow = (props: { account?: string | null, token: any, removeFr
             <CTableDataCell>{token.tokenSymbol}</CTableDataCell>
             <CTableDataCell>${pair?.priceUsd ?? 'Not available'} / ${abbreviateNumber(pair?.fdv) ?? 'Not available'}</CTableDataCell>
             <CTableDataCell>
-                <TYPE.main>{currencyBalance ? Number(currencyBalance?.toFixed(2)).toLocaleString() + ' ' + token.tokenSymbol + ' / ' : <Loader />} 
+                <TYPE.main>{currencyBalance ? Number(currencyBalance?.toFixed(2)).toLocaleString() + ' ' + token.tokenSymbol + ' / ' : <Loader />}
 
-                {tokenBalanceUsd && <span style={{marginLeft: 5}}> ${Number(tokenBalanceUsd.toFixed(2)).toLocaleString()} USD </span>}
+                    {tokenBalanceUsd && <span style={{ marginLeft: 5 }}> ${Number(tokenBalanceUsd.toFixed(2)).toLocaleString()} USD </span>}
 
-                {!tokenBalanceUsd && currencyBalance && currencyBalance?.toFixed(0) != '0' && usdcAndEthFormatted && <span style={{ marginLeft:5}}>${usdcAndEthFormatted.value[0]} USD</span>}
+                    {!tokenBalanceUsd && currencyBalance && currencyBalance?.toFixed(0) != '0' && usdcAndEthFormatted && <span style={{ marginLeft: 5 }}>${usdcAndEthFormatted.value[0]} USD</span>}
                 </TYPE.main>
             </CTableDataCell>
             <CTableDataCell>
                 <StyledInternalLink to={`/charts/${token.network}/${token.pairAddress}`}>View Chart</StyledInternalLink>
             </CTableDataCell>
             <CTableDataCell>
+                <div style={{display:'flex',gap: 15,justifyContent:'space-between', alignItems:'start'}}>
+                <TYPE.link onClick={openTokenModal}>Swap {token?.tokenSymbol}</TYPE.link>
                 <ButtonError style={{ width: 150, padding: 3 }} onClick={() => removeFromFavorites(token.pairAddress)}>
                     Remove  <MinusCircle />
                 </ButtonError>
+                </div>
             </CTableDataCell>
         </CTableRow>
     )
@@ -89,7 +107,7 @@ export const TabsList = (props: TabsListProps) => {
             <CNav variant="tabs" role="tablist">
                 {tabs?.map(tab => (
                     <CNavItem key={tab.label}>
-                        <CNavLink style={{color: tab.active == false ? theme.text1 : ''}} href={'javascript:void(0);'}
+                        <CNavLink style={{ color: tab.active == false ? theme.text1 : '' }} href={'javascript:void(0);'}
                             active={tab.active}
                             onClick={() => onActiveChanged(tab)}>
                             {tab.label}
@@ -116,16 +134,21 @@ export const FavoriteTokensList = () => {
         () => favoriteTokens || []
         , [favoriteTokens]
     )
-
     const { account } = useActiveWeb3React()
 
     const theme = useTheme()
+
+    const [tokenModal, setTokenModal] = React.useState<any>()
+    const dismissToken = React.useCallback(() => setTokenModal(undefined), [])
+
     return (
         <DarkCard>
+            <SwapTokenForTokenModal item={tokenModal} isOpen={Boolean(tokenModal)} onDismiss={dismissToken} />
+
             <AutoColumn gap="md">
                 <AutoColumn>
-                    <CTable caption="top" responsive style={{color:theme.text1}} hover={!isDarkMode}>
-                    <CTableCaption style={{color: theme.text1}}>Favorited Tokens</CTableCaption>
+                    <CTable caption="top" responsive style={{ color: theme.text1 }} hover={!isDarkMode}>
+                        <CTableCaption style={{ color: theme.text1 }}>Favorited Tokens</CTableCaption>
 
                         <CTableHead>
                             <CTableRow>
@@ -141,12 +164,13 @@ export const FavoriteTokensList = () => {
                         <CTableBody>
                             {favTokens?.length == 0 && <CTableRow>
                                 <CTableDataCell colSpan={5}>Favorite tokens by viewing their chart and clicking the favorite icon to see them here </CTableDataCell>
-                                </CTableRow>}
+                            </CTableRow>}
                             {favTokens.map((token) => (
-                               <FavoriteTokenRow removeFromFavorites={removeFromFavorites}
-                                                 token={token}
-                                                 account={account}
-                                                 key={`token_row_${token.tokenAddress}`} />
+                                <FavoriteTokenRow setTokenModal={setTokenModal}
+                                    removeFromFavorites={removeFromFavorites}
+                                    token={token}
+                                    account={account}
+                                    key={`token_row_${token.tokenAddress}`} />
                             ))}
                         </CTableBody>
                     </CTable>
