@@ -1,13 +1,15 @@
 import { WidgetSkeleton } from 'components/Widget'
 import { WIDGET_WIDTH } from 'components/Widget'
+import { ChartHeader, TokenInfoContainer, TokenNameCell } from 'pages/TokenDetails'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { LoadingBubble } from '../loading'
+import { LogoContainer } from '../TokenTable/TokenRow'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
-import { ChartContainer, ChartHeader, TokenInfoContainer, TokenNameCell } from './ChartSection'
+import { ChartContainer } from './ChartSection'
 import { DeltaContainer, TokenPrice } from './PriceChart'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
@@ -51,7 +53,7 @@ export const RightPanel = styled.div`
 `
 const LoadingChartContainer = styled(ChartContainer)`
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
-  height: 313px; // save 1px for the border-bottom (ie y-axis)
+  height: 314px; // save 1px for the border-bottom (ie y-axis)
   overflow: hidden;
 `
 
@@ -131,12 +133,6 @@ function Wave() {
 export function LoadingChart() {
   return (
     <ChartHeader>
-      <TokenInfoContainer>
-        <TokenNameCell>
-          <TokenLogoBubble />
-          <TitleBubble />
-        </TokenNameCell>
-      </TokenInfoContainer>
       <TokenPrice>
         <PriceBubble />
       </TokenPrice>
@@ -197,7 +193,18 @@ export default function TokenDetailsSkeleton() {
       <BreadcrumbNavLink to={{ chainName } ? `/tokens/${chainName}` : `/explore`}>
         <ArrowLeft size={14} /> Tokens
       </BreadcrumbNavLink>
-      <LoadingChart />
+      <ChartHeader>
+        <TokenInfoContainer>
+          <TokenNameCell>
+            <LogoContainer>
+              <TokenLogoBubble />
+            </LogoContainer>
+            <TitleBubble />
+          </TokenNameCell>
+        </TokenInfoContainer>
+        <LoadingChart />
+      </ChartHeader>
+
       <Space heightSize={45} />
       <LoadingStats />
       <Hr />

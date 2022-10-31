@@ -1,6 +1,8 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Trans } from '@lingui/macro'
+import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
+import CurrencyLogo from 'components/CurrencyLogo'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
@@ -8,6 +10,7 @@ import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BreadcrumbNavLink } from 'components/Tokens/TokenDetails/BreadcrumbNavLink'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
+import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import TokenDetailsSkeleton, {
   Hr,
   LeftPanel,
@@ -16,22 +19,74 @@ import TokenDetailsSkeleton, {
   TokenDetailsLayout,
 } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
+import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
+import { getChainInfo } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain, TokenQuery } from 'graphql/data/__generated__/TokenQuery.graphql'
-import { QueryToken, tokenQuery } from 'graphql/data/Token'
+import { QueryToken, tokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { useLoadTokenPriceQuery } from 'graphql/data/TokenPrice'
+import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useAtomValue } from 'jotai/utils'
+import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { Suspense, useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useLazyLoadQuery } from 'react-relay'
 import { useNavigate, useParams } from 'react-router-dom'
+import styled from 'styled-components/macro'
+import { textFadeIn } from 'theme/animations'
+
+export const ChartHeader = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  color: ${({ theme }) => theme.textPrimary};
+  gap: 4px;
+  margin-bottom: 24px;
+`
+export const TokenInfoContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+export const ChartContainer = styled.div`
+  display: flex;
+  height: 436px;
+  align-items: center;
+`
+export const TokenNameCell = styled.div`
+  display: flex;
+  gap: 8px;
+  font-size: 20px;
+  line-height: 28px;
+  align-items: center;
+  ${textFadeIn}
+`
+const TokenSymbol = styled.span`
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.textSecondary};
+`
+const TokenActions = styled.div`
+  display: flex;
+  gap: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+`
+
+export function useTokenLogoURI(token?: TokenQueryData | TopToken, nativeCurrency?: Token | NativeCurrency) {
+  const chainId = token ? CHAIN_NAME_TO_CHAIN_ID[token.chain] : SupportedChainId.MAINNET
+  return [
+    ...useCurrencyLogoURIs(nativeCurrency),
+    ...useCurrencyLogoURIs({ ...token, chainId }),
+    token?.project?.logoUrl,
+  ][0]
+}
 
 export default function TokenDetails() {
   const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
@@ -40,16 +95,16 @@ export default function TokenDetails() {
   const nativeCurrency = nativeOnChain(pageChainId)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
   const timePeriod = useAtomValue(filterTimeAtom)
-  //const tokenQueryReference = useLoadTokenQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
   const priceQueryReference = useLoadTokenPriceQuery(
     isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '',
     chain,
     timePeriod
   )
-  const tokenQueryData = useLazyLoadQuery<TokenQuery>(tokenQuery, {
-    contract: { address: isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain },
-  }).tokens?.[0]
-  //const tokenQueryData = usePreloadedQuery<TokenQuery>(tokenQuery, tokenQueryReference).tokens?.[0]
+  const contract = useMemo(
+    () => ({ address: isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain }),
+    [chain, isNative, nativeCurrency.wrapped.address, tokenAddress]
+  )
+  const tokenQueryData = useLazyLoadQuery<TokenQuery>(tokenQuery, { contract }).tokens?.[0]
   const token = useMemo(() => {
     if (!tokenAddress) return undefined
     if (isNative) return nativeCurrency
@@ -71,7 +126,7 @@ export default function TokenDetails() {
       if (!address) return
       startTransition(() => navigate(`/tokens/${chainName}/${address}`))
     },
-    [isNative, navigate, tokenQueryData?.project?.tokens]
+    [isNative, navigate, startTransition, tokenQueryData?.project?.tokens]
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
   const navigateToWidgetSelectedToken = useCallback(
@@ -99,6 +154,9 @@ export default function TokenDetails() {
     [continueSwap, setContinueSwap]
   )
 
+  const logoSrc = useTokenLogoURI(tokenQueryData, isNative ? nativeCurrency : undefined)
+  const L2Icon = getChainInfo(pageChainId)?.circleLogoUrl
+
   return (
     <Trace page={PageName.TOKEN_DETAILS_PAGE} properties={{ tokenAddress, tokenName: chainName }} shouldLogImpression>
       <TokenDetailsLayout>
@@ -107,14 +165,33 @@ export default function TokenDetails() {
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            <Suspense fallback={<LoadingChart />}>
-              <ChartSection
-                token={tokenQueryData}
-                currency={token}
-                nativeCurrency={isNative ? nativeCurrency : undefined}
-                priceQueryReference={priceQueryReference}
-              />
-            </Suspense>
+            <ChartHeader>
+              <TokenInfoContainer>
+                <TokenNameCell>
+                  <LogoContainer>
+                    <CurrencyLogo
+                      src={logoSrc}
+                      size={'32px'}
+                      symbol={nativeCurrency?.symbol ?? token?.symbol}
+                      currency={nativeCurrency ? undefined : token}
+                    />
+                    <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
+                  </LogoContainer>
+                  {token?.name ?? <Trans>Name not found</Trans>}
+                  <TokenSymbol>{token?.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+                </TokenNameCell>
+                <TokenActions>
+                  {tokenQueryData?.name && tokenQueryData.symbol && tokenQueryData.address && (
+                    <ShareButton token={tokenQueryData} isNative={!!nativeCurrency} />
+                  )}
+                </TokenActions>
+              </TokenInfoContainer>
+              <ChartContainer>
+                <Suspense fallback={<LoadingChart />}>
+                  <ChartSection priceQueryReference={priceQueryReference} />
+                </Suspense>
+              </ChartContainer>
+            </ChartHeader>
             <StatsSection
               TVL={tokenQueryData.market?.totalValueLocked?.value}
               volume24H={tokenQueryData.market?.volume24H?.value}

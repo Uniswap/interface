@@ -20,12 +20,9 @@ export const tokenPriceQuery = graphql`
     }
   }
 `
-export type PricePoint = NonNullable<
-  NonNullable<NonNullable<NonNullable<TokenPriceQuery['response']['tokens']>[number]>['market']['priceHistory']>[number]
->
-export type PriceDurations = Partial<Record<TimePeriod, PricePoint[]>>
+export type PricePoint = { timestamp: number; value: number }
 
-export function isPricePoint(p: { timestamp: number; value: number } | null): p is PricePoint {
+export function isPricePoint(p: PricePoint | null): p is PricePoint {
   return p !== null
 }
 
@@ -44,14 +41,14 @@ export function useLoadTokenPriceQuery(address: string, chain: Chain, timePeriod
 export function usePreloadedTokenPriceQuery(queryReference: PreloadedQuery<TokenPriceQuery>): PricePoint[] | undefined {
   const queryData = usePreloadedQuery<TokenPriceQuery>(tokenPriceQuery, queryReference)
 
+  // Appends the current price to the end of the priceHistory array
   const priceHistory = useMemo(() => {
-    const priceHistory = queryData.tokens?.[0]?.market?.priceHistory?.filter(isPricePoint)
-    const currentPrice = queryData.tokens?.[0]?.market?.price?.value
-
-    // Append the current price to the end of the priceHistory array
-    if (currentPrice !== undefined && priceHistory && priceHistory.length > 0) {
+    const market = queryData.tokens?.[0]?.market
+    const priceHistory = market?.priceHistory?.filter(isPricePoint)
+    const currentPrice = market?.price?.value
+    if (Array.isArray(priceHistory) && currentPrice !== undefined) {
       const timestamp = Date.now() / 1000
-      priceHistory.push({ timestamp, value: currentPrice })
+      return [...priceHistory, { timestamp, value: currentPrice }]
     }
     return priceHistory
   }, [queryData])
