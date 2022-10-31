@@ -1,8 +1,8 @@
-import { style } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 import { bodySmall, buttonTextSmall, headlineSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
 
-import { breakpoints, sprinkles } from '../../css/sprinkles.css'
+import { breakpoints, sprinkles, themeVars } from '../../css/sprinkles.css'
 
 export const statsText = style([
   sprinkles({
@@ -66,6 +66,23 @@ export const description = style([
     lineHeight: '20px',
   },
 ])
+
+globalStyle(`${description} a[href]`, {
+  color: `${themeVars.colors.textSecondary}`,
+  textDecoration: 'none',
+})
+
+globalStyle(`${description} a[href]:hover`, {
+  color: `${themeVars.colors.textSecondary}`,
+  opacity: '0.6',
+  textDecoration: 'none',
+})
+
+globalStyle(`${description} a[href]:active`, {
+  color: `${themeVars.colors.textSecondary}`,
+  opacity: '0.4',
+  textDecoration: 'none',
+})
 
 export const descriptionOpen = style([
   {

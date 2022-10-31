@@ -90,7 +90,7 @@ const Collection = () => {
                   )}
                 </Box>
               </Box>
-              <Column paddingX="32">
+              <Column paddingX="48">
                 {(isLoading || collectionStats !== undefined) && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
                 )}

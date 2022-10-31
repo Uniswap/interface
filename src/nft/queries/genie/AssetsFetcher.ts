@@ -40,7 +40,7 @@ export const AssetsFetcher = async ({
   notForSale?: boolean
   pageParam: number
 }): Promise<GenieAsset[] | undefined> => {
-  const url = `${process.env.REACT_APP_GENIE_API_URL}/assets`
+  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/assets`
   const payload: AssetPayload = {
     filters: {
       address: contractAddress.toLowerCase(),

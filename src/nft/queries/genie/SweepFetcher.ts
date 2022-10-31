@@ -19,7 +19,7 @@ export const fetchSweep = async ({
   rarityRange?: Record<string, unknown>
   traits?: Trait[]
 }): Promise<GenieAsset[]> => {
-  const url = `${process.env.REACT_APP_GENIE_API_URL}/assets`
+  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/assets`
   const payload: AssetPayload = {
     filters: {
       address: contractAddress.toLowerCase(),
