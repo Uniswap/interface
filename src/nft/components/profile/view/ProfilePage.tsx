@@ -277,7 +277,7 @@ const SelectAllButton = ({ ownerAssets }: { ownerAssets: WalletAsset[] }) => {
     } else {
       resetSellAssets()
     }
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAllSelected, resetSellAssets, selectSellAsset])
 
   const toggleAllSelected = () => {
