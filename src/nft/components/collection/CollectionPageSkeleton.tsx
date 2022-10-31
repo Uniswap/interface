@@ -7,7 +7,7 @@ import { ActivitySwitcherLoading } from './ActivitySwitcher'
 import { CollectionNftsAndMenuLoading } from './CollectionNfts'
 import { CollectionStatsLoading } from './CollectionStats'
 
-export const CollectionPageLoading = () => {
+export const CollectionPageSkeleton = () => {
   const isMobile = useIsMobile()
   return (
     <Column width="full">

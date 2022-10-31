@@ -6,7 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { CollectionPageLoading } from 'nft/components/collection/CollectionPageLoading'
+import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -227,7 +227,7 @@ export default function App() {
                       <Route
                         path="/nfts/collection/:contractAddress"
                         element={
-                          <Suspense fallback={<CollectionPageLoading />}>
+                          <Suspense fallback={<CollectionPageSkeleton />}>
                             <Collection />
                           </Suspense>
                         }
@@ -235,7 +235,7 @@ export default function App() {
                       <Route
                         path="/nfts/collection/:contractAddress/activity"
                         element={
-                          <Suspense fallback={<CollectionPageLoading />}>
+                          <Suspense fallback={<CollectionPageSkeleton />}>
                             <Collection />
                           </Suspense>
                         }
