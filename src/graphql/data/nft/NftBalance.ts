@@ -66,6 +66,13 @@ const nftBalancePaginationQuery = graphql`
             }
           }
           listedMarketplaces
+          creatorRoyaltyPayoutAddress
+          creatorRoyaltyBasisPoints
+          lastPrice {
+            currency
+            timestamp
+            value
+          }
         }
       }
       pageInfo {
@@ -104,31 +111,31 @@ export function useNftBalanceQuery(
     queryData
   )
 
-  const walletAssets: WalletAsset[] = data.nftBalances.edges.map((queryAsset: { node: any }) => {
+  const walletAssets: WalletAsset[] = data.nftBalances?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node.ownedAsset
     return {
       id: asset.id,
-      image_url: asset.image.url,
-      image_preview_url: asset.smallImage.url,
+      image_url: asset.image?.url,
+      image_preview_url: asset.smallImage?.url,
       name: asset.name,
       tokenId: asset.tokenId,
       asset_contract: {
-        address: asset.collection.nftContracts[0].address,
-        schema_name: asset.collection.nftContracts[0].standard,
-        name: asset.collection.name,
+        address: asset.collection?.nftContracts[0].address,
+        schema_name: asset.collection?.nftContracts[0].standard,
+        name: asset.collection?.name,
         description: asset.description,
-        image_url: asset.collection.image.url,
-        payout_address: string, // ask BE
+        image_url: asset.collection?.image?.url,
+        payout_address: queryAsset.node.creatorRoyaltyPayoutAddress, // ask BE
       },
       collection: asset.collection,
-      collectionIsVerified: asset.collection.isVerified,
-      lastPrice: number, // ask BE
-      floorPrice: asset.collection.markets[0].floorPrice,
-      creatorPercentage: number, // ask BE
-      listing_date: asset.listings[0].edges[0].node.createdAt,
-      date_acquired: string, // ask BE
+      collectionIsVerified: asset.collection?.isVerified,
+      lastPrice: queryAsset.node.lastPrice?.value, // ask BE
+      floorPrice: asset.collection?.markets[0]?.floorPrice,
+      creatorPercentage: parseFloat(queryAsset.node.creatorRoyaltyBasisPoints) / 10000, // ask BE
+      listing_date: asset.listings ? asset.listings[0]?.edges[0]?.node.createdAt : undefined,
+      date_acquired: queryAsset.node.lastPrice?.timestamp, // ask BE
       sellOrders: asset.listings?.edges,
-      floor_sell_order_price: asset.listings[0].edges[0].node.price.value,
+      floor_sell_order_price: asset.listings ? asset.listings[0]?.edges[0]?.node.price.value : undefined,
     }
   })
   return { walletAssets, hasNext, isLoadingNext, loadNext }

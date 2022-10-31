@@ -55,7 +55,7 @@ export interface WalletAsset {
   creatorPercentage: number
   listing_date: string
   date_acquired: string
-  sellOrders: SellOrder[]
+  sellOrders?: SellOrder[]
   floor_sell_order_price: number
   // Used for creating new listings
   expirationTime?: number

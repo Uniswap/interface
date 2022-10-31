@@ -6,6 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -242,7 +243,14 @@ export default function App() {
 
                   {nftFlag === NftVariant.Enabled && (
                     <>
-                      <Route path="/profile" element={<Profile />} />
+                      <Route
+                        path="/profile"
+                        element={
+                          <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                            <Profile />
+                          </Suspense>
+                        }
+                      />
                       <Route path="/nfts" element={<NftExplore />} />
                       <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
                       <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
