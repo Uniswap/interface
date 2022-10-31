@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2f8dd60a6e97a4f71470e96e5b2cfc3b>>
+ * @generated SignedSource<<31ca09be7f1ac66d32002eeb102f9f47>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,11 +24,11 @@ export type FavoriteTokenCardQuery$data = {
     readonly markets: ReadonlyArray<{
       readonly price: {
         readonly currency: Currency | null;
-        readonly value: number | null;
+        readonly value: number;
       } | null;
       readonly pricePercentChange24h: {
         readonly currency: Currency | null;
-        readonly value: number | null;
+        readonly value: number;
       } | null;
     } | null> | null;
     readonly tokens: ReadonlyArray<{

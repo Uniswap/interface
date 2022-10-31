@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<471c926db1faa0faf85477b278ec798d>>
+ * @generated SignedSource<<a4585945a46d77b68946c1604b3666e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type SelectWalletScreenQuery$data = {
   readonly portfolios: ReadonlyArray<{
     readonly ownerAddress: string;
     readonly tokensTotalDenominatedValue: {
-      readonly value: number | null;
+      readonly value: number;
     } | null;
   } | null> | null;
 };

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8806ce597f1088bc88656423cbb451f0>>
+ * @generated SignedSource<<0312ea66673e0f0797f24c83b09a9759>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,15 +21,15 @@ export type ExploreTokensTabQuery$data = {
     readonly markets: ReadonlyArray<{
       readonly marketCap: {
         readonly currency: Currency | null;
-        readonly value: number | null;
+        readonly value: number;
       } | null;
       readonly price: {
         readonly currency: Currency | null;
-        readonly value: number | null;
+        readonly value: number;
       } | null;
       readonly pricePercentChange24h: {
         readonly currency: Currency | null;
-        readonly value: number | null;
+        readonly value: number;
       } | null;
     } | null> | null;
     readonly name: string | null;

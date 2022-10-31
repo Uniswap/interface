@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0dc1dcf801fd57ef95a83b93eddade96>>
+ * @generated SignedSource<<1ab8f34ca2d35ef5df90b1cb2245136d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,7 @@ export type balancesQuery$data = {
     readonly tokenBalances: ReadonlyArray<{
       readonly denominatedValue: {
         readonly currency: Currency | null;
-        readonly value: number | null;
+        readonly value: number;
       } | null;
       readonly quantity: number | null;
       readonly token: {
@@ -31,7 +31,7 @@ export type balancesQuery$data = {
       } | null;
       readonly tokenProjectMarket: {
         readonly relativeChange24: {
-          readonly value: number | null;
+          readonly value: number;
         } | null;
         readonly tokenProject: {
           readonly logoUrl: string | null;

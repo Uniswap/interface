@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2824941da0dcdb0b05c2252e11ace371>>
+ * @generated SignedSource<<3c181c15b777e2408e3e971e085ac6e9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type NftsTabQuery$data = {
           readonly isVerified: boolean | null;
           readonly markets: ReadonlyArray<{
             readonly floorPrice: {
-              readonly value: number | null;
+              readonly value: number;
             } | null;
           }> | null;
           readonly name: string | null;
@@ -29,13 +29,13 @@ export type NftsTabQuery$data = {
         readonly description: string | null;
         readonly id: string;
         readonly image: {
-          readonly url: string | null;
+          readonly url: string;
         } | null;
         readonly name: string | null;
         readonly nftContract: {
-          readonly address: string | null;
+          readonly address: string;
         } | null;
-        readonly tokenId: string | null;
+        readonly tokenId: string;
       } | null;
     } | null> | null;
     readonly ownerAddress: string;

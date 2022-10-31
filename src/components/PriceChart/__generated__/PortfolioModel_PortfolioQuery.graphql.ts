@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f4f2106b41dcb935d3766340f56f2b2>>
+ * @generated SignedSource<<5f308be395385309c8faac211abf319c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,21 +17,21 @@ export type PortfolioModel_PortfolioQuery$variables = {
 export type PortfolioModel_PortfolioQuery$data = {
   readonly portfolios: ReadonlyArray<{
     readonly dailyValues: ReadonlyArray<{
-      readonly close: number | null;
+      readonly close: number;
       readonly timestamp: number;
     } | null> | null;
     readonly hourlyValues: ReadonlyArray<{
-      readonly close: number | null;
+      readonly close: number;
       readonly timestamp: number;
     } | null> | null;
     readonly monthlyValues: ReadonlyArray<{
-      readonly close: number | null;
+      readonly close: number;
       readonly timestamp: number;
     } | null> | null;
     readonly tokenBalances: ReadonlyArray<{
       readonly denominatedValue: {
         readonly currency: Currency | null;
-        readonly value: number | null;
+        readonly value: number;
       } | null;
       readonly quantity: number | null;
       readonly token: {
@@ -43,7 +43,7 @@ export type PortfolioModel_PortfolioQuery$data = {
       } | null;
       readonly tokenProjectMarket: {
         readonly relativeChange24: {
-          readonly value: number | null;
+          readonly value: number;
         } | null;
         readonly tokenProject: {
           readonly logoUrl: string | null;
@@ -51,11 +51,11 @@ export type PortfolioModel_PortfolioQuery$data = {
       } | null;
     } | null> | null;
     readonly weeklyValues: ReadonlyArray<{
-      readonly close: number | null;
+      readonly close: number;
       readonly timestamp: number;
     } | null> | null;
     readonly yearlyValues: ReadonlyArray<{
-      readonly close: number | null;
+      readonly close: number;
       readonly timestamp: number;
     } | null> | null;
   } | null> | null;

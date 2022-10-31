@@ -2,22 +2,6 @@
 directive @defer on FIELD
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by an API key.
 """
 directive @aws_api_key on OBJECT | FIELD_DEFINITION
@@ -38,6 +22,12 @@ directive @aws_publish(
   subscriptions: [String]
 ) on FIELD_DEFINITION
 
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on FIELD_DEFINITION
+
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
   """
@@ -47,12 +37,22 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""
 Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
 directive @aws_cognito_user_pools(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 enum ActivityType {
   APPROVE
@@ -80,7 +80,7 @@ enum ActivityType {
 type Amount implements IAmount {
   id: ID!
   currency: Currency
-  value: Float
+  value: Float!
 }
 
 type AssetActivity {
@@ -147,7 +147,7 @@ enum HistoryDuration {
 
 interface IAmount {
   currency: Currency
-  value: Float
+  value: Float!
 }
 
 interface IContract {
@@ -157,7 +157,7 @@ interface IContract {
 
 type Image {
   id: ID!
-  url: String
+  url: String!
   dimensions: Dimensions
 }
 
@@ -203,7 +203,7 @@ type NftAsset {
   """  TODO: may need to be array to support erc1155 cases. not needed at the moment so will revisit.
   """
   ownerAddress: String
-  tokenId: String
+  tokenId: String!
 
   """  Resolver to be implemented"""
   traits: [NftAssetTrait!]
@@ -214,6 +214,7 @@ type NftAsset {
   suspiciousFlag: Boolean
   flaggedBy: String
   metadataUrl: String
+  creator: NftProfile
 }
 
 type NftAssetConnection {
@@ -288,7 +289,7 @@ input NftBalancesFilterInput {
 
 type NftCollection {
   id: ID!
-  collectionId: String
+  collectionId: String!
 
   """
     TODO: support querying for collection assets here
@@ -365,7 +366,7 @@ type NftCollectionTraitStats {
 
 type NftContract implements IContract {
   id: ID!
-  address: String
+  address: String!
   chain: Chain!
   name: String
   standard: NftStandard
@@ -421,7 +422,7 @@ type NftOrderEdge {
 
 type NftProfile {
   id: ID!
-  address: String
+  address: String!
   isVerified: Boolean
   profileImage: Image
   username: String
@@ -506,7 +507,7 @@ type Query {
 type TimestampedAmount implements IAmount {
   id: ID!
   currency: Currency
-  value: Float
+  value: Float!
   timestamp: Int!
 }
 
@@ -564,6 +565,7 @@ type TokenProject {
   logoUrl: String
   logo: Image
   smallLogo: Image
+  isSpam: Boolean
   markets(currencies: [Currency!]!): [TokenProjectMarket]
 }
 

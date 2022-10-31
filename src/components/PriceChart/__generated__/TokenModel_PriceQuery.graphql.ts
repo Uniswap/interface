@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e7717d1f1aafeb6e7d12553e9ae670bd>>
+ * @generated SignedSource<<0db99d99ba1fbe0d97c224390239eeae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,23 +21,23 @@ export type TokenModel_PriceQuery$data = {
   readonly tokenProjects: ReadonlyArray<{
     readonly markets: ReadonlyArray<{
       readonly priceHistory1D: ReadonlyArray<{
-        readonly close: number | null;
+        readonly close: number;
         readonly timestamp: number;
       } | null> | null;
       readonly priceHistory1H: ReadonlyArray<{
-        readonly close: number | null;
+        readonly close: number;
         readonly timestamp: number;
       } | null> | null;
       readonly priceHistory1M: ReadonlyArray<{
-        readonly close: number | null;
+        readonly close: number;
         readonly timestamp: number;
       } | null> | null;
       readonly priceHistory1W: ReadonlyArray<{
-        readonly close: number | null;
+        readonly close: number;
         readonly timestamp: number;
       } | null> | null;
       readonly priceHistory1Y: ReadonlyArray<{
-        readonly close: number | null;
+        readonly close: number;
         readonly timestamp: number;
       } | null> | null;
     } | null> | null;

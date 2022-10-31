@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cb306ac81a7363985d5ee2f234a1fbf8>>
+ * @generated SignedSource<<59a5522912061ca6111c2a023763918e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,10 +30,10 @@ export type TransactionListQuery$data = {
         readonly imageUrl: string | null;
         readonly name: string | null;
         readonly nftContract: {
-          readonly address: string | null;
+          readonly address: string;
           readonly chain: Chain;
         } | null;
-        readonly tokenId: string | null;
+        readonly tokenId: string;
       };
       readonly direction: TransactionDirection;
       readonly nftStandard: NftStandard;
@@ -67,7 +67,7 @@ export type TransactionListQuery$data = {
       readonly tokenStandard: TokenStandard;
       readonly transactedValue: {
         readonly currency: Currency | null;
-        readonly value: number | null;
+        readonly value: number;
       } | null;
     } | {
       // This will never be '%other', but we need some

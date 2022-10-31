@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<315174bde922f0d48d639e2bc2058398>>
+ * @generated SignedSource<<44ac40d6edfb352a46718dfc4a258204>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,23 +18,23 @@ export type TokenDetailsStats_tokenProject$data = {
   readonly markets: ReadonlyArray<{
     readonly fullyDilutedMarketCap: {
       readonly currency: Currency | null;
-      readonly value: number | null;
+      readonly value: number;
     } | null;
     readonly marketCap: {
       readonly currency: Currency | null;
-      readonly value: number | null;
+      readonly value: number;
     } | null;
     readonly price: {
       readonly currency: Currency | null;
-      readonly value: number | null;
+      readonly value: number;
     } | null;
     readonly priceHigh52W: {
       readonly currency: Currency | null;
-      readonly value: number | null;
+      readonly value: number;
     } | null;
     readonly priceLow52W: {
       readonly currency: Currency | null;
-      readonly value: number | null;
+      readonly value: number;
     } | null;
   } | null> | null;
   readonly name: string | null;

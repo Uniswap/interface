@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b3f3abd68c64924ed36a60e07e47d021>>
+ * @generated SignedSource<<56a5c2425e3cc0d79a7d6c6c71082f89>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type TokenDetailsScreen_headerPriceLabel$data = {
   readonly markets: ReadonlyArray<{
     readonly price: {
-      readonly value: number | null;
+      readonly value: number;
     } | null;
   } | null> | null;
   readonly " $fragmentType": "TokenDetailsScreen_headerPriceLabel";

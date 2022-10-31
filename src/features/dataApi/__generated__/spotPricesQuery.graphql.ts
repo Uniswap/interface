@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c566e0be2f65e53641bfe6c251ebd91d>>
+ * @generated SignedSource<<2d2a3f8ff33c700a4c5bb7c27fab824d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,10 +22,10 @@ export type spotPricesQuery$data = {
   readonly tokenProjects?: ReadonlyArray<{
     readonly markets: ReadonlyArray<{
       readonly price: {
-        readonly value: number | null;
+        readonly value: number;
       } | null;
       readonly pricePercentChange24h: {
-        readonly value: number | null;
+        readonly value: number;
       } | null;
     } | null> | null;
   } | null> | null;
