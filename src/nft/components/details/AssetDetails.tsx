@@ -8,7 +8,6 @@ import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
-import { rarityProviderLogo } from 'nft/utils/rarity'
 import { useEffect, useMemo, useCallback, useReducer, useState } from 'react'
 import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
 
@@ -184,6 +183,20 @@ const ActivitySelectContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
+`
+
+const ContentNotAvailable = styled.div`
+  display: flex;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
+  line-height: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+
+  width: 450px;
+  height: 450px;
 `
 
 const FilterBox = styled.div<{ isActive?: boolean }>`
@@ -415,7 +428,9 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
   return (
     <Column>
       <MediaContainer>
-        {assetMediaType === MediaType.Image ? (
+        {asset.imageUrl === undefined ? (
+          <ContentNotAvailable>Content not available yet</ContentNotAvailable>
+        ) : assetMediaType === MediaType.Image ? (
           <img
             className={styles.image}
             src={asset.imageUrl}
