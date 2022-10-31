@@ -87,6 +87,13 @@ export const DiscreteNumberCell = ({ value }: CellProps) => (
   <span>{value.value ? volumeFormatter(value.value) : '-'}</span>
 )
 
+const getDenominatedValue = (denomination: Denomination, inWei: boolean, value?: number, usdPrice?: number) => {
+  if (denomination === Denomination.ETH) return value
+  if (usdPrice && value) return usdPrice * (inWei ? parseFloat(formatEther(value)) : value)
+
+  return undefined
+}
+
 export const EthCell = ({
   value,
   denomination,
@@ -96,12 +103,7 @@ export const EthCell = ({
   denomination: Denomination
   usdPrice?: number
 }) => {
-  const denominatedValue =
-    denomination === Denomination.ETH
-      ? value
-      : usdPrice && value
-      ? usdPrice * parseFloat(formatEther(value))
-      : undefined
+  const denominatedValue = getDenominatedValue(denomination, true, value, usdPrice)
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
       ? formatWeiToDecimal(denominatedValue.toString(), true) + ' ETH'
@@ -124,7 +126,7 @@ export const VolumeCell = ({
   denomination: Denomination
   usdPrice?: number
 }) => {
-  const denominatedValue = denomination === Denomination.ETH ? value : usdPrice && value ? usdPrice * value : undefined
+  const denominatedValue = getDenominatedValue(denomination, false, value, usdPrice)
 
   const formattedValue = denominatedValue
     ? denomination === Denomination.ETH
