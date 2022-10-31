@@ -153,7 +153,7 @@ export interface GenieCollection {
   indexingStats: { openSea: { successfulExecutionDate: string; lastRequestedAt: string } }
   marketplaceCount?: { marketplace: string; count: number }[]
   imageUrl: string
-  twitter?: string
+  twitterUrl?: string
   instagram?: string
   discordUrl?: string
   externalUrl?: string

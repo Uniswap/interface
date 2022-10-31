@@ -2,7 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
 
 import { useNavigate } from 'react-router-dom'
@@ -265,7 +265,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
-  const toggleBag = useBag((s) => s.toggleBag)
+  const openBag = useBag((s) => s.openBag)
 
   const USDPrice = useUsdPrice(asset)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
@@ -334,6 +334,9 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               // toggleBag
               onClick={() => {
                 assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+                if (!assetInBag) {
+                  openBag()
+                }
               }}
             >
               <ThemedText.SubHeader lineHeight={'20px'}>

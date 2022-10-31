@@ -7,6 +7,7 @@ import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { CollectionStatsFetcher } from 'nft/queries'
 
 const AssetContainer = styled.div`
   display: flex;
@@ -42,6 +43,10 @@ const Asset = () => {
   const asset = useMemo(() => (data ? data[0] : undefined), [data])
   const collection = useMemo(() => (data ? data[1] : undefined), [data])
 
+  const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
+    CollectionStatsFetcher(contractAddress as string)
+  )
+
   return (
     <>
       <Trace
@@ -51,7 +56,7 @@ const Asset = () => {
       >
         {asset && collection ? (
           <AssetContainer>
-            <AssetDetails collection={collection} asset={asset} />
+            <AssetDetails collection={collection} asset={asset} collectionStats={collectionStats} />
             <AssetPriceDetailsContainer>
               <AssetPriceDetails collection={collection} asset={asset} />
             </AssetPriceDetailsContainer>

@@ -7,7 +7,7 @@ import { ActivityEventResponse, ActivityEventType } from 'nft/types'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
-import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, GenieCollection, SellOrder } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
 import { isAudio } from 'nft/utils/isAudio'
@@ -15,6 +15,7 @@ import { isVideo } from 'nft/utils/isVideo'
 import { rarityProviderLogo } from 'nft/utils/rarity'
 import qs from 'query-string'
 import { useEffect, useMemo, useCallback, useReducer, useState } from 'react'
+import { ExternalLink } from 'react-feather'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { useNavigate } from 'react-router-dom'
 import { VerifiedIcon } from '../icons'
@@ -32,7 +33,7 @@ import { reduceFilters } from '../collection/Activity'
 import * as activityStyles from 'nft/components/collection/Activity.css'
 
 import * as styles from './AssetDetails.css'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'nft/utils/address'
 
 const CollectionHeader = styled.div`
   display: flex;
@@ -48,6 +49,31 @@ const AssetPriceDetailsContainer = styled.div`
   display: none;
   @media (max-width: 960px) {
     display: block;
+  }
+`
+
+const SocialLink = styled.a`
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
   }
 `
 
@@ -99,6 +125,12 @@ const AddressTextLink = styled.a`
       },
     }) => `opacity ${duration.medium} ${timing.ease}`};
   }
+`
+
+const SocialsContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
 `
 
 const DescriptionText = styled.div`
@@ -241,9 +273,10 @@ enum MediaType {
 interface AssetDetailsProps {
   asset: GenieAsset
   collection: CollectionInfoForAsset
+  collectionStats: GenieCollection | undefined
 }
 
-export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
+export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetailsProps) => {
   const navigate = useNavigate()
   const itemsInBag = useBag((state) => state.itemsInBag)
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
@@ -361,11 +394,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     }
   )
 
-  // useEffect(() => {
-  //   if (asset.creator) setCreatorAddress(asset.creator.address)
-  //   if (asset.owner) setOwnerAddress(asset.owner)
-  // }, [asset])
-
   useEffect(() => {
     setSelected(
       !!itemsInBag.find((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
@@ -450,11 +478,28 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           <span style={{ fontSize: 14, lineHeight: '20px' }}>By </span>
           {asset.creator && asset.creator.address && (
             <AddressTextLink href={`https://etherscan.io/address/${asset.creator.address}`} target="_blank">
-              {shortenAddress(asset.creator?.address)}
+              {shortenAddress(asset.creator?.address, 2, 4)}
             </AddressTextLink>
           )}
 
           <DescriptionText>{collection.collectionDescription}</DescriptionText>
+          <SocialsContainer>
+            {collectionStats?.externalUrl && (
+              <SocialLink target="_blank" href={collectionStats?.externalUrl}>
+                Website <ExternalLink size={14} />
+              </SocialLink>
+            )}
+            {collectionStats?.twitterUrl && (
+              <SocialLink target="_blank" href={`https://twitter.com/${collectionStats?.twitterUrl}`}>
+                Twitter <ExternalLink size={14} />
+              </SocialLink>
+            )}
+            {collectionStats?.discordUrl && (
+              <SocialLink target="_blank" href={collectionStats?.discordUrl}>
+                Discord <ExternalLink size={14} />
+              </SocialLink>
+            )}
+          </SocialsContainer>
         </>
       </InfoContainer>
       <InfoContainer primaryHeader="Details" secondaryHeader={null}>

@@ -75,8 +75,8 @@ const MobileSocialsPopover = ({
               </Box>
             </MobileSocialsIcon>
           ) : null}
-          {collectionStats.twitter ? (
-            <MobileSocialsIcon href={'https://twitter.com/' + collectionStats.twitter}>
+          {collectionStats.twitterUrl ? (
+            <MobileSocialsIcon href={'https://twitter.com/' + collectionStats.twitterUrl}>
               <Box margin="auto" paddingTop="6">
                 <TwitterIcon
                   fill={themeVars.colors.textSecondary}
@@ -160,8 +160,8 @@ const CollectionName = ({
               />
             </SocialsIcon>
           ) : null}
-          {collectionStats.twitter ? (
-            <SocialsIcon href={'https://twitter.com/' + collectionStats.twitter}>
+          {collectionStats.twitterUrl ? (
+            <SocialsIcon href={'https://twitter.com/' + collectionStats.twitterUrl}>
               <TwitterIcon
                 fill={themeVars.colors.textSecondary}
                 color={themeVars.colors.textSecondary}
@@ -185,7 +185,7 @@ const CollectionName = ({
       </Row>
       {isMobile &&
         (collectionStats.discordUrl ||
-          collectionStats.twitter ||
+          collectionStats.twitterUrl ||
           collectionStats.instagram ||
           collectionStats.externalUrl) && (
           <MobileSocialsPopover
