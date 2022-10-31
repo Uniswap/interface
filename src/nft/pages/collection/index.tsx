@@ -77,21 +77,23 @@ const Collection = () => {
           {contractAddress ? (
             <>
               {' '}
-              <Box width="full" height="160">
-                {isLoading ? (
-                  <CollectionBannerLoading />
-                ) : (
-                  <Box
-                    as="img"
-                    height="full"
-                    width="full"
-                    src={collectionStats?.bannerImageUrl}
-                    className={isLoading ? styles.loadingBanner : styles.bannerImage}
-                    background="none"
-                  />
-                )}
+              <Box width="full" height="276">
+                <Box width="full" height="276">
+                  {isLoading ? (
+                    <CollectionBannerLoading />
+                  ) : (
+                    <Box
+                      as="img"
+                      height="full"
+                      width="full"
+                      src={`${collectionStats?.bannerImageUrl}?w=${window.innerWidth}`}
+                      className={isLoading ? styles.loadingBanner : styles.bannerImage}
+                      background="none"
+                    />
+                  )}
+                </Box>
               </Box>
-              <Column paddingX="32">
+              <Column paddingX="48">
                 {(isLoading || collectionStats !== undefined) && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
                 )}

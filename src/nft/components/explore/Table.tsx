@@ -1,3 +1,6 @@
+import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import clsx from 'clsx'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -26,6 +29,7 @@ export function Table<D extends Record<string, unknown>>({
   classNames,
   ...props
 }: TableProps<D>) {
+  const { chainId } = useWeb3React()
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
     {
       columns,
@@ -94,21 +98,29 @@ export function Table<D extends Record<string, unknown>>({
           prepareRow(row)
 
           return (
-            <tr
-              className={styles.tr}
-              {...row.getRowProps()}
+            <TraceEvent
+              events={[Event.onClick]}
+              name={EventName.NFT_TRENDING_ROW_SELECTED}
+              properties={{ collection_address: row.original.collection.address, chain_id: chainId }}
+              element={ElementName.NFT_TRENDING_ROW}
               key={i}
-              onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
             >
-              {row.cells.map((cell, cellIndex) => {
-                return (
-                  <td className={clsx(styles.td, classNames?.td)} {...cell.getCellProps()} key={cellIndex}>
-                    {cellIndex === 0 ? <span className={styles.rank}>{i + 1}</span> : null}
-                    {cell.render('Cell')}
-                  </td>
-                )
-              })}
-            </tr>
+              <tr
+                className={styles.tr}
+                {...row.getRowProps()}
+                key={i}
+                onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
+              >
+                {row.cells.map((cell, cellIndex) => {
+                  return (
+                    <td className={clsx(styles.td, classNames?.td)} {...cell.getCellProps()} key={cellIndex}>
+                      {cellIndex === 0 ? <span className={styles.rank}>{i + 1}</span> : null}
+                      {cell.render('Cell')}
+                    </td>
+                  )
+                })}
+              </tr>
+            </TraceEvent>
           )
         })}
       </tbody>

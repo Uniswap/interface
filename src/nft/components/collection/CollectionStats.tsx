@@ -293,7 +293,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
             </StatsItem>
           ) : null}
           {stats.stats?.one_day_floor_change ? (
-            <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
+            <StatsItem label="24-Hour floor" isMobile={isMobile ?? false}>
               <PercentChange>
                 {floorChangeStr}% {arrow}
               </PercentChange>
@@ -312,11 +312,6 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           {uniqueOwnersPercentage ? (
             <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
               {uniqueOwnersPercentage}%
-            </StatsItem>
-          ) : null}
-          {stats.stats?.total_volume ? (
-            <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
-              {totalVolumeStr} ETH
             </StatsItem>
           ) : null}
           {stats.stats?.total_listings && listedPercentageStr > 0 ? (

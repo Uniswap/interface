@@ -35,7 +35,7 @@ const WalletButton = styled(ButtonPrimary)`
 `
 
 const ProfileButton = styled(WalletButton)`
-  background: ${({ theme }) => theme.backgroundInteractive};
+  background: ${({ theme }) => theme.accentAction};
   transition: ${({ theme }) => theme.transition.duration.fast} ${({ theme }) => theme.transition.timing.ease}
     background-color;
 `
