@@ -288,13 +288,12 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     return <OwnerContainer asset={asset} />
   }
 
-  const shortAddress = shortenAddress(asset.owner.address ?? '')
-  const uploadLink = asset.tokenType === 'ERC1155' ? asset.creator : asset.owner
+  const shortAddress = shortenAddress(asset.owner.address ?? '', 2, 4)
 
   return (
     <Container>
       <OwnerInformationContainer>
-        <OwnerText target="_blank" href={`https://etherscan.io/address/${asset.owner}`}>
+        <OwnerText target="_blank" href={`https://etherscan.io/address/${asset.owner.address}`}>
           Seller: {asset.tokenType === 'ERC1155' ? '' : <span>{isOwner ? 'you' : shortAddress}</span>}
         </OwnerText>
         <UploadLink

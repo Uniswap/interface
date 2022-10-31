@@ -160,10 +160,22 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
                   </PriceContainer>
                 )}
               </TD>
-              <Link href={`${explorer}/address/${event.fromAddress}`} target="_blank">
-                <TD>{event && event.fromAddress && shortenAddress(event.fromAddress, 2, 4)}</TD>
-              </Link>{' '}
-              <TD>{event.toAddress && shortenAddress(event.toAddress)}</TD>
+
+              <TD>
+                {event && event.fromAddress && (
+                  <Link href={`${explorer}address/${event.fromAddress}`} target="_blank">
+                    {shortenAddress(event.fromAddress, 2, 4)}
+                  </Link>
+                )}
+              </TD>
+
+              <TD>
+                {event.toAddress && (
+                  <Link href={`${explorer}address/${event.toAddress}`} target="_blank">
+                    {shortenAddress(event.toAddress, 2, 4)}
+                  </Link>
+                )}
+              </TD>
               <TD>{event.eventTimestamp && getTimeDifference(event.eventTimestamp.toString())}</TD>
             </TR>
           )

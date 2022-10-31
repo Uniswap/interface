@@ -35,9 +35,28 @@ const Body = styled.div`
 `
 
 const Center = styled.span`
-  display: flex;
   align-items: center;
+  cursor: pointer;
+  display: flex;
   gap: 8px;
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
 `
 
 const CopyIcon = styled(Copy)`
@@ -59,8 +78,6 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
   const { address, tokenId, tokenType, creator } = asset
   const { totalSupply } = collection
 
-  const finalTokenId = tokenId.slice(0, 20)
-
   const [, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(address || '')
@@ -71,8 +88,8 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
       <GridItem
         header="Contract address"
         body={
-          <Center>
-            {shortenAddress(address, 2, 4)} <CopyIcon onClick={copy} size={13} />
+          <Center onClick={copy}>
+            {shortenAddress(address, 2, 4)} <CopyIcon size={13} />
           </Center>
         }
       />
