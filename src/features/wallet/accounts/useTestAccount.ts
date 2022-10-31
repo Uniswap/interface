@@ -18,7 +18,7 @@ export function useTestAccount() {
         importAccountActions.trigger({
           type: ImportAccountType.Mnemonic,
           name: 'Demo Account',
-          mnemonic: MNEMONIC_TEST_ONLY,
+          validatedMnemonic: MNEMONIC_TEST_ONLY,
           markAsActive: true,
           ignoreActivate: true,
         })

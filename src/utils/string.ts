@@ -17,7 +17,7 @@ export function trimToLength(value: string, maxLength: number) {
   return trimmed.length > maxLength ? trimmed.substring(0, maxLength) + '...' : trimmed
 }
 
-// Remove slashes (/) from the beggining and end of the string
+// Remove slashes (/) from the beginning and end of the string
 export function trimSlashes(value: string) {
   return value.replace(/^\/+|\/+$/g, '')
 }
@@ -29,7 +29,8 @@ export function toTitleCase(str: string) {
 }
 
 export function normalizeTextInput(input: string, toLowerCase = true) {
-  const trimmed = input.trim()
+  // Trim and replace all white spaces with a single space
+  const trimmed = input.trim().replace(/\s+/g, ' ')
   return toLowerCase ? trimmed.toLowerCase() : trimmed
 }
 

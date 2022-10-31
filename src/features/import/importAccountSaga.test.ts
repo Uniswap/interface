@@ -30,7 +30,7 @@ const SAMPLE_SEED_ADDRESS = '0x82D56A352367453f74FC0dC7B071b311da373Fa6'
 describe(importAccount, () => {
   it('imports native account', async () => {
     const params: ImportMnemonicAccountParams = {
-      mnemonic: SAMPLE_SEED,
+      validatedMnemonic: SAMPLE_SEED,
       name: 'WALLET',
       type: ImportAccountType.Mnemonic,
     }

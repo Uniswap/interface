@@ -5,7 +5,6 @@ import { activateAccount, addAccount, unlockWallet } from 'src/features/wallet/w
 import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
 import { getChecksumAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
-import { normalizeMnemonic } from 'src/utils/mnemonics'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { all, call, put } from 'typed-redux-saga'
 
@@ -20,7 +19,7 @@ export function* importAccount(params: ImportAccountParams) {
   } else if (type === ImportAccountType.Mnemonic) {
     yield* call(
       importMnemonicAccounts,
-      params.mnemonic,
+      params.validatedMnemonic,
       name,
       params.indexes,
       params.markAsActive,
@@ -46,14 +45,13 @@ function* importAddressAccount(address: string, name?: string, ignoreActivate?: 
 }
 
 function* importMnemonicAccounts(
-  mnemonic: string,
+  validatedMnemonic: string,
   name?: string,
   indexes = [0],
   markAsActive?: boolean,
   ignoreActivate?: boolean
 ) {
-  const formattedMnemonic = normalizeMnemonic(mnemonic)
-  const mnemonicId = yield* call(importMnemonic, formattedMnemonic)
+  const mnemonicId = yield* call(importMnemonic, validatedMnemonic)
   // generate private keys and return addresses for all derivation indexes
   const addresses = yield* all(
     indexes.map((index) => {

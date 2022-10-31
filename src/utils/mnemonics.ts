@@ -1,75 +1,57 @@
 import { utils, wordlists } from 'ethers'
-import { TFunction } from 'i18next'
 import { MNEMONIC_LENGTH_MAX, MNEMONIC_LENGTH_MIN } from 'src/constants/accounts'
+import { normalizeTextInput } from 'src/utils/string'
+
+export enum MnemonicValidationError {
+  InvalidWord = 'InvalidWord',
+  NotEnoughWords = 'NotEnoughWords',
+  TooManyWords = 'TooManyWords',
+  InvalidPhrase = 'InvalidPhrase',
+}
 
 // Validate if word is part of the BIP-39 word set [https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki]
-export function isValidWord(
-  mnemonic: NullUndefined<string>,
-  t: TFunction
-): {
-  valid: boolean
-  errorText?: string
-  tooShort?: boolean
+export function validateSetOfWords(mnemonic?: string): {
+  error?: MnemonicValidationError
+  invalidWord?: string
+  isValidLength: boolean // we need this to enable/disable buttons for all error return types
 } {
-  if (!mnemonic)
-    return {
-      valid: false,
-      errorText: t('Enter value'),
-    }
-  const formatted = normalizeMnemonic(mnemonic)
-  const split = formatted.split(' ')
-  const invalidWords = split.filter((item) => wordlists.en.getWordIndex(item) === -1)
+  if (!mnemonic) return { error: MnemonicValidationError.NotEnoughWords, isValidLength: false }
 
+  const formatted = normalizeTextInput(mnemonic)
+  const split = formatted.split(' ')
+  const isValidLength = split.length >= MNEMONIC_LENGTH_MIN && split.length <= MNEMONIC_LENGTH_MAX
+
+  const invalidWords = split.filter((item) => wordlists.en.getWordIndex(item) === -1)
   if (invalidWords.length) {
     return {
-      valid: false,
-      errorText: t('Invalid word: {{word}}', { word: invalidWords.at(-1) }),
+      error: MnemonicValidationError.InvalidWord,
+      invalidWord: invalidWords.at(-1),
+      isValidLength,
     }
   }
 
-  if (split.length < MNEMONIC_LENGTH_MIN || split.length > MNEMONIC_LENGTH_MAX)
-    return {
-      valid: false,
-      errorText: t('Recovery phrases must be 12-24 words'),
-      tooShort: split.length < MNEMONIC_LENGTH_MIN,
-    }
+  if (split.length < MNEMONIC_LENGTH_MIN)
+    return { error: MnemonicValidationError.NotEnoughWords, isValidLength }
 
-  return {
-    valid: true,
-  }
+  if (split.length > MNEMONIC_LENGTH_MAX)
+    return { error: MnemonicValidationError.TooManyWords, isValidLength }
+
+  return { isValidLength }
 }
 
 // Validate phrase by verifying the checksum
-export function isValidMnemonic(
-  mnemonic: NullUndefined<string>,
-  t: TFunction
-): {
-  valid: boolean
-  errorText?: string
+export function validateMnemonic(mnemonic?: string): {
+  error?: MnemonicValidationError
+  invalidWord?: string
+  validMnemonic?: string
 } {
-  if (!mnemonic)
-    return {
-      valid: false,
-      errorText: t('Enter value'),
-    }
-  const formatted = normalizeMnemonic(mnemonic)
-  const split = formatted.split(' ')
+  const { error, invalidWord } = validateSetOfWords(mnemonic)
+  if (error) return { error, invalidWord }
 
-  if (split.length < MNEMONIC_LENGTH_MIN || split.length > MNEMONIC_LENGTH_MAX)
-    return {
-      valid: false,
-      errorText: t('Recovery phrase must be 12-24 words'),
-    }
+  const formatted = normalizeTextInput(mnemonic ?? '')
+  if (!utils.isValidMnemonic(formatted)) return { error: MnemonicValidationError.InvalidPhrase }
 
-  if (!utils.isValidMnemonic(formatted)) {
-    return {
-      valid: false,
-      errorText: t('Invalid phrase'),
-    }
-  }
-  return {
-    valid: true,
-  }
+  return { validMnemonic: formatted }
 }
 
 export function isValidDerivationPath(derivationPath: string) {
@@ -79,17 +61,9 @@ export function isValidDerivationPath(derivationPath: string) {
   return split[0] === 'm' && split.length === 6
 }
 
-export function isValidMnemonicLocale(locale: string) {
-  if (!locale) return false
-  // Only english locales are currently supported
-  if (locale !== 'en') return false
-  return true
-}
-
-// Format the mnemonic to handle extra whitespace
-// May need more additions here as other languages are supported
-export function normalizeMnemonic(mnemonic: string) {
-  if (!mnemonic) return ''
-  // Trim and replace all whitespaces with a single space
-  return mnemonic.trim().replace(/\s+/g, ' ')
+// Check if phrase has trailing whitespace, indicating the user is done typing the previous word.
+export function userFinishedTypingWord(mnemonic: string | undefined) {
+  if (!mnemonic) return false
+  const lastChar = mnemonic[mnemonic.length - 1]
+  return lastChar === ' '
 }

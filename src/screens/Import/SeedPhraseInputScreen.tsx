@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -12,8 +12,12 @@ import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { isValidMnemonic, isValidWord } from 'src/utils/mnemonics'
-import { normalizeTextInput } from 'src/utils/string'
+import {
+  MnemonicValidationError,
+  userFinishedTypingWord,
+  validateMnemonic,
+  validateSetOfWords,
+} from 'src/utils/mnemonics'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 
@@ -31,44 +35,71 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
   const [pastePermissionModalOpen, setPastePermissionModalOpen] = useState(false)
   useLockScreenOnBlur(pastePermissionModalOpen)
 
-  const [focused, setFocused] = useState(false)
   const [value, setValue] = useState<string | undefined>(undefined)
-  const {
-    valid: validWord,
-    errorText: errorTextWord,
-    tooShort,
-  } = isValidWord(value ? normalizeTextInput(value, false) : null, t)
-  const [errorTextPhrase, setErrorPhrase] = useState<string | undefined>()
+  const [submitEnabled, setSubmitEnabled] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
-  const showValidation = !focused || (focused && !tooShort)
-  const isValid = showValidation && validWord && !errorTextPhrase
-  const error = (showValidation && errorTextWord) || errorTextPhrase
+  useEffect(() => {
+    if (!errorMessage) {
+      setSubmitEnabled(true)
+    } else {
+      setSubmitEnabled(false)
+    }
+  }, [errorMessage, setSubmitEnabled])
 
   // Add all accounts from mnemonic.
   const onSubmit = useCallback(() => {
-    if (validWord && value) {
-      // Check phrase validation
-      const { valid: validPhrase, errorText } = isValidMnemonic(normalizeTextInput(value, false), t)
-      if (!validPhrase) {
-        setErrorPhrase(errorText)
-        return
+    // Check phrase validation
+    const { validMnemonic, error, invalidWord } = validateMnemonic(value)
+    if (!validMnemonic) {
+      setShowSuccess(false)
+      if (error === MnemonicValidationError.InvalidPhrase) {
+        setErrorMessage(t('Invalid phrase'))
+      } else if (error === MnemonicValidationError.InvalidWord) {
+        setErrorMessage(t('Invalid word: {{word}}', { word: invalidWord }))
+      } else if (
+        error === MnemonicValidationError.TooManyWords ||
+        error === MnemonicValidationError.NotEnoughWords
+      ) {
+        setErrorMessage(t('Recovery phrase must be 12-24 words'))
       }
-
-      dispatch(
-        importAccountActions.trigger({
-          type: ImportAccountType.Mnemonic,
-          mnemonic: value,
-          indexes: Array.from(Array(IMPORT_WALLET_AMOUNT).keys()),
-        })
-      )
-      navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
+      return
     }
-  }, [dispatch, navigation, params, t, validWord, value])
+
+    dispatch(
+      importAccountActions.trigger({
+        type: ImportAccountType.Mnemonic,
+        validatedMnemonic: validMnemonic,
+        indexes: Array.from(Array(IMPORT_WALLET_AMOUNT).keys()),
+      })
+    )
+    navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
+  }, [dispatch, navigation, params, t, value])
 
   const onChange = (text: string | undefined) => {
-    if (errorTextPhrase) {
-      setErrorPhrase('')
+    const { error, invalidWord, isValidLength } = validateSetOfWords(text)
+
+    // always show success UI if phrase is valid length
+    if (isValidLength) {
+      setShowSuccess(true)
+    } else {
+      setShowSuccess(false)
     }
+
+    // suppress error messages if the  user is not done typing a word
+    const suppressError =
+      (error === MnemonicValidationError.InvalidWord && !userFinishedTypingWord(text)) ||
+      error === MnemonicValidationError.NotEnoughWords
+
+    if (!error || suppressError) {
+      setErrorMessage('')
+    } else if (error === MnemonicValidationError.InvalidWord) {
+      setErrorMessage(t('Invalid word: {{word}}', { word: invalidWord }))
+    } else if (error === MnemonicValidationError.TooManyWords) {
+      setErrorMessage(t('Recovery phrase must be 12-24 words'))
+    }
+
     setValue(text)
   }
 
@@ -82,17 +113,15 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
           liveCheck
           afterPasteButtonPress={() => setPastePermissionModalOpen(false)}
           beforePasteButtonPress={() => setPastePermissionModalOpen(true)}
-          error={error}
+          errorMessage={errorMessage}
           placeholderLabel={t('recovery phrase')}
-          showSuccess={isValid}
+          showSuccess={showSuccess}
           value={value}
-          onBlur={() => setFocused(false)}
           onChange={onChange}
-          onFocus={() => setFocused(true)}
         />
       </Flex>
       <Button
-        disabled={!validWord}
+        disabled={!submitEnabled}
         label={t('Continue')}
         name={ElementName.Next}
         onPress={onSubmit}

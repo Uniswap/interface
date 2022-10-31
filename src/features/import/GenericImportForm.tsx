@@ -15,7 +15,7 @@ const INPUT_VALUES = {
 }
 interface Props {
   value: string | undefined
-  error: string | undefined
+  errorMessage: string | undefined
   onChange: (text: string | undefined) => void
   placeholderLabel: string | undefined
   onSubmit?: () => void
@@ -33,7 +33,7 @@ interface Props {
 export function GenericImportForm({
   value,
   onChange,
-  error,
+  errorMessage,
   placeholderLabel,
   onSubmit,
   showSuccess,
@@ -74,7 +74,7 @@ export function GenericImportForm({
           borderColor={
             showSuccess
               ? 'accentSuccess'
-              : error && (liveCheck || !focused) && value
+              : errorMessage && (liveCheck || !focused) && value
               ? 'accentCritical'
               : 'background2'
           }
@@ -141,11 +141,11 @@ export function GenericImportForm({
           )}
         </Flex>
         <Flex>
-          {error && value && (liveCheck || !focused) && (
+          {errorMessage && value && (liveCheck || !focused) && (
             <Flex centered row gap="sm">
               <AlertTriangle color={theme.colors.accentCritical} />
               <Text color="accentCritical" variant="bodyLarge">
-                {error}
+                {errorMessage}
               </Text>
             </Flex>
           )}
