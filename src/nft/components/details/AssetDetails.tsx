@@ -4,9 +4,7 @@ import useENSName from 'hooks/useENSName'
 import AssetActivity from './AssetActivity'
 import { Box } from 'nft/components/Box'
 import { ActivityEventResponse, ActivityEventType } from 'nft/types'
-import { buttonTextMedium } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
-import { useTimeout } from 'nft/hooks/useTimeout'
 import { CollectionInfoForAsset, GenieAsset, GenieCollection, SellOrder } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
@@ -144,7 +142,7 @@ const RarityWrap = styled.span`
   color: ${({ theme }) => theme.textPrimary};
   padding: 2px 4px;
   border-radius: 4px;
-  alignitems: center;
+  align-items: center;
   gap: 8px;
 `
 
