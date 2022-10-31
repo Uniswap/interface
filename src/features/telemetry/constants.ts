@@ -161,6 +161,7 @@ export const enum MarkNames {
  */
 export const enum LogContext {
   Analytics = 'Analytics',
+  CloudBackup = 'CloudBackup',
   ErrorBoundary = 'ErrorBoundary',
   Experiments = 'Experiments',
   ForceUpgrade = 'ForceUpgrade',

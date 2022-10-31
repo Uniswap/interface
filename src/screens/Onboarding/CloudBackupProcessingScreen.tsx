@@ -9,6 +9,8 @@ import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { backupMnemonicToICloud } from 'src/features/CloudBackup/RNICloudBackupsManager'
+import { logException } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
@@ -35,25 +37,29 @@ export function CloudBackupProcessingScreen({
 
   const [processing, doneProcessing] = useReducer(() => false, true)
 
-  const handleBackupError = useCallback(() => {
-    Alert.alert(
-      t('iCloud error'),
-      t(
-        'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
-      ),
-      [
-        {
-          text: t('OK'),
-          style: 'default',
-        },
-      ]
-    )
-    navigation.navigate({
-      name: OnboardingScreens.Backup,
-      params: { importType },
-      merge: true,
-    })
-  }, [t, importType, navigation])
+  const handleBackupError = useCallback(
+    (error) => {
+      logException(LogContext.CloudBackup, error)
+      Alert.alert(
+        t('iCloud error'),
+        t(
+          'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
+        ),
+        [
+          {
+            text: t('OK'),
+            style: 'default',
+          },
+        ]
+      )
+      navigation.navigate({
+        name: OnboardingScreens.Backup,
+        params: { importType },
+        merge: true,
+      })
+    },
+    [t, importType, navigation]
+  )
 
   // Handle finished backing up to Cloud
   useEffect(() => {
@@ -83,7 +89,7 @@ export function CloudBackupProcessingScreen({
         )
       } catch (error) {
         logger.debug('CloudBackupProcessingScreen', 'backupMnemonicToICloud', 'Error', error)
-        handleBackupError()
+        handleBackupError(error)
       }
     }
 
