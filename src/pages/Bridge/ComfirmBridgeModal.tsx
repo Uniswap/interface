@@ -124,7 +124,7 @@ export default memo(function Disclaimer({
               <Flex color={theme.text} alignItems="center" style={{ gap: 8 }}>
                 <Text fontSize={20}>{t`Review your transfer`}</Text>
               </Flex>
-              <X onClick={onDismiss} style={{ cursor: 'pointer' }} color={theme.subText} />
+              <X onClick={onDismiss} style={{ cursor: 'pointer' }} color={theme.text} />
             </Flex>
 
             <Flex style={{ gap: 20 }} flexDirection="column">

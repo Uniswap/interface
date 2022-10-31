@@ -60,7 +60,7 @@ function calcReceiveValueAndFee(inputBridgeValue: string, tokenOut: MultiChainTo
       return {
         fee,
         outputAmount: value,
-        time: '~ 3-30 mins',
+        time: '~3-30 mins',
         inputAmount: inputBridgeValue,
       }
     }

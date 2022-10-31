@@ -348,7 +348,6 @@ export default function Header() {
   const { width } = useWindowSize()
   const [{ show: isShowTutorial = false, step }] = useTutorialSwapGuide()
   const under369 = width && width < 369
-  const under500 = width && width < 500
   const { mixpanelHandler } = useMixpanel()
   return (
     <HeaderFrame>
@@ -476,11 +475,6 @@ export default function Header() {
             <CampaignWrapper id={TutorialIds.CAMPAIGN_LINK}>
               <StyledNavLink id={`campaigns`} to={'/campaigns'} isActive={match => Boolean(match)}>
                 <Trans>Campaigns</Trans>
-                {!under500 && (
-                  <NewLabel>
-                    <Trans>New</Trans>
-                  </NewLabel>
-                )}
               </StyledNavLink>
             </CampaignWrapper>
           )}

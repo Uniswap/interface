@@ -6,19 +6,13 @@ const TabItem = styled.div<{ isActive?: boolean }>`
   text-align: center;
   height: fit-content;
   padding: 4px 12px;
-  font-family: 'Work Sans';
-  font-style: normal;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
   color: ${({ theme }) => theme.subText};
-  cursor: pointer;
   user-select: none;
-
   border-radius: 20px;
-
   transition: all 150ms;
-
   ${({ isActive, theme }) =>
     isActive &&
     css`
