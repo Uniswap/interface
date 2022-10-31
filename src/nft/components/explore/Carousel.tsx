@@ -1,6 +1,7 @@
 import { useWindowSize } from 'hooks/useWindowSize'
 import { ChevronLeftIcon } from 'nft/components/icons'
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
+import { ReactNode, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { a, useSprings } from 'react-spring'
 import styled from 'styled-components/macro'
 
@@ -8,6 +9,10 @@ const CarouselContainer = styled.div`
   display: flex;
   max-width: 592px;
   width: 100%;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    height: 320px;
+  }
 `
 
 const CarouselCardContainer = styled.div`
@@ -49,6 +54,10 @@ const IconContainer = styled.div<{ right?: boolean }>`
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     height: 296px;
   }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    display: none;
+  }
 `
 
 interface CarouselProps {
@@ -62,6 +71,7 @@ export const Carousel = ({ children }: CarouselProps) => {
   const { width } = useWindowSize()
   const carouselCardContainerRef = useRef<HTMLDivElement>(null)
   const [cardWidth, setCardWidth] = useState(MAX_CARD_WIDTH)
+  const [resetTimer, toggleResetTimer] = useReducer((state) => !state, false)
 
   useEffect(() => {
     if (carouselCardContainerRef.current) {
@@ -69,9 +79,9 @@ export const Carousel = ({ children }: CarouselProps) => {
     }
   }, [width])
 
-  const idx = useCallback((x: number, l = children.length) => (x < 0 ? x + l : x) % l, [children])
+  const idx = useCallback((x: number, l = children.length) => calculateCardIndex(x, l), [children])
   const getPos = useCallback(
-    (i: number, firstVis: number, firstVisIdx: number) => idx(i - firstVis + firstVisIdx),
+    (i: number, firstVis: number, firstVisIdx: number) => calculateFirstCardIndex(i, firstVis, firstVisIdx, idx),
     [idx]
   )
   const [springs, set] = useSprings(children.length, (i) => ({
@@ -86,12 +96,7 @@ export const Carousel = ({ children }: CarouselProps) => {
       set((i) => {
         const position = getPos(i, firstVis, firstVisIdx)
         const prevPosition = getPos(i, prev.current[0], prev.current[1])
-        const rank =
-          firstVis -
-          (y < 0 ? children.length : 0) +
-          position -
-          firstVisIdx +
-          (y < 0 && firstVis === 0 ? children.length : 0)
+        const rank = calculateRank(firstVis, firstVisIdx, position, children.length, y)
         return {
           x: (-y % (cardWidth * children.length)) + cardWidth * rank + FIRST_CARD_OFFSET,
           immediate: vy < 0 ? prevPosition > position : prevPosition < position,
@@ -109,12 +114,26 @@ export const Carousel = ({ children }: CarouselProps) => {
 
   const index = useRef(0)
 
-  const toggleSlide = (next: -1 | 1) => {
-    const offset = cardWidth * next
-    index.current += offset
+  const toggleSlide = useCallback(
+    (next: -1 | 1) => {
+      const offset = cardWidth * next
+      index.current += offset
 
-    runSprings(index.current, next)
-  }
+      runSprings(index.current, next)
+      toggleResetTimer()
+    },
+    [runSprings, cardWidth]
+  )
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      toggleSlide(1)
+    }, 7_000)
+    return () => {
+      console.log('clearing interval')
+      clearInterval(interval)
+    }
+  }, [toggleSlide, resetTimer])
 
   return (
     <CarouselContainer>

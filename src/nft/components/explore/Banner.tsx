@@ -61,7 +61,7 @@ const HeaderContainer = styled.div`
     padding-top: 0px;
   }
 `
-const DEFAULT_ASSET_QUERY_AMOUNT = 5
+const DEFAULT_TRENDING_COLLECTION_QUERY_AMOUNT = 5
 
 const Banner = () => {
   const navigate = useNavigate()
@@ -86,36 +86,21 @@ const Banner = () => {
         Every listing.
       </HeaderContainer>
       {collections ? (
-        <>
-          {isMobile ? (
+        <Carousel>
+          {collections.map((collection) => (
             <CarouselCard
-              collection={collections[0]}
-              onClick={() => navigate(`/nfts/collection/${collections[0].address}`)}
+              key={collection.address}
+              collection={collection}
+              onClick={() => navigate(`/nfts/collection/${collection.address}`)}
             />
-          ) : (
-            <Carousel>
-              {collections.map((collection) => (
-                <CarouselCard
-                  key={collection.address}
-                  collection={collection}
-                  onClick={() => navigate(`/nfts/collection/${collection.address}`)}
-                />
-              ))}
-            </Carousel>
-          )}
-        </>
+          ))}
+        </Carousel>
       ) : (
-        <>
-          {isMobile ? (
-            <LoadingCarouselCard />
-          ) : (
-            <Carousel>
-              {[...Array(DEFAULT_ASSET_QUERY_AMOUNT)].map((index) => (
-                <LoadingCarouselCard key={'carouselCard' + index} />
-              ))}
-            </Carousel>
-          )}
-        </>
+        <Carousel>
+          {[...Array(DEFAULT_TRENDING_COLLECTION_QUERY_AMOUNT)].map((index) => (
+            <LoadingCarouselCard key={'carouselCard' + index} />
+          ))}
+        </Carousel>
       )}
     </BannerContainer>
   )

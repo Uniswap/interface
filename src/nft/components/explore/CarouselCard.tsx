@@ -161,6 +161,22 @@ const TableElement = styled.div`
   line-height: 20px;
 `
 
+interface MarketplaceRowProps {
+  marketplace: string
+  floor: string
+  listings: string
+}
+
+export const MarketplaceRow = ({ marketplace, floor, listings }: MarketplaceRowProps) => {
+  return (
+    <>
+      <TableElement>{marketplace}</TableElement>
+      <TableElement>{floor}</TableElement>
+      <TableElement>{listings}</TableElement>
+    </>
+  )
+}
+
 interface CarouselCardProps {
   collection: TrendingCollection
   onClick: () => void
@@ -193,19 +209,15 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
         <HeaderRow>Uniswap</HeaderRow>
         <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
         <HeaderRow>324 Listings</HeaderRow>
-        <TableElement>OpenSea</TableElement>
-        <TableElement>7.1 ETH</TableElement>
-        <TableElement>279</TableElement>
-        <TableElement>X2Y2</TableElement>
-        <TableElement>7.3 ETH</TableElement>
-        <TableElement>32</TableElement>
-        <TableElement>LooksRare</TableElement>
-        <TableElement>6.9 ETH</TableElement>
-        <TableElement>12</TableElement>
+        <MarketplaceRow marketplace="Opensea" floor="7.1 ETH" listings="239" />
+        <MarketplaceRow marketplace="X2Y2" floor="7.1 ETH" listings="239" />
+        <MarketplaceRow marketplace="LooksRare" floor="7.1 ETH" listings="239" />
       </CardBottomContainer>
     </CarouselCardContainer>
   )
 }
+
+const DEFAULT_TABLE_ELEMENTS = 12
 
 export const LoadingCarouselCard = () => {
   return (
@@ -218,18 +230,9 @@ export const LoadingCarouselCard = () => {
         <HeaderOverlay />
       </LoadingCardHeaderContainer>
       <CardBottomContainer>
-        <LoadingTableElement />
-        <LoadingTableElement />
-        <LoadingTableElement />
-        <LoadingTableElement />
-        <LoadingTableElement />
-        <LoadingTableElement />
-        <LoadingTableElement />
-        <LoadingTableElement />
-        <LoadingTableElement />
-        <LoadingTableElement />
-        <LoadingTableElement />
-        <LoadingTableElement />
+        {[...Array(DEFAULT_TABLE_ELEMENTS)].map((index) => (
+          <LoadingTableElement key={index} />
+        ))}
       </CardBottomContainer>
     </CarouselCardContainer>
   )
