@@ -68,15 +68,12 @@ export const detailsImage = sprinkles({
 export const detailsName = style([
   body,
   sprinkles({
-    marginBottom: '6',
+    paddingBottom: '12',
     fontWeight: 'normal',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   }),
-  {
-    lineHeight: '24px',
-  },
 ])
 
 export const eventDetail = style([
