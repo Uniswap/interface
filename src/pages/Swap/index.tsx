@@ -733,9 +733,9 @@ export default function Swap({ history }: RouteComponentProps) {
 
               <GasSelectorModal isOpen={gasSettingsOpen} onDismiss={closeGasSettings} />
 
-              <small style={{ color: theme.text1, cursor: 'pointer', display: 'flex', marginBottom: 5, alignItems: 'center', justifyContent: 'flex-end' }} onClick={openGasSettings}>Customize Gas <ArrowUpRight /></small>
+              {chainId && chainId === 1 && <small style={{ color: theme.text1, cursor: 'pointer', display: 'flex', marginBottom: 5, alignItems: 'center', justifyContent: 'flex-end' }} onClick={openGasSettings}>Customize Gas <ArrowUpRight /></small>}
               <AutoColumn gap={'xs'}>
-                {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge style={{ marginBottom: 3 }} variant={BadgeVariant.DEFAULT}>
+                {chainId && chainId === 1 && useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge style={{ marginBottom: 3 }} variant={BadgeVariant.DEFAULT}>
                   Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}
                 <div style={{ display: 'relative' }}>
                   <CurrencyInputPanel

@@ -255,7 +255,7 @@ export function useSwapCallback(
       return { state: SwapCallbackState.LOADING, callback: null, error: null }
     }
   }
-  
+
 
   return {
     state: SwapCallbackState.VALID,
@@ -263,7 +263,7 @@ export function useSwapCallback(
       const estimatedCalls: SwapCallEstimate[] = await Promise.all(
         swapCalls.map((call) => {
           const { address, calldata, value } = call
-          
+
 
           const tx =
             !value || isZero(value)
@@ -275,7 +275,7 @@ export function useSwapCallback(
                 value,
               }
 
-              console.log ( `useSwapCallback[swapCalls.map]`, tx )
+          console.log(`useSwapCallback[swapCalls.map]`, tx)
           return library
             .estimateGas(tx)
             .then((gasEstimate) => {
@@ -292,7 +292,7 @@ export function useSwapCallback(
               // try once to adjust the tokens output value
 
 
- 
+
               console.log(`Manually adjusting trade to run optimally`, trade);
 
               // re run the swap with a 
@@ -320,12 +320,12 @@ export function useSwapCallback(
       // check if any calls errored with a recognizable error
       if (!bestCallOption) {
 
-        
+
 
         const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
-        
+
         if (errorCalls.filter(callError => !callError?.error?.message.includes('gas')).length > 0) throw errorCalls[errorCalls.length - 1].error
-        let  firstNoErrorCall = estimatedCalls.find<SwapCallEstimate>(
+        let firstNoErrorCall = estimatedCalls.find<SwapCallEstimate>(
           (call): call is SwapCallEstimate => !('error' in call)
         )
         if (!firstNoErrorCall && errorCalls.filter(callError => !callError?.error?.message.includes('gas')).length > 0) {
@@ -335,7 +335,7 @@ export function useSwapCallback(
           firstNoErrorCall = errorCalls.find(callError => !!callError?.error?.message.includes('gas'))
         }
 
-        bestCallOption = firstNoErrorCall || swapCalls[ 0 ] as any
+        bestCallOption = firstNoErrorCall || swapCalls[0] as any
       }
 
       const {
@@ -370,34 +370,38 @@ export function useSwapCallback(
       const useDegenMode = useExpertMode
       const useProtection = useFrontrunProtection
       let shouldResetGasSettings = false
-      if (useDegenMode) {
-        const gasPrices = await getCurrentGasPrices()
-        // use custom gas settings if they have them applied
-        if (gasSettings?.custom && gasSettings?.custom > 0) {
-          gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
-          if (gasSettings?.useOnce) {
-            shouldResetGasSettings = true
+
+      // on ethereum take custom gas into consideration
+      if (chainId === 1) {
+        if (useDegenMode) {
+          const gasPrices = await getCurrentGasPrices()
+          // use custom gas settings if they have them applied
+          if (gasSettings?.custom && gasSettings?.custom > 0) {
+            gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
+            if (gasSettings?.useOnce) {
+              shouldResetGasSettings = true
+            }
+          } else {
+            // allocate an additional +26 gwei to account for any changes that may have occurred
+            // since this is expert mode the idea is to get the swap off as fast as possible
+            gasEstimate.gasPrice = toHex(((+gasPrices.high + 12) * 1e9))
           }
-        } else {
-          // allocate an additional +26 gwei to account for any changes that may have occurred
-          // since this is expert mode the idea is to get the swap off as fast as possible
-          gasEstimate.gasPrice = toHex(((+gasPrices.high + 12) * 1e9))
-        }
-      } else if (gasSettings?.low || gasSettings?.high || gasSettings?.medium || gasSettings?.ultra || gasSettings?.custom && gasSettings?.custom > 0) {
-        const gasPrices = await getCurrentGasPrices()
-        if (gasSettings?.low) {
-          gasEstimate.gasPrice = toHex((+gasPrices.low * 1e9))
-        } else if (gasSettings?.medium) {
-          gasEstimate.gasPrice = toHex((+gasPrices.medium * 1e9))
-        } else if (gasSettings?.high) {
-          gasEstimate.gasPrice = toHex((+gasPrices.high * 1e9))
-        } else if (gasSettings?.ultra) {
-          const ultraGasPrice = +gasPrices.high + 12;
-          gasEstimate.gasPrice = toHex((+ultraGasPrice * 1e9));
-        } else if (gasSettings?.custom && gasSettings?.custom > 0) {
-          gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
-          if (gasSettings?.useOnce) {
-            shouldResetGasSettings = true
+        } else if (gasSettings?.low || gasSettings?.high || gasSettings?.medium || gasSettings?.ultra || gasSettings?.custom && gasSettings?.custom > 0) {
+          const gasPrices = await getCurrentGasPrices()
+          if (gasSettings?.low) {
+            gasEstimate.gasPrice = toHex((+gasPrices.low * 1e9))
+          } else if (gasSettings?.medium) {
+            gasEstimate.gasPrice = toHex((+gasPrices.medium * 1e9))
+          } else if (gasSettings?.high) {
+            gasEstimate.gasPrice = toHex((+gasPrices.high * 1e9))
+          } else if (gasSettings?.ultra) {
+            const ultraGasPrice = +gasPrices.high + 12;
+            gasEstimate.gasPrice = toHex((+ultraGasPrice * 1e9));
+          } else if (gasSettings?.custom && gasSettings?.custom > 0) {
+            gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
+            if (gasSettings?.useOnce) {
+              shouldResetGasSettings = true
+            }
           }
         }
       }

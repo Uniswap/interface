@@ -267,8 +267,8 @@ export const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://arbiscan.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum',
-    logoUrl: '',
-    defaultListUrl: '',
+    logoUrl: 'https://pbs.twimg.com/profile_images/1490751860461953029/046qIxwT_400x400.jpg',
+    defaultListUrl: 'https://bridge.arbitrum.io/token-list-42161.json',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     addNetworkInfo: {
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
