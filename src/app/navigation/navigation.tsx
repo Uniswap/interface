@@ -118,6 +118,7 @@ function TabNavigator({ homeScreenQueries }: { homeScreenQueries: HomeScreenQuer
 
   return (
     <Tab.Navigator
+      sceneContainerStyle={{ paddingBottom: TAB_NAVIGATOR_HEIGHT }}
       screenOptions={{
         tabBarActiveTintColor: theme.colors.textPrimary,
         tabBarInactiveTintColor: theme.colors.textTertiary,
