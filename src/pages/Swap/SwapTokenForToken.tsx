@@ -410,7 +410,7 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
   };
 
   const removeSend = () => {
-    onChangeRecipient('')
+    onChangeRecipient(null)
     onSwitchUseChangeRecipient(false)
   };
 
