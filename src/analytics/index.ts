@@ -35,6 +35,7 @@ export function initializeAnalytics() {
 
 /** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
+  console.log(`[analytics(${eventName})]: ${JSON.stringify(eventProperties)}`)
   if (!PROXY_URL) {
     console.log(`[analytics(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return

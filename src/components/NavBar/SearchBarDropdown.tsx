@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, NavBarSearchTypes } from 'analytics/constants'
+import { NavBarSearchTypes } from 'analytics/constants'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -63,14 +62,12 @@ export const SearchBarDropdownSection = ({
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               index={index + startingIndex}
-              traceEvent={() =>
-                sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, {
-                  position: index + startingIndex,
-                  selected_search_result_name: suggestion.name,
-                  selected_search_result_address: suggestion.address,
-                  ...eventProperties,
-                })
-              }
+              eventProperties={{
+                position: index + startingIndex,
+                selected_search_result_name: suggestion.name,
+                selected_search_result_address: suggestion.address,
+                ...eventProperties,
+              }}
             />
           ) : (
             <TokenRow
@@ -80,14 +77,12 @@ export const SearchBarDropdownSection = ({
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               index={index + startingIndex}
-              traceEvent={() =>
-                sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, {
-                  position: index + startingIndex,
-                  selected_search_result_name: suggestion.name,
-                  selected_search_result_address: suggestion.address,
-                  ...eventProperties,
-                })
-              }
+              eventProperties={{
+                position: index + startingIndex,
+                selected_search_result_name: suggestion.name,
+                selected_search_result_address: suggestion.address,
+                ...eventProperties,
+              }}
             />
           )
         )}
