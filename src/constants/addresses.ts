@@ -14,8 +14,14 @@ export const MULTICALL_ADDRESS: AddressMap = {
   [SupportedChainId.OPTIMISM]: '0x90f872b3d8f33f305e0250db6A2761B354f7710A',
   [SupportedChainId.ARBITRUM_ONE]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
+  [SupportedChainId.BINANCE]: '0xfF6FD90A470Aaa0c1B8A54681746b07AcdFedc9B'
 }
-export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
+export const V2_FACTORY_ADDRESSES: AddressMap = {
+  ...constructSameAddressMap(V2_FACTORY_ADDRESS),
+  [SupportedChainId.BINANCE]: '0xca143ce32fe78f1f7019d7d551a6402fc5350c73'
+}
+
+
 const  _V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x25553828f22bdd19a20e4f12f052903cb474a335')
 _V2_ROUTER_ADDRESS[SupportedChainId.BINANCE] = '0xacb85595c219e7fc92623a0934ed72d7968d9bf4'
 export const V2_ROUTER_ADDRESS = _V2_ROUTER_ADDRESS

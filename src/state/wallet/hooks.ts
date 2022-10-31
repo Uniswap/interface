@@ -59,8 +59,6 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
 const TOKEN_BALANCE_GAS_OVERRIDE: { [chainId: number]: number } = {
   [SupportedChainId.OPTIMISM]: 250_000,
   [SupportedChainId.OPTIMISTIC_KOVAN]: 250_000,
-  [SupportedChainId.BINANCE]: 250_000,
-
 }
 
 /**

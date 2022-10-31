@@ -50,7 +50,7 @@ export const AddTokenToFavoritesModal = (props: Props) => {
             } as TokenAddedPayload
 
             onTokenAdded(item)
-
+            setAddress('')
             onDismiss()
         }
     }
