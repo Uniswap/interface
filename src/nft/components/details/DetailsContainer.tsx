@@ -22,7 +22,6 @@ const Details = styled.div`
 
 const Header = styled.div`
   color: ${({ theme }) => theme.textSecondary};
-  font-weight: 600;
   font-size: 14px;
   line-height: 20px;
 `

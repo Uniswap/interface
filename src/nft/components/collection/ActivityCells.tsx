@@ -257,9 +257,10 @@ interface RankingProps {
   rarity: TokenRarity
   collectionName: string
   rarityVerified: boolean
+  details?: boolean
 }
 
-const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
+export const Ranking = ({ details, rarity, collectionName, rarityVerified }: RankingProps) => {
   const rarityProviderLogo = getRarityProviderLogo(rarity.source)
 
   return (
@@ -278,11 +279,11 @@ const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
       }
       placement="top"
     >
-      <Box className={styles.rarityInfo}>
+      <Box className={details ? styles.rarityInfoDetails : styles.rarityInfo}>
+        Rarity:
         <Box paddingTop="2" paddingBottom="2" display="flex">
           {putCommas(rarity.rank)}
         </Box>
-
         <Box display="flex" height="16">
           {rarityVerified ? <RarityVerifiedIcon /> : null}
         </Box>

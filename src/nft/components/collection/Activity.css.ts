@@ -217,3 +217,17 @@ export const rarityInfo = style([
     backdropFilter: 'blur(6px)',
   },
 ])
+
+export const rarityInfoDetails = style([
+  sprinkles({
+    display: 'flex',
+    borderRadius: '4',
+    height: '16',
+    width: 'min',
+    color: 'textSecondary',
+    fontSize: '10',
+    fontWeight: 'semibold',
+    paddingX: '4',
+    cursor: 'pointer',
+  }),
+])

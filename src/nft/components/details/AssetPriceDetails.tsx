@@ -180,6 +180,11 @@ const OwnerInformationContainer = styled.div`
   margin-bottom: 20px;
 `
 
+const BuyNowContainer = styled.div`
+  @media (min-width: 960px) {
+  }
+`
+
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = listing ? new Date(listing.orderClosingDate) : undefined
@@ -290,6 +295,43 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
 
   const shortAddress = shortenAddress(asset.owner.address ?? '', 2, 4)
 
+  const BuyNowB = () => {
+    return (
+      <BuyNowContainer>
+        {!isErc1555 || !assetInBag ? (
+          <BuyNowButton
+            assetInBag={assetInBag}
+            margin={true}
+            useAccentColor={true}
+            // toggleBag
+            onClick={() => {
+              assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+              if (!assetInBag) {
+                openBag()
+              }
+            }}
+          >
+            <ThemedText.SubHeader lineHeight={'20px'}>
+              <span style={{ color: 'white' }}>{assetInBag ? 'Remove' : 'Buy Now'}</span>
+            </ThemedText.SubHeader>
+          </BuyNowButton>
+        ) : (
+          <Erc1155BuyNowButton>
+            <Erc1155ChangeButton remove={true} onClick={() => removeAssetsFromBag([asset])}>
+              <MinusIcon width="20px" height="20px" />
+            </Erc1155ChangeButton>
+            <Erc1155BuyNowText>
+              <ThemedText.SubHeader lineHeight={'20px'}>{quantity}</ThemedText.SubHeader>
+            </Erc1155BuyNowText>
+            <Erc1155ChangeButton remove={false} onClick={() => addAssetsToBag([asset])}>
+              <PlusIcon width="20px" height="20px" />
+            </Erc1155ChangeButton>
+          </Erc1155BuyNowButton>
+        )}
+      </BuyNowContainer>
+    )
+  }
+
   return (
     <Container>
       <OwnerInformationContainer>
@@ -325,36 +367,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             )}
           </PriceRow>
           {expirationDate && <Tertiary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</Tertiary>}
-          {!isErc1555 || !assetInBag ? (
-            <BuyNowButton
-              assetInBag={assetInBag}
-              margin={true}
-              useAccentColor={true}
-              // toggleBag
-              onClick={() => {
-                assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
-                if (!assetInBag) {
-                  openBag()
-                }
-              }}
-            >
-              <ThemedText.SubHeader lineHeight={'20px'}>
-                <span style={{ color: 'white' }}>{assetInBag ? 'Remove' : 'Buy Now'}</span>
-              </ThemedText.SubHeader>
-            </BuyNowButton>
-          ) : (
-            <Erc1155BuyNowButton>
-              <Erc1155ChangeButton remove={true} onClick={() => removeAssetsFromBag([asset])}>
-                <MinusIcon width="20px" height="20px" />
-              </Erc1155ChangeButton>
-              <Erc1155BuyNowText>
-                <ThemedText.SubHeader lineHeight={'20px'}>{quantity}</ThemedText.SubHeader>
-              </Erc1155BuyNowText>
-              <Erc1155ChangeButton remove={false} onClick={() => addAssetsToBag([asset])}>
-                <PlusIcon width="20px" height="20px" />
-              </Erc1155ChangeButton>
-            </Erc1155BuyNowButton>
-          )}
+          <BuyNowB />
         </BestPriceContainer>
       ) : (
         <NotForSale collection={collection} />

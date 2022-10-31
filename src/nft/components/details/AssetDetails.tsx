@@ -1,26 +1,25 @@
 import { useWeb3React } from '@web3-react/core'
-import clsx from 'clsx'
-import useENSName from 'hooks/useENSName'
 import AssetActivity from './AssetActivity'
 import { Box } from 'nft/components/Box'
 import { ActivityEventResponse, ActivityEventType } from 'nft/types'
 import { useBag } from 'nft/hooks'
-import { CollectionInfoForAsset, GenieAsset, GenieCollection, SellOrder } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, GenieCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
 import { rarityProviderLogo } from 'nft/utils/rarity'
-import qs from 'query-string'
 import { useEffect, useMemo, useCallback, useReducer, useState } from 'react'
+import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
+
+import { Row } from 'nft/components/Flex'
 import { ExternalLink } from 'react-feather'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { useNavigate } from 'react-router-dom'
 import { VerifiedIcon } from '../icons'
-import styled, { css } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import InfoContainer from './InfoContainer'
 import TraitsContainer from './TraitsContainer'
-import rarityIcon from './rarity.svg'
 import DetailsContainer from './DetailsContainer'
 import { useQuery } from 'react-query'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
@@ -28,10 +27,11 @@ import { putCommas } from 'nft/utils/putCommas'
 import { SupportedChainId } from 'constants/chains'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { reduceFilters } from '../collection/Activity'
-import * as activityStyles from 'nft/components/collection/Activity.css'
 
+import { Ranking } from 'nft/components/collection/ActivityCells'
 import * as styles from './AssetDetails.css'
 import { shortenAddress } from 'nft/utils/address'
+import { MouseoverTooltip } from 'components/Tooltip'
 
 const CollectionHeader = styled.div`
   display: flex;
@@ -139,11 +139,11 @@ const DescriptionText = styled.div`
 
 const RarityWrap = styled.span`
   display: flex;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.textSecondary};
   padding: 2px 4px;
   border-radius: 4px;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 `
 
 const EmptyActivitiesContainer = styled.div`
@@ -275,7 +275,6 @@ interface AssetDetailsProps {
 }
 
 export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetailsProps) => {
-  const navigate = useNavigate()
   const itemsInBag = useBag((state) => state.itemsInBag)
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
   // const creatorEnsName = useENSName(creatorAddress)
@@ -287,14 +286,13 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
 
   const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
 
-  const { rarityProvider, rarityLogo } = useMemo(
+  const { rarityProvider } = useMemo(
     () =>
       asset.rarity
         ? {
             rarityProvider: asset.rarity.providers.find(
               ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
             ),
-            rarityLogo: rarityProviderLogo[asset.rarity.primaryProvider] || '',
           }
         : {},
     [asset.rarity]
@@ -410,7 +408,8 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     }
   }, [asset, address, provider])
 
-  const rarity = asset.rarity ? asset.rarity?.providers[0].rank : undefined
+  const rarity = asset.rarity ? asset.rarity?.providers[0] : undefined
+  const rarityProviderLogo = getRarityProviderLogo(rarity?.provider)
 
   return (
     <Column>
@@ -427,21 +426,37 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
         )}
       </MediaContainer>
       <CollectionHeader>
-        {collection.collectionName} {collection.isVerified && <VerifiedIcon />}
+        {collection.collectionName} {collectionStats?.isVerified && <VerifiedIcon />}
       </CollectionHeader>
       <AssetHeader>{asset.name ? asset.name : `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       <AssetPriceDetailsContainer>
         <AssetPriceDetails asset={asset} collection={collection} />
       </AssetPriceDetailsContainer>
-
       <InfoContainer
         primaryHeader="Traits"
         defaulOpen
         secondaryHeader={
           rarityProvider && rarity ? (
-            <RarityWrap>
-              Rarity {putCommas(rarity)} <img src={rarityIcon} alt={rarityProvider.provider} />
-            </RarityWrap>
+            <MouseoverTooltip
+              text={
+                <div>
+                  {' '}
+                  <Row>
+                    <Box display="flex" marginRight="4">
+                      <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+                    </Box>
+                    <Box width="full" fontSize="14">
+                      {collectionStats?.rarityVerified
+                        ? `Verified by ${collectionStats?.name}`
+                        : `Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
+                    </Box>
+                  </Row>
+                </div>
+              }
+              placement="top"
+            >
+              <RarityWrap>Rarity: {putCommas(rarity.score)}</RarityWrap>
+            </MouseoverTooltip>
           ) : null
         }
       >
@@ -470,7 +485,6 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
           )}
         </>
       </InfoContainer>
-
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
         <>
           <span style={{ fontSize: 14, lineHeight: '20px' }}>By </span>
