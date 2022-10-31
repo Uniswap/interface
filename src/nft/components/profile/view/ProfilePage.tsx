@@ -266,7 +266,10 @@ const SelectAllButton = ({ ownerAssets }: { ownerAssets: WalletAsset[] }) => {
   const resetSellAssets = useSellAsset((state) => state.reset)
   const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
 
-  const allAssets = isNftGraphQl ? ownerAssets : displayAssets
+  const allAssets = useMemo(
+    () => (isNftGraphQl ? ownerAssets : displayAssets),
+    [isNftGraphQl, ownerAssets, displayAssets]
+  )
 
   useEffect(() => {
     if (isAllSelected) {
@@ -274,7 +277,8 @@ const SelectAllButton = ({ ownerAssets }: { ownerAssets: WalletAsset[] }) => {
     } else {
       resetSellAssets()
     }
-  }, [isAllSelected, resetSellAssets, selectSellAsset, allAssets])
+    // eslint-disable-next-line
+  }, [isAllSelected, resetSellAssets, selectSellAsset])
 
   const toggleAllSelected = () => {
     setIsAllSelected(!isAllSelected)

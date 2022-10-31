@@ -26,7 +26,9 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
   }, false)
 
   const isSelected = useMemo(() => {
-    return sellAssets.some((item) => asset.id === item.id)
+    return sellAssets.some(
+      (item) => item.tokenId === asset.tokenId && item.asset_contract.address === asset.asset_contract.address
+    )
   }, [asset, sellAssets])
 
   const handleSelect = () => {

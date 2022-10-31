@@ -130,7 +130,7 @@ export function useNftBalanceQuery(
       collection: asset.collection,
       collectionIsVerified: asset.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value, // ask BE
-      floorPrice: asset.collection?.markets[0]?.floorPrice,
+      floorPrice: asset.collection?.markets[0]?.floorPrice?.value,
       creatorPercentage: parseFloat(queryAsset.node.creatorRoyaltyBasisPoints) / 10000, // ask BE
       listing_date: asset.listings ? asset.listings[0]?.edges[0]?.node.createdAt : undefined,
       date_acquired: queryAsset.node.lastPrice?.timestamp, // ask BE
