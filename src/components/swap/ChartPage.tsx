@@ -153,6 +153,23 @@ const useIntervalAsync = (fn: () => Promise<unknown>, ms: number) => {
         };
     }, [run]);
 };
+
+export const fetchDexscreenerToken = (address: string) => {
+    const getData = (async () => {
+        if (address) {
+            const response = await axios.get<{ pairs?: Pair[], pair?: Pair }>(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
+
+            console.log(`[useDexscreenerToken] - setting state`, response.data)
+            const dataSet = response?.data?.pair ? response?.data?.pair : response?.data?.pairs?.[0]
+            console.log(`[useDexscreenerToken]:response`, dataSet)
+            return dataSet
+        } else {
+            return {}
+        }
+    })
+    return getData()
+}
+
 export const useDexscreenerToken = (address?: string) => {
     const [data, setData] = React.useState<Pair>()
 

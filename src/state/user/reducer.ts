@@ -147,7 +147,7 @@ export default createReducer(initialState, (builder) =>
       state.searchPreferences = action.payload.newPreferences;
     })
     .addCase(updateFavoritedTokens, (state, action) => {
-      state.favorites = action.payload.newFavorites
+      state.favorites = _.uniqBy(action.payload.newFavorites, a => a.tokenAddress)
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserChartHistory, (state, action) => {

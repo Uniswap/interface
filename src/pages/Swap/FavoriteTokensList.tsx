@@ -1,3 +1,4 @@
+import { ButtonConfirmed, ButtonError } from 'components/Button'
 import { CNav, CNavItem, CNavLink, CTabContent, CTabPane, CTable, CTableBody, CTableCaption, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
 import { ChevronDown, ChevronUp, MinusCircle } from 'react-feather'
 import React, { useEffect, useMemo } from 'react'
@@ -6,8 +7,8 @@ import { useAddPairToFavorites, useUserFavoritesManager } from 'state/user/hooks
 import { useConvertTokenAmountToUsdString, useKiba } from 'pages/Vote/VotePage';
 import { useCurrencyBalance, useCurrencyBalances } from 'state/wallet/hooks'
 
+import {AddTokenToFavoritesModal} from './AddTokenToFavoritesModal'
 import { AutoColumn } from 'components/Column'
-import { ButtonError } from 'components/Button'
 import { DarkCard } from 'components/Card'
 import Loader from 'components/Loader';
 import { SwapTokenForTokenModal } from 'components/ChartSidebar/SwapTokenForTokenModal'
@@ -126,9 +127,17 @@ export const TabsList = (props: TabsListProps) => {
     )
 }
 
+type TokenAddedPayload = {
+    tokenAddress: string
+    tokenSymbol: string
+    network: string
+    pairAddress: string
+    tokenName: string
+}
+
 export const FavoriteTokensList = () => {
     const [favoriteTokens] = useUserFavoritesManager()
-    const { removeFromFavorites } = useAddPairToFavorites()
+    const { removeFromFavorites, addToFavorites } = useAddPairToFavorites()
     const isDarkMode = useIsDarkMode()
     const favTokens = useMemo(
         () => favoriteTokens || []
@@ -137,18 +146,29 @@ export const FavoriteTokensList = () => {
     const { account } = useActiveWeb3React()
 
     const theme = useTheme()
-
+    const [isAddOpen, setIsAddOpen] = React.useState(false)
     const [tokenModal, setTokenModal] = React.useState<any>()
     const dismissToken = React.useCallback(() => setTokenModal(undefined), [])
+    const addTokenToFavoritesCb = (token: TokenAddedPayload) => {
+        addToFavorites(token.pairAddress, token.network, token.tokenAddress, token.tokenName, token.tokenSymbol)
+    }
+
+    const closeAddModal = () => setIsAddOpen(false)
+    const openAddModal = () => setIsAddOpen(true)
 
     return (
         <DarkCard>
             <SwapTokenForTokenModal item={tokenModal} isOpen={Boolean(tokenModal)} onDismiss={dismissToken} />
-
+            <AddTokenToFavoritesModal onTokenAdded={addTokenToFavoritesCb} isOpen={isAddOpen} onDismiss={closeAddModal} />
             <AutoColumn gap="md">
                 <AutoColumn>
                     <CTable caption="top" responsive style={{ color: theme.text1 }} hover={!isDarkMode}>
-                        <CTableCaption style={{ color: theme.text1 }}>Favorited Tokens</CTableCaption>
+                        <CTableCaption style={{ color: theme.text1 }}>
+                            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                                <TYPE.main>Favorited Tokens</TYPE.main>
+                                <ButtonConfirmed onClick={openAddModal} style={{padding:3, width: 175}}>Add Token</ButtonConfirmed>
+                            </div>
+                            </CTableCaption>
 
                         <CTableHead>
                             <CTableRow>

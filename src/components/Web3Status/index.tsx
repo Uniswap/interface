@@ -22,6 +22,7 @@ import { shortenAddress } from '../../utils'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useMemo } from 'react'
+import useTheme from 'hooks/useTheme'
 import { useWalletModalToggle } from '../../state/application/hooks'
 
 const IconWrapper = styled.div<{ size?: number }>`
@@ -185,7 +186,7 @@ function Web3StatusInner() {
   }, [allTransactions])
 
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
-
+  const theme = useTheme()
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
   const toggleWalletModal = useWalletModalToggle()
@@ -195,7 +196,7 @@ function Web3StatusInner() {
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <RowBetween>
-            <Text color={'#fff'}>
+            <Text color={theme.text1}>
               <Trans>{pending?.length} Pending</Trans>
             </Text>{' '}
             <Loader stroke="white" />
