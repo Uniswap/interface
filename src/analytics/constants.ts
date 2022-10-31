@@ -16,6 +16,7 @@ export enum EventName {
   NAVBAR_SEARCH_SELECTED = 'Navbar Search Selected',
   NAVBAR_SEARCH_EXITED = 'Navbar Search Exited',
   NFT_ACTIVITY_SELECTED = 'NFT Activity Selected',
+  NFT_BUY_ADDED = 'NFT Buy Bag Added',
   NFT_FILTER_OPENED = 'NFT Collection Filter Opened',
   NFT_FILTER_SELECTED = 'NFT Filter Selected',
   NFT_TRENDING_ROW_SELECTED = 'Trending Row Selected',
