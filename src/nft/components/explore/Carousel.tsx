@@ -130,7 +130,6 @@ export const Carousel = ({ children }: CarouselProps) => {
       toggleSlide(1)
     }, 7_000)
     return () => {
-      console.log('clearing interval')
       clearInterval(interval)
     }
   }, [toggleSlide, resetTimer])

@@ -1,8 +1,10 @@
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { VerifiedIcon } from 'nft/components/icons'
-import { TrendingCollection } from 'nft/types'
+import { CollectionStatsFetcher } from 'nft/queries'
+import { Markets, TrendingCollection } from 'nft/types'
 import { formatWeiToDecimal } from 'nft/utils'
+import { useQuery } from 'react-query'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -163,16 +165,16 @@ const TableElement = styled.div`
 
 interface MarketplaceRowProps {
   marketplace: string
-  floor: string
-  listings: string
+  floor?: string
+  listings?: string
 }
 
 export const MarketplaceRow = ({ marketplace, floor, listings }: MarketplaceRowProps) => {
   return (
     <>
       <TableElement>{marketplace}</TableElement>
-      <TableElement>{floor}</TableElement>
-      <TableElement>{listings}</TableElement>
+      <TableElement>{floor ?? '-'}</TableElement>
+      <TableElement>{listings ?? '-'}</TableElement>
     </>
   )
 }
@@ -182,7 +184,24 @@ interface CarouselCardProps {
   onClick: () => void
 }
 
+const MARKETS_TO_CHECK = [Markets.Opensea, Markets.X2Y2, Markets.LooksRare] as const
+const MARKETS_ENUM_TO_NAME = {
+  [Markets.Opensea]: 'OpenSea',
+  [Markets.X2Y2]: 'X2Y2',
+  [Markets.LooksRare]: 'LooksRare',
+}
+
 export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
+  const { data: collectionStats, isLoading } = useQuery(
+    ['trendingCollectionStats', collection.address],
+    () => CollectionStatsFetcher(collection.address),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
+  )
+
   const theme = useTheme()
 
   return (
@@ -206,18 +225,43 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
         <HeaderOverlay />
       </CardHeaderContainer>
       <CardBottomContainer>
-        <HeaderRow>Uniswap</HeaderRow>
-        <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
-        <HeaderRow>324 Listings</HeaderRow>
-        <MarketplaceRow marketplace="Opensea" floor="7.1 ETH" listings="239" />
-        <MarketplaceRow marketplace="X2Y2" floor="7.1 ETH" listings="239" />
-        <MarketplaceRow marketplace="LooksRare" floor="7.1 ETH" listings="239" />
+        {isLoading || !collectionStats ? (
+          <LoadingTable />
+        ) : (
+          <>
+            <HeaderRow>Uniswap</HeaderRow>
+            <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
+            <HeaderRow>324 Listings</HeaderRow>
+            {MARKETS_TO_CHECK.map((market) => {
+              const marketplace = collectionStats.marketplaceCount?.find(
+                (marketplace) => marketplace.marketplace === market
+              )
+              return (
+                <MarketplaceRow
+                  key={'trendingCollection' + collection.address}
+                  marketplace={MARKETS_ENUM_TO_NAME[market]}
+                  listings={marketplace?.count.toString()}
+                />
+              )
+            })}
+          </>
+        )}
       </CardBottomContainer>
     </CarouselCardContainer>
   )
 }
 
 const DEFAULT_TABLE_ELEMENTS = 12
+
+export const LoadingTable = () => {
+  return (
+    <>
+      {[...Array(DEFAULT_TABLE_ELEMENTS)].map((index) => (
+        <LoadingTableElement key={index} />
+      ))}
+    </>
+  )
+}
 
 export const LoadingCarouselCard = () => {
   return (
@@ -230,9 +274,7 @@ export const LoadingCarouselCard = () => {
         <HeaderOverlay />
       </LoadingCardHeaderContainer>
       <CardBottomContainer>
-        {[...Array(DEFAULT_TABLE_ELEMENTS)].map((index) => (
-          <LoadingTableElement key={index} />
-        ))}
+        <LoadingTable />
       </CardBottomContainer>
     </CarouselCardContainer>
   )
