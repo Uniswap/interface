@@ -145,7 +145,7 @@ const RarityWrap = styled.span`
   padding: 2px 4px;
   border-radius: 4px;
   alignitems: center;
-  gap: 20px;
+  gap: 8px;
 `
 
 const EmptyActivitiesContainer = styled.div`
@@ -442,7 +442,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
         secondaryHeader={
           rarityProvider && rarity ? (
             <RarityWrap>
-              Rarity {putCommas(rarity)} <img src={rarityIcon} width={16} alt={rarityProvider.provider} />
+              Rarity {putCommas(rarity)} <img src={rarityIcon} alt={rarityProvider.provider} />
             </RarityWrap>
           ) : null
         }
