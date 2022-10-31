@@ -22,7 +22,7 @@ import Widget from 'components/Widget'
 import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain, TokenQuery } from 'graphql/data/__generated__/TokenQuery.graphql'
-import { QueryToken, tokenQuery, useLoadTokenQuery } from 'graphql/data/Token'
+import { QueryToken, tokenQuery } from 'graphql/data/Token'
 import { useLoadTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
@@ -30,7 +30,7 @@ import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useAtomValue } from 'jotai/utils'
 import { Suspense, useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { usePreloadedQuery } from 'react-relay'
+import { useLazyLoadQuery } from 'react-relay'
 import { useNavigate, useParams } from 'react-router-dom'
 
 export default function TokenDetails() {
@@ -40,13 +40,16 @@ export default function TokenDetails() {
   const nativeCurrency = nativeOnChain(pageChainId)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
   const timePeriod = useAtomValue(filterTimeAtom)
-  const tokenQueryReference = useLoadTokenQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
+  //const tokenQueryReference = useLoadTokenQuery(isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain)
   const priceQueryReference = useLoadTokenPriceQuery(
     isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '',
     chain,
     timePeriod
   )
-  const tokenQueryData = usePreloadedQuery<TokenQuery>(tokenQuery, tokenQueryReference).tokens?.[0]
+  const tokenQueryData = useLazyLoadQuery<TokenQuery>(tokenQuery, {
+    contract: { address: isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain },
+  }).tokens?.[0]
+  //const tokenQueryData = usePreloadedQuery<TokenQuery>(tokenQuery, tokenQueryReference).tokens?.[0]
   const token = useMemo(() => {
     if (!tokenAddress) return undefined
     if (isNative) return nativeCurrency
