@@ -12,6 +12,7 @@ export enum EventName {
   EXPLORE_SEARCH_SELECTED = 'Explore Search Selected',
   EXPLORE_TOKEN_ROW_CLICKED = 'Explore Token Row Clicked',
   PAGE_VIEWED = 'Page Viewed',
+  NAVBAR_RESULT_SELECTED = 'Navbar Result Selected',
   NAVBAR_SEARCH_SELECTED = 'Navbar Search Selected',
   NAVBAR_SEARCH_EXITED = 'Navbar Search Exited',
   NFT_ACTIVITY_SELECTED = 'NFT Activity Selected',
@@ -97,6 +98,7 @@ export enum PageName {
 export enum SectionName {
   CURRENCY_INPUT_PANEL = 'swap-currency-input',
   CURRENCY_OUTPUT_PANEL = 'swap-currency-output',
+  NAVBAR_SEARCH = 'Navbar Search',
   WIDGET = 'widget',
   // alphabetize additional section names.
 }
@@ -146,6 +148,15 @@ export enum Event {
   onKeyPress = 'onKeyPress',
   onSelect = 'onSelect',
   // alphabetize additional events.
+}
+
+/** Known navbar search result types */
+export enum NavBarSearchTypes {
+  COLLECTION_SUGGESTION = 'collection-suggestion',
+  COLLECTION_TRENDING = 'collection-trending',
+  RECENT_SEARCH = 'recent',
+  TOKEN_SUGGESTION = 'token-suggestion',
+  TOKEN_TRENDING = 'token-trending',
 }
 
 /**
