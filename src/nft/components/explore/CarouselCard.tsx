@@ -231,7 +231,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
           <>
             <HeaderRow>Uniswap</HeaderRow>
             <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
-            <HeaderRow>324 Listings</HeaderRow>
+            <HeaderRow>{collectionStats.marketplaceCount?.reduce((acc, cur) => acc + cur.count, 0)} Listings</HeaderRow>
             {MARKETS_TO_CHECK.map((market) => {
               const marketplace = collectionStats.marketplaceCount?.find(
                 (marketplace) => marketplace.marketplace === market
