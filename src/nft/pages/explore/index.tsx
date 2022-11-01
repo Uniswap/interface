@@ -10,6 +10,14 @@ const ExploreContainer = styled.div`
   align-items: center;
   width: 100%;
   padding: 16px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    gap: 16px;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    gap: 0px;
+  }
 `
 
 const NftExplore = () => {

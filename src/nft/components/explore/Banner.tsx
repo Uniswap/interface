@@ -23,7 +23,7 @@ const BannerContainer = styled.div`
     height: 100%;
     gap: 14px;
     margin-top: 4px;
-    margin-bottom: 30px;
+    margin-bottom: 6px;
   }
 `
 
