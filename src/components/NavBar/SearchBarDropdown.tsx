@@ -195,12 +195,9 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     }
   }, [toggleOpen, hoveredIndex, totalSuggestions])
 
-  let showTokensFirst: boolean
-  if (isNFTPage) {
-    showTokensFirst = !hasVerifiedCollection && hasVerifiedToken
-  } else {
-    showTokensFirst = !hasVerifiedToken && hasVerifiedCollection
-  }
+  const showTokensFirst =
+    !(isNFTPage && !hasVerifiedCollection && hasVerifiedToken) &&
+    !(!isNFTPage && !hasVerifiedToken && hasVerifiedCollection)
 
   useEffect(() => {
     if (!isLoading) {
