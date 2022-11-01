@@ -19,7 +19,7 @@ import {
   useWalletBalance,
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
+import { BagItem, BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
 import { buildSellObject } from 'nft/utils/buildSellObject'
 import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
 import { fetchPrice } from 'nft/utils/fetchPrice'
@@ -255,6 +255,14 @@ const Bag = () => {
     (!isProfilePage && !isBuyingAssets && bagStatus === BagStatus.ADDING_TO_BAG) || (isProfilePage && !isSellingAssets)
   )
 
+  const formatAnalyticsEventProperties = (assets: BagItem[], priceData: number | undefined) => ({
+    collection_addresses: assets.map((asset) => asset.asset.address),
+    token_ids: assets.map((asset) => asset.asset.tokenId),
+    token_types: assets.map((asset) => asset.asset.tokenType),
+    bag_quantity: itemsInBag.length,
+    usd_value: priceData,
+  })
+
   return (
     <>
       {bagExpanded && shouldShowBag ? (
@@ -283,6 +291,7 @@ const Bag = () => {
                     bagStatus={bagStatus}
                     fetchAssets={fetchAssets}
                     assetsAreInReview={itemsInBag.some((item) => item.status === BagItemStatus.REVIEWING_PRICE_CHANGE)}
+                    eventProperties={formatAnalyticsEventProperties(itemsInBag, totalUsdPrice)}
                   />
                 )}
                 {isSellingAssets && isProfilePage && (

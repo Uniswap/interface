@@ -1,5 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import Loader from 'components/Loader'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -48,6 +50,7 @@ interface BagFooterProps {
   bagStatus: BagStatus
   fetchAssets: () => void
   assetsAreInReview: boolean
+  eventProperties: Record<string, unknown>
 }
 
 const PENDING_BAG_STATUSES = [
@@ -65,6 +68,7 @@ export const BagFooter = ({
   bagStatus,
   fetchAssets,
   assetsAreInReview,
+  eventProperties,
 }: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
   const walletModalIsOpen = useModalIsOpen(ApplicationModal.WALLET)
@@ -102,28 +106,36 @@ export const BagFooter = ({
             )}
           </WarningText>
         )}
-        <Row
-          as="button"
-          color="explicitWhite"
-          className={styles.payButton}
-          disabled={isDisabled}
-          onClick={() => {
-            if (!isConnected) {
-              toggleWalletModal()
-            } else {
-              fetchAssets()
-            }
-          }}
+        <TraceEvent
+          events={[Event.onClick]}
+          name={EventName.NFT_BUY_BAG_PAY}
+          element={ElementName.NFT_BUY_BAG_PAY_BUTTON}
+          properties={{ ...eventProperties }}
+          shouldLogImpression={isConnected && !isDisabled}
         >
-          {isPending && <Loader size="20px" stroke="white" />}
-          {!isConnected || walletModalIsOpen
-            ? 'Connect wallet'
-            : bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET
-            ? 'Proceed in wallet'
-            : bagStatus === BagStatus.PROCESSING_TRANSACTION
-            ? 'Transaction pending'
-            : 'Pay'}
-        </Row>
+          <Row
+            as="button"
+            color="explicitWhite"
+            className={styles.payButton}
+            disabled={isDisabled}
+            onClick={() => {
+              if (!isConnected) {
+                toggleWalletModal()
+              } else {
+                fetchAssets()
+              }
+            }}
+          >
+            {isPending && <Loader size="20px" stroke="white" />}
+            {!isConnected || walletModalIsOpen
+              ? 'Connect wallet'
+              : bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET
+              ? 'Proceed in wallet'
+              : bagStatus === BagStatus.PROCESSING_TRANSACTION
+              ? 'Transaction pending'
+              : 'Pay'}
+          </Row>
+        </TraceEvent>
       </Footer>
     </Column>
   )
