@@ -16,6 +16,10 @@ export enum ColumnHeaders {
   Owners = 'Owners',
 }
 
+const compareFloats = (a: number, b: number): 1 | -1 => {
+  return Math.round(a * 100000) >= Math.round(b * 100000) ? 1 : -1
+}
+
 const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
   const floorSort = useMemo(() => {
     return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
@@ -28,21 +32,19 @@ const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
 
   const floorChangeSort = useMemo(() => {
     return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
-      return Math.round(rowA.original.floor.change * 100000) >= Math.round(rowB.original.floor.change * 100000) ? 1 : -1
+      return compareFloats(rowA.original.floor.change, rowB.original.floor.change)
     }
   }, [])
 
   const volumeSort = useMemo(() => {
     return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
-      return Math.round(rowA.original.volume.value * 100000) >= Math.round(rowB.original.volume.value * 100000) ? 1 : -1
+      return compareFloats(rowA.original.volume.value, rowB.original.volume.value)
     }
   }, [])
 
   const volumeChangeSort = useMemo(() => {
     return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
-      return Math.round(rowA.original.volume.change * 100000) >= Math.round(rowB.original.volume.change * 100000)
-        ? 1
-        : -1
+      return compareFloats(rowA.original.volume.change, rowB.original.volume.change)
     }
   }, [])
 
@@ -127,7 +129,23 @@ const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
   )
   return (
     <>
-      <Table {...{ data, columns }} />
+      <Table
+        smallHiddenColumns={[
+          ColumnHeaders.Items,
+          ColumnHeaders.FloorChange,
+          ColumnHeaders.Volume,
+          ColumnHeaders.VolumeChange,
+          ColumnHeaders.Owners,
+        ]}
+        mediumHiddenColumns={[
+          ColumnHeaders.Items,
+          ColumnHeaders.FloorChange,
+          ColumnHeaders.VolumeChange,
+          ColumnHeaders.Owners,
+        ]}
+        largeHiddenColumns={[ColumnHeaders.Items, ColumnHeaders.Owners]}
+        {...{ data, columns }}
+      />
     </>
   )
 }

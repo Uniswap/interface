@@ -1,9 +1,9 @@
 import clsx from 'clsx'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Column, useSortBy, useTable } from 'react-table'
+import { Column, IdType, useSortBy, useTable } from 'react-table'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -72,38 +72,47 @@ const StyledRankHolder = styled(LoadingBubble)`
   margin-right: 12px;
 `
 
-const DEFAULT_ASSET_QUERY_AMOUNT = 10
-const MAX_COLUMNS = 7
+const DEFAULT_TRENDING_TABLE_QUERY_AMOUNT = 10
 
-interface TableProps {
+interface TableProps<D extends Record<string, unknown>> {
   columns: Column<CollectionTableColumn>[]
   data: CollectionTableColumn[]
+  smallHiddenColumns: IdType<D>[]
+  mediumHiddenColumns: IdType<D>[]
+  largeHiddenColumns: IdType<D>[]
   classNames?: {
     td: string
   }
 }
-
-export function Table({ columns, data, classNames, ...props }: TableProps) {
+export function Table<D extends Record<string, unknown>>({
+  columns,
+  data,
+  smallHiddenColumns,
+  mediumHiddenColumns,
+  largeHiddenColumns,
+  classNames,
+  ...props
+}: TableProps<D>) {
   const theme = useTheme()
   const { width } = useWindowSize()
-  const [maxCols, setMaxCols] = useState(MAX_COLUMNS)
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
-    {
-      columns,
-      data,
-      initialState: {
-        sortBy: [
-          {
-            desc: true,
-            id: ColumnHeaders.Volume,
-          },
-        ],
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setHiddenColumns, visibleColumns } =
+    useTable(
+      {
+        columns,
+        data,
+        initialState: {
+          sortBy: [
+            {
+              desc: true,
+              id: ColumnHeaders.Volume,
+            },
+          ],
+        },
+        ...props,
       },
-      ...props,
-    },
-    useSortBy
-  )
+      useSortBy
+    )
 
   const navigate = useNavigate()
 
@@ -111,30 +120,15 @@ export function Table({ columns, data, classNames, ...props }: TableProps) {
     if (!width) return
 
     if (width < theme.breakpoint.sm) {
-      setHiddenColumns([
-        ColumnHeaders.Items,
-        ColumnHeaders.FloorChange,
-        ColumnHeaders.Volume,
-        ColumnHeaders.VolumeChange,
-        ColumnHeaders.Owners,
-      ])
-      setMaxCols(MAX_COLUMNS - 5)
+      setHiddenColumns(smallHiddenColumns)
     } else if (width < theme.breakpoint.md) {
-      setHiddenColumns([
-        ColumnHeaders.Items,
-        ColumnHeaders.FloorChange,
-        ColumnHeaders.VolumeChange,
-        ColumnHeaders.Owners,
-      ])
-      setMaxCols(MAX_COLUMNS - 4)
+      setHiddenColumns(mediumHiddenColumns)
     } else if (width < theme.breakpoint.lg) {
-      setHiddenColumns([ColumnHeaders.Items, ColumnHeaders.Owners])
-      setMaxCols(MAX_COLUMNS - 2)
+      setHiddenColumns(largeHiddenColumns)
     } else {
       setHiddenColumns([])
-      setMaxCols(MAX_COLUMNS)
     }
-  }, [width, setHiddenColumns, theme.breakpoint])
+  }, [width, setHiddenColumns, columns, smallHiddenColumns, mediumHiddenColumns, largeHiddenColumns, theme.breakpoint])
 
   if (data.length === 0) {
     return (
@@ -175,9 +169,9 @@ export function Table({ columns, data, classNames, ...props }: TableProps) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {[...Array(DEFAULT_ASSET_QUERY_AMOUNT)].map((_, index) => (
+          {[...Array(DEFAULT_TRENDING_TABLE_QUERY_AMOUNT)].map((_, index) => (
             <StyledLoadingRow key={index}>
-              {[...Array(maxCols)].map((_, cellIndex) => {
+              {[...Array(visibleColumns.length)].map((_, cellIndex) => {
                 return (
                   <td className={clsx(styles.loadingTd, classNames?.td)} key={cellIndex}>
                     {cellIndex === 0 ? (
