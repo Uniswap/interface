@@ -12,11 +12,7 @@ import { useBag, useCollectionFilters, useFiltersExpanded, useIsCollectionLoadin
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { GenieCollection } from 'nft/types'
-<<<<<<< HEAD
-import { useEffect, useMemo } from 'react'
-=======
-import { Suspense, useEffect } from 'react'
->>>>>>> main
+import { Suspense, useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring'
