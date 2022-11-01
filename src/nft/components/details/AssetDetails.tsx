@@ -468,7 +468,11 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
         <>
           <ByText>By </ByText>
           {asset.creator && asset.creator.address && (
-            <AddressTextLink href={`https://etherscan.io/address/${asset.creator.address}`} target="_blank">
+            <AddressTextLink
+              href={`https://etherscan.io/address/${asset.creator.address}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {shortenAddress(asset.creator?.address, 2, 4)}
             </AddressTextLink>
           )}
@@ -476,17 +480,21 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
           <DescriptionText>{collection.collectionDescription}</DescriptionText>
           <SocialsContainer>
             {collectionStats?.externalUrl && (
-              <SocialLink target="_blank" href={collectionStats?.externalUrl}>
+              <SocialLink target="_blank" href={collectionStats?.externalUrl} rel="noopener noreferrer">
                 Website <ExternalLink size={14} />
               </SocialLink>
             )}
             {collectionStats?.twitterUrl && (
-              <SocialLink target="_blank" href={`https://twitter.com/${collectionStats?.twitterUrl}`}>
+              <SocialLink
+                target="_blank"
+                href={`https://twitter.com/${collectionStats?.twitterUrl}`}
+                rel="noopener noreferrer"
+              >
                 Twitter <ExternalLink size={14} />
               </SocialLink>
             )}
             {collectionStats?.discordUrl && (
-              <SocialLink target="_blank" href={collectionStats?.discordUrl}>
+              <SocialLink target="_blank" href={collectionStats?.discordUrl} rel="noopener noreferrer">
                 Discord <ExternalLink size={14} />
               </SocialLink>
             )}

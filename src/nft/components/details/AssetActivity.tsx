@@ -164,7 +164,11 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
 
                 <TD>
                   {fromAddress && (
-                    <Link href={`https://etherscan.io/address/${fromAddress}`} target="_blank">
+                    <Link
+                      href={`https://etherscan.io/address/${fromAddress}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {shortenAddress(fromAddress, 2, 4)}
                     </Link>
                   )}
@@ -172,7 +176,7 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
 
                 <TD>
                   {toAddress && (
-                    <Link href={`https://etherscan.io/address/${toAddress}`} target="_blank">
+                    <Link href={`https://etherscan.io/address/${toAddress}`} target="_blank" rel="noopener noreferrer">
                       {shortenAddress(toAddress, 2, 4)}
                     </Link>
                   )}
