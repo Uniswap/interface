@@ -21,7 +21,7 @@ export default function UnknownSummaryItem({
 
   const title = formatTitleWithStatus({
     status: transaction.status,
-    text: t('Contract Interaction'),
+    text: t('Contract interaction'),
     showInlineWarning,
     t,
   })

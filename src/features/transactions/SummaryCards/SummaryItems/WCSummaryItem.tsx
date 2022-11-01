@@ -17,7 +17,7 @@ export default function WCSummaryItem({
   const { t } = useTranslation()
   const title = formatTitleWithStatus({
     status: transaction.status,
-    text: t('Contract Interaction'),
+    text: t('Contract interaction'),
     showInlineWarning,
     t,
   })
