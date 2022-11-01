@@ -1,44 +1,30 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
-import { AddressDisplay } from 'src/components/AddressDisplay'
+import { AppStackScreenProp } from 'src/app/navigation/types'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { Screen } from 'src/components/layout/Screen'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import TransactionList from 'src/components/TransactionList/TransactionList'
-import SessionsButton from 'src/components/WalletConnect/SessionsButton'
 import { openModal } from 'src/features/modals/modalSlice'
 import { setNotificationStatus } from 'src/features/notifications/notificationSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
-import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
-
-const MAX_SCROLL_HEIGHT = 180
 
 export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) {
   const { preloadedQuery } = route.params
 
   const dispatch = useAppDispatch()
-  const navigation = useAppStackNavigation()
   const { t } = useTranslation()
   const { address, type } = useActiveAccountWithThrow()
   const readonly = type === AccountType.Readonly
-
-  const { sessions } = useWalletConnect(address)
-
-  const onPressSessions = useCallback(() => {
-    if (address) {
-      navigation.navigate(Screens.SettingsWalletManageConnection, { address })
-    }
-  }, [address, navigation])
 
   // TODO: remove when buy flow ready
   const onPressScan = () => {
@@ -54,23 +40,11 @@ export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) 
   }, [dispatch, address])
 
   return (
-    <HeaderScrollScreen
-      contentHeader={
-        <BackHeader p="md">
-          <Text variant="buttonLabelMedium">{t('Activity')}</Text>
-        </BackHeader>
-      }
-      fixedHeader={
-        <Flex centered>
-          <AddressDisplay hideAddressInSubtitle address={address} variant="subheadLarge" />
-        </Flex>
-      }
-      maxScrollHeightOverride={MAX_SCROLL_HEIGHT}>
-      {sessions.length > 0 && (
-        <Flex px="sm">
-          <SessionsButton sessions={sessions} onPress={onPressSessions} />
-        </Flex>
-      )}
+    <Screen>
+      <BackHeader p="md">
+        <Text variant="buttonLabelMedium">{t('Activity')}</Text>
+      </BackHeader>
+
       <Flex pb="lg" px="sm">
         <TransactionList
           emptyStateContent={
@@ -91,6 +65,6 @@ export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) 
           readonly={readonly}
         />
       </Flex>
-    </HeaderScrollScreen>
+    </Screen>
   )
 }
