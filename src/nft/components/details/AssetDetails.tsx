@@ -16,7 +16,7 @@ import { useCallback, useMemo, useReducer, useState } from 'react'
 import { ExternalLink } from 'react-feather'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
 import { reduceFilters } from '../collection/Activity'
 import { VerifiedIcon } from '../icons'
@@ -26,6 +26,22 @@ import DetailsContainer from './DetailsContainer'
 import InfoContainer from './InfoContainer'
 import TraitsContainer from './TraitsContainer'
 
+const OpacityTransition = css`
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `opacity ${duration.medium} ${timing.ease}`};
+`
+
 const CollectionHeader = styled.a`
   display: flex;
   align-items: center;
@@ -34,24 +50,7 @@ const CollectionHeader = styled.a`
   color: ${({ theme }) => theme.textPrimary};
   margin-top: 28px;
   text-decoration: none;
-
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `opacity ${duration.medium} ${timing.ease}`};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `opacity ${duration.medium} ${timing.ease}`};
-  }
+  ${OpacityTransition};
 `
 
 const AssetPriceDetailsContainer = styled.div`
@@ -68,23 +67,7 @@ const SocialLink = styled.a`
   align-items: center;
   gap: 4px;
 
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `opacity ${duration.medium} ${timing.ease}`};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `opacity ${duration.medium} ${timing.ease}`};
-  }
+  ${OpacityTransition};
 `
 
 const AssetHeader = styled.div`
@@ -117,24 +100,7 @@ const AddressTextLink = styled.a`
   text-decoration: none;
   max-width: 100%;
   word-wrap: break-word;
-
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `opacity ${duration.medium} ${timing.ease}`};
-  }
-
-  &:active {
-    opacity: ${({ theme }) => theme.opacity.click};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `opacity ${duration.medium} ${timing.ease}`};
-  }
+  ${OpacityTransition};
 `
 
 const SocialsContainer = styled.div`
@@ -176,15 +142,7 @@ const Link = styled.a`
   line-height: 16px;
   margin-top: 12px;
   cursor: pointer;
-
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `opacity ${duration.medium} ${timing.ease}`};
-  }
+  ${OpacityTransition};
 `
 
 const ActivitySelectContainer = styled.div`
@@ -223,15 +181,7 @@ const FilterBox = styled.div<{ isActive?: boolean }>`
   cursor: pointer;
   box-sizing: border-box;
   border: ${({ isActive, theme }) => (isActive ? `1px solid ${theme.accentActive}` : undefined)};
-
-  &:hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `opacity ${duration.medium} ${timing.ease}`};
-  }
+  ${OpacityTransition};
 `
 
 const AudioPlayer = ({
@@ -421,8 +371,6 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
     [isSuccess, eventsData]
   )
-
-  console.log(asset)
 
   return (
     <Column>

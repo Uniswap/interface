@@ -55,11 +55,10 @@ const TD = styled.td`
   padding-top: 8px;
   padding-bottom: 8px;
   height: 56px;
-
   vertical-align: middle;
 
   @media (max-width: 960px) {
-    &:nth-child(4) {
+    &:nth-child(4) {a
       display: none;
     }
   }
@@ -83,21 +82,17 @@ const Link = styled.a`
 
   &:hover {
     opacity: ${({ theme }) => theme.opacity.hover};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `opacity ${duration.medium} ${timing.ease}`};
   }
 
   &:active {
     opacity: ${({ theme }) => theme.opacity.click};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `opacity ${duration.medium} ${timing.ease}`};
   }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `opacity ${duration.medium} ${timing.ease}`};
 `
 
 const ActivityContainer = styled.div`

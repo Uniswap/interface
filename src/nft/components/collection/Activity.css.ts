@@ -218,16 +218,14 @@ export const rarityInfo = style([
   },
 ])
 
-export const rarityInfoDetails = style([
-  sprinkles({
-    display: 'flex',
-    borderRadius: '4',
-    height: '16',
-    width: 'min',
-    color: 'textSecondary',
-    fontSize: '10',
-    fontWeight: 'semibold',
-    paddingX: '4',
-    cursor: 'pointer',
-  }),
-])
+export const rarityInfoDetails = sprinkles({
+  display: 'flex',
+  borderRadius: '4',
+  height: '16',
+  width: 'min',
+  color: 'textSecondary',
+  fontSize: '10',
+  fontWeight: 'semibold',
+  paddingX: '4',
+  cursor: 'pointer',
+})
