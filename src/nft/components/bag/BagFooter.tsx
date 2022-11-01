@@ -40,6 +40,30 @@ const WarningText = styled(ThemedText.BodyPrimary)`
   text-align: center;
 `
 
+interface WarningProps {
+  sufficientBalance: boolean
+  showWarning: boolean
+}
+
+const Warning = ({ sufficientBalance, showWarning }: WarningProps) => {
+  let warningText = null
+  if (!sufficientBalance) {
+    warningText = <Trans>Insufficient funds</Trans>
+  }
+  if (showWarning) {
+    warningText = <Trans>Something went wrong. Please try again.</Trans>
+  }
+  if (!warningText) {
+    return null
+  }
+  return (
+    <WarningText fontSize="14px" lineHeight="20px">
+      <WarningIcon />
+      {warningText}
+    </WarningText>
+  )
+}
+
 interface BagFooterProps {
   isConnected: boolean
   sufficientBalance: boolean
@@ -92,16 +116,7 @@ export const BagFooter = ({
             {`${ethNumberStandardFormatter(totalUsdPrice, true)}`}
           </Row>
         </Column>
-        {showWarning && (
-          <WarningText fontSize="14px" lineHeight="20px">
-            <WarningIcon />
-            {!sufficientBalance ? (
-              <Trans>Insufficient funds</Trans>
-            ) : (
-              <Trans>Something went wrong. Please try again.</Trans>
-            )}
-          </WarningText>
-        )}
+        <Warning sufficientBalance={sufficientBalance} showWarning={showWarning} />
         <Row
           as="button"
           color="explicitWhite"
