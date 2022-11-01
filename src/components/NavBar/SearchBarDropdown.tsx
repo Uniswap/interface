@@ -159,6 +159,9 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     [trendingTokenResults, trendingTokensLength]
   )
 
+  const hasVerifiedCollection = trendingCollections.some((collection) => collection?.isVerified)
+  const hasVerifiedToken = trendingTokens.some((token) => token?.onDefaultList)
+
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
     : Math.min(shortenedHistory.length, 2) +
@@ -192,13 +195,20 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     }
   }, [toggleOpen, hoveredIndex, totalSuggestions])
 
+  let showTokensFirst: boolean
+  if (isNFTPage) {
+    showTokensFirst = !hasVerifiedCollection && hasVerifiedToken
+  } else {
+    showTokensFirst = !hasVerifiedToken && hasVerifiedCollection
+  }
+
   useEffect(() => {
     if (!isLoading) {
       const tokenSearchResults =
         tokens.length > 0 ? (
           <SearchBarDropdownSection
             hoveredIndex={hoveredIndex}
-            startingIndex={isNFTPage ? collections.length : 0}
+            startingIndex={!showTokensFirst ? collections.length : 0}
             setHoveredIndex={setHoveredIndex}
             toggleOpen={toggleOpen}
             suggestions={tokens}
@@ -215,7 +225,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
           collections.length > 0 ? (
             <SearchBarDropdownSection
               hoveredIndex={hoveredIndex}
-              startingIndex={isNFTPage ? 0 : tokens.length}
+              startingIndex={!showTokensFirst ? 0 : tokens.length}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               suggestions={collections}
@@ -230,15 +240,15 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
         hasInput ? (
           // Empty or Up to 8 combined tokens and nfts
           <Column gap="20">
-            {isNFTPage ? (
+            {showTokensFirst ? (
               <>
-                {collectionSearchResults}
                 {tokenSearchResults}
+                {collectionSearchResults}
               </>
             ) : (
               <>
-                {tokenSearchResults}
                 {collectionSearchResults}
+                {tokenSearchResults}
               </>
             )}
           </Column>
@@ -300,6 +310,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     hasInput,
     isNFTPage,
     isTokenPage,
+    showTokensFirst,
   ])
 
   return (
