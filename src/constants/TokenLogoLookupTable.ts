@@ -10,7 +10,7 @@ class TokenLogoLookupTable {
     const lists = DEFAULT_LIST_OF_LISTS
     lists.forEach((list) =>
       store.getState().lists.byUrl[list].current?.tokens.forEach((token) => {
-        if (token.logoURI?.includes('.eth')) console.log(token)
+        if (token.logoURI?.includes('.eth')) alert(token)
         return token.logoURI && (dict[token.address.toLowerCase()] = token.logoURI)
       })
     )
@@ -20,11 +20,9 @@ class TokenLogoLookupTable {
     if (!address) return undefined
 
     if (!this.dict) {
-      const startTime = Date.now()
       this.dict = this.createMap()
-      console.log((Date.now() - startTime) / 1000)
     }
-    return this.dict[address]
+    return this.dict[address.toLowerCase()]
   }
 }
 
