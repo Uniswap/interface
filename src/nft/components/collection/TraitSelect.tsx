@@ -113,7 +113,7 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
   const debouncedSearch = useDebounce(search, 300)
 
   const searchedTraits = useMemo(
-    () => traits.filter((t) => t.trait_value.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
+    () => traits.filter((t) => t.trait_value?.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
     [debouncedSearch, traits]
   )
 

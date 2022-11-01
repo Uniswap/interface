@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { body, buttonTextMedium, subhead, subheadSmall } from 'nft/css/common.css'
+import { body, bodySmall, buttonTextMedium, subhead, subheadSmall } from 'nft/css/common.css'
 import { breakpoints, sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const baseRow = style([
@@ -74,9 +74,6 @@ export const detailsName = style([
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   }),
-  {
-    lineHeight: '24px',
-  },
 ])
 
 export const eventDetail = style([
@@ -91,7 +88,7 @@ export const eventDetail = style([
 ])
 
 export const eventTime = style([
-  subheadSmall,
+  bodySmall,
   sprinkles({
     color: 'textSecondary',
   }),
