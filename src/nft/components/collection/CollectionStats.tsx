@@ -264,13 +264,14 @@ const statsLoadingSkeleton = (isMobile: boolean) =>
   )
 
 const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
-  const uniqueOwnersPercentage = stats.stats
-    ? roundWholePercentage(((stats.stats.num_owners ?? 1) / (stats.stats.total_supply ?? 0)) * 100)
-    : 0
+  const uniqueOwnersPercentage =
+    stats.stats && stats.stats.total_supply
+      ? roundWholePercentage(((stats.stats.num_owners ?? 0) / stats.stats.total_supply) * 100)
+      : 0
   const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply ?? 0) : 0
   const listedPercentageStr =
-    stats.stats && stats.stats.total_listings
-      ? roundWholePercentage((stats.stats.total_listings / (stats.stats.total_supply ?? 0)) * 100)
+    stats.stats && stats.stats.total_supply
+      ? roundWholePercentage((stats.stats.total_listings ?? 0 / stats.stats.total_supply) * 100)
       : 0
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
