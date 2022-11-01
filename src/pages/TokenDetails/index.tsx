@@ -14,7 +14,6 @@ import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import TokenDetailsSkeleton, {
   Hr,
   LeftPanel,
-  LoadingChart,
   RightPanel,
   TokenDetailsLayout,
 } from 'components/Tokens/TokenDetails/Skeleton'
@@ -36,7 +35,7 @@ import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useAtomValue } from 'jotai/utils'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
-import { Suspense, useCallback, useMemo, useState, useTransition } from 'react'
+import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useLazyLoadQuery } from 'react-relay'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -95,15 +94,26 @@ export default function TokenDetails() {
   const nativeCurrency = nativeOnChain(pageChainId)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
   const timePeriod = useAtomValue(filterTimeAtom)
-  const priceQueryReference = useLoadTokenPriceQuery(
-    isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '',
-    chain,
-    timePeriod
-  )
   const contract = useMemo(
     () => ({ address: isNative ? nativeCurrency.wrapped.address : tokenAddress ?? '', chain }),
     [chain, isNative, nativeCurrency.wrapped.address, tokenAddress]
   )
+
+  // const [priceQueryReference, loadQuery] = useQueryLoader<TokenPriceQuery>(tokenPriceQuery)
+  // useEffect(() => {
+  //   if (priceQueryReference) {
+  //     // Re-render once the new line is ready, rather than flash a loading state.
+  //     startTransition(() => loadQuery({ contract, duration: toHistoryDuration(timePeriod) }))
+  //   } else {
+  //     // Shows chart suspense on first render
+  //     loadQuery({ contract, duration: toHistoryDuration(timePeriod) })
+  //   }
+  //   // Skips running effect when priceQueryReference is updated to prevent loop
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [contract, timePeriod, loadQuery])
+
+  const priceQueryReference = useLoadTokenPriceQuery(contract, timePeriod)
+
   const tokenQueryData = useLazyLoadQuery<TokenQuery>(tokenQuery, { contract }).tokens?.[0]
   const token = useMemo(() => {
     if (!tokenAddress) return undefined
@@ -117,22 +127,22 @@ export default function TokenDetails() {
 
   const navigate = useNavigate()
   // Wrapping navigate in a transition prevents Suspense from unnecessarily showing fallbacks again.
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTokenTransition] = useTransition()
   const navigateToTokenForChain = useCallback(
     (chain: Chain) => {
       const chainName = chain.toLowerCase()
       const token = tokenQueryData?.project?.tokens.find((token) => token.chain === chain && token.address)
       const address = isNative ? NATIVE_CHAIN_ID : token?.address
       if (!address) return
-      startTransition(() => navigate(`/tokens/${chainName}/${address}`))
+      startTokenTransition(() => navigate(`/tokens/${chainName}/${address}`))
     },
-    [isNative, navigate, startTransition, tokenQueryData?.project?.tokens]
+    [isNative, navigate, startTokenTransition, tokenQueryData?.project?.tokens]
   )
   useOnGlobalChainSwitch(navigateToTokenForChain)
   const navigateToWidgetSelectedToken = useCallback(
     (token: Currency) => {
       const address = token.isNative ? NATIVE_CHAIN_ID : token.address
-      startTransition(() => navigate(`/tokens/${chainName}/${address}`))
+      startTokenTransition(() => navigate(`/tokens/${chainName}/${address}`))
     },
     [chainName, navigate]
   )
@@ -187,9 +197,7 @@ export default function TokenDetails() {
                 </TokenActions>
               </TokenInfoContainer>
               <ChartContainer>
-                <Suspense fallback={<LoadingChart />}>
-                  <ChartSection priceQueryReference={priceQueryReference} />
-                </Suspense>
+                <ChartSection priceQueryReference={priceQueryReference} />
               </ChartContainer>
             </ChartHeader>
             <StatsSection

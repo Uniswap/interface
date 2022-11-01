@@ -1,23 +1,29 @@
 import { ParentSize } from '@visx/responsive'
+import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { TokenPriceQuery } from 'graphql/data/__generated__/TokenPriceQuery.graphql'
 import { usePreloadedTokenPriceQuery } from 'graphql/data/TokenPrice'
+import { Suspense } from 'react'
 import { PreloadedQuery } from 'react-relay'
-import styled from 'styled-components/macro'
 
 import PriceChart from './PriceChart'
-
-export const ChartContainer = styled.div`
-  display: flex;
-  height: 436px;
-  align-items: center;
-  width: 100%;
-`
 
 export default function ChartSection({
   priceQueryReference,
 }: {
-  priceQueryReference: PreloadedQuery<TokenPriceQuery>
+  priceQueryReference?: PreloadedQuery<TokenPriceQuery> | null
 }) {
+  return (
+    <Suspense fallback={<LoadingChart />}>
+      {priceQueryReference && (
+        <ChartContainer>
+          <Chart priceQueryReference={priceQueryReference} />
+        </ChartContainer>
+      )}
+    </Suspense>
+  )
+}
+
+function Chart({ priceQueryReference }: { priceQueryReference: PreloadedQuery<TokenPriceQuery> }) {
   const prices = usePreloadedTokenPriceQuery(priceQueryReference)
   return (
     <ChartContainer>

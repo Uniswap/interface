@@ -1,11 +1,8 @@
 import graphql from 'babel-plugin-relay/macro'
 import { DEFAULT_ERC20_DECIMALS } from 'constants/tokens'
-import { useEffect, useMemo } from 'react'
-import { loadQuery, useRelayEnvironment } from 'react-relay'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import { Chain } from './__generated__/TokenPriceQuery.graphql'
-import { TokenQuery, TokenQuery$data } from './__generated__/TokenQuery.graphql'
+import { TokenQuery$data } from './__generated__/TokenQuery.graphql'
 import { CHAIN_NAME_TO_CHAIN_ID } from './util'
 
 /*
@@ -60,18 +57,6 @@ export const tokenQuery = graphql`
 `
 
 export type TokenQueryData = NonNullable<TokenQuery$data['tokens']>[number]
-
-export function useLoadTokenQuery(address: string, chain: Chain) {
-  const contract = useMemo(() => ({ address: address.toLowerCase(), chain }), [address, chain])
-  const environment = useRelayEnvironment()
-  const queryReference = loadQuery<TokenQuery>(environment, tokenQuery, { contract })
-
-  useEffect(() => {
-    return () => queryReference.dispose()
-  })
-
-  return queryReference
-}
 
 // TODO: Return a QueryToken from useTokenQuery instead of TokenQueryData to make it more usable in Currency-centric interfaces.
 export class QueryToken extends WrappedTokenInfo {

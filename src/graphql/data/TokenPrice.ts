@@ -1,8 +1,8 @@
 import graphql from 'babel-plugin-relay/macro'
-import { useEffect, useMemo } from 'react'
+import { startTransition, useCallback, useEffect, useMemo, useState } from 'react'
 import { loadQuery, PreloadedQuery, usePreloadedQuery, useRelayEnvironment } from 'react-relay'
 
-import { Chain, TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
+import { ContractInput, TokenPriceQuery } from './__generated__/TokenPriceQuery.graphql'
 import { TimePeriod, toHistoryDuration } from './util'
 
 export const tokenPriceQuery = graphql`
@@ -26,13 +26,25 @@ export function isPricePoint(p: PricePoint | null): p is PricePoint {
   return p !== null
 }
 
-export function useLoadTokenPriceQuery(address: string, chain: Chain, timePeriod: TimePeriod) {
+export function useLoadTokenPriceQuery(contract: ContractInput, timePeriod: TimePeriod) {
   const duration = toHistoryDuration(timePeriod)
-  const contract = useMemo(() => ({ address: address.toLowerCase(), chain }), [address, chain])
-  const queryReference = loadQuery<TokenPriceQuery>(useRelayEnvironment(), tokenPriceQuery, { contract, duration })
+  const environment = useRelayEnvironment()
+
+  const loadTokenPriceQuery = useCallback(
+    () => loadQuery<TokenPriceQuery>(environment, tokenPriceQuery, { contract, duration }),
+    [contract, duration, environment]
+  )
+  const [queryReference, setQueryReference] = useState<PreloadedQuery<TokenPriceQuery>>(() => {
+    return loadTokenPriceQuery()
+  })
 
   useEffect(() => {
-    return () => queryReference.dispose()
+    // Re-render once the new line is ready, rather than flash a loading state.
+    startTransition(() => setQueryReference(loadTokenPriceQuery()))
+  }, [contract, duration, loadTokenPriceQuery])
+
+  useEffect(() => {
+    return () => queryReference && queryReference.dispose()
   })
 
   return queryReference

@@ -11,7 +11,7 @@ import { PricePoint } from 'graphql/data/TokenPrice'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
-import { ReactNode, startTransition, useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import {
@@ -378,13 +378,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
       <TimeOptionsWrapper>
         <TimeOptionsContainer>
           {ORDERED_TIMES.map((time) => (
-            <TimeButton
-              key={DISPLAYS[time]}
-              active={timePeriod === time}
-              onClick={() => {
-                startTransition(() => setTimePeriod(time))
-              }}
-            >
+            <TimeButton key={DISPLAYS[time]} active={timePeriod === time} onClick={() => setTimePeriod(time)}>
               {DISPLAYS[time]}
             </TimeButton>
           ))}

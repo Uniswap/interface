@@ -9,7 +9,6 @@ import { LoadingBubble } from '../loading'
 import { LogoContainer } from '../TokenTable/TokenRow'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
-import { ChartContainer } from './ChartSection'
 import { DeltaContainer, TokenPrice } from './PriceChart'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
@@ -50,6 +49,12 @@ export const RightPanel = styled.div`
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
     display: flex;
   }
+`
+export const ChartContainer = styled.div`
+  display: flex;
+  height: 436px;
+  align-items: center;
+  width: 100%;
 `
 const LoadingChartContainer = styled(ChartContainer)`
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
