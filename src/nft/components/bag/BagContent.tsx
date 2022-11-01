@@ -1,7 +1,11 @@
+import { EventName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
+// import { useTrace } from 'analytics/Trace'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { Column } from 'nft/components/Flex'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { BagItemStatus, BagStatus } from 'nft/types'
+import { GenieAsset } from 'nft/types'
 import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
 import { fetchPrice } from 'nft/utils/fetchPrice'
 import { useEffect, useMemo } from 'react'
@@ -50,18 +54,32 @@ export const BagContent = () => {
     }
   }, [bagStatus, itemsInBag, priceChangedAssets, setBagStatus])
 
+  // eventProperties : map priceChangedAssets
+
+  const formatAnalyticsEventProperties = (priceChangedAssets: GenieAsset[]) => ({
+    // collection_addresses: priceChangedAssets.map((asset) => token?.symbol),
+    // token_addresses: tokens.map((token) => token?.address),
+    // token_chain_ids: tokens.map((token) => token?.chainId),
+  })
+
   return (
     <>
       <Column display={priceChangedAssets.length > 0 || unavailableAssets.length > 0 ? 'flex' : 'none'}>
         {unavailableAssets.length > 0 && (
-          <UnavailableAssetsHeaderRow
-            assets={unavailableAssets}
-            usdPrice={fetchedPriceData}
-            clearUnavailableAssets={() => setItemsInBag(availableItems)}
-            didOpenUnavailableAssets={didOpenUnavailableAssets}
-            setDidOpenUnavailableAssets={setDidOpenUnavailableAssets}
-            isMobile={isMobile}
-          />
+          <Trace
+            name={EventName.NFT_BUY_BAG_CHANGED}
+            properties={formatAnalyticsEventProperties(priceChangedAssets)}
+            shouldLogImpression
+          >
+            <UnavailableAssetsHeaderRow
+              assets={unavailableAssets}
+              usdPrice={fetchedPriceData}
+              clearUnavailableAssets={() => setItemsInBag(availableItems)}
+              didOpenUnavailableAssets={didOpenUnavailableAssets}
+              setDidOpenUnavailableAssets={setDidOpenUnavailableAssets}
+              isMobile={isMobile}
+            />
+          </Trace>
         )}
         {priceChangedAssets.map((asset, index) => (
           <PriceChangeBagRow
