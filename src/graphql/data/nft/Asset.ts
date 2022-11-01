@@ -1,6 +1,6 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
-import { GenieAsset } from 'nft/types'
+import { GenieAsset, Rarity } from 'nft/types'
 import { loadQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 
 import RelayEnvironment from '../RelayEnvironment'
@@ -163,8 +163,13 @@ export function useAssetsQuery(
       // totalCount?: number, // TODO waiting for BE changes
       collectionIsVerified: asset.collection?.isVerified,
       rarity: {
-        primaryProvider: 'RARITY_SNIPER', // TODO update when backend adds more providers
-        providers: asset.rarities,
+        primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
+        providers: asset.rarities.map((rarity: Rarity) => {
+          return {
+            ...rarity,
+            provider: 'Rarity Sniper',
+          }
+        }),
       },
       owner: asset.ownerAddress,
       creator: {
