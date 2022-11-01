@@ -4,7 +4,7 @@ import { TokenInfo } from '@uniswap/token-lists'
 import axios from 'axios'
 import { rgba } from 'polished'
 import { stringify } from 'querystring'
-import { ChangeEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trash } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -134,12 +134,12 @@ const fetchTokens = async (
   }
 }
 
-export const NoResult = () => {
+export const NoResult = ({ msg }: { msg?: ReactNode }) => {
   const theme = useTheme()
   return (
     <Column style={{ padding: '20px', height: '100%' }}>
       <TYPE.main color={theme.text3} textAlign="center" mb="20px">
-        <Trans>No results found.</Trans>
+        {msg || <Trans>No results found.</Trans>}
       </TYPE.main>
     </Column>
   )

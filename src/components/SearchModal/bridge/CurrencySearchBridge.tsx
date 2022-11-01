@@ -14,7 +14,7 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { isAddress } from 'utils'
 import { filterTokens } from 'utils/filtering'
 
-import { CloseIcon } from '../../../theme'
+import { CloseIcon, ExternalLink } from '../../../theme'
 import { ContentWrapper, NoResult } from '../CurrencySearch'
 import CurrencyListBridge from '../bridge/CurrencyListBridge'
 import { useTokenComparator } from '../sorting'
@@ -173,7 +173,21 @@ export default function CurrencySearchBridge({
           onCurrencySelect={handleCurrencySelect}
         />
       ) : (
-        <NoResult />
+        <NoResult
+          msg={
+            debouncedQuery && (
+              <Text fontSize={12} color={theme.subText} fontWeight="normal" lineHeight={'18px'}>
+                <Trans>
+                  Multichain doesn’t support this token yet. <br />
+                  If you want to apply this token for cross-chain bridges on Multichain, please read more{' '}
+                  <ExternalLink href="https://anyswap.medium.com/how-to-apply-for-cross-chain-bridges-on-anyswap-82fcb6c9f0d2">
+                    here
+                  </ExternalLink>
+                </Trans>
+              </Text>
+            )
+          }
+        />
       )}
     </ContentWrapper>
   )

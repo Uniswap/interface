@@ -73,7 +73,7 @@ const CurrencyListBridge = memo(function CurrencyListV2({
   )
 
   return (
-    <div style={{ flex: '1', overflow: 'auto', height: '100%' }}>
+    <div style={{ flex: '1', overflow: 'hidden', height: '100%' }}>
       {isOutput ? (
         currencies.map((item, index) => (
           <Row index={index} currency={item} key={index} currencyBalance={currencyBalances[index]} />
