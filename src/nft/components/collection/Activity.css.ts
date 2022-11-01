@@ -68,7 +68,7 @@ export const detailsImage = sprinkles({
 export const detailsName = style([
   body,
   sprinkles({
-    paddingBottom: '12',
+    height: 'inherit',
     fontWeight: 'normal',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
