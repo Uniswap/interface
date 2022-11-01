@@ -422,6 +422,8 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     [isSuccess, eventsData]
   )
 
+  console.log(asset)
+
   return (
     <Column>
       <MediaContainer>

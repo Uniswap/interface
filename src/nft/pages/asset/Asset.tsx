@@ -3,11 +3,11 @@ import { Trace } from 'analytics/Trace'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { fetchSingleAsset } from 'nft/queries'
+import { CollectionStatsFetcher } from 'nft/queries'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { CollectionStatsFetcher } from 'nft/queries'
 
 const AssetContainer = styled.div`
   display: flex;
@@ -43,7 +43,7 @@ const Asset = () => {
   const asset = useMemo(() => (data ? data[0] : undefined), [data])
   const collection = useMemo(() => (data ? data[1] : undefined), [data])
 
-  const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
+  const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
   )
 
