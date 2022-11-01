@@ -14,7 +14,7 @@ export function WalletConnectModals() {
   const activeAccount = useActiveAccount()
   const dispatch = useAppDispatch()
 
-  const { pendingRequests, modalState } = useWalletConnect(activeAccount?.address)
+  const { pendingRequests, modalState, pendingSession } = useWalletConnect(activeAccount?.address)
 
   const currRequest = pendingRequests[0] ?? null
 
@@ -32,10 +32,11 @@ export function WalletConnectModals() {
 
   return (
     <>
-      {modalState.isOpen && (
+      {(modalState.isOpen || Boolean(pendingSession)) && (
         <WalletConnectModal
+          isVisible
           initialScreenState={modalState.initialState}
-          isVisible={true}
+          pendingSession={pendingSession}
           onClose={onClose}
         />
       )}

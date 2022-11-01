@@ -23,25 +23,28 @@ import { useDisplayName, useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { connectToApp } from 'src/features/walletConnect/WalletConnect'
+import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 
 const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
 
 type Props = {
   isVisible: boolean
   initialScreenState?: ScannerModalState
+  pendingSession: WalletConnectSession | null
   onClose: () => void
 }
 
 export function WalletConnectModal({
   initialScreenState = ScannerModalState.ScanQr,
   isVisible,
+  pendingSession,
   onClose,
 }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const displayName = useDisplayName(activeAddress)
-  const { sessions, pendingSession } = useWalletConnect(activeAddress)
+  const { sessions } = useWalletConnect(activeAddress)
   const [currentScreenState, setCurrentScreenState] =
     useState<ScannerModalState>(initialScreenState)
   const { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera } =

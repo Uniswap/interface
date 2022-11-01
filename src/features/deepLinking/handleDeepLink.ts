@@ -6,8 +6,9 @@ import { handleTransactionLink } from 'src/features/deepLinking/handleTransactio
 import { logEvent } from 'src/features/telemetry'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import { activateAccount } from 'src/features/wallet/walletSlice'
+import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { logger } from 'src/utils/logger'
-import { call, put, takeLatest } from 'typed-redux-saga'
+import { call, put, takeLatest, fork } from 'typed-redux-saga'
 
 export interface DeepLink {
   url: string
@@ -24,6 +25,17 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
   const { coldStart } = action.payload
   try {
     const url = new URL(action.payload.url)
+
+    // handle WC deeplink connections
+    const wcUri = url.searchParams.get('uri')
+    if (url.pathname.includes('/wc') && wcUri) {
+      const isValidWcUri = yield* call(isValidWCUrl, wcUri)
+      if (isValidWcUri) {
+        yield* fork(connectToApp, wcUri)
+      }
+      return
+    }
+
     const screen = url.searchParams.get('screen')
     const userAddress = url.searchParams.get('userAddress')
 
