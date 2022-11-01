@@ -192,8 +192,8 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     }
   }, [toggleOpen, hoveredIndex, totalSuggestions])
 
-  const hasVerifiedCollection = trendingCollections.some((collection) => collection?.isVerified)
-  const hasVerifiedToken = trendingTokens.some((token) => token?.onDefaultList)
+  const hasVerifiedCollection = collections.some((collection) => collection.isVerified)
+  const hasVerifiedToken = tokens.some((token) => token.onDefaultList)
   const showCollectionsFirst =
     (isNFTPage && (hasVerifiedCollection || !hasVerifiedToken)) ||
     (!isNFTPage && !hasVerifiedToken && hasVerifiedCollection)
