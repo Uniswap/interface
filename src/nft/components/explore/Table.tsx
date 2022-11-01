@@ -3,7 +3,7 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Column, IdType, useSortBy, useTable } from 'react-table'
+import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
@@ -131,68 +131,7 @@ export function Table<D extends Record<string, unknown>>({
   }, [width, setHiddenColumns, columns, smallHiddenColumns, mediumHiddenColumns, largeHiddenColumns, theme.breakpoint])
 
   if (data.length === 0) {
-    return (
-      <table {...getTableProps()} className={styles.table}>
-        <thead className={styles.thead}>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
-              {headerGroup.headers.map((column, index) => {
-                return (
-                  <StyledHeader
-                    className={styles.th}
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    style={{
-                      textAlign: index === 0 ? 'left' : 'right',
-                      paddingLeft: index === 0 ? '52px' : 0,
-                    }}
-                    isFirstHeader={index === 0}
-                    key={index}
-                  >
-                    <Box as="span" color="accentAction" position="relative">
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />
-                        ) : (
-                          <ArrowRightIcon style={{ transform: 'rotate(-90deg)', position: 'absolute' }} />
-                        )
-                      ) : (
-                        ''
-                      )}
-                    </Box>
-                    <Box as="span" paddingLeft={column.isSorted ? '18' : '0'}>
-                      {column.render('Header')}
-                    </Box>
-                  </StyledHeader>
-                )
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {[...Array(DEFAULT_TRENDING_TABLE_QUERY_AMOUNT)].map((_, index) => (
-            <StyledLoadingRow key={index}>
-              {[...Array(visibleColumns.length)].map((_, cellIndex) => {
-                return (
-                  <td className={clsx(styles.loadingTd, classNames?.td)} key={cellIndex}>
-                    {cellIndex === 0 ? (
-                      <StyledCollectionNameHolder>
-                        <StyledRankHolder />
-                        <StyledImageHolder />
-                        <LoadingBubble />
-                      </StyledCollectionNameHolder>
-                    ) : (
-                      <StyledLoadingHolder>
-                        <LoadingBubble />
-                      </StyledLoadingHolder>
-                    )}
-                  </td>
-                )
-              })}
-            </StyledLoadingRow>
-          ))}
-        </tbody>
-      </table>
-    )
+    return <LoadingTable headerGroups={headerGroups} visibleColumns={visibleColumns} {...getTableProps()} />
   }
 
   return (
@@ -261,6 +200,76 @@ export function Table<D extends Record<string, unknown>>({
             </StyledRow>
           )
         })}
+      </tbody>
+    </table>
+  )
+}
+
+interface LoadingTableProps {
+  headerGroups: HeaderGroup<CollectionTableColumn>[]
+  visibleColumns: ColumnInstance<CollectionTableColumn>[]
+}
+
+function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTableProps) {
+  return (
+    <table {...props} className={styles.table}>
+      <thead className={styles.thead}>
+        {headerGroups.map((headerGroup) => (
+          <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+            {headerGroup.headers.map((column, index) => {
+              return (
+                <StyledHeader
+                  className={styles.th}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  style={{
+                    textAlign: index === 0 ? 'left' : 'right',
+                    paddingLeft: index === 0 ? '52px' : 0,
+                  }}
+                  isFirstHeader={index === 0}
+                  key={index}
+                >
+                  <Box as="span" color="accentAction" position="relative">
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <ArrowRightIcon style={{ transform: 'rotate(90deg)', position: 'absolute' }} />
+                      ) : (
+                        <ArrowRightIcon style={{ transform: 'rotate(-90deg)', position: 'absolute' }} />
+                      )
+                    ) : (
+                      ''
+                    )}
+                  </Box>
+                  <Box as="span" paddingLeft={column.isSorted ? '18' : '0'}>
+                    {column.render('Header')}
+                  </Box>
+                </StyledHeader>
+              )
+            })}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...props}>
+        {[...Array(DEFAULT_TRENDING_TABLE_QUERY_AMOUNT)].map((_, index) => (
+          <StyledLoadingRow key={index}>
+            {[...Array(visibleColumns.length)].map((_, cellIndex) => {
+              return (
+                <td className={clsx(styles.loadingTd)} key={cellIndex}>
+                  {cellIndex === 0 ? (
+                    <StyledCollectionNameHolder>
+                      <StyledRankHolder />
+                      <StyledImageHolder />
+                      <LoadingBubble />
+                    </StyledCollectionNameHolder>
+                  ) : (
+                    <StyledLoadingHolder>
+                      <LoadingBubble />
+                    </StyledLoadingHolder>
+                  )}
+                </td>
+              )
+            })}
+          </StyledLoadingRow>
+        ))}
       </tbody>
     </table>
   )
