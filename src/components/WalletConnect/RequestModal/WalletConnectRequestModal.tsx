@@ -17,6 +17,8 @@ import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { GasSpeed } from 'src/features/gas/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
+import { useIsBlocked } from 'src/features/trm/hooks'
 import { useSignerAccounts } from 'src/features/wallet/hooks'
 import { signWcRequestActions } from 'src/features/walletConnect/saga'
 import { EthMethod, isPrimaryTypePermit, PermitMessage } from 'src/features/walletConnect/types'
@@ -95,7 +97,6 @@ const spacerProps: ComponentProps<typeof Box> = {
 }
 
 export function WalletConnectRequestModal({ isVisible, onClose, request }: Props) {
-  const theme = useAppTheme()
   const chainId = toSupportedChainId(request.dapp.chain_id) ?? undefined
 
   const tx: providers.TransactionRequest | null = useMemo(() => {
@@ -116,8 +117,12 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     value: isTransactionRequest(request) ? request.transaction.value : undefined,
   })
 
+  const { isBlocked, isBlockedLoading } = useIsBlocked(request.account)
+
   const checkConfirmEnabled = () => {
     if (!signerAccount) return false
+
+    if (isBlocked || isBlockedLoading) return false
 
     if (methodCostsGas(request)) return !!(tx && hasSufficientFunds && gasFeeInfo)
 
@@ -225,20 +230,11 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
               </SectionContainer>
             )}
           </Flex>
-          {isPotentiallyUnsafe(request) ? (
-            <Flex centered row alignSelf="center" gap="xs">
-              <AlertTriangle
-                color={theme.colors.accentWarning}
-                height={iconSizes.sm}
-                width={iconSizes.sm}
-              />
-              <Text color="textSecondary" fontStyle="italic" variant="bodyMicro">
-                {t('Be careful: this {{ requestType }} authorizes assets', {
-                  requestType: isTransactionRequest(request) ? 'transaction' : 'message',
-                })}
-              </Text>
-            </Flex>
-          ) : null}
+          <WarningSection
+            isBlockedAddress={isBlocked}
+            request={request}
+            showUnsafeWarning={isPotentiallyUnsafe(request)}
+          />
           <Flex row gap="sm">
             <Button
               fill
@@ -261,6 +257,40 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
         </Flex>
       </Flex>
     </BottomSheetModal>
+  )
+}
+
+function WarningSection({
+  request,
+  showUnsafeWarning,
+  isBlockedAddress,
+}: {
+  request: WalletConnectRequest
+  showUnsafeWarning: boolean
+  isBlockedAddress: boolean
+}) {
+  const theme = useAppTheme()
+  const { t } = useTranslation()
+
+  if (!showUnsafeWarning && !isBlockedAddress) return null
+
+  if (isBlockedAddress) {
+    return <BlockedAddressWarning centered row alignSelf="center" />
+  }
+
+  return (
+    <Flex centered row alignSelf="center" gap="xs">
+      <AlertTriangle
+        color={theme.colors.accentWarning}
+        height={iconSizes.sm}
+        width={iconSizes.sm}
+      />
+      <Text color="textSecondary" fontStyle="italic" variant="bodyMicro">
+        {t('Be careful: this {{ requestType }} authorizes assets', {
+          requestType: isTransactionRequest(request) ? 'transaction' : 'message',
+        })}
+      </Text>
+    </Flex>
   )
 }
 

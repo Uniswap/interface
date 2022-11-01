@@ -131,6 +131,6 @@ export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
         background: 'accentWarningSoft',
       }
     default:
-      return { text: 'none', background: 'none' }
+      return { text: 'textSecondary', background: 'none' }
   }
 }

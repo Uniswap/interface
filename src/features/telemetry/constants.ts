@@ -32,6 +32,7 @@ export const enum SectionName {
 export const enum ModalName {
   Account = 'account-modal',
   AddWallet = 'add-wallet-modal',
+  BlockedAddress = 'blocked-address',
   ConnectedDapps = 'connected-dapps',
   Experiments = 'experiments',
   ForceUpgradeModal = 'force-upgrade-modal',

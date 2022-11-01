@@ -1,6 +1,6 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
-import React, { StrictMode } from 'react'
+import React, { StrictMode, useCallback, useEffect } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
@@ -26,8 +26,10 @@ import { MarkNames } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
-import { useAccounts } from 'src/features/wallet/hooks'
+import { useTrmPrefetch } from 'src/features/trm/api'
+import { useAccounts, useSignerAccounts } from 'src/features/wallet/hooks'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
+import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
 
@@ -96,9 +98,30 @@ function AppInner() {
   )
 }
 
+const PREFETCH_OPTIONS = {
+  ifOlderThan: 60 * 15, // cache results for 15 minutes
+}
+
 function DataUpdaters() {
   const accounts = useAccounts()
   const addresses = Object.keys(accounts)
+
+  const signerAccounts = useSignerAccounts()
+  const prefetchTrm = useTrmPrefetch()
+
+  const prefetchTrmData = useCallback(
+    () =>
+      signerAccounts.forEach((account) => {
+        prefetchTrm(account.address, PREFETCH_OPTIONS)
+      }),
+    [prefetchTrm, signerAccounts]
+  )
+
+  // Prefetch TRM data on app start (either cold or warm)
+  useEffect(prefetchTrmData)
+  useAppStateTrigger('background', 'active', prefetchTrmData)
+  useAppStateTrigger('inactive', 'active', prefetchTrmData)
+
   // TODO(MOB-2922): Once TransactionHistoryUpdaterQuery can accept an array of addresses,
   // use `useQueryLoader` to load the query within `InteractionManager.runAfterInteractions`
   // and pass the query ref to the `TransactionHistoryUpdater` component

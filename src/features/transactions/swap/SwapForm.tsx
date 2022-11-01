@@ -34,6 +34,8 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { createTransactionId } from 'src/features/transactions/utils'
+import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
+import { useIsBlockedActiveAddress } from 'src/features/trm/hooks'
 import { formatPrice, NumberType } from 'src/utils/format'
 
 interface SwapFormProps {
@@ -85,6 +87,8 @@ export function SwapForm({
 
   useShowSwapNetworkNotification(chainId)
 
+  const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
+
   const [showWarningModal, setShowWarningModal] = useState(false)
 
   const swapDataRefreshing = !isWrapAction(wrapType) && (trade.isFetching || trade.loading)
@@ -92,7 +96,8 @@ export function SwapForm({
   const noValidSwap = !isWrapAction(wrapType) && !trade.trade
   const blockingWarning = warnings.some((warning) => warning.action === WarningAction.DisableReview)
 
-  const actionButtonDisabled = noValidSwap || blockingWarning || swapDataRefreshing
+  const actionButtonDisabled =
+    noValidSwap || blockingWarning || swapDataRefreshing || isBlocked || isBlockedLoading
 
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
   const swapWarningColor = getAlertColor(swapWarning?.severity)
@@ -186,8 +191,8 @@ export function SwapForm({
             <Flex fill gap="none">
               <Flex
                 backgroundColor="background2"
-                borderBottomLeftRadius={swapWarning || showRate ? 'none' : 'xl'}
-                borderBottomRightRadius={swapWarning || showRate ? 'none' : 'xl'}
+                borderBottomLeftRadius={swapWarning || showRate || isBlocked ? 'none' : 'xl'}
+                borderBottomRightRadius={swapWarning || showRate || isBlocked ? 'none' : 'xl'}
                 borderTopLeftRadius="xl"
                 borderTopRightRadius="xl"
                 gap="none"
@@ -221,8 +226,7 @@ export function SwapForm({
                   onShowTokenSelector={() => onShowTokenSelector(CurrencyField.OUTPUT)}
                 />
               </Flex>
-              {/* TODO: this could use the Button component instead. */}
-              {swapWarning && (
+              {swapWarning && !isBlocked ? (
                 <TouchableArea onPress={onSwapWarningClick}>
                   <Flex
                     row
@@ -255,8 +259,22 @@ export function SwapForm({
                     </Flex>
                   </Flex>
                 </TouchableArea>
+              ) : null}
+              {isBlocked && (
+                <BlockedAddressWarning
+                  row
+                  alignItems="center"
+                  alignSelf="stretch"
+                  backgroundColor="background2"
+                  borderBottomLeftRadius="lg"
+                  borderBottomRightRadius="lg"
+                  flexGrow={1}
+                  mt="xxxs"
+                  px="md"
+                  py="sm"
+                />
               )}
-              {showRate && (
+              {showRate && !isBlocked ? (
                 <TouchableArea onPress={() => setShowInverseRate(!showInverseRate)}>
                   <Flex
                     row
@@ -295,7 +313,7 @@ export function SwapForm({
                     </Flex>
                   </Flex>
                 </TouchableArea>
-              )}
+              ) : null}
             </Flex>
           </Trace>
         </AnimatedFlex>

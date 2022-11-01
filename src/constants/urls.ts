@@ -6,6 +6,7 @@ export const uniswapUrls = {
   gasServiceUrl: getUniswapGasServiceUrl(),
   routingApiUrl: getUniswapRoutingApiUrl(),
   graphQLUrl: getUniswapGraphQLUrl(),
+  trmUrl: getUniswapTrmUrl(),
 }
 
 function getUniswapApiBaseUrl() {
@@ -22,6 +23,10 @@ function getUniswapGasServiceUrl() {
 
 function getUniswapGraphQLUrl() {
   return `${config.uniswapApiBaseUrl}/v1/graphql`
+}
+
+function getUniswapTrmUrl() {
+  return `${config.uniswapApiBaseUrl}/v1/screen`
 }
 
 export const TOKEN_WARNING_HELP_PAGE_URL =

@@ -19,6 +19,7 @@ import { routingApi } from 'src/features/routing/routingApi'
 import { tokenListsReducer } from 'src/features/tokenLists/reducer'
 import { tokensReducer } from 'src/features/tokens/tokensSlice'
 import { transactionReducer } from 'src/features/transactions/slice'
+import { trmApi } from 'src/features/trm/api'
 import { walletReducer } from 'src/features/wallet/walletSlice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 export const rootReducer = combineReducers({
@@ -27,6 +28,7 @@ export const rootReducer = combineReducers({
   [gasApi.reducerPath]: gasApi.reducer,
   [multicall.reducerPath]: multicall.reducer,
   [routingApi.reducerPath]: routingApi.reducer,
+  [trmApi.reducerPath]: trmApi.reducer,
   biometricSettings: biometricSettingsReducer,
   blocks: blocksReducer,
   chains: chainsReducer,

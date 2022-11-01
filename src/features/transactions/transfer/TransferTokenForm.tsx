@@ -27,6 +27,8 @@ import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferFormWarnings } from 'src/features/transactions/transfer/TransferFormWarnings'
 import { createOnToggleShowRecipientSelector } from 'src/features/transactions/transfer/utils'
 import { createTransactionId } from 'src/features/transactions/utils'
+import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
+import { useIsBlockedActiveAddress } from 'src/features/trm/hooks'
 import { dimensions } from 'src/styles/sizing'
 
 interface TransferTokenProps {
@@ -47,6 +49,8 @@ export function TransferTokenForm({
   onNext,
   warnings,
 }: TransferTokenProps) {
+  const { t } = useTranslation()
+
   const {
     currencyAmounts,
     currencyBalances,
@@ -78,14 +82,16 @@ export function TransferTokenForm({
     hasWarning: false,
   })
 
-  const { t } = useTranslation()
-
   const { onShowTokenSelector, onSetAmount, onSetMax } = useSwapActionHandlers(dispatch)
   const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
 
+  const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
+
   const actionButtonDisabled =
     warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
-    transferWarning.loading
+    transferWarning.loading ||
+    isBlocked ||
+    isBlockedLoading
 
   const goToNext = useCallback(() => {
     const txId = createTransactionId()
@@ -131,7 +137,7 @@ export function TransferTokenForm({
         />
       </Suspense>
       <Flex fill grow gap="xs" justifyContent="space-between" onLayout={onLayout}>
-        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xs">
+        <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} gap="xxxs">
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
           ) : (
@@ -172,8 +178,12 @@ export function TransferTokenForm({
 
           <Flex
             backgroundColor={recipient ? 'background2' : 'none'}
-            borderRadius="xl"
+            borderBottomLeftRadius={isBlocked ? 'none' : 'xl'}
+            borderBottomRightRadius={isBlocked ? 'none' : 'xl'}
+            borderTopLeftRadius="xl"
+            borderTopRightRadius="xl"
             justifyContent="center"
+            mt="xxs"
             px="md"
             py="lg">
             {recipient && (
@@ -185,6 +195,20 @@ export function TransferTokenForm({
               </Suspense>
             )}
           </Flex>
+          {isBlocked && (
+            <BlockedAddressWarning
+              row
+              alignItems="center"
+              alignSelf="stretch"
+              backgroundColor="background2"
+              borderBottomLeftRadius="lg"
+              borderBottomRightRadius="lg"
+              flexGrow={1}
+              mt="xxxs"
+              px="md"
+              py="sm"
+            />
+          )}
         </AnimatedFlex>
         <AnimatedFlex exiting={FadeOutDown} gap="xs">
           {!nftIn && !showNativeKeyboard && (

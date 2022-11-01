@@ -1,4 +1,5 @@
 import { configureStore, Middleware } from '@reduxjs/toolkit'
+import { MMKV } from 'react-native-mmkv'
 import { persistReducer, persistStore, Storage } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
 import createMigrate from 'src/app/createMigrate'
@@ -11,8 +12,7 @@ import { ensApi } from 'src/features/ens/api'
 import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { routingApi } from 'src/features/routing/routingApi'
-
-import { MMKV } from 'react-native-mmkv'
+import { trmApi } from 'src/features/trm/api'
 
 const storage = new MMKV()
 
@@ -55,6 +55,7 @@ export const persistConfig = {
     'transactions',
     'wallet',
     ensApi.reducerPath,
+    trmApi.reducerPath,
   ],
   version: 25,
   migrate: createMigrate(migrations),
@@ -88,6 +89,7 @@ export const store = configureStore({
       forceUpgradeApi.middleware,
       gasApi.middleware,
       routingApi.middleware,
+      trmApi.middleware,
       sagaMiddleware,
       ...middlewares
     ),
