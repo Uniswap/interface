@@ -142,6 +142,7 @@ function useRouterSwap(
 
           let txReceipt
           if (promise) {
+            window.onbeforeunload = () => ''
             txReceipt = await promise
           } else {
             return Promise.reject('router wrong method')
@@ -176,6 +177,8 @@ function useRouterSwap(
         } catch (error) {
           console.error('Could not swap', error)
           return Promise.reject(error || 'router unknown error')
+        } finally {
+          window.onbeforeunload = null
         }
       },
       inputError: !sufficientBalance,
