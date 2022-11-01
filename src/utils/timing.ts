@@ -19,6 +19,23 @@ export async function promiseTimeout<T extends any>(promise: Promise<T>, millise
   return result
 }
 
+/**
+ * Create a promise that resolves after a minimum delay
+ * @param promise to execute
+ * @param milliseconds length of minimum delay time in ms
+ */
+export async function promiseMinDelay<T extends any>(promise: Promise<T>, milliseconds: number) {
+  const minDelay = new Promise<null>((resolve) => {
+    const id = setTimeout(() => {
+      clearTimeout(id)
+      resolve(null)
+    }, milliseconds)
+  })
+  // Awaits until either the promise rejects or both the promise and minimum delay have resolved
+  const [result] = await Promise.all([promise, minDelay])
+  return result
+}
+
 // https://usehooks-typescript.com/react-hook/use-interval
 export function useInterval(callback: () => void, delay: number | null, immediateStart?: boolean) {
   const savedCallback = useRef<() => void | null>()

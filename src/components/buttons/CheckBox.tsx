@@ -27,7 +27,7 @@ export function CheckBox({ checked, onCheckPressed, size }: CheckBoxProps) {
       p="xxxs"
       width={size + theme.spacing.xxxs + BORDER_WIDTH * 4}
       onPress={onPress}>
-      {checked ? <Check color={theme.colors.textPrimary} height={size} width={size} /> : null}
+      {checked ? <Check color={theme.colors.white} height={size} width={size} /> : null}
     </TouchableArea>
   )
 }

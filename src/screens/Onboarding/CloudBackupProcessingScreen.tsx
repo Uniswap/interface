@@ -17,6 +17,8 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
 import { logger } from 'src/utils/logger'
+import { ONE_SECOND_MS } from 'src/utils/time'
+import { promiseMinDelay } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -49,27 +51,30 @@ export function CloudBackupProcessingScreen({
           {
             text: t('OK'),
             style: 'default',
+            onPress: () => {
+              navigation.goBack()
+            },
           },
         ]
       )
-      navigation.navigate({
-        name: OnboardingScreens.Backup,
-        params: { importType },
-        merge: true,
-      })
     },
-    [t, importType, navigation]
+    [t, navigation]
   )
 
   // Handle finished backing up to Cloud
   useEffect(() => {
     if (activeAccount?.backups?.includes(BackupType.Cloud)) {
       doneProcessing()
-      navigation.navigate({
-        name: OnboardingScreens.Backup,
-        params: { importType },
-        merge: true,
-      })
+      // Show success state for 1s before navigating back
+      const timer = setTimeout(() => {
+        navigation.navigate({
+          name: OnboardingScreens.Backup,
+          params: { importType },
+          merge: true,
+        })
+      }, ONE_SECOND_MS)
+
+      return () => clearTimeout(timer)
     }
   }, [activeAccount?.backups, importType, navigation])
 
@@ -79,7 +84,12 @@ export function CloudBackupProcessingScreen({
 
     const backup = async () => {
       try {
-        await backupMnemonicToICloud(activeAccount.address, password)
+        // Ensure processing state is shown for at least 1s
+        await promiseMinDelay(
+          backupMnemonicToICloud(activeAccount.address, password),
+          ONE_SECOND_MS
+        )
+
         dispatch(
           editAccountActions.trigger({
             type: EditAccountAction.AddBackupMethod,
@@ -101,12 +111,12 @@ export function CloudBackupProcessingScreen({
       {processing ? (
         <Flex centered grow gap="xl">
           <ActivityIndicator size="large" />
-          <Text variant="headlineMedium">{t('Backing up to iCloud...')}</Text>
+          <Text variant="headlineSmall">{t('Backing up to iCloud...')}</Text>
         </Flex>
       ) : (
-        <Flex centered grow gap="none" mb="lg">
+        <Flex centered grow gap="none">
           <CheckmarkCircle color={theme.colors.accentAction} size={dimensions.fullWidth / 4} />
-          <Text variant="headlineMedium">{t('iCloud backup successful')}</Text>
+          <Text variant="headlineSmall">{t('iCloud backup successful')}</Text>
         </Flex>
       )}
     </Screen>
