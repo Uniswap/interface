@@ -51,8 +51,7 @@ const Table = styled.table`
 
 const TD = styled.td`
   height: 56px;
-  padding-bottom: 8px;
-  padding-top: 8px;
+  padding: 8px 0px;
   text-align: left;
   vertical-align: middle;
   width: 20%;
@@ -128,57 +127,61 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
   return (
     <ActivityContainer id="activityContainer">
       <Table>
-        <TR>
-          <TH>Event</TH>
-          <TH>Price</TH>
-          <TH>By</TH>
-          <TH>To</TH>
-          <TH>Time</TH>
-        </TR>
-        {events.map((event, index) => {
-          const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
-          const formattedPrice = price ? putCommas(formatEthPrice(price)).toString() : null
+        <thead>
+          <TR>
+            <TH>Event</TH>
+            <TH>Price</TH>
+            <TH>By</TH>
+            <TH>To</TH>
+            <TH>Time</TH>
+          </TR>
+        </thead>
+        <tbody>
+          {events.map((event, index) => {
+            const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
+            const formattedPrice = price ? putCommas(formatEthPrice(price)).toString() : null
 
-          return (
-            <TR key={index}>
-              <TD>
-                <EventCellContainer>
-                  <EventCell
-                    eventType={eventType}
-                    eventTimestamp={eventTimestamp}
-                    eventTransactionHash={transactionHash}
-                    eventOnly
-                  />
-                </EventCellContainer>
-              </TD>
-              <TD>
-                {formattedPrice && (
-                  <PriceContainer>
-                    {marketplace && <MarketplaceIcon marketplace={marketplace} />}
-                    {formattedPrice} ETH
-                  </PriceContainer>
-                )}
-              </TD>
+            return (
+              <TR key={index}>
+                <TD>
+                  <EventCellContainer>
+                    <EventCell
+                      eventType={eventType}
+                      eventTimestamp={eventTimestamp}
+                      eventTransactionHash={transactionHash}
+                      eventOnly
+                    />
+                  </EventCellContainer>
+                </TD>
+                <TD>
+                  {formattedPrice && (
+                    <PriceContainer>
+                      {marketplace && <MarketplaceIcon marketplace={marketplace} />}
+                      {formattedPrice} ETH
+                    </PriceContainer>
+                  )}
+                </TD>
 
-              <TD>
-                {fromAddress && (
-                  <Link href={`${explorer}address/${fromAddress}`} target="_blank">
-                    {shortenAddress(fromAddress, 2, 4)}
-                  </Link>
-                )}
-              </TD>
+                <TD>
+                  {fromAddress && (
+                    <Link href={`${explorer}address/${fromAddress}`} target="_blank">
+                      {shortenAddress(fromAddress, 2, 4)}
+                    </Link>
+                  )}
+                </TD>
 
-              <TD>
-                {toAddress && (
-                  <Link href={`${explorer}address/${toAddress}`} target="_blank">
-                    {shortenAddress(toAddress, 2, 4)}
-                  </Link>
-                )}
-              </TD>
-              <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString())}</TD>
-            </TR>
-          )
-        })}
+                <TD>
+                  {toAddress && (
+                    <Link href={`${explorer}address/${toAddress}`} target="_blank">
+                      {shortenAddress(toAddress, 2, 4)}
+                    </Link>
+                  )}
+                </TD>
+                <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString())}</TD>
+              </TR>
+            )
+          })}
+        </tbody>
       </Table>
     </ActivityContainer>
   )

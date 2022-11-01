@@ -268,6 +268,10 @@ export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset 
   )
 }
 
+const SubHeader = styled(ThemedText.SubHeader)`
+  color: ${({ theme }) => theme.textPrimary};
+`
+
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
   const { account } = useWeb3React()
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
@@ -349,9 +353,9 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                   }
                 }}
               >
-                <ThemedText.SubHeader lineHeight={'20px'}>
-                  <span style={{ color: 'white' }}>{assetInBag ? 'Remove' : 'Buy Now'}</span>
-                </ThemedText.SubHeader>
+                <SubHeader lineHeight={'20px'}>
+                  <span>{assetInBag ? 'Remove' : 'Buy Now'}</span>
+                </SubHeader>
               </BuyNowButton>
             ) : (
               <Erc1155BuyNowButton>
