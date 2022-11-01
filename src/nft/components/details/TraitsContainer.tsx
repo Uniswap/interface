@@ -6,6 +6,7 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 16px;
+
   @media (max-width: 960px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
@@ -49,11 +50,10 @@ const TraitValue = styled.div`
 
 const GridItem = ({
   trait,
-  totalSupply,
   collectionAddress,
 }: {
   trait: Trait
-  totalSupply: number
+
   collectionAddress: string
 }) => {
   const params = qs.stringify(
@@ -77,14 +77,7 @@ const TraitsContainer = ({ asset, collection }: { asset: GenieAsset; collection:
   return (
     <Grid>
       {traits?.map((trait) => {
-        return (
-          <GridItem
-            key={trait.trait_type}
-            trait={trait}
-            totalSupply={collection.totalSupply}
-            collectionAddress={asset.address}
-          />
-        )
+        return <GridItem key={trait.trait_type} trait={trait} collectionAddress={asset.address} />
       })}
     </Grid>
   )

@@ -11,8 +11,8 @@ import { EventCell } from '../collection/ActivityCells'
 import { MarketplaceIcon } from '../collection/ActivityCells'
 
 const TR = styled.tr`
-  width: 100%;
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  width: 100%;
 
   &:nth-child(1) {
     border-bottom: none;
@@ -44,18 +44,18 @@ const TH = styled.th`
 `
 
 const Table = styled.table`
-  width: 100%;
-  text-align: left;
   border-collapse: collapse;
+  text-align: left;
+  width: 100%;
 `
 
 const TD = styled.td`
-  width: 20%;
-  text-align: left;
-  padding-top: 8px;
-  padding-bottom: 8px;
   height: 56px;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  text-align: left;
   vertical-align: middle;
+  width: 20%;
 
   @media (max-width: 960px) {
     &:nth-child(4) {a
@@ -71,8 +71,8 @@ const TD = styled.td`
 `
 
 const PriceContainer = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   gap: 8px;
 `
 
@@ -117,6 +117,10 @@ const ActivityContainer = styled.div`
   }
 `
 
+const EventCellContainer = styled.div`
+  margin-top: 5px;
+`
+
 const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {
   const events = eventsData === undefined ? [] : eventsData?.events
   const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
@@ -132,21 +136,20 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
           <TH>Time</TH>
         </TR>
         {events.map((event, index) => {
-          const price = event.price
+          const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
           const formattedPrice = price ? putCommas(formatEthPrice(price)).toString() : null
-          const marketplace = event.marketplace
 
           return (
             <TR key={index}>
               <TD>
-                <div style={{ marginTop: 5 }}>
+                <EventCellContainer>
                   <EventCell
-                    eventType={event.eventType}
-                    eventTimestamp={event.eventTimestamp}
-                    eventTransactionHash={event.transactionHash}
+                    eventType={eventType}
+                    eventTimestamp={eventTimestamp}
+                    eventTransactionHash={transactionHash}
                     eventOnly
                   />
-                </div>
+                </EventCellContainer>
               </TD>
               <TD>
                 {formattedPrice && (
@@ -158,21 +161,21 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
               </TD>
 
               <TD>
-                {event && event.fromAddress && (
-                  <Link href={`${explorer}address/${event.fromAddress}`} target="_blank">
-                    {shortenAddress(event.fromAddress, 2, 4)}
+                {fromAddress && (
+                  <Link href={`${explorer}address/${fromAddress}`} target="_blank">
+                    {shortenAddress(fromAddress, 2, 4)}
                   </Link>
                 )}
               </TD>
 
               <TD>
-                {event.toAddress && (
-                  <Link href={`${explorer}address/${event.toAddress}`} target="_blank">
-                    {shortenAddress(event.toAddress, 2, 4)}
+                {toAddress && (
+                  <Link href={`${explorer}address/${toAddress}`} target="_blank">
+                    {shortenAddress(toAddress, 2, 4)}
                   </Link>
                 )}
               </TD>
-              <TD>{event.eventTimestamp && getTimeDifference(event.eventTimestamp.toString())}</TD>
+              <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString())}</TD>
             </TR>
           )
         })}
