@@ -48,10 +48,12 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
 
   return (
     <TransactionFlow
+      showUSDToggle
       derivedInfo={derivedTransferInfo}
       dispatch={dispatch}
       exactValue={derivedTransferInfo.formattedAmounts[CurrencyField.INPUT]}
       flowName={t('Send')}
+      isUSDInput={derivedTransferInfo.isUSDInput}
       recipientSelector={
         <RecipientSelect
           recipient={state.recipient}

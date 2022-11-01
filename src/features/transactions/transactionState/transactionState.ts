@@ -74,24 +74,18 @@ const slice = createSlice({
       }
 
       state[field] = tradeableAsset
-
-      // on selecting a new input currency, reset input amounts
-      if (field === state.exactCurrencyField) {
-        state.exactAmountToken = ''
-        state.exactAmountUSD = ''
-      }
     },
     /** Switches input and output currencies */
     switchCurrencySides: (state) => {
-      // prettier enforces this ; here https://github.com/prettier/prettier/issues/4193
-      // eslint-disable-next-line no-extra-semi
+      state.exactCurrencyField =
+        state.exactCurrencyField === CurrencyField.INPUT
+          ? CurrencyField.OUTPUT
+          : CurrencyField.INPUT
+      state.focusOnCurrencyField = state.exactCurrencyField
       ;[state[CurrencyField.INPUT], state[CurrencyField.OUTPUT]] = [
         state[CurrencyField.OUTPUT],
         state[CurrencyField.INPUT],
       ]
-
-      state.exactAmountToken = ''
-      state.exactAmountUSD = ''
     },
     /** Processes a new typed value for the given `field` */
     updateExactAmountToken: (

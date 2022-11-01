@@ -40,6 +40,8 @@ interface TransactionFlowProps {
   setStep: (newStep: TransactionStep) => void
   warnings: Warning[]
   exactValue: string
+  isUSDInput?: boolean
+  showUSDToggle?: boolean
 }
 
 type InnerContentProps = Pick<
@@ -79,6 +81,8 @@ export function TransactionFlow({
   dispatch,
   warnings,
   exactValue,
+  isUSDInput,
+  showUSDToggle,
 }: TransactionFlowProps) {
   // enable tap to dismiss keyboard on whole modal screen
   // this only applies when we show native keyboard on smaller devices
@@ -97,7 +101,6 @@ export function TransactionFlow({
   }))
 
   const { onToggleUSDInput } = useSwapActionHandlers(dispatch)
-  const { isUSDInput } = derivedInfo
 
   return (
     <TouchableWithoutFeedback onPress={onBackgroundPress}>
@@ -108,7 +111,7 @@ export function TransactionFlow({
               <Text py="xs" textAlign="left" variant="subheadLarge">
                 {flowName}
               </Text>
-              {step === TransactionStep.FORM && (
+              {step === TransactionStep.FORM && showUSDToggle && (
                 <Button
                   emphasis={ButtonEmphasis.Tertiary}
                   label="$   USD"

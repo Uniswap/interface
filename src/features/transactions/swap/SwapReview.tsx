@@ -55,7 +55,6 @@ export function SwapReview({
     trade: { trade: trade },
     wrapType,
     exactCurrencyField,
-    isUSDInput = false,
     txId,
   } = derivedSwapInfo
 
@@ -191,7 +190,6 @@ export function SwapReview({
         currencyOut={currencyOut}
         formattedAmountIn={amountIn}
         formattedAmountOut={amountOut}
-        isUSDInput={isUSDInput}
         transactionDetails={getTransactionDetails()}
         onPrev={onPrev}
       />

@@ -19,11 +19,7 @@ import { GasSpeed } from 'src/features/gas/types'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { useSimulatedGasLimit } from 'src/features/routing/hooks'
-import {
-  STABLECOIN_AMOUNT_OUT,
-  useUSDCPrice,
-  useUSDCValue,
-} from 'src/features/routing/useUSDCPrice'
+import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { PERMITTABLE_TOKENS } from 'src/features/transactions/permit/permittableTokens'
 import { usePermitSignature } from 'src/features/transactions/permit/usePermitSignature'
@@ -74,7 +70,6 @@ export type DerivedSwapInfo<
   formattedDerivedValue: string
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
-  isUSDInput?: boolean
   nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
   selectingCurrencyField?: CurrencyField
   txId?: string
@@ -89,7 +84,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountToken,
     exactCurrencyField,
     focusOnCurrencyField = CurrencyField.INPUT,
-    isUSDInput,
     selectingCurrencyField,
     txId,
   } = state
@@ -152,7 +146,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT
   )
 
-  const tradeUSDValue = useUSDCValue(isUSDInput ? trade.trade?.outputAmount : undefined)
   const currencyAmounts = useMemo(
     () =>
       shouldGetQuote
@@ -179,15 +172,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     ]
   )
 
-  const otherCurrencyField = isExactIn ? CurrencyField.OUTPUT : CurrencyField.INPUT
-  const getFormattedDerivedValue = useCallback(() => {
-    if (isUSDInput) {
-      return tradeUSDValue?.toFixed(2) ?? ''
-    }
-
-    return currencyAmounts[otherCurrencyField]?.toSignificant(NUM_CURRENCY_SIG_FIGS) ?? ''
-  }, [currencyAmounts, isUSDInput, otherCurrencyField, tradeUSDValue])
-
   const currencyBalances = useMemo(() => {
     return {
       [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
@@ -202,6 +186,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tokenOutBalance,
   ])
 
+  const otherCurrencyField = isExactIn ? CurrencyField.OUTPUT : CurrencyField.INPUT
   return useMemo(() => {
     return {
       chainId,
@@ -212,10 +197,10 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       exactAmountUSD,
       exactCurrencyField,
       focusOnCurrencyField,
-      formattedDerivedValue: getFormattedDerivedValue(),
+      formattedDerivedValue:
+        currencyAmounts[otherCurrencyField]?.toSignificant(NUM_CURRENCY_SIG_FIGS) ?? '',
       trade,
       wrapType,
-      isUSDInput,
       nativeCurrencyBalance: nativeInBalance,
       selectingCurrencyField,
       txId,
@@ -229,9 +214,8 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountUSD,
     exactCurrencyField,
     focusOnCurrencyField,
-    getFormattedDerivedValue,
-    isUSDInput,
     nativeInBalance,
+    otherCurrencyField,
     selectingCurrencyField,
     trade,
     txId,
@@ -317,7 +301,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
   )
 
   const onSetAmount = useCallback(
-    (field: CurrencyField, value: string, isUSDInput: boolean) => {
+    (field: CurrencyField, value: string, isUSDInput?: boolean) => {
       const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
       updater(field, value)
     },

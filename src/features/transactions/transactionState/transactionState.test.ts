@@ -146,13 +146,15 @@ describe(switchCurrencySides, () => {
     const previousState = {
       ...testInitialState,
       exactCurrencyField: CurrencyField.INPUT,
+      focusOnCurrencyField: CurrencyField.INPUT,
       [CurrencyField.INPUT]: daiTradeableAsset,
       [CurrencyField.OUTPUT]: ethTradeableAsset,
     }
 
     expect(transactionStateReducer(previousState, switchCurrencySides())).toEqual({
       ...previousState,
-      exactCurrencyField: CurrencyField.INPUT,
+      exactCurrencyField: CurrencyField.OUTPUT,
+      focusOnCurrencyField: CurrencyField.OUTPUT,
       [CurrencyField.INPUT]: ethTradeableAsset,
       [CurrencyField.OUTPUT]: daiTradeableAsset,
       exactAmountUSD: '',

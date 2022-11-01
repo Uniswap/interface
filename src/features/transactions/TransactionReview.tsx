@@ -21,7 +21,7 @@ import { formatNumber, NumberType } from 'src/utils/format'
 
 interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: string; onPress: () => void }
-  isUSDInput: boolean
+  isUSDInput?: boolean
   transactionDetails?: ReactNode
   nftIn?: GQLNftAsset
   currencyIn?: Currency
@@ -53,7 +53,7 @@ export function TransactionReview({
   formattedAmountOut,
   nftIn,
   recipient,
-  isUSDInput,
+  isUSDInput = false,
   transactionDetails,
   onPrev,
 }: TransactionReviewProps) {

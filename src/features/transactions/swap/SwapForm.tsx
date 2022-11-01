@@ -24,7 +24,6 @@ import {
   DerivedSwapInfo,
   useShowSwapNetworkNotification,
   useSwapActionHandlers,
-  useUSDTokenUpdater,
 } from 'src/features/transactions/swap/hooks'
 import { SwapArrowButton } from 'src/features/transactions/swap/SwapArrowButton'
 import { isPriceImpactWarning } from 'src/features/transactions/swap/useSwapWarnings'
@@ -63,13 +62,10 @@ export function SwapForm({
     currencyAmounts,
     currencyBalances,
     exactCurrencyField,
-    exactAmountToken,
-    exactAmountUSD = '',
     focusOnCurrencyField,
     formattedDerivedValue,
     trade,
     wrapType,
-    isUSDInput = false,
   } = derivedSwapInfo
 
   const {
@@ -83,14 +79,6 @@ export function SwapForm({
   } = useSwapActionHandlers(dispatch)
 
   const { showNativeKeyboard, onLayout } = useShouldShowNativeKeyboard()
-
-  useUSDTokenUpdater(
-    dispatch,
-    isUSDInput,
-    exactAmountToken,
-    exactAmountUSD,
-    currencies[exactCurrencyField] ?? undefined
-  )
 
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
   const outputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.OUTPUT])
@@ -168,7 +156,6 @@ export function SwapForm({
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
                 dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
                 focus={focusOnCurrencyField === CurrencyField.INPUT}
-                isUSDInput={isUSDInput}
                 selection={showNativeKeyboard ? undefined : inputSelection}
                 showSoftInputOnFocus={showNativeKeyboard}
                 usdValue={inputCurrencyUSDValue}
@@ -180,7 +167,7 @@ export function SwapForm({
                 onSelectionChange={
                   showNativeKeyboard ? undefined : (start, end) => setInputSelection({ start, end })
                 }
-                onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
+                onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value)}
                 onSetMax={onSetMax}
                 onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
               />
@@ -216,7 +203,6 @@ export function SwapForm({
                   currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
                   dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
                   focus={focusOnCurrencyField === CurrencyField.OUTPUT}
-                  isUSDInput={isUSDInput}
                   selection={showNativeKeyboard ? undefined : outputSelection}
                   showNonZeroBalancesOnly={false}
                   showSoftInputOnFocus={showNativeKeyboard}
@@ -231,7 +217,7 @@ export function SwapForm({
                       ? undefined
                       : (start, end) => setOutputSelection({ start, end })
                   }
-                  onSetAmount={(value) => onSetAmount(CurrencyField.OUTPUT, value, isUSDInput)}
+                  onSetAmount={(value) => onSetAmount(CurrencyField.OUTPUT, value)}
                   onShowTokenSelector={() => onShowTokenSelector(CurrencyField.OUTPUT)}
                 />
               </Flex>
@@ -316,10 +302,9 @@ export function SwapForm({
         <AnimatedFlex exiting={FadeOutDown} gap="xs">
           {!showNativeKeyboard && (
             <DecimalPad
-              hasCurrencyPrefix={isUSDInput}
               resetSelection={resetSelection}
               selection={selection[focusOnCurrencyField]}
-              setValue={(value: string) => onSetAmount(focusOnCurrencyField, value, isUSDInput)}
+              setValue={(value: string) => onSetAmount(focusOnCurrencyField, value)}
               value={
                 focusOnCurrencyField === exactCurrencyField ? exactValue : formattedDerivedValue
               }
