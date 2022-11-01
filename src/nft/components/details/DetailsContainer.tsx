@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'
 import { shortenAddress } from 'nft/utils/address'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { putCommas } from 'nft/utils'
+import qs from 'query-string'
 
 const Details = styled.div`
   display: grid;

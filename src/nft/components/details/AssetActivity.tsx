@@ -126,7 +126,7 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
   const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
 
   return (
-    <ActivityContainer>
+    <ActivityContainer id="activityContainer">
       <Table>
         <TR>
           <TH>Event</TH>

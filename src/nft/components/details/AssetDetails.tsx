@@ -10,8 +10,9 @@ import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
 import { useEffect, useMemo, useCallback, useReducer, useState } from 'react'
 import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
+import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 
-import { Row } from 'nft/components/Flex'
+import { Center, Row } from 'nft/components/Flex'
 import { ExternalLink } from 'react-feather'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { useNavigate } from 'react-router-dom'
@@ -20,25 +21,45 @@ import styled from 'styled-components/macro'
 import InfoContainer from './InfoContainer'
 import TraitsContainer from './TraitsContainer'
 import DetailsContainer from './DetailsContainer'
-import { useQuery } from 'react-query'
+import { useQuery, useInfiniteQuery } from 'react-query'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { putCommas } from 'nft/utils/putCommas'
 import { SupportedChainId } from 'constants/chains'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { reduceFilters } from '../collection/Activity'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 import { Ranking } from 'nft/components/collection/ActivityCells'
 import * as styles from './AssetDetails.css'
 import { shortenAddress } from 'nft/utils/address'
 import { MouseoverTooltip } from 'components/Tooltip'
 
-const CollectionHeader = styled.div`
+const CollectionHeader = styled.a`
   display: flex;
   align-items: center;
   font-size: 16px;
   line-height: 24px;
   color: ${({ theme }) => theme.textPrimary};
   margin-top: 28px;
+  text-decoration: none;
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `opacity ${duration.medium} ${timing.ease}`};
+  }
 `
 
 const AssetPriceDetailsContainer = styled.div`
@@ -371,7 +392,14 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     [activeFilters]
   )
 
-  const { data: eventsData } = useQuery<ActivityEventResponse>(
+  const {
+    data: eventsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isSuccess,
+    isLoading,
+  } = useInfiniteQuery<ActivityEventResponse>(
     [
       'collectionActivity',
       {
@@ -389,8 +417,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
             .filter((key) => activeFilters[key as ActivityEventType])
             .map((key) => key as ActivityEventType),
         },
-        pageParam,
-        '25'
+        pageParam
       )
     },
     {
@@ -424,6 +451,10 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
 
   const rarity = asset.rarity ? asset.rarity?.providers[0] : undefined
   const rarityProviderLogo = getRarityProviderLogo(rarity?.provider)
+  const events = useMemo(
+    () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
+    [isSuccess, eventsData]
+  )
 
   return (
     <Column>
@@ -441,7 +472,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}
       </MediaContainer>
-      <CollectionHeader>
+      <CollectionHeader href={`#/nfts/collection/${asset.address}`}>
         {collection.collectionName} {collectionStats?.isVerified && <VerifiedIcon />}
       </CollectionHeader>
       <AssetHeader>{asset.name ? asset.name : `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
@@ -489,8 +520,22 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
             <Filter eventType={ActivityEventType.Transfer} />
             <Filter eventType={ActivityEventType.CancelListing} />
           </ActivitySelectContainer>
-          {eventsData && eventsData.events?.length > 0 ? (
-            <AssetActivity eventsData={eventsData} />
+          {events && events.length > 0 ? (
+            <InfiniteScroll
+              next={fetchNextPage}
+              hasMore={!!hasNextPage}
+              loader={
+                isFetchingNextPage ? (
+                  <Center>
+                    <LoadingSparkle />
+                  </Center>
+                ) : null
+              }
+              dataLength={events?.length ?? 0}
+              scrollableTarget="activityContainer"
+            >
+              <AssetActivity eventsData={{ events }} />
+            </InfiniteScroll>
           ) : (
             <EmptyActivitiesContainer>
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
