@@ -5,11 +5,12 @@ import {
   NavigationContainerRefWithCurrent,
 } from '@react-navigation/native'
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { Dispatch, FC, useEffect } from 'react'
+import React, { Dispatch, FC, useEffect, useState } from 'react'
 import { Linking } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { DeepLink, openDeepLink } from 'src/features/deepLinking/handleDeepLink'
 import { Trace } from 'src/features/telemetry/Trace'
+import { AppScreen } from 'src/screens/Screens'
 
 interface Props {
   onReady: (navigationRef: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>) => void
@@ -21,6 +22,8 @@ export const navigationRef = createNavigationContainerRef()
 export const NavigationContainer: FC<Props> = ({ children, onReady }) => {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
+  const [routeName, setRouteName] = useState<AppScreen>()
+  const [logImpression, setLogImpression] = useState<boolean>(false)
 
   useManageDeepLinks(dispatch)
 
@@ -34,8 +37,21 @@ export const NavigationContainer: FC<Props> = ({ children, onReady }) => {
       }}
       onReady={() => {
         onReady(navigationRef)
+      }}
+      onStateChange={() => {
+        const previousRouteName = routeName
+        const currentRouteName: AppScreen = navigationRef.getCurrentRoute()?.name as AppScreen
+
+        if (currentRouteName && previousRouteName !== currentRouteName) {
+          setLogImpression(true)
+          setRouteName(currentRouteName)
+        } else {
+          setLogImpression(false)
+        }
       }}>
-      <Trace>{children}</Trace>
+      <Trace logImpression={logImpression} screen={routeName}>
+        {children}
+      </Trace>
     </NativeNavigationContainer>
   )
 }

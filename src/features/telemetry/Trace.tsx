@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/core'
 import React, {
   createContext,
   memo,
@@ -7,6 +8,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
+import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { logEvent, logMessage } from 'src/features/telemetry'
 import {
   ElementName,
@@ -16,13 +18,16 @@ import {
   ModalName,
   SectionName,
 } from 'src/features/telemetry/constants'
+import { AppScreen } from 'src/screens/Screens'
 
 export interface ITraceContext {
-  screen?: string
+  screen?: AppScreen
 
   // Enclosed section name. Can be as wide or narrow as necessary to
   // provide telemetry context.
-  section?: SectionName | ModalName
+  section?: SectionName
+
+  modal?: ModalName
 
   // Element name mostly used to identify events sources
   // Does not need to be unique given the parent screen and section
@@ -38,6 +43,10 @@ export const TraceContext = createContext<ITraceContext>({})
 type TraceProps = {
   logImpression?: boolean // whether to log impression on mount
 
+  // additional properties to log with impression
+  // (eg. TokenDetails Impression: { tokenAddress: 'address', tokenName: 'name' })
+  properties?: Record<string, unknown>
+
   // registers a mark to later be measured
   startMark?: MarkNames
   // finalized mark measurements and logs duration between start and end mark timestamps
@@ -46,7 +55,10 @@ type TraceProps = {
 
 /**
  * Telemetry instrumentation component that combines parent telemetry context
- * with its own context to provide children a richer telemetry context.
+ * with its own context to provide children a richer telemetry context (eg Screen, Section, Modal, Element)
+ *
+ * Optionally can also log an “impression” event to analytics
+ * (eg: Page Viewed, Modal Opened type of events that indicate the User has seen this component).
  *
  * Marks: inspired by Web Performance API
  * @example
@@ -64,13 +76,15 @@ function _Trace({
   logImpression,
   screen,
   section,
+  modal,
   elementType,
   elementName,
   startMark,
   endMark,
+  properties,
 }: PropsWithChildren<TraceProps>) {
-  const didLogImpression = useRef<boolean>(false)
   const initialRenderTimestamp = useRef<number>(Date.now())
+  const isPartOfNavigationTree = useIsPartOfNavigationTree()
 
   const parentTrace = useContext(TraceContext)
 
@@ -83,6 +97,7 @@ function _Trace({
         JSON.stringify({
           screen,
           section,
+          modal,
           elementType,
           elementName,
         })
@@ -95,16 +110,17 @@ function _Trace({
           }
         : parentTrace.marks,
     }),
-    [elementName, elementType, parentTrace, startMark, screen, section]
+    [elementName, elementType, parentTrace, startMark, screen, section, modal]
   )
 
-  // Log impression if needed
+  // Log impression on mount for elements that are not part of the navigation tree
   useEffect(() => {
-    if (logImpression && !didLogImpression.current) {
-      logEvent(EventName.Impression, combinedProps)
-      didLogImpression.current = true
+    if (logImpression && !isPartOfNavigationTree) {
+      logEvent(EventName.Impression, { ...combinedProps, ...properties })
     }
-  }, [combinedProps, logImpression])
+    // Impressions should only be logged on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [logImpression])
 
   // Measure marks if needed
   useEffect(() => {
@@ -121,7 +137,42 @@ function _Trace({
     logMessage(LogContext.Marks, `${endMark}: ${markDuration}ms`)
   }, [combinedProps, endMark, parentTrace.marks])
 
-  return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
+  if (!isPartOfNavigationTree) {
+    return <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
+  }
+
+  return (
+    <NavAwareTrace
+      combinedProps={combinedProps}
+      logImpression={logImpression}
+      properties={properties}>
+      <TraceContext.Provider value={combinedProps}>{children}</TraceContext.Provider>
+    </NavAwareTrace>
+  )
+}
+
+type NavAwareTraceProps = Pick<TraceProps, 'logImpression' | 'properties'>
+
+// Internal component to keep track of navigation events
+// Needed since we need to rely on `navigation.useFocusEffect` to track
+// impressions of pages that are not unmounted when navigating away from them
+function NavAwareTrace({
+  logImpression,
+  combinedProps,
+  children,
+  properties,
+}: { combinedProps: ITraceContext } & PropsWithChildren<NavAwareTraceProps>) {
+  // this still doesn't captures navigating back from modals
+  // analysis will need to be done on the backend to determine the last screen impression
+  useFocusEffect(
+    React.useCallback(() => {
+      if (logImpression) {
+        logEvent(EventName.Impression, { ...combinedProps, ...properties })
+      }
+    }, [combinedProps, logImpression, properties])
+  )
+
+  return <>{children}</>
 }
 
 export const Trace = memo(_Trace)

@@ -104,7 +104,7 @@ export function BottomSheetModal({
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
       onDismiss={onClose}>
-      <Trace logImpression section={name}>
+      <Trace logImpression modal={name}>
         <BottomSheetView
           style={[
             { height: fullScreen ? fullScreenContentHeight : undefined },
@@ -147,7 +147,7 @@ export function BottomSheetScrollModal({
       snapPoints={snapPoints}
       stackBehavior={stackBehavior}
       onDismiss={onClose}>
-      <Trace logImpression section={name}>
+      <Trace logImpression modal={name}>
         <BottomSheetScrollView>{children}</BottomSheetScrollView>
       </Trace>
     </BaseModal>
@@ -196,7 +196,7 @@ export function BottomSheetDetachedModal({
       stackBehavior={stackBehavior}
       style={BottomSheetStyle.detached}
       onDismiss={onClose}>
-      <Trace logImpression section={name}>
+      <Trace logImpression modal={name}>
         <BottomSheetView
           style={[
             {

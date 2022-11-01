@@ -3,14 +3,9 @@ import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import React, { ComponentProps, PropsWithChildren, useCallback } from 'react'
 import { GestureResponderEvent, TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { withAnimated } from 'src/components/animated'
-import { ActionProps, ElementName } from 'src/features/telemetry/constants'
-import { TraceEvent } from 'src/features/telemetry/TraceEvent'
+import { ElementName } from 'src/features/telemetry/constants'
 import { defaultHitslopInset } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
-
-const TouchableAreaActionProps = (({ onPress, onLongPress }) => ({ onPress, onLongPress }))(
-  ActionProps
-)
 
 export const TouchableBox = createBox<Theme, TouchableOpacityProps>(TouchableOpacity)
 
@@ -55,14 +50,7 @@ export function TouchableArea({
     return <TouchableBox {...baseProps}>{children}</TouchableBox>
   }
 
-  return (
-    <TraceEvent
-      actionProps={TouchableAreaActionProps}
-      elementName={elementName}
-      elementType="button">
-      <TouchableBox {...baseProps}>{children}</TouchableBox>
-    </TraceEvent>
-  )
+  return <TouchableBox {...baseProps}>{children}</TouchableBox>
 }
 
 export const AnimatedTouchableArea = withAnimated(TouchableArea)

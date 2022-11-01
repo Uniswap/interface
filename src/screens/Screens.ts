@@ -62,3 +62,5 @@ export enum Tabs {
 export enum Stacks {
   AppStack = 'AppStack',
 }
+
+export type AppScreen = Screens | OnboardingScreens

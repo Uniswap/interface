@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { NavigationContainerRefContext, NavigationContext } from '@react-navigation/core'
+import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay'
 import { useEagerNavigation, useEagerRootNavigation } from 'src/app/navigation/useEagerNavigation'
 import { transactionListQuery } from 'src/components/TransactionList/TransactionList'
@@ -110,4 +111,17 @@ export function usePreloadedHomeScreenQueries(): HomeScreenQueries {
   }, [activeAccountAddress, loadPortfolioBalance])
 
   return useMemo(() => ({ portfolioBalanceQueryRef }), [portfolioBalanceQueryRef])
+}
+
+/**
+ * Utility hook that checks if the caller is part of the navigation tree.
+ *
+ * Inspired by how the navigation library checks if the the navigation object exists.
+ * https://github.com/react-navigation/react-navigation/blob/d7032ba8bb6ae24030a47f0724b61b561132fca6/packages/core/src/useNavigation.tsx#L18
+ */
+export function useIsPartOfNavigationTree() {
+  const root = useContext(NavigationContainerRefContext)
+  const navigation = useContext(NavigationContext)
+
+  return navigation !== undefined || root !== undefined
 }
