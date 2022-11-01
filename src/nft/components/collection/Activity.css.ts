@@ -74,9 +74,6 @@ export const detailsName = style([
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   }),
-  {
-    lineHeight: '24px',
-  },
 ])
 
 export const eventDetail = style([

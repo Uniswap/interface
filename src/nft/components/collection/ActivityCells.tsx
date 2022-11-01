@@ -259,31 +259,33 @@ const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
   const rarityProviderLogo = getRarityProviderLogo(rarity.source)
 
   return (
-    <MouseoverTooltip
-      text={
-        <Row>
-          <Box display="flex" marginRight="4">
-            <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+    <Box>
+      <MouseoverTooltip
+        text={
+          <Row>
+            <Box display="flex" marginRight="4">
+              <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+            </Box>
+            <Box width="full" fontSize="14">
+              {rarityVerified
+                ? `Verified by ${collectionName}`
+                : `Ranking by ${rarity.source === 'Genie' ? fallbackProvider : rarity.source}`}
+            </Box>
+          </Row>
+        }
+        placement="top"
+      >
+        <Box className={styles.rarityInfo}>
+          <Box paddingTop="2" paddingBottom="2" display="flex">
+            {putCommas(rarity.rank)}
           </Box>
-          <Box width="full" fontSize="14">
-            {rarityVerified
-              ? `Verified by ${collectionName}`
-              : `Ranking by ${rarity.source === 'Genie' ? fallbackProvider : rarity.source}`}
-          </Box>
-        </Row>
-      }
-      placement="top"
-    >
-      <Box className={styles.rarityInfo}>
-        <Box paddingTop="2" paddingBottom="2" display="flex">
-          {putCommas(rarity.rank)}
-        </Box>
 
-        <Box display="flex" height="16">
-          {rarityVerified ? <RarityVerifiedIcon /> : null}
+          <Box display="flex" height="16">
+            {rarityVerified ? <RarityVerifiedIcon /> : null}
+          </Box>
         </Box>
-      </Box>
-    </MouseoverTooltip>
+      </MouseoverTooltip>
+    </Box>
   )
 }
 
