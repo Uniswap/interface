@@ -29,7 +29,6 @@ import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { reduceFilters } from '../collection/Activity'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
-import { Ranking } from 'nft/components/collection/ActivityCells'
 import * as styles from './AssetDetails.css'
 import { shortenAddress } from 'nft/utils/address'
 import { MouseoverTooltip } from 'components/Tooltip'
