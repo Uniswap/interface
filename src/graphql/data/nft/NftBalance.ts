@@ -8,8 +8,14 @@ import { NftBalanceQuery } from './__generated__/NftBalanceQuery.graphql'
 
 const nftBalancePaginationQuery = graphql`
   fragment NftBalanceQuery_nftBalances on Query @refetchable(queryName: "NftBalancePaginationQuery") {
-    nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after, last: $last, before: $before)
-      @connection(key: "NftBalanceQuery_nftBalances") {
+    nftBalances(
+      ownerAddress: $ownerAddress
+      filter: $filter
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+    ) @connection(key: "NftBalanceQuery_nftBalances") {
       edges {
         node {
           ownedAsset {
@@ -86,13 +92,21 @@ const nftBalancePaginationQuery = graphql`
 `
 
 const nftBalanceQuery = graphql`
-  query NftBalanceQuery($ownerAddress: String!, $first: Int, $after: String, $last: Int, $before: String) {
+  query NftBalanceQuery(
+    $ownerAddress: String!
+    $filter: NftBalancesFilterInput
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+  ) {
     ...NftBalanceQuery_nftBalances
   }
 `
 
 export function useNftBalanceQuery(
   ownerAddress: string,
+  collectionFilters?: string[],
   first?: number,
   after?: string,
   last?: number,
@@ -100,6 +114,9 @@ export function useNftBalanceQuery(
 ) {
   const nftBalanceQueryReference = loadQuery<NftBalanceQuery>(RelayEnvironment, nftBalanceQuery, {
     ownerAddress,
+    filter: {
+      addresses: collectionFilters,
+    },
     first,
     after,
     last,

@@ -117,7 +117,7 @@ export const ProfilePage = () => {
     walletAssets: gqlWalletAssets,
     loadNext,
     hasNext,
-  } = useNftBalanceQuery(isNftGraphQl ? address : '', DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+  } = useNftBalanceQuery(isNftGraphQl ? address : '', collectionFilters, DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const ownerAssets = useMemo(
     () => (isNftGraphQl ? gqlWalletAssets : isSuccess ? ownerAssetsData?.pages.flat() : []),
