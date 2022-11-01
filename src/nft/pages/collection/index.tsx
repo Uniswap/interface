@@ -74,8 +74,8 @@ const Collection = () => {
           {contractAddress ? (
             <>
               {' '}
-              <Box width="full" height="160">
-                <Box width="full" height="160">
+              <Box width="full" height="276">
+                <Box width="full" height="276">
                   {isLoading ? (
                     <Box height="full" width="full" className={styles.loadingBanner} />
                   ) : (
@@ -83,7 +83,7 @@ const Collection = () => {
                       as="img"
                       height="full"
                       width="full"
-                      src={collectionStats?.bannerImageUrl}
+                      src={`${collectionStats?.bannerImageUrl}?w=${window.innerWidth}`}
                       className={isLoading ? styles.loadingBanner : styles.bannerImage}
                       background="none"
                     />
