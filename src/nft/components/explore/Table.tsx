@@ -253,7 +253,7 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
           <StyledLoadingRow key={index}>
             {[...Array(visibleColumns.length)].map((_, cellIndex) => {
               return (
-                <td className={clsx(styles.loadingTd)} key={cellIndex}>
+                <td className={styles.loadingTd} key={cellIndex}>
                   {cellIndex === 0 ? (
                     <StyledCollectionNameHolder>
                       <StyledRankHolder />
