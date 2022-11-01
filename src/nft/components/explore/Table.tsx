@@ -178,7 +178,7 @@ export function Table<D extends Record<string, unknown>>({
           return (
             <StyledRow
               {...row.getRowProps()}
-              key={i}
+              key={row.id}
               onClick={() => navigate(`/nfts/collection/${row.original.collection.address}`)}
             >
               {row.cells.map((cell, cellIndex) => {
