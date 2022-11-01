@@ -14,15 +14,14 @@ const AssetContainer = styled.div`
   width: 100%;
   justify-content: center;
   gap: 60px;
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-top: 48px;
+  padding: 48px 40px 0 40px;
 `
 
 const AssetPriceDetailsContainer = styled.div`
   min-width: 360px;
   position: relative;
   padding-right: 100px;
+
   @media (max-width: 960px) {
     display: none;
   }
@@ -44,7 +43,7 @@ const Asset = () => {
   const collection = useMemo(() => (data ? data[1] : undefined), [data])
 
   const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
-    CollectionStatsFetcher(contractAddress as string)
+    CollectionStatsFetcher(contractAddress)
   )
 
   return (

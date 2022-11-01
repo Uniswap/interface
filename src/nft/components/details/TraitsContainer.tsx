@@ -1,5 +1,6 @@
-import { CollectionInfoForAsset, GenieAsset, Trait } from 'nft/types'
+import { GenieAsset, Trait } from 'nft/types'
 import qs from 'query-string'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -49,16 +50,9 @@ const TraitValue = styled.div`
   margin-top: 4px;
 `
 
-const GridItem = ({
-  trait,
-  collectionAddress,
-}: {
-  trait: Trait
-
-  collectionAddress: string
-}) => {
+const GridItem = ({ trait: { trait_type, value }, collectionAddress }: { trait: Trait; collectionAddress: string }) => {
   const params = qs.stringify(
-    { traits: [`("${trait.trait_type}","${trait.value}")`] },
+    { traits: [`("${trait_type}","${value}")`] },
     {
       arrayFormat: 'comma',
     }
@@ -66,14 +60,14 @@ const GridItem = ({
 
   return (
     <GridItemContainer to={`/nfts/collection/${collectionAddress}?${params}`}>
-      <TraitType>{trait.trait_type}</TraitType>
-      <TraitValue>{trait.value}</TraitValue>
+      <TraitType>{trait_type}</TraitType>
+      <TraitValue>{value}</TraitValue>
     </GridItemContainer>
   )
 }
 
-const TraitsContainer = ({ asset, collection }: { asset: GenieAsset; collection: CollectionInfoForAsset }) => {
-  const traits = asset.traits?.sort((a, b) => a.trait_type.localeCompare(b.trait_type))
+const TraitsContainer = ({ asset }: { asset: GenieAsset }) => {
+  const traits = useMemo(() => asset.traits?.sort((a, b) => a.trait_type.localeCompare(b.trait_type)), [asset])
 
   return (
     <Grid>

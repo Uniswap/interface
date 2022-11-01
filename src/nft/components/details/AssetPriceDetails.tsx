@@ -67,21 +67,17 @@ const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccen
 
   &:hover {
     background-color: ${({ theme }) => theme.stateOverlayHover};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `background-color ${duration.medium} ${timing.ease}`};
   }
 
   &:active {
     background-color: ${({ theme, assetInBag }) => theme.stateOverlayPressed};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `background-color ${duration.medium} ${timing.ease}`};
   }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `background-color ${duration.medium} ${timing.ease}`};
 `
 
 const Erc1155BuyNowButton = styled.div`
@@ -184,11 +180,6 @@ const OwnerInformationContainer = styled.div`
   justify-content: space-between;
   padding: 0 8px;
   margin-bottom: 20px;
-`
-
-const BuyNowContainer = styled.div`
-  @media (min-width: 960px) {
-  }
 `
 
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
@@ -303,8 +294,6 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     return <OwnerContainer asset={asset} />
   }
 
-  const shortAddress = shortenAddress(asset.owner.address ?? '', 2, 4)
-
   return (
     <Container>
       <OwnerInformationContainer>
@@ -313,7 +302,12 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           href={`https://etherscan.io/address/${asset.owner.address}`}
           rel="noopener noreferrer"
         >
-          Seller: {asset.tokenType === 'ERC1155' ? '' : <span>{isOwner ? 'you' : shortAddress}</span>}
+          Seller:{' '}
+          {asset.tokenType === 'ERC1155' ? (
+            ''
+          ) : (
+            <span>{isOwner ? 'you' : shortenAddress(asset.owner.address ?? '', 2, 4)}</span>
+          )}
         </OwnerText>
         <UploadLink
           onClick={() => {
@@ -344,7 +338,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             )}
           </PriceRow>
           {expirationDate && <Tertiary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</Tertiary>}
-          <BuyNowContainer>
+          <div>
             {!isErc1555 || !assetInBag ? (
               <BuyNowButton
                 assetInBag={assetInBag}
@@ -374,7 +368,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                 </Erc1155ChangeButton>
               </Erc1155BuyNowButton>
             )}
-          </BuyNowContainer>
+          </div>
         </BestPriceContainer>
       ) : (
         <NotForSale collection={collection} />

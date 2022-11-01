@@ -16,16 +16,17 @@ const Header = styled.div<{ isOpen: boolean }>`
 
   &:hover {
     background-color: ${({ theme }) => theme.stateOverlayHover};
-    transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => css`background-color ${duration.medium} ${timing.ease}`};
   }
 
   &:active {
     background-color: ${({ theme }) => theme.stateOverlayPressed};
   }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => css`background-color ${duration.medium} ${timing.ease}`};
 `
 
 const PrimaryHeader = styled.span`

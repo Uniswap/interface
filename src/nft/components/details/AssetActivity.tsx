@@ -1,5 +1,3 @@
-import { getChainInfoOrDefault } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { ActivityEventResponse } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -122,7 +120,6 @@ const EventCellContainer = styled.div`
 
 const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {
   const events = eventsData === undefined ? [] : eventsData?.events
-  const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
 
   return (
     <ActivityContainer id="activityContainer">

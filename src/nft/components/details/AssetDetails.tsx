@@ -262,8 +262,6 @@ interface AssetDetailsProps {
 export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetailsProps) => {
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
 
-  // const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
-
   const { rarityProvider } = useMemo(
     () =>
       asset.rarity
@@ -374,7 +372,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     }
   )
 
-  const rarity = asset.rarity ? asset.rarity?.providers[0] : undefined
+  const rarity = asset.rarity?.providers[0]
   const rarityProviderLogo = getRarityProviderLogo(rarity?.provider)
   const events = useMemo(
     () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
@@ -427,7 +425,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
           ) : null
         }
       >
-        <TraitsContainer asset={asset} collection={collection} />
+        <TraitsContainer asset={asset} />
       </InfoContainer>
       <InfoContainer
         primaryHeader="Activity"
