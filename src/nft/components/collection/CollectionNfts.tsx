@@ -44,7 +44,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
-import { marketPlaceItems } from './MarketplaceSelect'
+import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
 import { Sweep } from './Sweep'
 import { TraitChip } from './TraitChip'
 
@@ -491,7 +491,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {markets.map((market) => (
               <TraitChip
                 key={market}
-                value={marketPlaceItems[market as keyof typeof marketPlaceItems]}
+                value={MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
                 onClick={() => {
                   scrollToTop()
                   removeMarket(market)
