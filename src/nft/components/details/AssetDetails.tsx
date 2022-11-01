@@ -128,11 +128,11 @@ const EmptyActivitiesContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   color: ${({ theme }) => theme.textPrimary};
   font-size: 28px;
   line-height: 36px;
-  padding-top: 56px;
-  padding-bottom: 56px;
+  padding: 56px 0px;
 `
 
 const Link = styled.a`
@@ -171,8 +171,6 @@ const ContentNotAvailable = styled.div`
 `
 
 const FilterBox = styled.div<{ isActive?: boolean }>`
-  max-width: 150;
-  height: 40;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.backgroundInteractive};
   color: ${({ theme }) => theme.textPrimary};
@@ -182,6 +180,16 @@ const FilterBox = styled.div<{ isActive?: boolean }>`
   box-sizing: border-box;
   border: ${({ isActive, theme }) => (isActive ? `1px solid ${theme.accentActive}` : undefined)};
   ${OpacityTransition};
+`
+
+const ByText = styled.span`
+  font-size: 14px;
+  line-height: 20px;
+`
+
+const Img = styled.img`
+  box-shadow: 0px 4px 4px 0px #00000040;
+  background-color: white;
 `
 
 const AudioPlayer = ({
@@ -378,12 +386,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
         {asset.imageUrl === undefined ? (
           <ContentNotAvailable>Content not available yet</ContentNotAvailable>
         ) : assetMediaType === MediaType.Image ? (
-          <img
-            className={styles.image}
-            src={asset.imageUrl}
-            alt={asset.name || collection.collectionName}
-            style={{ boxShadow: `0px 4px 4px 0px #00000040`, backgroundColor: 'white' }}
-          />
+          <Img className={styles.image} src={asset.imageUrl} alt={asset.name || collection.collectionName} />
         ) : (
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}
@@ -454,17 +457,15 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
             </InfiniteScroll>
           ) : (
             <EmptyActivitiesContainer>
-              <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
-                <div>No activities yet</div>
-                <Link href={`#/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
-              </div>
+              <div>No activities yet</div>
+              <Link href={`#/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
             </EmptyActivitiesContainer>
           )}
         </>
       </InfoContainer>
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
         <>
-          <span style={{ fontSize: 14, lineHeight: '20px' }}>By </span>
+          <ByText>By </ByText>
           {asset.creator && asset.creator.address && (
             <AddressTextLink href={`https://etherscan.io/address/${asset.creator.address}`} target="_blank">
               {shortenAddress(asset.creator?.address, 2, 4)}

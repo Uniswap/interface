@@ -57,7 +57,7 @@ const TD = styled.td`
   width: 20%;
 
   @media (max-width: 960px) {
-    &:nth-child(4) {a
+    &:nth-child(4) {
       display: none;
     }
   }
