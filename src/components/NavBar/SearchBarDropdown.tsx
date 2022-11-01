@@ -196,6 +196,12 @@ export const SearchBarDropdown = ({
     }
   }, [toggleOpen, hoveredIndex, totalSuggestions])
 
+  const hasVerifiedCollection = collections.some((collection) => collection.isVerified)
+  const hasVerifiedToken = tokens.some((token) => token.onDefaultList)
+  const showCollectionsFirst =
+    (isNFTPage && (hasVerifiedCollection || !hasVerifiedToken)) ||
+    (!isNFTPage && !hasVerifiedToken && hasVerifiedCollection)
+
   const trace = useTrace({ section: SectionName.NAVBAR_SEARCH })
 
   useEffect(() => {
@@ -205,7 +211,7 @@ export const SearchBarDropdown = ({
         tokens.length > 0 ? (
           <SearchBarDropdownSection
             hoveredIndex={hoveredIndex}
-            startingIndex={isNFTPage ? collections.length : 0}
+            startingIndex={showCollectionsFirst ? collections.length : 0}
             setHoveredIndex={setHoveredIndex}
             toggleOpen={toggleOpen}
             suggestions={tokens}
@@ -226,7 +232,7 @@ export const SearchBarDropdown = ({
           collections.length > 0 ? (
             <SearchBarDropdownSection
               hoveredIndex={hoveredIndex}
-              startingIndex={isNFTPage ? 0 : tokens.length}
+              startingIndex={showCollectionsFirst ? 0 : tokens.length}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               suggestions={collections}
@@ -245,7 +251,7 @@ export const SearchBarDropdown = ({
         hasInput ? (
           // Empty or Up to 8 combined tokens and nfts
           <Column gap="20">
-            {isNFTPage ? (
+            {showCollectionsFirst ? (
               <>
                 {collectionSearchResults}
                 {tokenSearchResults}
@@ -327,6 +333,7 @@ export const SearchBarDropdown = ({
     hasInput,
     isNFTPage,
     isTokenPage,
+    showCollectionsFirst,
     queryText,
     totalSuggestions,
     trace,
