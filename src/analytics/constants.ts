@@ -20,6 +20,7 @@ export enum EventName {
   NFT_BUY_BAG_CHANGED = 'NFT Buy Bag Changed',
   NFT_BUY_BAG_PAY = 'NFT Buy Bag Pay Clicked',
   NFT_BUY_BAG_REFUND = 'NFT Buy Bag Refund',
+  NFT_BUY_BAG_SIGNED = 'NFT Buy Bag Signed',
   NFT_BUY_BAG_SUCCESS = 'NFT Buy Bag Success',
   NFT_FILTER_OPENED = 'NFT Collection Filter Opened',
   NFT_FILTER_SELECTED = 'NFT Filter Selected',
