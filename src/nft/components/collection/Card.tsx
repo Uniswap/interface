@@ -87,6 +87,7 @@ const Erc1155ControlsContainer = styled.div`
   display: flex;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px 12px 12px 12px;
+  overflow: hidden;
 `
 
 const Erc1155ControlsDisplay = styled(ThemedText.HeadlineSmall)`
@@ -98,12 +99,11 @@ const Erc1155ControlsDisplay = styled(ThemedText.HeadlineSmall)`
   cursor: default;
 `
 
-const Erc1155ControlsInput = styled.div<{ subtract?: boolean }>`
+const Erc1155ControlsInput = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 40px;
-  border-radius: ${({ subtract }) => (subtract ? '12px 0px 0px 12px' : '0px 12px 12px 0px')};
   background: ${({ theme }) => theme.backgroundInteractive};
   color: ${({ theme }) => theme.textPrimary};
 
@@ -526,7 +526,6 @@ const Erc1155Controls = ({ quantity }: Erc1155ControlsInterface) => {
     <Erc1155ControlsRow>
       <Erc1155ControlsContainer>
         <Erc1155ControlsInput
-          subtract
           onClick={(e: MouseEvent) => {
             e.stopPropagation()
             removeAssetFromBag()
