@@ -316,6 +316,9 @@
   "Select backup to restore": "Select backup to restore",
   "Backup {{backupIndex}}": "Backup {{backupIndex}}",
   "Backed up on:": "Backed up on:",
+  "Invalid phrase": "Invalid phrase",
+  "Invalid word: {{word}}": "Invalid word: {{word}}",
+  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
   "Your recovery phrase will only be stored locally on your device.": "Your recovery phrase will only be stored locally on your device.",
   "Enter your recovery phrase": "Enter your recovery phrase",
   "recovery phrase": "recovery phrase",
@@ -338,8 +341,8 @@
   "Add backup to continue": "Add backup to continue",
   "Easily restore your wallet by backing up your recovery phrase to your iCloud.": "Easily restore your wallet by backing up your recovery phrase to your iCloud.",
   "iCloud backup": "iCloud backup",
-  "iCloud not available": "iCloud not available",
-  "Please verify that you are logged in to an Apple ID with iCloud enabled on this device and try again.": "Please verify that you are logged in to an Apple ID with iCloud enabled on this device and try again.",
+  "iCloud Drive not available": "iCloud Drive not available",
+  "Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.": "Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.",
   "Write down your recovery phrase and store it in a safe yet memorable place.": "Write down your recovery phrase and store it in a safe yet memorable place.",
   "Manual backup": "Manual backup",
   "Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your iCloud account is ever compromised.": "Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your iCloud account is ever compromised.",
@@ -414,10 +417,5 @@
   "Notifications": "Notifications",
   "Hide small balances": "Hide small balances",
   "Security": "Security",
-  "Unknown token": "Unknown token",
-  "Enter value": "Enter value",
-  "Invalid word: {{word}}": "Invalid word: {{word}}",
-  "Recovery phrases must be 12-24 words": "Recovery phrases must be 12-24 words",
-  "Recovery phrase must be 12-24 words": "Recovery phrase must be 12-24 words",
-  "Invalid phrase": "Invalid phrase"
+  "Unknown token": "Unknown token"
 }

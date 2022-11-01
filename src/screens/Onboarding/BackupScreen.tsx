@@ -29,6 +29,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { openSettings } from 'src/utils/linking'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
@@ -136,15 +137,13 @@ function BackupOptions({
         onPress={() => {
           if (!iCloudAvailable) {
             Alert.alert(
-              t('iCloud not available'),
+              t('iCloud Drive not available'),
               t(
-                'Please verify that you are logged in to an Apple ID with iCloud enabled on this device and try again.'
+                'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
               ),
               [
-                {
-                  text: t('OK'),
-                  style: 'default',
-                },
+                { text: t('Go to settings'), onPress: openSettings, style: 'default' },
+                { text: t('Not now'), style: 'cancel' },
               ]
             )
             return
