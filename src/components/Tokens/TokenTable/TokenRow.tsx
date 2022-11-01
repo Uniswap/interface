@@ -3,7 +3,7 @@ import { ParentSize } from '@visx/responsive'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName } from 'analytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
-import CurrencyLogo from 'components/CurrencyLogo'
+import { TokenLogo } from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
@@ -31,7 +31,6 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import { useTokenLogoURI } from '../TokenDetails/ChartSection'
 import InfoTip from '../TokenDetails/InfoTip'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 
@@ -469,7 +468,11 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           tokenInfo={
             <ClickableName>
               <LogoContainer>
-                <CurrencyLogo src={useTokenLogoURI(token)} symbol={tokenSymbol} />
+                <TokenLogo
+                  address={tokenAddress}
+                  chainId={CHAIN_NAME_TO_CHAIN_ID[filterNetwork]}
+                  symbol={tokenSymbol}
+                />
                 <L2NetworkLogo networkUrl={L2Icon} />
               </LogoContainer>
               <TokenInfoCell>

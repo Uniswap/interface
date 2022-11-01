@@ -1,4 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
+import { SupportedChainId } from 'constants/chains'
+import TokenLogoLookupTable from 'constants/TokenLogoLookupTable'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
@@ -48,4 +51,41 @@ export default function CurrencyLogo({
   }
 
   return currency?.isNative ? <StyledNativeLogo {...props} /> : <StyledLogo {...props} />
+}
+
+export function TokenLogo({
+  address,
+  chainId,
+  symbol,
+  size = '24px',
+  style,
+  ...rest
+}: {
+  address?: string
+  chainId?: number
+  symbol?: string | null
+  size?: string
+  style?: React.CSSProperties
+}) {
+  const currency = useMemo(
+    () => ({
+      chainId: chainId ?? SupportedChainId.MAINNET,
+      address,
+      isNative: address === NATIVE_CHAIN_ID,
+      logoURI: TokenLogoLookupTable.checkIcon(address),
+    }),
+    [address, chainId]
+  )
+  const logoURIs = useCurrencyLogoURIs(currency)
+
+  const props = {
+    alt: `${symbol ?? 'token'} logo`,
+    size,
+    srcs: logoURIs,
+    symbol,
+    style,
+    ...rest,
+  }
+
+  return address === NATIVE_CHAIN_ID ? <StyledNativeLogo {...props} /> : <StyledLogo {...props} />
 }

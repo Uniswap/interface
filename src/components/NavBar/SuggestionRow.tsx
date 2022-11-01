@@ -1,5 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
+import { TokenLogo } from 'components/CurrencyLogo'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
@@ -165,6 +166,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
+        <TokenLogo address={token.address} chainId={token.chainId} symbol={token.symbol} size="32px" />
         {!brokenImage && token.logoURI ? (
           <LogoContainer>
             <Box

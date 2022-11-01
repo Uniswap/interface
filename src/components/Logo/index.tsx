@@ -6,7 +6,7 @@ const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
 interface LogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'> {
   srcs: string[]
-  symbol?: string
+  symbol?: string | null
   size?: string
 }
 
