@@ -109,6 +109,13 @@ const Erc1155ControlsInput = styled.div<{ subtract?: boolean }>`
   }
 `
 
+const RankingContainer = styled.div`
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+`
+
 const StyledImageContainer = styled.div`
   position: relative;
 `
@@ -567,31 +574,33 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
   const { asset } = useCardContext()
 
   return (
-    <MouseoverTooltip
-      text={
-        <Row>
-          <Box display="flex" marginRight="4">
-            <img src={rarityLogo} alt="cardLogo" width={16} />
+    <RankingContainer>
+      <MouseoverTooltip
+        text={
+          <Row>
+            <Box display="flex" marginRight="4">
+              <img src={rarityLogo} alt="cardLogo" width={16} />
+            </Box>
+            <Box width="full" className={bodySmall}>
+              {rarityVerified
+                ? `Verified by ${asset.collectionName}`
+                : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
+            </Box>
+          </Row>
+        }
+        placement="top"
+      >
+        <Box className={styles.rarityInfo}>
+          <Box paddingTop="2" paddingBottom="2" display="flex">
+            {putCommas(provider.rank)}
           </Box>
-          <Box width="full" className={bodySmall}>
-            {rarityVerified
-              ? `Verified by ${asset.collectionName}`
-              : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
-          </Box>
-        </Row>
-      }
-      placement="top"
-    >
-      <Box className={styles.rarityInfo}>
-        <Box paddingTop="2" paddingBottom="2" display="flex">
-          {putCommas(provider.rank)}
-        </Box>
 
-        <Box display="flex" height="16">
-          {rarityVerified ? <RarityVerifiedIcon /> : null}
+          <Box display="flex" height="16">
+            {rarityVerified ? <RarityVerifiedIcon /> : null}
+          </Box>
         </Box>
-      </Box>
-    </MouseoverTooltip>
+      </MouseoverTooltip>
+    </RankingContainer>
   )
 }
 const SUSPICIOUS_TEXT = 'Blocked on OpenSea'
