@@ -1,16 +1,15 @@
 import { useWeb3React } from '@web3-react/core'
+import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
-import { useMemo } from 'react'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
-
-import { useNavigate } from 'react-router-dom'
+import { shortenAddress } from 'nft/utils/address'
+import { useMemo } from 'react'
 import { Upload } from 'react-feather'
+import { useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { shortenAddress } from 'nft/utils/address'
-import useCopyClipboard from 'hooks/useCopyClipboard'
 
 interface AssetPriceDetailsProps {
   asset: GenieAsset
@@ -274,7 +273,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
 
   const USDPrice = useUsdPrice(asset)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
-  const [isCopied, setCopied] = useCopyClipboard()
+  const [, setCopied] = useCopyClipboard()
 
   const { quantity, assetInBag } = useMemo(() => {
     return {

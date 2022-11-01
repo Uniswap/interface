@@ -29,6 +29,8 @@ export const baseCollectionImage = sprinkles({
   borderStyle: 'solid',
   borderWidth: '4px',
   borderColor: 'backgroundSurface',
+  borderRadius: 'round',
+  position: 'absolute',
 })
 
 export const collectionImage = style([

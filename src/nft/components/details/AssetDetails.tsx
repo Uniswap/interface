@@ -1,37 +1,30 @@
-import { useWeb3React } from '@web3-react/core'
-import AssetActivity from './AssetActivity'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
+import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
+import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+import { Center, Row } from 'nft/components/Flex'
+import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEventResponse, ActivityEventType } from 'nft/types'
-import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, GenieCollection } from 'nft/types'
+import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
-import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
-import { useEffect, useMemo, useCallback, useReducer, useState } from 'react'
+import { putCommas } from 'nft/utils/putCommas'
 import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
-import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
-
-import { Center, Row } from 'nft/components/Flex'
+import { useCallback, useMemo, useReducer, useState } from 'react'
 import { ExternalLink } from 'react-feather'
-import { getChainInfoOrDefault } from 'constants/chainInfo'
-import { useNavigate } from 'react-router-dom'
-import { VerifiedIcon } from '../icons'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { useInfiniteQuery, useQuery } from 'react-query'
 import styled from 'styled-components/macro'
+
+import { reduceFilters } from '../collection/Activity'
+import { VerifiedIcon } from '../icons'
+import AssetActivity from './AssetActivity'
+import * as styles from './AssetDetails.css'
+import DetailsContainer from './DetailsContainer'
 import InfoContainer from './InfoContainer'
 import TraitsContainer from './TraitsContainer'
-import DetailsContainer from './DetailsContainer'
-import { useQuery, useInfiniteQuery } from 'react-query'
-import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
-import { putCommas } from 'nft/utils/putCommas'
-import { SupportedChainId } from 'constants/chains'
-import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { reduceFilters } from '../collection/Activity'
-import InfiniteScroll from 'react-infinite-scroll-component'
-
-import * as styles from './AssetDetails.css'
-import { shortenAddress } from 'nft/utils/address'
-import { MouseoverTooltip } from 'components/Tooltip'
 
 const CollectionHeader = styled.a`
   display: flex;
@@ -308,16 +301,9 @@ interface AssetDetailsProps {
 }
 
 export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetailsProps) => {
-  const itemsInBag = useBag((state) => state.itemsInBag)
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
-  // const creatorEnsName = useENSName(creatorAddress)
-  // const ownerEnsName = useENSName(ownerAddress)
 
-  const [isSelected, setSelected] = useState(false)
-  const [isOwned, setIsOwned] = useState(false)
-  const { account: address, provider } = useWeb3React()
-
-  const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
+  // const { explorer } = getChainInfoOrDefault(SupportedChainId.MAINNET)
 
   const { rarityProvider } = useMemo(
     () =>
@@ -397,7 +383,6 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     hasNextPage,
     isFetchingNextPage,
     isSuccess,
-    isLoading,
   } = useInfiniteQuery<ActivityEventResponse>(
     [
       'collectionActivity',
@@ -429,24 +414,6 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
       refetchOnMount: false,
     }
   )
-
-  useEffect(() => {
-    setSelected(
-      !!itemsInBag.find((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
-    )
-  }, [asset, itemsInBag])
-
-  useEffect(() => {
-    if (provider) {
-      isAssetOwnedByUser({
-        tokenId: asset.tokenId,
-        userAddress: address || '',
-        assetAddress: asset.address,
-        tokenType: asset.tokenType,
-        provider,
-      }).then(setIsOwned)
-    }
-  }, [asset, address, provider])
 
   const rarity = asset.rarity ? asset.rarity?.providers[0] : undefined
   const rarityProviderLogo = getRarityProviderLogo(rarity?.provider)

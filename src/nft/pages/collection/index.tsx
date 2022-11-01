@@ -4,18 +4,21 @@ import { Trace } from 'analytics/Trace'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
+import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { Column, Row } from 'nft/components/Flex'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsCollectionLoading, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { GenieCollection } from 'nft/types'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
+
+export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
 
 const Collection = () => {
   const { contractAddress } = useParams()
@@ -74,16 +77,16 @@ const Collection = () => {
           {contractAddress ? (
             <>
               {' '}
-              <Box width="full" height="160">
-                <Box width="full" height="160">
+              <Box width="full" height="276">
+                <Box width="full" height="276">
                   {isLoading ? (
-                    <Box height="full" width="full" className={styles.loadingBanner} />
+                    <CollectionBannerLoading />
                   ) : (
                     <Box
                       as="img"
                       height="full"
                       width="full"
-                      src={collectionStats?.bannerImageUrl}
+                      src={`${collectionStats?.bannerImageUrl}?w=${window.innerWidth}`}
                       className={isLoading ? styles.loadingBanner : styles.bannerImage}
                       background="none"
                     />
@@ -125,11 +128,13 @@ const Collection = () => {
                       )
                     : contractAddress &&
                       (isLoading || collectionStats !== undefined) && (
-                        <CollectionNfts
-                          collectionStats={collectionStats || ({} as GenieCollection)}
-                          contractAddress={contractAddress}
-                          rarityVerified={collectionStats?.rarityVerified}
-                        />
+                        <Suspense fallback={<CollectionNftsAndMenuLoading />}>
+                          <CollectionNfts
+                            collectionStats={collectionStats || ({} as GenieCollection)}
+                            contractAddress={contractAddress}
+                            rarityVerified={collectionStats?.rarityVerified}
+                          />
+                        </Suspense>
                       )}
                 </AnimatedBox>
               </Row>

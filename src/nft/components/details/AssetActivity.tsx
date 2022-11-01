@@ -1,12 +1,13 @@
-import { ActivityEventResponse } from 'nft/types'
-import styled from 'styled-components/macro'
-import { shortenAddress } from 'nft/utils/address'
-import { EventCell } from '../collection/ActivityCells'
-import { getTimeDifference } from 'nft/utils/date'
-import { formatEthPrice } from 'nft/utils/currency'
-import { putCommas } from 'nft/utils/putCommas'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
+import { ActivityEventResponse } from 'nft/types'
+import { shortenAddress } from 'nft/utils/address'
+import { formatEthPrice } from 'nft/utils/currency'
+import { getTimeDifference } from 'nft/utils/date'
+import { putCommas } from 'nft/utils/putCommas'
+import styled from 'styled-components/macro'
+
+import { EventCell } from '../collection/ActivityCells'
 import { MarketplaceIcon } from '../collection/ActivityCells'
 
 const TR = styled.tr`

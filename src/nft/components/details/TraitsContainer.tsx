@@ -1,6 +1,6 @@
 import { CollectionInfoForAsset, GenieAsset, Trait } from 'nft/types'
-import styled from 'styled-components/macro'
 import qs from 'query-string'
+import styled from 'styled-components/macro'
 
 const Grid = styled.div`
   display: grid;
@@ -51,13 +51,6 @@ const TraitValue = styled.div`
   margin-top: 4px;
 `
 
-const TraitPercentage = styled.div`
-  color: ${({ theme }) => theme.textPrimary};
-  font-size: 12px;
-  line-height: 16px;
-  margin-top: 4px;
-`
-
 const GridItem = ({
   trait,
   totalSupply,
@@ -67,7 +60,6 @@ const GridItem = ({
   totalSupply: number
   collectionAddress: string
 }) => {
-  const percentage = ((trait.trait_count / totalSupply) * 100).toFixed(0)
   const params = qs.stringify(
     { traits: [`("${trait.trait_type}","${trait.value}")`] },
     {
@@ -75,7 +67,6 @@ const GridItem = ({
     }
   )
 
-  // /#/nfts/collection/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb
   return (
     <GridItemContainer href={`#/nfts/collection/${collectionAddress}?${params}`}>
       <TraitType>{trait.trait_type}</TraitType>
@@ -90,7 +81,14 @@ const TraitsContainer = ({ asset, collection }: { asset: GenieAsset; collection:
   return (
     <Grid>
       {traits?.map((trait) => {
-        return <GridItem trait={trait} totalSupply={collection.totalSupply} collectionAddress={asset.address} />
+        return (
+          <GridItem
+            key={trait.trait_type}
+            trait={trait}
+            totalSupply={collection.totalSupply}
+            collectionAddress={asset.address}
+          />
+        )
       })}
     </Grid>
   )
