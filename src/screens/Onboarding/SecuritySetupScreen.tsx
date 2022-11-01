@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { AuthenticationType, supportedAuthenticationTypesAsync } from 'expo-local-authentication'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -9,9 +8,12 @@ import FaceIcon from 'src/assets/icons/faceid.svg'
 import FingerprintIcon from 'src/assets/icons/fingerprint.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { Box, Flex } from 'src/components/layout'
-import { BiometricAuthWarningModal } from 'src/components/Settings/FaceIDWarningModal'
+import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
-import { biometricAuthenticationSuccessful } from 'src/features/biometrics/hooks'
+import {
+  biometricAuthenticationSuccessful,
+  useDeviceSupportsBiometricAuth,
+} from 'src/features/biometrics/hooks'
 import { setRequiredForTransactions } from 'src/features/biometrics/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType } from 'src/features/onboarding/utils'
@@ -27,18 +29,8 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
 
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const [isFingerprintDevice, setIsFingerprintDevice] = useState(false)
-
-  useEffect(() => {
-    async function getAuthenticationType() {
-      const authenticationTypes = await supportedAuthenticationTypesAsync()
-      setIsFingerprintDevice(
-        authenticationTypes.length === 1 &&
-          authenticationTypes.includes(AuthenticationType.FINGERPRINT)
-      )
-    }
-    getAuthenticationType()
-  }, [])
+  const { touchId: isTouchIdDevice } = useDeviceSupportsBiometricAuth()
+  const authenticationTypeName = isTouchIdDevice ? 'Touch' : 'Face'
 
   const onPressNext = useCallback(() => {
     setShowWarningModal(false)
@@ -63,10 +55,10 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
       authStatus === BiometricAuthenticationStatus.MissingEnrollment
     ) {
       Alert.alert(
-        isFingerprintDevice ? t('Touch ID is disabled') : t('Face ID is disabled'),
-        isFingerprintDevice
-          ? t('To use Touch ID, allow access in system settings')
-          : t('To use Face ID, allow access in system settings'),
+        t('{{authenticationTypeName}} ID is disabled', { authenticationTypeName }),
+        t('To use {{authenticationTypeName}} ID, allow access in system settings', {
+          authenticationTypeName,
+        }),
         [{ text: t('Go to settings'), onPress: openSettings }, { text: t('Not now') }]
       )
     }
@@ -75,7 +67,7 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
       dispatch(setRequiredForTransactions(true))
       onPressNext()
     }
-  }, [isFingerprintDevice, t, dispatch, onPressNext])
+  }, [t, authenticationTypeName, dispatch, onPressNext])
 
   const onCloseModal = useCallback(() => setShowWarningModal(false), [])
 
@@ -83,26 +75,21 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
     <>
       {showWarningModal && (
         <BiometricAuthWarningModal
-          isFingerprintDevice={isFingerprintDevice}
+          isTouchIdDevice={isTouchIdDevice}
           onClose={onCloseModal}
           onConfirm={onPressNext}
         />
       )}
       <OnboardingScreen
         childrenGap="none"
-        subtitle={
-          isFingerprintDevice
-            ? t(
-                'Make sure that you’re the only person who can access your app or make transactions by turning on Touch ID.'
-              )
-            : t(
-                'Make sure that you’re the only person who can access your app or make transactions by turning on Face ID.'
-              )
-        }
+        subtitle={t(
+          'Make sure that you’re the only person who can access your app or make transactions by turning on {{ authenticationTypeName }} ID.',
+          { authenticationTypeName }
+        )}
         title={t('Protect your wallet')}>
         <Flex centered grow>
           <Box borderColor="background3" borderRadius="xl" borderWidth={4} style={styles.iconView}>
-            {isFingerprintDevice ? (
+            {isTouchIdDevice ? (
               <FingerprintIcon color={theme.colors.textSecondary} height={58} width={58} />
             ) : (
               <FaceIcon color={theme.colors.textSecondary} height={58} width={58} />
@@ -118,7 +105,7 @@ export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
         />
 
         <Button
-          label={isFingerprintDevice ? t('Turn on Touch ID') : t('Turn on Face ID')}
+          label={t('Turn on {{authenticationTypeName}} ID', { authenticationTypeName })}
           name={ElementName.Enable}
           onPress={onPressEnableSecurity}
         />

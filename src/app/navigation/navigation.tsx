@@ -58,10 +58,10 @@ import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSe
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { OnboardingScreens, Screens, Stacks, Tabs } from 'src/screens/Screens'
+import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
 import { SettingsCloudBackupStatus } from 'src/screens/SettingsCloudBackupStatus'
-import { SettingsFaceIdScreen } from 'src/screens/SettingsFaceIdScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
@@ -217,7 +217,10 @@ function SettingsStackGroup() {
       <SettingsStack.Screen component={SettingsSupportScreen} name={Screens.SettingsSupport} />
       <SettingsStack.Screen component={SettingsTestConfigs} name={Screens.SettingsTestConfigs} />
       <SettingsStack.Screen component={DevScreen} name={Screens.Dev} />
-      <SettingsStack.Screen component={SettingsFaceIdScreen} name={Screens.SettingsFaceId} />
+      <SettingsStack.Screen
+        component={SettingsBiometricAuthScreen}
+        name={Screens.SettingsBiometricAuth}
+      />
       <SettingsStack.Screen
         component={SettingsViewSeedPhraseScreen}
         name={Screens.SettingsViewSeedPhrase}

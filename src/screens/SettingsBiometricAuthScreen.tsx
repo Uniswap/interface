@@ -13,7 +13,8 @@ import { Text } from 'src/components/Text'
 import {
   useBiometricAppSettings,
   useBiometricPrompt,
-  useOSFaceIdEnabled,
+  useDeviceSupportsBiometricAuth,
+  useOsBiometricAuthEnabled,
 } from 'src/features/biometrics/hooks'
 import {
   BiometricSettingType,
@@ -22,16 +23,20 @@ import {
 } from 'src/features/biometrics/slice'
 import { openSettings } from 'src/utils/linking'
 
-interface FaceIdSetting {
+interface BiometricAuthSetting {
   onValueChange: (newValue: boolean) => void
   value: boolean
   text: string
   subText: string
 }
 
-export function SettingsFaceIdScreen() {
+export function SettingsBiometricAuthScreen() {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+
+  const osBiometricAuthEnabled = useOsBiometricAuthEnabled()
+  const { touchId } = useDeviceSupportsBiometricAuth()
+  const authenticationTypeName = touchId ? 'Touch' : 'Face'
 
   const { requiredForAppAccess, requiredForTransactions } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt(({ biometricAppSettingType, newValue }) => {
@@ -45,13 +50,12 @@ export function SettingsFaceIdScreen() {
     }
   })
 
-  const osFaceIdEnabled = useOSFaceIdEnabled()
-
-  const options: FaceIdSetting[] = useMemo((): FaceIdSetting[] => {
+  const options: BiometricAuthSetting[] = useMemo((): BiometricAuthSetting[] => {
     const handleFaceIdTurnedOff = () => {
       Alert.alert(
         t(
-          'Face ID is currently turned off for Uniswap Wallet—you can turn it on it in your system settings.'
+          '{{authenticationTypeName}} ID is currently turned off for Uniswap Wallet—you can turn it on it in your system settings.',
+          authenticationTypeName
         ),
         '',
         [
@@ -66,7 +70,7 @@ export function SettingsFaceIdScreen() {
     return [
       {
         onValueChange: (newValue) => {
-          osFaceIdEnabled
+          osBiometricAuthEnabled
             ? trigger({
                 biometricAppSettingType: BiometricSettingType.RequiredForAppAccess,
                 newValue,
@@ -75,11 +79,11 @@ export function SettingsFaceIdScreen() {
         },
         value: requiredForAppAccess,
         text: t('App access'),
-        subText: t('Require Face ID to open app'),
+        subText: t('Require {{authenticationTypeName}} ID to open app', { authenticationTypeName }),
       },
       {
         onValueChange: (newValue) => {
-          osFaceIdEnabled
+          osBiometricAuthEnabled
             ? trigger({
                 biometricAppSettingType: BiometricSettingType.RequiredForTransactions,
                 newValue,
@@ -88,14 +92,21 @@ export function SettingsFaceIdScreen() {
         },
         value: requiredForTransactions,
         text: t('Transactions'),
-        subText: t('Require Face ID to transact'),
+        subText: t('Require {{authenticationTypeName}} ID to transact', { authenticationTypeName }),
       },
     ]
-  }, [requiredForAppAccess, t, requiredForTransactions, osFaceIdEnabled, trigger])
+  }, [
+    requiredForAppAccess,
+    t,
+    authenticationTypeName,
+    requiredForTransactions,
+    osBiometricAuthEnabled,
+    trigger,
+  ])
 
   const renderItem = ({
     item: { text, subText, value, onValueChange },
-  }: ListRenderItemInfo<FaceIdSetting>) => {
+  }: ListRenderItemInfo<BiometricAuthSetting>) => {
     return (
       <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="sm">
         <Flex row>
@@ -121,7 +132,9 @@ export function SettingsFaceIdScreen() {
     <Screen p="lg">
       <Flex alignItems="center" flexDirection="row" mb="xl">
         <BackButton color="textSecondary" />
-        <Text variant="buttonLabelLarge">Face ID</Text>
+        <Text variant="buttonLabelLarge">
+          {t('{{authenticationTypeName}} ID', { authenticationTypeName })}
+        </Text>
       </Flex>
 
       <FlatList

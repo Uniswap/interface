@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import { useSettingsStackNavigation } from 'src/app/navigation/types'
 import BookOpenIcon from 'src/assets/icons/book-open.svg'
 import FaceIdIcon from 'src/assets/icons/faceid.svg'
+import FingerprintIcon from 'src/assets/icons/fingerprint.svg'
 import FlashbotsIcon from 'src/assets/icons/flashbots.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -22,7 +23,7 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
-import { useDeviceSupportsFaceId } from 'src/features/biometrics/hooks'
+import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
@@ -36,8 +37,10 @@ export function SettingsScreen() {
   const theme = useTheme()
   const { t } = useTranslation()
 
-  // check if device supports faceId authentication, if not, hide faceId option
-  const deviceSupportsFaceId = useDeviceSupportsFaceId()
+  // check if device supports biometric authentication, if not, hide option
+  const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } =
+    useDeviceSupportsBiometricAuth()
+  const authenticationTypeName = isTouchIdSupported ? 'Touch' : 'Face'
 
   // Defining them inline instead of outside component b.c. they need t()
   const showDevSettings = isEnabled(TestConfig.ShowDevSettings)
@@ -56,10 +59,14 @@ export function SettingsScreen() {
         subTitle: t('App settings'),
         data: [
           {
-            screen: Screens.SettingsFaceId,
-            isHidden: !deviceSupportsFaceId,
-            text: 'Face ID',
-            icon: <FaceIdIcon {...iconProps} />,
+            screen: Screens.SettingsBiometricAuth,
+            isHidden: !isTouchIdSupported && !isFaceIdSupported,
+            text: t('{{authenticationTypeName}} ID', { authenticationTypeName }),
+            icon: isTouchIdSupported ? (
+              <FingerprintIcon {...iconProps} />
+            ) : (
+              <FaceIdIcon {...iconProps} />
+            ),
           },
           // @TODO: add back testnet toggle when Zerion provides data for testnets correctly.
         ],
@@ -116,7 +123,14 @@ export function SettingsScreen() {
         ],
       },
     ]
-  }, [t, theme, showDevSettings, deviceSupportsFaceId])
+  }, [
+    theme.colors.textSecondary,
+    t,
+    isTouchIdSupported,
+    isFaceIdSupported,
+    authenticationTypeName,
+    showDevSettings,
+  ])
 
   const renderItem = ({
     item,

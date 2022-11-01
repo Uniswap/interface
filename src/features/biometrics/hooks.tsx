@@ -45,29 +45,30 @@ export function biometricAuthenticationDisabledByOS(status: BiometricAuthenticat
   )
 }
 
-const checkAuthenticationTypes = async () => {
-  const res = await supportedAuthenticationTypesAsync()
-  return res?.includes(AuthenticationType.FACIAL_RECOGNITION)
-}
-
 /**
- * Check function of biometric (faceId specific) device support
- * @returns deviceSupportsFaceId Boolean value representing faceId Support availability
+ * Check function of biometric device support
+ * @returns object representing biometric auth support by type
  */
-
-export function useDeviceSupportsFaceId() {
-  // check if device supports faceId authentication, if not, hide faceId option
-  return useAsyncData(checkAuthenticationTypes).data
+export function useDeviceSupportsBiometricAuth() {
+  // check if device supports biometric authentication
+  const authenticationTypes = useAsyncData(supportedAuthenticationTypesAsync).data
+  return {
+    touchId: authenticationTypes?.includes(AuthenticationType.FINGERPRINT) ?? false,
+    faceId: authenticationTypes?.includes(AuthenticationType.FACIAL_RECOGNITION) ?? false,
+  }
 }
 
-const checkOsFaceIdEnabled = async () => {
+const checkOsBiometricAuthEnabled = async () => {
   const [compatible, enrolled] = await Promise.all([hasHardwareAsync(), isEnrolledAsync()])
   return compatible && enrolled
 }
 
-export function useOSFaceIdEnabled() {
-  // check if OS settings for Face ID are enabled
-  return useAsyncData(checkOsFaceIdEnabled).data
+/**
+ * Hook to determine whether biometric auth is enabled in OS settings
+ * @returns if Face ID or Touch ID is enabled
+ */
+export function useOsBiometricAuthEnabled() {
+  return useAsyncData(checkOsBiometricAuthEnabled).data
 }
 
 export function useBiometricAppSettings(): BiometricSettingsState {
