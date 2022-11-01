@@ -135,16 +135,16 @@ export function useAssetsQuery(
 
   const assets: GenieAsset[] = data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node
-    const ethPrice = parseEther(asset.listings?.edges[0].node.price.value?.toString() ?? '0').toString()
+    const ethPrice = parseEther(asset.listings?.edges[0]?.node.price.value?.toString() ?? '0').toString()
     return {
       id: asset.id,
-      address: asset.collection.nftContracts[0].address,
+      address: asset.collection.nftContracts[0]?.address,
       notForSale: asset.listings === null,
       collectionName: asset.collection?.name,
       collectionSymbol: asset.collection?.image?.url,
       imageUrl: asset.image?.url,
       animationUrl: asset.animationUrl,
-      marketplace: asset.listings?.edges[0].node.marketplace.toLowerCase(),
+      marketplace: asset.listings?.edges[0]?.node.marketplace.toLowerCase(),
       name: asset.name,
       priceInfo: asset.listings
         ? {
@@ -154,11 +154,11 @@ export function useAssetsQuery(
             basePrice: ethPrice,
           }
         : undefined,
-      susFlag: asset.suspiciousFlag,
+      openseaSusFlag: asset.suspiciousFlag,
       sellorders: asset.listings?.edges,
       smallImageUrl: asset.smallImage?.url,
       tokenId: asset.tokenId,
-      tokenType: asset.collection.nftContracts[0].standard,
+      tokenType: asset.collection.nftContracts[0]?.standard,
       // totalCount?: number, // TODO waiting for BE changes
       collectionIsVerified: asset.collection?.isVerified,
       rarity: {
