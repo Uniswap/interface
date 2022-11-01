@@ -139,7 +139,7 @@ export function useAssetsQuery(
     return {
       id: asset.id,
       address: asset.collection.nftContracts[0]?.address,
-      notForSale: asset.listings === null,
+      notForSale: asset.listings?.edges.length === 0,
       collectionName: asset.collection?.name,
       collectionSymbol: asset.collection?.image?.url,
       imageUrl: asset.image?.url,
