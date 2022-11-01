@@ -44,11 +44,9 @@ const styles = StyleSheet.create({
 const nftsTabQuery = graphql`
   query NftsTabQuery($ownerAddress: String!) {
     portfolios(ownerAddresses: [$ownerAddress]) {
-      id
       ownerAddress
       nftBalances {
         ownedAsset {
-          id
           collection {
             name
             isVerified
@@ -154,8 +152,7 @@ function NftsTabInner({
       navigation.navigate(Screens.NFTItem, {
         owner: owner,
         address: asset.contractAddress ?? '',
-        token_id: asset.tokenId ?? '',
-        floorPrice: asset.floorPrice, // TODO(MOB-3018): Change when switching over to GQL API on this screen
+        tokenId: asset.tokenId ?? '',
       })
     },
     [navigation, owner]

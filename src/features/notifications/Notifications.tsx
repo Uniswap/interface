@@ -375,7 +375,7 @@ export function TransferNFTNotification({
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
   const nftOwner = txType === TransactionType.Send ? notification.recipient : userAddress
-  const { asset: nft } = useNFT(nftOwner, tokenAddress, tokenId)
+  const nft = useNFT(nftOwner, tokenAddress, tokenId)
   const { name: ensName } = useENS(chainId, senderOrRecipient)
   const title = formTransferNFTNotificationTitle(
     txType,
@@ -391,7 +391,7 @@ export function TransferNFTNotification({
   const icon = (
     <LogoWithTxStatus
       assetType={assetType}
-      nftImageUrl={nft?.image_preview_url}
+      nftImageUrl={nft?.thumbnail?.url ?? undefined}
       size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
       txType={txType}

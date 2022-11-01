@@ -6,8 +6,7 @@ import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
-import { useNFT } from 'src/features/nfts/hooks'
-import { NFTAsset } from 'src/features/nfts/types'
+import { GQLNftAsset, useNFT } from 'src/features/nfts/hooks'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import {
   CurrencyField,
@@ -20,10 +19,10 @@ import { useActiveAccount } from 'src/features/wallet/hooks'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 
-export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
+export type DerivedTransferInfo = BaseDerivedInfo<Currency | GQLNftAsset> & {
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
   currencyIn: Currency | undefined
-  nftIn: NFTAsset.Asset | undefined
+  nftIn: GQLNftAsset | undefined
   chainId: ChainId
   exactCurrencyField: CurrencyField.INPUT
   formattedAmounts: {
@@ -53,7 +52,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
       : undefined
   )
 
-  const { asset: nftIn } = useNFT(
+  const nftIn = useNFT(
     activeAccount?.address,
     tradeableAsset?.address,
     tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721

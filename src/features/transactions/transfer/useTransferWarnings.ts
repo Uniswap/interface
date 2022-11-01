@@ -8,7 +8,7 @@ import {
   WarningSeverity,
 } from 'src/components/modals/WarningModal/types'
 import { ChainId } from 'src/constants/chains'
-import { NFTAsset } from 'src/features/nfts/types'
+import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { currencyAddress } from 'src/utils/currencyId'
@@ -66,13 +66,13 @@ export function useTransferWarnings(t: TFunction, derivedTransferInfo: DerivedTr
 
 const checkIsMissingRequiredParams = (
   currencyIn: Currency | undefined,
-  nftIn: NFTAsset.Asset | undefined,
+  nftIn: GQLNftAsset | undefined,
   chainId: ChainId | undefined,
   recipient: Address | undefined,
   hasCurrencyAmount: boolean,
   hasCurrencyBalance: boolean
 ) => {
-  const tokenAddress = currencyIn ? currencyAddress(currencyIn) : nftIn?.asset_contract.address
+  const tokenAddress = currencyIn ? currencyAddress(currencyIn) : nftIn?.nftContract.address
 
   if (!tokenAddress || !chainId || !recipient) return true
   if (!currencyIn && !nftIn) return true

@@ -15,7 +15,7 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { NFTAsset } from 'src/features/nfts/types'
+import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { dimensions } from 'src/styles/sizing'
 import { formatNumber, NumberType } from 'src/utils/format'
 
@@ -23,7 +23,7 @@ interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: string; onPress: () => void }
   isUSDInput: boolean
   transactionDetails?: ReactNode
-  nftIn?: NFTAsset.Asset
+  nftIn?: GQLNftAsset
   currencyIn?: Currency
   currencyOut?: Currency
   formattedAmountIn?: string

@@ -12,7 +12,7 @@ type Props = {
   squareGridView?: boolean
   maxHeight?: number
   placeholderContent?: string
-  uri: string
+  uri: string | undefined
 }
 
 /**
@@ -26,7 +26,7 @@ export function NFTViewer({
   placeholderContent,
 }: Props) {
   const { t } = useTranslation()
-  const imageHttpUri = uriToHttp(uri)[0]
+  const imageHttpUri = useMemo(() => (uri ? uriToHttp(uri)[0] : undefined), [uri])
 
   const fallback = useMemo(
     () => (

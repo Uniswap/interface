@@ -23,6 +23,7 @@ import { useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { shortenAddress } from 'src/utils/addresses'
+import { fromGraphQLChain } from 'src/utils/chainId'
 import { formatNFTFloorPrice } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 
@@ -31,7 +32,7 @@ export const UNISWAP_NFT_BASE_URL = 'https://interface-6y0ofdy69-uniswap.vercel.
 
 export function NFTItemScreen({
   route: {
-    params: { owner, address, token_id, floorPrice },
+    params: { owner, address, tokenId },
   },
 }: AppStackScreenProp<Screens.NFTItem>) {
   const theme = useAppTheme()
@@ -39,19 +40,21 @@ export function NFTItemScreen({
 
   const [showCollectionModal, setShowCollectionModal] = useState(false)
 
-  const { asset } = useNFT(owner, address, token_id)
+  const asset = useNFT(owner, address, tokenId)
+  const assetChainId = fromGraphQLChain(asset?.nftContract.chain)
+
   const ownerDisplayName = useDisplayName(owner)
 
   const onShare = useCallback(async () => {
-    if (!asset?.asset_contract.address || !asset?.token_id) return
+    if (!asset?.nftContract || !asset.tokenId) return
     try {
       await Share.share({
-        message: `${UNISWAP_NFT_BASE_URL}/nfts/asset/${asset.asset_contract.address}/${asset.token_id}`,
+        message: `${UNISWAP_NFT_BASE_URL}/nfts/asset/${asset.nftContract.address}/${asset.tokenId}`,
       })
     } catch (e) {
       logMessage(LogContext.Share, (e as any as Error).message, { screen: 'NFTItemScreen' })
     }
-  }, [asset?.asset_contract.address, asset?.token_id])
+  }, [asset?.nftContract, asset?.tokenId])
 
   const Header = useMemo(
     () => (
@@ -73,24 +76,29 @@ export function NFTItemScreen({
   )
 
   const creatorInfo = useMemo(() => {
-    if (!asset) return null
+    const creator = asset?.creator
 
-    const creatorAddress = asset.creator.address
+    if (!creator) return null
+
     return {
-      value: asset.creator.user?.username || shortenAddress(creatorAddress),
-      link: getExplorerLink(asset.chainId, creatorAddress, ExplorerDataType.ADDRESS),
+      value: creator.username || shortenAddress(creator.address),
+      link: assetChainId
+        ? getExplorerLink(assetChainId, creator.address, ExplorerDataType.ADDRESS)
+        : undefined,
     }
-  }, [asset])
+  }, [asset, assetChainId])
 
   const contractAddressInfo = useMemo(() => {
     if (!asset) return null
 
-    const contractAddress = asset.asset_contract.address
+    const contractAddress = asset.nftContract.address
     return {
       value: shortenAddress(contractAddress),
-      link: getExplorerLink(asset.chainId, contractAddress, ExplorerDataType.ADDRESS),
+      link: assetChainId
+        ? getExplorerLink(assetChainId, contractAddress, ExplorerDataType.ADDRESS)
+        : undefined,
     }
-  }, [asset])
+  }, [asset, assetChainId])
 
   // TODO: better handle error / loading states
   if (!asset) {
@@ -105,7 +113,7 @@ export function NFTItemScreen({
       <HeaderScrollScreen contentHeader={<Box px="md">{Header}</Box>} fixedHeader={Header}>
         <Flex mb="xxl" mt="md" mx="lg" pb="xxl">
           <Flex centered borderRadius="lg" overflow="hidden">
-            <NFTViewer autoplay uri={asset.image_url} />
+            {asset.image?.url && <NFTViewer autoplay uri={asset.image.url} />}
           </Flex>
 
           <Flex gap="none">
@@ -128,13 +136,13 @@ export function NFTItemScreen({
               px="md"
               py="sm">
               <Flex row alignItems="center" gap="sm" overflow="hidden">
-                {asset.collection.image_url ? (
+                {asset.collection.image?.url ? (
                   <Box
                     borderRadius="full"
                     height={theme.iconSizes.xl}
                     overflow="hidden"
                     width={theme.iconSizes.xl}>
-                    <NFTViewer uri={asset.collection.image_url} />
+                    <NFTViewer uri={asset.collection.image.url} />
                   </Box>
                 ) : null}
                 <Box flexShrink={1}>
@@ -147,12 +155,12 @@ export function NFTItemScreen({
                         {asset.collection.name}
                       </Text>
                     </Box>
-                    {asset.collection.safelist_request_status === 'verified' && (
+                    {asset.collection.isVerified && (
                       <VerifiedIcon color={theme.colors.userThemeMagenta} height={16} width={16} />
                     )}
                   </Flex>
                 </Box>
-                {floorPrice && (
+                {asset.collection.markets?.[0].floorPrice?.value && (
                   <Box flexGrow={1}>
                     <Text
                       color="textTertiary"
@@ -160,7 +168,9 @@ export function NFTItemScreen({
                       textAlign="right"
                       variant="buttonLabelMicro">
                       {t('Floor: {{floorPrice}} ETH', {
-                        floorPrice: formatNFTFloorPrice(floorPrice),
+                        floorPrice: formatNFTFloorPrice(
+                          asset.collection.markets?.[0].floorPrice?.value
+                        ),
                       })}
                     </Text>
                   </Box>
@@ -188,26 +198,34 @@ export function NFTItemScreen({
           )}
 
           <Flex row flexWrap="wrap">
-            <AssetMetadata
-              header={t('Creator')}
-              link={creatorInfo!.link}
-              value={creatorInfo!.value}
-            />
+            {creatorInfo && (
+              <AssetMetadata
+                header={t('Creator')}
+                link={creatorInfo.link}
+                value={creatorInfo.value}
+              />
+            )}
             <AssetMetadata
               header={t('Contract address')}
               link={contractAddressInfo!.link}
               value={contractAddressInfo!.value}
             />
-            <AssetMetadata header={t('Token ID')} value={asset.token_id} />
-            <AssetMetadata header={t('Token standard')} value={asset.asset_contract.schema_name} />
-            <AssetMetadata header={t('Network')} value={CHAIN_INFO[asset.chainId].label} />
+            <AssetMetadata header={t('Token ID')} value={asset.tokenId} />
+            <AssetMetadata
+              header={t('Token standard')}
+              value={asset.nftContract.standard ?? 'Unknown'}
+            />
+            <AssetMetadata
+              header={t('Network')}
+              value={assetChainId ? CHAIN_INFO[assetChainId].label : t('Unknown')}
+            />
           </Flex>
         </Flex>
       </HeaderScrollScreen>
       {showCollectionModal && (
         <NFTCollectionModal
           isVisible
-          slug={asset.collection.slug}
+          collection={asset.collection}
           onClose={onCloseCollectionModal}
         />
       )}

@@ -10,7 +10,6 @@ import { config } from 'src/config'
 import { ensApi } from 'src/features/ens/api'
 import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
-import { nftApi } from 'src/features/nfts/api'
 import { routingApi } from 'src/features/routing/routingApi'
 
 import { MMKV } from 'react-native-mmkv'
@@ -56,7 +55,6 @@ export const persistConfig = {
     'transactions',
     'wallet',
     ensApi.reducerPath,
-    nftApi.reducerPath,
   ],
   version: 25,
   migrate: createMigrate(migrations),
@@ -89,7 +87,6 @@ export const store = configureStore({
       ensApi.middleware,
       forceUpgradeApi.middleware,
       gasApi.middleware,
-      nftApi.middleware,
       routingApi.middleware,
       sagaMiddleware,
       ...middlewares

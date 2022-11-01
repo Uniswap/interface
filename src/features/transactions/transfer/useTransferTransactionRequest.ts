@@ -83,7 +83,7 @@ function getTransferParams(
 ): TransferTokenParams | undefined {
   const { currencyAmounts, currencyTypes, chainId, recipient, currencyIn, nftIn } =
     derivedTransferInfo
-  const tokenAddress = currencyIn ? currencyAddress(currencyIn) : nftIn?.asset_contract.address
+  const tokenAddress = currencyIn ? currencyAddress(currencyIn) : nftIn?.nftContract.address
   const amount = currencyAmounts[CurrencyField.INPUT]?.quotient.toString()
   const assetType = currencyTypes[CurrencyField.INPUT]
 
@@ -114,7 +114,7 @@ function getTransferParams(
         toAddress: recipient,
         tokenAddress,
         type: assetType,
-        tokenId: nftIn.token_id,
+        tokenId: nftIn.tokenId,
       }
     }
 

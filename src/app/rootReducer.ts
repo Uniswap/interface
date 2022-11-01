@@ -13,7 +13,6 @@ import { forceUpgradeApi } from 'src/features/forceUpgrade/forceUpgradeApi'
 import { gasApi } from 'src/features/gas/api'
 import { modalsReducer } from 'src/features/modals/modalSlice'
 import { multicall } from 'src/features/multicall'
-import { nftApi } from 'src/features/nfts/api'
 import { notificationReducer } from 'src/features/notifications/notificationSlice'
 import { providersReducer } from 'src/features/providers/providerSlice'
 import { routingApi } from 'src/features/routing/routingApi'
@@ -27,7 +26,6 @@ export const rootReducer = combineReducers({
   [forceUpgradeApi.reducerPath]: forceUpgradeApi.reducer,
   [gasApi.reducerPath]: gasApi.reducer,
   [multicall.reducerPath]: multicall.reducer,
-  [nftApi.reducerPath]: nftApi.reducer,
   [routingApi.reducerPath]: routingApi.reducer,
   biometricSettings: biometricSettingsReducer,
   blocks: blocksReducer,

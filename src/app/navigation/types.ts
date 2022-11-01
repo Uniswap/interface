@@ -9,13 +9,11 @@ import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-naviga
 import { PreloadedQuery } from 'react-relay'
 import { EducationContentType } from 'src/components/education'
 import { TransactionListQuery } from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
-import { NFTAsset } from 'src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 
-type NFTItem = { owner: Address } & Pick<NFTAsset.AssetContract, 'address'> &
-  Pick<NFTAsset.Asset, 'token_id'> & { floorPrice?: number }
+type NFTItem = { owner: Address; address: string; tokenId: string }
 
 export type TabParamList = {
   [Tabs.Home]: undefined

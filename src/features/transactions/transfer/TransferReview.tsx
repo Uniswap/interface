@@ -63,8 +63,8 @@ export function TransferReview({
     txId,
     chainId,
     recipient,
-    nftIn?.asset_contract.address,
-    nftIn?.token_id,
+    nftIn?.nftContract.address,
+    nftIn?.tokenId,
     txRequest,
     onNext
   )

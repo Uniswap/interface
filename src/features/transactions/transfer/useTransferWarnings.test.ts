@@ -3,7 +3,7 @@ import { WarningLabel } from 'src/components/modals/WarningModal/types'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
-import { NFTAsset } from 'src/features/nfts/types'
+import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
@@ -58,10 +58,26 @@ const transferState2: DerivedTransferInfo = {
 
 const mockNFT = {
   id: 1,
-  name: 'BAYC',
-  token_id: '1',
-  asset_contract: { address: '0xNFTAddress' },
-} as NFTAsset.Asset
+  collection: {
+    collectionId: '123',
+    description: null,
+    image: { url: '' },
+    isVerified: true,
+    markets: [],
+    name: 'BAYC',
+    numAssets: 10,
+  },
+  name: 'BAYC1',
+  description: null,
+  image: { url: '' },
+  thumbnail: { url: '' },
+  tokenId: '1',
+  nftContract: { address: '0xNFTAddress', chain: 'ETHEREUM', standard: null },
+  creator: {
+    address: '0xCreateAddress',
+    username: 'Username',
+  },
+} as GQLNftAsset
 
 const transferNFT: DerivedTransferInfo = {
   ...emptyTransferInfo,

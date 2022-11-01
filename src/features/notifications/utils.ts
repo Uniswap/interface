@@ -3,7 +3,7 @@ import JSBI from 'jsbi'
 import { i18n } from 'src/app/i18n'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { SpotPrice } from 'src/features/dataApi/spotPricesQuery'
-import { NFTAsset } from 'src/features/nfts/types'
+import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { WalletConnectNotification } from 'src/features/notifications/types'
 import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
@@ -161,12 +161,12 @@ export const formTransferCurrencyNotificationTitle = (
 export const formTransferNFTNotificationTitle = (
   txType: TransactionType,
   txStatus: TransactionStatus,
-  nft: NFTAsset.Asset | undefined,
+  nft: GQLNftAsset | undefined,
   tokenAddress: Address,
   tokenId: string,
   senderOrRecipient: string
 ) => {
-  const nftName = nft ? nft.name : `NFT ${shortenAddress(tokenAddress)} #${tokenId}`
+  const nftName = nft?.name ?? `NFT ${shortenAddress(tokenAddress)} #${tokenId}`
   const shortenedAddressOrENS = getShortenedAddressOrEns(senderOrRecipient)
   return formTransferTxTitle(txType, txStatus, nftName, shortenedAddressOrENS)
 }
