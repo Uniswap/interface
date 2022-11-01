@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { NavBarSearchTypes } from 'analytics/constants'
+import { NavBarSearchTypes, SectionName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -195,8 +196,10 @@ export const SearchBarDropdown = ({
     }
   }, [toggleOpen, hoveredIndex, totalSuggestions])
 
+  const trace = useTrace({ section: SectionName.NAVBAR_SEARCH })
+
   useEffect(() => {
-    const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText }
+    const eventProperties = { total_suggestions: totalSuggestions, query_text: queryText, ...trace }
     if (!isLoading) {
       const tokenSearchResults =
         tokens.length > 0 ? (
@@ -326,6 +329,7 @@ export const SearchBarDropdown = ({
     isTokenPage,
     queryText,
     totalSuggestions,
+    trace,
   ])
 
   return (

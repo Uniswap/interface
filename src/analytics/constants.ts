@@ -98,6 +98,7 @@ export enum PageName {
 export enum SectionName {
   CURRENCY_INPUT_PANEL = 'swap-currency-input',
   CURRENCY_OUTPUT_PANEL = 'swap-currency-output',
+  NAVBAR_SEARCH = 'Navbar Search',
   WIDGET = 'widget',
   // alphabetize additional section names.
 }
