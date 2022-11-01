@@ -32,6 +32,7 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout'
 import { NetworkPollConfig } from 'src/constants/misc'
 import { Priority, useQueryScheduler } from 'src/data/useQueryScheduler'
+import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
@@ -94,6 +95,8 @@ const exploreTokensTabParams: ExploreTokensTabQuery$variables = {
 function TabNavigator({ homeScreenQueries }: { homeScreenQueries: HomeScreenQueries }) {
   const { t } = useTranslation()
   const theme = useAppTheme()
+
+  useBiometricCheck()
 
   const { queryReference: exploreTokensTabQueryRef } = useQueryScheduler<ExploreTokensTabQuery>(
     Priority.Idle,

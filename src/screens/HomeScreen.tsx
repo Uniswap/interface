@@ -23,7 +23,6 @@ import TabbedScrollScreen, {
 } from 'src/components/layout/screens/TabbedScrollScreen'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
-import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { EXPERIMENTS, EXP_VARIANTS } from 'src/features/experiments/constants'
 import { useExperimentVariant } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -43,7 +42,6 @@ type Props = { queryRefs: HomeScreenQueries }
 export function HomeScreen({ queryRefs }: Props) {
   // imports test account for easy development/testing
   useTestAccount()
-  useBiometricCheck()
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
   const theme = useAppTheme()
