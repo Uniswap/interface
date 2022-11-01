@@ -1,5 +1,6 @@
 import { CollectionInfoForAsset, GenieAsset, Trait } from 'nft/types'
 import qs from 'query-string'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const Grid = styled.div`
@@ -12,7 +13,7 @@ const Grid = styled.div`
   }
 `
 
-const GridItemContainer = styled.a`
+const GridItemContainer = styled(Link)`
   background-color: ${({ theme }) => theme.backgroundInteractive};
   border-radius: 12px;
   cursor: pointer;
@@ -64,7 +65,7 @@ const GridItem = ({
   )
 
   return (
-    <GridItemContainer href={`#/nfts/collection/${collectionAddress}?${params}`}>
+    <GridItemContainer to={`/nfts/collection/${collectionAddress}?${params}`}>
       <TraitType>{trait.trait_type}</TraitType>
       <TraitValue>{trait.value}</TraitValue>
     </GridItemContainer>

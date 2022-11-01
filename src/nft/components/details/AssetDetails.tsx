@@ -16,6 +16,7 @@ import { useCallback, useMemo, useReducer, useState } from 'react'
 import { ExternalLink } from 'react-feather'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
+import { Link as RouterLink } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 
 import { reduceFilters } from '../collection/Activity'
@@ -42,7 +43,7 @@ const OpacityTransition = css`
   }) => `opacity ${duration.medium} ${timing.ease}`};
 `
 
-const CollectionHeader = styled.a`
+const CollectionHeader = styled(RouterLink)`
   display: flex;
   align-items: center;
   font-size: 16px;
@@ -135,7 +136,7 @@ const EmptyActivitiesContainer = styled.div`
   padding: 56px 0px;
 `
 
-const Link = styled.a`
+const Link = styled(RouterLink)`
   color: ${({ theme }) => theme.accentAction};
   text-decoration: none;
   font-size: 14px;
@@ -391,7 +392,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}
       </MediaContainer>
-      <CollectionHeader href={`#/nfts/collection/${asset.address}`}>
+      <CollectionHeader to={`/nfts/collection/${asset.address}`}>
         {collection.collectionName} {collectionStats?.isVerified && <VerifiedIcon />}
       </CollectionHeader>
       <AssetHeader>{asset.name ? asset.name : `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
@@ -458,7 +459,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
           ) : (
             <EmptyActivitiesContainer>
               <div>No activities yet</div>
-              <Link href={`#/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
+              <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
             </EmptyActivitiesContainer>
           )}
         </>
