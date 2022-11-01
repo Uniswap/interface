@@ -86,7 +86,7 @@ export interface GenieAsset {
   marketplace: Markets
   name: string
   priceInfo: PriceInfo
-  openseaSusFlag: boolean
+  susFlag: boolean
   sellorders: SellOrder[]
   smallImageUrl: string
   tokenId: string

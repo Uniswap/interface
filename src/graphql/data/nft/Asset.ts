@@ -154,7 +154,7 @@ export function useAssetsQuery(
             basePrice: ethPrice,
           }
         : undefined,
-      openseaSusFlag: asset.suspiciousFlag,
+      susFlag: asset.suspiciousFlag,
       sellorders: asset.listings?.edges,
       smallImageUrl: asset.smallImage?.url,
       tokenId: asset.tokenId,

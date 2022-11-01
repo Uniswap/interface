@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, UniformHeight } from 'nft/types'
 import { formatWeiToDecimal, isAudio, isVideo, rarityProviderLogo } from 'nft/utils'
-import { MouseEvent, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import * as Card from './Card'
 
@@ -76,29 +76,16 @@ export const CollectionAsset = ({
     <Card.Container
       asset={asset}
       selected={isSelected}
-      addToBag={() => {
+      addAssetToBag={() => {
         addAssetsToBag([asset])
         !bagExpanded && !isMobile && toggleBag()
       }}
-      removeFromBag={() => {
+      removeAssetFromBag={() => {
         removeAssetsFromBag([asset])
       }}
     >
       <Card.ImageContainer>
-        {asset.tokenType === 'ERC1155' && quantity > 0 && (
-          <Card.Erc1155Controls
-            quantity={quantity.toString()}
-            addAssetToBag={(e: MouseEvent) => {
-              e.stopPropagation()
-              addAssetsToBag([asset])
-              !bagExpanded && !isMobile && toggleBag()
-            }}
-            removeAssetFromBag={(e: MouseEvent) => {
-              e.stopPropagation()
-              removeAssetsFromBag([asset])
-            }}
-          />
-        )}
+        {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
         {asset.rarity && provider && provider.rank && (
           <Card.Ranking
             rarity={asset.rarity}
@@ -130,7 +117,7 @@ export const CollectionAsset = ({
           <Card.PrimaryRow>
             <Card.PrimaryDetails>
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
-              {asset.openseaSusFlag && <Card.Suspicious />}
+              {asset.susFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
             <Card.DetailsLink />
           </Card.PrimaryRow>

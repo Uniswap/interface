@@ -40,6 +40,8 @@ export interface CardContextProps {
   selected: boolean
   href: string
   setHref: (href: string) => void
+  addAssetToBag: () => void
+  removeAssetFromBag: () => void
 }
 
 const CardContext = createContext<CardContextProps | undefined>(undefined)
@@ -84,6 +86,7 @@ const Erc1155ControlsRow = styled.div`
 const Erc1155ControlsContainer = styled.div`
   display: flex;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 12px 12px 12px 12px;
 `
 
 const Erc1155ControlsDisplay = styled(ThemedText.HeadlineSmall)`
@@ -100,7 +103,7 @@ const Erc1155ControlsInput = styled.div<{ subtract?: boolean }>`
   justify-content: center;
   align-items: center;
   width: 40px;
-  border-radius: ${({ theme, subtract }) => (subtract ? '12px 0px 0px 12px' : '0px 12px 12px 0px')};
+  border-radius: ${({ subtract }) => (subtract ? '12px 0px 0px 12px' : '0px 12px 12px 0px')};
   background: ${({ theme }) => theme.backgroundInteractive};
   color: ${({ theme }) => theme.textPrimary};
 
@@ -124,12 +127,12 @@ const StyledImageContainer = styled.div`
 interface CardProps {
   asset: GenieAsset
   selected: boolean
-  addToBag: () => void
-  removeFromBag: () => void
+  addAssetToBag: () => void
+  removeAssetFromBag: () => void
   children: ReactNode
 }
 
-const Container = ({ asset, selected, addToBag, removeFromBag, children }: CardProps) => {
+const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, children }: CardProps) => {
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
@@ -141,8 +144,10 @@ const Container = ({ asset, selected, addToBag, removeFromBag, children }: CardP
       toggleHovered,
       href,
       setHref,
+      addAssetToBag,
+      removeAssetFromBag,
     }),
-    [asset, hovered, selected, href]
+    [asset, hovered, selected, href, addAssetToBag, removeAssetFromBag]
   )
 
   const assetRef = useRef<HTMLDivElement>(null)
@@ -166,10 +171,7 @@ const Container = ({ asset, selected, addToBag, removeFromBag, children }: CardP
         onClick={(e: MouseEvent) => {
           if (!asset.notForSale) {
             e.preventDefault()
-            !selected ? addToBag() : removeFromBag()
-            return true
-          } else {
-            return false
+            !selected ? addAssetToBag() : removeAssetFromBag()
           }
         }}
       >
@@ -515,19 +517,30 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
 
 interface Erc1155ControlsInterface {
   quantity: string
-  addAssetToBag: (e: MouseEvent) => void
-  removeAssetFromBag: (e: MouseEvent) => void
 }
 
-const Erc1155Controls = ({ addAssetToBag, removeAssetFromBag, quantity }: Erc1155ControlsInterface) => {
+const Erc1155Controls = ({ quantity }: Erc1155ControlsInterface) => {
+  const { addAssetToBag, removeAssetFromBag } = useCardContext()
+
   return (
     <Erc1155ControlsRow>
       <Erc1155ControlsContainer>
-        <Erc1155ControlsInput subtract onClick={removeAssetFromBag}>
+        <Erc1155ControlsInput
+          subtract
+          onClick={(e: MouseEvent) => {
+            e.stopPropagation()
+            removeAssetFromBag()
+          }}
+        >
           <MinusIconLarge width="24px" height="24px" />
         </Erc1155ControlsInput>
         <Erc1155ControlsDisplay>{quantity}</Erc1155ControlsDisplay>
-        <Erc1155ControlsInput onClick={addAssetToBag}>
+        <Erc1155ControlsInput
+          onClick={(e: MouseEvent) => {
+            e.stopPropagation()
+            addAssetToBag()
+          }}
+        >
           <PlusIconLarge width="24px" height="24px" />
         </Erc1155ControlsInput>
       </Erc1155ControlsContainer>
