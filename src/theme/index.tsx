@@ -242,7 +242,6 @@ const TextWrapper = styled(Text)<{ color: keyof AllColors }>`
 /**
  * Preset styles of the Rebass Text component
  */
-
 export const ThemedText = {
   BodyPrimary(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'textPrimary'} {...props} />
