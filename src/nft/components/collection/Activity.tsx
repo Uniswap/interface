@@ -39,6 +39,7 @@ interface ActivityProps {
   contractAddress: string
   rarityVerified: boolean
   collectionName: string
+  chainId?: number
 }
 
 const initialFilterState = {
@@ -54,7 +55,7 @@ const reduceFilters = (state: typeof initialFilterState, action: { eventType: Ac
 
 const baseHref = (event: ActivityEvent) => `/#/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`
 
-export const Activity = ({ contractAddress, rarityVerified, collectionName }: ActivityProps) => {
+export const Activity = ({ contractAddress, rarityVerified, collectionName, chainId }: ActivityProps) => {
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const {
@@ -162,8 +163,8 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
                   eventTransactionHash={event.transactionHash}
                 />
                 <PriceCell marketplace={event.marketplace} price={event.price} />
-                <AddressCell address={event.fromAddress} />
-                <AddressCell address={event.toAddress} desktopLBreakpoint />
+                <AddressCell address={event.fromAddress} chainId={chainId} />
+                <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
                 <BuyCell
                   event={event}
                   collectionName={collectionName}

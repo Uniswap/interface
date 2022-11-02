@@ -37,6 +37,11 @@ const themeContractValues = {
     deep: '',
     shallow: '',
   },
+
+  opacity: {
+    hover: '0.6',
+    pressed: '0.4',
+  },
 }
 
 export type Theme = typeof themeContractValues
