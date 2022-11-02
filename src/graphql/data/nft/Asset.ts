@@ -1,6 +1,6 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
-import { GenieAsset, Rarity } from 'nft/types'
+import { GenieAsset, Rarity, SellOrder } from 'nft/types'
 import { loadQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 
 import RelayEnvironment from '../RelayEnvironment'
@@ -155,7 +155,7 @@ export function useAssetsQuery(
           }
         : undefined,
       susFlag: asset.suspiciousFlag,
-      sellorders: asset.listings?.edges,
+      sellorders: asset.listings?.edges as SellOrder,
       smallImageUrl: asset.smallImage?.url,
       tokenId: asset.tokenId,
       tokenType: asset.collection.nftContracts[0]?.standard,

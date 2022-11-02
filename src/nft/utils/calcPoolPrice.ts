@@ -1,11 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BagItem, BagItemStatus, GenieAsset, Markets, UpdatedGenieAsset } from 'nft/types'
+import { BagItem, BagItemStatus, GenieAsset, Markets, OldSellOrder, UpdatedGenieAsset } from 'nft/types'
 
 export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   let amountToBuy: BigNumber = BigNumber.from(0)
   let marginalBuy: BigNumber = BigNumber.from(0)
-  if (!asset.sellorders) return ''
-  const nft = asset.sellorders[0]
+  if (!asset.sellorders || (asset.sellorders[0] as OldSellOrder).ammFeePercent === undefined) return '' // TODO update when pooled vars get added
+  const nft = asset.sellorders[0] as OldSellOrder
   const decimals = BigNumber.from(1).mul(10).pow(18)
   const ammFee = nft.ammFeePercent ? (100 + nft.ammFeePercent) * 100 : 110 * 100
 

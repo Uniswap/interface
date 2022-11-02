@@ -1,6 +1,6 @@
 import { parseEther } from '@ethersproject/units'
 import graphql from 'babel-plugin-relay/macro'
-import { CollectionInfoForAsset, GenieAsset, PriceInfo, SellOrder, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, GenieCollection, Rarity, SellOrder, TokenType } from 'nft/types'
 import { loadQuery, usePreloadedQuery } from 'react-relay'
 
 import RelayEnvironment from '../RelayEnvironment'
@@ -27,19 +27,19 @@ const detailsQuery = graphql`
           description
           animationUrl
           suspiciousFlag
+          creator {
+            address
+            profileImage {
+              url
+            }
+            isVerified
+          }
           collection {
             name
             isVerified
             numAssets
             image {
               url
-            }
-            creator {
-              address
-              profileImage {
-                url
-              }
-              isVerified
             }
             nftContracts {
               address
@@ -96,61 +96,62 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
   })
   const queryData = usePreloadedQuery<DetailsQuery>(detailsQuery, detailsQueryReference)
 
-  const asset = queryData.nftAssets?.edges[0].node
+  const asset = queryData.nftAssets?.edges[0]?.node as any
   const collection = asset?.collection
-  const ethPrice = parseEther(asset?.listings?.edges[0].node.price.value?.toString() ?? '0').toString()
+  const ethPrice = parseEther(asset?.listings?.edges[0]?.node.price.value?.toString()).toString()
 
-  if (!asset) return undefined
-
-  console.log(asset.listings?.edges as unknown as SellOrder[])
-
-  return [
+  const obj = [
     {
       id: asset?.id,
       address,
       notForSale: asset.listings === null,
-      collectionName: asset.collection?.name ?? undefined,
-      collectionSymbol: asset.collection?.image?.url ?? undefined,
-      imageUrl: asset.image?.url ?? undefined,
-      animationUrl: asset.animationUrl ?? undefined,
-      marketplace: asset.listings?.edges[0].node.marketplace.toLowerCase() as any,
-      name: asset.name ?? undefined,
-      priceInfo: asset.listings
-        ? {
-            ETHPrice: ethPrice,
-            baseAsset: 'ETH',
-            baseDecimals: '18',
-            basePrice: ethPrice,
-          }
-        : ({} as PriceInfo),
-      susFlag: asset.suspiciousFlag ?? undefined,
-      sellorders: asset.listings?.edges.map((listingNode) => {
-        return listingNode.node as unknown as SellOrder
+      collectionName: asset.collection?.name,
+      collectionSymbol: asset.collection?.image?.url,
+      imageUrl: asset.image?.url,
+      animationUrl: asset.animationUrl,
+      marketplace: asset.listings?.edges[0]?.node.marketplace.toLowerCase(),
+      name: asset.name,
+      priceInfo: {
+        ETHPrice: ethPrice,
+        baseAsset: 'ETH',
+        baseDecimals: '18',
+        basePrice: ethPrice,
+      },
+      susFlag: asset.suspiciousFlag,
+      sellorders: asset.listings?.edges.map((listingNode: { node: SellOrder }) => {
+        return listingNode.node
       }),
-      smallImageUrl: asset.smallImage?.url ?? undefined,
+      smallImageUrl: asset.smallImage?.url,
       tokenId,
-      tokenType: (asset.collection?.nftContracts && asset?.collection.nftContracts[0].standard) as TokenType,
-      collectionIsVerified: asset.collection?.isVerified ?? undefined,
+      tokenType: (asset.collection?.nftContracts && asset?.collection.nftContracts[0]?.standard) as TokenType,
+      collectionIsVerified: asset.collection?.isVerified,
       rarity: {
         primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
-        providers: asset.rarities as any,
+        providers: asset.rarities.map((rarity: Rarity) => {
+          return {
+            ...rarity,
+            provider: 'Rarity Sniper',
+          }
+        }),
       },
-      owner: asset.ownerAddress ?? undefined,
+      owner: asset.ownerAddress,
       creator: {
-        profile_img_url: asset.collection?.creator?.profileImage?.url ?? undefined,
-        address: asset.collection?.creator?.address ?? undefined,
+        profile_img_url: asset.creator?.profileImage?.url,
+        address: asset.creator?.address,
       },
-      metadataUrl: asset.metadataUrl ?? undefined,
-      traits: asset.traits?.map((trait) => {
+      metadataUrl: asset.metadataUrl,
+      traits: asset.traits?.map((trait: { name: string; value: string }) => {
         return { trait_type: trait.name, value: trait.value } as any
       }),
     },
     {
-      collectionDescription: collection?.description ?? undefined,
-      collectionImageUrl: collection?.image?.url ?? undefined,
-      collectionName: collection?.name ?? undefined,
-      isVerified: collection?.isVerified ?? undefined,
-      totalSupply: collection?.numAssets ?? undefined,
+      collectionDescription: collection?.description,
+      collectionImageUrl: collection?.image?.url,
+      collectionName: collection?.name,
+      isVerified: collection?.isVerified,
+      totalSupply: collection?.numAssets,
     },
   ]
+  console.log(obj)
+  return obj as [GenieAsset, GenieCollection]
 }

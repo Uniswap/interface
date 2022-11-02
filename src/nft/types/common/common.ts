@@ -1,4 +1,4 @@
-import { SellOrder } from '../sell'
+import { OldSellOrder, SellOrder } from '../sell'
 
 export interface OpenSeaCollection {
   name: string
@@ -87,7 +87,7 @@ export interface GenieAsset {
   name?: string
   priceInfo: PriceInfo
   susFlag?: boolean
-  sellorders?: SellOrder[]
+  sellorders?: OldSellOrder[] | SellOrder[] // TODO remove OldSellOrder when full migration to GraphQL is complete
   smallImageUrl?: string
   tokenId: string
   tokenType: TokenType

@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
-import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, OldSellOrder, SellOrder, TokenType } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -110,7 +110,9 @@ const DiscoveryContainer = styled.div`
 
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = listing ? new Date(listing.orderClosingDate) : undefined
+  const expirationDate = listing
+    ? new Date((listing as OldSellOrder).orderClosingDate ?? (listing as SellOrder).endAt)
+    : undefined
   const USDPrice = useUsdPrice(asset)
 
   const navigate = useNavigate()
@@ -188,7 +190,9 @@ export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset 
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
   const { account } = useWeb3React()
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = cheapestOrder ? new Date(cheapestOrder.orderClosingDate) : undefined
+  const expirationDate = cheapestOrder
+    ? new Date((cheapestOrder as OldSellOrder).orderClosingDate ?? (cheapestOrder as SellOrder).endAt)
+    : undefined
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
