@@ -14,11 +14,22 @@ import { Suspense, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring'
+import styled from 'styled-components/macro'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
 
 export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
+
+const CollectionDescriptionSection = styled(Column)`
+  ${styles.ScreenBreakpointsPaddings}
+`
+
+const CollectionDisplaySection = styled(Row)`
+  ${styles.ScreenBreakpointsPaddings}
+  align-items: flex-start;
+  position: relative;
+`
 
 const Collection = () => {
   const { contractAddress } = useParams()
@@ -93,7 +104,7 @@ const Collection = () => {
                   )}
                 </Box>
               </Box>
-              <Column paddingX="48">
+              <CollectionDescriptionSection>
                 {(isLoading || collectionStats !== undefined) && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
                 )}
@@ -105,8 +116,8 @@ const Collection = () => {
                     toggleActivity()
                   }}
                 />
-              </Column>
-              <Row alignItems="flex-start" position="relative" paddingX="48">
+              </CollectionDescriptionSection>
+              <CollectionDisplaySection>
                 <Box position="sticky" top="72" width="0">
                   {isFiltersExpanded && <Filters traits={collectionStats?.traits ?? []} />}
                 </Box>
@@ -138,7 +149,7 @@ const Collection = () => {
                         </Suspense>
                       )}
                 </AnimatedBox>
-              </Row>
+              </CollectionDisplaySection>
             </>
           ) : (
             // TODO: Put no collection asset page here
