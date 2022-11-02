@@ -41,7 +41,7 @@ interface SeparatorProps {
   show?: boolean
 }
 
-const Background = styled.div`
+const DetailsPageBackground = styled.div`
   position: fixed;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(12px);
@@ -318,7 +318,7 @@ const Bag = () => {
               <ListingModal />
             )}
           </Column>
-          {isDetailsPage && <Background onClick={toggleBag} />}
+          {isDetailsPage && <DetailsPageBackground onClick={toggleBag} />}
 
           {isOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />}
         </Portal>
