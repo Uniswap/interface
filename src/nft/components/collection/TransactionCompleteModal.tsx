@@ -8,7 +8,7 @@ import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, UniIcon } from 'nft/co
 import { Overlay, stopPropagation } from 'nft/components/modals/Overlay'
 import { vars } from 'nft/css/sprinkles.css'
 import { useIsMobile, useSendTransaction, useTransactionResponse } from 'nft/hooks'
-import { GenieAsset, TxResponse, TxStateType } from 'nft/types'
+import { TxResponse, TxStateType } from 'nft/types'
 import {
   fetchPrice,
   formatEthPrice,
@@ -18,6 +18,7 @@ import {
   parseTransactionResponse,
   shortenTxHash,
 } from 'nft/utils'
+import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -67,12 +68,6 @@ const TxCompleteModal = () => {
     useSendTransaction.subscribe((state) => (transactionStateRef.current = state.state))
   }, [])
 
-  const formatAnalyticsEventProperties = (assets: GenieAsset[]) => ({
-    collection_addresses: assets.map((asset) => asset.address),
-    token_ids: assets.map((asset) => asset.tokenId),
-    token_types: assets.map((asset) => asset.tokenType),
-  })
-
   return (
     <>
       {shouldShowModal && (
@@ -87,7 +82,7 @@ const TxCompleteModal = () => {
                   buy_quantity: nftsPurchased.length,
                   usd_value: totalPurchaseValue,
                   transaction_hash: txHash,
-                  ...formatAnalyticsEventProperties(nftsPurchased),
+                  ...formatAssetEventProperties(nftsPurchased),
                 }}
                 shouldLogImpression
               >

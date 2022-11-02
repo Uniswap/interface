@@ -1,13 +1,12 @@
 import { EventName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
-// import { useTrace } from 'analytics/Trace'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { Column } from 'nft/components/Flex'
 import { useBag, useIsMobile } from 'nft/hooks'
 import { BagItemStatus, BagStatus } from 'nft/types'
-import { GenieAsset } from 'nft/types'
 import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
 import { fetchPrice } from 'nft/utils/fetchPrice'
+import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 
@@ -54,23 +53,17 @@ export const BagContent = () => {
     }
   }, [bagStatus, itemsInBag, priceChangedAssets, setBagStatus])
 
-  // eventProperties : map priceChangedAssets
-
-  const formatAnalyticsEventProperties = (updatedAssets: GenieAsset[], fetchedPriceData: number | undefined) => ({
-    collection_addresses: updatedAssets.map((asset) => asset.address),
-    token_ids: updatedAssets.map((asset) => asset.tokenId),
-    token_types: updatedAssets.map((asset) => asset.tokenType),
-    bag_quantity: itemsInBag,
-    usd_value: fetchedPriceData,
-  })
-
   return (
     <>
       <Column display={priceChangedAssets.length > 0 || unavailableAssets.length > 0 ? 'flex' : 'none'}>
         {unavailableAssets.length > 0 && (
           <Trace
             name={EventName.NFT_BUY_BAG_CHANGED}
-            properties={formatAnalyticsEventProperties(unavailableAssets, fetchedPriceData)}
+            properties={{
+              usd_value: fetchedPriceData,
+              bag_quantity: itemsInBag,
+              ...formatAssetEventProperties(unavailableAssets),
+            }}
             shouldLogImpression
           >
             <UnavailableAssetsHeaderRow
@@ -86,7 +79,11 @@ export const BagContent = () => {
         {priceChangedAssets.length > 0 && (
           <Trace
             name={EventName.NFT_BUY_BAG_CHANGED}
-            properties={formatAnalyticsEventProperties(priceChangedAssets, fetchedPriceData)}
+            properties={{
+              usd_value: fetchedPriceData,
+              bag_quantity: itemsInBag,
+              ...formatAssetEventProperties(priceChangedAssets),
+            }}
             shouldLogImpression
           >
             {priceChangedAssets.map((asset, index) => (

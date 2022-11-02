@@ -19,12 +19,15 @@ import {
   useWalletBalance,
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
-import { BagItem, BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
-import { buildSellObject } from 'nft/utils/buildSellObject'
-import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
-import { fetchPrice } from 'nft/utils/fetchPrice'
+import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
+import {
+  buildSellObject,
+  fetchPrice,
+  formatAssetEventProperties,
+  recalculateBagUsingPooledAssets,
+  sortUpdatedAssets,
+} from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { sortUpdatedAssets } from 'nft/utils/updatedAssets'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -255,6 +258,7 @@ const Bag = () => {
     (!isProfilePage && !isBuyingAssets && bagStatus === BagStatus.ADDING_TO_BAG) || (isProfilePage && !isSellingAssets)
   )
 
+  /*
   const formatAnalyticsEventProperties = (assets: BagItem[], priceData: number | undefined) => ({
     collection_addresses: assets.map((asset) => asset.asset.address),
     token_ids: assets.map((asset) => asset.asset.tokenId),
@@ -262,6 +266,7 @@ const Bag = () => {
     bag_quantity: itemsInBag.length,
     usd_value: priceData,
   })
+  */
 
   return (
     <>
@@ -291,7 +296,10 @@ const Bag = () => {
                     bagStatus={bagStatus}
                     fetchAssets={fetchAssets}
                     assetsAreInReview={itemsInBag.some((item) => item.status === BagItemStatus.REVIEWING_PRICE_CHANGE)}
-                    eventProperties={formatAnalyticsEventProperties(itemsInBag, totalUsdPrice)}
+                    eventProperties={{
+                      usd_value: totalUsdPrice,
+                      ...formatAssetEventProperties(itemsInBag.map((item) => item.asset)),
+                    }}
                   />
                 )}
                 {isSellingAssets && isProfilePage && (
