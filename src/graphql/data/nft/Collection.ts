@@ -81,14 +81,15 @@ const collectionQuery = graphql`
     }
   }
 `
+
 export function useCollectionQuery(address: string): GenieCollection | undefined {
   const queryData = useLazyLoadQuery<CollectionQuery>(collectionQuery, { address })
 
-  const queryCollection = queryData.nftCollections?.edges[0].node as any
+  const queryCollection = queryData.nftCollections?.edges[0]?.node
   const traits = {} as Record<string, Trait[]>
   if (queryCollection?.traits) {
-    queryCollection?.traits.forEach((trait: { name: string; values: string[] }) => {
-      traits[trait.name] = trait.values?.map((value) => {
+    queryCollection?.traits.forEach((trait) => {
+      trait.values?.map((value) => {
         return {
           trait_type: trait.name,
           trait_value: value,
@@ -98,29 +99,31 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
   }
   return {
     address,
-    isVerified: queryCollection?.isVerified,
-    name: queryCollection?.name,
-    description: queryCollection?.description,
-    standard: queryCollection?.nftContracts[0]?.standard,
+    isVerified: queryCollection?.isVerified ?? undefined,
+    name: queryCollection?.name ?? undefined,
+    description: queryCollection?.description ?? undefined,
+    standard: queryCollection?.nftContracts ? queryCollection?.nftContracts[0]?.standard ?? undefined : undefined,
     bannerImageUrl: queryCollection?.bannerImage?.url,
-    stats: {
-      num_owners: queryCollection?.markets[0]?.owners,
-      floor_price: queryCollection?.markets[0]?.floorPrice?.value,
-      one_day_volume: queryCollection?.markets[0]?.volume?.value,
-      one_day_change: queryCollection?.markets[0]?.volumePercentChange?.value,
-      one_day_floor_change: queryCollection?.markets[0]?.floorPricePercentChange?.value,
-      banner_image_url: queryCollection?.bannerImage?.url,
-      total_supply: queryCollection?.numAssets,
-      total_listings: queryCollection?.markets[0]?.listings?.value,
-      total_volume: queryCollection?.markets[0]?.totalVolume?.value,
-    },
+    stats: queryCollection?.markets
+      ? {
+          num_owners: queryCollection?.markets[0]?.owners ?? undefined,
+          floor_price: queryCollection?.markets[0]?.floorPrice?.value ?? undefined,
+          one_day_volume: queryCollection?.markets[0]?.volume?.value ?? undefined,
+          one_day_change: queryCollection?.markets[0]?.volumePercentChange?.value ?? undefined,
+          one_day_floor_change: queryCollection?.markets[0]?.floorPricePercentChange?.value ?? undefined,
+          banner_image_url: queryCollection?.bannerImage?.url ?? undefined,
+          total_supply: queryCollection?.numAssets ?? undefined,
+          total_listings: queryCollection?.markets[0]?.listings?.value ?? undefined,
+          total_volume: queryCollection?.markets[0]?.totalVolume?.value ?? undefined,
+        }
+      : {},
     traits,
     // marketplaceCount: { marketplace: string; count: number }[], // TODO add when backend supports
     imageUrl: queryCollection?.image?.url,
-    twitter: queryCollection?.twitterName,
-    instagram: queryCollection?.instagramName,
-    discordUrl: queryCollection?.discordUrl,
-    externalUrl: queryCollection?.homepageUrl,
+    twitter: queryCollection?.twitterName ?? undefined,
+    instagram: queryCollection?.instagramName ?? undefined,
+    discordUrl: queryCollection?.discordUrl ?? undefined,
+    externalUrl: queryCollection?.homepageUrl ?? undefined,
     rarityVerified: false, // TODO update when backend supports
     // isFoundation: boolean, // TODO ask backend to add
   }
