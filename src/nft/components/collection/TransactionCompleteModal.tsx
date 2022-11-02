@@ -77,7 +77,7 @@ const TxCompleteModal = () => {
             {/* Successfully purchased NFTs */}
             {showPurchasedModal && (
               <Trace
-                name={EventName.NFT_BUY_BAG_SUCCESS}
+                name={EventName.NFT_BUY_BAG_SUCCEEDED}
                 properties={{
                   buy_quantity: nftsPurchased.length,
                   usd_value: totalPurchaseValue,
@@ -148,7 +148,7 @@ const TxCompleteModal = () => {
               /* Showing both purchases & refunds */
               (showPurchasedModal ? (
                 <Trace
-                  name={EventName.NFT_BUY_BAG_REFUND}
+                  name={EventName.NFT_BUY_BAG_REFUNDED}
                   properties={{
                     buy_quantity: nftsPurchased.length,
                     fail_quantity: nftsNotPurchased.length,
@@ -219,7 +219,7 @@ const TxCompleteModal = () => {
               ) : (
                 // Only showing when all assets are unavailable
                 <Trace
-                  name={EventName.NFT_BUY_BAG_REFUND}
+                  name={EventName.NFT_BUY_BAG_REFUNDED}
                   properties={{
                     buy_quantity: 0,
                     fail_quantity: nftsNotPurchased.length,
