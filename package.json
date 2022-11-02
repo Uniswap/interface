@@ -200,7 +200,8 @@
     "@types/react": "17",
     "@uniswap/sdk-core": "3.0.2",
     "jpeg-js": "0.4.4",
-    "node-fetch": "2.6.7"
+    "node-fetch": "2.6.7",
+    "@xmldom/xmldom": "0.7.7"
   },
   "jest": {
     "preset": "react-native",

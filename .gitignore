@@ -84,3 +84,6 @@ storybook-static/*
 
 # Private keys
 .env.local
+
+# Snyk
+.dccache
