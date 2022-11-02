@@ -12,6 +12,10 @@ const Grid = styled.div`
   @media (max-width: 960px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
+
+  @media (max-width: 420px) {
+    grid-template-columns: 1fr 1fr;
+  }
 `
 
 const GridItemContainer = styled(Link)`
