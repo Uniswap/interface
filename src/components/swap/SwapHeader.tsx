@@ -43,7 +43,7 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange, }: { a
             <Trans>Swap</Trans>
           </HeaderType>
 
-          {Boolean(chainId === 1 || chainId === 56) && <HeaderType isMobile={isMobile} onClick={onLimitClick} fontWeight={view === 'limit' ? 700 : 400} style={{ color: view === 'limit' ? '#F76C1D' : '', cursor: 'pointer', background: view === 'limit' ? theme.bg0 : 'transparent' }}>
+          {Boolean(!chainId || chainId === 1 || chainId === 56) && <HeaderType isMobile={isMobile} onClick={onLimitClick} fontWeight={view === 'limit' ? 700 : 400} style={{ color: view === 'limit' ? '#F76C1D' : '', cursor: 'pointer', background: view === 'limit' ? theme.bg0 : 'transparent' }}>
             <Trans>Limit</Trans>
           </HeaderType>}
 
