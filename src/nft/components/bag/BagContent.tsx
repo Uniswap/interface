@@ -1,3 +1,4 @@
+import { sendAnalyticsEvent } from 'analytics'
 import { EventName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
@@ -47,11 +48,18 @@ export const BagContent = () => {
     const hasAssetsInReview = priceChangedAssets.length > 0
     const hasAssets = itemsInBag.length > 0
 
+    if (hasAssetsInReview)
+      sendAnalyticsEvent(EventName.NFT_BUY_BAG_CHANGED, {
+        usd_value: fetchedPriceData,
+        bag_quantity: itemsInBag,
+        ...formatAssetEventProperties(priceChangedAssets),
+      })
+
     if (bagStatus === BagStatus.IN_REVIEW && !hasAssetsInReview) {
       if (hasAssets) setBagStatus(BagStatus.CONFIRM_REVIEW)
       else setBagStatus(BagStatus.ADDING_TO_BAG)
     }
-  }, [bagStatus, itemsInBag, priceChangedAssets, setBagStatus])
+  }, [bagStatus, itemsInBag, priceChangedAssets, setBagStatus, fetchedPriceData])
 
   return (
     <>
@@ -76,28 +84,16 @@ export const BagContent = () => {
             />
           </Trace>
         )}
-        {priceChangedAssets.length > 0 && (
-          <Trace
-            name={EventName.NFT_BUY_BAG_CHANGED}
-            properties={{
-              usd_value: fetchedPriceData,
-              bag_quantity: itemsInBag,
-              ...formatAssetEventProperties(priceChangedAssets),
-            }}
-            shouldLogImpression
-          >
-            {priceChangedAssets.map((asset, index) => (
-              <PriceChangeBagRow
-                key={asset.id}
-                asset={asset}
-                usdPrice={fetchedPriceData}
-                markAssetAsReviewed={markAssetAsReviewed}
-                top={index === 0 && unavailableAssets.length === 0}
-                isMobile={isMobile}
-              />
-            ))}
-          </Trace>
-        )}
+        {priceChangedAssets.map((asset, index) => (
+          <PriceChangeBagRow
+            key={asset.id}
+            asset={asset}
+            usdPrice={fetchedPriceData}
+            markAssetAsReviewed={markAssetAsReviewed}
+            top={index === 0 && unavailableAssets.length === 0}
+            isMobile={isMobile}
+          />
+        ))}
       </Column>
       <Column gap="8">
         {unchangedAssets
