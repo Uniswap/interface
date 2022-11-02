@@ -27,6 +27,10 @@ export const tokenQuery = graphql`
           value
           currency
         }
+        price {
+          value
+          currency
+        }
         volume24H: volume(duration: DAY) {
           value
           currency

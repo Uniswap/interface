@@ -15,6 +15,8 @@ import TokenDetailsSkeleton, {
   LeftPanel,
   RightPanel,
   TokenDetailsLayout,
+  TokenInfoContainer,
+  TokenNameCell,
 } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
@@ -38,36 +40,9 @@ import { ArrowLeft } from 'react-feather'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { textFadeIn } from 'theme/animations'
 
-import { RefetchPricesFunction } from './TimeSelector'
+import { RefetchPricesFunction } from './ChartSection'
 
-export const ChartHeader = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  color: ${({ theme }) => theme.textPrimary};
-  gap: 4px;
-  margin-bottom: 24px;
-`
-export const TokenInfoContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-export const ChartContainer = styled.div`
-  display: flex;
-  height: 436px;
-  align-items: center;
-`
-export const TokenNameCell = styled.div`
-  display: flex;
-  gap: 8px;
-  font-size: 20px;
-  line-height: 28px;
-  align-items: center;
-  ${textFadeIn}
-`
 const TokenSymbol = styled.span`
   text-transform: uppercase;
   color: ${({ theme }) => theme.textSecondary};
@@ -102,19 +77,6 @@ export default function TokenDetails({
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
   const nativeCurrency = nativeOnChain(pageChainId)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
-
-  // const [priceQueryReference, loadQuery] = useQueryLoader<TokenPriceQuery>(tokenPriceQuery)
-  // useEffect(() => {
-  //   if (priceQueryReference) {
-  //     // Re-render once the new line is ready, rather than flash a loading state.
-  //     startTransition(() => loadQuery({ contract, duration: toHistoryDuration(timePeriod) }))
-  //   } else {
-  //     // Shows chart suspense on first render
-  //     loadQuery({ contract, duration: toHistoryDuration(timePeriod) })
-  //   }
-  //   // Skips running effect when priceQueryReference is updated to prevent loop
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [contract, timePeriod, loadQuery])
 
   const tokenQueryData = usePreloadedQuery(tokenQuery, tokenQueryReference).tokens?.[0]
   const token = useMemo(() => {
@@ -177,31 +139,27 @@ export default function TokenDetails({
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            <ChartHeader>
-              <TokenInfoContainer>
-                <TokenNameCell>
-                  <LogoContainer>
-                    <CurrencyLogo
-                      src={logoSrc}
-                      size={'32px'}
-                      symbol={nativeCurrency?.symbol ?? token?.symbol}
-                      currency={nativeCurrency ? undefined : token}
-                    />
-                    <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
-                  </LogoContainer>
-                  {token?.name ?? <Trans>Name not found</Trans>}
-                  <TokenSymbol>{token?.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
-                </TokenNameCell>
-                <TokenActions>
-                  {tokenQueryData?.name && tokenQueryData.symbol && tokenQueryData.address && (
-                    <ShareButton token={tokenQueryData} isNative={!!nativeCurrency} />
-                  )}
-                </TokenActions>
-              </TokenInfoContainer>
-              <ChartContainer>
-                <ChartSection priceQueryReference={priceQueryReference} refetchTokenPrices={refetchTokenPrices} />
-              </ChartContainer>
-            </ChartHeader>
+            <TokenInfoContainer>
+              <TokenNameCell>
+                <LogoContainer>
+                  <CurrencyLogo
+                    src={logoSrc}
+                    size={'32px'}
+                    symbol={nativeCurrency?.symbol ?? token?.symbol}
+                    currency={nativeCurrency ? undefined : token}
+                  />
+                  <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
+                </LogoContainer>
+                {token?.name ?? <Trans>Name not found</Trans>}
+                <TokenSymbol>{token?.symbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
+              </TokenNameCell>
+              <TokenActions>
+                {tokenQueryData?.name && tokenQueryData.symbol && tokenQueryData.address && (
+                  <ShareButton token={tokenQueryData} isNative={!!nativeCurrency} />
+                )}
+              </TokenActions>
+            </TokenInfoContainer>
+            <ChartSection priceQueryReference={priceQueryReference} refetchTokenPrices={refetchTokenPrices} />
             <StatsSection
               TVL={tokenQueryData.market?.totalValueLocked?.value}
               volume24H={tokenQueryData.market?.volume24H?.value}

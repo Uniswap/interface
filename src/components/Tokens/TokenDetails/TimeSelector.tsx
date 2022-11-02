@@ -1,10 +1,8 @@
 import { TimePeriod } from 'graphql/data/util'
-import { useAtomValue } from 'jotai/utils'
 import { startTransition, useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
-import { filterTimeAtom } from '../state'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 export const TimeOptionsWrapper = styled.div`
@@ -49,9 +47,14 @@ const TimeButton = styled.button<{ active: boolean }>`
   }
 `
 
-export type RefetchPricesFunction = (t: TimePeriod) => void
-export default function TimePeriodSelector({ refetchTokenPrices }: { refetchTokenPrices: RefetchPricesFunction }) {
-  const [timePeriod, setTimePeriod] = useState(useAtomValue(filterTimeAtom))
+export default function TimePeriodSelector({
+  currentTimePeriod,
+  onTimeChange,
+}: {
+  currentTimePeriod: TimePeriod
+  onTimeChange: (t: TimePeriod) => void
+}) {
+  const [timePeriod, setTimePeriod] = useState(currentTimePeriod)
   return (
     <TimeOptionsWrapper>
       <TimeOptionsContainer>
@@ -60,7 +63,7 @@ export default function TimePeriodSelector({ refetchTokenPrices }: { refetchToke
             key={DISPLAYS[time]}
             active={timePeriod === time}
             onClick={() => {
-              startTransition(() => refetchTokenPrices(time))
+              startTransition(() => onTimeChange(time))
               setTimePeriod(time)
             }}
           >

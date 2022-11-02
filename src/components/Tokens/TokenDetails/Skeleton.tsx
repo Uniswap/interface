@@ -3,10 +3,10 @@ import { WIDGET_WIDTH } from 'components/Widget'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
+import { textFadeIn } from 'theme/animations'
 
 import { LoadingBubble } from '../loading'
 import { LogoContainer } from '../TokenTable/TokenRow'
-import { ChartHeader, TokenInfoContainer, TokenNameCell } from '.'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
 import { DeltaContainer, TokenPrice } from './PriceChart'
@@ -54,15 +54,34 @@ export const ChartContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 436px;
-  align-items: center;
+  margin-bottom: 24px;
+  align-items: flex-start;
   width: 100%;
 `
-const LoadingChartContainer = styled(ChartContainer)`
+const LoadingChartContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
-  height: 314px; // save 1px for the border-bottom (ie y-axis)
+  height: 100%;
+  margin-bottom: 44px;
+  padding-bottom: 66px;
   overflow: hidden;
 `
-
+export const TokenInfoContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+`
+export const TokenNameCell = styled.div`
+  display: flex;
+  gap: 8px;
+  font-size: 20px;
+  line-height: 28px;
+  align-items: center;
+  ${textFadeIn}
+`
 /* Loading state bubbles */
 const DetailBubble = styled(LoadingBubble)`
   height: 16px;
@@ -81,10 +100,13 @@ const TitleBubble = styled(DetailBubble)`
   width: 140px;
 `
 const PriceBubble = styled(SquaredBubble)`
-  height: 40px;
+  margin-top: 2px;
+  height: 38px;
 `
 const DeltaBubble = styled(DetailBubble)`
+  margin-top: 6px;
   width: 96px;
+  height: 20px;
 `
 const SectionBubble = styled(SquaredBubble)`
   width: 96px;
@@ -113,6 +135,7 @@ const ChartAnimation = styled.div`
   animation: wave 8s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
   display: flex;
   overflow: hidden;
+  margin-top: 90px;
 
   @keyframes wave {
     0% {
@@ -138,7 +161,7 @@ function Wave() {
 
 export function LoadingChart() {
   return (
-    <ChartHeader>
+    <ChartContainer>
       <TokenPrice>
         <PriceBubble />
       </TokenPrice>
@@ -157,7 +180,7 @@ export function LoadingChart() {
           </ChartAnimation>
         </div>
       </LoadingChartContainer>
-    </ChartHeader>
+    </ChartContainer>
   )
 }
 
@@ -199,19 +222,17 @@ export default function TokenDetailsSkeleton() {
       <BreadcrumbNavLink to={{ chainName } ? `/tokens/${chainName}` : `/explore`}>
         <ArrowLeft size={14} /> Tokens
       </BreadcrumbNavLink>
-      <ChartHeader>
-        <TokenInfoContainer>
-          <TokenNameCell>
-            <LogoContainer>
-              <TokenLogoBubble />
-            </LogoContainer>
-            <TitleBubble />
-          </TokenNameCell>
-        </TokenInfoContainer>
-        <LoadingChart />
-      </ChartHeader>
+      <TokenInfoContainer>
+        <TokenNameCell>
+          <LogoContainer>
+            <TokenLogoBubble />
+          </LogoContainer>
+          <TitleBubble />
+        </TokenNameCell>
+      </TokenInfoContainer>
+      <LoadingChart />
 
-      <Space heightSize={45} />
+      <Space heightSize={4} />
       <LoadingStats />
       <Hr />
       <AboutContainer>

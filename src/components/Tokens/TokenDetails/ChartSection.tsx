@@ -2,11 +2,14 @@ import { ParentSize } from '@visx/responsive'
 import { ChartContainer, LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { TokenPriceQuery } from 'graphql/data/__generated__/TokenPriceQuery.graphql'
 import { isPricePoint, PricePoint, tokenPriceQuery } from 'graphql/data/TokenPrice'
-import { Suspense, useMemo } from 'react'
+import { TimePeriod } from 'graphql/data/util'
+import { useAtomValue } from 'jotai/utils'
+import { startTransition, Suspense, useMemo, useState } from 'react'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 
+import { filterTimeAtom } from '../state'
 import PriceChart from './PriceChart'
-import TimePeriodSelector, { RefetchPricesFunction } from './TimeSelector'
+import TimePeriodSelector from './TimeSelector'
 
 function usePreloadedTokenPriceQuery(priceQueryReference: PreloadedQuery<TokenPriceQuery>): PricePoint[] | undefined {
   const queryData = usePreloadedQuery(tokenPriceQuery, priceQueryReference)
@@ -25,7 +28,6 @@ function usePreloadedTokenPriceQuery(priceQueryReference: PreloadedQuery<TokenPr
 
   return priceHistory
 }
-
 export default function ChartSection({
   priceQueryReference,
   refetchTokenPrices,
@@ -46,6 +48,7 @@ export default function ChartSection({
   )
 }
 
+export type RefetchPricesFunction = (t: TimePeriod) => void
 function Chart({
   priceQueryReference,
   refetchTokenPrices,
@@ -54,11 +57,19 @@ function Chart({
   refetchTokenPrices: RefetchPricesFunction
 }) {
   const prices = usePreloadedTokenPriceQuery(priceQueryReference)
+  // Initializes time period to global & maintain separate time period for subsequent changes
+  const [timePeriod, setTimePeriod] = useState(useAtomValue(filterTimeAtom))
 
   return (
     <ChartContainer>
       <ParentSize>{({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} />}</ParentSize>
-      <TimePeriodSelector refetchTokenPrices={refetchTokenPrices} />
+      <TimePeriodSelector
+        currentTimePeriod={timePeriod}
+        onTimeChange={(t: TimePeriod) => {
+          startTransition(() => refetchTokenPrices(t))
+          setTimePeriod(t)
+        }}
+      />
     </ChartContainer>
   )
 }
