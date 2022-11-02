@@ -166,7 +166,6 @@ const ContentNotAvailable = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-
   width: 450px;
   height: 450px;
 `
@@ -296,8 +295,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     return MediaType.Image
   }, [asset])
 
-  const contractAddress = asset.address
-  const token_id = asset.tokenId
+  const { address: contractAddress, tokenId: token_id } = asset
 
   const { data: priceData } = useQuery<ActivityEventResponse>(
     [
@@ -328,7 +326,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     }
   )
 
-  const lastSalePrice = priceData?.events ? priceData?.events[0]?.price : null
+  const lastSalePrice = priceData?.events[0]?.price ?? null
   const formattedPrice = lastSalePrice ? putCommas(formatEthPrice(lastSalePrice)).toString() : null
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
@@ -368,8 +366,8 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
         {
           token_id,
           eventTypes: Object.keys(activeFilters)
-            .filter((key) => activeFilters[key as ActivityEventType])
-            .map((key) => key as ActivityEventType),
+            .map((key) => key as ActivityEventType)
+            .filter((key) => activeFilters[key]),
         },
         pageParam
       )
@@ -406,7 +404,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
       <CollectionHeader to={`/nfts/collection/${asset.address}`}>
         {collection.collectionName} {collectionStats?.isVerified && <VerifiedIcon />}
       </CollectionHeader>
-      <AssetHeader>{asset.name ? asset.name : `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
+      <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       <AssetPriceDetailsContainer>
         <AssetPriceDetails asset={asset} collection={collection} />
       </AssetPriceDetailsContainer>
