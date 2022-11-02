@@ -14,7 +14,7 @@ The difference between Token and TokenProject:
     TokenProjectMarket is aggregated market data (aggregated over multiple dexes and centralized exchanges) that we get from coingecko.
 */
 export const tokenQuery = graphql`
-  query TokenQuery($contract: ContractInput!, $duration: HistoryDuration!) {
+  query TokenQuery($contract: ContractInput!) {
     tokens(contracts: [$contract]) {
       id @required(action: LOG)
       decimals
@@ -49,7 +49,6 @@ export const tokenQuery = graphql`
         }
       }
     }
-    ...TokenPrice
   }
 `
 

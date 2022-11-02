@@ -25,6 +25,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
+import { TokenPriceQuery } from 'graphql/data/__generated__/TokenPriceQuery.graphql'
 import { Chain, TokenQuery } from 'graphql/data/__generated__/TokenQuery.graphql'
 import { QueryToken, tokenQuery, TokenQueryData } from 'graphql/data/Token'
 import { TopToken } from 'graphql/data/TopTokens'
@@ -38,6 +39,8 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
+
+import { RefetchPricesFunction } from './TimeSelector'
 
 export const ChartHeader = styled.div`
   width: 100%;
@@ -86,8 +89,14 @@ export function useTokenLogoURI(token?: TokenQueryData | TopToken, nativeCurrenc
 
 type TokenDetailsProps = {
   tokenQueryReference: PreloadedQuery<TokenQuery>
+  priceQueryReference: PreloadedQuery<TokenPriceQuery> | null | undefined
+  refetchTokenPrices: RefetchPricesFunction
 }
-export default function TokenDetails({ tokenQueryReference }: TokenDetailsProps) {
+export default function TokenDetails({
+  tokenQueryReference,
+  priceQueryReference,
+  refetchTokenPrices,
+}: TokenDetailsProps) {
   const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
   const chain = validateUrlChainParam(chainName)
   const pageChainId = CHAIN_NAME_TO_CHAIN_ID[chain]
@@ -107,8 +116,7 @@ export default function TokenDetails({ tokenQueryReference }: TokenDetailsProps)
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [contract, timePeriod, loadQuery])
 
-  const queryData = usePreloadedQuery(tokenQuery, tokenQueryReference)
-  const tokenQueryData = queryData.tokens?.[0]
+  const tokenQueryData = usePreloadedQuery(tokenQuery, tokenQueryReference).tokens?.[0]
   const token = useMemo(() => {
     if (!tokenAddress) return undefined
     if (isNative) return nativeCurrency
@@ -191,7 +199,7 @@ export default function TokenDetails({ tokenQueryReference }: TokenDetailsProps)
                 </TokenActions>
               </TokenInfoContainer>
               <ChartContainer>
-                <ChartSection tokenPriceKey={queryData} />
+                <ChartSection priceQueryReference={priceQueryReference} refetchTokenPrices={refetchTokenPrices} />
               </ChartContainer>
             </ChartHeader>
             <StatsSection
