@@ -1,9 +1,8 @@
 import graphql from 'babel-plugin-relay/macro'
 import { Trait } from 'nft/hooks/useCollectionFilters'
 import { GenieCollection } from 'nft/types'
-import { loadQuery, usePreloadedQuery } from 'react-relay'
+import { useLazyLoadQuery } from 'react-relay'
 
-import RelayEnvironment from '../RelayEnvironment'
 import { CollectionQuery } from './__generated__/CollectionQuery.graphql'
 
 const collectionQuery = graphql`
@@ -83,10 +82,7 @@ const collectionQuery = graphql`
   }
 `
 export function useCollectionQuery(address: string): GenieCollection | undefined {
-  const collectionQueryReference = loadQuery<CollectionQuery>(RelayEnvironment, collectionQuery, {
-    address,
-  })
-  const queryData = usePreloadedQuery<CollectionQuery>(collectionQuery, collectionQueryReference)
+  const queryData = useLazyLoadQuery<CollectionQuery>(collectionQuery, { address })
 
   const queryCollection = queryData.nftCollections?.edges[0].node as any
   const traits = {} as Record<string, Trait[]>
