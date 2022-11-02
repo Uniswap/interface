@@ -55,7 +55,9 @@ const collectionQuery = graphql`
               value
               currency
             }
-            listings
+            listings {
+              value
+            }
             volume(duration: DAY) {
               value
               currency
@@ -113,7 +115,7 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
       one_day_floor_change: queryCollection?.markets[0]?.floorPricePercentChange?.value,
       banner_image_url: queryCollection?.bannerImage?.url,
       total_supply: queryCollection?.numAssets,
-      total_listings: queryCollection?.markets[0]?.listings,
+      total_listings: queryCollection?.markets[0]?.listings?.value,
       total_volume: queryCollection?.markets[0]?.totalVolume?.value,
     },
     traits,
