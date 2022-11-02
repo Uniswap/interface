@@ -16,6 +16,12 @@ export enum EventName {
   NAVBAR_SEARCH_SELECTED = 'Navbar Search Selected',
   NAVBAR_SEARCH_EXITED = 'Navbar Search Exited',
   NFT_ACTIVITY_SELECTED = 'NFT Activity Selected',
+  NFT_BUY_ADDED = 'NFT Buy Bag Added',
+  NFT_BUY_BAG_CHANGED = 'NFT Buy Bag Changed',
+  NFT_BUY_BAG_PAY = 'NFT Buy Bag Pay Clicked',
+  NFT_BUY_BAG_REFUNDED = 'NFT Buy Bag Refunded',
+  NFT_BUY_BAG_SIGNED = 'NFT Buy Bag Signed',
+  NFT_BUY_BAG_SUCCEEDED = 'NFT Buy Bag Succeeded',
   NFT_FILTER_OPENED = 'NFT Collection Filter Opened',
   NFT_FILTER_SELECTED = 'NFT Filter Selected',
   NFT_TRENDING_ROW_SELECTED = 'Trending Row Selected',
@@ -106,6 +112,7 @@ export enum SectionName {
 /** Known modals for analytics purposes. */
 export enum ModalName {
   CONFIRM_SWAP = 'confirm-swap-modal',
+  NFT_TX_COMPLETE = 'nft-tx-complete-modal',
   TOKEN_SELECTOR = 'token-selector-modal',
   // alphabetize additional modal names.
 }
@@ -125,6 +132,7 @@ export enum ElementName {
   MAX_TOKEN_AMOUNT_BUTTON = 'max-token-amount-button',
   NAVBAR_SEARCH_INPUT = 'navbar-search-input',
   NFT_ACTIVITY_TAB = 'nft-activity-tab',
+  NFT_BUY_BAG_PAY_BUTTON = 'nft-buy-bag-pay-button',
   NFT_FILTER_BUTTON = 'nft-filter-button',
   NFT_FILTER_OPTION = 'nft-filter-option',
   NFT_TRENDING_ROW = 'nft-trending-row',

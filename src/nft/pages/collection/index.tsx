@@ -91,7 +91,7 @@ const Collection = () => {
     <>
       <Trace
         page={PageName.NFT_COLLECTION_PAGE}
-        properties={{ collection_address: contractAddress, chain_id: chainId }}
+        properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
         shouldLogImpression
       >
         <Column width="full">
