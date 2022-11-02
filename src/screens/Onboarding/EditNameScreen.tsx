@@ -16,6 +16,7 @@ import { Text } from 'src/components/Text'
 import { NICKNAME_MAX_LENGTH } from 'src/constants/accounts'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
+import { AccountType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { usePendingAccounts } from 'src/features/wallet/hooks'
 import {
@@ -35,8 +36,22 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
   // Reference pending accounts to avoid any lag in saga import.
   const pendingAccount = Object.values(usePendingAccounts())?.[0]
 
-  const [newAccountName, setNewAccountName] = useState<string>(pendingAccount?.name ?? '')
+  // To track the first time a default name is set. After this is true it shouldn't be set again
+  const [hasDefaultName, setHasDefaultName] = useState(false)
+  const [newAccountName, setNewAccountName] = useState<string>('')
   const [focused, setFocused] = useState(false)
+
+  // Sets the default wallet nickname based on derivation index once the pendingAccount is set.
+  useEffect(() => {
+    if (hasDefaultName || !pendingAccount || pendingAccount.type === AccountType.Readonly) {
+      return
+    }
+
+    const derivationIndex = pendingAccount.derivationIndex
+    const defaultName = pendingAccount.name || `Wallet ${derivationIndex + 1}`
+    setNewAccountName(defaultName)
+    setHasDefaultName(true)
+  }, [pendingAccount, hasDefaultName])
 
   useEffect(() => {
     const beforeRemoveListener = () => {
