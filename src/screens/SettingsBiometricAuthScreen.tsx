@@ -54,8 +54,8 @@ export function SettingsBiometricAuthScreen() {
     const handleFaceIdTurnedOff = () => {
       Alert.alert(
         t(
-          '{{authenticationTypeName}} ID is currently turned off for Uniswap Wallet—you can turn it on it in your system settings.',
-          authenticationTypeName
+          '{{authenticationTypeName}} ID is currently turned off for Uniswap Wallet—you can turn it on in your system settings.',
+          { authenticationTypeName }
         ),
         '',
         [
