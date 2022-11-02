@@ -15,7 +15,7 @@ const PoolInfo = ({
 }: {
   chainId: ChainId | undefined
   tokenIn: MultiChainTokenInfo | undefined
-  poolValue: string | undefined
+  poolValue: string | number | undefined
 }) => {
   const theme = useTheme()
   return (

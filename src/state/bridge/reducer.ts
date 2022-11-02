@@ -19,7 +19,7 @@ export interface BridgeState {
   listTokenOut: WrappedTokenInfo[]
   loadingToken: boolean
 
-  poolValueOut: PoolValueOutMap
+  poolValueOutMap: PoolValueOutMap
 
   historyURL: string
 }
@@ -36,7 +36,7 @@ const DEFAULT_STATE: BridgeState = {
   listTokenOut: [],
   loadingToken: true,
 
-  poolValueOut: {},
+  poolValueOutMap: {},
 
   historyURL: '',
 }
@@ -62,8 +62,8 @@ export default createReducer(DEFAULT_STATE, builder =>
         if (loadingToken !== undefined) state.loadingToken = loadingToken
       },
     )
-    .addCase(setBridgePoolInfo, (state, { payload: { poolValueOut } }) => {
-      state.poolValueOut = poolValueOut
+    .addCase(setBridgePoolInfo, (state, { payload: { poolValueOutMap } }) => {
+      state.poolValueOutMap = poolValueOutMap
     })
     .addCase(resetBridgeState, state => {
       state.tokenInfoIn = undefined

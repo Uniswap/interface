@@ -121,10 +121,10 @@ export async function getChainlist(isStaleData: boolean) {
   }
 }
 
-export const formatPoolValue = (amount: string | undefined) => {
+export const formatPoolValue = (amount: string | number | undefined) => {
   try {
     if (amount === undefined) return t`Unlimited`
-    if (Number(amount) && amount) return formatNumberWithPrecisionRange(parseFloat(amount), 0, 2)
+    if (Number(amount) && amount) return formatNumberWithPrecisionRange(parseFloat(amount + ''), 0, 2)
   } catch (error) {}
   return '0'
 }

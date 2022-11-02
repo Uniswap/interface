@@ -74,15 +74,26 @@ const calcPoolValue = (amount: string, decimals: number) => {
 }
 
 type PoolValueType = {
-  poolValueIn: string | undefined // undefined: unlimit
-  poolValueOut: string | undefined
+  poolValueIn: string | number | undefined // undefined: unlimited
+  poolValueOut: string | number | undefined
 }
 
 export default function SwapForm() {
   const { account, chainId } = useActiveWeb3React()
   const { changeNetwork } = useActiveNetwork()
-  const [{ tokenInfoIn, tokenInfoOut, chainIdOut, currencyIn, listTokenOut, listTokenIn, listChainIn, loadingToken }] =
-    useBridgeState()
+  const [
+    {
+      tokenInfoIn,
+      tokenInfoOut,
+      chainIdOut,
+      currencyIn,
+      listTokenOut,
+      listTokenIn,
+      listChainIn,
+      loadingToken,
+      poolValueOutMap,
+    },
+  ] = useBridgeState()
   const { resetBridgeState, setBridgeState, setBridgePoolInfo } = useBridgeStateHandler()
   const toggleWalletModal = useWalletModalToggle()
   const isDark = useIsDarkMode()
@@ -142,31 +153,43 @@ export default function SwapForm() {
 
   useEffect(() => {
     const poolValueOutMap: PoolValueOutMap = {}
-    let poolValueOut: string | undefined
-    if (poolDataOut) {
-      Object.keys(poolDataOut).forEach(anytokenAddress => {
+    let poolValueOut: string | undefined | number
+    let tokenWithMaxPool
+    let maxPoolValue = -1
+    let hasUnlimitedPool = false
+
+    if (poolDataOut && listTokenOut.length) {
+      listTokenOut.forEach(token => {
+        const anytokenAddress = token.multichainInfo?.anytoken?.address ?? ''
         const poolInfo = poolDataOut?.[anytokenAddress]
-        const token = listTokenOut.find(e => e.multichainInfo?.anytoken?.address === anytokenAddress)
-        if (!poolInfo?.balanceOf || !token?.multichainInfo?.anytoken?.decimals) return
-        if (anytokenAddress === tokenInfoOut?.anytoken?.address) {
-          poolValueOut = calcPoolValue(poolInfo?.balanceOf, tokenInfoOut?.anytoken?.decimals)
+        if (!poolInfo) {
+          tokenWithMaxPool = token
+          hasUnlimitedPool = true
+          return
         }
-        poolValueOutMap[anytokenAddress] = formatPoolValue(
-          calcPoolValue(poolInfo?.balanceOf, token?.multichainInfo?.anytoken?.decimals),
-        )
+
+        if (!poolInfo?.balanceOf || !token?.multichainInfo?.anytoken?.decimals) return
+        const calcValue = calcPoolValue(poolInfo?.balanceOf, token?.multichainInfo?.anytoken?.decimals)
+        poolValueOutMap[anytokenAddress] = calcValue
+        if (Number(calcValue) > maxPoolValue && !hasUnlimitedPool) {
+          tokenWithMaxPool = token
+          maxPoolValue = Number(calcValue)
+        }
       })
     }
+    const tokenOut = tokenWithMaxPool || listTokenOut[0] || null
+    const anyTokenOut = tokenOut?.multichainInfo?.anytoken?.address
+    if (typeof anyTokenOut === 'string' && poolValueOutMap[anyTokenOut]) {
+      poolValueOut = poolValueOutMap[anyTokenOut]
+    }
+    setBridgeState({ tokenOut })
     setPoolValue(poolValue => ({ ...poolValue, poolValueOut }))
-    setBridgePoolInfo({ poolValueOut: poolValueOutMap })
-  }, [poolDataOut, listTokenOut, tokenInfoOut, setBridgePoolInfo])
+    setBridgePoolInfo({ poolValueOutMap })
+  }, [poolDataOut, listTokenOut, setBridgePoolInfo, setBridgeState])
 
   useEffect(() => {
-    setBridgeState({ chainIdOut: listChainOut[0] })
-  }, [setBridgeState, listChainOut])
-
-  useEffect(() => {
-    setBridgeState({ tokenOut: listTokenOut[0] || null })
-  }, [setBridgeState, listTokenOut])
+    if (!listChainOut.find(el => el === chainIdOut)) setBridgeState({ chainIdOut: listChainOut[0] })
+  }, [setBridgeState, listChainOut, chainIdOut])
 
   useEffect(() => {
     setInputAmount('')
@@ -335,8 +358,10 @@ export default function SwapForm() {
   const onCurrencySelectDest = useCallback(
     (tokenOut: WrappedTokenInfo) => {
       setBridgeState({ tokenOut })
+      const anyToken = tokenOut?.multichainInfo?.anytoken?.address ?? ''
+      setPoolValue(state => ({ ...state, poolValueOut: poolValueOutMap[anyToken] }))
     },
-    [setBridgeState],
+    [setBridgeState, poolValueOutMap],
   )
   const onSelectDestNetwork = useCallback(
     (chainId: ChainId) => {
