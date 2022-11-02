@@ -98,7 +98,7 @@ export const eventTime = style([
 ])
 
 export const addressCell = style([
-  subhead,
+  buttonTextMedium,
   sprinkles({
     color: 'textPrimary',
     height: 'full',

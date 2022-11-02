@@ -124,6 +124,7 @@ const Collection = () => {
                           contractAddress={contractAddress}
                           rarityVerified={collectionStats?.rarityVerified ?? false}
                           collectionName={collectionStats?.name ?? ''}
+                          chainId={chainId}
                         />
                       )
                     : contractAddress &&

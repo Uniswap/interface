@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/smart-order-router'
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName, PageName } from 'analytics/constants'
 import { useTrace } from 'analytics/Trace'
@@ -29,8 +30,30 @@ import { getTimeDifference, isValidDate } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
 import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
 import { MouseEvent, useMemo, useState } from 'react'
+import styled from 'styled-components/macro'
+import { ExternalLink } from 'theme'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import * as styles from './Activity.css'
+
+const AddressLink = styled(ExternalLink)`
+  color: ${({ theme }) => theme.textPrimary};
+  text-decoration: none;
+  a {
+    color: ${({ theme }) => theme.textPrimary};
+    text-decoration: none;
+  }
+  a:hover {
+    color: ${({ theme }) => theme.textPrimary};
+    text-decoration: none;
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+  a:focus {
+    color: ${({ theme }) => theme.textPrimary};
+    text-decoration: none;
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+`
 
 const formatListingStatus = (status: OrderStatus): string => {
   switch (status) {
@@ -115,15 +138,21 @@ export const BuyCell = ({
 interface AddressCellProps {
   address?: string
   desktopLBreakpoint?: boolean
+  chainId?: number
 }
 
-export const AddressCell = ({ address, desktopLBreakpoint }: AddressCellProps) => {
+export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCellProps) => {
   return (
     <Column
       display={{ sm: 'none', xl: desktopLBreakpoint ? 'none' : 'flex', xxl: 'flex' }}
       className={styles.addressCell}
     >
-      <Box>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
+      <AddressLink
+        href={getExplorerLink(chainId ?? ChainId.MAINNET, address ?? '', ExplorerDataType.ADDRESS)}
+        style={{ textDecoration: 'none' }}
+      >
+        <Box onClick={(e) => e.stopPropagation()}>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
+      </AddressLink>
     </Column>
   )
 }
