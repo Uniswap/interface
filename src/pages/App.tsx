@@ -6,7 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -65,11 +65,19 @@ const BodyWrapper = styled.div`
   `};
 `
 
-const HeaderWrapper = styled.div`
+const HeaderWrapper = styled.div<{ scrolledState?: boolean; nftFlagEnabled?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
+  background-color: ${({ theme, nftFlagEnabled, scrolledState }) =>
+    scrolledState && nftFlagEnabled && theme.backgroundSurface};
+  border-bottom: ${({ theme, nftFlagEnabled, scrolledState }) =>
+    scrolledState && nftFlagEnabled && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
+  transition: ${({ theme, nftFlagEnabled }) =>
+    nftFlagEnabled &&
+    `background-color ${theme.transition.duration.fast} ease-in-out,
+    border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
   z-index: ${Z_INDEX.sticky};
 `
@@ -115,12 +123,22 @@ export default function App() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
   const isExpertMode = useIsExpertMode()
+  const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
   initializeAnalytics()
 
+  const scrollListener = (e: Event) => {
+    if (window.scrollY > 0) {
+      setScrolledState(true)
+    } else {
+      setScrolledState(false)
+    }
+  }
+
   useEffect(() => {
     window.scrollTo(0, 0)
+    setScrolledState(false)
   }, [pathname])
 
   useEffect(() => {
@@ -143,13 +161,17 @@ export default function App() {
     user.set(CUSTOM_USER_PROPERTIES.EXPERT_MODE, isExpertMode)
   }, [isExpertMode])
 
+  useEffect(() => {
+    window.addEventListener('scroll', scrollListener)
+  }, [])
+
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper>
+          <HeaderWrapper scrolledState={scrolledState} nftFlagEnabled={nftFlag === NftVariant.Enabled}>
             <NavBar />
           </HeaderWrapper>
           <BodyWrapper>

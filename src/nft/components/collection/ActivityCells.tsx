@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/smart-order-router'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -26,8 +27,30 @@ import { getTimeDifference, isValidDate } from 'nft/utils/date'
 import { putCommas } from 'nft/utils/putCommas'
 import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
 import { MouseEvent, useMemo, useState } from 'react'
+import styled from 'styled-components/macro'
+import { ExternalLink } from 'theme'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import * as styles from './Activity.css'
+
+const AddressLink = styled(ExternalLink)`
+  color: ${({ theme }) => theme.textPrimary};
+  text-decoration: none;
+  a {
+    color: ${({ theme }) => theme.textPrimary};
+    text-decoration: none;
+  }
+  a:hover {
+    color: ${({ theme }) => theme.textPrimary};
+    text-decoration: none;
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+  a:focus {
+    color: ${({ theme }) => theme.textPrimary};
+    text-decoration: none;
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+`
 
 const formatListingStatus = (status: OrderStatus): string => {
   switch (status) {
@@ -102,15 +125,21 @@ export const BuyCell = ({
 interface AddressCellProps {
   address?: string
   desktopLBreakpoint?: boolean
+  chainId?: number
 }
 
-export const AddressCell = ({ address, desktopLBreakpoint }: AddressCellProps) => {
+export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCellProps) => {
   return (
     <Column
       display={{ sm: 'none', xl: desktopLBreakpoint ? 'none' : 'flex', xxl: 'flex' }}
       className={styles.addressCell}
     >
-      <Box>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
+      <AddressLink
+        href={getExplorerLink(chainId ?? ChainId.MAINNET, address ?? '', ExplorerDataType.ADDRESS)}
+        style={{ textDecoration: 'none' }}
+      >
+        <Box onClick={(e) => e.stopPropagation()}>{address ? shortenAddress(address, 2, 4) : '-'}</Box>
+      </AddressLink>
     </Column>
   )
 }
@@ -259,31 +288,33 @@ const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
   const rarityProviderLogo = getRarityProviderLogo(rarity.source)
 
   return (
-    <MouseoverTooltip
-      text={
-        <Row>
-          <Box display="flex" marginRight="4">
-            <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+    <Box>
+      <MouseoverTooltip
+        text={
+          <Row>
+            <Box display="flex" marginRight="4">
+              <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+            </Box>
+            <Box width="full" fontSize="14">
+              {rarityVerified
+                ? `Verified by ${collectionName}`
+                : `Ranking by ${rarity.source === 'Genie' ? fallbackProvider : rarity.source}`}
+            </Box>
+          </Row>
+        }
+        placement="top"
+      >
+        <Box className={styles.rarityInfo}>
+          <Box paddingTop="2" paddingBottom="2" display="flex">
+            {putCommas(rarity.rank)}
           </Box>
-          <Box width="full" fontSize="14">
-            {rarityVerified
-              ? `Verified by ${collectionName}`
-              : `Ranking by ${rarity.source === 'Genie' ? fallbackProvider : rarity.source}`}
-          </Box>
-        </Row>
-      }
-      placement="top"
-    >
-      <Box className={styles.rarityInfo}>
-        <Box paddingTop="2" paddingBottom="2" display="flex">
-          {putCommas(rarity.rank)}
-        </Box>
 
-        <Box display="flex" height="16">
-          {rarityVerified ? <RarityVerifiedIcon /> : null}
+          <Box display="flex" height="16">
+            {rarityVerified ? <RarityVerifiedIcon /> : null}
+          </Box>
         </Box>
-      </Box>
-    </MouseoverTooltip>
+      </MouseoverTooltip>
+    </Box>
   )
 }
 
