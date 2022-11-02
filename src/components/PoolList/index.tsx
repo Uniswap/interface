@@ -331,7 +331,7 @@ const PoolList = ({
   const [currentPage, setCurrentPage] = useState(1)
   useEffect(() => {
     setCurrentPage(1)
-  }, [subgraphPoolsData, currencies, searchValue, isShowOnlyActiveFarmPools, onlyShowStable])
+  }, [chainId, subgraphPoolsData, currencies, searchValue, isShowOnlyActiveFarmPools, onlyShowStable])
 
   const sortedFilteredSubgraphPoolsObject = useMemo(() => {
     const res = new Map<string, SubgraphPoolData[]>()
