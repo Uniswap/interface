@@ -22,7 +22,7 @@ import { switchChain } from 'utils/switchChain'
 
 import * as styles from './BagFooter.css'
 
-const Footer = styled.div<{ $showWarning: boolean }>`
+const Footer = styled.div`
   border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
   color: ${({ theme }) => theme.textPrimary};
   display: flex;
@@ -30,8 +30,6 @@ const Footer = styled.div<{ $showWarning: boolean }>`
   padding: 12px 16px;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
-  border-top-left-radius: ${({ $showWarning }) => ($showWarning ? '0' : '12')}px;
-  border-top-right-radius: ${({ $showWarning }) => ($showWarning ? '0' : '12')}px;
 `
 
 const WarningIcon = styled(AlertTriangle)`
@@ -154,7 +152,7 @@ export const BagFooter = ({
 
   return (
     <Column className={styles.footerContainer}>
-      <Footer $showWarning={bagStatus === BagStatus.WARNING}>
+      <Footer>
         <Column gap="4" paddingTop="8" paddingBottom="20">
           <Row justifyContent="space-between">
             <Box>
