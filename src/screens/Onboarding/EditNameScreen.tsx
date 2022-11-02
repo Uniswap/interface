@@ -13,6 +13,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { NICKNAME_MAX_LENGTH } from 'src/constants/accounts'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
@@ -138,6 +139,7 @@ function CustomizationSection({
             ref={textInputRef}
             backgroundColor="none"
             fontSize={28}
+            maxLength={NICKNAME_MAX_LENGTH}
             placeholder="Nickname"
             placeholderTextColor={theme.colors.textTertiary}
             testID="customize/name"

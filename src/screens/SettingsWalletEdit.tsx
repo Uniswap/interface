@@ -12,6 +12,7 @@ import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { NICKNAME_MAX_LENGTH } from 'src/constants/accounts'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
@@ -66,6 +67,7 @@ export function SettingsWalletEdit({
                 fontFamily={theme.textVariants.headlineMedium.fontFamily}
                 fontSize={theme.textVariants.headlineMedium.fontSize}
                 margin="none"
+                maxLength={NICKNAME_MAX_LENGTH}
                 numberOfLines={1}
                 placeholder={shortenAddress(address)}
                 placeholderTextColor={theme.colors.textTertiary}
