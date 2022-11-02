@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<73fb0908bf92f9478be8378729041bc7>>
+ * @generated SignedSource<<70dd412bfc454363618f513ffa10027e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,11 +10,14 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type TransactionHistoryUpdaterQuery$variables = {
-  address: string;
+  ownerAddresses: ReadonlyArray<string>;
 };
 export type TransactionHistoryUpdaterQuery$data = {
-  readonly assetActivities: ReadonlyArray<{
-    readonly timestamp: number;
+  readonly portfolios: ReadonlyArray<{
+    readonly assetActivities: ReadonlyArray<{
+      readonly timestamp: number;
+    } | null> | null;
+    readonly ownerAddress: string;
   } | null> | null;
 };
 export type TransactionHistoryUpdaterQuery = {
@@ -27,15 +30,24 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "address"
+    "name": "ownerAddresses"
   }
 ],
 v1 = [
   {
     "kind": "Variable",
-    "name": "address",
-    "variableName": "address"
-  },
+    "name": "ownerAddresses",
+    "variableName": "ownerAddresses"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "ownerAddress",
+  "storageKey": null
+},
+v3 = [
   {
     "kind": "Literal",
     "name": "page",
@@ -47,11 +59,18 @@ v1 = [
     "value": 1
   }
 ],
-v2 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "timestamp",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
   "storageKey": null
 };
 return {
@@ -64,12 +83,24 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "AssetActivity",
+        "concreteType": "Portfolio",
         "kind": "LinkedField",
-        "name": "assetActivities",
+        "name": "portfolios",
         "plural": true,
         "selections": [
-          (v2/*: any*/)
+          (v2/*: any*/),
+          {
+            "alias": null,
+            "args": (v3/*: any*/),
+            "concreteType": "AssetActivity",
+            "kind": "LinkedField",
+            "name": "assetActivities",
+            "plural": true,
+            "selections": [
+              (v4/*: any*/)
+            ],
+            "storageKey": "assetActivities(page:1,pageSize:1)"
+          }
         ],
         "storageKey": null
       }
@@ -86,35 +117,42 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "AssetActivity",
+        "concreteType": "Portfolio",
         "kind": "LinkedField",
-        "name": "assetActivities",
+        "name": "portfolios",
         "plural": true,
         "selections": [
           (v2/*: any*/),
           {
             "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          }
+            "args": (v3/*: any*/),
+            "concreteType": "AssetActivity",
+            "kind": "LinkedField",
+            "name": "assetActivities",
+            "plural": true,
+            "selections": [
+              (v4/*: any*/),
+              (v5/*: any*/)
+            ],
+            "storageKey": "assetActivities(page:1,pageSize:1)"
+          },
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "7ad83a968df1e79b6c4746bf5a741c11",
+    "cacheID": "320b1cb36d70f6a8376ca73bdebae44e",
     "id": null,
     "metadata": {},
     "name": "TransactionHistoryUpdaterQuery",
     "operationKind": "query",
-    "text": "query TransactionHistoryUpdaterQuery(\n  $address: String!\n) {\n  assetActivities(address: $address, pageSize: 1, page: 1) {\n    timestamp\n    id\n  }\n}\n"
+    "text": "query TransactionHistoryUpdaterQuery(\n  $ownerAddresses: [String!]!\n) {\n  portfolios(ownerAddresses: $ownerAddresses) {\n    ownerAddress\n    assetActivities(pageSize: 1, page: 1) {\n      timestamp\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "289ae900786cd3acf15aa7150762fc5e";
+(node as any).hash = "e3a38de3c44dc7501aa3170b4c3cd678";
 
 export default node;

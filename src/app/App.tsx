@@ -1,10 +1,10 @@
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
-import React, { StrictMode, useCallback, useEffect } from 'react'
+import React, { StrictMode, useCallback, useEffect, useMemo } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
-import { RelayEnvironmentProvider } from 'react-relay'
+import { PreloadFetchPolicy, RelayEnvironmentProvider } from 'react-relay'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { AppModals } from 'src/app/modals/AppModals'
@@ -15,7 +15,9 @@ import { WalletContextProvider } from 'src/app/walletContext'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { Suspense } from 'src/components/data/Suspense'
 import { config } from 'src/config'
+import { NetworkPollConfig, PollingInterval } from 'src/constants/misc'
 import { RelayEnvironment } from 'src/data/relay'
+import { Priority, useQueryScheduler } from 'src/data/useQueryScheduler'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { MulticallUpdaters } from 'src/features/multicall'
@@ -25,7 +27,11 @@ import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { MarkNames } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
-import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
+import {
+  TransactionHistoryUpdater,
+  transactionUpdaterQuery,
+} from 'src/features/transactions/TransactionHistoryUpdater'
+import { TransactionHistoryUpdaterQuery } from 'src/features/transactions/__generated__/TransactionHistoryUpdaterQuery.graphql'
 import { useTrmPrefetch } from 'src/features/trm/api'
 import { useAccounts, useSignerAccounts } from 'src/features/wallet/hooks'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
@@ -102,9 +108,30 @@ const PREFETCH_OPTIONS = {
   ifOlderThan: 60 * 15, // cache results for 15 minutes
 }
 
+const TXN_HISTORY_QUERY_OPTIONS: {
+  fetchPolicy: PreloadFetchPolicy
+  networkCacheConfig: { poll: PollingInterval }
+} = {
+  fetchPolicy: 'store-and-network',
+  ...NetworkPollConfig.Fast,
+}
+
 function DataUpdaters() {
   const accounts = useAccounts()
-  const addresses = Object.keys(accounts)
+
+  // Poll for new transactions on all imported accounts.
+  const transactionHistoryParams = useMemo(() => {
+    const addresses = Object.keys(accounts)
+    return { ownerAddresses: addresses }
+  }, [accounts])
+
+  const { queryReference: transactionHistoryUpdaterQueryRef } =
+    useQueryScheduler<TransactionHistoryUpdaterQuery>(
+      Priority.Idle, // Want this to run after interactions finish.
+      transactionUpdaterQuery,
+      transactionHistoryParams,
+      TXN_HISTORY_QUERY_OPTIONS
+    )
 
   const signerAccounts = useSignerAccounts()
   const prefetchTrm = useTrmPrefetch()
@@ -122,16 +149,15 @@ function DataUpdaters() {
   useAppStateTrigger('background', 'active', prefetchTrmData)
   useAppStateTrigger('inactive', 'active', prefetchTrmData)
 
-  // TODO(MOB-2922): Once TransactionHistoryUpdaterQuery can accept an array of addresses,
-  // use `useQueryLoader` to load the query within `InteractionManager.runAfterInteractions`
-  // and pass the query ref to the `TransactionHistoryUpdater` component
   return (
     <>
-      {addresses.map((address) => (
-        <Suspense key={address} fallback={null}>
-          <TransactionHistoryUpdater address={address} />
+      {transactionHistoryUpdaterQueryRef && (
+        <Suspense fallback={null}>
+          <TransactionHistoryUpdater
+            transactionHistoryUpdaterQueryRef={transactionHistoryUpdaterQueryRef}
+          />
         </Suspense>
-      ))}
+      )}
       <MulticallUpdaters />
       <TokenListUpdater />
     </>
