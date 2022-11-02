@@ -1,3 +1,5 @@
+import { Trait } from 'nft/hooks/useCollectionFilters'
+
 import { SellOrder } from '../sell'
 
 export interface OpenSeaCollection {
@@ -97,49 +99,30 @@ export interface GenieAsset {
   owner: string
   creator: OpenSeaUser
   metadataUrl: string
-  traits?: {
-    trait_type: string
-    value: string
-    display_type?: any
-    max_value?: any
-    trait_count: number
-    order?: any
-  }[]
+  traits?: Trait[]
 }
 
 export interface GenieCollection {
-  collectionAddress: string
   address: string
-  indexingStatus: string
-  isVerified: boolean
-  name: string
-  description: string
-  standard: string
+  isVerified?: boolean
+  name?: string
+  description?: string
+  standard?: string
   bannerImageUrl?: string
-  floorPrice: number
-  stats: {
-    num_owners: number
-    floor_price: number
-    one_day_volume: number
-    one_day_change: number
-    one_day_floor_change: number
-    banner_image_url: string
-    total_supply: number
-    total_listings: number
-    total_volume: number
+  stats?: {
+    num_owners?: number
+    floor_price?: number
+    one_day_volume?: number
+    one_day_change?: number
+    one_day_floor_change?: number
+    banner_image_url?: string
+    total_supply?: number
+    total_listings?: number
+    total_volume?: number
   }
-  symbol: string
-  traits: {
-    trait_type: string
-    trait_value: string
-    trait_count: number
-    floorSellOrder: PriceInfo
-    floorPrice: number
-  }[]
-  numTraitsByAmount: { traitCount: number; numWithTrait: number }[]
-  indexingStats: { openSea: { successfulExecutionDate: string; lastRequestedAt: string } }
+  traits?: Record<string, Trait[]>
   marketplaceCount?: { marketplace: string; count: number }[]
-  imageUrl: string
+  imageUrl?: string
   twitter?: string
   instagram?: string
   discordUrl?: string

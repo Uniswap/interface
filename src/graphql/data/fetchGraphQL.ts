@@ -19,7 +19,7 @@ const nftHeaders = {
 // The issue below prevented using a custom var in metadata to gate which queries are for the nft endpoint vs base endpoint
 // This is a temporary solution before the two endpoints merge
 // https://github.com/relay-tools/relay-hooks/issues/215
-const NFT_QUERIES = ['AssetQuery', 'AssetPaginationQuery']
+const NFT_QUERIES = ['AssetQuery', 'AssetPaginationQuery', 'CollectionQuery']
 
 const fetchQuery = (params: RequestParameters, variables: Variables): Promise<GraphQLResponse> => {
   const isNFT = NFT_QUERIES.includes(params.name)

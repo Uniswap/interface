@@ -1,9 +1,8 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
 import { GenieAsset, Rarity } from 'nft/types'
-import { loadQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
+import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 
-import RelayEnvironment from '../RelayEnvironment'
 import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
 import { AssetQuery, NftAssetsFilterInput, NftAssetSortableField } from './__generated__/AssetQuery.graphql'
 
@@ -117,7 +116,7 @@ export function useAssetsQuery(
   last?: number,
   before?: string
 ) {
-  const assetsQueryReference = loadQuery<AssetQuery>(RelayEnvironment, assetQuery, {
+  const queryData = useLazyLoadQuery<AssetQuery>(assetQuery, {
     address,
     orderBy,
     asc,
@@ -127,7 +126,6 @@ export function useAssetsQuery(
     last,
     before,
   })
-  const queryData = usePreloadedQuery<AssetQuery>(assetQuery, assetsQueryReference)
   const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<AssetPaginationQuery, any>(
     assetPaginationQuery,
     queryData
@@ -135,7 +133,9 @@ export function useAssetsQuery(
 
   const assets: GenieAsset[] = data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node
-    const ethPrice = parseEther(asset.listings?.edges[0]?.node.price.value?.toString() ?? '0').toString()
+    const ethPrice = parseEther(
+      asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
+    ).toString()
     return {
       id: asset.id,
       address: asset.collection.nftContracts[0]?.address,

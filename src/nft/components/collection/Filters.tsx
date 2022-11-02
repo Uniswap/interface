@@ -8,18 +8,15 @@ import { subhead } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks'
 import { Trait } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
-import { groupBy } from 'nft/utils/groupBy'
-import { useMemo } from 'react'
 import { useReducer } from 'react'
 
 import { TraitSelect } from './TraitSelect'
 
-export const Filters = ({ traits }: { traits: Trait[] }) => {
+export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait[]> }) => {
   const { buyNow, setBuyNow } = useCollectionFilters((state) => ({
     buyNow: state.buyNow,
     setBuyNow: state.setBuyNow,
   }))
-  const traitsByGroup: Record<string, Trait[]> = useMemo(() => (traits ? groupBy(traits, 'trait_type') : {}), [traits])
   const [buyNowHovered, toggleBuyNowHover] = useReducer((state) => !state, false)
 
   const handleBuyNowToggle = () => {

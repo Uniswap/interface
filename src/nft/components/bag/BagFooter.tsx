@@ -2,6 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import Loader from 'components/Loader'
 import { SupportedChainId } from 'constants/chains'
 import { Box } from 'nft/components/Box'
@@ -72,11 +74,11 @@ const Warning = ({ children }: PropsWithChildren<unknown>) => {
 }
 
 interface BagFooterProps {
-  isConnected: boolean
   totalEthPrice: BigNumber
   totalUsdPrice: number | undefined
   bagStatus: BagStatus
   fetchAssets: () => void
+  eventProperties: Record<string, unknown>
 }
 
 const PENDING_BAG_STATUSES = [
@@ -86,7 +88,13 @@ const PENDING_BAG_STATUSES = [
   BagStatus.PROCESSING_TRANSACTION,
 ]
 
-export const BagFooter = ({ totalEthPrice, totalUsdPrice, bagStatus, fetchAssets }: BagFooterProps) => {
+export const BagFooter = ({
+  totalEthPrice,
+  totalUsdPrice,
+  bagStatus,
+  fetchAssets,
+  eventProperties,
+}: BagFooterProps) => {
   const toggleWalletModal = useToggleWalletModal()
   const walletModalIsOpen = useModalIsOpen(ApplicationModal.WALLET)
   const { account, chainId, connector } = useWeb3React()
@@ -162,11 +170,19 @@ export const BagFooter = ({ totalEthPrice, totalUsdPrice, bagStatus, fetchAssets
             {`${ethNumberStandardFormatter(totalUsdPrice, true)}`}
           </Row>
         </Column>
-        <Warning>{warningText}</Warning>
-        <ActionButton onClick={handleClick} disabled={disabled}>
-          {isPending && <Loader size="20px" stroke="white" />}
-          {buttonText}
-        </ActionButton>
+        <TraceEvent
+          events={[Event.onClick]}
+          name={EventName.NFT_BUY_BAG_PAY}
+          element={ElementName.NFT_BUY_BAG_PAY_BUTTON}
+          properties={{ ...eventProperties }}
+          shouldLogImpression={connected && !disabled}
+        >
+          <Warning>{warningText}</Warning>
+          <ActionButton onClick={handleClick} disabled={disabled}>
+            {isPending && <Loader size="20px" stroke="white" />}
+            {buttonText}
+          </ActionButton>
+        </TraceEvent>
       </Footer>
     </Column>
   )

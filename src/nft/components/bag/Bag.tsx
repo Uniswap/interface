@@ -18,11 +18,14 @@ import {
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
-import { buildSellObject } from 'nft/utils/buildSellObject'
-import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
-import { fetchPrice } from 'nft/utils/fetchPrice'
+import {
+  buildSellObject,
+  fetchPrice,
+  formatAssetEventProperties,
+  recalculateBagUsingPooledAssets,
+  sortUpdatedAssets,
+} from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { sortUpdatedAssets } from 'nft/utils/updatedAssets'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -53,7 +56,6 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
 
 const Bag = () => {
   const { account, provider } = useWeb3React()
-  const isConnected = !!provider && !!account
 
   const bagStatus = useBag((s) => s.bagStatus)
   const setBagStatus = useBag((s) => s.setBagStatus)
@@ -268,11 +270,14 @@ const Bag = () => {
                 <ScrollingIndicator show={userCanScroll && scrollProgress < 100} />
                 {hasAssetsToShow && !isProfilePage && (
                   <BagFooter
-                    isConnected={isConnected}
                     totalEthPrice={totalEthPrice}
                     totalUsdPrice={totalUsdPrice}
                     bagStatus={bagStatus}
                     fetchAssets={fetchAssets}
+                    eventProperties={{
+                      usd_value: totalUsdPrice,
+                      ...formatAssetEventProperties(itemsInBag.map((item) => item.asset)),
+                    }}
                   />
                 )}
                 {isSellingAssets && isProfilePage && (

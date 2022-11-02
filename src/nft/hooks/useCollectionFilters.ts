@@ -29,7 +29,7 @@ export const SortByQueries = {
 export type Trait = {
   trait_type: string
   trait_value: string
-  trait_count: number
+  trait_count?: number
   floorPrice?: number
 }
 

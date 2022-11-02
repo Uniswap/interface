@@ -1,4 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, PageName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, UniformHeight } from 'nft/types'
 import { formatWeiToDecimal, isAudio, isVideo, rarityProviderLogo } from 'nft/utils'
@@ -36,6 +39,7 @@ export const CollectionAsset = ({
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const toggleBag = useBag((state) => state.toggleBag)
+  const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
 
   const { quantity, isSelected } = useMemo(() => {
     return {
@@ -72,6 +76,13 @@ export const CollectionAsset = ({
     }
   }, [asset])
 
+  const eventProperties = {
+    collection_address: asset.address,
+    token_id: asset.tokenId,
+    token_type: asset.tokenType,
+    ...trace,
+  }
+
   return (
     <Card.Container
       asset={asset}
@@ -79,6 +90,7 @@ export const CollectionAsset = ({
       addAssetToBag={() => {
         addAssetsToBag([asset])
         !bagExpanded && !isMobile && toggleBag()
+        sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
       }}
       removeAssetFromBag={() => {
         removeAssetsFromBag([asset])
