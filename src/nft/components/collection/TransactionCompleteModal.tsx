@@ -28,7 +28,7 @@ import * as styles from './TransactionCompleteModal.css'
 const TxCompleteModal = () => {
   const [ethPrice, setEthPrice] = useState(3000)
   const [showUnavailable, setShowUnavailable] = useState(false)
-  const txHash = useTransaction((state) => state.txHash)
+  const txHash = useSendTransaction((state) => state.txHash)
   const setTxState = useSendTransaction((state) => state.setState)
   const txState = useSendTransaction((state) => state.state)
   const transactionStateRef = useRef(txState)
