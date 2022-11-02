@@ -65,7 +65,7 @@ export const SwapVolumeContextProvider = ({ children, chainId }: { children: any
         const interval = setInterval(async () => {
             console.log(`[SwapVolumeContextProvider] - Run Interval Update on Swap Volume`)
             await intervalledFunction()
-        }, 60000 * 3.5)
+        }, 60000)
         return () => clearInterval(interval)
     }, [])
 

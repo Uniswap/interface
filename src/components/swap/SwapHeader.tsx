@@ -1,11 +1,11 @@
 import { RowBetween, RowFixed } from '../Row'
 import { StyledInternalLink, TYPE } from '../../theme'
+import styled, { ThemeContext } from 'styled-components/macro'
 
 import { Percent } from '@uniswap/sdk-core'
-import { useContext } from 'react'
 import SettingsTab from '../Settings'
 import { Trans } from '@lingui/macro'
-import styled, { ThemeContext } from 'styled-components/macro'
+import { useContext } from 'react'
 import { useIsMobile } from 'pages/Swap/SelectiveCharting'
 import { useWeb3React } from '@web3-react/core'
 
@@ -18,7 +18,7 @@ const StyledSwapHeader = styled.div`
 `
 
 const HeaderType = styled(TYPE.black) <{ isMobile: boolean }>`
-padding: 14px 40px 10px 40px;
+padding: ${props => !props.isMobile ?  '14px 40px 10px 40px' : '14px'};
 border-top-right-radius: 24px;
 border-top-left-radius: 24px;
 font-family: 'Poppins' !important;
@@ -43,7 +43,7 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange, }: { a
             <Trans>Swap</Trans>
           </HeaderType>
 
-          {<HeaderType isMobile={isMobile} onClick={onLimitClick} fontWeight={view === 'limit' ? 700 : 400} style={{ color: view === 'limit' ? '#F76C1D' : '', cursor: 'pointer', background: view === 'limit' ? theme.bg0 : 'transparent' }}>
+          {Boolean(chainId === 1 || chainId === 56) && <HeaderType isMobile={isMobile} onClick={onLimitClick} fontWeight={view === 'limit' ? 700 : 400} style={{ color: view === 'limit' ? '#F76C1D' : '', cursor: 'pointer', background: view === 'limit' ? theme.bg0 : 'transparent' }}>
             <Trans>Limit</Trans>
           </HeaderType>}
 
@@ -53,13 +53,13 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange, }: { a
 
 
         </RowFixed>
-        {chainId === 1 && (
-          <RowFixed alignItems="center">
-            {<StyledInternalLink style={{ fontSize: isMobile ? 12 : 14, marginRight: isMobile ? 0 : 15 }} to="/bridge">Crosschain</StyledInternalLink>}
+        <RowFixed alignItems="center" style={{gap: 5, marginRight:isMobile ? '' : 10}}>
+        {<StyledInternalLink style={{ fontSize: isMobile ? 12 : 14 }} to="/bridge">Crosschain</StyledInternalLink>}
 
+        {chainId === 1 && (
             <SettingsTab placeholderSlippage={allowedSlippage} />
-          </RowFixed>
         )}
+        </RowFixed>
       </RowBetween>
     </StyledSwapHeader>
   )

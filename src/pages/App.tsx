@@ -62,6 +62,7 @@ import logo from '../assets/images/download.png'
 import styled from 'styled-components/macro'
 import { useDarkModeManager } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
+import { useWalletModalToggle } from 'state/application/hooks';
 import { useWeb3React } from '@web3-react/core'
 
 const AppWrapper = styled.div<{ embedModel: EmbedModel }>`
@@ -139,23 +140,20 @@ const StyledDiv = styled.div`
   font-size:14px;
 `
 
+
+const GainsPage = (props: any) => <TokenBalanceContextProvider>
+  <VotePage {...props} />
+</TokenBalanceContextProvider>
+
 export default function App() {
   const theme = useTheme()
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
-
-  const [style, setStyle] = useState({ background: '#333' })
-  const Video = React.useMemo(() => {
-    return (
-      <VideoWrapper style={style} >
-      </VideoWrapper>
-    )
-  }, [])
+  const [darkMode,] = useDarkModeManager()
   const embedModel = useIsEmbedMode()
   const { chainId, account, library } = useWeb3React()
-  const noop = () => { return };
-  const innerWidth = window.innerWidth;
+  const noop = () => { return }
   const isMobile = useIsMobile()
-  const GainsPage = (props: any) => <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
+  const toggleWalletModal = useWalletModalToggle()
+
   return (
     <ErrorBoundary>
 
@@ -166,7 +164,8 @@ export default function App() {
           <Web3ReactManager>
             <GelatoProvider
               library={library}
-              chainId={chainId ? chainId : 1}
+              chainId={chainId}
+              toggleWalletModal={toggleWalletModal}
               account={account ?? undefined}
               useDefaultTheme={false}
               useDarkMode={darkMode}
