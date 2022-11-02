@@ -169,7 +169,7 @@ const PriceTooltip = ({ price }: { price: string }) => (
 )
 
 export const PriceCell = ({ marketplace, price }: { marketplace?: Markets; price?: string }) => {
-  const formattedPrice = useMemo(() => (price ? putCommas(formatEthPrice(price)).toString() : null), [price])
+  const formattedPrice = useMemo(() => (price ? putCommas(formatEthPrice(price))?.toString() : null), [price])
 
   return (
     <Row display={{ sm: 'none', md: 'flex' }} gap="8">
