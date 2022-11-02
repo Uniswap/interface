@@ -11,9 +11,9 @@ export interface FavoritesState {
   // add other types of assets here, e.g. nfts
 }
 
-// Default currency ids
-const WBTC_CURRENCY_ID = idFromCurrency(WBTC)
-const ETH_CURRENCY_ID = idFromCurrency(Ether.onChain(ChainId.Mainnet))
+// Default currency ids, need to be in lowercase to match slice add and remove behavior
+const WBTC_CURRENCY_ID = idFromCurrency(WBTC).toLowerCase()
+const ETH_CURRENCY_ID = idFromCurrency(Ether.onChain(ChainId.Mainnet)).toLowerCase()
 
 export const initialFavoritesState: FavoritesState = {
   tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
