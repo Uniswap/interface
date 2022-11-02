@@ -1,24 +1,81 @@
-import clsx from 'clsx'
+import ms from 'ms.macro'
+import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
+import { fetchPrice } from 'nft/utils'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
-import { Box } from '../../components/Box'
-import { Column, Row } from '../../components/Flex'
-import { headlineMedium } from '../../css/common.css'
 import { fetchTrendingCollections } from '../../queries'
-import { CollectionTableColumn, TimePeriod, VolumeType } from '../../types'
 import CollectionTable from './CollectionTable'
-import * as styles from './Explore.css'
 
 const timeOptions: { label: string; value: TimePeriod }[] = [
-  { label: '24 hour', value: TimePeriod.OneDay },
-  { label: '7 day', value: TimePeriod.SevenDays },
-  { label: '30 day', value: TimePeriod.ThirtyDays },
-  { label: 'All time', value: TimePeriod.AllTime },
+  { label: '1D', value: TimePeriod.OneDay },
+  { label: '1W', value: TimePeriod.SevenDays },
+  { label: '1M', value: TimePeriod.ThirtyDays },
+  { label: 'All', value: TimePeriod.AllTime },
 ]
+
+const ExploreContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+`
+
+const StyledHeader = styled.div`
+  color: ${({ theme }) => theme.textPrimary};
+  font-size: 36px;
+  line-height: 44px;
+  weight: 500;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    font-size: 20px;
+    line-height: 28px;
+  }
+`
+
+const FiltersRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 36px;
+  margin-bottom: 20px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    margin-bottom: 16px;
+    margin-top: 16px;
+  }
+`
+
+const Filter = styled.div`
+  display: flex;
+  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 16px;
+  padding: 4px;
+`
+
+const Selector = styled.div<{ active: boolean }>`
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: ${({ active, theme }) => (active ? theme.backgroundInteractive : 'none')};
+  cursor: pointer;
+
+  :hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+
+  :active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+`
+
+const StyledSelectorText = styled(ThemedText.SubHeader)<{ active: boolean }>`
+  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+`
 
 const TrendingCollections = () => {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.OneDay)
+  const [isEthToggled, setEthToggled] = useState(true)
 
   const { isSuccess, data } = useQuery(
     ['trendingCollections', timePeriod],
@@ -32,6 +89,13 @@ const TrendingCollections = () => {
       refetchInterval: 5000,
     }
   )
+
+  const { data: usdPrice } = useQuery(['fetchPrice', {}], () => fetchPrice(), {
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchInterval: ms`1m`,
+  })
 
   const trendingCollections = useMemo(() => {
     if (isSuccess && data) {
@@ -58,39 +122,46 @@ const TrendingCollections = () => {
         },
         sales: d.sales,
         totalSupply: d.totalSupply,
+        denomination: isEthToggled ? Denomination.ETH : Denomination.USD,
+        usdPrice,
       }))
     } else return [] as CollectionTableColumn[]
-  }, [data, isSuccess])
+  }, [data, isSuccess, isEthToggled, usdPrice])
 
   return (
-    <Box width="full" className={styles.section}>
-      <Column width="full">
-        <Row>
-          <Box as="h2" className={headlineMedium} marginTop="88">
-            Trending Collections
-          </Box>
-        </Row>
-        <Row>
-          <Box className={styles.trendingOptions}>
-            {timeOptions.map((timeOption) => {
-              return (
-                <span
-                  className={clsx(
-                    styles.trendingOption,
-                    timeOption.value === timePeriod && styles.trendingOptionActive
-                  )}
-                  key={timeOption.value}
-                  onClick={() => setTimePeriod(timeOption.value)}
-                >
+    <ExploreContainer>
+      <StyledHeader>Trending NFT collections</StyledHeader>
+      <FiltersRow>
+        <Filter>
+          {timeOptions.map((timeOption) => {
+            return (
+              <Selector
+                key={timeOption.value}
+                active={timeOption.value === timePeriod}
+                onClick={() => setTimePeriod(timeOption.value)}
+              >
+                <StyledSelectorText lineHeight="20px" active={timeOption.value === timePeriod}>
                   {timeOption.label}
-                </span>
-              )
-            })}
-          </Box>
-        </Row>
-        <Row paddingBottom="52">{data ? <CollectionTable data={trendingCollections} /> : <p>Loading</p>}</Row>
-      </Column>
-    </Box>
+                </StyledSelectorText>
+              </Selector>
+            )
+          })}
+        </Filter>
+        <Filter onClick={() => setEthToggled(!isEthToggled)}>
+          <Selector active={isEthToggled}>
+            <StyledSelectorText lineHeight="20px" active={isEthToggled}>
+              ETH
+            </StyledSelectorText>
+          </Selector>
+          <Selector active={!isEthToggled}>
+            <StyledSelectorText lineHeight="20px" active={!isEthToggled}>
+              USD
+            </StyledSelectorText>
+          </Selector>
+        </Filter>
+      </FiltersRow>
+      <CollectionTable data={trendingCollections} />
+    </ExploreContainer>
   )
 }
 

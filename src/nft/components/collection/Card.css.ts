@@ -7,6 +7,8 @@ export const card = style([
     overflow: 'hidden',
     borderStyle: 'solid',
     borderWidth: '1px',
+    paddingBottom: '12',
+    boxShadow: 'shallow',
   }),
   {
     boxSizing: 'border-box',
@@ -20,9 +22,6 @@ export const card = style([
         },
       },
     },
-    ':hover': {
-      boxShadow: themeVars.shadows.deep,
-    },
   },
 ])
 
@@ -34,8 +33,13 @@ export const notSelectedCard = style([
   card,
   sprinkles({
     backgroundColor: 'backgroundSurface',
-    borderColor: 'transparent',
+    borderColor: 'backgroundOutline',
   }),
+  {
+    ':hover': {
+      backgroundColor: themeVars.colors.stateOverlayHover,
+    },
+  },
 ])
 
 export const cardImageHover = style({
@@ -45,9 +49,15 @@ export const cardImageHover = style({
 export const selectedCard = style([
   card,
   sprinkles({
-    background: 'lightGrayOverlay',
-    borderColor: 'backgroundOutline',
+    background: 'backgroundSurface',
+    borderColor: 'accentAction',
+    borderWidth: '3px',
   }),
+  {
+    ':hover': {
+      backgroundColor: themeVars.colors.stateOverlayHover,
+    },
+  },
 ])
 
 export const button = style([

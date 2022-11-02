@@ -1239,20 +1239,15 @@ export const SuspiciousIcon20 = (props: SVGProps) => (
 )
 
 export const MinusIconLarge = (props: SVGProps) => (
-  <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path
-      d="M8.72879 16.7601H23.2734C23.8862 16.7601 24.4085 16.2478 24.4085 15.615C24.4085 14.9922 23.8862 14.4699 23.2734 14.4699H8.72879C8.13616 14.4699 7.59375 14.9922 7.59375 15.615C7.59375 16.2478 8.13616 16.7601 8.72879 16.7601Z"
-      fill="currentColor"
-    />
+  <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
 export const PlusIconLarge = (props: SVGProps) => (
-  <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path
-      d="M8.72712 16.75H14.8544V22.8772C14.8544 23.5 15.3666 24.0223 15.9994 24.0223C16.6323 24.0223 17.1445 23.5 17.1445 22.8772V16.75H23.2718C23.8945 16.75 24.4169 16.2377 24.4169 15.6049C24.4169 14.9721 23.8945 14.4598 23.2718 14.4598H17.1445V8.33259C17.1445 7.70982 16.6323 7.1875 15.9994 7.1875C15.3666 7.1875 14.8544 7.70982 14.8544 8.33259V14.4598H8.72712C8.10435 14.4598 7.58203 14.9721 7.58203 15.6049C7.58203 16.2377 8.10435 16.75 8.72712 16.75Z"
-      fill="currentColor"
-    />
+  <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 

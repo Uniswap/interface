@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, UniformHeight } from 'nft/types'
 import { formatWeiToDecimal, isAudio, isVideo, rarityProviderLogo } from 'nft/utils'
-import { MouseEvent, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import * as Card from './Card'
 
@@ -73,24 +73,45 @@ export const CollectionAsset = ({
   }, [asset])
 
   return (
-    <Card.Container asset={asset} selected={isSelected}>
-      {assetMediaType === AssetMediaType.Image ? (
-        <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
-      ) : assetMediaType === AssetMediaType.Video ? (
-        <Card.Video
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-        />
-      ) : (
-        <Card.Audio
-          uniformHeight={uniformHeight}
-          setUniformHeight={setUniformHeight}
-          shouldPlay={mediaShouldBePlaying}
-          setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
-        />
-      )}
+    <Card.Container
+      asset={asset}
+      selected={isSelected}
+      addAssetToBag={() => {
+        addAssetsToBag([asset])
+        !bagExpanded && !isMobile && toggleBag()
+      }}
+      removeAssetFromBag={() => {
+        removeAssetsFromBag([asset])
+      }}
+    >
+      <Card.ImageContainer>
+        {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
+        {asset.rarity && provider && provider.rank && (
+          <Card.Ranking
+            rarity={asset.rarity}
+            provider={provider}
+            rarityVerified={!!rarityVerified}
+            rarityLogo={rarityLogo}
+          />
+        )}
+        {assetMediaType === AssetMediaType.Image ? (
+          <Card.Image uniformHeight={uniformHeight} setUniformHeight={setUniformHeight} />
+        ) : assetMediaType === AssetMediaType.Video ? (
+          <Card.Video
+            uniformHeight={uniformHeight}
+            setUniformHeight={setUniformHeight}
+            shouldPlay={mediaShouldBePlaying}
+            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+          />
+        ) : (
+          <Card.Audio
+            uniformHeight={uniformHeight}
+            setUniformHeight={setUniformHeight}
+            shouldPlay={mediaShouldBePlaying}
+            setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
+          />
+        )}
+      </Card.ImageContainer>
       <Card.DetailsContainer>
         <Card.InfoContainer>
           <Card.PrimaryRow>
@@ -98,14 +119,7 @@ export const CollectionAsset = ({
               <Card.PrimaryInfo>{asset.name ? asset.name : `#${asset.tokenId}`}</Card.PrimaryInfo>
               {asset.susFlag && <Card.Suspicious />}
             </Card.PrimaryDetails>
-            {asset.rarity && provider && provider.rank && (
-              <Card.Ranking
-                rarity={asset.rarity}
-                provider={provider}
-                rarityVerified={!!rarityVerified}
-                rarityLogo={rarityLogo}
-              />
-            )}
+            <Card.DetailsLink />
           </Card.PrimaryRow>
           <Card.SecondaryRow>
             <Card.SecondaryDetails>
@@ -119,21 +133,6 @@ export const CollectionAsset = ({
             )}
           </Card.SecondaryRow>
         </Card.InfoContainer>
-        <Card.Button
-          quantity={quantity}
-          selectedChildren={'Remove'}
-          onClick={(e: MouseEvent) => {
-            e.preventDefault()
-            addAssetsToBag([asset])
-            !bagExpanded && !isMobile && toggleBag()
-          }}
-          onSelectedClick={(e: MouseEvent) => {
-            e.preventDefault()
-            removeAssetsFromBag([asset])
-          }}
-        >
-          {'Buy now'}
-        </Card.Button>
       </Card.DetailsContainer>
     </Card.Container>
   )

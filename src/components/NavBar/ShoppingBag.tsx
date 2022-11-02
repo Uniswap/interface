@@ -29,14 +29,14 @@ export const ShoppingBag = () => {
     <NavIcon onClick={toggleBag}>
       {isProfilePage ? (
         <>
-          <TagIcon width={20} height={20} />
+          <TagIcon viewBox="0 0 20 20" width={24} height={24} />
           {sellQuantity ? (
             <Box className={styles.bagQuantity}>{sellQuantity > 99 ? <HundredsOverflowIcon /> : sellQuantity}</Box>
           ) : null}
         </>
       ) : (
         <>
-          <BagIcon width={20} height={20} />
+          <BagIcon viewBox="0 0 20 20" width={24} height={24} />
           {bagQuantity ? (
             <Box className={styles.bagQuantity}>{bagQuantity > 99 ? <HundredsOverflowIcon /> : bagQuantity}</Box>
           ) : null}

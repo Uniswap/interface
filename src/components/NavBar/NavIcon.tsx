@@ -18,6 +18,7 @@ export const NavIcon = ({ children, isActive, onClick }: NavIconProps) => {
       color={isActive ? 'textPrimary' : 'textSecondary'}
       onClick={onClick}
       height="40"
+      width="40"
     >
       {children}
     </Box>

@@ -74,9 +74,6 @@ export const detailsName = style([
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   }),
-  {
-    lineHeight: '24px',
-  },
 ])
 
 export const eventDetail = style([
@@ -101,7 +98,7 @@ export const eventTime = style([
 ])
 
 export const addressCell = style([
-  subhead,
+  buttonTextMedium,
   sprinkles({
     color: 'textPrimary',
     height: 'full',
