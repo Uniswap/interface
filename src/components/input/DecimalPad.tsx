@@ -170,6 +170,12 @@ function KeyButton({
     }
   }
 
+  const onLongPress = () => {
+    if (action !== KeyAction.Delete) return
+
+    setValue('')
+  }
+
   return (
     <TouchableArea
       alignItems={align}
@@ -179,6 +185,7 @@ function KeyButton({
       paddingTop={paddingTop}
       testID={'decimal-pad-' + label}
       width="33%"
+      onLongPress={onLongPress}
       onPress={onPress}>
       <Text
         color={isDisabled ? 'textSecondary' : 'textPrimary'}
