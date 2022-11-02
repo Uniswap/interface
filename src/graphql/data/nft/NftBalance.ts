@@ -1,8 +1,7 @@
 import graphql from 'babel-plugin-relay/macro'
 import { WalletAsset } from 'nft/types'
-import { loadQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
+import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 
-import RelayEnvironment from '../RelayEnvironment'
 import { NftBalancePaginationQuery } from './__generated__/NftBalancePaginationQuery.graphql'
 import { NftBalanceQuery } from './__generated__/NftBalanceQuery.graphql'
 
@@ -112,7 +111,7 @@ export function useNftBalanceQuery(
   last?: number,
   before?: string
 ) {
-  const nftBalanceQueryReference = loadQuery<NftBalanceQuery>(RelayEnvironment, nftBalanceQuery, {
+  const queryData = useLazyLoadQuery<NftBalanceQuery>(nftBalanceQuery, {
     ownerAddress,
     filter: {
       addresses: collectionFilters,
@@ -122,7 +121,6 @@ export function useNftBalanceQuery(
     last,
     before,
   })
-  const queryData = usePreloadedQuery<NftBalanceQuery>(nftBalanceQuery, nftBalanceQueryReference)
   const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<NftBalancePaginationQuery, any>(
     nftBalancePaginationQuery,
     queryData
