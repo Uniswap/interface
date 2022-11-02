@@ -83,7 +83,7 @@ export default function ProAmmPriceRange({
 
           {/* <Divider /> */}
           <LiquidityChartRangeInput
-            style={{ minHeight: '175px' }}
+            style={{ minHeight: '180px' }}
             currencyA={baseCurrency}
             currencyB={quoteCurrency}
             feeAmount={position.pool.fee}
