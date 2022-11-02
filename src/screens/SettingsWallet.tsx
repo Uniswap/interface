@@ -12,6 +12,7 @@ import BriefcaseIcon from 'src/assets/icons/briefcase.svg'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import EditIcon from 'src/assets/icons/edit.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
+import ShieldIcon from 'src/assets/icons/shield.svg'
 import TrendingUpIcon from 'src/assets/icons/trending-up.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
@@ -41,10 +42,10 @@ import { AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts, useSelectAccountNotificationSetting } from 'src/features/wallet/hooks'
 import {
-  selectHideSmallBalances,
+  selectAccountHideSmallBalances,
+  selectAccountHideSpamTokens,
   selectSortedSignerMnemonicAccounts,
 } from 'src/features/wallet/selectors'
-import { setShowSmallBalances } from 'src/features/wallet/walletSlice'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { Screens } from './Screens'
 
@@ -71,9 +72,10 @@ export function SettingsWallet({
     Object.values(addressToAccount).length === 1 ||
     (mnemonicWallets.length === 1 && currentAccount.type === AccountType.SignerMnemonic)
 
+  const hideSmallBalances = useAppSelector(selectAccountHideSmallBalances(address))
+  const hideSpamTokens = useAppSelector(selectAccountHideSpamTokens(address))
   const notificationOSPermission = useNotificationOSPermissionsEnabled()
   const notificationsEnabledOnFirebase = useSelectAccountNotificationSetting(address)
-
   const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(
     notificationsEnabledOnFirebase
   )
@@ -135,10 +137,24 @@ export function SettingsWallet({
     setShowRemoveWalletModal(false)
   }
 
-  const hideSmallBalancesEnabled = useAppSelector(selectHideSmallBalances)
-
   const toggleHideSmallBalances = () => {
-    dispatch(setShowSmallBalances(hideSmallBalancesEnabled))
+    dispatch(
+      editAccountActions.trigger({
+        type: EditAccountAction.ToggleShowSmallBalances,
+        enabled: hideSmallBalances, // Toggles showSmallBalances since hideSmallBalances is the flipped value of showSmallBalances
+        address,
+      })
+    )
+  }
+
+  const toggleHideSpamTokens = () => {
+    dispatch(
+      editAccountActions.trigger({
+        type: EditAccountAction.ToggleShowSpamTokens,
+        enabled: hideSpamTokens, // Toggles showSpamTokens since hideSpamTokens is the flipped value of showSpamTokens
+        address,
+      })
+    )
   }
 
   const iconProps: SvgProps = {
@@ -172,11 +188,14 @@ export function SettingsWallet({
           icon: <NotificationIcon {...iconProps} />,
         },
         {
-          action: (
-            <Switch value={hideSmallBalancesEnabled} onValueChange={toggleHideSmallBalances} />
-          ),
+          action: <Switch value={hideSmallBalances} onValueChange={toggleHideSmallBalances} />,
           text: t('Hide small balances'),
           icon: <TrendingUpIcon {...iconProps} />,
+        },
+        {
+          action: <Switch value={hideSpamTokens} onValueChange={toggleHideSpamTokens} />,
+          text: t('Hide spam tokens'),
+          icon: <ShieldIcon {...iconProps} />,
         },
         {
           screen: Screens.SettingsWalletManageConnection,

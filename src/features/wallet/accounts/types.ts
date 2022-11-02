@@ -27,6 +27,8 @@ export interface AccountBase {
   pending?: boolean
   timeImportedMs: number
   pushNotificationsEnabled?: boolean
+  showSmallBalances?: boolean
+  showSpamTokens?: boolean
 }
 
 export interface SignerMnemonicAccount extends AccountBase {

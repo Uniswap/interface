@@ -21,8 +21,6 @@ interface Wallet {
   isUnlocked: boolean
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
-    showSmallBalances?: boolean // default: hide small balances
-
     nftViewType?: NFTViewType
 
     // Settings used in the top tokens list
@@ -92,9 +90,6 @@ const slice = createSlice({
     setNFTViewType: (state, action: PayloadAction<NFTViewType>) => {
       state.settings.nftViewType = action.payload
     },
-    setShowSmallBalances: (state, action: PayloadAction<boolean>) => {
-      state.settings.showSmallBalances = action.payload
-    },
     setTokensOrderBy: (
       state,
       { payload: { newTokensOrderBy } }: PayloadAction<{ newTokensOrderBy: TokensOrderBy }>
@@ -124,7 +119,6 @@ export const {
   setFinishedOnboarding,
   toggleFlashbots,
   setNFTViewType,
-  setShowSmallBalances,
   setTokensOrderBy,
   cycleTokensMetadataDisplayType,
 } = slice.actions

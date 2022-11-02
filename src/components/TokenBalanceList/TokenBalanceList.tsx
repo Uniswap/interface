@@ -9,7 +9,7 @@ import { Separator } from 'src/components/layout/Separator'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
-import { selectHideSmallBalances } from 'src/features/wallet/selectors'
+import { selectAccountHideSmallBalances } from 'src/features/wallet/selectors'
 import { CurrencyId } from 'src/utils/currencyId'
 
 type TokenBalanceListProps = {
@@ -31,7 +31,7 @@ export function TokenBalanceList({
   onPressTokenIn,
   tabViewScrollProps,
 }: TokenBalanceListProps) {
-  const hideSmallBalances = useAppSelector(selectHideSmallBalances)
+  const hideSmallBalances = useAppSelector(selectAccountHideSmallBalances(owner))
   const balances = useSortedPortfolioBalancesList(owner, hideSmallBalances)
   const truncatedBalances = useMemo(() => balances.slice(0, count), [balances, count])
   return (

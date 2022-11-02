@@ -65,12 +65,9 @@ export const selectFinishedOnboarding = (state: RootState) => state.wallet.finis
 export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
 export const selectNFTViewType = (state: RootState) =>
   state.wallet.settings.nftViewType ?? NFTViewType.Grid
-export const selectHideSmallBalances = (state: RootState) =>
-  !state.wallet.settings.showSmallBalances
 
 export const selectTokensOrderBy = (state: RootState) =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
-
 export const selectTokensMetadataDisplayType = (state: RootState) =>
   state.wallet.settings.tokensMetadataDisplayType ?? DEFAULT_TOKENS_METADATA_DISPLAY_TYPE
 
@@ -89,3 +86,8 @@ export const selectInactiveAccounts = createSelector(
 
 export const makeSelectAccountNotificationSetting = (address: Address) =>
   createSelector(selectAccounts, (accounts) => !!accounts[address]?.pushNotificationsEnabled)
+
+export const selectAccountHideSmallBalances = (address: Address) =>
+  createSelector(selectAccounts, (accounts) => !accounts[address]?.showSmallBalances)
+export const selectAccountHideSpamTokens = (address: Address) =>
+  createSelector(selectAccounts, (accounts) => !accounts[address]?.showSpamTokens)

@@ -17,12 +17,14 @@ import { createMonitoredSaga } from 'src/utils/saga'
 import { all, call, put } from 'typed-redux-saga'
 
 export enum EditAccountAction {
-  AddBackupMethod = 'addbackupmethod',
-  RemoveBackupMethod = 'deletebackupmethod',
-  Rename = 'rename',
-  Remove = 'remove',
-  TogglePushNotification = 'togglepushnotification',
-  ToggleTestnetSettings = 'toggletestnetsettings',
+  AddBackupMethod = 'AddBackupMethod',
+  RemoveBackupMethod = 'RemoveBackupMethod',
+  Rename = 'Rename',
+  Remove = 'Remove',
+  TogglePushNotification = 'TogglePushNotification',
+  ToggleTestnetSettings = 'ToggleTestnetSettings',
+  ToggleShowSmallBalances = 'ToggleShowSmallBalances',
+  ToggleShowSpamTokens = 'ToggleShowSpamTokenss',
   // May need a reorder action here eventually
 }
 interface EditParamsBase {
@@ -58,6 +60,16 @@ export interface ToggleTestnetSettingsParams extends EditParamsBase {
   enabled: boolean
 }
 
+export interface ToggleShowSmallBalancesParams extends EditParamsBase {
+  type: EditAccountAction.ToggleShowSmallBalances
+  enabled: boolean
+}
+
+export interface ToggleShowSpamTokensParams extends EditParamsBase {
+  type: EditAccountAction.ToggleShowSpamTokens
+  enabled: boolean
+}
+
 export type EditAccountParams =
   | AddBackupMethodParams
   | RemoveBackupMethodParams
@@ -65,6 +77,8 @@ export type EditAccountParams =
   | RemoveParams
   | TogglePushNotificationParams
   | ToggleTestnetSettingsParams
+  | ToggleShowSmallBalancesParams
+  | ToggleShowSpamTokensParams
 
 function* editAccount(params: EditAccountParams) {
   const { type, address } = params
@@ -86,6 +100,12 @@ function* editAccount(params: EditAccountParams) {
       break
     case EditAccountAction.RemoveBackupMethod:
       yield* call(removeBackupMethod, params, account)
+      break
+    case EditAccountAction.ToggleShowSmallBalances:
+      yield* call(toggleShowSmallBalances, params, account)
+      break
+    case EditAccountAction.ToggleShowSpamTokens:
+      yield* call(toggleShowSpamTokens, params, account)
       break
     default:
       break
@@ -186,6 +206,34 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
     'removeBackupMethod',
     'Removing backup method',
     mnemonicAccounts.map((a) => a.address)
+  )
+}
+
+function* toggleShowSmallBalances(params: ToggleShowSmallBalancesParams, account: Account) {
+  const { address, enabled } = params
+  logger.info('editAccountSaga', 'toggleShowSmallBalances', address, 'to', enabled)
+  yield* put(
+    editInStore({
+      address,
+      updatedAccount: {
+        ...account,
+        showSmallBalances: enabled,
+      },
+    })
+  )
+}
+
+function* toggleShowSpamTokens(params: ToggleShowSpamTokensParams, account: Account) {
+  const { address, enabled } = params
+  logger.info('editAccountSaga', 'toggleShowSpamTokens', address, 'to', enabled)
+  yield* put(
+    editInStore({
+      address,
+      updatedAccount: {
+        ...account,
+        showSpamTokens: enabled,
+      },
+    })
   )
 }
 

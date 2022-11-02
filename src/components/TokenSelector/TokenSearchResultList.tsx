@@ -19,7 +19,7 @@ import { useSearchTokens } from 'src/features/dataApi/searchTokens'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
-import { selectHideSmallBalances } from 'src/features/wallet/selectors'
+import { selectAccountHideSmallBalances } from 'src/features/wallet/selectors'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
 import { differenceWith } from 'src/utils/array'
 import { useDebounce } from 'src/utils/timing'
@@ -59,7 +59,7 @@ export function useTokenSectionsByVariation(
 ): TokenSection[] {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
-  const hideSmallBalances = useAppSelector(selectHideSmallBalances)
+  const hideSmallBalances = useAppSelector(selectAccountHideSmallBalances(activeAccount.address))
 
   const popularTokens = usePopularTokens()
   const portfolioBalancesById = usePortfolioBalances(activeAccount.address)
