@@ -112,6 +112,7 @@ export enum SectionName {
 /** Known modals for analytics purposes. */
 export enum ModalName {
   CONFIRM_SWAP = 'confirm-swap-modal',
+  NFT_TX_COMPLETE = 'nft-tx-complete-modal',
   TOKEN_SELECTOR = 'token-selector-modal',
   // alphabetize additional modal names.
 }

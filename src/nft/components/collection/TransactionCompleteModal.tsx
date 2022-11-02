@@ -1,5 +1,6 @@
-import { EventName } from 'analytics/constants'
+import { EventName, ModalName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
+import { useTrace } from 'analytics/Trace'
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
@@ -27,7 +28,7 @@ import * as styles from './TransactionCompleteModal.css'
 const TxCompleteModal = () => {
   const [ethPrice, setEthPrice] = useState(3000)
   const [showUnavailable, setShowUnavailable] = useState(false)
-  const txHash = useSendTransaction((state) => state.txHash)
+  const txHash = useTransaction((state) => state.txHash)
   const setTxState = useSendTransaction((state) => state.setState)
   const txState = useSendTransaction((state) => state.state)
   const transactionStateRef = useRef(txState)
@@ -36,6 +37,7 @@ const TxCompleteModal = () => {
   const isMobile = useIsMobile()
   const txHashUrl = getExplorerLink(1, txHash, ExplorerDataType.TRANSACTION)
   const shouldShowModal = (txState === TxStateType.Success || txState === TxStateType.Failed) && txState
+  const trace = useTrace({ modal: ModalName.NFT_TX_COMPLETE })
   const {
     nftsPurchased,
     nftsNotPurchased,
@@ -83,6 +85,7 @@ const TxCompleteModal = () => {
                   usd_value: totalPurchaseValue,
                   transaction_hash: txHash,
                   ...formatAssetEventProperties(nftsPurchased),
+                  ...trace,
                 }}
                 shouldLogImpression
               >
@@ -154,6 +157,7 @@ const TxCompleteModal = () => {
                     fail_quantity: nftsNotPurchased.length,
                     refund_amount_usd: totalUSDRefund,
                     transaction_hash: txHash,
+                    ...trace,
                   }}
                   shouldLogImpression
                 >
@@ -224,6 +228,7 @@ const TxCompleteModal = () => {
                     buy_quantity: 0,
                     fail_quantity: nftsNotPurchased.length,
                     refund_amount_usd: totalUSDRefund,
+                    ...trace,
                   }}
                   shouldLogImpression
                 >
