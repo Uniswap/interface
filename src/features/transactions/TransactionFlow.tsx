@@ -3,7 +3,9 @@ import { providers } from 'ethers'
 import React, { Dispatch, ReactElement, useCallback, useEffect } from 'react'
 import { Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
+import { useAppTheme } from 'src/app/hooks'
+import SortIcon from 'src/assets/icons/sort.svg'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Warning } from 'src/components/modals/WarningModal/types'
 import { Text } from 'src/components/Text'
@@ -84,6 +86,8 @@ export function TransactionFlow({
   isUSDInput,
   showUSDToggle,
 }: TransactionFlowProps) {
+  const theme = useAppTheme()
+
   // enable tap to dismiss keyboard on whole modal screen
   // this only applies when we show native keyboard on smaller devices
   const onBackgroundPress = () => {
@@ -112,13 +116,25 @@ export function TransactionFlow({
                 {flowName}
               </Text>
               {step === TransactionStep.FORM && showUSDToggle && (
-                <Button
-                  emphasis={ButtonEmphasis.Tertiary}
-                  label="$   USD"
-                  name="toggle-usd"
-                  size={ButtonSize.Small}
-                  onPress={() => onToggleUSDInput(!isUSDInput)}
-                />
+                <TouchableArea
+                  bg={isUSDInput ? 'background2' : 'none'}
+                  borderRadius="xl"
+                  px="sm"
+                  py="xs"
+                  onPress={() => onToggleUSDInput(!isUSDInput)}>
+                  <Flex row alignItems="center" gap="xxxs">
+                    <SortIcon
+                      color={theme.colors.textSecondary}
+                      height={theme.iconSizes.sm}
+                      width={theme.iconSizes.sm}
+                    />
+                    <Text
+                      color={isUSDInput ? 'textPrimary' : 'textSecondary'}
+                      variant="buttonLabelSmall">
+                      USD
+                    </Text>
+                  </Flex>
+                </TouchableArea>
               )}
             </Flex>
           )}
