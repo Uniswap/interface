@@ -75,7 +75,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
 
   const [, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
-    setCopied(address || '')
+    setCopied(address ?? '')
   }, [address, setCopied])
 
   return (

@@ -318,9 +318,11 @@ const Bag = () => {
               <ListingModal />
             )}
           </Column>
-          {isDetailsPage && <DetailsPageBackground onClick={toggleBag} />}
-
-          {isOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />}
+          {isDetailsPage ? (
+            <DetailsPageBackground onClick={toggleBag} />
+          ) : (
+            isOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
+          )}
         </Portal>
       ) : null}
     </>

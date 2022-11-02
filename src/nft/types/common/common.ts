@@ -41,13 +41,6 @@ export interface OpenSeaAsset {
   collection?: OpenSeaCollection
 }
 
-interface OpenSeaUser {
-  user?: null
-  profile_img_url: string
-  address: string
-  config: string
-}
-
 export enum TokenType {
   ERC20 = 'ERC20',
   ERC721 = 'ERC721',

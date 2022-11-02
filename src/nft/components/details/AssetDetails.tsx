@@ -1,8 +1,10 @@
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
+import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
+import { VerifiedIcon } from 'nft/components/icons'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEventResponse, ActivityEventType } from 'nft/types'
 import { CollectionInfoForAsset, GenieAsset, GenieCollection } from 'nft/types'
@@ -19,8 +21,6 @@ import { useInfiniteQuery, useQuery } from 'react-query'
 import { Link as RouterLink } from 'react-router-dom'
 import styled, { css } from 'styled-components/macro'
 
-import { reduceFilters } from '../collection/Activity'
-import { VerifiedIcon } from '../icons'
 import AssetActivity from './AssetActivity'
 import * as styles from './AssetDetails.css'
 import DetailsContainer from './DetailsContainer'
@@ -410,7 +410,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
       </AssetPriceDetailsContainer>
       <InfoContainer
         primaryHeader="Traits"
-        defaulOpen
+        defaultOpen
         secondaryHeader={
           rarityProvider && rarity ? (
             <MouseoverTooltip

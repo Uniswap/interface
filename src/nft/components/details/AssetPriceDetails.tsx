@@ -271,7 +271,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
-  const openBag = useBag((s) => s.openBag)
+  const toggleBag = useBag((s) => s.toggleBag)
+  const bagExpanded = useBag((s) => s.bagExpanded)
 
   const USDPrice = useUsdPrice(asset)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
@@ -346,8 +347,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                 useAccentColor={true}
                 onClick={() => {
                   assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
-                  if (!assetInBag && !isErc1555) {
-                    openBag()
+                  if (!assetInBag && !isErc1555 && !bagExpanded) {
+                    toggleBag()
                   }
                 }}
               >

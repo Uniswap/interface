@@ -21,7 +21,6 @@ interface BagState {
   setDidOpenUnavailableAssets: (didOpen: boolean) => void
   bagExpanded: boolean
   toggleBag: () => void
-  openBag: () => void
   isLocked: boolean
   setLocked: (isLocked: boolean) => void
   reset: () => void
@@ -57,10 +56,6 @@ export const useBag = create<BagState>()(
       toggleBag: () =>
         set(({ bagExpanded }) => ({
           bagExpanded: !bagExpanded,
-        })),
-      openBag: () =>
-        set(() => ({
-          bagExpanded: true,
         })),
       isLocked: false,
       setLocked: (_isLocked) =>

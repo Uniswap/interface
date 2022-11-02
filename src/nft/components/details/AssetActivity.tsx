@@ -110,13 +110,7 @@ const ActivityContainer = styled.div`
   }
 `
 
-const EventCellContainer = styled.div`
-  margin-top: 5px;
-`
-
 const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {
-  const events = eventsData?.events || []
-
   return (
     <ActivityContainer id="activityContainer">
       <Table>
@@ -130,54 +124,57 @@ const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | und
           </TR>
         </thead>
         <tbody>
-          {events.map((event, index) => {
-            const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
-            const formattedPrice = price ? putCommas(formatEthPrice(price)).toString() : null
+          {eventsData?.events &&
+            eventsData.events.map((event, index) => {
+              const { eventTimestamp, eventType, fromAddress, marketplace, price, toAddress, transactionHash } = event
+              const formattedPrice = price ? putCommas(formatEthPrice(price)).toString() : null
 
-            return (
-              <TR key={index}>
-                <TD>
-                  <EventCellContainer>
+              return (
+                <TR key={index}>
+                  <TD>
                     <EventCell
                       eventType={eventType}
                       eventTimestamp={eventTimestamp}
                       eventTransactionHash={transactionHash}
                       eventOnly
                     />
-                  </EventCellContainer>
-                </TD>
-                <TD>
-                  {formattedPrice && (
-                    <PriceContainer>
-                      {marketplace && <MarketplaceIcon marketplace={marketplace} />}
-                      {formattedPrice} ETH
-                    </PriceContainer>
-                  )}
-                </TD>
+                  </TD>
+                  <TD>
+                    {formattedPrice && (
+                      <PriceContainer>
+                        {marketplace && <MarketplaceIcon marketplace={marketplace} />}
+                        {formattedPrice} ETH
+                      </PriceContainer>
+                    )}
+                  </TD>
 
-                <TD>
-                  {fromAddress && (
-                    <Link
-                      href={`https://etherscan.io/address/${fromAddress}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {shortenAddress(fromAddress, 2, 4)}
-                    </Link>
-                  )}
-                </TD>
+                  <TD>
+                    {fromAddress && (
+                      <Link
+                        href={`https://etherscan.io/address/${fromAddress}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {shortenAddress(fromAddress, 2, 4)}
+                      </Link>
+                    )}
+                  </TD>
 
-                <TD>
-                  {toAddress && (
-                    <Link href={`https://etherscan.io/address/${toAddress}`} target="_blank" rel="noopener noreferrer">
-                      {shortenAddress(toAddress, 2, 4)}
-                    </Link>
-                  )}
-                </TD>
-                <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString())}</TD>
-              </TR>
-            )
-          })}
+                  <TD>
+                    {toAddress && (
+                      <Link
+                        href={`https://etherscan.io/address/${toAddress}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {shortenAddress(toAddress, 2, 4)}
+                      </Link>
+                    )}
+                  </TD>
+                  <TD>{eventTimestamp && getTimeDifference(eventTimestamp.toString())}</TD>
+                </TR>
+              )
+            })}
         </tbody>
       </Table>
     </ActivityContainer>

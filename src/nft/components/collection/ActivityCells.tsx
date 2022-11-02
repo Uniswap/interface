@@ -204,7 +204,7 @@ const renderEventIcon = (eventType: ActivityEventType) => {
     case ActivityEventType.Transfer:
       return <ActivityTransferIcon width={16} height={16} />
     case ActivityEventType.CancelListing:
-      return <CancelListingIcon width={24} height={24} />
+      return <CancelListingIcon width={16} height={16} />
     default:
       return null
   }
@@ -289,7 +289,7 @@ interface RankingProps {
   details?: boolean
 }
 
-export const Ranking = ({ details, rarity, collectionName, rarityVerified }: RankingProps) => {
+const Ranking = ({ details, rarity, collectionName, rarityVerified }: RankingProps) => {
   const rarityProviderLogo = getRarityProviderLogo(rarity.source)
 
   return (
