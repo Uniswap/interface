@@ -1,6 +1,11 @@
 import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
+import {
+  MAX_WIDTH_MEDIA_BREAKPOINT,
+  MOBILE_MEDIA_BREAKPOINT,
+  SMALL_MEDIA_BREAKPOINT,
+} from 'components/Tokens/constants'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
@@ -14,9 +19,42 @@ import { Suspense, useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring'
+import styled, { css } from 'styled-components/macro'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
+
+export const ScreenBreakpointsPaddings = css`
+  @media screen and (min-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+
+  @media screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  @media screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  @media screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+`
+
+const CollectionDescriptionSection = styled(Column)`
+  ${ScreenBreakpointsPaddings}
+`
+
+const CollectionDisplaySection = styled(Row)`
+  ${ScreenBreakpointsPaddings}
+  align-items: flex-start;
+  position: relative;
+`
 
 export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
 
@@ -93,7 +131,7 @@ const Collection = () => {
                   )}
                 </Box>
               </Box>
-              <Column paddingX="48">
+              <CollectionDescriptionSection>
                 {(isLoading || collectionStats !== undefined) && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
                 )}
@@ -105,8 +143,8 @@ const Collection = () => {
                     toggleActivity()
                   }}
                 />
-              </Column>
-              <Row alignItems="flex-start" position="relative" paddingX="48">
+              </CollectionDescriptionSection>
+              <CollectionDisplaySection>
                 <Box position="sticky" top="72" width="0">
                   {isFiltersExpanded && <Filters traits={collectionStats?.traits ?? []} />}
                 </Box>
@@ -138,7 +176,7 @@ const Collection = () => {
                         </Suspense>
                       )}
                 </AnimatedBox>
-              </Row>
+              </CollectionDisplaySection>
             </>
           ) : (
             // TODO: Put no collection asset page here
