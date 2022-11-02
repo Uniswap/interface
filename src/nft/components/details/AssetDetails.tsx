@@ -2,7 +2,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { Center, Row } from 'nft/components/Flex'
+import { Center } from 'nft/components/Flex'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEventResponse, ActivityEventType } from 'nft/types'
 import { CollectionInfoForAsset, GenieAsset, GenieCollection } from 'nft/types'
@@ -191,6 +191,19 @@ const ByText = styled.span`
 const Img = styled.img`
   box-shadow: 0px 4px 4px 0px #00000040;
   background-color: white;
+`
+
+const HoverImageContainer = styled.div`
+  display: flex;
+  margin-right: 4px;
+`
+
+const HoverContainer = styled.div`
+  display: flex;
+`
+
+const ContainerText = styled.span`
+  font-size: 14px;
 `
 
 const AudioPlayer = ({
@@ -404,19 +417,16 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
           rarityProvider && rarity ? (
             <MouseoverTooltip
               text={
-                <div>
-                  {' '}
-                  <Row>
-                    <Box display="flex" marginRight="4">
-                      <img src={rarityProviderLogo} alt="cardLogo" width={16} />
-                    </Box>
-                    <Box width="full" fontSize="14">
-                      {collectionStats?.rarityVerified
-                        ? `Verified by ${collectionStats?.name}`
-                        : `Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
-                    </Box>
-                  </Row>
-                </div>
+                <HoverContainer>
+                  <HoverImageContainer>
+                    <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+                  </HoverImageContainer>
+                  <ContainerText>
+                    {collectionStats?.rarityVerified
+                      ? `Verified by ${collectionStats?.name}`
+                      : `Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
+                  </ContainerText>
+                </HoverContainer>
               }
               placement="top"
             >

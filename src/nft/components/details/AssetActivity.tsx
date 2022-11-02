@@ -12,10 +12,6 @@ const TR = styled.tr`
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   width: 100%;
 
-  &:nth-child(1) {
-    border-bottom: none;
-  }
-
   &:last-child {
     border-bottom: none;
   }
@@ -119,7 +115,7 @@ const EventCellContainer = styled.div`
 `
 
 const AssetActivity = ({ eventsData }: { eventsData: ActivityEventResponse | undefined }) => {
-  const events = eventsData === undefined ? [] : eventsData?.events
+  const events = eventsData?.events || []
 
   return (
     <ActivityContainer id="activityContainer">
