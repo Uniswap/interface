@@ -35,10 +35,8 @@ const gcReleaseBufferSize = 10
 const queryCacheExpirationTime = ms`1m`
 const store = new Store(new RecordSource(), { gcReleaseBufferSize, queryCacheExpirationTime })
 const network = Network.create(fetchQuery)
-const requiredFieldLogger = console.error
 // Export a singleton instance of Relay Environment configured with our network function:
 export default new Environment({
   network,
   store,
-  requiredFieldLogger,
 })
