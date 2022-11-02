@@ -258,16 +258,6 @@ const Bag = () => {
     (!isProfilePage && !isBuyingAssets && bagStatus === BagStatus.ADDING_TO_BAG) || (isProfilePage && !isSellingAssets)
   )
 
-  /*
-  const formatAnalyticsEventProperties = (assets: BagItem[], priceData: number | undefined) => ({
-    collection_addresses: assets.map((asset) => asset.asset.address),
-    token_ids: assets.map((asset) => asset.asset.tokenId),
-    token_types: assets.map((asset) => asset.asset.tokenType),
-    bag_quantity: itemsInBag.length,
-    usd_value: priceData,
-  })
-  */
-
   return (
     <>
       {bagExpanded && shouldShowBag ? (
