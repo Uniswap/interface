@@ -29,7 +29,6 @@ import { getWrapType, isWrapAction, sumGasFees } from 'src/features/transactions
 import {
   getWethContract,
   tokenWrapActions,
-  tokenWrapSagaName,
   WrapType,
 } from 'src/features/transactions/swap/wrapSaga'
 import {
@@ -44,9 +43,7 @@ import { useActiveAccount, useActiveAccountAddressWithThrow } from 'src/features
 import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
 import { useAsyncData, usePrevious } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
-import { SagaStatus } from 'src/utils/saga'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
-import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
 const NUM_CURRENCY_SIG_FIGS = 6
@@ -651,7 +648,7 @@ export function useSwapCallback(
   approveTxRequest: providers.TransactionRequest | undefined,
   swapTxRequest: providers.TransactionRequest | undefined,
   trade: Trade | null | undefined,
-  onSubmit?: () => void,
+  onSubmit: () => void,
   txId?: string
 ): () => void {
   const appDispatch = useAppDispatch()
@@ -674,7 +671,7 @@ export function useSwapCallback(
           swapTxRequest,
         })
       )
-      onSubmit?.()
+      onSubmit()
     }
   }, [account, swapTxRequest, appDispatch, txId, trade, approveTxRequest, onSubmit])
 }
@@ -688,13 +685,6 @@ export function useWrapCallback(
 ) {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
-  const wrapState = useSagaStatus(tokenWrapSagaName, onSuccess)
-
-  useEffect(() => {
-    if (wrapState.status === SagaStatus.Started) {
-      onSuccess()
-    }
-  })
 
   return useMemo(() => {
     if (!isWrapAction(wrapType)) {
@@ -725,9 +715,10 @@ export function useWrapCallback(
             txRequest,
           })
         )
+        onSuccess()
       },
     }
-  }, [txId, account, appDispatch, inputCurrencyAmount, wrapType, txRequest])
+  }, [txId, account, appDispatch, inputCurrencyAmount, wrapType, txRequest, onSuccess])
 }
 
 // The first trade shown to the user is implicitly accepted but every subsequent update to
