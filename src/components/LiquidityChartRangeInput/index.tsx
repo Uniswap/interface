@@ -3,7 +3,7 @@ import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { format } from 'd3'
 import { saturate } from 'polished'
-import React, { ReactNode, useCallback, useMemo } from 'react'
+import { CSSProperties, ReactNode, useCallback, useMemo } from 'react'
 import { BarChart2, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Text } from 'rebass'
@@ -80,22 +80,24 @@ export default function LiquidityChartRangeInput({
   feeAmount,
   ticksAtLimit,
   price,
-  priceLower,
-  priceUpper,
+  leftPrice,
+  rightPrice,
   onLeftRangeInput,
   onRightRangeInput,
   interactive,
+  style = {},
 }: {
   currencyA: Currency | undefined
   currencyB: Currency | undefined
   feeAmount?: FeeAmount
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
   price: number | undefined
-  priceLower?: Price<Token, Token>
-  priceUpper?: Price<Token, Token>
+  leftPrice?: Price<Token, Token>
+  rightPrice?: Price<Token, Token>
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
   interactive: boolean
+  style?: CSSProperties
 }) {
   const theme = useTheme()
 
@@ -143,13 +145,10 @@ export default function LiquidityChartRangeInput({
   interactive = interactive && Boolean(formattedData?.length)
 
   const brushDomain: [number, number] | undefined = useMemo(() => {
-    const leftPrice = isSorted ? priceLower : priceUpper?.invert()
-    const rightPrice = isSorted ? priceUpper : priceLower?.invert()
-
     return leftPrice && rightPrice
       ? [parseFloat(leftPrice?.toSignificant(6)), parseFloat(rightPrice?.toSignificant(6))]
       : undefined
-  }, [isSorted, priceLower, priceUpper])
+  }, [leftPrice, rightPrice])
 
   const brushLabelValue = useCallback(
     (d: 'w' | 'e', x: number) => {
@@ -166,7 +165,7 @@ export default function LiquidityChartRangeInput({
   )
 
   return (
-    <AutoColumn gap="md" style={{ minHeight: '200px' }}>
+    <AutoColumn gap="md" style={{ minHeight: '200px', ...style }}>
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}

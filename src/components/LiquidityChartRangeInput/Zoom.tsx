@@ -1,5 +1,5 @@
 import { ScaleLinear, ZoomBehavior, ZoomTransform, select, zoom, zoomIdentity } from 'd3'
-import React, { useEffect, useMemo, useRef } from 'react'
+import { CSSProperties, useEffect, useMemo, useRef } from 'react'
 import { RefreshCcw, ZoomIn, ZoomOut } from 'react-feather'
 import styled from 'styled-components'
 
@@ -47,6 +47,7 @@ export default function Zoom({
   resetBrush,
   showResetButton,
   zoomLevels,
+  style,
 }: {
   svg: SVGElement | null
   xScale: ScaleLinear<number, number>
@@ -56,6 +57,7 @@ export default function Zoom({
   resetBrush: () => void
   showResetButton: boolean
   zoomLevels: ZoomLevels
+  style?: CSSProperties
 }) {
   const zoomBehavior = useRef<ZoomBehavior<Element, unknown>>()
 
@@ -110,7 +112,7 @@ export default function Zoom({
   }, [zoomInitial, zoomLevels])
 
   return (
-    <Wrapper count={showResetButton ? 3 : 2}>
+    <Wrapper count={showResetButton ? 3 : 2} style={style}>
       {showResetButton && (
         <Button
           onClick={() => {

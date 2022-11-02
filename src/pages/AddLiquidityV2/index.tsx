@@ -541,8 +541,8 @@ export default function AddLiquidity({
               feeAmount={feeAmount}
               ticksAtLimit={ticksAtLimit}
               price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
-              priceLower={priceLower}
-              priceUpper={priceUpper}
+              leftPrice={leftPrice}
+              rightPrice={rightPrice}
               onLeftRangeInput={onLeftRangeInput}
               onRightRangeInput={onRightRangeInput}
               interactive

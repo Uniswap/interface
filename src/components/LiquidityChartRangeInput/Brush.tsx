@@ -1,12 +1,12 @@
 import { BrushBehavior, D3BrushEvent, ScaleLinear, brushX, select } from 'd3'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { OffScreenHandle, brushHandleAccentPath, brushHandlePath } from 'components/LiquidityChartRangeInput/svg'
 import usePrevious from 'hooks/usePrevious'
 
-const Handle = styled.path<{ color: string }>`
-  cursor: ew-resize;
+const Handle = styled.path<{ color: string; interactive: boolean }>`
+  cursor: ${({ interactive }) => (interactive ? 'ew-resize' : 'default')};
   pointer-events: none;
 
   stroke-width: 3;
@@ -14,8 +14,8 @@ const Handle = styled.path<{ color: string }>`
   fill: ${({ color }) => color};
 `
 
-const HandleAccent = styled.path`
-  cursor: ew-resize;
+const HandleAccent = styled.path<{ interactive: boolean }>`
+  cursor: ${({ interactive }) => (interactive ? 'ew-resize' : 'default')};
   pointer-events: none;
 
   stroke-width: 1.5;
@@ -142,6 +142,12 @@ export const Brush = ({
       .attr('stroke', 'none')
       .attr('fill-opacity', '0.1')
       .attr('fill', `url(#${id}-gradient-selection)`)
+      .attr('cursor', interactive ? 'ew-resize' : 'default')
+
+    if (!interactive) {
+      select(brushRef.current).selectAll('.handle').attr('cursor', 'default')
+      select(brushRef.current).selectAll('.overlay').attr('cursor', 'default')
+    }
   }, [brushExtent, brushed, id, innerHeight, innerWidth, interactive, previousBrushExtent, xScale])
 
   // respond to xScale changes only
@@ -205,8 +211,12 @@ export const Brush = ({
                 }, 1)`}
               >
                 <g>
-                  <Handle color={westHandleColor} d={brushHandlePath(innerHeight)} />
-                  <HandleAccent d={brushHandleAccentPath()} />
+                  <Handle
+                    color={westHandleColor}
+                    d={brushHandlePath(innerHeight, interactive)}
+                    interactive={interactive}
+                  />
+                  <HandleAccent d={brushHandleAccentPath(interactive)} interactive={interactive} />
                 </g>
 
                 <LabelGroup
@@ -225,8 +235,12 @@ export const Brush = ({
             {eastHandleInView ? (
               <g transform={`translate(${xScale(localBrushExtent[1])}, 0), scale(${flipEastHandle ? '-1' : '1'}, 1)`}>
                 <g>
-                  <Handle color={eastHandleColor} d={brushHandlePath(innerHeight)} />
-                  <HandleAccent d={brushHandleAccentPath()} />
+                  <Handle
+                    color={eastHandleColor}
+                    d={brushHandlePath(innerHeight, interactive)}
+                    interactive={interactive}
+                  />
+                  <HandleAccent d={brushHandleAccentPath(interactive)} interactive={interactive} />
                 </g>
 
                 <LabelGroup
@@ -253,6 +267,7 @@ export const Brush = ({
       </>
     ),
     [
+      interactive,
       brushLabelValue,
       eastHandleColor,
       eastHandleInView,

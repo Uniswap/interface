@@ -1,10 +1,10 @@
 import { ScaleLinear } from 'd3'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 const StyledLine = styled.line`
-  opacity: 0.5;
-  stroke-width: 2;
+  opacity: 0.7;
+  stroke-width: 3;
   stroke: ${({ theme }) => theme.text};
   fill: none;
 `

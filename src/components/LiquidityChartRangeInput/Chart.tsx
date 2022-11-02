@@ -1,5 +1,5 @@
 import { ZoomTransform, max, scaleLinear } from 'd3'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { Bound } from 'state/mint/proamm/actions'
 
@@ -36,9 +36,20 @@ export function Chart({
   )
 
   const { xScale, yScale } = useMemo(() => {
+    const minDomain = brushDomain?.[0]
+      ? brushDomain[0] < current
+        ? brushDomain[0]
+        : current
+      : current * zoomLevels.initialMin
+    const maxDomain = brushDomain?.[1]
+      ? brushDomain[1] > current
+        ? brushDomain[1]
+        : current
+      : current * zoomLevels.initialMax
+
     const scales = {
       xScale: scaleLinear()
-        .domain([current * zoomLevels.initialMin, current * zoomLevels.initialMax] as number[])
+        .domain([minDomain, maxDomain] as number[])
         .range([0, innerWidth]),
       yScale: scaleLinear()
         .domain([0, max(series, yAccessor)] as number[])
@@ -51,7 +62,7 @@ export function Chart({
     }
 
     return scales
-  }, [current, zoomLevels.initialMin, zoomLevels.initialMax, innerWidth, series, innerHeight, zoom])
+  }, [brushDomain, current, zoomLevels.initialMin, zoomLevels.initialMax, innerWidth, series, innerHeight, zoom])
 
   useEffect(() => {
     // reset zoom as necessary
@@ -69,6 +80,7 @@ export function Chart({
       <Zoom
         svg={zoomRef.current}
         xScale={xScale}
+        style={{ top: !interactive ? '-56px' : undefined }}
         setZoom={setZoom}
         width={innerWidth}
         height={

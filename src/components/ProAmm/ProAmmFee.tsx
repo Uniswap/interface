@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
+import { Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { NonfungiblePositionManager, Position } from '@kyberswap/ks-sdk-elastic'
 import { Trans, t } from '@lingui/macro'
 import { useCallback } from 'react'
@@ -18,7 +19,6 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useActiveWeb3React } from 'hooks'
 import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { useProAmmPositionFees } from 'hooks/useProAmmPositionFees'
 import useTheme from 'hooks/useTheme'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -32,16 +32,19 @@ export default function ProAmmFee({
   layout = 0,
   text = '',
   hasUserDepositedInFarm,
+  feeValue0,
+  feeValue1,
 }: {
   tokenId: BigNumber
   position: Position
   layout?: number
   text?: string
   hasUserDepositedInFarm?: boolean
+  feeValue0: CurrencyAmount<Currency> | undefined
+  feeValue1: CurrencyAmount<Currency> | undefined
 }) {
   const { chainId, account, library } = useActiveWeb3React()
   const theme = useTheme()
-  const [feeValue0, feeValue1] = useProAmmPositionFees(tokenId, position, false)
   const token0Shown = unwrappedToken(position.pool.token0)
   const token1Shown = unwrappedToken(position.pool.token1)
   const addTransactionWithType = useTransactionAdder()

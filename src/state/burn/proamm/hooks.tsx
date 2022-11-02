@@ -111,7 +111,7 @@ export function useDerivedProAmmBurnInfo(
   //   error = error ?? <Trans>Enter a percent</Trans>
   // }
 
-  const [feeValue0, feeValue1] = useProAmmPositionFees(
+  const { current } = useProAmmPositionFees(
     position?.tokenId,
     pool && position
       ? new Position({
@@ -123,6 +123,8 @@ export function useDerivedProAmmBurnInfo(
       : undefined,
     asWETH,
   )
+
+  const [feeValue0, feeValue1] = current
 
   const parsedAmounts: {
     [Field.LIQUIDITY_PERCENT]: Percent

@@ -1,24 +1,20 @@
 import { Position } from '@kyberswap/ks-sdk-elastic'
 import { Trans, t } from '@lingui/macro'
-import { rgba } from 'polished'
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Flex, Text } from 'rebass'
-import styled from 'styled-components'
 
-import Card, { OutlineCard } from 'components/Card'
+import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import Divider from 'components/Divider'
 import { Swap2 as SwapIcon } from 'components/Icons'
 import InfoHelper from 'components/InfoHelper'
+import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { RowBetween, RowFixed } from 'components/Row'
 import useTheme from 'hooks/useTheme'
 import { Bound } from 'state/mint/proamm/actions'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
-const PriceRangeCard = styled(Card)`
-  background-color: ${({ theme }) => rgba(theme.buttonGray, 0.6)};
-`
 export default function ProAmmPriceRange({
   position,
   ticksAtLimit,
@@ -42,15 +38,16 @@ export default function ProAmmPriceRange({
 
   const priceLower = sorted ? position.token0PriceLower : position.token0PriceUpper.invert()
   const priceUpper = sorted ? position.token0PriceUpper : position.token0PriceLower.invert()
+
   const handleRateChange = useCallback(() => {
     setBaseCurrency(quoteCurrency)
   }, [quoteCurrency])
+
   return (
     <OutlineCard marginTop="1rem" padding="1rem">
       <AutoColumn gap="13px">
         {layout === 0 && (
           <>
-            {' '}
             <Text fontSize="16px" fontWeight="500">
               Pool Information
             </Text>
@@ -58,21 +55,6 @@ export default function ProAmmPriceRange({
           </>
         )}
 
-        <RowBetween>
-          <Text fontSize={12} fontWeight={500} color={theme.subText}>
-            <Trans>{layout === 0 ? 'CURRENT PRICE' : 'Current Price'}</Trans>
-          </Text>
-          <RowFixed>
-            <Text fontSize={layout === 0 ? '14px' : '12px'} style={{ textAlign: 'right' }}>{`${price.toSignificant(
-              10,
-            )} ${quoteCurrency.symbol} per ${baseCurrency.symbol}`}</Text>
-            <span onClick={handleRateChange} style={{ marginLeft: '2px', cursor: 'pointer' }}>
-              <SwapIcon size={layout === 0 ? 16 : 14} />
-            </span>
-          </RowFixed>
-        </RowBetween>
-
-        <Divider />
         <Flex>
           <Text fontSize={12} fontWeight={500} color={theme.subText}>
             <Trans>{layout === 0 ? 'SELECTED PRICE RANGE' : 'Selected Price Range'}</Trans>
@@ -83,55 +65,74 @@ export default function ProAmmPriceRange({
             size={12}
           ></InfoHelper>
         </Flex>
+
+        <div>
+          <Flex alignItems="center" justifyContent="center" sx={{ gap: '8px' }}>
+            <Text fontSize={12} fontWeight={500} color={theme.subText}>
+              <Trans>Current Price</Trans>
+            </Text>
+            <RowFixed>
+              <Text fontSize={'12px'} fontWeight="500" style={{ textAlign: 'right' }}>{`${price.toSignificant(10)} ${
+                quoteCurrency.symbol
+              } per ${baseCurrency.symbol}`}</Text>
+              <span onClick={handleRateChange} style={{ marginLeft: '2px', cursor: 'pointer' }}>
+                <SwapIcon size={layout === 0 ? 16 : 14} />
+              </span>
+            </RowFixed>
+          </Flex>
+
+          {/* <Divider /> */}
+          <LiquidityChartRangeInput
+            style={{ minHeight: '175px' }}
+            currencyA={baseCurrency}
+            currencyB={quoteCurrency}
+            feeAmount={position.pool.fee}
+            ticksAtLimit={ticksAtLimit}
+            price={price ? parseFloat(price.toSignificant(8)) : undefined}
+            leftPrice={priceLower}
+            rightPrice={priceUpper}
+            onLeftRangeInput={() => {
+              //
+            }}
+            onRightRangeInput={() => {
+              //
+            }}
+            interactive={false}
+          />
+        </div>
         <RowBetween style={{ gap: '12px' }}>
-          <PriceRangeCard width="48%" padding="12px 8px">
-            <AutoColumn gap="10px" justify="center">
-              <Flex>
-                <Text fontSize="12px" fontWeight={500} color={theme.subText}>
-                  <Trans>MIN PRICE</Trans>
-                </Text>
-                <InfoHelper
-                  text={t`Your position will be 100% composed of ${baseCurrency?.symbol} at this price`}
-                  placement={'right'}
-                  size={12}
-                ></InfoHelper>
-              </Flex>
-              <Text textAlign="center" fontWeight="500" fontSize="20px">{`${formatTickPrice(
-                priceLower,
-                ticksAtLimit,
-                Bound.LOWER,
-              )}`}</Text>
-              <Text textAlign="center" fontSize="12px" fontWeight="500" color={theme.subText}>
-                <Trans>
-                  {quoteCurrency.symbol} per {baseCurrency.symbol}
-                </Trans>
-              </Text>
-            </AutoColumn>
-          </PriceRangeCard>
-          <PriceRangeCard width="48%" padding="12px 8px">
-            <AutoColumn gap="10px" justify="center">
-              <Flex>
-                <Text fontSize="12px" fontWeight={500} color={theme.subText}>
-                  <Trans>MAX PRICE</Trans>
-                </Text>
-                <InfoHelper
-                  text={t`Your position will be 100% composed of ${quoteCurrency?.symbol} at this price`}
-                  placement={'right'}
-                  size={12}
-                ></InfoHelper>
-              </Flex>
-              <Text fontSize="20px" textAlign="center" fontWeight="500">{`${formatTickPrice(
-                priceUpper,
-                ticksAtLimit,
-                Bound.UPPER,
-              )}`}</Text>
-              <Text textAlign="center" fontSize="12px" fontWeight="500" color={theme.subText}>
-                <Trans>
-                  {quoteCurrency.symbol} per {baseCurrency.symbol}
-                </Trans>
-              </Text>
-            </AutoColumn>
-          </PriceRangeCard>
+          <Flex>
+            <Text fontSize="12px" fontWeight={500} color={theme.subText}>
+              <Trans>Min Price</Trans>
+            </Text>
+            <InfoHelper
+              text={t`Your position will be 100% composed of ${baseCurrency?.symbol} at this price`}
+              placement={'right'}
+              size={12}
+            ></InfoHelper>
+          </Flex>
+
+          <Text fontWeight="500" fontSize="12px">
+            {`${formatTickPrice(priceLower, ticksAtLimit, Bound.LOWER)}`} {quoteCurrency.symbol} per{' '}
+            {baseCurrency.symbol}
+          </Text>
+        </RowBetween>
+        <RowBetween style={{ gap: '12px' }}>
+          <Flex>
+            <Text fontSize="12px" fontWeight={500} color={theme.subText}>
+              <Trans>Max Price</Trans>
+            </Text>
+            <InfoHelper
+              text={t`Your position will be 100% composed of ${quoteCurrency?.symbol} at this price`}
+              placement={'right'}
+              size={12}
+            ></InfoHelper>
+          </Flex>
+
+          <Text fontSize="12px" fontWeight="500">
+            {`${formatTickPrice(priceUpper, ticksAtLimit, Bound.UPPER)}`} {quoteCurrency.symbol} per{' '}
+            {baseCurrency.symbol}
+          </Text>
         </RowBetween>
       </AutoColumn>
     </OutlineCard>

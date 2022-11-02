@@ -4,6 +4,7 @@ import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import { rgba } from 'polished'
 import { useMemo, useRef, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { Info } from 'react-feather'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useMedia } from 'react-use'
@@ -71,7 +72,7 @@ export default function ProAmmPool() {
               fee: pos.pool.fee,
               initCodeHashManualOverride: NETWORKS_INFO[chainId].elastic.initCodeHash,
             })
-            const pool = farmingPools.filter(pool => pool.poolAddress === poolAddress.toLowerCase())
+            const pool = farmingPools.filter(pool => pool.poolAddress.toLowerCase() === poolAddress.toLowerCase())
 
             const joinedLiquidity =
               // I'm sure we can always find pool
@@ -101,7 +102,7 @@ export default function ProAmmPool() {
               token0: pos.pool.token0.address,
               token1: pos.pool.token1.address,
               fee: pos.pool.fee,
-              endTime: pool?.[0].endTime,
+              endTime: pool?.[0]?.endTime,
               rewardPendings: [],
             }
           })
@@ -227,7 +228,7 @@ export default function ProAmmPool() {
                   }}
                   role="button"
                 >
-                  <Trans>Staked Positions</Trans>
+                  {isMobile ? <Trans>Farming Positions</Trans> : <Trans>My Farming Positions</Trans>}
                 </Tab>
               </Flex>
 
