@@ -2,6 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
 import { useLazyLoadQuery } from 'react-relay'
+import { PriceChartLabel } from 'src/components/PriceChart/PriceChartLabels'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
 import { TokenModel_PriceQuery } from 'src/components/PriceChart/__generated__/TokenModel_PriceQuery.graphql'
@@ -92,27 +93,27 @@ export function useTokenPriceGraphs(token: Token): NullUndefined<GraphMetadatas>
 
     const graphs = [
       {
-        label: '1H',
+        label: PriceChartLabel.Hour,
         index: 0,
         data: buildGraph([...priceHistory1H].reverse() as any, GRAPH_PRECISION),
       },
       {
-        label: '1D',
+        label: PriceChartLabel.Day,
         index: 1,
         data: buildGraph([...priceHistory1D].reverse() as any, GRAPH_PRECISION),
       },
       {
-        label: '1W',
+        label: PriceChartLabel.Week,
         index: 2,
         data: buildGraph([...priceHistory1W].reverse() as any, GRAPH_PRECISION),
       },
       {
-        label: '1M',
+        label: PriceChartLabel.Month,
         index: 3,
         data: buildGraph([...priceHistory1M].reverse() as any, GRAPH_PRECISION),
       },
       {
-        label: '1Y',
+        label: PriceChartLabel.Year,
         index: 4,
         data: buildGraph([...priceHistory1Y].reverse() as any, GRAPH_PRECISION),
       },

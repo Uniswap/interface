@@ -1,16 +1,16 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import { useAppTheme } from 'src/app/hooks'
 import { Box, Flex } from 'src/components/layout'
 import { BoxLoader } from 'src/components/loading/BoxLoader'
 import { FavoriteLoader } from 'src/components/loading/FavoriteLoader'
 import { HeaderLoader } from 'src/components/loading/HeaderLoader'
 import { NftCardLoader } from 'src/components/loading/NftCardLoader'
+import { PriceHeaderLoader } from 'src/components/loading/PriceHeaderLoader'
 import { Shimmer } from 'src/components/loading/Shimmer'
+import { TokenBalanceLoader } from 'src/components/loading/TokenBalanceLoader'
 import { TokenLoader } from 'src/components/loading/TokenLoader'
 import TransactionLoader from 'src/components/loading/TransactionLoader'
 import { WalletLoader } from 'src/components/loading/WalletLoader'
-import GraphCurveArea from './graph-curve-area.svg'
+import { WaveLoader } from 'src/components/loading/WaveLoader'
 
 type SkeletonType =
   | 'box'
@@ -24,6 +24,8 @@ type SkeletonType =
   | 'token'
   | 'transactions'
   | 'wallets'
+  | 'price-header'
+  | 'balance'
 
 type LoadingProps = {
   type?: SkeletonType
@@ -32,7 +34,6 @@ type LoadingProps = {
 }
 
 const useChildFromType = (type: SkeletonType, repeat: number, height?: number) => {
-  const theme = useAppTheme()
   switch (type) {
     case 'header':
       return (
@@ -45,12 +46,7 @@ const useChildFromType = (type: SkeletonType, repeat: number, height?: number) =
         </Box>
       )
     case 'graph':
-      return (
-        <Box overflow="hidden">
-          <GraphCurveArea color={theme.colors.background3} />
-          <GraphCurveArea fill={theme.colors.background3} style={StyleSheet.absoluteFill} />
-        </Box>
-      )
+      return <WaveLoader />
     case 'token':
       return (
         <Flex>
@@ -116,6 +112,10 @@ const useChildFromType = (type: SkeletonType, repeat: number, height?: number) =
           })}
         </Box>
       )
+    case 'price-header':
+      return <PriceHeaderLoader />
+    case 'balance':
+      return <TokenBalanceLoader />
     case 'box':
     default:
       return (

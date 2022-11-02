@@ -2,6 +2,7 @@ import { graphql } from 'babel-plugin-relay/macro'
 import { logger } from 'ethers'
 import { useMemo } from 'react'
 import { useLazyLoadQuery } from 'react-relay'
+import { PriceChartLabel } from 'src/components/PriceChart/PriceChartLabels'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
 import { PortfolioModel_PortfolioQuery } from 'src/components/PriceChart/__generated__/PortfolioModel_PortfolioQuery.graphql'
@@ -86,27 +87,27 @@ export function usePortfolioBalanceGraphs(owner: Address): NullUndefined<GraphMe
 
     const graphs = [
       {
-        label: '1H',
+        label: PriceChartLabel.Hour,
         index: 0,
         data: buildGraph(hourlyValues as any, GRAPH_PRECISION),
       },
       {
-        label: '1D',
+        label: PriceChartLabel.Day,
         index: 1,
         data: buildGraph(dailyValues as any, GRAPH_PRECISION),
       },
       {
-        label: '1W',
+        label: PriceChartLabel.Week,
         index: 2,
         data: buildGraph(weeklyValues as any, GRAPH_PRECISION),
       },
       {
-        label: '1M',
+        label: PriceChartLabel.Month,
         index: 3,
         data: buildGraph(monthlyValues as any, GRAPH_PRECISION),
       },
       {
-        label: '1Y',
+        label: PriceChartLabel.Year,
         index: 4,
         data: buildGraph(yearlyValues as any, GRAPH_PRECISION),
       },

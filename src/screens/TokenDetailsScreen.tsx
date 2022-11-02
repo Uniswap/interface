@@ -2,36 +2,38 @@ import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FadeIn } from 'react-native-reanimated'
 import { PreloadedQuery, useFragment } from 'react-relay'
 import { useAppDispatch } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
-import SendIcon from 'src/assets/icons/send.svg'
-import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Suspense } from 'src/components/data/Suspense'
-import { Box, Flex } from 'src/components/layout'
+import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { Loading } from 'src/components/loading'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
+import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButton'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
+import {
+  TokenDetailsHeader,
+  TokenDetailsHeaderProps,
+} from 'src/components/TokenDetails/TokenDetailsHeader'
+import { TokenDetailsLoader } from 'src/components/TokenDetails/TokenDetailsLoader'
 import {
   TokenDetailsStats,
   tokenDetailsStatsTokenProjectFragment,
 } from 'src/components/TokenDetails/TokenDetailsStats'
 import { TokenDetailsStats_tokenProject$key } from 'src/components/TokenDetails/__generated__/TokenDetailsStats_tokenProject.graphql'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
-import WarningIcon from 'src/components/tokens/WarningIcon'
 import { AssetType } from 'src/entities/assets'
 import { SafetyLevel } from 'src/features/dataApi/types'
 import { fromGraphQLSafetyLevel } from 'src/features/dataApi/utils'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
 import {
@@ -41,8 +43,6 @@ import {
 import { Screens } from 'src/screens/Screens'
 import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 import { TokenDetailsScreen_headerPriceLabel$key } from 'src/screens/__generated__/TokenDetailsScreen_headerPriceLabel.graphql'
-import { flex } from 'src/styles/flex'
-import { theme } from 'src/styles/theme'
 import { currencyAddress } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
@@ -58,41 +58,6 @@ export const tokenDetailsScreenQuery = graphql`
     }
   }
 `
-
-interface TokenDetailsHeaderProps {
-  currency: Currency
-  safetyLevel: NullUndefined<SafetyLevel>
-  onPressWarningIcon: () => void
-}
-
-function TokenDetailsHeader({
-  currency,
-  safetyLevel,
-  onPressWarningIcon,
-}: TokenDetailsHeaderProps) {
-  const { t } = useTranslation()
-
-  return (
-    <Flex mx="sm">
-      <CurrencyLogo currency={currency} size={36} />
-      <Flex row alignItems="center" gap="xs">
-        <Text color="textPrimary" numberOfLines={1} style={flex.shrink} variant="subheadLarge">
-          {currency.name ?? t('Unknown token')}
-        </Text>
-        {/* Suppress warning icon on low warning level */}
-        {(safetyLevel === SafetyLevel.Strong || safetyLevel === SafetyLevel.Blocked) && (
-          <TouchableArea onPress={onPressWarningIcon}>
-            <WarningIcon
-              height={theme.iconSizes.md}
-              safetyLevel={safetyLevel}
-              width={theme.imageSizes.sm}
-            />
-          </TouchableArea>
-        )}
-      </Flex>
-    </Flex>
-  )
-}
 
 function HeaderPriceLabel({
   tokenProject,
@@ -151,11 +116,19 @@ enum TransactionType {
 export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
   const { currencyId: _currencyId, preloadedQuery } = route.params
   const currency = useCurrency(_currencyId)
-  if (!currency || !preloadedQuery) {
+
+  if (!currency) {
+    // truly cannot render the component or a loading state without a currency
+    // we could consider showing an activity spinner here
     return null
   }
+
+  if (!preloadedQuery) {
+    return <TokenDetailsLoader currency={currency} />
+  }
+
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<TokenDetailsLoader currency={currency} />}>
       <TokenDetails currency={currency} preloadedQuery={preloadedQuery} />
     </Suspense>
   )
@@ -169,7 +142,6 @@ function TokenDetails({
   preloadedQuery: PreloadedQuery<TokenDetailsScreenQuery>
 }) {
   const dispatch = useAppDispatch()
-  const { t } = useTranslation()
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
   const data = useEagerLoadedQuery<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, preloadedQuery)
 
@@ -281,7 +253,7 @@ function TokenDetails({
   ])
 
   return (
-    <Box flex={1} mb="md">
+    <AnimatedBox entering={FadeIn} flex={1} mb="md">
       <HeaderScrollScreen
         contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
         fixedHeader={
@@ -303,43 +275,25 @@ function TokenDetails({
               currentChainBalance={currentChainBalance}
               otherChainBalances={otherChainBalances}
             />
-            <Flex gap="lg" mx="md">
+            <Box mx="md">
               <TokenDetailsStats
                 currency={currency}
                 token={data?.tokens?.[0]}
                 tokenProject={data?.tokenProjects?.[0]}
               />
-            </Flex>
+            </Box>
           </Flex>
         </Flex>
       </HeaderScrollScreen>
-      <Flex
-        row
-        bg="background0"
-        borderTopColor="backgroundOutline"
-        borderTopWidth={1}
-        gap="xs"
-        pb="md"
-        pt="sm"
-        px="lg">
-        <Button
-          fill
-          label={t('Swap')}
-          size={ButtonSize.Large}
-          onPress={() =>
-            onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
-          }
-        />
-        {currentChainBalance && (
-          <Button
-            IconName={SendIcon}
-            emphasis={ButtonEmphasis.Secondary}
-            name={ElementName.Send}
-            size={ButtonSize.Large}
-            onPress={onPressSend}
-          />
-        )}
-      </Flex>
+
+      <TokenDetailsActionButtons
+        showSend={!!currentChainBalance}
+        onPressSend={onPressSend}
+        onPressSwap={() =>
+          onPressSwap(currentChainBalance ? TransactionType.SELL : TransactionType.BUY)
+        }
+      />
+
       <TokenWarningModal
         currency={currency}
         disableAccept={!activeTransactionType || safetyLevel === SafetyLevel.Blocked}
@@ -351,6 +305,6 @@ function TokenDetails({
           setShowWarningModal(false)
         }}
       />
-    </Box>
+    </AnimatedBox>
   )
 }

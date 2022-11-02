@@ -57,7 +57,7 @@ export function TokenBalances({
           </Flex>
         </Flex>
       )}
-      <Separator mx="md" />
+      <Separator />
     </Flex>
   )
 }

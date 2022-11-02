@@ -21,9 +21,9 @@ import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/utils'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 
-const BUTTON_PADDING = 20
-const BUTTON_WIDTH = WIDTH / NUM_GRAPHS
-const LABEL_WIDTH = BUTTON_WIDTH - BUTTON_PADDING * 2
+export const BUTTON_PADDING = 20
+export const BUTTON_WIDTH = WIDTH / NUM_GRAPHS
+export const LABEL_WIDTH = BUTTON_WIDTH - BUTTON_PADDING * 2
 
 interface GraphProps {
   graphs: GraphMetadatas

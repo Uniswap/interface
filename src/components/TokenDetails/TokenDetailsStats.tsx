@@ -1,12 +1,13 @@
 import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useFragment } from 'react-relay'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Suspense } from 'src/components/data/Suspense'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
+import { Shimmer } from 'src/components/loading/Shimmer'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { TokenDetailsStats_token$key } from 'src/components/TokenDetails/__generated__/TokenDetailsStats_token.graphql'
@@ -64,6 +65,72 @@ export const tokenDetailsStatsTokenProjectFragment = graphql`
   }
 `
 
+export function TokenDetailsMarketData({
+  marketCap,
+  volume,
+  priceLow52W,
+  priceHight52W,
+  isLoading = false,
+}: {
+  marketCap?: number
+  volume?: number
+  priceLow52W?: number
+  priceHight52W?: number
+  isLoading?: boolean
+}) {
+  const { t } = useTranslation()
+
+  // Utility component to render formatted values
+  const FormattedValue = useCallback(
+    ({ value, numberType }: { value?: number; numberType: NumberType }) => {
+      if (isLoading) {
+        return (
+          <Shimmer>
+            <Text loaderOnly height="100%" variant="bodyLarge" width="50%">
+              $0.00
+            </Text>
+          </Shimmer>
+        )
+      }
+      return <Text variant="bodyLarge">{formatNumber(value, numberType)}</Text>
+    },
+    [isLoading]
+  )
+
+  return (
+    <Flex row justifyContent="space-between">
+      <Flex flex={1} gap="lg">
+        <Flex gap="xxs">
+          <Text color="textTertiary" variant="subheadSmall">
+            {t('Market cap')}
+          </Text>
+          <FormattedValue numberType={NumberType.FiatTokenStats} value={marketCap} />
+        </Flex>
+        <Flex gap="xxs">
+          <Text color="textTertiary" variant="subheadSmall">
+            {t('52W low')}
+          </Text>
+          <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceLow52W} />
+        </Flex>
+      </Flex>
+      <Flex flex={1} gap="lg">
+        <Flex gap="xxs">
+          <Text color="textTertiary" variant="subheadSmall">
+            {t('24h Uniswap volume')}
+          </Text>
+          <FormattedValue numberType={NumberType.FiatTokenStats} value={volume} />
+        </Flex>
+        <Flex gap="xxs">
+          <Text color="textTertiary" variant="subheadSmall">
+            {t('52W high')}
+          </Text>
+          <FormattedValue numberType={NumberType.FiatTokenDetails} value={priceHight52W} />
+        </Flex>
+      </Flex>
+    </Flex>
+  )
+}
+
 function TokenDetailsStatsInner({
   currency,
   token,
@@ -91,44 +158,12 @@ function TokenDetailsStatsInner({
   return (
     <Flex gap="lg">
       <Text variant="subheadLarge">{t('Stats')}</Text>
-      <Flex row justifyContent="space-between">
-        <Flex flex={1} gap="lg">
-          <Flex gap="xxs">
-            <Text color="textTertiary" variant="subheadSmall">
-              {t('Market cap')}
-            </Text>
-            <Text variant="bodyLarge">
-              {formatNumber(marketData?.marketCap?.value, NumberType.FiatTokenStats)}
-            </Text>
-          </Flex>
-          <Flex gap="xxs">
-            <Text color="textTertiary" variant="subheadSmall">
-              {t('52W low')}
-            </Text>
-            <Text variant="bodyLarge">
-              {formatNumber(marketData?.priceLow52W?.value, NumberType.FiatTokenDetails)}
-            </Text>
-          </Flex>
-        </Flex>
-        <Flex flex={1} gap="lg">
-          <Flex gap="xxs">
-            <Text color="textTertiary" variant="subheadSmall">
-              {t('24h Uniswap volume')}
-            </Text>
-            <Text variant="bodyLarge">
-              {formatNumber(tokenData?.market.volume.value, NumberType.FiatTokenStats)}
-            </Text>
-          </Flex>
-          <Flex gap="xxs">
-            <Text color="textTertiary" variant="subheadSmall">
-              {t('52W high')}
-            </Text>
-            <Text variant="bodyLarge">
-              {formatNumber(marketData?.priceHigh52W?.value, NumberType.FiatTokenDetails)}
-            </Text>
-          </Flex>
-        </Flex>
-      </Flex>
+      <TokenDetailsMarketData
+        marketCap={marketData?.marketCap?.value}
+        priceHight52W={marketData.priceHigh52W?.value}
+        priceLow52W={marketData.priceLow52W?.value}
+        volume={tokenData?.market.volume.value}
+      />
       <Flex gap="xxs">
         <Text color="textTertiary" variant="subheadSmall">
           {t('About {{ token }}', { token: tokenProjectData.name })}
