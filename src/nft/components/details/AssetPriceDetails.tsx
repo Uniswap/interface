@@ -255,7 +255,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               useAccentColor={true}
               onClick={() => {
                 assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
-                assetInBag && sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
+                !assetInBag && sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
               }}
             >
               <ThemedText.SubHeader lineHeight={'20px'}>{assetInBag ? 'Remove' : 'Buy Now'}</ThemedText.SubHeader>
