@@ -1,3 +1,4 @@
+import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { reduceFilters } from 'nft/components/collection/Activity'
@@ -15,7 +16,6 @@ import { isVideo } from 'nft/utils/isVideo'
 import { putCommas } from 'nft/utils/putCommas'
 import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
 import { useCallback, useMemo, useReducer, useState } from 'react'
-import { ExternalLink } from 'react-feather'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { Link as RouterLink } from 'react-router-dom'
@@ -43,7 +43,7 @@ const OpacityTransition = css`
   }) => `opacity ${duration.medium} ${timing.ease}`};
 `
 
-const CollectionHeader = styled(RouterLink)`x
+const CollectionHeader = styled.span`
   display: flex;
   align-items: center;
   font-size: 16px;
@@ -60,15 +60,6 @@ const AssetPriceDetailsContainer = styled.div`
   @media (max-width: 960px) {
     display: block;
   }
-`
-
-const SocialLink = styled.a`
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-
-  ${OpacityTransition};
 `
 
 const AssetHeader = styled.div`
@@ -94,10 +85,7 @@ const Column = styled.div`
 
 const AddressTextLink = styled.a`
   display: inline-block;
-  font-weight: 600;
-  color: ${({ theme }) => theme.textTertiary};
-  font-size: 16px;
-  line-height: 20px;
+  color: ${({ theme }) => theme.textSecondary};
   text-decoration: none;
   max-width: 100%;
   word-wrap: break-word;
@@ -144,6 +132,10 @@ const Link = styled(RouterLink)`
   margin-top: 12px;
   cursor: pointer;
   ${OpacityTransition};
+`
+
+const DefaultLink = styled(RouterLink)`
+  text-decoration: none;
 `
 
 const ActivitySelectContainer = styled.div`
@@ -205,7 +197,6 @@ const ByText = styled.span`
 `
 
 const Img = styled.img`
-  box-shadow: 0px 4px 4px 0px #00000040;
   background-color: white;
 `
 
@@ -418,9 +409,12 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}
       </MediaContainer>
-      <CollectionHeader to={`/nfts/collection/${asset.address}`}>
-        {collection.collectionName} {collectionStats?.isVerified && <VerifiedIcon />}
-      </CollectionHeader>
+      <DefaultLink to={`/nfts/collection/${asset.address}`}>
+        <CollectionHeader>
+          {collection.collectionName} {collectionStats?.isVerified && <VerifiedIcon />}
+        </CollectionHeader>
+      </DefaultLink>
+
       <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
       <AssetPriceDetailsContainer>
         <AssetPriceDetails asset={asset} collection={collection} />
@@ -490,37 +484,25 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
       <InfoContainer primaryHeader="Description" secondaryHeader={null}>
         <>
           <ByText>By </ByText>
-          {asset.creator && asset.creator.address && (
+          {asset?.creator && asset.creator?.address && (
             <AddressTextLink
               href={`https://etherscan.io/address/${asset.creator.address}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {shortenAddress(asset.creator?.address, 2, 4)}
+              {shortenAddress(asset.creator.address, 2, 4)}
             </AddressTextLink>
           )}
 
           <DescriptionText>{collection.collectionDescription}</DescriptionText>
           <SocialsContainer>
             {collectionStats?.externalUrl && (
-              <SocialLink target="_blank" href={collectionStats?.externalUrl} rel="noopener noreferrer">
-                Website <ExternalLink size={14} />
-              </SocialLink>
+              <Resource name="Website" link={`https://twitter.com/${collectionStats?.externalUrl}`} />
             )}
             {collectionStats?.twitterUrl && (
-              <SocialLink
-                target="_blank"
-                href={`https://twitter.com/${collectionStats?.twitterUrl}`}
-                rel="noopener noreferrer"
-              >
-                Twitter <ExternalLink size={14} />
-              </SocialLink>
+              <Resource name="Twitter" link={`https://twitter.com/${collectionStats?.twitterUrl}`} />
             )}
-            {collectionStats?.discordUrl && (
-              <SocialLink target="_blank" href={collectionStats?.discordUrl} rel="noopener noreferrer">
-                Discord <ExternalLink size={14} />
-              </SocialLink>
-            )}
+            {collectionStats?.discordUrl && <Resource name="Discord" link={collectionStats?.discordUrl} />}
           </SocialsContainer>
         </>
       </InfoContainer>

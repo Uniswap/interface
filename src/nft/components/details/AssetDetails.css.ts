@@ -6,8 +6,9 @@ import { sprinkles, vars } from '../../css/sprinkles.css'
 export const image = style([
   sprinkles({ borderRadius: '20', height: 'full', alignSelf: 'center' }),
   {
-    maxHeight: '500px',
-    maxWidth: '500px',
+    maxHeight: 'calc(90vh - 165px)',
+    maxWidth: 780,
+    minHeight: 400,
     boxShadow: `0px 20px 50px var(--shadow), 0px 10px 50px rgba(70, 115, 250, 0.2)`,
     '@media': {
       '(max-width: 1024px)': {
