@@ -43,7 +43,7 @@ const OpacityTransition = css`
   }) => `opacity ${duration.medium} ${timing.ease}`};
 `
 
-const CollectionHeader = styled(RouterLink)`
+const CollectionHeader = styled(RouterLink)`x
   display: flex;
   align-items: center;
   font-size: 16px;
@@ -150,10 +150,27 @@ const ActivitySelectContainer = styled.div`
   display: flex;
   gap: 8px;
   margin-bottom: 34px;
+  overflow-x: auto;
 
-  @media (max-width: 520px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  // Firefox scrollbar styling
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
+
+  // safari and chrome scrollbar styling
+  ::-webkit-scrollbar {
+    background: transparent;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    margin-top: 40px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.backgroundOutline};
+    border-radius: 8px;
+  }
+
+  @media (max-width: 720px) {
+    padding-bottom: 8px;
   }
 `
 
