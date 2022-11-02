@@ -133,7 +133,9 @@ export function useAssetsQuery(
 
   const assets: GenieAsset[] = data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node
-    const ethPrice = parseEther(asset.listings?.edges[0]?.node.price.value?.toString() ?? '0').toString()
+    const ethPrice = parseEther(
+      asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
+    ).toString()
     return {
       id: asset.id,
       address: asset.collection.nftContracts[0]?.address,
