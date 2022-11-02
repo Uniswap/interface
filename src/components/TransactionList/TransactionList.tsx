@@ -37,64 +37,66 @@ const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { 
 
 export const transactionListQuery = graphql`
   query TransactionListQuery($address: String!) {
-    assetActivities(address: $address, pageSize: 50, page: 1) {
-      timestamp
-      type
-      transaction {
-        hash
-        status
-        to
-        from
-      }
-      assetChanges {
-        __typename
-        ... on TokenTransfer {
-          asset {
-            name
-            symbol
-            address
-            decimals
-            chain
-          }
-          tokenStandard
-          quantity
-          sender
-          recipient
-          direction
-          transactedValue {
-            currency
-            value
-          }
+    portfolio(ownerAddress: $address) {
+      assetActivities(pageSize: 50, page: 1) {
+        timestamp
+        type
+        transaction {
+          hash
+          status
+          to
+          from
         }
-        ... on NftTransfer {
-          asset {
-            name
-            nftContract {
-              chain
-              address
-            }
-            tokenId
-            imageUrl
-            collection {
+        assetChanges {
+          __typename
+          ... on TokenTransfer {
+            asset {
               name
+              symbol
+              address
+              decimals
+              chain
+            }
+            tokenStandard
+            quantity
+            sender
+            recipient
+            direction
+            transactedValue {
+              currency
+              value
             }
           }
-          nftStandard
-          sender
-          recipient
-          direction
-        }
-        ... on TokenApproval {
-          asset {
-            name
-            symbol
-            decimals
-            address
-            chain
+          ... on NftTransfer {
+            asset {
+              name
+              nftContract {
+                chain
+                address
+              }
+              tokenId
+              imageUrl
+              collection {
+                name
+              }
+            }
+            nftStandard
+            sender
+            recipient
+            direction
           }
-          tokenStandard
-          approvedAddress
-          quantity
+          ... on TokenApproval {
+            asset {
+              name
+              symbol
+              decimals
+              address
+              chain
+            }
+            tokenStandard
+            approvedAddress
+            quantity
+          }
         }
       }
     }
@@ -102,7 +104,7 @@ export const transactionListQuery = graphql`
 `
 
 export type TransactionListQueryResponse = NonNullable<
-  TransactionListQuery$data['assetActivities']
+  NonNullable<TransactionListQuery$data['portfolio']>['assetActivities']
 >[0]
 
 interface TransactionListProps {

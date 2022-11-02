@@ -44,7 +44,6 @@ export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) 
       <BackHeader p="md">
         <Text variant="buttonLabelMedium">{t('Activity')}</Text>
       </BackHeader>
-
       <Flex pb="lg" px="sm">
         <TransactionList
           emptyStateContent={
