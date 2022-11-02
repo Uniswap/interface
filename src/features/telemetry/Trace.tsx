@@ -11,7 +11,6 @@ import React, {
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { logEvent, logMessage } from 'src/features/telemetry'
 import {
-  ElementName,
   EventName,
   LogContext,
   MarkNames,
@@ -28,11 +27,6 @@ export interface ITraceContext {
   section?: SectionName
 
   modal?: ModalName
-
-  // Element name mostly used to identify events sources
-  // Does not need to be unique given the parent screen and section
-  elementName?: ElementName | string
-  elementType?: 'button' | 'switch'
 
   // Keeps track of start time for given marks
   marks?: Record<MarkNames, number>
@@ -77,8 +71,6 @@ function _Trace({
   screen,
   section,
   modal,
-  elementType,
-  elementName,
   startMark,
   endMark,
   properties,
@@ -98,8 +90,6 @@ function _Trace({
           screen,
           section,
           modal,
-          elementType,
-          elementName,
         })
       ),
       marks: startMark
@@ -110,7 +100,7 @@ function _Trace({
           }
         : parentTrace.marks,
     }),
-    [elementName, elementType, parentTrace, startMark, screen, section, modal]
+    [parentTrace, startMark, screen, section, modal]
   )
 
   // Log impression on mount for elements that are not part of the navigation tree

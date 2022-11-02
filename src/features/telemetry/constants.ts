@@ -1,4 +1,8 @@
-/** High-level event names as used by Firebase */
+/**
+ * Event names that can occur in this application
+ *
+ * Subject to change as new features are added and new events are defined and logged.
+ */
 export enum EventName {
   Impression = 'impression',
   MarkMeasure = 'mark-measure',
@@ -178,16 +182,14 @@ export const enum LogContext {
 }
 
 /**
- * Known actions and their properties.
- * Use destructure assignments to pick properties.
+ * Known components' events that trigger callbacks.
+ *
+ * e.g OnFocus, OnLongPress, OnSubmit, etc.
+ *
  * @example
- *  const buttonProps = (({ onPress, onLongPress }) => ({ onPress, onLongPress }))(ActionProps)
+ *  <TraceEvent events={[ReactNativeEvent.onPress]} element={name}>
  */
-export const ActionProps = {
-  onLongPress: { action: 'long_press' },
-  onPress: { action: 'press' },
-  onTextInput: { action: 'text_input' },
-  // more to be added
+export enum ReactNativeEvent {
+  OnPress = 'onPress',
+  // alphabetize additional events.
 }
-
-export type PartialActionProps = Partial<typeof ActionProps>

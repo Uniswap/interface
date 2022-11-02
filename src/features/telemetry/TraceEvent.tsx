@@ -1,12 +1,26 @@
 import React, { PropsWithChildren } from 'react'
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
 import { logEvent } from 'src/features/telemetry'
-import { EventName, PartialActionProps } from 'src/features/telemetry/constants'
+import { ElementName, EventName, ReactNativeEvent } from 'src/features/telemetry/constants'
 import { ITraceContext, Trace, TraceContext } from 'src/features/telemetry/Trace'
-import { getKeys } from 'src/utils/objects'
+
+export type TelemetryProps = {
+  // Left this one as name as it's being used all over the app already
+  name?: TraceEventProps['elementName']
+} & Partial<Pick<TraceEventProps, 'eventName' | 'events' | 'properties'>>
 
 type TraceEventProps = {
-  actionProps: PartialActionProps
+  // Element name used to identify events sources
+  // e.g. account-card, onboarding-create-wallet
+  // TODO: Enforce ElementName type only
+  elementName?: ElementName | string
+  // event name to log
+  // TODO: Enforce EventName type only
+  eventName: EventName | string
+  // Known components' events that trigger callbacks to be augmented with telemetry logging
+  events: ReactNativeEvent[]
+  // extra properties to log with the event
+  properties?: Record<string, unknown>
 } & ITraceContext
 
 /**
@@ -18,10 +32,10 @@ type TraceEventProps = {
  *  </TraceEvent>
  */
 function _TraceEvent(props: PropsWithChildren<TraceEventProps>) {
-  const { elementType, actionProps, children, ...logEventProps } = props
+  const { elementName, eventName, events, properties, children, ...logEventProps } = props
 
   return (
-    <Trace elementType={elementType} {...logEventProps}>
+    <Trace {...logEventProps}>
       <TraceContext.Consumer>
         {(consumedProps) =>
           React.Children.map(children, (child) => {
@@ -30,7 +44,10 @@ function _TraceEvent(props: PropsWithChildren<TraceEventProps>) {
             }
 
             // For each child, augment event handlers defined in `actionProps`  with event tracing
-            return React.cloneElement(child, getEventHandlers(child, consumedProps, actionProps))
+            return React.cloneElement(
+              child,
+              getEventHandlers(child, consumedProps, events, eventName, elementName, properties)
+            )
           })
         }
       </TraceContext.Consumer>
@@ -47,21 +64,26 @@ export const TraceEvent = React.memo(_TraceEvent)
 function getEventHandlers(
   child: React.ReactElement,
   consumedProps: ITraceContext,
-  actionProps: PartialActionProps
+  events: ReactNativeEvent[],
+  eventName: EventName | string,
+  elementName?: ElementName | string,
+  properties?: Record<string, unknown>
 ) {
   const eventHandlers: Partial<
-    Record<keyof PartialActionProps, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>
+    Record<ReactNativeEvent, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>
   > = {}
 
-  for (const eventHandlerName of getKeys(actionProps)) {
-    eventHandlers[eventHandlerName] = (eventHandlerArgs: unknown) => {
+  for (const event of Object.values(events)) {
+    eventHandlers[event] = (eventHandlerArgs: unknown) => {
       // call child event handler with original arguments
-      child.props[eventHandlerName]?.apply(child, eventHandlerArgs)
+      child.props[event]?.apply(child, eventHandlerArgs)
 
       // augment handler with analytics logging
-      logEvent(actionProps[eventHandlerName]?.action ?? EventName.UserEvent, {
+      logEvent(eventName, {
         ...consumedProps,
-        ...actionProps[eventHandlerName],
+        ...properties,
+        elementName,
+        action: event,
       })
     }
   }

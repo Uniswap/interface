@@ -3,7 +3,8 @@ import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import React, { ComponentProps, PropsWithChildren, useCallback } from 'react'
 import { GestureResponderEvent, TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { withAnimated } from 'src/components/animated'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ReactNativeEvent } from 'src/features/telemetry/constants'
+import { TelemetryProps, TraceEvent } from 'src/features/telemetry/TraceEvent'
 import { defaultHitslopInset } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 
@@ -11,10 +12,9 @@ export const TouchableBox = createBox<Theme, TouchableOpacityProps>(TouchableOpa
 
 export type BaseButtonProps = PropsWithChildren<
   ComponentProps<typeof TouchableBox> & {
-    name?: ElementName | string
     hapticFeedback?: boolean
     hapticStyle?: ImpactFeedbackStyle
-  }
+  } & TelemetryProps
 >
 
 /**
@@ -30,6 +30,9 @@ export function TouchableArea({
   onPress,
   children,
   name: elementName,
+  eventName,
+  events,
+  properties,
   ...rest
 }: BaseButtonProps) {
   const onPressHandler = useCallback(
@@ -46,11 +49,19 @@ export function TouchableArea({
 
   const baseProps = { onPress: onPressHandler, hitSlop: defaultHitslopInset, ...rest }
 
-  if (!elementName) {
+  if (!elementName || !eventName) {
     return <TouchableBox {...baseProps}>{children}</TouchableBox>
   }
 
-  return <TouchableBox {...baseProps}>{children}</TouchableBox>
+  return (
+    <TraceEvent
+      elementName={elementName}
+      eventName={eventName}
+      events={[ReactNativeEvent.OnPress, ...(events || [])]}
+      properties={properties}>
+      <TouchableBox {...baseProps}>{children}</TouchableBox>
+    </TraceEvent>
+  )
 }
 
 export const AnimatedTouchableArea = withAnimated(TouchableArea)
