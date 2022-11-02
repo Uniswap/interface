@@ -306,7 +306,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           {asset.tokenType === 'ERC1155' ? (
             ''
           ) : (
-            <span>{isOwner ? 'you' : shortenAddress(asset.owner.address ?? '', 2, 4)}</span>
+            <span>{isOwner ? 'you' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
           )}
         </OwnerText>
         <UploadLink
