@@ -5,12 +5,10 @@ import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import AnimatedInLineChart from 'components/Charts/AnimatedInLineChart'
-import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
 import { PricePoint } from 'graphql/data/TokenPrice'
 import { TimePeriod } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useAtom } from 'jotai'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
@@ -91,10 +89,10 @@ interface PriceChartProps {
   width: number
   height: number
   prices: PricePoint[] | undefined | null
+  timePeriod: TimePeriod
 }
 
-export function PriceChart({ width, height, prices }: PriceChartProps) {
-  const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
+export function PriceChart({ width, height, prices, timePeriod }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
 

@@ -62,7 +62,9 @@ function Chart({
 
   return (
     <ChartContainer>
-      <ParentSize>{({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} />}</ParentSize>
+      <ParentSize>
+        {({ width }) => <PriceChart prices={prices ?? null} width={width} height={436} timePeriod={timePeriod} />}
+      </ParentSize>
       <TimePeriodSelector
         currentTimePeriod={timePeriod}
         onTimeChange={(t: TimePeriod) => {
