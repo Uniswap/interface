@@ -28,6 +28,7 @@ import { sortUpdatedAssets } from 'nft/utils/updatedAssets'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
+import styled from 'styled-components/macro'
 
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
@@ -39,6 +40,15 @@ interface SeparatorProps {
   top?: boolean
   show?: boolean
 }
+
+const Background = styled.div`
+  position: fixed;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  top: 72px;
+  width: 100%;
+  height: 100%;
+`
 
 const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
   <Box
@@ -81,6 +91,8 @@ const Bag = () => {
   const isNFTPage = pathname.startsWith('/nfts')
   const shouldShowBag = isNFTPage || isProfilePage
   const isMobile = useIsMobile()
+
+  const isDetailsPage = pathname.includes('/nfts/asset/')
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
   const transactionState = useSendTransaction((state) => state.state)
@@ -306,6 +318,8 @@ const Bag = () => {
               <ListingModal />
             )}
           </Column>
+          {isDetailsPage && <Background onClick={toggleBag} />}
+
           {isOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />}
         </Portal>
       ) : null}
