@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
-import CurrencyLogo from 'components/CurrencyLogo'
+import { TokenLogo } from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { TokenQueryData } from 'graphql/data/Token'
 import { PriceDurations } from 'graphql/data/TokenPrice'
@@ -80,19 +80,12 @@ export default function ChartSection({
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
 
-  const logoSrc = useTokenLogoURI(token, nativeCurrency)
-
   return (
     <ChartHeader>
       <TokenInfoContainer>
         <TokenNameCell>
           <LogoContainer>
-            <CurrencyLogo
-              src={logoSrc}
-              size={'32px'}
-              symbol={nativeCurrency?.symbol ?? token.symbol}
-              currency={nativeCurrency ? undefined : currency}
-            />
+            <TokenLogo token={token} size={'32px'} />
             <L2NetworkLogo networkUrl={L2Icon} size={'16px'} />
           </LogoContainer>
           {nativeCurrency?.name ?? token.name ?? <Trans>Name not found</Trans>}

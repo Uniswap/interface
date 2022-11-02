@@ -468,11 +468,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
           tokenInfo={
             <ClickableName>
               <LogoContainer>
-                <TokenLogo
-                  address={tokenAddress}
-                  chainId={CHAIN_NAME_TO_CHAIN_ID[filterNetwork]}
-                  symbol={tokenSymbol}
-                />
+                <TokenLogo token={token} />
                 <L2NetworkLogo networkUrl={L2Icon} />
               </LogoContainer>
               <TokenInfoCell>

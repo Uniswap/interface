@@ -60,7 +60,7 @@ export default function useCurrencyLogoURIs(
         isToken?: boolean
         address?: string
         chainId: number
-        logoURI?: string
+        logoURI?: string | null
       }
     | null
     | undefined

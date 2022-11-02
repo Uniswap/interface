@@ -1,7 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import { SupportedChainId } from 'constants/chains'
 import TokenLogoLookupTable from 'constants/TokenLogoLookupTable'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import React, { useMemo } from 'react'
 import styled from 'styled-components/macro'
@@ -54,38 +55,45 @@ export default function CurrencyLogo({
 }
 
 export function TokenLogo({
-  address,
-  chainId,
-  symbol,
+  token,
   size = '24px',
   style,
   ...rest
 }: {
-  address?: string
-  chainId?: number
-  symbol?: string | null
+  token: {
+    address?: string
+    chain?: string
+    chainId?: number
+    symbol: string | null
+    project?: {
+      logoUrl: string | null
+    } | null
+  }
   size?: string
   style?: React.CSSProperties
 }) {
+  const chainId = token.chainId ?? (token.chain ? CHAIN_NAME_TO_CHAIN_ID[token.chain] : SupportedChainId.MAINNET)
+  const isNative = token.address === NATIVE_CHAIN_ID
+  const nativeCurrency = isNative ? nativeOnChain(chainId) : undefined
   const currency = useMemo(
     () => ({
-      chainId: chainId ?? SupportedChainId.MAINNET,
-      address,
-      isNative: address === NATIVE_CHAIN_ID,
-      logoURI: TokenLogoLookupTable.checkIcon(address),
+      chainId,
+      address: token.address,
+      isNative: token.address === NATIVE_CHAIN_ID,
+      logoURI: TokenLogoLookupTable.checkIcon(token.address) ?? token.project?.logoUrl,
     }),
-    [address, chainId]
+    [chainId, token.address, token.project?.logoUrl]
   )
-  const logoURIs = useCurrencyLogoURIs(currency)
+  const logoURIs = useCurrencyLogoURIs(nativeCurrency ?? currency)
 
   const props = {
-    alt: `${symbol ?? 'token'} logo`,
+    alt: `${token.symbol ?? 'token'} logo`,
     size,
     srcs: logoURIs,
-    symbol,
+    symbol: token.symbol,
     style,
     ...rest,
   }
 
-  return address === NATIVE_CHAIN_ID ? <StyledNativeLogo {...props} /> : <StyledLogo {...props} />
+  return token.address === NATIVE_CHAIN_ID ? <StyledNativeLogo {...props} /> : <StyledLogo {...props} />
 }

@@ -166,7 +166,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
     >
       <Row style={{ width: '65%' }}>
         <LogoContainer>
-          <TokenLogo address={token.address} chainId={token.chainId} symbol={token.symbol} size="36px" />
+          <TokenLogo token={token} size="36px" />
           <L2NetworkLogo networkUrl={L2Icon} size="16px" />
         </LogoContainer>
         <Column className={styles.suggestionPrimaryContainer}>
