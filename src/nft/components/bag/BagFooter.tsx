@@ -74,8 +74,11 @@ const ActionButton = ({ bagStatus, onClick, walletModalIsOpen, sufficientBalance
   } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
     disabled = true
     buttonText = <Trans>Transaction pending</Trans>
-  } else if (sufficientBalance !== false) {
+  } else if (sufficientBalance === true) {
     disabled = false
+    buttonText = <Trans>Pay</Trans>
+  } else if (sufficientBalance === false) {
+    disabled = true
     buttonText = <Trans>Pay</Trans>
   }
   return (
@@ -149,8 +152,7 @@ export const BagFooter = ({ totalEthPrice, totalUsdPrice, bagStatus, fetchAssets
     if (!connected || chainId !== SupportedChainId.MAINNET) {
       return undefined
     }
-    const balanceBN = parseEther(balanceInEth.toString())
-    return BigNumber.from(balanceBN).gte(totalEthPrice)
+    return parseEther(balanceInEth).gte(totalEthPrice)
   }, [connected, chainId, balanceInEth, totalEthPrice])
 
   return (
