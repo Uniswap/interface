@@ -136,7 +136,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     () =>
       asset.rarity
         ? {
-            rarityProvider: asset.rarity.providers.find(
+            rarityProvider: asset?.rarity?.providers?.find(
               ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
             ),
             rarityLogo: rarityProviderLogo[asset.rarity.primaryProvider] || '',

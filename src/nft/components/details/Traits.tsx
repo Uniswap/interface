@@ -45,8 +45,8 @@ export const Traits = ({
   collectionAddress,
 }: {
   traits: {
-    value: string
-    trait_type: string
+    value?: string
+    trait_type?: string
   }[]
   collectionAddress: string
 }) => (
@@ -67,7 +67,7 @@ export const Traits = ({
               href={`#/nfts/collection/${collectionAddress}?${params}`}
               style={{ textDecoration: 'none' }}
             >
-              <Trait label={item.trait_type} value={item.value} />
+              <Trait label={item.trait_type ?? ''} value={item.value ?? ''} />
             </a>
           )
         })}

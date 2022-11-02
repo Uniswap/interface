@@ -69,7 +69,9 @@ export const CollectionAsset = ({
 
   const { provider, rarityLogo } = useMemo(() => {
     return {
-      provider: asset.rarity?.providers.find(({ provider: _provider }) => _provider === asset.rarity?.primaryProvider),
+      provider: asset?.rarity?.providers?.find(
+        ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
+      ),
       rarityLogo: rarityProviderLogo[asset.rarity?.primaryProvider ?? 0] ?? '',
     }
   }, [asset])
@@ -88,7 +90,7 @@ export const CollectionAsset = ({
     >
       <Card.ImageContainer>
         {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
-        {asset.rarity && provider && provider.rank && (
+        {asset.rarity && provider && (
           <Card.Ranking
             rarity={asset.rarity}
             provider={provider}

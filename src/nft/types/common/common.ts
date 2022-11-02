@@ -72,7 +72,7 @@ export interface AssetSellOrder {
 
 export interface Rarity {
   primaryProvider: string
-  providers: { provider: string; rank: number; url?: string; score: number }[]
+  providers?: { provider: string; rank?: number; url?: string; score?: number }[]
 }
 
 export interface GenieAsset {
@@ -83,7 +83,7 @@ export interface GenieAsset {
   collectionSymbol?: string
   imageUrl?: string
   animationUrl?: string
-  marketplace: Markets
+  marketplace?: Markets
   name?: string
   priceInfo: PriceInfo
   susFlag?: boolean
@@ -98,8 +98,8 @@ export interface GenieAsset {
   creator: OpenSeaUser
   metadataUrl?: string
   traits?: {
-    trait_type: string
-    value: string
+    trait_type?: string
+    value?: string
     display_type?: any
     max_value?: any
     trait_count?: number

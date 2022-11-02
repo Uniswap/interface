@@ -1,6 +1,6 @@
 import { parseEther } from '@ethersproject/units'
 import graphql from 'babel-plugin-relay/macro'
-import { CollectionInfoForAsset, GenieAsset, Rarity, SellOrder, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType } from 'nft/types'
 import { useLazyLoadQuery } from 'react-relay'
 
 import { DetailsQuery } from './__generated__/DetailsQuery.graphql'
@@ -94,65 +94,68 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
     tokenId,
   })
 
-  const asset = queryData.nftAssets?.edges[0]?.node as any
+  const asset = queryData.nftAssets?.edges[0]?.node
   const collection = asset?.collection
-  const ethPrice = parseEther(asset?.listings?.edges[0]?.node.price.value?.toString()).toString()
+  const ethPrice = parseEther(asset?.listings?.edges[0].node.price.value?.toString() ?? '0').toString()
 
   return [
     {
       id: asset?.id,
       address,
-      notForSale: asset.listings === null,
-      collectionName: asset.collection?.name,
-      collectionSymbol: asset.collection?.image?.url,
-      imageUrl: asset.image?.url,
-      animationUrl: asset.animationUrl,
-      marketplace: asset.listings?.edges[0]?.node.marketplace.toLowerCase(),
-      name: asset.name,
+      notForSale: asset?.listings === null,
+      collectionName: asset?.collection?.name ?? undefined,
+      collectionSymbol: asset?.collection?.image?.url,
+      imageUrl: asset?.image?.url,
+      animationUrl: asset?.animationUrl ?? undefined,
+      marketplace: asset?.listings?.edges[0]?.node.marketplace.toLowerCase() as any,
+      name: asset?.name ?? undefined,
       priceInfo: {
         ETHPrice: ethPrice,
         baseAsset: 'ETH',
         baseDecimals: '18',
         basePrice: ethPrice,
       },
-      susFlag: asset.suspiciousFlag,
-      sellorders: asset.listings?.edges.map((listingNode: { node: SellOrder }) => {
+      susFlag: asset?.suspiciousFlag ?? undefined,
+      sellorders: asset?.listings?.edges.map((listingNode) => {
         return {
           ...listingNode.node,
           protocolParameters: listingNode.node.protocolParameters
             ? JSON.parse(listingNode.node.protocolParameters.toString())
             : undefined,
-        }
+        } as SellOrder
       }),
-      smallImageUrl: asset.smallImage?.url,
+      smallImageUrl: asset?.smallImage?.url,
       tokenId,
-      tokenType: (asset.collection?.nftContracts && asset?.collection.nftContracts[0]?.standard) as TokenType,
-      collectionIsVerified: asset.collection?.isVerified,
+      tokenType: (asset?.collection?.nftContracts && asset?.collection.nftContracts[0]?.standard) as TokenType,
+      collectionIsVerified: asset?.collection?.isVerified ?? undefined,
       rarity: {
         primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
-        providers: asset.rarities.map((rarity: Rarity) => {
-          return {
-            ...rarity,
-            provider: 'Rarity Sniper',
-          }
-        }),
+        providers: asset?.rarities
+          ? asset?.rarities?.map((rarity) => {
+              return {
+                rank: rarity.rank ?? undefined,
+                score: rarity.score ?? undefined,
+                provider: 'Rarity Sniper',
+              }
+            })
+          : undefined,
       },
-      owner: asset.ownerAddress,
+      owner: asset?.ownerAddress ?? undefined,
       creator: {
-        profile_img_url: asset.creator?.profileImage?.url,
-        address: asset.creator?.address,
+        profile_img_url: asset?.creator?.profileImage?.url,
+        address: asset?.creator?.address,
       },
-      metadataUrl: asset.metadataUrl,
-      traits: asset.traits?.map((trait: { name: string; value: string }) => {
-        return { trait_type: trait.name, value: trait.value } as any
+      metadataUrl: asset?.metadataUrl ?? undefined,
+      traits: asset?.traits?.map((trait) => {
+        return { trait_type: trait.name ?? undefined, value: trait.value ?? undefined }
       }),
     },
     {
       collectionDescription: collection?.description,
       collectionImageUrl: collection?.image?.url,
-      collectionName: collection?.name,
-      isVerified: collection?.isVerified,
-      totalSupply: collection?.numAssets,
+      collectionName: collection?.name ?? undefined,
+      isVerified: collection?.isVerified ?? undefined,
+      totalSupply: collection?.numAssets ?? undefined,
     },
   ]
 }

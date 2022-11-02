@@ -102,6 +102,7 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
   const possibleMarkets = itemsInBag.reduce((markets, item) => {
     const asset = item.asset
     const market = asset.marketplace
+    if (!market) return {}
     if (!isPooledMarket(market)) return markets
 
     const key = asset.address + asset.marketplace
@@ -116,6 +117,7 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
   const updatedPriceMarkets = itemsInBag.reduce((markets, item) => {
     const asset = item.asset
     const market = asset.marketplace
+    if (!market) return {}
     if (!asset.updatedPriceInfo) return markets
     if (!isPooledMarket(market)) return markets
 
@@ -134,18 +136,19 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
   }, {} as { [key: string]: string })
 
   itemsInBag.forEach((item) => {
-    if (isPooledMarket(item.asset.marketplace)) {
-      const asset = item.asset
-      const isPriceChangedAsset = !!asset.updatedPriceInfo
+    if (item.asset.marketplace)
+      if (isPooledMarket(item.asset.marketplace)) {
+        const asset = item.asset
+        const isPriceChangedAsset = !!asset.updatedPriceInfo
 
-      const calculatedPrice = isPriceChangedAsset
-        ? calculatedAvgPoolPrices[asset.address + asset.marketplace]
-        : calcPoolPrice(asset, possibleMarkets[asset.address + asset.marketplace].indexOf(item.asset.tokenId))
+        const calculatedPrice = isPriceChangedAsset
+          ? calculatedAvgPoolPrices[asset.address + asset.marketplace]
+          : calcPoolPrice(asset, possibleMarkets[asset.address + asset.marketplace].indexOf(item.asset.tokenId))
 
-      if (isPriceChangedAsset && item.asset.updatedPriceInfo)
-        item.asset.updatedPriceInfo.ETHPrice = item.asset.updatedPriceInfo.basePrice = calculatedPrice
-      else item.asset.priceInfo.ETHPrice = calculatedPrice
-    }
+        if (isPriceChangedAsset && item.asset.updatedPriceInfo)
+          item.asset.updatedPriceInfo.ETHPrice = item.asset.updatedPriceInfo.basePrice = calculatedPrice
+        else item.asset.priceInfo.ETHPrice = calculatedPrice
+      }
   })
 
   return itemsInBag
