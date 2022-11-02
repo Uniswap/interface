@@ -1,6 +1,6 @@
 import { parseEther } from '@ethersproject/units'
 import graphql from 'babel-plugin-relay/macro'
-import { CollectionInfoForAsset, GenieAsset, GenieCollection, Rarity, SellOrder, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, Rarity, SellOrder, TokenType } from 'nft/types'
 import { loadQuery, usePreloadedQuery } from 'react-relay'
 
 import RelayEnvironment from '../RelayEnvironment'
@@ -100,7 +100,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
   const collection = asset?.collection
   const ethPrice = parseEther(asset?.listings?.edges[0]?.node.price.value?.toString()).toString()
 
-  const obj = [
+  return [
     {
       id: asset?.id,
       address,
@@ -119,7 +119,12 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       },
       susFlag: asset.suspiciousFlag,
       sellorders: asset.listings?.edges.map((listingNode: { node: SellOrder }) => {
-        return listingNode.node
+        return {
+          ...listingNode.node,
+          protocolParameters: listingNode.node.protocolParameters
+            ? JSON.parse(listingNode.node.protocolParameters.toString())
+            : undefined,
+        }
       }),
       smallImageUrl: asset.smallImage?.url,
       tokenId,
@@ -152,6 +157,4 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       totalSupply: collection?.numAssets,
     },
   ]
-  console.log(obj)
-  return obj as [GenieAsset, GenieCollection]
 }

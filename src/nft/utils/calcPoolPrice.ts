@@ -1,13 +1,19 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BagItem, BagItemStatus, GenieAsset, Markets, OldSellOrder, UpdatedGenieAsset } from 'nft/types'
+import { BagItem, BagItemStatus, GenieAsset, Markets, OldSellOrder, SellOrder, UpdatedGenieAsset } from 'nft/types'
 
+// TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
 export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   let amountToBuy: BigNumber = BigNumber.from(0)
   let marginalBuy: BigNumber = BigNumber.from(0)
-  if (!asset.sellorders || (asset.sellorders[0] as OldSellOrder).ammFeePercent === undefined) return '' // TODO update when pooled vars get added
-  const nft = asset.sellorders[0] as OldSellOrder
+  if (!asset.sellorders) return ''
+
+  const nft =
+    (asset.sellorders[0] as OldSellOrder).ammFeePercent === undefined
+      ? (asset.sellorders[0] as SellOrder).protocolParameters
+      : (asset.sellorders[0] as OldSellOrder)
+
   const decimals = BigNumber.from(1).mul(10).pow(18)
-  const ammFee = nft.ammFeePercent ? (100 + nft.ammFeePercent) * 100 : 110 * 100
+  const ammFee = nft.ammFeePercent ? ((100 + (nft.ammFeePercent as number)) as number) * 100 : 110 * 100
 
   if (asset.marketplace === Markets.NFTX) {
     const sixteenmul = BigNumber.from(1).mul(10).pow(16)
@@ -27,8 +33,32 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
     marginalBuy = marginalBuy.mul(decimals)
   }
 
-  const ethReserves = BigNumber.from(nft.ethReserves?.toLocaleString('fullwide', { useGrouping: false }))
-  const tokenReserves = BigNumber.from(nft.tokenReserves?.toLocaleString('fullwide', { useGrouping: false }))
+  const ethReserves = BigNumber.from(
+    (
+      (nft.ethReserves as number) ??
+      (
+        nft as Record<
+          string,
+          {
+            ethReserves: number
+          }
+        >
+      ).poolMetadata.ethReserves
+    )?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
+  )
+  const tokenReserves = BigNumber.from(
+    (
+      (nft.tokenReserves as number) ??
+      (
+        nft as Record<
+          string,
+          {
+            tokenReserves: number
+          }
+        >
+      ).poolMetadata.tokenReserves
+    )?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
+  )
   const numerator = ethReserves.mul(amountToBuy).mul(1000)
   const denominator = tokenReserves.sub(amountToBuy).mul(997)
 

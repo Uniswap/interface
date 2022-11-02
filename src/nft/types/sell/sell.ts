@@ -48,7 +48,7 @@ export interface SellOrder {
   status: OrderStatus
   tokenId: string
   type: OrderType
-  protocolParameters: string
+  protocolParameters: Record<string, unknown>
 }
 
 export interface Listing {

@@ -76,6 +76,7 @@ const assetPaginationQuery = graphql`
                 taker
                 tokenId
                 type
+                protocolParameters
               }
               cursor
             }
@@ -155,7 +156,14 @@ export function useAssetsQuery(
           }
         : undefined,
       susFlag: asset.suspiciousFlag,
-      sellorders: asset.listings?.edges as SellOrder,
+      sellorders: asset.listings?.edges.map((listingNode: { node: SellOrder }) => {
+        return {
+          ...listingNode.node,
+          protocolParameters: listingNode.node.protocolParameters
+            ? JSON.parse(listingNode.node.protocolParameters.toString())
+            : undefined,
+        }
+      }),
       smallImageUrl: asset.smallImage?.url,
       tokenId: asset.tokenId,
       tokenType: asset.collection.nftContracts[0]?.standard,
