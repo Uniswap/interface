@@ -84,7 +84,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
 
   const formattedUSDValue = usdValue
     ? formatNumber(parseFloat(usdValue?.toExact()), NumberType.FiatTokenQuantity)
-    : '$0'
+    : ''
   const formattedCurrencyAmount = currencyAmount
     ? formatCurrencyAmount(currencyAmount, NumberType.TokenTx)
     : ''
