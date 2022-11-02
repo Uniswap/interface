@@ -86,6 +86,7 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
   const queryData = useLazyLoadQuery<CollectionQuery>(collectionQuery, { address })
 
   const queryCollection = queryData.nftCollections?.edges[0]?.node
+  const market = queryCollection?.markets && queryCollection?.markets[0]
   const traits = {} as Record<string, Trait[]>
   if (queryCollection?.traits) {
     queryCollection?.traits.forEach((trait) => {
@@ -106,15 +107,15 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
     bannerImageUrl: queryCollection?.bannerImage?.url,
     stats: queryCollection?.markets
       ? {
-          num_owners: queryCollection?.markets[0]?.owners ?? undefined,
-          floor_price: queryCollection?.markets[0]?.floorPrice?.value ?? undefined,
-          one_day_volume: queryCollection?.markets[0]?.volume?.value ?? undefined,
-          one_day_change: queryCollection?.markets[0]?.volumePercentChange?.value ?? undefined,
-          one_day_floor_change: queryCollection?.markets[0]?.floorPricePercentChange?.value ?? undefined,
+          num_owners: market?.owners ?? undefined,
+          floor_price: market?.floorPrice?.value ?? undefined,
+          one_day_volume: market?.volume?.value ?? undefined,
+          one_day_change: market?.volumePercentChange?.value ?? undefined,
+          one_day_floor_change: market?.floorPricePercentChange?.value ?? undefined,
           banner_image_url: queryCollection?.bannerImage?.url ?? undefined,
           total_supply: queryCollection?.numAssets ?? undefined,
-          total_listings: queryCollection?.markets[0]?.listings?.value ?? undefined,
-          total_volume: queryCollection?.markets[0]?.totalVolume?.value ?? undefined,
+          total_listings: market?.listings?.value ?? undefined,
+          total_volume: market?.totalVolume?.value ?? undefined,
         }
       : {},
     traits,
