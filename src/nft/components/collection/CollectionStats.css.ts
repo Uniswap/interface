@@ -29,6 +29,8 @@ export const baseCollectionImage = sprinkles({
   borderStyle: 'solid',
   borderWidth: '4px',
   borderColor: 'backgroundSurface',
+  borderRadius: 'round',
+  position: 'absolute',
 })
 
 export const collectionImage = style([
@@ -74,13 +76,13 @@ globalStyle(`${description} a[href]`, {
 
 globalStyle(`${description} a[href]:hover`, {
   color: `${themeVars.colors.textSecondary}`,
-  opacity: '0.6',
+  opacity: `${themeVars.opacity.hover}`,
   textDecoration: 'none',
 })
 
-globalStyle(`${description} a[href]:active`, {
+globalStyle(`${description} a[href]:focus`, {
   color: `${themeVars.colors.textSecondary}`,
-  opacity: '0.4',
+  opacity: `${themeVars.opacity.pressed}`,
   textDecoration: 'none',
 })
 

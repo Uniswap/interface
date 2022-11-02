@@ -38,6 +38,7 @@ export const address = style([
 ])
 
 export const verifiedBadge = sprinkles({
+  marginLeft: '4',
   display: 'inline-block',
   paddingTop: '4',
   height: '28',
