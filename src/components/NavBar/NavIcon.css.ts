@@ -4,6 +4,7 @@ import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 export const navIcon = style([
   sprinkles({
+    alignItems: 'center',
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -11,7 +12,6 @@ export const navIcon = style([
     justifyContent: 'center',
     textAlign: 'center',
     cursor: 'pointer',
-    padding: '10',
     borderRadius: '8',
     transition: '250',
   }),

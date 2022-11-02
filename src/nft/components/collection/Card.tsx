@@ -1,18 +1,17 @@
 import clsx from 'clsx'
-import Column from 'components/Column'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import {
+  ChevronRightIcon,
   MinusIconLarge,
   PauseButtonIcon,
   PlayButtonIcon,
   PlusIconLarge,
   PoolIcon,
   RarityVerifiedIcon,
-  SuspiciousIcon20,
 } from 'nft/components/icons'
-import { body, bodySmall, subheadSmall } from 'nft/css/common.css'
+import { body, bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, UniformHeight, UniformHeights } from 'nft/types'
@@ -28,6 +27,9 @@ import {
   useRef,
   useState,
 } from 'react'
+import { AlertTriangle } from 'react-feather'
+import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import * as styles from './Card.css'
 
@@ -38,6 +40,8 @@ export interface CardContextProps {
   selected: boolean
   href: string
   setHref: (href: string) => void
+  addAssetToBag: () => void
+  removeAssetFromBag: () => void
 }
 
 const CardContext = createContext<CardContextProps | undefined>(undefined)
@@ -50,14 +54,85 @@ const useCardContext = () => {
 
 const baseHref = (asset: GenieAsset) => `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
 
+const DetailsLinkContainer = styled.a`
+  display: flex;
+  flex-shrink: 0;
+  text-decoration: none;
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
+  line-height: 20px;
+  weight: 400;
+
+  :hover {
+    color: ${({ theme }) => theme.accentAction};
+  }
+`
+
+const SuspiciousIcon = styled(AlertTriangle)`
+  width: 16px;
+  height: 16px;
+  color: ${({ theme }) => theme.accentFailure};
+`
+
+const Erc1155ControlsRow = styled.div`
+  position: absolute;
+  display: flex;
+  width: 100%;
+  bottom: 12px;
+  z-index: 2;
+  justify-content: center;
+`
+
+const Erc1155ControlsContainer = styled.div`
+  display: flex;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 12px 12px 12px 12px;
+  overflow: hidden;
+`
+
+const Erc1155ControlsDisplay = styled(ThemedText.HeadlineSmall)`
+  display: flex;
+  padding: 6px 8px;
+  width: 60px;
+  background: ${({ theme }) => theme.backgroundBackdrop};
+  justify-content: center;
+  cursor: default;
+`
+
+const Erc1155ControlsInput = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  background: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.textPrimary};
+
+  :hover {
+    color: ${({ theme }) => theme.accentAction};
+  }
+`
+
+const RankingContainer = styled.div`
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+`
+
+const StyledImageContainer = styled.div`
+  position: relative;
+`
+
 /* -------- ASSET CARD -------- */
 interface CardProps {
   asset: GenieAsset
   selected: boolean
+  addAssetToBag: () => void
+  removeAssetFromBag: () => void
   children: ReactNode
 }
 
-const Container = ({ asset, selected, children }: CardProps) => {
+const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, children }: CardProps) => {
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
@@ -69,8 +144,10 @@ const Container = ({ asset, selected, children }: CardProps) => {
       toggleHovered,
       href,
       setHref,
+      addAssetToBag,
+      removeAssetFromBag,
     }),
-    [asset, hovered, selected, href]
+    [asset, hovered, selected, href, addAssetToBag, removeAssetFromBag]
   )
 
   const assetRef = useRef<HTMLDivElement>(null)
@@ -82,22 +159,31 @@ const Container = ({ asset, selected, children }: CardProps) => {
   return (
     <CardContext.Provider value={providerValue}>
       <Box
-        as="a"
-        href={href ? href : baseHref(asset)}
         position={'relative'}
         ref={assetRef}
         borderRadius={'20'}
-        className={styles.notSelectedCard}
+        className={selected ? styles.selectedCard : styles.notSelectedCard}
         draggable={false}
         onMouseEnter={() => toggleHovered()}
         onMouseLeave={() => toggleHovered()}
         transition="250"
+        cursor={asset.notForSale ? 'default' : 'pointer'}
+        onClick={(e: MouseEvent) => {
+          if (!asset.notForSale) {
+            e.preventDefault()
+            !selected ? addAssetToBag() : removeAssetFromBag()
+          }
+        }}
       >
         {children}
       </Box>
     </CardContext.Provider>
   )
 }
+
+const ImageContainer = ({ children }: { children: ReactNode }) => (
+  <StyledImageContainer>{children}</StyledImageContainer>
+)
 
 /* -------- CARD IMAGE -------- */
 interface ImageProps {
@@ -365,10 +451,14 @@ const InfoContainer = ({ children }: { children: ReactNode }) => {
   )
 }
 
-const PrimaryRow = ({ children }: { children: ReactNode }) => <Row justifyContent="space-between">{children}</Row>
+const PrimaryRow = ({ children }: { children: ReactNode }) => (
+  <Row gap="8" justifyContent="space-between">
+    {children}
+  </Row>
+)
 
 const PrimaryDetails = ({ children }: { children: ReactNode }) => (
-  <Row overflow="hidden" whiteSpace="nowrap">
+  <Row justifyItems="center" overflow="hidden" whiteSpace="nowrap">
     {children}
   </Row>
 )
@@ -425,100 +515,35 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   )
 }
 
-interface ButtonProps {
-  children: ReactNode
-  quantity: number
-  selectedChildren: ReactNode
-  onClick: (e: MouseEvent) => void
-  onSelectedClick: (e: MouseEvent) => void
+interface Erc1155ControlsInterface {
+  quantity: string
 }
 
-const Button = ({ children, quantity, selectedChildren, onClick, onSelectedClick }: ButtonProps) => {
-  const [buttonHovered, toggleButtonHovered] = useReducer((s) => !s, false)
-  const { asset, selected, setHref } = useCardContext()
-  const buttonRef = useRef<HTMLDivElement>(null)
-  const isMobile = useIsMobile()
-
-  useLayoutEffect(() => {
-    if (buttonHovered && buttonRef.current?.matches(':hover') === false) toggleButtonHovered()
-  }, [buttonHovered])
+const Erc1155Controls = ({ quantity }: Erc1155ControlsInterface) => {
+  const { addAssetToBag, removeAssetFromBag } = useCardContext()
 
   return (
-    <>
-      {!selected || asset.tokenType !== 'ERC1155' ? (
-        <Box
-          as="button"
-          ref={buttonRef}
-          color={
-            buttonHovered || isMobile
-              ? 'explicitWhite'
-              : selected
-              ? 'accentFailure'
-              : asset.notForSale
-              ? 'textTertiary'
-              : 'accentAction'
-          }
-          background={
-            buttonHovered || isMobile
-              ? asset.notForSale
-                ? 'backgroundInteractive'
-                : selected
-                ? 'accentFailure'
-                : 'accentAction'
-              : asset.notForSale
-              ? 'backgroundModule'
-              : selected
-              ? 'accentFailureSoft'
-              : 'accentActionSoft'
-          }
-          className={clsx(styles.button, subheadSmall)}
-          onClick={(e) =>
-            selected
-              ? onSelectedClick(e)
-              : asset.notForSale
-              ? () => {
-                  return true
-                }
-              : onClick(e)
-          }
-          onMouseEnter={() => {
-            !asset.notForSale && setHref('')
-            !buttonHovered && toggleButtonHovered()
+    <Erc1155ControlsRow>
+      <Erc1155ControlsContainer>
+        <Erc1155ControlsInput
+          onClick={(e: MouseEvent) => {
+            e.stopPropagation()
+            removeAssetFromBag()
           }}
-          onMouseLeave={() => {
-            !asset.notForSale && setHref(baseHref(asset))
-            buttonHovered && toggleButtonHovered()
-          }}
-          transition="250"
         >
-          {selected
-            ? selectedChildren
-            : asset.notForSale
-            ? buttonHovered || isMobile
-              ? 'See details'
-              : 'Not for sale'
-            : children}
-        </Box>
-      ) : (
-        <Row className={styles.erc1155ButtonRow}>
-          <Column
-            as="button"
-            className={styles.erc1155MinusButton}
-            onClick={(e: MouseEvent<Element, globalThis.MouseEvent>) => onSelectedClick(e)}
-          >
-            <MinusIconLarge width="32" height="32" />
-          </Column>
-          <Box className={`${styles.erc1155QuantityText} ${subheadSmall}`}>{quantity.toString()}</Box>
-          <Column
-            as="button"
-            className={styles.erc1155PlusButton}
-            onClick={(e: MouseEvent<Element, globalThis.MouseEvent>) => onClick(e)}
-          >
-            <PlusIconLarge width="32" height="32" />
-          </Column>
-        </Row>
-      )}
-    </>
+          <MinusIconLarge width="24px" height="24px" />
+        </Erc1155ControlsInput>
+        <Erc1155ControlsDisplay>{quantity}</Erc1155ControlsDisplay>
+        <Erc1155ControlsInput
+          onClick={(e: MouseEvent) => {
+            e.stopPropagation()
+            addAssetToBag()
+          }}
+        >
+          <PlusIconLarge width="24px" height="24px" />
+        </Erc1155ControlsInput>
+      </Erc1155ControlsContainer>
+    </Erc1155ControlsRow>
   )
 }
 
@@ -530,6 +555,22 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
       src={`/nft/svgs/marketplaces/${marketplace}.svg`}
       className={styles.marketplaceIcon}
     />
+  )
+}
+
+const DetailsLink = () => {
+  const { asset } = useCardContext()
+
+  return (
+    <DetailsLinkContainer
+      href={baseHref(asset)}
+      onClick={(e: MouseEvent) => {
+        e.stopPropagation()
+      }}
+    >
+      Details
+      <ChevronRightIcon width="20px" height="20px" />
+    </DetailsLinkContainer>
   )
 }
 
@@ -545,31 +586,33 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
   const { asset } = useCardContext()
 
   return (
-    <MouseoverTooltip
-      text={
-        <Row>
-          <Box display="flex" marginRight="4">
-            <img src={rarityLogo} alt="cardLogo" width={16} />
+    <RankingContainer>
+      <MouseoverTooltip
+        text={
+          <Row>
+            <Box display="flex" marginRight="4">
+              <img src={rarityLogo} alt="cardLogo" width={16} />
+            </Box>
+            <Box width="full" className={bodySmall}>
+              {rarityVerified
+                ? `Verified by ${asset.collectionName}`
+                : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
+            </Box>
+          </Row>
+        }
+        placement="top"
+      >
+        <Box className={styles.rarityInfo}>
+          <Box paddingTop="2" paddingBottom="2" display="flex">
+            {putCommas(provider.rank)}
           </Box>
-          <Box width="full" className={bodySmall}>
-            {rarityVerified
-              ? `Verified by ${asset.collectionName}`
-              : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
-          </Box>
-        </Row>
-      }
-      placement="top"
-    >
-      <Box className={styles.rarityInfo}>
-        <Box paddingTop="2" paddingBottom="2" display="flex">
-          {putCommas(provider.rank)}
-        </Box>
 
-        <Box display="flex" height="16">
-          {rarityVerified ? <RarityVerifiedIcon /> : null}
+          <Box display="flex" height="16">
+            {rarityVerified ? <RarityVerifiedIcon /> : null}
+          </Box>
         </Box>
-      </Box>
-    </MouseoverTooltip>
+      </MouseoverTooltip>
+    </RankingContainer>
   )
 }
 const SUSPICIOUS_TEXT = 'Blocked on OpenSea'
@@ -577,8 +620,8 @@ const SUSPICIOUS_TEXT = 'Blocked on OpenSea'
 const Suspicious = () => {
   return (
     <MouseoverTooltip text={<Box className={bodySmall}>{SUSPICIOUS_TEXT}</Box>} placement="top">
-      <Box display="flex" flexShrink="0" marginLeft="2">
-        <SuspiciousIcon20 width="20" height="20" />
+      <Box display="flex" flexShrink="0" marginLeft="4">
+        <SuspiciousIcon />
       </Box>
     </MouseoverTooltip>
   )
@@ -632,7 +675,7 @@ const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
         width="full"
         style={{
           paddingTop: '100%',
-          background: `linear-gradient(270deg, ${themeVars.colors.backgroundOutline} 0%, ${themeVars.colors.backgroundSurface} 100%)`,
+          background: `linear-gradient(90deg, ${themeVars.colors.backgroundSurface} 0%, ${themeVars.colors.backgroundInteractive} 95.83%)`,
         }}
       >
         <Box
@@ -656,10 +699,12 @@ const NoContentContainer = ({ uniformHeight }: NoContentContainerProps) => (
 
 export {
   Audio,
-  Button,
   Container,
   DetailsContainer,
+  DetailsLink,
+  Erc1155Controls,
   Image,
+  ImageContainer,
   InfoContainer,
   MarketplaceIcon,
   Pool,

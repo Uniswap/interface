@@ -74,9 +74,6 @@ export const detailsName = style([
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   }),
-  {
-    lineHeight: '24px',
-  },
 ])
 
 export const eventDetail = style([
@@ -101,7 +98,7 @@ export const eventTime = style([
 ])
 
 export const addressCell = style([
-  subhead,
+  buttonTextMedium,
   sprinkles({
     color: 'textPrimary',
     height: 'full',
@@ -217,15 +214,3 @@ export const rarityInfo = style([
     backdropFilter: 'blur(6px)',
   },
 ])
-
-export const rarityInfoDetails = sprinkles({
-  display: 'flex',
-  borderRadius: '4',
-  height: '16',
-  width: 'min',
-  color: 'textSecondary',
-  fontSize: '10',
-  fontWeight: 'semibold',
-  paddingX: '4',
-  cursor: 'pointer',
-})
