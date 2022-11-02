@@ -28,11 +28,12 @@ font-size:${props => props.isMobile ? '14px' : '17px'};
   color:#F76C1D;
 }`
 
-export default function SwapHeader({ allowedSlippage, view, onViewChange, }: { allowedSlippage: Percent, view: 'bridge' | 'swap' | 'limit' | 'flooz', onViewChange: (view: "bridge" | "swap" | 'limit' | 'flooz') => void }) {
+export default function SwapHeader({ allowedSlippage, view, onViewChange, }: { allowedSlippage: Percent, view: 'bridge' | 'swap' | 'limit' | 'crosschain', onViewChange: (view: "bridge" | "swap" | 'limit' | 'crosschain') => void }) {
   const { chainId } = useWeb3React()
   const onBridgeClick = () => onViewChange('bridge');
   const onLimitClick = () => onViewChange('limit');
   const onSwapClick = () => onViewChange('swap')
+  const onCrosschainClick = () => onViewChange('crosschain')
   const isMobile = useIsMobile()
   const theme = useContext(ThemeContext)
   return (
@@ -51,11 +52,14 @@ export default function SwapHeader({ allowedSlippage, view, onViewChange, }: { a
             <Trans>Bridge</Trans>
           </HeaderType>}
 
+          {<HeaderType isMobile={isMobile} onClick={onCrosschainClick} fontWeight={view === 'crosschain' ? 700 : 400} style={{ color: view === 'crosschain' ? '#F76C1D' : '', cursor: 'pointer', background: view === 'crosschain' ? theme.bg0 : 'transparent' }}>
+            <Trans>Crosschain</Trans>
+          </HeaderType>}
+
 
         </RowFixed>
-        <RowFixed alignItems="center" style={{gap: 5, marginRight:isMobile ? '' : 10}}>
-        {<StyledInternalLink style={{ fontSize: isMobile ? 12 : 14 }} to="/bridge">Crosschain</StyledInternalLink>}
-
+        <RowFixed alignItems="center" style={{gap: 5, marginRight:isMobile ? '' : 15, marginBottom:isMobile ? '' : 5}}>
+        
         {chainId === 1 && (
             <SettingsTab placeholderSlippage={allowedSlippage} />
         )}

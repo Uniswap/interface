@@ -7,6 +7,9 @@ import { TYPE } from 'theme'
 import styled from 'styled-components/macro'
 import { useIsDarkMode } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
+import  bridgeicon  from '../../../assets/images/bridgeicon.png'
+import { isMobile } from 'react-device-detect'
+
 
 /*tslint-disable*/
 /*eslint-disable*/
@@ -68,8 +71,13 @@ export const Bridge = () => {
         <AutoColumn gap="lg">
             <AutoColumn gap="sm">
                 <TYPE.small>
-                    <img src={'https://kiba.tools/static/media/download.e893807d.png'} style={{ maxWidth: 40 }} />
-                    Kiba Bridge
+                <img
+              width={isMobile ? '10px' : '20px'}
+              src={bridgeicon}
+              margin-right='10px'
+              
+            />
+                      Kiba Crosschain Bridge
                 </TYPE.small>
                 <Wrapper>
                     {content}

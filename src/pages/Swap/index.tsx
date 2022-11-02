@@ -72,6 +72,8 @@ import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { useUSDCValueV2AndV3 } from '../../hooks/useUSDCPrice'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { warningSeverity } from '../../utils/prices'
+import { Bridge } from 'components/AccountDetails/Bridge'
+
 
 // In addition to the navigator object, we also have a clipboard
 //   property.
@@ -568,7 +570,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const swapIsUnsupported = useIsSwapUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
-  const [view, setView] = React.useState<'bridge' | 'swap' | 'flooz' |
+  const [view, setView] = React.useState<'bridge' | 'swap' | 'crosschain' |
     'limit'
   >('swap')
   const cannotUseFeature = !account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0)
@@ -1021,10 +1023,11 @@ export default function Swap({ history }: RouteComponentProps) {
             </AutoColumn>
           </Wrapper>
         )}
-        {view === 'flooz' && <Wrapper style={{ background: theme.bg0, borderBottomRightRadius: 24, borderBottomLeftRadius: 24 }}>
-          <iframe style={{ backgroundColor: 'bg0', display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 600, width: '100%' }} src={floozUrl} />
+        {view === 'crosschain' &&
+          <Wrapper style={{ width: '100%', background: theme.bg6, borderBottomRightRadius: 24, borderBottomLeftRadius: 24 }}>
+            <Bridge />
+          </Wrapper>}
 
-        </Wrapper>}
         {view === 'limit' &&
           <Wrapper style={{ width: '100%', background: theme.bg0, borderBottomRightRadius: 24, borderBottomLeftRadius: 24 }}>
             <LimitOrders />
