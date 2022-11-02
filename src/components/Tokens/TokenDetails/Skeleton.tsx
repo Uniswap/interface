@@ -1,12 +1,12 @@
 import { WidgetSkeleton } from 'components/Widget'
 import { WIDGET_WIDTH } from 'components/Widget'
-import { ChartHeader, TokenInfoContainer, TokenNameCell } from 'pages/TokenDetails'
 import { ArrowLeft } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { LoadingBubble } from '../loading'
 import { LogoContainer } from '../TokenTable/TokenRow'
+import { ChartHeader, TokenInfoContainer, TokenNameCell } from '.'
 import { AboutContainer, AboutHeader } from './About'
 import { BreadcrumbNavLink } from './BreadcrumbNavLink'
 import { DeltaContainer, TokenPrice } from './PriceChart'
@@ -52,6 +52,7 @@ export const RightPanel = styled.div`
 `
 export const ChartContainer = styled.div`
   display: flex;
+  flex-direction: column;
   height: 436px;
   align-items: center;
   width: 100%;
