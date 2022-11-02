@@ -10,7 +10,7 @@ import { bodySmall } from 'nft/css/common.css'
 import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { ethNumberStandardFormatter, formatWeiToDecimal } from 'nft/utils'
-import { useCallback, useMemo } from 'react'
+import { PropsWithChildren, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useModalIsOpen, useToggleWalletModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -47,71 +47,26 @@ const WarningText = styled(ThemedText.BodyPrimary)`
 `
 
 interface ActionButtonProps {
-  bagStatus: BagStatus
   disabled?: boolean
-  isPending?: boolean
   onClick: () => void
-  walletModalIsOpen?: boolean
-  sufficientBalance: boolean | undefined
 }
 
-const ActionButton = ({ bagStatus, onClick, walletModalIsOpen, sufficientBalance }: ActionButtonProps) => {
-  const { account, chainId } = useWeb3React()
-  const connected = Boolean(account && chainId)
-
-  const isPending = PENDING_BAG_STATUSES.includes(bagStatus) || walletModalIsOpen
-  let disabled = true
-  let buttonText = <Trans>Something went wrong</Trans>
-  if (!connected || walletModalIsOpen) {
-    disabled = false
-    buttonText = <Trans>Connect wallet</Trans>
-  } else if (connected && chainId !== SupportedChainId.MAINNET) {
-    disabled = false
-    buttonText = <Trans>Switch networks</Trans>
-  } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
-    disabled = true
-    buttonText = <Trans>Proceed in wallet</Trans>
-  } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
-    disabled = true
-    buttonText = <Trans>Transaction pending</Trans>
-  } else if (sufficientBalance === true) {
-    disabled = false
-    buttonText = <Trans>Pay</Trans>
-  } else if (sufficientBalance === false) {
-    disabled = true
-    buttonText = <Trans>Pay</Trans>
-  }
+const ActionButton = ({ disabled, children, onClick }: PropsWithChildren<ActionButtonProps>) => {
   return (
     <Row as="button" color="explicitWhite" className={styles.payButton} disabled={disabled} onClick={onClick}>
-      {isPending && <Loader size="20px" stroke="white" />}
-      {buttonText}
+      {children}
     </Row>
   )
 }
-interface WarningProps {
-  bagStatus: BagStatus
-  sufficientBalance: undefined | boolean
-}
 
-const Warning = ({ bagStatus, sufficientBalance }: WarningProps) => {
-  const { account, chainId } = useWeb3React()
-  const connected = Boolean(account && chainId)
-  let warningText = null
-
-  if (connected && chainId !== SupportedChainId.MAINNET) {
-    warningText = <Trans>Wrong network</Trans>
-  } else if (sufficientBalance === false) {
-    warningText = <Trans>Insufficient funds</Trans>
-  } else if (bagStatus === BagStatus.WARNING) {
-    warningText = <Trans>Something went wrong. Please try again.</Trans>
-  }
-  if (!warningText) {
+const Warning = ({ children }: PropsWithChildren<unknown>) => {
+  if (!children) {
     return null
   }
   return (
     <WarningText fontSize="14px" lineHeight="20px">
       <WarningIcon />
-      {warningText}
+      {children}
     </WarningText>
   )
 }
@@ -155,6 +110,40 @@ export const BagFooter = ({ totalEthPrice, totalUsdPrice, bagStatus, fetchAssets
     return parseEther(balanceInEth).gte(totalEthPrice)
   }, [connected, chainId, balanceInEth, totalEthPrice])
 
+  const { buttonText, disabled, warningText } = useMemo(() => {
+    let buttonText = <Trans>Something went wrong</Trans>
+    let disabled = true
+    let warningText = null
+
+    if (connected && chainId !== SupportedChainId.MAINNET) {
+      buttonText = <Trans>Switch networks</Trans>
+      disabled = false
+      warningText = <Trans>Wrong network</Trans>
+    } else if (sufficientBalance === false) {
+      buttonText = <Trans>Pay</Trans>
+      disabled = true
+      warningText = <Trans>Insufficient funds</Trans>
+    } else if (bagStatus === BagStatus.WARNING) {
+      warningText = <Trans>Something went wrong. Please try again.</Trans>
+    } else if (!connected || walletModalIsOpen) {
+      disabled = false
+      buttonText = <Trans>Connect wallet</Trans>
+    } else if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
+      disabled = true
+      buttonText = <Trans>Proceed in wallet</Trans>
+    } else if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
+      disabled = true
+      buttonText = <Trans>Transaction pending</Trans>
+    } else if (sufficientBalance === true) {
+      disabled = false
+      buttonText = <Trans>Pay</Trans>
+    }
+
+    return { buttonText, disabled, warningText }
+  }, [bagStatus, chainId, connected, sufficientBalance, walletModalIsOpen])
+
+  const isPending = PENDING_BAG_STATUSES.includes(bagStatus) || walletModalIsOpen
+
   return (
     <Column className={styles.footerContainer}>
       <Footer $showWarning={bagStatus === BagStatus.WARNING}>
@@ -173,13 +162,11 @@ export const BagFooter = ({ totalEthPrice, totalUsdPrice, bagStatus, fetchAssets
             {`${ethNumberStandardFormatter(totalUsdPrice, true)}`}
           </Row>
         </Column>
-        <Warning bagStatus={bagStatus} sufficientBalance={sufficientBalance} />
-        <ActionButton
-          onClick={handleClick}
-          bagStatus={bagStatus}
-          walletModalIsOpen={walletModalIsOpen}
-          sufficientBalance={sufficientBalance}
-        />
+        <Warning>{warningText}</Warning>
+        <ActionButton onClick={handleClick} disabled={disabled}>
+          {isPending && <Loader size="20px" stroke="white" />}
+          {buttonText}
+        </ActionButton>
       </Footer>
     </Column>
   )
