@@ -11,6 +11,7 @@ const query = graphql`
     topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {
       logoUrl
       name
+      safetyLevel
       tokens {
         chain
         address

@@ -9,28 +9,26 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { getTokenWarningHeaderText } from 'src/components/tokens/utils'
+import { getTokenSafetyHeaderText } from 'src/components/tokens/utils'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TOKEN_WARNING_HELP_PAGE_URL } from 'src/constants/urls'
+import { SafetyLevel } from 'src/features/dataApi/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import {
-  TokenWarningLevel,
-  useTokenWarningLevelColors,
-} from 'src/features/tokens/useTokenWarningLevel'
+import { useTokenSafetyLevelColors } from 'src/features/tokens/useTokenWarningLevel'
 import { opacify } from 'src/utils/colors'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
 
-function getWarningText(tokenWarningLevel: TokenWarningLevel, t: TFunction) {
-  switch (tokenWarningLevel) {
-    case TokenWarningLevel.LOW:
+function getTokenSafetyBodyText(safetyLevel: NullUndefined<SafetyLevel>, t: TFunction) {
+  switch (safetyLevel) {
+    case SafetyLevel.Medium:
       return t(
         "This token isn't traded on leading U.S. centralized exchanges. Always conduct your own research before trading."
       )
-    case TokenWarningLevel.MEDIUM:
+    case SafetyLevel.Strong:
       return t(
         "This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading."
       )
-    case TokenWarningLevel.BLOCKED:
+    case SafetyLevel.Blocked:
       return t("You can't trade this token using the Uniswap App.")
     default:
       return ''
@@ -40,7 +38,7 @@ function getWarningText(tokenWarningLevel: TokenWarningLevel, t: TFunction) {
 interface Props {
   isVisible: boolean
   currency: Currency
-  tokenWarningLevel: TokenWarningLevel
+  safetyLevel: NullUndefined<SafetyLevel>
   disableAccept?: boolean // only show message and close button
   onClose: () => void
   onAccept: () => void
@@ -52,15 +50,14 @@ interface Props {
 export default function TokenWarningModal({
   isVisible,
   currency,
-  tokenWarningLevel,
+  safetyLevel,
   disableAccept,
   onClose,
   onAccept,
 }: Props) {
   const { t } = useTranslation()
-
   const theme = useAppTheme()
-  const warningColor = useTokenWarningLevelColors(tokenWarningLevel)
+  const warningColor = useTokenSafetyLevelColors(safetyLevel)
 
   const explorerLink = getExplorerLink(
     currency.chainId,
@@ -85,12 +82,12 @@ export default function TokenWarningModal({
           style={{
             borderColor: opacify(60, theme.colors[warningColor]),
           }}>
-          <WarningIcon tokenWarningLevel={tokenWarningLevel} width={theme.iconSizes.md} />
+          <WarningIcon safetyLevel={safetyLevel} width={theme.iconSizes.md} />
         </Flex>
-        <Text variant="buttonLabelMedium">{getTokenWarningHeaderText(tokenWarningLevel, t)}</Text>
+        <Text variant="buttonLabelMedium">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
         <Flex centered gap="xxs" width="90%">
           <Text color="textSecondary" textAlign="center" variant="bodySmall">
-            {getWarningText(tokenWarningLevel, t)}{' '}
+            {getTokenSafetyBodyText(safetyLevel, t)}{' '}
             <TouchableArea height={18} onPress={onPressLearnMore}>
               <Text color="accentActive" variant="buttonLabelSmall">
                 {t('Learn more')}

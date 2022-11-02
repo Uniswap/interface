@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { useLazyLoadQuery } from 'react-relay'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
 import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
+import { fromGraphQLSafetyLevel } from 'src/features/dataApi/utils'
 import { balancesQuery } from 'src/features/dataApi/__generated__/balancesQuery.graphql'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
@@ -30,6 +31,7 @@ const query = graphql`
         tokenProjectMarket {
           tokenProject {
             logoUrl
+            safetyLevel
           }
           relativeChange24: pricePercentChange(duration: DAY) {
             value
@@ -92,6 +94,7 @@ export function usePortfolioBalances(
         currency,
         currencyId: currencyId(currency),
         logoUrl: balance.tokenProjectMarket?.tokenProject?.logoUrl,
+        safetyLevel: fromGraphQLSafetyLevel(balance.tokenProjectMarket?.tokenProject.safetyLevel),
       }
 
       const portfolioBalance: PortfolioBalance = {

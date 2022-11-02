@@ -1,13 +1,13 @@
 import { TFunction } from 'i18next'
-import { TokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
+import { SafetyLevel } from 'src/features/dataApi/types'
 
-export function getTokenWarningHeaderText(tokenWarningLevel: TokenWarningLevel, t: TFunction) {
-  switch (tokenWarningLevel) {
-    case TokenWarningLevel.LOW:
+export function getTokenSafetyHeaderText(safetyLevel: NullUndefined<SafetyLevel>, t: TFunction) {
+  switch (safetyLevel) {
+    case SafetyLevel.Medium:
       return t('Caution')
-    case TokenWarningLevel.MEDIUM:
+    case SafetyLevel.Strong:
       return t('Warning')
-    case TokenWarningLevel.BLOCKED:
+    case SafetyLevel.Blocked:
       return t('Not available')
   }
 }

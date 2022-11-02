@@ -1,7 +1,10 @@
 import { Token } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
-import { CurrencyInfo, GQLTokenProject } from 'src/features/dataApi/types'
-import { ContractInput } from 'src/features/dataApi/__generated__/tokenProjectsQuery.graphql'
+import { CurrencyInfo, GQLTokenProject, SafetyLevel } from 'src/features/dataApi/types'
+import {
+  ContractInput,
+  SafetyLevel as GraphQLSafteyLevel,
+} from 'src/features/dataApi/__generated__/tokenProjectsQuery.graphql'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { fromGraphQLChain, toGraphQLChain } from 'src/utils/chainId'
 import {
@@ -26,7 +29,7 @@ export function tokenProjectToCurrencyInfos(
   return tokenProject
     .flatMap((project) =>
       project?.tokens.map((token) => {
-        const { logoUrl, name } = project
+        const { logoUrl, name, safetyLevel } = project
         const { chain, address, decimals, symbol } = token
         const chainId = fromGraphQLChain(chain)
         if (!chainId || !decimals || !symbol || !name) return null
@@ -40,10 +43,30 @@ export function tokenProjectToCurrencyInfos(
           currency,
           currencyId: currencyId(currency),
           logoUrl,
+          safetyLevel: fromGraphQLSafetyLevel(safetyLevel),
         }
 
         return currencyInfo
       })
     )
     .filter(Boolean) as CurrencyInfo[]
+}
+
+// Converts return value for SafetyLevel from GQL to custom enum for easier comparison.
+// Use anywhere where we reference the return value of SafetyLevel on a `TokenProject` from api.
+export function fromGraphQLSafetyLevel(
+  safetyLevel: NullUndefined<GraphQLSafteyLevel>
+): SafetyLevel | null {
+  switch (safetyLevel) {
+    case 'MEDIUM_WARNING':
+      return SafetyLevel.Medium
+    case 'STRONG_WARNING':
+      return SafetyLevel.Strong
+    case 'BLOCKED':
+      return SafetyLevel.Blocked
+    case 'VERIFIED':
+      return SafetyLevel.Verified
+    default:
+      return null
+  }
 }

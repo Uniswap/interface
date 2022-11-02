@@ -12,6 +12,7 @@ const query = graphql`
     searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {
       logoUrl
       name
+      safetyLevel
       tokens {
         chain
         address

@@ -7,7 +7,6 @@ import { ChainId } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import {
   useCombinedActiveList,
-  useTokenWarningList,
   useUniswapDefaultList,
   useUnsupportedTokenList,
 } from 'src/features/tokenLists/hooks'
@@ -68,11 +67,6 @@ export function useNativeCurrencies(): ChainIdToCurrencyIdToNativeCurrency {
 export function useUnsupportedTokens(): ChainIdToCurrencyIdToToken {
   const unsupportedTokensMap = useUnsupportedTokenList()
   return useTokensFromListedMap(unsupportedTokensMap, false)
-}
-
-export function useWarningTokens(): ChainIdToCurrencyIdToToken {
-  const warningTokensMap = useTokenWarningList()
-  return useTokensFromListedMap(warningTokensMap, false)
 }
 
 // Used for determining risk levels of tokens.

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<44ac40d6edfb352a46718dfc4a258204>>
+ * @generated SignedSource<<7e19f77422fcc01bdb388862051196dc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Chain = "ARBITRUM" | "CELO" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
 export type Currency = "ETH" | "USD" | "%future added value";
+export type SafetyLevel = "BLOCKED" | "MEDIUM_WARNING" | "STRONG_WARNING" | "VERIFIED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type TokenDetailsStats_tokenProject$data = {
   readonly description: string | null;
@@ -38,6 +39,7 @@ export type TokenDetailsStats_tokenProject$data = {
     } | null;
   } | null> | null;
   readonly name: string | null;
+  readonly safetyLevel: SafetyLevel | null;
   readonly tokens: ReadonlyArray<{
     readonly address: string | null;
     readonly chain: Chain;
@@ -106,6 +108,13 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "name",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "safetyLevel",
       "storageKey": null
     },
     {
@@ -236,6 +245,6 @@ return {
 };
 })();
 
-(node as any).hash = "6937ba63e5be68a95f6f75c6849aef6f";
+(node as any).hash = "67ca67c9d6624b81106644274d13cdf4";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<638c91d8690838cc70f06d2a65368043>>
+ * @generated SignedSource<<cf5a41524ec3bc1e9d92f0626b6c83aa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,7 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type Chain = "ARBITRUM" | "CELO" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
+export type SafetyLevel = "BLOCKED" | "MEDIUM_WARNING" | "STRONG_WARNING" | "VERIFIED" | "%future added value";
 export type searchTokensProjectsQuery$variables = {
   searchQuery: string;
   skip: boolean;
@@ -18,6 +19,7 @@ export type searchTokensProjectsQuery$data = {
   readonly searchTokenProjects?: ReadonlyArray<{
     readonly logoUrl: string | null;
     readonly name: string | null;
+    readonly safetyLevel: SafetyLevel | null;
     readonly tokens: ReadonlyArray<{
       readonly address: string | null;
       readonly chain: Chain;
@@ -69,31 +71,38 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "chain",
+  "name": "safetyLevel",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "address",
+  "name": "chain",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "decimals",
+  "name": "address",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "symbol",
+  "name": "decimals",
   "storageKey": null
 },
 v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "symbol",
+  "storageKey": null
+},
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -122,6 +131,7 @@ return {
             "selections": [
               (v2/*: any*/),
               (v3/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -130,10 +140,10 @@ return {
                 "name": "tokens",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
                   (v5/*: any*/),
                   (v6/*: any*/),
-                  (v7/*: any*/)
+                  (v7/*: any*/),
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -167,6 +177,7 @@ return {
             "selections": [
               (v2/*: any*/),
               (v3/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -175,15 +186,15 @@ return {
                 "name": "tokens",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
                   (v5/*: any*/),
                   (v6/*: any*/),
                   (v7/*: any*/),
-                  (v8/*: any*/)
+                  (v8/*: any*/),
+                  (v9/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v8/*: any*/)
+              (v9/*: any*/)
             ],
             "storageKey": null
           }
@@ -192,16 +203,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ab29099d341df671cb77aea539ab50ff",
+    "cacheID": "9bdb8f77466921a88e6fd4fda462e2b0",
     "id": null,
     "metadata": {},
     "name": "searchTokensProjectsQuery",
     "operationKind": "query",
-    "text": "query searchTokensProjectsQuery(\n  $searchQuery: String!\n  $skip: Boolean!\n) {\n  searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {\n    logoUrl\n    name\n    tokens {\n      chain\n      address\n      decimals\n      symbol\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query searchTokensProjectsQuery(\n  $searchQuery: String!\n  $skip: Boolean!\n) {\n  searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {\n    logoUrl\n    name\n    safetyLevel\n    tokens {\n      chain\n      address\n      decimals\n      symbol\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a892f72180072deba8b36858883da388";
+(node as any).hash = "02a855b5db6cae2e2dd27d4b84ad437e";
 
 export default node;

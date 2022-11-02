@@ -12,6 +12,7 @@ const query = graphql`
     tokenProjects(contracts: $contracts) {
       logoUrl
       name
+      safetyLevel
       tokens {
         chain
         address

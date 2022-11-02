@@ -3,28 +3,21 @@ import { SvgProps } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import XOctagon from 'src/assets/icons/x-octagon.svg'
-import {
-  TokenWarningLevel,
-  useTokenWarningLevelColors,
-} from 'src/features/tokens/useTokenWarningLevel'
+import { SafetyLevel } from 'src/features/dataApi/types'
+import { useTokenSafetyLevelColors } from 'src/features/tokens/useTokenWarningLevel'
 
 interface Props {
-  tokenWarningLevel: TokenWarningLevel
+  safetyLevel: NullUndefined<SafetyLevel>
 }
 
-export default function WarningIcon({ tokenWarningLevel, ...rest }: Props & SvgProps) {
-  const colorKey = useTokenWarningLevelColors(tokenWarningLevel)
+export default function WarningIcon({ safetyLevel, ...rest }: Props & SvgProps) {
+  const colorKey = useTokenSafetyLevelColors(safetyLevel)
   const theme = useAppTheme()
-  if (
-    tokenWarningLevel === TokenWarningLevel.LOW ||
-    tokenWarningLevel === TokenWarningLevel.MEDIUM
-  ) {
+  if (safetyLevel === SafetyLevel.Medium || safetyLevel === SafetyLevel.Strong) {
     return <AlertTriangle color={theme.colors[colorKey]} {...rest} />
   }
-
-  if (tokenWarningLevel === TokenWarningLevel.BLOCKED) {
+  if (safetyLevel === SafetyLevel.Blocked) {
     return <XOctagon color={theme.colors[colorKey]} {...rest} />
   }
-
   return null
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<92afd3d1a2f0db21592fb7b6675b8d79>>
+ * @generated SignedSource<<de1a89008cf71a380bd8dabbf245ad0f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,11 +10,13 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type Chain = "ARBITRUM" | "CELO" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
+export type SafetyLevel = "BLOCKED" | "MEDIUM_WARNING" | "STRONG_WARNING" | "VERIFIED" | "%future added value";
 export type topTokensQuery$variables = {};
 export type topTokensQuery$data = {
   readonly topTokenProjects: ReadonlyArray<{
     readonly logoUrl: string | null;
     readonly name: string | null;
+    readonly safetyLevel: SafetyLevel | null;
     readonly tokens: ReadonlyArray<{
       readonly address: string | null;
       readonly chain: Chain;
@@ -64,31 +66,38 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "chain",
+  "name": "safetyLevel",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "address",
+  "name": "chain",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "decimals",
+  "name": "address",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "symbol",
+  "name": "decimals",
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "symbol",
+  "storageKey": null
+},
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -112,6 +121,7 @@ return {
         "selections": [
           (v1/*: any*/),
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -120,10 +130,10 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
-              (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
-              (v6/*: any*/)
+              (v6/*: any*/),
+              (v7/*: any*/)
             ],
             "storageKey": null
           }
@@ -150,6 +160,7 @@ return {
         "selections": [
           (v1/*: any*/),
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -158,31 +169,31 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
-              (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
               (v6/*: any*/),
-              (v7/*: any*/)
+              (v7/*: any*/),
+              (v8/*: any*/)
             ],
             "storageKey": null
           },
-          (v7/*: any*/)
+          (v8/*: any*/)
         ],
         "storageKey": "topTokenProjects(orderBy:\"MARKET_CAP\",page:1,pageSize:100)"
       }
     ]
   },
   "params": {
-    "cacheID": "31ece9211a7bbdb935c944c1ab903d33",
+    "cacheID": "764123e362fd26ae153200d3d26e30bc",
     "id": null,
     "metadata": {},
     "name": "topTokensQuery",
     "operationKind": "query",
-    "text": "query topTokensQuery {\n  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {\n    logoUrl\n    name\n    tokens {\n      chain\n      address\n      decimals\n      symbol\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query topTokensQuery {\n  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {\n    logoUrl\n    name\n    safetyLevel\n    tokens {\n      chain\n      address\n      decimals\n      symbol\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8279b4a563922d1ac7060817a4f9f660";
+(node as any).hash = "4320beafa0819fe2577f62900c4d1c3e";
 
 export default node;

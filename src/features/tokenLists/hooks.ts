@@ -3,7 +3,6 @@
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import TOKEN_WARNING_LIST from 'src/constants/tokenLists/testTokenWarningList.tokenlist.json'
 import { UNI_LIST, UNSUPPORTED_LIST_URLS } from 'src/constants/tokenLists/tokenLists'
 import { ChainIdToListedTokens } from 'src/features/tokenLists/types'
 import sortByListPriority from 'src/features/tokenLists/utils'
@@ -125,10 +124,6 @@ export function useUnsupportedTokenList(): ChainIdToListedTokens {
   // get dynamic list of unsupported tokens
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
   return loadedUnsupportedListMap
-}
-
-export function useTokenWarningList(): ChainIdToListedTokens {
-  return useMemo(() => listToTokenMap(TOKEN_WARNING_LIST), [])
 }
 
 const ONLY_UNISWAP_LIST = [UNI_LIST]

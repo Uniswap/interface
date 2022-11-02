@@ -10,46 +10,31 @@ import { Text } from 'src/components/Text'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TokenOption } from 'src/components/TokenSelector/types'
-import {
-  TokenWarningLevel,
-  TokenWarningLevelMap,
-  useDismissTokenWarnings,
-} from 'src/features/tokens/useTokenWarningLevel'
-import { currencyId } from 'src/utils/currencyId'
+import { SafetyLevel } from 'src/features/dataApi/types'
+import { useDismissTokenWarnings } from 'src/features/tokens/useTokenWarningLevel'
 import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface OptionProps {
   option: TokenOption
   showNetworkPill: boolean
   onPress: () => void
-  tokenWarningLevelMap: TokenWarningLevelMap
 }
 
-export function TokenOptionItem({
-  option,
-  showNetworkPill,
-  onPress,
-  tokenWarningLevelMap,
-}: OptionProps) {
+export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [dismissedWarningTokens, dismissTokenWarning] = useDismissTokenWarnings()
 
   const { currencyInfo, quantity, balanceUSD } = option
-  const { currency } = currencyInfo
-  const id = currencyId(currency.wrapped)
+  const { currency, safetyLevel } = currencyInfo
 
-  const tokenWarningLevel =
-    tokenWarningLevelMap?.[currency.chainId]?.[id] ?? TokenWarningLevel.MEDIUM
   const dismissed = Boolean(dismissedWarningTokens[currency.chainId]?.[currency.wrapped.address])
 
   const onPressTokenOption = useCallback(() => {
     if (
-      tokenWarningLevel === TokenWarningLevel.BLOCKED ||
-      ((tokenWarningLevel === TokenWarningLevel.LOW ||
-        tokenWarningLevel === TokenWarningLevel.MEDIUM) &&
-        !dismissed)
+      safetyLevel === SafetyLevel.Blocked ||
+      ((safetyLevel === SafetyLevel.Medium || safetyLevel === SafetyLevel.Strong) && !dismissed)
     ) {
       Keyboard.dismiss()
       setShowWarningModal(true)
@@ -57,12 +42,12 @@ export function TokenOptionItem({
     }
 
     onPress()
-  }, [dismissed, onPress, tokenWarningLevel])
+  }, [dismissed, onPress, safetyLevel])
 
   return (
     <>
       <TouchableArea
-        opacity={tokenWarningLevel === TokenWarningLevel.BLOCKED ? 0.5 : 1}
+        opacity={safetyLevel === SafetyLevel.Blocked ? 0.5 : 1}
         testID={`token-option-${currency.chainId}-${currency.symbol}`}
         onPress={onPressTokenOption}>
         <Flex row alignItems="center" gap="xs" justifyContent="space-between" py="sm">
@@ -82,7 +67,7 @@ export function TokenOptionItem({
                 </Flex>
                 <WarningIcon
                   height={theme.iconSizes.sm}
-                  tokenWarningLevel={tokenWarningLevel}
+                  safetyLevel={safetyLevel}
                   width={theme.iconSizes.sm}
                 />
               </Flex>
@@ -95,7 +80,7 @@ export function TokenOptionItem({
             </Flex>
           </Flex>
 
-          {tokenWarningLevel === TokenWarningLevel.BLOCKED ? (
+          {safetyLevel === SafetyLevel.Blocked ? (
             <Text variant="bodySmall">{t('Not available')}</Text>
           ) : quantity && quantity !== 0 ? (
             <Box alignItems="flex-end">
@@ -112,7 +97,7 @@ export function TokenOptionItem({
         <TokenWarningModal
           isVisible
           currency={currency}
-          tokenWarningLevel={tokenWarningLevel}
+          safetyLevel={safetyLevel}
           onAccept={() => {
             dismissTokenWarning(currency)
             setShowWarningModal(false)

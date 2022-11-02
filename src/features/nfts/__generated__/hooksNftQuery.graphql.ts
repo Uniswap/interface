@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f8d0f35ebe8f40789cabfd492b0ff579>>
+ * @generated SignedSource<<3547b493ac120261afe371237577c75a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -292,7 +292,7 @@ return {
                             {
                               "alias": null,
                               "args": null,
-                              "concreteType": "Amount",
+                              "concreteType": "TimestampedAmount",
                               "kind": "LinkedField",
                               "name": "floorPrice",
                               "plural": false,
@@ -313,7 +313,7 @@ return {
                             {
                               "alias": null,
                               "args": null,
-                              "concreteType": "Amount",
+                              "concreteType": "TimestampedAmount",
                               "kind": "LinkedField",
                               "name": "totalVolume",
                               "plural": false,
@@ -458,7 +458,7 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Amount",
+                            "concreteType": "TimestampedAmount",
                             "kind": "LinkedField",
                             "name": "floorPrice",
                             "plural": false,
@@ -479,7 +479,7 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Amount",
+                            "concreteType": "TimestampedAmount",
                             "kind": "LinkedField",
                             "name": "totalVolume",
                             "plural": false,

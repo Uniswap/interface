@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eb894b70c2fa6a6a5ab2e33644bd973a>>
+ * @generated SignedSource<<510109afc79fc1a6b7c19a1432d122f1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,7 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type Chain = "ARBITRUM" | "CELO" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
+export type SafetyLevel = "BLOCKED" | "MEDIUM_WARNING" | "STRONG_WARNING" | "VERIFIED" | "%future added value";
 export type ContractInput = {
   address?: string | null;
   chain: Chain;
@@ -21,6 +22,7 @@ export type tokenProjectsQuery$data = {
   readonly tokenProjects: ReadonlyArray<{
     readonly logoUrl: string | null;
     readonly name: string | null;
+    readonly safetyLevel: SafetyLevel | null;
     readonly tokens: ReadonlyArray<{
       readonly address: string | null;
       readonly chain: Chain;
@@ -67,31 +69,38 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "chain",
+  "name": "safetyLevel",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "address",
+  "name": "chain",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "decimals",
+  "name": "address",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "symbol",
+  "name": "decimals",
   "storageKey": null
 },
 v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "symbol",
+  "storageKey": null
+},
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -115,6 +124,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -123,10 +133,10 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
               (v5/*: any*/),
               (v6/*: any*/),
-              (v7/*: any*/)
+              (v7/*: any*/),
+              (v8/*: any*/)
             ],
             "storageKey": null
           }
@@ -153,6 +163,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -161,31 +172,31 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
-              (v4/*: any*/),
               (v5/*: any*/),
               (v6/*: any*/),
               (v7/*: any*/),
-              (v8/*: any*/)
+              (v8/*: any*/),
+              (v9/*: any*/)
             ],
             "storageKey": null
           },
-          (v8/*: any*/)
+          (v9/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "70b17eba7e15a8cf3fa657e3b552b397",
+    "cacheID": "4cdde4072465ac9b6c8f40695729cc60",
     "id": null,
     "metadata": {},
     "name": "tokenProjectsQuery",
     "operationKind": "query",
-    "text": "query tokenProjectsQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    logoUrl\n    name\n    tokens {\n      chain\n      address\n      decimals\n      symbol\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query tokenProjectsQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    logoUrl\n    name\n    safetyLevel\n    tokens {\n      chain\n      address\n      decimals\n      symbol\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "86ba58b2b2b958d9124ec8e19f1521ea";
+(node as any).hash = "4349d4f0ac8ceca286ea518fb83dc75f";
 
 export default node;

@@ -9,12 +9,22 @@ const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
 const TEST_TOKEN_INPUT: TokenOption[] = [
   {
-    currencyInfo: { currency: DAI, currencyId: currencyId(DAI), logoUrl: null },
+    currencyInfo: {
+      currency: DAI,
+      currencyId: currencyId(DAI),
+      logoUrl: null,
+      safetyLevel: null,
+    },
     balanceUSD: null,
     quantity: null,
   },
   {
-    currencyInfo: { currency: ETH, currencyId: currencyId(ETH), logoUrl: null },
+    currencyInfo: {
+      currency: ETH,
+      currencyId: currencyId(ETH),
+      logoUrl: null,
+      safetyLevel: null,
+    },
     balanceUSD: null,
     quantity: null,
   },
@@ -23,6 +33,7 @@ const TEST_TOKEN_INPUT: TokenOption[] = [
       currency: DAI_ARBITRUM_ONE,
       currencyId: currencyId(DAI_ARBITRUM_ONE),
       logoUrl: null,
+      safetyLevel: null,
     },
     balanceUSD: null,
     quantity: null,

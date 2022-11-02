@@ -18,7 +18,6 @@ import { usePortfolioBalances } from 'src/features/dataApi/balances'
 import { useSearchTokens } from 'src/features/dataApi/searchTokens'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
-import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWarningLevel'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
@@ -209,7 +208,6 @@ function _TokenSearchResultList({
 
   const debouncedSearchFilter = useDebounce(searchFilter)
   const sections = useTokenSectionsByVariation(variation, chainFilter, debouncedSearchFilter)
-  const tokenWarningLevelMap = useCombinedTokenWarningLevelMap()
 
   const sectionsRef = useRef(sections)
   useEffect(() => {
@@ -222,12 +220,11 @@ function _TokenSearchResultList({
         <TokenOptionItem
           option={item}
           showNetworkPill={!chainFilter && item.currencyInfo.currency.chainId !== ChainId.Mainnet}
-          tokenWarningLevelMap={tokenWarningLevelMap}
           onPress={() => onSelectCurrency?.(item.currencyInfo.currency)}
         />
       )
     },
-    [onSelectCurrency, tokenWarningLevelMap, chainFilter]
+    [onSelectCurrency, chainFilter]
   )
 
   useEffect(() => {

@@ -26,12 +26,13 @@ export const tokenDetailsStatsTokenFragment = graphql`
   }
 `
 
-const tokenDetailsStatsTokenProjectFragment = graphql`
+export const tokenDetailsStatsTokenProjectFragment = graphql`
   fragment TokenDetailsStats_tokenProject on TokenProject {
     description
     homepageUrl
     twitterName
     name
+    safetyLevel
     markets(currencies: [USD]) {
       price {
         value

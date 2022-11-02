@@ -20,14 +20,20 @@ import { Text } from 'src/components/Text'
 import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
-import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
+import {
+  TokenDetailsStats,
+  tokenDetailsStatsTokenProjectFragment,
+} from 'src/components/TokenDetails/TokenDetailsStats'
+import { TokenDetailsStats_tokenProject$key } from 'src/components/TokenDetails/__generated__/TokenDetailsStats_tokenProject.graphql'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { AssetType } from 'src/entities/assets'
+import { SafetyLevel } from 'src/features/dataApi/types'
+import { fromGraphQLSafetyLevel } from 'src/features/dataApi/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { TokenWarningLevel, useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
+import { useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
 import {
   CurrencyField,
   TransactionState,
@@ -55,16 +61,17 @@ export const tokenDetailsScreenQuery = graphql`
 
 interface TokenDetailsHeaderProps {
   currency: Currency
-  tokenWarningLevel: TokenWarningLevel
+  safetyLevel: NullUndefined<SafetyLevel>
   onPressWarningIcon: () => void
 }
 
 function TokenDetailsHeader({
   currency,
-  tokenWarningLevel,
+  safetyLevel,
   onPressWarningIcon,
 }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
+
   return (
     <Flex mx="sm">
       <CurrencyLogo currency={currency} size={36} />
@@ -73,12 +80,11 @@ function TokenDetailsHeader({
           {currency.name ?? t('Unknown token')}
         </Text>
         {/* Suppress warning icon on low warning level */}
-        {(tokenWarningLevel === TokenWarningLevel.MEDIUM ||
-          tokenWarningLevel === TokenWarningLevel.BLOCKED) && (
+        {(safetyLevel === SafetyLevel.Strong || safetyLevel === SafetyLevel.Blocked) && (
           <TouchableArea onPress={onPressWarningIcon}>
             <WarningIcon
               height={theme.iconSizes.md}
-              tokenWarningLevel={tokenWarningLevel}
+              safetyLevel={safetyLevel}
               width={theme.imageSizes.sm}
             />
           </TouchableArea>
@@ -121,7 +127,6 @@ function HeaderTitleElement({
   tokenProject: TokenDetailsScreen_headerPriceLabel$key | null | undefined
 }) {
   const { t } = useTranslation()
-
   return (
     <Flex centered gap="none">
       <Flex centered row gap="xs">
@@ -145,13 +150,10 @@ enum TransactionType {
 
 export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
   const { currencyId: _currencyId, preloadedQuery } = route.params
-
   const currency = useCurrency(_currencyId)
-
   if (!currency || !preloadedQuery) {
     return null
   }
-
   return (
     <Suspense fallback={<Loading />}>
       <TokenDetails currency={currency} preloadedQuery={preloadedQuery} />
@@ -170,14 +172,20 @@ function TokenDetails({
   const { t } = useTranslation()
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
   const data = useEagerLoadedQuery<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, preloadedQuery)
+
   // set if attempting buy or sell, use for warning modal
   const [activeTransactionType, setActiveTransactionType] = useState<TransactionType | undefined>(
     undefined
   )
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const { tokenWarningLevel, tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(
-    currency.wrapped
-  )
+  const { tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(currency.wrapped)
+
+  const { safetyLevel: safetyLevelGraphql } =
+    useFragment<TokenDetailsStats_tokenProject$key>(
+      tokenDetailsStatsTokenProjectFragment,
+      data.tokenProjects?.[0] ?? null
+    ) ?? {}
+  const safetyLevel = fromGraphQLSafetyLevel(safetyLevelGraphql)
 
   const initialSendState = useMemo((): TransactionState => {
     return {
@@ -226,7 +234,7 @@ function TokenDetails({
   const onPressSwap = useCallback(
     (swapType: TransactionType.BUY | TransactionType.SELL) => {
       // show warning modal speedbump if token has a warning level and user has not dismissed
-      if (tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed) {
+      if (safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
         setActiveTransactionType(swapType)
         setShowWarningModal(true)
       } else {
@@ -239,18 +247,18 @@ function TokenDetails({
         return
       }
     },
-    [navigateToSwapBuy, navigateToSwapSell, tokenWarningDismissed, tokenWarningLevel]
+    [navigateToSwapBuy, navigateToSwapSell, safetyLevel, tokenWarningDismissed]
   )
 
   const onPressSend = useCallback(() => {
     // show warning modal speedbump if token has a warning level and user has not dismissed
-    if (tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed) {
+    if (safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
       setActiveTransactionType(TransactionType.SEND)
       setShowWarningModal(true)
     } else {
       dispatch(openModal({ name: ModalName.Send, ...{ initialState: initialSendState } }))
     }
-  }, [tokenWarningLevel, tokenWarningDismissed, dispatch, initialSendState])
+  }, [safetyLevel, tokenWarningDismissed, dispatch, initialSendState])
 
   const onAcceptWarning = useCallback(() => {
     warningDismissCallback()
@@ -285,7 +293,7 @@ function TokenDetails({
           <Flex gap="xxs">
             <TokenDetailsHeader
               currency={currency}
-              tokenWarningLevel={tokenWarningLevel}
+              safetyLevel={safetyLevel}
               onPressWarningIcon={() => setShowWarningModal(true)}
             />
             <CurrencyPriceChart currency={currency} />
@@ -334,9 +342,9 @@ function TokenDetails({
       </Flex>
       <TokenWarningModal
         currency={currency}
-        disableAccept={!activeTransactionType || tokenWarningLevel === TokenWarningLevel.BLOCKED}
+        disableAccept={!activeTransactionType || safetyLevel === SafetyLevel.Blocked}
         isVisible={showWarningModal}
-        tokenWarningLevel={tokenWarningLevel}
+        safetyLevel={safetyLevel}
         onAccept={onAcceptWarning}
         onClose={() => {
           setActiveTransactionType(undefined)

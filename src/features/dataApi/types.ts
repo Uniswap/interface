@@ -1,10 +1,14 @@
 import { Currency } from '@uniswap/sdk-core'
-import { Chain } from 'src/features/dataApi/__generated__/tokenProjectsQuery.graphql'
+import {
+  Chain,
+  SafetyLevel as GraphQLSafteyLevel,
+} from 'src/features/dataApi/__generated__/tokenProjectsQuery.graphql'
 import { CurrencyId } from 'src/utils/currencyId'
 
 export type CurrencyInfo = {
   currency: Currency
   currencyId: CurrencyId
+  safetyLevel: NullUndefined<SafetyLevel>
   logoUrl: NullUndefined<string>
 }
 
@@ -27,4 +31,12 @@ export type GQLTokenProject = {
   readonly tokens: readonly GQLToken[]
   readonly logoUrl: string | null
   readonly name: string | null
+  readonly safetyLevel: GraphQLSafteyLevel | null
+}
+
+export enum SafetyLevel {
+  Blocked = 'BLOCKED',
+  Medium = 'MEDIUM_WARNING',
+  Strong = 'STRONG_WARNING',
+  Verified = 'VERIFIED',
 }
