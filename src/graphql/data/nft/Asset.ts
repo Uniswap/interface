@@ -135,6 +135,8 @@ export function useAssetsQuery(
 
   const assets: GenieAsset[] = data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node
+    console.log('reached')
+    console.log(asset.listings?.edges[0]?.node.price.value?.toString() ?? '0')
     const ethPrice = parseEther(asset.listings?.edges[0]?.node.price.value?.toString() ?? '0').toString()
     return {
       id: asset.id,

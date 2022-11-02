@@ -199,7 +199,7 @@ export const ProfilePage = () => {
                   />
                   <Row gap="8" flexWrap="nowrap">
                     {isSellMode && <SelectAllButton />}
-                    <SellModeButton active={isSellMode} onClick={handleSellModeClick}>
+                    <SellModeButton className={buttonTextMedium} active={isSellMode} onClick={handleSellModeClick}>
                       <TagIcon height={20} width={20} />
                       Sell
                     </SellModeButton>
