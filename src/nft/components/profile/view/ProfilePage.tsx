@@ -7,7 +7,6 @@ import { CrossIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { buttonTextMedium, subhead } from 'nft/css/common.css'
 import {
-  useBag,
   useFiltersExpanded,
   useIsMobile,
   useProfilePageState,
@@ -15,6 +14,7 @@ import {
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
+import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { fetchMultipleCollectionStats, fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
@@ -47,6 +47,11 @@ const SellModeButton = styled.button<{ active: boolean }>`
   }
 `
 
+const ProfilePageColumn = styled(Column)`
+  overflow-x: hidden !important;
+  ${ScreenBreakpointsPaddings}
+`
+
 const FILTER_SIDEBAR_WIDTH = 300
 const PADDING = 16
 
@@ -71,7 +76,6 @@ export const ProfilePage = () => {
   const resetSellAssets = useSellAsset((state) => state.reset)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
-  const isBagExpanded = useBag((state) => state.bagExpanded)
   const isMobile = useIsMobile()
   const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
 
@@ -164,12 +168,7 @@ export const ProfilePage = () => {
   })
 
   return (
-    <Column
-      width="full"
-      paddingLeft={{ sm: `${PADDING}`, md: '52' }}
-      paddingRight={{ sm: `${PADDING}`, md: isBagExpanded ? '0' : '72' }}
-      paddingTop={{ sm: `${PADDING}`, md: '40' }}
-    >
+    <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
       {anyQueryIsLoading ? (
         <ProfilePageLoadingSkeleton />
       ) : walletAssets.length === 0 ? (
@@ -280,7 +279,7 @@ export const ProfilePage = () => {
           </Box>
         </Row>
       )}
-    </Column>
+    </ProfilePageColumn>
   )
 }
 
