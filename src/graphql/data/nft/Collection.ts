@@ -120,7 +120,7 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
     traits,
     // marketplaceCount: { marketplace: string; count: number }[], // TODO add when backend supports
     imageUrl: queryCollection?.image?.url ?? '',
-    // twitter: queryCollection?.twitterName ?? '',
+    twitterUrl: queryCollection?.twitterName ?? '',
     instagram: queryCollection?.instagramName ?? undefined,
     discordUrl: queryCollection?.discordUrl ?? undefined,
     externalUrl: queryCollection?.homepageUrl ?? undefined,
