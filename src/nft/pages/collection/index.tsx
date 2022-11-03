@@ -5,7 +5,7 @@ import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGrap
 import { useCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
+import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats } from 'nft/components/collection'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { Column, Row } from 'nft/components/Flex'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsCollectionLoading, useIsMobile } from 'nft/hooks'

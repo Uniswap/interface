@@ -1,10 +1,8 @@
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'analytics/constants'
-import { useTrace } from 'analytics/Trace'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
-import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType, Deprecated_SellOrder } from 'nft/types'
+import { CollectionInfoForAsset, Deprecated_SellOrder, GenieAsset, SellOrder, TokenType } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
@@ -301,14 +299,6 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const USDPrice = useUsdPrice(asset)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
   const [, setCopied] = useCopyClipboard()
-
-  const trace = useTrace({ page: PageName.NFT_DETAILS_PAGE })
-  const eventProperties = {
-    collection_address: asset.address,
-    token_id: asset.tokenId,
-    token_type: asset.tokenType,
-    ...trace,
-  }
 
   const { quantity, assetInBag } = useMemo(() => {
     return {
