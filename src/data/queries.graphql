@@ -6,6 +6,48 @@ query PortfolioBalance($owner: String!) {
   }
 }
 
+query PortfolioBalances($ownerAddress: String!) {
+  portfolios(ownerAddresses: [$ownerAddress]) {
+    tokenBalances {
+      quantity
+      denominatedValue {
+        currency
+        value
+      }
+      token {
+        chain
+        address
+        name
+        symbol
+        decimals
+      }
+      tokenProjectMarket {
+        tokenProject {
+          logoUrl
+          safetyLevel
+        }
+        relativeChange24: pricePercentChange(duration: DAY) {
+          value
+        }
+      }
+    }
+  }
+}
+
+query SearchTokensProjects($searchQuery: String!, $skip: Boolean!) {
+  searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {
+    logoUrl
+    name
+    safetyLevel
+    tokens {
+      chain
+      address
+      decimals
+      symbol
+    }
+  }
+}
+
 query TransactionHistoryUpdater($addresses: [String!]!) {
   portfolios(ownerAddresses: $addresses) {
     ownerAddress
@@ -14,3 +56,33 @@ query TransactionHistoryUpdater($addresses: [String!]!) {
     }
   }
 }
+
+query TokenProjects($contracts: [ContractInput!]!) {
+  tokenProjects(contracts: $contracts) {
+    logoUrl
+    name
+    safetyLevel
+    tokens {
+      chain
+      address
+      decimals
+      symbol
+    }
+  }
+}
+
+query TopTokens {
+  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {
+    logoUrl
+    name
+    safetyLevel
+    tokens {
+      chain
+      address
+      decimals
+      symbol
+    }
+  }
+}
+
+

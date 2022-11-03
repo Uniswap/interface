@@ -1,10 +1,8 @@
 import { Token } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
-import { CurrencyInfo, GQLTokenProject, SafetyLevel } from 'src/features/dataApi/types'
-import {
-  ContractInput,
-  SafetyLevel as GraphQLSafteyLevel,
-} from 'src/features/dataApi/__generated__/tokenProjectsQuery.graphql'
+import { Chain, ContractInput, TopTokensQuery } from 'src/data/__generated__/types-and-hooks'
+import { CurrencyInfo, SafetyLevel } from 'src/features/dataApi/types'
+import { SafetyLevel as GraphQLSafteyLevel } from 'src/features/dataApi/__generated__/tokenProjectsQuery.graphql'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { fromGraphQLChain, toGraphQLChain } from 'src/utils/chainId'
 import {
@@ -17,17 +15,17 @@ import {
 // Converts CurrencyId to ContractInput format for GQL token queries
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
   return {
-    chain: toGraphQLChain(currencyIdToChain(id) ?? ChainId.Mainnet) ?? 'ETHEREUM',
+    chain: toGraphQLChain(currencyIdToChain(id) ?? ChainId.Mainnet) ?? Chain.Ethereum,
     address: currencyIdToGraphQLAddress(id),
   }
 }
 
 export function tokenProjectToCurrencyInfos(
-  tokenProject: readonly (GQLTokenProject | null)[],
+  tokenProject: TopTokensQuery['topTokenProjects'],
   chainFilter?: ChainId | null
 ): CurrencyInfo[] {
   return tokenProject
-    .flatMap((project) =>
+    ?.flatMap((project) =>
       project?.tokens.map((token) => {
         const { logoUrl, name, safetyLevel } = project
         const { chain, address, decimals, symbol } = token

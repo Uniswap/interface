@@ -1,11 +1,18 @@
 import { NavigationContainerRefContext, NavigationContext } from '@react-navigation/core'
 import { useCallback, useContext, useEffect } from 'react'
 import { useEagerNavigation, useEagerRootNavigation } from 'src/app/navigation/useEagerNavigation'
+import { baseCurrencyIds } from 'src/components/TokenSelector/hooks'
 import { transactionListQuery } from 'src/components/TransactionList/TransactionList'
 import { TransactionListQuery } from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
 import { PollingInterval } from 'src/constants/misc'
 import { preloadMapping } from 'src/data/preloading'
-import { usePortfolioBalanceLazyQuery } from 'src/data/__generated__/types-and-hooks'
+import {
+  usePortfolioBalanceLazyQuery,
+  usePortfolioBalancesLazyQuery,
+  useTokenProjectsLazyQuery,
+  useTopTokensLazyQuery,
+} from 'src/data/__generated__/types-and-hooks'
+import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { Screens, Tabs } from 'src/screens/Screens'
 
@@ -86,7 +93,11 @@ export function useEagerExternalProfileRootNavigation() {
 
 /** Preloaded home screen queries that reload on active account change */
 export function usePreloadedHomeScreenQueries() {
-  const [load] = usePortfolioBalanceLazyQuery()
+  const [loadPortfolioBalance] = usePortfolioBalanceLazyQuery()
+  const [loadPortfolioBalances] = usePortfolioBalancesLazyQuery()
+  const [loadTopTokens] = useTopTokensLazyQuery()
+  const [loadTokenProjects] = useTokenProjectsLazyQuery()
+
   const activeAccountAddress = useActiveAccountAddress()
 
   useEffect(() => {
@@ -94,8 +105,18 @@ export function usePreloadedHomeScreenQueries() {
       return
     }
 
-    load({ variables: { owner: activeAccountAddress } })
-  }, [activeAccountAddress, load])
+    loadPortfolioBalance({ variables: { owner: activeAccountAddress } })
+
+    // queries for token selector
+    loadPortfolioBalances({ variables: { ownerAddress: activeAccountAddress } })
+  }, [activeAccountAddress, loadPortfolioBalance, loadPortfolioBalances])
+
+  useEffect(() => {
+    loadTopTokens()
+
+    const baseCurrencyContracts = baseCurrencyIds.map((id) => currencyIdToContractInput(id))
+    loadTokenProjects({ variables: { contracts: baseCurrencyContracts } })
+  }, [loadTopTokens, loadTokenProjects])
 }
 
 /**

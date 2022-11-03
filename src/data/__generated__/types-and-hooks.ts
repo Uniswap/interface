@@ -820,12 +820,39 @@ export type PortfolioBalanceQueryVariables = Exact<{
 
 export type PortfolioBalanceQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', tokensTotalDenominatedValue?: { __typename?: 'Amount', value: number } | null } | null> | null };
 
+export type PortfolioBalancesQueryVariables = Exact<{
+  ownerAddress: Scalars['String'];
+}>;
+
+
+export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', tokenBalances?: Array<{ __typename?: 'TokenBalance', quantity?: number | null, denominatedValue?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', chain: Chain, address?: string | null, name?: string | null, symbol?: string | null, decimals?: number | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', tokenProject: { __typename?: 'TokenProject', logoUrl?: string | null, safetyLevel?: SafetyLevel | null }, relativeChange24?: { __typename?: 'Amount', value: number } | null } | null } | null> | null } | null> | null };
+
+export type SearchTokensProjectsQueryVariables = Exact<{
+  searchQuery: Scalars['String'];
+  skip: Scalars['Boolean'];
+}>;
+
+
+export type SearchTokensProjectsQuery = { __typename?: 'Query', searchTokenProjects?: Array<{ __typename?: 'TokenProject', logoUrl?: string | null, name?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }> } | null> | null };
+
 export type TransactionHistoryUpdaterQueryVariables = Exact<{
   addresses: Array<Scalars['String']> | Scalars['String'];
 }>;
 
 
 export type TransactionHistoryUpdaterQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', ownerAddress: string, assetActivities?: Array<{ __typename?: 'AssetActivity', timestamp: number } | null> | null } | null> | null };
+
+export type TokenProjectsQueryVariables = Exact<{
+  contracts: Array<ContractInput> | ContractInput;
+}>;
+
+
+export type TokenProjectsQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', logoUrl?: string | null, name?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }> } | null> | null };
+
+export type TopTokensQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TopTokensQuery = { __typename?: 'Query', topTokenProjects?: Array<{ __typename?: 'TokenProject', logoUrl?: string | null, name?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }> } | null> | null };
 
 
 export const PortfolioBalanceDocument = gql`
@@ -865,6 +892,107 @@ export function usePortfolioBalanceLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type PortfolioBalanceQueryHookResult = ReturnType<typeof usePortfolioBalanceQuery>;
 export type PortfolioBalanceLazyQueryHookResult = ReturnType<typeof usePortfolioBalanceLazyQuery>;
 export type PortfolioBalanceQueryResult = Apollo.QueryResult<PortfolioBalanceQuery, PortfolioBalanceQueryVariables>;
+export const PortfolioBalancesDocument = gql`
+    query PortfolioBalances($ownerAddress: String!) {
+  portfolios(ownerAddresses: [$ownerAddress]) {
+    tokenBalances {
+      quantity
+      denominatedValue {
+        currency
+        value
+      }
+      token {
+        chain
+        address
+        name
+        symbol
+        decimals
+      }
+      tokenProjectMarket {
+        tokenProject {
+          logoUrl
+          safetyLevel
+        }
+        relativeChange24: pricePercentChange(duration: DAY) {
+          value
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __usePortfolioBalancesQuery__
+ *
+ * To run a query within a React component, call `usePortfolioBalancesQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePortfolioBalancesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePortfolioBalancesQuery({
+ *   variables: {
+ *      ownerAddress: // value for 'ownerAddress'
+ *   },
+ * });
+ */
+export function usePortfolioBalancesQuery(baseOptions: Apollo.QueryHookOptions<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>(PortfolioBalancesDocument, options);
+      }
+export function usePortfolioBalancesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>(PortfolioBalancesDocument, options);
+        }
+export type PortfolioBalancesQueryHookResult = ReturnType<typeof usePortfolioBalancesQuery>;
+export type PortfolioBalancesLazyQueryHookResult = ReturnType<typeof usePortfolioBalancesLazyQuery>;
+export type PortfolioBalancesQueryResult = Apollo.QueryResult<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>;
+export const SearchTokensProjectsDocument = gql`
+    query SearchTokensProjects($searchQuery: String!, $skip: Boolean!) {
+  searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {
+    logoUrl
+    name
+    safetyLevel
+    tokens {
+      chain
+      address
+      decimals
+      symbol
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchTokensProjectsQuery__
+ *
+ * To run a query within a React component, call `useSearchTokensProjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchTokensProjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchTokensProjectsQuery({
+ *   variables: {
+ *      searchQuery: // value for 'searchQuery'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useSearchTokensProjectsQuery(baseOptions: Apollo.QueryHookOptions<SearchTokensProjectsQuery, SearchTokensProjectsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchTokensProjectsQuery, SearchTokensProjectsQueryVariables>(SearchTokensProjectsDocument, options);
+      }
+export function useSearchTokensProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchTokensProjectsQuery, SearchTokensProjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchTokensProjectsQuery, SearchTokensProjectsQueryVariables>(SearchTokensProjectsDocument, options);
+        }
+export type SearchTokensProjectsQueryHookResult = ReturnType<typeof useSearchTokensProjectsQuery>;
+export type SearchTokensProjectsLazyQueryHookResult = ReturnType<typeof useSearchTokensProjectsLazyQuery>;
+export type SearchTokensProjectsQueryResult = Apollo.QueryResult<SearchTokensProjectsQuery, SearchTokensProjectsQueryVariables>;
 export const TransactionHistoryUpdaterDocument = gql`
     query TransactionHistoryUpdater($addresses: [String!]!) {
   portfolios(ownerAddresses: $addresses) {
@@ -903,3 +1031,88 @@ export function useTransactionHistoryUpdaterLazyQuery(baseOptions?: Apollo.LazyQ
 export type TransactionHistoryUpdaterQueryHookResult = ReturnType<typeof useTransactionHistoryUpdaterQuery>;
 export type TransactionHistoryUpdaterLazyQueryHookResult = ReturnType<typeof useTransactionHistoryUpdaterLazyQuery>;
 export type TransactionHistoryUpdaterQueryResult = Apollo.QueryResult<TransactionHistoryUpdaterQuery, TransactionHistoryUpdaterQueryVariables>;
+export const TokenProjectsDocument = gql`
+    query TokenProjects($contracts: [ContractInput!]!) {
+  tokenProjects(contracts: $contracts) {
+    logoUrl
+    name
+    safetyLevel
+    tokens {
+      chain
+      address
+      decimals
+      symbol
+    }
+  }
+}
+    `;
+
+/**
+ * __useTokenProjectsQuery__
+ *
+ * To run a query within a React component, call `useTokenProjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTokenProjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTokenProjectsQuery({
+ *   variables: {
+ *      contracts: // value for 'contracts'
+ *   },
+ * });
+ */
+export function useTokenProjectsQuery(baseOptions: Apollo.QueryHookOptions<TokenProjectsQuery, TokenProjectsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TokenProjectsQuery, TokenProjectsQueryVariables>(TokenProjectsDocument, options);
+      }
+export function useTokenProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TokenProjectsQuery, TokenProjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TokenProjectsQuery, TokenProjectsQueryVariables>(TokenProjectsDocument, options);
+        }
+export type TokenProjectsQueryHookResult = ReturnType<typeof useTokenProjectsQuery>;
+export type TokenProjectsLazyQueryHookResult = ReturnType<typeof useTokenProjectsLazyQuery>;
+export type TokenProjectsQueryResult = Apollo.QueryResult<TokenProjectsQuery, TokenProjectsQueryVariables>;
+export const TopTokensDocument = gql`
+    query TopTokens {
+  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {
+    logoUrl
+    name
+    safetyLevel
+    tokens {
+      chain
+      address
+      decimals
+      symbol
+    }
+  }
+}
+    `;
+
+/**
+ * __useTopTokensQuery__
+ *
+ * To run a query within a React component, call `useTopTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTopTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTopTokensQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTopTokensQuery(baseOptions?: Apollo.QueryHookOptions<TopTokensQuery, TopTokensQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TopTokensQuery, TopTokensQueryVariables>(TopTokensDocument, options);
+      }
+export function useTopTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TopTokensQuery, TopTokensQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TopTokensQuery, TopTokensQueryVariables>(TopTokensDocument, options);
+        }
+export type TopTokensQueryHookResult = ReturnType<typeof useTopTokensQuery>;
+export type TopTokensLazyQueryHookResult = ReturnType<typeof useTopTokensLazyQuery>;
+export type TopTokensQueryResult = Apollo.QueryResult<TopTokensQuery, TopTokensQueryVariables>;

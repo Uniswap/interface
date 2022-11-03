@@ -1,5 +1,6 @@
 import { BigNumberish } from 'ethers'
 import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
+import { Chain } from 'src/data/__generated__/types-and-hooks'
 import { Chain as GraphQLChain } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 
 const supportedChains = Object.values(ChainId).map((c) => c.toString())
@@ -39,18 +40,18 @@ export function fromGraphQLChain(chain: GraphQLChain | undefined): ChainId | nul
   return null
 }
 
-export function toGraphQLChain(chainId: ChainId): GraphQLChain | null {
+export function toGraphQLChain(chainId: ChainId): Chain | null {
   switch (chainId) {
     case ChainId.Mainnet:
-      return 'ETHEREUM'
+      return Chain.Ethereum
     case ChainId.ArbitrumOne:
-      return 'ARBITRUM'
+      return Chain.Arbitrum
     case ChainId.Goerli:
-      return 'ETHEREUM_GOERLI'
+      return Chain.EthereumGoerli
     case ChainId.Optimism:
-      return 'OPTIMISM'
+      return Chain.Optimism
     case ChainId.Polygon:
-      return 'POLYGON'
+      return Chain.Polygon
   }
   return null // TODO: throw error?
 }

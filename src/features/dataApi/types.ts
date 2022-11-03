@@ -1,8 +1,5 @@
+import { QueryResult } from '@apollo/client'
 import { Currency } from '@uniswap/sdk-core'
-import {
-  Chain,
-  SafetyLevel as GraphQLSafteyLevel,
-} from 'src/features/dataApi/__generated__/tokenProjectsQuery.graphql'
 import { CurrencyId } from 'src/utils/currencyId'
 
 export type CurrencyInfo = {
@@ -20,19 +17,7 @@ export type PortfolioBalance = {
   relativeChange24: number
 }
 
-export type GQLToken = {
-  readonly chain: Chain
-  readonly address: string | null
-  readonly decimals: number | null
-  readonly symbol: string | null
-}
-
-export type GQLTokenProject = {
-  readonly tokens: readonly GQLToken[]
-  readonly logoUrl: string | null
-  readonly name: string | null
-  readonly safetyLevel: GraphQLSafteyLevel | null
-}
+export type GqlResult<T> = Pick<QueryResult<T>, 'data' | 'loading' | 'error'>
 
 export enum SafetyLevel {
   Blocked = 'BLOCKED',

@@ -1,63 +1,30 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
-import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
+import { usePortfolioBalancesQuery } from 'src/data/__generated__/types-and-hooks'
+import { CurrencyInfo, GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
 import { fromGraphQLSafetyLevel } from 'src/features/dataApi/utils'
-import { balancesQuery } from 'src/features/dataApi/__generated__/balancesQuery.graphql'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { currencyId, CurrencyId } from 'src/utils/currencyId'
 
-const query = graphql`
-  query balancesQuery($ownerAddress: String!) {
-    portfolios(ownerAddresses: [$ownerAddress]) {
-      tokenBalances {
-        quantity
-        denominatedValue {
-          currency
-          value
-        }
-        token {
-          chain
-          address
-          name
-          symbol
-          decimals
-        }
-        tokenProjectMarket {
-          tokenProject {
-            logoUrl
-            safetyLevel
-          }
-          relativeChange24: pricePercentChange(duration: DAY) {
-            value
-          }
-        }
-      }
-    }
-  }
-`
 /** Returns all balances indexed by currencyId for a given address */
 export function usePortfolioBalances(
   address: Address
-): Record<CurrencyId, PortfolioBalance> | undefined {
-  const balancesData = useLazyLoadQuery<balancesQuery>(
-    query,
-    { ownerAddress: address },
-    {
-      networkCacheConfig: { poll: PollingInterval.Fast },
-      // given the query endpoint and variables are the same as PortfolioBalanceQuery,
-      // ensure a network request issued to ensure we get all the required fields.
-      fetchPolicy: 'store-and-network',
-    }
-  )
+): GqlResult<Record<CurrencyId, PortfolioBalance>> {
+  const { data: balancesData, loading } = usePortfolioBalancesQuery({
+    variables: { ownerAddress: address },
+    pollInterval: PollingInterval.Fast,
+
+    // TODO: either default all error policies to 'all' or remove this once
+    // BE fixes the type error here
+    errorPolicy: 'all',
+  })
   const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
 
-  return useMemo(() => {
+  const formattedData = useMemo(() => {
     if (!balancesForAddress) return
 
     const byId: Record<CurrencyId, PortfolioBalance> = {}
@@ -107,8 +74,10 @@ export function usePortfolioBalances(
       byId[id] = portfolioBalance
     })
 
-    return Object.keys(byId).length > 0 ? byId : undefined
+    return byId
   }, [balancesForAddress])
+
+  return { data: formattedData, loading }
 }
 
 /** Returns portfolio balances for a given address sorted by USD value. */
@@ -116,7 +85,7 @@ export function useSortedPortfolioBalancesList(
   address: Address,
   hideSmallBalances?: boolean
 ): PortfolioBalance[] {
-  const balancesById = usePortfolioBalances(address)
+  const { data: balancesById } = usePortfolioBalances(address)
 
   return useMemo(() => {
     if (!balancesById) return EMPTY_ARRAY
@@ -133,7 +102,7 @@ export function useSortedPortfolioBalancesList(
 /** Helper hook to retrieve balance for a single currency for the active account. */
 export function useSingleBalance(currency: NullUndefined<Currency>): PortfolioBalance | null {
   const address = useActiveAccountAddressWithThrow()
-  const portfolioBalances = usePortfolioBalances(address)
+  const { data: portfolioBalances } = usePortfolioBalances(address)
 
   return useMemo(() => {
     if (!currency || !portfolioBalances) return null
@@ -146,7 +115,7 @@ export function useSingleBalance(currency: NullUndefined<Currency>): PortfolioBa
 /** Helper hook to retrieve balances for a set of currencies for the active account. */
 export function useMultipleBalances(currencies: CurrencyId[]): PortfolioBalance[] | null {
   const address = useActiveAccountAddressWithThrow()
-  const balances = usePortfolioBalances(address)
+  const { data: balances } = usePortfolioBalances(address)
 
   return useMemo(() => {
     if (!currencies || !currencies.length || !balances) return null

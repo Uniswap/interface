@@ -3,9 +3,7 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { Suspense } from 'src/components/data/Suspense'
 import { AnimatedFlex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 import { TokenSearchResultList } from 'src/components/TokenSelector/TokenSearchResultList'
@@ -57,17 +55,15 @@ function _TokenSelector({
         onBack={onBack}
         onChangeText={onChangeText}
       />
-      <Suspense fallback={<Loading repeat={5} type="token" />}>
-        <KeyboardAvoidingView behavior="height">
-          <TokenSearchResultList
-            chainFilter={chainFilter}
-            searchFilter={searchFilter}
-            variation={variation}
-            onChangeChainFilter={onChangeChainFilter}
-            onSelectCurrency={onSelectCurrency}
-          />
-        </KeyboardAvoidingView>
-      </Suspense>
+      <KeyboardAvoidingView behavior="height">
+        <TokenSearchResultList
+          chainFilter={chainFilter}
+          searchFilter={searchFilter}
+          variation={variation}
+          onChangeChainFilter={onChangeChainFilter}
+          onSelectCurrency={onSelectCurrency}
+        />
+      </KeyboardAvoidingView>
     </AnimatedFlex>
   )
 }

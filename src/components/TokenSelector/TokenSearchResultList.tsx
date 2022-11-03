@@ -5,6 +5,7 @@ import { ListRenderItemInfo, SectionList } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { Box, Flex, Inset } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { filter } from 'src/components/TokenSelector/filter'
 import { useAllCommonBaseCurrencies } from 'src/components/TokenSelector/hooks'
@@ -56,14 +57,17 @@ export function useTokenSectionsByVariation(
   variation: TokenSelectorVariation,
   chainFilter: ChainId | null,
   searchFilter: string | null
-): TokenSection[] {
+): { sections: TokenSection[]; loading: boolean } {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
   const hideSmallBalances = useAppSelector(selectAccountHideSmallBalances(activeAccount.address))
 
-  const popularTokens = usePopularTokens()
-  const portfolioBalancesById = usePortfolioBalances(activeAccount.address)
-  const commonBaseCurrencies = useAllCommonBaseCurrencies()
+  const { data: popularTokens, loading: popularTokensLoading } = usePopularTokens()
+  const { data: portfolioBalancesById, loading: portfolioBalancesLoading } = usePortfolioBalances(
+    activeAccount.address
+  )
+  const { data: commonBaseCurrencies, loading: commonBaseCurrenciesLoading } =
+    useAllCommonBaseCurrencies()
 
   const portfolioBalances: PortfolioBalance[] = useMemo(() => {
     if (!portfolioBalancesById) return EMPTY_ARRAY
@@ -80,6 +84,8 @@ export function useTokenSectionsByVariation(
   }, [portfolioBalancesById, hideSmallBalances])
 
   const popularTokenOptions = useMemo(() => {
+    if (!popularTokens) return EMPTY_ARRAY
+
     return popularTokens
       .sort((a, b) => {
         if (a.currency.name && b.currency.name) {
@@ -95,6 +101,8 @@ export function useTokenSectionsByVariation(
   }, [popularTokens, portfolioBalancesById])
 
   const commonBaseTokenOptions = useMemo(() => {
+    if (!commonBaseCurrencies) return EMPTY_ARRAY
+
     return commonBaseCurrencies.map((currencyInfo) => {
       return (
         portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo)
@@ -104,8 +112,14 @@ export function useTokenSectionsByVariation(
 
   // Only call search endpoint if searchFilter is non-null and TokenSelectorVariation includes tokens without balance
   const skipSearch = !searchFilter || variation === TokenSelectorVariation.BalancesOnly
-  const searchResultCurrencies = useSearchTokens(searchFilter, chainFilter, skipSearch)
+  const { data: searchResultCurrencies, loading: searchTokensLoading } = useSearchTokens(
+    searchFilter,
+    chainFilter,
+    skipSearch
+  )
   const searchResults = useMemo(() => {
+    if (!searchResultCurrencies) return EMPTY_ARRAY
+
     return searchResultCurrencies.map((currencyInfo) => {
       return (
         portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo)
@@ -193,7 +207,13 @@ export function useTokenSectionsByVariation(
     searchFilter,
   ])
 
-  return sections
+  const loading =
+    commonBaseCurrenciesLoading ||
+    popularTokensLoading ||
+    portfolioBalancesLoading ||
+    searchTokensLoading
+
+  return useMemo(() => ({ sections, loading }), [sections, loading])
 }
 
 function _TokenSearchResultList({
@@ -207,7 +227,11 @@ function _TokenSearchResultList({
   const sectionListRef = useRef<SectionList<TokenOption>>(null)
 
   const debouncedSearchFilter = useDebounce(searchFilter)
-  const sections = useTokenSectionsByVariation(variation, chainFilter, debouncedSearchFilter)
+  const { sections, loading } = useTokenSectionsByVariation(
+    variation,
+    chainFilter,
+    debouncedSearchFilter
+  )
 
   const sectionsRef = useRef(sections)
   useEffect(() => {
@@ -237,6 +261,10 @@ function _TokenSearchResultList({
       })
     }
   }, [variation, sectionsRef])
+
+  if (loading) {
+    return <Loading repeat={5} type="token" />
+  }
 
   return (
     <Box>
