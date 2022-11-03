@@ -16,9 +16,14 @@ import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import styled from 'styled-components/macro'
 import { formatDollar } from 'utils/formatNumbers'
 
 import * as styles from './SearchBar.css'
+
+const StyledLogoContainer = styled(LogoContainer)`
+  margin-right: 8px;
+`
 
 interface CollectionRowProps {
   collection: GenieCollection
@@ -125,8 +130,6 @@ interface TokenRowProps {
 }
 
 export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceEvent, index }: TokenRowProps) => {
-  const [brokenImage, setBrokenImage] = useState(false)
-  const [loaded, setLoaded] = useState(false)
   const addToSearchHistory = useSearchHistory(
     (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
   )
@@ -165,10 +168,10 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
       style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
-        <LogoContainer>
+        <StyledLogoContainer>
           <TokenLogo token={token} size="36px" />
           <L2NetworkLogo networkUrl={L2Icon} size="16px" />
-        </LogoContainer>
+        </StyledLogoContainer>
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>

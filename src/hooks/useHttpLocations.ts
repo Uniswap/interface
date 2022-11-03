@@ -10,7 +10,6 @@ export default function useHttpLocations(uri: string | undefined | null): string
   const resolvedContentHash = useENSContentHash(ens?.ensName)
   return useMemo(() => {
     if (ens) {
-      alert('HERE')
       return resolvedContentHash.contenthash ? uriToHttp(contenthashToUri(resolvedContentHash.contenthash)) : []
     } else {
       return uri ? uriToHttp(uri) : []

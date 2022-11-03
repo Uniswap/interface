@@ -3,7 +3,7 @@ import { ElementName, Event, EventName } from 'analytics/constants'
 import { TraceEvent } from 'analytics/TraceEvent'
 import { getTokenAddress } from 'analytics/utils'
 import { AutoColumn } from 'components/Column'
-import CurrencyLogo from 'components/CurrencyLogo'
+import { TokenLogo } from 'components/CurrencyLogo'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
@@ -99,5 +99,5 @@ export default function CommonBases({
 function CurrencyLogoFromList({ currency }: { currency: Currency }) {
   const token = useTokenInfoFromActiveList(currency)
 
-  return <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
+  return <TokenLogo token={token} style={{ marginRight: 8 }} />
 }

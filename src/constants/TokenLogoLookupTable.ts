@@ -11,10 +11,25 @@ class TokenLogoLookupTable {
     lists.forEach((list) =>
       store.getState().lists.byUrl[list].current?.tokens.forEach((token) => {
         const lowercaseAddress = token.address.toLowerCase()
+        const newLogoUri = token.logoURI
         const currentEntry = dict[lowercaseAddress]
-        // Prefer non-coingecko (lower res) logos
-        if (!currentEntry || currentEntry.startsWith('https://assets.coingecko')) {
-          dict[lowercaseAddress] = token.logoURI
+
+        if (newLogoUri) {
+          // Avoid using coingecko if available
+          if (
+            currentEntry &&
+            currentEntry.startsWith('https://assets.coingecko') &&
+            !newLogoUri.startsWith('https://assets.coingecko')
+          ) {
+            dict[lowercaseAddress] = token.logoURI
+          } else {
+            if (newLogoUri.startsWith('https://assets.coingecko')) {
+              // Request larger images from coingecko
+              dict[lowercaseAddress] = token.logoURI.replace(/small|thumb/g, 'large')
+            } else {
+              dict[lowercaseAddress] = token.logoURI
+            }
+          }
         }
       })
     )
