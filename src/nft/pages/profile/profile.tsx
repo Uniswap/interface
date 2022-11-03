@@ -1,4 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
+import { PageName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
 import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { ChevronLeftIcon, XMarkIcon } from 'nft/components/icons'
@@ -45,42 +47,44 @@ const Profile = () => {
   }
 
   return (
-    <Box className={styles.mobileSellWrapper}>
-      {/* <Head> TODO: figure out metadata tagging
+    <Trace page={PageName.NFT_PROFILE_PAGE} shouldLogImpression>
+      <Box className={styles.mobileSellWrapper}>
+        {/* <Head> TODO: figure out metadata tagging
           <title>Genie | Sell</title>
         </Head> */}
-      <Row className={styles.mobileSellHeader}>
-        {sellPageState === ProfilePageStateType.LISTING && (
-          <Box marginRight="4" onClick={() => setSellPageState(ProfilePageStateType.VIEWING)}>
-            <ChevronLeftIcon height={28} width={28} />
+        <Row className={styles.mobileSellHeader}>
+          {sellPageState === ProfilePageStateType.LISTING && (
+            <Box marginRight="4" onClick={() => setSellPageState(ProfilePageStateType.VIEWING)}>
+              <ChevronLeftIcon height={28} width={28} />
+            </Box>
+          )}
+          <Box className={headlineSmall} paddingBottom="4" style={{ lineHeight: '28px' }}>
+            {sellPageState === ProfilePageStateType.VIEWING ? 'Select NFTs' : 'Create Listing'}
           </Box>
+          <Box cursor="pointer" marginLeft="auto" marginRight="0" onClick={exitSellFlow}>
+            <XMarkIcon height={28} width={28} fill={themeVars.colors.textPrimary} />
+          </Box>
+        </Row>
+        {account != null ? (
+          <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
+            {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
+          </Box>
+        ) : (
+          <Column as="section" gap="60" className={styles.section}>
+            <div style={{ minHeight: '70vh' }}>
+              <Center className={styles.notConnected} flexDirection="column">
+                <Box as="span" className={headlineMedium} color="textSecondary" marginBottom="24" display="block">
+                  No items to display
+                </Box>
+                <Box as="button" className={buttonMedium} onClick={toggleWalletModal}>
+                  Connect Wallet
+                </Box>
+              </Center>
+            </div>
+          </Column>
         )}
-        <Box className={headlineSmall} paddingBottom="4" style={{ lineHeight: '28px' }}>
-          {sellPageState === ProfilePageStateType.VIEWING ? 'Select NFTs' : 'Create Listing'}
-        </Box>
-        <Box cursor="pointer" marginLeft="auto" marginRight="0" onClick={exitSellFlow}>
-          <XMarkIcon height={28} width={28} fill={themeVars.colors.textPrimary} />
-        </Box>
-      </Row>
-      {account != null ? (
-        <Box style={{ width: `calc(100% - ${cartExpanded ? SHOPPING_BAG_WIDTH : 0}px)` }}>
-          {sellPageState === ProfilePageStateType.VIEWING ? <ProfilePage /> : <ListPage />}
-        </Box>
-      ) : (
-        <Column as="section" gap="60" className={styles.section}>
-          <div style={{ minHeight: '70vh' }}>
-            <Center className={styles.notConnected} flexDirection="column">
-              <Box as="span" className={headlineMedium} color="textSecondary" marginBottom="24" display="block">
-                No items to display
-              </Box>
-              <Box as="button" className={buttonMedium} onClick={toggleWalletModal}>
-                Connect Wallet
-              </Box>
-            </Center>
-          </div>
-        </Column>
-      )}
-    </Box>
+      </Box>
+    </Trace>
   )
 }
 
