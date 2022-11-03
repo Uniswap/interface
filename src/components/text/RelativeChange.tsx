@@ -36,7 +36,7 @@ export function RelativeChange({
           semanticColor ? (isPositiveChange ? 'accentSuccess' : 'accentCritical') : 'textSecondary'
         }
         variant={variant}>
-        {change ? `${change.toFixed(2)}%` : '-'}{' '}
+        {change ? `${change.toFixed(2)}%` : '-'}
         {absoluteChange ? `(${formatNumber(absoluteChange, NumberType.FiatTokenPrice)})` : ''}
       </Text>
     </Flex>

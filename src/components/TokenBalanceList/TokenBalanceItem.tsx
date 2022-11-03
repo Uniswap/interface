@@ -38,7 +38,8 @@ export const TokenBalanceItem = memo(
         flexDirection="row"
         justifyContent="space-between"
         minHeight={56}
-        p="sm"
+        px="sm"
+        py="xs"
         onPress={onPress}
         onPressIn={onPressIn}>
         <AnimatedFlex
@@ -51,7 +52,7 @@ export const TokenBalanceItem = memo(
           overflow="hidden">
           <TokenLogo
             chainId={currency.chainId}
-            size={theme.imageSizes.lg}
+            size={theme.imageSizes.xl}
             symbol={currency.symbol}
             url={currencyInfo.logoUrl ?? undefined}
           />

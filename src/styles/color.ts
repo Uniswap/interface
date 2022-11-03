@@ -467,7 +467,7 @@ export const colorsDark: Palette = {
   backgroundScrim: opacify(50, colors.gray750),
 
   textPrimary: colors.white,
-  textSecondary: colors.gray100,
+  textSecondary: colors.gray200,
   textTertiary: colors.gray400,
 
   accentAction: colors.pink400,

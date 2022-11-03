@@ -5,7 +5,6 @@ import {
   TabViewScrollProps,
   TAB_VIEW_SCROLL_THROTTLE,
 } from 'src/components/layout/screens/TabbedScrollScreen'
-import { Separator } from 'src/components/layout/Separator'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
@@ -36,7 +35,6 @@ export function TokenBalanceList({
   const truncatedBalances = useMemo(() => balances.slice(0, count), [balances, count])
   return (
     <AnimatedFlatList
-      ItemSeparatorComponent={() => <Separator />}
       ListEmptyComponent={empty}
       data={truncatedBalances}
       keyExtractor={key}
