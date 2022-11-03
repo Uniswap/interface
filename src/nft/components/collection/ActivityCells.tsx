@@ -206,6 +206,8 @@ interface EventCellProps {
   eventTimestamp?: number
   eventTransactionHash?: string
   eventOnly?: boolean
+  price?: string
+  isMobile?: boolean
 }
 
 const renderEventIcon = (eventType: ActivityEventType) => {
@@ -245,19 +247,28 @@ const eventColors = (eventType: ActivityEventType) => {
   return activityEvents[eventType] as 'gold' | 'green' | 'violet' | 'accentFailure'
 }
 
-export const EventCell = ({ eventType, eventTimestamp, eventTransactionHash, eventOnly }: EventCellProps) => {
+export const EventCell = ({
+  eventType,
+  eventTimestamp,
+  eventTransactionHash,
+  eventOnly,
+  price,
+  isMobile,
+}: EventCellProps) => {
+  const formattedPrice = useMemo(() => (price ? putCommas(formatEthPrice(price))?.toString() : null), [price])
   return (
     <Column height="full" justifyContent="center" gap="4">
       <Row className={styles.eventDetail} color={eventColors(eventType)}>
         {renderEventIcon(eventType)}
         {ActivityEventTypeDisplay[eventType]}
       </Row>
-      {!eventOnly && eventTimestamp && isValidDate(eventTimestamp) && (
+      {eventTimestamp && isValidDate(eventTimestamp) && !isMobile && !eventOnly && (
         <Row className={styles.eventTime}>
           {getTimeDifference(eventTimestamp.toString())}
           {eventTransactionHash && <ExternalLinkIcon transactionHash={eventTransactionHash} />}
         </Row>
       )}
+      {isMobile && price && <Row fontSize="16" fontWeight="normal" color="textPrimary">{`${formattedPrice} ETH`}</Row>}
     </Column>
   )
 }
@@ -266,6 +277,8 @@ interface ItemCellProps {
   event: ActivityEvent
   rarityVerified: boolean
   collectionName: string
+  isMobile: boolean
+  eventTimestamp?: number
 }
 
 const NoContentContainer = () => (
@@ -340,7 +353,7 @@ const getItemImage = (tokenMetadata?: TokenMetadata): string | undefined => {
   return tokenMetadata?.smallImageUrl || tokenMetadata?.imageUrl
 }
 
-export const ItemCell = ({ event, rarityVerified, collectionName }: ItemCellProps) => {
+export const ItemCell = ({ event, rarityVerified, collectionName, eventTimestamp, isMobile }: ItemCellProps) => {
   const [loaded, setLoaded] = useState(false)
   const [noContent, setNoContent] = useState(!getItemImage(event.tokenMetadata))
 
@@ -364,13 +377,14 @@ export const ItemCell = ({ event, rarityVerified, collectionName }: ItemCellProp
       )}
       <Column height="full" justifyContent="center" overflow="hidden" whiteSpace="nowrap" marginRight="24">
         <Box className={styles.detailsName}>{event.tokenMetadata?.name || event.tokenId}</Box>
-        {event.tokenMetadata?.rarity && (
+        {event.tokenMetadata?.rarity && !isMobile && (
           <Ranking
             rarity={event.tokenMetadata?.rarity}
             rarityVerified={rarityVerified}
             collectionName={collectionName}
           />
         )}
+        {isMobile && eventTimestamp && isValidDate(eventTimestamp) && getTimeDifference(eventTimestamp.toString())}
       </Column>
     </Row>
   )
