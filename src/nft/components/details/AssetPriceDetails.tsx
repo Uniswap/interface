@@ -4,7 +4,7 @@ import { useTrace } from 'analytics/Trace'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
-import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType, Deprecated_SellOrder } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
@@ -287,7 +287,8 @@ const SubHeader = styled(ThemedText.SubHeader)`
 
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
   const { account } = useWeb3React()
-  const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
+  const cheapestOrder =
+    asset.sellorders && asset.sellorders.length > 0 ? (asset.sellorders[0] as Deprecated_SellOrder) : undefined
   const expirationDate =
     cheapestOrder && cheapestOrder?.orderClosingDate ? new Date(cheapestOrder.orderClosingDate) : undefined
 

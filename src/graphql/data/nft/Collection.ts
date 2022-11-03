@@ -1,6 +1,5 @@
 import graphql from 'babel-plugin-relay/macro'
-import { Trait } from 'nft/hooks/useCollectionFilters'
-import { GenieCollection } from 'nft/types'
+import { GenieCollection, Trait } from 'nft/types'
 import { useLazyLoadQuery } from 'react-relay'
 
 import { CollectionQuery } from './__generated__/CollectionQuery.graphql'

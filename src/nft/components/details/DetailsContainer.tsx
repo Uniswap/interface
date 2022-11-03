@@ -91,7 +91,7 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
       <GridItem header="Token ID" body={tokenId.length > 9 ? stringShortener(tokenId) : tokenId} />
       <GridItem header="Token standard" body={tokenType} />
       <GridItem header="Blockchain" body="Ethereum" />
-      <GridItem header="Total supply" body={`${putCommas(totalSupply)}`} />
+      <GridItem header="Total supply" body={`${putCommas(totalSupply ?? 0)}`} />
       <GridItem header="Creator" body={creator?.address && shortenAddress(creator.address, 2, 4)} />
     </Details>
   )

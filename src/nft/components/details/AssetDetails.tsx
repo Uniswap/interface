@@ -12,7 +12,7 @@ import { caption } from 'nft/css/common.css'
 import { useTimeout } from 'nft/hooks/useTimeout'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEventResponse, ActivityEventType } from 'nft/types'
-import { CollectionInfoForAsset, GenieAsset, GenieCollection, SellOrder } from 'nft/types'
+import { CollectionInfoForAsset, Deprecated_SellOrder, GenieAsset, GenieCollection, SellOrder } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
@@ -362,7 +362,8 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
   )
 
   const lastSalePrice = priceData?.events[0]?.price ?? null
-  const formattedPrice = lastSalePrice ? putCommas(formatEthPrice(lastSalePrice)).toString() : null
+  const formattedEthprice = formatEthPrice(lastSalePrice ?? '') || 0
+  const formattedPrice = lastSalePrice ? putCommas(formattedEthprice).toString() : null
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const Filter = useCallback(
@@ -418,7 +419,8 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     }
   )
 
-  const rarity = asset.rarity?.providers[0]
+  const rarity = asset?.rarity?.providers?.length ? asset?.rarity?.providers?.[0] : undefined
+  const [showHolder, setShowHolder] = useState(false)
   const rarityProviderLogo = getRarityProviderLogo(rarity?.provider)
   const events = useMemo(
     () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
@@ -428,10 +430,15 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
   return (
     <Column>
       <MediaContainer>
-        {asset.imageUrl === undefined ? (
+        {asset.imageUrl === undefined || showHolder ? (
           <ContentNotAvailable>Content not available yet</ContentNotAvailable>
         ) : assetMediaType === MediaType.Image ? (
-          <Img className={styles.image} src={asset.imageUrl} alt={asset.name || collection.collectionName} />
+          <Img
+            className={styles.image}
+            src={asset.imageUrl}
+            alt={asset.name || collection.collectionName}
+            onError={() => setShowHolder(true)}
+          />
         ) : (
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}
@@ -450,7 +457,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
         primaryHeader="Traits"
         defaultOpen
         secondaryHeader={
-          rarityProvider && rarity ? (
+          rarityProvider && rarity && rarity.score ? (
             <MouseoverTooltip
               text={
                 <HoverContainer>

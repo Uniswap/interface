@@ -70,10 +70,10 @@ export interface Rarity {
 
 export interface Trait {
   trait_type: string
-  value: string
+  trait_value: string
   display_type?: any
   max_value?: any
-  trait_count: number
+  trait_count?: number
   order?: any
 }
 export interface GenieAsset {
@@ -104,14 +104,7 @@ export interface GenieAsset {
     address: string
     profile_img_url: string
   }
-  traits?: {
-    trait_type: string
-    value: string
-    display_type?: any
-    max_value?: any
-    trait_count: number
-    order?: any
-  }[]
+  traits?: Trait[]
 }
 
 export interface GenieCollection {

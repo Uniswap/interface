@@ -129,7 +129,7 @@ const Collection = () => {
               </CollectionDescriptionSection>
               <CollectionDisplaySection>
                 <Box position="sticky" top="72" width="0">
-                  {isFiltersExpanded && <Filters traitsByGroup={collectionStats?.traits ?? {}} />}
+                  {/* {isFiltersExpanded && <Filters traitsByGroup={collectionStats?.traits ?? {}} />} */}
                 </Box>
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}

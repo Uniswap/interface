@@ -57,9 +57,12 @@ const TraitValue = styled.div`
   display: inline-block;
 `
 
-const GridItem = ({ trait: { trait_type, value }, collectionAddress }: { trait: Trait; collectionAddress: string }) => {
+const GridItem = ({ trait, collectionAddress }: { trait: Trait; collectionAddress: string }) => {
+  const { trait_type } = trait
+  // @ts-ignore
+  const trait_value = trait.trait_value || trait.value
   const params = qs.stringify(
-    { traits: [`("${trait_type}","${value}")`] },
+    { traits: [`("${trait_type}","${trait_value}")`] },
     {
       arrayFormat: 'comma',
     }
@@ -68,7 +71,7 @@ const GridItem = ({ trait: { trait_type, value }, collectionAddress }: { trait: 
   return (
     <GridItemContainer to={`/nfts/collection/${collectionAddress}?${params}`}>
       <TraitType>{trait_type}</TraitType>
-      <TraitValue>{value}</TraitValue>
+      <TraitValue>{trait_value}</TraitValue>
     </GridItemContainer>
   )
 }
