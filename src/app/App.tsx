@@ -149,7 +149,7 @@ function DataUpdaters() {
   )
 
   // Prefetch TRM data on app start (either cold or warm)
-  useEffect(prefetchTrmData)
+  useEffect(prefetchTrmData, [prefetchTrmData])
   useAppStateTrigger('background', 'active', prefetchTrmData)
   useAppStateTrigger('inactive', 'active', prefetchTrmData)
 
