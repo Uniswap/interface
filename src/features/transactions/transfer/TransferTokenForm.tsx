@@ -1,9 +1,12 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
+import { Keyboard, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
+import { useAppTheme } from 'src/app/hooks'
+import AlertTriangleIcon from 'src/assets/icons/alert-triangle.svg'
 import { Button, ButtonSize } from 'src/components/buttons/Button'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { Suspense } from 'src/components/data/Suspense'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
@@ -12,10 +15,12 @@ import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
-import { Warning, WarningAction } from 'src/components/modals/WarningModal/types'
+import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
+import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
+import { Text } from 'src/components/Text'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import { ARROW_SIZE } from 'src/features/transactions/swap/SwapForm'
@@ -24,7 +29,7 @@ import {
   transactionStateActions,
 } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
-import { TransferFormWarnings } from 'src/features/transactions/transfer/TransferFormWarnings'
+import { TransferFormSpeedbumps } from 'src/features/transactions/transfer/TransferFormWarnings'
 import { createOnToggleShowRecipientSelector } from 'src/features/transactions/transfer/utils'
 import { createTransactionId } from 'src/features/transactions/utils'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
@@ -38,7 +43,7 @@ interface TransferTokenProps {
   warnings: Warning[]
 }
 
-export interface TransferWarning {
+export interface TransferSpeedbump {
   hasWarning: boolean
   loading: boolean
 }
@@ -50,6 +55,7 @@ export function TransferTokenForm({
   warnings,
 }: TransferTokenProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const {
     currencyAmounts,
@@ -76,7 +82,8 @@ export function TransferTokenForm({
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
 
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const [transferWarning, setTransferWarning] = useState<TransferWarning>({
+  const [showSpeedbumpModal, setShowSpeedbumpModal] = useState(false)
+  const [transferSpeedbump, setTransferSpeedbump] = useState<TransferSpeedbump>({
     loading: true,
     hasWarning: false,
   })
@@ -88,7 +95,7 @@ export function TransferTokenForm({
 
   const actionButtonDisabled =
     warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
-    transferWarning.loading ||
+    transferSpeedbump.loading ||
     isBlocked ||
     isBlockedLoading
 
@@ -99,19 +106,19 @@ export function TransferTokenForm({
   }, [dispatch, onNext])
 
   const onPressReview = useCallback(() => {
-    if (transferWarning.hasWarning) {
-      setShowWarningModal(true)
+    if (transferSpeedbump.hasWarning) {
+      setShowSpeedbumpModal(true)
     } else {
       goToNext()
     }
-  }, [goToNext, transferWarning.hasWarning])
+  }, [goToNext, transferSpeedbump.hasWarning])
 
-  const onSetTransferWarning = useCallback(({ hasWarning, loading }: TransferWarning) => {
-    setTransferWarning({ hasWarning, loading })
+  const onSetTransferSpeedbump = useCallback(({ hasWarning, loading }: TransferSpeedbump) => {
+    setTransferSpeedbump({ hasWarning, loading })
   }, [])
 
-  const onSetShowWarningModal = useCallback((showModal: boolean) => {
-    setShowWarningModal(showModal)
+  const onSetShowSpeedbumpModal = useCallback((showModal: boolean) => {
+    setShowSpeedbumpModal(showModal)
   }, [])
 
   const [inputSelection, setInputSelection] = useState<TextInputProps['selection']>()
@@ -122,16 +129,36 @@ export function TransferTokenForm({
     [setInputSelection]
   )
 
+  const onTransferWarningClick = () => {
+    Keyboard.dismiss()
+    setShowWarningModal(true)
+  }
+
+  const transferWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
+  const transferWarningColor = getAlertColor(transferWarning?.severity)
+
   return (
     <>
+      {showWarningModal && transferWarning?.title && (
+        <WarningModal
+          isVisible
+          caption={transferWarning.message}
+          confirmText={t('OK')}
+          modalName={ModalName.SendWarning}
+          severity={transferWarning.severity}
+          title={transferWarning.title}
+          onClose={() => setShowWarningModal(false)}
+          onConfirm={() => setShowWarningModal(false)}
+        />
+      )}
       <Suspense fallback={null}>
-        <TransferFormWarnings
+        <TransferFormSpeedbumps
           chainId={chainId}
           dispatch={dispatch}
           recipient={recipient}
-          setShowWarningModal={onSetShowWarningModal}
-          setTransferWarning={onSetTransferWarning}
-          showWarningModal={showWarningModal}
+          setShowSpeedbumpModal={onSetShowSpeedbumpModal}
+          setTransferSpeedbump={onSetTransferSpeedbump}
+          showSpeedbumpModal={showSpeedbumpModal}
           onNext={goToNext}
         />
       </Suspense>
@@ -175,39 +202,65 @@ export function TransferTokenForm({
             </Box>
           </Box>
 
-          <Flex
-            backgroundColor={recipient ? 'background2' : 'none'}
-            borderBottomLeftRadius={isBlocked ? 'none' : 'xl'}
-            borderBottomRightRadius={isBlocked ? 'none' : 'xl'}
-            borderTopLeftRadius="xl"
-            borderTopRightRadius="xl"
-            justifyContent="center"
-            mt="xxs"
-            px="md"
-            py="lg">
-            {recipient && (
-              <Suspense fallback={<Loading type="image" />}>
-                <RecipientInputPanel
-                  recipientAddress={recipient}
-                  onToggleShowRecipientSelector={onToggleShowRecipientSelector}
-                />
-              </Suspense>
-            )}
-          </Flex>
-          {isBlocked && (
-            <BlockedAddressWarning
-              row
-              alignItems="center"
-              alignSelf="stretch"
-              backgroundColor="background2"
-              borderBottomLeftRadius="lg"
-              borderBottomRightRadius="lg"
-              flexGrow={1}
-              mt="xxxs"
+          <Box>
+            <Flex
+              backgroundColor={recipient ? 'background2' : 'none'}
+              borderBottomLeftRadius={transferWarning || isBlocked ? 'none' : 'xl'}
+              borderBottomRightRadius={transferWarning || isBlocked ? 'none' : 'xl'}
+              borderTopLeftRadius="xl"
+              borderTopRightRadius="xl"
+              justifyContent="center"
+              mt="xxs"
               px="md"
-              py="sm"
-            />
-          )}
+              py="lg">
+              {recipient && (
+                <Suspense fallback={<Loading type="image" />}>
+                  <RecipientInputPanel
+                    recipientAddress={recipient}
+                    onToggleShowRecipientSelector={onToggleShowRecipientSelector}
+                  />
+                </Suspense>
+              )}
+            </Flex>
+            {transferWarning && !isBlocked ? (
+              <TouchableArea onPress={onTransferWarningClick}>
+                <Flex
+                  row
+                  alignItems="center"
+                  alignSelf="stretch"
+                  backgroundColor={transferWarningColor.background}
+                  borderBottomLeftRadius="lg"
+                  borderBottomRightRadius="lg"
+                  flexGrow={1}
+                  gap="xs"
+                  px="md"
+                  py="sm">
+                  <AlertTriangleIcon
+                    color={theme.colors[transferWarningColor.text]}
+                    height={theme.iconSizes.sm}
+                    width={theme.iconSizes.sm}
+                  />
+                  <Text color={transferWarningColor.text} variant="subheadSmall">
+                    {transferWarning.title}
+                  </Text>
+                </Flex>
+              </TouchableArea>
+            ) : null}
+            {isBlocked ? (
+              <BlockedAddressWarning
+                row
+                alignItems="center"
+                alignSelf="stretch"
+                backgroundColor="background2"
+                borderBottomLeftRadius="lg"
+                borderBottomRightRadius="lg"
+                flexGrow={1}
+                mt="xxxs"
+                px="md"
+                py="sm"
+              />
+            ) : null}
+          </Box>
         </AnimatedFlex>
         <AnimatedFlex exiting={FadeOutDown} gap="xs">
           {!nftIn && !showNativeKeyboard && (

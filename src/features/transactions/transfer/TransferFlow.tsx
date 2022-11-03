@@ -20,6 +20,7 @@ import {
   createOnSelectRecipient,
   createOnToggleShowRecipientSelector,
 } from 'src/features/transactions/transfer/utils'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 
 interface TransferFormProps {
   prefilledState?: TransactionState
@@ -29,6 +30,7 @@ interface TransferFormProps {
 export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const { t } = useTranslation()
+  const account = useActiveAccountWithThrow()
   const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
   const onSelectRecipient = createOnSelectRecipient(dispatch)
   const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
@@ -45,7 +47,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
   const transferTxWithGasSettings = useMemo(() => {
     return gasFeeInfo ? { ...txRequest, ...gasFeeInfo.params } : txRequest
   }, [gasFeeInfo, txRequest])
-  const warnings = useTransferWarnings(t, derivedTransferInfo)
+  const warnings = useTransferWarnings(t, account, derivedTransferInfo)
 
   return (
     <TransactionFlow

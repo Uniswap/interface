@@ -8,6 +8,7 @@ import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { getTransferWarnings } from 'src/features/transactions/transfer/useTransferWarnings'
+import { account } from 'src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
@@ -126,29 +127,29 @@ const mockTranslate = jest.fn()
 
 describe(getTransferWarnings, () => {
   it('does not error when Currency with balances and amounts is provided', () => {
-    const warnings = getTransferWarnings(mockTranslate, transferCurrency)
+    const warnings = getTransferWarnings(mockTranslate, account, transferCurrency)
     expect(warnings.length).toBe(0)
   })
 
   it('does not error when correctly formed NFT is provided', () => {
-    const warnings = getTransferWarnings(mockTranslate, transferNFT)
+    const warnings = getTransferWarnings(mockTranslate, account, transferNFT)
     expect(warnings.length).toBe(0)
   })
 
   it('catches incomplete form errors: no recipient', async () => {
-    const warnings = getTransferWarnings(mockTranslate, transferState)
+    const warnings = getTransferWarnings(mockTranslate, account, transferState)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches incomplete form errors: no amount', async () => {
-    const warnings = getTransferWarnings(mockTranslate, transferState2)
+    const warnings = getTransferWarnings(mockTranslate, account, transferState2)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
-    const warnings = getTransferWarnings(mockTranslate, insufficientBalanceState)
+    const warnings = getTransferWarnings(mockTranslate, account, insufficientBalanceState)
     expect(warnings.length).toBe(1)
     expect(warnings[0].type).toEqual(WarningLabel.InsufficientFunds)
   })
@@ -162,7 +163,11 @@ describe(getTransferWarnings, () => {
       },
     }
 
-    const warnings = getTransferWarnings(mockTranslate, incompleteAndInsufficientBalanceState)
+    const warnings = getTransferWarnings(
+      mockTranslate,
+      account,
+      incompleteAndInsufficientBalanceState
+    )
     expect(warnings.length).toBe(2)
   })
 })

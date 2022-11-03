@@ -11,9 +11,14 @@ import { ChainId } from 'src/constants/chains'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
+import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { currencyAddress } from 'src/utils/currencyId'
 
-export function getTransferWarnings(t: TFunction, derivedTransferInfo: DerivedTransferInfo) {
+export function getTransferWarnings(
+  t: TFunction,
+  account: Account,
+  derivedTransferInfo: DerivedTransferInfo
+) {
   const { currencyBalances, currencyAmounts, recipient, currencyIn, nftIn, chainId } =
     derivedTransferInfo
 
@@ -44,6 +49,7 @@ export function getTransferWarnings(t: TFunction, derivedTransferInfo: DerivedTr
       ),
     })
   }
+
   // transfer form is missing fields
   if (isMissingRequiredParams) {
     warnings.push({
@@ -53,15 +59,29 @@ export function getTransferWarnings(t: TFunction, derivedTransferInfo: DerivedTr
     })
   }
 
+  if (account?.type === AccountType.Readonly) {
+    warnings.push({
+      type: WarningLabel.ViewOnlyAccount,
+      severity: WarningSeverity.Medium,
+      action: WarningAction.DisableSubmit,
+      title: t('This wallet is view-only'),
+      message: t('You need to import this wallet via recovery phrase to send assets.'),
+    })
+  }
+
   // TODO: Add warning for insufficient gas for transfer
 
   return warnings
 }
 
-export function useTransferWarnings(t: TFunction, derivedTransferInfo: DerivedTransferInfo) {
+export function useTransferWarnings(
+  t: TFunction,
+  account: Account,
+  derivedTransferInfo: DerivedTransferInfo
+) {
   return useMemo(() => {
-    return getTransferWarnings(t, derivedTransferInfo)
-  }, [derivedTransferInfo, t])
+    return getTransferWarnings(t, account, derivedTransferInfo)
+  }, [derivedTransferInfo, account, t])
 }
 
 const checkIsMissingRequiredParams = (

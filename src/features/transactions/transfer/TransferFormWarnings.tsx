@@ -10,7 +10,7 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
 import { clearRecipient } from 'src/features/transactions/transactionState/transactionState'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
-import { TransferWarning } from 'src/features/transactions/transfer/TransferTokenForm'
+import { TransferSpeedbump } from 'src/features/transactions/transfer/TransferTokenForm'
 import {
   useActiveAccountAddressWithThrow,
   useDisplayName,
@@ -21,20 +21,20 @@ interface TransferFormWarningProps {
   dispatch: React.Dispatch<AnyAction>
   recipient?: string
   chainId?: ChainId
-  showWarningModal: boolean
+  showSpeedbumpModal: boolean
   onNext: () => void
-  setTransferWarning: (w: TransferWarning) => void
-  setShowWarningModal: (b: boolean) => void
+  setTransferSpeedbump: (w: TransferSpeedbump) => void
+  setShowSpeedbumpModal: (b: boolean) => void
 }
 
-export function TransferFormWarnings({
+export function TransferFormSpeedbumps({
   dispatch,
   recipient,
   chainId,
-  showWarningModal,
+  showSpeedbumpModal,
   onNext,
-  setTransferWarning,
-  setShowWarningModal,
+  setTransferSpeedbump,
+  setShowSpeedbumpModal,
 }: TransferFormWarningProps) {
   const { t } = useTranslation()
 
@@ -52,12 +52,12 @@ export function TransferFormWarnings({
   )
 
   useEffect(() => {
-    setTransferWarning({
+    setTransferSpeedbump({
       hasWarning: (isNewRecipient || isSmartContractAddress) && !isSignerRecipient,
       loading: addressLoading,
     })
   }, [
-    setTransferWarning,
+    setTransferSpeedbump,
     isNewRecipient,
     isSmartContractAddress,
     addressLoading,
@@ -66,19 +66,19 @@ export function TransferFormWarnings({
 
   const onCloseSmartContractWarning = useCallback(() => {
     dispatch(clearRecipient())
-    setShowWarningModal(false)
-  }, [dispatch, setShowWarningModal])
+    setShowSpeedbumpModal(false)
+  }, [dispatch, setShowSpeedbumpModal])
 
   const onCloseNewRecipientWarning = useCallback(
-    () => setShowWarningModal(false),
-    [setShowWarningModal]
+    () => setShowSpeedbumpModal(false),
+    [setShowSpeedbumpModal]
   )
 
   const displayName = useDisplayName(recipient)
 
   return (
     <>
-      {showWarningModal && !isSignerRecipient && isSmartContractAddress && (
+      {showSpeedbumpModal && !isSignerRecipient && isSmartContractAddress && (
         <WarningModal
           isVisible
           caption={t(
@@ -92,7 +92,7 @@ export function TransferFormWarnings({
           onConfirm={onCloseSmartContractWarning}
         />
       )}
-      {showWarningModal && !isSmartContractAddress && !isSignerRecipient && isNewRecipient && (
+      {showSpeedbumpModal && !isSmartContractAddress && !isSignerRecipient && isNewRecipient && (
         <WarningModal
           isVisible
           caption={t(

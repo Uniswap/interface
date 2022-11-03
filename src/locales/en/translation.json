@@ -290,6 +290,7 @@
   "Keep in mind that the network fee is still charged for failed transfers.": "Keep in mind that the network fee is still charged for failed transfers.",
   "Review transfer": "Review transfer",
   "Your {{ symbol }} balance has decreased since you entered the amount you'd like to send": "Your {{ symbol }} balance has decreased since you entered the amount you'd like to send",
+  "You need to import this wallet via recovery phrase to send assets.": "You need to import this wallet via recovery phrase to send assets.",
   "Unwrapped": "Unwrapped",
   "Transaction": "Transaction",
   "This wallet is blocked": "This wallet is blocked",

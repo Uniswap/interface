@@ -1,8 +1,10 @@
 import { providers } from 'ethers'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Warning, WarningAction } from 'src/components/modals/WarningModal/types'
-import { ElementName } from 'src/features/telemetry/constants'
+import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
+import WarningModal from 'src/components/modals/WarningModal/WarningModal'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import {
@@ -10,7 +12,6 @@ import {
   useTransferERC20Callback,
   useTransferNFTCallback,
 } from 'src/features/transactions/transfer/hooks'
-import { TransferDetails } from 'src/features/transactions/transfer/TransferDetails'
 import { currencyAddress } from 'src/utils/currencyId'
 import { formatCurrencyAmount, formatNumber, NumberType } from 'src/utils/format'
 
@@ -32,6 +33,15 @@ export function TransferReview({
   warnings,
 }: TransferFormProps) {
   const { t } = useTranslation()
+  const [showWarningModal, setShowWarningModal] = useState(false)
+
+  const onShowWarning = useCallback(() => {
+    setShowWarningModal(true)
+  }, [])
+
+  const onCloseWarning = useCallback(() => {
+    setShowWarningModal(false)
+  }, [])
 
   const {
     currencyAmounts,
@@ -44,11 +54,13 @@ export function TransferReview({
     exactAmountUSD,
   } = derivedTransferInfo
 
-  // TODO: how should we surface this warning?
-  const actionButtonDisabled =
-    warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
-    !totalGasFee ||
-    !txRequest
+  const blockingWarning = warnings.some(
+    (warning) =>
+      warning.action === WarningAction.DisableSubmit ||
+      warning.action === WarningAction.DisableReview
+  )
+
+  const actionButtonDisabled = blockingWarning || !totalGasFee || !txRequest
 
   const transferERC20Callback = useTransferERC20Callback(
     txId,
@@ -59,7 +71,7 @@ export function TransferReview({
     txRequest,
     onNext
   )
-  // TODO: if readonly account, not sendable
+
   const transferNFTCallback = useTransferNFTCallback(
     txId,
     chainId,
@@ -84,20 +96,45 @@ export function TransferReview({
     onPress: submitCallback,
   }
 
+  const transferWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
   const formattedAmountIn = isUSDInput
     ? formatNumber(parseFloat(exactAmountUSD), NumberType.FiatTokenQuantity)
     : formatCurrencyAmount(currencyAmounts[CurrencyField.INPUT], NumberType.TokenTx)
 
   return (
-    <TransactionReview
-      actionButtonProps={actionButtonProps}
-      currencyIn={currencyIn}
-      formattedAmountIn={formattedAmountIn}
-      isUSDInput={isUSDInput}
-      nftIn={nftIn}
-      recipient={recipient}
-      transactionDetails={<TransferDetails chainId={chainId} gasFee={totalGasFee} />}
-      onPrev={onPrev}
-    />
+    <>
+      {showWarningModal && transferWarning?.title && (
+        <WarningModal
+          isVisible
+          caption={transferWarning.message}
+          closeText={blockingWarning ? undefined : t('Cancel')}
+          confirmText={blockingWarning ? t('OK') : t('Confirm')}
+          modalName={ModalName.SendWarning}
+          severity={transferWarning.severity}
+          title={transferWarning.title}
+          onCancel={onCloseWarning}
+          onClose={onCloseWarning}
+          onConfirm={onCloseWarning}
+        />
+      )}
+      <TransactionReview
+        actionButtonProps={actionButtonProps}
+        currencyIn={currencyIn}
+        formattedAmountIn={formattedAmountIn}
+        isUSDInput={isUSDInput}
+        nftIn={nftIn}
+        recipient={recipient}
+        transactionDetails={
+          <TransactionDetails
+            chainId={chainId}
+            gasFee={totalGasFee}
+            showWarning={Boolean(transferWarning)}
+            warning={transferWarning}
+            onShowWarning={onShowWarning}
+          />
+        }
+        onPrev={onPrev}
+      />
+    </>
   )
 }
