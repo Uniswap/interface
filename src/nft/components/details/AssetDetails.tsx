@@ -530,9 +530,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
 
           <DescriptionText>{collection.collectionDescription}</DescriptionText>
           <SocialsContainer>
-            {collectionStats?.externalUrl && (
-              <Resource name="Website" link={`https://twitter.com/${collectionStats?.externalUrl}`} />
-            )}
+            {collectionStats?.externalUrl && <Resource name="Website" link={`${collectionStats?.externalUrl}`} />}
             {collectionStats?.twitterUrl && (
               <Resource name="Twitter" link={`https://twitter.com/${collectionStats?.twitterUrl}`} />
             )}
