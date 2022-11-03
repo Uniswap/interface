@@ -98,7 +98,7 @@ export interface GenieAsset {
   rarity?: Rarity
   owner?: string
   creator: OpenSeaUser
-  metadataUrl: string
+  metadataUrl?: string
   traits?: Trait[]
 }
 

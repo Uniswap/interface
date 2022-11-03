@@ -110,8 +110,7 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
   const possibleMarkets = itemsInBag.reduce((markets, item) => {
     const asset = item.asset
     const market = asset.marketplace
-    if (!market) return {}
-    if (!isPooledMarket(market)) return markets
+    if (!market || !isPooledMarket(market)) return markets
 
     const key = asset.address + asset.marketplace
     if (Object.keys(markets).includes(key)) {
@@ -125,9 +124,7 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
   const updatedPriceMarkets = itemsInBag.reduce((markets, item) => {
     const asset = item.asset
     const market = asset.marketplace
-    if (!market) return {}
-    if (!asset.updatedPriceInfo) return markets
-    if (!isPooledMarket(market)) return markets
+    if (!market || !asset.updatedPriceInfo || !isPooledMarket(market)) return markets
 
     const key = asset.address + asset.marketplace
     if (Object.keys(markets).includes(key)) {
