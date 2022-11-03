@@ -43,7 +43,7 @@ import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
-import { marketPlaceItems } from './MarketplaceSelect'
+import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
 import { Sweep } from './Sweep'
 import { TraitChip } from './TraitChip'
 
@@ -406,9 +406,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }, [collectionStats, location])
 
   useEffect(() => {
-    if (collectionStats && collectionStats.floorPrice) {
-      const lowValue = collectionStats.floorPrice
-      const maxValue = 10 * collectionStats.floorPrice
+    if (collectionStats && collectionStats.stats?.floor_price) {
+      const lowValue = collectionStats.stats?.floor_price
+      const maxValue = 10 * collectionStats.stats?.floor_price
 
       if (priceRangeLow === '') {
         setPriceRangeLow(lowValue?.toFixed(2))
@@ -481,7 +481,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {markets.map((market) => (
               <TraitChip
                 key={market}
-                value={marketPlaceItems[market as keyof typeof marketPlaceItems]}
+                value={MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
                 onClick={() => {
                   scrollToTop()
                   removeMarket(market)

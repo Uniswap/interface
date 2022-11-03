@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
-import { parseEther } from 'ethers/lib/utils'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import ListingModal from 'nft/components/bag/profile/ListingModal'
 import { Box } from 'nft/components/Box'
@@ -16,15 +15,17 @@ import {
   useSellAsset,
   useSendTransaction,
   useTransactionResponse,
-  useWalletBalance,
 } from 'nft/hooks'
 import { fetchRoute } from 'nft/queries'
 import { BagItemStatus, BagStatus, ProfilePageStateType, RouteResponse, TxStateType } from 'nft/types'
-import { buildSellObject } from 'nft/utils/buildSellObject'
-import { recalculateBagUsingPooledAssets } from 'nft/utils/calcPoolPrice'
-import { fetchPrice } from 'nft/utils/fetchPrice'
+import {
+  buildSellObject,
+  fetchPrice,
+  formatAssetEventProperties,
+  recalculateBagUsingPooledAssets,
+  sortUpdatedAssets,
+} from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { sortUpdatedAssets } from 'nft/utils/updatedAssets'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -54,7 +55,8 @@ const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
 )
 
 const Bag = () => {
-  const { account } = useWeb3React()
+  const { account, provider } = useWeb3React()
+
   const bagStatus = useBag((s) => s.bagStatus)
   const setBagStatus = useBag((s) => s.setBagStatus)
   const didOpenUnavailableAssets = useBag((s) => s.didOpenUnavailableAssets)
@@ -72,9 +74,6 @@ const Bag = () => {
   const toggleBag = useBag((s) => s.toggleBag)
   const setTotalEthPrice = useBag((s) => s.setTotalEthPrice)
   const setTotalUsdPrice = useBag((s) => s.setTotalUsdPrice)
-
-  const { address, balance: balanceInEth, provider } = useWalletBalance()
-  const isConnected = !!provider && !!address
 
   const { pathname } = useLocation()
   const isProfilePage = pathname.startsWith('/profile')
@@ -122,11 +121,6 @@ const Bag = () => {
 
     return { totalEthPrice, totalUsdPrice }
   }, [itemsInBag, fetchedPriceData])
-
-  const sufficientBalance = useMemo(() => {
-    const balance = parseEther(balanceInEth.toString())
-    return isConnected ? BigNumber.from(balance).gte(totalEthPrice) : true
-  }, [balanceInEth, totalEthPrice, isConnected])
 
   const purchaseAssets = async (routingData: RouteResponse) => {
     if (!provider || !routingData) return
@@ -276,13 +270,14 @@ const Bag = () => {
                 <ScrollingIndicator show={userCanScroll && scrollProgress < 100} />
                 {hasAssetsToShow && !isProfilePage && (
                   <BagFooter
-                    sufficientBalance={sufficientBalance}
-                    isConnected={isConnected}
                     totalEthPrice={totalEthPrice}
                     totalUsdPrice={totalUsdPrice}
                     bagStatus={bagStatus}
                     fetchAssets={fetchAssets}
-                    assetsAreInReview={itemsInBag.some((item) => item.status === BagItemStatus.REVIEWING_PRICE_CHANGE)}
+                    eventProperties={{
+                      usd_value: totalUsdPrice,
+                      ...formatAssetEventProperties(itemsInBag.map((item) => item.asset)),
+                    }}
                   />
                 )}
                 {isSellingAssets && isProfilePage && (

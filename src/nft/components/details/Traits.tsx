@@ -1,3 +1,4 @@
+import { Trait } from 'nft/hooks'
 import qs from 'query-string'
 
 import { badge } from '../../css/common.css'
@@ -5,12 +6,7 @@ import { Box } from '../Box'
 import { Column } from '../Flex'
 import * as styles from './Traits.css'
 
-interface TraitProps {
-  label: string
-  value: string
-}
-
-const Trait: React.FC<TraitProps> = ({ label, value }: TraitProps) => (
+const TraitRow: React.FC<Trait> = ({ trait_type, trait_value }: Trait) => (
   <Column backgroundColor="backgroundSurface" padding="16" gap="4" borderRadius="12">
     <Box
       as="span"
@@ -22,7 +18,7 @@ const Trait: React.FC<TraitProps> = ({ label, value }: TraitProps) => (
       style={{ textTransform: 'uppercase' }}
       maxWidth={{ sm: '120', md: '160' }}
     >
-      {label}
+      {trait_type}
     </Box>
 
     <Box
@@ -35,27 +31,18 @@ const Trait: React.FC<TraitProps> = ({ label, value }: TraitProps) => (
       textOverflow="ellipsis"
       maxWidth={{ sm: '120', md: '160' }}
     >
-      {value}
+      {trait_value}
     </Box>
   </Column>
 )
 
-export const Traits = ({
-  traits,
-  collectionAddress,
-}: {
-  traits: {
-    value: string
-    trait_type: string
-  }[]
-  collectionAddress: string
-}) => (
+export const Traits = ({ traits, collectionAddress }: { traits: Trait[]; collectionAddress: string }) => (
   <div className={styles.grid}>
     {traits.length === 0
       ? 'No traits'
       : traits.map((item) => {
           const params = qs.stringify(
-            { traits: [`("${item.trait_type}","${item.value}")`] },
+            { traits: [`("${item.trait_type}","${item.trait_value}")`] },
             {
               arrayFormat: 'comma',
             }
@@ -63,11 +50,11 @@ export const Traits = ({
 
           return (
             <a
-              key={`${item.trait_type}-${item.value}`}
+              key={`${item.trait_type}-${item.trait_value}`}
               href={`#/nfts/collection/${collectionAddress}?${params}`}
               style={{ textDecoration: 'none' }}
             >
-              <Trait label={item.trait_type} value={item.value} />
+              <TraitRow trait_type={item.trait_type} trait_value={item.trait_value} />
             </a>
           )
         })}

@@ -1,4 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, PageName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
 import clsx from 'clsx'
 import { MouseoverTooltip } from 'components/Tooltip/index'
 import useENSName from 'hooks/useENSName'
@@ -131,6 +134,15 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const [isSelected, setSelected] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const { account: address, provider } = useWeb3React()
+
+  const trace = useTrace({ page: PageName.NFT_DETAILS_PAGE })
+
+  const eventProperties = {
+    collection_address: asset.address,
+    token_id: asset.tokenId,
+    token_type: asset.tokenType,
+    ...trace,
+  }
 
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
@@ -394,7 +406,10 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 onClick={() => {
                   if (isSelected) {
                     removeAssetsFromBag([asset])
-                  } else addAssetsToBag([asset])
+                  } else {
+                    addAssetsToBag([asset])
+                    sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
+                  }
                   setSelected((x) => !x)
                 }}
               >

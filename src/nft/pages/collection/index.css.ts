@@ -1,6 +1,12 @@
 import { style } from '@vanilla-extract/css'
+import {
+  MAX_WIDTH_MEDIA_BREAKPOINT,
+  MOBILE_MEDIA_BREAKPOINT,
+  SMALL_MEDIA_BREAKPOINT,
+} from 'components/Tokens/constants'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
+import { css } from 'styled-components/macro'
 
 import { sprinkles, vars } from '../../css/sprinkles.css'
 
@@ -60,3 +66,25 @@ export const noCollectionAssets = sprinkles({
   justifyContent: 'center',
   marginTop: '40',
 })
+
+export const ScreenBreakpointsPaddings = css`
+  @media screen and (min-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+
+  @media screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  @media screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  @media screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+`
