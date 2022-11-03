@@ -1,13 +1,20 @@
-import graphql from 'babel-plugin-relay/macro'
+import { gql, useQuery } from '@apollo/client'
 import { parseEther } from 'ethers/lib/utils'
 import { GenieAsset, Rarity, SellOrder } from 'nft/types'
-import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 
-import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
-import { AssetQuery, NftAssetsFilterInput, NftAssetSortableField } from './__generated__/AssetQuery.graphql'
+import { NftAssetsFilterInput, NftAssetSortableField } from '../__generated__/types-and-hooks'
 
-const assetPaginationQuery = graphql`
-  fragment AssetQuery_nftAssets on Query @refetchable(queryName: "AssetPaginationQuery") {
+const assetQuery = gql`
+  query AssetQuery(
+    $address: String!
+    $orderBy: NftAssetSortableField
+    $asc: Boolean
+    $filter: NftAssetsFilterInput
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+  ) {
     nftAssets(
       address: $address
       orderBy: $orderBy
@@ -17,7 +24,7 @@ const assetPaginationQuery = graphql`
       after: $after
       last: $last
       before: $before
-    ) @connection(key: "AssetQuery_nftAssets") {
+    ) {
       edges {
         node {
           id
@@ -88,22 +95,13 @@ const assetPaginationQuery = graphql`
           metadataUrl
         }
       }
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
     }
-  }
-`
-
-const assetQuery = graphql`
-  query AssetQuery(
-    $address: String!
-    $orderBy: NftAssetSortableField
-    $asc: Boolean
-    $filter: NftAssetsFilterInput
-    $first: Int
-    $after: String
-    $last: Int
-    $before: String
-  ) {
-    ...AssetQuery_nftAssets
   }
 `
 
@@ -117,22 +115,30 @@ export function useAssetsQuery(
   last?: number,
   before?: string
 ) {
-  const queryData = useLazyLoadQuery<AssetQuery>(assetQuery, {
-    address,
-    orderBy,
-    asc,
-    filter,
-    first,
-    after,
-    last,
-    before,
+  const { loading, data, fetchMore } = useQuery(assetQuery, {
+    variables: {
+      address,
+      orderBy,
+      asc,
+      filter,
+      first,
+      after,
+      last,
+      before,
+    },
+    pollInterval: 999,
   })
-  const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<AssetPaginationQuery, any>(
-    assetPaginationQuery,
-    queryData
-  )
 
-  const assets: GenieAsset[] = data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
+  const loadMore = () =>
+    fetchMore({
+      variables: {
+        after: data?.nftAssets?.pageInfo?.endCursor,
+      },
+    })
+
+  const hasNext = data?.nftAssets?.pageInfo?.hasNextPage
+
+  const assets: GenieAsset[] = data?.nftAssets?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node
     const ethPrice = parseEther(
       asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
@@ -186,5 +192,5 @@ export function useAssetsQuery(
       metadataUrl: asset.metadataUrl,
     }
   })
-  return { assets, hasNext, isLoadingNext, loadNext }
+  return { assets, loading, loadMore, hasNext }
 }

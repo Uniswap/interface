@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { loadingAnimation } from 'components/Loader/styled'
 import { parseEther } from 'ethers/lib/utils'
 import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
-import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/nft/__generated__/AssetQuery.graphql'
+import { NftAssetTraitInput, NftMarketplace } from 'graphql/data/__generated__/types-and-hooks'
 import { useAssetsQuery } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
@@ -244,9 +244,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   )
   const {
     assets: nftQueryAssets,
-    loadNext,
+    loading,
+    loadMore,
     hasNext,
-    isLoadingNext,
   } = useAssetsQuery(
     isNftGraphQl ? contractAddress : '',
     SortByQueries[sortBy].field,
@@ -274,18 +274,14 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const isMobile = useIsMobile()
 
   const collectionNfts = useMemo(() => {
-    if (
-      (isNftGraphQl && !nftQueryAssets && !isLoadingNext) ||
-      (!isNftGraphQl && !collectionAssets) ||
-      !AssetsFetchSuccess
-    )
+    if ((isNftGraphQl && !nftQueryAssets && !loading) || (!isNftGraphQl && !collectionAssets) || !AssetsFetchSuccess)
       return undefined
 
     return isNftGraphQl ? nftQueryAssets : collectionAssets?.pages.flat()
-  }, [AssetsFetchSuccess, collectionAssets, isLoadingNext, isNftGraphQl, nftQueryAssets])
+  }, [AssetsFetchSuccess, collectionAssets, loading, isNftGraphQl, nftQueryAssets])
 
-  const wrappedLoadingState = isNftGraphQl ? isLoadingNext : isLoading
-  const wrappedHasNext = isNftGraphQl ? hasNext : hasNextPage ?? false
+  const wrappedLoadingState = isNftGraphQl ? loading : isLoading
+  const wrappedHasNext = isNftGraphQl ? hasNext : hasNextPage ?? false //todo
 
   useEffect(() => {
     setIsCollectionNftsLoading(wrappedLoadingState)
@@ -530,7 +526,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
         </Box>
       </AnimatedBox>
       <InfiniteScroll
-        next={() => (isNftGraphQl ? loadNext(DEFAULT_ASSET_QUERY_AMOUNT) : fetchNextPage())}
+        next={() => (isNftGraphQl ? loadMore() : fetchNextPage())}
         hasMore={wrappedHasNext}
         loader={wrappedHasNext && hasNfts ? loadingAssets : null}
         dataLength={collectionNfts?.length ?? 0}
