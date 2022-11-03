@@ -98,18 +98,19 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
   const collection = asset?.collection
   const ethPrice = parseEther(asset?.listings?.edges[0].node.price.value?.toString() ?? '0').toString()
 
-  // asset?.listings?.edges.map((listingNode) => {
-  //   return {
-  //     ...listingNode.node,
-  //     protocolParameters: listingNode.node.protocolParameters
-  //       ? JSON.parse(listingNode.node.protocolParameters.toString())
-  //       : undefined,
-  //   } as SellOrder
-  // })
+  asset?.listings?.edges.map((listingNode) => {
+    return {
+      ...listingNode.node,
+      protocolParameters: listingNode.node.protocolParameters
+        ? JSON.parse(listingNode.node.protocolParameters.toString())
+        : undefined,
+    } as SellOrder
+  })
 
-  // asset?.traits?.map((trait) => {
-  //   return { trait_type: trait.name ?? '', value: trait.value ?? '' } as Trait
-  // }),
+  asset?.traits?.map((trait) => {
+    // @ts-ignore
+    return { trait_type: newTrait.name ?? '', value: newTrait.value ?? '' } as Trait
+  })
 
   return [
     {
