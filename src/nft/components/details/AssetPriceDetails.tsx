@@ -1,8 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
+import { PageName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
-import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
@@ -202,7 +204,9 @@ const OwnerInformationContainer = styled.div`
 
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = listing ? new Date(listing.orderClosingDate) : undefined
+  const expirationDate = listing
+    ? new Date((listing as Deprecated_SellOrder).orderClosingDate ?? (listing as SellOrder).endAt)
+    : undefined
   const USDPrice = useUsdPrice(asset)
 
   const navigate = useNavigate()
@@ -286,6 +290,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate =
     cheapestOrder && cheapestOrder?.orderClosingDate ? new Date(cheapestOrder.orderClosingDate) : undefined
+
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
@@ -295,6 +300,14 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const USDPrice = useUsdPrice(asset)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
   const [, setCopied] = useCopyClipboard()
+
+  const trace = useTrace({ page: PageName.NFT_DETAILS_PAGE })
+  const eventProperties = {
+    collection_address: asset.address,
+    token_id: asset.tokenId,
+    token_type: asset.tokenType,
+    ...trace,
+  }
 
   const { quantity, assetInBag } = useMemo(() => {
     return {
@@ -357,7 +370,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             )}
           </PriceRow>
           {expirationDate && <Tertiary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</Tertiary>}
-          <div style={{ position: 'relative' }}>
+          <div>
             {!isErc1555 || !assetInBag ? (
               <BuyNowButtonContainer>
                 <BuyNowButton

@@ -15,6 +15,8 @@ export const formatEth = (price: number) => {
     return `${Math.round(price / 1000000)}M`
   } else if (price > 1000) {
     return `${Math.round(price / 1000)}K`
+  } else if (price < 0.001) {
+    return '<0.001'
   } else {
     return `${Math.round(price * 100 + Number.EPSILON) / 100}`
   }

@@ -47,12 +47,6 @@ const TraitType = styled.div`
   line-height: 12px;
   white-space: nowrap;
   width: 100%;
-
-  display: inline-block;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  width: calc(99%); // https://stackoverflow.com/questions/17779293/css-text-overflow-ellipsis-not-working
 `
 
 const TraitValue = styled.div`
@@ -61,11 +55,6 @@ const TraitValue = styled.div`
   line-height: 24px;
   margin-top: 4px;
   display: inline-block;
-
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  width: calc(99%); // https://stackoverflow.com/questions/17779293/css-text-overflow-ellipsis-not-working
 `
 
 const GridItem = ({ trait: { trait_type, value }, collectionAddress }: { trait: Trait; collectionAddress: string }) => {

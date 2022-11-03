@@ -1,14 +1,18 @@
+import { PageName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
 import Resource from 'components/Tokens/TokenDetails/Resource'
-import { MouseoverTooltip } from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip/index'
 import { Box } from 'nft/components/Box'
 import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
+import { caption } from 'nft/css/common.css'
+import { useTimeout } from 'nft/hooks/useTimeout'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
 import { ActivityEventResponse, ActivityEventType } from 'nft/types'
-import { CollectionInfoForAsset, GenieAsset, GenieCollection } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, GenieCollection, SellOrder } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'
@@ -243,6 +247,27 @@ const initialFilterState = {
   [ActivityEventType.Transfer]: false,
   [ActivityEventType.CancelListing]: false,
 }
+const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
+
+const CountdownTimer = ({ sellOrder }: { sellOrder: Deprecated_SellOrder | SellOrder }) => {
+  const { date, expires } = useMemo(() => {
+    const date = new Date((sellOrder as Deprecated_SellOrder).orderClosingDate ?? (sellOrder as SellOrder).endAt)
+    return {
+      date,
+      expires: formatter.format(date),
+    }
+  }, [sellOrder])
+  const [days, hours, minutes, seconds] = useTimeout(date)
+
+  return (
+    <MouseoverTooltip text={<Box fontSize="12">Expires {expires}</Box>}>
+      <Box as="span" fontWeight="normal" className={caption} color="textSecondary">
+        Expires: {days !== 0 ? `${days} days` : ''} {hours !== 0 ? `${hours} hours` : ''} {minutes} minutes {seconds}{' '}
+        seconds
+      </Box>
+    </MouseoverTooltip>
+  )
+}
 
 const AssetView = ({
   mediaType,
@@ -282,11 +307,13 @@ interface AssetDetailsProps {
 export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetailsProps) => {
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
 
+  const trace = useTrace({ page: PageName.NFT_DETAILS_PAGE })
+
   const { rarityProvider } = useMemo(
     () =>
       asset.rarity
         ? {
-            rarityProvider: asset.rarity.providers.find(
+            rarityProvider: asset?.rarity?.providers?.find(
               ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
             ),
           }
@@ -295,9 +322,9 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
   )
 
   const assetMediaType = useMemo(() => {
-    if (isAudio(asset.animationUrl)) {
+    if (isAudio(asset.animationUrl ?? '')) {
       return MediaType.Audio
-    } else if (isVideo(asset.animationUrl)) {
+    } else if (isVideo(asset.animationUrl ?? '')) {
       return MediaType.Video
     }
     return MediaType.Image

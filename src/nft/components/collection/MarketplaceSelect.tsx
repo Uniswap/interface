@@ -1,6 +1,7 @@
 import { sendAnalyticsEvent } from 'analytics'
 import { EventName, FilterTypes } from 'analytics/constants'
 import clsx from 'clsx'
+import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { Column, Row } from 'nft/components/Flex'
@@ -9,16 +10,18 @@ import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
-import { FormEvent, useEffect, useReducer, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useReducer, useState } from 'react'
 
 import { Checkbox } from '../layout/Checkbox'
 
-export const marketPlaceItems = {
+export const MARKETPLACE_ITEMS = {
   looksrare: 'LooksRare',
   nft20: 'NFT20',
   nftx: 'NFTX',
   opensea: 'OpenSea',
   x2y2: 'X2Y2',
+  cryptopunks: 'LarvaLabs',
+  sudoswap: 'SudoSwap',
 }
 
 const MarketplaceItem = ({
@@ -84,6 +87,8 @@ const MarketplaceItem = ({
   )
 }
 
+const GRAPHQL_MARKETS = ['cryptopunks', 'sudoswap']
+
 export const MarketplaceSelect = () => {
   const {
     addMarket,
@@ -99,6 +104,23 @@ export const MarketplaceSelect = () => {
 
   const [isOpen, setOpen] = useState(!!selectedMarkets.length)
   const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
+  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
+
+  const MarketplaceItems = useMemo(
+    () =>
+      Object.entries(MARKETPLACE_ITEMS)
+        .filter(([value]) => isNftGraphQl || !GRAPHQL_MARKETS.includes(value))
+        .map(([value, title]) => (
+          <MarketplaceItem
+            key={value}
+            title={title}
+            value={value}
+            count={marketCount?.[value] || 0}
+            {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
+          />
+        )),
+    [addMarket, isNftGraphQl, marketCount, removeMarket, selectedMarkets]
+  )
 
   return (
     <>
@@ -141,15 +163,7 @@ export const MarketplaceSelect = () => {
           </Box>
         </Box>
         <Column className={styles.filterDropDowns} paddingBottom="8" paddingLeft="0">
-          {Object.entries(marketPlaceItems).map(([value, title]) => (
-            <MarketplaceItem
-              key={value}
-              title={title}
-              value={value}
-              count={marketCount?.[value] || 0}
-              {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
-            />
-          ))}
+          {MarketplaceItems}
         </Column>
       </Box>
     </>

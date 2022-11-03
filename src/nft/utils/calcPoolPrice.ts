@@ -1,12 +1,27 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BagItem, BagItemStatus, GenieAsset, Markets, UpdatedGenieAsset } from 'nft/types'
+import {
+  BagItem,
+  BagItemStatus,
+  Deprecated_SellOrder,
+  GenieAsset,
+  Markets,
+  SellOrder,
+  UpdatedGenieAsset,
+} from 'nft/types'
 
+// TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
 export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   let amountToBuy: BigNumber = BigNumber.from(0)
   let marginalBuy: BigNumber = BigNumber.from(0)
-  const nft = asset.sellorders[0]
+  if (!asset.sellorders) return ''
+
+  const nft =
+    (asset.sellorders[0] as Deprecated_SellOrder).ammFeePercent === undefined
+      ? (asset.sellorders[0] as SellOrder).protocolParameters
+      : (asset.sellorders[0] as Deprecated_SellOrder)
+
   const decimals = BigNumber.from(1).mul(10).pow(18)
-  const ammFee = nft.ammFeePercent ? (100 + nft.ammFeePercent) * 100 : 110 * 100
+  const ammFee = nft.ammFeePercent ? (100 + (nft.ammFeePercent as number)) * 100 : 110 * 100
 
   if (asset.marketplace === Markets.NFTX) {
     const sixteenmul = BigNumber.from(1).mul(10).pow(16)
@@ -26,8 +41,32 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
     marginalBuy = marginalBuy.mul(decimals)
   }
 
-  const ethReserves = BigNumber.from(nft.ethReserves?.toLocaleString('fullwide', { useGrouping: false }))
-  const tokenReserves = BigNumber.from(nft.tokenReserves?.toLocaleString('fullwide', { useGrouping: false }))
+  const ethReserves = BigNumber.from(
+    (
+      (nft.ethReserves as number) ??
+      (
+        nft as Record<
+          string,
+          {
+            ethReserves: number
+          }
+        >
+      ).poolMetadata.ethReserves
+    )?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
+  )
+  const tokenReserves = BigNumber.from(
+    (
+      (nft.tokenReserves as number) ??
+      (
+        nft as Record<
+          string,
+          {
+            tokenReserves: number
+          }
+        >
+      ).poolMetadata.tokenReserves
+    )?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
+  )
   const numerator = ethReserves.mul(amountToBuy).mul(1000)
   const denominator = tokenReserves.sub(amountToBuy).mul(997)
 
@@ -71,7 +110,7 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
   const possibleMarkets = itemsInBag.reduce((markets, item) => {
     const asset = item.asset
     const market = asset.marketplace
-    if (!isPooledMarket(market)) return markets
+    if (!market || !isPooledMarket(market)) return markets
 
     const key = asset.address + asset.marketplace
     if (Object.keys(markets).includes(key)) {
@@ -85,8 +124,7 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
   const updatedPriceMarkets = itemsInBag.reduce((markets, item) => {
     const asset = item.asset
     const market = asset.marketplace
-    if (!asset.updatedPriceInfo) return markets
-    if (!isPooledMarket(market)) return markets
+    if (!market || !asset.updatedPriceInfo || !isPooledMarket(market)) return markets
 
     const key = asset.address + asset.marketplace
     if (Object.keys(markets).includes(key)) {
@@ -103,18 +141,19 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
   }, {} as { [key: string]: string })
 
   itemsInBag.forEach((item) => {
-    if (isPooledMarket(item.asset.marketplace)) {
-      const asset = item.asset
-      const isPriceChangedAsset = !!asset.updatedPriceInfo
+    if (item.asset.marketplace)
+      if (isPooledMarket(item.asset.marketplace)) {
+        const asset = item.asset
+        const isPriceChangedAsset = !!asset.updatedPriceInfo
 
-      const calculatedPrice = isPriceChangedAsset
-        ? calculatedAvgPoolPrices[asset.address + asset.marketplace]
-        : calcPoolPrice(asset, possibleMarkets[asset.address + asset.marketplace].indexOf(item.asset.tokenId))
+        const calculatedPrice = isPriceChangedAsset
+          ? calculatedAvgPoolPrices[asset.address + asset.marketplace]
+          : calcPoolPrice(asset, possibleMarkets[asset.address + asset.marketplace].indexOf(item.asset.tokenId))
 
-      if (isPriceChangedAsset && item.asset.updatedPriceInfo)
-        item.asset.updatedPriceInfo.ETHPrice = item.asset.updatedPriceInfo.basePrice = calculatedPrice
-      else item.asset.priceInfo.ETHPrice = calculatedPrice
-    }
+        if (isPriceChangedAsset && item.asset.updatedPriceInfo)
+          item.asset.updatedPriceInfo.ETHPrice = item.asset.updatedPriceInfo.basePrice = calculatedPrice
+        else item.asset.priceInfo.ETHPrice = calculatedPrice
+      }
   })
 
   return itemsInBag

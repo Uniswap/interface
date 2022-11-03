@@ -18,7 +18,7 @@ export const fetchPrice = async (currency: Currency = Currency.ETH): Promise<num
   }
 }
 
-export function useUsdPrice(asset: GenieAsset): string {
+export function useUsdPrice(asset: GenieAsset): string | undefined {
   const { data: fetchedPriceData } = useQuery(['fetchPrice', {}], () => fetchPrice(), {})
 
   return fetchedPriceData && asset?.priceInfo?.ETHPrice

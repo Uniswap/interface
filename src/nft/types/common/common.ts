@@ -1,4 +1,4 @@
-import { SellOrder } from '../sell'
+import { Deprecated_SellOrder, SellOrder } from '../sell'
 
 export interface OpenSeaCollection {
   name: string
@@ -51,7 +51,7 @@ export enum TokenType {
 
 export interface PriceInfo {
   ETHPrice: string
-  USDPrice: string
+  USDPrice?: string
   baseAsset: string
   baseDecimals: string
   basePrice: string
@@ -65,7 +65,7 @@ export interface AssetSellOrder {
 
 export interface Rarity {
   primaryProvider: string
-  providers: { provider: string; rank: number; url?: string; score: number }[]
+  providers?: { provider: string; rank?: number; url?: string; score?: number }[]
 }
 
 export interface Trait {
@@ -80,16 +80,16 @@ export interface GenieAsset {
   id?: string // This would be a random id created and assigned by front end
   address: string
   notForSale: boolean
-  collectionName: string
-  collectionSymbol: string
-  imageUrl: string
-  animationUrl: string
-  marketplace: Markets
-  name: string
+  collectionName?: string
+  collectionSymbol?: string
+  imageUrl?: string
+  animationUrl?: string
+  marketplace?: Markets
+  name?: string
   priceInfo: PriceInfo
-  susFlag: boolean
-  sellorders: SellOrder[]
-  smallImageUrl: string
+  susFlag?: boolean
+  sellorders?: Deprecated_SellOrder[] | SellOrder[] // TODO remove OldSellOrder when full migration to GraphQL is complete
+  smallImageUrl?: string
   tokenId: string
   tokenType: TokenType
   totalCount?: number // The totalCount from the query to /assets
@@ -102,6 +102,7 @@ export interface GenieAsset {
   metadataUrl: string
   creator: {
     address: string
+    profile_img_url: string
   }
   traits?: {
     trait_type: string
@@ -114,36 +115,24 @@ export interface GenieAsset {
 }
 
 export interface GenieCollection {
-  collectionAddress: string
   address: string
-  indexingStatus: string
-  isVerified: boolean
-  name: string
-  description: string
-  standard: string
+  isVerified?: boolean
+  name?: string
+  description?: string
+  standard?: string
   bannerImageUrl?: string
-  floorPrice: number
-  stats: {
-    num_owners: number
-    floor_price: number
-    one_day_volume: number
-    one_day_change: number
-    one_day_floor_change: number
-    banner_image_url: string
-    total_supply: number
-    total_listings: number
-    total_volume: number
+  stats?: {
+    num_owners?: number
+    floor_price?: number
+    one_day_volume?: number
+    one_day_change?: number
+    one_day_floor_change?: number
+    banner_image_url?: string
+    total_supply?: number
+    total_listings?: number
+    total_volume?: number
   }
-  symbol: string
-  traits: {
-    trait_type: string
-    trait_value: string
-    trait_count: number
-    floorSellOrder: PriceInfo
-    floorPrice: number
-  }[]
-  numTraitsByAmount: { traitCount: number; numWithTrait: number }[]
-  indexingStats: { openSea: { successfulExecutionDate: string; lastRequestedAt: string } }
+  traits?: Record<string, Trait[]>
   marketplaceCount?: { marketplace: string; count: number }[]
   imageUrl: string
   twitterUrl?: string
