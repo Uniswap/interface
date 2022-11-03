@@ -12,7 +12,7 @@ export interface ListingWarning {
   message: string
 }
 
-export interface OldSellOrder {
+export interface Deprecated_SellOrder {
   assetId: string
   ethPrice: number
   basePrice: number
@@ -84,7 +84,7 @@ export interface WalletAsset {
   creatorPercentage: number
   listing_date: string
   date_acquired: string
-  sellOrders: OldSellOrder[]
+  sellOrders: Deprecated_SellOrder[]
   floor_sell_order_price: number
   // Used for creating new listings
   expirationTime?: number

@@ -1,5 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BagItem, BagItemStatus, GenieAsset, Markets, OldSellOrder, SellOrder, UpdatedGenieAsset } from 'nft/types'
+import {
+  BagItem,
+  BagItemStatus,
+  Deprecated_SellOrder,
+  GenieAsset,
+  Markets,
+  SellOrder,
+  UpdatedGenieAsset,
+} from 'nft/types'
 
 // TODO: a lot of the below typecasting logic can be simplified when GraphQL migration is complete
 export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
@@ -8,9 +16,9 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   if (!asset.sellorders) return ''
 
   const nft =
-    (asset.sellorders[0] as OldSellOrder).ammFeePercent === undefined
+    (asset.sellorders[0] as Deprecated_SellOrder).ammFeePercent === undefined
       ? (asset.sellorders[0] as SellOrder).protocolParameters
-      : (asset.sellorders[0] as OldSellOrder)
+      : (asset.sellorders[0] as Deprecated_SellOrder)
 
   const decimals = BigNumber.from(1).mul(10).pow(18)
   const ammFee = nft.ammFeePercent ? ((100 + (nft.ammFeePercent as number)) as number) * 100 : 110 * 100

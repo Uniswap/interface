@@ -16,7 +16,7 @@ import { badge, bodySmall, caption, headlineMedium, subhead } from 'nft/css/comm
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
-import { CollectionInfoForAsset, GenieAsset, OldSellOrder, SellOrder } from 'nft/types'
+import { CollectionInfoForAsset, Deprecated_SellOrder, GenieAsset, SellOrder } from 'nft/types'
 import { useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -60,9 +60,9 @@ const AudioPlayer = ({
 
 const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
 
-const CountdownTimer = ({ sellOrder }: { sellOrder: OldSellOrder | SellOrder }) => {
+const CountdownTimer = ({ sellOrder }: { sellOrder: Deprecated_SellOrder | SellOrder }) => {
   const { date, expires } = useMemo(() => {
-    const date = new Date((sellOrder as OldSellOrder).orderClosingDate ?? (sellOrder as SellOrder).endAt)
+    const date = new Date((sellOrder as Deprecated_SellOrder).orderClosingDate ?? (sellOrder as SellOrder).endAt)
     return {
       date,
       expires: formatter.format(date),
@@ -387,7 +387,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                     </Box>
                   )}
                 </Row>
-                {(asset.sellorders?.[0] as OldSellOrder).orderClosingDate ||
+                {(asset.sellorders?.[0] as Deprecated_SellOrder).orderClosingDate ||
                 (asset.sellorders?.[0] as SellOrder).endAt ? (
                   <CountdownTimer sellOrder={asset.sellorders[0]} />
                 ) : null}

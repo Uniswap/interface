@@ -1,6 +1,6 @@
 import { Trait } from 'nft/hooks/useCollectionFilters'
 
-import { OldSellOrder, SellOrder } from '../sell'
+import { Deprecated_SellOrder, SellOrder } from '../sell'
 
 export interface OpenSeaCollection {
   name: string
@@ -89,7 +89,7 @@ export interface GenieAsset {
   name?: string
   priceInfo: PriceInfo
   susFlag?: boolean
-  sellorders?: OldSellOrder[] | SellOrder[] // TODO remove OldSellOrder when full migration to GraphQL is complete
+  sellorders?: Deprecated_SellOrder[] | SellOrder[] // TODO remove OldSellOrder when full migration to GraphQL is complete
   smallImageUrl?: string
   tokenId: string
   tokenType: TokenType
