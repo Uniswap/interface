@@ -1,4 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, PageName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, OldSellOrder, SellOrder, TokenType } from 'nft/types'
@@ -200,6 +203,14 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const USDPrice = useUsdPrice(asset)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
 
+  const trace = useTrace({ page: PageName.NFT_DETAILS_PAGE })
+  const eventProperties = {
+    collection_address: asset.address,
+    token_id: asset.tokenId,
+    token_type: asset.tokenType,
+    ...trace,
+  }
+
   const { quantity, assetInBag } = useMemo(() => {
     return {
       quantity: itemsInBag.filter(
@@ -246,7 +257,10 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               assetInBag={assetInBag}
               margin={true}
               useAccentColor={true}
-              onClick={() => (assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset]))}
+              onClick={() => {
+                assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+                !assetInBag && sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
+              }}
             >
               <ThemedText.SubHeader lineHeight={'20px'}>{assetInBag ? 'Remove' : 'Buy Now'}</ThemedText.SubHeader>
             </BuyNowButton>
