@@ -1,33 +1,16 @@
-import { graphql } from 'babel-plugin-relay/macro'
 import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
-import { useLazyLoadQuery } from 'react-relay'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
-import { SearchPopularTokensQuery } from 'src/components/explore/search/__generated__/SearchPopularTokensQuery.graphql'
 import { Separator } from 'src/components/layout/Separator'
 import { EMPTY_ARRAY } from 'src/constants/misc'
+import { useSearchPopularTokensQuery } from 'src/data/__generated__/types-and-hooks'
 import { SearchResultType, TokenSearchResult } from 'src/features/explore/searchHistorySlice'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
 export function SearchPopularTokens() {
   // Load popular tokens by top trading volume
-  const data = useLazyLoadQuery<SearchPopularTokensQuery>(
-    graphql`
-      query SearchPopularTokensQuery {
-        topTokenProjects(orderBy: VOLUME, page: 1, pageSize: 3) {
-          logoUrl
-          tokens {
-            chain
-            address
-            name
-            symbol
-          }
-        }
-      }
-    `,
-    {}
-  )
+  const { data } = useSearchPopularTokensQuery()
 
   const popularTokens = useMemo(() => {
     if (!data || !data.topTokenProjects) return EMPTY_ARRAY

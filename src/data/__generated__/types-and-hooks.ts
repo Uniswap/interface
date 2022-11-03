@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import { gql } from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -854,6 +854,18 @@ export type TopTokensQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TopTokensQuery = { __typename?: 'Query', topTokenProjects?: Array<{ __typename?: 'TokenProject', logoUrl?: string | null, name?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }> } | null> | null };
 
+export type SearchPopularTokensQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SearchPopularTokensQuery = { __typename?: 'Query', topTokenProjects?: Array<{ __typename?: 'TokenProject', logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, name?: string | null, symbol?: string | null }> } | null> | null };
+
+export type SearchResultsQueryVariables = Exact<{
+  searchQuery: Scalars['String'];
+}>;
+
+
+export type SearchResultsQuery = { __typename?: 'Query', searchTokenProjects?: Array<{ __typename?: 'TokenProject', logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, name?: string | null, symbol?: string | null }> } | null> | null };
+
 
 export const PortfolioBalanceDocument = gql`
     query PortfolioBalance($owner: String!) {
@@ -1116,3 +1128,84 @@ export function useTopTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type TopTokensQueryHookResult = ReturnType<typeof useTopTokensQuery>;
 export type TopTokensLazyQueryHookResult = ReturnType<typeof useTopTokensLazyQuery>;
 export type TopTokensQueryResult = Apollo.QueryResult<TopTokensQuery, TopTokensQueryVariables>;
+export const SearchPopularTokensDocument = gql`
+    query SearchPopularTokens {
+  topTokenProjects(orderBy: VOLUME, page: 1, pageSize: 3) {
+    logoUrl
+    tokens {
+      chain
+      address
+      name
+      symbol
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchPopularTokensQuery__
+ *
+ * To run a query within a React component, call `useSearchPopularTokensQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchPopularTokensQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchPopularTokensQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSearchPopularTokensQuery(baseOptions?: Apollo.QueryHookOptions<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>(SearchPopularTokensDocument, options);
+      }
+export function useSearchPopularTokensLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>(SearchPopularTokensDocument, options);
+        }
+export type SearchPopularTokensQueryHookResult = ReturnType<typeof useSearchPopularTokensQuery>;
+export type SearchPopularTokensLazyQueryHookResult = ReturnType<typeof useSearchPopularTokensLazyQuery>;
+export type SearchPopularTokensQueryResult = Apollo.QueryResult<SearchPopularTokensQuery, SearchPopularTokensQueryVariables>;
+export const SearchResultsDocument = gql`
+    query SearchResults($searchQuery: String!) {
+  searchTokenProjects(searchQuery: $searchQuery) {
+    logoUrl
+    tokens {
+      chain
+      address
+      name
+      symbol
+    }
+  }
+}
+    `;
+
+/**
+ * __useSearchResultsQuery__
+ *
+ * To run a query within a React component, call `useSearchResultsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchResultsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchResultsQuery({
+ *   variables: {
+ *      searchQuery: // value for 'searchQuery'
+ *   },
+ * });
+ */
+export function useSearchResultsQuery(baseOptions: Apollo.QueryHookOptions<SearchResultsQuery, SearchResultsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchResultsQuery, SearchResultsQueryVariables>(SearchResultsDocument, options);
+      }
+export function useSearchResultsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchResultsQuery, SearchResultsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchResultsQuery, SearchResultsQueryVariables>(SearchResultsDocument, options);
+        }
+export type SearchResultsQueryHookResult = ReturnType<typeof useSearchResultsQuery>;
+export type SearchResultsLazyQueryHookResult = ReturnType<typeof useSearchResultsLazyQuery>;
+export type SearchResultsQueryResult = Apollo.QueryResult<SearchResultsQuery, SearchResultsQueryVariables>;

@@ -85,4 +85,26 @@ query TopTokens {
   }
 }
 
+query SearchPopularTokens {
+  topTokenProjects(orderBy: VOLUME, page: 1, pageSize: 3) {
+    logoUrl
+    tokens {
+      chain
+      address
+      name
+      symbol
+    }
+  }
+}
 
+query SearchResults($searchQuery: String!) {
+  searchTokenProjects(searchQuery: $searchQuery) {
+    logoUrl
+    tokens {
+      chain
+      address
+      name
+      symbol
+    }
+  }
+}

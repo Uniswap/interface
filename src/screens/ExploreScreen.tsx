@@ -149,7 +149,7 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
             <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} mx="md">
               <VirtualizedList>
                 <Box p="xxs" />
-                {searchQuery.length === 0 ? (
+                {debouncedSearchQuery.length === 0 ? (
                   <SearchEmptySection />
                 ) : (
                   <SearchResultsSection searchQuery={debouncedSearchQuery} />
