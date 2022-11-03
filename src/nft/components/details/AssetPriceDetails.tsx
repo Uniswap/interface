@@ -8,13 +8,39 @@ import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
 import { Upload } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 interface AssetPriceDetailsProps {
   asset: GenieAsset
   collection: CollectionInfoForAsset
 }
+
+const hoverState = css`
+  :hover::after {
+    border-radius: 12px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.stateOverlayHover};
+    z-index: 0;
+  }
+
+  :active::after {
+    border-radius: 12px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.stateOverlayPressed};
+    z-index: 0;
+  }
+`
 
 const Container = styled.div`
   width: 100%;
@@ -65,24 +91,16 @@ const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccen
   text-align: center;
   cursor: pointer;
 
-  &:hover {
-    background-color: ${({ theme }) => theme.stateOverlayHover};
-  }
+  ${hoverState}
+`
 
-  &:active {
-    background-color: ${({ theme, assetInBag }) => theme.stateOverlayPressed};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `background-color ${duration.medium} ${timing.ease}`};
+const BuyNowButtonContainer = styled.div`
+  position: relative;
 `
 
 const Erc1155BuyNowButton = styled.div`
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   width: 100%;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
@@ -93,7 +111,6 @@ const Erc1155BuyNowButton = styled.div`
   justify-content: space-between;
   overflow-x: hidden;
 `
-
 const Tertiary = styled(ThemedText.BodySecondary)`
   color: ${({ theme }) => theme.textTertiary};
 `
@@ -111,9 +128,10 @@ const Erc1155ChangeButton = styled(Erc1155BuyNowText)<{ remove: boolean }>`
   color: ${({ theme, remove }) => (remove ? theme.accentFailure : theme.accentAction)};
   cursor: pointer;
 
-  :hover {
-    background-color: ${({ theme, remove }) => (remove ? theme.accentFailure : theme.accentAction)};
-    color: ${({ theme }) => theme.textPrimary};
+  ${hoverState}
+
+  &:hover::after {
+    border-radius: 0px;
   }
 `
 
@@ -339,34 +357,44 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
             )}
           </PriceRow>
           {expirationDate && <Tertiary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</Tertiary>}
-          <div>
+          <div style={{ position: 'relative' }}>
             {!isErc1555 || !assetInBag ? (
-              <BuyNowButton
-                assetInBag={assetInBag}
-                margin={true}
-                useAccentColor={true}
-                onClick={() => {
-                  assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
-                  if (!assetInBag && !isErc1555 && !bagExpanded) {
-                    toggleBag()
-                  }
-                }}
-              >
-                <SubHeader lineHeight={'20px'}>
-                  <span>{assetInBag ? 'Remove' : 'Buy Now'}</span>
-                </SubHeader>
-              </BuyNowButton>
+              <BuyNowButtonContainer>
+                <BuyNowButton
+                  assetInBag={assetInBag}
+                  margin={true}
+                  useAccentColor={true}
+                  onClick={() => {
+                    assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+                    if (!assetInBag && !isErc1555 && !bagExpanded) {
+                      toggleBag()
+                    }
+                  }}
+                >
+                  <SubHeader lineHeight={'20px'}>
+                    <span>{assetInBag ? 'Remove' : 'Buy Now'}</span>
+                  </SubHeader>
+                </BuyNowButton>
+              </BuyNowButtonContainer>
             ) : (
               <Erc1155BuyNowButton>
-                <Erc1155ChangeButton remove={true} onClick={() => removeAssetsFromBag([asset])}>
-                  <MinusIcon width="20px" height="20px" />
-                </Erc1155ChangeButton>
-                <Erc1155BuyNowText>
-                  <ThemedText.SubHeader lineHeight={'20px'}>{quantity}</ThemedText.SubHeader>
-                </Erc1155BuyNowText>
-                <Erc1155ChangeButton remove={false} onClick={() => addAssetsToBag([asset])}>
-                  <PlusIcon width="20px" height="20px" />
-                </Erc1155ChangeButton>
+                <BuyNowButtonContainer>
+                  <Erc1155ChangeButton remove={true} onClick={() => removeAssetsFromBag([asset])}>
+                    <MinusIcon width="20px" height="20px" />
+                  </Erc1155ChangeButton>
+                </BuyNowButtonContainer>
+
+                <BuyNowButtonContainer>
+                  <Erc1155BuyNowText>
+                    <ThemedText.SubHeader lineHeight={'20px'}>{quantity}</ThemedText.SubHeader>
+                  </Erc1155BuyNowText>
+                </BuyNowButtonContainer>
+
+                <BuyNowButtonContainer>
+                  <Erc1155ChangeButton remove={false} onClick={() => addAssetsToBag([asset])}>
+                    <PlusIcon width="20px" height="20px" />
+                  </Erc1155ChangeButton>
+                </BuyNowButtonContainer>
               </Erc1155BuyNowButton>
             )}
           </div>
