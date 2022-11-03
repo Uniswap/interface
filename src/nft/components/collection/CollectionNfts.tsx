@@ -54,6 +54,8 @@ interface CollectionNftsProps {
 }
 
 const rarityStatusCache = new Map<string, boolean>()
+const nonRarityIcon = <NonRarityIcon width="20" height="20" viewBox="2 2 22 22" color={vars.color.blue400} />
+const rarityIcon = <RarityIcon width="20" height="20" viewBox="2 2 24 24" color={vars.color.blue400} />
 
 const ActionsContainer = styled.div`
   display: flex;
@@ -298,25 +300,25 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {
               displayText: 'Low to High',
               onClick: () => setSortBy(SortBy.LowToHigh),
-              icon: <NonRarityIcon width="20" height="20" viewBox="2 2 22 22" color={vars.color.blue400} />,
+              icon: nonRarityIcon,
               reverseIndex: 2,
             },
             {
               displayText: 'High to Low',
               onClick: () => setSortBy(SortBy.HighToLow),
-              icon: <NonRarityIcon width="20" height="20" viewBox="2 2 22 22" color={vars.color.blue400} />,
+              icon: nonRarityIcon,
               reverseIndex: 1,
             },
             {
               displayText: 'Rare to Common',
               onClick: () => setSortBy(SortBy.RareToCommon),
-              icon: <RarityIcon width="20" height="20" viewBox="2 2 24 24" color={vars.color.blue400} />,
+              icon: rarityIcon,
               reverseIndex: 4,
             },
             {
               displayText: 'Common to Rare',
               onClick: () => setSortBy(SortBy.CommonToRare),
-              icon: <RarityIcon width="20" height="20" viewBox="2 2 24 24" color={vars.color.blue400} />,
+              icon: rarityIcon,
               reverseIndex: 3,
             },
           ]
@@ -324,13 +326,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {
               displayText: 'Low to High',
               onClick: () => setSortBy(SortBy.LowToHigh),
-              icon: <NonRarityIcon width="20" height="20" viewBox="2 2 22 22" color={vars.color.blue400} />,
+              icon: nonRarityIcon,
               reverseIndex: 2,
             },
             {
               displayText: 'High to Low',
               onClick: () => setSortBy(SortBy.HighToLow),
-              icon: <NonRarityIcon width="20" height="20" viewBox="2 2 22 22" color={vars.color.blue400} />,
+              icon: nonRarityIcon,
               reverseIndex: 1,
             },
           ],

@@ -39,7 +39,7 @@ const SellModeButton = styled.button<{ active: boolean }>`
   gap: 8px;
   cursor: pointer;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
-  color: #fff;
+  color: ${({ theme }) => theme.textPrimary};
   border: none;
   outline: none;
   &:hover {

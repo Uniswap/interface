@@ -84,7 +84,7 @@ export const SortDropdown = ({
       >
         {!isCollectionStatsLoading && (
           <>
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="center" color="textPrimary">
               {!isOpen && reversable && (
                 <Row
                   onClick={(e) => {

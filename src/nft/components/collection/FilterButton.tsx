@@ -69,6 +69,7 @@ export const FilterButton = ({
           <FilterIcon
             style={{
               marginBottom: '-4px',
+              color: 'textPrimary',
               paddingRight: `${!isFiltersExpanded || showFilterBadge ? '6px' : '0px'}`,
             }}
           />
