@@ -75,3 +75,22 @@ it('formats USD token quantities prices correctly', () => {
   expect(formatNumber(0.0099, NumberType.FiatTokenQuantity)).toBe('<$0.01')
   expect(formatNumber(0, NumberType.FiatTokenQuantity)).toBe('$0.00')
 })
+
+it('formats Swap text input/output numbers correctly', () => {
+  expect(formatNumber(1234567.8901, NumberType.SwapTradeAmount)).toBe('1234570')
+  expect(formatNumber(765432.1, NumberType.SwapTradeAmount)).toBe('765432')
+
+  expect(formatNumber(7654.321, NumberType.SwapTradeAmount)).toBe('7654.32')
+  expect(formatNumber(765.4321, NumberType.SwapTradeAmount)).toBe('765.432')
+  expect(formatNumber(76.54321, NumberType.SwapTradeAmount)).toBe('76.5432')
+  expect(formatNumber(7.654321, NumberType.SwapTradeAmount)).toBe('7.65432')
+  expect(formatNumber(7.60000054321, NumberType.SwapTradeAmount)).toBe('7.60')
+  expect(formatNumber(7.6, NumberType.SwapTradeAmount)).toBe('7.60')
+  expect(formatNumber(7, NumberType.SwapTradeAmount)).toBe('7.00')
+
+  expect(formatNumber(0.987654321, NumberType.SwapTradeAmount)).toBe('0.98765')
+  expect(formatNumber(0.9, NumberType.SwapTradeAmount)).toBe('0.90')
+  expect(formatNumber(0.901000123, NumberType.SwapTradeAmount)).toBe('0.901')
+  expect(formatNumber(0.000000001, NumberType.SwapTradeAmount)).toBe('0.000000001')
+  expect(formatNumber(0, NumberType.SwapTradeAmount)).toBe('0')
+})

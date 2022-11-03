@@ -34,9 +34,9 @@ import {
 } from 'src/features/transactions/swap/utils'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { createTransactionId } from 'src/features/transactions/utils'
+import { formatCurrencyAmount, formatPrice, NumberType } from 'src/utils/format'
 import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'src/features/trm/hooks'
-import { formatPrice, NumberType } from 'src/utils/format'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -65,7 +65,6 @@ export function SwapForm({
     currencyBalances,
     exactCurrencyField,
     focusOnCurrencyField,
-    formattedDerivedValue,
     trade,
     wrapType,
   } = derivedSwapInfo
@@ -137,6 +136,13 @@ export function SwapForm({
   const rateUnitPrice = useUSDCPrice(showInverseRate ? price?.quoteCurrency : price?.baseCurrency)
   const showRate = !swapWarning && (trade.trade || swapDataRefreshing)
 
+  const derivedCurrencyField =
+    exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+  const formattedDerivedValue = formatCurrencyAmount(
+    currencyAmounts[derivedCurrencyField],
+    NumberType.SwapTradeAmount,
+    ''
+  )
   return (
     <>
       {showWarningModal && swapWarning?.title && (

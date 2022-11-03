@@ -33,6 +33,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
   const onSelectRecipient = createOnSelectRecipient(dispatch)
   const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
   const derivedTransferInfo = useDerivedTransferInfo(state)
+  const { isUSDInput, exactAmountToken, exactAmountUSD } = derivedTransferInfo
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
   const txRequest = useTransferTransactionRequest(derivedTransferInfo)
   const gasFeeInfo = useTransactionGasFee(
@@ -51,7 +52,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
       showUSDToggle
       derivedInfo={derivedTransferInfo}
       dispatch={dispatch}
-      exactValue={derivedTransferInfo.formattedAmounts[CurrencyField.INPUT]}
+      exactValue={isUSDInput ? exactAmountUSD : exactAmountToken}
       flowName={t('Send')}
       isUSDInput={derivedTransferInfo.isUSDInput}
       recipientSelector={

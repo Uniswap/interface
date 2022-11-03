@@ -54,9 +54,8 @@ export function TransferTokenForm({
   const {
     currencyAmounts,
     currencyBalances,
-    formattedAmounts,
     exactAmountToken,
-    exactAmountUSD = '',
+    exactAmountUSD,
     recipient,
     isUSDInput = false,
     currencyIn,
@@ -157,7 +156,7 @@ export function TransferTokenForm({
                 selection={inputSelection}
                 showSoftInputOnFocus={showNativeKeyboard}
                 usdValue={inputCurrencyUSDValue}
-                value={formattedAmounts[CurrencyField.INPUT]}
+                value={isUSDInput ? exactAmountUSD : exactAmountToken}
                 warnings={warnings}
                 onSelectionChange={
                   showNativeKeyboard ? undefined : (start, end) => setInputSelection({ start, end })
@@ -217,7 +216,7 @@ export function TransferTokenForm({
               resetSelection={resetSelection}
               selection={inputSelection}
               setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
-              value={formattedAmounts[CurrencyField.INPUT]}
+              value={isUSDInput ? exactAmountUSD : exactAmountToken}
             />
           )}
           <Button

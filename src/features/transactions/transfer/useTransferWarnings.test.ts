@@ -13,7 +13,7 @@ const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
 const emptyTransferInfo: Pick<
   DerivedTransferInfo,
-  'currencyTypes' | 'currencies' | 'formattedAmounts' | 'exactAmountToken' | 'exactCurrencyField'
+  'currencyTypes' | 'currencies' | 'exactAmountToken' | 'exactCurrencyField' | 'exactAmountUSD'
 > = {
   currencyTypes: {
     [CurrencyField.INPUT]: AssetType.Currency,
@@ -21,11 +21,9 @@ const emptyTransferInfo: Pick<
   currencies: {
     [CurrencyField.INPUT]: undefined,
   },
-  formattedAmounts: {
-    [CurrencyField.INPUT]: '1000000',
-  },
   // these numbers don't really match up but that's ok
   exactAmountToken: '10000',
+  exactAmountUSD: '',
   exactCurrencyField: CurrencyField.INPUT,
 }
 

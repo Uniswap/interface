@@ -17,7 +17,6 @@ import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { dimensions } from 'src/styles/sizing'
-import { formatNumber, NumberType } from 'src/utils/format'
 
 interface BaseReviewProps {
   actionButtonProps: { disabled: boolean; label: string; name: string; onPress: () => void }
@@ -79,15 +78,12 @@ export function TransactionReview({
               maxFontSizeMultiplier={theme.textVariants.headlineLarge.maxFontSizeMultiplier}
               px="md"
               py="none"
-              showCurrencySign={isUSDInput}
+              // on review screen, number formatter will already include $ sign
+              showCurrencySign={false}
               showSoftInputOnFocus={false}
               testID="amount-input-in"
               textAlign="center"
-              value={
-                formattedAmountIn
-                  ? formatNumber(parseFloat(formattedAmountIn), NumberType.TokenTx)
-                  : undefined
-              }
+              value={formattedAmountIn}
             />
             <CurrencyLogoWithLabel currency={currencyIn} />
           </Flex>
@@ -113,7 +109,7 @@ export function TransactionReview({
                 showSoftInputOnFocus={false}
                 testID="amount-input-out"
                 textAlign="center"
-                value={formatNumber(parseFloat(formattedAmountOut), NumberType.TokenTx)}
+                value={formattedAmountOut}
               />
               <CurrencyLogoWithLabel currency={currencyOut} />
             </Flex>

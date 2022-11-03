@@ -20,6 +20,7 @@ import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
+import { formatCurrencyAmount, formatNumber, NumberType } from 'src/utils/format'
 
 interface SwapFormProps {
   onNext: () => void
@@ -51,7 +52,6 @@ export function SwapReview({
     chainId,
     currencies,
     currencyAmounts,
-    formattedDerivedValue,
     trade: { trade: trade },
     wrapType,
     exactCurrencyField,
@@ -164,10 +164,17 @@ export function SwapReview({
     return null
   }
 
+  const derivedCurrencyField =
+    exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+  const derivedAmount = formatCurrencyAmount(
+    currencyAmounts[derivedCurrencyField],
+    NumberType.TokenTx
+  )
+  const formattedExactValue = formatNumber(parseFloat(exactValue), NumberType.TokenTx)
   const [amountIn, amountOut] =
     exactCurrencyField === CurrencyField.INPUT
-      ? [exactValue, formattedDerivedValue]
-      : [formattedDerivedValue, exactValue]
+      ? [formattedExactValue, derivedAmount]
+      : [derivedAmount, formattedExactValue]
   return (
     <>
       {showWarningModal && swapWarning?.title && (

@@ -12,6 +12,7 @@ import {
 } from 'src/features/transactions/transfer/hooks'
 import { TransferDetails } from 'src/features/transactions/transfer/TransferDetails'
 import { currencyAddress } from 'src/utils/currencyId'
+import { formatCurrencyAmount, formatNumber, NumberType } from 'src/utils/format'
 
 interface TransferFormProps {
   derivedTransferInfo: DerivedTransferInfo
@@ -34,13 +35,13 @@ export function TransferReview({
 
   const {
     currencyAmounts,
-    formattedAmounts,
     recipient,
     isUSDInput = false,
     currencyIn,
     nftIn,
     chainId,
     txId,
+    exactAmountUSD,
   } = derivedTransferInfo
 
   // TODO: how should we surface this warning?
@@ -83,11 +84,15 @@ export function TransferReview({
     onPress: submitCallback,
   }
 
+  const formattedAmountIn = isUSDInput
+    ? formatNumber(parseFloat(exactAmountUSD), NumberType.FiatTokenQuantity)
+    : formatCurrencyAmount(currencyAmounts[CurrencyField.INPUT], NumberType.TokenTx)
+
   return (
     <TransactionReview
       actionButtonProps={actionButtonProps}
       currencyIn={currencyIn}
-      formattedAmountIn={formattedAmounts[CurrencyField.INPUT]}
+      formattedAmountIn={formattedAmountIn}
       isUSDInput={isUSDInput}
       nftIn={nftIn}
       recipient={recipient}

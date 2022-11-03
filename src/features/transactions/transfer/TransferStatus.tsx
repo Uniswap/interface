@@ -12,7 +12,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'src/features/wallet/hooks'
-import { formatCurrencyAmount } from 'src/utils/format'
+import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 
 type TransferStatusProps = {
   derivedTransferInfo: DerivedTransferInfo
@@ -26,7 +26,7 @@ const getTextFromTransferStatus = (
   recipient: string | undefined,
   transactionDetails?: TransactionDetails
 ) => {
-  const { currencyIn, nftIn, currencyAmounts, isUSDInput, formattedAmounts } = derivedTransferInfo
+  const { currencyIn, nftIn, currencyAmounts, isUSDInput, exactAmountUSD } = derivedTransferInfo
   if (
     !transactionDetails ||
     transactionDetails.typeInfo.type !== TransactionType.Send ||
@@ -43,15 +43,16 @@ const getTextFromTransferStatus = (
     }
   }
   const status = transactionDetails.status
-
   if (status === TransactionStatus.Success) {
     return {
       title: t('Send successful!'),
       description: t(
         'You sent {{ currencyAmount }}{{ tokenName }}{{ usdValue }} to {{ recipient }}.',
         {
-          currencyAmount: nftIn ? '' : formatCurrencyAmount(currencyAmounts[CurrencyField.INPUT]),
-          usdValue: isUSDInput ? ` ($${formattedAmounts[CurrencyField.INPUT]})` : '',
+          currencyAmount: nftIn
+            ? ''
+            : formatCurrencyAmount(currencyAmounts[CurrencyField.INPUT], NumberType.TokenTx),
+          usdValue: isUSDInput ? ` ($${exactAmountUSD})` : '',
           tokenName: nftIn?.name ?? ` ${currencyIn?.symbol}` ?? ' tokens',
           recipient,
         }

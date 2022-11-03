@@ -41,12 +41,12 @@ import {
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { useActiveAccount, useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
+import { formatCurrencyAmount, NumberType } from 'src/utils/format'
 import { useAsyncData, usePrevious } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 
 export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
-const NUM_CURRENCY_SIG_FIGS = 6
 const NUM_USD_DECIMALS_DISPLAY = 2
 
 export type DerivedSwapInfo<
@@ -64,7 +64,6 @@ export type DerivedSwapInfo<
     [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<TOutput>>
   }
   focusOnCurrencyField: CurrencyField
-  formattedDerivedValue: string
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
   nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
@@ -183,7 +182,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tokenOutBalance,
   ])
 
-  const otherCurrencyField = isExactIn ? CurrencyField.OUTPUT : CurrencyField.INPUT
   return useMemo(() => {
     return {
       chainId,
@@ -194,8 +192,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       exactAmountUSD,
       exactCurrencyField,
       focusOnCurrencyField,
-      formattedDerivedValue:
-        currencyAmounts[otherCurrencyField]?.toSignificant(NUM_CURRENCY_SIG_FIGS) ?? '',
       trade,
       wrapType,
       nativeCurrencyBalance: nativeInBalance,
@@ -212,7 +208,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactCurrencyField,
     focusOnCurrencyField,
     nativeInBalance,
-    otherCurrencyField,
     selectingCurrencyField,
     trade,
     txId,
@@ -246,7 +241,7 @@ export function useUSDTokenUpdater(
 
       return dispatch(
         updateExactAmountToken({
-          amount: currencyAmount?.toSignificant(NUM_CURRENCY_SIG_FIGS) || '',
+          amount: formatCurrencyAmount(currencyAmount, NumberType.SwapTradeAmount, ''),
         })
       )
     }

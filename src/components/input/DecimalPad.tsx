@@ -135,6 +135,7 @@ function KeyButton({
   const start = selection && hasCurrencyPrefix ? selection.start - 1 : selection?.start
   const end = selection?.end && hasCurrencyPrefix ? selection.end - 1 : selection?.end
 
+  // TODO(MOB-3433): in USD mode, prevent user from typing in more than 2 decimals
   const handleInsert = () => {
     if (start === undefined || end === undefined) {
       // has no text selection, cursor is at the end of the text input

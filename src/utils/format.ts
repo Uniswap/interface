@@ -9,6 +9,13 @@ const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
 })
 
+const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS = new Intl.NumberFormat('en-US', {
+  notation: 'standard',
+  maximumFractionDigits: 5,
+  minimumFractionDigits: 2,
+  useGrouping: false,
+})
+
 const THREE_DECIMALS = new Intl.NumberFormat('en-US', {
   notation: 'standard',
   maximumFractionDigits: 3,
@@ -79,6 +86,21 @@ const SIX_SIG_FIGS_TWO_DECIMALS = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
 })
 
+const SIX_SIG_FIGS_NO_COMMAS = new Intl.NumberFormat('en-US', {
+  notation: 'standard',
+  maximumSignificantDigits: 6,
+  useGrouping: false,
+})
+
+const SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS = new Intl.NumberFormat('en-US', {
+  notation: 'standard',
+  maximumSignificantDigits: 6,
+  minimumSignificantDigits: 3,
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+  useGrouping: false,
+})
+
 const THREE_SIG_FIGS_USD = new Intl.NumberFormat('en-US', {
   notation: 'standard',
   maximumSignificantDigits: 3,
@@ -113,6 +135,13 @@ const tokenTxFormatter: FormatterRule[] = [
   { upperBound: 1, formatter: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN },
   { upperBound: 10000, formatter: SIX_SIG_FIGS_TWO_DECIMALS },
   { upperBound: Infinity, formatter: TWO_DECIMALS },
+]
+
+const swapTradeAmountFormatter: FormatterRule[] = [
+  { exact: 0, formatter: '0' },
+  { upperBound: 0.1, formatter: SIX_SIG_FIGS_NO_COMMAS },
+  { upperBound: 1, formatter: FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS },
+  { upperBound: Infinity, formatter: SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS },
 ]
 
 const fiatTokenDetailsFormatter: FormatterRule[] = [
@@ -153,6 +182,10 @@ export enum NumberType {
   // used for token quantities in transaction contexts (e.g. swap, send)
   TokenTx = 'token-tx',
 
+  // this formatter is only used for displaying the swap trade output amount
+  // in the text input boxes. Output amounts on review screen should use the above TokenTx formatter
+  SwapTradeAmount = 'swap-trade-amount',
+
   // fiat prices in any component that belongs in the Token Details flow (except for token stats)
   FiatTokenDetails = 'fiat-token-details',
 
@@ -172,6 +205,7 @@ export enum NumberType {
 const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatter,
   [NumberType.TokenTx]: tokenTxFormatter,
+  [NumberType.SwapTradeAmount]: swapTradeAmountFormatter,
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
@@ -194,9 +228,13 @@ function getFormatterRule(input: number, type: NumberType) {
   throw new Error(`formatter for type ${type} not configured correctly`)
 }
 
-export function formatNumber(input?: number | null, type: NumberType = NumberType.TokenNonTx) {
+export function formatNumber(
+  input?: number | null,
+  type: NumberType = NumberType.TokenNonTx,
+  placeholder: string = '-'
+) {
   if (input === null || input === undefined) {
-    return '-'
+    return placeholder
   }
 
   const formatter = getFormatterRule(input, type)
@@ -206,9 +244,10 @@ export function formatNumber(input?: number | null, type: NumberType = NumberTyp
 
 export function formatCurrencyAmount(
   amount?: CurrencyAmount<Currency> | null,
-  type: NumberType = NumberType.TokenNonTx
+  type: NumberType = NumberType.TokenNonTx,
+  placeholder?: string
 ) {
-  return formatNumber(amount ? parseFloat(amount.toSignificant()) : undefined, type)
+  return formatNumber(amount ? parseFloat(amount.toSignificant()) : undefined, type, placeholder)
 }
 
 export function formatPriceImpact(priceImpact: Percent | undefined) {
