@@ -6,6 +6,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
+import { openUri } from 'src/utils/linking'
 
 type LongTextProps = {
   initialDisplayedLines?: number
@@ -86,6 +87,11 @@ export function LongText({
             style={{
               body: { color: theme.colors[color] },
               link: { color: theme.colors[linkColor] },
+            }}
+            onLinkPress={(url) => {
+              // add our own custom link handler since it has security checks that only open http/https links
+              openUri(url)
+              return false
             }}>
             {text}
           </Markdown>
