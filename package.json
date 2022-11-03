@@ -37,8 +37,8 @@
     "download-env-local": "bash ./scripts/downloadEnvLocal.sh"
   },
   "dependencies": {
+    "@amplitude/analytics-react-native": "0.5.0",
     "@amplitude/experiment-react-native-client": "0.7.3",
-    "@amplitude/react-native": "2.13.0",
     "@apollo/client": "3.7.1",
     "@ethersproject/hash": "5.6.1",
     "@ethersproject/shims": "5.6.0",
@@ -49,7 +49,7 @@
     "@formatjs/intl-pluralrules": "4.3.1",
     "@formatjs/intl-relativetimeformat": "11.1.2",
     "@gorhom/bottom-sheet": "4.1.5",
-    "@react-native-async-storage/async-storage": "1.15.9",
+    "@react-native-async-storage/async-storage": "1.17.10",
     "@react-native-community/netinfo": "9.3.0",
     "@react-native-firebase/analytics": "12.9.3",
     "@react-native-firebase/app": "14.11.1",

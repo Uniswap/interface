@@ -338,10 +338,9 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
-  - Amplitude (8.10.0):
+  - Amplitude (8.14.0):
     - AnalyticsConnector (~> 1.0.0)
-  - amplitude-react-native (2.13.0):
-    - Amplitude (= 8.10.0)
+  - amplitude-react-native (0.5.0):
     - React-Core
   - AmplitudeExperiment (1.7.3):
     - AnalyticsConnector (~> 1.0.0)
@@ -913,7 +912,7 @@ PODS:
     - React-jsi (= 0.68.3)
     - React-logger (= 0.68.3)
     - React-perflogger (= 0.68.3)
-  - RNCAsyncStorage (1.15.9):
+  - RNCAsyncStorage (1.17.10):
     - React-Core
   - RNCMaskedView (0.2.6):
     - React-Core
@@ -997,7 +996,7 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
-  - "amplitude-react-native (from `../node_modules/@amplitude/react-native`)"
+  - "amplitude-react-native (from `../node_modules/@amplitude/analytics-react-native`)"
   - Argon2Swift
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -1131,7 +1130,7 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   amplitude-react-native:
-    :path: "../node_modules/@amplitude/react-native"
+    :path: "../node_modules/@amplitude/analytics-react-native"
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
@@ -1289,8 +1288,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
-  Amplitude: 2904f346250510b9e19a4e2262017bcf1d4368f9
-  amplitude-react-native: 985b13211d36cf03131289fb10e0e23bed98a409
+  Amplitude: bff4ceaad2a79e908682134d75dc862960594ea6
+  amplitude-react-native: ad975c1f96cb5cbb22029bb57fd0e37d6a19bf33
   AmplitudeExperiment: ebcd6fa2743578438f01b642d41a89ded27915b0
   AnalyticsConnector: 4c386d5972ac9da86e22d668564dbbac97558754
   Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
@@ -1387,7 +1386,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: f41f116aad644973f24653effb3db3de64fa0314
   React-runtimeexecutor: 8cdd80915ed6dabf2221a689f1f7ddb50ea5e9f3
   ReactCommon: 5b1b43a7d81a1ac4eec85f7c4db3283a14a3b13d
-  RNCAsyncStorage: 26f25150da507524a7815f2ada06ca0967f65633
+  RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
   RNCMaskedView: c298b644a10c0c142055b3ae24d83879ecb13ccd
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
   RNFBAnalytics: 1b0e5ddb5e99c534403817ae93edb10d685378e9

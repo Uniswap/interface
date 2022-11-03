@@ -181,6 +181,26 @@ export const enum LogContext {
   WrappedTokenInfo = 'WrappedTokenInfo',
 }
 
+export enum UserPropertyName {
+  ActiveWalletAddress = 'active_wallet_address',
+  ActiveWalletType = 'active_wallet_type',
+  AppOpenAuthMethod = 'app_open_auth_method',
+  AppVersion = 'app_version',
+  DarkMode = 'is_dark_mode',
+  IsCloudBackedUp = 'is_cloud_backed_up',
+  IsPushEnabled = 'is_push_enabled',
+  TransactionAuthMethod = 'transaction_auth_method',
+  WalletSignerCount = 'wallet_signer_count',
+  WalletViewOnlyCount = 'wallet_view_only_count',
+}
+
+// could add PIN in the future
+export enum AuthMethod {
+  None = 'None',
+  FaceId = 'FaceId',
+  TouchId = 'TouchId',
+}
+
 /**
  * Known components' events that trigger callbacks.
  *

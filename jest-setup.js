@@ -6,6 +6,14 @@ import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-
 // required polyfill for rtk-query baseQueryFn
 import 'cross-fetch/polyfill'
 
+// Mock Amplitde log reporting
+jest.mock('@amplitude/analytics-react-native', () => ({
+  init: () => jest.fn(),
+  identify: () => jest.fn(),
+  flush: () => jest.fn(),
+  track: () => jest.fn(),
+}))
+
 // Mock Sentry crash reporting
 jest.mock('@sentry/react-native', () => ({
   init: () => jest.fn(),

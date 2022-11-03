@@ -5,6 +5,7 @@ declare module 'react-native-dotenv' {
   export const AMPLITUDE_API_KEY: string
   export const AMPLITUDE_API_URL: string
   export const AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: string
+  export const AMPLITUDE_TEST_API_KEY: string
   export const COINGECKO_API_URL: string
   export const COVALENT_API_KEY: string
   export const DEBUG: string

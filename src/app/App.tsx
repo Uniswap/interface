@@ -25,6 +25,7 @@ import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { initializeRemoteConfig } from 'src/features/remoteConfig'
 import { MarkNames } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
+import { TraceUserProperties } from 'src/features/telemetry/TraceUserProperties'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import { useTrmPrefetch } from 'src/features/trm/api'
@@ -124,6 +125,7 @@ function DataUpdaters() {
 
   return (
     <>
+      <TraceUserProperties />
       <TransactionHistoryUpdater />
       <MulticallUpdaters />
       <TokenListUpdater />

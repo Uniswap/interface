@@ -2,15 +2,57 @@
 # yarn lockfile v1
 
 
+"@amplitude/analytics-client-common@^0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-client-common/-/analytics-client-common-0.3.5.tgz#57650942bafb84095d5fd80a6243ec573c1f3c0a"
+  integrity sha512-1iWPxrIcjD3WW7rxFQQPFqnaLkjpvjJnvMXLP737kAOEHG2cF3erpYrqObWx1l9CL/K3H3o9GSMveZ6RX8eX0w==
+  dependencies:
+    "@amplitude/analytics-connector" "^1.4.5"
+    "@amplitude/analytics-core" "^0.10.0"
+    "@amplitude/analytics-types" "^0.12.0"
+    tslib "^2.3.1"
+
+"@amplitude/analytics-connector@^1.4.5":
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-connector/-/analytics-connector-1.4.6.tgz#60a66eaf0bcdcd17db4f414ff340c69e63116a72"
+  integrity sha512-6jD2pOosRD4y8DT8StUCz7yTd5ZDkdOU9/AWnlWKM5qk90Mz7sdZrdZ9H7sA/L3yOJEpQOYZgQplQdWWUzyWug==
+  dependencies:
+    "@amplitude/ua-parser-js" "0.7.31"
+
+"@amplitude/analytics-core@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-core/-/analytics-core-0.10.0.tgz#0d68cede53fecaadfef9c36455eb271454b6ccee"
+  integrity sha512-D/6U9SzyDmcNWnT/lFnBKfYl4ASicLlwD1tqu4RZoYS3SwHd/PNST+LbnL3yBTEIJIY//qjth9lLBh/RRzePfg==
+  dependencies:
+    "@amplitude/analytics-types" "^0.12.0"
+    tslib "^2.3.1"
+
+"@amplitude/analytics-react-native@0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-react-native/-/analytics-react-native-0.5.0.tgz#c83b597e0ab30671704053841a25d1335aa2d0f2"
+  integrity sha512-9LEQT3hTP8Bb23W92rEg3ak3CXjL4e9yE98GujnDxZtvf4ymIcOPkQkUpQ7gEvVHpdF04F1c+9nEvMDpW6w6zA==
+  dependencies:
+    "@amplitude/analytics-client-common" "^0.3.5"
+    "@amplitude/analytics-core" "^0.10.0"
+    "@amplitude/analytics-types" "^0.12.0"
+    "@amplitude/ua-parser-js" "^0.7.31"
+    "@react-native-async-storage/async-storage" "^1.17.7"
+    tslib "^2.3.1"
+
+"@amplitude/analytics-types@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@amplitude/analytics-types/-/analytics-types-0.12.0.tgz#aeec6f204758637603937f05393bdf89fa8e7a5b"
+  integrity sha512-XwySEhnCdU8fNWUNaB38JS7bwOt4GOUG8OqgzuXtR8HvGnpCvuT7C6H+BIGA7MfctNQBAzR+6IBgDD+8r1/OEQ==
+
 "@amplitude/experiment-react-native-client@0.7.3":
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/@amplitude/experiment-react-native-client/-/experiment-react-native-client-0.7.3.tgz#cf5e24b2fd94e5b975f19a5bc4d3c7acc5a21dc2"
   integrity sha512-Cy/AYDKheYS6uQ93qQLeIe38mMGJWLOHHp3HPh0h/03VTH6HD5TIyI8CdUz4UxQ6qDzTzA18B82gtNsGQz2Ntw==
 
-"@amplitude/react-native@2.13.0":
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/@amplitude/react-native/-/react-native-2.13.0.tgz#4d7a87d6c7fd5c7146e01a87fdcfab1499ece9f1"
-  integrity sha512-uoSkEyDePAifJCPhQn3LiU1mIhZPRoFExuUqJaUndJ/hsf7tpaLCAZMJTos4F1yQBHXlKuZCVSz96QxFPLibMg==
+"@amplitude/ua-parser-js@0.7.31", "@amplitude/ua-parser-js@^0.7.31":
+  version "0.7.31"
+  resolved "https://registry.yarnpkg.com/@amplitude/ua-parser-js/-/ua-parser-js-0.7.31.tgz#749bf7cb633cfcc7ff3c10805bad7c5f6fbdbc61"
+  integrity sha512-+z8UGRaj13Pt5NDzOnkTBy49HE2CX64jeL0ArB86HAtilpnfkPB7oqkigN7Lf2LxscMg4QhFD7mmCfedh3rqTg==
 
 "@ampproject/remapping@^2.0.0":
   version "2.1.1"
@@ -4521,10 +4563,10 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.2.tgz#830beaec4b4091a9e9398ac50f865ddea52186b9"
   integrity sha512-92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA==
 
-"@react-native-async-storage/async-storage@1.15.9":
-  version "1.15.9"
-  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.15.9.tgz#744ecd566f108e86b6b59e617c23fdb4b8d53358"
-  integrity sha512-LrVPfhKqodRiDWCgZp7J2X55JQqOhdQUxbl17RrktIGCZ0ud2XHdNoTIvyI1VccqHoF/CZK6v+G0IoX5NYZ1JA==
+"@react-native-async-storage/async-storage@1.17.10", "@react-native-async-storage/async-storage@^1.17.7":
+  version "1.17.10"
+  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.17.10.tgz#8d6a4771912be8454a9e215eebd469b1b8e2e638"
+  integrity sha512-KrR021BmBLsA0TT1AAsfH16bHYy0MSbhdAeBAqpriak3GS1T2alFcdTUvn13p0ZW6FKRD6Bd3ryU2zhU/IYYJQ==
   dependencies:
     merge-options "^3.0.4"
 

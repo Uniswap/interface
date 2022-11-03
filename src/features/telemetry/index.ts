@@ -1,8 +1,9 @@
-import { Amplitude } from '@amplitude/react-native'
+import { flush, Identify, identify, init, track } from '@amplitude/analytics-react-native'
 import { firebase } from '@react-native-firebase/analytics'
 import * as Sentry from '@sentry/react-native'
-import { AMPLITUDE_API_KEY } from 'react-native-dotenv'
-import { LogContext } from 'src/features/telemetry/constants'
+import { AMPLITUDE_API_KEY, AMPLITUDE_TEST_API_KEY } from 'react-native-dotenv'
+import { LogContext, UserPropertyName } from 'src/features/telemetry/constants'
+import { EventProperties } from 'src/features/telemetry/types'
 import { logger } from 'src/utils/logger'
 type LogTags = {
   [key: string]: Primitive
@@ -16,13 +17,26 @@ export async function initAnalytics() {
   }
 
   try {
-    const ampInstance = Amplitude.getInstance()
-    ampInstance.init(AMPLITUDE_API_KEY)
-
+    init(
+      __DEV__ ? AMPLITUDE_TEST_API_KEY : AMPLITUDE_API_KEY,
+      undefined, // User ID should be undefined to let Amplitude default to Device ID
+      {
+        // Disable tracking of private user information by Amplitude
+        trackingOptions: {
+          adid: false,
+          country: false,
+          carrier: false,
+          city: false,
+          dma: false, // designated market area
+          ipAddress: false,
+          region: false,
+        },
+      }
+    )
     await firebase.analytics().setAnalyticsCollectionEnabled(true)
   } catch (err) {
     logException(LogContext.Analytics, err)
-    logger.error('telemetry', 'enableAnalytics', 'error from Firebase', err)
+    logger.error('telemetry', 'enableAnalytics', 'error initializing analytics', err)
   }
 }
 
@@ -39,6 +53,8 @@ export async function logEvent(name: string, params: {}) {
     logger.error('telemetry', 'logEvent', 'error from Firebase', err)
   }
 }
+
+//#region ------------------------------ Sentry ------------------------------
 
 /**
  * Logs an exception to our Sentry Dashboard
@@ -73,3 +89,49 @@ export function logMessage(context: LogContext, message: string, extraTags?: Log
 
   Sentry.captureMessage(message, { tags: { ...(extraTags || {}), mobileContext: context } })
 }
+
+//#endregion
+
+//#region ------------------------------ Amplitude ------------------------------
+
+/**
+ * Sends an event to Amplitude.
+ */
+export function sendAnalyticsEvent<EventName extends keyof EventProperties>(
+  ...args: undefined extends EventProperties[EventName]
+    ? [EventName] | [EventName, EventProperties[EventName]]
+    : [EventName, EventProperties[EventName]]
+) {
+  const [eventName, eventProperties] = args
+  if (__DEV__) {
+    logger.info(
+      'telemetry',
+      'sendAnalyticsEvent',
+      `[analytics(${eventName})]: ${JSON.stringify(eventProperties)}`
+    )
+    return
+  }
+
+  track(eventName, eventProperties)
+}
+
+export function flushAnalyticsEvents() {
+  if (__DEV__) {
+    logger.info('telemetry', 'flushAnalyticsEvents', 'flushing analytics events')
+    return
+  }
+  flush()
+}
+
+// didn't want to set it to Amplitude's type to keep it loose from their implementation
+type ValidPropertyValue = number | string | boolean | Array<string | number>
+
+export function setUserProperty(property: UserPropertyName, value: ValidPropertyValue) {
+  if (__DEV__) {
+    logger.info('telemetry', 'setUserProperty', `property: ${property}, value: ${value}`)
+    return
+  }
+  identify(new Identify().set(property, value))
+}
+
+//#endregion

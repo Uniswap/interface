@@ -13,6 +13,7 @@ import {
   selectPendingAccounts,
   selectSignerAccounts,
   selectSignerMnemonicAccountExists,
+  selectViewOnlyAccounts,
 } from 'src/features/wallet/selectors'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'src/utils/addresses'
@@ -30,6 +31,10 @@ export function usePendingAccounts(): AddressTo<Account> {
 
 export function useSignerAccounts() {
   return useAppSelector(selectSignerAccounts)
+}
+
+export function useViewOnlyAccounts() {
+  return useAppSelector(selectViewOnlyAccounts)
 }
 
 export function useActiveAccount(): Account | null {
