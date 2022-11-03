@@ -1,5 +1,6 @@
 import { TransactionListQueryResponse } from 'src/components/TransactionList/TransactionList'
 import { ChainId } from 'src/constants/chains'
+import { ActivityType } from 'src/data/__generated__/types-and-hooks'
 import parseApproveTransaction from 'src/features/transactions/history/conversion/parseApproveTransaction'
 import parseNFTMintTransaction from 'src/features/transactions/history/conversion/parseMintTransaction'
 import parseReceiveTransaction from 'src/features/transactions/history/conversion/parseReceiveTransaction'
@@ -26,19 +27,19 @@ export default function extractTransactionDetails(
 
   let typeInfo: TransactionTypeInfo | undefined
   switch (transaction.type) {
-    case 'APPROVE':
+    case ActivityType.Approve:
       typeInfo = parseApproveTransaction(transaction)
       break
-    case 'SEND':
+    case ActivityType.Send:
       typeInfo = parseSendTransaction(transaction)
       break
-    case 'RECEIVE':
+    case ActivityType.Receive:
       typeInfo = parseReceiveTransaction(transaction)
       break
-    case 'SWAP':
+    case ActivityType.Swap:
       typeInfo = parseTradeTransaction(transaction)
       break
-    case 'MINT':
+    case ActivityType.Mint:
       typeInfo = parseNFTMintTransaction(transaction)
       break
   }

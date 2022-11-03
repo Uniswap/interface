@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
 import { usePortfolioBalancesQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
-import { fromGraphQLSafetyLevel } from 'src/features/dataApi/utils'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
@@ -61,7 +60,7 @@ export function usePortfolioBalances(
         currency,
         currencyId: currencyId(currency),
         logoUrl: balance.tokenProjectMarket?.tokenProject?.logoUrl,
-        safetyLevel: fromGraphQLSafetyLevel(balance.tokenProjectMarket?.tokenProject.safetyLevel),
+        safetyLevel: balance.tokenProjectMarket?.tokenProject.safetyLevel,
       }
 
       const portfolioBalance: PortfolioBalance = {

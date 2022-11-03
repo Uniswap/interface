@@ -1,14 +1,11 @@
+import { NetworkStatus } from '@apollo/client'
 import { Currency } from '@uniswap/sdk-core'
-import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
-import { PreloadedQuery, useFragment } from 'react-relay'
 import { useAppDispatch } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { useEagerLoadedQuery } from 'src/app/navigation/useEagerNavigation'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import { Suspense } from 'src/components/data/Suspense'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
@@ -18,20 +15,18 @@ import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButton'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
-import {
-  TokenDetailsHeader,
-  TokenDetailsHeaderProps,
-} from 'src/components/TokenDetails/TokenDetailsHeader'
+import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLoader } from 'src/components/TokenDetails/TokenDetailsLoader'
-import {
-  TokenDetailsStats,
-  tokenDetailsStatsTokenProjectFragment,
-} from 'src/components/TokenDetails/TokenDetailsStats'
-import { TokenDetailsStats_tokenProject$key } from 'src/components/TokenDetails/__generated__/TokenDetailsStats_tokenProject.graphql'
+import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
+import { PollingInterval } from 'src/constants/misc'
+import {
+  SafetyLevel,
+  TokenDetailsScreenQuery,
+  useTokenDetailsScreenQuery,
+} from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
-import { SafetyLevel } from 'src/features/dataApi/types'
-import { fromGraphQLSafetyLevel } from 'src/features/dataApi/utils'
+import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
@@ -41,55 +36,29 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
-import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
-import { TokenDetailsScreen_headerPriceLabel$key } from 'src/screens/__generated__/TokenDetailsScreen_headerPriceLabel.graphql'
 import { currencyAddress } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
-export const tokenDetailsScreenQuery = graphql`
-  query TokenDetailsScreenQuery($contract: ContractInput!) {
-    tokens(contracts: [$contract]) {
-      ...TokenDetailsStats_token
-    }
+type Price = NonNullable<
+  NonNullable<NonNullable<NonNullable<TokenDetailsScreenQuery['tokenProjects']>[0]>['markets']>[0]
+>['price']
 
-    tokenProjects(contracts: [$contract]) {
-      ...TokenDetailsStats_tokenProject
-      ...TokenDetailsScreen_headerPriceLabel
-    }
-  }
-`
-
-function HeaderPriceLabel({
-  tokenProject,
-}: {
-  tokenProject: TokenDetailsScreen_headerPriceLabel$key
-}) {
+function HeaderPriceLabel({ price }: { price: Price }) {
   const { t } = useTranslation()
-  const spotPrice = useFragment(
-    graphql`
-      fragment TokenDetailsScreen_headerPriceLabel on TokenProject {
-        markets(currencies: [USD]) {
-          price {
-            value
-          }
-        }
-      }
-    `,
-    tokenProject
-  )
 
   return (
     <Text color="textSecondary" variant="buttonLabelMicro">
-      {formatUSDPrice(spotPrice?.markets?.[0]?.price?.value) ?? t('Unknown token')}
+      {formatUSDPrice(price?.value) ?? t('Unknown token')}
     </Text>
   )
 }
 
 function HeaderTitleElement({
   currency,
-  tokenProject,
-}: Pick<TokenDetailsHeaderProps, 'currency'> & {
-  tokenProject: TokenDetailsScreen_headerPriceLabel$key | null | undefined
+  data,
+}: {
+  currency: Currency
+  data: TokenDetailsScreenQuery | undefined
 }) {
   const { t } = useTranslation()
   return (
@@ -98,11 +67,7 @@ function HeaderTitleElement({
         <CurrencyLogo currency={currency} size={16} />
         <Text variant="subheadLarge">{currency.name ?? t('Unknown token')}</Text>
       </Flex>
-      {tokenProject && (
-        <Suspense fallback={null}>
-          <HeaderPriceLabel tokenProject={tokenProject} />
-        </Suspense>
-      )}
+      <HeaderPriceLabel price={data?.tokenProjects?.[0]?.markets?.[0]?.price} />
     </Flex>
   )
 }
@@ -114,8 +79,16 @@ enum TransactionType {
 }
 
 export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
-  const { currencyId: _currencyId, preloadedQuery } = route.params
+  const { currencyId: _currencyId } = route.params
   const currency = useCurrency(_currencyId)
+
+  const { data, loading, error, networkStatus } = useTokenDetailsScreenQuery({
+    variables: {
+      contract: currencyIdToContractInput(_currencyId),
+    },
+    pollInterval: PollingInterval.Fast,
+    notifyOnNetworkStatusChange: true,
+  })
 
   if (!currency) {
     // truly cannot render the component or a loading state without a currency
@@ -123,27 +96,22 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
     return null
   }
 
-  if (!preloadedQuery) {
+  if ((loading && networkStatus !== NetworkStatus.loading) || error) {
     return <TokenDetailsLoader currency={currency} />
   }
 
-  return (
-    <Suspense fallback={<TokenDetailsLoader currency={currency} />}>
-      <TokenDetails currency={currency} preloadedQuery={preloadedQuery} />
-    </Suspense>
-  )
+  return <TokenDetails currency={currency} data={data} />
 }
 
 function TokenDetails({
   currency,
-  preloadedQuery,
+  data,
 }: {
   currency: Currency
-  preloadedQuery: PreloadedQuery<TokenDetailsScreenQuery>
+  data: TokenDetailsScreenQuery | undefined
 }) {
   const dispatch = useAppDispatch()
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
-  const data = useEagerLoadedQuery<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, preloadedQuery)
 
   // set if attempting buy or sell, use for warning modal
   const [activeTransactionType, setActiveTransactionType] = useState<TransactionType | undefined>(
@@ -152,12 +120,7 @@ function TokenDetails({
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(currency.wrapped)
 
-  const { safetyLevel: safetyLevelGraphql } =
-    useFragment<TokenDetailsStats_tokenProject$key>(
-      tokenDetailsStatsTokenProjectFragment,
-      data.tokenProjects?.[0] ?? null
-    ) ?? {}
-  const safetyLevel = fromGraphQLSafetyLevel(safetyLevelGraphql)
+  const safetyLevel = data?.tokenProjects?.[0]?.safetyLevel
 
   const initialSendState = useMemo((): TransactionState => {
     return {
@@ -258,7 +221,7 @@ function TokenDetails({
         contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
         fixedHeader={
           <BackHeader>
-            <HeaderTitleElement currency={currency} tokenProject={data?.tokenProjects?.[0]} />
+            <HeaderTitleElement currency={currency} data={data} />
           </BackHeader>
         }>
         <Flex gap="xl" my="md">
@@ -276,11 +239,7 @@ function TokenDetails({
               otherChainBalances={otherChainBalances}
             />
             <Box mx="md">
-              <TokenDetailsStats
-                currency={currency}
-                token={data?.tokens?.[0]}
-                tokenProject={data?.tokenProjects?.[0]}
-              />
+              <TokenDetailsStats currency={currency} data={data} />
             </Box>
           </Flex>
         </Flex>

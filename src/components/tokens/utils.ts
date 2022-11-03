@@ -1,11 +1,11 @@
 import { TFunction } from 'i18next'
-import { SafetyLevel } from 'src/features/dataApi/types'
+import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 
 export function getTokenSafetyHeaderText(safetyLevel: NullUndefined<SafetyLevel>, t: TFunction) {
   switch (safetyLevel) {
-    case SafetyLevel.Medium:
+    case SafetyLevel.MediumWarning:
       return t('Caution')
-    case SafetyLevel.Strong:
+    case SafetyLevel.StrongWarning:
       return t('Warning')
     case SafetyLevel.Blocked:
       return t('Not available')

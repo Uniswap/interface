@@ -12,7 +12,7 @@ import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDeta
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsMarketData } from 'src/components/TokenDetails/TokenDetailsStats'
-import { SafetyLevel } from 'src/features/dataApi/types'
+import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'src/features/wallet/hooks'
 
@@ -33,7 +33,7 @@ export function TokenDetailsLoader({ currency }: { currency: Currency }) {
             <Flex gap="none">
               <TokenDetailsHeader
                 currency={currency}
-                safetyLevel={SafetyLevel.Medium}
+                safetyLevel={SafetyLevel.MediumWarning}
                 onPressWarningIcon={() => {}}
               />
               <PriceChartLoading />

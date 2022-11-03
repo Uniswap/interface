@@ -1,5 +1,6 @@
 import { QueryResult } from '@apollo/client'
 import { Currency } from '@uniswap/sdk-core'
+import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyId } from 'src/utils/currencyId'
 
 export type CurrencyInfo = {
@@ -18,10 +19,3 @@ export type PortfolioBalance = {
 }
 
 export type GqlResult<T> = Pick<QueryResult<T>, 'data' | 'loading' | 'error'>
-
-export enum SafetyLevel {
-  Blocked = 'BLOCKED',
-  Medium = 'MEDIUM_WARNING',
-  Strong = 'STRONG_WARNING',
-  Verified = 'VERIFIED',
-}

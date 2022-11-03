@@ -6,12 +6,9 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { PreloadedQuery } from 'react-relay'
 import { EducationContentType } from 'src/components/education'
-import { TransactionListQuery } from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
-import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 
 type NFTItem = { owner: Address; address: string; tokenId: string }
 
@@ -97,16 +94,12 @@ export type AppStackParamList = {
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.TokenDetails]: {
     currencyId: string
-    preloadedQuery: NullUndefined<PreloadedQuery<TokenDetailsScreenQuery>>
   }
   [Screens.NFTItem]: NFTItem
   [Screens.ExternalProfile]: {
     address: string
-    preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
   }
-  [Screens.Activity]: {
-    preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
-  }
+  [Screens.Activity]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }
 

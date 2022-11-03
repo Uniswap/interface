@@ -6,7 +6,7 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import WarningIcon from 'src/components/tokens/WarningIcon'
-import { SafetyLevel } from 'src/features/dataApi/types'
+import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 
@@ -30,7 +30,7 @@ export function TokenDetailsHeader({
           {currency.name ?? t('Unknown token')}
         </Text>
         {/* Suppress warning icon on low warning level */}
-        {(safetyLevel === SafetyLevel.Strong || safetyLevel === SafetyLevel.Blocked) && (
+        {(safetyLevel === SafetyLevel.StrongWarning || safetyLevel === SafetyLevel.Blocked) && (
           <TouchableArea onPress={onPressWarningIcon}>
             <WarningIcon
               height={theme.iconSizes.md}

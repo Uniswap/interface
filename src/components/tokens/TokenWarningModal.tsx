@@ -12,7 +12,7 @@ import { Text } from 'src/components/Text'
 import { getTokenSafetyHeaderText } from 'src/components/tokens/utils'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TOKEN_WARNING_HELP_PAGE_URL } from 'src/constants/urls'
-import { SafetyLevel } from 'src/features/dataApi/types'
+import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'src/features/tokens/useTokenWarningLevel'
 import { opacify } from 'src/utils/colors'
@@ -20,11 +20,11 @@ import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
 
 function getTokenSafetyBodyText(safetyLevel: NullUndefined<SafetyLevel>, t: TFunction) {
   switch (safetyLevel) {
-    case SafetyLevel.Medium:
+    case SafetyLevel.MediumWarning:
       return t(
         "This token isn't traded on leading U.S. centralized exchanges. Always conduct your own research before trading."
       )
-    case SafetyLevel.Strong:
+    case SafetyLevel.StrongWarning:
       return t(
         "This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading."
       )

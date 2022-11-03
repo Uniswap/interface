@@ -64,7 +64,7 @@ const useNavigateToProfileTab = (address: string | undefined) => {
   const onPress = () => {
     if (!address) return
     store.dispatch(closeModal({ name: ModalName.Swap }))
-    navigate(address)
+    navigate()
   }
 
   return {

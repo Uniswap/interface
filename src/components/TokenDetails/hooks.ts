@@ -1,17 +1,15 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { useEagerNavigation } from 'src/app/navigation/useEagerNavigation'
+import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { ChainId } from 'src/constants/chains'
-import { PollingInterval } from 'src/constants/misc'
 import { nativeOnChain } from 'src/constants/tokens'
-import { preloadMapping } from 'src/data/preloading'
+import { useTokenDetailsScreenLazyQuery } from 'src/data/__generated__/types-and-hooks'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useMultipleBalances, useSingleBalance } from 'src/features/dataApi/balances'
+import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { BridgeInfo, WrappedTokenInfo } from 'src/features/tokenLists/wrappedTokenInfo'
 import { useTokenInfoFromAddress } from 'src/features/tokens/useTokenInfoFromAddress'
 import { Screens } from 'src/screens/Screens'
-import { tokenDetailsScreenQuery } from 'src/screens/TokenDetailsScreen'
-import { TokenDetailsScreenQuery } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 import { buildCurrencyId, currencyAddress, CurrencyId } from 'src/utils/currencyId'
 import { getKeys } from 'src/utils/objects'
 
@@ -75,19 +73,19 @@ export function useCrossChainBalances(currency: Currency) {
 
 /** Utility hook to simplify navigating to token details screen */
 export function useTokenDetailsNavigation() {
-  const { registerNavigationIntent, preloadedNavigate } =
-    useEagerNavigation<TokenDetailsScreenQuery>(tokenDetailsScreenQuery, PollingInterval.Fast)
+  const navigation = useHomeStackNavigation()
+  const [load] = useTokenDetailsScreenLazyQuery()
 
   const preload = (currencyId: CurrencyId) => {
-    registerNavigationIntent(
-      preloadMapping.tokenDetails({
-        currencyId,
-      })
-    )
+    load({
+      variables: {
+        contract: currencyIdToContractInput(currencyId),
+      },
+    })
   }
 
   const navigate = (currencyId: CurrencyId) => {
-    preloadedNavigate(Screens.TokenDetails, { currencyId })
+    navigation.navigate(Screens.TokenDetails, { currencyId })
   }
 
   return { preload, navigate }

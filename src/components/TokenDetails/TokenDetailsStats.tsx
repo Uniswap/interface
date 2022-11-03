@@ -1,69 +1,15 @@
 import { Currency } from '@uniswap/sdk-core'
-import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useFragment } from 'react-relay'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { Suspense } from 'src/components/data/Suspense'
 import { Flex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
 import { Shimmer } from 'src/components/loading/Shimmer'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
-import { TokenDetailsStats_token$key } from 'src/components/TokenDetails/__generated__/TokenDetailsStats_token.graphql'
-import { TokenDetailsStats_tokenProject$key } from 'src/components/TokenDetails/__generated__/TokenDetailsStats_tokenProject.graphql'
+import { TokenDetailsScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { currencyAddress } from 'src/utils/currencyId'
 import { formatNumber, NumberType } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
-
-// Fetch Uniswap volume from Token#markets
-export const tokenDetailsStatsTokenFragment = graphql`
-  fragment TokenDetailsStats_token on Token {
-    market(currency: USD) @required(action: LOG) {
-      volume(duration: DAY) @required(action: LOG) {
-        value @required(action: LOG)
-      }
-    }
-  }
-`
-
-export const tokenDetailsStatsTokenProjectFragment = graphql`
-  fragment TokenDetailsStats_tokenProject on TokenProject {
-    description
-    homepageUrl
-    twitterName
-    name
-    safetyLevel
-    markets(currencies: [USD]) {
-      price {
-        value
-        currency
-      }
-      marketCap {
-        value
-        currency
-      }
-      fullyDilutedMarketCap {
-        value
-        currency
-      }
-      priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
-        value
-        currency
-      }
-      priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
-        value
-        currency
-      }
-    }
-    tokens {
-      chain
-      address
-      symbol
-      decimals
-    }
-  }
-`
 
 export function TokenDetailsMarketData({
   marketCap,
@@ -131,23 +77,19 @@ export function TokenDetailsMarketData({
   )
 }
 
-function TokenDetailsStatsInner({
+export function TokenDetailsStats({
   currency,
-  token,
-  tokenProject,
+  data,
 }: {
   currency: Currency
-  token: TokenDetailsStats_token$key
-  tokenProject: TokenDetailsStats_tokenProject$key
+  data: TokenDetailsScreenQuery | undefined
 }) {
   const { t } = useTranslation()
 
-  const tokenData = useFragment(tokenDetailsStatsTokenFragment, token)
-  const tokenProjectData = useFragment(tokenDetailsStatsTokenProjectFragment, tokenProject)
+  const tokenData = data?.tokens?.[0]
+  const tokenProjectData = data?.tokenProjects?.[0]
 
   const marketData = tokenProjectData?.markets ? tokenProjectData.markets[0] : null
-
-  if (!tokenProject || !marketData) return null
 
   const explorerLink = getExplorerLink(
     currency.chainId,
@@ -160,16 +102,16 @@ function TokenDetailsStatsInner({
       <Text variant="subheadLarge">{t('Stats')}</Text>
       <TokenDetailsMarketData
         marketCap={marketData?.marketCap?.value}
-        priceHight52W={marketData.priceHigh52W?.value}
-        priceLow52W={marketData.priceLow52W?.value}
-        volume={tokenData?.market.volume.value}
+        priceHight52W={marketData?.priceHigh52W?.value}
+        priceLow52W={marketData?.priceLow52W?.value}
+        volume={tokenData?.market?.volume?.value}
       />
       <Flex gap="xxs">
         <Text color="textTertiary" variant="subheadSmall">
-          {t('About {{ token }}', { token: tokenProjectData.name })}
+          {t('About {{ token }}', { token: tokenProjectData?.name })}
         </Text>
         <Flex gap="sm">
-          {tokenProjectData.description && (
+          {tokenProjectData?.description && (
             <LongText
               gap="xxxs"
               initialDisplayedLines={5}
@@ -177,7 +119,7 @@ function TokenDetailsStatsInner({
             />
           )}
           <Flex row>
-            {tokenProjectData.homepageUrl && (
+            {tokenProjectData?.homepageUrl && (
               <LinkButton
                 color="accentAction"
                 label={t('Website')}
@@ -185,7 +127,7 @@ function TokenDetailsStatsInner({
                 url={tokenProjectData.homepageUrl}
               />
             )}
-            {tokenProjectData.twitterName && (
+            {tokenProjectData?.twitterName && (
               <LinkButton
                 color="accentAction"
                 label={t('Twitter')}
@@ -203,22 +145,5 @@ function TokenDetailsStatsInner({
         </Flex>
       </Flex>
     </Flex>
-  )
-}
-
-export function TokenDetailsStats({
-  currency,
-  token,
-  tokenProject,
-}: {
-  currency: Currency
-  token: TokenDetailsStats_token$key | null | undefined
-  tokenProject: TokenDetailsStats_tokenProject$key | null | undefined
-}) {
-  if (!token || !tokenProject) return null
-  return (
-    <Suspense fallback={<Loading />}>
-      <TokenDetailsStatsInner currency={currency} token={token} tokenProject={tokenProject} />
-    </Suspense>
   )
 }

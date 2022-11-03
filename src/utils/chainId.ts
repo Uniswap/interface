@@ -1,7 +1,7 @@
 import { BigNumberish } from 'ethers'
+import { Chain as GQLChain } from 'src/components/PriceChart/__generated__/TokenModel_PriceQuery.graphql'
 import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
 import { Chain } from 'src/data/__generated__/types-and-hooks'
-import { Chain as GraphQLChain } from 'src/screens/__generated__/TokenDetailsScreenQuery.graphql'
 
 const supportedChains = Object.values(ChainId).map((c) => c.toString())
 
@@ -23,7 +23,7 @@ export function isTestnet(chainId: ChainId): boolean {
   return TESTNET_CHAIN_IDS.includes(chainId)
 }
 
-export function fromGraphQLChain(chain: GraphQLChain | undefined): ChainId | null {
+export function fromGraphQLChain(chain: GQLChain | undefined): ChainId | null {
   switch (chain) {
     case 'ETHEREUM':
       return ChainId.Mainnet

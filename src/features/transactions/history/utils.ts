@@ -1,23 +1,17 @@
 import dayjs from 'dayjs'
 import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
-import {
-  Chain,
-  TokenStandard,
-  TransactionListQuery$data,
-} from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
 import { ChainId } from 'src/constants/chains'
 import { nativeOnChain } from 'src/constants/tokens'
+import {
+  Amount,
+  Currency,
+  Token,
+  TokenStandard,
+  TransactionListQuery,
+} from 'src/data/__generated__/types-and-hooks'
 import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
-
-interface Asset {
-  readonly address: string | null
-  readonly chain: Chain
-  readonly decimals: number | null
-  readonly name: string | null
-  readonly symbol: string | null
-}
 
 export interface AllFormattedTransactions {
   combinedTransactionList: TransactionDetails[]
@@ -96,7 +90,7 @@ export function formatTransactionsByDate(
  * Transforms api txn data to formatted TransactionDetails array
  * @param data Transaction history data response
  */
-export function parseDataResponseToTransactionDetails(data: TransactionListQuery$data) {
+export function parseDataResponseToTransactionDetails(data: TransactionListQuery) {
   if (data.portfolio?.assetActivities) {
     return data.portfolio.assetActivities.reduce((accum: TransactionDetails[], t) => {
       const parsed = extractTransactionDetails(t)
@@ -119,7 +113,7 @@ export function parseDataResponseToTransactionDetails(data: TransactionListQuery
  */
 export function deriveCurrencyAmountFromAssetResponse(
   tokenStandard: TokenStandard,
-  asset: Asset,
+  asset: Partial<Token>,
   quantity: string
 ) {
   const nativeCurrency = nativeOnChain(ChainId.Mainnet)
@@ -138,11 +132,6 @@ export function deriveCurrencyAmountFromAssetResponse(
  * @param transactedValue Transacted value amount from TokenTransfer API response
  * @returns parsed USD value as a number if currency is of type USD
  */
-export function parseUSDValueFromAssetChange(
-  transactedValue: {
-    currency: string | null
-    value: number | null
-  } | null
-) {
-  return transactedValue?.currency === 'USD' ? transactedValue.value ?? undefined : undefined
+export function parseUSDValueFromAssetChange(transactedValue: NullUndefined<Partial<Amount>>) {
+  return transactedValue?.currency === Currency.Usd ? transactedValue.value ?? undefined : undefined
 }

@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import React from 'react'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
@@ -10,12 +11,13 @@ import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 export function PortfolioBalance() {
   const owner = useActiveAccountAddressWithThrow()
-  const { data, loading, error } = usePortfolioBalanceQuery({
+  const { data, loading, error, networkStatus } = usePortfolioBalanceQuery({
     variables: { owner },
     pollInterval: PollingInterval.Fast,
+    notifyOnNetworkStatusChange: true,
   })
 
-  if (loading || error) {
+  if ((loading && networkStatus !== NetworkStatus.poll) || error) {
     return (
       <Loading>
         <Flex alignSelf="flex-start" backgroundColor="background0" borderRadius="md">

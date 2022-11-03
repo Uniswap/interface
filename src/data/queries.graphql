@@ -57,6 +57,52 @@ query TransactionHistoryUpdater($addresses: [String!]!) {
   }
 }
 
+query TokenDetailsScreen($contract: ContractInput!) {
+  tokens(contracts: [$contract]) {
+    market(currency: USD) {
+      volume(duration: DAY) {
+        value
+      }
+    }
+  }
+
+  tokenProjects(contracts: [$contract]) {
+    description
+    homepageUrl
+    twitterName
+    name
+    safetyLevel
+    markets(currencies: [USD]) {
+      price {
+        value
+        currency
+      }
+      marketCap {
+        value
+        currency
+      }
+      fullyDilutedMarketCap {
+        value
+        currency
+      }
+      priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+        value
+        currency
+      }
+      priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+        value
+        currency
+      }
+    }
+    tokens {
+      chain
+      address
+      symbol
+      decimals
+    }
+  }
+}
+
 query TokenProjects($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {
     logoUrl
@@ -67,6 +113,72 @@ query TokenProjects($contracts: [ContractInput!]!) {
       address
       decimals
       symbol
+    }
+  }
+}
+
+query TransactionList($address: String!) {
+  portfolio(ownerAddress: $address) {
+    assetActivities(pageSize: 50, page: 1) {
+      timestamp
+      type
+      transaction {
+        hash
+        status
+        to
+        from
+      }
+      assetChanges {
+        __typename
+        ... on TokenTransfer {
+          asset {
+            name
+            symbol
+            address
+            decimals
+            chain
+          }
+          tokenStandard
+          quantity
+          sender
+          recipient
+          direction
+          transactedValue {
+            currency
+            value
+          }
+        }
+        ... on NftTransfer {
+          asset {
+            name
+            nftContract {
+              chain
+              address
+            }
+            tokenId
+            imageUrl
+            collection {
+              name
+            }
+          }
+          nftStandard
+          sender
+          recipient
+          direction
+        }
+        ... on TokenApproval {
+          asset {
+            name
+            symbol
+            decimals
+            address
+            chain
+          }
+          tokenStandard
+          approvedAddress
+          quantity
+        }
+      }
     }
   }
 }
@@ -105,6 +217,27 @@ query SearchResults($searchQuery: String!) {
       address
       name
       symbol
+    }
+  }
+}
+
+query FavoriteTokenCardQuery($contract: ContractInput!) {
+  tokenProjects(contracts: [$contract]) {
+    tokens {
+      chain
+      address
+      symbol
+    }
+    logoUrl
+    markets(currencies: USD) {
+      price {
+        currency
+        value
+      }
+      pricePercentChange24h {
+        currency
+        value
+      }
     }
   }
 }

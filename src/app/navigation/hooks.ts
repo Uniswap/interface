@@ -1,92 +1,86 @@
 import { NavigationContainerRefContext, NavigationContext } from '@react-navigation/core'
 import { useCallback, useContext, useEffect } from 'react'
-import { useEagerNavigation, useEagerRootNavigation } from 'src/app/navigation/useEagerNavigation'
+import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
+import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/navigation/types'
 import { baseCurrencyIds } from 'src/components/TokenSelector/hooks'
-import { transactionListQuery } from 'src/components/TransactionList/TransactionList'
-import { TransactionListQuery } from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
-import { PollingInterval } from 'src/constants/misc'
-import { preloadMapping } from 'src/data/preloading'
 import {
   usePortfolioBalanceLazyQuery,
   usePortfolioBalancesLazyQuery,
   useTokenProjectsLazyQuery,
   useTopTokensLazyQuery,
+  useTransactionListLazyQuery,
 } from 'src/data/__generated__/types-and-hooks'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { useActiveAccountAddress } from 'src/features/wallet/hooks'
-import { Screens, Tabs } from 'src/screens/Screens'
+import { Screens } from 'src/screens/Screens'
 
 /**
  * Utility hook to simplify navigating to Activity screen.
  * Preloads query needed to render transaction list.
  */
 export function useEagerActivityNavigation() {
-  const { registerNavigationIntent, preloadedNavigate } = useEagerNavigation<TransactionListQuery>(
-    transactionListQuery,
-    PollingInterval.Normal
+  const navigation = useAppStackNavigation()
+  const [load] = useTransactionListLazyQuery()
+
+  const preload = useCallback(
+    (address: string) => {
+      load({
+        variables: {
+          address,
+        },
+      })
+    },
+    [load]
   )
 
-  const preload = (address: string) => {
-    registerNavigationIntent(
-      preloadMapping.activity({
-        address,
-      })
-    )
-  }
-
-  const navigate = (address: string) => {
-    preloadedNavigate(Screens.Activity, { address })
-  }
+  const navigate = useCallback(() => navigation.navigate(Screens.Activity), [navigation])
 
   return { preload, navigate }
 }
 
 /**
  * Utility hook to simplify navigating to Activity screen.
- * Preloads query neede to render transaction list.
+ * Preloads query needed to render transaction list.
  */
 export function useEagerExternalProfileNavigation() {
-  const { registerNavigationIntent, preloadedNavigate } = useEagerNavigation<TransactionListQuery>(
-    transactionListQuery,
-    PollingInterval.Normal
+  const navigation = useExploreStackNavigation()
+
+  const [load] = useTransactionListLazyQuery()
+
+  const preload = useCallback(
+    (address: string) => {
+      load({ variables: { address } })
+    },
+    [load]
   )
 
-  const preload = (address: string) => {
-    registerNavigationIntent(
-      preloadMapping.activity({
-        address,
-      })
-    )
-  }
-
-  const navigate = (address: string) => {
-    preloadedNavigate(Screens.ExternalProfile, { address })
-  }
+  const navigate = useCallback(
+    (address: string) => navigation.navigate(Screens.ExternalProfile, { address }),
+    [navigation]
+  )
 
   return { preload, navigate }
 }
 
 export function useEagerExternalProfileRootNavigation() {
-  const { registerNavigationIntent, preloadedNavigate } =
-    useEagerRootNavigation<TransactionListQuery>(Tabs.Explore, transactionListQuery)
+  const [load] = useTransactionListLazyQuery()
 
   const preload = useCallback(
     (address: string) => {
-      registerNavigationIntent(
-        preloadMapping.externalProfile({
+      load({
+        variables: {
           address,
-        })
-      )
+        },
+      })
     },
-    [registerNavigationIntent]
+    [load]
   )
 
-  const navigate = useCallback(
-    (address: string, callback?: () => void) => {
-      preloadedNavigate({ screen: Screens.ExternalProfile, params: { address } }, callback)
-    },
-    [preloadedNavigate]
-  )
+  const navigate = useCallback((address: string, callback?: () => void) => {
+    rootNavigate(Screens.ExternalProfile, { address }).then(() => {
+      callback?.()
+    })
+  }, [])
 
   return { preload, navigate }
 }

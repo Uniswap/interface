@@ -1,18 +1,16 @@
-import { graphql } from 'babel-plugin-relay/macro'
+import { NetworkStatus } from '@apollo/client'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList, SectionListData } from 'react-native'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
-import { Suspense } from 'src/components/data/Suspense'
 import { Box } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
+import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
 import {
   TransactionListQuery,
-  TransactionListQuery$data,
-} from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
-import { EMPTY_ARRAY } from 'src/constants/misc'
+  useTransactionListQuery,
+} from 'src/data/__generated__/types-and-hooks'
 import {
   formatTransactionsByDate,
   parseDataResponseToTransactionDetails,
@@ -35,123 +33,47 @@ const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { 
   </Box>
 )
 
-export const transactionListQuery = graphql`
-  query TransactionListQuery($address: String!) {
-    portfolio(ownerAddress: $address) {
-      assetActivities(pageSize: 50, page: 1) {
-        timestamp
-        type
-        transaction {
-          hash
-          status
-          to
-          from
-        }
-        assetChanges {
-          __typename
-          ... on TokenTransfer {
-            asset {
-              name
-              symbol
-              address
-              decimals
-              chain
-            }
-            tokenStandard
-            quantity
-            sender
-            recipient
-            direction
-            transactedValue {
-              currency
-              value
-            }
-          }
-          ... on NftTransfer {
-            asset {
-              name
-              nftContract {
-                chain
-                address
-              }
-              tokenId
-              imageUrl
-              collection {
-                name
-              }
-            }
-            nftStandard
-            sender
-            recipient
-            direction
-          }
-          ... on TokenApproval {
-            asset {
-              name
-              symbol
-              decimals
-              address
-              chain
-            }
-            tokenStandard
-            approvedAddress
-            quantity
-          }
-        }
-      }
-    }
-  }
-`
-
 export type TransactionListQueryResponse = NonNullable<
-  NonNullable<TransactionListQuery$data['portfolio']>['assetActivities']
+  NonNullable<TransactionListQuery['portfolio']>['assetActivities']
 >[0]
 
 interface TransactionListProps {
   ownerAddress: Address
-  preloadedQuery: NullUndefined<PreloadedQuery<TransactionListQuery>>
   readonly: boolean
   emptyStateContent: ReactElement | null
 }
 
-const suspend = () => new Promise(() => {})
-
 export default function TransactionList(props: TransactionListProps) {
-  return (
-    <Suspense
-      fallback={
-        <Box>
-          <Loading type="transactions" />
-        </Box>
-      }>
-      <TransactionListInner {...props} />
-    </Suspense>
-  )
+  // Parse remote txn data from query and merge with local txn data
+  const { data, loading, error, networkStatus } = useTransactionListQuery({
+    variables: { address: props.ownerAddress },
+    pollInterval: PollingInterval.Fast,
+    notifyOnNetworkStatusChange: true,
+  })
+
+  if ((loading && networkStatus !== NetworkStatus.poll) || error) {
+    return (
+      <Box>
+        <Loading type="transactions" />
+      </Box>
+    )
+  }
+  return <TransactionListInner {...props} data={data} />
 }
 
 /** Displays historical and pending transactions for a given address. */
 function TransactionListInner({
+  data,
   ownerAddress,
-  preloadedQuery,
   readonly,
   emptyStateContent,
-}: TransactionListProps) {
-  // force a fallback if the query is not yet loaded
-  if (!preloadedQuery) {
-    throw suspend()
-  }
-
+}: TransactionListProps & { data: TransactionListQuery | undefined }) {
   const { t } = useTranslation()
 
-  // Parse remote txn data from query and merge with local txn data
-  const transactionData = usePreloadedQuery<TransactionListQuery>(
-    transactionListQuery,
-    preloadedQuery
-  )
   // format local and remote fetched txns
   const formattedTransactions = useMemo(
-    () => (transactionData ? parseDataResponseToTransactionDetails(transactionData) : []),
-    [transactionData]
+    () => (data ? parseDataResponseToTransactionDetails(data) : []),
+    [data]
   )
   const transactions = useMergeLocalAndRemoteTransactions(ownerAddress, formattedTransactions)
   // Format transactions for section list

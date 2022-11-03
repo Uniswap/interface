@@ -49,10 +49,7 @@ export function HomeScreen() {
     navigation.dispatch(DrawerActions.openDrawer())
   }, [navigation])
 
-  const { preload, navigate } = useEagerActivityNavigation()
-  const onPressNotifications = useCallback(() => {
-    navigate(activeAccount.address)
-  }, [activeAccount.address, navigate])
+  const { preload, navigate: onPressNotifications } = useEagerActivityNavigation()
 
   const onPressInNotifications = useCallback(() => {
     preload(activeAccount.address)

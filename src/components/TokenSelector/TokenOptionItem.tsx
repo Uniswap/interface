@@ -10,7 +10,7 @@ import { Text } from 'src/components/Text'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TokenOption } from 'src/components/TokenSelector/types'
-import { SafetyLevel } from 'src/features/dataApi/types'
+import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { useDismissTokenWarnings } from 'src/features/tokens/useTokenWarningLevel'
 import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
@@ -34,7 +34,8 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
   const onPressTokenOption = useCallback(() => {
     if (
       safetyLevel === SafetyLevel.Blocked ||
-      ((safetyLevel === SafetyLevel.Medium || safetyLevel === SafetyLevel.Strong) && !dismissed)
+      ((safetyLevel === SafetyLevel.MediumWarning || safetyLevel === SafetyLevel.StrongWarning) &&
+        !dismissed)
     ) {
       Keyboard.dismiss()
       setShowWarningModal(true)

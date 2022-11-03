@@ -32,7 +32,7 @@ export function AccountHeader() {
 
   const onPressNotifications = useCallback(() => {
     if (activeAddress) {
-      navigate(activeAddress)
+      navigate()
     }
   }, [activeAddress, navigate])
 

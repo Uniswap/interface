@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { AppStackScreenProp } from 'src/app/navigation/types'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -16,11 +15,8 @@ import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Screens } from 'src/screens/Screens'
 
-export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) {
-  const { preloadedQuery } = route.params
-
+export function ActivityScreen() {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { address, type } = useActiveAccountWithThrow()
@@ -60,7 +56,6 @@ export function ActivityScreen({ route }: AppStackScreenProp<Screens.Activity>) 
             </Flex>
           }
           ownerAddress={address}
-          preloadedQuery={preloadedQuery}
           readonly={readonly}
         />
       </Flex>

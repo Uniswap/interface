@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { SafetyLevel } from 'src/features/dataApi/types'
+import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import {
   addDismissedWarningToken,
   dismissedWarningTokensSelector,
@@ -36,9 +36,9 @@ export function useTokenWarningLevel(currency: Currency): {
 
 export function useTokenSafetyLevelColors(safetyLevel: NullUndefined<SafetyLevel>) {
   switch (safetyLevel) {
-    case SafetyLevel.Medium:
+    case SafetyLevel.MediumWarning:
       return 'accentWarning'
-    case SafetyLevel.Strong:
+    case SafetyLevel.StrongWarning:
       return 'accentCritical'
     case SafetyLevel.Blocked:
       return 'textSecondary'

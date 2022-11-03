@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client'
+import { NetworkStatus } from '@apollo/client'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ImageStyle, ViewProps } from 'react-native'
@@ -14,6 +14,7 @@ import { RelativeChange } from 'src/components/text/RelativeChange'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { PollingInterval } from 'src/constants/misc'
+import { useFavoriteTokenCardQueryQuery } from 'src/data/__generated__/types-and-hooks'
 import { AssetType } from 'src/entities/assets'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { removeFavoriteToken } from 'src/features/favorites/slice'
@@ -31,31 +32,6 @@ const THIN_BORDER = 0.5
 
 const BOX_TOKEN_LOGO_SIZE = 36
 const boxTokenLogoStyle: ImageStyle = { width: BOX_TOKEN_LOGO_SIZE, height: BOX_TOKEN_LOGO_SIZE }
-
-// Do one query per item to avoid suspense on entire screen / container
-// @TODO: Find way to load at the root of explore without a rerender when favorite token state changes
-export const favoriteTokenCardQuery = gql`
-  query FavoriteTokenCardQuery($contract: ContractInput!) {
-    tokenProjects(contracts: [$contract]) {
-      tokens {
-        chain
-        address
-        symbol
-      }
-      logoUrl
-      markets(currencies: USD) {
-        price {
-          currency
-          value
-        }
-        pricePercentChange24h {
-          currency
-          value
-        }
-      }
-    }
-  }
-`
 
 type FavoriteTokenCardProps = {
   currencyId: CurrencyId
@@ -75,11 +51,15 @@ function FavoriteTokenCard({
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const contractInput = useMemo(() => currencyIdToContractInput(currencyId), [currencyId])
 
-  const { data, loading, error } = useQuery(favoriteTokenCardQuery, {
+  // TODO: this TODO is now obsolete, and can be completed with Apollo
+  // Do one query per item to avoid suspense on entire screen / container
+  // @TODO: Find way to load at the root of explore without a rerender when favorite token state changes
+  const { data, loading, error, networkStatus } = useFavoriteTokenCardQueryQuery({
     variables: {
       contract: contractInput,
     },
     pollInterval: PollingInterval.Fast,
+    notifyOnNetworkStatusChange: true,
   })
 
   // Parse token fields from response
@@ -129,7 +109,7 @@ function FavoriteTokenCard({
     tokenDetailsNavigation.preload(currencyId)
   }
 
-  if (loading || error) {
+  if ((loading && networkStatus !== NetworkStatus.poll) || error) {
     return <BaseCard.Shadow aspectRatio={1} px="xs" {...rest} />
   }
 

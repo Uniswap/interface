@@ -31,7 +31,7 @@ const ACTIVITY_KEY = 'profile-activity'
 
 export function ExternalProfileScreen({
   route: {
-    params: { address, preloadedQuery },
+    params: { address },
   },
 }: Props) {
   const dispatch = useAppDispatch()
@@ -73,7 +73,7 @@ export function ExternalProfileScreen({
     ({ route }) => {
       switch (route?.key) {
         case ACTIVITY_KEY:
-          return <ProfileActivityTab ownerAddress={address} preloadedQuery={preloadedQuery} />
+          return <ProfileActivityTab ownerAddress={address} />
         case NFTS_KEY:
           return <NftsTab owner={address} />
         case TOKENS_KEY:
@@ -81,7 +81,7 @@ export function ExternalProfileScreen({
       }
       return null
     },
-    [address, preloadedQuery]
+    [address]
   )
 
   const onPressSend = useCallback(() => {
