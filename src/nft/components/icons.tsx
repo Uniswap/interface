@@ -924,7 +924,7 @@ export const CornerDownLeftIcon = (props: SVGProps) => (
 )
 
 export const FilterIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg width="20" height="20" viewBox="1 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       d="M18.3332 2.5H1.6665L8.33317 10.3833V15.8333L11.6665 17.5V10.3833L18.3332 2.5Z"
       stroke="currentColor"
