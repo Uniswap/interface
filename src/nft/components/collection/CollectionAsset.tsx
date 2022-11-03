@@ -56,11 +56,13 @@ export const CollectionAsset = ({
     let notForSale = true
     let assetMediaType = AssetMediaType.Image
 
-    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo.ETHPrice ? asset.priceInfo.ETHPrice : 0).lt(0)
-    if (isAudio(asset.animationUrl)) {
-      assetMediaType = AssetMediaType.Audio
-    } else if (isVideo(asset.animationUrl)) {
-      assetMediaType = AssetMediaType.Video
+    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
+    if (asset.animationUrl) {
+      if (isAudio(asset.animationUrl)) {
+        assetMediaType = AssetMediaType.Audio
+      } else if (isVideo(asset.animationUrl)) {
+        assetMediaType = AssetMediaType.Video
+      }
     }
 
     return {
@@ -71,7 +73,9 @@ export const CollectionAsset = ({
 
   const { provider, rarityLogo } = useMemo(() => {
     return {
-      provider: asset.rarity?.providers.find(({ provider: _provider }) => _provider === asset.rarity?.primaryProvider),
+      provider: asset?.rarity?.providers?.find(
+        ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
+      ),
       rarityLogo: rarityProviderLogo[asset.rarity?.primaryProvider ?? 0] ?? '',
     }
   }, [asset])
@@ -98,7 +102,7 @@ export const CollectionAsset = ({
     >
       <Card.ImageContainer>
         {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}
-        {asset.rarity && provider && provider.rank && (
+        {asset.rarity && provider && (
           <Card.Ranking
             rarity={asset.rarity}
             provider={provider}
