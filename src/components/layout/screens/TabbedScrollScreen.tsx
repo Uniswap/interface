@@ -17,7 +17,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Route, SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
-import { ScrollEvent } from 'recyclerlistview/dist/reactnative/core/scrollcomponent/BaseScrollView'
 import { useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout/Box'
@@ -45,7 +44,7 @@ type TabbedScrollScreenProps = {
 
 export type TabViewScrollProps = {
   ref: Ref<any>
-  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent> | ScrollEvent) => void
+  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   contentContainerStyle: ViewStyle
 }
 

@@ -1,9 +1,12 @@
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
+import { FlashList, ListRenderItemInfo } from '@shopify/flash-list'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { SWAP_BUTTON_HEIGHT } from 'src/app/navigation/TabBar'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import NoNFTsIcon from 'src/assets/icons/empty-state-picture.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
@@ -19,7 +22,6 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
-import { GridRecyclerList } from 'src/components/layout/GridRecyclerList'
 import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
 import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
@@ -31,17 +33,12 @@ import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
-import { theme as FixedTheme } from 'src/styles/theme'
 import { formatNFTFloorPrice } from 'src/utils/format'
 
 const MAX_NFT_IMAGE_SIZE = 375
-
-const styles = StyleSheet.create({
-  tabContentStyle: {
-    paddingHorizontal: FixedTheme.spacing.xs,
-    paddingTop: FixedTheme.spacing.sm,
-  },
-})
+const ESTIMATED_ITEM_SIZE = 100
+const PREFETCH_ITEMS_THRESHOLD = 0.5
+const LOADING_ITEM = 'loading'
 
 const nftsTabPaginationQuery = graphql`
   fragment NftsTab_asset on Query
@@ -109,6 +106,11 @@ function formatNftItems(data: NftsTab_asset$data | null | undefined): NFTItem[] 
   return nfts
 }
 
+const keyExtractor = (item: NFTItem | string) =>
+  typeof item === 'string'
+    ? LOADING_ITEM
+    : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
+
 export function NftsTab(props: {
   owner: string
   tabViewScrollProps?: TabViewScrollProps
@@ -146,7 +148,7 @@ function NftsTabInner({
     nftsTabQuery,
     {
       ownerAddress: owner,
-      first: 20,
+      first: 50,
     },
     // `NFTsTabQuery` has the same key as `PortfolioBalance`, which can cause
     // race conditions, where `PortfolioBalance` sends a network request first,
@@ -161,11 +163,13 @@ function NftsTabInner({
     NftBalancesPaginationQuery,
     NftsTab_asset$key
   >(nftsTabPaginationQuery, queryData)
+
   const nftDataItems = formatNftItems(data)
+  const shouldAddInLoadingItem = isLoadingNext && nftDataItems.length % 2 === 1
 
   const onListEndReached = () => {
     if (!hasNext) return
-    loadNext(20)
+    loadNext(50)
   }
 
   const onPressItem = useCallback(
@@ -188,10 +192,12 @@ function NftsTabInner({
   }
 
   const renderItem = useCallback(
-    (asset: NFTItem) => {
-      return (
+    ({ item }: ListRenderItemInfo<string | NFTItem>) => {
+      return typeof item === 'string' ? (
+        <Loading repeat={1} type="nft" />
+      ) : (
         <Box flex={1} justifyContent="flex-start" m="xs">
-          <TouchableArea activeOpacity={1} onPress={() => onPressItem(asset)}>
+          <TouchableArea activeOpacity={1} onPress={() => onPressItem(item)}>
             <Box
               alignItems="center"
               aspectRatio={1}
@@ -202,32 +208,32 @@ function NftsTabInner({
               width="100%">
               <NFTViewer
                 maxHeight={MAX_NFT_IMAGE_SIZE}
-                placeholderContent={asset.name || asset.collectionName}
+                placeholderContent={item.name || item.collectionName}
                 squareGridView={true}
-                uri={asset.imageUrl ?? ''}
+                uri={item.imageUrl ?? ''}
               />
             </Box>
             <Flex gap="none" py="xs">
               <Text ellipsizeMode="tail" numberOfLines={1} variant="bodyLarge">
-                {asset.name}
+                {item.name}
               </Text>
               <Flex row alignItems="center" gap="xs" justifyContent="flex-start">
                 <Flex row shrink>
                   <Text ellipsizeMode="tail" numberOfLines={1} variant="bodySmall">
-                    {asset.collectionName}
+                    {item.collectionName}
                   </Text>
                 </Flex>
-                {asset.isVerifiedCollection && (
+                {item.isVerifiedCollection && (
                   <VerifiedIcon color={theme.colors.userThemeMagenta} height={16} width={16} />
                 )}
               </Flex>
-              {asset.floorPrice && (
+              {item.floorPrice && (
                 <Text
                   color="textSecondary"
                   ellipsizeMode="tail"
                   numberOfLines={1}
                   variant="bodySmall">
-                  {formatNFTFloorPrice(asset.floorPrice)} ETH
+                  {formatNFTFloorPrice(item.floorPrice)} ETH
                 </Text>
               )}
             </Flex>
@@ -237,6 +243,8 @@ function NftsTabInner({
     },
     [onPressItem, theme.colors.userThemeMagenta]
   )
+
+  const footerHeight = useBottomTabBarHeight() + SWAP_BUTTON_HEIGHT
 
   return nftDataItems.length === 0 ? (
     <Flex centered flex={1} style={loadingContainerStyle}>
@@ -249,15 +257,23 @@ function NftsTabInner({
       />
     </Flex>
   ) : (
-    <View style={styles.tabContentStyle}>
-      <GridRecyclerList
-        data={nftDataItems}
-        getKey={({ contractAddress, tokenId }) => getNFTAssetKey(contractAddress ?? '', tokenId)}
-        isLoadingNext={isLoadingNext}
+    <Flex flexGrow={1} paddingHorizontal="xs" paddingTop="sm">
+      <FlashList
+        ref={tabViewScrollProps?.ref}
+        ListFooterComponent={
+          isLoadingNext ? <Loading repeat={4} type="nft" /> : <Box height={footerHeight} />
+        }
+        contentContainerStyle={tabViewScrollProps?.contentContainerStyle}
+        data={shouldAddInLoadingItem ? [...nftDataItems, LOADING_ITEM] : nftDataItems}
+        estimatedItemSize={ESTIMATED_ITEM_SIZE}
+        keyExtractor={keyExtractor}
+        numColumns={2}
         renderItem={renderItem}
-        tabViewScrollProps={tabViewScrollProps}
+        showsVerticalScrollIndicator={false}
         onEndReached={onListEndReached}
+        onEndReachedThreshold={PREFETCH_ITEMS_THRESHOLD}
+        onScroll={tabViewScrollProps?.onScroll}
       />
-    </View>
+    </Flex>
   )
 }
