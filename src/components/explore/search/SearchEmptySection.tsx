@@ -46,12 +46,6 @@ export const SUGGESTED_WALLETS: WalletSearchResult[] = [
   },
   {
     type: SearchResultType.Wallet,
-    address: '0x1a9C8182C09F50C8318d769245beA52c32BE35BC',
-    ensName: 'uniswap.eth',
-    category: WalletCategory.DAO,
-  },
-  {
-    type: SearchResultType.Wallet,
     address: '0x11E4857Bb9993a50c685A79AFad4E6F65D518DDa',
     ensName: 'hayden.eth',
     category: WalletCategory.Builder,
