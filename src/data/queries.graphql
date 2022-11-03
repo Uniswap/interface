@@ -1,0 +1,16 @@
+query PortfolioBalance($owner: String!) {
+  portfolios(ownerAddresses: [$owner]) {
+    tokensTotalDenominatedValue {
+      value
+    }
+  }
+}
+
+query TransactionHistoryUpdater($addresses: [String!]!) {
+  portfolios(ownerAddresses: $addresses) {
+    ownerAddress
+    assetActivities(pageSize: 1, page: 1) {
+      timestamp
+    }
+  }
+}

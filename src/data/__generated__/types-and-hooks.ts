@@ -820,6 +820,13 @@ export type PortfolioBalanceQueryVariables = Exact<{
 
 export type PortfolioBalanceQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', tokensTotalDenominatedValue?: { __typename?: 'Amount', value: number } | null } | null> | null };
 
+export type TransactionHistoryUpdaterQueryVariables = Exact<{
+  addresses: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type TransactionHistoryUpdaterQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', ownerAddress: string, assetActivities?: Array<{ __typename?: 'AssetActivity', timestamp: number } | null> | null } | null> | null };
+
 
 export const PortfolioBalanceDocument = gql`
     query PortfolioBalance($owner: String!) {
@@ -858,3 +865,41 @@ export function usePortfolioBalanceLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type PortfolioBalanceQueryHookResult = ReturnType<typeof usePortfolioBalanceQuery>;
 export type PortfolioBalanceLazyQueryHookResult = ReturnType<typeof usePortfolioBalanceLazyQuery>;
 export type PortfolioBalanceQueryResult = Apollo.QueryResult<PortfolioBalanceQuery, PortfolioBalanceQueryVariables>;
+export const TransactionHistoryUpdaterDocument = gql`
+    query TransactionHistoryUpdater($addresses: [String!]!) {
+  portfolios(ownerAddresses: $addresses) {
+    ownerAddress
+    assetActivities(pageSize: 1, page: 1) {
+      timestamp
+    }
+  }
+}
+    `;
+
+/**
+ * __useTransactionHistoryUpdaterQuery__
+ *
+ * To run a query within a React component, call `useTransactionHistoryUpdaterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionHistoryUpdaterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionHistoryUpdaterQuery({
+ *   variables: {
+ *      addresses: // value for 'addresses'
+ *   },
+ * });
+ */
+export function useTransactionHistoryUpdaterQuery(baseOptions: Apollo.QueryHookOptions<TransactionHistoryUpdaterQuery, TransactionHistoryUpdaterQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TransactionHistoryUpdaterQuery, TransactionHistoryUpdaterQueryVariables>(TransactionHistoryUpdaterDocument, options);
+      }
+export function useTransactionHistoryUpdaterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionHistoryUpdaterQuery, TransactionHistoryUpdaterQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TransactionHistoryUpdaterQuery, TransactionHistoryUpdaterQueryVariables>(TransactionHistoryUpdaterDocument, options);
+        }
+export type TransactionHistoryUpdaterQueryHookResult = ReturnType<typeof useTransactionHistoryUpdaterQuery>;
+export type TransactionHistoryUpdaterLazyQueryHookResult = ReturnType<typeof useTransactionHistoryUpdaterLazyQuery>;
+export type TransactionHistoryUpdaterQueryResult = Apollo.QueryResult<TransactionHistoryUpdaterQuery, TransactionHistoryUpdaterQueryVariables>;
