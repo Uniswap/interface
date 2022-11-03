@@ -1,3 +1,4 @@
+import { MouseoverTooltip } from 'components/Tooltip'
 import { DEFAULT_LIST_OF_LISTS } from 'constants/lists'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
 import { chainIdToNetworkName } from 'lib/hooks/useCurrencyLogoURIs'
@@ -105,6 +106,16 @@ interface SmartLogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'>
   size?: string
 }
 
+interface IndividialLogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'> {
+  src: string
+  size?: string
+}
+
+function IndividialLogo({ src, alt, style, size, ...rest }: IndividialLogoProps) {
+  const [display, setDisplay] = useState(true)
+  return display ? <img {...rest} alt={alt} src={src} style={style} onError={() => setDisplay(false)} /> : null
+}
+
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
@@ -121,30 +132,16 @@ export function SmartLogo({ token: { address, chain, chainId, symbol }, alt, sty
         .flat(1) ?? []
     // Prioritize non-coingecko logos
     tokenListIcons.sort((a, b) => (a?.startsWith('https://assets.coingecko') ? -1 : 1))
-    return [assetsRepoIcon, ...tokenListIcons]
+    return [...new Set([assetsRepoIcon, ...tokenListIcons])]
   }, [address, chain, chainId, checksummedAddress])
 
-  const src: string | undefined = srcs.find((src) => !BAD_SRCS[src])
-
-  if (src) {
-    return (
-      <img
-        {...rest}
-        alt={alt}
-        src={src}
-        style={style}
-        onError={() => {
-          if (src) BAD_SRCS[src] = true
-          refresh((i) => i + 1)
-        }}
-      />
-    )
-  }
-
   return (
-    <MissingImageLogo size={size}>
-      {/* use only first 3 characters of Symbol for design reasons */}
-      {symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
-    </MissingImageLogo>
+    <div style={{ display: 'flex', flexDirection: 'row' }}>
+      {srcs.map((src) => (
+        <MouseoverTooltip key={src} text={src}>
+          <IndividialLogo {...rest} alt={alt} src={src} style={style} />
+        </MouseoverTooltip>
+      ))}
+    </div>
   )
 }

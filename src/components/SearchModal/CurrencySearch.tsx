@@ -194,7 +194,7 @@ export function CurrencySearch({
               onKeyDown={handleEnter}
             />
           </Row>
-          {showCommonBases && (
+          {showCommonBases && false && (
             <CommonBases
               chainId={chainId}
               onSelect={handleCurrencySelect}
