@@ -98,20 +98,6 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
   const collection = asset?.collection
   const ethPrice = parseEther(asset?.listings?.edges[0].node.price.value?.toString() ?? '0').toString()
 
-  asset?.listings?.edges.map((listingNode) => {
-    return {
-      ...listingNode.node,
-      protocolParameters: listingNode.node.protocolParameters
-        ? JSON.parse(listingNode.node.protocolParameters.toString())
-        : undefined,
-    } as SellOrder
-  })
-
-  asset?.traits?.map((trait) => {
-    // @ts-ignore
-    return { trait_type: newTrait.name ?? '', value: newTrait.value ?? '' } as Trait
-  })
-
   return [
     {
       id: asset?.id,
@@ -130,7 +116,14 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
         basePrice: ethPrice,
       },
       susFlag: asset?.suspiciousFlag ?? undefined,
-      sellorders: [],
+      sellorders: asset?.listings?.edges.map((listingNode) => {
+        return {
+          ...listingNode.node,
+          protocolParameters: listingNode.node.protocolParameters
+            ? JSON.parse(listingNode.node.protocolParameters.toString())
+            : undefined,
+        } as SellOrder
+      }),
       smallImageUrl: asset?.smallImage?.url,
       tokenId,
       tokenType: (asset?.collection?.nftContracts && asset?.collection.nftContracts[0]?.standard) as TokenType,
@@ -153,7 +146,10 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
         address: asset?.creator?.address ?? '',
       },
       metadataUrl: asset?.metadataUrl ?? '',
-      traits: [],
+      traits: asset?.traits?.map((trait) => {
+        // @ts-ignore
+        return { trait_type: trait.name ?? '', value: trait.value ?? '' } as Trait
+      }),
       externalLink: '',
     },
     {
