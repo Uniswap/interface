@@ -1,4 +1,5 @@
-import React from 'react'
+import MaskedView from '@react-native-masked-view/masked-view'
+import React, { ComponentProps } from 'react'
 import { Box, Flex } from 'src/components/layout'
 import { BoxLoader } from 'src/components/loading/BoxLoader'
 import { FavoriteLoader } from 'src/components/loading/FavoriteLoader'
@@ -31,9 +32,13 @@ type LoadingProps = {
   type?: SkeletonType
   repeat?: number
   height?: number
+
+  // use this instead of React.PropsWithChildren because MaskedView doesn't accept
+  // every kind of ReactNode as a valid mask element
+  children?: ComponentProps<typeof MaskedView>['maskElement']
 }
 
-const useChildFromType = (type: SkeletonType, repeat: number, height?: number) => {
+const getChildFromType = (type: SkeletonType, repeat: number, height?: number) => {
   switch (type) {
     case 'header':
       return (
@@ -130,8 +135,8 @@ const useChildFromType = (type: SkeletonType, repeat: number, height?: number) =
   }
 }
 
-export function Loading({ type = 'box', repeat = 1, height }: LoadingProps) {
-  const child = useChildFromType(type, repeat, height)
+export function Loading({ type = 'box', repeat = 1, height, children }: LoadingProps) {
+  const child = children ?? getChildFromType(type, repeat, height)
 
   return <Shimmer>{child}</Shimmer>
 }

@@ -1,57 +1,37 @@
-import { graphql } from 'babel-plugin-relay/macro'
 import React from 'react'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
-import { Suspense } from 'src/components/data/Suspense'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { DecimalNumber } from 'src/components/text/DecimalNumber'
-import { PortfolioBalanceQuery } from 'src/features/balances/__generated__/PortfolioBalanceQuery.graphql'
+import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
+import { PollingInterval } from 'src/constants/misc'
+import { usePortfolioBalanceQuery } from 'src/data/__generated__/types-and-hooks'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { formatUSDPrice, NumberType } from 'src/utils/format'
 
-interface PortfolioBalanceProps {
-  queryRef: NullUndefined<PreloadedQuery<PortfolioBalanceQuery>>
-}
+export function PortfolioBalance() {
+  const owner = useActiveAccountAddressWithThrow()
+  const { data, loading, error } = usePortfolioBalanceQuery({
+    variables: { owner },
+    pollInterval: PollingInterval.Fast,
+  })
 
-export const portfolioBalanceQuery = graphql`
-  query PortfolioBalanceQuery($owner: String!) {
-    portfolios(ownerAddresses: [$owner]) {
-      tokensTotalDenominatedValue @required(action: LOG) {
-        value @required(action: LOG)
-      }
-    }
-  }
-`
-
-export function PortfolioBalance({ queryRef }: PortfolioBalanceProps) {
-  if (!queryRef) {
+  if (loading || error) {
     return (
-      <Box width="70%">
-        <Loading />
-      </Box>
+      <Loading>
+        <Flex alignSelf="flex-start" backgroundColor="background0" borderRadius="md">
+          <HiddenFromScreenReaders>
+            <DecimalNumber number="0000.00" opacity={0} variant="headlineLarge" />
+          </HiddenFromScreenReaders>
+        </Flex>
+      </Loading>
     )
   }
-
-  return (
-    <Suspense
-      errorFallback={<DecimalNumber number="-" variant="headlineLarge" />}
-      fallback={
-        <Box width="70%">
-          <Loading />
-        </Box>
-      }>
-      <PortfolioBalanceInner queryRef={queryRef} />
-    </Suspense>
-  )
-}
-
-function PortfolioBalanceInner({ queryRef }: { queryRef: PreloadedQuery<PortfolioBalanceQuery> }) {
-  const data = usePreloadedQuery(portfolioBalanceQuery, queryRef)
 
   return (
     <Flex gap="xxs">
       <DecimalNumber
         number={formatUSDPrice(
-          data?.portfolios?.[0]?.tokensTotalDenominatedValue.value ?? undefined,
+          data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value ?? undefined,
           NumberType.FiatTokenQuantity
         )}
         variant="headlineLarge"

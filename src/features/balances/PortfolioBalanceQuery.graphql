@@ -1,0 +1,7 @@
+  query PortfolioBalance($owner: String!) {
+    portfolios(ownerAddresses: [$owner]) {
+      tokensTotalDenominatedValue {
+        value
+      }
+    }
+  }

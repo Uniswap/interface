@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { HomeScreenQueries, useEagerActivityNavigation } from 'src/app/navigation/hooks'
+import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import HamburgerIcon from 'src/assets/icons/hamburger.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
@@ -37,9 +37,7 @@ import { removePendingSession } from 'src/features/walletConnect/walletConnectSl
 const TOKENS_KEY = 'tokens'
 const NFTS_KEY = 'nfts'
 
-type Props = { queryRefs: HomeScreenQueries }
-
-export function HomeScreen({ queryRefs }: Props) {
+export function HomeScreen() {
   // imports test account for easy development/testing
   useTestAccount()
   const activeAccount = useActiveAccountWithThrow()
@@ -72,7 +70,7 @@ export function HomeScreen({ queryRefs }: Props) {
       <Flex bg="background0" gap="sm" pb="md">
         <AccountHeader />
         <Flex gap="sm" px="lg">
-          <PortfolioBalance queryRef={queryRefs.portfolioBalanceQueryRef} />
+          <PortfolioBalance />
           {activeAccount.type !== AccountType.Readonly && (
             <Flex pt="xxs">
               <QuickActions />
@@ -81,7 +79,7 @@ export function HomeScreen({ queryRefs }: Props) {
         </Flex>
       </Flex>
     )
-  }, [activeAccount.type, queryRefs.portfolioBalanceQueryRef])
+  }, [activeAccount.type])
 
   const scrollHeader = useMemo(() => {
     if (!tabsExperimentVariant || tabsExperimentVariant === EXP_VARIANTS.Tabs) return

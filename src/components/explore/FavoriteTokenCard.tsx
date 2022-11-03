@@ -1,15 +1,12 @@
-import { graphql } from 'babel-plugin-relay/macro'
+import { gql, useQuery } from '@apollo/client'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ImageStyle, ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useLazyLoadQuery } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AnimatedTouchableArea } from 'src/components/buttons/TouchableArea'
-import { Suspense } from 'src/components/data/Suspense'
 import RemoveButton from 'src/components/explore/RemoveButton'
-import { FavoriteTokenCardQuery } from 'src/components/explore/__generated__/FavoriteTokenCardQuery.graphql'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
@@ -37,7 +34,7 @@ const boxTokenLogoStyle: ImageStyle = { width: BOX_TOKEN_LOGO_SIZE, height: BOX_
 
 // Do one query per item to avoid suspense on entire screen / container
 // @TODO: Find way to load at the root of explore without a rerender when favorite token state changes
-export const favoriteTokenCardQuery = graphql`
+export const favoriteTokenCardQuery = gql`
   query FavoriteTokenCardQuery($contract: ContractInput!) {
     tokenProjects(contracts: [$contract]) {
       tokens {
@@ -66,15 +63,7 @@ type FavoriteTokenCardProps = {
   setIsEditing: (update: boolean) => void
 } & ViewProps
 
-function FavoriteTokenCard(props: FavoriteTokenCardProps) {
-  return (
-    <Suspense fallback={<BaseCard.Shadow aspectRatio={1} px="xs" {...props} />}>
-      <FavoriteTokenCardInner {...props} />
-    </Suspense>
-  )
-}
-
-function FavoriteTokenCardInner({
+function FavoriteTokenCard({
   currencyId,
   isEditing,
   setIsEditing,
@@ -86,13 +75,12 @@ function FavoriteTokenCardInner({
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const contractInput = useMemo(() => currencyIdToContractInput(currencyId), [currencyId])
 
-  const data = useLazyLoadQuery<FavoriteTokenCardQuery>(
-    favoriteTokenCardQuery,
-    {
+  const { data, loading, error } = useQuery(favoriteTokenCardQuery, {
+    variables: {
       contract: contractInput,
     },
-    { networkCacheConfig: { poll: PollingInterval.Fast }, fetchPolicy: 'store-and-network' }
-  )
+    pollInterval: PollingInterval.Fast,
+  })
 
   // Parse token fields from response
   const tokenData = data?.tokenProjects?.[0]
@@ -139,6 +127,10 @@ function FavoriteTokenCardInner({
   const onPressIn = () => {
     if (isEditing) return
     tokenDetailsNavigation.preload(currencyId)
+  }
+
+  if (loading || error) {
+    return <BaseCard.Shadow aspectRatio={1} px="xs" {...rest} />
   }
 
   return (

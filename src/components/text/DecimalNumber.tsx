@@ -1,8 +1,8 @@
 import React from 'react'
-import { Text } from 'src/components/Text'
+import { Text, TextProps } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 
-type DecimalNumberProps = {
+type DecimalNumberProps = TextProps & {
   number: string
   separator?: string
   variant: keyof Theme['textVariants']
@@ -10,11 +10,11 @@ type DecimalNumberProps = {
 
 // Utility component to display decimal numbers where the decimal part
 // is dimmed
-export function DecimalNumber({ number, separator = '.', variant }: DecimalNumberProps) {
+export function DecimalNumber({ number, separator = '.', variant, ...rest }: DecimalNumberProps) {
   const [pre, post] = number.split(separator)
 
   return (
-    <Text variant={variant}>
+    <Text variant={variant} {...rest}>
       {pre}
       {post && (
         <Text color="textTertiary">

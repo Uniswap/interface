@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { batch } from 'react-redux'
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { refetchAllQueries } from 'src/data/apollo'
 import {
   setLastTxNotificationUpdate,
   setNotificationStatus,
@@ -70,6 +71,9 @@ export function TransactionHistoryUpdater({
         if (hasNewTransactions) {
           dispatch(setLastTxNotificationUpdate({ address, timestamp: transactionData.timestamp }))
           dispatch(setNotificationStatus({ address, hasNotifications: true }))
+
+          // full send refetch all active (mounted) queries
+          refetchAllQueries()
         }
       })
     })

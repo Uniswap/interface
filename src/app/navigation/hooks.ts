@@ -1,13 +1,11 @@
 import { NavigationContainerRefContext, NavigationContext } from '@react-navigation/core'
-import { useCallback, useContext, useEffect, useMemo } from 'react'
-import { PreloadedQuery, useQueryLoader } from 'react-relay'
+import { useCallback, useContext, useEffect } from 'react'
 import { useEagerNavigation, useEagerRootNavigation } from 'src/app/navigation/useEagerNavigation'
 import { transactionListQuery } from 'src/components/TransactionList/TransactionList'
 import { TransactionListQuery } from 'src/components/TransactionList/__generated__/TransactionListQuery.graphql'
 import { PollingInterval } from 'src/constants/misc'
 import { preloadMapping } from 'src/data/preloading'
-import { portfolioBalanceQuery } from 'src/features/balances/PortfolioBalance'
-import { PortfolioBalanceQuery } from 'src/features/balances/__generated__/PortfolioBalanceQuery.graphql'
+import { usePortfolioBalanceLazyQuery } from 'src/data/__generated__/types-and-hooks'
 import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { Screens, Tabs } from 'src/screens/Screens'
 
@@ -86,31 +84,18 @@ export function useEagerExternalProfileRootNavigation() {
   return { preload, navigate }
 }
 
-// list of queries used on the home screen that are preloaded
-// only portfolio balance now, but token balances, etc. in the future
-export type HomeScreenQueries = {
-  portfolioBalanceQueryRef: NullUndefined<PreloadedQuery<PortfolioBalanceQuery>>
-}
-
-/** Preloaded home screen query refs that reload on active account change */
-export function usePreloadedHomeScreenQueries(): HomeScreenQueries {
+/** Preloaded home screen queries that reload on active account change */
+export function usePreloadedHomeScreenQueries() {
+  const [load] = usePortfolioBalanceLazyQuery()
   const activeAccountAddress = useActiveAccountAddress()
-  const [portfolioBalanceQueryRef, loadPortfolioBalance] =
-    useQueryLoader<PortfolioBalanceQuery>(portfolioBalanceQuery)
 
   useEffect(() => {
     if (!activeAccountAddress) {
       return
     }
 
-    // reload home query when active account changes
-    loadPortfolioBalance(
-      { owner: activeAccountAddress },
-      { networkCacheConfig: { poll: PollingInterval.Fast } }
-    )
-  }, [activeAccountAddress, loadPortfolioBalance])
-
-  return useMemo(() => ({ portfolioBalanceQueryRef }), [portfolioBalanceQueryRef])
+    load({ variables: { owner: activeAccountAddress } })
+  }, [activeAccountAddress, load])
 }
 
 /**

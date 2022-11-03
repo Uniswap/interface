@@ -1,3 +1,4 @@
+import { ApolloProvider } from '@apollo/client'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import React, { StrictMode, useCallback, useEffect, useMemo } from 'react'
@@ -16,6 +17,7 @@ import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { Suspense } from 'src/components/data/Suspense'
 import { config } from 'src/config'
 import { NetworkPollConfig, PollingInterval } from 'src/constants/misc'
+import { client } from 'src/data/apollo'
 import { RelayEnvironment } from 'src/data/relay'
 import { Priority, useQueryScheduler } from 'src/data/useQueryScheduler'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
@@ -64,29 +66,31 @@ function App() {
       <StrictMode>
         <SafeAreaProvider>
           <Provider store={store}>
-            <Trace startMark={MarkNames.RelayRestore}>
-              <RelayEnvironmentProvider environment={RelayEnvironment}>
-                <Trace endMark={MarkNames.RelayRestore}>
-                  <PersistGate loading={null} persistor={persistor}>
-                    <DynamicThemeProvider>
-                      <ErrorBoundary>
-                        <WalletContextProvider>
-                          <BiometricContextProvider>
-                            <LockScreenContextProvider>
-                              <DataUpdaters />
-                              <BottomSheetModalProvider>
-                                <AppModals />
-                                <AppInner />
-                              </BottomSheetModalProvider>
-                            </LockScreenContextProvider>
-                          </BiometricContextProvider>
-                        </WalletContextProvider>
-                      </ErrorBoundary>
-                    </DynamicThemeProvider>
-                  </PersistGate>
-                </Trace>
-              </RelayEnvironmentProvider>
-            </Trace>
+            <ApolloProvider client={client}>
+              <Trace startMark={MarkNames.RelayRestore}>
+                <RelayEnvironmentProvider environment={RelayEnvironment}>
+                  <Trace endMark={MarkNames.RelayRestore}>
+                    <PersistGate loading={null} persistor={persistor}>
+                      <DynamicThemeProvider>
+                        <ErrorBoundary>
+                          <WalletContextProvider>
+                            <BiometricContextProvider>
+                              <LockScreenContextProvider>
+                                <DataUpdaters />
+                                <BottomSheetModalProvider>
+                                  <AppModals />
+                                  <AppInner />
+                                </BottomSheetModalProvider>
+                              </LockScreenContextProvider>
+                            </BiometricContextProvider>
+                          </WalletContextProvider>
+                        </ErrorBoundary>
+                      </DynamicThemeProvider>
+                    </PersistGate>
+                  </Trace>
+                </RelayEnvironmentProvider>
+              </Trace>
+            </ApolloProvider>
           </Provider>
         </SafeAreaProvider>
       </StrictMode>

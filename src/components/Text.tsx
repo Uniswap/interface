@@ -6,7 +6,7 @@ import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenRea
 import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
 
-type TextProps = ComponentProps<typeof ThemedText> & {
+export type TextProps = ComponentProps<typeof ThemedText> & {
   maxFontSizeMultiplier?: number
   animated?: boolean
   noTextScaling?: boolean
