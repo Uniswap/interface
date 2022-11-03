@@ -1,9 +1,9 @@
 import { MouseoverTooltip } from 'components/Tooltip'
-import { DEFAULT_LIST_OF_LISTS } from 'constants/lists'
+import { DEFAULT_LIST_OF_LISTS, UNI_LIST } from 'constants/lists'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
 import { chainIdToNetworkName } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ImageProps } from 'rebass'
 import store from 'state'
 import styled from 'styled-components/macro'
@@ -63,10 +63,12 @@ export default function Logo({ srcs, alt, style, size, symbol, ...rest }: LogoPr
 
 class TokenLogoLookupTable {
   dict: { [key: string]: string[] | undefined } | null = null
+  selections: { [key: string]: string } = {}
 
   createMap() {
     const dict: { [key: string]: string[] | undefined } = {}
 
+    console.log(store.getState().lists.byUrl[UNI_LIST].current)
     DEFAULT_LIST_OF_LISTS.forEach((list) =>
       store.getState().lists.byUrl[list].current?.tokens.forEach((token) => {
         if (token.logoURI) {
@@ -92,6 +94,25 @@ class TokenLogoLookupTable {
     }
     return this.dict[address.toLowerCase()]
   }
+  addSelection(address: string, logoUri: string) {
+    this.selections[address.toLowerCase()] = logoUri
+  }
+  getList() {
+    const changes: any[] = []
+    store.getState().lists.byUrl[UNI_LIST].current?.tokens.forEach((t) => {
+      const selection = this.selections[t.address.toLowerCase()]
+      if (selection && selection !== t.logoURI) {
+        changes.push({
+          name: t.name,
+          chainId: t.chainId,
+          address: t.address,
+          oldLogoURI: t.logoURI,
+          newLogoURI: selection,
+        })
+      }
+    })
+    console.log(changes)
+  }
 }
 
 const LogoTable = new TokenLogoLookupTable()
@@ -106,14 +127,39 @@ interface SmartLogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'>
   size?: string
 }
 
+const LogoWrapper = styled.div<{ selected: boolean }>`
+  border-bottom: ${({ selected }) => (selected ? '2px solid green' : 'none')};
+  margin-right: 4px;
+`
+
 interface IndividialLogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'> {
+  selected: boolean
+  setSelected: (s: string) => void
   src: string
   size?: string
 }
 
-function IndividialLogo({ src, alt, style, size, ...rest }: IndividialLogoProps) {
+function IndividialLogo({ selected, setSelected, src, alt, style, size, ...rest }: IndividialLogoProps) {
   const [display, setDisplay] = useState(true)
-  return display ? <img {...rest} alt={alt} src={src} style={style} onError={() => setDisplay(false)} /> : null
+  return display ? (
+    <LogoWrapper selected={selected} onClick={() => setSelected(src)}>
+      <img {...rest} alt={alt} src={src} style={style} onError={() => setDisplay(false)} />
+    </LogoWrapper>
+  ) : null
+}
+
+function AddLogo({ addSrc }: { addSrc: (s: string) => void }) {
+  const [value, setValue] = useState('')
+  return (
+    <input
+      placeholder="add new"
+      value={value}
+      onInput={(e) => setValue(e.currentTarget.value)}
+      onKeyDown={(e) => {
+        addSrc(value)
+      }}
+    ></input>
+  )
 }
 
 /**
@@ -135,13 +181,33 @@ export function SmartLogo({ token: { address, chain, chainId, symbol }, alt, sty
     return [...new Set([assetsRepoIcon, ...tokenListIcons])]
   }, [address, chain, chainId, checksummedAddress])
 
+  const [displaySrcs, setDisplaySrcs] = useState(srcs)
+  const addSrc = useCallback((s: string) => {
+    setDisplaySrcs([s, ...displaySrcs])
+  }, [])
+
+  const [selected, setSelected] = useState(srcs[0])
+
+  useEffect(() => {
+    address && LogoTable.addSelection(address, selected)
+    LogoTable.getList()
+  }, [address, selected])
+
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
-      {srcs.map((src) => (
+      {displaySrcs.map((src) => (
         <MouseoverTooltip key={src} text={src}>
-          <IndividialLogo {...rest} alt={alt} src={src} style={style} />
+          <IndividialLogo
+            selected={selected === src}
+            setSelected={setSelected}
+            {...rest}
+            alt={alt}
+            src={src}
+            style={style}
+          />
         </MouseoverTooltip>
       ))}
+      <AddLogo addSrc={addSrc} />
     </div>
   )
 }

@@ -216,6 +216,10 @@ const LoadingRow = () => (
   </LoadingRows>
 )
 
+const doNothing = () => {
+  const i = 0
+}
+
 export default function CurrencyList({
   height,
   currencies,
@@ -268,7 +272,9 @@ export default function CurrencyList({
             style={style}
             currency={currency}
             isSelected={isSelected}
-            onSelect={handleSelect}
+            onSelect={() => {
+              const i = 0
+            }}
             otherSelected={otherSelected}
             showCurrencyAmount={showCurrencyAmount}
             eventProperties={formatAnalyticsEventProperties(token, index, data, searchQuery, isAddressSearch)}
@@ -291,16 +297,18 @@ export default function CurrencyList({
       {LoadingRow}
     </FixedSizeList>
   ) : (
-    <FixedSizeList
-      height={height}
-      ref={fixedListRef as any}
-      width="100%"
-      itemData={itemData}
-      itemCount={itemData.length}
-      itemSize={56}
-      itemKey={itemKey}
-    >
-      {Row}
-    </FixedSizeList>
+    <>
+      {itemData.map((currency) => (
+        <CurrencyRow
+          key={currency.wrapped.address}
+          currency={currency}
+          onSelect={doNothing}
+          isSelected={false}
+          otherSelected={false}
+          showCurrencyAmount={false}
+          eventProperties={{ test: 'yay' }}
+        />
+      ))}
+    </>
   )
 }
