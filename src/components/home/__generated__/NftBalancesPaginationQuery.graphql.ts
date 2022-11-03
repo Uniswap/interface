@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<39fc5183c5d8f2b4bb91f8900a96b093>>
+ * @generated SignedSource<<1ea3935c966465edae784b7ec323b948>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,30 +10,44 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type NftsTabQuery$variables = {
-  first: number;
+export type NftBalancesPaginationQuery$variables = {
+  after?: string | null;
+  first?: number | null;
   ownerAddress: string;
 };
-export type NftsTabQuery$data = {
+export type NftBalancesPaginationQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"NftsTab_asset">;
 };
-export type NftsTabQuery = {
-  response: NftsTabQuery$data;
-  variables: NftsTabQuery$variables;
+export type NftBalancesPaginationQuery = {
+  response: NftBalancesPaginationQuery$data;
+  variables: NftBalancesPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "first"
-},
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "after"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "first"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "ownerAddress"
+  }
+],
 v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "ownerAddress"
+  "kind": "Variable",
+  "name": "after",
+  "variableName": "after"
 },
 v2 = [
+  (v1/*: any*/),
   {
     "kind": "Variable",
     "name": "first",
@@ -61,16 +75,15 @@ v4 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "NftsTabQuery",
+    "name": "NftBalancesPaginationQuery",
     "selections": [
       {
-        "args": null,
+        "args": [
+          (v1/*: any*/)
+        ],
         "kind": "FragmentSpread",
         "name": "NftsTab_asset"
       }
@@ -80,12 +93,9 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "NftsTabQuery",
+    "name": "NftBalancesPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -312,16 +322,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "edac893da3ccbc5851b05e3c382ed04d",
+    "cacheID": "1e7ec9b291697793a3b810837de44da3",
     "id": null,
     "metadata": {},
-    "name": "NftsTabQuery",
+    "name": "NftBalancesPaginationQuery",
     "operationKind": "query",
-    "text": "query NftsTabQuery(\n  $ownerAddress: String!\n  $first: Int!\n) {\n  ...NftsTab_asset\n}\n\nfragment NftsTab_asset on Query {\n  nftBalances(ownerAddress: $ownerAddress, first: $first) {\n    edges {\n      node {\n        ownedAsset {\n          id\n          collection {\n            name\n            isVerified\n            markets(currencies: [ETH]) {\n              floorPrice {\n                value\n                id\n              }\n              id\n            }\n            id\n          }\n          image {\n            url\n            id\n          }\n          name\n          tokenId\n          description\n          nftContract {\n            address\n            id\n          }\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n"
+    "text": "query NftBalancesPaginationQuery(\n  $after: String\n  $first: Int\n  $ownerAddress: String!\n) {\n  ...NftsTab_asset_WGPvJ\n}\n\nfragment NftsTab_asset_WGPvJ on Query {\n  nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after) {\n    edges {\n      node {\n        ownedAsset {\n          id\n          collection {\n            name\n            isVerified\n            markets(currencies: [ETH]) {\n              floorPrice {\n                value\n                id\n              }\n              id\n            }\n            id\n          }\n          image {\n            url\n            id\n          }\n          name\n          tokenId\n          description\n          nftContract {\n            address\n            id\n          }\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8687d7ba9e0bc4cc38dc46af770235a9";
+(node as any).hash = "0c0d5f23ca8154f3d1708c770dbc23ed";
 
 export default node;

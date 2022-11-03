@@ -101,7 +101,9 @@ const getChildFromType = (type: SkeletonType, repeat: number, height?: number) =
     case 'text':
       return <BoxLoader borderRadius="xs" height={height ?? 16} />
     case 'nft':
-      return (
+      return repeat === 1 ? (
+        <NftCardLoader opacity={1} />
+      ) : (
         <Box>
           {new Array(repeat / 2).fill(null).map((_, i) => {
             const firstColOpacity = (repeat - ((repeat / 2) * i + 1) + 1) / repeat

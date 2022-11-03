@@ -2,17 +2,19 @@ import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View, ViewStyle } from 'react-native'
-import { useLazyLoadQuery } from 'react-relay'
+import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import NoNFTsIcon from 'src/assets/icons/empty-state-picture.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Suspense } from 'src/components/data/Suspense'
+import { NftBalancesPaginationQuery } from 'src/components/home/__generated__/NftBalancesPaginationQuery.graphql'
+import { NftsTabQuery } from 'src/components/home/__generated__/NftsTabQuery.graphql'
 import {
-  NftsTabQuery,
-  NftsTabQuery$data,
-} from 'src/components/home/__generated__/NftsTabQuery.graphql'
+  NftsTab_asset$data,
+  NftsTab_asset$key,
+} from 'src/components/home/__generated__/NftsTab_asset.graphql'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Box } from 'src/components/layout/Box'
@@ -22,7 +24,7 @@ import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollSc
 import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
-import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import { openModal } from 'src/features/modals/modalSlice'
 import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
@@ -41,46 +43,57 @@ const styles = StyleSheet.create({
   },
 })
 
-const nftsTabQuery = graphql`
-  query NftsTabQuery($ownerAddress: String!) {
-    portfolios(ownerAddresses: [$ownerAddress]) {
-      ownerAddress
-      nftBalances {
-        ownedAsset {
-          collection {
-            name
-            isVerified
-            markets(currencies: [ETH]) {
-              floorPrice {
-                value
+const nftsTabPaginationQuery = graphql`
+  fragment NftsTab_asset on Query
+  @argumentDefinitions(after: { type: "String" })
+  @refetchable(queryName: "NftBalancesPaginationQuery") {
+    nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after)
+      @connection(key: "NftsTab__nftBalances") {
+      edges {
+        node {
+          ownedAsset {
+            id
+            collection {
+              name
+              isVerified
+              markets(currencies: [ETH]) {
+                floorPrice {
+                  value
+                }
               }
             }
-          }
-          image {
-            url
-          }
-          name
-          tokenId
-          description
-          nftContract {
-            address
+            image {
+              url
+            }
+            name
+            tokenId
+            description
+            nftContract {
+              address
+            }
           }
         }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
       }
     }
   }
 `
+const nftsTabQuery = graphql`
+  query NftsTabQuery($ownerAddress: String!, $first: Int!) {
+    ...NftsTab_asset
+  }
+`
 
-function formatNftItems(data: NftsTabQuery$data | null | undefined): NFTItem[] {
-  const items = data?.portfolios?.[0]?.nftBalances?.flat()
+function formatNftItems(data: NftsTab_asset$data | null | undefined): NFTItem[] {
+  const items = data?.nftBalances?.edges?.flatMap((item) => item.node)
   if (!items) return EMPTY_ARRAY
   const nfts = items
-    .filter(
-      (item) =>
-        item?.ownedAsset?.name &&
-        item?.ownedAsset?.nftContract?.address &&
-        item?.ownedAsset?.tokenId
-    )
+    .filter((item) => item?.ownedAsset?.nftContract?.address && item?.ownedAsset?.tokenId)
     .map((item): NFTItem => {
       return {
         name: item?.ownedAsset?.name ?? undefined,
@@ -129,23 +142,31 @@ function NftsTabInner({
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
 
-  const nftData = useLazyLoadQuery<NftsTabQuery>(
+  const queryData = useLazyLoadQuery<NftsTabQuery>(
     nftsTabQuery,
     {
       ownerAddress: owner,
+      first: 20,
     },
-    {
-      networkCacheConfig: { poll: PollingInterval.Normal },
-      // `NFTsTabQuery` has the same key as `PortfolioBalance`, which can cause
-      // race conditions, where `PortfolioBalance` sends a network request first,
-      // but does not pull NFT data. When `NFTsTabQuery` runs, it sees that a query
-      // with the same key was executed recently, and does not try to send a request.
-      // This change forces both a store lookup and a network request.
-      // FIX(MOB-2498): possible fix is to use a fragment here.
-      fetchPolicy: 'store-and-network',
-    }
+    // `NFTsTabQuery` has the same key as `PortfolioBalance`, which can cause
+    // race conditions, where `PortfolioBalance` sends a network request first,
+    // but does not pull NFT data. When `NFTsTabQuery` runs, it sees that a query
+    // with the same key was executed recently, and does not try to send a request.
+    // This change forces both a store lookup and a network request.
+    // FIX(MOB-2498): possible fix is to use a fragment here.
+    { fetchPolicy: 'store-and-network' }
   )
-  const nftDataItems = formatNftItems(nftData)
+
+  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment<
+    NftBalancesPaginationQuery,
+    NftsTab_asset$key
+  >(nftsTabPaginationQuery, queryData)
+  const nftDataItems = formatNftItems(data)
+
+  const onListEndReached = () => {
+    if (!hasNext) return
+    loadNext(20)
+  }
 
   const onPressItem = useCallback(
     (asset: NFTItem) => {
@@ -216,6 +237,7 @@ function NftsTabInner({
     },
     [onPressItem, theme.colors.userThemeMagenta]
   )
+
   return nftDataItems.length === 0 ? (
     <Flex centered flex={1} style={loadingContainerStyle}>
       <BaseCard.EmptyState
@@ -231,8 +253,10 @@ function NftsTabInner({
       <GridRecyclerList
         data={nftDataItems}
         getKey={({ contractAddress, tokenId }) => getNFTAssetKey(contractAddress ?? '', tokenId)}
+        isLoadingNext={isLoadingNext}
         renderItem={renderItem}
         tabViewScrollProps={tabViewScrollProps}
+        onEndReached={onListEndReached}
       />
     </View>
   )
