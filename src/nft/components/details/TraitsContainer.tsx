@@ -8,6 +8,7 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 16px;
+  max-width: 780px;
 
   @media (max-width: 960px) {
     grid-template-columns: 1fr 1fr 1fr;
@@ -38,6 +39,7 @@ const GridItemContainer = styled(Link)`
       transition: { duration, timing },
     },
   }) => `opacity ${duration.medium} ${timing.ease}`};
+  min-width: 0;
 `
 
 const TraitType = styled.div`
@@ -55,6 +57,12 @@ const TraitValue = styled.div`
   line-height: 24px;
   margin-top: 4px;
   display: inline-block;
+
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 `
 
 const GridItem = ({ trait, collectionAddress }: { trait: Trait; collectionAddress: string }) => {
