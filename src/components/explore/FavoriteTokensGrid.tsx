@@ -5,7 +5,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
 
-import { AnimatedFlex, Box } from 'src/components/layout'
+import { AnimatedBox, Box } from 'src/components/layout'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { flex } from 'src/styles/flex'
 import { theme as FixedTheme } from 'src/styles/theme'
@@ -13,7 +13,7 @@ import { CurrencyId } from 'src/utils/currencyId'
 
 const NUM_COLUMNS = 3
 const GAP_SIZE = FixedTheme.spacing.xs
-const ITEM_FLEX = 1 / NUM_COLUMNS
+const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
 
 /** Renders the favorite tokens card on the Explore page */
 export function FavoriteTokensGrid({
@@ -38,7 +38,7 @@ export function FavoriteTokensGrid({
             currencyId={item}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
-            style={{ flex: ITEM_FLEX }}
+            style={ITEM_FLEX}
           />
           {lastColumn ? null : <Box width={GAP_SIZE} />}
         </>
@@ -48,7 +48,7 @@ export function FavoriteTokensGrid({
   )
 
   return (
-    <AnimatedFlex entering={FadeIn} gap="sm" mx="xs">
+    <AnimatedBox entering={FadeIn} mx="xs">
       <FavoriteHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
       <FlatList
         ItemSeparatorComponent={() => <Box height={GAP_SIZE} />}
@@ -61,6 +61,6 @@ export function FavoriteTokensGrid({
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
       />
-    </AnimatedFlex>
+    </AnimatedBox>
   )
 }

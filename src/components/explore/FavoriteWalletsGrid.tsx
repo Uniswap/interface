@@ -5,13 +5,13 @@ import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
 
-import { AnimatedFlex, Box } from 'src/components/layout'
+import { AnimatedBox, Box } from 'src/components/layout'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { theme } from 'src/styles/theme'
 
-const NUM_COLUMNS = 2
+const NUM_COLUMNS = 3
 const GAP_SIZE = theme.spacing.xs
-const ITEM_FLEX = 1 / NUM_COLUMNS
+const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
 
 /** Renders the favorite tokens card on the Explore page */
 export function FavoriteWalletsGrid({
@@ -33,7 +33,7 @@ export function FavoriteWalletsGrid({
             address={address}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
-            style={{ marginVertical: theme.spacing.sm, flex: ITEM_FLEX }}
+            style={ITEM_FLEX}
           />
           {lastColumn ? null : <Box width={GAP_SIZE} />}
         </>
@@ -43,19 +43,17 @@ export function FavoriteWalletsGrid({
   )
 
   return (
-    <AnimatedFlex entering={FadeIn} gap="none" mx="xs">
+    <AnimatedBox entering={FadeIn} mx="xs">
       <FavoriteHeaderRow isEditing={isEditing} onPress={() => setIsEditing(!isEditing)} />
       <FlatList
-        ItemSeparatorComponent={ItemSeparator}
+        ItemSeparatorComponent={() => <Box height={GAP_SIZE} />}
         data={watchedWalletsList}
         keyExtractor={(address) => address}
         numColumns={NUM_COLUMNS}
         renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
       />
-    </AnimatedFlex>
+    </AnimatedBox>
   )
-}
-
-function ItemSeparator() {
-  return <Box width={theme.spacing.xs} />
 }

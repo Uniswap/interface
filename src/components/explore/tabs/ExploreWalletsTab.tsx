@@ -9,7 +9,6 @@ import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { WalletSearchResult } from 'src/features/explore/searchHistorySlice'
 import { selectHasWatchedWallets, selectWatchedAddressSet } from 'src/features/favorites/selectors'
-import { theme } from 'src/styles/theme'
 
 function walletKey(wallet: WalletSearchResult) {
   return wallet.address
@@ -33,16 +32,15 @@ function ExploreWalletsTab({ listRef }: { listRef?: React.MutableRefObject<null>
     <FlatList
       ref={listRef}
       ListHeaderComponent={
-        <Flex my="sm">
+        <Flex mt="sm">
           {hasFavoritedWallets ? (
             <FavoriteWalletsGrid isEditing={isEditing} setIsEditing={setIsEditing} />
           ) : null}
-          <Text color="textSecondary" variant="buttonLabelSmall">
+          <Text color="textSecondary" mb="xxs" variant="subheadSmall">
             {t('Suggested wallets')}
           </Text>
         </Flex>
       }
-      contentContainerStyle={{ paddingVertical: theme.spacing.md }}
       data={SUGGESTED_WALLETS}
       keyExtractor={walletKey}
       listKey="wallets"

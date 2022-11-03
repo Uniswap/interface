@@ -17,7 +17,7 @@ export function FavoriteHeaderRow({
   const { t } = useTranslation()
   const theme = useAppTheme()
   return (
-    <Flex row alignItems="center" justifyContent="space-between">
+    <Flex row alignItems="center" justifyContent="space-between" mb="xs">
       <Text color="textSecondary" variant="subheadSmall">
         {isEditing ? t('Edit favorites') : t('Favorites')}
       </Text>
