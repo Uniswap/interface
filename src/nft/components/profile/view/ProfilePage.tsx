@@ -1,3 +1,5 @@
+import { Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
@@ -198,10 +200,12 @@ export const ProfilePage = () => {
                   />
                   <Row gap="8" flexWrap="nowrap">
                     {isSellMode && <SelectAllButton />}
-                    <SellModeButton active={isSellMode} onClick={handleSellModeClick}>
-                      <TagIcon height={20} width={20} />
-                      Sell
-                    </SellModeButton>
+                    <TraceEvent events={[Event.onClick]} name={EventName.NFT_SELL_SELECTED}>
+                      <SellModeButton active={isSellMode} onClick={handleSellModeClick}>
+                        <TagIcon height={20} width={20} />
+                        Sell
+                      </SellModeButton>
+                    </TraceEvent>
                   </Row>
                 </Row>
                 <Row>
