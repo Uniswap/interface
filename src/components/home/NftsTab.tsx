@@ -1,4 +1,3 @@
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback } from 'react'
@@ -6,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { View, ViewStyle } from 'react-native'
 import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { SWAP_BUTTON_HEIGHT } from 'src/app/navigation/TabBar'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import NoNFTsIcon from 'src/assets/icons/empty-state-picture.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
@@ -39,6 +37,7 @@ const MAX_NFT_IMAGE_SIZE = 375
 const ESTIMATED_ITEM_SIZE = 100
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const LOADING_ITEM = 'loading'
+const FOOTER_HEIGHT = 20
 
 const nftsTabPaginationQuery = graphql`
   fragment NftsTab_asset on Query
@@ -244,8 +243,6 @@ function NftsTabInner({
     [onPressItem, theme.colors.userThemeMagenta]
   )
 
-  const footerHeight = useBottomTabBarHeight() + SWAP_BUTTON_HEIGHT
-
   return nftDataItems.length === 0 ? (
     <Flex centered flex={1} style={loadingContainerStyle}>
       <BaseCard.EmptyState
@@ -261,7 +258,8 @@ function NftsTabInner({
       <FlashList
         ref={tabViewScrollProps?.ref}
         ListFooterComponent={
-          isLoadingNext ? <Loading repeat={4} type="nft" /> : <Box height={footerHeight} />
+          // If not loading, we add a footer  to cover any possible space that is covered up by bottom tab bar
+          isLoadingNext ? <Loading repeat={4} type="nft" /> : <Box height={FOOTER_HEIGHT} />
         }
         contentContainerStyle={tabViewScrollProps?.contentContainerStyle}
         data={shouldAddInLoadingItem ? [...nftDataItems, LOADING_ITEM] : nftDataItems}
