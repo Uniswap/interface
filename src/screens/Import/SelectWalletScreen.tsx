@@ -131,7 +131,7 @@ function WalletPreviewList({
 
   const isFirstAccountActive = useRef(false) // to keep track of first account activated from the selected accounts
   const onSubmit = useCallback(() => {
-    addresses.map((address) => {
+    addresses.forEach((address) => {
       // Remove unselected accounts from store.
       if (!selectedAddresses.includes(address)) {
         dispatch(
@@ -146,6 +146,16 @@ function WalletPreviewList({
           dispatch(activateAccount(address))
           isFirstAccountActive.current = true
         }
+        const account = pendingAccounts[address]
+        if (!account.name && account.type !== AccountType.Readonly) {
+          dispatch(
+            editAccountActions.trigger({
+              type: EditAccountAction.Rename,
+              address,
+              newName: t('Wallet {{ number }}', { number: account.derivationIndex + 1 }),
+            })
+          )
+        }
       }
     })
     navigation.navigate({ name: OnboardingScreens.Backup, params, merge: true })
@@ -157,6 +167,7 @@ function WalletPreviewList({
     selectedAddresses,
     isFirstAccountActive,
     params,
+    t,
   ])
 
   return (

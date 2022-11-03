@@ -48,10 +48,11 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
     }
 
     const derivationIndex = pendingAccount.derivationIndex
-    const defaultName = pendingAccount.name || `Wallet ${derivationIndex + 1}`
+    const defaultName =
+      pendingAccount.name || t('Wallet {{ number }}', { number: derivationIndex + 1 })
     setNewAccountName(defaultName)
     setHasDefaultName(true)
-  }, [pendingAccount, hasDefaultName])
+  }, [pendingAccount, hasDefaultName, t])
 
   useEffect(() => {
     const beforeRemoveListener = () => {
