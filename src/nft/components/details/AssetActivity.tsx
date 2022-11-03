@@ -101,9 +101,7 @@ const ActivityContainer = styled.div`
     background: transparent;
     width: 4px;
   }
-  ::-webkit-scrollbar-track {
-    // margin-top: 40px;
-  }
+
   ::-webkit-scrollbar-thumb {
     background: ${({ theme }) => theme.backgroundOutline};
     border-radius: 8px;
