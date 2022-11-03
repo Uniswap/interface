@@ -131,6 +131,7 @@ export const statsValue = style([
   }),
   {
     lineHeight: '24px',
+    whiteSpace: 'nowrap',
   },
 ])
 

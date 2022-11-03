@@ -59,7 +59,29 @@ const rarityIcon = <RarityIcon width="20" height="20" viewBox="2 2 24 24" color=
 
 const ActionsContainer = styled.div`
   display: flex;
+  gap: 10px;
+  width: 100%;
   justify-content: space-between;
+`
+
+const ActionsSubContainer = styled.div`
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  min-width: 0px;
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    gap: 10px;
+  }
+`
+
+export const SortDropodownContainer = styled.div<{ isFiltersExpanded: boolean }>`
+  width: max-content;
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    ${({ isFiltersExpanded }) => isFiltersExpanded && `display: none;`}
+  }
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    display: none;
+  }
 `
 
 const EmptyCollectionWrapper = styled.div`
@@ -424,10 +446,15 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   return (
     <>
-      <AnimatedBox position="sticky" top="72" width="full" zIndex="3" marginBottom="20">
-        <Box backgroundColor="backgroundBackdrop" width="full" padding="16">
+      <AnimatedBox position="sticky" top="72" width="full" zIndex="3" marginBottom={{ sm: '8', md: '20' }}>
+        <Box
+          backgroundColor="backgroundBackdrop"
+          width="full"
+          paddingTop={{ sm: '12', md: '16' }}
+          paddingBottom={{ sm: '12', md: '16' }}
+        >
           <ActionsContainer>
-            <Row gap="12">
+            <ActionsSubContainer>
               <TraceEvent
                 events={[Event.onClick]}
                 element={ElementName.NFT_FILTER_BUTTON}
@@ -439,12 +466,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                   isMobile={isMobile}
                   isFiltersExpanded={isFiltersExpanded}
                   onClick={() => setFiltersExpanded(!isFiltersExpanded)}
-                  collectionCount={collectionNfts?.[0]?.totalCount ?? 0}
                 />
               </TraceEvent>
-              <SortDropdown dropDownOptions={sortDropDownOptions} />
+              <SortDropodownContainer isFiltersExpanded={isFiltersExpanded}>
+                <SortDropdown dropDownOptions={sortDropDownOptions} />
+              </SortDropodownContainer>
               <CollectionSearch />
-            </Row>
+            </ActionsSubContainer>
             {!hasErc1155s ? (
               isLoading ? (
                 <LoadingButton />
