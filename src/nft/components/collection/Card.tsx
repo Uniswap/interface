@@ -203,7 +203,7 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
   }
 
   return (
-    <Box display="flex" overflow="hidden">
+    <Box display="flex" overflow="hidden" borderTopLeftRadius="20" borderTopRightRadius="20">
       <Box
         as={'img'}
         width="full"
