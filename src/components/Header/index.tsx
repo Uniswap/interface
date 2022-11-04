@@ -154,8 +154,14 @@ const DiscoverWrapper = styled.span`
 
 const CampaignWrapper = styled.span``
 
-const AboutWrapper = styled.span`
+const BlogWrapper = styled.span`
   @media (max-width: 1440px) {
+    display: none;
+  }
+`
+
+const AboutWrapper = styled.span`
+  @media (max-width: 1400px) {
     display: none;
   }
 `
@@ -537,6 +543,18 @@ export default function Header() {
               </Dropdown>
             </HoverDropdown>
           </AboutWrapper>
+
+          <BlogWrapper>
+            <StyledNavExternalLink
+              onClick={() => {
+                mixpanelHandler(MIXPANEL_TYPE.BLOG_MENU_CLICKED)
+              }}
+              target="_blank"
+              href="https://blog.kyberswap.com"
+            >
+              <Trans>Blog</Trans>
+            </StyledNavExternalLink>
+          </BlogWrapper>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
