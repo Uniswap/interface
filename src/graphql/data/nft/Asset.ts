@@ -115,7 +115,7 @@ export function useAssetsQuery(
   last?: number,
   before?: string
 ) {
-  const { loading, data, fetchMore } = useQuery(assetQuery, {
+  const { loading, data, fetchMore, startPolling } = useQuery(assetQuery, {
     variables: {
       address,
       orderBy,
@@ -126,8 +126,9 @@ export function useAssetsQuery(
       last,
       before,
     },
-    pollInterval: 999,
   })
+
+  startPolling(999)
 
   const loadMore = () =>
     fetchMore({
