@@ -54,6 +54,9 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
+const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
+const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
+
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
@@ -130,7 +133,7 @@ export default function App() {
   const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
-  initializeAnalytics('8f61d3323d3fcab9c138e26744e3e', 'https://api.uniswap.org/v1/amplitude-proxy')
+  initializeAnalytics(ANALYTICS_DUMMY_KEY, ANALYTICS_PROXY_URL)
 
   const scrollListener = (e: Event) => {
     if (window.scrollY > 0) {
