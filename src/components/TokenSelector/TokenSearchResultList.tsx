@@ -18,7 +18,7 @@ import { EMPTY_ARRAY } from 'src/constants/misc'
 import { usePortfolioBalances } from 'src/features/dataApi/balances'
 import { useSearchTokens } from 'src/features/dataApi/searchTokens'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
-import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
+import { CurrencyInfo, GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { makeSelectAccountHideSmallBalances } from 'src/features/wallet/selectors'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
@@ -57,7 +57,7 @@ export function useTokenSectionsByVariation(
   variation: TokenSelectorVariation,
   chainFilter: ChainId | null,
   searchFilter: string | null
-): { sections: TokenSection[]; loading: boolean } {
+): GqlResult<TokenSection[]> {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
   const hideSmallBalances = useAppSelector(
@@ -71,8 +71,8 @@ export function useTokenSectionsByVariation(
   const { data: commonBaseCurrencies, loading: commonBaseCurrenciesLoading } =
     useAllCommonBaseCurrencies()
 
-  const portfolioBalances: PortfolioBalance[] = useMemo(() => {
-    if (!portfolioBalancesById) return EMPTY_ARRAY
+  const portfolioBalances = useMemo(() => {
+    if (!portfolioBalancesById) return
 
     const allPortfolioBalances: PortfolioBalance[] = Object.values(portfolioBalancesById).sort(
       (a, b) => b.balanceUSD - a.balanceUSD
@@ -86,7 +86,7 @@ export function useTokenSectionsByVariation(
   }, [portfolioBalancesById, hideSmallBalances])
 
   const popularTokenOptions = useMemo(() => {
-    if (!popularTokens) return EMPTY_ARRAY
+    if (!popularTokens) return
 
     return popularTokens
       .sort((a, b) => {
@@ -103,7 +103,7 @@ export function useTokenSectionsByVariation(
   }, [popularTokens, portfolioBalancesById])
 
   const commonBaseTokenOptions = useMemo(() => {
-    if (!commonBaseCurrencies) return EMPTY_ARRAY
+    if (!commonBaseCurrencies) return
 
     return commonBaseCurrencies.map((currencyInfo) => {
       return (
@@ -120,7 +120,7 @@ export function useTokenSectionsByVariation(
     skipSearch
   )
   const searchResults = useMemo(() => {
-    if (!searchResultCurrencies) return EMPTY_ARRAY
+    if (!searchResultCurrencies) return
 
     return searchResultCurrencies.map((currencyInfo) => {
       return (
@@ -130,6 +130,7 @@ export function useTokenSectionsByVariation(
   }, [searchResultCurrencies, portfolioBalancesById])
 
   const sections = useMemo(() => {
+    if (!portfolioBalances) return
     // Return single "search results" section when user has searchFilter
     if (searchFilter && searchFilter.length > 0) {
       if (variation === TokenSelectorVariation.BalancesOnly) {
@@ -142,8 +143,9 @@ export function useTokenSectionsByVariation(
                 data: results,
               },
             ]
-          : []
+          : EMPTY_ARRAY
       } else {
+        if (!searchResults) return
         return searchResults.length > 0
           ? [
               {
@@ -151,7 +153,7 @@ export function useTokenSectionsByVariation(
                 data: searchResults,
               },
             ]
-          : []
+          : EMPTY_ARRAY
       }
     }
 
@@ -164,6 +166,7 @@ export function useTokenSectionsByVariation(
       ]
     }
 
+    if (!popularTokenOptions) return
     if (variation === TokenSelectorVariation.BalancesAndPopular) {
       const popularMinusBalances = difference(popularTokenOptions, portfolioBalances)
       return [
@@ -177,6 +180,8 @@ export function useTokenSectionsByVariation(
         },
       ]
     }
+
+    if (!commonBaseTokenOptions) return
 
     // SuggestedAndPopular variation
     const balancesAndCommonBases = [
@@ -215,7 +220,7 @@ export function useTokenSectionsByVariation(
     portfolioBalancesLoading ||
     searchTokensLoading
 
-  return useMemo(() => ({ sections, loading }), [sections, loading])
+  return useMemo(() => ({ data: sections, loading }), [sections, loading])
 }
 
 function _TokenSearchResultList({
@@ -229,7 +234,7 @@ function _TokenSearchResultList({
   const sectionListRef = useRef<SectionList<TokenOption>>(null)
 
   const debouncedSearchFilter = useDebounce(searchFilter)
-  const { sections, loading } = useTokenSectionsByVariation(
+  const { data: sections, loading } = useTokenSectionsByVariation(
     variation,
     chainFilter,
     debouncedSearchFilter
@@ -255,7 +260,7 @@ function _TokenSearchResultList({
 
   useEffect(() => {
     // when changing lists to show, resume at the top of the list
-    if (sectionsRef.current.length > 0) {
+    if (sectionsRef.current && sectionsRef.current.length > 0) {
       sectionListRef.current?.scrollToLocation({
         itemIndex: 0,
         sectionIndex: 0,
@@ -289,7 +294,7 @@ function _TokenSearchResultList({
         keyboardShouldPersistTaps="always"
         renderItem={renderItem}
         renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
-        sections={sections}
+        sections={sections ?? EMPTY_ARRAY}
         showsVerticalScrollIndicator={false}
         windowSize={5}
       />
