@@ -56,10 +56,10 @@ function SafeAreaWithInsets({ children, edges, ...rest }: PropsWithChildren<Scre
   )
 }
 
-export function Screen(props: PropsWithChildren<ScreenProps>) {
+export function Screen({ bg = 'background0', children, ...rest }: PropsWithChildren<ScreenProps>) {
   return (
-    <SafeAreaWithInsets flex={1} {...props} bg="background0">
-      {props.children}
+    <SafeAreaWithInsets bg={bg} flex={1} {...rest}>
+      {children}
     </SafeAreaWithInsets>
   )
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
@@ -11,7 +12,6 @@ import { LongText } from 'src/components/text/LongText'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
-import { theme } from 'src/styles/theme'
 import { formatNFTFloorPrice, formatNumber } from 'src/utils/format'
 
 export function NFTCollectionModal({
@@ -24,6 +24,7 @@ export function NFTCollectionModal({
   onClose: () => void
 }) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   // TODO: Add loading state for this modal
   if (!collection) return null
@@ -32,7 +33,7 @@ export function NFTCollectionModal({
 
   return (
     <BottomSheetModal isVisible={isVisible} name={ModalName.NftCollection} onClose={onClose}>
-      <Screen edges={['bottom']} pt="md" px="lg">
+      <Screen bg="background1" edges={['bottom']} pt="md" px="lg">
         <Trace section={SectionName.NFTCollectionModal}>
           <Flex gap="sm">
             {/* Collection image and name */}
@@ -62,7 +63,7 @@ export function NFTCollectionModal({
 
             {/* Collection stats */}
             <Flex row gap="xxs" justifyContent="space-between">
-              <Flex alignItems="center" gap="xxs">
+              <Flex fill alignItems="center" gap="xxs">
                 <Text color="textTertiary" variant="subheadSmall">
                   {t('Items')}
                 </Text>
@@ -70,7 +71,7 @@ export function NFTCollectionModal({
                   <Text variant="bodyLarge">{formatNumber(collection.numAssets)}</Text>
                 )}
               </Flex>
-              <Flex alignItems="center" gap="xxs">
+              <Flex fill alignItems="center" gap="xxs">
                 <Text color="textTertiary" variant="subheadSmall">
                   {t('Owners')}
                 </Text>
