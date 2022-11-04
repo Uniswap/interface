@@ -108,6 +108,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       collectionSymbol: asset?.collection?.image?.url,
       imageUrl: asset?.image?.url,
       animationUrl: asset?.animationUrl ?? undefined,
+      // todo: fix the back/frontend discrepency here and drop the any
       marketplace: listing?.marketplace.toLowerCase() as any,
       name: asset?.name ?? undefined,
       priceInfo: {
