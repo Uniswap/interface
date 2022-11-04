@@ -7,7 +7,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { Text } from 'src/components/Text'
-import { TotalBalance } from 'src/features/balances/TotalBalanceDeprecated'
+import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { useENSAvatar } from 'src/features/ens/api'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -41,7 +41,7 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
         <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
         <Flex grow gap="none">
           <Text variant="bodyLarge">{displayName?.name}</Text>
-          <TotalBalance color="textSecondary" owner={address} variant="subheadSmall" />
+          <PortfolioBalance color="textSecondary" owner={address} variant="subheadSmall" />
         </Flex>
         <Flex row alignItems="center" gap="xs">
           {isActive && (
