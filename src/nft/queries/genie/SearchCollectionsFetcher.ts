@@ -39,10 +39,21 @@ export const fetchSearchCollections = async (addressOrName: string, recursive = 
     body: JSON.stringify(payload),
   })
   if (isName) {
-    const data = (await r.json()) as { data: GenieCollection[] }
-    return data?.data ? data.data.slice(0, 6) : []
+    const data = await r.json()
+    const formattedData = data?.data
+      ? data.data.map((collection: { stats: Record<string, unknown>; floorPrice: string }) => {
+          return {
+            ...collection,
+            stats: {
+              ...collection.stats,
+              floor_price: collection.floorPrice,
+            },
+          }
+        })
+      : []
+    return formattedData.slice(0, 6)
   }
   const data = await r.json()
 
-  return data.data ? [data.data[0]] : []
+  return data.data ? [{ ...data.data[0], stats: { ...data.data[0], floor_price: data.data[0].floorPrice } }] : []
 }
