@@ -101,8 +101,6 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
   const collection = asset?.collection
   const ethPrice = parseEther(asset?.listings?.edges[0].node.price.value?.toString() ?? '0').toString()
 
-  console.log(collection)
-
   return [
     {
       id: asset?.id,
