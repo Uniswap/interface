@@ -54,6 +54,32 @@ const getNetworkString = (chainId: ChainId | undefined) => {
   }
 }
 
+const DextoolSearchV2ChainId: { [chain in ChainId]: string } = {
+  [ChainId.MAINNET]: 'ether',
+  [ChainId.BSCMAINNET]: 'bsc',
+  [ChainId.MATIC]: 'polygon',
+  [ChainId.CRONOS]: 'cronos',
+  [ChainId.AVAXMAINNET]: 'avalanche',
+  [ChainId.FANTOM]: 'fantom',
+  [ChainId.ARBITRUM]: 'arbitrum',
+  [ChainId.VELAS]: 'velas',
+  [ChainId.AURORA]: 'aurora',
+  [ChainId.OASIS]: 'oasis',
+  [ChainId.OPTIMISM]: 'optimism',
+  [ChainId.ETHW]: 'ethw',
+
+  [ChainId.BTTC]: '',
+  [ChainId.ROPSTEN]: '',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: '',
+  [ChainId.BSCTESTNET]: '',
+  [ChainId.MUMBAI]: '',
+  [ChainId.AVAXTESTNET]: '',
+  [ChainId.CRONOSTESTNET]: '',
+  [ChainId.ARBITRUM_TESTNET]: '',
+}
+
 const DEXTOOLS_API = 'https://pancake-subgraph-proxy.kyberswap.com/dextools'
 const monthTs = 2592000000
 const weekTs = 604800000
@@ -100,12 +126,17 @@ const fetcherDextools = (url: string) => {
 }
 
 export const searchTokenPair = (address: string, chainId: ChainId | undefined) => {
+  if (!chainId) return
   if (TOKEN_PAIRS_ADDRESS_MAPPING[address.toLowerCase()]) {
     return new Promise((resolve, reject) => {
-      resolve([{ id: TOKEN_PAIRS_ADDRESS_MAPPING[address.toLowerCase()] }])
+      resolve([{ id: { pair: TOKEN_PAIRS_ADDRESS_MAPPING[address.toLowerCase()] } }])
     })
   }
-  return fetcherDextools(`${getNetworkString(chainId)}/api/pair/search?s=${address}`)
+  return fetcherDextools(`shared/search/v2?chains=${DextoolSearchV2ChainId[chainId]}&query=${address}`).then(res =>
+    res.results
+      .filter((token: any) => token.id.token === address.toLowerCase() && !!token.volume)
+      .sort((tokenA: any, tokenB: any) => tokenB.volume - tokenA.volume),
+  )
 }
 export const getHistoryCandleStatus = (pairAddress: string, chainId: ChainId | undefined) => {
   return fetcherDextools(`${getNetworkString(chainId)}/api/Uniswap/1/history-candle-status?pair=${pairAddress}`)
@@ -200,15 +231,16 @@ export const checkPairHasDextoolsData = async (
   if (isNativeToken(chainId, currencyA) || isNativeToken(chainId, currencyB)) {
     const token = (isNativeToken(chainId, currencyA) ? currencyB : currencyA) as Token
     if (token?.address) {
-      const data1: { id: string }[] = await searchTokenPair(token.address, chainId)
-      if (data1.length > 0 && data1[0].id) {
-        const ver = (await getHistoryCandleStatus(data1[0].id, chainId)) || 0
+      const searchResults: { id: { pair: string } }[] = await searchTokenPair(token.address, chainId)
+      const pairAddress = searchResults[0]?.id?.pair
+      if (searchResults && searchResults.length > 0 && pairAddress) {
+        const ver = (await getHistoryCandleStatus(pairAddress, chainId)) || 0
 
         const ts = Math.floor(new Date().getTime() / monthTs) * monthTs
-        const { data } = await getCandlesApi(chainId, data1[0].id, ver, ts, 'month')
+        const { data } = await getCandlesApi(chainId, pairAddress, ver, ts, 'month')
         if (data?.candles?.length) {
           res.ver = ver
-          res.pairAddress = data1[0].id
+          res.pairAddress = pairAddress
           updateLocalstorageCheckedPair(key, res)
           return Promise.resolve(res)
         }
@@ -219,15 +251,16 @@ export const checkPairHasDextoolsData = async (
     if (isUSDToken(chainId, currencyA) || isUSDToken(chainId, currencyB)) {
       const token = (isUSDToken(chainId, currencyA) ? currencyB : currencyA) as Token
       if (token?.address) {
-        const data1 = await searchTokenPair(token.address, chainId)
-        if (data1.length > 0 && data1[0].id) {
-          const ver = await getHistoryCandleStatus(data1[0].id, chainId)
+        const searchResults = await searchTokenPair(token.address, chainId)
+        const pairAddress = searchResults[0]?.id?.pair
+        if (searchResults.length > 0 && pairAddress) {
+          const ver = await getHistoryCandleStatus(pairAddress, chainId)
           if (ver) {
             const ts = Math.floor(new Date().getTime() / monthTs) * monthTs
-            const { data } = await getCandlesApi(chainId, data1[0].id, ver, ts, 'month', '15m', 'usd')
+            const { data } = await getCandlesApi(chainId, pairAddress, ver, ts, 'month', '15m', 'usd')
             if (data?.candles?.length) {
               res.ver = ver
-              res.pairAddress = data1[0].id
+              res.pairAddress = pairAddress
               updateLocalstorageCheckedPair(key, res)
               return Promise.resolve(res)
             }
