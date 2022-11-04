@@ -89,7 +89,7 @@ export const TokenItem = memo(
     const menuActions = useMemo(() => {
       return isFavorited
         ? [
-            { title: t('Remove favorite'), systemIcon: 'minus' },
+            { title: t('Remove favorite'), systemIcon: 'star.fill' },
             { title: t('Swap'), systemIcon: 'arrow.2.squarepath' },
           ]
         : [
