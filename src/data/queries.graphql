@@ -1,6 +1,8 @@
 query Nfts($ownerAddress: String!) {
   portfolios(ownerAddresses: [$ownerAddress]) {
+    id
     nftBalances {
+      id
       ownedAsset {
         id
         collection {
@@ -8,6 +10,7 @@ query Nfts($ownerAddress: String!) {
           collectionId
           description
           image {
+            id
             url
           }
           isVerified
@@ -21,28 +24,34 @@ query Nfts($ownerAddress: String!) {
             }
             owners
             volume24h {
+              id
               value
             }
             totalVolume {
+              id
               value
             }
           }
         }
         description
         image {
+          id
           url
         }
         name
         nftContract {
+          id
           address
           chain
           standard
         }
         thumbnail {
+          id
           url
         }
         tokenId
         creator {
+          id
           address
           username
         }
@@ -53,7 +62,9 @@ query Nfts($ownerAddress: String!) {
 
 query PortfolioBalance($owner: String!) {
   portfolios(ownerAddresses: [$owner]) {
+    id
     tokensTotalDenominatedValue {
+      id
       value
     }
   }
@@ -61,13 +72,17 @@ query PortfolioBalance($owner: String!) {
 
 query PortfolioBalances($ownerAddress: String!) {
   portfolios(ownerAddresses: [$ownerAddress]) {
+    id
     tokenBalances {
+      id
       quantity
       denominatedValue {
+        id
         currency
         value
       }
       token {
+        id
         chain
         address
         name
@@ -75,12 +90,15 @@ query PortfolioBalances($ownerAddress: String!) {
         decimals
       }
       tokenProjectMarket {
+        id
         tokenProject {
+          id
           logoUrl
           safetyLevel
           isSpam
         }
         relativeChange24: pricePercentChange(duration: DAY) {
+          id
           value
         }
       }
@@ -94,6 +112,7 @@ query SearchTokensProjects($searchQuery: String!) {
     name
     safetyLevel
     tokens {
+      id
       chain
       address
       decimals
@@ -104,8 +123,10 @@ query SearchTokensProjects($searchQuery: String!) {
 
 query TransactionHistoryUpdater($addresses: [String!]!) {
   portfolios(ownerAddresses: $addresses) {
+    id
     ownerAddress
     assetActivities(pageSize: 1, page: 1) {
+      id
       timestamp
     }
   }
@@ -113,42 +134,53 @@ query TransactionHistoryUpdater($addresses: [String!]!) {
 
 query TokenDetailsScreen($contract: ContractInput!) {
   tokens(contracts: [$contract]) {
+    id
     market(currency: USD) {
+      id
       volume(duration: DAY) {
+        id
         value
       }
     }
   }
 
   tokenProjects(contracts: [$contract]) {
+    id
     description
     homepageUrl
     twitterName
     name
     safetyLevel
     markets(currencies: [USD]) {
+      id
       price {
+        id
         value
         currency
       }
       marketCap {
+        id
         value
         currency
       }
       fullyDilutedMarketCap {
+        id
         value
         currency
       }
       priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+        id
         value
         currency
       }
       priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+        id
         value
         currency
       }
     }
     tokens {
+      id
       chain
       address
       symbol
@@ -159,10 +191,12 @@ query TokenDetailsScreen($contract: ContractInput!) {
 
 query TokenProjects($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {
+    id
     logoUrl
     name
     safetyLevel
     tokens {
+      id
       chain
       address
       decimals
@@ -173,10 +207,13 @@ query TokenProjects($contracts: [ContractInput!]!) {
 
 query TransactionList($address: String!) {
   portfolio(ownerAddress: $address) {
+    id
     assetActivities(pageSize: 50, page: 1) {
+      id
       timestamp
       type
       transaction {
+        id
         hash
         status
         to
@@ -185,7 +222,9 @@ query TransactionList($address: String!) {
       assetChanges {
         __typename
         ... on TokenTransfer {
+          id
           asset {
+            id
             name
             symbol
             address
@@ -198,20 +237,25 @@ query TransactionList($address: String!) {
           recipient
           direction
           transactedValue {
+            id
             currency
             value
           }
         }
         ... on NftTransfer {
+          id
           asset {
+            id
             name
             nftContract {
+              id
               chain
               address
             }
             tokenId
             imageUrl
             collection {
+              id
               name
             }
           }
@@ -221,7 +265,9 @@ query TransactionList($address: String!) {
           direction
         }
         ... on TokenApproval {
+          id
           asset {
+            id
             name
             symbol
             decimals
@@ -239,10 +285,12 @@ query TransactionList($address: String!) {
 
 query TopTokens {
   topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {
+    id
     logoUrl
     name
     safetyLevel
     tokens {
+      id
       chain
       address
       decimals
@@ -253,8 +301,10 @@ query TopTokens {
 
 query SearchPopularTokens {
   topTokenProjects(orderBy: VOLUME, page: 1, pageSize: 3) {
+    id
     logoUrl
     tokens {
+      id
       chain
       address
       name
@@ -265,8 +315,10 @@ query SearchPopularTokens {
 
 query SearchResults($searchQuery: String!) {
   searchTokenProjects(searchQuery: $searchQuery) {
+    id
     logoUrl
     tokens {
+      id
       chain
       address
       name
@@ -277,11 +329,15 @@ query SearchResults($searchQuery: String!) {
 
 query SpotPrices($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {
+    id
     markets(currencies: [USD]) {
+      id
       price {
+        id
         value
       }
       pricePercentChange24h {
+        id
         value
       }
     }
@@ -290,18 +346,23 @@ query SpotPrices($contracts: [ContractInput!]!) {
 
 query FavoriteTokenCardQuery($contract: ContractInput!) {
   tokenProjects(contracts: [$contract]) {
+    id
     tokens {
+      id
       chain
       address
       symbol
     }
     logoUrl
     markets(currencies: USD) {
+      id
       price {
+        id
         currency
         value
       }
       pricePercentChange24h {
+        id
         currency
         value
       }
