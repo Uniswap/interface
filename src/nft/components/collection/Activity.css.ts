@@ -103,6 +103,7 @@ export const addressCell = style([
     color: 'textPrimary',
     height: 'full',
     justifyContent: 'center',
+    paddingLeft: '2',
   }),
   {
     lineHeight: '24px',
