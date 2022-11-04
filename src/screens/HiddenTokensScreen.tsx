@@ -10,6 +10,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useSortedPortfolioBalances } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import {
@@ -31,11 +32,7 @@ export function HiddenTokensScreen({
   const hideSmallBalances = useAppSelector(makeSelectAccountHideSmallBalances(address))
   const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(address))
 
-  const { smallBalances, spamBalances } = useSortedPortfolioBalances(
-    address,
-    hideSmallBalances,
-    hideSpamTokens
-  )
+  const { data } = useSortedPortfolioBalances(address, hideSmallBalances, hideSpamTokens)
 
   const onPressToken = useCallback(
     (currencyId: CurrencyId) => {
@@ -51,13 +48,17 @@ export function HiddenTokensScreen({
     [tokenDetailsNavigation]
   )
 
-  const sections = useMemo(
-    () => [
-      { title: t('Small balances'), data: smallBalances },
-      { title: t('Spam tokens'), data: spamBalances },
-    ],
-    [t, smallBalances, spamBalances]
-  )
+  const sections = useMemo(() => {
+    if (!data) return EMPTY_ARRAY
+
+    return [
+      { title: t('Small balances'), data: data.smallBalances },
+      { title: t('Spam tokens'), data: data.spamBalances },
+    ]
+  }, [t, data])
+
+  // TODO: add loading state here
+  if (!data) return null
 
   return (
     <Screen>
@@ -74,8 +75,8 @@ export function HiddenTokensScreen({
               onPressTokenIn={onPressTokenIn}
             />
           )}
-          renderSectionHeader={({ section: { title, data } }) =>
-            data.length > 0 ? <SectionHeader title={title} /> : null
+          renderSectionHeader={({ section: { title, items } }) =>
+            items?.length > 0 ? <SectionHeader title={title} /> : null
           }
           sections={sections}
           showsVerticalScrollIndicator={false}

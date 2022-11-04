@@ -1,17 +1,19 @@
 import { SpacingShorthandProps } from '@shopify/restyle'
 import React, { ReactElement, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ViewStyle } from 'react-native'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import {
   TabViewScrollProps,
   TAB_VIEW_SCROLL_THROTTLE,
 } from 'src/components/layout/screens/TabbedScrollScreen'
 import { Separator } from 'src/components/layout/Separator'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { useSortedPortfolioBalances } from 'src/features/dataApi/balances'
@@ -31,6 +33,7 @@ type TokenBalanceListProps = {
   onPressToken: (currencyId: CurrencyId) => void
   onRefresh?: () => void
   tabViewScrollProps?: TabViewScrollProps
+  loadingContainerStyle?: ViewStyle
 }
 
 export function TokenBalanceList({
@@ -39,15 +42,22 @@ export function TokenBalanceList({
   onPressToken,
   onPressTokenIn,
   tabViewScrollProps,
+  loadingContainerStyle,
 }: TokenBalanceListProps) {
   const hideSmallBalances = useAppSelector(makeSelectAccountHideSmallBalances(owner))
   const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(owner))
 
-  const { balances, smallBalances, spamBalances } = useSortedPortfolioBalances(
-    owner,
-    hideSmallBalances,
-    hideSpamTokens
-  )
+  const { data } = useSortedPortfolioBalances(owner, hideSmallBalances, hideSpamTokens)
+
+  if (!data) {
+    return (
+      <Box m="sm" style={loadingContainerStyle}>
+        <Loading repeat={4} type="token" />
+      </Box>
+    )
+  }
+
+  const { balances, smallBalances, spamBalances } = data
   const numHiddenTokens = smallBalances.length + spamBalances.length
 
   return (

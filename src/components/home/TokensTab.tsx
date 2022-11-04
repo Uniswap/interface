@@ -2,12 +2,10 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, ViewStyle } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { Suspense } from 'src/components/data/Suspense'
 import { NoTokens } from 'src/components/icons/NoTokens'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { TabViewScrollProps } from 'src/components/layout/screens/TabbedScrollScreen'
-import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
@@ -54,32 +52,26 @@ export function TokensTab({
 
   return (
     <Flex grow style={styles.tabContentStyle}>
-      <Suspense
-        fallback={
-          <Box m="sm" style={loadingContainerStyle}>
-            <Loading repeat={4} type="token" />
-          </Box>
-        }>
-        <TokenBalanceList
-          empty={
-            <Flex centered flex={1}>
-              <BaseCard.EmptyState
-                buttonLabel={t('Receive tokens')}
-                description={t(
-                  'Transfer tokens from a centralized exchange or another wallet to get started.'
-                )}
-                icon={<NoTokens />}
-                title={t('No tokens yet')}
-                onPress={onPressScan}
-              />
-            </Flex>
-          }
-          owner={owner}
-          tabViewScrollProps={tabViewScrollProps}
-          onPressToken={onPressToken}
-          onPressTokenIn={onPressTokenIn}
-        />
-      </Suspense>
+      <TokenBalanceList
+        empty={
+          <Flex centered flex={1}>
+            <BaseCard.EmptyState
+              buttonLabel={t('Receive tokens')}
+              description={t(
+                'Transfer tokens from a centralized exchange or another wallet to get started.'
+              )}
+              icon={<NoTokens />}
+              title={t('No tokens yet')}
+              onPress={onPressScan}
+            />
+          </Flex>
+        }
+        loadingContainerStyle={loadingContainerStyle}
+        owner={owner}
+        tabViewScrollProps={tabViewScrollProps}
+        onPressToken={onPressToken}
+        onPressTokenIn={onPressTokenIn}
+      />
     </Flex>
   )
 }

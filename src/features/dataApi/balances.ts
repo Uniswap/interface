@@ -1,6 +1,6 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
+import { PollingInterval } from 'src/constants/misc'
 import { usePortfolioBalancesQuery } from 'src/data/__generated__/types-and-hooks'
 import { CurrencyInfo, GqlResult, PortfolioBalance } from 'src/features/dataApi/types'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
@@ -100,12 +100,11 @@ export function useSortedPortfolioBalances(
   address: Address,
   hideSmallBalances?: boolean,
   hideSpamTokens?: boolean
-): SortedPortfolioBalances {
-  const { data: balancesById } = usePortfolioBalances(address)
+): GqlResult<SortedPortfolioBalances> {
+  const { data: balancesById, loading } = usePortfolioBalances(address)
 
-  return useMemo(() => {
-    if (!balancesById)
-      return { balances: EMPTY_ARRAY, smallBalances: EMPTY_ARRAY, spamBalances: EMPTY_ARRAY }
+  const formattedData = useMemo(() => {
+    if (!balancesById) return
 
     const { balances, smallBalances, spamBalances } = Object.values(
       balancesById
@@ -130,6 +129,8 @@ export function useSortedPortfolioBalances(
       spamBalances: spamBalances.sort((a, b) => b.balanceUSD - a.balanceUSD),
     }
   }, [balancesById, hideSmallBalances, hideSpamTokens])
+
+  return { data: formattedData, loading }
 }
 
 /** Helper hook to retrieve balance for a single currency for the active account. */
