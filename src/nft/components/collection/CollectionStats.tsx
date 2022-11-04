@@ -307,12 +307,12 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
             </StatsItem>
           ) : null}
           {totalSupplyStr ? (
-            <StatsItem label="Items" shouldHide={isMobile ? true : false}>
+            <StatsItem label="Items" shouldHide={isMobile ?? false}>
               {totalSupplyStr}
             </StatsItem>
           ) : null}
           {uniqueOwnersPercentage ? (
-            <StatsItem label="Unique owners" shouldHide={isMobile ? true : false}>
+            <StatsItem label="Unique owners" shouldHide={isMobile ?? false}>
               {uniqueOwnersPercentage}%
             </StatsItem>
           ) : null}
@@ -322,7 +322,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
             </StatsItem>
           ) : null}
           {stats.stats?.total_listings && listedPercentageStr > 0 ? (
-            <StatsItem label="Listed" shouldHide={isMobile ? true : false}>
+            <StatsItem label="Listed" shouldHide={isMobile ?? false}>
               {listedPercentageStr}%
             </StatsItem>
           ) : null}

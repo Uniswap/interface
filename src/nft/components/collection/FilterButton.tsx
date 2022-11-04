@@ -34,12 +34,9 @@ export const FilterButton = ({
       width={isMobile ? '44' : 'auto'}
       height="44"
       whiteSpace="nowrap"
+      color="textPrimary"
     >
-      <FilterIcon
-        style={{
-          color: 'textPrimary',
-        }}
-      />
+      <FilterIcon />
       {!isMobile && !isFiltersExpanded && <Box className={buttonTextMedium}> Filter</Box>}
     </Box>
   )
