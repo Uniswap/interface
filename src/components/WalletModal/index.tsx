@@ -6,9 +6,9 @@ import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'ana
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
+import { networkConnection } from 'connection'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -47,30 +47,29 @@ const CloseColor = styled(Close)`
   }
 `
 
-const Wrapper = styled.div<{ redesignFlag?: boolean }>`
+const Wrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
-  background-color: ${({ redesignFlag, theme }) => redesignFlag && theme.backgroundSurface};
-  outline: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundOutline}`};
-  box-shadow: ${({ redesignFlag, theme }) => redesignFlag && theme.deepShadow};
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  outline: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  box-shadow: ${({ theme }) => theme.deepShadow};
   margin: 0;
   padding: 0;
   width: 100%;
 `
 
-const HeaderRow = styled.div<{ redesignFlag?: boolean }>`
+const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
-  font-weight: ${({ redesignFlag }) => (redesignFlag ? '600' : '500')};
-  size: ${({ redesignFlag }) => redesignFlag && '16px'};
+  font-weight: 600;
+  size: 16px;
   color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     padding: 1rem;
   `};
 `
 
-const ContentWrapper = styled.div<{ redesignFlag?: boolean }>`
-  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg0)};
-  border: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundOutline}`};
+const ContentWrapper = styled.div`
+  background-color: ${({ theme }) => theme.backgroundSurface};
   padding: 0 1rem 1rem 1rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -155,8 +154,6 @@ export default function WalletModal({
 
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const nftFlagEnabled = useNftFlag() === NftVariant.Enabled
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
@@ -191,6 +188,13 @@ export default function WalletModal({
       setPendingConnector(undefined)
     }
   }, [pendingConnector, walletView])
+
+  // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
+  useEffect(() => {
+    if (chainId && connector !== networkConnection.connector) {
+      networkConnection.connector.activate(chainId)
+    }
+  }, [chainId, connector])
 
   // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {
@@ -301,7 +305,7 @@ export default function WalletModal({
       )
     } else {
       headerRow = (
-        <HeaderRow redesignFlag={redesignFlagEnabled}>
+        <HeaderRow>
           <HoverText>
             <Trans>Connect a wallet</Trans>
           </HoverText>
@@ -367,16 +371,8 @@ export default function WalletModal({
   }
 
   return (
-    <Modal
-      isOpen={walletModalOpen}
-      onDismiss={toggleWalletModal}
-      minHeight={false}
-      maxHeight={90}
-      redesignFlag={redesignFlagEnabled}
-    >
-      <Wrapper data-testid="wallet-modal" redesignFlag={redesignFlagEnabled}>
-        {getModalContent()}
-      </Wrapper>
+    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
+      <Wrapper data-testid="wallet-modal">{getModalContent()}</Wrapper>
     </Modal>
   )
 }

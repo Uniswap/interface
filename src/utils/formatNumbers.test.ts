@@ -136,7 +136,7 @@ describe('formatDollar for a non-price amount', () => {
     expect(formatDollar({ num: null })).toEqual('-')
   })
   it('0', () => {
-    expect(formatDollar({ num: 0 })).toEqual('0')
+    expect(formatDollar({ num: 0 })).toEqual('$0.00')
   })
   it('< 0.000001', () => {
     expect(formatDollar({ num: 0.0000000001 })).toEqual('$<0.000001')

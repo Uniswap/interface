@@ -7,7 +7,6 @@ import { CrossIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { buttonTextMedium, subhead } from 'nft/css/common.css'
 import {
-  useBag,
   useFiltersExpanded,
   useIsMobile,
   useProfilePageState,
@@ -15,6 +14,7 @@ import {
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
+import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { fetchMultipleCollectionStats, fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
@@ -39,12 +39,17 @@ const SellModeButton = styled.button<{ active: boolean }>`
   gap: 8px;
   cursor: pointer;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
-  color: #fff;
+  color: ${({ theme }) => theme.textPrimary};
   border: none;
   outline: none;
   &:hover {
     background-color: ${({ theme }) => theme.accentAction};
   }
+`
+
+const ProfilePageColumn = styled(Column)`
+  overflow-x: hidden !important;
+  ${ScreenBreakpointsPaddings}
 `
 
 const FILTER_SIDEBAR_WIDTH = 360
@@ -71,7 +76,6 @@ export const ProfilePage = () => {
   const resetSellAssets = useSellAsset((state) => state.reset)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
-  const isBagExpanded = useBag((state) => state.bagExpanded)
   const isMobile = useIsMobile()
   const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
 
@@ -141,7 +145,7 @@ export const ProfilePage = () => {
     if (ownerCollections?.length && collectionStats?.length) {
       const ownerCollectionsCopy = [...ownerCollections]
       for (const collection of ownerCollectionsCopy) {
-        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.floorPrice
+        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.stats?.floor_price
         collection.floorPrice = roundFloorPrice(floorPrice)
       }
       setWalletCollections(ownerCollectionsCopy)
@@ -152,7 +156,7 @@ export const ProfilePage = () => {
     if (ownerCollections?.length && collectionStats?.length) {
       const ownerCollectionsCopy = [...ownerCollections]
       for (const collection of ownerCollectionsCopy) {
-        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.floorPrice
+        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.stats?.floor_price //TODO update when changing walletStats endpoint to gql
         collection.floorPrice = floorPrice ? Math.round(floorPrice * 1000 + Number.EPSILON) / 1000 : 0 //round to at most 3 digits
       }
       setWalletCollections(ownerCollectionsCopy)
@@ -164,7 +168,7 @@ export const ProfilePage = () => {
   })
 
   return (
-    <Column width="full" paddingRight={{ sm: `${PADDING}`, md: isBagExpanded ? '0' : '72' }}>
+    <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
       {anyQueryIsLoading ? (
         <ProfilePageLoadingSkeleton />
       ) : walletAssets.length === 0 ? (
@@ -198,7 +202,7 @@ export const ProfilePage = () => {
                   />
                   <Row gap="8" flexWrap="nowrap">
                     {isSellMode && <SelectAllButton />}
-                    <SellModeButton active={isSellMode} onClick={handleSellModeClick}>
+                    <SellModeButton className={buttonTextMedium} active={isSellMode} onClick={handleSellModeClick}>
                       <TagIcon height={20} width={20} />
                       Sell
                     </SellModeButton>
@@ -279,7 +283,7 @@ export const ProfilePage = () => {
           </Box>
         </Row>
       )}
-    </Column>
+    </ProfilePageColumn>
   )
 }
 

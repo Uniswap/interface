@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from 'nft/types'
+import { BagItem, BagItemStatus, BagStatus, TokenType, UpdatedGenieAsset } from 'nft/types'
 import { v4 as uuidv4 } from 'uuid'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
@@ -13,9 +13,10 @@ interface BagState {
   setTotalEthPrice: (totalEthPrice: BigNumber) => void
   totalUsdPrice: number | undefined
   setTotalUsdPrice: (totalUsdPrice: number | undefined) => void
-  addAssetToBag: (asset: UpdatedGenieAsset) => void
-  removeAssetFromBag: (asset: UpdatedGenieAsset) => void
+  addAssetsToBag: (asset: UpdatedGenieAsset[], fromSweep?: boolean) => void
+  removeAssetsFromBag: (assets: UpdatedGenieAsset[]) => void
   markAssetAsReviewed: (asset: UpdatedGenieAsset, toKeep: boolean) => void
+  lockSweepItems: (contractAddress: string) => void
   didOpenUnavailableAssets: boolean
   setDidOpenUnavailableAssets: (didOpen: boolean) => void
   bagExpanded: boolean
@@ -76,34 +77,70 @@ export const useBag = create<BagState>()(
         set(() => ({
           totalUsdPrice,
         })),
-      addAssetToBag: (asset) =>
+      addAssetsToBag: (assets, fromSweep = false) =>
         set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
-          const assetWithId = { asset: { id: uuidv4(), ...asset }, status: BagItemStatus.ADDED_TO_BAG }
+          const items: BagItem[] = []
+          const itemsInBagCopy = [...itemsInBag]
+          assets.forEach((asset) => {
+            let index = -1
+            if (asset.tokenType !== TokenType.ERC1155) {
+              index = itemsInBag.findIndex(
+                (n) => n.asset.tokenId === asset.tokenId && n.asset.address === asset.address
+              )
+            }
+            if (index !== -1) {
+              itemsInBagCopy[index].inSweep = fromSweep
+            } else {
+              const assetWithId = {
+                asset: { id: uuidv4(), ...asset },
+                status: BagItemStatus.ADDED_TO_BAG,
+                inSweep: fromSweep,
+              }
+              items.push(assetWithId)
+            }
+          })
           if (itemsInBag.length === 0)
             return {
-              itemsInBag: [assetWithId],
+              itemsInBag: items,
               bagStatus: BagStatus.ADDING_TO_BAG,
             }
           else
             return {
-              itemsInBag: [...itemsInBag, assetWithId],
+              itemsInBag: [...itemsInBagCopy, ...items],
               bagStatus: BagStatus.ADDING_TO_BAG,
             }
         }),
-      removeAssetFromBag: (asset) => {
+      removeAssetsFromBag: (assets) => {
         set(({ itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           if (itemsInBag.length === 0) return { itemsInBag: [] }
-          const itemsCopy = [...itemsInBag]
-          const index = itemsCopy.findIndex((n) =>
-            asset.id ? n.asset.id === asset.id : n.asset.tokenId === asset.tokenId && n.asset.address === asset.address
+          const itemsCopy = itemsInBag.filter(
+            (item) =>
+              !assets.some((asset) =>
+                asset.id
+                  ? asset.id === item.asset.id
+                  : asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+              )
           )
-          if (index === -1) return { itemsInBag: get().itemsInBag }
-          itemsCopy.splice(index, 1)
           return { itemsInBag: itemsCopy }
         })
       },
+      lockSweepItems: (contractAddress) =>
+        set(({ itemsInBag }) => {
+          if (get().isLocked) return { itemsInBag: get().itemsInBag }
+          const itemsInBagCopy = itemsInBag.map((item) =>
+            item.asset.address === contractAddress && item.inSweep ? { ...item, inSweep: false } : item
+          )
+          if (itemsInBag.length === 0)
+            return {
+              itemsInBag,
+            }
+          else
+            return {
+              itemsInBag: [...itemsInBagCopy],
+            }
+        }),
       reset: () =>
         set(() => {
           if (!get().isLocked)

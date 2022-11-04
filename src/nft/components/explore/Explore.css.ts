@@ -8,7 +8,7 @@ export const section = style([
     paddingRight: { sm: '16', xl: '0' },
   }),
   {
-    maxWidth: '1000px',
+    maxWidth: '1200px',
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'row',
@@ -146,70 +146,6 @@ export const marketplaceIcon = style([
   },
 ])
 
-/* Value Prop Styles */
-export const valuePropWrap = style([
-  {
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'auto',
-    '@media': {
-      [`(max-width: ${breakpoints.sm}px)`]: {
-        backgroundPosition: 'top 0 left 100px',
-      },
-      [`(min-width: ${breakpoints.sm}px)`]: {
-        backgroundPosition: 'top 0 right 0',
-      },
-    },
-  },
-  sprinkles({
-    width: 'full',
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: 'outline',
-    borderRadius: '12',
-    paddingLeft: '16',
-    paddingRight: '16',
-    marginTop: '60',
-    position: 'relative',
-  }),
-])
-
-export const valuePropOverlay = style([
-  {
-    height: '135px',
-  },
-  sprinkles({
-    position: 'absolute',
-    width: 'full',
-    backgroundColor: 'grey900',
-    left: '0',
-    top: '0',
-    opacity: { sm: '0.7', xl: '0.1' },
-  }),
-])
-
-export const valuePropContent = style([
-  sprinkles({
-    position: 'relative',
-    zIndex: '1',
-    paddingLeft: { sm: '20', md: '28', lg: '36' },
-    paddingBottom: '18',
-    fontSize: { sm: '20', md: '28' },
-    paddingTop: { sm: '28', md: '32' },
-  }),
-  {
-    lineHeight: '28px',
-    '@media': {
-      [`(max-width: 400px)`]: { width: '88%' },
-      [`(min-width: 400px)`]: { width: '67%' },
-      [`(min-width: ${breakpoints.md}px)`]: {
-        width: '58%',
-        lineHeight: '36px',
-      },
-      [`(min-width: ${breakpoints.lg - 1}px)`]: { width: '50%' },
-    },
-  },
-])
-
 /* Base Table Styles  */
 
 export const table = style([
@@ -219,6 +155,7 @@ export const table = style([
     borderSpacing: '0px 40px',
   },
   sprinkles({
+    background: 'backgroundSurface',
     width: 'full',
     borderRadius: '12',
     borderStyle: 'none',
@@ -242,14 +179,11 @@ export const th = style([
     },
   },
   sprinkles({
-    color: { default: 'textSecondary', hover: 'textPrimary' },
-    cursor: 'pointer',
+    color: { default: 'textSecondary' },
     paddingTop: '12',
     paddingBottom: '12',
   }),
 ])
-
-export const tr = sprinkles({ cursor: 'pointer' })
 
 export const rank = sprinkles({
   color: 'textSecondary',
@@ -262,7 +196,6 @@ export const rank = sprinkles({
 export const td = style([
   body,
   {
-    verticalAlign: 'middle',
     selectors: {
       '&:nth-last-child(1)': {
         paddingRight: '20px',
@@ -271,15 +204,32 @@ export const td = style([
   },
   sprinkles({
     maxWidth: '160',
-    paddingTop: '10',
-    paddingBottom: '10',
+    paddingY: '8',
+    textAlign: 'right',
+    position: 'relative',
+  }),
+])
+
+export const loadingTd = style([
+  body,
+  {
+    selectors: {
+      '&:nth-last-child(1)': {
+        paddingRight: '20px',
+      },
+    },
+  },
+  sprinkles({
+    maxWidth: '160',
+    paddingY: '8',
     textAlign: 'right',
     position: 'relative',
   }),
 ])
 
 export const trendingOptions = sprinkles({
-  marginBottom: '32',
+  marginTop: '36',
+  marginBottom: '20',
   height: '44',
   borderRadius: '12',
   borderWidth: '2px',

@@ -9,7 +9,7 @@ export const fetchRoute = async ({
   toBuy: any
   senderAddress: string
 }): Promise<RouteResponse> => {
-  const url = `${process.env.REACT_APP_GENIE_API_URL}/route`
+  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/route`
   const payload = {
     sell: [...toSell].map((x) => buildRouteItem(x)),
     buy: [...toBuy].filter((x) => x.tokenType !== 'Dust').map((x) => buildRouteItem(x)),
@@ -52,14 +52,14 @@ const buildRouteItem = (item: GenieAsset): RouteItem => {
   return {
     id: item.id,
     symbol: item.priceInfo.baseAsset,
-    name: item.name,
-    decimals: item.decimals || 0, // 0 for fungible items
+    name: item.name ?? '',
+    decimals: parseFloat(item.priceInfo.baseDecimals),
     address: item.address,
     tokenType: item.tokenType,
     tokenId: item.tokenId,
     marketplace: item.marketplace,
     collectionName: item.collectionName,
-    amount: item.amount || 1, // default 1 for a single asset
+    amount: 1,
     priceInfo: {
       basePrice: item.priceInfo.basePrice,
       baseAsset: item.priceInfo.baseAsset,

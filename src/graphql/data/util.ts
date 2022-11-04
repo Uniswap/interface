@@ -2,7 +2,7 @@ import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 
-import { Chain, HistoryDuration } from './__generated__/TokenQuery.graphql'
+import { Chain, HistoryDuration } from './__generated__/TopTokens100Query.graphql'
 
 export enum TimePeriod {
   HOUR,
@@ -66,7 +66,7 @@ export const CHAIN_NAME_TO_CHAIN_ID: { [key: string]: SupportedChainId } = {
   OPTIMISM: SupportedChainId.OPTIMISM,
 }
 
-export const BACKEND_CHAIN_NAMES: Chain[] = ['ARBITRUM', 'CELO', 'ETHEREUM', 'OPTIMISM', 'POLYGON']
+export const BACKEND_CHAIN_NAMES: Chain[] = ['ETHEREUM', 'POLYGON', 'OPTIMISM', 'ARBITRUM', 'CELO']
 
 export function isValidBackendChainName(chainName: string | undefined): chainName is Chain {
   if (!chainName) return false
@@ -97,5 +97,10 @@ export function unwrapToken<T extends { address: string | null } | null>(chainId
   if (address !== nativeAddress) return token
 
   const nativeToken = nativeOnChain(chainId)
-  return { ...token, ...nativeToken, address: NATIVE_CHAIN_ID }
+  return {
+    ...token,
+    ...nativeToken,
+    address: NATIVE_CHAIN_ID,
+    extensions: undefined, // prevents marking cross-chain wrapped tokens as native
+  }
 }

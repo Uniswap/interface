@@ -1,20 +1,27 @@
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, FilterTypes } from 'analytics/constants'
 import clsx from 'clsx'
+import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { Column, Row } from 'nft/components/Flex'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
-import { FormEvent, useEffect, useReducer, useState } from 'react'
+import { useTraitsOpen } from 'nft/hooks/useTraitsOpen'
+import { TraitPosition } from 'nft/hooks/useTraitsOpen'
+import { FormEvent, useEffect, useMemo, useReducer, useState } from 'react'
 
 import { Checkbox } from '../layout/Checkbox'
 
-export const marketPlaceItems = {
+export const MARKETPLACE_ITEMS = {
   looksrare: 'LooksRare',
   nft20: 'NFT20',
   nftx: 'NFTX',
   opensea: 'OpenSea',
   x2y2: 'X2Y2',
+  cryptopunks: 'LarvaLabs',
+  sudoswap: 'SudoSwap',
 }
 
 const MarketplaceItem = ({
@@ -46,6 +53,7 @@ const MarketplaceItem = ({
       removeMarket(value)
       setCheckboxSelected(false)
     }
+    sendAnalyticsEvent(EventName.NFT_FILTER_SELECTED, { filter_type: FilterTypes.MARKETPLACE })
   }
 
   return (
@@ -58,9 +66,11 @@ const MarketplaceItem = ({
       fontWeight="normal"
       className={`${subheadSmall} ${styles.subRowHover}`}
       paddingLeft="12"
-      paddingRight="12"
+      paddingRight="16"
+      borderRadius="12"
       cursor="pointer"
-      style={{ paddingBottom: '21px', paddingTop: '21px', maxHeight: '44px' }}
+      maxHeight="44"
+      style={{ paddingBottom: '22px', paddingTop: '22px' }}
       onMouseEnter={toggleHover}
       onMouseLeave={toggleHover}
       onClick={handleCheckbox}
@@ -77,6 +87,8 @@ const MarketplaceItem = ({
   )
 }
 
+const GRAPHQL_MARKETS = ['cryptopunks', 'sudoswap']
+
 export const MarketplaceSelect = () => {
   const {
     addMarket,
@@ -91,46 +103,14 @@ export const MarketplaceSelect = () => {
   }))
 
   const [isOpen, setOpen] = useState(!!selectedMarkets.length)
+  const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
+  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
 
-  return (
-    <Box
-      as="details"
-      className={clsx(subheadSmall, !isOpen && styles.rowHover, isOpen && styles.detailsOpen)}
-      borderRadius="12"
-      open={isOpen}
-    >
-      <Box
-        as="summary"
-        className={clsx(isOpen && styles.summaryOpen, isOpen ? styles.rowHoverOpen : styles.rowHover)}
-        display="flex"
-        justifyContent="space-between"
-        cursor="pointer"
-        alignItems="center"
-        fontSize="14"
-        paddingTop="12"
-        paddingLeft="12"
-        paddingRight="12"
-        paddingBottom={isOpen ? '8' : '12'}
-        onClick={(e) => {
-          e.preventDefault()
-          setOpen(!isOpen)
-        }}
-      >
-        Marketplaces
-        <Box
-          color="textSecondary"
-          transition="250"
-          height="28"
-          width="28"
-          style={{
-            transform: `rotate(${isOpen ? 0 : 180}deg)`,
-          }}
-        >
-          <ChevronUpIcon />
-        </Box>
-      </Box>
-      <Column className={styles.filterDropDowns} paddingLeft="0">
-        {Object.entries(marketPlaceItems).map(([value, title]) => (
+  const MarketplaceItems = useMemo(
+    () =>
+      Object.entries(MARKETPLACE_ITEMS)
+        .filter(([value]) => isNftGraphQl || !GRAPHQL_MARKETS.includes(value))
+        .map(([value, title]) => (
           <MarketplaceItem
             key={value}
             title={title}
@@ -138,8 +118,54 @@ export const MarketplaceSelect = () => {
             count={marketCount?.[value] || 0}
             {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
           />
-        ))}
-      </Column>
-    </Box>
+        )),
+    [addMarket, isNftGraphQl, marketCount, removeMarket, selectedMarkets]
+  )
+
+  return (
+    <>
+      <Box className={styles.detailsOpen} opacity={isOpen ? '1' : '0'} />
+      <Box
+        as="details"
+        className={clsx(subheadSmall, !isOpen && styles.rowHover)}
+        open={isOpen}
+        borderRadius={isOpen ? '0' : '12'}
+      >
+        <Box
+          as="summary"
+          className={`${styles.row} ${styles.rowHover}`}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          fontSize="16"
+          paddingTop="12"
+          paddingLeft="12"
+          paddingBottom="12"
+          lineHeight="20"
+          borderRadius="12"
+          maxHeight="48"
+          onClick={(e) => {
+            e.preventDefault()
+            setOpen(!isOpen)
+            setTraitsOpen(TraitPosition.MARKPLACE_INDEX, !isOpen)
+          }}
+        >
+          Marketplaces
+          <Box display="flex" alignItems="center">
+            <Box
+              className={styles.chevronContainer}
+              style={{
+                transform: `rotate(${isOpen ? 0 : 180}deg)`,
+              }}
+            >
+              <ChevronUpIcon className={styles.chevronIcon} />
+            </Box>
+          </Box>
+        </Box>
+        <Column className={styles.filterDropDowns} paddingBottom="8" paddingLeft="0">
+          {MarketplaceItems}
+        </Column>
+      </Box>
+    </>
   )
 }

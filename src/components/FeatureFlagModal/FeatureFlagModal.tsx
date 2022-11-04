@@ -1,6 +1,6 @@
 import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { FavoriteTokensVariant, useFavoriteTokensFlag } from 'featureFlags/flags/favoriteTokens'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
+import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -203,16 +203,14 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FeatureFlagGroup name="Phase 0 Follow-ups">
-        <FeatureFlagOption
-          variant={FavoriteTokensVariant}
-          value={useFavoriteTokensFlag()}
-          featureFlag={FeatureFlag.favoriteTokens}
-          label="Favorite Tokens"
-        />
-      </FeatureFlagGroup>
       <FeatureFlagGroup name="Phase 1">
         <FeatureFlagOption variant={NftVariant} value={useNftFlag()} featureFlag={FeatureFlag.nft} label="NFTs" />
+        <FeatureFlagOption
+          variant={NftGraphQlVariant}
+          value={useNftGraphQlFlag()}
+          featureFlag={FeatureFlag.nftGraphQl}
+          label="NFT GraphQL Endpoints"
+        />
       </FeatureFlagGroup>
       <FeatureFlagGroup name="Debug">
         <FeatureFlagOption

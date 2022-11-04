@@ -1,12 +1,16 @@
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName } from 'analytics/constants'
 import clsx from 'clsx'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'
-import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
+import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { getChainInfo } from 'constants/chainInfo'
+import { checkWarning } from 'constants/tokenSafety'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { VerifiedIcon } from 'nft/components/icons'
 import { vars } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
 import { FungibleToken, GenieCollection } from 'nft/types'
@@ -23,8 +27,8 @@ interface CollectionRowProps {
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
-  traceEvent: () => void
   index: number
+  eventProperties: Record<string, unknown>
 }
 
 export const CollectionRow = ({
@@ -32,8 +36,8 @@ export const CollectionRow = ({
   isHovered,
   setHoveredIndex,
   toggleOpen,
-  traceEvent,
   index,
+  eventProperties,
 }: CollectionRowProps) => {
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -45,8 +49,8 @@ export const CollectionRow = ({
   const handleClick = useCallback(() => {
     addToSearchHistory(collection)
     toggleOpen()
-    traceEvent()
-  }, [addToSearchHistory, collection, toggleOpen, traceEvent])
+    sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+  }, [addToSearchHistory, collection, toggleOpen, eventProperties])
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -89,13 +93,13 @@ export const CollectionRow = ({
             <Box className={styles.primaryText}>{collection.name}</Box>
             {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
-          <Box className={styles.secondaryText}>{putCommas(collection.stats.total_supply)} items</Box>
+          <Box className={styles.secondaryText}>{putCommas(collection.stats?.total_supply)} items</Box>
         </Column>
       </Row>
-      {collection.floorPrice ? (
+      {collection.stats?.floor_price ? (
         <Column className={styles.suggestionSecondaryContainer}>
           <Row gap="4">
-            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.floorPrice)} ETH</Box>
+            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.stats?.floor_price)} ETH</Box>
           </Row>
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>
@@ -118,11 +122,11 @@ interface TokenRowProps {
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
-  traceEvent: () => void
   index: number
+  eventProperties: Record<string, unknown>
 }
 
-export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceEvent, index }: TokenRowProps) => {
+export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
   const [brokenImage, setBrokenImage] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const addToSearchHistory = useSearchHistory(
@@ -133,8 +137,8 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
   const handleClick = useCallback(() => {
     addToSearchHistory(token)
     toggleOpen()
-    traceEvent()
-  }, [addToSearchHistory, toggleOpen, token, traceEvent])
+    sendAnalyticsEvent(EventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+  }, [addToSearchHistory, toggleOpen, token, eventProperties])
 
   const [bridgedAddress, bridgedChain, L2Icon] = useBridgedAddress(token)
   const tokenDetailsPath = getTokenDetailsURL(bridgedAddress ?? token.address, undefined, bridgedChain ?? token.chainId)
@@ -181,7 +185,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, traceE
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            {token.onDefaultList && <VerifiedIcon className={styles.suggestionIcon} />}
+            <TokenSafetyIcon warning={checkWarning(token.address)} />
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>

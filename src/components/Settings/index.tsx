@@ -3,7 +3,6 @@ import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
@@ -23,16 +22,16 @@ import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 
-const StyledMenuIcon = styled(Settings)<{ redesignFlag: boolean }>`
+const StyledMenuIcon = styled(Settings)`
   height: 20px;
   width: 20px;
 
   > * {
-    stroke: ${({ theme, redesignFlag }) => (redesignFlag ? theme.textSecondary : theme.deprecated_text1)};
+    stroke: ${({ theme }) => theme.textSecondary};
   }
 `
 
-const StyledCloseIcon = styled(X)<{ redesignFlag: boolean }>`
+const StyledCloseIcon = styled(X)`
   height: 20px;
   width: 20px;
   :hover {
@@ -40,7 +39,7 @@ const StyledCloseIcon = styled(X)<{ redesignFlag: boolean }>`
   }
 
   > * {
-    stroke: ${({ theme, redesignFlag }) => (redesignFlag ? theme.textSecondary : theme.deprecated_text1)};
+    stroke: ${({ theme }) => theme.textSecondary};
   }
 `
 
@@ -83,10 +82,10 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span<{ redesignFlag: boolean }>`
+const MenuFlyout = styled.span`
   min-width: 20.125rem;
-  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg2)};
-  border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : theme.deprecated_bg3)};
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
@@ -97,7 +96,7 @@ const MenuFlyout = styled.span<{ redesignFlag: boolean }>`
   top: 2rem;
   right: 0rem;
   z-index: 100;
-  color: ${({ theme, redesignFlag }) => redesignFlag && theme.textPrimary};
+  color: ${({ theme }) => theme.textPrimary};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     min-width: 18.125rem;
@@ -123,8 +122,6 @@ const ModalContentWrapper = styled.div`
 
 export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
   const { chainId } = useWeb3React()
-  const redesignFlag = useRedesignFlag()
-  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const node = useRef<HTMLDivElement>()
   const open = useModalIsOpen(ApplicationModal.SETTINGS)
@@ -152,7 +149,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <Text fontWeight={500} fontSize={20}>
                 <Trans>Are you sure?</Trans>
               </Text>
-              <StyledCloseIcon onClick={() => setShowConfirmation(false)} redesignFlag={redesignFlagEnabled} />
+              <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
@@ -190,7 +187,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
         id="open-settings-dialog-button"
         aria-label={t`Transaction Settings`}
       >
-        <StyledMenuIcon redesignFlag={redesignFlagEnabled} />
+        <StyledMenuIcon />
         {expertMode ? (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">
@@ -200,10 +197,10 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
         ) : null}
       </StyledMenuButton>
       {open && (
-        <MenuFlyout redesignFlag={redesignFlagEnabled}>
+        <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
             <Text fontWeight={600} fontSize={14}>
-              <Trans>{redesignFlagEnabled ? 'Settings' : 'Transaction Settings'}</Trans>
+              <Trans>Settings</Trans>
             </Text>
             <TransactionSettings placeholderSlippage={placeholderSlippage} />
             <Text fontWeight={600} fontSize={14}>

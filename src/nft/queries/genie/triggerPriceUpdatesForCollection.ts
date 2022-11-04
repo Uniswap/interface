@@ -1,5 +1,5 @@
 export const triggerPriceUpdatesForCollection = async (address: string) => {
-  const url = `${process.env.REACT_APP_GENIE_API_URL}/collections/refresh`
+  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/collections/refresh`
   const r = await fetch(url, {
     method: 'PUT',
     headers: {

@@ -8,11 +8,23 @@ export enum EventName {
   APP_LOADED = 'Application Loaded',
   APPROVE_TOKEN_TXN_SUBMITTED = 'Approve Token Transaction Submitted',
   CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
+  EXPLORE_BANNER_CLICKED = 'Explore Banner Clicked',
   EXPLORE_SEARCH_SELECTED = 'Explore Search Selected',
   EXPLORE_TOKEN_ROW_CLICKED = 'Explore Token Row Clicked',
   PAGE_VIEWED = 'Page Viewed',
+  NAVBAR_RESULT_SELECTED = 'Navbar Result Selected',
   NAVBAR_SEARCH_SELECTED = 'Navbar Search Selected',
   NAVBAR_SEARCH_EXITED = 'Navbar Search Exited',
+  NFT_ACTIVITY_SELECTED = 'NFT Activity Selected',
+  NFT_BUY_ADDED = 'NFT Buy Bag Added',
+  NFT_BUY_BAG_CHANGED = 'NFT Buy Bag Changed',
+  NFT_BUY_BAG_PAY = 'NFT Buy Bag Pay Clicked',
+  NFT_BUY_BAG_REFUNDED = 'NFT Buy Bag Refunded',
+  NFT_BUY_BAG_SIGNED = 'NFT Buy Bag Signed',
+  NFT_BUY_BAG_SUCCEEDED = 'NFT Buy Bag Succeeded',
+  NFT_FILTER_OPENED = 'NFT Collection Filter Opened',
+  NFT_FILTER_SELECTED = 'NFT Filter Selected',
+  NFT_TRENDING_ROW_SELECTED = 'Trending Row Selected',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
   SWAP_MAX_TOKEN_AMOUNT_SELECTED = 'Swap Max Token Amount Selected',
@@ -73,6 +85,10 @@ export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
  * Known pages in the app. Highest order context.
  */
 export enum PageName {
+  NFT_COLLECTION_PAGE = 'nft-collection-page',
+  NFT_DETAILS_PAGE = 'nft-details-page',
+  NFT_EXPLORE_PAGE = 'nft-explore-page',
+  TOKEN_DETAILS_PAGE = 'token-details',
   TOKENS_PAGE = 'tokens-page',
   POOL_PAGE = 'pool-page',
   SWAP_PAGE = 'swap-page',
@@ -88,12 +104,15 @@ export enum PageName {
 export enum SectionName {
   CURRENCY_INPUT_PANEL = 'swap-currency-input',
   CURRENCY_OUTPUT_PANEL = 'swap-currency-output',
+  NAVBAR_SEARCH = 'Navbar Search',
+  WIDGET = 'widget',
   // alphabetize additional section names.
 }
 
 /** Known modals for analytics purposes. */
 export enum ModalName {
   CONFIRM_SWAP = 'confirm-swap-modal',
+  NFT_TX_COMPLETE = 'nft-tx-complete-modal',
   TOKEN_SELECTOR = 'token-selector-modal',
   // alphabetize additional modal names.
 }
@@ -107,10 +126,16 @@ export enum ElementName {
   COMMON_BASES_CURRENCY_BUTTON = 'common-bases-currency-button',
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
   CONNECT_WALLET_BUTTON = 'connect-wallet-button',
+  EXPLORE_BANNER = 'explore-banner',
   EXPLORE_SEARCH_INPUT = 'explore_search_input',
   IMPORT_TOKEN_BUTTON = 'import-token-button',
   MAX_TOKEN_AMOUNT_BUTTON = 'max-token-amount-button',
   NAVBAR_SEARCH_INPUT = 'navbar-search-input',
+  NFT_ACTIVITY_TAB = 'nft-activity-tab',
+  NFT_BUY_BAG_PAY_BUTTON = 'nft-buy-bag-pay-button',
+  NFT_FILTER_BUTTON = 'nft-filter-button',
+  NFT_FILTER_OPTION = 'nft-filter-option',
+  NFT_TRENDING_ROW = 'nft-trending-row',
   PRICE_UPDATE_ACCEPT_BUTTON = 'price-update-accept-button',
   SWAP_BUTTON = 'swap-button',
   SWAP_DETAILS_DROPDOWN = 'swap-details-dropdown',
@@ -131,4 +156,22 @@ export enum Event {
   onKeyPress = 'onKeyPress',
   onSelect = 'onSelect',
   // alphabetize additional events.
+}
+
+/** Known navbar search result types */
+export enum NavBarSearchTypes {
+  COLLECTION_SUGGESTION = 'collection-suggestion',
+  COLLECTION_TRENDING = 'collection-trending',
+  RECENT_SEARCH = 'recent',
+  TOKEN_SUGGESTION = 'token-suggestion',
+  TOKEN_TRENDING = 'token-trending',
+}
+
+/**
+ * Known Filter Types for NFTs
+ */
+export enum FilterTypes {
+  MARKETPLACE = 'Marketplace',
+  PRICE_RANGE = 'Price Range',
+  TRAIT = 'Trait',
 }
