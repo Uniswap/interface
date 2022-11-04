@@ -60,7 +60,7 @@ const AudioPlayer = ({
 
 const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
 
-const CountdownTimer = ({ sellOrder }: { sellOrder: Deprecated_SellOrder | SellOrder }) => {
+const CountdownTimer = ({ sellOrder }: { sellOrder?: Deprecated_SellOrder | SellOrder }) => {
   const { date, expires } = useMemo(() => {
     const date = new Date((sellOrder as Deprecated_SellOrder).orderClosingDate ?? (sellOrder as SellOrder).endAt)
     return {
@@ -190,6 +190,16 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   }, [asset, address, provider])
 
   const USDPrice = useUsdPrice(asset)
+
+  const firstSellOrder = useMemo(
+    () =>
+      Boolean(asset.sellorders !== undefined && asset.sellorders.length > 0)
+        ? (asset.sellorders as Deprecated_SellOrder[] | SellOrder[])[0]
+        : undefined,
+    [asset.sellorders]
+  )
+
+  const renderSellOrderUI = Boolean(asset.priceInfo && firstSellOrder && !isOwned)
 
   return (
     <AnimatedBox
@@ -355,7 +365,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             </Row>
           </Column>
 
-          {asset.priceInfo && asset.sellorders && !isOwned ? (
+          {renderSellOrderUI && (
             <Row
               marginTop="8"
               marginBottom="40"
@@ -369,10 +379,10 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             >
               <Column justifyContent="flex-start" gap="8">
                 <Row gap="12" as="a" target="_blank" rel="norefferer">
-                  <a href={asset.sellorders[0].marketplaceUrl} rel="noreferrer" target="_blank">
+                  <a href={firstSellOrder?.marketplaceUrl} rel="noreferrer" target="_blank">
                     <img
                       className={styles.marketplace}
-                      src={`/nft/svgs/marketplaces/${asset.sellorders[0].marketplace.toLowerCase()}.svg`}
+                      src={`/nft/svgs/marketplaces/${firstSellOrder?.marketplace.toLowerCase()}.svg`}
                       height={16}
                       width={16}
                       alt="Markeplace"
@@ -387,9 +397,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                     </Box>
                   )}
                 </Row>
-                {(asset.sellorders?.[0] as Deprecated_SellOrder).orderClosingDate ||
-                (asset.sellorders?.[0] as SellOrder).endAt ? (
-                  <CountdownTimer sellOrder={asset.sellorders[0]} />
+                {(firstSellOrder as Deprecated_SellOrder)?.orderClosingDate || (firstSellOrder as SellOrder)?.endAt ? (
+                  <CountdownTimer sellOrder={firstSellOrder} />
                 ) : null}
               </Column>
               <Box
@@ -419,7 +428,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 {isSelected ? 'Added to Bag' : 'Buy Now'}
               </Box>
             </Row>
-          ) : null}
+          )}
           <Row gap="32" marginBottom="20">
             <button data-active={showTraits} onClick={() => setShowTraits(true)} className={styles.tab}>
               Traits
