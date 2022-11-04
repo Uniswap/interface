@@ -10,7 +10,8 @@ export function useSearchTokens(
   skip: boolean
 ): GqlResult<CurrencyInfo[]> {
   const { data, loading } = useSearchTokensProjectsQuery({
-    variables: { searchQuery: searchQuery ?? '', skip },
+    variables: { searchQuery: searchQuery ?? '' },
+    skip,
   })
 
   const formattedData = useMemo(() => {

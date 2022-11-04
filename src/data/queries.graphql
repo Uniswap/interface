@@ -88,8 +88,8 @@ query PortfolioBalances($ownerAddress: String!) {
   }
 }
 
-query SearchTokensProjects($searchQuery: String!, $skip: Boolean!) {
-  searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {
+query SearchTokensProjects($searchQuery: String!) {
+  searchTokenProjects(searchQuery: $searchQuery) {
     logoUrl
     name
     safetyLevel

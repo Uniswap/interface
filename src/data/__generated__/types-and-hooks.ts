@@ -836,7 +836,6 @@ export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<
 
 export type SearchTokensProjectsQueryVariables = Exact<{
   searchQuery: Scalars['String'];
-  skip: Scalars['Boolean'];
 }>;
 
 
@@ -1080,8 +1079,8 @@ export type PortfolioBalancesQueryHookResult = ReturnType<typeof usePortfolioBal
 export type PortfolioBalancesLazyQueryHookResult = ReturnType<typeof usePortfolioBalancesLazyQuery>;
 export type PortfolioBalancesQueryResult = Apollo.QueryResult<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>;
 export const SearchTokensProjectsDocument = gql`
-    query SearchTokensProjects($searchQuery: String!, $skip: Boolean!) {
-  searchTokenProjects(searchQuery: $searchQuery) @skip(if: $skip) {
+    query SearchTokensProjects($searchQuery: String!) {
+  searchTokenProjects(searchQuery: $searchQuery) {
     logoUrl
     name
     safetyLevel
@@ -1108,7 +1107,6 @@ export const SearchTokensProjectsDocument = gql`
  * const { data, loading, error } = useSearchTokensProjectsQuery({
  *   variables: {
  *      searchQuery: // value for 'searchQuery'
- *      skip: // value for 'skip'
  *   },
  * });
  */
