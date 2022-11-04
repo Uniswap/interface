@@ -28,6 +28,9 @@ module.exports = function (api) {
     // metro doesn't like these
     '@babel/plugin-proposal-numeric-separator',
     'relay',
+    // reduce startup time by compiling queries ahead of time
+    // https://www.apollographql.com/docs/react/performance/babel#using-graphql-tagmacro
+    'graphql-tag',
   ]
 
   if (inProduction) {
