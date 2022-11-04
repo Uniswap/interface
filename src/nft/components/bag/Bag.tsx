@@ -77,9 +77,8 @@ const Bag = () => {
   const isConnected = !!provider && !!address
 
   const { pathname } = useLocation()
-  const isProfilePage = pathname.startsWith('/profile')
   const isNFTPage = pathname.startsWith('/nfts')
-  const shouldShowBag = isNFTPage || isProfilePage
+  const shouldShowBag = isNFTPage
   const isMobile = useIsMobile()
 
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)

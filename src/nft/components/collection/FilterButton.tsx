@@ -31,7 +31,7 @@ export const FilterButton = ({
   }))
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const { pathname } = useLocation()
-  const isProfilePage = pathname.startsWith('/profile')
+  const isProfilePage = pathname.startsWith('nfts/profile')
   const isCollectionNftsLoading = useIsCollectionLoading((state) => state.isCollectionNftsLoading)
 
   const showFilterBadge = isProfilePage

@@ -243,7 +243,6 @@ export default function App() {
 
                   {nftFlag === NftVariant.Enabled && (
                     <>
-                      <Route path="/profile" element={<Profile />} />
                       <Route path="/nfts" element={<NftExplore />} />
                       <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
                       <Route
@@ -262,6 +261,7 @@ export default function App() {
                           </Suspense>
                         }
                       />
+                      <Route path="/nfts/profile" element={<Profile />} />
                     </>
                   )}
                 </Routes>

@@ -255,8 +255,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                   onClick={() => {
                     if (!parsed.origin || parsed.origin === 'collection') {
                       navigate(`/nfts/collection/${asset.address}`)
-                    } else if (parsed.origin === 'profile') {
-                      navigate('/profile', undefined)
+                    } else if (parsed.origin === '/nfts/profile') {
+                      navigate('/nfts/profile', undefined)
                     } else if (parsed.origin === 'explore') {
                       navigate(`/nfts`, undefined)
                     } else if (parsed.origin === 'activity') {
