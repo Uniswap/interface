@@ -6,6 +6,8 @@ import { devtools } from 'zustand/middleware'
 
 interface BagState {
   bagStatus: BagStatus
+  bagManuallyClosed: boolean
+  setBagExpanded: ({ bagExpanded, manualClose }: { bagExpanded: boolean; manualClose?: boolean }) => void
   setBagStatus: (state: BagStatus) => void
   itemsInBag: BagItem[]
   setItemsInBag: (items: BagItem[]) => void
@@ -30,6 +32,8 @@ export const useBag = create<BagState>()(
   devtools(
     (set, get) => ({
       bagStatus: BagStatus.ADDING_TO_BAG,
+      bagExpanded: false,
+      bagManuallyClosed: false,
       setBagStatus: (newBagStatus) =>
         set(() => ({
           bagStatus: newBagStatus,
@@ -52,11 +56,9 @@ export const useBag = create<BagState>()(
         set(() => ({
           didOpenUnavailableAssets: didOpen,
         })),
-      bagExpanded: false,
-      toggleBag: () =>
-        set(({ bagExpanded }) => ({
-          bagExpanded: !bagExpanded,
-        })),
+      setBagExpanded: ({ bagExpanded, manualClose }) =>
+        set(({ bagManuallyClosed }) => ({ bagExpanded, bagManuallyClosed: manualClose || bagManuallyClosed })),
+      toggleBag: () => set(({ bagExpanded }) => ({ bagExpanded: !bagExpanded })),
       isLocked: false,
       setLocked: (_isLocked) =>
         set(() => ({
@@ -64,7 +66,8 @@ export const useBag = create<BagState>()(
         })),
       itemsInBag: [],
       setItemsInBag: (items) =>
-        set(() => ({
+        set(({ bagManuallyClosed }) => ({
+          bagManuallyClosed: items.length === 0 ? false : bagManuallyClosed,
           itemsInBag: items,
         })),
       totalEthPrice: BigNumber.from(0),
@@ -112,7 +115,7 @@ export const useBag = create<BagState>()(
             }
         }),
       removeAssetsFromBag: (assets) => {
-        set(({ itemsInBag }) => {
+        set(({ bagManuallyClosed, itemsInBag }) => {
           if (get().isLocked) return { itemsInBag: get().itemsInBag }
           if (itemsInBag.length === 0) return { itemsInBag: [] }
           const itemsCopy = itemsInBag.filter(
@@ -123,7 +126,7 @@ export const useBag = create<BagState>()(
                   : asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
               )
           )
-          return { itemsInBag: itemsCopy }
+          return { bagManuallyClosed: itemsCopy.length === 0 ? false : bagManuallyClosed, itemsInBag: itemsCopy }
         })
       },
       lockSweepItems: (contractAddress) =>
@@ -149,6 +152,7 @@ export const useBag = create<BagState>()(
               itemsInBag: [],
               didOpenUnavailableAssets: false,
               isLocked: false,
+              bagManuallyClosed: false,
             }
           else return {}
         }),

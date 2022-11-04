@@ -1,6 +1,8 @@
 import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
+import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
+import { useCollectionQuery } from 'graphql/data/nft/Collection'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
@@ -10,15 +12,26 @@ import { useBag, useCollectionFilters, useFiltersExpanded, useIsCollectionLoadin
 import * as styles from 'nft/pages/collection/index.css'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { GenieCollection } from 'nft/types'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useSpring } from 'react-spring'
+import styled from 'styled-components/macro'
 
 const FILTER_WIDTH = 332
 const BAG_WIDTH = 324
 
 export const CollectionBannerLoading = () => <Box height="full" width="full" className={styles.loadingBanner} />
+
+const CollectionDescriptionSection = styled(Column)`
+  ${styles.ScreenBreakpointsPaddings}
+`
+
+const CollectionDisplaySection = styled(Row)`
+  ${styles.ScreenBreakpointsPaddings}
+  align-items: flex-start;
+  position: relative;
+`
 
 const Collection = () => {
   const { contractAddress } = useParams()
@@ -31,10 +44,18 @@ const Collection = () => {
   const isActivityToggled = pathname.includes('/activity')
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
+  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
   const { chainId } = useWeb3React()
 
-  const { data: collectionStats, isLoading } = useQuery(['collectionStats', contractAddress], () =>
+  const { data: queryCollection, isLoading } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
+  )
+
+  const gqlCollection = useCollectionQuery(contractAddress as string)
+
+  const collectionStats = useMemo(
+    () => (isNftGraphQl ? gqlCollection : queryCollection),
+    [isNftGraphQl, gqlCollection, queryCollection]
   )
 
   useEffect(() => {
@@ -70,7 +91,7 @@ const Collection = () => {
     <>
       <Trace
         page={PageName.NFT_COLLECTION_PAGE}
-        properties={{ collection_address: contractAddress, chain_id: chainId }}
+        properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
         shouldLogImpression
       >
         <Column width="full">
@@ -93,7 +114,7 @@ const Collection = () => {
                   )}
                 </Box>
               </Box>
-              <Column paddingX="48">
+              <CollectionDescriptionSection>
                 {(isLoading || collectionStats !== undefined) && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
                 )}
@@ -105,10 +126,10 @@ const Collection = () => {
                     toggleActivity()
                   }}
                 />
-              </Column>
-              <Row alignItems="flex-start" position="relative" paddingX="48">
+              </CollectionDescriptionSection>
+              <CollectionDisplaySection>
                 <Box position="sticky" top="72" width="0">
-                  {isFiltersExpanded && <Filters traits={collectionStats?.traits ?? []} />}
+                  {isFiltersExpanded && <Filters traitsByGroup={collectionStats?.traits ?? {}} />}
                 </Box>
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
@@ -138,7 +159,7 @@ const Collection = () => {
                         </Suspense>
                       )}
                 </AnimatedBox>
-              </Row>
+              </CollectionDisplaySection>
             </>
           ) : (
             // TODO: Put no collection asset page here

@@ -371,6 +371,7 @@ const colorStyles = defineProperties({
     color: vars.color,
     background: vars.color,
     borderColor: vars.color,
+    borderLeftColor: vars.color,
     borderBottomColor: vars.color,
     borderTopColor: vars.color,
     backgroundColor: vars.color,
@@ -390,6 +391,7 @@ const unresponsiveProperties = defineProperties({
   properties: {
     cursor: ['default', 'pointer', 'auto'],
     borderStyle,
+    borderLeftStyle: borderStyle,
     borderBottomStyle: borderStyle,
     borderTopStyle: borderStyle,
     borderRadius: vars.radii,

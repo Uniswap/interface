@@ -253,7 +253,14 @@ export default function App() {
                         }
                       />
                       <Route path="/nfts" element={<NftExplore />} />
-                      <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
+                      <Route
+                        path="/nfts/asset/:contractAddress/:tokenId"
+                        element={
+                          <Suspense fallback={<div>Holder for loading ...</div>}>
+                            <Asset />
+                          </Suspense>
+                        }
+                      />
                       <Route
                         path="/nfts/collection/:contractAddress"
                         element={

@@ -23,9 +23,9 @@ export const Details = ({
 }: {
   contractAddress: string
   tokenId: string
-  metadataUrl: string
+  metadataUrl?: string
   tokenType: string
-  totalSupply: number
+  totalSupply?: number
   blockchain: string
 }) => (
   <Row gap={{ md: '32', sm: '16' }} width="full" justifyContent="space-between" alignItems="flex-start" flexWrap="wrap">

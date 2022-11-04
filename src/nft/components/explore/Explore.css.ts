@@ -43,20 +43,6 @@ export const bannerOverlay = style([
   }),
 ])
 
-export const collectionName = style([
-  sprinkles({
-    textAlign: 'left',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    display: 'inline-block',
-    color: 'explicitWhite',
-  }),
-  {
-    maxWidth: 'calc(100% - 80px)',
-  },
-])
-
 export const collectionDetails = style([
   sprinkles({
     width: 'full',
@@ -69,43 +55,6 @@ export const collectionDetails = style([
     },
   },
 ])
-
-export const volumeRank = style([
-  sprinkles({
-    paddingTop: '8',
-    paddingBottom: '8',
-    paddingRight: '16',
-    paddingLeft: '16',
-    color: 'blue400',
-    background: 'accentActionSoft',
-  }),
-  {
-    borderRadius: '64px',
-    maxWidth: '172px',
-  },
-])
-
-export const exploreCollection = style([
-  {
-    width: '176px',
-  },
-  sprinkles({
-    color: 'explicitWhite',
-    marginTop: '36',
-    borderRadius: '12',
-    padding: '12',
-    paddingRight: '16',
-    paddingLeft: '16',
-  }),
-])
-
-export const carouselIndicator = sprinkles({
-  width: '36',
-  height: '4',
-  marginRight: '6',
-  borderRadius: 'round',
-  display: 'inline-block',
-})
 
 /* Activity Feed Styles */
 export const activityRow = style([
@@ -184,14 +133,6 @@ export const th = style([
     paddingBottom: '12',
   }),
 ])
-
-export const rank = sprinkles({
-  color: 'textSecondary',
-  position: 'absolute',
-  display: { md: 'inline-block', sm: 'none' },
-  left: '24',
-  top: '20',
-})
 
 export const td = style([
   body,

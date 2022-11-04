@@ -9,7 +9,6 @@ import { CrossIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { buttonTextMedium, subhead } from 'nft/css/common.css'
 import {
-  useBag,
   useFiltersExpanded,
   useIsMobile,
   useProfilePageState,
@@ -17,6 +16,7 @@ import {
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
+import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
@@ -41,12 +41,17 @@ const SellModeButton = styled.button<{ active: boolean }>`
   gap: 8px;
   cursor: pointer;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
-  color: #fff;
+  color: ${({ theme }) => theme.textPrimary};
   border: none;
   outline: none;
   &:hover {
     background-color: ${({ theme }) => theme.accentAction};
   }
+`
+
+const ProfilePageColumn = styled(Column)`
+  overflow-x: hidden !important;
+  ${ScreenBreakpointsPaddings}
 `
 
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
@@ -69,7 +74,6 @@ export const ProfilePage = () => {
   const resetSellAssets = useSellAsset((state) => state.reset)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
-  const isBagExpanded = useBag((state) => state.bagExpanded)
   const isMobile = useIsMobile()
   const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
   const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
@@ -141,12 +145,7 @@ export const ProfilePage = () => {
   })
 
   return (
-    <Column
-      width="full"
-      paddingLeft={{ sm: `${PADDING}`, md: '52' }}
-      paddingRight={{ sm: `${PADDING}`, md: isBagExpanded ? '0' : '72' }}
-      paddingTop={{ sm: `${PADDING}`, md: '40' }}
-    >
+    <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
       {anyQueryIsLoading && !isNftGraphQl ? (
         <ProfileBodyLoadingSkeleton />
       ) : ownerAssets?.length === 0 ? (
@@ -176,7 +175,7 @@ export const ProfilePage = () => {
                   />
                   <Row gap="8" flexWrap="nowrap">
                     {isSellMode && <SelectAllButton ownerAssets={ownerAssets ?? []} />}
-                    <SellModeButton active={isSellMode} onClick={handleSellModeClick}>
+                    <SellModeButton className={buttonTextMedium} active={isSellMode} onClick={handleSellModeClick}>
                       <TagIcon height={20} width={20} />
                       Sell
                     </SellModeButton>
@@ -255,7 +254,7 @@ export const ProfilePage = () => {
           </Box>
         </Row>
       )}
-    </Column>
+    </ProfilePageColumn>
   )
 }
 
