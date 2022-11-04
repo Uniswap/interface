@@ -90,8 +90,7 @@ export const selectInactiveAccounts = createSelector(
 
 export const makeSelectAccountNotificationSetting = (address: Address) =>
   createSelector(selectAccounts, (accounts) => !!accounts[address]?.pushNotificationsEnabled)
-
-export const selectAccountHideSmallBalances = (address: Address) =>
+export const makeSelectAccountHideSmallBalances = (address: Address) =>
   createSelector(selectAccounts, (accounts) => !accounts[address]?.showSmallBalances)
-export const selectAccountHideSpamTokens = (address: Address) =>
+export const makeSelectAccountHideSpamTokens = (address: Address) =>
   createSelector(selectAccounts, (accounts) => !accounts[address]?.showSpamTokens)

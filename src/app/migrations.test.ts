@@ -21,6 +21,7 @@ import {
   v22Schema,
   v23Schema,
   v24Schema,
+  v25Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -805,5 +806,13 @@ describe('Redux state migrations', () => {
     }
     const v25 = migrations[25](v24Stub)
     expect(v25.passwordLockout.passwordAttempts).toBe(0)
+  })
+
+  it('migrates from v25 to v26', () => {
+    const v25Stub = {
+      ...v25Schema,
+    }
+    const v26 = migrations[26](v25Stub)
+    expect(v26.wallet.settings.showSmallBalances).toBeUndefined()
   })
 })

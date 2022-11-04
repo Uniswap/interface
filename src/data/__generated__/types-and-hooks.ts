@@ -832,7 +832,7 @@ export type PortfolioBalancesQueryVariables = Exact<{
 }>;
 
 
-export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', tokenBalances?: Array<{ __typename?: 'TokenBalance', quantity?: number | null, denominatedValue?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', chain: Chain, address?: string | null, name?: string | null, symbol?: string | null, decimals?: number | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', tokenProject: { __typename?: 'TokenProject', logoUrl?: string | null, safetyLevel?: SafetyLevel | null }, relativeChange24?: { __typename?: 'Amount', value: number } | null } | null } | null> | null } | null> | null };
+export type PortfolioBalancesQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', tokenBalances?: Array<{ __typename?: 'TokenBalance', quantity?: number | null, denominatedValue?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null, token?: { __typename?: 'Token', chain: Chain, address?: string | null, name?: string | null, symbol?: string | null, decimals?: number | null } | null, tokenProjectMarket?: { __typename?: 'TokenProjectMarket', tokenProject: { __typename?: 'TokenProject', logoUrl?: string | null, safetyLevel?: SafetyLevel | null, isSpam?: boolean | null }, relativeChange24?: { __typename?: 'Amount', value: number } | null } | null } | null> | null } | null> | null };
 
 export type SearchTokensProjectsQueryVariables = Exact<{
   searchQuery: Scalars['String'];
@@ -1041,6 +1041,7 @@ export const PortfolioBalancesDocument = gql`
         tokenProject {
           logoUrl
           safetyLevel
+          isSpam
         }
         relativeChange24: pricePercentChange(duration: DAY) {
           value

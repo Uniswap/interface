@@ -9,6 +9,12 @@ import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSli
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { currencyId, CurrencyId } from 'src/utils/currencyId'
 
+type SortedPortfolioBalances = {
+  balances: PortfolioBalance[]
+  smallBalances: PortfolioBalance[]
+  spamBalances: PortfolioBalance[]
+}
+
 /** Returns all balances indexed by currencyId for a given address */
 export function usePortfolioBalances(
   address: Address
@@ -60,6 +66,7 @@ export function usePortfolioBalances(
         currency,
         currencyId: currencyId(currency),
         logoUrl: balance.tokenProjectMarket?.tokenProject?.logoUrl,
+        isSpam: balance.tokenProjectMarket?.tokenProject?.isSpam,
         safetyLevel: balance.tokenProjectMarket?.tokenProject.safetyLevel,
       }
 
@@ -79,23 +86,50 @@ export function usePortfolioBalances(
   return { data: formattedData, loading }
 }
 
-/** Returns portfolio balances for a given address sorted by USD value. */
-export function useSortedPortfolioBalancesList(
+/**
+ * Returns portfolio balances for a given address sorted by USD value.
+ * Can optionally split out small balances and spam balances into separate arrays.
+ *
+ * @param address to get portfolio balances for
+ * @param hideSmallBalances whether to return small balances in separate array
+ * @param hideSpamTokens whether to return spam token balances in separate array
+ * @returns SortedPortfolioBalances object with `balances`, `smallBalances`, `spamBalances`
+ *
+ */
+export function useSortedPortfolioBalances(
   address: Address,
-  hideSmallBalances?: boolean
-): PortfolioBalance[] {
+  hideSmallBalances?: boolean,
+  hideSpamTokens?: boolean
+): SortedPortfolioBalances {
   const { data: balancesById } = usePortfolioBalances(address)
 
   return useMemo(() => {
-    if (!balancesById) return EMPTY_ARRAY
+    if (!balancesById)
+      return { balances: EMPTY_ARRAY, smallBalances: EMPTY_ARRAY, spamBalances: EMPTY_ARRAY }
 
-    const balances = hideSmallBalances
-      ? Object.values(balancesById).filter(
-          (balance) => balance.balanceUSD > HIDE_SMALL_USD_BALANCES_THRESHOLD
-        )
-      : Object.values(balancesById)
-    return balances.sort((a, b) => b.balanceUSD - a.balanceUSD)
-  }, [balancesById, hideSmallBalances])
+    const { balances, smallBalances, spamBalances } = Object.values(
+      balancesById
+    ).reduce<SortedPortfolioBalances>(
+      (acc, balance) => {
+        // Prioritize isSpam over small balance
+        if (hideSpamTokens && balance.currencyInfo.isSpam) {
+          acc.spamBalances.push(balance)
+        } else if (hideSmallBalances && balance.balanceUSD < HIDE_SMALL_USD_BALANCES_THRESHOLD) {
+          acc.smallBalances.push(balance)
+        } else {
+          acc.balances.push(balance)
+        }
+        return acc
+      },
+      { balances: [], smallBalances: [], spamBalances: [] }
+    )
+
+    return {
+      balances: balances.sort((a, b) => b.balanceUSD - a.balanceUSD),
+      smallBalances: smallBalances.sort((a, b) => b.balanceUSD - a.balanceUSD),
+      spamBalances: spamBalances.sort((a, b) => b.balanceUSD - a.balanceUSD),
+    }
+  }, [balancesById, hideSmallBalances, hideSpamTokens])
 }
 
 /** Helper hook to retrieve balance for a single currency for the active account. */

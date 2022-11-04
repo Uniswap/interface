@@ -1,42 +1,68 @@
-import React, { ReactElement, useMemo } from 'react'
-import { useAppSelector } from 'src/app/hooks'
+import { SpacingShorthandProps } from '@shopify/restyle'
+import React, { ReactElement, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppStackNavigation } from 'src/app/navigation/types'
+import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { Chevron } from 'src/components/icons/Chevron'
+import { Flex } from 'src/components/layout'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import {
   TabViewScrollProps,
   TAB_VIEW_SCROLL_THROTTLE,
 } from 'src/components/layout/screens/TabbedScrollScreen'
+import { Separator } from 'src/components/layout/Separator'
+import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
-import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
+import { useSortedPortfolioBalances } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
-import { selectAccountHideSmallBalances } from 'src/features/wallet/selectors'
+import {
+  makeSelectAccountHideSmallBalances,
+  makeSelectAccountHideSpamTokens,
+} from 'src/features/wallet/selectors'
+import { Screens } from 'src/screens/Screens'
+import { Theme } from 'src/styles/theme'
 import { CurrencyId } from 'src/utils/currencyId'
 
 type TokenBalanceListProps = {
+  owner: Address
   empty?: ReactElement | null
   onPressTokenIn: (currencyId: CurrencyId) => void
   onPressToken: (currencyId: CurrencyId) => void
   onRefresh?: () => void
-  refreshing?: boolean
-  owner: Address
-  count?: number
   tabViewScrollProps?: TabViewScrollProps
 }
 
 export function TokenBalanceList({
   owner,
-  count,
   empty,
   onPressToken,
   onPressTokenIn,
   tabViewScrollProps,
 }: TokenBalanceListProps) {
-  const hideSmallBalances = useAppSelector(selectAccountHideSmallBalances(owner))
-  const balances = useSortedPortfolioBalancesList(owner, hideSmallBalances)
-  const truncatedBalances = useMemo(() => balances.slice(0, count), [balances, count])
+  const hideSmallBalances = useAppSelector(makeSelectAccountHideSmallBalances(owner))
+  const hideSpamTokens = useAppSelector(makeSelectAccountHideSpamTokens(owner))
+
+  const { balances, smallBalances, spamBalances } = useSortedPortfolioBalances(
+    owner,
+    hideSmallBalances,
+    hideSpamTokens
+  )
+  const numHiddenTokens = smallBalances.length + spamBalances.length
+
   return (
     <AnimatedFlatList
-      ListEmptyComponent={empty}
-      data={truncatedBalances}
+      ItemSeparatorComponent={() => <Separator />}
+      ListEmptyComponent={
+        <>
+          <HiddenTokensRow address={owner} my="md" numHidden={numHiddenTokens} />
+          {empty}
+        </>
+      }
+      ListFooterComponent={
+        <HiddenTokensRow address={owner} mb="xl" mt="sm" numHidden={numHiddenTokens} />
+      }
+      data={balances}
       keyExtractor={key}
       renderItem={({ item }: { item: PortfolioBalance }) => (
         <TokenBalanceItem
@@ -56,4 +82,33 @@ export function TokenBalanceList({
 
 function key({ currencyInfo }: PortfolioBalance) {
   return currencyInfo.currencyId
+}
+
+function HiddenTokensRow({
+  numHidden,
+  address,
+  ...props
+}: { numHidden: number; address: Address } & SpacingShorthandProps<Theme>) {
+  const { t } = useTranslation()
+  const theme = useAppTheme()
+  const navigation = useAppStackNavigation()
+
+  const onPressHiddenTokens = useCallback(() => {
+    navigation.navigate(Screens.HiddenTokens, {
+      address,
+    })
+  }, [navigation, address])
+
+  if (numHidden === 0) return null
+
+  return (
+    <TouchableArea onPress={onPressHiddenTokens} {...props}>
+      <Flex row justifyContent="space-between" mx="xs">
+        <Text color="textSecondary" variant="subheadSmall">
+          {t('Hidden ({{numHidden}})', { numHidden })}
+        </Text>
+        <Chevron color={theme.colors.textSecondary} direction="e" />
+      </Flex>
+    </TouchableArea>
+  )
 }

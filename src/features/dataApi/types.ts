@@ -8,6 +8,7 @@ export type CurrencyInfo = {
   currencyId: CurrencyId
   safetyLevel: NullUndefined<SafetyLevel>
   logoUrl: NullUndefined<string>
+  isSpam?: NullUndefined<boolean>
 }
 
 // Portfolio balance as exposed to the app

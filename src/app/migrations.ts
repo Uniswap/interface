@@ -345,4 +345,10 @@ export const migrations = {
       passwordLockout: { passwordAttempts: 0 },
     }
   },
+
+  26: (state: any) => {
+    const newState = { ...state }
+    delete newState.wallet.settings.showSmallBalances
+    return newState
+  },
 }

@@ -78,6 +78,7 @@ query PortfolioBalances($ownerAddress: String!) {
         tokenProject {
           logoUrl
           safetyLevel
+          isSpam
         }
         relativeChange24: pricePercentChange(duration: DAY) {
           value
