@@ -41,7 +41,7 @@ function useSendTxToKsSettingCallback() {
       dstAmount: string,
     ) => {
       const url = `${KS_SETTING_API}/v1/multichain-transfers`
-      const data = {
+      const body = {
         userAddress: account,
         srcChainId: srcChainId.toString(),
         dstChainId: dstChainId.toString(),
@@ -54,14 +54,21 @@ function useSendTxToKsSettingCallback() {
         status: 0,
       }
       try {
-        await axios.post(url, data)
+        await axios.post(url, body)
         onSuccess()
       } catch (err) {
-        console.error(err)
-        const errStr = `SendTxToKsSetting fail with payload = ${JSON.stringify(data)}`
-        const error = new Error(errStr)
+        const extraData = {
+          body,
+          status: undefined,
+          response: undefined,
+        }
+        if (err?.response?.data) {
+          extraData.status = err.response.status
+          extraData.response = err.response.data
+        }
+        const error = new Error(`SendTxToKsSetting fail, srcTxHash = ${Date.now()}`, { cause: err })
         error.name = 'PostBridge'
-        captureException(error, { level: 'fatal' })
+        captureException(error, { level: 'fatal', extra: { args: JSON.stringify(extraData, null, 2) } })
       }
     },
     [account, onSuccess],
