@@ -3,7 +3,6 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import {
-  ChevronRightIcon,
   MinusIconLarge,
   PauseButtonIcon,
   PlayButtonIcon,
@@ -162,6 +161,8 @@ const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, childre
         position={'relative'}
         ref={assetRef}
         borderRadius={'20'}
+        borderBottomLeftRadius={'12'}
+        borderBottomRightRadius={'12'}
         className={selected ? styles.selectedCard : styles.notSelectedCard}
         draggable={false}
         onMouseEnter={() => toggleHovered()}
@@ -195,6 +196,7 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
+  const isMobile = useIsMobile()
 
   if (noContent) {
     return <NoContentContainer uniformHeight={uniformHeight} />
@@ -221,7 +223,7 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
           }
           setLoaded(true)
         }}
-        className={clsx(hovered && styles.cardImageHover, !loaded && styles.loadingBackground)}
+        className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
       />
     </Box>
   )
@@ -275,7 +277,7 @@ const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
             setImageLoaded(true)
           }}
           visibility={shouldPlay ? 'hidden' : 'visible'}
-          className={clsx(hovered && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
+          className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
         />
       </Box>
       {shouldPlay ? (
@@ -371,7 +373,7 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
             }
             setImageLoaded(true)
           }}
-          className={clsx(hovered && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
+          className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
         />
       </Box>
       {shouldPlay ? (
@@ -569,7 +571,6 @@ const DetailsLink = () => {
       }}
     >
       Details
-      <ChevronRightIcon width="20px" height="20px" />
     </DetailsLinkContainer>
   )
 }

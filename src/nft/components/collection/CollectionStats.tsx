@@ -243,9 +243,9 @@ const CollectionDescription = ({ description }: { description: string }) => {
   )
 }
 
-const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: string; isMobile: boolean }) => {
+const StatsItem = ({ children, label, shouldHide }: { children: ReactNode; label: string; shouldHide: boolean }) => {
   return (
-    <Box display="flex" flexDirection={'column'} alignItems="baseline" gap="2" height="min">
+    <Box display={shouldHide ? 'none' : 'flex'} flexDirection={'column'} alignItems="baseline" gap="2" height="min">
       <span className={styles.statsValue}>{children}</span>
       <Box as="span" className={styles.statsLabel}>
         {label}
@@ -295,34 +295,34 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
       ) : (
         <>
           {stats.stats?.floor_price ? (
-            <StatsItem label="Global floor" isMobile={isMobile ?? false}>
+            <StatsItem label="Global floor" shouldHide={false}>
               {floorPriceStr} ETH
             </StatsItem>
           ) : null}
           {stats.stats?.one_day_floor_change ? (
-            <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
+            <StatsItem label="24-Hour Floor" shouldHide={false}>
               <PercentChange>
                 {floorChangeStr}% {arrow}
               </PercentChange>
             </StatsItem>
           ) : null}
           {totalSupplyStr ? (
-            <StatsItem label="Items" isMobile={isMobile ?? false}>
+            <StatsItem label="Items" shouldHide={isMobile ?? false}>
               {totalSupplyStr}
             </StatsItem>
           ) : null}
           {uniqueOwnersPercentage ? (
-            <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
+            <StatsItem label="Unique owners" shouldHide={isMobile ?? false}>
               {uniqueOwnersPercentage}%
             </StatsItem>
           ) : null}
           {stats.stats?.total_volume ? (
-            <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
+            <StatsItem label="Total Volume" shouldHide={false}>
               {totalVolumeStr} ETH
             </StatsItem>
           ) : null}
           {stats.stats?.total_listings && listedPercentageStr > 0 ? (
-            <StatsItem label="Listed" isMobile={isMobile ?? false}>
+            <StatsItem label="Listed" shouldHide={isMobile ?? false}>
               {listedPercentageStr}%
             </StatsItem>
           ) : null}
@@ -394,23 +394,15 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
           collectionSocialsIsOpen={collectionSocialsIsOpen}
           toggleCollectionSocials={toggleCollectionSocials}
         />
-        {!isMobile && (
-          <>
-            {(stats.description || isCollectionStatsLoading) && (
-              <CollectionDescription description={stats.description ?? ''} />
-            )}
-            <StatsRow stats={stats} marginTop="20" />
-          </>
+        {(stats.description || isCollectionStatsLoading) && !isMobile && (
+          <CollectionDescription description={stats.description ?? ''} />
         )}
+        <StatsRow display={{ sm: 'none', md: 'flex' }} stats={stats} marginTop="20" />
       </Box>
-      {isMobile && (
-        <>
-          <Box marginBottom="12">{stats.description && <CollectionDescription description={stats.description} />}</Box>
-          <Marquee>
-            <StatsRow stats={stats} marginLeft="6" marginRight="6" marginBottom="28" isMobile />
-          </Marquee>
-        </>
+      {(stats.description || isCollectionStatsLoading) && isMobile && (
+        <CollectionDescription description={stats.description ?? ''} />
       )}
+      <StatsRow isMobile display={{ sm: 'flex', md: 'none' }} stats={stats} marginTop="20" marginBottom="12" />
     </Box>
   )
 }

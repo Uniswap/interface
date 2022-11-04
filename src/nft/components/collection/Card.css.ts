@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { calc } from '@vanilla-extract/css-utils'
-import { breakpoints, sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
+import { sprinkles, themeVars } from 'nft/css/sprinkles.css'
 
 export const card = style([
   sprinkles({
@@ -13,15 +13,6 @@ export const card = style([
   {
     boxSizing: 'border-box',
     WebkitBoxSizing: 'border-box',
-    '@media': {
-      [`(max-width: ${breakpoints.sm - 1}px)`]: {
-        ':hover': {
-          borderColor: themeVars.colors.backgroundOutline,
-          cursor: 'pointer',
-          background: vars.color.lightGrayOverlay,
-        },
-      },
-    },
   },
 ])
 
