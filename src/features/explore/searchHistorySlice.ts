@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/rootReducer'
 import { ChainId } from 'src/constants/chains'
+import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 
 const SEARCH_HISTORY_LENGTH = 5
 
@@ -37,6 +38,7 @@ export interface TokenSearchResult extends SearchResultBase {
   name: string
   symbol: string
   logoUrl: string | null
+  safetyLevel: SafetyLevel
 }
 
 export interface EtherscanSearchResult extends SearchResultBase {

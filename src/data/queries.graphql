@@ -108,6 +108,7 @@ query PortfolioBalances($ownerAddress: String!) {
 
 query SearchTokensProjects($searchQuery: String!) {
   searchTokenProjects(searchQuery: $searchQuery) {
+    id
     logoUrl
     name
     safetyLevel
@@ -372,6 +373,7 @@ query SearchResults($searchQuery: String!) {
   searchTokenProjects(searchQuery: $searchQuery) {
     id
     logoUrl
+    safetyLevel
     tokens {
       id
       chain

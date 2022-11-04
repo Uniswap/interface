@@ -14,7 +14,7 @@ import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TOKEN_WARNING_HELP_PAGE_URL } from 'src/constants/urls'
 import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useTokenSafetyLevelColors } from 'src/features/tokens/useTokenWarningLevel'
+import { useTokenSafetyLevelColors } from 'src/features/tokens/safetyHooks'
 import { opacify } from 'src/utils/colors'
 import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
 
@@ -65,7 +65,10 @@ export default function TokenWarningModal({
     ExplorerDataType.ADDRESS
   )
 
-  const closeButtonText = disableAccept ? t('Close') : t('Back')
+  // always hide accept button if blocked token
+  const hideAcceptButton = disableAccept || safetyLevel === SafetyLevel.Blocked
+
+  const closeButtonText = hideAcceptButton ? t('Close') : t('Back')
 
   const onPressLearnMore = () => {
     openUri(TOKEN_WARNING_HELP_PAGE_URL)
@@ -122,10 +125,10 @@ export default function TokenWarningModal({
             name={ElementName.Cancel}
             onPress={onClose}
           />
-          {!disableAccept && (
+          {!hideAcceptButton && (
             <Button
               fill
-              emphasis={ButtonEmphasis.Detrimental}
+              emphasis={getButtonEmphasis(safetyLevel)}
               label={t('I understand')}
               name={ElementName.TokenWarningAccept}
               onPress={onAccept}
@@ -135,4 +138,15 @@ export default function TokenWarningModal({
       </Flex>
     </BottomSheetModal>
   )
+}
+
+function getButtonEmphasis(safetyLevel: NullUndefined<SafetyLevel>) {
+  switch (safetyLevel) {
+    case SafetyLevel.MediumWarning:
+      return ButtonEmphasis.Warning
+    case SafetyLevel.StrongWarning:
+      return ButtonEmphasis.Detrimental
+    default:
+      return undefined
+  }
 }

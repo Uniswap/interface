@@ -48,6 +48,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }) {
           address,
           name,
           symbol,
+          safetyLevel: tokenProject.safetyLevel,
           logoUrl: tokenProject.logoUrl,
         } as TokenSearchResult
       })

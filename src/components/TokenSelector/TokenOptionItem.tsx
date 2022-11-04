@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
@@ -11,7 +10,7 @@ import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
-import { useDismissTokenWarnings } from 'src/features/tokens/useTokenWarningLevel'
+import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface OptionProps {
@@ -22,20 +21,18 @@ interface OptionProps {
 
 export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProps) {
   const theme = useAppTheme()
-  const { t } = useTranslation()
-  const [showWarningModal, setShowWarningModal] = useState(false)
-  const [dismissedWarningTokens, dismissTokenWarning] = useDismissTokenWarnings()
 
   const { currencyInfo, quantity, balanceUSD } = option
-  const { currency, safetyLevel } = currencyInfo
+  const { currency, currencyId, safetyLevel } = currencyInfo
 
-  const dismissed = Boolean(dismissedWarningTokens[currency.chainId]?.[currency.wrapped.address])
+  const [showWarningModal, setShowWarningModal] = useState(false)
+  const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(currencyId)
 
   const onPressTokenOption = useCallback(() => {
     if (
       safetyLevel === SafetyLevel.Blocked ||
       ((safetyLevel === SafetyLevel.MediumWarning || safetyLevel === SafetyLevel.StrongWarning) &&
-        !dismissed)
+        !tokenWarningDismissed)
     ) {
       Keyboard.dismiss()
       setShowWarningModal(true)
@@ -43,7 +40,13 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
     }
 
     onPress()
-  }, [dismissed, onPress, safetyLevel])
+  }, [onPress, safetyLevel, tokenWarningDismissed])
+
+  const onAcceptTokenWarning = useCallback(() => {
+    dismissWarningCallback()
+    setShowWarningModal(false)
+    onPress()
+  }, [dismissWarningCallback, onPress])
 
   return (
     <>
@@ -66,11 +69,15 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
                     {currency.name}
                   </Text>
                 </Flex>
-                <WarningIcon
-                  height={theme.iconSizes.sm}
-                  safetyLevel={safetyLevel}
-                  width={theme.iconSizes.sm}
-                />
+                {(safetyLevel === SafetyLevel.Blocked ||
+                  safetyLevel === SafetyLevel.StrongWarning) && (
+                  <WarningIcon
+                    height={theme.iconSizes.sm}
+                    safetyLevel={safetyLevel}
+                    strokeColorOverride="textSecondary"
+                    width={theme.iconSizes.sm}
+                  />
+                )}
               </Flex>
               <Flex centered row gap="xs">
                 <Text color="textSecondary" numberOfLines={1} variant="subheadSmall">
@@ -81,9 +88,7 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
             </Flex>
           </Flex>
 
-          {safetyLevel === SafetyLevel.Blocked ? (
-            <Text variant="bodySmall">{t('Not available')}</Text>
-          ) : quantity && quantity !== 0 ? (
+          {quantity && quantity !== 0 ? (
             <Box alignItems="flex-end">
               <Text variant="bodyLarge">{formatNumber(quantity, NumberType.TokenTx)}</Text>
               <Text color="textSecondary" variant="subheadSmall">
@@ -99,11 +104,7 @@ export function TokenOptionItem({ option, showNetworkPill, onPress }: OptionProp
           isVisible
           currency={currency}
           safetyLevel={safetyLevel}
-          onAccept={() => {
-            dismissTokenWarning(currency)
-            setShowWarningModal(false)
-            onPress()
-          }}
+          onAccept={onAcceptTokenWarning}
           onClose={() => setShowWarningModal(false)}
         />
       ) : null}

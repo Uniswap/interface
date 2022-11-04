@@ -2,6 +2,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
 import { SerializedToken } from 'src/features/tokenLists/types'
+import { CurrencyId } from 'src/utils/currencyId'
 
 interface Tokens {
   customTokens: {
@@ -10,9 +11,7 @@ interface Tokens {
     }
   }
   dismissedWarningTokens: {
-    [chainId: number]: {
-      [address: Address]: boolean
-    }
+    [currencyId: CurrencyId]: boolean
   }
 }
 
@@ -35,14 +34,9 @@ const slice = createSlice({
       if (!state.customTokens[chainId] || !!state.customTokens[chainId][address]) return
       delete state.customTokens[chainId][address]
     },
-    addDismissedWarningToken: (
-      state,
-      action: PayloadAction<{ address: Address; chainId: number }>
-    ) => {
-      const { chainId, address } = action.payload
-      state.dismissedWarningTokens ||= {}
-      state.dismissedWarningTokens[chainId] ||= {}
-      state.dismissedWarningTokens[chainId][address] = true
+    addDismissedWarningToken: (state, action: PayloadAction<{ currencyId: CurrencyId }>) => {
+      const { currencyId } = action.payload
+      state.dismissedWarningTokens[currencyId] = true
     },
     resetDismissedWarnings: (state) => {
       state.dismissedWarningTokens = {}

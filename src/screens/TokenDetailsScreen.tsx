@@ -28,14 +28,14 @@ import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
+import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
 import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
-import { currencyAddress, currencyIdToAddress } from 'src/utils/currencyId'
+import { currencyAddress, currencyId, currencyIdToAddress } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
 type Price = NonNullable<
@@ -124,8 +124,10 @@ function TokenDetails({
   const [activeTransactionType, setActiveTransactionType] = useState<TransactionType | undefined>(
     undefined
   )
+
+  const _currencyId = currencyId(currency)
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const { tokenWarningDismissed, warningDismissCallback } = useTokenWarningLevel(currency.wrapped)
+  const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(_currencyId)
 
   const safetyLevel = data?.tokenProjects?.[0]?.safetyLevel
 
@@ -203,7 +205,7 @@ function TokenDetails({
   }, [safetyLevel, tokenWarningDismissed, dispatch, initialSendState])
 
   const onAcceptWarning = useCallback(() => {
-    warningDismissCallback()
+    dismissWarningCallback()
     setShowWarningModal(false)
     if (activeTransactionType === TransactionType.BUY) {
       navigateToSwapBuy()
@@ -215,11 +217,11 @@ function TokenDetails({
     }
   }, [
     activeTransactionType,
+    dismissWarningCallback,
     dispatch,
     initialSendState,
     navigateToSwapBuy,
     navigateToSwapSell,
-    warningDismissCallback,
   ])
 
   return (
@@ -262,7 +264,7 @@ function TokenDetails({
 
       <TokenWarningModal
         currency={currency}
-        disableAccept={!activeTransactionType || safetyLevel === SafetyLevel.Blocked}
+        disableAccept={!activeTransactionType}
         isVisible={showWarningModal}
         safetyLevel={safetyLevel}
         onAccept={onAcceptWarning}

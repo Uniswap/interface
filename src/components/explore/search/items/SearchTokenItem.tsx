@@ -5,6 +5,8 @@ import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import WarningIcon from 'src/components/tokens/WarningIcon'
+import { SafetyLevel } from 'src/data/__generated__/types-and-hooks'
 import {
   addToSearchHistory,
   SearchResultType,
@@ -22,14 +24,22 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
   const theme = useAppTheme()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  const { chainId, address, name, symbol, logoUrl } = token
+  const { chainId, address, name, symbol, logoUrl, safetyLevel } = token
   const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
 
   const onPress = () => {
     tokenDetailsNavigation.navigate(currencyId)
     dispatch(
       addToSearchHistory({
-        searchResult: { type: SearchResultType.Token, chainId, address, name, symbol, logoUrl },
+        searchResult: {
+          type: SearchResultType.Token,
+          chainId,
+          address,
+          name,
+          symbol,
+          logoUrl,
+          safetyLevel,
+        },
       })
     )
   }
@@ -44,9 +54,19 @@ export function SearchTokenItem({ token }: SearchTokenItemProps) {
       <Flex row alignItems="center" gap="sm" px="xs" py="sm">
         <TokenLogo size={theme.imageSizes.xl} symbol={symbol} url={logoUrl ?? undefined} />
         <Flex gap="none">
-          <Text color="textPrimary" variant="bodyLarge">
-            {name}
-          </Text>
+          <Flex row alignItems="center" gap="xxs">
+            <Text color="textPrimary" variant="bodyLarge">
+              {name}
+            </Text>
+            {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
+              <WarningIcon
+                height={theme.iconSizes.sm}
+                safetyLevel={safetyLevel}
+                strokeColorOverride="textSecondary"
+                width={theme.iconSizes.sm}
+              />
+            )}
+          </Flex>
           <Text color="textSecondary" variant="subheadSmall">
             {symbol.toUpperCase() ?? ''}
           </Text>
