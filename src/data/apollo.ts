@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { apolloDevToolsInit } from 'react-native-apollo-devtools-client'
 import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
 
@@ -17,4 +18,10 @@ export function refetchAllQueries() {
   return client.refetchQueries({
     include: 'active',
   })
+}
+
+if (__DEV__) {
+  // initializes the Flipper Apollo DevTools
+  // requires the `react-native-apollo-devtools` plugin installed in Flipper
+  apolloDevToolsInit(client)
 }

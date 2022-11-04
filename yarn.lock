@@ -19510,6 +19510,11 @@ react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-native-apollo-devtools-client@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-apollo-devtools-client/-/react-native-apollo-devtools-client-1.0.4.tgz#aa09836c2a5f06f4b4ffa8953c6b3145d05a7b4a"
+  integrity sha512-g/7uxtz+/D3Pvt3H2W1qrqYs1SzOrEOY2d/U6QPtelpTFK9kinQd6D9ToiwpvYZhJ1PYWlWMglKWcHp9AQmhsg==
+
 react-native-clean-project@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/react-native-clean-project/-/react-native-clean-project-4.0.1.tgz#c0e2b17eebf32a683aa67da45fe7932857166da7"
@@ -19556,10 +19561,10 @@ react-native-flipper-relay-devtools@1.0.3:
   dependencies:
     relay-devtools-core janicduplessis/relay-devtools#relay-devtools-core-v1.2.1-gitpkg
 
-react-native-flipper@0.162.0:
-  version "0.162.0"
-  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.162.0.tgz#9919adb743dae50a80d914eaa3a53eb33eaf39ec"
-  integrity sha512-htXhzHDKWkMaBivc+SLTxqT1GkJxR2rrXobXlAhFYrvaQ6ws1KA6peqQssEiPSrXQJ2Z2oRXQ+yrlPKaBC/Hjg==
+react-native-flipper@0.173.0:
+  version "0.173.0"
+  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.173.0.tgz#48b365f5a180161fbf63d6e0650b59157a5ad973"
+  integrity sha512-S9naGaruRQ1l518ty9hbfWuQhIMThRhQqr8uXTXzYeiSdwMxXhVFKnFKT0+NeTD5AUMPEnIAPFBkpVGCmjzNJA==
 
 react-native-gesture-handler@2.6.0:
   version "2.6.0"
