@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutRectangle } from 'react-native'
+import { LayoutRectangle, TextInput as NativeTextInput } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import PasteButton from 'src/components/buttons/PasteButton'
@@ -50,6 +50,7 @@ export function GenericImportForm({
   const theme = useAppTheme()
   const [focused, setFocused] = useState(false)
   const [layout, setLayout] = useState<LayoutRectangle | null>()
+  const textInputRef = useRef<NativeTextInput>(null)
 
   const handleBlur = () => {
     setFocused(false)
@@ -59,6 +60,8 @@ export function GenericImportForm({
   const handleFocus = () => {
     setFocused(true)
     onFocus?.()
+    // Need this to allow for focus on click on container.
+    textInputRef?.current?.focus()
   }
 
   const handleSubmit = () => {
@@ -67,7 +70,7 @@ export function GenericImportForm({
 
   return (
     <Trace section={SectionName.ImportAccountForm}>
-      <Flex gap="md">
+      <Flex gap="md" onTouchEnd={handleFocus}>
         <Flex
           centered
           backgroundColor="background1"
@@ -87,6 +90,7 @@ export function GenericImportForm({
           width="100%">
           <Flex row alignItems="flex-end" gap="none">
             <TextInput
+              ref={textInputRef}
               autoFocus
               autoCapitalize="none"
               autoCorrect={Boolean(autoCorrect)}
