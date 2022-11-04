@@ -127,7 +127,6 @@ export function useNftBalanceQuery(
     nftBalancePaginationQuery,
     queryData
   )
-
   const walletAssets: WalletAsset[] = data.nftBalances?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node.ownedAsset
     return {
@@ -142,13 +141,13 @@ export function useNftBalanceQuery(
         name: asset.collection?.name,
         description: asset.description,
         image_url: asset.collection?.image?.url,
-        payout_address: queryAsset.node.listingFees.payoutAddress, // ask BE
+        payout_address: queryAsset.node.listingFees && queryAsset.node.listingFees[0].payoutAddress, // ask BE
       },
       collection: asset.collection,
       collectionIsVerified: asset.collection?.isVerified,
       lastPrice: queryAsset.node.lastPrice?.value, // ask BE
       floorPrice: asset.collection?.markets[0]?.floorPrice?.value,
-      creatorPercentage: parseFloat(queryAsset.node.listingFees.basisPoints) / 10000, // ask BE
+      creatorPercentage: queryAsset.node.listingFees && queryAsset.node.listingFees[0].basisPoints / 10000, // ask BE
       listing_date: asset.listings ? asset.listings[0]?.edges[0]?.node.createdAt : undefined,
       date_acquired: queryAsset.node.lastPrice?.timestamp, // ask BE
       sellOrders: asset.listings?.edges,
