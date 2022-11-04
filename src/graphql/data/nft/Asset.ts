@@ -133,6 +133,8 @@ export function useAssetsQuery(
     queryData
   )
 
+  // Poll for updates.
+  const POLLING_INTERVAL = ms`999ms`
   const environment = useRelayEnvironment()
   const refresh = useCallback(async () => {
     const length = data.nftAssets?.edges?.length
@@ -140,14 +142,19 @@ export function useAssetsQuery(
     // Polling while scrolling requires reloading *all* pages, which is untenable.
     if (length > DEFAULT_ASSET_QUERY_AMOUNT) return
 
+    // Initiate a network request. When it resolves, refresh the UI from store (to avoid re-triggering Suspense);
+    // see: https://relay.dev/docs/guided-tour/refetching/refreshing-queries/#if-you-need-to-avoid-suspense-1.
     await fetchQuery<AssetQuery>(environment, assetQuery, { ...vars, first: length }).toPromise()
     setQueryOptions(({ fetchKey }) => ({
       fetchKey: fetchKey + 1,
       fetchPolicy: 'store-only',
     }))
   }, [data.nftAssets?.edges?.length, environment, vars])
-  useInterval(refresh, ms`999ms`)
+  // NB: This will poll every POLLING_INTERVAL, *not* every POLLING_INTERVAL from the last successful poll.
+  // TODO(WEB-2004): Update useInterval to wait for the fn to complete before rescheduling.
+  useInterval(refresh, POLLING_INTERVAL)
 
+  // It is especially important for this to be memoized to avoid re-rendering from polling if data is unchanged.
   const assets: GenieAsset[] = useMemo(
     () =>
       data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
