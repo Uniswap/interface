@@ -164,7 +164,7 @@ export const syncLocalFiltersWithURL = (state: CollectionFilters) => {
   const stringifiedQuery = qs.stringify(modifiedQuery, { arrayFormat: 'comma' })
 
   // Using pushState on purpose here. router.push() will trigger re-renders & API calls.
-  window.history.pushState({}, ``, `${url}${stringifiedQuery && `?${stringifiedQuery}`}`)
+  window.history.replaceState({}, ``, `${url}${stringifiedQuery && `?${stringifiedQuery}`}`)
 }
 
 export const applyFiltersFromURL = (location: Location, collectionStats: GenieCollection) => {
