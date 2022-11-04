@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import { TFunction } from 'i18next'
 import React, { ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -45,13 +44,13 @@ interface TransactionListProps {
 
 export default function TransactionList(props: TransactionListProps) {
   // Parse remote txn data from query and merge with local txn data
-  const { data, loading, error, networkStatus } = useTransactionListQuery({
+  const { data, loading } = useTransactionListQuery({
     variables: { address: props.ownerAddress },
     pollInterval: PollingInterval.Fast,
-    notifyOnNetworkStatusChange: true,
+    errorPolicy: 'all',
   })
 
-  if ((loading && networkStatus !== NetworkStatus.poll) || error) {
+  if (loading && !data) {
     return (
       <Box>
         <Loading type="transactions" />

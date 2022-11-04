@@ -20,6 +20,7 @@ export function PortfolioBalance({ owner, variant, color }: PortfolioBalanceProp
   const { data, loading } = usePortfolioBalanceQuery({
     variables: { owner: owner ?? activeAdresss },
     pollInterval: PollingInterval.Fast,
+    errorPolicy: 'all',
   })
 
   if (loading && !data) {

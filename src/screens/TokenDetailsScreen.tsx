@@ -1,8 +1,6 @@
-import { NetworkStatus } from '@apollo/client'
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeIn } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
@@ -83,12 +81,12 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
   const { currencyId: _currencyId } = route.params
   const currency = useCurrency(_currencyId)
 
-  const { data, loading, error, networkStatus } = useTokenDetailsScreenQuery({
+  const { data, loading } = useTokenDetailsScreenQuery({
     variables: {
       contract: currencyIdToContractInput(_currencyId),
     },
     pollInterval: PollingInterval.Fast,
-    notifyOnNetworkStatusChange: true,
+    errorPolicy: 'all',
   })
 
   const traceProps = useMemo(() => {
@@ -101,7 +99,7 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
     return null
   }
 
-  if ((loading && networkStatus !== NetworkStatus.loading) || error) {
+  if (loading && !data) {
     return <TokenDetailsLoader currency={currency} />
   }
 
@@ -225,7 +223,7 @@ function TokenDetails({
   ])
 
   return (
-    <AnimatedBox entering={FadeIn} flex={1} mb="md">
+    <AnimatedBox flex={1} mb="md">
       <HeaderScrollScreen
         contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
         fixedHeader={

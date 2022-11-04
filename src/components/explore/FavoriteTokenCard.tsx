@@ -1,4 +1,3 @@
-import { NetworkStatus } from '@apollo/client'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ImageStyle, ViewProps } from 'react-native'
@@ -54,12 +53,12 @@ function FavoriteTokenCard({
   // TODO: this TODO is now obsolete, and can be completed with Apollo
   // Do one query per item to avoid suspense on entire screen / container
   // @TODO: Find way to load at the root of explore without a rerender when favorite token state changes
-  const { data, loading, error, networkStatus } = useFavoriteTokenCardQueryQuery({
+  const { data, loading } = useFavoriteTokenCardQueryQuery({
     variables: {
       contract: contractInput,
     },
     pollInterval: PollingInterval.Fast,
-    notifyOnNetworkStatusChange: true,
+    errorPolicy: 'all',
   })
 
   // Parse token fields from response
@@ -109,7 +108,7 @@ function FavoriteTokenCard({
     tokenDetailsNavigation.preload(currencyId)
   }
 
-  if ((loading && networkStatus !== NetworkStatus.poll) || error) {
+  if (loading && !data) {
     return <BaseCard.Shadow aspectRatio={1} px="xs" {...rest} />
   }
 
