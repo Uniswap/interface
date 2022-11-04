@@ -4122,10 +4122,10 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
-"@uniswap/analytics@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.0.0.tgz#3e31b9a6a905e10647c2f0606ae9bee940ab1ad1"
-  integrity sha512-FDh77kKlK4rxQILmK592+SUoSRBr1pLa0+dNzSY+zYiw2/bUOSRbGpajv8ezsuI9tWwIiYF8y0gBdmOzU64mEg==
+"@uniswap/analytics@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.0.1.tgz#a86ff3d1e9dc9aeea7272404c68d50a616aa3fd9"
+  integrity sha512-KEz0tXlkGpu5RvpD7z7WgnSr7u10gjtlwTjCo1Mmcf00RSP5lwMbCHg+/tl2tM82J9eZ7w+/M86ol9GhqdZUsg==
   dependencies:
     "@amplitude/analytics-browser" "^1.5.8"
     react "^18.2.0"
