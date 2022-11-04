@@ -41,6 +41,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
 import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
@@ -74,7 +75,7 @@ const ActionsSubContainer = styled.div`
   }
 `
 
-export const SortDropodownContainer = styled.div<{ isFiltersExpanded: boolean }>`
+export const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
   width: max-content;
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     ${({ isFiltersExpanded }) => isFiltersExpanded && `display: none;`}
@@ -105,9 +106,9 @@ const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
   gap: 8px;
   border: none;
   border-radius: 12px;
-  padding: 10px 18px 10px 12px;
+  padding: 12px 18px 12px 12px;
   cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
-  color: ${({ toggled, disabled, theme }) => (toggled && !disabled ? theme.white : theme.textPrimary)};
+  color: ${({ toggled, disabled, theme }) => (toggled && !disabled ? theme.accentTextLightPrimary : theme.textPrimary)};
   background: ${({ theme, toggled, disabled }) =>
     !disabled && toggled
       ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)'
@@ -120,6 +121,16 @@ const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
         transition: { duration, timing },
       },
     }) => `${duration.fast} background-color ${timing.in}`};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding: 12px 12px 12px 12px;
+  }
+`
+
+const SweepText = styled(ThemedText.BodyPrimary)`
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    display: none;
   }
 `
 
@@ -468,9 +479,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                   onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                 />
               </TraceEvent>
-              <SortDropodownContainer isFiltersExpanded={isFiltersExpanded}>
+              <SortDropdownContainer isFiltersExpanded={isFiltersExpanded}>
                 <SortDropdown dropDownOptions={sortDropDownOptions} />
-              </SortDropodownContainer>
+              </SortDropdownContainer>
               <CollectionSearch />
             </ActionsSubContainer>
             {!hasErc1155s ? (
@@ -491,7 +502,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                   }}
                 >
                   <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
-                  Sweep
+                  <SweepText fontWeight={600} color="currentColor" lineHeight="20px">
+                    Sweep
+                  </SweepText>
                 </SweepButton>
               )
             ) : null}
