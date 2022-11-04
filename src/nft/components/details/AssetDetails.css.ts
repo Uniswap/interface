@@ -7,17 +7,17 @@ export const image = style([
   sprinkles({ borderRadius: '20', height: 'full', alignSelf: 'center' }),
   {
     maxHeight: 'calc(90vh - 165px)',
-    maxWidth: 780,
     minHeight: 400,
+    maxWidth: 780,
     boxShadow: `0px 20px 50px var(--shadow), 0px 10px 50px rgba(70, 115, 250, 0.2)`,
     '@media': {
       '(max-width: 1024px)': {
         maxHeight: '64vh',
-        maxWidth: '64vh',
       },
       '(max-width: 640px)': {
+        minHeight: 280,
         maxHeight: '56vh',
-        maxWidth: '56vh',
+        maxWidth: '100%',
       },
     },
   },
