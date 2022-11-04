@@ -22,6 +22,7 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectWallet>
 
+const FALLBACK_ID = 'fallback'
 export function SelectWalletScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -50,8 +51,12 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
         portfolio.tokensTotalDenominatedValue.value > 0
     )
     // if none of the addresses have a balance then just display the first one
-    return filtered?.length ? filtered : [allAddressBalances?.[0]]
-  }, [allAddressBalances])
+    return filtered?.length
+      ? filtered
+      : allAddressBalances?.length
+      ? [allAddressBalances?.[0]]
+      : [{ id: FALLBACK_ID, ownerAddress: addresses[0], tokensTotalDenominatedValue: null }] // if query returned null, fallback to the first address
+  }, [allAddressBalances, addresses])
 
   const [selectedAddresses, setSelectedAddresses] = useReducer(
     (currentAddresses: string[], addressToProcess: string) =>
