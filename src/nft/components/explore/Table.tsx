@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
+import { useIsMobile } from 'nft/hooks'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
@@ -18,6 +19,9 @@ const RankCellContainer = styled.div`
   align-items: center;
   padding-left: 24px;
   gap: 12px;
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-left: 8px;
+  }
 `
 
 const StyledRow = styled.tr`
@@ -95,6 +99,7 @@ export function Table<D extends Record<string, unknown>>({
 }: TableProps<D>) {
   const theme = useTheme()
   const { width } = useWindowSize()
+  const isMobile = useIsMobile()
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setHiddenColumns, visibleColumns } =
     useTable(
@@ -146,7 +151,7 @@ export function Table<D extends Record<string, unknown>>({
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   style={{
                     textAlign: index === 0 ? 'left' : 'right',
-                    paddingLeft: index === 0 ? '52px' : 0,
+                    paddingLeft: index === 0 ? (isMobile ? '16px' : '52px') : 0,
                   }}
                   isFirstHeader={index === 0}
                   key={index}
@@ -186,9 +191,11 @@ export function Table<D extends Record<string, unknown>>({
                   <td className={clsx(styles.td, classNames?.td)} {...cell.getCellProps()} key={cellIndex}>
                     {cellIndex === 0 ? (
                       <RankCellContainer>
-                        <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
-                          {i + 1}
-                        </ThemedText.BodySecondary>
+                        {!isMobile && (
+                          <ThemedText.BodySecondary fontSize="14px" lineHeight="20px">
+                            {i + 1}
+                          </ThemedText.BodySecondary>
+                        )}
                         {cell.render('Cell')}
                       </RankCellContainer>
                     ) : (
