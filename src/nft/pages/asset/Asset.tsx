@@ -21,7 +21,6 @@ const AssetContainer = styled.div`
   @media (max-width: 960px) {
     padding: 40px 40px 0 40px;
   }
-
   @media (max-width: 540px) {
     padding: 20px 20px 0 20px;
   }
