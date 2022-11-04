@@ -138,8 +138,10 @@ export function useAssetsQuery(
   const environment = useRelayEnvironment()
   const refresh = useCallback(async () => {
     const length = data.nftAssets?.edges?.length
-    // Only poll if the user has not started scrolling.
-    // Polling while scrolling requires reloading *all* pages, which is untenable.
+    // Only poll if the user has not started paging.
+    // Polling after paging requires reloading *all* pages, which is untenable.
+    // TODO(cbachmeier): Refactor CollectionNfts to pass the first visible cursor to useAssetsQuery,
+    // to allow for polling of the visible page only. This would make polling tenable after the user has paged.
     if (length > DEFAULT_ASSET_QUERY_AMOUNT) return
 
     // Initiate a network request. When it resolves, refresh the UI from store (to avoid re-triggering Suspense);
