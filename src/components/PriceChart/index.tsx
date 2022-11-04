@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Suspense } from 'src/components/data/Suspense'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { PriceChartLoading } from 'src/components/PriceChart/PriceChartLoading'
@@ -10,19 +9,9 @@ import { useTokenPriceGraphs } from 'src/components/PriceChart/TokenModel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { Text } from 'src/components/Text'
 
-export const CurrencyPriceChart = ({ currency }: { currency: Currency }) => {
-  return (
-    <Suspense fallback={<PriceChartLoading />}>
-      <CurrencyPriceChartInner currency={currency} />
-    </Suspense>
-  )
-}
-
-function CurrencyPriceChartInner({ currency }: { currency: Currency }) {
-  const graphs = useTokenPriceGraphs(currency.wrapped)
+export function CurrencyPriceChart({ currency }: { currency: Currency }) {
+  const { data: graphs, loading, error } = useTokenPriceGraphs(currency.wrapped)
   const { t } = useTranslation()
-
-  const error = graphs === null
 
   if (error) {
     return (
@@ -32,6 +21,10 @@ function CurrencyPriceChartInner({ currency }: { currency: Currency }) {
         </Text>
       </Flex>
     )
+  }
+
+  if (!graphs && loading) {
+    return <PriceChartLoading />
   }
 
   return <PriceChart graphs={graphs} />

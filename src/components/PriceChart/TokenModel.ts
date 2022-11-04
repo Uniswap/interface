@@ -1,80 +1,28 @@
 import { Token } from '@uniswap/sdk-core'
-import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay'
 import { PriceChartLabel } from 'src/components/PriceChart/PriceChartLabels'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
-import { TokenModel_PriceQuery } from 'src/components/PriceChart/__generated__/TokenModel_PriceQuery.graphql'
-import { PollingInterval } from 'src/constants/misc'
-import { toGraphQLChain } from 'src/utils/chainId'
-import { graphQLCurrencyInfo } from 'src/utils/currencyId'
+import { useTokenPriceChartsQuery } from 'src/data/__generated__/types-and-hooks'
+import { GqlResult } from 'src/features/dataApi/types'
+import { currencyIdToContractInput } from 'src/features/dataApi/utils'
+import { currencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 
-const priceQuery = graphql`
-  query TokenModel_PriceQuery($contract: ContractInput!) {
-    tokenProjects(contracts: [$contract]) {
-      name
-      markets(currencies: [USD]) {
-        # Data supported for all durations
-        # - HOUR: 5m interval data
-        # - DAY: 5m interval data
-        # - WEEK: hourly interval data
-        # - MONTH: hourly interval data
-        # - YEAR: daily interval data
-        # - MAX: 5m/hourly/daily depending on history duration
-        priceHistory1H: priceHistory(duration: HOUR) {
-          timestamp
-          close: value
-        }
-        priceHistory1D: priceHistory(duration: DAY) {
-          timestamp
-          close: value
-        }
-        priceHistory1W: priceHistory(duration: WEEK) {
-          timestamp
-          close: value
-        }
-        priceHistory1M: priceHistory(duration: MONTH) {
-          timestamp
-          close: value
-        }
-        priceHistory1Y: priceHistory(duration: YEAR) {
-          timestamp
-          close: value
-        }
-      }
-      tokens {
-        chain
-        address
-        symbol
-        decimals
-      }
-    }
-  }
-`
-
-/**
- * @returns undefined if loading, null if error, `GraphMetadatas` otherwise
- */
-export function useTokenPriceGraphs(token: Token): NullUndefined<GraphMetadatas> {
-  const { address, chain } = graphQLCurrencyInfo(token)
-  const graphQLChain = toGraphQLChain(chain)
-
-  const priceData = useLazyLoadQuery<TokenModel_PriceQuery>(
-    priceQuery,
-    {
-      contract: {
-        address,
-        chain: graphQLChain ?? 'ETHEREUM',
-      },
+export function useTokenPriceGraphs(token: Token): GqlResult<GraphMetadatas> {
+  const {
+    data: priceData,
+    loading,
+    error,
+  } = useTokenPriceChartsQuery({
+    variables: {
+      contract: currencyIdToContractInput(currencyId(token)),
     },
-    { networkCacheConfig: { poll: PollingInterval.Normal } }
-  )
+  })
 
-  return useMemo(() => {
+  const formattedData = useMemo(() => {
     if (!priceData) {
-      return undefined
+      return
     }
 
     const { priceHistory1H, priceHistory1D, priceHistory1W, priceHistory1M, priceHistory1Y } =
@@ -88,7 +36,7 @@ export function useTokenPriceGraphs(token: Token): NullUndefined<GraphMetadatas>
       !priceHistory1Y
     ) {
       logger.debug('TokenModel', 'useTokenPriceGraphs', 'Token prices error')
-      return null
+      return
     }
 
     const graphs = [
@@ -121,4 +69,6 @@ export function useTokenPriceGraphs(token: Token): NullUndefined<GraphMetadatas>
 
     return graphs as GraphMetadatas
   }, [priceData])
+
+  return { data: formattedData, loading, error }
 }
