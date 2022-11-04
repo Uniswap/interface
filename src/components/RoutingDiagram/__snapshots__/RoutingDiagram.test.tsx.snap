@@ -110,7 +110,7 @@ exports[`renders multi route 1`] = `
 }
 
 .c6 path {
-  stroke: #99A1BD;
+  stroke: #98A1C0;
 }
 
 .c8 {
@@ -129,9 +129,9 @@ exports[`renders multi route 1`] = `
 }
 
 .c9 {
-  background-color: #C9D0E7;
+  background-color: #B8C0DC;
   border-radius: 4px;
-  color: #5E6887;
+  color: #5D6785;
   font-size: 10px;
   padding: 2px 4px;
   z-index: 1021;
@@ -348,7 +348,7 @@ exports[`renders single route 1`] = `
 }
 
 .c6 path {
-  stroke: #99A1BD;
+  stroke: #98A1C0;
 }
 
 .c8 {
@@ -367,9 +367,9 @@ exports[`renders single route 1`] = `
 }
 
 .c9 {
-  background-color: #C9D0E7;
+  background-color: #B8C0DC;
   border-radius: 4px;
-  color: #5E6887;
+  color: #5D6785;
   font-size: 10px;
   padding: 2px 4px;
   z-index: 1021;
