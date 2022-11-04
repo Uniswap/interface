@@ -162,7 +162,6 @@ export async function signListing(
     case 'LooksRare':
       const addresses = addressesByNetwork[SupportedChainId.MAINNET]
       const currentTime = Math.round(Date.now() / 1000)
-      console.log(asset.creatorPercentage)
       const makerOrder: MakerOrder = {
         // true --> ask / false --> bid
         isOrderAsk: true,
