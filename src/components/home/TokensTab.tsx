@@ -48,7 +48,7 @@ export function TokensTab({
 
   const styles = StyleSheet.create({
     tabContentStyle: {
-      paddingHorizontal: theme.spacing.sm,
+      padding: theme.spacing.sm,
     },
   })
 

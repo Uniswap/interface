@@ -60,8 +60,23 @@ export const TabStyles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
   },
-  indicator: { backgroundColor: FixedTheme.colors.userThemeMagenta, height: 2 },
-  tab: { margin: 0, padding: 0, top: 0 },
+  indicator: {
+    backgroundColor: FixedTheme.colors.userThemeMagenta,
+    bottom: -1,
+    height: 2,
+    position: 'absolute',
+  },
+  tab: {
+    // add inactive border to bottom of tab bar
+    borderBottomWidth: 1,
+    margin: 0,
+    padding: 0,
+    // remove default shadow border under tab bar
+    shadowColor: FixedTheme.colors.none,
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    top: 0,
+  },
   tabBar: {
     paddingHorizontal: FixedTheme.spacing.lg,
     position: 'absolute',
@@ -180,7 +195,13 @@ export default function TabbedScrollScreen({
           indicatorStyle={[TabStyles.indicator]}
           navigationState={{ index: tabIndex, routes }}
           renderLabel={renderTabLabel}
-          style={[TabStyles.tab, { backgroundColor: theme.colors.background0 }]}
+          style={[
+            TabStyles.tab,
+            {
+              backgroundColor: theme.colors.background0,
+              borderBottomColor: theme.colors.backgroundOutline,
+            },
+          ]}
           onTabPress={({ preventDefault, route }) => {
             if (isListGliding.current) {
               preventDefault()
