@@ -39,7 +39,7 @@ export const CollectionAsset = ({
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
-  const toggleBag = useBag((state) => state.toggleBag)
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
 
   const { quantity, isSelected } = useMemo(() => {
@@ -80,7 +80,7 @@ export const CollectionAsset = ({
   const handleAddAssetToBag = useCallback(() => {
     addAssetsToBag([asset])
     if (!bagExpanded && !isMobile && !bagManuallyClosed) {
-      toggleBag()
+      setBagExpanded({ bagExpanded: true })
     }
     sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
       collection_address: asset.address,
@@ -88,7 +88,7 @@ export const CollectionAsset = ({
       token_type: asset.tokenType,
       ...trace,
     })
-  }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, toggleBag, trace])
+  }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
 
   const handleRemoveAssetFromBag = useCallback(() => {
     removeAssetsFromBag([asset])

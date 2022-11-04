@@ -7,6 +7,7 @@ import { devtools } from 'zustand/middleware'
 interface BagState {
   bagStatus: BagStatus
   bagManuallyClosed: boolean
+  setBagExpanded: ({ bagExpanded, manualClose }: { bagExpanded: boolean; manualClose?: boolean }) => void
   setBagStatus: (state: BagStatus) => void
   itemsInBag: BagItem[]
   setItemsInBag: (items: BagItem[]) => void
@@ -55,13 +56,9 @@ export const useBag = create<BagState>()(
         set(() => ({
           didOpenUnavailableAssets: didOpen,
         })),
-      toggleBag: () =>
-        set(({ bagExpanded }) => {
-          if (bagExpanded === false) {
-            return { bagExpanded: !bagExpanded, bagManuallyClosed: true }
-          }
-          return { bagExpanded: !bagExpanded }
-        }),
+      setBagExpanded: ({ bagExpanded, manualClose }) =>
+        set(({ bagManuallyClosed }) => ({ bagExpanded, bagManuallyClosed: manualClose || bagManuallyClosed })),
+      toggleBag: () => set(({ bagExpanded }) => ({ bagExpanded: !bagExpanded })),
       isLocked: false,
       setLocked: (_isLocked) =>
         set(() => ({
