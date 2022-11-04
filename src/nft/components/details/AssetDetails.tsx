@@ -1,8 +1,5 @@
 import { ScrollBarStyles } from 'components/Common'
 import Resource from 'components/Tokens/TokenDetails/Resource'
-import { EventName, PageName, sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
-import { useWeb3React } from '@web3-react/core'
-import clsx from 'clsx'
 import { MouseoverTooltip } from 'components/Tooltip/index'
 import { Box } from 'nft/components/Box'
 import { reduceFilters } from 'nft/components/collection/Activity'

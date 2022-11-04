@@ -1,4 +1,4 @@
-import { ElementName, EventName, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
 import { Currency } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -68,7 +68,7 @@ export default function CommonBases({
 
           return (
             <TraceEvent
-              events={[Event.onClick, Event.onKeyPress]}
+              events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
               name={EventName.TOKEN_SELECTED}
               properties={formatAnalyticsEventProperties(currency, searchQuery, isAddressSearch)}
               element={ElementName.COMMON_BASES_CURRENCY_BUTTON}
