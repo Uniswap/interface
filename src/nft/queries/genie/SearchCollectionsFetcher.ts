@@ -55,5 +55,5 @@ export const fetchSearchCollections = async (addressOrName: string, recursive = 
   }
   const data = await r.json()
 
-  return data.data ? [{ ...data.data[0], stats: { ...data.data[0], floor_price: data.data[0].floorPrice } }] : []
+  return data.data ? [{ ...data.data[0], stats: { ...data.data[0].stats, floor_price: data.data[0].floorPrice } }] : []
 }
