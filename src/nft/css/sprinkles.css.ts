@@ -403,7 +403,6 @@ const unresponsiveProperties = defineProperties({
     borderBottom: vars.border,
     borderTop: vars.border,
     borderWidth,
-    borderLeftWidth: borderWidth,
     borderBottomWidth: borderWidth,
     borderTopWidth: borderWidth,
     fontFamily: vars.fonts,
