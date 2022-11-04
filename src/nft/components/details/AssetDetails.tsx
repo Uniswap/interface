@@ -400,9 +400,11 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
     [isSuccess, eventsData]
   )
 
+  // TODO: remove after switching to graphql
   const externalUrl = collection.externalUrl ?? collectionStats?.externalUrl
   const twitterUrl = collection.twitterUrl ?? collectionStats?.twitterUrl
   const discordUrl = collection.discordUrl ?? collectionStats?.discordUrl
+  const isVerified = collection.isVerified ?? collectionStats?.isVerified
 
   return (
     <Column>
@@ -422,7 +424,7 @@ export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetail
       </MediaContainer>
       <DefaultLink to={`/nfts/collection/${asset.address}`}>
         <CollectionHeader>
-          {collection.collectionName} {collectionStats?.isVerified && <VerifiedIcon />}
+          {collection.collectionName} {isVerified && <VerifiedIcon />}
         </CollectionHeader>
       </DefaultLink>
 
