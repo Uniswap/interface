@@ -14,7 +14,7 @@ export default function ProfileActivityTab({ ownerAddress }: { ownerAddress: Add
             <Text variant="headlineSmall">{t('No activity yet')}</Text>
             <Text color="textSecondary" variant="bodySmall">
               {t(
-                'When you make transactions or interact with sites, details of your activity will appear here.'
+                'When you make transactions or interact with apps, details of your activity will appear here.'
               )}
             </Text>
           </Flex>

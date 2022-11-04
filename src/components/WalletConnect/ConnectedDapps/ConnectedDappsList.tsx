@@ -58,10 +58,10 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
         ) : (
           <Flex fill alignItems="center" gap="xs" style={emptyCardStyle}>
             <Text color="textPrimary" variant="subheadLarge">
-              {t('No sites connected')}
+              {t('No apps connected')}
             </Text>
             <Text color="textSecondary" textAlign="center" variant="bodySmall">
-              {t('Connect to a site by scanning a code via WalletConnect')}
+              {t('Connect to an app by scanning a code via WalletConnect')}
             </Text>
           </Flex>
         )}

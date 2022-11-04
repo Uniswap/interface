@@ -272,10 +272,10 @@ export function OnboardingCompleteAnimation({
             <Text color="textSecondary" textAlign="center" variant="bodyLarge">
               {isNewWallet
                 ? t(
-                    "You've created, nicknamed, and backed up your wallet. Now, you can explore and transact with the sites, tokens, NFTs, and other wallets that make up the world of web3!"
+                    "You've created, nicknamed, and backed up your wallet. Now, you can explore and transact with the apps, tokens, NFTs, and other wallets that make up the world of web3!"
                   )
                 : t(
-                    'Check out your tokens and NFTs, watch other wallets, connect to web3 sites, and swap directly in the app.'
+                    'Check out your tokens and NFTs, watch other wallets, connect to web3 apps, and swap directly in the app.'
                   )}
             </Text>
           </Animated.View>

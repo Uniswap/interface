@@ -186,8 +186,8 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
                 emphasis={ButtonEmphasis.Secondary}
                 label={
                   props.numConnections === 1
-                    ? t('1 site connected')
-                    : t('{{numConnections}} sites connected', {
+                    ? t('1 app connected')
+                    : t('{{numConnections}} apps connected', {
                         numConnections: props.numConnections,
                       })
                 }

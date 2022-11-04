@@ -49,7 +49,7 @@ const SitePermissions = () => {
   return (
     <Flex gap="sm" p="md">
       <Text color="textSecondary" variant="subheadSmall">
-        {t('Site permissions')}
+        {t('App permissions')}
       </Text>
       <Flex row alignItems="flex-start" gap="xs">
         <Box mt="xxxs">
