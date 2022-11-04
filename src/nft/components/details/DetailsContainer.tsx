@@ -54,6 +54,25 @@ const Center = styled.span`
   }) => `opacity ${duration.medium} ${timing.ease}`};
 `
 
+const CreatorLink = styled.a`
+  color: ${({ theme }) => theme.textPrimary};
+  text-decoration: none;
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `opacity ${duration.medium} ${timing.ease}`};
+`
+
 const CopyIcon = styled(Copy)`
   cursor: pointer;
 `
@@ -92,7 +111,20 @@ const DetailsContainer = ({ asset, collection }: { asset: GenieAsset; collection
       <GridItem header="Token standard" body={tokenType} />
       <GridItem header="Blockchain" body="Ethereum" />
       <GridItem header="Total supply" body={`${putCommas(totalSupply ?? 0)}`} />
-      <GridItem header="Creator" body={creator?.address && shortenAddress(creator.address, 2, 4)} />
+      <GridItem
+        header="Creator"
+        body={
+          creator?.address && (
+            <CreatorLink
+              href={`https://etherscan.io/address/${creator.address}`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {shortenAddress(creator.address, 2, 4)}
+            </CreatorLink>
+          )
+        }
+      />
     </Details>
   )
 }

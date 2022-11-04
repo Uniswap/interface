@@ -150,7 +150,6 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
         // @ts-ignore
         return { trait_type: trait.name ?? '', value: trait.value ?? '' } as Trait
       }),
-      externalLink: '',
     },
     {
       collectionDescription: collection?.description,

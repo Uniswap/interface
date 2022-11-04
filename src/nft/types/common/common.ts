@@ -98,7 +98,6 @@ export interface GenieAsset {
   owner: {
     address: string
   }
-  externalLink: string
   metadataUrl: string
   creator: {
     address: string
