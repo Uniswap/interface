@@ -42,12 +42,13 @@ export interface WidgetProps {
   token?: Currency
   onTokenChange?: (token: Currency) => void
   onReviewSwapClick?: OnReviewSwapClick
+  accentColor?: string
 }
 
-export default function Widget({ token, onTokenChange, onReviewSwapClick }: WidgetProps) {
+export default function Widget({ token, onTokenChange, onReviewSwapClick, accentColor }: WidgetProps) {
   const { connector, provider } = useWeb3React()
   const locale = useActiveLocale()
-  const theme = useWidgetTheme()
+  const theme = { ...useWidgetTheme(), accent: accentColor }
   const { inputs, tokenSelector } = useSyncWidgetInputs({ token, onTokenChange })
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()

@@ -8,6 +8,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
+import { useTokenLogoURI } from 'pages/TokenDetails'
 import { ForwardedRef, forwardRef } from 'react'
 import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp } from 'react-feather'
@@ -31,7 +32,6 @@ import {
   TokenSortMethod,
   useSetSortMethod,
 } from '../state'
-import { useTokenLogoURI } from '../TokenDetails/ChartSection'
 import InfoTip from '../TokenDetails/InfoTip'
 import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 

@@ -5,13 +5,9 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { TokenQueryData } from 'graphql/data/Token'
 import { PriceDurations } from 'graphql/data/TokenPrice'
-import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
-import { getColorFromUriPath } from 'hooks/useColor'
 import { useAtomValue } from 'jotai/utils'
-import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
-import { useEffect, useState } from 'react'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
 
 import { filterTimeAtom } from '../state'
@@ -55,44 +51,24 @@ const TokenActions = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 
-export function useTokenLogoURI(
-  token: NonNullable<TokenQueryData> | NonNullable<TopToken>,
-  nativeCurrency?: Token | NativeCurrency
-) {
-  const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
-  return [
-    ...useCurrencyLogoURIs(nativeCurrency),
-    ...useCurrencyLogoURIs({ ...token, chainId }),
-    token.project?.logoUrl,
-  ][0]
-}
-
 export default function ChartSection({
   token,
   currency,
   nativeCurrency,
   prices,
+  logoSrc,
+  color,
 }: {
   token: NonNullable<TokenQueryData>
   currency?: Currency | null
   nativeCurrency?: Token | NativeCurrency
   prices?: PriceDurations
+  logoSrc?: string | null
+  color: string
 }) {
   const chainId = CHAIN_NAME_TO_CHAIN_ID[token.chain]
   const L2Icon = getChainInfo(chainId)?.circleLogoUrl
   const timePeriod = useAtomValue(filterTimeAtom)
-
-  const logoSrc = useTokenLogoURI(token, nativeCurrency)
-
-  const theme = useTheme()
-  const [color, setColor] = useState(theme.accentAction)
-
-  useEffect(() => {
-    logoSrc &&
-      getColorFromUriPath(logoSrc).then((color) => {
-        color && setColor(color)
-      })
-  }, [logoSrc])
 
   return (
     <ChartHeader>

@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { PageName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
@@ -17,17 +17,31 @@ import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget from 'components/Widget'
+import { SupportedChainId } from 'constants/chains'
 import { DEFAULT_ERC20_DECIMALS, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { Chain } from 'graphql/data/__generated__/TokenQuery.graphql'
-import { QueryToken, useTokenQuery } from 'graphql/data/Token'
+import { QueryToken, TokenQueryData, useTokenQuery } from 'graphql/data/Token'
 import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
+import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID, validateUrlChainParam } from 'graphql/data/util'
 import { useIsUserAddedTokenOnChain } from 'hooks/Tokens'
+import { getColorFromUriPath } from 'hooks/useColor'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useCallback, useMemo, useState, useTransition } from 'react'
+import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
+import { useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useTheme } from 'styled-components/macro'
+
+export function useTokenLogoURI(token: TokenQueryData | TopToken | undefined, nativeCurrency?: Token | NativeCurrency) {
+  const chainId = token?.chain ? CHAIN_NAME_TO_CHAIN_ID[token?.chain] : SupportedChainId.MAINNET
+  return [
+    ...useCurrencyLogoURIs(nativeCurrency),
+    ...useCurrencyLogoURIs({ ...token, chainId }),
+    token?.project?.logoUrl,
+  ][0]
+}
 
 export default function TokenDetails() {
   const { tokenAddress, chainName } = useParams<{ tokenAddress?: string; chainName?: string }>()
@@ -46,6 +60,18 @@ export default function TokenDetails() {
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   const isBlockedToken = tokenWarning?.canProceed === false
+
+  const logoSrc = useTokenLogoURI(tokenQueryData, isNative ? nativeCurrency : undefined)
+
+  const theme = useTheme()
+  const [color, setColor] = useState(theme.accentAction)
+
+  useEffect(() => {
+    logoSrc &&
+      getColorFromUriPath(logoSrc).then((color) => {
+        color && setColor(color)
+      })
+  }, [logoSrc])
 
   const navigate = useNavigate()
   // Wrapping navigate in a transition prevents Suspense from unnecessarily showing fallbacks again.
@@ -94,12 +120,7 @@ export default function TokenDetails() {
             <BreadcrumbNavLink to={`/tokens/${chainName}`}>
               <ArrowLeft size={14} /> Tokens
             </BreadcrumbNavLink>
-            <ChartSection
-              token={tokenQueryData}
-              currency={token}
-              nativeCurrency={isNative ? nativeCurrency : undefined}
-              prices={prices}
-            />
+            <ChartSection logoSrc={logoSrc} token={tokenQueryData} prices={prices} color={color} />
             <StatsSection
               TVL={tokenQueryData.market?.totalValueLocked?.value}
               volume24H={tokenQueryData.market?.volume24H?.value}
@@ -125,6 +146,7 @@ export default function TokenDetails() {
 
         <RightPanel>
           <Widget
+            accentColor={color}
             token={token ?? nativeCurrency}
             onTokenChange={navigateToWidgetSelectedToken}
             onReviewSwapClick={onReviewSwapClick}
