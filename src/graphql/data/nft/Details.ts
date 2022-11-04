@@ -147,8 +147,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       },
       metadataUrl: asset?.metadataUrl ?? '',
       traits: asset?.traits?.map((trait) => {
-        // @ts-ignore
-        return { trait_type: trait.name ?? '', value: trait.value ?? '' } as Trait
+        return { trait_type: trait.name ?? '', trait_value: trait.value ?? '' } as Trait
       }),
     },
     {
