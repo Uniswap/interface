@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom'
 
 const EmptyState = () => {
   const { pathname } = useLocation()
-  const isProfilePage = pathname.startsWith('/nft/profile')
+  const isProfilePage = pathname.startsWith('/nfts/profile')
 
   return (
     <Column gap={isProfilePage ? '16' : '12'} marginTop="36">
