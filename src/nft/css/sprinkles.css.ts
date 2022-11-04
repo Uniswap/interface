@@ -18,6 +18,7 @@ const themeContractValues = {
     backgroundModule: '',
     backgroundOutline: '',
     backgroundSurface: '',
+    backgroundBackdrop: '',
 
     modalBackdrop: '',
 
@@ -34,6 +35,12 @@ const themeContractValues = {
     elevation: '',
     tooltip: '',
     deep: '',
+    shallow: '',
+  },
+
+  opacity: {
+    hover: '0.6',
+    pressed: '0.4',
   },
 }
 
@@ -77,6 +84,7 @@ const dimensions = {
   '276': '276px',
   '288': '288px',
   '292': '292px',
+  '332': '332px',
   '386': '386px',
   half: '50%',
   full: '100%',
@@ -178,7 +186,7 @@ export const vars = createGlobalTheme(':root', {
     grey300: '#99A1BD',
     grey200: '#B7BED4',
     grey100: '#DDE3F7',
-    grey50: '#EDEFF7',
+    grey50: '#F5F6FC',
     accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
     outline: 'rgba(153, 161, 189, 0.24)',
     lightGrayOverlay: '#99A1BD14',
@@ -262,7 +270,7 @@ const flexAlignment = [
 
 const overflow = ['hidden', 'inherit', 'scroll', 'visible', 'auto'] as const
 
-const borderWidth = ['0px', '0.5px', '1px', '1.5px', '2px', '4px']
+const borderWidth = ['0px', '0.5px', '1px', '1.5px', '2px', '3px', '4px']
 
 const borderStyle = ['none', 'solid'] as const
 
@@ -383,6 +391,7 @@ const unresponsiveProperties = defineProperties({
     cursor: ['default', 'pointer', 'auto'],
     borderStyle,
     borderBottomStyle: borderStyle,
+    borderTopStyle: borderStyle,
     borderRadius: vars.radii,
     borderTopLeftRadius: vars.radii,
     borderTopRightRadius: vars.radii,
@@ -393,6 +402,7 @@ const unresponsiveProperties = defineProperties({
     borderTop: vars.border,
     borderWidth,
     borderBottomWidth: borderWidth,
+    borderTopWidth: borderWidth,
     fontFamily: vars.fonts,
     overflow,
     overflowX: overflow,

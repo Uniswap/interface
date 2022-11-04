@@ -1,10 +1,46 @@
-import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { BagCloseIcon } from 'nft/components/icons'
 import { roundAndPluralize } from 'nft/utils/roundAndPluralize'
+import styled from 'styled-components/macro'
+import { ButtonText, ThemedText } from 'theme'
 
 import * as styles from './BagHeader.css'
 
+const ClearButton = styled(ButtonText)`
+  color: ${({ theme }) => theme.textSecondary};
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  transition: 150ms ease color;
+
+  :hover {
+    color: ${({ theme }) => theme.accentActive};
+  }
+`
+const ControlRow = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+const IconWrapper = styled.button`
+  background-color: transparent;
+  border-radius: 8px;
+  border: none;
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+  display: flex;
+  padding: 2px;
+  opacity: 1;
+  transition: 125ms ease opacity;
+  :hover {
+    opacity: 0.6;
+  }
+  :active {
+    opacity: 0.4;
+  }
+`
 interface BagHeaderProps {
   numberOfAssets: number
   toggleBag: () => void
@@ -16,24 +52,16 @@ export const BagHeader = ({ numberOfAssets, toggleBag, resetFlow, isProfilePage 
   return (
     <Column gap="4" paddingX="32" marginBottom="20">
       <Row className={styles.header}>
-        {isProfilePage ? 'Sell NFTs' : 'My bag'}
-        <Box display="flex" padding="2" color="textSecondary" cursor="pointer" onClick={toggleBag}>
+        <ThemedText.HeadlineSmall>{isProfilePage ? 'Sell NFTs' : 'My bag'}</ThemedText.HeadlineSmall>
+        <IconWrapper onClick={toggleBag}>
           <BagCloseIcon />
-        </Box>
+        </IconWrapper>
       </Row>
       {numberOfAssets > 0 && (
-        <Box fontSize="14" fontWeight="normal" style={{ lineHeight: '20px' }} color="textPrimary">
-          {roundAndPluralize(numberOfAssets, 'NFT')} ·{' '}
-          <Box
-            as="span"
-            className={styles.clearAll}
-            onClick={() => {
-              resetFlow()
-            }}
-          >
-            Clear all
-          </Box>
-        </Box>
+        <ControlRow>
+          <ThemedText.BodyPrimary>{roundAndPluralize(numberOfAssets, 'NFT')}</ThemedText.BodyPrimary>
+          <ClearButton onClick={resetFlow}>Clear all</ClearButton>
+        </ControlRow>
       )}
     </Column>
   )

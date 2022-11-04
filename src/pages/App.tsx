@@ -5,9 +5,8 @@ import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -21,7 +20,7 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import NavBar from '../components/NavBar'
 import Polling from '../components/Polling'
 import Popups from '../components/Popups'
-import { LoadingTokenDetails } from '../components/Tokens/TokenDetails/LoadingTokenDetails'
+import { TokenDetailsPageSkeleton } from '../components/Tokens/TokenDetails/Skeleton'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
@@ -48,12 +47,10 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
-const AppWrapper = styled.div<{ redesignFlagEnabled: boolean }>`
+const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
-  font-feature-settings: ${({ redesignFlagEnabled }) =>
-    redesignFlagEnabled ? undefined : "'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on"};
 `
 
 const BodyWrapper = styled.div`
@@ -68,11 +65,19 @@ const BodyWrapper = styled.div`
   `};
 `
 
-const HeaderWrapper = styled.div`
+const HeaderWrapper = styled.div<{ scrolledState?: boolean; nftFlagEnabled?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
+  background-color: ${({ theme, nftFlagEnabled, scrolledState }) =>
+    scrolledState && nftFlagEnabled && theme.backgroundSurface};
+  border-bottom: ${({ theme, nftFlagEnabled, scrolledState }) =>
+    scrolledState && nftFlagEnabled && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
+  transition: ${({ theme, nftFlagEnabled }) =>
+    nftFlagEnabled &&
+    `background-color ${theme.transition.duration.fast} ease-in-out,
+    border-width ${theme.transition.duration.fast} ease-in-out`};
   top: 0;
   z-index: ${Z_INDEX.sticky};
 `
@@ -113,18 +118,27 @@ const LazyLoadSpinner = () => (
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const nftFlag = useNftFlag()
-  const redesignFlagEnabled = useRedesignFlag() === RedesignVariant.Enabled
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
   const isExpertMode = useIsExpertMode()
+  const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
   initializeAnalytics()
 
+  const scrollListener = (e: Event) => {
+    if (window.scrollY > 0) {
+      setScrolledState(true)
+    } else {
+      setScrolledState(false)
+    }
+  }
+
   useEffect(() => {
     window.scrollTo(0, 0)
+    setScrolledState(false)
   }, [pathname])
 
   useEffect(() => {
@@ -147,13 +161,17 @@ export default function App() {
     user.set(CUSTOM_USER_PROPERTIES.EXPERT_MODE, isExpertMode)
   }, [isExpertMode])
 
+  useEffect(() => {
+    window.addEventListener('scroll', scrollListener)
+  }, [])
+
   return (
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
-      <AppWrapper redesignFlagEnabled={redesignFlagEnabled}>
+      <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper>
+          <HeaderWrapper scrolledState={scrolledState} nftFlagEnabled={nftFlag === NftVariant.Enabled}>
             <NavBar />
           </HeaderWrapper>
           <BodyWrapper>
@@ -169,7 +187,7 @@ export default function App() {
                   <Route
                     path="tokens/:chainName/:tokenAddress"
                     element={
-                      <Suspense fallback={<LoadingTokenDetails />}>
+                      <Suspense fallback={<TokenDetailsPageSkeleton />}>
                         <TokenDetails />
                       </Suspense>
                     }
@@ -226,7 +244,14 @@ export default function App() {
                     <>
                       <Route path="/profile" element={<Profile />} />
                       <Route path="/nfts" element={<NftExplore />} />
-                      <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
+                      <Route
+                        path="/nfts/asset/:contractAddress/:tokenId"
+                        element={
+                          <Suspense fallback={<div>Holder for loading ...</div>}>
+                            <Asset />
+                          </Suspense>
+                        }
+                      />
                       <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
                       <Route path="/nfts/collection/:contractAddress/activity" element={<Collection />} />
                     </>

@@ -39,6 +39,7 @@ interface ActivityProps {
   contractAddress: string
   rarityVerified: boolean
   collectionName: string
+  chainId?: number
 }
 
 const initialFilterState = {
@@ -54,7 +55,7 @@ const reduceFilters = (state: typeof initialFilterState, action: { eventType: Ac
 
 const baseHref = (event: ActivityEvent) => `/#/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`
 
-export const Activity = ({ contractAddress, rarityVerified, collectionName }: ActivityProps) => {
+export const Activity = ({ contractAddress, rarityVerified, collectionName, chainId }: ActivityProps) => {
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
 
   const {
@@ -100,8 +101,8 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
   )
 
   const itemsInBag = useBag((state) => state.itemsInBag)
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const cartExpanded = useBag((state) => state.bagExpanded)
   const toggleCart = useBag((state) => state.toggleBag)
   const isMobile = useIsMobile()
@@ -131,7 +132,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
 
   return (
     <Box>
-      <Row gap="8">
+      <Row gap="8" paddingTop="16">
         <Filter eventType={ActivityEventType.Listing} />
         <Filter eventType={ActivityEventType.Sale} />
         <Filter eventType={ActivityEventType.Transfer} />
@@ -155,20 +156,28 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName }: Ac
           >
             {events.map((event, i) => (
               <Box as="a" href={baseHref(event)} className={styles.eventRow} key={i}>
-                <ItemCell event={event} rarityVerified={rarityVerified} collectionName={collectionName} />
+                <ItemCell
+                  event={event}
+                  rarityVerified={rarityVerified}
+                  collectionName={collectionName}
+                  eventTimestamp={event.eventTimestamp}
+                  isMobile={isMobile}
+                />
                 <EventCell
                   eventType={event.eventType}
                   eventTimestamp={event.eventTimestamp}
                   eventTransactionHash={event.transactionHash}
+                  price={event.price}
+                  isMobile={isMobile}
                 />
                 <PriceCell marketplace={event.marketplace} price={event.price} />
-                <AddressCell address={event.fromAddress} />
-                <AddressCell address={event.toAddress} desktopLBreakpoint />
+                <AddressCell address={event.fromAddress} chainId={chainId} />
+                <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
                 <BuyCell
                   event={event}
                   collectionName={collectionName}
-                  selectAsset={addAssetToBag}
-                  removeAsset={removeAssetFromBag}
+                  selectAsset={addAssetsToBag}
+                  removeAsset={removeAssetsFromBag}
                   itemsInBag={itemsInBag}
                   cartExpanded={cartExpanded}
                   toggleCart={toggleCart}

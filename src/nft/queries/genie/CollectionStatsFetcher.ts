@@ -1,10 +1,11 @@
 import { isAddress } from '@ethersproject/address'
+import { groupBy } from 'nft/utils/groupBy'
 
 import { GenieCollection } from '../../types'
 
 export const CollectionStatsFetcher = async (addressOrName: string, recursive = false): Promise<GenieCollection> => {
   const isName = !isAddress(addressOrName.toLowerCase())
-  const url = `${process.env.REACT_APP_GENIE_API_URL}/collections`
+  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/collections`
 
   if (!isName && !recursive) {
     try {
@@ -55,5 +56,11 @@ export const CollectionStatsFetcher = async (addressOrName: string, recursive = 
   })
 
   const data = await r.json()
-  return data?.data ? data.data[0] : {}
+  const collections = data?.data.map((collection: Record<string, unknown>) => {
+    return {
+      ...collection,
+      traits: collection.traits && groupBy(collection.traits as unknown[], 'trait_type'),
+    }
+  })
+  return collections[0]
 }

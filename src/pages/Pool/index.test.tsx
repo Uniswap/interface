@@ -1,6 +1,5 @@
 import * as chains from 'constants/chains'
 import * as useV3Positions from 'hooks/useV3Positions'
-import { BrowserRouter as Router } from 'react-router-dom'
 import { render, screen } from 'test-utils'
 
 import Pool from '.'
@@ -22,11 +21,7 @@ describe('networks', () => {
       return { loading: false, positions: undefined }
     })
 
-    render(
-      <Router>
-        <Pool />
-      </Router>
-    )
+    render(<Pool />)
     expect(screen.getByText('Your connected network is unsupported.')).toBeInTheDocument()
   })
 
@@ -36,11 +31,7 @@ describe('networks', () => {
       return { loading: false, positions: undefined }
     })
 
-    render(
-      <Router>
-        <Pool />
-      </Router>
-    )
+    render(<Pool />)
     expect(screen.getByText('Your active V3 liquidity positions will appear here.')).toBeInTheDocument()
   })
 })

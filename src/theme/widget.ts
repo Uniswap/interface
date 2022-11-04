@@ -1,5 +1,9 @@
 import { colorsDark, colorsLight } from './colors'
 
+const fonts = {
+  fontFamily: 'Inter custom',
+}
+
 export const LIGHT_THEME = {
   // surface
   container: colorsLight.backgroundSurface,
@@ -16,6 +20,8 @@ export const LIGHT_THEME = {
   success: colorsLight.accentSuccess,
   warning: colorsLight.accentWarning,
   error: colorsLight.accentCritical,
+
+  ...fonts,
 }
 
 export const DARK_THEME = {
@@ -34,4 +40,6 @@ export const DARK_THEME = {
   success: colorsDark.accentSuccess,
   warning: colorsDark.accentWarning,
   error: colorsDark.accentCritical,
+
+  ...fonts,
 }

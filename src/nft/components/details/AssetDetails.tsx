@@ -1,4 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, PageName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
 import clsx from 'clsx'
 import { MouseoverTooltip } from 'components/Tooltip/index'
 import useENSName from 'hooks/useENSName'
@@ -13,7 +16,8 @@ import { badge, bodySmall, caption, headlineMedium, subhead } from 'nft/css/comm
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
-import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
+import { CollectionInfoForAsset, Deprecated_SellOrder, GenieAsset, SellOrder } from 'nft/types'
+import { useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
@@ -27,6 +31,7 @@ import ReactMarkdown from 'react-markdown'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useSpring } from 'react-spring'
 
+import { SUSPICIOUS_TEXT } from '../collection/Card'
 import * as styles from './AssetDetails.css'
 
 const AudioPlayer = ({
@@ -55,9 +60,9 @@ const AudioPlayer = ({
 
 const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
 
-const CountdownTimer = ({ sellOrder }: { sellOrder: SellOrder }) => {
+const CountdownTimer = ({ sellOrder }: { sellOrder: Deprecated_SellOrder | SellOrder }) => {
   const { date, expires } = useMemo(() => {
-    const date = new Date(sellOrder.orderClosingDate)
+    const date = new Date((sellOrder as Deprecated_SellOrder).orderClosingDate ?? (sellOrder as SellOrder).endAt)
     return {
       date,
       expires: formatter.format(date),
@@ -112,8 +117,8 @@ interface AssetDetailsProps {
 export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const { pathname, search } = useLocation()
   const navigate = useNavigate()
-  const addAssetToBag = useBag((state) => state.addAssetToBag)
-  const removeAssetFromBag = useBag((state) => state.removeAssetFromBag)
+  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
+  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
   const [creatorAddress, setCreatorAddress] = useState('')
@@ -130,11 +135,20 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const [isOwned, setIsOwned] = useState(false)
   const { account: address, provider } = useWeb3React()
 
+  const trace = useTrace({ page: PageName.NFT_DETAILS_PAGE })
+
+  const eventProperties = {
+    collection_address: asset.address,
+    token_id: asset.tokenId,
+    token_type: asset.tokenType,
+    ...trace,
+  }
+
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
       asset.rarity
         ? {
-            rarityProvider: asset.rarity.providers.find(
+            rarityProvider: asset?.rarity?.providers?.find(
               ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
             ),
             rarityLogo: rarityProviderLogo[asset.rarity.primaryProvider] || '',
@@ -144,16 +158,16 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   )
 
   const assetMediaType = useMemo(() => {
-    if (isAudio(asset.animationUrl)) {
+    if (isAudio(asset.animationUrl ?? '')) {
       return MediaType.Audio
-    } else if (isVideo(asset.animationUrl)) {
+    } else if (isVideo(asset.animationUrl ?? '')) {
       return MediaType.Video
     }
     return MediaType.Image
   }, [asset])
 
   useEffect(() => {
-    if (asset.creator) setCreatorAddress(asset.creator.address)
+    if (asset.creator) setCreatorAddress(asset.creator.address ?? '')
     if (asset.owner) setOwnerAddress(asset.owner)
   }, [asset])
 
@@ -174,6 +188,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       }).then(setIsOwned)
     }
   }, [asset, address, provider])
+
+  const USDPrice = useUsdPrice(asset)
 
   return (
     <AnimatedBox
@@ -269,9 +285,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               </Row>
             </Row>
             <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={headlineMedium}>
-              {asset.openseaSusFlag && (
+              {asset.susFlag && (
                 <Box marginTop="8">
-                  <MouseoverTooltip text={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}>
+                  <MouseoverTooltip text={<Box fontWeight="normal">{SUSPICIOUS_TEXT}</Box>}>
                     <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />
                   </MouseoverTooltip>
                 </Box>
@@ -339,7 +355,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             </Row>
           </Column>
 
-          {asset.priceInfo && !isOwned ? (
+          {asset.priceInfo && asset.sellorders && !isOwned ? (
             <Row
               marginTop="8"
               marginBottom="40"
@@ -356,7 +372,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                   <a href={asset.sellorders[0].marketplaceUrl} rel="noreferrer" target="_blank">
                     <img
                       className={styles.marketplace}
-                      src={`/nft/svgs/marketplaces/${asset.sellorders[0].marketplace}.svg`}
+                      src={`/nft/svgs/marketplaces/${asset.sellorders[0].marketplace.toLowerCase()}.svg`}
                       height={16}
                       width={16}
                       alt="Markeplace"
@@ -365,11 +381,16 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                   <Row as="span" className={subhead} color="textPrimary">
                     {formatEthPrice(asset.priceInfo.ETHPrice)} <Eth2Icon />
                   </Row>
-                  <Box as="span" color="textSecondary" className={bodySmall}>
-                    ${toSignificant(asset.priceInfo.USDPrice)}
-                  </Box>
+                  {USDPrice && (
+                    <Box as="span" color="textSecondary" className={bodySmall}>
+                      ${toSignificant(USDPrice)}
+                    </Box>
+                  )}
                 </Row>
-                {asset.sellorders?.[0].orderClosingDate ? <CountdownTimer sellOrder={asset.sellorders[0]} /> : null}
+                {(asset.sellorders?.[0] as Deprecated_SellOrder).orderClosingDate ||
+                (asset.sellorders?.[0] as SellOrder).endAt ? (
+                  <CountdownTimer sellOrder={asset.sellorders[0]} />
+                ) : null}
               </Column>
               <Box
                 as="button"
@@ -387,8 +408,11 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 boxShadow={{ hover: 'elevation' }}
                 onClick={() => {
                   if (isSelected) {
-                    removeAssetFromBag(asset)
-                  } else addAssetToBag(asset)
+                    removeAssetsFromBag([asset])
+                  } else {
+                    addAssetsToBag([asset])
+                    sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
+                  }
                   setSelected((x) => !x)
                 }}
               >
@@ -412,7 +436,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               tokenId={asset.tokenId}
               tokenType={asset.tokenType}
               blockchain="Ethereum"
-              metadataUrl={asset.externalLink}
+              metadataUrl={asset.metadataUrl}
               totalSupply={collection.totalSupply}
             />
           )}

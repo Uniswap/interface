@@ -44,7 +44,7 @@ const StatPrice = styled.span`
 const NoData = styled.div`
   color: ${({ theme }) => theme.textTertiary};
 `
-const Wrapper = styled.div`
+export const StatsWrapper = styled.div`
   gap: 16px;
   ${textFadeIn}
 `
@@ -84,7 +84,7 @@ export default function StatsSection(props: StatsSectionProps) {
   const { priceLow52W, priceHigh52W, TVL, volume24H } = props
   if (TVL || volume24H || priceLow52W || priceHigh52W) {
     return (
-      <Wrapper>
+      <StatsWrapper>
         <Header>
           <Trans>Stats</Trans>
         </Header>
@@ -110,7 +110,7 @@ export default function StatsSection(props: StatsSectionProps) {
             <Stat value={priceHigh52W} title={<Trans>52W high</Trans>} isPrice={true} />
           </StatPair>
         </TokenStatsSection>
-      </Wrapper>
+      </StatsWrapper>
     )
   } else {
     return <NoData>No stats available</NoData>

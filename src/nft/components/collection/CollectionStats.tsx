@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import { getDeltaArrow } from 'components/Tokens/TokenDetails/PriceChart'
+import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Marquee } from 'nft/components/layout/Marquee'
@@ -198,6 +199,10 @@ const CollectionName = ({
   )
 }
 
+const CollectionDescriptionLoading = () => (
+  <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading} />
+)
+
 const CollectionDescription = ({ description }: { description: string }) => {
   const [showReadMore, setShowReadMore] = useState(false)
   const [readMore, toggleReadMore] = useReducer((state) => !state, false)
@@ -218,7 +223,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   }, [descriptionRef, baseRef, isCollectionStatsLoading])
 
   return isCollectionStatsLoading ? (
-    <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading}></Box>
+    <CollectionDescriptionLoading />
   ) : (
     <Box ref={baseRef} marginTop={{ sm: '12', md: '16' }} style={{ maxWidth: '680px' }}>
       <Box
@@ -232,7 +237,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
         />
       </Box>
       <Box as="span" display={showReadMore ? 'inline' : 'none'} className={styles.readMore} onClick={toggleReadMore}>
-        Show {readMore ? 'less' : 'more'}
+        show {readMore ? 'less' : 'more'}
       </Box>
     </Box>
   )
@@ -249,25 +254,8 @@ const StatsItem = ({ children, label, isMobile }: { children: ReactNode; label: 
   )
 }
 
-const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
-  const uniqueOwnersPercentage = stats.stats
-    ? roundWholePercentage((stats.stats.num_owners / stats.stats.total_supply) * 100)
-    : 0
-  const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply) : 0
-  const listedPercentageStr =
-    stats.stats && stats.stats.total_listings > 0
-      ? roundWholePercentage((stats.stats.total_listings / stats.stats.total_supply) * 100)
-      : 0
-  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-
-  // round daily volume & floorPrice to 3 decimals or less
-  const totalVolumeStr = volumeFormatter(stats.stats?.total_volume)
-  const floorPriceStr = floorFormatter(stats.floorPrice)
-  const floorChangeStr =
-    stats.stats && stats.stats.one_day_floor_change ? Math.round(Math.abs(stats.stats.one_day_floor_change) * 100) : 0
-  const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_floor_change) : null
-
-  const statsLoadingSkeleton = new Array(5).fill(
+const statsLoadingSkeleton = (isMobile: boolean) =>
+  new Array(5).fill(
     <>
       <Box display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="baseline" gap="2" height="min">
         <div className={styles.statsLabelLoading} />
@@ -276,47 +264,100 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
     </>
   )
 
+const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
+  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
+  const uniqueOwnersPercentage =
+    stats.stats && stats.stats.total_supply
+      ? roundWholePercentage(((stats.stats.num_owners ?? 0) / stats.stats.total_supply) * 100)
+      : 0
+  const totalSupplyStr = stats.stats ? quantityFormatter(stats.stats.total_supply ?? 0) : 0
+  const listedPercentageStr =
+    stats.stats && stats.stats.total_supply
+      ? roundWholePercentage(((stats.stats.total_listings ?? 0) / stats.stats.total_supply) * 100)
+      : 0
+  const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
+
+  // round daily volume & floorPrice to 3 decimals or less
+  const totalVolumeStr = volumeFormatter(stats.stats?.total_volume ?? 0)
+  const floorPriceStr = floorFormatter(stats.stats?.floor_price ?? 0)
+  // graphQL formatted %age values out of 100, whereas v3 endpoint did a decimal between 0 & 1
+  // TODO: remove feature flag gated logic when graphql migration is complete
+  const floorChangeStr =
+    stats.stats && stats.stats.one_day_floor_change
+      ? Math.round(Math.abs(stats.stats.one_day_floor_change) * (isNftGraphQl ? 1 : 100))
+      : 0
+  const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_floor_change) : null
+
   return (
-    <Row gap={{ sm: '20', md: '60' }} {...props}>
-      {isCollectionStatsLoading && statsLoadingSkeleton}
-      {stats.floorPrice ? (
-        <StatsItem label="Global floor" isMobile={isMobile ?? false}>
-          {floorPriceStr} ETH
-        </StatsItem>
-      ) : null}
-      {stats.stats?.one_day_floor_change ? (
-        <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
-          <PercentChange>
-            {floorChangeStr}% {arrow}
-          </PercentChange>
-        </StatsItem>
-      ) : null}
-      {stats.stats?.total_volume ? (
-        <StatsItem label="Total volume" isMobile={isMobile ?? false}>
-          {totalVolumeStr} ETH
-        </StatsItem>
-      ) : null}
-      {totalSupplyStr ? (
-        <StatsItem label="Items" isMobile={isMobile ?? false}>
-          {totalSupplyStr}
-        </StatsItem>
-      ) : null}
-      {uniqueOwnersPercentage ? (
-        <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
-          {uniqueOwnersPercentage}%
-        </StatsItem>
-      ) : null}
-      {stats.stats?.total_volume ? (
-        <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
-          {totalVolumeStr} ETH
-        </StatsItem>
-      ) : null}
-      {stats.stats?.total_listings && listedPercentageStr > 0 ? (
-        <StatsItem label="Listed" isMobile={isMobile ?? false}>
-          {listedPercentageStr}%
-        </StatsItem>
-      ) : null}
+    <Row gap={{ sm: '36', md: '60' }} {...props}>
+      {isCollectionStatsLoading ? (
+        statsLoadingSkeleton(isMobile ?? false)
+      ) : (
+        <>
+          {stats.stats?.floor_price ? (
+            <StatsItem label="Global floor" isMobile={isMobile ?? false}>
+              {floorPriceStr} ETH
+            </StatsItem>
+          ) : null}
+          {stats.stats?.one_day_floor_change ? (
+            <StatsItem label="24-Hour Floor" isMobile={isMobile ?? false}>
+              <PercentChange>
+                {floorChangeStr}% {arrow}
+              </PercentChange>
+            </StatsItem>
+          ) : null}
+          {totalSupplyStr ? (
+            <StatsItem label="Items" isMobile={isMobile ?? false}>
+              {totalSupplyStr}
+            </StatsItem>
+          ) : null}
+          {uniqueOwnersPercentage ? (
+            <StatsItem label="Unique owners" isMobile={isMobile ?? false}>
+              {uniqueOwnersPercentage}%
+            </StatsItem>
+          ) : null}
+          {stats.stats?.total_volume ? (
+            <StatsItem label="Total Volume" isMobile={isMobile ?? false}>
+              {totalVolumeStr} ETH
+            </StatsItem>
+          ) : null}
+          {stats.stats?.total_listings && listedPercentageStr > 0 ? (
+            <StatsItem label="Listed" isMobile={isMobile ?? false}>
+              {listedPercentageStr}%
+            </StatsItem>
+          ) : null}
+        </>
+      )}
     </Row>
+  )
+}
+
+export const CollectionStatsLoading = ({ isMobile }: { isMobile: boolean }) => {
+  return (
+    <Column marginTop={isMobile ? '20' : '0'} position="relative" width="full">
+      <Box className={styles.collectionImageIsLoadingBackground} />
+      <Box className={styles.collectionImageIsLoading} />
+      <Box className={styles.statsText}>
+        <Box className={styles.nameTextLoading} />
+        {!isMobile && (
+          <>
+            <CollectionDescriptionLoading />
+            <Row gap={{ sm: '20', md: '60' }} marginTop="20">
+              {statsLoadingSkeleton(isMobile)}
+            </Row>
+          </>
+        )}
+      </Box>
+      {isMobile && (
+        <>
+          <Marquee>
+            <Row gap={{ sm: '20', md: '60' }} marginX="6" marginY="28">
+              {statsLoadingSkeleton(isMobile)}
+            </Row>
+          </Marquee>
+        </>
+      )}
+    </Column>
   )
 }
 
@@ -347,8 +388,8 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       <Box className={styles.statsText}>
         <CollectionName
           collectionStats={stats}
-          name={stats.name}
-          isVerified={stats.isVerified}
+          name={stats.name ?? ''}
+          isVerified={stats.isVerified ?? false}
           isMobile={isMobile}
           collectionSocialsIsOpen={collectionSocialsIsOpen}
           toggleCollectionSocials={toggleCollectionSocials}
@@ -356,7 +397,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
         {!isMobile && (
           <>
             {(stats.description || isCollectionStatsLoading) && (
-              <CollectionDescription description={stats.description} />
+              <CollectionDescription description={stats.description ?? ''} />
             )}
             <StatsRow stats={stats} marginTop="20" />
           </>

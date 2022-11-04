@@ -12,8 +12,8 @@ export const CollectionProfile = ({
 }: {
   isVerified?: boolean
   label: string
-  name: string
-  avatarUrl: string
+  name?: string
+  avatarUrl?: string
 } & BoxProps) => {
   return (
     <Row {...props}>

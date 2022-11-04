@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-10-11 02:57\n"
+"PO-Revision-Date: 2022-10-27 02:48\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -28,10 +28,6 @@ msgstr "$-"
 msgid "${0}"
 msgstr "${0}"
 
-#: src/components/swap/TradePrice.tsx
-msgid "(${0})"
-msgstr "(${0})"
-
 #: src/components/AddressInputPanel/index.tsx
 msgid "(View on Explorer)"
 msgstr "(在以太坊资源浏览器上查看)"
@@ -43,6 +39,10 @@ msgstr "(全部清除)"
 #: src/pages/Vote/Landing.tsx
 msgid "(edit)"
 msgstr "(编辑)"
+
+#: src/components/swap/TradePrice.tsx
+msgid "({0})"
+msgstr "({0})"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
@@ -182,7 +182,6 @@ msgid "Add more liquidity"
 msgstr "增加更多流动性"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
 msgstr "添加 {0}"
 
@@ -198,7 +197,6 @@ msgstr "添加{0}/{1} V3流动性"
 msgid "Added"
 msgstr "添加"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "已添加 {0}"
@@ -234,6 +232,11 @@ msgstr "允许 Uniswap 调用您的 {0}"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
 msgstr "已允许"
+
+#: src/constants/tokenSafety.tsx
+#: src/constants/tokenSafety.tsx
+msgid "Always conduct your own research before trading."
+msgstr "始终在交易前进行自己的研究。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -283,14 +286,6 @@ msgstr "批准中"
 msgid "Approving {0}"
 msgstr "正在批准 {0}"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Arbiscan"
-msgstr "Arbiscan"
-
-#: src/components/Header/NetworkSelector.tsx
-msgid "Arbitrum Bridge"
-msgstr "Arbitrum桥"
-
 #: src/components/DowntimeWarning/index.tsx
 msgid "Arbitrum is in Beta and may experience downtime. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
 msgstr "Arbitrum 处于 Beta 阶段，可能会遇到停机问题。在停机期间，您的仓位不会赚取手续费，也将无法移除流动性。<0>阅读更多。</0>"
@@ -319,7 +314,6 @@ msgstr "自动路由 API"
 msgid "Available to deposit: {0}"
 msgstr "可调用的数额：{0}"
 
-#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "返回钱包选择"
@@ -353,25 +347,9 @@ msgstr "最佳价格路由消耗的gas约为 {formattedGasPriceString}"
 msgid "Blocked Address"
 msgstr "封锁地址"
 
-#: src/components/Blocklist/index.tsx
-msgid "Blocked address"
-msgstr "已屏蔽地址"
-
-#: src/components/Header/NetworkSelector.tsx
-msgid "Blockscout"
-msgstr "块侦察"
-
-#: src/components/Header/NetworkSelector.tsx
-msgid "Bridge"
-msgstr "桥"
-
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "通过添加流动性，您将按您在流动池中所占比例赚取对应交易量的0.3%手续费。手续费将实时累加到流动池中，在您取回流动性时也将同时取回您赚取的手续费。"
-
-#: src/components/SearchModal/ImportList.tsx
-msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "添加此代币列表代表您信任其数据是正确的。任何人都可以创建代币列表，包括创建假冒实际列表的造假版本，以及自我声称代表了某项目的代币列表。"
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
@@ -393,11 +371,7 @@ msgstr "警告"
 msgid "Change"
 msgstr "更改"
 
-#: src/components/Header/index.tsx
-msgid "Charts"
-msgstr "图表"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
+#: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Check network status"
 msgstr "检查网络状态"
 
@@ -417,7 +391,6 @@ msgstr "领取"
 msgid "Claim <0/> for {0}"
 msgstr "为 {0} 领取 <0/>"
 
-#: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -461,10 +434,6 @@ msgstr "已领取！"
 msgid "Claiming"
 msgstr "领取中"
 
-#: src/components/Header/index.tsx
-msgid "Claiming UNI"
-msgstr "正在领取UNI"
-
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
@@ -479,7 +448,6 @@ msgid "Clear all"
 msgstr "全部清除"
 
 #: src/components/TokenSafety/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -545,7 +513,6 @@ msgstr "在您的钱包中确认此连接"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/ExecuteModal.tsx
@@ -562,7 +529,6 @@ msgstr "在钱包中确认交易"
 msgid "Connect"
 msgstr "连接"
 
-#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -598,10 +564,6 @@ msgstr "连接到钱包以查看您的流动资金。"
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with"
 msgstr "与"
-
-#: src/components/WalletModal/PendingView.tsx
-msgid "Connecting..."
-msgstr "正在连接..."
 
 #: src/components/Tokens/TokenDetails/AddressSection.tsx
 msgid "Contract address"
@@ -770,7 +732,6 @@ msgid "Discord"
 msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "关闭"
 
@@ -824,10 +785,6 @@ msgstr "输入地址来查看领取 UNI 代币的资质。如果地址有任何�
 msgid "Enter an amount"
 msgstr "输入数额"
 
-#: src/components/SearchModal/ManageLists.tsx
-msgid "Enter valid list location"
-msgstr "输入有效的代币列表源"
-
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
 msgstr "输入有效的代币合约地址"
@@ -839,19 +796,13 @@ msgstr "输入 {0} 数量"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "错误"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "连接错误"
-
-#: src/components/SearchModal/ManageLists.tsx
-msgid "Error importing list"
-msgstr "导入列表出错"
 
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimate may differ due to your wallet gas settings"
@@ -860,10 +811,6 @@ msgstr "由于您的钱包 gas 设置，估计值可能有差异"
 #: src/components/swap/GasEstimateBadge.tsx
 msgid "Estimated network fee"
 msgstr "预估网络费用"
-
-#: src/components/Header/NetworkSelector.tsx
-msgid "Etherscan"
-msgstr "Etherscan"
 
 #: src/components/vote/ExecuteModal.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -926,10 +873,6 @@ msgstr "查看 Uniswap 分析。"
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "无法从 Uniswap 界面切换网络。为了在 {0} 上使用 Uniswap，您必须更改钱包中的网络。"
 
-#: src/components/Tokens/TokenTable/FavoriteButton.tsx
-msgid "Favorites"
-msgstr "收藏夹"
-
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
 msgstr "功能标志"
@@ -978,7 +921,6 @@ msgstr "全范围仓位可能比集中仓位赚取更少的费用。在<0>此处
 msgid "Get support on Discord"
 msgstr "在Discord上寻求支持"
 
-#: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "帮助中心"
@@ -996,7 +938,6 @@ msgstr "隐藏"
 msgid "High Price Impact"
 msgstr "对兑换率有高度影响"
 
-#: src/components/SearchModal/ImportList.tsx
 #: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
@@ -1006,21 +947,11 @@ msgstr "我已知悉"
 msgid "If you believe this is an error, please send an email including your address to"
 msgstr "如果您认为这是一个错误，请将包含您的地址的电子邮件发送至"
 
-#: src/components/SearchModal/ImportList.tsx
-msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "如果您从这个代币列表中购买代币，您可能无法再将其售出。"
-
 #: src/components/SearchModal/BlockedToken.tsx
-#: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
-#: src/components/SearchModal/ManageLists.tsx
 msgid "Import"
 msgstr "导入"
-
-#: src/components/SearchModal/ImportList.tsx
-msgid "Import List"
-msgstr "导入代币列表"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
@@ -1029,10 +960,6 @@ msgstr "导入流动池"
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
 msgstr "导入 V2 流动池"
-
-#: src/components/SearchModal/ImportList.tsx
-msgid "Import at your own risk"
-msgstr "自行承担导入的风险"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "In range"
@@ -1053,6 +980,10 @@ msgstr "输入数额仅为估值。您最多会售出<0>{0} {1}</0> 否则将还
 #: src/components/WalletModal/InjectedOption.tsx
 msgid "Install MetaMask"
 msgstr "安装 MetaMask"
+
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Insufficient funds"
+msgstr "不充足的资金"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -1151,14 +1082,6 @@ msgstr "流动资金提供者奖励"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "流动资金提供者在所有交易中按其在流动池中的份额获得0.3%的手续费。手续费按实时累计方式添加到流动池中，可与流动资金一起赎回。"
 
-#: src/components/SearchModal/Manage.tsx
-msgid "Lists"
-msgstr "列表"
-
-#: src/components/SearchModal/ManageLists.tsx
-msgid "Loaded"
-msgstr "已加载"
-
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1169,6 +1092,10 @@ msgstr "已加载"
 msgid "Loading"
 msgstr "正在加载"
 
+#: src/components/Tokens/TokenDetails/PriceChart.tsx
+msgid "Loading chart data"
+msgstr "加载图表数据"
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "MAX"
 msgstr "最大值"
@@ -1177,7 +1104,6 @@ msgstr "最大值"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
-#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "管理"
@@ -1185,10 +1111,6 @@ msgstr "管理"
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
 msgstr "在奖励池中管理流动资金"
-
-#: src/components/SearchModal/CurrencySearch.tsx
-msgid "Manage Token Lists"
-msgstr "管理代币列表"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
@@ -1295,7 +1217,7 @@ msgstr "未找到名称"
 msgid "Network Fee"
 msgstr "网络费用"
 
-#: src/components/Header/ChainConnectivityWarning.tsx
+#: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "Network Warning"
 msgstr "网络警告"
 
@@ -1376,17 +1298,9 @@ msgstr "对费率感到满意的话，请点击“供应”键，到审查步骤
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "只有在 {0} 区块编号之前已自行委托或委托给另一个区块链地址的 UNI 代币才有资格投票。"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Optimism Bridge"
-msgstr "乐观桥"
-
 #: src/components/DowntimeWarning/index.tsx
 msgid "Optimism is in Beta and may experience downtime. Optimism expects planned downtime to upgrade the network in the near future. During downtime, your position will not earn fees and you will be unable to remove liquidity. <0>Read more.</0>"
 msgstr "Optimism 处于 Beta 阶段，可能会遇到停机问题。Optimism 计划近期内会停机升级网络。在停机期间，您的仓位不会赚取手续费，也将无法移除流动性。<0>阅读更多。</0>"
-
-#: src/components/Header/NetworkSelector.tsx
-msgid "Optimistic Etherscan"
-msgstr "Optimistic Etherscan"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1418,32 +1332,15 @@ msgstr "参与的流动池"
 msgid "Pending"
 msgstr "待办"
 
-#: src/components/SearchModal/ManageLists.tsx
-msgid "Please confirm you would like to remove this list by typing REMOVE"
-msgstr "请输入 REMOVE 以确认您要删除此列表"
-
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "请连接到以太坊 Layer 1"
-
-#: src/constants/tokenSafety.tsx
-msgid "Please do your own research before trading."
-msgstr "请在交易前进行自己的研究。"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "请输入单词 \"{confirmWord}\" 以启用专家模式。"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Polygon Bridge"
-msgstr "Polygon 连桥"
-
-#: src/components/Header/NetworkSelector.tsx
-msgid "Polygonscan"
-msgstr "Polygonscan"
-
 #: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/Header/index.tsx
 #: src/components/NavBar/index.tsx
 msgid "Pool"
 msgstr "流动池"
@@ -1488,10 +1385,6 @@ msgstr "流行的 NFT 合集"
 #: src/components/NavBar/SearchBarDropdown.tsx
 msgid "Popular tokens"
 msgstr "热门代币"
-
-#: src/components/Header/NetworkSelector.tsx
-msgid "Portal Bridge"
-msgstr "门桥"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1645,10 +1538,6 @@ msgstr "去除投票权委托"
 msgid "Remove Liquidity"
 msgstr "去除流动资金"
 
-#: src/components/SearchModal/ManageLists.tsx
-msgid "Remove list"
-msgstr "去除代币列表"
-
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Removed"
 msgstr "已移除"
@@ -1669,7 +1558,6 @@ msgstr "移除 {0} {1} 和 {2} {3}"
 msgid "Request Features"
 msgstr "功能建议"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1704,10 +1592,6 @@ msgstr "选择代币"
 msgid "Select a token to find your v2 liquidity."
 msgstr "选择代币以查找您的 v2 流动资金。"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Select a {0}network"
-msgstr "选择 {0}网络"
-
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "选择一个操作。"
@@ -1737,6 +1621,10 @@ msgstr "设置兑换率范围"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
 msgstr "设置起始兑换率"
+
+#: src/components/Settings/index.tsx
+msgid "Settings"
+msgstr "设置"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
@@ -1780,6 +1668,10 @@ msgstr "有些代币无法通过此界面使用，因为它们可能无法很好
 msgid "Something went wrong"
 msgstr "出错了"
 
+#: src/nft/components/bag/BagFooter.tsx
+msgid "Something went wrong. Please try again."
+msgstr "出问题了。请再试一次。"
+
 #: src/components/Tokens/TokensBanner.tsx
 msgid "Sort and filter assets across networks on the new Tokens page."
 msgstr "在新的令牌页面上跨网络对资产进行排序和过滤。"
@@ -1821,7 +1713,6 @@ msgid "Supplying {0} {1} and {2} {3}"
 msgstr "提供 {0} {1} 和 {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
-#: src/components/Header/index.tsx
 #: src/components/NavBar/index.tsx
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 #: src/components/swap/SwapHeader.tsx
@@ -1914,7 +1805,6 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "出于风险和合规性原因，该应用程序会安全地收集您的钱包地址并与 TRM Labs Inc. 共享。"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "连接尝试失败。请单击重试并按照步骤在您的钱包中连接。"
 
@@ -1922,7 +1812,7 @@ msgstr "连接尝试失败。请单击重试并按照步骤在您的钱包中连
 msgid "The cost of sending this transaction is more than half of the value of the input amount."
 msgstr "发送此交易的成本是输入金额价值的一半以上。"
 
-#: src/components/Header/Polling.tsx
+#: src/components/Polling/index.tsx
 msgid "The current fast gas amount for sending a transaction on L1. Gas fees are paid in Ethereum's native currency Ether (ETH) and denominated in GWEI."
 msgstr "当前用于在 L1 上快速发送交易的 gas 价。 Gas 费用以以太坊的本位币以太币 (ETH) 支付，并以 GWEI 计价。"
 
@@ -1951,7 +1841,7 @@ msgstr "市场兑换率超出您指定的范围。将只注入单项代币。"
 msgid "The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert."
 msgstr "您保证收到的最低金额。如果价格进一步下滑，您的交易将恢复。"
 
-#: src/components/Header/Polling.tsx
+#: src/components/Polling/index.tsx
 msgid "The most recent block number on this network. Prices update on every block."
 msgstr "此网络上的最新区块编号。兑换率会每区块都更新。"
 
@@ -2042,17 +1932,15 @@ msgid "To (at least)"
 msgstr "兑换到(至少数额)"
 
 #: src/components/Tokens/TokenTable/TokenRow.tsx
-msgid "Token Name"
+msgid "Token name"
 msgstr "令牌名称"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
 msgstr "不支持该代币"
 
-#: src/components/Header/index.tsx
 #: src/components/NavBar/SearchBarDropdown.tsx
 #: src/components/NavBar/index.tsx
-#: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "代币"
 
@@ -2060,7 +1948,6 @@ msgstr "代币"
 msgid "Top pools"
 msgstr "顶级流动池"
 
-#: src/pages/Tokens/index.tsx
 #: src/pages/Tokens/index.tsx
 msgid "Top tokens on Uniswap"
 msgstr "Uniswap 上的热门代币"
@@ -2085,7 +1972,6 @@ msgstr "交易路由"
 msgid "Transaction Settings"
 msgstr "交易设置"
 
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -2122,7 +2008,6 @@ msgstr "交易"
 msgid "Transfer Token"
 msgstr "代币转账"
 
-#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "再试一次"
@@ -2252,10 +2137,6 @@ msgstr "展开"
 msgid "Update Delegation"
 msgstr "更新投票权委托"
 
-#: src/components/SearchModal/ManageLists.tsx
-msgid "Update list"
-msgstr "更新代币列表"
-
 #: src/components/Settings/index.tsx
 msgid "Use the Uniswap Labs API to get faster quotes."
 msgstr "使用 Uniswap Labs API 获得更快的报价。"
@@ -2285,10 +2166,6 @@ msgstr "查看已累积手续费和数据分析<0>↗</0>"
 msgid "View and sell NFTs"
 msgstr "查看和出售 NFT"
 
-#: src/components/SearchModal/ManageLists.tsx
-msgid "View list"
-msgstr "查看代币列表"
-
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "View more analytics"
 msgstr "查看更多分析"
@@ -2299,7 +2176,6 @@ msgid "View on Etherscan"
 msgstr "在 Etherscan 上查看"
 
 #: src/components/AccountDetails/index.tsx
-#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
 msgstr "在以太坊资源浏览器上查看"
@@ -2316,10 +2192,6 @@ msgstr "在以太坊资源浏览器上查看交易"
 #: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame."
 msgstr "交易量是在选定时间范围内在 Uniswap v3 上交易的资产数量。"
-
-#: src/components/Header/index.tsx
-msgid "Vote"
-msgstr "投票"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
@@ -2383,10 +2255,6 @@ msgstr "投票大约结束于 {0}"
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting starts approximately {0}"
 msgstr "投票大约于 {0} 开始"
-
-#: src/components/TransactionConfirmationModal/index.tsx
-msgid "Waiting For Confirmation"
-msgstr "等待确认"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting for confirmation"
@@ -2494,11 +2362,7 @@ msgstr "您没有足够的票数来提交提案"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "您在此流动池中还未有流动资金。"
 
-#: src/components/Tokens/TokenTable/TokenTable.tsx
-msgid "You have no favorited tokens"
-msgstr "您没有收藏的代币"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
+#: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection."
 msgstr "您的网络连接可能断了。"
 
@@ -2631,7 +2495,6 @@ msgid "Your unclaimed UNI"
 msgstr "您未领取的 UNI 代币"
 
 #: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
-#: src/components/Tokens/TokenDetails/MobileBalanceSummaryFooter.tsx
 msgid "Your {0} balance"
 msgstr "您的 {0} 余额"
 
@@ -2670,21 +2533,13 @@ msgstr "为了"
 msgid "for {0}"
 msgstr "为 {0}"
 
-#: src/components/Header/Polling.tsx
+#: src/components/Polling/index.tsx
 msgid "gwei"
 msgstr "gwei"
 
-#: src/components/Web3Status/index.tsx
-msgid "has socks emoji"
-msgstr "有 socks 表情包"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
+#: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "here."
 msgstr "这里。"
-
-#: src/components/SearchModal/ManageLists.tsx
-msgid "https:// or ipfs:// or ENS name"
-msgstr "https:// 或 ipfs:// 或 ENS 名"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -2711,8 +2566,12 @@ msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {导入令牌} other {导入代币}}"
 
 #: src/constants/tokenSafety.tsx
-msgid "{0, plural, =1 {This token isn't verified.} other {These tokens aren't verified.}}"
-msgstr "{0, plural, =1 {此令牌未经过验证。} other {这些令牌未经验证。}}"
+msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.} other {These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.}}"
+msgstr "{0, plural, =1 {该代币不在美国领先的中心化交易所交易，也不经常在 Uniswap 上交换。} other {这些代币不在美国领先的中心化交易所交易，也不经常在 Uniswap 上交换。}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't traded on leading U.S. centralized exchanges.} other {These tokens aren't traded on leading U.S. centralized exchanges.}}"
+msgstr "{0, plural, =1 {该代币不在美国领先的中心化交易所交易。} other {这些代币不在美国领先的中心化交易所交易。}}"
 
 #: src/constants/tokenSafety.tsx
 msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
@@ -2720,7 +2579,6 @@ msgstr "{0, plural, =1 {您不能使用 Uniswap 应用程序交易此代币。} 
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
-#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 
@@ -2796,23 +2654,10 @@ msgstr "{0} 票"
 msgid "{0} per {1}"
 msgstr "{0} 每 {1}"
 
-#: src/components/SearchModal/ImportList.tsx
-#: src/components/SearchModal/ManageLists.tsx
-msgid "{0} tokens"
-msgstr "{0} 代币"
-
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "{0} {1} 兑换率："
-
-#: src/components/Header/index.tsx
-msgid "{0} {nativeCurrencySymbol}"
-msgstr "{0} {nativeCurrencySymbol}"
-
-#: src/components/SearchModal/CurrencyList/index.tsx
-msgid "{0} • Added by user"
-msgstr "{0} • 由用户添加"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/FeeSelector/FeeOption.tsx
@@ -2858,11 +2703,7 @@ msgstr "{SOCKS_AMOUNT} UNI 代币"
 msgid "{USER_AMOUNT} UNI"
 msgstr "{USER_AMOUNT} UNI 代币"
 
-#: src/components/SearchModal/ManageLists.tsx
-msgid "{activeTokensOnThisChain} tokens"
-msgstr "{activeTokensOnThisChain} 代币"
-
-#: src/components/Header/ChainConnectivityWarning.tsx
+#: src/components/Polling/ChainConnectivityWarning.tsx
 msgid "{label} might be down right now, or you may have lost your network connection."
 msgstr "{label} 现在可能已关闭，或者您可能已丢失网络连接。"
 

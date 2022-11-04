@@ -1,8 +1,12 @@
+import { ElementName, Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useIsCollectionLoading } from 'nft/hooks'
 
 import * as styles from './ActivitySwitcher.css'
+
+export const ActivitySwitcherLoading = new Array(2).fill(<div className={styles.styledLoading} />)
 
 export const ActivitySwitcher = ({
   showActivity,
@@ -12,12 +16,11 @@ export const ActivitySwitcher = ({
   toggleActivity: () => void
 }) => {
   const isLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-  const loadingVals = new Array(2).fill(<div className={styles.styledLoading} />)
 
   return (
     <Row gap="24" marginBottom="28">
       {isLoading ? (
-        loadingVals
+        ActivitySwitcherLoading
       ) : (
         <>
           <Box
@@ -27,13 +30,19 @@ export const ActivitySwitcher = ({
           >
             Items
           </Box>
-          <Box
-            as="button"
-            className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
-            onClick={() => !showActivity && toggleActivity()}
+          <TraceEvent
+            events={[Event.onClick]}
+            element={ElementName.NFT_ACTIVITY_TAB}
+            name={EventName.NFT_ACTIVITY_SELECTED}
           >
-            Activity
-          </Box>
+            <Box
+              as="button"
+              className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
+              onClick={() => !showActivity && toggleActivity()}
+            >
+              Activity
+            </Box>
+          </TraceEvent>
         </>
       )}
     </Row>

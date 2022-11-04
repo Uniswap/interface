@@ -10,7 +10,7 @@ export const bagContainer = style([
     right: '16',
     background: 'backgroundModule',
     padding: '8',
-    zIndex: 'fixed',
+    zIndex: 'dropdown',
     borderRadius: '8',
     justifyContent: 'space-between',
   }),
