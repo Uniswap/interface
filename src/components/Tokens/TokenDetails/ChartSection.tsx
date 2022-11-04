@@ -7,9 +7,11 @@ import { TokenQueryData } from 'graphql/data/Token'
 import { PriceDurations } from 'graphql/data/TokenPrice'
 import { TopToken } from 'graphql/data/TopTokens'
 import { CHAIN_NAME_TO_CHAIN_ID } from 'graphql/data/util'
+import { getColorFromUriPath } from 'hooks/useColor'
 import { useAtomValue } from 'jotai/utils'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
-import styled from 'styled-components/macro'
+import { useEffect, useState } from 'react'
+import styled, { useTheme } from 'styled-components/macro'
 import { textFadeIn } from 'theme/animations'
 
 import { filterTimeAtom } from '../state'
@@ -82,6 +84,16 @@ export default function ChartSection({
 
   const logoSrc = useTokenLogoURI(token, nativeCurrency)
 
+  const theme = useTheme()
+  const [color, setColor] = useState(theme.accentAction)
+
+  useEffect(() => {
+    logoSrc &&
+      getColorFromUriPath(logoSrc).then((color) => {
+        color && setColor(color)
+      })
+  }, [logoSrc])
+
   return (
     <ChartHeader>
       <TokenInfoContainer>
@@ -104,7 +116,9 @@ export default function ChartSection({
       </TokenInfoContainer>
       <ChartContainer>
         <ParentSize>
-          {({ width }) => <PriceChart prices={prices ? prices?.[timePeriod] : null} width={width} height={436} />}
+          {({ width }) => (
+            <PriceChart color={color} prices={prices ? prices?.[timePeriod] : null} width={width} height={436} />
+          )}
         </ParentSize>
       </ChartContainer>
     </ChartHeader>

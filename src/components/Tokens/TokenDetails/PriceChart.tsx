@@ -131,12 +131,13 @@ const margin = { top: 100, bottom: 48, crosshair: 72 }
 const timeOptionsHeight = 44
 
 interface PriceChartProps {
+  color: string
   width: number
   height: number
   prices: PricePoint[] | undefined | null
 }
 
-export function PriceChart({ width, height, prices }: PriceChartProps) {
+export function PriceChart({ color, width, height, prices }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
@@ -295,6 +296,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
         <svg width={width} height={graphHeight} style={{ minWidth: '100%' }}>
           <AnimatedInLineChart
             data={prices}
+            color={color}
             getX={getX}
             getY={getY}
             marginTop={margin.top}
@@ -341,7 +343,7 @@ export function PriceChart({ width, height, prices }: PriceChartProps) {
                 left={crosshair}
                 top={rdScale(displayPrice.value) + margin.top}
                 size={50}
-                fill={theme.accentAction}
+                fill={color}
                 stroke={theme.backgroundOutline}
                 strokeWidth={0.5}
               />

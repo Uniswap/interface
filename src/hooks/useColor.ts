@@ -43,7 +43,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   return null
 }
 
-async function getColorFromUriPath(uri: string): Promise<string | null> {
+export async function getColorFromUriPath(uri: string): Promise<string | null> {
   const formattedPath = uriToHttp(uri)[0]
 
   let palette
