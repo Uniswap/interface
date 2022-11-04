@@ -88,7 +88,7 @@ export interface GenieAsset {
   name?: string
   priceInfo: PriceInfo
   susFlag?: boolean
-  sellorders?: Deprecated_SellOrder[] | SellOrder[] // TODO remove OldSellOrder when full migration to GraphQL is complete
+  sellorders?: Deprecated_SellOrder[] | SellOrder[] // TODO remove Deprecated_SellOrder when full migration to GraphQL is complete
   smallImageUrl?: string
   tokenId: string
   tokenType: TokenType
