@@ -43,17 +43,17 @@ const IconWrapper = styled.button`
 `
 interface BagHeaderProps {
   numberOfAssets: number
-  toggleBag: () => void
+  closeBag: () => void
   resetFlow: () => void
   isProfilePage: boolean
 }
 
-export const BagHeader = ({ numberOfAssets, toggleBag, resetFlow, isProfilePage }: BagHeaderProps) => {
+export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }: BagHeaderProps) => {
   return (
     <Column gap="4" paddingX="32" marginBottom="20">
       <Row className={styles.header}>
         <ThemedText.HeadlineSmall>{isProfilePage ? 'Sell NFTs' : 'My bag'}</ThemedText.HeadlineSmall>
-        <IconWrapper onClick={toggleBag}>
+        <IconWrapper onClick={closeBag}>
           <BagCloseIcon />
         </IconWrapper>
       </Row>

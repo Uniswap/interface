@@ -26,7 +26,7 @@ import {
   sortUpdatedAssets,
 } from 'nft/utils'
 import { combineBuyItemsWithTxRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
@@ -74,6 +74,7 @@ const Bag = () => {
   const toggleBag = useBag((s) => s.toggleBag)
   const setTotalEthPrice = useBag((s) => s.setTotalEthPrice)
   const setTotalUsdPrice = useBag((s) => s.setTotalUsdPrice)
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
 
   const { pathname } = useLocation()
   const isProfilePage = pathname.startsWith('/profile')
@@ -136,10 +137,12 @@ const Bag = () => {
       setLocked(false)
       setModalIsOpen(false)
       setTransactionResponse(purchaseResponse)
-      bagExpanded && toggleBag()
+      setBagExpanded({ bagExpanded: false })
       reset()
     }
   }
+
+  const handleCloseBag = useCallback(() => setBagExpanded({ bagExpanded: false, manualClose: true }), [setBagExpanded])
 
   const fetchAssets = async () => {
     const itemsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)
@@ -210,7 +213,7 @@ const Bag = () => {
   }, [bagIsLocked, isOpen])
 
   useEffect(() => {
-    bagExpanded && toggleBag()
+    setBagExpanded({ bagExpanded: false })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
@@ -258,7 +261,7 @@ const Bag = () => {
               <>
                 <BagHeader
                   numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
-                  toggleBag={toggleBag}
+                  closeBag={handleCloseBag}
                   resetFlow={isProfilePage ? resetSellAssets : reset}
                   isProfilePage={isProfilePage}
                 />
