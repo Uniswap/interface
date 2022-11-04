@@ -90,12 +90,14 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
   const traits = {} as Record<string, Trait[]>
   if (queryCollection?.traits) {
     queryCollection?.traits.forEach((trait) => {
-      trait.values?.map((value) => {
-        return {
-          trait_type: trait.name,
-          trait_value: value,
-        } as Trait
-      })
+      if (trait.name && trait.values) {
+        traits[trait.name] = trait.values.map((value) => {
+          return {
+            trait_type: trait.name,
+            trait_value: value,
+          } as Trait
+        })
+      }
     })
   }
   return {
