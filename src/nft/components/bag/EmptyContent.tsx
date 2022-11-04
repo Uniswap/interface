@@ -15,7 +15,7 @@ const StyledColumn = styled(Column)<{ isProfilePage?: boolean }>`
 
 const EmptyState = () => {
   const { pathname } = useLocation()
-  const isProfilePage = pathname.startsWith('/profile')
+  const isProfilePage = pathname.startsWith('/nfts/profile')
 
   return (
     <StyledColumn isProfilePage={isProfilePage}>
