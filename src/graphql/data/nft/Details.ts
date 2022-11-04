@@ -1,6 +1,5 @@
 import { parseEther } from '@ethersproject/units'
 import graphql from 'babel-plugin-relay/macro'
-import { Trait } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType } from 'nft/types'
 import { useLazyLoadQuery } from 'react-relay'
 
@@ -141,14 +140,14 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
             })
           : undefined,
       },
-      owner: asset?.ownerAddress ?? undefined,
+      owner: { address: asset?.ownerAddress ?? '' },
       creator: {
-        profile_img_url: asset?.creator?.profileImage?.url,
-        address: asset?.creator?.address,
+        profile_img_url: asset?.creator?.profileImage?.url ?? '',
+        address: asset?.creator?.address ?? '',
       },
-      metadataUrl: asset?.metadataUrl ?? undefined,
+      metadataUrl: asset?.metadataUrl ?? '',
       traits: asset?.traits?.map((trait) => {
-        return { trait_type: trait.name ?? undefined, trait_value: trait.value ?? undefined } as Trait
+        return { trait_type: trait.name ?? '', trait_value: trait.value ?? '' }
       }),
     },
     {

@@ -1,6 +1,5 @@
 import graphql from 'babel-plugin-relay/macro'
-import { Trait } from 'nft/hooks/useCollectionFilters'
-import { GenieCollection } from 'nft/types'
+import { GenieCollection, Trait } from 'nft/types'
 import { useLazyLoadQuery } from 'react-relay'
 
 import { CollectionQuery } from './__generated__/CollectionQuery.graphql'
@@ -90,12 +89,14 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
   const traits = {} as Record<string, Trait[]>
   if (queryCollection?.traits) {
     queryCollection?.traits.forEach((trait) => {
-      trait.values?.map((value) => {
-        return {
-          trait_type: trait.name,
-          trait_value: value,
-        } as Trait
-      })
+      if (trait.name && trait.values) {
+        traits[trait.name] = trait.values.map((value) => {
+          return {
+            trait_type: trait.name,
+            trait_value: value,
+          } as Trait
+        })
+      }
     })
   }
   return {
@@ -120,8 +121,8 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
       : {},
     traits,
     // marketplaceCount: { marketplace: string; count: number }[], // TODO add when backend supports
-    imageUrl: queryCollection?.image?.url,
-    twitter: queryCollection?.twitterName ?? undefined,
+    imageUrl: queryCollection?.image?.url ?? '',
+    twitterUrl: queryCollection?.twitterName ?? '',
     instagram: queryCollection?.instagramName ?? undefined,
     discordUrl: queryCollection?.discordUrl ?? undefined,
     externalUrl: queryCollection?.homepageUrl ?? undefined,

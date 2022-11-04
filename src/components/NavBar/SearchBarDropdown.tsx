@@ -134,6 +134,7 @@ export const SearchBarDropdown = ({
               stats: {
                 total_supply: collection.totalSupply,
                 one_day_change: collection.floorChange,
+                floor_price: formatEthPrice(collection.floor?.toString()),
               },
             }))
             .slice(0, isNFTPage ? 3 : 2)

@@ -13,13 +13,15 @@ export const CollectionSearch = () => {
   return (
     <Box
       as="input"
+      flex="1"
       borderColor={{ default: 'backgroundOutline', focus: 'genieBlue' }}
       borderWidth="1.5px"
       borderStyle="solid"
       borderRadius="12"
       padding="12"
       backgroundColor="backgroundSurface"
-      width="332"
+      maxWidth="332"
+      minWidth="0"
       fontSize="16"
       height="44"
       color={{ placeholder: 'textTertiary', default: 'textPrimary' }}

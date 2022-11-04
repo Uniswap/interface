@@ -1,5 +1,3 @@
-import { Trait } from 'nft/hooks/useCollectionFilters'
-
 import { Deprecated_SellOrder, SellOrder } from '../sell'
 
 export interface OpenSeaCollection {
@@ -43,13 +41,6 @@ export interface OpenSeaAsset {
   collection?: OpenSeaCollection
 }
 
-interface OpenSeaUser {
-  user?: null
-  profile_img_url?: string
-  address?: string
-  config?: string
-}
-
 export enum TokenType {
   ERC20 = 'ERC20',
   ERC721 = 'ERC721',
@@ -77,6 +68,14 @@ export interface Rarity {
   providers?: { provider: string; rank?: number; url?: string; score?: number }[]
 }
 
+export interface Trait {
+  trait_type: string
+  trait_value: string
+  display_type?: any
+  max_value?: any
+  trait_count?: number
+  order?: any
+}
 export interface GenieAsset {
   id?: string // This would be a random id created and assigned by front end
   address: string
@@ -96,9 +95,14 @@ export interface GenieAsset {
   totalCount?: number // The totalCount from the query to /assets
   collectionIsVerified?: boolean
   rarity?: Rarity
-  owner?: string
-  creator: OpenSeaUser
-  metadataUrl?: string
+  owner: {
+    address: string
+  }
+  metadataUrl: string
+  creator: {
+    address: string
+    profile_img_url: string
+  }
   traits?: Trait[]
 }
 
@@ -122,8 +126,8 @@ export interface GenieCollection {
   }
   traits?: Record<string, Trait[]>
   marketplaceCount?: { marketplace: string; count: number }[]
-  imageUrl?: string
-  twitter?: string
+  imageUrl: string
+  twitterUrl?: string
   instagram?: string
   discordUrl?: string
   externalUrl?: string

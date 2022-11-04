@@ -5,7 +5,7 @@ import { useTrace } from 'analytics/Trace'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, Markets, UniformHeight } from 'nft/types'
 import { formatWeiToDecimal, isAudio, isVideo, rarityProviderLogo } from 'nft/utils'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import * as Card from './Card'
 
@@ -34,11 +34,12 @@ export const CollectionAsset = ({
   setCurrentTokenPlayingMedia,
   rarityVerified,
 }: CollectionAssetProps) => {
+  const bagManuallyClosed = useBag((state) => state.bagManuallyClosed)
   const addAssetsToBag = useBag((state) => state.addAssetsToBag)
   const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
   const itemsInBag = useBag((state) => state.itemsInBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
-  const toggleBag = useBag((state) => state.toggleBag)
+  const setBagExpanded = useBag((state) => state.setBagExpanded)
   const trace = useTrace({ page: PageName.NFT_COLLECTION_PAGE })
 
   const { quantity, isSelected } = useMemo(() => {
@@ -80,25 +81,29 @@ export const CollectionAsset = ({
     }
   }, [asset])
 
-  const eventProperties = {
-    collection_address: asset.address,
-    token_id: asset.tokenId,
-    token_type: asset.tokenType,
-    ...trace,
-  }
+  const handleAddAssetToBag = useCallback(() => {
+    addAssetsToBag([asset])
+    if (!bagExpanded && !isMobile && !bagManuallyClosed) {
+      setBagExpanded({ bagExpanded: true })
+    }
+    sendAnalyticsEvent(EventName.NFT_BUY_ADDED, {
+      collection_address: asset.address,
+      token_id: asset.tokenId,
+      token_type: asset.tokenType,
+      ...trace,
+    })
+  }, [addAssetsToBag, asset, bagExpanded, bagManuallyClosed, isMobile, setBagExpanded, trace])
+
+  const handleRemoveAssetFromBag = useCallback(() => {
+    removeAssetsFromBag([asset])
+  }, [asset, removeAssetsFromBag])
 
   return (
     <Card.Container
       asset={asset}
       selected={isSelected}
-      addAssetToBag={() => {
-        addAssetsToBag([asset])
-        !bagExpanded && !isMobile && toggleBag()
-        sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
-      }}
-      removeAssetFromBag={() => {
-        removeAssetsFromBag([asset])
-      }}
+      addAssetToBag={handleAddAssetToBag}
+      removeAssetFromBag={handleRemoveAssetFromBag}
     >
       <Card.ImageContainer>
         {asset.tokenType === 'ERC1155' && quantity > 0 && <Card.Erc1155Controls quantity={quantity.toString()} />}

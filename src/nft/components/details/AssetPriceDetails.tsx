@@ -1,14 +1,14 @@
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, PageName } from 'analytics/constants'
-import { useTrace } from 'analytics/Trace'
+import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
 import { CollectionInfoForAsset, Deprecated_SellOrder, GenieAsset, SellOrder, TokenType } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
+import { shortenAddress } from 'nft/utils/address'
 import { useMemo } from 'react'
+import { Upload } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 interface AssetPriceDetailsProps {
@@ -16,8 +16,40 @@ interface AssetPriceDetailsProps {
   collection: CollectionInfoForAsset
 }
 
+const hoverState = css`
+  :hover::after {
+    border-radius: 12px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.stateOverlayHover};
+    z-index: 0;
+  }
+
+  :active::after {
+    border-radius: 12px;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: ${({ theme }) => theme.stateOverlayPressed};
+    z-index: 0;
+  }
+`
+
 const Container = styled.div`
-  margin-left: 86px;
+  width: 100%;
+
+  @media (min-width: 960px) {
+    position: fixed;
+    width: 360px;
+    margin-top: -6px;
+  }
 `
 
 const BestPriceContainer = styled.div`
@@ -28,7 +60,6 @@ const BestPriceContainer = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
-  width: 320px;
 `
 
 const HeaderRow = styled.div`
@@ -59,11 +90,17 @@ const BuyNowButton = styled.div<{ assetInBag: boolean; margin: boolean; useAccen
   margin-top: ${({ margin }) => (margin ? '12px' : '0px')};
   text-align: center;
   cursor: pointer;
+
+  ${hoverState}
+`
+
+const BuyNowButtonContainer = styled.div`
+  position: relative;
 `
 
 const Erc1155BuyNowButton = styled.div`
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   width: 100%;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
@@ -73,6 +110,9 @@ const Erc1155BuyNowButton = styled.div`
   cursor: pointer;
   justify-content: space-between;
   overflow-x: hidden;
+`
+const Tertiary = styled(ThemedText.BodySecondary)`
+  color: ${({ theme }) => theme.textTertiary};
 `
 
 const Erc1155BuyNowText = styled.div`
@@ -88,10 +128,30 @@ const Erc1155ChangeButton = styled(Erc1155BuyNowText)<{ remove: boolean }>`
   color: ${({ theme, remove }) => (remove ? theme.accentFailure : theme.accentAction)};
   cursor: pointer;
 
-  :hover {
-    background-color: ${({ theme, remove }) => (remove ? theme.accentFailure : theme.accentAction)};
-    color: ${({ theme }) => theme.textPrimary};
+  ${hoverState}
+
+  &:hover::after {
+    border-radius: 0px;
   }
+`
+
+const UploadLink = styled.a`
+  color: ${({ theme }) => theme.textSecondary};
+  cursor: pointer;
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `opacity ${duration.medium} ${timing.ease}`};
 `
 
 const NotForSaleContainer = styled.div`
@@ -111,10 +171,40 @@ const DiscoveryContainer = styled.div`
   align-items: center;
 `
 
+const OwnerText = styled.a`
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.textSecondary};
+  text-decoration: none;
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `opacity ${duration.medium} ${timing.ease}`};
+`
+
+const OwnerInformationContainer = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
+  margin-bottom: 20px;
+`
+
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = listing
-    ? new Date((listing as Deprecated_SellOrder).orderClosingDate ?? (listing as SellOrder).endAt)
+  const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
+  const expirationDate = cheapestOrder
+    ? new Date((cheapestOrder as Deprecated_SellOrder).orderClosingDate ?? (cheapestOrder as SellOrder).endAt)
     : undefined
   const USDPrice = useUsdPrice(asset)
 
@@ -190,26 +280,27 @@ export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset 
   )
 }
 
+const SubHeader = styled(ThemedText.SubHeader)`
+  color: ${({ theme }) => theme.textPrimary};
+`
+
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
   const { account } = useWeb3React()
+
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
   const expirationDate = cheapestOrder
     ? new Date((cheapestOrder as Deprecated_SellOrder).orderClosingDate ?? (cheapestOrder as SellOrder).endAt)
     : undefined
+
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
+  const toggleBag = useBag((s) => s.toggleBag)
+  const bagExpanded = useBag((s) => s.bagExpanded)
 
   const USDPrice = useUsdPrice(asset)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
-
-  const trace = useTrace({ page: PageName.NFT_DETAILS_PAGE })
-  const eventProperties = {
-    collection_address: asset.address,
-    token_id: asset.tokenId,
-    token_type: asset.tokenType,
-    ...trace,
-  }
+  const [, setCopied] = useCopyClipboard()
 
   const { quantity, assetInBag } = useMemo(() => {
     return {
@@ -222,8 +313,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     }
   }, [asset, itemsInBag])
 
-  const isOwner =
-    asset.owner && typeof asset.owner === 'string' ? account?.toLowerCase() === asset.owner.toLowerCase() : false
+  const isOwner = asset.owner ? account?.toLowerCase() === asset.owner?.address?.toLowerCase() : false
 
   if (isOwner) {
     return <OwnerContainer asset={asset} />
@@ -231,6 +321,28 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
 
   return (
     <Container>
+      <OwnerInformationContainer>
+        <OwnerText
+          target="_blank"
+          href={`https://etherscan.io/address/${asset.owner.address}`}
+          rel="noopener noreferrer"
+        >
+          {asset.tokenType === 'ERC1155' ? (
+            ''
+          ) : (
+            <span> Seller: {isOwner ? 'you' : asset.owner.address && shortenAddress(asset.owner.address, 2, 4)}</span>
+          )}
+        </OwnerText>
+        <UploadLink
+          onClick={() => {
+            setCopied(window.location.href)
+          }}
+          target="_blank"
+        >
+          <Upload size={20} strokeWidth={2} />
+        </UploadLink>
+      </OwnerInformationContainer>
+
       {cheapestOrder && asset.priceInfo ? (
         <BestPriceContainer>
           <HeaderRow>
@@ -241,7 +353,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           </HeaderRow>
           <PriceRow>
             <ThemedText.MediumHeader fontSize={'28px'} lineHeight={'36px'}>
-              {formatEthPrice(asset.priceInfo.ETHPrice)}
+              {formatEthPrice(asset.priceInfo.ETHPrice)} ETH
             </ThemedText.MediumHeader>
             {USDPrice && (
               <ThemedText.BodySecondary lineHeight={'24px'}>
@@ -249,34 +361,48 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               </ThemedText.BodySecondary>
             )}
           </PriceRow>
-          {expirationDate && (
-            <ThemedText.BodySecondary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</ThemedText.BodySecondary>
-          )}
-          {!isErc1555 || !assetInBag ? (
-            <BuyNowButton
-              assetInBag={assetInBag}
-              margin={true}
-              useAccentColor={true}
-              onClick={() => {
-                assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
-                !assetInBag && sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
-              }}
-            >
-              <ThemedText.SubHeader lineHeight={'20px'}>{assetInBag ? 'Remove' : 'Buy Now'}</ThemedText.SubHeader>
-            </BuyNowButton>
-          ) : (
-            <Erc1155BuyNowButton>
-              <Erc1155ChangeButton remove={true} onClick={() => removeAssetsFromBag([asset])}>
-                <MinusIcon width="20px" height="20px" />
-              </Erc1155ChangeButton>
-              <Erc1155BuyNowText>
-                <ThemedText.SubHeader lineHeight={'20px'}>{quantity}</ThemedText.SubHeader>
-              </Erc1155BuyNowText>
-              <Erc1155ChangeButton remove={false} onClick={() => addAssetsToBag([asset])}>
-                <PlusIcon width="20px" height="20px" />
-              </Erc1155ChangeButton>
-            </Erc1155BuyNowButton>
-          )}
+          {expirationDate && <Tertiary fontSize={'14px'}>Sale ends: {timeLeft(expirationDate)}</Tertiary>}
+          <div>
+            {!isErc1555 || !assetInBag ? (
+              <BuyNowButtonContainer>
+                <BuyNowButton
+                  assetInBag={assetInBag}
+                  margin={true}
+                  useAccentColor={true}
+                  onClick={() => {
+                    assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+                    if (!assetInBag && !isErc1555 && !bagExpanded) {
+                      toggleBag()
+                    }
+                  }}
+                >
+                  <SubHeader lineHeight={'20px'}>
+                    <span>{assetInBag ? 'Remove' : 'Buy Now'}</span>
+                  </SubHeader>
+                </BuyNowButton>
+              </BuyNowButtonContainer>
+            ) : (
+              <Erc1155BuyNowButton>
+                <BuyNowButtonContainer>
+                  <Erc1155ChangeButton remove={true} onClick={() => removeAssetsFromBag([asset])}>
+                    <MinusIcon width="20px" height="20px" />
+                  </Erc1155ChangeButton>
+                </BuyNowButtonContainer>
+
+                <BuyNowButtonContainer>
+                  <Erc1155BuyNowText>
+                    <ThemedText.SubHeader lineHeight={'20px'}>{quantity}</ThemedText.SubHeader>
+                  </Erc1155BuyNowText>
+                </BuyNowButtonContainer>
+
+                <BuyNowButtonContainer>
+                  <Erc1155ChangeButton remove={false} onClick={() => addAssetsToBag([asset])}>
+                    <PlusIcon width="20px" height="20px" />
+                  </Erc1155ChangeButton>
+                </BuyNowButtonContainer>
+              </Erc1155BuyNowButton>
+            )}
+          </div>
         </BestPriceContainer>
       ) : (
         <NotForSale collection={collection} />
