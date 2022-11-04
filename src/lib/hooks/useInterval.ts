@@ -6,8 +6,9 @@ import { useEffect, useRef } from 'react'
  * @param delay if null, the callback will not be invoked
  * @param leading if true, the callback will be invoked immediately (on the leading edge); otherwise, it will be invoked after delay
  */
-export default function useInterval(callback: () => void, delay: null | number, leading = true) {
-  const savedCallback = useRef<() => void>()
+export default function useInterval(callback: () => void | Promise<void>, delay: null | number, leading = true) {
+  const savedCallback = useRef<typeof callback>()
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Remember the latest callback.
   useEffect(() => {
@@ -16,16 +17,24 @@ export default function useInterval(callback: () => void, delay: null | number, 
 
   // Set up the interval.
   useEffect(() => {
-    function tick() {
-      const { current } = savedCallback
-      current && current()
+    async function tick() {
+      if (savedCallback.current && delay !== null) {
+        const promise = savedCallback.current()
+        // Defer the next interval until the current callback has resolved.
+        if (promise) await promise
+        timeout.current = setTimeout(tick, delay)
+      }
     }
 
     if (delay !== null) {
-      if (leading) tick()
-      const id = setInterval(tick, delay)
-      return () => clearInterval(id)
+      if (leading) {
+        tick()
+      } else {
+        timeout.current = setTimeout(tick, delay)
+      }
     }
-    return
+    return () => {
+      timeout.current && clearInterval(timeout.current)
+    }
   }, [delay, leading])
 }
