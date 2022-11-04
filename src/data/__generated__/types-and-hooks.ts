@@ -914,6 +914,13 @@ export type FavoriteTokenCardQueryQueryVariables = Exact<{
 
 export type FavoriteTokenCardQueryQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', id: string, price?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> | null } | null> | null };
 
+export type ExploreTokensTabQueryVariables = Exact<{
+  topTokensOrderBy: MarketSortableField;
+}>;
+
+
+export type ExploreTokensTabQuery = { __typename?: 'Query', topTokenProjects?: Array<{ __typename?: 'TokenProject', name?: string | null, logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null, marketCap?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null } | null> | null } | null> | null };
+
 
 export const NftsDocument = gql`
     query Nfts($ownerAddress: String!) {
@@ -1764,3 +1771,59 @@ export function useFavoriteTokenCardQueryLazyQuery(baseOptions?: Apollo.LazyQuer
 export type FavoriteTokenCardQueryQueryHookResult = ReturnType<typeof useFavoriteTokenCardQueryQuery>;
 export type FavoriteTokenCardQueryLazyQueryHookResult = ReturnType<typeof useFavoriteTokenCardQueryLazyQuery>;
 export type FavoriteTokenCardQueryQueryResult = Apollo.QueryResult<FavoriteTokenCardQueryQuery, FavoriteTokenCardQueryQueryVariables>;
+export const ExploreTokensTabDocument = gql`
+    query ExploreTokensTab($topTokensOrderBy: MarketSortableField!) {
+  topTokenProjects(orderBy: $topTokensOrderBy, page: 1, pageSize: 100) {
+    name
+    logoUrl
+    tokens {
+      chain
+      address
+      decimals
+      symbol
+    }
+    markets(currencies: USD) {
+      price {
+        currency
+        value
+      }
+      marketCap {
+        currency
+        value
+      }
+      pricePercentChange24h {
+        currency
+        value
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useExploreTokensTabQuery__
+ *
+ * To run a query within a React component, call `useExploreTokensTabQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExploreTokensTabQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useExploreTokensTabQuery({
+ *   variables: {
+ *      topTokensOrderBy: // value for 'topTokensOrderBy'
+ *   },
+ * });
+ */
+export function useExploreTokensTabQuery(baseOptions: Apollo.QueryHookOptions<ExploreTokensTabQuery, ExploreTokensTabQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ExploreTokensTabQuery, ExploreTokensTabQueryVariables>(ExploreTokensTabDocument, options);
+      }
+export function useExploreTokensTabLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ExploreTokensTabQuery, ExploreTokensTabQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ExploreTokensTabQuery, ExploreTokensTabQueryVariables>(ExploreTokensTabDocument, options);
+        }
+export type ExploreTokensTabQueryHookResult = ReturnType<typeof useExploreTokensTabQuery>;
+export type ExploreTokensTabLazyQueryHookResult = ReturnType<typeof useExploreTokensTabLazyQuery>;
+export type ExploreTokensTabQueryResult = Apollo.QueryResult<ExploreTokensTabQuery, ExploreTokensTabQueryVariables>;

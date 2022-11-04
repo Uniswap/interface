@@ -6,15 +6,12 @@ import { KeyboardAvoidingView, TextInput } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
-import { PreloadedQuery } from 'react-relay'
 import { useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList, TabNavigationProp } from 'src/app/navigation/types'
-import { Suspense } from 'src/components/data/Suspense'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import ExploreTokensTab from 'src/components/explore/tabs/ExploreTokensTab'
 import ExploreWalletsTab from 'src/components/explore/tabs/ExploreWalletsTab'
-import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
@@ -36,11 +33,9 @@ const WALLETS_KEY = 'wallets'
 
 const SIDEBAR_SWIPE_CONTAINER_WIDTH = 45
 
-type Props = {
-  exploreTokensTabQueryRef: PreloadedQuery<ExploreTokensTabQuery>
-} & NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
+type Props = NativeStackScreenProps<ExploreStackParamList, Screens.Explore>
 
-export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
+export function ExploreScreen({ navigation }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -89,17 +84,13 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
     ({ route }) => {
       switch (route?.key) {
         case TOKENS_KEY:
-          return (
-            <Suspense fallback={<ExploreTokensTabLoader />}>
-              <ExploreTokensTab listRef={listRef} queryRef={exploreTokensTabQueryRef} />
-            </Suspense>
-          )
+          return <ExploreTokensTab listRef={listRef} />
         case WALLETS_KEY:
           return <ExploreWalletsTab />
       }
       return null
     },
-    [exploreTokensTabQueryRef, listRef]
+    [listRef]
   )
 
   const renderTabBar = useCallback(
@@ -188,7 +179,7 @@ export function ExploreScreen({ exploreTokensTabQueryRef, navigation }: Props) {
   )
 }
 
-function ExploreTokensTabLoader() {
+export function ExploreTokensTabLoader() {
   const { t } = useTranslation()
   return (
     <Flex gap="lg" mx="xs" my="sm">

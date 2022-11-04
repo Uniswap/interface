@@ -1,63 +1,39 @@
-import { graphql } from 'babel-plugin-relay/macro'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
-import { PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { useOrderByModal } from 'src/components/explore/Modals'
 import { SortButton } from 'src/components/explore/SortButton'
-import { ExploreTokensTabQuery } from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { EMPTY_ARRAY } from 'src/constants/misc'
+import { EMPTY_ARRAY, PollingInterval } from 'src/constants/misc'
+import {
+  MarketSortableField,
+  useExploreTokensTabQuery,
+} from 'src/data/__generated__/types-and-hooks'
 import { useTokensMetadataDisplayType } from 'src/features/explore/hooks'
 import { getOrderByCompareFn, getOrderByValues } from 'src/features/explore/utils'
 import { selectFavoriteTokensSet, selectHasFavoriteTokens } from 'src/features/favorites/selectors'
+import { ExploreTokensTabLoader } from 'src/screens/ExploreScreen'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 
-export const exploreTokensTabQuery = graphql`
-  query ExploreTokensTabQuery($topTokensOrderBy: MarketSortableField!) {
-    topTokenProjects(orderBy: $topTokensOrderBy, page: 1, pageSize: 100) {
-      name
-      logoUrl
-      tokens {
-        chain
-        address
-        # HACK: Decimals included so Token Selector's top tokens query can reuse cached data
-        decimals
-        symbol
-      }
-      markets(currencies: USD) {
-        price {
-          currency
-          value
-        }
-        marketCap {
-          currency
-          value
-        }
-        pricePercentChange24h {
-          currency
-          value
-        }
-      }
-    }
-  }
-`
-
 type ExploreTokensTabProps = {
-  queryRef: PreloadedQuery<ExploreTokensTabQuery>
   listRef?: React.MutableRefObject<null>
 }
 
-function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
+function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
   const { t } = useTranslation()
 
-  const data = usePreloadedQuery<ExploreTokensTabQuery>(exploreTokensTabQuery, queryRef)
+  const { data, loading } = useExploreTokensTabQuery({
+    variables: {
+      topTokensOrderBy: MarketSortableField.MarketCap,
+    },
+    pollInterval: PollingInterval.Slow,
+  })
 
   // Sorting and filtering
   const { orderBy, setOrderByModalIsVisible, orderByModal } = useOrderByModal()
@@ -136,6 +112,10 @@ function ExploreTokensTab({ queryRef, listRef }: ExploreTokensTabProps) {
     () => setOrderByModalIsVisible(true),
     [setOrderByModalIsVisible]
   )
+
+  if (loading && !data) {
+    return <ExploreTokensTabLoader />
+  }
 
   return (
     <>

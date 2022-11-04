@@ -424,3 +424,37 @@ query FavoriteTokenCardQuery($contract: ContractInput!) {
     }
   }
 }
+
+query ExploreTokensTab($topTokensOrderBy: MarketSortableField!) {
+  topTokenProjects(orderBy: $topTokensOrderBy, page: 1, pageSize: 100) {
+    id
+    name
+    logoUrl
+    tokens {
+      id
+      chain
+      address
+      # HACK: Decimals included so Token Selector's top tokens query can reuse cached data
+      decimals
+      symbol
+    }
+    markets(currencies: USD) {
+      id
+      price {
+        id
+        currency
+        value
+      }
+      marketCap {
+        id
+        currency
+        value
+      }
+      pricePercentChange24h {
+        id
+        currency
+        value
+      }
+    }
+  }
+}

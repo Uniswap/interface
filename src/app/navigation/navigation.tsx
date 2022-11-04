@@ -2,10 +2,9 @@ import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
-import React, { useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { PreloadedQuery } from 'react-relay'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { usePreloadedHomeScreenQueries } from 'src/app/navigation/hooks'
@@ -23,15 +22,12 @@ import DiscoverIconFilled from 'src/assets/icons/discover-filled.svg'
 import DiscoverIcon from 'src/assets/icons/discover.svg'
 import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
-import { exploreTokensTabQuery } from 'src/components/explore/tabs/ExploreTokensTab'
-import {
-  ExploreTokensTabQuery,
-  ExploreTokensTabQuery$variables,
-} from 'src/components/explore/tabs/__generated__/ExploreTokensTabQuery.graphql'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box } from 'src/components/layout'
-import { NetworkPollConfig } from 'src/constants/misc'
-import { Priority, useQueryScheduler } from 'src/data/useQueryScheduler'
+import {
+  MarketSortableField,
+  useExploreTokensTabLazyQuery,
+} from 'src/data/__generated__/types-and-hooks'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -89,31 +85,17 @@ const NullComponent = () => {
   return null
 }
 
-const exploreTokensTabParams: ExploreTokensTabQuery$variables = {
-  topTokensOrderBy: 'MARKET_CAP',
-}
-
 function TabNavigator() {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
   useBiometricCheck()
 
-  const { queryReference: exploreTokensTabQueryRef } = useQueryScheduler<ExploreTokensTabQuery>(
-    Priority.Idle,
-    exploreTokensTabQuery,
-    exploreTokensTabParams,
-    NetworkPollConfig.Slow
-  )
+  const [load] = useExploreTokensTabLazyQuery()
 
-  // important to memoize to avoid the entire explore stack from getting re-rendered on tab switch
-  const ExploreStackNavigatorMemo = useCallback(
-    () =>
-      exploreTokensTabQueryRef ? (
-        <ExploreStackNavigator exploreTokensTabQueryRef={exploreTokensTabQueryRef} />
-      ) : null,
-    [exploreTokensTabQueryRef]
-  )
+  useEffect(() => {
+    load({ variables: { topTokensOrderBy: MarketSortableField.MarketCap } })
+  }, [load])
 
   return (
     <Tab.Navigator
@@ -179,7 +161,7 @@ function TabNavigator() {
         }}
       />
       <Tab.Screen
-        component={ExploreStackNavigatorMemo}
+        component={ExploreStackNavigator}
         name={Tabs.Explore}
         options={{
           tabBarItemStyle: { backgroundColor: theme.colors.background0 },
@@ -286,23 +268,14 @@ export function HomeStackNavigator() {
   )
 }
 
-export function ExploreStackNavigator({
-  exploreTokensTabQueryRef,
-}: {
-  exploreTokensTabQueryRef: PreloadedQuery<ExploreTokensTabQuery>
-}) {
+export function ExploreStackNavigator() {
   return (
     <ExploreStack.Navigator
       initialRouteName={Screens.Explore}
       screenOptions={{
         ...navOptions.noHeader,
       }}>
-      <ExploreStack.Screen
-        children={(props) => (
-          <ExploreScreen exploreTokensTabQueryRef={exploreTokensTabQueryRef} {...props} />
-        )}
-        name={Screens.Explore}
-      />
+      <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
     </ExploreStack.Navigator>
   )
 }
