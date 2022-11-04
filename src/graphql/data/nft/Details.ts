@@ -1,6 +1,6 @@
 import { parseEther } from '@ethersproject/units'
 import graphql from 'babel-plugin-relay/macro'
-import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType, Trait } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, SellOrder, TokenType } from 'nft/types'
 import { useLazyLoadQuery } from 'react-relay'
 
 import { DetailsQuery } from './__generated__/DetailsQuery.graphql'
@@ -147,7 +147,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       },
       metadataUrl: asset?.metadataUrl ?? '',
       traits: asset?.traits?.map((trait) => {
-        return { trait_type: trait.name ?? '', trait_value: trait.value ?? '' } as Trait
+        return { trait_type: trait.name ?? '', trait_value: trait.value ?? '' }
       }),
     },
     {
