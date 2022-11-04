@@ -1,7 +1,11 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
+import useInterval from 'lib/hooks/useInterval'
+import ms from 'ms.macro'
+import { DEFAULT_ASSET_QUERY_AMOUNT } from 'nft/components/collection/CollectionNfts'
 import { GenieAsset, Rarity, SellOrder } from 'nft/types'
-import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
+import { useCallback, useMemo, useState } from 'react'
+import { fetchQuery, useLazyLoadQuery, usePaginationFragment, useRelayEnvironment } from 'react-relay'
 
 import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
 import { AssetQuery, NftAssetsFilterInput, NftAssetSortableField } from './__generated__/AssetQuery.graphql'
@@ -117,74 +121,91 @@ export function useAssetsQuery(
   last?: number,
   before?: string
 ) {
-  const queryData = useLazyLoadQuery<AssetQuery>(assetQuery, {
-    address,
-    orderBy,
-    asc,
-    filter,
-    first,
-    after,
-    last,
-    before,
-  })
+  const vars = useMemo(
+    () => ({ address, orderBy, asc, filter, first, after, last, before }),
+    [address, after, asc, before, filter, first, last, orderBy]
+  )
+  const [queryOptions, setQueryOptions] = useState({ fetchKey: 0 })
+  const queryData = useLazyLoadQuery<AssetQuery>(assetQuery, vars, queryOptions)
+
   const { data, hasNext, loadNext, isLoadingNext } = usePaginationFragment<AssetPaginationQuery, any>(
     assetPaginationQuery,
     queryData
   )
 
-  const assets: GenieAsset[] = data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
-    const asset = queryAsset.node
-    const ethPrice = parseEther(
-      asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
-    ).toString()
-    return {
-      id: asset.id,
-      address: asset.collection.nftContracts[0]?.address,
-      notForSale: asset.listings?.edges.length === 0,
-      collectionName: asset.collection?.name,
-      collectionSymbol: asset.collection?.image?.url,
-      imageUrl: asset.image?.url,
-      animationUrl: asset.animationUrl,
-      marketplace: asset.listings?.edges[0]?.node.marketplace.toLowerCase(),
-      name: asset.name,
-      priceInfo: asset.listings
-        ? {
-            ETHPrice: ethPrice,
-            baseAsset: 'ETH',
-            baseDecimals: '18',
-            basePrice: ethPrice,
-          }
-        : undefined,
-      susFlag: asset.suspiciousFlag,
-      sellorders: asset.listings?.edges.map((listingNode: { node: SellOrder }) => {
+  const environment = useRelayEnvironment()
+  const refresh = useCallback(async () => {
+    const length = data.nftAssets?.edges?.length
+    // Only poll if the user has not started scrolling.
+    // Polling while scrolling requires reloading *all* pages, which is untenable.
+    if (length > DEFAULT_ASSET_QUERY_AMOUNT) return
+
+    await fetchQuery<AssetQuery>(environment, assetQuery, { ...vars, first: length }).toPromise()
+    setQueryOptions(({ fetchKey }) => ({
+      fetchKey: fetchKey + 1,
+      fetchPolicy: 'store-only',
+    }))
+  }, [data.nftAssets?.edges?.length, environment, vars])
+  useInterval(refresh, ms`999ms`)
+
+  const assets: GenieAsset[] = useMemo(
+    () =>
+      data.nftAssets?.edges?.map((queryAsset: { node: any }) => {
+        const asset = queryAsset.node
+        const ethPrice = parseEther(
+          asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
+        ).toString()
         return {
-          ...listingNode.node,
-          protocolParameters: listingNode.node.protocolParameters
-            ? JSON.parse(listingNode.node.protocolParameters.toString())
+          id: asset.id,
+          address: asset.collection.nftContracts[0]?.address,
+          notForSale: asset.listings?.edges.length === 0,
+          collectionName: asset.collection?.name,
+          collectionSymbol: asset.collection?.image?.url,
+          imageUrl: asset.image?.url,
+          animationUrl: asset.animationUrl,
+          marketplace: asset.listings?.edges[0]?.node.marketplace.toLowerCase(),
+          name: asset.name,
+          priceInfo: asset.listings
+            ? {
+                ETHPrice: ethPrice,
+                baseAsset: 'ETH',
+                baseDecimals: '18',
+                basePrice: ethPrice,
+              }
             : undefined,
+          susFlag: asset.suspiciousFlag,
+          sellorders: asset.listings?.edges.map((listingNode: { node: SellOrder }) => {
+            return {
+              ...listingNode.node,
+              protocolParameters: listingNode.node.protocolParameters
+                ? JSON.parse(listingNode.node.protocolParameters.toString())
+                : undefined,
+            }
+          }),
+          smallImageUrl: asset.smallImage?.url,
+          tokenId: asset.tokenId,
+          tokenType: asset.collection.nftContracts[0]?.standard,
+          // totalCount?: number, // TODO waiting for BE changes
+          collectionIsVerified: asset.collection?.isVerified,
+          rarity: {
+            primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
+            providers: asset.rarities.map((rarity: Rarity) => {
+              return {
+                ...rarity,
+                provider: 'Rarity Sniper',
+              }
+            }),
+          },
+          owner: asset.ownerAddress,
+          creator: {
+            profile_img_url: asset.collection?.creator?.profileImage?.url,
+            address: asset.collection?.creator?.address,
+          },
+          metadataUrl: asset.metadataUrl,
         }
       }),
-      smallImageUrl: asset.smallImage?.url,
-      tokenId: asset.tokenId,
-      tokenType: asset.collection.nftContracts[0]?.standard,
-      // totalCount?: number, // TODO waiting for BE changes
-      collectionIsVerified: asset.collection?.isVerified,
-      rarity: {
-        primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
-        providers: asset.rarities.map((rarity: Rarity) => {
-          return {
-            ...rarity,
-            provider: 'Rarity Sniper',
-          }
-        }),
-      },
-      owner: asset.ownerAddress,
-      creator: {
-        profile_img_url: asset.collection?.creator?.profileImage?.url,
-        address: asset.collection?.creator?.address,
-      },
-      metadataUrl: asset.metadataUrl,
-    }
-  })
+    [data.nftAssets?.edges]
+  )
+
   return { assets, hasNext, isLoadingNext, loadNext }
 }
