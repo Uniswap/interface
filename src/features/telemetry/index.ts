@@ -1,7 +1,7 @@
 import { flush, Identify, identify, init, track } from '@amplitude/analytics-react-native'
 import { firebase } from '@react-native-firebase/analytics'
 import * as Sentry from '@sentry/react-native'
-import { AMPLITUDE_API_KEY, AMPLITUDE_TEST_API_KEY } from 'react-native-dotenv'
+import { AMPLITUDE_API_TEST_KEY } from 'react-native-dotenv'
 import { LogContext, UserPropertyName } from 'src/features/telemetry/constants'
 import { EventProperties } from 'src/features/telemetry/types'
 import { logger } from 'src/utils/logger'
@@ -18,7 +18,8 @@ export async function initAnalytics() {
 
   try {
     init(
-      __DEV__ ? AMPLITUDE_TEST_API_KEY : AMPLITUDE_API_KEY,
+      // reporting to test project until we add the proxy in a comming PR
+      AMPLITUDE_API_TEST_KEY,
       undefined, // User ID should be undefined to let Amplitude default to Device ID
       {
         // Disable tracking of private user information by Amplitude

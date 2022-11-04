@@ -97,7 +97,6 @@ export function DevScreen({ navigation }: any) {
               <TouchableArea
                 key={s}
                 m="xs"
-                name={`DEBUG_${s}`}
                 testID={`dev_screen/${s}`}
                 onPress={() => activateWormhole(s)}>
                 <Text color="textPrimary">{s}</Text>
@@ -114,22 +113,19 @@ export function DevScreen({ navigation }: any) {
               onValueChange={() => onToggleFlashbots(!flashbotsEnabled)}
             />
           </Flex>
-          <TouchableArea mt="md" name="DEBUG_Create" onPress={onPressCreate}>
+          <TouchableArea mt="md" onPress={onPressCreate}>
             <Text color="textPrimary">Create account</Text>
           </TouchableArea>
-          <TouchableArea mt="sm" name="DEBUG_ToggleTestnets" onPress={onPressToggleTestnets}>
+          <TouchableArea mt="sm" onPress={onPressToggleTestnets}>
             <Text color="textPrimary">Toggle testnets</Text>
           </TouchableArea>
-          <TouchableArea
-            mt="sm"
-            name="DEBUG_ResetTokenWarnings"
-            onPress={onPressResetTokenWarnings}>
+          <TouchableArea mt="sm" onPress={onPressResetTokenWarnings}>
             <Text color="textPrimary">Reset token warnings</Text>
           </TouchableArea>
-          <TouchableArea mt="sm" name="DEBUG_ShowError" onPress={onPressShowError}>
+          <TouchableArea mt="sm" onPress={onPressShowError}>
             <Text color="textPrimary">Show global error</Text>
           </TouchableArea>
-          <TouchableArea mt="sm" name="DEBUG_ResetOnboarding" onPress={onPressResetOnboarding}>
+          <TouchableArea mt="sm" onPress={onPressResetOnboarding}>
             <Text color="textPrimary">Reset onboarding</Text>
           </TouchableArea>
           <Text color="textPrimary" mt="xl" textAlign="center">

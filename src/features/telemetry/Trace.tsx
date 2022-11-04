@@ -9,7 +9,7 @@ import React, {
   useRef,
 } from 'react'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
-import { logEvent, logMessage } from 'src/features/telemetry'
+import { logMessage, sendAnalyticsEvent } from 'src/features/telemetry'
 import {
   EventName,
   LogContext,
@@ -34,7 +34,7 @@ export interface ITraceContext {
 
 export const TraceContext = createContext<ITraceContext>({})
 
-type TraceProps = {
+export type TraceProps = {
   logImpression?: boolean // whether to log impression on mount
 
   // additional properties to log with impression
@@ -106,7 +106,7 @@ function _Trace({
   // Log impression on mount for elements that are not part of the navigation tree
   useEffect(() => {
     if (logImpression && !isPartOfNavigationTree) {
-      logEvent(EventName.Impression, { ...combinedProps, ...properties })
+      sendAnalyticsEvent(EventName.Impression, { ...combinedProps, ...properties })
     }
     // Impressions should only be logged on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,7 +157,7 @@ function NavAwareTrace({
   useFocusEffect(
     React.useCallback(() => {
       if (logImpression) {
-        logEvent(EventName.Impression, { ...combinedProps, ...properties })
+        sendAnalyticsEvent(EventName.Impression, { ...combinedProps, ...properties })
       }
     }, [combinedProps, logImpression, properties])
   )

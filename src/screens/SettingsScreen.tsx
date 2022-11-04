@@ -183,7 +183,6 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
 
   return (
     <TouchableArea
-      name="DEBUG_Settings_Navigate"
       onPress={() => {
         navigation.goBack()
         dispatch(resetWallet())

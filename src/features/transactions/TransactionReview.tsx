@@ -16,10 +16,11 @@ import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
+import { ElementName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
 
 interface BaseReviewProps {
-  actionButtonProps: { disabled: boolean; label: string; name: string; onPress: () => void }
+  actionButtonProps: { disabled: boolean; label: string; name: ElementName; onPress: () => void }
   isUSDInput?: boolean
   transactionDetails?: ReactNode
   nftIn?: GQLNftAsset

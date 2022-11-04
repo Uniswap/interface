@@ -4,6 +4,7 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { ElementName } from 'src/features/telemetry/constants'
 import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
   selected: boolean
   balance?: number | null
   onSelect: (address: string) => void
-  name?: string
+  name?: ElementName
   testID?: string
 }
 

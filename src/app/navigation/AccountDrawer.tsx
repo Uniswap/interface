@@ -409,7 +409,7 @@ function SettingsButton({
   onPress,
   label,
 }: {
-  name: string
+  name: ElementName
   Icon: React.FC<SvgProps>
   label: string
   onPress: () => void

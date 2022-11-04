@@ -1,22 +1,17 @@
 import React, { PropsWithChildren } from 'react'
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
-import { logEvent } from 'src/features/telemetry'
+import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, EventName, ReactNativeEvent } from 'src/features/telemetry/constants'
 import { ITraceContext, Trace, TraceContext } from 'src/features/telemetry/Trace'
 
-export type TelemetryProps = {
-  // Left this one as name as it's being used all over the app already
-  name?: TraceEventProps['elementName']
-} & Partial<Pick<TraceEventProps, 'eventName' | 'events' | 'properties'>>
-
-type TraceEventProps = {
+export type TraceEventProps = {
   // Element name used to identify events sources
   // e.g. account-card, onboarding-create-wallet
   // TODO: Enforce ElementName type only
-  elementName?: ElementName | string
+  elementName?: ElementName
   // event name to log
   // TODO: Enforce EventName type only
-  eventName: EventName | string
+  eventName: EventName
   // Known components' events that trigger callbacks to be augmented with telemetry logging
   events: ReactNativeEvent[]
   // extra properties to log with the event
@@ -65,8 +60,8 @@ function getEventHandlers(
   child: React.ReactElement,
   consumedProps: ITraceContext,
   events: ReactNativeEvent[],
-  eventName: EventName | string,
-  elementName?: ElementName | string,
+  eventName: EventName,
+  elementName?: ElementName,
   properties?: Record<string, unknown>
 ) {
   const eventHandlers: Partial<
@@ -79,11 +74,10 @@ function getEventHandlers(
       child.props[event]?.apply(child, eventHandlerArgs)
 
       // augment handler with analytics logging
-      logEvent(eventName, {
+      sendAnalyticsEvent(eventName, {
         ...consumedProps,
         ...properties,
         elementName,
-        action: event,
       })
     }
   }

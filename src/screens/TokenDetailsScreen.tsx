@@ -29,6 +29,7 @@ import { AssetType } from 'src/entities/assets'
 import { currencyIdToContractInput } from 'src/features/dataApi/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { Trace } from 'src/features/telemetry/Trace'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useTokenWarningLevel } from 'src/features/tokens/useTokenWarningLevel'
 import {
@@ -36,7 +37,7 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
-import { currencyAddress } from 'src/utils/currencyId'
+import { currencyAddress, currencyIdToAddress } from 'src/utils/currencyId'
 import { formatUSDPrice } from 'src/utils/format'
 
 type Price = NonNullable<
@@ -90,6 +91,10 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
     notifyOnNetworkStatusChange: true,
   })
 
+  const traceProps = useMemo(() => {
+    return { tokenAddress: currencyIdToAddress(_currencyId), tokenName: currency?.name }
+  }, [_currencyId, currency?.name])
+
   if (!currency) {
     // truly cannot render the component or a loading state without a currency
     // we could consider showing an activity spinner here
@@ -100,7 +105,11 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
     return <TokenDetailsLoader currency={currency} />
   }
 
-  return <TokenDetails currency={currency} data={data} />
+  return (
+    <Trace logImpression properties={traceProps}>
+      <TokenDetails currency={currency} data={data} />
+    </Trace>
+  )
 }
 
 function TokenDetails({

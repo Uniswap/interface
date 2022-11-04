@@ -49,7 +49,7 @@ export function SettingsRow({
     }
   }
   return (
-    <TouchableArea disabled={Boolean(action)} name="DEBUG_Settings_Navigate" onPress={handleRow}>
+    <TouchableArea disabled={Boolean(action)} onPress={handleRow}>
       <Flex row alignItems="center" minHeight={40}>
         <Flex grow row alignItems={subText ? 'flex-start' : 'center'} flexBasis={0} gap="sm">
           <Flex centered height={32} width={32}>

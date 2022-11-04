@@ -42,7 +42,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
           <ScrollView bounces={false} style={flex.grow}>
             {options.map(({ key, onPress, render }) => {
               return (
-                <TouchableArea key={key} hapticFeedback name={key} testID={key} onPress={onPress}>
+                <TouchableArea key={key} hapticFeedback testID={key} onPress={onPress}>
                   {render()}
                 </TouchableArea>
               )

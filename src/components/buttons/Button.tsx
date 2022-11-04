@@ -7,6 +7,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { getButtonProperties } from 'src/components/buttons/utils'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { TelemetryProps } from 'src/features/telemetry/types'
 
 export enum ButtonSize {
   Small = 'small',
@@ -22,8 +23,7 @@ export enum ButtonEmphasis {
   Warning = 'warning',
 }
 
-interface ButtonProps {
-  name?: string
+type ButtonProps = {
   label?: string
   size?: ButtonSize
   /** this is the preferred way of passing in an icon. It is just the name of the SVG file */
@@ -39,7 +39,7 @@ interface ButtonProps {
   onPress?: () => void
   onPressIn?: () => void
   onLongPress?: () => void
-}
+} & TelemetryProps
 
 const _Button = ({
   name,
