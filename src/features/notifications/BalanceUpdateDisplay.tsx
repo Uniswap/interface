@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
-import { Suspense } from 'src/components/data/Suspense'
 import { Text } from 'src/components/Text'
 import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
@@ -13,34 +12,15 @@ interface BalanceUpdateProps {
   transactionStatus: TransactionStatus
 }
 
-export default function BalanceUpdateDisplay({
+export default function BalanceUpdate({
   currency,
   amountRaw,
   transactionType,
   transactionStatus,
 }: BalanceUpdateProps) {
-  return (
-    <Suspense fallback={null}>
-      <BalanceUpdateInner
-        amountRaw={amountRaw}
-        currency={currency}
-        transactionStatus={transactionStatus}
-        transactionType={transactionType}
-      />
-    </Suspense>
-  )
-}
-
-function BalanceUpdateInner({
-  currency,
-  amountRaw,
-  transactionType,
-  transactionStatus,
-}: BalanceUpdateProps) {
-  const spotPrice = useSpotPrice(currency)
-
+  const { data: spotPrice, loading } = useSpotPrice(currency)
   return useMemo(() => {
-    if (!amountRaw || !currency) {
+    if (!amountRaw || !currency || loading) {
       return null
     }
     const balanceUpdate = createBalanceUpdate({
@@ -71,5 +51,5 @@ function BalanceUpdateInner({
         </Text>
       </>
     )
-  }, [amountRaw, currency, spotPrice, transactionStatus, transactionType])
+  }, [amountRaw, currency, spotPrice, transactionStatus, transactionType, loading])
 }

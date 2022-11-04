@@ -274,6 +274,19 @@ query SearchResults($searchQuery: String!) {
   }
 }
 
+query SpotPrices($contracts: [ContractInput!]!) {
+  tokenProjects(contracts: $contracts) {
+    markets(currencies: [USD]) {
+      price {
+        value
+      }
+      pricePercentChange24h {
+        value
+      }
+    }
+  }
+}
+
 query FavoriteTokenCardQuery($contract: ContractInput!) {
   tokenProjects(contracts: [$contract]) {
     tokens {

@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
-import { Suspense } from 'src/components/data/Suspense'
 import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { AssetUpdateLayout } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
@@ -23,34 +22,12 @@ export default function BalanceUpdate({
   nftTradeType,
   transactedUSDValue,
 }: BalanceUpdateProps) {
-  return (
-    <Suspense fallback={null}>
-      <BalanceUpdateInner
-        amountRaw={amountRaw}
-        currency={currency}
-        nftTradeType={nftTradeType}
-        transactedUSDValue={transactedUSDValue}
-        transactionStatus={transactionStatus}
-        transactionType={transactionType}
-      />
-    </Suspense>
-  )
-}
-
-function BalanceUpdateInner({
-  currency,
-  amountRaw,
-  transactionType,
-  transactionStatus,
-  nftTradeType,
-  transactedUSDValue,
-}: BalanceUpdateProps) {
   // Skip fetching spot price if known USD transacted value
   const skipQuery = !!transactedUSDValue
-  const spotPrice = useSpotPrice(currency, skipQuery)
+  const { data: spotPrice, loading } = useSpotPrice(currency, skipQuery)
 
   const balanceUpdate = useMemo(() => {
-    if (!amountRaw) {
+    if (!amountRaw || loading) {
       return undefined
     }
     return createBalanceUpdate({
@@ -70,7 +47,10 @@ function BalanceUpdateInner({
     transactedUSDValue,
     transactionStatus,
     transactionType,
+    loading,
   ])
+
+  if (loading) return null
 
   return (
     <AssetUpdateLayout

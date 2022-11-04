@@ -887,6 +887,13 @@ export type SearchResultsQueryVariables = Exact<{
 
 export type SearchResultsQuery = { __typename?: 'Query', searchTokenProjects?: Array<{ __typename?: 'TokenProject', logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, name?: string | null, symbol?: string | null }> } | null> | null };
 
+export type SpotPricesQueryVariables = Exact<{
+  contracts: Array<ContractInput> | ContractInput;
+}>;
+
+
+export type SpotPricesQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', value: number } | null } | null> | null } | null> | null };
+
 export type FavoriteTokenCardQueryQueryVariables = Exact<{
   contract: ContractInput;
 }>;
@@ -1488,6 +1495,48 @@ export function useSearchResultsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type SearchResultsQueryHookResult = ReturnType<typeof useSearchResultsQuery>;
 export type SearchResultsLazyQueryHookResult = ReturnType<typeof useSearchResultsLazyQuery>;
 export type SearchResultsQueryResult = Apollo.QueryResult<SearchResultsQuery, SearchResultsQueryVariables>;
+export const SpotPricesDocument = gql`
+    query SpotPrices($contracts: [ContractInput!]!) {
+  tokenProjects(contracts: $contracts) {
+    markets(currencies: [USD]) {
+      price {
+        value
+      }
+      pricePercentChange24h {
+        value
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSpotPricesQuery__
+ *
+ * To run a query within a React component, call `useSpotPricesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSpotPricesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSpotPricesQuery({
+ *   variables: {
+ *      contracts: // value for 'contracts'
+ *   },
+ * });
+ */
+export function useSpotPricesQuery(baseOptions: Apollo.QueryHookOptions<SpotPricesQuery, SpotPricesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SpotPricesQuery, SpotPricesQueryVariables>(SpotPricesDocument, options);
+      }
+export function useSpotPricesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SpotPricesQuery, SpotPricesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SpotPricesQuery, SpotPricesQueryVariables>(SpotPricesDocument, options);
+        }
+export type SpotPricesQueryHookResult = ReturnType<typeof useSpotPricesQuery>;
+export type SpotPricesLazyQueryHookResult = ReturnType<typeof useSpotPricesLazyQuery>;
+export type SpotPricesQueryResult = Apollo.QueryResult<SpotPricesQuery, SpotPricesQueryVariables>;
 export const FavoriteTokenCardQueryDocument = gql`
     query FavoriteTokenCardQuery($contract: ContractInput!) {
   tokenProjects(contracts: [$contract]) {
