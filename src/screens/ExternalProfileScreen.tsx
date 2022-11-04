@@ -119,7 +119,7 @@ export function ExternalProfileScreen({
       <Screen edges={['top', 'left', 'right']}>
         <Flex grow>
           <Flex gap="sm" mb="sm" mx="md">
-            <BackButton showButtonLabel />
+            <BackButton />
             <AddressDisplay
               address={address}
               captionVariant="subheadLarge"
