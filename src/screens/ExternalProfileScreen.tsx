@@ -101,7 +101,13 @@ export function ExternalProfileScreen({
           indicatorStyle={[TabStyles.indicator]}
           navigationState={{ index: tabIndex, routes: tabs }}
           renderLabel={renderTabLabel}
-          style={[TabStyles.tab, { backgroundColor: theme.colors.background0 }]}
+          style={[
+            TabStyles.tab,
+            {
+              backgroundColor: theme.colors.background0,
+              borderBottomColor: theme.colors.backgroundOutline,
+            },
+          ]}
         />
       )
     },
