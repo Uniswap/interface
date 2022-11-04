@@ -2,7 +2,6 @@ import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms.macro'
-import { DEFAULT_ASSET_QUERY_AMOUNT } from 'nft/components/collection/CollectionNfts'
 import { GenieAsset, Rarity, SellOrder } from 'nft/types'
 import { useCallback, useMemo, useState } from 'react'
 import { fetchQuery, useLazyLoadQuery, usePaginationFragment, useRelayEnvironment } from 'react-relay'
@@ -138,12 +137,6 @@ export function useAssetsQuery(
   const environment = useRelayEnvironment()
   const refresh = useCallback(async () => {
     const length = data.nftAssets?.edges?.length
-    // Only poll if the user has not started paging.
-    // Polling after paging requires reloading *all* pages, which is untenable.
-    // TODO(cbachmeier): Refactor CollectionNfts to pass the first visible cursor to useAssetsQuery,
-    // to allow for polling of the visible page only. This would make polling tenable after the user has paged.
-    if (length > DEFAULT_ASSET_QUERY_AMOUNT) return
-
     // Initiate a network request. When it resolves, refresh the UI from store (to avoid re-triggering Suspense);
     // see: https://relay.dev/docs/guided-tour/refetching/refreshing-queries/#if-you-need-to-avoid-suspense-1.
     await fetchQuery<AssetQuery>(environment, assetQuery, { ...vars, first: length }).toPromise()
