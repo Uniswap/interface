@@ -37,6 +37,9 @@ const detailsQuery = graphql`
             name
             isVerified
             numAssets
+            twitterName
+            discordUrl
+            homepageUrl
             image {
               url
             }
@@ -98,6 +101,8 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
   const collection = asset?.collection
   const ethPrice = parseEther(asset?.listings?.edges[0].node.price.value?.toString() ?? '0').toString()
 
+  console.log(collection)
+
   return [
     {
       id: asset?.id,
@@ -156,6 +161,9 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       collectionName: collection?.name ?? undefined,
       isVerified: collection?.isVerified ?? undefined,
       totalSupply: collection?.numAssets ?? undefined,
+      twitterUrl: collection?.twitterName ?? undefined,
+      discordUrl: collection?.discordUrl ?? undefined,
+      externalUrl: collection?.homepageUrl ?? undefined,
     },
   ]
 }
