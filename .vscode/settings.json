@@ -14,6 +14,6 @@
   "eslint.enable": true,
   "eslint.debug": true,
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   }
 }

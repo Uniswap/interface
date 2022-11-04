@@ -1,9 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { BrowserEvent, ElementName, EventName, PageName, Trace, TraceEvent } from '@uniswap/analytics'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'analytics/constants'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
-import { TraceEvent } from 'analytics/TraceEvent'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -320,7 +317,7 @@ export default function Pool() {
                     )}
                     {showConnectAWallet && (
                       <TraceEvent
-                        events={[Event.onClick]}
+                        events={[BrowserEvent.onClick]}
                         name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
                         properties={{ received_swap_quote: false }}
                         element={ElementName.CONNECT_WALLET_BUTTON}

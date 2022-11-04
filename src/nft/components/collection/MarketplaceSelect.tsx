@@ -1,5 +1,4 @@
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, FilterTypes } from 'analytics/constants'
+import { EventName, FilterTypes, sendAnalyticsEvent } from '@uniswap/analytics'
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'

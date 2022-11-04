@@ -1,5 +1,4 @@
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
+import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
 import React from 'react'
 import { Check } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -115,7 +114,7 @@ export default function Option({
 }) {
   const content = (
     <TraceEvent
-      events={[Event.onClick]}
+      events={[BrowserEvent.onClick]}
       name={EventName.WALLET_SELECTED}
       properties={{ wallet_type: header }}
       element={ElementName.WALLET_TYPE_OPTION}

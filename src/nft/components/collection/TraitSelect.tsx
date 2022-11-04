@@ -1,5 +1,4 @@
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, FilterTypes } from 'analytics/constants'
+import { EventName, FilterTypes, sendAnalyticsEvent } from '@uniswap/analytics'
 import useDebounce from 'hooks/useDebounce'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'

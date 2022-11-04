@@ -1,6 +1,12 @@
-import { initializeAnalytics, sendAnalyticsEvent, user } from 'analytics'
-import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
+import {
+  CustomerUserProperties,
+  EventName,
+  initializeAnalytics,
+  PageName,
+  sendAnalyticsEvent,
+  Trace,
+  user,
+} from '@uniswap/analytics'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
@@ -124,7 +130,7 @@ export default function App() {
   const [scrolledState, setScrolledState] = useState(false)
 
   useAnalyticsReporter()
-  initializeAnalytics()
+  initializeAnalytics('8f61d3323d3fcab9c138e26744e3e', 'https://api.uniswap.org/v1/amplitude-proxy')
 
   const scrollListener = (e: Event) => {
     if (window.scrollY > 0) {
@@ -141,10 +147,10 @@ export default function App() {
 
   useEffect(() => {
     sendAnalyticsEvent(EventName.APP_LOADED)
-    user.set(CUSTOM_USER_PROPERTIES.USER_AGENT, navigator.userAgent)
-    user.set(CUSTOM_USER_PROPERTIES.BROWSER, getBrowser())
-    user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
-    user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    user.set(CustomerUserProperties.USER_AGENT, navigator.userAgent)
+    user.set(CustomerUserProperties.BROWSER, getBrowser())
+    user.set(CustomerUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
+    user.set(CustomerUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
     getCLS(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
     getFCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
     getFID(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
@@ -152,11 +158,11 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    user.set(CUSTOM_USER_PROPERTIES.DARK_MODE, isDarkMode)
+    user.set(CustomerUserProperties.DARK_MODE, isDarkMode)
   }, [isDarkMode])
 
   useEffect(() => {
-    user.set(CUSTOM_USER_PROPERTIES.EXPERT_MODE, isExpertMode)
+    user.set(CustomerUserProperties.EXPERT_MODE, isExpertMode)
   }, [isExpertMode])
 
   useEffect(() => {

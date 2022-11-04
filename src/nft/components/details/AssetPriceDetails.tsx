@@ -1,3 +1,4 @@
+import { EventName, PageName, sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
 import { useWeb3React } from '@web3-react/core'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'

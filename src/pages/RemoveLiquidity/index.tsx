@@ -2,10 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
+import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useMemo, useState } from 'react'
@@ -630,7 +629,7 @@ export default function RemoveLiquidity() {
             <div style={{ position: 'relative' }}>
               {!account ? (
                 <TraceEvent
-                  events={[Event.onClick]}
+                  events={[BrowserEvent.onClick]}
                   name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
                   properties={{ received_swap_quote: false }}
                   element={ElementName.CONNECT_WALLET_BUTTON}

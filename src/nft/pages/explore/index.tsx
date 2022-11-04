@@ -1,5 +1,4 @@
-import { PageName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
+import { PageName, Trace } from '@uniswap/analytics'
 import Banner from 'nft/components/explore/Banner'
 import TrendingCollections from 'nft/components/explore/TrendingCollections'
 import styled from 'styled-components/macro'

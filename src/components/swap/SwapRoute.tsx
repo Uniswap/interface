@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
+import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
@@ -65,7 +64,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
   return (
     <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen}>
       <TraceEvent
-        events={[Event.onClick]}
+        events={[BrowserEvent.onClick]}
         name={EventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED}
         element={ElementName.AUTOROUTER_VISUALIZATION_ROW}
         shouldLogImpression={!open}

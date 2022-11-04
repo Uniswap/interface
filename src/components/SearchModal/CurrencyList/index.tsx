@@ -1,7 +1,6 @@
+import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -133,7 +132,7 @@ export function CurrencyRow({
   // only show add or remove buttons if not on selected list
   return (
     <TraceEvent
-      events={[Event.onClick, Event.onKeyPress]}
+      events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
       name={EventName.TOKEN_SELECTED}
       properties={{ is_imported_by_user: customAdded, ...eventProperties }}
       element={ElementName.TOKEN_SELECTOR_ROW}

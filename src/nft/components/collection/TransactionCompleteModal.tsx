@@ -1,7 +1,5 @@
 import { formatEther } from '@ethersproject/units'
-import { EventName, ModalName } from 'analytics/constants'
-import { Trace } from 'analytics/Trace'
-import { useTrace } from 'analytics/Trace'
+import { EventName, ModalName, Trace, useTrace } from '@uniswap/analytics'
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'

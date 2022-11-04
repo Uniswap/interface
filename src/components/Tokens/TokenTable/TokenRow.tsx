@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { EventName, sendAnalyticsEvent } from '@uniswap/analytics'
 import { ParentSize } from '@visx/responsive'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName } from 'analytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'

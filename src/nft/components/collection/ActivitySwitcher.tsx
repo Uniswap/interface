@@ -1,5 +1,4 @@
-import { ElementName, Event, EventName } from 'analytics/constants'
-import { TraceEvent } from 'analytics/TraceEvent'
+import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useIsCollectionLoading } from 'nft/hooks'
@@ -33,7 +32,7 @@ export const ActivitySwitcher = ({
             Items
           </Box>
           <TraceEvent
-            events={[Event.onClick]}
+            events={[BrowserEvent.onClick]}
             element={ElementName.NFT_ACTIVITY_TAB}
             name={EventName.NFT_ACTIVITY_SELECTED}
           >
