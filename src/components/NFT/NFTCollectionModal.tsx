@@ -25,6 +25,9 @@ export function NFTCollectionModal({
 }) {
   const { t } = useTranslation()
 
+  // TODO: Add loading state for this modal
+  if (!collection) return null
+
   const stats = collection.markets?.[0]
 
   return (

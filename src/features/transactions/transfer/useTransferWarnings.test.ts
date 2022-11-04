@@ -56,8 +56,9 @@ const transferState2: DerivedTransferInfo = {
 }
 
 const mockNFT = {
-  id: 1,
+  id: '1',
   collection: {
+    id: '123',
     collectionId: '123',
     description: null,
     image: { url: '' },

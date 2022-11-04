@@ -1,3 +1,56 @@
+query Nfts($ownerAddress: String!) {
+  portfolios(ownerAddresses: [$ownerAddress]) {
+    nftBalances {
+      ownedAsset {
+        id
+        collection {
+          id
+          collectionId
+          description
+          image {
+            url
+          }
+          isVerified
+          name
+          numAssets
+          markets(currencies: [USD]) {
+            id
+            floorPrice {
+              id
+              value
+            }
+            owners
+            volume24h {
+              value
+            }
+            totalVolume {
+              value
+            }
+          }
+        }
+        description
+        image {
+          url
+        }
+        name
+        nftContract {
+          address
+          chain
+          standard
+        }
+        thumbnail {
+          url
+        }
+        tokenId
+        creator {
+          address
+          username
+        }
+      }
+    }
+  }
+}
+
 query PortfolioBalance($owner: String!) {
   portfolios(ownerAddresses: [$owner]) {
     tokensTotalDenominatedValue {

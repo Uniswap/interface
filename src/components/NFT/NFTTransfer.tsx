@@ -12,7 +12,7 @@ export function NFTTransfer({ asset, nftSize }: { asset: GQLNftAsset; nftSize?: 
       </Box>
       <Flex centered row gap="xs">
         <Box borderRadius="full" height={28} overflow="hidden" width={28}>
-          <NFTViewer uri={asset?.collection.image?.url} />
+          <NFTViewer uri={asset?.collection?.image?.url} />
         </Box>
         <Text variant="buttonLabelLarge">{asset?.name}</Text>
       </Flex>

@@ -813,6 +813,13 @@ export enum TransactionStatus {
   Pending = 'PENDING'
 }
 
+export type NftsQueryVariables = Exact<{
+  ownerAddress: Scalars['String'];
+}>;
+
+
+export type NftsQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', nftBalances?: Array<{ __typename?: 'NftBalance', ownedAsset?: { __typename?: 'NftAsset', id: string, description?: string | null, name?: string | null, tokenId: string, collection?: { __typename?: 'NftCollection', id: string, collectionId: string, description?: string | null, isVerified?: boolean | null, name?: string | null, numAssets?: number | null, image?: { __typename?: 'Image', url: string } | null, markets?: Array<{ __typename?: 'NftCollectionMarket', id: string, owners?: number | null, floorPrice?: { __typename?: 'TimestampedAmount', id: string, value: number } | null, volume24h?: { __typename?: 'Amount', value: number } | null, totalVolume?: { __typename?: 'TimestampedAmount', value: number } | null }> | null } | null, image?: { __typename?: 'Image', url: string } | null, nftContract?: { __typename?: 'NftContract', address: string, chain: Chain, standard?: NftStandard | null } | null, thumbnail?: { __typename?: 'Image', url: string } | null, creator?: { __typename?: 'NftProfile', address: string, username?: string | null } | null } | null } | null> | null } | null> | null };
+
 export type PortfolioBalanceQueryVariables = Exact<{
   owner: Scalars['String'];
 }>;
@@ -888,6 +895,88 @@ export type FavoriteTokenCardQueryQueryVariables = Exact<{
 export type FavoriteTokenCardQueryQuery = { __typename?: 'Query', tokenProjects?: Array<{ __typename?: 'TokenProject', logoUrl?: string | null, tokens: Array<{ __typename?: 'Token', chain: Chain, address?: string | null, symbol?: string | null }>, markets?: Array<{ __typename?: 'TokenProjectMarket', price?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null, pricePercentChange24h?: { __typename?: 'Amount', currency?: Currency | null, value: number } | null } | null> | null } | null> | null };
 
 
+export const NftsDocument = gql`
+    query Nfts($ownerAddress: String!) {
+  portfolios(ownerAddresses: [$ownerAddress]) {
+    nftBalances {
+      ownedAsset {
+        id
+        collection {
+          id
+          collectionId
+          description
+          image {
+            url
+          }
+          isVerified
+          name
+          numAssets
+          markets(currencies: [USD]) {
+            id
+            floorPrice {
+              id
+              value
+            }
+            owners
+            volume24h {
+              value
+            }
+            totalVolume {
+              value
+            }
+          }
+        }
+        description
+        image {
+          url
+        }
+        name
+        nftContract {
+          address
+          chain
+          standard
+        }
+        thumbnail {
+          url
+        }
+        tokenId
+        creator {
+          address
+          username
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useNftsQuery__
+ *
+ * To run a query within a React component, call `useNftsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNftsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNftsQuery({
+ *   variables: {
+ *      ownerAddress: // value for 'ownerAddress'
+ *   },
+ * });
+ */
+export function useNftsQuery(baseOptions: Apollo.QueryHookOptions<NftsQuery, NftsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NftsQuery, NftsQueryVariables>(NftsDocument, options);
+      }
+export function useNftsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NftsQuery, NftsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NftsQuery, NftsQueryVariables>(NftsDocument, options);
+        }
+export type NftsQueryHookResult = ReturnType<typeof useNftsQuery>;
+export type NftsLazyQueryHookResult = ReturnType<typeof useNftsLazyQuery>;
+export type NftsQueryResult = Apollo.QueryResult<NftsQuery, NftsQueryVariables>;
 export const PortfolioBalanceDocument = gql`
     query PortfolioBalance($owner: String!) {
   portfolios(ownerAddresses: [$owner]) {

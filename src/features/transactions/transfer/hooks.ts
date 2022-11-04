@@ -50,7 +50,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
       : undefined
   )
 
-  const nftIn = useNFT(
+  const { data: nftIn } = useNFT(
     activeAccount?.address,
     tradeableAsset?.address,
     tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721

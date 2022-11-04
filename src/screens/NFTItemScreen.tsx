@@ -40,8 +40,8 @@ export function NFTItemScreen({
 
   const [showCollectionModal, setShowCollectionModal] = useState(false)
 
-  const asset = useNFT(owner, address, tokenId)
-  const assetChainId = fromGraphQLChain(asset?.nftContract.chain)
+  const { data: asset, loading: nftLoading } = useNFT(owner, address, tokenId)
+  const assetChainId = fromGraphQLChain(asset?.nftContract?.chain)
 
   const ownerDisplayName = useDisplayName(owner)
 
@@ -89,7 +89,7 @@ export function NFTItemScreen({
   }, [asset, assetChainId])
 
   const contractAddressInfo = useMemo(() => {
-    if (!asset) return null
+    if (!asset?.nftContract?.address) return null
 
     const contractAddress = asset.nftContract.address
     return {
@@ -101,7 +101,7 @@ export function NFTItemScreen({
   }, [asset, assetChainId])
 
   // TODO: better handle error / loading states
-  if (!asset) {
+  if (nftLoading || !asset || !asset.collection) {
     return null
   }
 
@@ -213,7 +213,7 @@ export function NFTItemScreen({
             <AssetMetadata header={t('Token ID')} value={asset.tokenId} />
             <AssetMetadata
               header={t('Token standard')}
-              value={asset.nftContract.standard ?? 'Unknown'}
+              value={asset.nftContract?.standard ?? t('Unknown')}
             />
             <AssetMetadata
               header={t('Network')}

@@ -92,7 +92,7 @@ const checkIsMissingRequiredParams = (
   hasCurrencyAmount: boolean,
   hasCurrencyBalance: boolean
 ) => {
-  const tokenAddress = currencyIn ? currencyAddress(currencyIn) : nftIn?.nftContract.address
+  const tokenAddress = currencyIn ? currencyAddress(currencyIn) : nftIn?.nftContract?.address
 
   if (!tokenAddress || !chainId || !recipient) return true
   if (!currencyIn && !nftIn) return true

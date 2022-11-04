@@ -375,7 +375,7 @@ export function TransferNFTNotification({
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
   const nftOwner = txType === TransactionType.Send ? notification.recipient : userAddress
-  const nft = useNFT(nftOwner, tokenAddress, tokenId)
+  const { data: nft } = useNFT(nftOwner, tokenAddress, tokenId)
   const { name: ensName } = useENS(chainId, senderOrRecipient)
   const title = formTransferNFTNotificationTitle(
     txType,
