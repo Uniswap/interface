@@ -1,7 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, PageName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
 import { CancelListingIcon, MinusIcon, PlusIcon } from 'nft/components/icons'
 import { useBag } from 'nft/hooks'
-import { CollectionInfoForAsset, GenieAsset, TokenType } from 'nft/types'
+import { CollectionInfoForAsset, Deprecated_SellOrder, GenieAsset, SellOrder, TokenType } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice, getMarketplaceIcon, timeLeft, useUsdPrice } from 'nft/utils'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -110,7 +113,9 @@ const DiscoveryContainer = styled.div`
 
 export const OwnerContainer = ({ asset }: { asset: GenieAsset }) => {
   const listing = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = listing ? new Date(listing.orderClosingDate) : undefined
+  const expirationDate = listing
+    ? new Date((listing as Deprecated_SellOrder).orderClosingDate ?? (listing as SellOrder).endAt)
+    : undefined
   const USDPrice = useUsdPrice(asset)
 
   const navigate = useNavigate()
@@ -188,13 +193,23 @@ export const NotForSale = ({ collection }: { collection: CollectionInfoForAsset 
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
   const { account } = useWeb3React()
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
-  const expirationDate = cheapestOrder ? new Date(cheapestOrder.orderClosingDate) : undefined
+  const expirationDate = cheapestOrder
+    ? new Date((cheapestOrder as Deprecated_SellOrder).orderClosingDate ?? (cheapestOrder as SellOrder).endAt)
+    : undefined
   const itemsInBag = useBag((s) => s.itemsInBag)
   const addAssetsToBag = useBag((s) => s.addAssetsToBag)
   const removeAssetsFromBag = useBag((s) => s.removeAssetsFromBag)
 
   const USDPrice = useUsdPrice(asset)
   const isErc1555 = asset.tokenType === TokenType.ERC1155
+
+  const trace = useTrace({ page: PageName.NFT_DETAILS_PAGE })
+  const eventProperties = {
+    collection_address: asset.address,
+    token_id: asset.tokenId,
+    token_type: asset.tokenType,
+    ...trace,
+  }
 
   const { quantity, assetInBag } = useMemo(() => {
     return {
@@ -242,7 +257,10 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
               assetInBag={assetInBag}
               margin={true}
               useAccentColor={true}
-              onClick={() => (assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset]))}
+              onClick={() => {
+                assetInBag ? removeAssetsFromBag([asset]) : addAssetsToBag([asset])
+                !assetInBag && sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
+              }}
             >
               <ThemedText.SubHeader lineHeight={'20px'}>{assetInBag ? 'Remove' : 'Buy Now'}</ThemedText.SubHeader>
             </BuyNowButton>

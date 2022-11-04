@@ -29,7 +29,7 @@ export const eventRow = style([
   baseRow,
   sprinkles({
     paddingY: '12',
-    paddingX: '16',
+    paddingX: { sm: '4', md: '16' },
     color: 'textPrimary',
     cursor: 'pointer',
     borderWidth: '1px',

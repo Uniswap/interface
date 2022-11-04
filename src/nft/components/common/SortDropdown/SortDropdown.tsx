@@ -66,7 +66,7 @@ export const SortDropdown = ({
         fontSize="14"
         borderRadius="12"
         borderStyle={isOpen && !mini ? 'solid' : 'none'}
-        background={mini ? 'none' : 'backgroundModule'}
+        background={mini ? 'none' : 'backgroundInteractive'}
         borderColor="backgroundOutline"
         borderWidth="1px"
         borderBottomLeftRadius={isOpen ? '0' : undefined}
@@ -84,7 +84,7 @@ export const SortDropdown = ({
       >
         {!isCollectionStatsLoading && (
           <>
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="center" color="textPrimary">
               {!isOpen && reversable && (
                 <Row
                   onClick={(e) => {
@@ -138,7 +138,7 @@ export const SortDropdown = ({
         right={inFilters ? '16' : 'auto'}
         paddingBottom="8"
         fontSize="14"
-        background="backgroundModule"
+        background="backgroundInteractive"
         borderStyle="solid"
         borderColor="backgroundOutline"
         borderWidth="1px"
@@ -218,7 +218,7 @@ const DropDownItem = ({
       cursor="pointer"
     >
       {option.icon && (
-        <Box width="28" height="28">
+        <Box width="20" height="20">
           {option.icon}
         </Box>
       )}

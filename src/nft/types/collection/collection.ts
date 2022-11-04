@@ -21,12 +21,11 @@ export interface AssetPayload {
 }
 
 export interface CollectionInfoForAsset {
-  collectionSymbol: string
-  collectionDescription: string | null
-  collectionImageUrl: string
-  collectionName: string
-  isVerified: boolean
-  totalSupply: number
+  collectionDescription?: string | null
+  collectionImageUrl?: string
+  collectionName?: string
+  isVerified?: boolean
+  totalSupply?: number
 }
 
 export type CollectionSort = Record<
@@ -49,10 +48,10 @@ export enum ActivityEventType {
 }
 
 export enum ActivityEventTypeDisplay {
-  'LISTING' = 'Listing',
-  'SALE' = 'Sale',
-  'TRANSFER' = 'Transfer',
-  'CANCEL_LISTING' = 'Cancel',
+  'LISTING' = 'Listed',
+  'SALE' = 'Sold',
+  'TRANSFER' = 'Transferred',
+  'CANCEL_LISTING' = 'Cancelled',
 }
 
 export enum OrderStatus {

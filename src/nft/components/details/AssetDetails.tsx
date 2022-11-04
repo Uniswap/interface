@@ -1,4 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, PageName } from 'analytics/constants'
+import { useTrace } from 'analytics/Trace'
 import clsx from 'clsx'
 import { MouseoverTooltip } from 'components/Tooltip/index'
 import useENSName from 'hooks/useENSName'
@@ -13,7 +16,7 @@ import { badge, bodySmall, caption, headlineMedium, subhead } from 'nft/css/comm
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useTimeout } from 'nft/hooks/useTimeout'
-import { CollectionInfoForAsset, GenieAsset, SellOrder } from 'nft/types'
+import { CollectionInfoForAsset, Deprecated_SellOrder, GenieAsset, SellOrder } from 'nft/types'
 import { useUsdPrice } from 'nft/utils'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
@@ -57,9 +60,9 @@ const AudioPlayer = ({
 
 const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
 
-const CountdownTimer = ({ sellOrder }: { sellOrder: SellOrder }) => {
+const CountdownTimer = ({ sellOrder }: { sellOrder: Deprecated_SellOrder | SellOrder }) => {
   const { date, expires } = useMemo(() => {
-    const date = new Date(sellOrder.orderClosingDate)
+    const date = new Date((sellOrder as Deprecated_SellOrder).orderClosingDate ?? (sellOrder as SellOrder).endAt)
     return {
       date,
       expires: formatter.format(date),
@@ -132,11 +135,20 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   const [isOwned, setIsOwned] = useState(false)
   const { account: address, provider } = useWeb3React()
 
+  const trace = useTrace({ page: PageName.NFT_DETAILS_PAGE })
+
+  const eventProperties = {
+    collection_address: asset.address,
+    token_id: asset.tokenId,
+    token_type: asset.tokenType,
+    ...trace,
+  }
+
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
       asset.rarity
         ? {
-            rarityProvider: asset.rarity.providers.find(
+            rarityProvider: asset?.rarity?.providers?.find(
               ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
             ),
             rarityLogo: rarityProviderLogo[asset.rarity.primaryProvider] || '',
@@ -146,16 +158,16 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
   )
 
   const assetMediaType = useMemo(() => {
-    if (isAudio(asset.animationUrl)) {
+    if (isAudio(asset.animationUrl ?? '')) {
       return MediaType.Audio
-    } else if (isVideo(asset.animationUrl)) {
+    } else if (isVideo(asset.animationUrl ?? '')) {
       return MediaType.Video
     }
     return MediaType.Image
   }, [asset])
 
   useEffect(() => {
-    if (asset.creator) setCreatorAddress(asset.creator.address)
+    if (asset.creator) setCreatorAddress(asset.creator.address ?? '')
     if (asset.owner) setOwnerAddress(asset.owner)
   }, [asset])
 
@@ -343,7 +355,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             </Row>
           </Column>
 
-          {asset.priceInfo && !isOwned ? (
+          {asset.priceInfo && asset.sellorders && !isOwned ? (
             <Row
               marginTop="8"
               marginBottom="40"
@@ -360,7 +372,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                   <a href={asset.sellorders[0].marketplaceUrl} rel="noreferrer" target="_blank">
                     <img
                       className={styles.marketplace}
-                      src={`/nft/svgs/marketplaces/${asset.sellorders[0].marketplace}.svg`}
+                      src={`/nft/svgs/marketplaces/${asset.sellorders[0].marketplace.toLowerCase()}.svg`}
                       height={16}
                       width={16}
                       alt="Markeplace"
@@ -375,7 +387,10 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                     </Box>
                   )}
                 </Row>
-                {asset.sellorders?.[0].orderClosingDate ? <CountdownTimer sellOrder={asset.sellorders[0]} /> : null}
+                {(asset.sellorders?.[0] as Deprecated_SellOrder).orderClosingDate ||
+                (asset.sellorders?.[0] as SellOrder).endAt ? (
+                  <CountdownTimer sellOrder={asset.sellorders[0]} />
+                ) : null}
               </Column>
               <Box
                 as="button"
@@ -394,7 +409,10 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
                 onClick={() => {
                   if (isSelected) {
                     removeAssetsFromBag([asset])
-                  } else addAssetsToBag([asset])
+                  } else {
+                    addAssetsToBag([asset])
+                    sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
+                  }
                   setSelected((x) => !x)
                 }}
               >

@@ -1,3 +1,5 @@
+import { NftMarketplace, OrderStatus, OrderType } from 'graphql/data/nft/__generated__/DetailsQuery.graphql'
+
 import { GenieCollection } from '../common'
 
 export interface ListingMarket {
@@ -10,7 +12,7 @@ export interface ListingWarning {
   message: string
 }
 
-export interface SellOrder {
+export interface Deprecated_SellOrder {
   assetId: string
   ethPrice: number
   basePrice: number
@@ -26,6 +28,27 @@ export interface SellOrder {
   ammFeePercent?: number
   ethReserves?: number
   tokenReserves?: number
+}
+
+export interface SellOrder {
+  address: string
+  createdAt: number
+  endAt: number
+  id: string
+  maker: string
+  marketplace: NftMarketplace
+  marketplaceUrl: string
+  orderHash: string
+  price: {
+    currency: string
+    value: number
+  }
+  quantity: number
+  startAt: number
+  status: OrderStatus
+  tokenId: string
+  type: OrderType
+  protocolParameters: Record<string, unknown>
 }
 
 export interface Listing {
@@ -61,7 +84,7 @@ export interface WalletAsset {
   creatorPercentage: number
   listing_date: string
   date_acquired: string
-  sellOrders: SellOrder[]
+  sellOrders: Deprecated_SellOrder[]
   floor_sell_order_price: number
   // Used for creating new listings
   expirationTime?: number

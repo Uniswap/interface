@@ -3,6 +3,7 @@ import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/FilterButton.css'
 import { Row } from 'nft/components/Flex'
 import { FilterIcon } from 'nft/components/icons'
+import { buttonTextMedium } from 'nft/css/common.css'
 import { useCollectionFilters, useIsCollectionLoading, useWalletCollections } from 'nft/hooks'
 import { putCommas } from 'nft/utils/putCommas'
 import { useLocation } from 'react-router-dom'
@@ -66,12 +67,16 @@ export const FilterButton = ({
           )}
 
           <FilterIcon
-            style={{ marginBottom: '-4px', paddingRight: `${!isFiltersExpanded || showFilterBadge ? '6px' : '0px'}` }}
+            style={{
+              marginBottom: '-4px',
+              color: 'textPrimary',
+              paddingRight: `${!isFiltersExpanded || showFilterBadge ? '6px' : '0px'}`,
+            }}
           />
         </>
       )}
 
-      {!isMobile && !isFiltersExpanded && 'Filter'}
+      <span className={buttonTextMedium}> {!isMobile && !isFiltersExpanded && 'Filter'}</span>
 
       {showFilterBadge && !isMobile ? (
         <Box display="inline-block" position="relative">
@@ -80,7 +85,7 @@ export const FilterButton = ({
               •
             </Box>
           )}
-          <Box paddingLeft={!isFiltersExpanded ? '12' : '2'}>
+          <Box className={buttonTextMedium} paddingLeft={!isFiltersExpanded ? '12' : '2'}>
             {collectionCount > 0 ? putCommas(collectionCount) : 0} results
           </Box>
         </Box>
