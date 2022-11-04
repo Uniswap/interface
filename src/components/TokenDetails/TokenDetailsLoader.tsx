@@ -30,7 +30,7 @@ export function TokenDetailsLoader({ currency }: { currency: Currency }) {
         <Flex flex={1}>
           <TokenDetailsBackButtonRow currency={currency} />
           <Flex gap="xl">
-            <Flex gap="none">
+            <Flex gap="xxs">
               <TokenDetailsHeader
                 currency={currency}
                 safetyLevel={SafetyLevel.MediumWarning}

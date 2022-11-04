@@ -9,7 +9,7 @@ import { Text } from 'src/components/Text'
 export function PriceChartLoading() {
   return (
     <>
-      <Box mt="xxs">
+      <Box>
         <Loading type="price-header" />
       </Box>
       <Box my="lg">
