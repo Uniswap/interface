@@ -121,6 +121,17 @@ query SearchTokensProjects($searchQuery: String!) {
   }
 }
 
+query SelectWalletScreen($ownerAddresses: [String!]!) {
+  portfolios(ownerAddresses: $ownerAddresses) {
+    id
+    ownerAddress
+    tokensTotalDenominatedValue {
+      id
+      value
+    }
+  }
+}
+
 query TransactionHistoryUpdater($addresses: [String!]!) {
   portfolios(ownerAddresses: $addresses) {
     id

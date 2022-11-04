@@ -841,6 +841,13 @@ export type SearchTokensProjectsQueryVariables = Exact<{
 
 export type SearchTokensProjectsQuery = { __typename?: 'Query', searchTokenProjects?: Array<{ __typename?: 'TokenProject', id: string, logoUrl?: string | null, name?: string | null, safetyLevel?: SafetyLevel | null, tokens: Array<{ __typename?: 'Token', id: string, chain: Chain, address?: string | null, decimals?: number | null, symbol?: string | null }> } | null> | null };
 
+export type SelectWalletScreenQueryVariables = Exact<{
+  ownerAddresses: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type SelectWalletScreenQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', ownerAddress: string, tokensTotalDenominatedValue?: { __typename?: 'Amount', value: number } | null } | null> | null };
+
 export type TransactionHistoryUpdaterQueryVariables = Exact<{
   addresses: Array<Scalars['String']> | Scalars['String'];
 }>;
@@ -1147,6 +1154,44 @@ export function useSearchTokensProjectsLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type SearchTokensProjectsQueryHookResult = ReturnType<typeof useSearchTokensProjectsQuery>;
 export type SearchTokensProjectsLazyQueryHookResult = ReturnType<typeof useSearchTokensProjectsLazyQuery>;
 export type SearchTokensProjectsQueryResult = Apollo.QueryResult<SearchTokensProjectsQuery, SearchTokensProjectsQueryVariables>;
+export const SelectWalletScreenDocument = gql`
+    query SelectWalletScreen($ownerAddresses: [String!]!) {
+  portfolios(ownerAddresses: $ownerAddresses) {
+    ownerAddress
+    tokensTotalDenominatedValue {
+      value
+    }
+  }
+}
+    `;
+
+/**
+ * __useSelectWalletScreenQuery__
+ *
+ * To run a query within a React component, call `useSelectWalletScreenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSelectWalletScreenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSelectWalletScreenQuery({
+ *   variables: {
+ *      ownerAddresses: // value for 'ownerAddresses'
+ *   },
+ * });
+ */
+export function useSelectWalletScreenQuery(baseOptions: Apollo.QueryHookOptions<SelectWalletScreenQuery, SelectWalletScreenQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SelectWalletScreenQuery, SelectWalletScreenQueryVariables>(SelectWalletScreenDocument, options);
+      }
+export function useSelectWalletScreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SelectWalletScreenQuery, SelectWalletScreenQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SelectWalletScreenQuery, SelectWalletScreenQueryVariables>(SelectWalletScreenDocument, options);
+        }
+export type SelectWalletScreenQueryHookResult = ReturnType<typeof useSelectWalletScreenQuery>;
+export type SelectWalletScreenLazyQueryHookResult = ReturnType<typeof useSelectWalletScreenLazyQuery>;
+export type SelectWalletScreenQueryResult = Apollo.QueryResult<SelectWalletScreenQuery, SelectWalletScreenQueryVariables>;
 export const TransactionHistoryUpdaterDocument = gql`
     query TransactionHistoryUpdater($addresses: [String!]!) {
   portfolios(ownerAddresses: $addresses) {
