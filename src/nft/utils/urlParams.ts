@@ -163,7 +163,7 @@ export const syncLocalFiltersWithURL = (state: CollectionFilters) => {
   const url = window.location.href.split('?')[0]
   const stringifiedQuery = qs.stringify(modifiedQuery, { arrayFormat: 'comma' })
 
-  // Using pushState on purpose here. router.push() will trigger re-renders & API calls.
+  // Using window.history directly on purpose here. router.push() will trigger re-renders & API calls.
   window.history.replaceState({}, ``, `${url}${stringifiedQuery && `?${stringifiedQuery}`}`)
 }
 
