@@ -40,8 +40,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
-import { ThemedText } from 'theme'
+import styled from 'styled-components/macro'
 
 import { CollectionAssetLoading } from './CollectionAssetLoading'
 import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
@@ -55,6 +54,8 @@ interface CollectionNftsProps {
 }
 
 const rarityStatusCache = new Map<string, boolean>()
+const nonRarityIcon = <NonRarityIcon width="20" height="20" viewBox="2 2 22 22" color={vars.color.blue400} />
+const rarityIcon = <RarityIcon width="20" height="20" viewBox="2 2 24 24" color={vars.color.blue400} />
 
 const ActionsContainer = styled.div`
   display: flex;
@@ -171,8 +172,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const toggleBag = useBag((state) => state.toggleBag)
   const bagExpanded = useBag((state) => state.bagExpanded)
-
-  const theme = useTheme()
 
   const debouncedMinPrice = useDebounce(minPrice, 500)
   const debouncedMaxPrice = useDebounce(maxPrice, 500)
@@ -301,25 +300,25 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {
               displayText: 'Low to High',
               onClick: () => setSortBy(SortBy.LowToHigh),
-              icon: <NonRarityIcon width="28" height="28" color={vars.color.blue400} />,
+              icon: nonRarityIcon,
               reverseIndex: 2,
             },
             {
               displayText: 'High to Low',
               onClick: () => setSortBy(SortBy.HighToLow),
-              icon: <NonRarityIcon width="28" height="28" color={vars.color.blue400} />,
+              icon: nonRarityIcon,
               reverseIndex: 1,
             },
             {
               displayText: 'Rare to Common',
               onClick: () => setSortBy(SortBy.RareToCommon),
-              icon: <RarityIcon width="28" height="28" color={vars.color.blue400} />,
+              icon: rarityIcon,
               reverseIndex: 4,
             },
             {
               displayText: 'Common to Rare',
               onClick: () => setSortBy(SortBy.CommonToRare),
-              icon: <RarityIcon width="28" height="28" color={vars.color.blue400} />,
+              icon: rarityIcon,
               reverseIndex: 3,
             },
           ]
@@ -327,13 +326,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {
               displayText: 'Low to High',
               onClick: () => setSortBy(SortBy.LowToHigh),
-              icon: <NonRarityIcon width="28" height="28" color={vars.color.blue400} />,
+              icon: nonRarityIcon,
               reverseIndex: 2,
             },
             {
               displayText: 'High to Low',
               onClick: () => setSortBy(SortBy.HighToLow),
-              icon: <NonRarityIcon width="28" height="28" color={vars.color.blue400} />,
+              icon: nonRarityIcon,
               reverseIndex: 1,
             },
           ],
@@ -453,6 +452,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 <SweepButton
                   toggled={sweepIsOpen}
                   disabled={!buyNow}
+                  className={buttonTextMedium}
                   onClick={() => {
                     if (!buyNow || hasErc1155s) return
                     if (!sweepIsOpen) {
@@ -462,16 +462,8 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                     setSweepOpen(!sweepIsOpen)
                   }}
                 >
-                  <SweepIcon width="24px" height="24px" />
-                  <ThemedText.BodyPrimary
-                    fontWeight={600}
-                    color={sweepIsOpen && buyNow ? theme.white : theme.textPrimary}
-                    lineHeight="20px"
-                    marginTop="2px"
-                    marginBottom="2px"
-                  >
-                    Sweep
-                  </ThemedText.BodyPrimary>
+                  <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
+                  Sweep
                 </SweepButton>
               )
             ) : null}

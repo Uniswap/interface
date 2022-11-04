@@ -29,7 +29,7 @@ export const eventRow = style([
   baseRow,
   sprinkles({
     paddingY: '12',
-    paddingX: '16',
+    paddingX: { sm: '4', md: '16' },
     color: 'textPrimary',
     cursor: 'pointer',
     borderWidth: '1px',
@@ -103,6 +103,7 @@ export const addressCell = style([
     color: 'textPrimary',
     height: 'full',
     justifyContent: 'center',
+    paddingLeft: '2',
   }),
   {
     lineHeight: '24px',

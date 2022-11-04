@@ -30,7 +30,6 @@ export const HeaderRow = () => {
       <Box display={{ sm: 'none', md: 'block' }}>{ColumnHeaders.Price}</Box>
       <Box display={{ sm: 'none', xl: 'block' }}>{ColumnHeaders.By}</Box>
       <Box display={{ sm: 'none', xxl: 'block' }}>{ColumnHeaders.To}</Box>
-      <Box display={{ sm: 'none', lg: 'block' }}>Buy</Box>
     </Box>
   )
 }
@@ -156,11 +155,19 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
           >
             {events.map((event, i) => (
               <Box as="a" href={baseHref(event)} className={styles.eventRow} key={i}>
-                <ItemCell event={event} rarityVerified={rarityVerified} collectionName={collectionName} />
+                <ItemCell
+                  event={event}
+                  rarityVerified={rarityVerified}
+                  collectionName={collectionName}
+                  eventTimestamp={event.eventTimestamp}
+                  isMobile={isMobile}
+                />
                 <EventCell
                   eventType={event.eventType}
                   eventTimestamp={event.eventTimestamp}
                   eventTransactionHash={event.transactionHash}
+                  price={event.price}
+                  isMobile={isMobile}
                 />
                 <PriceCell marketplace={event.marketplace} price={event.price} />
                 <AddressCell address={event.fromAddress} chainId={chainId} />
