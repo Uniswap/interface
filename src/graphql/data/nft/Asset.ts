@@ -1,6 +1,7 @@
 import { gql, useQuery } from '@apollo/client'
 import { parseEther } from 'ethers/lib/utils'
 import { GenieAsset, Rarity, SellOrder } from 'nft/types'
+import { useEffect } from 'react'
 
 import { NftAssetsFilterInput, NftAssetSortableField } from '../__generated__/types-and-hooks'
 
@@ -115,7 +116,7 @@ export function useAssetsQuery(
   last?: number,
   before?: string
 ) {
-  const { loading, data, fetchMore, startPolling } = useQuery(assetQuery, {
+  const queryResult = useQuery(assetQuery, {
     variables: {
       address,
       orderBy,
@@ -127,15 +128,30 @@ export function useAssetsQuery(
       before,
     },
   })
+  const { loading, data, fetchMore, startPolling } = queryResult
 
   startPolling(999)
 
-  const loadMore = () =>
+  const loadMore = () => {
     fetchMore({
       variables: {
         after: data?.nftAssets?.pageInfo?.endCursor,
       },
     })
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const total = (data?.nftAssets?.edges?.length || 0) + queryResult.variables?.first
+
+      queryResult?.refetch({
+        ...queryResult.variables,
+        first: total,
+      })
+    }, 999)
+
+    return () => clearInterval(intervalId)
+  }, [address, orderBy, asc, filter, first, after, last, before, queryResult.data?.nftAssets?.pageInfo?.endCursor])
 
   const hasNext = data?.nftAssets?.pageInfo?.hasNextPage
 
