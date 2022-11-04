@@ -12,7 +12,7 @@ import { Text } from 'src/components/Text'
 import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { useDynamicFontSizing } from 'src/features/transactions/hooks'
 import { Theme } from 'src/styles/theme'
-import { formatCurrencyAmount, formatNumber, NumberType } from 'src/utils/format'
+import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'src/utils/format'
 
 const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
@@ -83,7 +83,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   const showInsufficientBalanceWarning = insufficientBalanceWarning && !isOutput
 
   const formattedUSDValue = usdValue
-    ? formatNumber(parseFloat(usdValue?.toExact()), NumberType.FiatTokenQuantity)
+    ? formatNumberOrString(usdValue?.toExact(), NumberType.FiatTokenQuantity)
     : ''
   const formattedCurrencyAmount = currencyAmount
     ? formatCurrencyAmount(currencyAmount, NumberType.TokenTx)

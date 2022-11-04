@@ -4,7 +4,7 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { formatUSDPrice } from 'src/utils/format'
+import { formatUSDPrice, NumberType } from 'src/utils/format'
 
 interface Props {
   address: string
@@ -57,7 +57,7 @@ export default function WalletPreviewCard({
           />
         </Flex>
         <Text color="textSecondary" variant="subheadSmall">
-          {formatUSDPrice(balance)}
+          {formatUSDPrice(balance, NumberType.FiatTokenQuantity)}
         </Text>
       </Flex>
     </TouchableArea>

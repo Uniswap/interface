@@ -103,6 +103,7 @@ const SIX_SIG_FIGS_TWO_DECIMALS_NO_COMMAS = new Intl.NumberFormat('en-US', {
 
 const THREE_SIG_FIGS_USD = new Intl.NumberFormat('en-US', {
   notation: 'standard',
+  minimumSignificantDigits: 3,
   maximumSignificantDigits: 3,
   currency: 'USD',
   style: 'currency',
@@ -189,7 +190,7 @@ export enum NumberType {
   // fiat prices in any component that belongs in the Token Details flow (except for token stats)
   FiatTokenDetails = 'fiat-token-details',
 
-  // fiat prices everyone except Token Details flow
+  // fiat prices everywhere except Token Details flow
   FiatTokenPrice = 'fiat-token-price',
 
   // fiat values for market cap, TVL, volume in the Token Details screen
@@ -239,7 +240,7 @@ export function formatNumber(
 
   const formatter = getFormatterRule(input, type)
   if (typeof formatter === 'string') return formatter
-  return formatter.format(input)
+  return formatter.format(input).replace('E', 'e') // the E in scientific notation should be lowercase
 }
 
 export function formatCurrencyAmount(
@@ -281,7 +282,7 @@ export function formatDate(date: Date) {
   })
 }
 
-function formatNumberOrString(price: NullUndefined<number | string>, type: NumberType) {
+export function formatNumberOrString(price: NullUndefined<number | string>, type: NumberType) {
   if (price === null || price === undefined) return '-'
   if (typeof price === 'string') return formatNumber(parseFloat(price), type)
   return formatNumber(price, type)

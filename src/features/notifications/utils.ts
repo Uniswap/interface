@@ -9,7 +9,7 @@ import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/t
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { getValidAddress, shortenAddress } from 'src/utils/addresses'
 import { currencyIdToAddress } from 'src/utils/currencyId'
-import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
+import { formatCurrencyAmount, formatUSDPrice, NumberType } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification) => {
@@ -313,7 +313,7 @@ export const getFormattedCurrencyAmount = (
       convertScientificNotationToNumber(currencyAmountRaw)
 
     const currencyAmount = CurrencyAmount.fromRawAmount<Currency>(currency, parsedCurrencyAmountRaw)
-    const formattedAmount = formatCurrencyAmount(currencyAmount)
+    const formattedAmount = formatCurrencyAmount(currencyAmount, NumberType.TokenTx)
     return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `
   } catch (e) {
     logger.info('notifications/utils', 'getFormattedCurrencyAmount', 'could not format amount', e)

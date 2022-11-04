@@ -20,7 +20,7 @@ import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
-import { formatCurrencyAmount, formatNumber, NumberType } from 'src/utils/format'
+import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'src/utils/format'
 
 interface SwapFormProps {
   onNext: () => void
@@ -170,7 +170,7 @@ export function SwapReview({
     currencyAmounts[derivedCurrencyField],
     NumberType.TokenTx
   )
-  const formattedExactValue = formatNumber(parseFloat(exactValue), NumberType.TokenTx)
+  const formattedExactValue = formatNumberOrString(exactValue, NumberType.TokenTx)
   const [amountIn, amountOut] =
     exactCurrencyField === CurrencyField.INPUT
       ? [formattedExactValue, derivedAmount]

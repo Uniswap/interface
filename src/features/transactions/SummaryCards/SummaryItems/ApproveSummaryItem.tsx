@@ -12,6 +12,7 @@ import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/ut
 import { ApproveTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { shortenAddress } from 'src/utils/addresses'
 import { buildCurrencyId } from 'src/utils/currencyId'
+import { formatNumberOrString, NumberType } from 'src/utils/format'
 
 export default function ApproveSummaryItem({
   transaction,
@@ -30,10 +31,13 @@ export default function ApproveSummaryItem({
     t,
   })
 
-  const approvalAmountCaption =
-    transaction.typeInfo.approvalAmount === 'INF' ? t('Unlimited') : undefined
+  const { approvalAmount } = transaction.typeInfo
+
+  const approvalAmountCaption = approvalAmount === 'INF' ? t('Unlimited') : undefined
   const approvalAmountTitle = `${
-    transaction.typeInfo.approvalAmount === 'INF' ? '' : transaction.typeInfo.approvalAmount ?? ''
+    !approvalAmount || approvalAmount === 'INF'
+      ? ''
+      : formatNumberOrString(transaction.typeInfo.approvalAmount, NumberType.TokenTx)
   } ${currency?.symbol ?? ''}`
 
   return (

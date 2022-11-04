@@ -13,7 +13,7 @@ import {
   useTransferNFTCallback,
 } from 'src/features/transactions/transfer/hooks'
 import { currencyAddress } from 'src/utils/currencyId'
-import { formatCurrencyAmount, formatNumber, NumberType } from 'src/utils/format'
+import { formatCurrencyAmount, formatNumberOrString, NumberType } from 'src/utils/format'
 
 interface TransferFormProps {
   derivedTransferInfo: DerivedTransferInfo
@@ -98,7 +98,7 @@ export function TransferReview({
 
   const transferWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
   const formattedAmountIn = isUSDInput
-    ? formatNumber(parseFloat(exactAmountUSD), NumberType.FiatTokenQuantity)
+    ? formatNumberOrString(exactAmountUSD, NumberType.FiatTokenQuantity)
     : formatCurrencyAmount(currencyAmounts[CurrencyField.INPUT], NumberType.TokenTx)
 
   return (

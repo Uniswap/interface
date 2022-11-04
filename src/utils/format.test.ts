@@ -1,7 +1,7 @@
 import { formatNumber, NumberType } from 'src/utils/format'
 
 it('formats token reference numbers correctly', () => {
-  expect(formatNumber(1234567000000000, NumberType.TokenNonTx)).toBe('1.23E15')
+  expect(formatNumber(1234567000000000, NumberType.TokenNonTx)).toBe('1.23e15')
   expect(formatNumber(1002345, NumberType.TokenNonTx)).toBe('1.00M')
   expect(formatNumber(1234, NumberType.TokenNonTx)).toBe('1,234.00')
   expect(formatNumber(0.00909, NumberType.TokenNonTx)).toBe('0.009')
@@ -37,8 +37,8 @@ it('formats fiat estimates on token details pages correctly', () => {
   expect(formatNumber(0.001231, NumberType.FiatTokenDetails)).toBe('$0.00123')
   expect(formatNumber(0.00001231, NumberType.FiatTokenDetails)).toBe('$0.0000123')
 
-  expect(formatNumber(0.0000001234, NumberType.FiatTokenDetails)).toBe('$1.23E-7')
-  expect(formatNumber(0.000000009876, NumberType.FiatTokenDetails)).toBe('$9.88E-9')
+  expect(formatNumber(0.0000001234, NumberType.FiatTokenDetails)).toBe('$1.23e-7')
+  expect(formatNumber(0.000000009876, NumberType.FiatTokenDetails)).toBe('$9.88e-9')
 })
 
 it('formats fiat estimates for tokens correctly', () => {
@@ -49,8 +49,8 @@ it('formats fiat estimates for tokens correctly', () => {
   expect(formatNumber(0.001231, NumberType.FiatTokenPrice)).toBe('$0.00123')
   expect(formatNumber(0.00001231, NumberType.FiatTokenPrice)).toBe('$0.0000123')
 
-  expect(formatNumber(0.0000001234, NumberType.FiatTokenPrice)).toBe('$1.23E-7')
-  expect(formatNumber(0.000000009876, NumberType.FiatTokenPrice)).toBe('$9.88E-9')
+  expect(formatNumber(0.0000001234, NumberType.FiatTokenPrice)).toBe('$1.23e-7')
+  expect(formatNumber(0.000000009876, NumberType.FiatTokenPrice)).toBe('$9.88e-9')
 })
 
 it('formats fiat estimates for token stats correctly', () => {

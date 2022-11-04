@@ -77,7 +77,7 @@ const SitePermissions = () => {
         </Box>
         <Box flex={1}>
           <Text color="textPrimary" variant="bodySmall">
-            {t('Transfer your assets without your consent')}
+            {t('Transfer your assets without consent')}
           </Text>
         </Box>
       </Flex>
