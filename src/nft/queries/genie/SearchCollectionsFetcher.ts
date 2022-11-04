@@ -2,6 +2,8 @@ import { isAddress } from '@ethersproject/address'
 
 import { GenieCollection } from '../../types'
 
+const MAX_SEARCH_RESULTS = 6
+
 export const fetchSearchCollections = async (addressOrName: string, recursive = false): Promise<GenieCollection[]> => {
   const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/searchCollections`
   const isName = !isAddress(addressOrName.toLowerCase())
@@ -51,7 +53,7 @@ export const fetchSearchCollections = async (addressOrName: string, recursive = 
           }
         })
       : []
-    return formattedData.slice(0, 6)
+    return formattedData.slice(0, MAX_SEARCH_RESULTS)
   }
   const data = await r.json()
 
