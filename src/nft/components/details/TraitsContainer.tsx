@@ -66,9 +66,7 @@ const TraitValue = styled.div`
 `
 
 const GridItem = ({ trait, collectionAddress }: { trait: Trait; collectionAddress: string }) => {
-  const { trait_type } = trait
-  // @ts-ignore
-  const trait_value = trait.trait_value || trait.value
+  const { trait_type, trait_value } = trait
   const params = qs.stringify(
     { traits: [`("${trait_type}","${trait_value}")`] },
     {
