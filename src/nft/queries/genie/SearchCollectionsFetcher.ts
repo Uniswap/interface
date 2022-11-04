@@ -2,6 +2,8 @@ import { isAddress } from '@ethersproject/address'
 
 import { GenieCollection } from '../../types'
 
+const MAX_SEARCH_RESULTS = 6
+
 export const fetchSearchCollections = async (addressOrName: string, recursive = false): Promise<GenieCollection[]> => {
   const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/searchCollections`
   const isName = !isAddress(addressOrName.toLowerCase())
@@ -39,10 +41,21 @@ export const fetchSearchCollections = async (addressOrName: string, recursive = 
     body: JSON.stringify(payload),
   })
   if (isName) {
-    const data = (await r.json()) as { data: GenieCollection[] }
-    return data?.data ? data.data.slice(0, 6) : []
+    const data = await r.json()
+    const formattedData = data?.data
+      ? data.data.map((collection: { stats: Record<string, unknown>; floorPrice: string }) => {
+          return {
+            ...collection,
+            stats: {
+              ...collection.stats,
+              floor_price: collection.floorPrice,
+            },
+          }
+        })
+      : []
+    return formattedData.slice(0, MAX_SEARCH_RESULTS)
   }
   const data = await r.json()
 
-  return data.data ? [data.data[0]] : []
+  return data.data ? [{ ...data.data[0], stats: { ...data.data[0].stats, floor_price: data.data[0].floorPrice } }] : []
 }
