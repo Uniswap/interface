@@ -1,38 +1,217 @@
-import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
-import { EventName, PageName } from 'analytics/constants'
-import { useTrace } from 'analytics/Trace'
-import clsx from 'clsx'
+import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip/index'
-import useENSName from 'hooks/useENSName'
-import { AnimatedBox, Box } from 'nft/components/Box'
-import { CollectionProfile } from 'nft/components/details/CollectionProfile'
-import { Details } from 'nft/components/details/Details'
-import { Traits } from 'nft/components/details/Traits'
-import { Center, Column, Row } from 'nft/components/Flex'
-import { CloseDropDownIcon, CornerDownLeftIcon, Eth2Icon, ShareIcon, SuspiciousIcon } from 'nft/components/icons'
-import { ExpandableText } from 'nft/components/layout/ExpandableText'
-import { badge, bodySmall, caption, headlineMedium, subhead } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
-import { useBag } from 'nft/hooks'
-import { useTimeout } from 'nft/hooks/useTimeout'
-import { CollectionInfoForAsset, Deprecated_SellOrder, GenieAsset, SellOrder } from 'nft/types'
-import { useUsdPrice } from 'nft/utils'
+import { Box } from 'nft/components/Box'
+import { reduceFilters } from 'nft/components/collection/Activity'
+import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
+import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+import { Center } from 'nft/components/Flex'
+import { VerifiedIcon } from 'nft/components/icons'
+import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
+import { ActivityEventResponse, ActivityEventType } from 'nft/types'
+import { CollectionInfoForAsset, GenieAsset, GenieCollection } from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
-import { isAssetOwnedByUser } from 'nft/utils/isAssetOwnedByUser'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
-import { fallbackProvider, rarityProviderLogo } from 'nft/utils/rarity'
-import { toSignificant } from 'nft/utils/toSignificant'
-import qs from 'query-string'
-import { useEffect, useMemo, useState } from 'react'
-import ReactMarkdown from 'react-markdown'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useSpring } from 'react-spring'
+import { putCommas } from 'nft/utils/putCommas'
+import { fallbackProvider, getRarityProviderLogo } from 'nft/utils/rarity'
+import { useCallback, useMemo, useReducer, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { useInfiniteQuery, useQuery } from 'react-query'
+import { Link as RouterLink } from 'react-router-dom'
+import styled, { css } from 'styled-components/macro'
 
-import { SUSPICIOUS_TEXT } from '../collection/Card'
+import AssetActivity from './AssetActivity'
 import * as styles from './AssetDetails.css'
+import DetailsContainer from './DetailsContainer'
+import InfoContainer from './InfoContainer'
+import TraitsContainer from './TraitsContainer'
+
+const OpacityTransition = css`
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+
+  &:active {
+    opacity: ${({ theme }) => theme.opacity.click};
+  }
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `opacity ${duration.medium} ${timing.ease}`};
+`
+
+const CollectionHeader = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  line-height: 24px;
+  color: ${({ theme }) => theme.textPrimary};
+  margin-top: 28px;
+  text-decoration: none;
+  ${OpacityTransition};
+`
+
+const AssetPriceDetailsContainer = styled.div`
+  margin-top: 20px;
+  display: none;
+  @media (max-width: 960px) {
+    display: block;
+  }
+`
+
+const AssetHeader = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 36px;
+  line-height: 36px;
+  color: ${({ theme }) => theme.textPrimary};
+  margin-top: 8px;
+`
+
+const MediaContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 780px;
+`
+
+const AddressTextLink = styled.a`
+  display: inline-block;
+  color: ${({ theme }) => theme.textSecondary};
+  text-decoration: none;
+  max-width: 100%;
+  word-wrap: break-word;
+  ${OpacityTransition};
+`
+
+const SocialsContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+`
+
+const DescriptionText = styled.div`
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 20px;
+`
+
+const RarityWrap = styled.span`
+  display: flex;
+  color: ${({ theme }) => theme.textSecondary};
+  padding: 2px 4px;
+  border-radius: 4px;
+  align-items: center;
+  gap: 4px;
+`
+
+const EmptyActivitiesContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: ${({ theme }) => theme.textPrimary};
+  font-size: 28px;
+  line-height: 36px;
+  padding: 56px 0px;
+`
+
+const Link = styled(RouterLink)`
+  color: ${({ theme }) => theme.accentAction};
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 16px;
+  margin-top: 12px;
+  cursor: pointer;
+  ${OpacityTransition};
+`
+
+const DefaultLink = styled(RouterLink)`
+  text-decoration: none;
+`
+
+const ActivitySelectContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 34px;
+  overflow-x: auto;
+
+  // Firefox scrollbar styling
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
+
+  // safari and chrome scrollbar styling
+  ::-webkit-scrollbar {
+    background: transparent;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    margin-top: 40px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.backgroundOutline};
+    border-radius: 8px;
+  }
+
+  @media (max-width: 720px) {
+    padding-bottom: 8px;
+  }
+`
+
+const ContentNotAvailable = styled.div`
+  display: flex;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
+  line-height: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  width: 450px;
+  height: 450px;
+`
+
+const FilterBox = styled.div<{ isActive?: boolean }>`
+  box-sizing: border-box;
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.textPrimary};
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: ${({ isActive, theme }) => (isActive ? `1px solid ${theme.accentActive}` : undefined)};
+  ${OpacityTransition};
+`
+
+const ByText = styled.span`
+  font-size: 14px;
+  line-height: 20px;
+`
+
+const Img = styled.img`
+  background-color: white;
+`
+
+const HoverImageContainer = styled.div`
+  display: flex;
+  margin-right: 4px;
+`
+
+const HoverContainer = styled.div`
+  display: flex;
+`
+
+const ContainerText = styled.span`
+  font-size: 14px;
+`
 
 const AudioPlayer = ({
   imageUrl,
@@ -58,26 +237,11 @@ const AudioPlayer = ({
   )
 }
 
-const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
-
-const CountdownTimer = ({ sellOrder }: { sellOrder: Deprecated_SellOrder | SellOrder }) => {
-  const { date, expires } = useMemo(() => {
-    const date = new Date((sellOrder as Deprecated_SellOrder).orderClosingDate ?? (sellOrder as SellOrder).endAt)
-    return {
-      date,
-      expires: formatter.format(date),
-    }
-  }, [sellOrder])
-  const [days, hours, minutes, seconds] = useTimeout(date)
-
-  return (
-    <MouseoverTooltip text={<Box fontSize="12">Expires {expires}</Box>}>
-      <Box as="span" fontWeight="normal" className={caption} color="textSecondary">
-        Expires: {days !== 0 ? `${days} days` : ''} {hours !== 0 ? `${hours} hours` : ''} {minutes} minutes {seconds}{' '}
-        seconds
-      </Box>
-    </MouseoverTooltip>
-  )
+const initialFilterState = {
+  [ActivityEventType.Listing]: true,
+  [ActivityEventType.Sale]: true,
+  [ActivityEventType.Transfer]: false,
+  [ActivityEventType.CancelListing]: false,
 }
 
 const AssetView = ({
@@ -112,46 +276,19 @@ enum MediaType {
 interface AssetDetailsProps {
   asset: GenieAsset
   collection: CollectionInfoForAsset
+  collectionStats: GenieCollection | undefined
 }
 
-export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
-  const { pathname, search } = useLocation()
-  const navigate = useNavigate()
-  const addAssetsToBag = useBag((state) => state.addAssetsToBag)
-  const removeAssetsFromBag = useBag((state) => state.removeAssetsFromBag)
-  const itemsInBag = useBag((state) => state.itemsInBag)
-  const bagExpanded = useBag((state) => state.bagExpanded)
-  const [creatorAddress, setCreatorAddress] = useState('')
-  const [ownerAddress, setOwnerAddress] = useState('')
+export const AssetDetails = ({ asset, collection, collectionStats }: AssetDetailsProps) => {
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
-  const creatorEnsName = useENSName(creatorAddress)
-  const ownerEnsName = useENSName(ownerAddress)
-  const parsed = qs.parse(search)
-  const { gridWidthOffset } = useSpring({
-    gridWidthOffset: bagExpanded ? 324 : 0,
-  })
-  const [showTraits, setShowTraits] = useState(true)
-  const [isSelected, setSelected] = useState(false)
-  const [isOwned, setIsOwned] = useState(false)
-  const { account: address, provider } = useWeb3React()
 
-  const trace = useTrace({ page: PageName.NFT_DETAILS_PAGE })
-
-  const eventProperties = {
-    collection_address: asset.address,
-    token_id: asset.tokenId,
-    token_type: asset.tokenType,
-    ...trace,
-  }
-
-  const { rarityProvider, rarityLogo } = useMemo(
+  const { rarityProvider } = useMemo(
     () =>
       asset.rarity
         ? {
             rarityProvider: asset?.rarity?.providers?.find(
               ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
             ),
-            rarityLogo: rarityProviderLogo[asset.rarity.primaryProvider] || '',
           }
         : {},
     [asset.rarity]
@@ -166,282 +303,217 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     return MediaType.Image
   }, [asset])
 
-  useEffect(() => {
-    if (asset.creator) setCreatorAddress(asset.creator.address ?? '')
-    if (asset.owner) setOwnerAddress(asset.owner)
-  }, [asset])
+  const { address: contractAddress, tokenId: token_id } = asset
 
-  useEffect(() => {
-    setSelected(
-      !!itemsInBag.find((item) => item.asset.tokenId === asset.tokenId && item.asset.address === asset.address)
-    )
-  }, [asset, itemsInBag])
-
-  useEffect(() => {
-    if (provider) {
-      isAssetOwnedByUser({
-        tokenId: asset.tokenId,
-        userAddress: address || '',
-        assetAddress: asset.address,
-        tokenType: asset.tokenType,
-        provider,
-      }).then(setIsOwned)
+  const { data: priceData } = useQuery<ActivityEventResponse>(
+    [
+      'collectionActivity',
+      {
+        contractAddress,
+      },
+    ],
+    async ({ pageParam = '' }) => {
+      return await ActivityFetcher(
+        contractAddress,
+        {
+          token_id,
+          eventTypes: [ActivityEventType.Sale],
+        },
+        pageParam,
+        '1'
+      )
+    },
+    {
+      getNextPageParam: (lastPage) => {
+        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
+      },
+      refetchInterval: 15000,
+      refetchIntervalInBackground: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
     }
-  }, [asset, address, provider])
+  )
 
-  const USDPrice = useUsdPrice(asset)
+  const lastSalePrice = priceData?.events[0]?.price ?? null
+  const formattedEthprice = formatEthPrice(lastSalePrice ?? '') || 0
+  const formattedPrice = lastSalePrice ? putCommas(formattedEthprice).toString() : null
+  const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
+
+  const Filter = useCallback(
+    function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
+      const isActive = activeFilters[eventType]
+
+      return (
+        <FilterBox isActive={isActive} onClick={() => filtersDispatch({ eventType })}>
+          {eventType === ActivityEventType.CancelListing
+            ? 'Cancellations'
+            : eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
+        </FilterBox>
+      )
+    },
+    [activeFilters]
+  )
+
+  const {
+    data: eventsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isSuccess,
+  } = useInfiniteQuery<ActivityEventResponse>(
+    [
+      'collectionActivity',
+      {
+        contractAddress,
+        activeFilters,
+        token_id,
+      },
+    ],
+    async ({ pageParam = '' }) => {
+      return await ActivityFetcher(
+        contractAddress,
+        {
+          token_id,
+          eventTypes: Object.keys(activeFilters)
+            .map((key) => key as ActivityEventType)
+            .filter((key) => activeFilters[key]),
+        },
+        pageParam
+      )
+    },
+    {
+      getNextPageParam: (lastPage) => {
+        return lastPage.events?.length === 25 ? lastPage.cursor : undefined
+      },
+      refetchInterval: 15000,
+      refetchIntervalInBackground: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    }
+  )
+
+  const rarity = asset?.rarity?.providers?.length ? asset?.rarity?.providers?.[0] : undefined
+  const [showHolder, setShowHolder] = useState(false)
+  const rarityProviderLogo = getRarityProviderLogo(rarity?.provider)
+  const events = useMemo(
+    () => (isSuccess ? eventsData?.pages.map((page) => page.events).flat() : null),
+    [isSuccess, eventsData]
+  )
 
   return (
-    <AnimatedBox
-      style={{
-        // @ts-ignore
-        width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
-      }}
-      className={styles.container}
-    >
-      <div className={styles.columns}>
-        <Column className={styles.column}>
-          {assetMediaType === MediaType.Image ? (
-            <img
-              className={styles.image}
-              src={asset.imageUrl}
-              alt={asset.name || collection.collectionName}
-              style={{ ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }}
-            />
-          ) : (
-            <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
-          )}
-        </Column>
-        <Column className={clsx(styles.column, styles.columnRight)} width="full">
-          <Column>
-            <Row
-              marginBottom="8"
-              alignItems="center"
-              textAlign="center"
-              justifyContent={rarityProvider ? 'space-between' : 'flex-end'}
+    <Column>
+      <MediaContainer>
+        {asset.imageUrl === undefined || showHolder ? (
+          <ContentNotAvailable>Content not available yet</ContentNotAvailable>
+        ) : assetMediaType === MediaType.Image ? (
+          <Img
+            className={styles.image}
+            src={asset.imageUrl}
+            alt={asset.name || collection.collectionName}
+            onError={() => setShowHolder(true)}
+          />
+        ) : (
+          <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
+        )}
+      </MediaContainer>
+      <DefaultLink to={`/nfts/collection/${asset.address}`}>
+        <CollectionHeader>
+          {collection.collectionName} {collectionStats?.isVerified && <VerifiedIcon />}
+        </CollectionHeader>
+      </DefaultLink>
+
+      <AssetHeader>{asset.name ?? `${asset.collectionName} #${asset.tokenId}`}</AssetHeader>
+      <AssetPriceDetailsContainer>
+        <AssetPriceDetails asset={asset} collection={collection} />
+      </AssetPriceDetailsContainer>
+      <InfoContainer
+        primaryHeader="Traits"
+        defaultOpen
+        secondaryHeader={
+          rarityProvider && rarity && rarity.score ? (
+            <MouseoverTooltip
+              text={
+                <HoverContainer>
+                  <HoverImageContainer>
+                    <img src={rarityProviderLogo} alt="cardLogo" width={16} />
+                  </HoverImageContainer>
+                  <ContainerText>
+                    {collectionStats?.rarityVerified
+                      ? `Verified by ${collectionStats?.name}`
+                      : `Ranking by ${rarity.provider === 'Genie' ? fallbackProvider : rarity.provider}`}
+                  </ContainerText>
+                </HoverContainer>
+              }
+              placement="top"
             >
-              {rarityProvider && (
-                <MouseoverTooltip
-                  text={
-                    <Row gap="4">
-                      <img src={rarityLogo} width={16} alt={rarityProvider.provider} />
-                      Ranking by{' '}
-                      {asset.rarity?.primaryProvider === 'Genie' ? fallbackProvider : asset.rarity?.primaryProvider}
-                    </Row>
-                  }
-                >
-                  <Center
-                    paddingLeft="6"
-                    paddingRight="4"
-                    className={badge}
-                    backgroundColor="backgroundSurface"
-                    color="textPrimary"
-                    borderRadius="4"
-                  >
-                    #{rarityProvider.rank} <img src="/nft/svgs/rarity.svg" height={15} width={15} alt="Rarity rank" />
+              <RarityWrap>Rarity: {putCommas(rarity.score)}</RarityWrap>
+            </MouseoverTooltip>
+          ) : null
+        }
+      >
+        <TraitsContainer asset={asset} />
+      </InfoContainer>
+      <InfoContainer
+        primaryHeader="Activity"
+        secondaryHeader={formattedPrice ? `Last Sale: ${formattedPrice} ETH` : undefined}
+      >
+        <>
+          <ActivitySelectContainer>
+            <Filter eventType={ActivityEventType.Listing} />
+            <Filter eventType={ActivityEventType.Sale} />
+            <Filter eventType={ActivityEventType.Transfer} />
+            <Filter eventType={ActivityEventType.CancelListing} />
+          </ActivitySelectContainer>
+          {events && events.length > 0 ? (
+            <InfiniteScroll
+              next={fetchNextPage}
+              hasMore={!!hasNextPage}
+              loader={
+                isFetchingNextPage ? (
+                  <Center>
+                    <LoadingSparkle />
                   </Center>
-                </MouseoverTooltip>
-              )}
-              <Row gap="12">
-                <Center
-                  as="button"
-                  padding="0"
-                  border="none"
-                  background="transparent"
-                  cursor="pointer"
-                  onClick={async () => {
-                    await navigator.clipboard.writeText(`${window.location.hostname}/#${pathname}`)
-                  }}
-                >
-                  <ShareIcon />
-                </Center>
-
-                <Center
-                  as="button"
-                  border="none"
-                  width="32"
-                  height="32"
-                  padding="0"
-                  background="transparent"
-                  cursor="pointer"
-                  onClick={() => {
-                    if (!parsed.origin || parsed.origin === 'collection') {
-                      navigate(`/nfts/collection/${asset.address}`)
-                    } else if (parsed.origin === 'profile') {
-                      navigate('/profile', undefined)
-                    } else if (parsed.origin === 'explore') {
-                      navigate(`/nfts`, undefined)
-                    } else if (parsed.origin === 'activity') {
-                      navigate(`/nfts/collection/${asset.address}/activity`, undefined)
-                    }
-                  }}
-                >
-                  {parsed.origin ? (
-                    <CornerDownLeftIcon width="28" height="28" />
-                  ) : (
-                    <CloseDropDownIcon color={themeVars.colors.textSecondary} />
-                  )}
-                </Center>
-              </Row>
-            </Row>
-            <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={headlineMedium}>
-              {asset.susFlag && (
-                <Box marginTop="8">
-                  <MouseoverTooltip text={<Box fontWeight="normal">{SUSPICIOUS_TEXT}</Box>}>
-                    <SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />
-                  </MouseoverTooltip>
-                </Box>
-              )}
-
-              {asset.name || `${collection.collectionName} #${asset.tokenId}`}
-            </Row>
-            {collection.collectionDescription ? (
-              <ExpandableText>
-                <ReactMarkdown
-                  allowedTypes={['link', 'paragraph', 'strong', 'code', 'emphasis', 'text']}
-                  source={collection.collectionDescription}
-                />
-              </ExpandableText>
-            ) : null}
-            <Row
-              justifyContent={{
-                sm: 'space-between',
-              }}
-              gap={{
-                sm: 'unset',
-              }}
-              marginBottom="36"
+                ) : null
+              }
+              dataLength={events?.length ?? 0}
+              scrollableTarget="activityContainer"
             >
-              {ownerAddress.length > 0 && (
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={`https://etherscan.io/address/${asset.owner}`}
-                  style={{ textDecoration: 'none' }}
-                >
-                  <CollectionProfile
-                    label="Owner"
-                    avatarUrl=""
-                    name={ownerEnsName.ENSName ?? shortenAddress(ownerAddress, 0, 4)}
-                  />
-                </a>
-              )}
-
-              <Link to={`/nfts/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
-                <CollectionProfile
-                  label="Collection"
-                  avatarUrl={collection.collectionImageUrl}
-                  name={collection.collectionName}
-                  isVerified={collection.isVerified}
-                />
-              </Link>
-
-              {creatorAddress ? (
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={`https://etherscan.io/address/${creatorAddress}`}
-                  style={{ textDecoration: 'none' }}
-                >
-                  <CollectionProfile
-                    label="Creator"
-                    avatarUrl={asset.creator.profile_img_url}
-                    name={creatorEnsName.ENSName ?? shortenAddress(creatorAddress, 0, 4)}
-                    isVerified
-                    className={styles.creator}
-                  />
-                </a>
-              ) : null}
-            </Row>
-          </Column>
-
-          {asset.priceInfo && asset.sellorders && !isOwned ? (
-            <Row
-              marginTop="8"
-              marginBottom="40"
-              justifyContent="space-between"
-              borderRadius="12"
-              paddingTop="16"
-              paddingBottom="16"
-              paddingLeft="16"
-              paddingRight="24"
-              background="accentActiveSoft"
-            >
-              <Column justifyContent="flex-start" gap="8">
-                <Row gap="12" as="a" target="_blank" rel="norefferer">
-                  <a href={asset.sellorders[0].marketplaceUrl} rel="noreferrer" target="_blank">
-                    <img
-                      className={styles.marketplace}
-                      src={`/nft/svgs/marketplaces/${asset.sellorders[0].marketplace.toLowerCase()}.svg`}
-                      height={16}
-                      width={16}
-                      alt="Markeplace"
-                    />
-                  </a>
-                  <Row as="span" className={subhead} color="textPrimary">
-                    {formatEthPrice(asset.priceInfo.ETHPrice)} <Eth2Icon />
-                  </Row>
-                  {USDPrice && (
-                    <Box as="span" color="textSecondary" className={bodySmall}>
-                      ${toSignificant(USDPrice)}
-                    </Box>
-                  )}
-                </Row>
-                {(asset.sellorders?.[0] as Deprecated_SellOrder).orderClosingDate ||
-                (asset.sellorders?.[0] as SellOrder).endAt ? (
-                  <CountdownTimer sellOrder={asset.sellorders[0]} />
-                ) : null}
-              </Column>
-              <Box
-                as="button"
-                paddingTop="14"
-                paddingBottom="14"
-                fontWeight="medium"
-                textAlign="center"
-                fontSize="14"
-                style={{ width: '244px' }}
-                color={isSelected ? 'genieBlue' : 'explicitWhite'}
-                border="none"
-                borderRadius="12"
-                background={isSelected ? 'explicitWhite' : 'genieBlue'}
-                transition="250"
-                boxShadow={{ hover: 'elevation' }}
-                onClick={() => {
-                  if (isSelected) {
-                    removeAssetsFromBag([asset])
-                  } else {
-                    addAssetsToBag([asset])
-                    sendAnalyticsEvent(EventName.NFT_BUY_ADDED, { ...eventProperties })
-                  }
-                  setSelected((x) => !x)
-                }}
-              >
-                {isSelected ? 'Added to Bag' : 'Buy Now'}
-              </Box>
-            </Row>
-          ) : null}
-          <Row gap="32" marginBottom="20">
-            <button data-active={showTraits} onClick={() => setShowTraits(true)} className={styles.tab}>
-              Traits
-            </button>
-            <button data-active={!showTraits} onClick={() => setShowTraits(false)} className={styles.tab}>
-              Details
-            </button>
-          </Row>
-          {showTraits ? (
-            <Traits collectionAddress={asset.address} traits={asset.traits ?? []} />
+              <AssetActivity eventsData={{ events }} />
+            </InfiniteScroll>
           ) : (
-            <Details
-              contractAddress={asset.address}
-              tokenId={asset.tokenId}
-              tokenType={asset.tokenType}
-              blockchain="Ethereum"
-              metadataUrl={asset.metadataUrl}
-              totalSupply={collection.totalSupply}
-            />
+            <EmptyActivitiesContainer>
+              <div>No activities yet</div>
+              <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
+            </EmptyActivitiesContainer>
           )}
-        </Column>
-      </div>
-    </AnimatedBox>
+        </>
+      </InfoContainer>
+      <InfoContainer primaryHeader="Description" secondaryHeader={null}>
+        <>
+          <ByText>By </ByText>
+          {asset?.creator && asset.creator?.address && (
+            <AddressTextLink
+              href={`https://etherscan.io/address/${asset.creator.address}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {shortenAddress(asset.creator.address, 2, 4)}
+            </AddressTextLink>
+          )}
+
+          <DescriptionText>{collection.collectionDescription}</DescriptionText>
+          <SocialsContainer>
+            {collectionStats?.externalUrl && <Resource name="Website" link={`${collectionStats?.externalUrl}`} />}
+            {collectionStats?.twitterUrl && (
+              <Resource name="Twitter" link={`https://twitter.com/${collectionStats?.twitterUrl}`} />
+            )}
+            {collectionStats?.discordUrl && <Resource name="Discord" link={collectionStats?.discordUrl} />}
+          </SocialsContainer>
+        </>
+      </InfoContainer>
+      <InfoContainer primaryHeader="Details" secondaryHeader={null}>
+        <DetailsContainer asset={asset} collection={collection} />
+      </InfoContainer>
+    </Column>
   )
 }

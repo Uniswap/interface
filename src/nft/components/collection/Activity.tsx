@@ -48,7 +48,7 @@ const initialFilterState = {
   [ActivityEventType.CancelListing]: false,
 }
 
-const reduceFilters = (state: typeof initialFilterState, action: { eventType: ActivityEventType }) => {
+export const reduceFilters = (state: typeof initialFilterState, action: { eventType: ActivityEventType }) => {
   return { ...state, [action.eventType]: !state[action.eventType] }
 }
 

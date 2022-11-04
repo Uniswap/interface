@@ -10,6 +10,7 @@ import {
   ActivityListingIcon,
   ActivitySaleIcon,
   ActivityTransferIcon,
+  CancelListingIcon,
   RarityVerifiedIcon,
 } from 'nft/components/icons'
 import {
@@ -157,7 +158,7 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
   )
 }
 
-const MarketplaceIcon = ({ marketplace }: { marketplace: Markets }) => {
+export const MarketplaceIcon = ({ marketplace }: { marketplace: Markets }) => {
   return (
     <Box
       as="img"
@@ -204,8 +205,9 @@ interface EventCellProps {
   eventType: ActivityEventType
   eventTimestamp?: number
   eventTransactionHash?: string
+  eventOnly?: boolean
   price?: string
-  isMobile: boolean
+  isMobile?: boolean
 }
 
 const renderEventIcon = (eventType: ActivityEventType) => {
@@ -216,6 +218,8 @@ const renderEventIcon = (eventType: ActivityEventType) => {
       return <ActivitySaleIcon width={16} height={16} />
     case ActivityEventType.Transfer:
       return <ActivityTransferIcon width={16} height={16} />
+    case ActivityEventType.CancelListing:
+      return <CancelListingIcon width={16} height={16} />
     default:
       return null
   }
@@ -237,13 +241,20 @@ const eventColors = (eventType: ActivityEventType) => {
     [ActivityEventType.Listing]: 'gold',
     [ActivityEventType.Sale]: 'green',
     [ActivityEventType.Transfer]: 'violet',
-    [ActivityEventType.CancelListing]: 'error',
+    [ActivityEventType.CancelListing]: 'accentFailure',
   }
 
   return activityEvents[eventType] as 'gold' | 'green' | 'violet' | 'accentFailure'
 }
 
-export const EventCell = ({ eventType, eventTimestamp, eventTransactionHash, price, isMobile }: EventCellProps) => {
+export const EventCell = ({
+  eventType,
+  eventTimestamp,
+  eventTransactionHash,
+  eventOnly,
+  price,
+  isMobile,
+}: EventCellProps) => {
   const formattedPrice = useMemo(() => (price ? putCommas(formatEthPrice(price))?.toString() : null), [price])
   return (
     <Column height="full" justifyContent="center" gap="4">
@@ -251,7 +262,7 @@ export const EventCell = ({ eventType, eventTimestamp, eventTransactionHash, pri
         {renderEventIcon(eventType)}
         {ActivityEventTypeDisplay[eventType]}
       </Row>
-      {eventTimestamp && isValidDate(eventTimestamp) && !isMobile && (
+      {eventTimestamp && isValidDate(eventTimestamp) && !isMobile && !eventOnly && (
         <Row className={styles.eventTime}>
           {getTimeDifference(eventTimestamp.toString())}
           {eventTransactionHash && <ExternalLinkIcon transactionHash={eventTransactionHash} />}
@@ -301,9 +312,10 @@ interface RankingProps {
   rarity: TokenRarity
   collectionName: string
   rarityVerified: boolean
+  details?: boolean
 }
 
-const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
+const Ranking = ({ details, rarity, collectionName, rarityVerified }: RankingProps) => {
   const rarityProviderLogo = getRarityProviderLogo(rarity.source)
 
   return (

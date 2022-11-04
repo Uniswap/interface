@@ -79,7 +79,6 @@ export const detailsName = style([
 export const eventDetail = style([
   subhead,
   sprinkles({
-    marginBottom: '4',
     gap: '8',
   }),
   {
