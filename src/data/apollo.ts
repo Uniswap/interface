@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { relayStylePagination } from '@apollo/client/utilities'
 import { apolloDevToolsInit } from 'react-native-apollo-devtools-client'
 import { config } from 'src/config'
 import { uniswapUrls } from 'src/constants/urls'
@@ -11,7 +12,16 @@ export const client = new ApolloClient({
     // TODO: remove once API gateway supports mobile origin URL
     Origin: uniswapUrls.apiBaseUrl,
   },
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          // relayStylePagination function unfortunately generates a field policy that ignores args
+          nftBalances: relayStylePagination(),
+        },
+      },
+    },
+  }),
 })
 
 export function refetchAllQueries() {

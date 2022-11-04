@@ -60,6 +60,46 @@ query Nfts($ownerAddress: String!) {
   }
 }
 
+query NFTsTabQuery($ownerAddress: String!, $first: Int, $after: String) {
+  nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after) {
+    edges {
+      node {
+        ownedAsset {
+          id
+          collection {
+            id
+            name
+            isVerified
+            markets(currencies: [ETH]) {
+              id
+              floorPrice {
+                value
+              }
+            }
+          }
+          image {
+            id
+            url
+          }
+          name
+          tokenId
+          description
+          nftContract {
+            id
+            address
+          }
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}
+
 query PortfolioBalance($owner: String!) {
   portfolios(ownerAddresses: [$owner]) {
     id

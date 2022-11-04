@@ -1,21 +1,13 @@
+import { useIsFocused } from '@react-navigation/core'
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list'
-import { graphql } from 'babel-plugin-relay/macro'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View, ViewStyle } from 'react-native'
-import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import NoNFTsIcon from 'src/assets/icons/empty-state-picture.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { Suspense } from 'src/components/data/Suspense'
-import { NftBalancesPaginationQuery } from 'src/components/home/__generated__/NftBalancesPaginationQuery.graphql'
-import { NftsTabQuery } from 'src/components/home/__generated__/NftsTabQuery.graphql'
-import {
-  NftsTab_asset$data,
-  NftsTab_asset$key,
-} from 'src/components/home/__generated__/NftsTab_asset.graphql'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Box } from 'src/components/layout/Box'
@@ -25,6 +17,7 @@ import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import { EMPTY_ARRAY } from 'src/constants/misc'
+import { NfTsTabQueryQuery, useNfTsTabQueryQuery } from 'src/data/__generated__/types-and-hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { NFTItem } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
@@ -39,53 +32,7 @@ const PREFETCH_ITEMS_THRESHOLD = 0.5
 const LOADING_ITEM = 'loading'
 const FOOTER_HEIGHT = 20
 
-const nftsTabPaginationQuery = graphql`
-  fragment NftsTab_asset on Query
-  @argumentDefinitions(after: { type: "String" })
-  @refetchable(queryName: "NftBalancesPaginationQuery") {
-    nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after)
-      @connection(key: "NftsTab__nftBalances") {
-      edges {
-        node {
-          ownedAsset {
-            id
-            collection {
-              name
-              isVerified
-              markets(currencies: [ETH]) {
-                floorPrice {
-                  value
-                }
-              }
-            }
-            image {
-              url
-            }
-            name
-            tokenId
-            description
-            nftContract {
-              address
-            }
-          }
-        }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-        hasPreviousPage
-        startCursor
-      }
-    }
-  }
-`
-const nftsTabQuery = graphql`
-  query NftsTabQuery($ownerAddress: String!, $first: Int!) {
-    ...NftsTab_asset
-  }
-`
-
-function formatNftItems(data: NftsTab_asset$data | null | undefined): NFTItem[] {
+function formatNftItems(data: NfTsTabQueryQuery | undefined): NFTItem[] {
   const items = data?.nftBalances?.edges?.flatMap((item) => item.node)
   if (!items) return EMPTY_ARRAY
   const nfts = items
@@ -110,26 +57,7 @@ const keyExtractor = (item: NFTItem | string) =>
     ? LOADING_ITEM
     : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
-export function NftsTab(props: {
-  owner: string
-  tabViewScrollProps?: TabViewScrollProps
-  loadingContainerStyle?: ViewStyle
-}) {
-  return (
-    <Suspense
-      fallback={
-        <View style={props.loadingContainerStyle}>
-          <Flex pt="sm">
-            <Loading repeat={6} type="nft" />
-          </Flex>
-        </View>
-      }>
-      <NftsTabInner {...props} />
-    </Suspense>
-  )
-}
-
-function NftsTabInner({
+export function NftsTab({
   owner,
   tabViewScrollProps,
   loadingContainerStyle,
@@ -142,33 +70,43 @@ function NftsTabInner({
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
+  const [isSwitchingAccounts, setIsSwitchingAccounts] = useState(false)
 
-  const queryData = useLazyLoadQuery<NftsTabQuery>(
-    nftsTabQuery,
-    {
-      ownerAddress: owner,
-      first: 50,
+  const { data, loading, fetchMore, refetch } = useNfTsTabQueryQuery({
+    variables: { ownerAddress: owner, first: 50 },
+    notifyOnNetworkStatusChange: true, // Used to trigger `loading` state on fetchMore request
+    errorPolicy: 'all', // Suppress non-null image.url fields from backend
+    onCompleted: () => {
+      setIsSwitchingAccounts(false)
     },
-    // `NFTsTabQuery` has the same key as `PortfolioBalance`, which can cause
-    // race conditions, where `PortfolioBalance` sends a network request first,
-    // but does not pull NFT data. When `NFTsTabQuery` runs, it sees that a query
-    // with the same key was executed recently, and does not try to send a request.
-    // This change forces both a store lookup and a network request.
-    // FIX(MOB-2498): possible fix is to use a fragment here.
-    { fetchPolicy: 'store-and-network' }
-  )
+  })
 
-  const { data, loadNext, isLoadingNext, hasNext } = usePaginationFragment<
-    NftBalancesPaginationQuery,
-    NftsTab_asset$key
-  >(nftsTabPaginationQuery, queryData)
+  /**
+   * When owner changes, we need to trigger a refetch due to useRelayPagination policy ignoring key argument changes
+   * This only needs to be done if owner changes AND refetch callback already exists.
+   * We need to use the `setIsSwitchingAccounts` state in order to trigger loading state on switching accounts.
+   * If not, it will incorrectly display the old account's content until the refetch completes.
+   */
+  const isFocused = useIsFocused()
+  useEffect(() => {
+    if (!refetch || !isFocused) return
+    setIsSwitchingAccounts(true)
+    refetch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [owner])
 
   const nftDataItems = formatNftItems(data)
-  const shouldAddInLoadingItem = isLoadingNext && nftDataItems.length % 2 === 1
+  const shouldAddInLoadingItem = loading && nftDataItems.length % 2 === 1
 
   const onListEndReached = () => {
-    if (!hasNext) return
-    loadNext(50)
+    if (!data?.nftBalances?.pageInfo?.hasNextPage) return
+
+    fetchMore({
+      variables: {
+        first: 50,
+        after: data?.nftBalances?.pageInfo?.endCursor,
+      },
+    })
   }
 
   const onPressItem = useCallback(
@@ -243,6 +181,17 @@ function NftsTabInner({
     [onPressItem, theme.colors.userThemeMagenta]
   )
 
+  // Initial loading state
+  if ((!data || isSwitchingAccounts) && loading) {
+    return (
+      <View style={loadingContainerStyle}>
+        <Flex pt="sm">
+          <Loading repeat={6} type="nft" />
+        </Flex>
+      </View>
+    )
+  }
+
   return nftDataItems.length === 0 ? (
     <Flex centered flex={1} style={loadingContainerStyle}>
       <BaseCard.EmptyState
@@ -259,7 +208,7 @@ function NftsTabInner({
         ref={tabViewScrollProps?.ref}
         ListFooterComponent={
           // If not loading, we add a footer  to cover any possible space that is covered up by bottom tab bar
-          isLoadingNext ? <Loading repeat={4} type="nft" /> : <Box height={FOOTER_HEIGHT} />
+          loading ? <Loading repeat={4} type="nft" /> : <Box height={FOOTER_HEIGHT} />
         }
         contentContainerStyle={tabViewScrollProps?.contentContainerStyle}
         data={shouldAddInLoadingItem ? [...nftDataItems, LOADING_ITEM] : nftDataItems}
