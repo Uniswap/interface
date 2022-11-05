@@ -12,7 +12,7 @@ import { GetValidatorGaslessQuoteResult, GetValidatorQuoteResult } from './types
 
 export const routingApiKromatika = createApi({
   reducerPath: 'routingApiKromatika',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://api.metadexa.io/v1.0' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'https://beta.kromatika.finance/v1.0' }),
   endpoints: (build) => ({
     getQuote: build.query<
       GetValidatorQuoteResult,
