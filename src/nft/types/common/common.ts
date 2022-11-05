@@ -1,6 +1,4 @@
-import { Trait } from 'nft/hooks/useCollectionFilters'
-
-import { SellOrder } from '../sell'
+import { Deprecated_SellOrder, SellOrder } from '../sell'
 
 export interface OpenSeaCollection {
   name: string
@@ -43,13 +41,6 @@ export interface OpenSeaAsset {
   collection?: OpenSeaCollection
 }
 
-interface OpenSeaUser {
-  user?: null
-  profile_img_url: string
-  address: string
-  config: string
-}
-
 export enum TokenType {
   ERC20 = 'ERC20',
   ERC721 = 'ERC721',
@@ -60,7 +51,7 @@ export enum TokenType {
 
 export interface PriceInfo {
   ETHPrice: string
-  USDPrice: string
+  USDPrice?: string
   baseAsset: string
   baseDecimals: string
   basePrice: string
@@ -74,31 +65,44 @@ export interface AssetSellOrder {
 
 export interface Rarity {
   primaryProvider: string
-  providers: { provider: string; rank: number; url?: string; score: number }[]
+  providers?: { provider: string; rank?: number; url?: string; score?: number }[]
 }
 
+export interface Trait {
+  trait_type: string
+  trait_value: string
+  display_type?: any
+  max_value?: any
+  trait_count?: number
+  order?: any
+}
 export interface GenieAsset {
   id?: string // This would be a random id created and assigned by front end
   address: string
   notForSale: boolean
-  collectionName: string
-  collectionSymbol: string
-  imageUrl: string
-  animationUrl: string
-  marketplace: Markets
-  name: string
+  collectionName?: string
+  collectionSymbol?: string
+  imageUrl?: string
+  animationUrl?: string
+  marketplace?: Markets
+  name?: string
   priceInfo: PriceInfo
-  susFlag: boolean
-  sellorders: SellOrder[]
-  smallImageUrl: string
+  susFlag?: boolean
+  sellorders?: Deprecated_SellOrder[] | SellOrder[] // TODO remove OldSellOrder when full migration to GraphQL is complete
+  smallImageUrl?: string
   tokenId: string
   tokenType: TokenType
   totalCount?: number // The totalCount from the query to /assets
   collectionIsVerified?: boolean
   rarity?: Rarity
-  owner: string
-  creator: OpenSeaUser
+  owner: {
+    address: string
+  }
   metadataUrl: string
+  creator: {
+    address: string
+    profile_img_url: string
+  }
   traits?: Trait[]
 }
 
@@ -122,8 +126,8 @@ export interface GenieCollection {
   }
   traits?: Record<string, Trait[]>
   marketplaceCount?: { marketplace: string; count: number }[]
-  imageUrl?: string
-  twitter?: string
+  imageUrl: string
+  twitterUrl?: string
   instagram?: string
   discordUrl?: string
   externalUrl?: string

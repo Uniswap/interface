@@ -41,7 +41,7 @@ const SellModeButton = styled.button<{ active: boolean }>`
   gap: 8px;
   cursor: pointer;
   background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
-  color: #fff;
+  color: ${({ theme }) => theme.textPrimary};
   border: none;
   outline: none;
   &:hover {
@@ -195,13 +195,16 @@ export const ProfilePage = () => {
                   <FilterButton
                     isMobile={isMobile}
                     isFiltersExpanded={isFiltersExpanded}
-                    results={displayAssets.length}
                     onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                   />
                   <Row gap="8" flexWrap="nowrap">
                     {isSellMode && <SelectAllButton />}
-                    <TraceEvent events={[Event.onClick]} name={EventName.NFT_SELL_SELECTED}>
-                      <SellModeButton active={isSellMode} onClick={handleSellModeClick}>
+                    <TraceEvent
+                      events={[Event.onClick]}
+                      name={EventName.NFT_SELL_SELECTED}
+                      shouldLogImpression={!isSellMode}
+                    >
+                      <SellModeButton className={buttonTextMedium} active={isSellMode} onClick={handleSellModeClick}>
                         <TagIcon height={20} width={20} />
                         Sell
                       </SellModeButton>

@@ -8,13 +8,21 @@ export interface GlobalPalette {
   black: Color
   gray50: Color
   gray100: Color
+  gray150: Color
   gray200: Color
+  gray250: Color
   gray300: Color
+  gray350: Color
   gray400: Color
+  gray450: Color
   gray500: Color
+  gray550: Color
   gray600: Color
+  gray650: Color
   gray700: Color
+  gray750: Color
   gray800: Color
+  gray850: Color
   gray900: Color
   pink50: Color
   pink100: Color
@@ -89,14 +97,22 @@ export const colors: GlobalPalette = {
   black: '#000000',
   gray50: '#F5F6FC',
   gray100: '#E8ECFB',
-  gray200: '#C9D0E7',
-  gray300: '#99A1BD',
-  gray400: '#7C85A2',
-  gray500: '#5E6887',
-  gray600: '#404963',
+  gray150: '#D2D9EE',
+  gray200: '#B8C0DC',
+  gray250: '#A6AFCA',
+  gray300: '#98A1C0',
+  gray350: '#888FAB',
+  gray400: '#7780A0',
+  gray450: '#6B7594',
+  gray500: '#5D6785',
+  gray550: '#505A78',
+  gray600: '#404A67',
+  gray650: '#333D59',
   gray700: '#293249',
-  gray800: '#141B2B',
-  gray900: '#0E111A',
+  gray750: '#1B2236',
+  gray800: '#131A2A',
+  gray850: '#0E1524',
+  gray900: '#0D111C',
   pink50: '#F9ECF1',
   pink100: '#FFD9E4',
   pink200: '#FBA4C0',

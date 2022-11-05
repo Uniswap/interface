@@ -1,6 +1,6 @@
 import graphql from 'babel-plugin-relay/macro'
 import { parseEther } from 'ethers/lib/utils'
-import { GenieAsset, Rarity } from 'nft/types'
+import { GenieAsset, Rarity, SellOrder } from 'nft/types'
 import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 
 import { AssetPaginationQuery } from './__generated__/AssetPaginationQuery.graphql'
@@ -75,6 +75,7 @@ const assetPaginationQuery = graphql`
                 taker
                 tokenId
                 type
+                protocolParameters
               }
               cursor
             }
@@ -155,7 +156,14 @@ export function useAssetsQuery(
           }
         : undefined,
       susFlag: asset.suspiciousFlag,
-      sellorders: asset.listings?.edges,
+      sellorders: asset.listings?.edges.map((listingNode: { node: SellOrder }) => {
+        return {
+          ...listingNode.node,
+          protocolParameters: listingNode.node.protocolParameters
+            ? JSON.parse(listingNode.node.protocolParameters.toString())
+            : undefined,
+        }
+      }),
       smallImageUrl: asset.smallImage?.url,
       tokenId: asset.tokenId,
       tokenType: asset.collection.nftContracts[0]?.standard,

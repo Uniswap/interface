@@ -1,4 +1,4 @@
-export const putCommas = (value?: number) => {
+export const putCommas = (value: number) => {
   try {
     if (!value) return value
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')

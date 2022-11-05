@@ -52,7 +52,7 @@ const buildRouteItem = (item: GenieAsset): RouteItem => {
   return {
     id: item.id,
     symbol: item.priceInfo.baseAsset,
-    name: item.name,
+    name: item.name ?? '',
     decimals: parseFloat(item.priceInfo.baseDecimals),
     address: item.address,
     tokenType: item.tokenType,

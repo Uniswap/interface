@@ -133,7 +133,7 @@ const AuthenticatedHeader = () => {
   }, [balanceString, nativeCurrencyPrice])
 
   const navigateToProfile = () => {
-    navigate('/profile')
+    navigate('/nfts/profile')
     closeModal()
   }
 

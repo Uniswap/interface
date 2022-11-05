@@ -3,7 +3,6 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import {
-  ChevronRightIcon,
   MinusIconLarge,
   PauseButtonIcon,
   PlayButtonIcon,
@@ -162,6 +161,8 @@ const Container = ({ asset, selected, addAssetToBag, removeAssetFromBag, childre
         position={'relative'}
         ref={assetRef}
         borderRadius={'20'}
+        borderBottomLeftRadius={'12'}
+        borderBottomRightRadius={'12'}
         className={selected ? styles.selectedCard : styles.notSelectedCard}
         draggable={false}
         onMouseEnter={() => toggleHovered()}
@@ -195,13 +196,14 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
+  const isMobile = useIsMobile()
 
   if (noContent) {
     return <NoContentContainer uniformHeight={uniformHeight} />
   }
 
   return (
-    <Box display="flex" overflow="hidden">
+    <Box display="flex" overflow="hidden" borderTopLeftRadius="20" borderTopRightRadius="20">
       <Box
         as={'img'}
         width="full"
@@ -221,7 +223,7 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
           }
           setLoaded(true)
         }}
-        className={clsx(hovered && styles.cardImageHover, !loaded && styles.loadingBackground)}
+        className={clsx(hovered && !isMobile && styles.cardImageHover, !loaded && styles.loadingBackground)}
       />
     </Box>
   )
@@ -275,7 +277,7 @@ const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
             setImageLoaded(true)
           }}
           visibility={shouldPlay ? 'hidden' : 'visible'}
-          className={clsx(hovered && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
+          className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
         />
       </Box>
       {shouldPlay ? (
@@ -371,7 +373,7 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
             }
             setImageLoaded(true)
           }}
-          className={clsx(hovered && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
+          className={clsx(hovered && !isMobile && styles.cardImageHover, !imageLoaded && styles.loadingBackground)}
         />
       </Box>
       {shouldPlay ? (
@@ -569,7 +571,6 @@ const DetailsLink = () => {
       }}
     >
       Details
-      <ChevronRightIcon width="20px" height="20px" />
     </DetailsLinkContainer>
   )
 }
@@ -577,7 +578,7 @@ const DetailsLink = () => {
 /* -------- RANKING CARD -------- */
 interface RankingProps {
   rarity: Rarity
-  provider: { url?: string; rank: number }
+  provider: { url?: string; rank?: number }
   rarityVerified: boolean
   rarityLogo?: string
 }
@@ -586,33 +587,37 @@ const Ranking = ({ rarity, provider, rarityVerified, rarityLogo }: RankingProps)
   const { asset } = useCardContext()
 
   return (
-    <RankingContainer>
-      <MouseoverTooltip
-        text={
-          <Row>
-            <Box display="flex" marginRight="4">
-              <img src={rarityLogo} alt="cardLogo" width={16} />
-            </Box>
-            <Box width="full" className={bodySmall}>
-              {rarityVerified
-                ? `Verified by ${asset.collectionName}`
-                : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
-            </Box>
-          </Row>
-        }
-        placement="top"
-      >
-        <Box className={styles.rarityInfo}>
-          <Box paddingTop="2" paddingBottom="2" display="flex">
-            {putCommas(provider.rank)}
-          </Box>
+    <>
+      {provider.rank && (
+        <RankingContainer>
+          <MouseoverTooltip
+            text={
+              <Row>
+                <Box display="flex" marginRight="4">
+                  <img src={rarityLogo} alt="cardLogo" width={16} />
+                </Box>
+                <Box width="full" className={bodySmall}>
+                  {rarityVerified
+                    ? `Verified by ${asset.collectionName}`
+                    : `Ranking by ${rarity.primaryProvider === 'Genie' ? fallbackProvider : rarity.primaryProvider}`}
+                </Box>
+              </Row>
+            }
+            placement="top"
+          >
+            <Box className={styles.rarityInfo}>
+              <Box paddingTop="2" paddingBottom="2" display="flex">
+                {putCommas(provider.rank)}
+              </Box>
 
-          <Box display="flex" height="16">
-            {rarityVerified ? <RarityVerifiedIcon /> : null}
-          </Box>
-        </Box>
-      </MouseoverTooltip>
-    </RankingContainer>
+              <Box display="flex" height="16">
+                {rarityVerified ? <RarityVerifiedIcon /> : null}
+              </Box>
+            </Box>
+          </MouseoverTooltip>
+        </RankingContainer>
+      )}
+    </>
   )
 }
 const SUSPICIOUS_TEXT = 'Blocked on OpenSea'

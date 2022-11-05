@@ -6,7 +6,6 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -243,25 +242,18 @@ export default function App() {
 
                   {nftFlag === NftVariant.Enabled && (
                     <>
-                      <Route path="/profile" element={<Profile />} />
                       <Route path="/nfts" element={<NftExplore />} />
-                      <Route path="/nfts/asset/:contractAddress/:tokenId" element={<Asset />} />
                       <Route
-                        path="/nfts/collection/:contractAddress"
+                        path="/nfts/asset/:contractAddress/:tokenId"
                         element={
-                          <Suspense fallback={<CollectionPageSkeleton />}>
-                            <Collection />
+                          <Suspense fallback={<div>Holder for loading ...</div>}>
+                            <Asset />
                           </Suspense>
                         }
                       />
-                      <Route
-                        path="/nfts/collection/:contractAddress/activity"
-                        element={
-                          <Suspense fallback={<CollectionPageSkeleton />}>
-                            <Collection />
-                          </Suspense>
-                        }
-                      />
+                      <Route path="/nfts/profile" element={<Profile />} />
+                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
+                      <Route path="/nfts/collection/:contractAddress/activity" element={<Collection />} />
                     </>
                   )}
                 </Routes>
