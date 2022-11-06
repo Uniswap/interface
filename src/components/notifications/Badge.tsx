@@ -1,7 +1,7 @@
 import React, { memo, PropsWithChildren } from 'react'
 import { Box } from 'src/components/layout/Box'
 
-const NOTIFICATION_DOT_SIZE = 14
+const NOTIFICATION_DOT_SIZE = 11
 
 type Props = {
   children: PropsWithChildren<any>
@@ -19,8 +19,8 @@ function _NotificationBadge({ children, showIndicator }: Props) {
           borderWidth={2}
           height={NOTIFICATION_DOT_SIZE}
           position="absolute"
-          right={-2}
-          top={-4}
+          right={0}
+          top={-2}
           width={NOTIFICATION_DOT_SIZE}
           zIndex="popover"
         />

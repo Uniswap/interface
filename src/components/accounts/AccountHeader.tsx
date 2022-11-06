@@ -10,11 +10,15 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithStatus'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { QRScannerIconButton } from 'src/components/QRCodeScanner/QRScannerIconButton'
 import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
+import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
+import { iconSizes } from 'src/styles/sizing'
 
 export function AccountHeader() {
   const theme = useAppTheme()
@@ -42,6 +46,14 @@ export function AccountHeader() {
     }
   }, [activeAddress, preload])
 
+  const onPressScan = useCallback(() => {
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
+    )
+  }, [dispatch])
+
   return (
     <Box
       alignItems="center"
@@ -65,16 +77,18 @@ export function AccountHeader() {
         onPress={onPressAccountHeader}>
         {activeAddress && (
           <Flex row gap="xs">
-            <AddressDisplay
-              hideAddressInSubtitle
-              address={activeAddress}
-              variant="buttonLabelMedium"
+            <AddressDisplay hideAddressInSubtitle address={activeAddress} variant="subheadLarge" />
+            <Chevron
+              color={theme.colors.textSecondary}
+              direction="s"
+              height={iconSizes.lg}
+              width={iconSizes.lg}
             />
-            <Chevron color={theme.colors.textSecondary} direction="s" height={20} width={20} />
           </Flex>
         )}
       </TouchableArea>
-      <Box alignItems="center" flexDirection="row" justifyContent="flex-end">
+      <Flex alignItems="center" flexDirection="row" gap="md" justifyContent="flex-end">
+        <QRScannerIconButton onPress={onPressScan} />
         <TouchableArea onPress={onPressNotifications} onPressIn={onPressInNotifications}>
           {sortedPendingTransactions?.length ? (
             <PendingNotificationBadge sortedPendingTransactions={sortedPendingTransactions} />
@@ -82,7 +96,7 @@ export function AccountHeader() {
             <TxHistoryIconWithStatus />
           )}
         </TouchableArea>
-      </Box>
+      </Flex>
     </Box>
   )
 }

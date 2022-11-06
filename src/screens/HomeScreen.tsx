@@ -7,7 +7,6 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import HamburgerIcon from 'src/assets/icons/hamburger.svg'
-import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -29,10 +28,8 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
-import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
-import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 
 const TOKENS_KEY = 'tokens'
 const NFTS_KEY = 'nfts'
@@ -62,21 +59,20 @@ export function HomeScreen() {
     EXP_VARIANTS.Tabs
   )
 
-  const contentHeader = useMemo(() => {
-    return (
+  const contentHeader = useMemo(
+    () => (
       <Flex bg="background0" gap="sm" pb="md">
         <AccountHeader />
         <Flex gap="sm" px="lg">
-          <PortfolioBalance />
-          {activeAccount.type !== AccountType.Readonly && (
-            <Flex pt="xxs">
-              <QuickActions />
-            </Flex>
-          )}
+          <PortfolioBalance owner={activeAccount.address} />
+          <Flex pt="xxs">
+            <QuickActions />
+          </Flex>
         </Flex>
       </Flex>
-    )
-  }, [activeAccount.type])
+    ),
+    [activeAccount.address]
+  )
 
   const scrollHeader = useMemo(() => {
     if (!tabsExperimentVariant || tabsExperimentVariant === EXP_VARIANTS.Tabs) return
@@ -172,20 +168,10 @@ function QuickActions() {
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-  const activeAccount = useActiveAccountWithThrow()
 
   const onPressReceive = () => {
     dispatch(
       openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
-    )
-  }
-
-  // TODO: remove when buy flow ready
-  const onPressScan = () => {
-    // in case we received a pending session from a previous scan after closing modal
-    dispatch(removePendingSession())
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
     )
   }
 
@@ -201,27 +187,11 @@ function QuickActions() {
         CustomIcon={
           <SendIcon color={theme.colors.userThemeColor} height={20} strokeWidth={2} width={20} />
         }
-        disabled={activeAccount.type === AccountType.Readonly}
         emphasis={ButtonEmphasis.Tertiary}
         label={t('Send')}
         name={ElementName.Send}
         size={ButtonSize.Medium}
         onPress={onPressSend}
-      />
-      <Button
-        fill
-        noTextScaling
-        CustomIcon={
-          <ScanQRIcon color={theme.colors.userThemeColor} height={20} strokeWidth={2} width={20} />
-        }
-        emphasis={ButtonEmphasis.Tertiary}
-        label={t('Scan')}
-        name={
-          // Note. Leaving as buy since scan will be reverted before launch
-          ElementName.NavigateBuy
-        }
-        size={ButtonSize.Medium}
-        onPress={onPressScan}
       />
       <Button
         fill

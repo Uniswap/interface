@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
-import TxHistoryIcon from 'src/assets/icons/tx-history.svg'
+import BellIcon from 'src/assets/icons/bell.svg'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
@@ -17,7 +17,7 @@ function _TxHistoryIconWithStatus({ size = iconSizes.lg }: Props) {
 
   return (
     <NotificationBadge showIndicator={hasNotifications}>
-      <TxHistoryIcon color={theme.colors.textSecondary} height={size} width={size} />
+      <BellIcon color={theme.colors.textSecondary} height={size} width={size} />
     </NotificationBadge>
   )
 }
