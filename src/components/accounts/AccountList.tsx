@@ -42,8 +42,8 @@ export function AccountList({ accounts, onAddWallet, onPressEdit, onPress }: Acc
           onPress={onAddWallet}>
           <PlusIcon
             color={theme.colors.textSecondary}
-            height={theme.iconSizes.sm}
-            width={theme.iconSizes.sm}
+            height={theme.iconSizes.xs}
+            width={theme.iconSizes.xs}
           />
         </TouchableArea>
       </Flex>

@@ -40,6 +40,7 @@ import {
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { iconSizes } from 'src/styles/sizing'
 import { setClipboard } from 'src/utils/clipboard'
 import { openUri } from 'src/utils/linking'
 
@@ -47,7 +48,7 @@ const onPressGetHelp = () => {
   openUri(uniswapUrls.helpUrl)
 }
 
-const UNICON_WIDTH = 36
+const UNICON_SIZE = iconSizes.xxxl
 
 export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { t } = useTranslation()
@@ -312,8 +313,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         <AddressDisplay
           showCopy
           address={activeAccountAddress}
-          captionVariant="bodyLarge"
-          size={UNICON_WIDTH}
+          captionVariant="subheadSmall"
+          size={UNICON_SIZE}
           variant="subheadLarge"
         />
       </Flex>
@@ -343,7 +344,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
 
       <Box flexGrow={1} />
 
-      <Separator mb="sm" />
+      <Separator mb="md" />
 
       {accountsData.length <= 1 ? (
         <TouchableArea ml="lg" mt="sm" onPress={onPressAddWallet}>
@@ -357,8 +358,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
               p="xs">
               <PlusIcon
                 color={theme.colors.textSecondary}
-                height={theme.iconSizes.sm}
-                width={theme.iconSizes.sm}
+                height={theme.iconSizes.xs}
+                width={theme.iconSizes.xs}
               />
             </Box>
             <Text variant="bodyLarge">{t('Add another wallet')}</Text>
@@ -419,14 +420,14 @@ function SettingsButton({
   return (
     <TouchableArea name={name} testID={name} onPress={onPress}>
       <Flex row alignItems="center" gap="sm">
-        <Box alignItems="center" width={UNICON_WIDTH}>
+        <Box alignItems="center" width={UNICON_SIZE}>
           <Icon
             color={theme.colors.textSecondary}
             height={theme.iconSizes.lg}
             width={theme.iconSizes.lg}
           />
         </Box>
-        <Text color="textSecondary" variant="bodyLarge">
+        <Text color="textPrimary" variant="bodyLarge">
           {label}
         </Text>
       </Flex>

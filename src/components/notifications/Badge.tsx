@@ -13,7 +13,7 @@ function _NotificationBadge({ children, showIndicator }: Props) {
     <Box position="relative">
       {showIndicator && (
         <Box
-          backgroundColor="accentAction"
+          backgroundColor="userThemeMagenta"
           borderColor="background0"
           borderRadius="full"
           borderWidth={2}

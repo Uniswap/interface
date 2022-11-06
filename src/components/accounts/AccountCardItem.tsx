@@ -13,6 +13,7 @@ import { useSelectAddressHasNotifications } from 'src/features/notifications/hoo
 import { ElementName } from 'src/features/telemetry/constants'
 import { Account } from 'src/features/wallet/accounts/types'
 import { useDisplayName } from 'src/features/wallet/hooks'
+import { iconSizes } from 'src/styles/sizing'
 
 interface Props {
   account: Account
@@ -31,7 +32,12 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
 
   const icon = useMemo(() => {
     return (
-      <AccountIcon address={address} avatarUri={avatar} showViewOnlyBadge={isViewOnly} size={36} />
+      <AccountIcon
+        address={address}
+        avatarUri={avatar}
+        showViewOnlyBadge={isViewOnly}
+        size={iconSizes.xl}
+      />
     )
   }, [address, avatar, isViewOnly])
 
@@ -41,24 +47,24 @@ export function AccountCardItem({ account, isViewOnly, isActive, onPress, onPres
         <NotificationBadge showIndicator={hasNotifications}>{icon}</NotificationBadge>
         <Flex grow gap="none">
           <Text variant="bodyLarge">{displayName?.name}</Text>
-          <PortfolioBalance color="textSecondary" owner={address} variant="subheadSmall" />
+          <PortfolioBalance color="textSecondary" owner={address} variant="bodySmall" />
         </Flex>
         <Flex row alignItems="center" gap="xs">
           {isActive && (
             <Check
               color={theme.colors.userThemeMagenta}
-              height={theme.iconSizes.lg}
-              width={theme.iconSizes.lg}
+              height={theme.iconSizes.md}
+              width={theme.iconSizes.md}
             />
           )}
           {onPressEdit && (
             <TouchableArea name={ElementName.Edit} onPress={() => onPressEdit(address)}>
               <TripleDots
-                color={theme.colors.textSecondary}
-                height={12}
+                color={theme.colors.textTertiary}
+                height={iconSizes.xs}
                 strokeLinecap="round"
                 strokeWidth="1"
-                width={20}
+                width={iconSizes.sm}
               />
             </TouchableArea>
           )}
