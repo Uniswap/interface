@@ -416,7 +416,7 @@ export const colorsLight: Palette = {
   accentWarning: colors.goldVibrant,
   accentCritical: colors.red400,
 
-  accentBranded: colors.pink200,
+  accentBranded: colors.magentaVibrant,
 
   accentActionSoft: opacify(12, colors.pink400),
   accentActiveSoft: opacify(24, colors.blue400),
@@ -476,7 +476,7 @@ export const colorsDark: Palette = {
   accentWarning: colors.goldVibrant,
   accentCritical: colors.red400,
 
-  accentBranded: colors.pink200,
+  accentBranded: colors.magentaVibrant,
 
   accentActionSoft: opacify(24, colors.blue400),
   accentActiveSoft: opacify(24, colors.blue400),

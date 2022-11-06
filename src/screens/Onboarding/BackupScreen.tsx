@@ -213,11 +213,11 @@ function BackupOptionButton({
         testID={name}
         onPress={onPress}>
         <Flex row alignItems="center" gap="xs" justifyContent="space-between">
-          <Flex row flexShrink={1} gap="sm">
+          <Flex row alignItems="center" flexShrink={1} gap="sm">
             <Box>{icon}</Box>
-            <Flex flexShrink={1} gap="xxs">
+            <Flex flexShrink={1} gap="xxxs">
               <Text variant="subheadSmall">{label}</Text>
-              <Text color="textSecondary" variant="buttonLabelMicro">
+              <Text color="textSecondary" variant="bodySmall">
                 {caption}
               </Text>
             </Flex>
