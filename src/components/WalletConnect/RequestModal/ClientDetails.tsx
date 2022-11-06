@@ -34,7 +34,7 @@ export function ClientDetails({
         <LinkButton
           backgroundColor="accentActiveSoft"
           borderRadius="sm"
-          color="blue300"
+          color="accentActive"
           iconColor="textSecondary"
           label={dapp.url}
           mt="xs"

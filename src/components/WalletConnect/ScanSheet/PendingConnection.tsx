@@ -202,8 +202,9 @@ export const PendingConnection = ({ pendingSession, onClose }: Props) => {
             </Trans>
           </Text>
           <LinkButton
-            backgroundColor="background2"
+            backgroundColor="accentActiveSoft"
             borderRadius="sm"
+            color="accentActive"
             label={pendingSession.dapp.url}
             mb="sm"
             p="xs"

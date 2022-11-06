@@ -76,8 +76,9 @@ export function WalletConnectSwitchChainModal({ isVisible, onClose, request }: P
             </Trans>
           </Text>
           <LinkButton
-            backgroundColor="background2"
+            backgroundColor="accentActiveSoft"
             borderRadius="sm"
+            color="accentActive"
             label={dapp.url}
             p="xs"
             textVariant="buttonLabelMicro"
