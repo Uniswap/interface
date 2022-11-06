@@ -12,7 +12,6 @@ import {
   TabViewScrollProps,
   TAB_VIEW_SCROLL_THROTTLE,
 } from 'src/components/layout/screens/TabbedScrollScreen'
-import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
@@ -62,7 +61,6 @@ export function TokenBalanceList({
 
   return (
     <AnimatedFlatList
-      ItemSeparatorComponent={() => <Separator />}
       ListEmptyComponent={
         <>
           <HiddenTokensRow address={owner} my="md" numHidden={numHiddenTokens} />
