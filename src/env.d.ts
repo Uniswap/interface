@@ -21,7 +21,3 @@ declare module 'react-native-dotenv' {
   export const VERSION: string
   export const ONESIGNAL_APP_ID: string
 }
-
-declare module 'babel-plugin-relay/macro' {
-  export { graphql } from 'react-relay'
-}

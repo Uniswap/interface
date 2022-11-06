@@ -38,7 +38,7 @@ jobs:
         run: yarn --no-audit --prefer-offline
 
       - name: Update GraphQL Schema
-        run: yarn relay:schema
+        run: yarn apollo:schema
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3

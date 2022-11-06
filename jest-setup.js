@@ -68,11 +68,6 @@ jest.mock('react-native-onesignal', () => {
 
 jest.mock('expo-linear-gradient', () => {})
 
-jest.mock('src/data/relay', () => {
-  const { createMockEnvironment } = require('relay-test-utils')
-  return createMockEnvironment()
-})
-
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
 jest.mock('react-native-permissions', () => {})
 jest.mock('react-native-device-info', () => mockRNDeviceInfo)

@@ -125,6 +125,7 @@ export type Image = {
   url: Scalars['String'];
 };
 
+/**   TODO: deprecate this enum */
 export enum MarketSortableField {
   MarketCap = 'MARKET_CAP',
   Volume = 'VOLUME'
@@ -243,7 +244,9 @@ export type NftAssetTraitInput = {
 export type NftBalance = {
   __typename?: 'NftBalance';
   id: Scalars['ID'];
+  lastPrice?: Maybe<TimestampedAmount>;
   listedMarketplaces?: Maybe<Array<NftMarketplace>>;
+  listingFees?: Maybe<Array<Maybe<NftFee>>>;
   ownedAsset?: Maybe<NftAsset>;
 };
 
@@ -386,6 +389,13 @@ export type NftContract = IContract & {
   standard?: Maybe<NftStandard>;
   symbol?: Maybe<Scalars['String']>;
   totalSupply?: Maybe<Scalars['Int']>;
+};
+
+export type NftFee = {
+  __typename?: 'NftFee';
+  basisPoints: Scalars['Int'];
+  id: Scalars['ID'];
+  payoutAddress: Scalars['String'];
 };
 
 export enum NftMarketplace {
@@ -620,6 +630,7 @@ export type QueryTopTokenProjectsArgs = {
 
 export type QueryTopTokensArgs = {
   chain?: InputMaybe<Chain>;
+  orderBy?: InputMaybe<TokenSortableField>;
   page: Scalars['Int'];
   pageSize: Scalars['Int'];
 };
@@ -769,6 +780,13 @@ export type TokenProjectMarketPricePercentChangeArgs = {
 export type TokenProjectMarketVolumeArgs = {
   duration: HistoryDuration;
 };
+
+/**   TODO: implement MARKET_CAP and VOLUME, they return mock data */
+export enum TokenSortableField {
+  MarketCap = 'MARKET_CAP',
+  TotalValueLocked = 'TOTAL_VALUE_LOCKED',
+  Volume = 'VOLUME'
+}
 
 export enum TokenStandard {
   Erc1155 = 'ERC1155',

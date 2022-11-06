@@ -155,7 +155,6 @@ export const enum ElementName {
 
 export const enum MarkNames {
   AppStartup = 'AppStartup',
-  RelayRestore = 'RelayRestore',
 }
 
 /**
@@ -174,7 +173,6 @@ export const enum LogContext {
   Marks = 'Marks',
   OpenUri = 'OpenUri',
   ProviderManager = 'ProviderManager',
-  Relay = 'Relay',
   SecurityConcern = 'SecurityConcern',
   Share = 'Share',
   ValidateAddress = 'ValidateAddress',

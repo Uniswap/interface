@@ -1,3 +1,5 @@
+Note. We migrated to Apollo client in November. This needs to be updated with information for Apollo.
+
 # Relay
 
 [Relay](https://relay.dev/docs/) is a GraphQL client built for scale with unique benefits:

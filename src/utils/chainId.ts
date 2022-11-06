@@ -1,5 +1,4 @@
 import { BigNumberish } from 'ethers'
-import { Chain as GQLChain } from 'src/components/PriceChart/__generated__/TokenModel_PriceQuery.graphql'
 import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
 import { Chain } from 'src/data/__generated__/types-and-hooks'
 
@@ -23,17 +22,17 @@ export function isTestnet(chainId: ChainId): boolean {
   return TESTNET_CHAIN_IDS.includes(chainId)
 }
 
-export function fromGraphQLChain(chain: GQLChain | undefined): ChainId | null {
+export function fromGraphQLChain(chain: Chain | undefined): ChainId | null {
   switch (chain) {
-    case 'ETHEREUM':
+    case Chain.Ethereum:
       return ChainId.Mainnet
-    case 'ARBITRUM':
+    case Chain.Arbitrum:
       return ChainId.ArbitrumOne
-    case 'ETHEREUM_GOERLI':
+    case Chain.EthereumGoerli:
       return ChainId.Goerli
-    case 'OPTIMISM':
+    case Chain.Optimism:
       return ChainId.Optimism
-    case 'POLYGON':
+    case Chain.Polygon:
       return ChainId.Polygon
   }
 

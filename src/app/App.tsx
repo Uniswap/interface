@@ -5,7 +5,6 @@ import React, { StrictMode, useCallback, useEffect } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
-import { RelayEnvironmentProvider } from 'react-relay'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { AppModals } from 'src/app/modals/AppModals'
@@ -16,7 +15,6 @@ import { WalletContextProvider } from 'src/app/walletContext'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { config } from 'src/config'
 import { client } from 'src/data/apollo'
-import { RelayEnvironment } from 'src/data/relay'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { MulticallUpdaters } from 'src/features/multicall'
@@ -61,29 +59,23 @@ function App() {
         <SafeAreaProvider>
           <Provider store={store}>
             <ApolloProvider client={client}>
-              <Trace startMark={MarkNames.RelayRestore}>
-                <RelayEnvironmentProvider environment={RelayEnvironment}>
-                  <Trace endMark={MarkNames.RelayRestore}>
-                    <PersistGate loading={null} persistor={persistor}>
-                      <DynamicThemeProvider>
-                        <ErrorBoundary>
-                          <WalletContextProvider>
-                            <BiometricContextProvider>
-                              <LockScreenContextProvider>
-                                <DataUpdaters />
-                                <BottomSheetModalProvider>
-                                  <AppModals />
-                                  <AppInner />
-                                </BottomSheetModalProvider>
-                              </LockScreenContextProvider>
-                            </BiometricContextProvider>
-                          </WalletContextProvider>
-                        </ErrorBoundary>
-                      </DynamicThemeProvider>
-                    </PersistGate>
-                  </Trace>
-                </RelayEnvironmentProvider>
-              </Trace>
+              <PersistGate loading={null} persistor={persistor}>
+                <DynamicThemeProvider>
+                  <ErrorBoundary>
+                    <WalletContextProvider>
+                      <BiometricContextProvider>
+                        <LockScreenContextProvider>
+                          <DataUpdaters />
+                          <BottomSheetModalProvider>
+                            <AppModals />
+                            <AppInner />
+                          </BottomSheetModalProvider>
+                        </LockScreenContextProvider>
+                      </BiometricContextProvider>
+                    </WalletContextProvider>
+                  </ErrorBoundary>
+                </DynamicThemeProvider>
+              </PersistGate>
             </ApolloProvider>
           </Provider>
         </SafeAreaProvider>

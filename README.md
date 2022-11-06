@@ -126,6 +126,6 @@ A [Github workflow runs a Fastlane build and deploy](https://github.com/Uniswap/
 
 Deploys can also be triggered by running the [`Fastlane deploy iOS` workflow manually](https://github.com/Uniswap/mobile/actions/workflows/fastlane.yml)
 
-### GraphQL/Relay
+### GraphQL
 
 See [data/README.md](./src/data/README.md)

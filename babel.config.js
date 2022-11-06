@@ -27,7 +27,6 @@ module.exports = function (api) {
     '@babel/plugin-proposal-logical-assignment-operators',
     // metro doesn't like these
     '@babel/plugin-proposal-numeric-separator',
-    'relay',
   ]
 
   if (inProduction) {
