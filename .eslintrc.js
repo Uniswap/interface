@@ -1,13 +1,11 @@
 module.exports = {
   root: true,
-  extends: ['@react-native-community', 'plugin:jest/recommended'],
+  extends: ['@react-native-community', 'plugin:jest/recommended', 'plugin:prettier/recommended'],
   rules: {
-    curly: 'off',
     'no-eval': 'error',
     'no-extra-boolean-cast': 'error',
     'no-ex-assign': 'error',
     'no-console': 'warn',
-    semi: 'off',
     // https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
@@ -107,6 +105,16 @@ module.exports = {
     'react/no-danger': 'error',
     'react/no-danger-with-children': 'error',
     'react/no-unsafe': 'error',
+    // Overwrite default Prettier settings - https://prettier.io/docs/en/options.html
+    'prettier/prettier': [
+      'error',
+      {
+        bracketSameLine: true,
+        singleQuote: true,
+        printWidth: 100,
+        semi: false,
+      },
+    ],
   },
   plugins: ['detox', 'jest', 'react', 'react-native', 'no-unsanitized', 'security'],
   overrides: [

@@ -1,10 +1,10 @@
 {
   "recommendations": [
-    "ms-vscode.vscode-typescript-tslint-plugin",
-    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
     "pkief.material-icon-theme",
     "davidanson.vscode-markdownlint",
-    "mikestead.dotenv"
+    "mikestead.dotenv",
+    "Orta.vscode-jest"
   ],
   "unwantedRecommendations": []
 }
