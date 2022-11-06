@@ -46,15 +46,15 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) needs access to your Camera to scan QR codes</string>
+	<string>$(PRODUCT_NAME) Wallet needs access to your Camera to scan QR codes</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Enabling Face ID helps $(PRODUCT_NAME) keep your assets secure.</string>
+	<string>Enabling Face ID helps $(PRODUCT_NAME) Wallet keep your assets secure.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) does not require access to your location.</string>
+	<string>$(PRODUCT_NAME) Wallet does not require access to your location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) does not require access to your location.</string>
+	<string>$(PRODUCT_NAME) Wallet does not require access to your location.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME) does not require access to the microphone.</string>
+	<string>$(PRODUCT_NAME) Wallet does not require access to the microphone.</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.Uniswap</key>
