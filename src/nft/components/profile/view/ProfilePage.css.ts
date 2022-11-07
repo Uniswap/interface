@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css'
-import { subheadSmall } from 'nft/css/common.css'
 
 import { sprinkles, themeVars, vars } from '../../../css/sprinkles.css'
 
@@ -26,21 +25,6 @@ export const subRowHover = style({
     background: themeVars.colors.backgroundInteractive,
   },
 })
-
-export const collectionName = style([
-  subheadSmall,
-  sprinkles({
-    overflow: 'hidden',
-    paddingRight: '14',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  }),
-  {
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    maxWidth: '180px',
-  },
-])
 
 export const verifiedBadge = style({
   height: '12px',
