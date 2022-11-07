@@ -71,11 +71,10 @@ const PageTabs = () => {
 const Navbar = () => {
   const { pathname } = useLocation()
   const isNftPage = pathname.startsWith('/nfts')
-  const nftFlagEnabled = useNftFlag() === NftVariant.Enabled
 
   return (
     <>
-      <nav className={`${!nftFlagEnabled && styles.navBlur} ${styles.nav}`}>
+      <nav className={`${styles.nav}`}>
         <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
           <Box className={styles.leftSideContainer}>
             <Box as="a" href="#/swap" className={styles.logoContainer}>
