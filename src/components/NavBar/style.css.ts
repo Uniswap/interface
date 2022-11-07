@@ -14,6 +14,12 @@ export const nav = style([
   }),
 ])
 
+export const navBlur = style([
+  {
+    backdropFilter: 'blur(24px)',
+  },
+])
+
 export const logoContainer = style([
   sprinkles({
     display: 'flex',
