@@ -73,6 +73,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
   return {
     userThemeColor: darkMode ? colorsDark.userThemeColor : colorsLight.userThemeColor,
 
+    background: darkMode ? colorsDark.background : colorsLight.background,
     backgroundBackdrop: darkMode ? colorsDark.backgroundBackdrop : colorsLight.backgroundBackdrop,
     backgroundSurface: darkMode ? colorsDark.backgroundSurface : colorsLight.backgroundSurface,
     backgroundModule: darkMode ? colorsDark.backgroundModule : colorsLight.backgroundModule,
@@ -320,7 +321,7 @@ export const ThemedText = {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.deprecated_text1};
-  background-color: ${({ theme }) => theme.deprecated_bg1} !important;
+  background-color: ${({ theme }) => theme.background} !important;
 }
 
 a {
