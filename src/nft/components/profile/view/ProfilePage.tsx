@@ -52,7 +52,7 @@ const ProfilePageColumn = styled(Column)`
   ${ScreenBreakpointsPaddings}
 `
 
-const FILTER_SIDEBAR_WIDTH = 300
+const FILTER_SIDEBAR_WIDTH = 360
 const PADDING = 16
 
 function roundFloorPrice(price?: number, n?: number) {
@@ -178,7 +178,11 @@ export const ProfilePage = () => {
           <FilterSidebar />
 
           {(!isMobile || !isFiltersExpanded) && (
-            <Column width="full">
+            <Column
+              width="full"
+              paddingLeft={{ sm: `${PADDING}`, md: isFiltersExpanded ? '36' : '52' }}
+              paddingTop={{ sm: `${PADDING}`, md: '40' }}
+            >
               <ProfileAccountDetails />
               <AnimatedBox
                 flexShrink="0"
