@@ -1,6 +1,8 @@
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { useWeb3React } from '@web3-react/core'
-import { Event, EventName } from 'analytics/constants'
+import { Event, EventName, ModalName } from 'analytics/constants'
+import { Trace } from 'analytics/Trace'
+import { useTrace } from 'analytics/Trace'
 import { TraceEvent } from 'analytics/TraceEvent'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -37,6 +39,7 @@ const ListingModal = () => {
   const toggleCart = useBag((state) => state.toggleBag)
   const looksRareNonceRef = useRef(looksRareNonce)
   const isMobile = useIsMobile()
+  const trace = useTrace({ modal: ModalName.NFT_LISTING })
 
   useEffect(() => {
     useNFTList.subscribe((state) => (looksRareNonceRef.current = state.looksRareNonce))
@@ -58,6 +61,7 @@ const ListingModal = () => {
     marketplaces: listings.map((asset) => asset.marketplace.name),
     list_quantity: listings.length,
     usd_value: ethPriceInUSD,
+    ...trace,
   }
 
   // when all collections have been approved, auto start the signing process
@@ -163,99 +167,105 @@ const ListingModal = () => {
   const showSuccessScreen = useMemo(() => listingStatus === ListingStatus.APPROVED, [listingStatus])
 
   return (
-    <Column paddingTop="20" paddingBottom="20" paddingLeft="12" paddingRight="12">
-      <Row className={headlineSmall} marginBottom="10">
-        {isMobile && !showSuccessScreen && (
-          <Box paddingTop="4" marginRight="4" onClick={toggleCart}>
-            <ChevronLeftIcon height={28} width={28} />
+    <Trace modal={ModalName.NFT_LISTING}>
+      <Column paddingTop="20" paddingBottom="20" paddingLeft="12" paddingRight="12">
+        <Row className={headlineSmall} marginBottom="10">
+          {isMobile && !showSuccessScreen && (
+            <Box paddingTop="4" marginRight="4" onClick={toggleCart}>
+              <ChevronLeftIcon height={28} width={28} />
+            </Box>
+          )}
+          {showSuccessScreen ? 'Success!' : `Listing ${sellAssets.length} NFTs`}
+          <Box
+            as="button"
+            border="none"
+            color="textSecondary"
+            backgroundColor="backgroundSurface"
+            marginLeft="auto"
+            marginRight="0"
+            paddingRight="0"
+            display={{ sm: 'flex', md: 'none' }}
+            cursor="pointer"
+            onClick={toggleCart}
+          >
+            <XMarkIcon height={28} width={28} fill={themeVars.colors.textPrimary} />
           </Box>
-        )}
-        {showSuccessScreen ? 'Success!' : `Listing ${sellAssets.length} NFTs`}
-        <Box
-          as="button"
-          border="none"
-          color="textSecondary"
-          backgroundColor="backgroundSurface"
-          marginLeft="auto"
-          marginRight="0"
-          paddingRight="0"
-          display={{ sm: 'flex', md: 'none' }}
-          cursor="pointer"
-          onClick={toggleCart}
-        >
-          <XMarkIcon height={28} width={28} fill={themeVars.colors.textPrimary} />
-        </Box>
-      </Row>
-      <Column overflowX="hidden" overflowY="auto" style={{ maxHeight: '60vh' }}>
-        {showSuccessScreen ? (
-          <ListingSection
-            sectionTitle={`Listed ${listings.length} item${pluralize(listings.length)} for sale`}
-            rows={listings}
-            index={0}
-            openIndex={openIndex}
-            isSuccessScreen={true}
-          />
-        ) : (
-          <>
+        </Row>
+        <Column overflowX="hidden" overflowY="auto" style={{ maxHeight: '60vh' }}>
+          {showSuccessScreen ? (
             <ListingSection
-              sectionTitle={`Approve ${collectionsRequiringApproval.length} collection${pluralize(
-                collectionsRequiringApproval.length
-              )}`}
-              title="COLLECTIONS"
-              rows={collectionsRequiringApproval}
-              index={1}
-              openIndex={openIndex}
-            />
-            <ListingSection
-              sectionTitle={`Confirm ${listings.length} listing${pluralize(listings.length)}`}
-              caption="Now you can sign to list each item"
-              title="NFTS"
+              sectionTitle={`Listed ${listings.length} item${pluralize(listings.length)} for sale`}
               rows={listings}
-              index={2}
+              index={0}
               openIndex={openIndex}
+              isSuccessScreen={true}
             />
-          </>
+          ) : (
+            <>
+              <ListingSection
+                sectionTitle={`Approve ${collectionsRequiringApproval.length} collection${pluralize(
+                  collectionsRequiringApproval.length
+                )}`}
+                title="COLLECTIONS"
+                rows={collectionsRequiringApproval}
+                index={1}
+                openIndex={openIndex}
+              />
+              <ListingSection
+                sectionTitle={`Confirm ${listings.length} listing${pluralize(listings.length)}`}
+                caption="Now you can sign to list each item"
+                title="NFTS"
+                rows={listings}
+                index={2}
+                openIndex={openIndex}
+              />
+            </>
+          )}
+        </Column>
+        <hr className={styles.sectionDivider} />
+        <Row className={subhead} marginTop="12" marginBottom={showSuccessScreen ? '8' : '20'}>
+          Return if sold
+          <Row className={subheadSmall} marginLeft="auto" marginRight="0">
+            {totalEthListingValue}
+            &nbsp;ETH
+          </Row>
+        </Row>
+        {showSuccessScreen ? (
+          <Box as="span" className={caption} color="textSecondary">
+            Status:{' '}
+            <Box as="span" color="green200">
+              Confirmed
+            </Box>
+          </Box>
+        ) : (
+          <TraceEvent
+            events={[Event.onClick]}
+            name={EventName.NFT_SELL_START_LISTING}
+            properties={{ ...eventProperties }}
+          >
+            <ListingButton
+              onClick={clickStartListingFlow}
+              buttonText={'Start listing'}
+              showWarningOverride={isMobile}
+            />
+          </TraceEvent>
+        )}
+        {(listingStatus === ListingStatus.PENDING || listingStatus === ListingStatus.SIGNING) && (
+          <Box
+            as="button"
+            border="none"
+            backgroundColor="backgroundSurface"
+            cursor="pointer"
+            color="orange"
+            className={styles.button}
+            onClick={clickStopListing}
+            type="button"
+          >
+            Stop listing
+          </Box>
         )}
       </Column>
-      <hr className={styles.sectionDivider} />
-      <Row className={subhead} marginTop="12" marginBottom={showSuccessScreen ? '8' : '20'}>
-        Return if sold
-        <Row className={subheadSmall} marginLeft="auto" marginRight="0">
-          {totalEthListingValue}
-          &nbsp;ETH
-        </Row>
-      </Row>
-      {showSuccessScreen ? (
-        <Box as="span" className={caption} color="textSecondary">
-          Status:{' '}
-          <Box as="span" color="green200">
-            Confirmed
-          </Box>
-        </Box>
-      ) : (
-        <TraceEvent
-          events={[Event.onClick]}
-          name={EventName.NFT_SELL_START_LISTING}
-          properties={{ ...eventProperties }}
-        >
-          <ListingButton onClick={clickStartListingFlow} buttonText={'Start listing'} showWarningOverride={isMobile} />
-        </TraceEvent>
-      )}
-      {(listingStatus === ListingStatus.PENDING || listingStatus === ListingStatus.SIGNING) && (
-        <Box
-          as="button"
-          border="none"
-          backgroundColor="backgroundSurface"
-          cursor="pointer"
-          color="orange"
-          className={styles.button}
-          onClick={clickStopListing}
-          type="button"
-        >
-          Stop listing
-        </Box>
-      )}
-    </Column>
+    </Trace>
   )
 }
 
