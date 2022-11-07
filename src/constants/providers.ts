@@ -11,7 +11,7 @@ import { RPC_URLS } from './networks'
 // NB: Third-party providers (eg MetaMask) will have their own polling intervals,
 // which should be left as-is to allow operations (eg transaction confirmation) to resolve faster.
 // Network providers (eg AppJsonRpcProvider) need to update less frequently to be considered responsive.
-export const POLLING_INTERVAL = ms`12s` // mainnet block frequency
+export const POLLING_INTERVAL = ms`12s` // mainnet block frequency - ok for other chains as it is a sane refresh rate
 
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
   private _blockCache = new Map<string, Promise<any>>()
@@ -25,7 +25,9 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
   }
 
   constructor(chainId: SupportedChainId) {
-    super(RPC_URLS[chainId][0], { chainId, name: CHAIN_IDS_TO_NAMES[chainId] })
+    // Including networkish allows ethers to skip the initial detectNetwork call.
+    const networkish = { chainId, name: CHAIN_IDS_TO_NAMES[chainId] }
+    super(RPC_URLS[chainId][0], networkish)
     this.pollingInterval = POLLING_INTERVAL
   }
 
