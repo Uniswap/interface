@@ -70,6 +70,16 @@ jobs:
         uses: uniswap/convert-cidv0-cidv1@v1.0.0
         with:
           cidv0: ${{ steps.pinata.outputs.hash }}
+          
+      - name: Pin to Arweave on 4everland
+        uses: 4everland/pin-action@v1.2
+        continue-on-error: true
+        timeout-minutes: 2
+        with:
+          EVER_TOKEN: ${{ secrets.EVER_TOKEN }}
+          EVER_PROJECT_NAME: 'uniswap-interface'
+          EVER_PROJECT_PLAT: 'AR'
+          BUILD_LOCATION: './build'
 
       - uses: actions/cache@v3
         id: cypress-cache
