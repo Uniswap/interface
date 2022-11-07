@@ -1,12 +1,12 @@
 import React, { memo } from 'react'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TokenLogo } from 'src/components/CurrencyLogo/TokenLogo'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { PortfolioBalance } from 'src/features/dataApi/types'
+import { iconSizes } from 'src/styles/sizing'
 import { CurrencyId } from 'src/utils/currencyId'
 import { formatNumber, formatUSDPrice, NumberType } from 'src/utils/format'
 
@@ -18,7 +18,6 @@ interface TokenBalanceItemProps {
 
 export const TokenBalanceItem = memo(
   ({ portfolioBalance, onPressToken, onPressTokenIn }: TokenBalanceItemProps) => {
-    const theme = useAppTheme()
     const { quantity, currencyInfo, relativeChange24 } = portfolioBalance
     const { currency } = currencyInfo
 
@@ -52,7 +51,7 @@ export const TokenBalanceItem = memo(
           overflow="hidden">
           <TokenLogo
             chainId={currency.chainId}
-            size={theme.imageSizes.xl}
+            size={iconSizes.xxxl}
             symbol={currency.symbol}
             url={currencyInfo.logoUrl ?? undefined}
           />

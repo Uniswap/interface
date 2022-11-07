@@ -28,7 +28,7 @@ import { useExperimentVariant } from 'src/features/experiments/hooks'
 import { dimensions } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
 
-const SIDEBAR_SWIPE_CONTAINER_WIDTH = 45
+const SIDEBAR_SWIPE_CONTAINER_WIDTH = 50
 
 type TabbedScrollScreenProps = {
   contentHeader?: ReactElement
