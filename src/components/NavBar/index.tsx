@@ -74,7 +74,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`${styles.nav}`}>
+      <nav className={styles.nav}>
         <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
           <Box className={styles.leftSideContainer}>
             <Box as="a" href="#/swap" className={styles.logoContainer}>
