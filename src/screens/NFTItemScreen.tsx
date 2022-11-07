@@ -116,7 +116,7 @@ export function NFTItemScreen({
             {asset.image?.url && <NFTViewer autoplay uri={asset.image.url} />}
           </Flex>
 
-          <Flex gap="none">
+          <Flex gap="xxs">
             <Text numberOfLines={2} variant="subheadLarge">
               {asset.name}
             </Text>
@@ -146,12 +146,12 @@ export function NFTItemScreen({
                   </Box>
                 ) : null}
                 <Box flexShrink={1}>
-                  <Text color="textTertiary" variant="buttonLabelMicro">
+                  <Text color="textPrimary" variant="buttonLabelMicro">
                     {t('Collection')}
                   </Text>
                   <Flex row alignItems="center" gap="xs">
                     <Box flexShrink={1}>
-                      <Text color="textPrimary" numberOfLines={1} variant="bodyLarge">
+                      <Text color="textSecondary" numberOfLines={1} variant="bodyLarge">
                         {asset.collection.name}
                       </Text>
                     </Box>
@@ -163,7 +163,7 @@ export function NFTItemScreen({
                 {asset.collection.markets?.[0].floorPrice?.value && (
                   <Box flexGrow={1}>
                     <Text
-                      color="textTertiary"
+                      color="textSecondary"
                       numberOfLines={1}
                       textAlign="right"
                       variant="buttonLabelMicro">

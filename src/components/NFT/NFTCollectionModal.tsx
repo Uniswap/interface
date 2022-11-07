@@ -33,7 +33,7 @@ export function NFTCollectionModal({
 
   return (
     <BottomSheetModal isVisible={isVisible} name={ModalName.NftCollection} onClose={onClose}>
-      <Screen bg="background1" edges={['bottom']} pt="md" px="lg">
+      <Screen bg="background1" edges={['bottom']} pt="xs" px="lg">
         <Trace section={SectionName.NFTCollectionModal}>
           <Flex gap="sm">
             {/* Collection image and name */}

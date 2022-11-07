@@ -87,6 +87,11 @@ export function LongText({
             style={{
               body: { color: theme.colors[color] },
               link: { color: theme.colors[linkColor] },
+              paragraph: {
+                marginBottom: 0,
+                fontSize: theme.textVariants.bodySmall.fontSize,
+                lineHeight: theme.textVariants.bodySmall.lineHeight,
+              },
             }}
             onLinkPress={(url) => {
               // add our own custom link handler since it has security checks that only open http/https links
