@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutRectangle, TextInput as NativeTextInput } from 'react-native'
+import { LayoutRectangle, StyleSheet, TextInput as NativeTextInput } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import PasteButton from 'src/components/buttons/PasteButton'
@@ -124,11 +124,17 @@ export function GenericImportForm({
           {!value && (
             <Flex
               centered
+              grow
               row
               gap="xs"
               position="absolute"
               onLayout={(event: any) => setLayout(event.nativeEvent.layout)}>
-              <Text color="textSecondary" variant="bodyLarge">
+              <Text
+                adjustsFontSizeToFit
+                color="textSecondary"
+                numberOfLines={1}
+                style={styles.placeholderLabelStyle}
+                variant="bodyLarge">
                 {t('Type or')}
               </Text>
               <PasteButton
@@ -137,7 +143,12 @@ export function GenericImportForm({
                 onPress={onChange}
               />
               {placeholderLabel && (
-                <Text color="textSecondary" variant="bodyLarge">
+                <Text
+                  adjustsFontSizeToFit
+                  color="textSecondary"
+                  numberOfLines={1}
+                  style={styles.placeholderLabelStyle}
+                  variant="bodyLarge">
                   {placeholderLabel}
                 </Text>
               )}
@@ -158,3 +169,9 @@ export function GenericImportForm({
     </Trace>
   )
 }
+
+const styles = StyleSheet.create({
+  placeholderLabelStyle: {
+    flexShrink: 1,
+  },
+})
