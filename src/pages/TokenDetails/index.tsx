@@ -131,6 +131,7 @@ export default function TokenDetails() {
               <>
                 <Hr />
                 <AboutSection
+                  color={color}
                   address={tokenQueryData.address ?? ''}
                   description={tokenQueryData.project?.description}
                   homepageUrl={tokenQueryData.project?.homepageUrl}

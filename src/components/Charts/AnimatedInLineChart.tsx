@@ -72,6 +72,9 @@ function AnimatedInLineChart<T>({
                 strokeOpacity={hasAnimatedIn ? 1 : 0}
                 fill="none"
                 stroke={lineColor}
+                style={{
+                  filter: `drop-shadow( 0px 0px 4px ${lineColor})`,
+                }}
               />
               {shouldAnimate && lineLength !== 0 && (
                 <animated.path
@@ -79,6 +82,7 @@ function AnimatedInLineChart<T>({
                   strokeWidth={strokeWidth}
                   fill="none"
                   stroke={lineColor}
+                  style={{ filter: `drop-shadow( 0px 0px 3px ${lineColor})` }}
                   strokeDashoffset={spring.frame.to((v) => v * lineLength)}
                   strokeDasharray={lineLength}
                 />

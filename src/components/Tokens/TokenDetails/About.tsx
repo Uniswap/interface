@@ -64,13 +64,14 @@ export const ResourcesContainer = styled.div`
 `
 
 type AboutSectionProps = {
+  color: string
   address: string
   description?: string | null | undefined
   homepageUrl?: string | null | undefined
   twitterName?: string | null | undefined
 }
 
-export function AboutSection({ address, description, homepageUrl, twitterName }: AboutSectionProps) {
+export function AboutSection({ color, address, description, homepageUrl, twitterName }: AboutSectionProps) {
   const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
 
@@ -99,10 +100,10 @@ export function AboutSection({ address, description, homepageUrl, twitterName }:
         <Trans>Links</Trans>
       </ThemedText.SubHeaderSmall>
       <ResourcesContainer>
-        <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-        <Resource name={'More analytics'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-        {homepageUrl && <Resource name={'Website'} link={homepageUrl} />}
-        {twitterName && <Resource name={'Twitter'} link={`https://twitter.com/${twitterName}`} />}
+        <Resource color={color} name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
+        <Resource color={color} name={'More analytics'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+        {homepageUrl && <Resource color={color} name={'Website'} link={homepageUrl} />}
+        {twitterName && <Resource color={color} name={'Twitter'} link={`https://twitter.com/${twitterName}`} />}
       </ResourcesContainer>
     </AboutContainer>
   )
