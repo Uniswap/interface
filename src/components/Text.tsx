@@ -1,19 +1,20 @@
 import { createText, useResponsiveProp } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren } from 'react'
+import { useWindowDimensions } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { Box } from 'src/components/layout'
 import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenReaders'
 import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
 
+const DEFAULT_FONT_SCALE = 1
+
 export type TextProps = ComponentProps<typeof ThemedText> & {
   maxFontSizeMultiplier?: number
   animated?: boolean
-  noTextScaling?: boolean
+  allowFontScaling?: boolean
   loaderOnly?: boolean
 } & Pick<ComponentProps<typeof Box>, 'height' | 'width'>
-
-const NO_TEXT_SCALING_MULTIPLIER = 1
 
 // Use this text component throughout the app instead of
 // Default RN Text for theme support
@@ -44,27 +45,41 @@ export const Text = ({
   animated,
   loaderOnly,
   maxFontSizeMultiplier,
-  noTextScaling,
+  allowFontScaling,
   height,
   width,
   ...rest
 }: TextProps) => {
+  const { fontScale } = useWindowDimensions()
   const variant = useResponsiveProp(rest.variant ?? 'bodySmall') as keyof typeof textVariants
-  const multiplier = noTextScaling
-    ? NO_TEXT_SCALING_MULTIPLIER
-    : maxFontSizeMultiplier ?? textVariants[variant].maxFontSizeMultiplier
+  const enableFontScaling = allowFontScaling ?? fontScale > DEFAULT_FONT_SCALE
+  const multiplier = maxFontSizeMultiplier ?? textVariants[variant].maxFontSizeMultiplier
 
   if (animated) {
-    return <ThemedAnimatedText maxFontSizeMultiplier={multiplier} {...rest} />
+    return (
+      <ThemedAnimatedText
+        allowFontScaling={enableFontScaling}
+        maxFontSizeMultiplier={multiplier}
+        {...rest}
+      />
+    )
   }
 
   if (loaderOnly) {
     return (
       <TextLoaderWrapper height={height} width={width}>
-        <ThemedText color="none" maxFontSizeMultiplier={multiplier} opacity={0} {...rest} />
+        <ThemedText
+          allowFontScaling={enableFontScaling}
+          color="none"
+          maxFontSizeMultiplier={multiplier}
+          opacity={0}
+          {...rest}
+        />
       </TextLoaderWrapper>
     )
   }
 
-  return <ThemedText maxFontSizeMultiplier={multiplier} {...rest} />
+  return (
+    <ThemedText allowFontScaling={enableFontScaling} maxFontSizeMultiplier={multiplier} {...rest} />
+  )
 }

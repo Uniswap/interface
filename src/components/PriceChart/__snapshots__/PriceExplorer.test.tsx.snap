@@ -461,7 +461,8 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        maxFontSizeMultiplier={1}
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1.2}
         style={
           Array [
             Object {
@@ -510,7 +511,8 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        maxFontSizeMultiplier={1}
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1.2}
         style={
           Array [
             Object {
@@ -559,7 +561,8 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        maxFontSizeMultiplier={1}
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1.2}
         style={
           Array [
             Object {
@@ -608,7 +611,8 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        maxFontSizeMultiplier={1}
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1.2}
         style={
           Array [
             Object {
@@ -657,7 +661,8 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        maxFontSizeMultiplier={1}
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1.2}
         style={
           Array [
             Object {

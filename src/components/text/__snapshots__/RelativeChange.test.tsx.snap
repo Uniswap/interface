@@ -43,6 +43,7 @@ exports[`renders a relative change 1`] = `
     }
   />
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -105,6 +106,7 @@ exports[`renders placeholders with absolute change 1`] = `
     }
   />
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -138,6 +140,7 @@ exports[`renders placeholders without a change 1`] = `
   }
 >
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [

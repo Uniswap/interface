@@ -33,7 +33,7 @@ type ButtonProps = {
   emphasis?: ButtonEmphasis
   disabled?: boolean
   fill?: boolean // flex=1
-  noTextScaling?: boolean
+  allowFontScaling?: boolean
   hapticFeedback?: boolean
   hapticStyle?: ImpactFeedbackStyle
   onPress?: () => void
@@ -43,7 +43,7 @@ type ButtonProps = {
 
 const _Button = ({
   name,
-  noTextScaling = false,
+  allowFontScaling,
   label,
   IconName,
   CustomIcon,
@@ -110,8 +110,8 @@ const _Button = ({
         {icon}
         {label && (
           <Text
+            allowFontScaling={allowFontScaling}
             color={textColor}
-            noTextScaling={noTextScaling}
             textAlign="center"
             variant={textVariant}>
             {label}

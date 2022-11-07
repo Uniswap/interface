@@ -17,7 +17,7 @@ export function DecimalNumber({ number, separator = '.', variant, ...rest }: Dec
     <Text variant={variant} {...rest}>
       {pre}
       {post && (
-        <Text color="textTertiary">
+        <Text color="textTertiary" variant={variant}>
           {separator}
           {post}
         </Text>

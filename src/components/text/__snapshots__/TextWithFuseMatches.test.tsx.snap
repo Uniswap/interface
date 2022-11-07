@@ -14,6 +14,7 @@ exports[`renders text with few matches 1`] = `
   }
 >
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -30,6 +31,7 @@ exports[`renders text with few matches 1`] = `
     A
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -46,6 +48,7 @@ exports[`renders text with few matches 1`] = `
      
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -62,6 +65,7 @@ exports[`renders text with few matches 1`] = `
     t
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -78,6 +82,7 @@ exports[`renders text with few matches 1`] = `
     e
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -94,6 +99,7 @@ exports[`renders text with few matches 1`] = `
     x
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -110,6 +116,7 @@ exports[`renders text with few matches 1`] = `
     t
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -126,6 +133,7 @@ exports[`renders text with few matches 1`] = `
      
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -142,6 +150,7 @@ exports[`renders text with few matches 1`] = `
     w
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -158,6 +167,7 @@ exports[`renders text with few matches 1`] = `
     i
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -174,6 +184,7 @@ exports[`renders text with few matches 1`] = `
     t
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -190,6 +201,7 @@ exports[`renders text with few matches 1`] = `
     h
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -206,6 +218,7 @@ exports[`renders text with few matches 1`] = `
     o
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -222,6 +235,7 @@ exports[`renders text with few matches 1`] = `
     u
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -238,6 +252,7 @@ exports[`renders text with few matches 1`] = `
     t
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -254,6 +269,7 @@ exports[`renders text with few matches 1`] = `
      
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -270,6 +286,7 @@ exports[`renders text with few matches 1`] = `
     m
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -286,6 +303,7 @@ exports[`renders text with few matches 1`] = `
     a
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -302,6 +320,7 @@ exports[`renders text with few matches 1`] = `
     t
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -318,6 +337,7 @@ exports[`renders text with few matches 1`] = `
     c
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -334,6 +354,7 @@ exports[`renders text with few matches 1`] = `
     h
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -350,6 +371,7 @@ exports[`renders text with few matches 1`] = `
     e
   </Text>
   <Text
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       Array [
@@ -370,6 +392,7 @@ exports[`renders text with few matches 1`] = `
 
 exports[`renders text without matches 1`] = `
 <Text
+  allowFontScaling={true}
   maxFontSizeMultiplier={1.4}
   numberOfLines={1}
   style={

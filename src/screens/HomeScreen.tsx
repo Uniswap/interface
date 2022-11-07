@@ -180,10 +180,10 @@ function QuickActions() {
     <Flex centered row gap="xs">
       <Button
         fill
-        noTextScaling
         CustomIcon={
           <SendIcon color={theme.colors.userThemeColor} height={20} strokeWidth={2} width={20} />
         }
+        allowFontScaling={false}
         emphasis={ButtonEmphasis.Tertiary}
         label={t('Send')}
         name={ElementName.Send}
@@ -192,10 +192,10 @@ function QuickActions() {
       />
       <Button
         fill
-        noTextScaling
         CustomIcon={
           <Arrow color={theme.colors.userThemeColor} direction="s" size={theme.iconSizes.md} />
         }
+        allowFontScaling={false}
         emphasis={ButtonEmphasis.Tertiary}
         label={t('Receive')}
         name={ElementName.Receive}

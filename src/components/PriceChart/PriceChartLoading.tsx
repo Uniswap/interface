@@ -20,7 +20,7 @@ export function PriceChartLoading() {
           return (
             <Box key={label} p="xxs" width={BUTTON_WIDTH}>
               <Text
-                noTextScaling
+                allowFontScaling={false}
                 color="textTertiary"
                 textAlign="center"
                 variant="buttonLabelSmall">

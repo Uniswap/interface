@@ -34,6 +34,7 @@ exports[`renders a currency logo with network logo 1`] = `
   >
     <Text
       adjustsFontSizeToFit={true}
+      allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       numberOfLines={1}
       style={
