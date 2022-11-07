@@ -163,6 +163,7 @@ export type OnboardingStackNavigationProp = CompositeNavigationProp<
 
 export type RootParamList = TabParamList &
   HomeStackParamList &
+  ExploreStackParamList &
   AccountStackParamList &
   SettingsStackParamList &
   OnboardingStackParamList &

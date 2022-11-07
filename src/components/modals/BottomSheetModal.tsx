@@ -12,6 +12,7 @@ import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
+import { TelemetryTraceProps } from 'src/features/telemetry/types'
 import { dimensions, spacing } from 'src/styles/sizing'
 
 type Props = {
@@ -26,7 +27,7 @@ type Props = {
   fullScreen?: boolean
   backgroundColor?: string
   isDismissible?: boolean
-}
+} & TelemetryTraceProps
 
 const HandleBar = () => {
   return (
@@ -54,6 +55,7 @@ export function BottomSheetModal({
   isVisible,
   children,
   name,
+  properties,
   onClose,
   snapPoints = CONTENT_HEIGHT_SNAP_POINTS,
   stackBehavior = 'push',
@@ -104,7 +106,7 @@ export function BottomSheetModal({
       snapPoints={animatedSnapPoints}
       stackBehavior={stackBehavior}
       onDismiss={onClose}>
-      <Trace logImpression modal={name}>
+      <Trace logImpression modal={name} properties={properties}>
         <BottomSheetView
           style={[
             { height: fullScreen ? fullScreenContentHeight : undefined },

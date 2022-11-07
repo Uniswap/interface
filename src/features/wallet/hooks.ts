@@ -10,6 +10,7 @@ import {
   selectActiveAccount,
   selectActiveAccountAddress,
   selectNonPendingAccounts,
+  selectNonPendingSignerAccounts,
   selectPendingAccounts,
   selectSignerAccounts,
   selectSignerMnemonicAccountExists,
@@ -31,6 +32,10 @@ export function usePendingAccounts(): AddressTo<Account> {
 
 export function useSignerAccounts() {
   return useAppSelector(selectSignerAccounts)
+}
+
+export function useNonPendingSignerAccounts() {
+  return useAppSelector(selectNonPendingSignerAccounts)
 }
 
 export function useViewOnlyAccounts() {

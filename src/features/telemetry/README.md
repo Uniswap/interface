@@ -44,8 +44,26 @@ Component that bundles context metadata from parent “Trace” components with 
 
 ### Logging when Trace/TraceEvent are not appropriate
 
-The function `sendAnalyticsEvent(eventName, eventProperties)` can be called in cases where we cannot use the components discussed above. Some examples of where this may be useful are:
+The function `sendAnalyticsEvent(eventName, eventProperties)` can be called in cases where we cannot use the components discussed above.
+
+Some examples of where this may be useful are:
 
 1. When logging from `useEffect` on desired results/effects
 2. When logging from custom events
 3. When logging from callbacks
+4. When logging from components that handle their own navigation (e.g. TabView)
+5. Outside of a React's render context
+
+In cases where you're in a React's render context (cases 1-4 above), we still want to send the parent context properties with these events. The hook `useTrace()` returns any properties from a parent Context in case they exist:
+
+```javascript
+const parentTrace = useTrace()
+
+const onIndexChangeTrace = (index: number) => {
+  sendAnalyticsEvent(EventName.Impression, {
+    section: navigationState.routes[index].key,
+    ...parentTrace,
+  })
+  onIndexChange(index)
+}
+```

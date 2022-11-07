@@ -1,6 +1,5 @@
 import React from 'react'
 import { useColorScheme } from 'react-native'
-// Note: test renderer must be required after react-native.
 import renderer, { act } from 'react-test-renderer'
 import * as biometricHooks from 'src/features/biometrics/hooks'
 import * as telemetry from 'src/features/telemetry'
@@ -33,7 +32,7 @@ describe('TraceUserProperties', () => {
       pushNotificationsEnabled: true,
     })
     mockFn(walletHooks, 'useViewOnlyAccounts', ['address1', 'address2'])
-    mockFn(walletHooks, 'useSignerAccounts', ['address3'])
+    mockFn(walletHooks, 'useNonPendingSignerAccounts', ['address3'])
     mockFn(biometricHooks, 'useBiometricAppSettings', {
       requiredForAppAccess: true,
       requiredForTransactions: true,
@@ -77,7 +76,7 @@ describe('TraceUserProperties', () => {
     mockedUsedColorScheme.mockReturnValue('dark')
     mockFn(walletHooks, 'useActiveAccount', null)
     mockFn(walletHooks, 'useViewOnlyAccounts', [])
-    mockFn(walletHooks, 'useSignerAccounts', [])
+    mockFn(walletHooks, 'useNonPendingSignerAccounts', [])
     mockFn(biometricHooks, 'useBiometricAppSettings', {
       requiredForAppAccess: false,
       requiredForTransactions: false,

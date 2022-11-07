@@ -5,7 +5,7 @@ import { GestureResponderEvent, TouchableOpacity, TouchableOpacityProps } from '
 import { withAnimated } from 'src/components/animated'
 import { ReactNativeEvent } from 'src/features/telemetry/constants'
 import { TraceEvent } from 'src/features/telemetry/TraceEvent'
-import { TelemetryProps } from 'src/features/telemetry/types'
+import { TelemetryEventProps } from 'src/features/telemetry/types'
 import { defaultHitslopInset } from 'src/styles/sizing'
 import { Theme } from 'src/styles/theme'
 
@@ -15,7 +15,7 @@ export type BaseButtonProps = PropsWithChildren<
   ComponentProps<typeof TouchableBox> & {
     hapticFeedback?: boolean
     hapticStyle?: ImpactFeedbackStyle
-  } & TelemetryProps
+  } & TelemetryEventProps
 >
 
 /**

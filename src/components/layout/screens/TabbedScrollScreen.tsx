@@ -16,15 +16,17 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Route, SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
+import { Route, SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppTheme } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
+import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { Text } from 'src/components/Text'
 import { EXPERIMENTS, EXP_VARIANTS } from 'src/features/experiments/constants'
 import { useExperimentVariant } from 'src/features/experiments/hooks'
+import { SectionName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
 
@@ -38,7 +40,7 @@ type TabbedScrollScreenProps = {
     scrollProps: TabViewScrollProps,
     loadingContainerStyle: ViewStyle
   ) => ReactElement | null
-  tabs: { key: string; title: string }[]
+  tabs: { key: SectionName; title: string }[]
   disableOpenSidebarGesture?: boolean
 }
 
@@ -299,7 +301,7 @@ export default function TabbedScrollScreen({
 
   return (
     <Screen edges={['top', 'left', 'right']}>
-      <TabView
+      <TraceTabView
         lazy
         initialLayout={{
           height: 0,

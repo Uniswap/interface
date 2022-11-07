@@ -26,13 +26,10 @@ import { EXPERIMENTS, EXP_VARIANTS } from 'src/features/experiments/constants'
 import { useExperimentVariant } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
-
-const TOKENS_KEY = 'tokens'
-const NFTS_KEY = 'nfts'
 
 export function HomeScreen() {
   // imports test account for easy development/testing
@@ -130,7 +127,7 @@ export function HomeScreen() {
   const renderTab = useMemo(() => {
     return (route: Route, scrollProps: TabViewScrollProps, loadingContainerStyle: ViewStyle) => {
       switch (route?.key) {
-        case NFTS_KEY:
+        case SectionName.HomeNFTsTab:
           return (
             <NftsTab
               loadingContainerStyle={loadingContainerStyle}
@@ -138,7 +135,7 @@ export function HomeScreen() {
               tabViewScrollProps={scrollProps}
             />
           )
-        case TOKENS_KEY:
+        case SectionName.HomeTokensTab:
           return (
             <TokensTab
               loadingContainerStyle={loadingContainerStyle}
@@ -157,8 +154,8 @@ export function HomeScreen() {
       renderTab={renderTab}
       scrollHeader={scrollHeader}
       tabs={[
-        { key: TOKENS_KEY, title: t('Tokens') },
-        { key: NFTS_KEY, title: t('NFTs') },
+        { key: SectionName.HomeTokensTab, title: t('Tokens') },
+        { key: SectionName.HomeNFTsTab, title: t('NFTs') },
       ]}
     />
   )

@@ -7,7 +7,7 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { getButtonProperties } from 'src/components/buttons/utils'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { TelemetryProps } from 'src/features/telemetry/types'
+import { TelemetryEventProps } from 'src/features/telemetry/types'
 
 export enum ButtonSize {
   Small = 'small',
@@ -39,7 +39,7 @@ type ButtonProps = {
   onPress?: () => void
   onPressIn?: () => void
   onLongPress?: () => void
-} & TelemetryProps
+} & TelemetryEventProps
 
 const _Button = ({
   name,

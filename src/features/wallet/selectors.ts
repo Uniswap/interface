@@ -22,6 +22,10 @@ export const selectSignerAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts).filter((a) => a.type !== AccountType.Readonly)
 )
 
+export const selectNonPendingSignerAccounts = createSelector(selectAccounts, (accounts) =>
+  Object.values(accounts).filter((a) => a.type !== AccountType.Readonly && !a.pending)
+)
+
 export const selectViewOnlyAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts).filter((a) => a.type === AccountType.Readonly && !a.pending)
 )

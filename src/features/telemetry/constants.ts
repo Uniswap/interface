@@ -4,6 +4,7 @@
  * Subject to change as new features are added and new events are defined and logged.
  */
 export enum EventName {
+  AppLoaded = 'app-loaded',
   Impression = 'impression',
   MarkMeasure = 'mark-measure',
   Transaction = 'transaction',
@@ -20,16 +21,23 @@ export const enum SectionName {
   AccountCard = 'account-card',
   CurrencyInputPanel = 'currency-input-panel',
   CurrencyOutputPanel = 'currency-output-panel',
+  ExploreTokensTab = 'explore-tokens-tab',
+  ExploreWalletsTab = 'explore-wallets-tab',
+  HomeNFTsTab = 'home-nfts-tab',
+  HomeTokensTab = 'home-tokens-tab',
   ImportAccountForm = 'import-account-form',
   NameAccountForm = 'name-account-form',
-  TokenBalance = 'token-balance',
-  TokenSelect = 'token-select',
-  ExploreTokens = 'explore-tokens',
   NFTCollectionModal = 'nft-collection-modal',
   OnboardingBackup = 'onboarding-backup',
   OnboardingNotifications = 'onboarding-notifications',
   OnboardingSecurity = 'onboarding-security',
   OnboardingWalletCustomize = 'onboarding-wallet-customize',
+  ProfileActivityTab = 'profile-activity-tab',
+  ProfileNftsTab = 'profile-nfts-tab',
+  ProfileTokensTab = 'profile-tokens-tab',
+  Sidebar = 'sidebar',
+  TokenBalance = 'token-balance',
+  TokenSelect = 'token-select',
 }
 
 /** Known modals for telemetry purposes. */

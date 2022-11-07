@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput } from 'react-native'
 import { GestureDetector } from 'react-native-gesture-handler'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { SceneRendererProps, TabBar, TabView } from 'react-native-tab-view'
+import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList, TabNavigationProp } from 'src/app/navigation/types'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
@@ -23,13 +23,12 @@ import {
 } from 'src/components/layout/screens/TabbedScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Loading } from 'src/components/loading'
+import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { Text } from 'src/components/Text'
+import { SectionName } from 'src/features/telemetry/constants'
 import { Screens, Tabs } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { useDebounce } from 'src/utils/timing'
-
-const TOKENS_KEY = 'tokens'
-const WALLETS_KEY = 'wallets'
 
 const SIDEBAR_SWIPE_CONTAINER_WIDTH = 45
 
@@ -73,8 +72,8 @@ export function ExploreScreen({ navigation }: Props) {
 
   const tabs = useMemo(
     () => [
-      { key: TOKENS_KEY, title: t('Tokens') },
-      { key: WALLETS_KEY, title: t('Wallets') },
+      { key: SectionName.ExploreTokensTab, title: t('Tokens') },
+      { key: SectionName.ExploreWalletsTab, title: t('Wallets') },
     ],
     [t]
   )
@@ -83,9 +82,9 @@ export function ExploreScreen({ navigation }: Props) {
   const renderTab = useCallback(
     ({ route }) => {
       switch (route?.key) {
-        case TOKENS_KEY:
+        case SectionName.ExploreTokensTab:
           return <ExploreTokensTab listRef={listRef} />
-        case WALLETS_KEY:
+        case SectionName.ExploreWalletsTab:
           return <ExploreWalletsTab />
       }
       return null
@@ -155,7 +154,7 @@ export function ExploreScreen({ navigation }: Props) {
             </AnimatedFlex>
           </KeyboardAvoidingView>
         ) : (
-          <TabView
+          <TraceTabView
             navigationState={{ index: tabIndex, routes: tabs }}
             renderScene={renderTab}
             renderTabBar={renderTabBar}

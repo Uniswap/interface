@@ -23,13 +23,10 @@ export enum Screens {
   SettingsTestConfigs = 'SettingsTestConfigs',
   SettingsBiometricAuth = 'SettingsBiometricAuth',
   SettingsViewSeedPhrase = 'SettingsViewSeedPhrase',
-  Swap = 'Swap',
   TabNavigator = 'TabNavigator',
   TokenDetails = 'TokenDetails',
-  Transfer = 'Transfer',
   ExternalProfile = 'ExternalProfile',
   WebView = 'WebView',
-  Welcome = 'Welcome',
 }
 
 export enum OnboardingScreens {

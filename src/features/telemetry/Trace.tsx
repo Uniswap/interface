@@ -1,13 +1,5 @@
 import { useFocusEffect } from '@react-navigation/core'
-import React, {
-  createContext,
-  memo,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import React, { createContext, memo, PropsWithChildren, useEffect, useMemo, useRef } from 'react'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { logMessage, sendAnalyticsEvent } from 'src/features/telemetry'
 import {
@@ -17,6 +9,7 @@ import {
   ModalName,
   SectionName,
 } from 'src/features/telemetry/constants'
+import { useTrace } from 'src/features/telemetry/hooks'
 import { AppScreen } from 'src/screens/Screens'
 
 export interface ITraceContext {
@@ -78,7 +71,7 @@ function _Trace({
   const initialRenderTimestamp = useRef<number>(Date.now())
   const isPartOfNavigationTree = useIsPartOfNavigationTree()
 
-  const parentTrace = useContext(TraceContext)
+  const parentTrace = useTrace()
 
   // Component props are destructured to ensure shallow comparison
   const combinedProps = useMemo(
