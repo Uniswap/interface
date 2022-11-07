@@ -58,6 +58,9 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
           console.error(`Failed to get block number for chainId ${activeChainId}`, error)
         })
 
+      // Avoid extra calls by only polling every 12s.
+      provider.pollingInterval = 12
+
       provider.on('block', onBlock)
       return () => {
         stale = true
