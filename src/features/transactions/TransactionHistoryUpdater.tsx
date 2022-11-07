@@ -2,7 +2,7 @@ import React, { Fragment, ReactElement, useEffect, useMemo } from 'react'
 import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { PollingInterval } from 'src/constants/misc'
-import { refetchAllQueries } from 'src/data/apollo'
+import { useRefetchQueries } from 'src/data/hooks'
 import {
   TransactionHistoryUpdaterQueryResult,
   useTransactionHistoryUpdaterQuery,
@@ -63,6 +63,8 @@ function AddressTransactionHistoryUpdater({
   // Current txn count for all addresses
   const lastTxNotificationUpdateTimestamp = useAppSelector(selectLastTxNotificationUpdate)[address]
 
+  const refetchQueries = useRefetchQueries()
+
   useEffect(() => {
     batch(() => {
       // parse txns and address from portfolio
@@ -83,11 +85,11 @@ function AddressTransactionHistoryUpdater({
           // full send refetch all active (mounted) queries
           // NOTE: every wallet may call this on new transaction.
           // It may be better to batch this action, or target specific queries.
-          refetchAllQueries()
+          refetchQueries()
         }
       })
     })
-  }, [activities, address, dispatch, lastTxNotificationUpdateTimestamp])
+  }, [activities, address, dispatch, lastTxNotificationUpdateTimestamp, refetchQueries])
 
   return null
 }

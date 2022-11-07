@@ -4,6 +4,12 @@ import 'react-native'
 import renderer from 'react-test-renderer'
 import App from 'src/app/App'
 
+jest.mock('src/data/hooks', () => {
+  return {
+    useApolloClient: () => {},
+  }
+})
+
 it('renders correctly', () => {
   renderer.create(<App />)
 })

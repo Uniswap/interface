@@ -34,16 +34,14 @@ export function PortfolioBalance({ owner, variant, color }: PortfolioBalanceProp
   }
 
   return (
-    <Flex gap="xxs">
-      <DecimalNumber
-        color={color}
-        fontWeight="600"
-        number={formatUSDPrice(
-          data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value ?? undefined,
-          NumberType.FiatTokenQuantity
-        )}
-        variant={variant ?? 'headlineLarge'}
-      />
-    </Flex>
+    <DecimalNumber
+      color={color}
+      fontWeight="600"
+      number={formatUSDPrice(
+        data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value ?? undefined,
+        NumberType.FiatTokenQuantity
+      )}
+      variant={variant ?? 'headlineLarge'}
+    />
   )
 }

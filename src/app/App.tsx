@@ -14,7 +14,7 @@ import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { config } from 'src/config'
-import { client } from 'src/data/apollo'
+import { useApolloClient } from 'src/data/hooks'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { MulticallUpdaters } from 'src/features/multicall'
@@ -53,6 +53,13 @@ initializeRemoteConfig()
 initOneSignal()
 
 function App() {
+  const client = useApolloClient()
+
+  if (!client) {
+    // TODO(MOB-3515): delay splash screen until client is rehydated
+    return null
+  }
+
   return (
     <Trace startMark={MarkNames.AppStartup}>
       <StrictMode>
