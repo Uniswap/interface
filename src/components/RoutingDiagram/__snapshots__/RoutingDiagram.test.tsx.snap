@@ -131,7 +131,7 @@ exports[`renders multi route 1`] = `
 .c9 {
   background-color: #B8C0DC;
   border-radius: 4px;
-  color: #5D6785;
+  color: #7780A0;
   font-size: 10px;
   padding: 2px 4px;
   z-index: 1021;
@@ -369,7 +369,7 @@ exports[`renders single route 1`] = `
 .c9 {
   background-color: #B8C0DC;
   border-radius: 4px;
-  color: #5D6785;
+  color: #7780A0;
   font-size: 10px;
   padding: 2px 4px;
   z-index: 1021;
