@@ -1,8 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
-import { ChainId } from 'src/constants/chains'
-import { Chain, SpotPricesQuery, useSpotPricesQuery } from 'src/data/__generated__/types-and-hooks'
+import { PollingInterval } from 'src/constants/misc'
+import { SpotPricesQuery, useSpotPricesQuery } from 'src/data/__generated__/types-and-hooks'
 import { GqlResult } from 'src/features/dataApi/types'
-import { toGraphQLChain } from 'src/utils/chainId'
+import { currencyIdToContractInput } from 'src/features/dataApi/utils'
+import { currencyId } from 'src/utils/currencyId'
 
 export type SpotPrice = NonNullable<
   NonNullable<NonNullable<SpotPricesQuery['tokenProjects']>[0]>['markets']
@@ -18,14 +19,10 @@ export function useSpotPrice(
 ): GqlResult<SpotPrice> {
   const { data, loading } = useSpotPricesQuery({
     variables: {
-      contracts: [
-        {
-          chain: toGraphQLChain(currency?.chainId ?? ChainId.Mainnet) ?? Chain.Ethereum,
-          address: currency?.wrapped.address.toLowerCase(),
-        },
-      ],
+      contracts: [currencyIdToContractInput(currencyId(currency!))],
     },
-    skip,
+    pollInterval: PollingInterval.Fast,
+    skip: skip || !currency,
   })
 
   return { data: data?.tokenProjects?.[0]?.markets?.[0], loading }

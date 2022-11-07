@@ -32,7 +32,7 @@ function ExploreTokensTab({ listRef }: ExploreTokensTabProps) {
     variables: {
       topTokensOrderBy: MarketSortableField.MarketCap,
     },
-    pollInterval: PollingInterval.Slow,
+    pollInterval: PollingInterval.Fast,
   })
 
   // Sorting and filtering

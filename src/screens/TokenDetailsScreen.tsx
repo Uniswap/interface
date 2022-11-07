@@ -94,8 +94,10 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
     return null
   }
 
-  if (loading && !data) {
-    return <TokenDetailsLoader currency={currency} />
+  if (!data) {
+    if (loading) {
+      return <TokenDetailsLoader currency={currency} />
+    }
   }
 
   return <TokenDetails currency={currency} data={data} />
