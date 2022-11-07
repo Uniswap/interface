@@ -1,6 +1,6 @@
 import { Swap } from './usecases/Swap'
-import { quickOnboarding } from './utils/utils'
 import { permissions } from './utils/fixtures'
+import { quickOnboarding } from './utils/utils'
 
 describe('Swap', () => {
   beforeAll(async () => {

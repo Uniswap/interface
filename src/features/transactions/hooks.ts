@@ -16,7 +16,6 @@ import {
   createSwapFromStateFromDetails,
   createWrapFormStateFromDetails,
 } from 'src/features/transactions/swap/createSwapFromStateFromDetails'
-
 import {
   TransactionDetails,
   TransactionStatus,

@@ -8,7 +8,7 @@ import { selectAccounts } from 'src/features/wallet/selectors'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { connectToApp, isValidWCUrl } from 'src/features/walletConnect/WalletConnect'
 import { logger } from 'src/utils/logger'
-import { call, put, takeLatest, fork } from 'typed-redux-saga'
+import { call, fork, put, takeLatest } from 'typed-redux-saga'
 
 export interface DeepLink {
   url: string

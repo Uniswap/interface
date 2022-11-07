@@ -1,4 +1,6 @@
-import './wdyr' // needs to be the first import
+// Disable sorting imports with Prettier for this file so that it doesn't change the order
+// organize-imports-ignore
+import './wdyr'
 
 import Shake from '@shakebugs/react-native-shake'
 import { AppRegistry } from 'react-native'

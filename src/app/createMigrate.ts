@@ -1,7 +1,6 @@
-// Adapted from https://github.com/rt2zz/redux-persist/blob/master/src/createMigrate.ts to addd more logging
-import { DEFAULT_VERSION } from 'redux-persist/es/constants'
-
+// Adapted from https://github.com/rt2zz/redux-persist/blob/master/src/createMigrate.ts to add more logging
 import type { MigrationManifest, PersistedState } from 'redux-persist'
+import { DEFAULT_VERSION } from 'redux-persist/es/constants'
 import { logger } from 'src/utils/logger'
 
 export default function createMigrate(

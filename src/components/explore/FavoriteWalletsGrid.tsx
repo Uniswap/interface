@@ -4,7 +4,6 @@ import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
-
 import { AnimatedBox, Box } from 'src/components/layout'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { theme } from 'src/styles/theme'

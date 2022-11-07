@@ -4,7 +4,6 @@ import { FadeIn } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
-
 import { AnimatedBox, Box } from 'src/components/layout'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { flex } from 'src/styles/flex'

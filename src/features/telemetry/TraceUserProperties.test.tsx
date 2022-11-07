@@ -1,12 +1,11 @@
 import React from 'react'
+import { useColorScheme } from 'react-native'
 // Note: test renderer must be required after react-native.
 import renderer, { act } from 'react-test-renderer'
-import { TraceUserProperties } from 'src/features/telemetry/TraceUserProperties'
-
-import { useColorScheme } from 'react-native'
 import * as biometricHooks from 'src/features/biometrics/hooks'
 import * as telemetry from 'src/features/telemetry'
 import { AuthMethod, UserPropertyName } from 'src/features/telemetry/constants'
+import { TraceUserProperties } from 'src/features/telemetry/TraceUserProperties'
 import { AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import * as walletHooks from 'src/features/wallet/hooks'
 import * as versionUtils from 'src/utils/version'
