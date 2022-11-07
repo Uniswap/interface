@@ -14,6 +14,7 @@ import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
+import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { getValidAddress } from 'src/utils/addresses'
@@ -47,17 +48,23 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   const normalizedValue = normalizeTextInput(value ?? '')
   const { address: resolvedAddress, name } = useENS(ChainId.Mainnet, normalizedValue, true)
   const isAddress = getValidAddress(normalizedValue, true, false)
+  const { isSmartContractAddress, loading } = useIsSmartContractAddress(
+    isAddress ?? undefined,
+    ChainId.Mainnet
+  )
 
   // Form validation.
   const walletExists =
     (resolvedAddress && importedAddresses.includes(resolvedAddress)) ||
     importedAddresses.includes(normalizedValue)
-  const isValid = (isAddress || name) && !walletExists
+  const isValid = (isAddress || name) && !walletExists && !loading && !isSmartContractAddress
 
   let errorText
   if (!isValid && walletExists) {
     errorText = t('This address is already imported')
-  } else if (!isValid) {
+  } else if (!isValid && isSmartContractAddress) {
+    errorText = t('Address is a smart contract')
+  } else if (!isValid && !loading) {
     errorText = t('Address does not exist')
   }
 
