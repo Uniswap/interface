@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { PageName, Trace } from '@uniswap/analytics'
+import { Trace } from '@uniswap/analytics'
+import { PageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'

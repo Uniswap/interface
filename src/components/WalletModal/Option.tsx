@@ -1,4 +1,5 @@
-import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { Check } from 'react-feather'
 import styled from 'styled-components/macro'

@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import useDebounce from 'hooks/useDebounce'

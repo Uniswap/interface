@@ -1,4 +1,5 @@
-import { EventName, sendAnalyticsEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import clsx from 'clsx'
 import { L2NetworkLogo, LogoContainer } from 'components/Tokens/TokenTable/TokenRow'

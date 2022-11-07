@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
-import { EventName, ModalName, Trace } from '@uniswap/analytics'
+import { Trace } from '@uniswap/analytics'
+import { EventName, ModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'

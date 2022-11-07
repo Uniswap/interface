@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'

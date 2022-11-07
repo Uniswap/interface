@@ -1,4 +1,5 @@
-import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'

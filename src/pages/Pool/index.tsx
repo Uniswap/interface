@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, ElementName, EventName, PageName, Trace, TraceEvent } from '@uniswap/analytics'
+import { Trace, TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, PageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'

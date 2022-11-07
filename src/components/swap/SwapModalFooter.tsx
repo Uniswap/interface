@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import {

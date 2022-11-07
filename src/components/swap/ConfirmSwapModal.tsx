@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { EventName, ModalName, sendAnalyticsEvent, Trace } from '@uniswap/analytics'
+import { sendAnalyticsEvent, Trace } from '@uniswap/analytics'
+import { EventName, ModalName } from '@uniswap/analytics-events'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'

@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
-import { PageName, Trace } from '@uniswap/analytics'
+import { Trace } from '@uniswap/analytics'
+import { PageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import ExecuteModal from 'components/vote/ExecuteModal'

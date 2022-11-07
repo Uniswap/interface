@@ -1,6 +1,7 @@
 import 'rc-slider/assets/index.css'
 
-import { EventName, FilterTypes, sendAnalyticsEvent } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName, FilterTypes } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'

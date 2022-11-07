@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { CustomerUserProperties, EventName, sendAnalyticsEvent, user, WalletConnectionResult } from '@uniswap/analytics'
+import { sendAnalyticsEvent, user } from '@uniswap/analytics'
+import { CustomUserProperties, EventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendEvent } from 'components/analytics'
@@ -130,12 +131,12 @@ const sendAnalyticsEventAndUserInfo = (
     wallet_type: walletType,
     is_reconnect: isReconnect,
   })
-  user.set(CustomerUserProperties.WALLET_ADDRESS, account)
-  user.set(CustomerUserProperties.WALLET_TYPE, walletType)
+  user.set(CustomUserProperties.WALLET_ADDRESS, account)
+  user.set(CustomUserProperties.WALLET_TYPE, walletType)
   if (chainId) {
-    user.postInsert(CustomerUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
+    user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
   }
-  user.postInsert(CustomerUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
+  user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
 }
 
 export default function WalletModal({

@@ -1,12 +1,5 @@
-import {
-  CustomerUserProperties,
-  EventName,
-  initializeAnalytics,
-  PageName,
-  sendAnalyticsEvent,
-  Trace,
-  user,
-} from '@uniswap/analytics'
+import { initializeAnalytics, sendAnalyticsEvent, Trace, user } from '@uniswap/analytics'
+import { CustomUserProperties, EventName, PageName } from '@uniswap/analytics-events'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
@@ -151,10 +144,10 @@ export default function App() {
 
   useEffect(() => {
     sendAnalyticsEvent(EventName.APP_LOADED)
-    user.set(CustomerUserProperties.USER_AGENT, navigator.userAgent)
-    user.set(CustomerUserProperties.BROWSER, getBrowser())
-    user.set(CustomerUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
-    user.set(CustomerUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
+    user.set(CustomUserProperties.BROWSER, getBrowser())
+    user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
+    user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
     getCLS(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
     getFCP(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
     getFID(({ delta }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
@@ -162,11 +155,11 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    user.set(CustomerUserProperties.DARK_MODE, isDarkMode)
+    user.set(CustomUserProperties.DARK_MODE, isDarkMode)
   }, [isDarkMode])
 
   useEffect(() => {
-    user.set(CustomerUserProperties.EXPERT_MODE, isExpertMode)
+    user.set(CustomUserProperties.EXPERT_MODE, isExpertMode)
   }, [isExpertMode])
 
   useEffect(() => {

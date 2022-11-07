@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { EventName, sendAnalyticsEvent, SwapPriceUpdateUserResponse } from '@uniswap/analytics'
+import { sendAnalyticsEvent } from '@uniswap/analytics'
+import { EventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useEffect, useState } from 'react'

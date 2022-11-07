@@ -1,4 +1,5 @@
-import { EventName, SectionName, sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { EventName, SectionName } from '@uniswap/analytics-events'
 import {
   TradeType,
   Transaction,

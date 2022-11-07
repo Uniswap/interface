@@ -4122,10 +4122,15 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
-"@uniswap/analytics@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.0.1.tgz#a86ff3d1e9dc9aeea7272404c68d50a616aa3fd9"
-  integrity sha512-KEz0tXlkGpu5RvpD7z7WgnSr7u10gjtlwTjCo1Mmcf00RSP5lwMbCHg+/tl2tM82J9eZ7w+/M86ol9GhqdZUsg==
+"@uniswap/analytics-events@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics-events/-/analytics-events-1.0.0.tgz#0edf14cebcca8b38ae38e7221e7c57fd4728b2c4"
+  integrity sha512-xZt8FRkWWTW4myW4p2Ccxfrb/aRZtYLFtGru7aDszDAqoUCT66vUlHZRrbUzYoCpjZX6J+x1tHPaDAhGlgZUqw==
+
+"@uniswap/analytics@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/analytics/-/analytics-1.0.2.tgz#0c497bd26c6e58ff93267d90eaac4ad5a8cdcab9"
+  integrity sha512-59MYvTwHLWbIp3nOgIEOC9CsWxS39Fhe76Nj/1YlWNL+3yE/Z5Sooz6hqTlutFrSlIZN3O5pMLXQSpjUTAZEfA==
   dependencies:
     "@amplitude/analytics-browser" "^1.5.8"
     react "^18.2.0"

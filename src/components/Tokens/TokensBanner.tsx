@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { X } from 'react-feather'

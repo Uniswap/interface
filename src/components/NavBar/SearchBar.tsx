@@ -1,15 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
-import {
-  BrowserEvent,
-  ElementName,
-  EventName,
-  SectionName,
-  sendAnalyticsEvent,
-  Trace,
-  TraceEvent,
-  useTrace,
-} from '@uniswap/analytics'
+import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName, SectionName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'

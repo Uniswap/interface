@@ -1,4 +1,5 @@
-import { EventName, PageName, sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { sendAnalyticsEvent, useTrace } from '@uniswap/analytics'
+import { EventName, PageName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/smart-order-router'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'

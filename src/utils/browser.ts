@@ -1,4 +1,4 @@
-import { Browser } from '@uniswap/analytics'
+import { Browser } from '@uniswap/analytics-events'
 
 // Get browser being used, code comes from: https://developer.mozilla.org/en-US/docs/Web/API/Window/navigator.
 export function getBrowser(): string {

@@ -1,5 +1,6 @@
 import { Plural, Trans } from '@lingui/macro'
-import { BrowserEvent, ElementName, EventName, TraceEvent } from '@uniswap/analytics'
+import { TraceEvent } from '@uniswap/analytics'
+import { BrowserEvent, ElementName, EventName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { ButtonPrimary } from 'components/Button'
