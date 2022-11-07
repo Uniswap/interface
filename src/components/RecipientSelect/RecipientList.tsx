@@ -4,7 +4,7 @@ import { ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
-import { AnimatedFlex, Inset } from 'src/components/layout'
+import { AnimatedFlex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { Text } from 'src/components/Text'
@@ -16,15 +16,13 @@ interface RecipientListProps {
 
 export function RecipientList({ onPress, sections }: RecipientListProps) {
   const renderItem = ({ item }: ListRenderItemInfo<SearchableRecipient>) => (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+    <AnimatedFlex entering={FadeIn} exiting={FadeOut} py="sm">
       <RecipientRow recipient={item} onPress={onPress} />
     </AnimatedFlex>
   )
 
   return (
     <SectionList
-      ItemSeparatorComponent={ItemSeparator}
-      SectionSeparatorComponent={SectionSeparator}
       keyExtractor={key}
       keyboardShouldPersistTaps="always"
       renderItem={renderItem}
@@ -36,7 +34,7 @@ export function RecipientList({ onPress, sections }: RecipientListProps) {
 
 function SectionHeader(info: { section: SectionListData<SearchableRecipient> }) {
   return (
-    <AnimatedFlex backgroundColor="background1" entering={FadeIn} exiting={FadeOut}>
+    <AnimatedFlex backgroundColor="background1" entering={FadeIn} exiting={FadeOut} py="xs">
       <Text color="textTertiary" variant="bodySmall">
         {info.section.title}
       </Text>
@@ -71,12 +69,4 @@ export function RecipientLoadingRow() {
       <Loading type="token" />
     </AnimatedFlex>
   )
-}
-
-function ItemSeparator() {
-  return <Inset all="sm" />
-}
-
-function SectionSeparator() {
-  return <Inset all="sm" />
 }

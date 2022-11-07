@@ -15,7 +15,7 @@ interface SearchBarProps extends SearchTextInputProps {
 export function SearchBar({ onBack, hideBackButton, ...rest }: SearchBarProps) {
   const theme = useAppTheme()
   return (
-    <Flex centered row gap="sm" mx="md">
+    <Flex centered row gap="sm">
       {!hideBackButton && (
         <TouchableArea name={ElementName.Back} testID={ElementName.Back} onPress={onBack}>
           <Chevron color={theme.colors.textPrimary} />

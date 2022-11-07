@@ -63,7 +63,6 @@ export function RecipientSelect({
         {loading && <RecipientLoadingRow />}
         {noResults ? (
           <Flex centered gap="sm" mt="lg" px="lg">
-            <Text variant="buttonLabelMedium">😔</Text>
             <Text variant="buttonLabelMedium">{t('No results found')}</Text>
             <Text color="textTertiary" textAlign="center" variant="bodyLarge">
               {t('The address you typed either does not exist or is spelled incorrectly.')}

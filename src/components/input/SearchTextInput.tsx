@@ -4,10 +4,9 @@ import { Keyboard, LayoutChangeEvent, TextInput as NativeTextInput, ViewStyle } 
 import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import X from 'src/assets/icons/x.svg'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { AnimatedTouchableArea, TouchableArea } from 'src/components/buttons/TouchableArea'
 import { TextInput, TextInputProps } from 'src/components/input/TextInput'
-import { AnimatedFlex, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
 import SearchIcon from '../../assets/icons/search.svg'
@@ -28,7 +27,6 @@ export type SearchTextInputProps = TextInputProps & {
   clearIcon?: ReactElement
   disableClearable?: boolean
   endAdornment?: ReactElement
-  showBackButton?: boolean
   showCancelButton?: boolean
 }
 
@@ -45,7 +43,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     onChangeText,
     onFocus,
     placeholder,
-    showBackButton,
     showCancelButton,
     value,
   } = props
@@ -97,7 +94,10 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
 
   const textInputStyle = useAnimatedStyle(() => {
     return {
-      marginRight: withSpring(isFocus.value ? cancelButtonWidth.value + 10 : 0, springConfig),
+      marginRight: withSpring(
+        showCancelButton && isFocus.value ? cancelButtonWidth.value + theme.spacing.sm : 0,
+        springConfig
+      ),
     }
   })
 
@@ -130,8 +130,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
   })
 
   return (
-    <Flex centered row gap="none">
-      {showBackButton && <BackButton pr="sm" />}
+    <Box alignItems="center" flexDirection="row" flexShrink={1}>
       <AnimatedFlex
         row
         alignItems="center"
@@ -180,7 +179,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           <Text variant="buttonLabelMedium">{t('Cancel')}</Text>
         </AnimatedTouchableArea>
       )}
-    </Flex>
+    </Box>
   )
 })
 
