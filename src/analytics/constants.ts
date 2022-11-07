@@ -25,6 +25,7 @@ export enum EventName {
   NFT_FILTER_OPENED = 'NFT Collection Filter Opened',
   NFT_FILTER_SELECTED = 'NFT Filter Selected',
   NFT_LISTING_SIGNED = 'NFT Listing Signed',
+  NFT_LISTING_COMPLETED = 'NFT Listing Success',
   NFT_SELL_ITEM_ADDED = 'NFT Sell Item Added',
   NFT_SELL_SELECTED = 'NFT Sell Selected',
   NFT_SELL_START_LISTING = 'NFT Sell Start Listing',

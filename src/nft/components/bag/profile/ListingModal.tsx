@@ -205,13 +205,18 @@ const ListingModal = () => {
         </Row>
         <Column overflowX="hidden" overflowY="auto" style={{ maxHeight: '60vh' }}>
           {showSuccessScreen ? (
-            <ListingSection
-              sectionTitle={`Listed ${listings.length} item${pluralize(listings.length)} for sale`}
-              rows={listings}
-              index={0}
-              openIndex={openIndex}
-              isSuccessScreen={true}
-            />
+            <Trace
+              name={EventName.NFT_LISTING_COMPLETED}
+              properties={{ list_quantity: listings.length, usd_value: ethPriceInUSD, ...trace }}
+            >
+              <ListingSection
+                sectionTitle={`Listed ${listings.length} item${pluralize(listings.length)} for sale`}
+                rows={listings}
+                index={0}
+                openIndex={openIndex}
+                isSuccessScreen={true}
+              />
+            </Trace>
           ) : (
             <>
               <ListingSection
