@@ -36,7 +36,7 @@ export function TokenLogo({
           style={[
             style.image,
             {
-              backgroundColor: theme.colors.textTertiary,
+              backgroundColor: theme.colors.backgroundOutline,
               width: size,
               height: size,
               borderRadius: size / 2,
