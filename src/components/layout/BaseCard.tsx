@@ -2,6 +2,7 @@ import { BoxProps, ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
+import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
@@ -150,9 +151,55 @@ function EmptyState({
   )
 }
 
+// Error State
+type ErrorStateProps = {
+  title?: string
+  description: string
+  retry?: () => void
+  retryButtonLabel?: string
+  icon?: ReactNode
+}
+
+function ErrorState({ title, description, retry, retryButtonLabel, icon }: ErrorStateProps) {
+  const theme = useAppTheme()
+  return (
+    <Flex centered grow gap="lg" p="sm" width="100%">
+      <Flex centered>
+        {icon ?? (
+          <AlertTriangle
+            color={theme.colors.textSecondary}
+            height={theme.iconSizes.xxxl}
+            width={theme.iconSizes.xxxl}
+          />
+        )}
+        <Flex centered gap="xs">
+          {title ? (
+            <Text textAlign="center" variant="buttonLabelMedium">
+              {title}
+            </Text>
+          ) : null}
+          <Text color="textSecondary" textAlign="center" variant="bodySmall">
+            {description}
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex row>
+        {retryButtonLabel ? (
+          <TouchableArea hapticFeedback onPress={retry}>
+            <Text color="magentaVibrant" variant="buttonLabelSmall">
+              {retryButtonLabel}
+            </Text>
+          </TouchableArea>
+        ) : null}
+      </Flex>
+    </Flex>
+  )
+}
+
 export const BaseCard = {
   Container,
   EmptyState,
+  ErrorState,
   Header,
   Shadow,
 }
