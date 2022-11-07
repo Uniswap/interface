@@ -244,20 +244,20 @@ export default function App() {
 
                   {nftFlag === NftVariant.Enabled && (
                     <>
-                      <Route
-                        path="/profile"
-                        element={
-                          <Suspense fallback={<ProfilePageLoadingSkeleton />}>
-                            <Profile />
-                          </Suspense>
-                        }
-                      />
                       <Route path="/nfts" element={<NftExplore />} />
                       <Route
                         path="/nfts/asset/:contractAddress/:tokenId"
                         element={
                           <Suspense fallback={<div>Holder for loading ...</div>}>
                             <Asset />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="/nfts/profile"
+                        element={
+                          <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                            <Profile />
                           </Suspense>
                         }
                       />

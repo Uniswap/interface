@@ -170,7 +170,6 @@ export const ProfilePage = () => {
                   <FilterButton
                     isMobile={isMobile}
                     isFiltersExpanded={isFiltersExpanded}
-                    results={ownerAssets?.length}
                     onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                   />
                   <Row gap="8" flexWrap="nowrap">

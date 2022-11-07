@@ -141,15 +141,15 @@ export function useNftBalanceQuery(
         name: asset.collection?.name,
         description: asset.description,
         image_url: asset.collection?.image?.url,
-        payout_address: queryAsset.node.listingFees && queryAsset.node.listingFees[0].payoutAddress, // ask BE
+        payout_address: queryAsset.node.listingFees && queryAsset.node.listingFees[0].payoutAddress,
       },
       collection: asset.collection,
       collectionIsVerified: asset.collection?.isVerified,
-      lastPrice: queryAsset.node.lastPrice?.value, // ask BE
+      lastPrice: queryAsset.node.lastPrice?.value,
       floorPrice: asset.collection?.markets[0]?.floorPrice?.value,
-      creatorPercentage: queryAsset.node.listingFees && queryAsset.node.listingFees[0].basisPoints / 10000, // ask BE
+      creatorPercentage: queryAsset.node.listingFees && queryAsset.node.listingFees[0].basisPoints / 10000,
       listing_date: asset.listings ? asset.listings[0]?.edges[0]?.node.createdAt : undefined,
-      date_acquired: queryAsset.node.lastPrice?.timestamp, // ask BE
+      date_acquired: queryAsset.node.lastPrice?.timestamp,
       sellOrders: asset.listings?.edges,
       floor_sell_order_price: asset.listings ? asset.listings[0]?.edges[0]?.node.price.value : undefined,
     }

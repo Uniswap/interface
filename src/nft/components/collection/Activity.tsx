@@ -131,7 +131,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
 
   return (
     <Box>
-      <Row gap="8" paddingTop="16">
+      <Row gap="8" paddingTop={{ sm: '0', md: '16' }}>
         <Filter eventType={ActivityEventType.Listing} />
         <Filter eventType={ActivityEventType.Sale} />
         <Filter eventType={ActivityEventType.Transfer} />

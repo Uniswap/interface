@@ -87,9 +87,8 @@ const Bag = () => {
   const setBagExpanded = useBag((state) => state.setBagExpanded)
 
   const { pathname } = useLocation()
-  const isProfilePage = pathname.startsWith('/profile')
+  const isProfilePage = pathname.startsWith('/nfts/profile')
   const isNFTPage = pathname.startsWith('/nfts')
-  const shouldShowBag = isNFTPage || isProfilePage
   const isMobile = useIsMobile()
 
   const isDetailsPage = pathname.includes('/nfts/asset/')
@@ -266,7 +265,7 @@ const Bag = () => {
 
   return (
     <>
-      {bagExpanded && shouldShowBag ? (
+      {bagExpanded && isNFTPage ? (
         <Portal>
           <Column zIndex={isMobile || isOpen ? 'modal' : '3'} className={styles.bagContainer}>
             {!(isProfilePage && profilePageState === ProfilePageStateType.LISTING) ? (

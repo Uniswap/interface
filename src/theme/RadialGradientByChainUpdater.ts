@@ -30,7 +30,7 @@ export default function RadialGradientByChainUpdater(): null {
   const { chainId } = useWeb3React()
   const [darkMode] = useDarkModeManager()
   const { pathname } = useLocation()
-  const isNftPage = pathname.startsWith('/nfts') || pathname.startsWith('/profile')
+  const isNftPage = pathname.startsWith('/nfts')
 
   // manage background color
   useEffect(() => {
