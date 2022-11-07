@@ -25,6 +25,7 @@ export enum EventName {
   NFT_FILTER_OPENED = 'NFT Collection Filter Opened',
   NFT_FILTER_SELECTED = 'NFT Filter Selected',
   NFT_SELL_SELECTED = 'NFT Sell Selected',
+  NFT_SELL_START_LISTING = 'NFT Sell Start Listing',
   NFT_TRENDING_ROW_SELECTED = 'Trending Row Selected',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',

@@ -1,5 +1,7 @@
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { useWeb3React } from '@web3-react/core'
+import { Event, EventName } from 'analytics/constants'
+import { TraceEvent } from 'analytics/TraceEvent'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { ChevronLeftIcon, XMarkIcon } from 'nft/components/icons'
@@ -8,6 +10,7 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag, useIsMobile, useNFTList, useSellAsset } from 'nft/hooks'
 import { logListing, looksRareNonceFetcher } from 'nft/queries'
 import { AssetRow, CollectionRow, ListingRow, ListingStatus } from 'nft/types'
+import { fetchPrice } from 'nft/utils/fetchPrice'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { Dispatch, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -40,6 +43,22 @@ const ListingModal = () => {
   }, [])
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
+
+  const [ethPriceInUSD, setEthPriceInUSD] = useState(0)
+
+  useEffect(() => {
+    fetchPrice().then((price) => {
+      setEthPriceInUSD(price || 0)
+    })
+  }, [])
+
+  const eventProperties = {
+    collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
+    token_ids: sellAssets.map((asset) => asset.tokenId),
+    marketplaces: listings.map((asset) => asset.marketplace.name),
+    list_quantity: listings.length,
+    usd_value: ethPriceInUSD,
+  }
 
   // when all collections have been approved, auto start the signing process
   useEffect(() => {
@@ -214,7 +233,13 @@ const ListingModal = () => {
           </Box>
         </Box>
       ) : (
-        <ListingButton onClick={clickStartListingFlow} buttonText={'Start listing'} showWarningOverride={isMobile} />
+        <TraceEvent
+          events={[Event.onClick]}
+          name={EventName.NFT_SELL_START_LISTING}
+          properties={{ ...eventProperties }}
+        >
+          <ListingButton onClick={clickStartListingFlow} buttonText={'Start listing'} showWarningOverride={isMobile} />
+        </TraceEvent>
       )}
       {(listingStatus === ListingStatus.PENDING || listingStatus === ListingStatus.SIGNING) && (
         <Box
