@@ -14,8 +14,8 @@ export enum SearchResultType {
 // Currently only used for fixed default wallet list
 export enum WalletCategory {
   DAO = 'DAO',
-  NFTArtist = 'NFT Artist',
-  NFTCollector = 'NFT Collector',
+  NFTArtist = 'NFT artist',
+  NFTCollector = 'NFT collector',
   Builder = 'Builder',
 }
 
