@@ -87,10 +87,12 @@ export default function CurrencySearchBridge({
     }
   }, [isOpen])
 
+  const listTokenRef = useRef<HTMLDivElement>(null)
   const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value
     const checksumInput = isAddress(input)
     setSearchQuery(checksumInput || input)
+    if (listTokenRef?.current) listTokenRef.current.scrollTop = 0
   }, [])
 
   const handleEnter = useCallback(
@@ -168,6 +170,7 @@ export default function CurrencySearchBridge({
 
       {visibleCurrencies?.length ? (
         <CurrencyListBridge
+          listTokenRef={listTokenRef}
           isOutput={isOutput}
           currencies={visibleCurrencies}
           onCurrencySelect={handleCurrencySelect}

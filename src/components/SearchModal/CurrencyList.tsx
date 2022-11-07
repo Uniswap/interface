@@ -2,7 +2,9 @@ import { Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import { rgba } from 'polished'
 import React, { CSSProperties, ReactNode, memo, useCallback } from 'react'
 import { Star, Trash } from 'react-feather'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { FixedSizeList } from 'react-window'
+import InfiniteLoader from 'react-window-infinite-loader'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -188,6 +190,7 @@ function CurrencyList({
   removeImportedToken,
   loadMoreRows,
   hasMore,
+  listTokenRef,
 }: {
   isImportedTab: boolean
   hasMore: boolean
@@ -200,6 +203,7 @@ function CurrencyList({
   handleClickFavorite: (e: React.MouseEvent, currency: Currency) => void
   removeImportedToken: (token: Token) => void
   loadMoreRows: () => Promise<void>
+  listTokenRef: React.Ref<HTMLDivElement>
 }) {
   const { account } = useActiveWeb3React()
   const currencyBalances = useCurrencyBalances(account || undefined, currencies)
@@ -261,30 +265,47 @@ function CurrencyList({
       removeImportedToken,
     ],
   )
+  const loadMoreItems = useCallback(() => loadMoreRows(), [loadMoreRows])
   if (currencies.length === 1 && currencies[0].isNative) return null
+  const itemCount = hasMore ? currencies.length + 1 : currencies.length // If there are more items to be loaded then add an extra row to hold a loading indicator.
+  const isItemLoaded = (index: number) => !hasMore || index < currencies.length
   return (
-    <InfiniteScroll
-      dataLength={currencies.length}
-      next={loadMoreRows}
-      hasMore={hasMore}
-      loader={
-        <Flex justifyContent={'center'} fontSize={13} marginBottom={10}>
-          <Text>loading...</Text>
-        </Flex>
-      }
-      endMessage={null}
-      scrollableTarget="currency-list-wrapper"
-    >
-      {currencies.map((item, index) => (
-        <Row
-          key={index}
-          index={index}
-          currency={item}
-          currencyBalance={currencyBalances[index]}
-          style={{ height: 56 }}
-        />
-      ))}
-    </InfiniteScroll>
+    <AutoSizer>
+      {({ height, width }) => (
+        <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={itemCount} loadMoreItems={loadMoreItems}>
+          {({ onItemsRendered, ref }) => (
+            <FixedSizeList
+              height={height + 100}
+              width={width}
+              itemCount={itemCount}
+              itemSize={56}
+              onItemsRendered={onItemsRendered}
+              ref={ref}
+              outerRef={listTokenRef}
+            >
+              {({ index, style }: { index: number; style: CSSProperties }) => {
+                if (!isItemLoaded(index)) {
+                  return (
+                    <Flex justifyContent={'center'} fontSize={13} marginBottom={10} style={style}>
+                      <Text>loading...</Text>
+                    </Flex>
+                  )
+                }
+                return (
+                  <Row
+                    index={index}
+                    currency={currencies[index]}
+                    key={currencies[index]?.wrapped.address || index}
+                    currencyBalance={currencyBalances[index]}
+                    style={style}
+                  />
+                )
+              }}
+            </FixedSizeList>
+          )}
+        </InfiniteLoader>
+      )}
+    </AutoSizer>
   )
 }
 export default memo(CurrencyList)
