@@ -1,9 +1,9 @@
 import { addressesByNetwork, SupportedChainId } from '@looksrare/sdk'
 import { useWeb3React } from '@web3-react/core'
-import { Event, EventName, ModalName } from 'analytics/constants'
+import { sendAnalyticsEvent } from 'analytics'
+import { EventName, ModalName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { useTrace } from 'analytics/Trace'
-import { TraceEvent } from 'analytics/TraceEvent'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { ChevronLeftIcon, XMarkIcon } from 'nft/components/icons'
@@ -55,10 +55,16 @@ const ListingModal = () => {
     })
   }, [])
 
-  const eventProperties = {
+  const startListingEventProperties = {
     collection_addresses: sellAssets.map((asset) => asset.asset_contract.address),
     token_ids: sellAssets.map((asset) => asset.tokenId),
     marketplaces: listings.map((asset) => asset.marketplace.name),
+    list_quantity: listings.length,
+    usd_value: ethPriceInUSD,
+    ...trace,
+  }
+
+  const approvalEventProperties = {
     list_quantity: listings.length,
     usd_value: ethPriceInUSD,
     ...trace,
@@ -131,6 +137,11 @@ const ListingModal = () => {
     if (allListingsSigned) {
       setOpenIndex(0)
       setListingStatus(ListingStatus.APPROVED)
+      sendAnalyticsEvent(EventName.NFT_LISTING_SIGNED, {
+        signatures_requested: listings.length,
+        signatures_approved: listings.length,
+        ...approvalEventProperties,
+      })
     } else if (!paused) {
       setListingStatus(ListingStatus.FAILED)
     }
@@ -162,6 +173,7 @@ const ListingModal = () => {
   const clickStartListingFlow = () => {
     resetAllRows()
     allCollectionsApproved ? signListings() : startListingFlow()
+    !allCollectionsApproved && sendAnalyticsEvent(EventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
   }
 
   const showSuccessScreen = useMemo(() => listingStatus === ListingStatus.APPROVED, [listingStatus])
@@ -238,17 +250,7 @@ const ListingModal = () => {
             </Box>
           </Box>
         ) : (
-          <TraceEvent
-            events={[Event.onClick]}
-            name={EventName.NFT_SELL_START_LISTING}
-            properties={{ ...eventProperties }}
-          >
-            <ListingButton
-              onClick={clickStartListingFlow}
-              buttonText={'Start listing'}
-              showWarningOverride={isMobile}
-            />
-          </TraceEvent>
+          <ListingButton onClick={clickStartListingFlow} buttonText={'Start listing'} showWarningOverride={isMobile} />
         )}
         {(listingStatus === ListingStatus.PENDING || listingStatus === ListingStatus.SIGNING) && (
           <Box
