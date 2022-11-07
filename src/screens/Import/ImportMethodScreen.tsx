@@ -11,7 +11,7 @@ import SeedPhraseIcon from 'src/assets/icons/pencil.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import {
@@ -233,25 +233,23 @@ function OptionCard({
       py="sm"
       testID={name}
       onPress={onPress}>
-      <Flex row alignItems="center" gap="md" justifyContent="space-between">
-        <Flex row alignItems="center" gap="md" justifyContent="flex-start">
-          <Flex
-            centered
-            borderColor="accentBranded"
-            borderRadius="md"
-            borderWidth={1}
-            height={32}
-            padding="md"
-            width={32}>
-            {icon}
-          </Flex>
-
-          <Flex alignItems="flex-start" gap="xxxs" justifyContent="space-around">
-            <Text variant="subheadSmall">{title}</Text>
-            <Text color="textSecondary" variant="buttonLabelMicro">
-              {blurb}
-            </Text>
-          </Flex>
+      <Flex row alignItems="center" gap="md">
+        <Box
+          alignItems="center"
+          borderColor="accentBranded"
+          borderRadius="md"
+          borderWidth={1}
+          height={32}
+          justifyContent="center"
+          padding="md"
+          width={32}>
+          {icon}
+        </Box>
+        <Flex fill alignItems="flex-start" gap="xxxs" justifyContent="space-around">
+          <Text variant="subheadSmall">{title}</Text>
+          <Text color="textSecondary" variant="buttonLabelMicro">
+            {blurb}
+          </Text>
         </Flex>
         <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
       </Flex>

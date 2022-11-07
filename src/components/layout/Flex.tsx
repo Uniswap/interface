@@ -59,15 +59,11 @@ export function Flex({
   spacerProps,
   ...boxProps
 }: FlexProps) {
-  const childrenArr = useMemo(() => React.Children.toArray(children).filter((c) => !!c), [children])
-  const mergedSpacerProps = useMemo(
-    () => ({
-      x: row || flexDirection === 'row' || flexDirection === 'row-reverse' ? gap : undefined,
-      y: flexDirection === 'column' || flexDirection === 'column-reverse' ? gap : undefined,
-      ...spacerProps,
-    }),
-    [flexDirection, gap, row, spacerProps]
-  )
+  const childrenArr = useMemo(() => React.Children.toArray(children), [children])
+
+  const x = row || flexDirection === 'row' || flexDirection === 'row-reverse' ? gap : undefined
+  const y = flexDirection === 'column' || flexDirection === 'column-reverse' ? gap : undefined
+
   return (
     <Box
       alignItems={centered ? 'center' : alignItems}
@@ -82,7 +78,7 @@ export function Flex({
       {childrenArr.map((child, index, array) => (
         <React.Fragment key={index}>
           {child}
-          {gap && index < array.length - 1 && <Spacer {...mergedSpacerProps} />}
+          {gap && index < array.length - 1 && <Spacer {...spacerProps} x={x} y={y} />}
         </React.Fragment>
       ))}
     </Box>
