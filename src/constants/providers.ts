@@ -26,8 +26,7 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
 
   constructor(chainId: SupportedChainId) {
     // Including networkish allows ethers to skip the initial detectNetwork call.
-    const networkish = { chainId, name: CHAIN_IDS_TO_NAMES[chainId] }
-    super(RPC_URLS[chainId][0], networkish)
+    super(RPC_URLS[chainId][0], /* networkish= */ { chainId, name: CHAIN_IDS_TO_NAMES[chainId] })
     this.pollingInterval = POLLING_INTERVAL
   }
 
