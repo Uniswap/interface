@@ -31,12 +31,11 @@ function getButtonTextColor(emphasis: ButtonEmphasis): keyof Theme['colors'] {
 }
 
 function getButtonBorderColor(emphasis: ButtonEmphasis): keyof Theme['colors'] {
-  const buttonColor = getButtonColor(emphasis)
   switch (emphasis) {
     case ButtonEmphasis.Tertiary:
       return 'backgroundOutline'
     default:
-      return buttonColor
+      return 'none'
   }
 }
 

@@ -410,7 +410,7 @@ export const colorsLight: Palette = {
   textSecondary: colors.gray550,
   textTertiary: colors.gray350,
 
-  accentAction: colors.pink400,
+  accentAction: colors.magentaVibrant,
   accentActive: colors.blue400,
   accentSuccess: colors.green300,
   accentWarning: colors.goldVibrant,
@@ -418,7 +418,7 @@ export const colorsLight: Palette = {
 
   accentBranded: colors.magentaVibrant,
 
-  accentActionSoft: opacify(12, colors.pink400),
+  accentActionSoft: opacify(12, colors.magentaVibrant),
   accentActiveSoft: opacify(24, colors.blue400),
   accentSuccessSoft: opacify(24, colors.green300),
   accentWarningSoft: opacify(24, colors.gold200),
@@ -470,7 +470,7 @@ export const colorsDark: Palette = {
   textSecondary: colors.gray200,
   textTertiary: colors.gray400,
 
-  accentAction: colors.pink400,
+  accentAction: colors.magentaVibrant,
   accentActive: colors.blue400,
   accentSuccess: colors.green300,
   accentWarning: colors.goldVibrant,

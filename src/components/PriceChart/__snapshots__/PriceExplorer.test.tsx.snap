@@ -219,7 +219,7 @@ exports[`renders correctly 1`] = `
               "strokeWidth",
             ]
           }
-          stroke={4294644110}
+          stroke={4294734591}
           strokeWidth={3}
         />
         <RNSVGDefs>
@@ -227,9 +227,9 @@ exports[`renders correctly 1`] = `
             gradient={
               Array [
                 0,
-                872092046,
+                872182527,
                 1,
-                16454030,
+                16544511,
               ]
             }
             gradientTransform={null}
