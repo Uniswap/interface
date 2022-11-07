@@ -8,7 +8,10 @@ import ms from 'ms.macro'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from './chains'
 import { RPC_URLS } from './networks'
 
-export const POLLING_INTERVAL = ms`12s`
+// NB: Third-party providers (eg MetaMask) will have their own polling intervals,
+// which should be left as-is to allow operations (eg transaction confirmation) to resolve faster.
+// Network providers (eg AppJsonRpcProvider) need to update less frequently to be considered responsive.
+export const POLLING_INTERVAL = ms`12s` // mainnet block frequency
 
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
   private _blockCache = new Map<string, Promise<any>>()
