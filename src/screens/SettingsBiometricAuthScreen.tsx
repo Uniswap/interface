@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { Alert, ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
+import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
@@ -108,11 +108,11 @@ export function SettingsBiometricAuthScreen() {
     item: { text, subText, value, onValueChange },
   }: ListRenderItemInfo<BiometricAuthSetting>) => {
     return (
-      <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="sm">
+      <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Flex row>
           <Flex gap="none">
-            <Text variant="subheadLarge">{text}</Text>
-            <Text color="textSecondary" variant="buttonLabelSmall">
+            <Text variant="bodyLarge">{text}</Text>
+            <Text color="textSecondary" variant="bodyMicro">
               {subText}
             </Text>
           </Flex>
@@ -129,19 +129,20 @@ export function SettingsBiometricAuthScreen() {
   }
 
   return (
-    <Screen p="lg">
-      <Flex alignItems="center" flexDirection="row" mb="xl">
-        <BackButton color="textSecondary" />
+    <Screen>
+      <BackHeader alignment="left" mx="md" pt="md">
         <Text variant="buttonLabelLarge">
           {t('{{authenticationTypeName}} ID', { authenticationTypeName })}
         </Text>
-      </Flex>
-
-      <FlatList
-        ItemSeparatorComponent={() => <Box bg="backgroundOutline" height={1} my="md" />}
-        data={options}
-        renderItem={renderItem}
-      />
+      </BackHeader>
+      <Box p="lg">
+        <FlatList
+          ItemSeparatorComponent={() => <Box bg="backgroundOutline" height={1} my="md" />}
+          data={options}
+          renderItem={renderItem}
+          scrollEnabled={false}
+        />
+      </Box>
     </Screen>
   )
 }
