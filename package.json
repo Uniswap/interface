@@ -54,7 +54,7 @@
     "@react-native-firebase/auth": "14.5.1",
     "@react-native-firebase/firestore": "14.5.1",
     "@react-native-firebase/remote-config": "14.2.2",
-    "@react-native-masked-view/masked-view": "0.2.6",
+    "@react-native-masked-view/masked-view": "0.2.8",
     "@react-navigation/bottom-tabs": "6.3.2",
     "@react-navigation/core": "6.2.2",
     "@react-navigation/drawer": "6.3.1",
