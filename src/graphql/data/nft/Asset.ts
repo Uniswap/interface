@@ -159,7 +159,7 @@ export function useAssetsQuery(
         ).toString()
         return {
           id: asset.id,
-          address: asset.collection.nftContracts[0]?.address,
+          address: asset.collection?.nftContracts[0]?.address,
           notForSale: asset.listings?.edges.length === 0,
           collectionName: asset.collection?.name,
           collectionSymbol: asset.collection?.image?.url,
@@ -186,7 +186,7 @@ export function useAssetsQuery(
           }),
           smallImageUrl: asset.smallImage?.url,
           tokenId: asset.tokenId,
-          tokenType: asset.collection.nftContracts[0]?.standard,
+          tokenType: asset.collection?.nftContracts[0]?.standard,
           // totalCount?: number, // TODO waiting for BE changes
           collectionIsVerified: asset.collection?.isVerified,
           rarity: {
