@@ -110,6 +110,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
       <Flex pt="lg">
         <GenericImportForm
           autoCorrect
+          blurOnSubmit
           liveCheck
           afterPasteButtonPress={() => setPastePermissionModalOpen(false)}
           beforePasteButtonPress={() => setPastePermissionModalOpen(true)}

@@ -107,7 +107,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
       title={t('Enter a wallet address')}>
       <Flex pt="lg">
         <GenericImportForm
-          blurOnSubmit={Boolean(isValid)}
+          blurOnSubmit
           endAdornment={isAddress ? undefined : '.eth'}
           errorMessage={errorText}
           liveCheck={showLiveCheck}
