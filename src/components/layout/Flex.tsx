@@ -59,7 +59,7 @@ export function Flex({
   spacerProps,
   ...boxProps
 }: FlexProps) {
-  const childrenArr = useMemo(() => React.Children.toArray(children), [children])
+  const childrenArr = useMemo(() => React.Children.toArray(children).filter(Boolean), [children])
 
   const x = row || flexDirection === 'row' || flexDirection === 'row-reverse' ? gap : undefined
   const y = flexDirection === 'column' || flexDirection === 'column-reverse' ? gap : undefined
