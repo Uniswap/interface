@@ -24,8 +24,6 @@ import { AnimatedFlex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import TraceTabView from 'src/components/telemetry/TraceTabView'
 import { Text } from 'src/components/Text'
-import { EXPERIMENTS, EXP_VARIANTS } from 'src/features/experiments/constants'
-import { useExperimentVariant } from 'src/features/experiments/hooks'
 import { SectionName } from 'src/features/telemetry/constants'
 import { dimensions } from 'src/styles/sizing'
 import { theme as FixedTheme } from 'src/styles/theme'
@@ -34,7 +32,6 @@ const SIDEBAR_SWIPE_CONTAINER_WIDTH = 50
 
 type TabbedScrollScreenProps = {
   contentHeader?: ReactElement
-  scrollHeader?: ReactElement
   renderTab: (
     route: Route,
     scrollProps: TabViewScrollProps,
@@ -124,7 +121,6 @@ export const panHeaderGestureAction = (openSidebar: () => void) =>
 
 export default function TabbedScrollScreen({
   contentHeader,
-  scrollHeader,
   renderTab,
   tabs,
   disableOpenSidebarGesture,
@@ -133,13 +129,7 @@ export default function TabbedScrollScreen({
   const theme = useAppTheme()
   const navigation = useAppStackNavigation()
 
-  const tabsExperimentsVariant = useExperimentVariant(
-    EXPERIMENTS.StickyTabsHeader,
-    EXP_VARIANTS.Tabs
-  )
-
   const [headerHeight, setHeaderHeight] = useState(INITIAL_TAB_BAR_HEIGHT) // estimation for initial height, updated on layout
-  const [scrollHeaderHeight, setScrollHeaderHeight] = useState(INITIAL_TAB_BAR_HEIGHT) // estimation for initial height, updated on layout
   const animatedScrollY = useSharedValue(0)
   const isListGliding = useRef(false)
 
@@ -161,22 +151,13 @@ export default function TabbedScrollScreen({
   )
 
   const tabBarAnimatedStyle = useAnimatedStyle(() => {
-    // If scrollHeader exists, we must account for scrollHeader padding which is equal to insets.top
-    let tabBarTop = Math.max(scrollHeaderHeight - insets.top, 0)
-
-    if (
-      tabsExperimentsVariant === EXP_VARIANTS.TitleActions ||
-      tabsExperimentsVariant === EXP_VARIANTS.Tabs
-    ) {
-      tabBarTop = 0
-    }
     return {
       transform: [
         {
           translateY: interpolate(
             animatedScrollY.value,
             [0, headerHeight],
-            [headerHeight, tabBarTop],
+            [headerHeight, 0],
             Extrapolate.CLAMP
           ),
         },
@@ -229,21 +210,6 @@ export default function TabbedScrollScreen({
             animatedScrollY.value,
             [0, headerHeight + insets.top],
             [0, -headerHeight - insets.top],
-            Extrapolate.CLAMP
-          ),
-        },
-      ],
-    }
-  })
-
-  const scrollHeaderAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(
-            animatedScrollY.value,
-            [0, headerHeight],
-            [-headerHeight, 0],
             Extrapolate.CLAMP
           ),
         },
@@ -345,16 +311,6 @@ export default function TabbedScrollScreen({
         width="100%"
         zIndex="sticky"
       />
-      {scrollHeader && (
-        <AnimatedFlex
-          bg="background0"
-          style={[TabStyles.header, scrollHeaderAnimatedStyle, { paddingTop: insets.top }]}
-          onLayout={(event: LayoutChangeEvent) =>
-            setScrollHeaderHeight(event.nativeEvent.layout.height)
-          }>
-          {scrollHeader}
-        </AnimatedFlex>
-      )}
     </Screen>
   )
 }

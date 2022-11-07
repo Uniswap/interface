@@ -5,8 +5,6 @@ import { LayoutChangeEvent } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { FEATURE_FLAGS } from 'src/features/experiments/constants'
-import { useFeatureFlag } from 'src/features/experiments/hooks'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import {
   makeSelectAddressTransactions,
@@ -195,14 +193,11 @@ export function useShouldShowNativeKeyboard() {
 
     setInitialContentHeight(totalHeight)
   }
-  const swapNativeKeyboardFeatureFlag = useFeatureFlag(FEATURE_FLAGS.SwapNativeKeyboard, false)
   const isSmallDevice = Boolean(
     initialContentHeight && dimensions.fullHeight * SCREEN_HEIGHT_BUFFER < initialContentHeight
   )
 
-  const showNativeKeyboard = swapNativeKeyboardFeatureFlag || isSmallDevice
-
-  return { onLayout, showNativeKeyboard: showNativeKeyboard }
+  return { onLayout, showNativeKeyboard: isSmallDevice }
 }
 
 export function useDynamicFontSizing(

@@ -14,9 +14,4 @@ export enum FEATURE_FLAGS {
  * Experiment variants
  * These should match the `Variant Value` on Amplitude
  */
-export enum EXP_VARIANTS {
-  Tabs = 'tabs',
-  TitleActions = 'title-actions',
-  ActionsTitlesTabs = 'actions-titles-tabs',
-  TitlesTabs = 'titles-tabs',
-}
+export enum EXP_VARIANTS {}

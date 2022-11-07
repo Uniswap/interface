@@ -1,33 +1,22 @@
-import { DrawerActions } from '@react-navigation/core'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
 import { Route } from 'react-native-tab-view'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
-import { useAppStackNavigation } from 'src/app/navigation/types'
-import HamburgerIcon from 'src/assets/icons/hamburger.svg'
 import SendIcon from 'src/assets/icons/send.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
-import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
-import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Arrow } from 'src/components/icons/Arrow'
-import { TxHistoryIconWithStatus } from 'src/components/icons/TxHistoryIconWithStatus'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import TabbedScrollScreen, {
   TabViewScrollProps,
 } from 'src/components/layout/screens/TabbedScrollScreen'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
-import { EXPERIMENTS, EXP_VARIANTS } from 'src/features/experiments/constants'
-import { useExperimentVariant } from 'src/features/experiments/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
-import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 
@@ -36,25 +25,6 @@ export function HomeScreen() {
   useTestAccount()
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
-  const theme = useAppTheme()
-  const navigation = useAppStackNavigation()
-
-  const onPressHamburger = useCallback(() => {
-    navigation.dispatch(DrawerActions.openDrawer())
-  }, [navigation])
-
-  const { preload, navigate: onPressNotifications } = useEagerActivityNavigation()
-
-  const onPressInNotifications = useCallback(() => {
-    preload(activeAccount.address)
-  }, [activeAccount.address, preload])
-
-  const sortedPendingTransactions = useSortedPendingTransactions(activeAccount.address)
-
-  const tabsExperimentVariant = useExperimentVariant(
-    EXPERIMENTS.StickyTabsHeader,
-    EXP_VARIANTS.Tabs
-  )
 
   const contentHeader = useMemo(
     () => (
@@ -70,59 +40,6 @@ export function HomeScreen() {
     ),
     [activeAccount.address]
   )
-
-  const scrollHeader = useMemo(() => {
-    if (!tabsExperimentVariant || tabsExperimentVariant === EXP_VARIANTS.Tabs) return
-
-    const shouldShowActions = [
-      EXP_VARIANTS.TitleActions.valueOf(),
-      EXP_VARIANTS.ActionsTitlesTabs.valueOf(),
-    ].includes(tabsExperimentVariant)
-
-    return (
-      <Flex row justifyContent="space-between" px="lg" py="xs">
-        {shouldShowActions ? (
-          <TouchableArea justifyContent="center" onPress={onPressHamburger}>
-            <HamburgerIcon
-              color={theme.colors.textSecondary}
-              height={theme.iconSizes.md}
-              width={theme.iconSizes.md}
-            />
-          </TouchableArea>
-        ) : (
-          <Box />
-        )}
-        <AddressDisplay
-          hideAddressInSubtitle
-          address={activeAccount.address}
-          variant="subheadLarge"
-        />
-        {shouldShowActions ? (
-          <TouchableArea
-            justifyContent="center"
-            onPress={onPressNotifications}
-            onPressIn={onPressInNotifications}>
-            {sortedPendingTransactions?.length ? (
-              <PendingNotificationBadge sortedPendingTransactions={sortedPendingTransactions} />
-            ) : (
-              <TxHistoryIconWithStatus />
-            )}
-          </TouchableArea>
-        ) : (
-          <Box />
-        )}
-      </Flex>
-    )
-  }, [
-    activeAccount.address,
-    sortedPendingTransactions,
-    onPressHamburger,
-    onPressInNotifications,
-    onPressNotifications,
-    tabsExperimentVariant,
-    theme.colors.textSecondary,
-    theme.iconSizes.md,
-  ])
 
   const renderTab = useMemo(() => {
     return (route: Route, scrollProps: TabViewScrollProps, loadingContainerStyle: ViewStyle) => {
@@ -152,7 +69,6 @@ export function HomeScreen() {
     <TabbedScrollScreen
       contentHeader={contentHeader}
       renderTab={renderTab}
-      scrollHeader={scrollHeader}
       tabs={[
         { key: SectionName.HomeTokensTab, title: t('Tokens') },
         { key: SectionName.HomeNFTsTab, title: t('NFTs') },
