@@ -6,8 +6,8 @@ import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
-import { Trace } from 'src/features/telemetry/Trace'
 import { Theme } from 'src/styles/theme'
 
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }

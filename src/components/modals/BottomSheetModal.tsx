@@ -10,8 +10,8 @@ import React, { ComponentProps, PropsWithChildren, useCallback, useEffect, useRe
 import { StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
+import { Trace } from 'src/components/telemetry/Trace'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Trace } from 'src/features/telemetry/Trace'
 import { TelemetryTraceProps } from 'src/features/telemetry/types'
 import { dimensions, spacing } from 'src/styles/sizing'
 

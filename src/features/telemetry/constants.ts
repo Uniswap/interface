@@ -9,6 +9,7 @@ export enum EventName {
   MarkMeasure = 'mark-measure',
   Transaction = 'transaction',
   UserEvent = 'user-event',
+  // alphabetize additional values.
 }
 
 /**
@@ -18,7 +19,6 @@ export enum EventName {
  * `elementName`, but a different `section`.
  */
 export const enum SectionName {
-  AccountCard = 'account-card',
   CurrencyInputPanel = 'currency-input-panel',
   CurrencyOutputPanel = 'currency-output-panel',
   ExploreTokensTab = 'explore-tokens-tab',
@@ -26,18 +26,11 @@ export const enum SectionName {
   HomeNFTsTab = 'home-nfts-tab',
   HomeTokensTab = 'home-tokens-tab',
   ImportAccountForm = 'import-account-form',
-  NameAccountForm = 'name-account-form',
-  NFTCollectionModal = 'nft-collection-modal',
-  OnboardingBackup = 'onboarding-backup',
-  OnboardingNotifications = 'onboarding-notifications',
-  OnboardingSecurity = 'onboarding-security',
-  OnboardingWalletCustomize = 'onboarding-wallet-customize',
   ProfileActivityTab = 'profile-activity-tab',
   ProfileNftsTab = 'profile-nfts-tab',
   ProfileTokensTab = 'profile-tokens-tab',
   Sidebar = 'sidebar',
-  TokenBalance = 'token-balance',
-  TokenSelect = 'token-select',
+  // alphabetize additional values.
 }
 
 /** Known modals for telemetry purposes. */
@@ -45,17 +38,14 @@ export const enum ModalName {
   Account = 'account-modal',
   AddWallet = 'add-wallet-modal',
   BlockedAddress = 'blocked-address',
-  ConnectedDapps = 'connected-dapps',
   Experiments = 'experiments',
-  ForceUpgradeModal = 'force-upgrade-modal',
-  NetworkSelector = 'network-selector-modal',
-  WalletQRCode = 'wallet-qr-code-modal',
-  NFTAsset = 'nft-asset',
-  TermsModal = 'terms-modal',
-  RecoveryWarning = 'recovery-warning',
   FaceIDWarning = 'face-id-warning',
+  ForceUpgradeModal = 'force-upgrade-modal',
   ICloudBackupInfo = 'icloud-backup-info-modal',
+  NetworkSelector = 'network-selector-modal',
   NftCollection = 'nft-collection',
+  RecoveryWarning = 'recovery-warning',
+  RemoveWallet = 'remove-wallet-modal',
   ScreenshotWarning = 'screenshot-warning',
   Send = 'send-modal',
   SendWarning = 'send-warning-modal',
@@ -64,11 +54,11 @@ export const enum ModalName {
   TokenWarningModal = 'token-warning-modal',
   TooltipContent = 'tooltip-content',
   TransactionActions = 'transaction-actions',
-  WalletConnectScan = 'wallet-connect-scan-modal',
+  ViewSeedPhraseWarning = 'view-seed-phrase-warning',
   WCSignRequest = 'wc-sign-request-modal',
   WCSwitchChainRequest = 'wc-switch-chain-request-modal',
-  RemoveWallet = 'remove-wallet-modal',
-  ViewSeedPhraseWarning = 'view-seed-phrase-warning',
+  WalletConnectScan = 'wallet-connect-scan-modal',
+  // alphabetize additional values.
 }
 
 /**
@@ -79,38 +69,22 @@ export const enum ModalName {
 export const enum ElementName {
   AccountCard = 'account-card',
   AddManualBackup = 'add-manual-backup',
-  AddiCloudBackup = 'add-icloud-backup',
   AddViewOnlyWallet = 'add-view-only-wallet',
-  ApplyThemeFromNFT = 'apply-theme-from-nft',
+  AddiCloudBackup = 'add-icloud-backup',
   Back = 'back',
-  BuyToken = 'buy-token',
   Cancel = 'cancel',
-  ClearSearch = 'clear-search',
   Confirm = 'confirm',
   Continue = 'continue',
   Copy = 'copy',
   CreateAccount = 'create-account',
   Disconnect = 'disconnect',
-  Done = 'done',
   Edit = 'edit',
-  EditCancel = 'edit-cancel',
   Enable = 'enable',
   EtherscanView = 'etherscan-view',
-  FavoritesFilter = 'favorites-filter',
   GetHelp = 'get-help',
   ImportAccount = 'import',
   Manage = 'manage',
   ManageConnections = 'manage-connections',
-  NFTAssetItem = 'nft-asset-item',
-  NFTAssetViewOnUniswap = 'nft-asset-view-on-uniswap',
-  NFTCollectionDiscord = 'nft-collection-discord',
-  NFTCollectionItem = 'nft-collection-item',
-  NFTCollectionTwitter = 'nft-collection-twitter',
-  NFTCollectionViewOnUniswap = 'nft-collection-view-on-uniswap',
-  NFTCollectionWebsite = 'nft-collection-website',
-  NavigateBuy = 'navigate-buy',
-  NavigateSend = 'navigate-send',
-  NavigateSwap = 'navigate-swap',
   NetworkButton = 'network-button',
   Next = 'next',
   Notifications = 'notifications',
@@ -124,10 +98,6 @@ export const enum ElementName {
   QRCodeModalToggle = 'qr-code-modal-toggle',
   Receive = 'receive',
   Remove = 'remove',
-  Rename = 'rename',
-  Reset = 'reset',
-  Restart = 'restart',
-  RetrySwap = 'retry-swap',
   ReviewSwap = 'review-swap',
   ReviewTransfer = 'review-transfer',
   SearchEtherscanItem = 'search-etherscan-item',
@@ -135,34 +105,27 @@ export const enum ElementName {
   SearchWalletItem = 'search-wallet-item',
   SelectColor = 'select-color',
   SelectRecipient = 'select-recipient',
-  SellToken = 'sell-token',
   Send = 'send',
   Settings = 'settings',
-  ShareButton = 'share-button',
   Skip = 'skip',
   Submit = 'submit',
   Swap = 'swap',
-  SwapAnyway = 'swap-anyway',
-  SwapArrow = 'swap-arrow',
-  Switch = 'switch',
-  TabBarSwap = 'tab-bar-swap',
   TokenSelectorToggle = 'token-selector-toggle',
   TokenWarningAccept = 'token-warning-accept',
-  TransactionSummaryHash = 'transaction-summary',
-  TryAgain = 'try-again',
   Unwrap = 'unwrap',
-  WCDappSwitchNetwork = 'wc-dapp-switch-network',
   WCDappSwitchAccount = 'wc-dapp-switch-account',
+  WCDappSwitchNetwork = 'wc-dapp-switch-network',
   WCOpenDapp = 'wc-open-dapp',
-  WCViewDappConnections = 'wc-view-dapp-connections',
   WalletCard = 'wallet-card',
   WalletConnectScan = 'wallet-connect-scan',
   WalletSettings = 'WalletSettings',
   Wrap = 'wrap',
+  // alphabetize additional values.
 }
 
 export const enum MarkNames {
   AppStartup = 'AppStartup',
+  // alphabetize additional values.
 }
 
 /**
@@ -184,7 +147,7 @@ export const enum LogContext {
   SecurityConcern = 'SecurityConcern',
   Share = 'Share',
   ValidateAddress = 'ValidateAddress',
-  WrappedTokenInfo = 'WrappedTokenInfo',
+  // alphabetize additional values.
 }
 
 export enum UserPropertyName {
@@ -198,13 +161,15 @@ export enum UserPropertyName {
   TransactionAuthMethod = 'transaction_auth_method',
   WalletSignerCount = 'wallet_signer_count',
   WalletViewOnlyCount = 'wallet_view_only_count',
+  // alphabetize additional values.
 }
 
 // could add PIN in the future
 export enum AuthMethod {
-  None = 'None',
   FaceId = 'FaceId',
+  None = 'None',
   TouchId = 'TouchId',
+  // alphabetize additional values.
 }
 
 /**
@@ -217,5 +182,5 @@ export enum AuthMethod {
  */
 export enum ReactNativeEvent {
   OnPress = 'onPress',
-  // alphabetize additional events.
+  // alphabetize additional values.
 }

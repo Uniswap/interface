@@ -15,10 +15,10 @@ import { Box } from 'src/components/layout/Box'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
+import { Trace } from 'src/components/telemetry/Trace'
 import { Text } from 'src/components/Text'
 import { useUSDCPrice, useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
-import { Trace } from 'src/features/telemetry/Trace'
 import { useShouldShowNativeKeyboard } from 'src/features/transactions/hooks'
 import {
   DerivedSwapInfo,

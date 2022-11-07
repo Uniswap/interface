@@ -1,8 +1,8 @@
 import React, { PropsWithChildren } from 'react'
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
+import { ITraceContext, Trace, TraceContext } from 'src/components/telemetry/Trace'
 import { sendAnalyticsEvent } from 'src/features/telemetry'
 import { ElementName, EventName, ReactNativeEvent } from 'src/features/telemetry/constants'
-import { ITraceContext, Trace, TraceContext } from 'src/features/telemetry/Trace'
 
 export type TraceEventProps = {
   // Element name used to identify events sources

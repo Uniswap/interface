@@ -1,6 +1,6 @@
+import { TraceProps } from 'src/components/telemetry/Trace'
+import { TraceEventProps } from 'src/components/telemetry/TraceEvent'
 import { EventName } from 'src/features/telemetry/constants'
-import { TraceProps } from 'src/features/telemetry/Trace'
-import { TraceEventProps } from 'src/features/telemetry/TraceEvent'
 
 type BaseEventProperty = Partial<TraceEventProps & TraceProps> | undefined
 
