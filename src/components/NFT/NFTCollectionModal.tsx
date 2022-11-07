@@ -18,7 +18,7 @@ export function NFTCollectionModal({
   isVisible,
   onClose,
 }: {
-  collection: NonNullable<GQLNftAsset>['collection']
+  collection: NonNullable<NonNullable<GQLNftAsset>['collection']>
   isVisible: boolean
   onClose: () => void
 }) {
@@ -26,11 +26,8 @@ export function NFTCollectionModal({
   const theme = useAppTheme()
 
   const traceProps = useMemo(() => {
-    return { address: collection?.collectionId }
-  }, [collection?.collectionId])
-
-  // TODO: Add loading state for this modal
-  if (!collection) return null
+    return { address: collection.collectionId }
+  }, [collection.collectionId])
 
   const stats = collection.markets?.[0]
 
