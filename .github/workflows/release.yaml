@@ -1,7 +1,7 @@
 name: Release
 on:
   schedule:
-    - cron: '0 12 * * 1-5' # every day 12:00 UTC Monday-Friday
+    - cron: '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
   # manual trigger
   workflow_dispatch:
 
