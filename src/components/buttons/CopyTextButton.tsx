@@ -1,20 +1,22 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import CheckCircle from 'src/assets/icons/check-circle.svg'
 import CopySheets from 'src/assets/icons/copy-sheets.svg'
 import { Button, ButtonEmphasis } from 'src/components/buttons/Button'
 import { setClipboard } from 'src/utils/clipboard'
+import { useTimeout } from 'src/utils/timing'
 
 interface Props {
   copyText?: string
 }
 
-const ICON_SIZE = 18
-
 export function CopyTextButton({ copyText }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
+
+  const ICON_SIZE = theme.iconSizes.md
+  const RESET_COPY_STATE_DELAY = 1500
 
   const [isCopied, setIsCopied] = useState(false)
 
@@ -29,6 +31,14 @@ export function CopyTextButton({ copyText }: Props) {
     if (copyText) setClipboard(copyText)
     setIsCopied(true)
   }
+
+  const resetIsCopied = useCallback(() => {
+    if (isCopied) {
+      setIsCopied(false)
+    }
+  }, [isCopied])
+
+  useTimeout(resetIsCopied, RESET_COPY_STATE_DELAY)
 
   return (
     <Button
