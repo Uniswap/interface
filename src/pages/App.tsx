@@ -54,6 +54,7 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
+// Placeholder API key. Actual API key used in the proxy server
 const ANALYTICS_DUMMY_KEY = '00000000000000000000000000000000'
 const ANALYTICS_PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
 
