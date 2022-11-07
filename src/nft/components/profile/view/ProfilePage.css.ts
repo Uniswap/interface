@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css'
+import { subheadSmall } from 'nft/css/common.css'
 
 import { sprinkles, themeVars, vars } from '../../../css/sprinkles.css'
 
@@ -20,11 +21,14 @@ export const ethIcon = style({
   marginBottom: '-3px',
 })
 
-export const subRowHover = style({
-  ':hover': {
-    background: themeVars.colors.backgroundInteractive,
+export const subRowHover = style([
+  subheadSmall,
+  {
+    ':hover': {
+      background: themeVars.colors.backgroundInteractive,
+    },
   },
-})
+])
 
 export const verifiedBadge = style({
   height: '12px',

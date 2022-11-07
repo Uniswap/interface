@@ -3,7 +3,7 @@ import { Column, Row } from 'nft/components/Flex'
 import { XMarkIcon } from 'nft/components/icons'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { Input } from 'nft/components/layout/Input'
-import { subhead, subheadSmall } from 'nft/css/common.css'
+import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
@@ -162,10 +162,10 @@ const CollectionItem = ({
   return (
     <Row
       maxWidth="full"
-      overflowX={'hidden'}
-      overflowY={'hidden'}
+      overflowX="hidden"
+      overflowY="hidden"
       fontWeight="normal"
-      className={`${subheadSmall} ${styles.subRowHover}`}
+      className={styles.subRowHover}
       justifyContent="space-between"
       cursor="pointer"
       paddingLeft="12"
@@ -190,8 +190,7 @@ const CollectionItem = ({
           overflow="hidden"
           paddingLeft="12"
           paddingRight="14"
-          style={{ minHeight: 15 }}
-          maxWidth={'180'}
+          style={{ minHeight: 15, maxWidth: '180px' }}
         >
           {collection.name}{' '}
         </Box>
