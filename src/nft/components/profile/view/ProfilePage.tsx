@@ -237,47 +237,53 @@ export const ProfilePage = () => {
           )}
         </Row>
       )}
-      {sellAssets.length > 0 && (
-        <Row
-          display={{ sm: 'flex', md: 'none' }}
-          position="fixed"
-          bottom="24"
-          left="16"
-          height="56"
-          borderRadius="12"
-          paddingX="16"
-          paddingY="12"
-          style={{ background: '#0d0e0ef2', width: 'calc(100% - 32px)', lineHeight: '24px' }}
-          className={subhead}
-        >
-          {sellAssets.length}&nbsp; selected item{sellAssets.length === 1 ? '' : 's'}
-          <Box
-            fontWeight="semibold"
-            fontSize="14"
-            cursor="pointer"
-            color="genieBlue"
-            marginRight="20"
-            marginLeft="auto"
-            onClick={reset}
-            lineHeight="16"
-          >
-            Clear
-          </Box>
-          <Box
-            marginRight="0"
-            fontWeight="medium"
-            fontSize="14"
-            cursor="pointer"
-            backgroundColor="genieBlue"
-            onClick={() => setSellPageState(ProfilePageStateType.LISTING)}
-            lineHeight="16"
-            borderRadius="12"
-            padding="8"
-          >
-            Continue
-          </Box>
-        </Row>
-      )}
+
+      <Row
+        display={{ sm: 'flex', md: 'none' }}
+        position="fixed"
+        bottom="56"
+        left="16"
+        height="56"
+        borderRadius="12"
+        paddingX="16"
+        paddingY="12"
+        style={{ background: '#0d0e0ef2', width: 'calc(100% - 32px)', lineHeight: '24px' }}
+        className={subhead}
+      >
+        {sellAssets.length > 0 ? (
+          <>
+            {' '}
+            {sellAssets.length}&nbsp;{sellAssets.length === 1 ? 'selected item' : 'NFTs'}{' '}
+            <Box
+              fontWeight="semibold"
+              fontSize="14"
+              cursor="pointer"
+              color="genieBlue"
+              marginRight="20"
+              marginLeft="auto"
+              onClick={reset}
+              lineHeight="16"
+            >
+              Clear
+            </Box>
+            <Box
+              marginRight="0"
+              fontWeight="medium"
+              fontSize="14"
+              cursor="pointer"
+              backgroundColor="genieBlue"
+              onClick={() => setSellPageState(ProfilePageStateType.LISTING)}
+              lineHeight="16"
+              borderRadius="12"
+              padding="8"
+            >
+              Continue
+            </Box>
+          </>
+        ) : (
+          <span> No NFTs Selected</span>
+        )}
+      </Row>
     </ProfilePageColumn>
   )
 }
