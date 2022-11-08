@@ -49,7 +49,7 @@ const FiltersRow = styled.div`
 
 const Filter = styled.div`
   display: flex;
-  outline: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 16px;
   padding: 4px;
 `
