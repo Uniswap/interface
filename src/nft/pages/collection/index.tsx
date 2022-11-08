@@ -118,7 +118,7 @@ const Collection = () => {
                 {(isLoading || collectionStats !== undefined) && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
                 )}
-
+                <div id="nft-anchor"></div>
                 <ActivitySwitcher
                   showActivity={isActivityToggled}
                   toggleActivity={() => {
@@ -133,6 +133,7 @@ const Collection = () => {
                 </Box>
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
+
                 <AnimatedBox
                   style={{
                     transform: gridX.to((x) => `translate(${x as number}px)`),
