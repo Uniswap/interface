@@ -131,9 +131,9 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
         {error ? (
           <BaseCard.ErrorState
             description={t('Something went wrong on our side.')}
-            retry={onRetry}
             retryButtonLabel={t('Retry')}
             title={t("Couldn't load addresses")}
+            onRetry={onRetry}
           />
         ) : isLoadingAccounts || loading ? (
           <Flex grow justifyContent="space-between">
