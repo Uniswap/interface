@@ -70,7 +70,7 @@ const PageTabs = () => {
 
 const Navbar = () => {
   const { pathname } = useLocation()
-  const isNftPage = pathname.startsWith('/nfts') || pathname.startsWith('/profile')
+  const isNftPage = pathname.startsWith('/nfts')
 
   return (
     <>

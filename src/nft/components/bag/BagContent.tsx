@@ -69,7 +69,7 @@ export const BagContent = () => {
             name={EventName.NFT_BUY_BAG_CHANGED}
             properties={{
               usd_value: fetchedPriceData,
-              bag_quantity: itemsInBag,
+              bag_quantity: itemsInBag.length,
               ...formatAssetEventProperties(unavailableAssets),
             }}
             shouldLogImpression

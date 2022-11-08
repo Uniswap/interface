@@ -7,8 +7,13 @@ import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { Center } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { ActivityFetcher } from 'nft/queries/genie/ActivityFetcher'
-import { ActivityEventResponse, ActivityEventType } from 'nft/types'
-import { CollectionInfoForAsset, GenieAsset, GenieCollection } from 'nft/types'
+import {
+  ActivityEventResponse,
+  ActivityEventType,
+  CollectionInfoForAsset,
+  GenieAsset,
+  GenieCollection,
+} from 'nft/types'
 import { shortenAddress } from 'nft/utils/address'
 import { formatEthPrice } from 'nft/utils/currency'
 import { isAudio } from 'nft/utils/isAudio'

@@ -99,7 +99,8 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
 
   const asset = queryData.nftAssets?.edges[0]?.node
   const collection = asset?.collection
-  const ethPrice = parseEther(asset?.listings?.edges[0].node.price.value?.toString() ?? '0').toString()
+  const listing = asset?.listings?.edges[0]?.node
+  const ethPrice = parseEther(listing?.price.value?.toString() ?? '0').toString()
 
   return [
     {
@@ -110,7 +111,8 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       collectionSymbol: asset?.collection?.image?.url,
       imageUrl: asset?.image?.url,
       animationUrl: asset?.animationUrl ?? undefined,
-      marketplace: asset?.listings?.edges[0]?.node.marketplace.toLowerCase() as any,
+      // todo: fix the back/frontend discrepency here and drop the any
+      marketplace: listing?.marketplace.toLowerCase() as any,
       name: asset?.name ?? undefined,
       priceInfo: {
         ETHPrice: ethPrice,

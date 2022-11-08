@@ -83,7 +83,7 @@ export const PriceRange = () => {
     }
 
     // set min price for price range querying
-    setMinPrice(v.currentTarget.value)
+    setMinPrice(v.currentTarget.value.toString())
     scrollToTop()
   }
 
@@ -125,8 +125,8 @@ export const PriceRange = () => {
     const maxChange = (100 - newMax) / 100
     const newMaxPrice = priceRangeHighNumber - maxChange * diff
 
-    setMinPrice(newMinPrice.toFixed(2))
-    setMaxPrice(newMaxPrice.toFixed(2))
+    setMinPrice(newMinPrice.toFixed(2).toString())
+    setMaxPrice(newMaxPrice.toFixed(2).toString())
 
     // set back to placeholder when they move back to end of range
     if (newMin === 0) {
