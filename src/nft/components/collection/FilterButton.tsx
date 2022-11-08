@@ -43,13 +43,13 @@ export const FilterButton = ({
       {!isMobile ? (
         <>
           {!isFiltersExpanded && <Box className={buttonTextMedium}> Filter</Box>}
-          <Box display="inline-block" position="relative">
+          <Box display="inline-block" position="relative" className={buttonTextMedium}>
             {!isFiltersExpanded && (
-              <Box as="span" position="absolute" left="4" style={{ top: '5px', fontSize: '8px' }}>
+              <Box as="span" position="absolute" left="4" style={{ top: '5px' }}>
                 •
               </Box>
             )}
-            <Box className={buttonTextMedium} paddingLeft={!isFiltersExpanded ? '12' : '4'}>
+            <Box paddingLeft={!isFiltersExpanded ? '12' : '4'}>
               {collectionCount > 0 ? putCommas(collectionCount) : 0} results
             </Box>
           </Box>

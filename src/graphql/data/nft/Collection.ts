@@ -130,7 +130,7 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
       ? market?.marketplaces?.map((market) => {
           return {
             marketplace: market.marketplace?.toLowerCase() ?? '',
-            listings: market.listings ?? 0,
+            count: market.listings ?? 0,
             floorPrice: market.floorPrice ?? 0,
           }
         })
