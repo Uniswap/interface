@@ -57,6 +57,9 @@ export const CollectionStatsFetcher = async (addressOrName: string, recursive = 
 
   const data = await r.json()
   const collections = data?.data.map((collection: Record<string, unknown>) => {
+    // @ts-ignore
+    collection.stats.floor_price = collection.floorPrice
+
     return {
       ...collection,
       traits: collection.traits && groupBy(collection.traits as unknown[], 'trait_type'),
