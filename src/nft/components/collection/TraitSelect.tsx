@@ -8,11 +8,14 @@ import { subheadSmall } from 'nft/css/common.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
-import { FormEvent, MouseEvent, useEffect, useMemo, useState } from 'react'
+import { FormEvent, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FixedSizeList } from 'react-window'
 
 import { Input } from '../layout/Input'
 import * as styles from './Filters.css'
 import { TraitsHeader } from './TraitsHeader'
+
+const TRAIT_ROW_HEIGHT = 44
 
 const TraitItem = ({
   trait,
@@ -105,17 +108,41 @@ const TraitItem = ({
   )
 }
 
+interface TraitRowProps {
+  data: Array<Trait>
+  index: number
+}
+
 export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: string; index: number }) => {
   const addTrait = useCollectionFilters((state) => state.addTrait)
   const removeTrait = useCollectionFilters((state) => state.removeTrait)
   const selectedTraits = useCollectionFilters((state) => state.traits)
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
+  const fixedListRef = useRef<FixedSizeList>()
 
   const searchedTraits = useMemo(
     () => traits.filter((t) => t.trait_value?.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
     [debouncedSearch, traits]
   )
+
+  const Row = useCallback(
+    function TraitRow({ data, index }: TraitRowProps) {
+      const trait: Trait = data[index]
+
+      const isTraitSelected = selectedTraits.find(
+        ({ trait_type, trait_value }) =>
+          trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
+      )
+      return <TraitItem isTraitSelected={!!isTraitSelected} {...{ trait, addTrait, removeTrait }} />
+    },
+    [selectedTraits, addTrait, removeTrait]
+  )
+
+  const itemKey = useCallback((index: number, data: Trait[]) => {
+    const trait = data[index]
+    return `${trait.trait_type}_${trait.trait_value}_${index}`
+  }, [])
 
   return traits.length ? (
     <TraitsHeader index={index} numTraits={traits.length} title={type}>
@@ -130,20 +157,17 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
         width="full"
       />
       <Column className={styles.filterDropDowns} paddingLeft="0" paddingBottom="8">
-        {searchedTraits.map((trait, index) => {
-          const isTraitSelected = selectedTraits.find(
-            ({ trait_type, trait_value }) =>
-              trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
-          )
-
-          return (
-            <TraitItem
-              isTraitSelected={!!isTraitSelected}
-              key={trait.trait_value}
-              {...{ trait, addTrait, removeTrait }}
-            />
-          )
-        })}
+        <FixedSizeList
+          height={searchedTraits.length * TRAIT_ROW_HEIGHT}
+          ref={fixedListRef as any}
+          width="100%"
+          itemData={searchedTraits}
+          itemCount={searchedTraits.length}
+          itemSize={TRAIT_ROW_HEIGHT}
+          itemKey={itemKey}
+        >
+          {Row}
+        </FixedSizeList>
       </Column>
     </TraitsHeader>
   ) : null
