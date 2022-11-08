@@ -118,7 +118,7 @@ const Collection = () => {
                 {(isLoading || collectionStats !== undefined) && (
                   <CollectionStats stats={collectionStats || ({} as GenieCollection)} isMobile={isMobile} />
                 )}
-                <div id="nft-anchor"></div>
+                <div id="nft-anchor" />
                 <ActivitySwitcher
                   showActivity={isActivityToggled}
                   toggleActivity={() => {
