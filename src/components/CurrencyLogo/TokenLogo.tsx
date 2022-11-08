@@ -1,16 +1,12 @@
-import { ShadowProps } from '@shopify/restyle'
 import React from 'react'
 import { Image } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
-import { style } from 'src/components/CurrencyLogo/styles'
+import { SHADOW_OFFSET, style, THIN_BORDER } from 'src/components/CurrencyLogo/styles'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
-import { theme as FixedTheme, Theme } from 'src/styles/theme'
-
-const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
-const THIN_BORDER = 0.5
+import { theme as FixedTheme } from 'src/styles/theme'
 
 interface TokenLogoProps {
   url?: string
@@ -48,14 +44,14 @@ export function TokenLogo({
       ) : (
         <Box
           alignItems="center"
-          bg="background3"
+          bg="backgroundOutline"
+          borderRadius="full"
           height={size}
           justifyContent="center"
-          px="xxs"
-          style={{ borderRadius: size / 2 }}
+          px="xs"
           width={size}>
-          <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} textAlign="center">
-            {symbol?.slice(0, 5).toUpperCase()}
+          <Text adjustsFontSizeToFit color="textPrimary" numberOfLines={1} textAlign="center">
+            {symbol?.slice(0, 3).toUpperCase()}
           </Text>
         </Box>
       )}

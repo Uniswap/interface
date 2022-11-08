@@ -1,38 +1,29 @@
-import { ShadowProps } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
 import React, { useState } from 'react'
 import { Image } from 'react-native'
 import { SvgUri } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
-import { style } from 'src/components/CurrencyLogo/styles'
+import { SHADOW_OFFSET, style, THIN_BORDER } from 'src/components/CurrencyLogo/styles'
 import { getCurrencyLogoSrcs } from 'src/components/CurrencyLogo/utils'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_ID_TO_LOGO } from 'src/constants/chains'
-import { Theme } from 'src/styles/theme'
+import { theme as FixedTheme } from 'src/styles/theme'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { uriToHttp } from 'src/utils/uriToHttp'
-
-const DEFAULT_SIZE = 36
-const NETWORK_LOGO_SIZE = 16
-const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
-const THIN_BORDER = 0.5
 
 interface CurrencyLogoProps {
   currency: Currency
   size?: number
 }
 
-export function CurrencyLogo(props: CurrencyLogoProps) {
-  const { size, currency } = props
-  const networkSize = NETWORK_LOGO_SIZE
+export function CurrencyLogo({ currency, size = FixedTheme.imageSizes.xl }: CurrencyLogoProps) {
   const notOnMainnet = currency.chainId !== ChainId.Mainnet
-  const currencyLogoSize = size ?? DEFAULT_SIZE
 
   return (
     <Box alignItems="center" height={size} justifyContent="center" width={size}>
-      <CurrencyLogoOnly currency={currency} size={currencyLogoSize} />
+      <CurrencyLogoOnly currency={currency} size={size} />
       {notOnMainnet && (
         <Box
           bottom={0}
@@ -42,7 +33,7 @@ export function CurrencyLogo(props: CurrencyLogoProps) {
           shadowOffset={SHADOW_OFFSET}
           shadowOpacity={0.1}
           shadowRadius={2}>
-          <NetworkLogo chainId={currency.chainId} size={networkSize} />
+          <NetworkLogo chainId={currency.chainId} size={FixedTheme.iconSizes.sm} />
         </Box>
       )}
     </Box>
@@ -69,7 +60,7 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
         style={[
           style.image,
           {
-            backgroundColor: theme.colors.textTertiary,
+            backgroundColor: theme.colors.backgroundOutline,
             width: size,
             height: size,
             borderRadius: size / 2,
@@ -85,14 +76,14 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
     return (
       <Box
         alignItems="center"
-        bg="background3"
+        bg="backgroundOutline"
+        borderRadius="full"
         height={size}
         justifyContent="center"
-        px="xxs"
-        style={{ borderRadius: size / 2 }}
+        px="xs"
         width={size}>
-        <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} textAlign="center">
-          {currency.symbol?.slice(0, 5).toUpperCase()}
+        <Text adjustsFontSizeToFit color="textPrimary" numberOfLines={1} textAlign="center">
+          {currency.symbol?.slice(0, 3).toUpperCase()}
         </Text>
       </Box>
     )
@@ -104,17 +95,14 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
     return (
       <SvgUri
         height={size}
-        style={[
-          style.image,
-          {
-            backgroundColor: theme.colors.textTertiary,
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-            borderColor: theme.colors.backgroundOutline,
-            borderWidth: THIN_BORDER,
-          },
-        ]}
+        style={{
+          backgroundColor: theme.colors.backgroundOutline,
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderColor: theme.colors.backgroundOutline,
+          borderWidth: THIN_BORDER,
+        }}
         uri={srcs[0]}
         width={size}
       />
@@ -131,7 +119,7 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
       style={[
         style.image,
         {
-          backgroundColor: theme.colors.textTertiary,
+          backgroundColor: theme.colors.backgroundOutline,
           width: size,
           height: size,
           borderRadius: size / 2,

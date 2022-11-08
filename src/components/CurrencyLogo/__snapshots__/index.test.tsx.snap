@@ -19,15 +19,13 @@ exports[`renders a currency logo with network logo 1`] = `
       Array [
         Object {
           "alignItems": "center",
-          "backgroundColor": "#E8ECFB",
+          "backgroundColor": "#D2D9EE",
+          "borderRadius": 999999,
           "display": "flex",
           "height": 20,
           "justifyContent": "center",
-          "paddingHorizontal": 4,
+          "paddingHorizontal": 8,
           "width": 20,
-        },
-        Object {
-          "borderRadius": 10,
         },
       ]
     }
@@ -40,7 +38,7 @@ exports[`renders a currency logo with network logo 1`] = `
       style={
         Array [
           Object {
-            "color": "#505A78",
+            "color": "#0D111C",
             "display": "flex",
             "textAlign": "center",
           },
@@ -113,7 +111,6 @@ exports[`renders a currency logo without network logo 1`] = `
     style={
       Array [
         Object {
-          "backgroundColor": "#E8ECFB",
           "resizeMode": "contain",
         },
         Object {
