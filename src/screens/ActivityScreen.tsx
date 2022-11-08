@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
+import { useAppStackNavigation } from 'src/app/navigation/types'
 import { NoTransactions } from 'src/components/icons/NoTransactions'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -13,27 +14,43 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { setNotificationStatus } from 'src/features/notifications/notificationSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
-import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
+import { useActiveAccountWithThrow, useNativeAccountExists } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 export function ActivityScreen() {
   const dispatch = useAppDispatch()
+  const navigation = useAppStackNavigation()
   const { t } = useTranslation()
   const { address, type } = useActiveAccountWithThrow()
   const readonly = type === AccountType.Readonly
+  const hasImportedSeedPhrase = useNativeAccountExists()
 
   // TODO: remove when buy flow ready
   const onPressScan = () => {
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
     dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
     )
+  }
+
+  const onPressImport = () => {
+    navigation.navigate(Screens.OnboardingStack, {
+      screen: OnboardingScreens.ImportMethod,
+    })
   }
 
   useEffect(() => {
     dispatch(setNotificationStatus({ address, hasNotifications: false }))
   }, [dispatch, address])
+
+  const emptyStateDescription = readonly
+    ? t('Import this wallet’s recovery phrase to make transactions.')
+    : t('When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.')
+
+  const emptyStateButtonLabel =
+    readonly && !hasImportedSeedPhrase ? t('Import recovery phrase') : t('Receive tokens or NFTs')
 
   return (
     <Screen>
@@ -43,15 +60,13 @@ export function ActivityScreen() {
       <Flex pb="lg" px="sm">
         <TransactionList
           emptyStateContent={
-            <Flex centered flex={1}>
+            <Flex centered grow height="100%">
               <BaseCard.EmptyState
-                buttonLabel={t('Receive tokens or NFTs')}
-                description={t(
-                  'When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.'
-                )}
+                buttonLabel={emptyStateButtonLabel}
+                description={emptyStateDescription}
                 icon={<NoTransactions />}
-                title={t('No tokens yet')}
-                onPress={onPressScan}
+                title={t('No activity yet')}
+                onPress={readonly && !hasImportedSeedPhrase ? onPressImport : onPressScan}
               />
             </Flex>
           }

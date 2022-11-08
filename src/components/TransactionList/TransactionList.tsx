@@ -50,12 +50,14 @@ export default function TransactionList(props: TransactionListProps) {
     errorPolicy: 'all',
   })
 
-  if (loading && !data) {
-    return (
-      <Box>
-        <Loading type="transactions" />
-      </Box>
-    )
+  if (!data) {
+    if (loading) {
+      return (
+        <Box>
+          <Loading type="transactions" />
+        </Box>
+      )
+    }
   }
   return <TransactionListInner {...props} data={data} />
 }
