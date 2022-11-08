@@ -3,6 +3,8 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useBlockNumber } from 'state/application/hooks'
+
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { addTransaction } from './actions'
@@ -20,11 +22,12 @@ export function useTransactionAdder(): (
     arbitrary?: any
   },
 ) => void {
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId, account, library } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
+  const blockNumber = useBlockNumber()
 
   return useCallback(
-    (
+    async (
       response: TransactionResponse,
       {
         desiredChainId,
@@ -46,6 +49,9 @@ export function useTransactionAdder(): (
       if (!chainId) return
 
       const { hash } = response
+
+      const tx = await library?.getTransaction(hash)
+
       if (!hash) {
         throw Error('No transaction hash found.')
       }
@@ -53,6 +59,10 @@ export function useTransactionAdder(): (
         addTransaction({
           hash,
           from: account,
+          to: tx?.to,
+          nonce: tx?.nonce,
+          data: tx?.data,
+          sentAtBlock: blockNumber,
           chainId: desiredChainId ?? chainId,
           approval,
           type,
@@ -62,7 +72,7 @@ export function useTransactionAdder(): (
         }),
       )
     },
-    [account, chainId, dispatch],
+    [account, chainId, dispatch, blockNumber, library],
   )
 }
 

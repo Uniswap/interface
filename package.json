@@ -140,6 +140,7 @@
     "dayjs": "^1.10.7",
     "env-cmd": "^10.1.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "find-replacement-tx": "^1.2.3",
     "firebase": "^9.8.2",
     "graphql": "^15.5.0",
     "graphql-request": "^3.7.0",

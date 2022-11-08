@@ -1,6 +1,7 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ethers } from 'ethers'
+import { findReplacementTx } from 'find-replacement-tx'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -13,7 +14,7 @@ import { getFullDisplayBalance } from 'utils/formatBalance'
 import { useActiveWeb3React } from '../../hooks'
 import { NotificationType, useBlockNumber, useTransactionNotify } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
-import { SerializableTransactionReceipt, checkedTransaction, finalizeTransaction } from './actions'
+import { SerializableTransactionReceipt, checkedTransaction, finalizeTransaction, removeTx, replaceTx } from './actions'
 
 export function shouldCheck(
   lastBlockNumber: number,
@@ -110,6 +111,41 @@ export default function Updater(): null {
     uniqueTransactions
       .filter(hash => shouldCheck(lastBlockNumber, transactions[hash]))
       .forEach(hash => {
+        // Check if tx was replaced
+        library
+          .getTransaction(hash)
+          .then(res => {
+            const { sentAtBlock, from, to, nonce, data } = transactions[hash]
+            // this mean tx was drop
+            if (res === null) {
+              if (sentAtBlock && from && to && nonce && data)
+                findReplacementTx(library, sentAtBlock, {
+                  from,
+                  to,
+                  nonce,
+                  data,
+                })
+                  .then(newTx => {
+                    if (newTx) {
+                      dispatch(
+                        replaceTx({
+                          chainId,
+                          oldHash: hash,
+                          newHash: newTx.hash,
+                        }),
+                      )
+                    }
+                  })
+                  .catch(() => {
+                    dispatch(removeTx({ chainId, hash }))
+                  })
+              else {
+                dispatch(removeTx({ chainId, hash }))
+              }
+            }
+          })
+          .catch(console.log)
+
         library
           .getTransactionReceipt(hash)
           .then(receipt => {
@@ -118,7 +154,7 @@ export default function Updater(): null {
               dispatch(
                 finalizeTransaction({
                   chainId,
-                  hash,
+                  hash: receipt.transactionHash,
                   receipt: {
                     blockHash: receipt.blockHash,
                     blockNumber: receipt.blockNumber,
@@ -136,7 +172,7 @@ export default function Updater(): null {
               )
 
               transactionNotify({
-                hash,
+                hash: receipt.transactionHash,
                 notiType: receipt.status === 1 ? NotificationType.SUCCESS : NotificationType.ERROR,
                 type: parseTransactionType(receipt),
                 summary: parseTransactionSummary(receipt),
@@ -149,7 +185,7 @@ export default function Updater(): null {
                         arbitrary: transaction.arbitrary,
                         actual_gas: receipt.gasUsed || BigNumber.from(0),
                         gas_price: receipt.effectiveGasPrice || BigNumber.from(0),
-                        tx_hash: hash,
+                        tx_hash: receipt.transactionHash,
                       })
                     }
                     break
@@ -158,7 +194,7 @@ export default function Updater(): null {
                     if (transaction.arbitrary) {
                       mixpanelHandler(MIXPANEL_TYPE.BRIDGE_TRANSACTION_SUBMIT, {
                         ...transaction.arbitrary,
-                        tx_hash: hash,
+                        tx_hash: receipt.transactionHash,
                       })
                     }
                     break
@@ -173,7 +209,7 @@ export default function Updater(): null {
                     if (transaction.arbitrary) {
                       mixpanelHandler(MIXPANEL_TYPE.ELASTIC_INCREASE_LIQUIDITY_COMPLETED, {
                         ...transaction.arbitrary,
-                        tx_hash: hash,
+                        tx_hash: receipt.transactionHash,
                       })
                     }
                     break

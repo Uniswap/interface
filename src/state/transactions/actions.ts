@@ -5,6 +5,9 @@ import { BigNumber } from 'ethers'
 export interface SerializableTransactionReceipt {
   to: string
   from: string
+  nonce?: number
+  data?: string
+  sentAtBlock?: number
   contractAddress: string
   transactionIndex: number
   blockHash: string
@@ -19,6 +22,10 @@ export const addTransaction = createAction<{
   chainId: ChainId
   hash: string
   from: string
+  to?: string
+  nonce?: number
+  data?: string
+  sentAtBlock?: number
   approval?: { tokenAddress: string; spender: string }
   claim?: { recipient: string }
   type?: string
@@ -38,3 +45,9 @@ export const checkedTransaction = createAction<{
   blockNumber: number
 }>('transactions/checkedTransaction')
 export const checkedSubgraph = createAction<{ chainId: ChainId; hash: string }>('transactions/checkedSubgraph')
+export const replaceTx = createAction<{
+  chainId: ChainId
+  oldHash: string
+  newHash: string
+}>('transactions/replaceTx')
+export const removeTx = createAction<{ chainId: ChainId; hash: string }>('transactions/removeTx')

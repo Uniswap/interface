@@ -7,6 +7,8 @@ import {
   checkedTransaction,
   clearAllTransactions,
   finalizeTransaction,
+  removeTx,
+  replaceTx,
 } from './actions'
 
 const now = () => new Date().getTime()
@@ -22,6 +24,10 @@ export interface TransactionDetails {
   addedTime: number
   confirmedTime?: number
   from: string
+  to?: string
+  data?: string
+  nonce?: number
+  sentAtBlock?: number
   arbitrary: any // To store anything arbitrary, so it has any type
   needCheckSubgraph?: boolean
 }
@@ -38,12 +44,28 @@ export default createReducer(initialState, builder =>
   builder
     .addCase(
       addTransaction,
-      (transactions, { payload: { chainId, from, hash, approval, type, summary, claim, arbitrary } }) => {
+      (
+        transactions,
+        { payload: { sentAtBlock, to, nonce, data, chainId, from, hash, approval, type, summary, claim, arbitrary } },
+      ) => {
         if (transactions[chainId]?.[hash]) {
           throw Error('Attempted to add existing transaction.')
         }
         const txs = transactions[chainId] ?? {}
-        txs[hash] = { hash, approval, type, summary, claim, arbitrary, from, addedTime: now() }
+        txs[hash] = {
+          sentAtBlock,
+          to,
+          nonce,
+          data,
+          hash,
+          approval,
+          type,
+          summary,
+          claim,
+          arbitrary,
+          from,
+          addedTime: now(),
+        }
         transactions[chainId] = txs
       },
     )
@@ -77,5 +99,17 @@ export default createReducer(initialState, builder =>
         return
       }
       tx.needCheckSubgraph = false
+    })
+    .addCase(replaceTx, (transactions, { payload: { chainId, oldHash, newHash } }) => {
+      const txs = transactions[chainId] ?? {}
+      txs[newHash] = {
+        ...txs[oldHash],
+        hash: newHash,
+      }
+      delete txs[oldHash]
+      transactions[chainId] = txs
+    })
+    .addCase(removeTx, (transactions, { payload: { chainId, hash } }) => {
+      delete transactions[chainId]?.[hash]
     }),
 )
