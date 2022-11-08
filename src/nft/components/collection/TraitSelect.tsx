@@ -8,8 +8,8 @@ import { subheadSmall } from 'nft/css/common.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
-import { FormEvent, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-// import AutoSizer from 'react-virtualized-auto-sizer'
+import { CSSProperties, FormEvent, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 
 import { Input } from '../layout/Input'
@@ -23,11 +23,13 @@ const TraitItem = ({
   addTrait,
   removeTrait,
   isTraitSelected,
+  style,
 }: {
   trait: Trait
   addTrait: (trait: Trait) => void
   removeTrait: (trait: Trait) => void
   isTraitSelected: boolean
+  style?: CSSProperties
 }) => {
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
   const [hovered, setHovered] = useState(false)
@@ -80,6 +82,7 @@ const TraitItem = ({
       style={{
         paddingBottom: '22px',
         paddingTop: '22px',
+        ...style,
       }}
       maxHeight="44"
       onMouseEnter={handleHover}
@@ -112,6 +115,7 @@ const TraitItem = ({
 interface TraitRowProps {
   data: Array<Trait>
   index: number
+  style: CSSProperties
 }
 
 export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: string; index: number }) => {
@@ -120,7 +124,6 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
   const selectedTraits = useCollectionFilters((state) => state.traits)
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
-  const fixedListRef = useRef<FixedSizeList>()
 
   const searchedTraits = useMemo(
     () => traits.filter((t) => t.trait_value?.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
@@ -128,14 +131,14 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
   )
 
   const Row = useCallback(
-    function TraitRow({ data, index }: TraitRowProps) {
+    function TraitRow({ data, index, style }: TraitRowProps) {
       const trait: Trait = data[index]
 
       const isTraitSelected = selectedTraits.find(
         ({ trait_type, trait_value }) =>
           trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
       )
-      return <TraitItem isTraitSelected={!!isTraitSelected} {...{ trait, addTrait, removeTrait }} />
+      return <TraitItem style={style} isTraitSelected={!!isTraitSelected} {...{ trait, addTrait, removeTrait }} />
     },
     [selectedTraits, addTrait, removeTrait]
   )
@@ -157,23 +160,23 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
         position="static"
         width="full"
       />
-      <Column className={styles.filterDropDowns} paddingLeft="0" paddingBottom="8">
-        {/* <AutoSizer disableWidth> */}
-        {/* {({ height }) => ( */}
-        <FixedSizeList
-          height={searchedTraits.length * TRAIT_ROW_HEIGHT}
-          // height={height}
-          ref={fixedListRef as any}
-          width="100%"
-          itemData={searchedTraits}
-          itemCount={searchedTraits.length}
-          itemSize={TRAIT_ROW_HEIGHT}
-          itemKey={itemKey}
-        >
-          {Row}
-        </FixedSizeList>
-        {/* )} */}
-        {/* </AutoSizer> */}
+      <Column
+        className={styles.filterDropDowns}
+        style={{ height: `${Math.min(TRAIT_ROW_HEIGHT * searchedTraits.length, styles.MAX_FILTER_DROPDOWN_HEIGHT)}px` }}
+      >
+        <AutoSizer disableWidth>
+          {({ height }) => (
+            <FixedSizeList
+              height={height}
+              width="100%"
+              itemData={searchedTraits}
+              itemCount={searchedTraits.length}
+              itemSize={TRAIT_ROW_HEIGHT}
+            >
+              {({ index, style, data }) => <Row style={style} key={itemKey(index, data)} data={data} index={index} />}
+            </FixedSizeList>
+          )}
+        </AutoSizer>
       </Column>
     </TraitsHeader>
   ) : null
