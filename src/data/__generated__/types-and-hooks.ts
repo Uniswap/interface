@@ -29,9 +29,7 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   assetActivities?: Maybe<Array<Maybe<AssetActivity>>>;
-  /**   Resolver to be implemented */
   nftAssets?: Maybe<NftAssetConnection>;
-  /**   Resolver to be implemented */
   nftBalances?: Maybe<NftBalanceConnection>;
   nftCollections?: Maybe<NftCollectionConnection>;
   nftCollectionsById?: Maybe<Array<Maybe<NftCollection>>>;
@@ -174,7 +172,6 @@ export type NftAsset = {
   originalImage?: Maybe<Image>;
   /**   TODO: may need to be array to support erc1155 cases. not needed at the moment so will revisit. */
   ownerAddress?: Maybe<Scalars['String']>;
-  /**   Resolver to be implemented */
   rarities?: Maybe<Array<NftAssetRarity>>;
   smallImage?: Maybe<Image>;
   smallImageUrl?: Maybe<Scalars['String']>;
@@ -182,7 +179,6 @@ export type NftAsset = {
   thumbnail?: Maybe<Image>;
   thumbnailUrl?: Maybe<Scalars['String']>;
   tokenId: Scalars['String'];
-  /**   Resolver to be implemented */
   traits?: Maybe<Array<NftAssetTrait>>;
 };
 
@@ -331,6 +327,7 @@ export enum NftMarketplace {
 
 export type NftCollectionMarketplace = {
   __typename?: 'NftCollectionMarketplace';
+  floorPrice?: Maybe<Scalars['Float']>;
   id: Scalars['ID'];
   listings?: Maybe<Scalars['Int']>;
   marketplace?: Maybe<NftMarketplace>;
@@ -705,6 +702,7 @@ export type NftAssetConnection = {
   __typename?: 'NftAssetConnection';
   edges: Array<NftAssetEdge>;
   pageInfo: PageInfo;
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
 export type NftAssetEdge = {
@@ -908,7 +906,7 @@ export type TransactionListQueryVariables = Exact<{
 }>;
 
 
-export type TransactionListQuery = { __typename?: 'Query', portfolio?: { __typename?: 'Portfolio', id: string, assetActivities?: Array<{ __typename?: 'AssetActivity', id: string, timestamp: number, type: ActivityType, transaction: { __typename?: 'Transaction', id: string, hash: string, status: TransactionStatus, to: string, from: string }, assetChanges: Array<{ __typename: 'NftApproval' } | { __typename: 'NftApproveForAll' } | { __typename: 'NftTransfer', id: string, nftStandard: NftStandard, sender: string, recipient: string, direction: TransactionDirection, asset: { __typename?: 'NftAsset', id: string, name?: string | null, tokenId: string, imageUrl?: string | null, nftContract?: { __typename?: 'NftContract', id: string, chain: Chain, address: string } | null, collection?: { __typename?: 'NftCollection', id: string, name?: string | null } | null } } | { __typename: 'TokenApproval', id: string, tokenStandard: TokenStandard, approvedAddress: string, quantity: string, asset: { __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, decimals?: number | null, address?: string | null, chain: Chain } } | { __typename: 'TokenTransfer', id: string, tokenStandard: TokenStandard, quantity: string, sender: string, recipient: string, direction: TransactionDirection, asset: { __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, address?: string | null, decimals?: number | null, chain: Chain }, transactedValue?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> } | null> | null } | null };
+export type TransactionListQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, assetActivities?: Array<{ __typename?: 'AssetActivity', id: string, timestamp: number, type: ActivityType, transaction: { __typename?: 'Transaction', id: string, hash: string, status: TransactionStatus, to: string, from: string }, assetChanges: Array<{ __typename: 'NftApproval' } | { __typename: 'NftApproveForAll' } | { __typename: 'NftTransfer', id: string, nftStandard: NftStandard, sender: string, recipient: string, direction: TransactionDirection, asset: { __typename?: 'NftAsset', id: string, name?: string | null, tokenId: string, imageUrl?: string | null, nftContract?: { __typename?: 'NftContract', id: string, chain: Chain, address: string } | null, collection?: { __typename?: 'NftCollection', id: string, name?: string | null } | null } } | { __typename: 'TokenApproval', id: string, tokenStandard: TokenStandard, approvedAddress: string, quantity: string, asset: { __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, decimals?: number | null, address?: string | null, chain: Chain } } | { __typename: 'TokenTransfer', id: string, tokenStandard: TokenStandard, quantity: string, sender: string, recipient: string, direction: TransactionDirection, asset: { __typename?: 'Token', id: string, name?: string | null, symbol?: string | null, address?: string | null, decimals?: number | null, chain: Chain }, transactedValue?: { __typename?: 'Amount', id: string, currency?: Currency | null, value: number } | null } | null> } | null> | null } | null> | null };
 
 export type TopTokensQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1538,7 +1536,7 @@ export type TokenProjectsLazyQueryHookResult = ReturnType<typeof useTokenProject
 export type TokenProjectsQueryResult = Apollo.QueryResult<TokenProjectsQuery, TokenProjectsQueryVariables>;
 export const TransactionListDocument = gql`
     query TransactionList($address: String!) {
-  portfolio(ownerAddress: $address) {
+  portfolios(ownerAddresses: [$address]) {
     id
     assetActivities(pageSize: 50, page: 1) {
       id

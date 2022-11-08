@@ -33,7 +33,7 @@ const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { 
 )
 
 export type TransactionListQueryResponse = NonNullable<
-  NonNullable<TransactionListQuery['portfolio']>['assetActivities']
+  NonNullable<NonNullable<TransactionListQuery['portfolios']>[0]>['assetActivities']
 >[0]
 
 interface TransactionListProps {

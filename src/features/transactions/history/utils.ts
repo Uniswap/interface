@@ -91,8 +91,8 @@ export function formatTransactionsByDate(
  * @param data Transaction history data response
  */
 export function parseDataResponseToTransactionDetails(data: TransactionListQuery) {
-  if (data.portfolio?.assetActivities) {
-    return data.portfolio.assetActivities.reduce((accum: TransactionDetails[], t) => {
+  if (data.portfolios?.[0]?.assetActivities) {
+    return data.portfolios[0].assetActivities.reduce((accum: TransactionDetails[], t) => {
       const parsed = extractTransactionDetails(t)
       if (parsed) {
         accum.push(parsed)
