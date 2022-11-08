@@ -9,7 +9,7 @@ import { useCallback, useMemo } from 'react'
 
 import * as Card from './Card'
 
-enum AssetMediaType {
+export enum AssetMediaType {
   Image,
   Video,
   Audio,

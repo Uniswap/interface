@@ -29,7 +29,7 @@ import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
 import { ProfileBodyLoadingSkeleton } from './ProfilePageLoadingSkeleton'
-import { WalletAssetDisplay } from './WalletAssetDisplay'
+import { ViewMyNftsAsset } from './ViewMyNftsAsset'
 
 const SellModeButton = styled.button<{ active: boolean }>`
   display: flex;
@@ -202,7 +202,10 @@ export const ProfilePage = () => {
                   <div className={assetList}>
                     {ownerAssets?.length
                       ? ownerAssets.map((asset, index) => (
-                          <WalletAssetDisplay asset={asset} isSellMode={isSellMode} key={index} />
+                          // eslint-disable-next-line react/jsx-key
+                          <div>
+                            <ViewMyNftsAsset asset={asset} isSellMode={isSellMode} key={index} />
+                          </div>
                         ))
                       : null}
                   </div>

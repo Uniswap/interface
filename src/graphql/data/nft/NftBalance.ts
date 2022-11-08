@@ -1,4 +1,5 @@
 import graphql from 'babel-plugin-relay/macro'
+import { parseEther } from 'ethers/lib/utils'
 import { WalletAsset } from 'nft/types'
 import { useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 
@@ -129,10 +130,24 @@ export function useNftBalanceQuery(
   )
   const walletAssets: WalletAsset[] = data.nftBalances?.edges?.map((queryAsset: { node: any }) => {
     const asset = queryAsset.node.ownedAsset
+    const ethPrice = parseEther(
+      asset.listings?.edges[0]?.node.price.value?.toLocaleString('fullwide', { useGrouping: false }) ?? '0'
+    ).toString()
     return {
       id: asset.id,
       image_url: asset.image?.url,
       image_preview_url: asset.smallImage?.url,
+      animationUrl: asset.animationUrl,
+      susFlag: asset.suspiciousFlag,
+      priceInfo: asset.listings
+        ? {
+            ETHPrice: ethPrice,
+            baseAsset: 'ETH',
+            baseDecimals: '18',
+            basePrice: ethPrice,
+          }
+        : undefined,
+      tokenType: asset.collection?.nftContracts[0]?.standard,
       name: asset.name,
       tokenId: asset.tokenId,
       asset_contract: {

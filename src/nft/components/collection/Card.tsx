@@ -10,7 +10,7 @@ import {
   PoolIcon,
   RarityVerifiedIcon,
 } from 'nft/components/icons'
-import { body, bodySmall } from 'nft/css/common.css'
+import { body, bodySmall, buttonTextSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { GenieAsset, Rarity, UniformHeight, UniformHeights } from 'nft/types'
@@ -58,12 +58,12 @@ const DetailsLinkContainer = styled.a`
   flex-shrink: 0;
   text-decoration: none;
   color: ${({ theme }) => theme.textSecondary};
-  font-size: 14px;
-  line-height: 20px;
-  weight: 400;
 
   :hover {
-    color: ${({ theme }) => theme.accentAction};
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+  :focus {
+    opacity: ${({ theme }) => theme.opacity.click};
   }
 `
 
@@ -570,7 +570,7 @@ const DetailsLink = () => {
         e.stopPropagation()
       }}
     >
-      Details
+      <Box className={buttonTextSmall}>Details</Box>
     </DetailsLinkContainer>
   )
 }
