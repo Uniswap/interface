@@ -82,7 +82,11 @@ export const ProfileBodyLoadingSkeleton = () => {
         <FilterButtonSkeleton />
         <SellButtonSkeleton />
       </FilterBarSkeletonWrapper>
-      <div className={assetList}>{new Array(DEFAULT_WALLET_ASSET_QUERY_AMOUNT).fill(<ProfileAssetCardSkeleton />)}</div>
+      <div className={assetList}>
+        {Array.from(Array(DEFAULT_WALLET_ASSET_QUERY_AMOUNT), (_, index) => (
+          <ProfileAssetCardSkeleton key={index} />
+        ))}
+      </div>
     </SkeletonBodyWrapper>
   )
 }
