@@ -27,10 +27,11 @@ const CollectionName = styled.div`
   text-overflow: ellipsis;
 `
 
-const TruncatedSubHeader = styled(ThemedText.SubHeader)`
+const TruncatedSubHeader = styled(ThemedText.BodyPrimary)`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-weight: 400;
 `
 
 const RoundedImage = styled.div<{ src?: string }>`
