@@ -187,6 +187,7 @@ export const colors: GlobalPalette = {
 export interface Palette {
   userThemeColor: Color
 
+  background: string
   backgroundBackdrop: Color
   backgroundSurface: Color
   backgroundInteractive: Color
@@ -248,17 +249,18 @@ export interface Palette {
 export const colorsLight: Palette = {
   userThemeColor: colors.magentaVibrant,
 
+  background: '#faf9fa', //INTENTIONALLY OFF THEME TO GIVE WHITE BG A SOFTER VISUAL
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
   backgroundModule: colors.gray50,
   backgroundInteractive: colors.gray100,
   backgroundFloating: opacify(8, colors.gray700),
-  backgroundOutline: opacify(24, colors.gray500),
+  backgroundOutline: colors.gray150,
   backgroundScrim: opacify(60, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.white),
 
   textPrimary: colors.gray900,
-  textSecondary: colors.gray500,
+  textSecondary: colors.gray400,
   textTertiary: colors.gray300,
 
   accentAction: colors.pink400,
@@ -311,12 +313,13 @@ export const colorsLight: Palette = {
 export const colorsDark: Palette = {
   userThemeColor: colors.magentaVibrant,
 
+  background: colors.gray800,
   backgroundBackdrop: colors.black,
   backgroundSurface: colors.gray900,
   backgroundModule: colors.gray800,
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
-  backgroundOutline: opacify(14, colors.gray300),
+  backgroundOutline: colors.gray750,
   backgroundScrim: opacify(72, colors.gray900),
   backgroundScrolledSurface: opacify(72, colors.gray900),
 

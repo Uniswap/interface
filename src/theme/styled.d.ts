@@ -6,6 +6,7 @@ export type AllColors = ThemeColors | Colors
 export interface ThemeColors {
   userThemeColor: string
 
+  background: string
   backgroundBackdrop: Color
   backgroundSurface: Color
   backgroundModule: Color

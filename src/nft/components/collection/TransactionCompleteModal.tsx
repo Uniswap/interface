@@ -1,3 +1,4 @@
+import { formatEther } from '@ethersproject/units'
 import { EventName, ModalName } from 'analytics/constants'
 import { Trace } from 'analytics/Trace'
 import { useTrace } from 'analytics/Trace'
@@ -82,7 +83,7 @@ const TxCompleteModal = () => {
                 name={EventName.NFT_BUY_BAG_SUCCEEDED}
                 properties={{
                   buy_quantity: nftsPurchased.length,
-                  usd_value: totalPurchaseValue,
+                  usd_value: parseFloat(formatEther(totalPurchaseValue)) * ethPrice,
                   transaction_hash: txHash,
                   ...formatAssetEventProperties(nftsPurchased),
                   ...trace,

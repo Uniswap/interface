@@ -52,9 +52,9 @@ export function getDeltaArrow(delta: number | null | undefined) {
   if (delta === null || delta === undefined) {
     return null
   } else if (Math.sign(delta) < 0) {
-    return <StyledDownArrow size={16} key="arrow-down" />
+    return <StyledDownArrow size={24} key="arrow-down" />
   }
-  return <StyledUpArrow size={16} key="arrow-up" />
+  return <StyledUpArrow size={24} key="arrow-up" />
 }
 
 export function formatDelta(delta: number | null | undefined) {
