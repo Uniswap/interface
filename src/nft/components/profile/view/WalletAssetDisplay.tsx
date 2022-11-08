@@ -100,7 +100,7 @@ export const WalletAssetDisplay = ({ asset, isSellMode }: { asset: WalletAsset; 
                           borderRadius="4"
                           marginLeft="4"
                           objectFit="cover"
-                          src={`/nft/svgs/marketplaces/${market}.svg`}
+                          src={`/nft/svgs/marketplaces/${market.toLowerCase()}.svg`}
                         />
                       )
                     })}
