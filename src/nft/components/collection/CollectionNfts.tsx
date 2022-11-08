@@ -606,7 +606,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           <Center width="full" color="textSecondary" textAlign="center" style={{ height: '60vh' }}>
             <EmptyCollectionWrapper>
               <p className={headlineMedium}>No NFTS found</p>
-              <Box onClick={reset} className={clsx(bodySmall, buttonTextMedium)} color="blue" cursor="pointer">
+              <Box
+                onClick={reset}
+                type="button"
+                className={clsx(bodySmall, buttonTextMedium)}
+                color="blue"
+                cursor="pointer"
+              >
                 <ViewFullCollection>View full collection</ViewFullCollection>
               </Box>
             </EmptyCollectionWrapper>
