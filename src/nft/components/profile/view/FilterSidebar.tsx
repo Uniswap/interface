@@ -9,8 +9,28 @@ import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks
 import { WalletCollection } from 'nft/types'
 import { Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import { useSpring } from 'react-spring'
+import styled from 'styled-components/macro'
 
 import * as styles from './ProfilePage.css'
+
+const ItemsContainer = styled.div`
+  // Firefox scrollbar styling
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
+  overflow-y: scroll;
+  height: 100%;
+
+  // safari and chrome scrollbar styling
+  ::-webkit-scrollbar {
+    background: transparent;
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.backgroundOutline};
+    border-radius: 8px;
+  }
+`
 
 export const FilterSidebar = () => {
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
@@ -99,16 +119,18 @@ const CollectionSelect = ({
             collectionSearchText={collectionSearchText}
             setCollectionSearchText={setCollectionSearchText}
           />
-          <Box paddingBottom="8" overflowY="scroll" style={{ scrollbarWidth: 'none' }}>
-            {displayCollections?.map((collection, index) => (
-              <CollectionItem
-                key={index}
-                collection={collection}
-                collectionFilters={collectionFilters}
-                setCollectionFilters={setCollectionFilters}
-              />
-            ))}
-          </Box>
+          <ItemsContainer>
+            <Box paddingBottom="8" style={{ scrollbarWidth: 'none' }}>
+              {displayCollections?.map((collection, index) => (
+                <CollectionItem
+                  key={index}
+                  collection={collection}
+                  collectionFilters={collectionFilters}
+                  setCollectionFilters={setCollectionFilters}
+                />
+              ))}
+            </Box>
+          </ItemsContainer>
         </Column>
       </Box>
     </>

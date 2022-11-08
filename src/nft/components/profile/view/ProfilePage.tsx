@@ -16,6 +16,7 @@ import {
   useWalletBalance,
   useWalletCollections,
 } from 'nft/hooks'
+import Portal from '@reach/portal'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
@@ -50,8 +51,12 @@ const SellModeButton = styled.button<{ active: boolean }>`
 `
 
 const ProfilePageColumn = styled(Column)`
-  overflow-x: hidden !important;
-  ${ScreenBreakpointsPaddings}
+  // overflow-x: hidden !important;
+  ${ScreenBreakpointsPaddings};
+  // position: absolute;
+  // top: 0;
+  // background-color: black;
+  // z-index: 100000;
 `
 
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
@@ -145,6 +150,7 @@ export const ProfilePage = () => {
   })
 
   return (
+    // <Portal>
     <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
       {anyQueryIsLoading && !isNftGraphQl ? (
         <ProfileBodyLoadingSkeleton />
@@ -260,6 +266,7 @@ export const ProfilePage = () => {
         )}
       </Row>
     </ProfilePageColumn>
+    // </Portal>
   )
 }
 
@@ -316,6 +323,7 @@ const CollectionFiltersRow = ({
   const getCollection = (collectionAddress: string) => {
     return collections?.find((collection) => collection.address === collectionAddress)
   }
+
   return (
     <Row paddingTop="18" gap="8" flexWrap="wrap">
       {collectionFilters &&
