@@ -1,6 +1,8 @@
 import { Identify, identify, init, track } from '@amplitude/analytics-browser'
 import { isProductionEnv } from 'utils/env'
 
+import { CustomTransport } from './CustomTransport'
+
 const DUMMY_KEY = '00000000000000000000000000000000'
 const PROXY_URL = process.env.REACT_APP_AMPLITUDE_PROXY_URL
 
@@ -21,6 +23,7 @@ export function initializeAnalytics() {
     {
       // Configure the SDK to work with alternate endpoint
       serverUrl: PROXY_URL,
+      transportProvider: new CustomTransport(),
       // Disable tracking of private user information by Amplitude
       trackingOptions: {
         ipAddress: false,
