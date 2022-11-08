@@ -16,7 +16,7 @@ import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { Trace } from 'src/components/telemetry/Trace'
 import { TraceUserProperties } from 'src/components/telemetry/TraceUserProperties'
 import { config } from 'src/config'
-import { useApolloClient } from 'src/data/hooks'
+import { usePersistedApolloClient } from 'src/data/hooks'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { MulticallUpdaters } from 'src/features/multicall'
@@ -53,7 +53,7 @@ initializeRemoteConfig()
 initOneSignal()
 
 function App() {
-  const client = useApolloClient()
+  const client = usePersistedApolloClient()
 
   if (!client) {
     // TODO(MOB-3515): delay splash screen until client is rehydated

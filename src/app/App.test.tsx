@@ -6,7 +6,7 @@ import App from 'src/app/App'
 
 jest.mock('src/data/hooks', () => {
   return {
-    useApolloClient: () => {},
+    usePersistedApolloClient: () => {},
   }
 })
 

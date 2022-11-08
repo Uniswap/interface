@@ -1,4 +1,10 @@
-import { ApolloClient, createHttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+  NormalizedCacheObject,
+  useApolloClient,
+} from '@apollo/client'
 import { relayStylePagination } from '@apollo/client/utilities'
 import { MMKVWrapper, persistCache } from 'apollo3-cache-persist'
 import { useCallback, useEffect, useState } from 'react'
@@ -14,7 +20,8 @@ if (__DEV__) {
   require('react-native-mmkv-flipper-plugin').initializeMMKVFlipper({ default: mmkv })
 }
 
-export const useApolloClient = () => {
+// ONLY for use once in App.tsx! If you add this in other places you will go to JAIL!
+export const usePersistedApolloClient = () => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
 
   useEffect(() => {
