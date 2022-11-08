@@ -133,7 +133,6 @@ const Collection = () => {
                 </Box>
 
                 {/* @ts-ignore: https://github.com/microsoft/TypeScript/issues/34933 */}
-
                 <AnimatedBox
                   style={{
                     transform: gridX.to((x) => `translate(${x as number}px)`),
