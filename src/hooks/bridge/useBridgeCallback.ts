@@ -66,7 +66,7 @@ function useSendTxToKsSettingCallback() {
           extraData.status = err.response.status
           extraData.response = err.response.data
         }
-        const error = new Error(`SendTxToKsSetting fail, srcTxHash = ${Date.now()}`, { cause: err })
+        const error = new Error(`SendTxToKsSetting fail, srcTxHash = ${extraData.body.srcTxHash}`, { cause: err })
         error.name = 'PostBridge'
         captureException(error, { level: 'fatal', extra: { args: JSON.stringify(extraData, null, 2) } })
       }
