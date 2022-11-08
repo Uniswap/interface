@@ -19,11 +19,12 @@ import {
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
 import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
-import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
 import { useSpring } from 'react-spring'
 import styled from 'styled-components/macro'
+import shallow from 'zustand/shallow'
 
 import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
@@ -69,19 +70,25 @@ export const ProfilePage = () => {
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
   const listFilter = useWalletCollections((state) => state.listFilter)
-  const sellAssets = useSellAsset((state) => state.sellAssets)
-  const reset = useSellAsset((state) => state.reset)
-  const resetSellAssets = useSellAsset((state) => state.reset)
+  const { isSellMode, resetSellAssets, sellAssets, setIsSellMode } = useSellAsset(
+    ({ isSellMode, reset, sellAssets, setIsSellMode }) => ({
+      isSellMode,
+      resetSellAssets: reset,
+      sellAssets,
+      setIsSellMode,
+    }),
+    shallow
+  )
+
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
   const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
-  const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
 
-  const handleSellModeClick = () => {
+  const handleSellModeClick = useCallback(() => {
     resetSellAssets()
-    toggleSellMode()
-  }
+    setIsSellMode(!isSellMode)
+  }, [isSellMode, resetSellAssets, setIsSellMode])
 
   const { data: ownerCollections, isLoading: collectionsAreLoading } = useQuery(
     ['ownerCollections', address],
@@ -233,7 +240,7 @@ export const ProfilePage = () => {
             color="genieBlue"
             marginRight="20"
             marginLeft="auto"
-            onClick={reset}
+            onClick={resetSellAssets}
             lineHeight="16"
           >
             Clear
