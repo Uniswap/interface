@@ -10,8 +10,8 @@ export const lightTheme: Theme = {
     explicitWhite: '#FFFFFF',
 
     backgroundFloating: '#00000000',
-    backgroundInteractive: vars.color.grey100,
-    backgroundModule: vars.color.grey50,
+    backgroundInteractive: vars.color.gray100,
+    backgroundModule: vars.color.gray50,
     backgroundOutline: `rgba(94,104,135,0.24)`,
     backgroundSurface: '#FFFFFF',
     backgroundBackdrop: '#FFF',
@@ -23,9 +23,9 @@ export const lightTheme: Theme = {
     gold: vars.color.gold400,
     violet: vars.color.violet400,
 
-    textPrimary: vars.color.grey900,
-    textSecondary: vars.color.grey500,
-    textTertiary: vars.color.grey300,
+    textPrimary: vars.color.gray900,
+    textSecondary: vars.color.gray500,
+    textTertiary: vars.color.gray300,
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

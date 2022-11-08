@@ -47,7 +47,7 @@ export const SearchBarDropdownSection = ({
 }: SearchBarDropdownSectionProps) => {
   return (
     <Column gap="12">
-      <Row paddingX="16" paddingY="4" gap="8" color="grey300" className={subheadSmall} style={{ lineHeight: '20px' }}>
+      <Row paddingX="16" paddingY="4" gap="8" color="gray300" className={subheadSmall} style={{ lineHeight: '20px' }}>
         {headerIcon ? headerIcon : null}
         <Box>{header}</Box>
       </Row>

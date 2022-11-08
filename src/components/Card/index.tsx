@@ -14,15 +14,15 @@ export const LightCard = styled(Card)`
   background-color: ${({ theme }) => theme.deprecated_bg1};
 `
 
-export const LightGreyCard = styled(Card)`
+export const LightGrayCard = styled(Card)`
   background-color: ${({ theme }) => theme.deprecated_bg2};
 `
 
-export const GreyCard = styled(Card)`
+export const GrayCard = styled(Card)`
   background-color: ${({ theme }) => theme.deprecated_bg3};
 `
 
-export const DarkGreyCard = styled(Card)`
+export const DarkGrayCard = styled(Card)`
   background-color: ${({ theme }) => theme.deprecated_bg2};
 `
 

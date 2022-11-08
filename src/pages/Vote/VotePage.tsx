@@ -18,7 +18,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { ButtonPrimary } from '../../components/Button'
-import { GreyCard } from '../../components/Card'
+import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import { CardSection, DataCard } from '../../components/earn/styled'
 import { RowBetween, RowFixed } from '../../components/Row'
@@ -318,7 +318,7 @@ export default function VotePage() {
                 </ThemedText.DeprecatedMain>
               </RowBetween>
               {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
-                <GreyCard>
+                <GrayCard>
                   <ThemedText.DeprecatedBlack>
                     <Trans>
                       Only UNI votes that were self delegated or delegated to another address before block{' '}
@@ -333,7 +333,7 @@ export default function VotePage() {
                       </span>
                     )}
                   </ThemedText.DeprecatedBlack>
-                </GreyCard>
+                </GrayCard>
               )}
             </AutoColumn>
             {showVotingButtons && (

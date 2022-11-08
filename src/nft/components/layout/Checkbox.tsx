@@ -24,7 +24,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({ hovered, children, ...props 
       {children}
       <Box
         as="span"
-        borderColor={props.checked || hovered ? 'accentAction' : 'grey400'}
+        borderColor={props.checked || hovered ? 'accentAction' : 'gray400'}
         className={styles.checkbox}
         background={props.checked ? 'accentAction' : undefined}
         // This element is purely decorative so
