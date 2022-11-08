@@ -97,7 +97,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
   const asset = queryData.nftAssets?.edges[0]?.node
   const collection = asset?.collection
   const listing = asset?.listings?.edges[0]?.node
-  const ethPrice = parseEther(listing?.price.value?.toString() ?? '0').toString()
+  const ethPrice = parseEther(listing?.price?.value?.toString() ?? '0').toString()
 
   return [
     {
@@ -105,8 +105,8 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       address,
       notForSale: asset?.listings === null,
       collectionName: asset?.collection?.name ?? undefined,
-      collectionSymbol: asset?.collection?.image?.url,
-      imageUrl: asset?.image?.url,
+      collectionSymbol: asset?.collection?.image?.url ?? undefined,
+      imageUrl: asset?.image?.url ?? undefined,
       animationUrl: asset?.animationUrl ?? undefined,
       // todo: fix the back/frontend discrepency here and drop the any
       marketplace: listing?.marketplace.toLowerCase() as any,
@@ -126,7 +126,7 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
             : undefined,
         } as SellOrder
       }),
-      smallImageUrl: asset?.smallImage?.url,
+      smallImageUrl: asset?.smallImage?.url ?? undefined,
       tokenId,
       tokenType: (asset?.collection?.nftContracts && asset?.collection.nftContracts[0]?.standard) as TokenType,
       collectionIsVerified: asset?.collection?.isVerified ?? undefined,
@@ -153,8 +153,8 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       }),
     },
     {
-      collectionDescription: collection?.description,
-      collectionImageUrl: collection?.image?.url,
+      collectionDescription: collection?.description ?? undefined,
+      collectionImageUrl: collection?.image?.url ?? undefined,
       collectionName: collection?.name ?? undefined,
       isVerified: collection?.isVerified ?? undefined,
       totalSupply: collection?.numAssets ?? undefined,

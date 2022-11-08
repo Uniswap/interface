@@ -152,7 +152,13 @@ export const LoadingButton = styled.div`
 
 export const DEFAULT_ASSET_QUERY_AMOUNT = 25
 
-const loadingAssets = <>{new Array(DEFAULT_ASSET_QUERY_AMOUNT).fill(<CollectionAssetLoading />)}</>
+const loadingAssets = (
+  <>
+    {Array.from(Array(DEFAULT_ASSET_QUERY_AMOUNT), (_, index) => (
+      <CollectionAssetLoading key={index} />
+    ))}
+  </>
+)
 
 export const CollectionNftsLoading = () => (
   <Box width="full" className={styles.assetList}>

@@ -66,15 +66,9 @@ export interface WalletAsset {
   asset_contract: {
     address: string
     schema_name: 'ERC1155' | 'ERC721' | string
-    asset_contract_type: string
-    created_date: string
     name: string
-    symbol: string
     description: string
-    external_link: string
     image_url: string
-    default_to_fiat: boolean
-    only_proxied_transfers: boolean
     payout_address: string
   }
   collection: GenieCollection
@@ -84,7 +78,7 @@ export interface WalletAsset {
   creatorPercentage: number
   listing_date: string
   date_acquired: string
-  sellOrders: Deprecated_SellOrder[]
+  sellOrders: Deprecated_SellOrder[] | SellOrder[] // TODO remove Deprecated_SellOrder when full migration to GraphQL is complete
   floor_sell_order_price: number
   // Used for creating new listings
   expirationTime?: number

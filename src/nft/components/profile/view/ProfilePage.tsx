@@ -1,3 +1,5 @@
+import { NftGraphQlVariant, useNftGraphQlFlag } from 'featureFlags/flags/nftGraphQl'
+import { useNftBalanceQuery } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
@@ -15,8 +17,8 @@ import {
   useWalletCollections,
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
-import { fetchMultipleCollectionStats, fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
-import { ProfilePageStateType, WalletCollection } from 'nft/types'
+import { fetchWalletAssets, OSCollectionsFetcher } from 'nft/queries'
+import { ProfilePageStateType, WalletAsset, WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, useEffect, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useInfiniteQuery, useQuery } from 'react-query'
@@ -26,7 +28,7 @@ import styled from 'styled-components/macro'
 import { EmptyWalletContent } from './EmptyWalletContent'
 import { ProfileAccountDetails } from './ProfileAccountDetails'
 import * as styles from './ProfilePage.css'
-import { ProfilePageLoadingSkeleton } from './ProfilePageLoadingSkeleton'
+import { ProfileBodyLoadingSkeleton } from './ProfilePageLoadingSkeleton'
 import { WalletAssetDisplay } from './WalletAssetDisplay'
 
 const SellModeButton = styled.button<{ active: boolean }>`
@@ -52,12 +54,9 @@ const ProfilePageColumn = styled(Column)`
   ${ScreenBreakpointsPaddings}
 `
 
+export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
 const FILTER_SIDEBAR_WIDTH = 300
 const PADDING = 16
-
-function roundFloorPrice(price?: number, n?: number) {
-  return price ? Math.round(price * Math.pow(10, n ?? 3) + Number.EPSILON) / Math.pow(10, n ?? 3) : 0
-}
 
 export const ProfilePage = () => {
   const { address } = useWalletBalance()
@@ -66,7 +65,6 @@ export const ProfilePage = () => {
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const walletAssets = useWalletCollections((state) => state.walletAssets)
   const setWalletAssets = useWalletCollections((state) => state.setWalletAssets)
-  const displayAssets = useWalletCollections((state) => state.displayAssets)
   const setDisplayAssets = useWalletCollections((state) => state.setDisplayAssets)
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
@@ -77,6 +75,7 @@ export const ProfilePage = () => {
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
+  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
   const [isSellMode, toggleSellMode] = useReducer((s) => !s, false)
 
   const handleSellModeClick = () => {
@@ -87,15 +86,6 @@ export const ProfilePage = () => {
   const { data: ownerCollections, isLoading: collectionsAreLoading } = useQuery(
     ['ownerCollections', address],
     () => OSCollectionsFetcher({ params: { asset_owner: address, offset: '0', limit: '300' } }),
-    {
-      refetchOnWindowFocus: false,
-    }
-  )
-
-  const ownerCollectionsAddresses = useMemo(() => ownerCollections?.map(({ address }) => address), [ownerCollections])
-  const { data: collectionStats, isLoading: collectionStatsAreLoading } = useQuery(
-    ['ownerCollectionStats', ownerCollectionsAddresses],
-    () => fetchMultipleCollectionStats({ addresses: ownerCollectionsAddresses ?? [] }),
     {
       refetchOnWindowFocus: false,
     }
@@ -118,50 +108,37 @@ export const ProfilePage = () => {
     },
     {
       getNextPageParam: (lastPage, pages) => {
-        return lastPage?.flat().length === 25 ? pages.length : null
+        return lastPage?.flat().length === DEFAULT_WALLET_ASSET_QUERY_AMOUNT ? pages.length : null
       },
       refetchOnWindowFocus: false,
       refetchOnMount: false,
     }
   )
 
-  const anyQueryIsLoading = collectionsAreLoading || collectionStatsAreLoading || assetsAreLoading
+  const anyQueryIsLoading = collectionsAreLoading || assetsAreLoading
 
-  const ownerAssets = useMemo(() => (isSuccess ? ownerAssetsData?.pages.flat() : null), [isSuccess, ownerAssetsData])
+  const {
+    walletAssets: gqlWalletAssets,
+    loadNext,
+    hasNext,
+  } = useNftBalanceQuery(isNftGraphQl ? address : '', collectionFilters, DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+
+  const ownerAssets = useMemo(
+    () => (isNftGraphQl ? gqlWalletAssets : isSuccess ? ownerAssetsData?.pages.flat() : []),
+    [isNftGraphQl, gqlWalletAssets, isSuccess, ownerAssetsData]
+  )
 
   useEffect(() => {
-    setDisplayAssets(walletAssets, listFilter)
-  }, [walletAssets, listFilter, setDisplayAssets])
+    !isNftGraphQl && setWalletAssets(ownerAssets?.flat() ?? [])
+  }, [ownerAssets, setWalletAssets, isNftGraphQl])
 
   useEffect(() => {
-    setWalletAssets(ownerAssets?.flat() ?? [])
-  }, [ownerAssets, setWalletAssets])
+    !isNftGraphQl && setDisplayAssets(walletAssets, listFilter)
+  }, [walletAssets, listFilter, setDisplayAssets, isNftGraphQl])
 
   useEffect(() => {
     ownerCollections && setWalletCollections(ownerCollections)
   }, [ownerCollections, setWalletCollections])
-
-  useEffect(() => {
-    if (ownerCollections?.length && collectionStats?.length) {
-      const ownerCollectionsCopy = [...ownerCollections]
-      for (const collection of ownerCollectionsCopy) {
-        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.stats?.floor_price
-        collection.floorPrice = roundFloorPrice(floorPrice)
-      }
-      setWalletCollections(ownerCollectionsCopy)
-    }
-  }, [collectionStats, ownerCollections, setWalletCollections])
-
-  useEffect(() => {
-    if (ownerCollections?.length && collectionStats?.length) {
-      const ownerCollectionsCopy = [...ownerCollections]
-      for (const collection of ownerCollectionsCopy) {
-        const floorPrice = collectionStats.find((stat) => stat.address === collection.address)?.stats?.floor_price //TODO update when changing walletStats endpoint to gql
-        collection.floorPrice = floorPrice ? Math.round(floorPrice * 1000 + Number.EPSILON) / 1000 : 0 //round to at most 3 digits
-      }
-      setWalletCollections(ownerCollectionsCopy)
-    }
-  }, [collectionStats, ownerCollections, setWalletCollections])
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
@@ -169,9 +146,9 @@ export const ProfilePage = () => {
 
   return (
     <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
-      {anyQueryIsLoading ? (
-        <ProfilePageLoadingSkeleton />
-      ) : walletAssets.length === 0 ? (
+      {anyQueryIsLoading && !isNftGraphQl ? (
+        <ProfileBodyLoadingSkeleton />
+      ) : ownerAssets?.length === 0 ? (
         <EmptyWalletContent />
       ) : (
         <Row alignItems="flex-start" position="relative">
@@ -196,7 +173,7 @@ export const ProfilePage = () => {
                     onClick={() => setFiltersExpanded(!isFiltersExpanded)}
                   />
                   <Row gap="8" flexWrap="nowrap">
-                    {isSellMode && <SelectAllButton />}
+                    {isSellMode && <SelectAllButton ownerAssets={ownerAssets ?? []} />}
                     <SellModeButton className={buttonTextMedium} active={isSellMode} onClick={handleSellModeClick}>
                       <TagIcon height={20} width={20} />
                       Sell
@@ -212,21 +189,19 @@ export const ProfilePage = () => {
                   />
                 </Row>
                 <InfiniteScroll
-                  next={fetchNextPage}
-                  hasMore={hasNextPage ?? false}
+                  next={() => (isNftGraphQl ? loadNext(DEFAULT_WALLET_ASSET_QUERY_AMOUNT) : fetchNextPage())}
+                  hasMore={isNftGraphQl ? hasNext : hasNextPage ?? false}
                   loader={
-                    hasNextPage ? (
-                      <Center>
-                        <LoadingSparkle />
-                      </Center>
-                    ) : null
+                    <Center>
+                      <LoadingSparkle />
+                    </Center>
                   }
-                  dataLength={displayAssets.length}
+                  dataLength={ownerAssets?.length ?? 0}
                   style={{ overflow: 'unset' }}
                 >
                   <div className={assetList}>
-                    {displayAssets && displayAssets.length
-                      ? displayAssets.map((asset, index) => (
+                    {ownerAssets?.length
+                      ? ownerAssets.map((asset, index) => (
                           <WalletAssetDisplay asset={asset} isSellMode={isSellMode} key={index} />
                         ))
                       : null}
@@ -282,15 +257,21 @@ export const ProfilePage = () => {
   )
 }
 
-const SelectAllButton = () => {
+const SelectAllButton = ({ ownerAssets }: { ownerAssets: WalletAsset[] }) => {
   const [isAllSelected, setIsAllSelected] = useState(false)
   const displayAssets = useWalletCollections((state) => state.displayAssets)
   const selectSellAsset = useSellAsset((state) => state.selectSellAsset)
   const resetSellAssets = useSellAsset((state) => state.reset)
+  const isNftGraphQl = useNftGraphQlFlag() === NftGraphQlVariant.Enabled
+
+  const allAssets = useMemo(
+    () => (isNftGraphQl ? ownerAssets : displayAssets),
+    [isNftGraphQl, ownerAssets, displayAssets]
+  )
 
   useEffect(() => {
     if (isAllSelected) {
-      displayAssets.forEach((asset) => selectSellAsset(asset))
+      allAssets.forEach((asset) => selectSellAsset(asset))
     } else {
       resetSellAssets()
     }
