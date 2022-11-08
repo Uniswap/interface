@@ -37,7 +37,7 @@ export const bannerOverlay = style([
     position: 'absolute',
     opacity: '0.7',
     width: 'full',
-    backgroundColor: 'grey900',
+    backgroundColor: 'gray900',
     left: '0',
     top: '0',
   }),
@@ -68,14 +68,14 @@ export const activityRow = style([
 ])
 
 export const activeRow = sprinkles({
-  backgroundColor: 'grey800',
+  backgroundColor: 'gray800',
 })
 
 export const timestamp = style([
   sprinkles({
     position: 'absolute',
     fontSize: '12',
-    color: 'grey300',
+    color: 'gray300',
     right: { sm: 'unset', lg: '12' },
     left: { sm: '64', lg: 'unset' },
     top: { sm: '28', lg: 'unset' },
