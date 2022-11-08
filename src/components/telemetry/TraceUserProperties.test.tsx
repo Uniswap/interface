@@ -30,6 +30,8 @@ describe('TraceUserProperties', () => {
       type: AccountType.SignerMnemonic,
       backups: [BackupType.Cloud],
       pushNotificationsEnabled: true,
+      showSmallBalances: true,
+      showSpamTokens: false,
     })
     mockFn(walletHooks, 'useViewOnlyAccounts', ['address1', 'address2'])
     mockFn(walletHooks, 'useNonPendingSignerAccounts', ['address3'])
@@ -61,12 +63,14 @@ describe('TraceUserProperties', () => {
     )
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.IsCloudBackedUp, true)
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.IsPushEnabled, true)
+    expect(mocked).toHaveBeenCalledWith(UserPropertyName.IsHideSmallBalancesEnabled, false)
+    expect(mocked).toHaveBeenCalledWith(UserPropertyName.IsHideSpamTokensEnabled, true)
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.WalletViewOnlyCount, 2)
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.WalletSignerCount, 1)
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.AppOpenAuthMethod, AuthMethod.FaceId)
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.TransactionAuthMethod, AuthMethod.FaceId)
 
-    expect(mocked).toHaveBeenCalledTimes(10)
+    expect(mocked).toHaveBeenCalledTimes(12)
   })
 
   it('sets user properties without active account', () => {

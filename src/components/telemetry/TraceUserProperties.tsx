@@ -54,6 +54,8 @@ export function TraceUserProperties() {
       Boolean(activeAccount.backups?.includes(BackupType.Cloud))
     )
     setUserProperty(UserPropertyName.IsPushEnabled, Boolean(activeAccount.pushNotificationsEnabled))
+    setUserProperty(UserPropertyName.IsHideSmallBalancesEnabled, !activeAccount.showSmallBalances)
+    setUserProperty(UserPropertyName.IsHideSpamTokensEnabled, !activeAccount.showSpamTokens)
   }, [activeAccount])
 
   useEffect(() => {

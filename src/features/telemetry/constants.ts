@@ -157,6 +157,8 @@ export enum UserPropertyName {
   AppVersion = 'app_version',
   DarkMode = 'is_dark_mode',
   IsCloudBackedUp = 'is_cloud_backed_up',
+  IsHideSmallBalancesEnabled = 'is_hide_small_balances_enabled',
+  IsHideSpamTokensEnabled = 'is_hide_spam_tokens_enabled',
   IsPushEnabled = 'is_push_enabled',
   TransactionAuthMethod = 'transaction_auth_method',
   WalletSignerCount = 'wallet_signer_count',
