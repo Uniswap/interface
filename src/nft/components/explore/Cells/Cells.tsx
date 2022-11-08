@@ -27,7 +27,7 @@ const CollectionName = styled.div`
   text-overflow: ellipsis;
 `
 
-const TruncatedSubHeader = styled(ThemedText.BodyPrimary)`
+const TruncatedSubHeader = styled(ThemedText.SubHeaderSmall)`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
