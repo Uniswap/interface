@@ -104,7 +104,7 @@ const Collection = () => {
                     <CollectionBannerLoading />
                   ) : (
                     <Box
-                      as={collectionStats?.bannerImageUrl ? 'img' : undefined}
+                      as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
                       height="full"
                       width="full"
                       src={
