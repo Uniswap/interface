@@ -295,7 +295,7 @@ const NoContentContainer = () => (
       left="1/2"
       top="1/2"
       style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-      color="grey500"
+      color="gray500"
       fontSize="12"
       fontWeight="normal"
     >

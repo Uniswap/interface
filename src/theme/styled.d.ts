@@ -77,7 +77,7 @@ export interface Colors {
   deprecated_text4: Color
   deprecated_text5: Color
 
-  // backgrounds / greys
+  // backgrounds / grays
   deprecated_bg0: Color
   deprecated_bg1: Color
   deprecated_bg2: Color
