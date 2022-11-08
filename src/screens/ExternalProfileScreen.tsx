@@ -4,9 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
-import EyeOffIcon from 'src/assets/icons/eye-off.svg'
-import EyeIcon from 'src/assets/icons/eye.svg'
 import SendIcon from 'src/assets/icons/send.svg'
+import StarIconImage from 'src/assets/icons/star.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button, ButtonEmphasis, ButtonSize } from 'src/components/buttons/Button'
@@ -36,10 +35,10 @@ export function ExternalProfileScreen({
   const theme = useAppTheme()
   const [tabIndex, setIndex] = useState(0)
 
-  const isWatching = useAppSelector(selectWatchedAddressSet).has(address)
+  const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 
-  const onWatchPress = () => {
-    if (isWatching) {
+  const onPressFavorite = () => {
+    if (isFavorited) {
       dispatch(removeWatchedAddress({ address }))
     } else {
       dispatch(addWatchedAddress({ address }))
@@ -56,6 +55,15 @@ export function ExternalProfileScreen({
       [CurrencyField.OUTPUT]: null,
     }
   }, [address])
+
+  const onPressSend = useCallback(() => {
+    dispatch(
+      openModal({
+        name: ModalName.Send,
+        ...{ initialState: initialSendState },
+      })
+    )
+  }, [dispatch, initialSendState])
 
   const tabs = useMemo(
     () => [
@@ -80,15 +88,6 @@ export function ExternalProfileScreen({
     },
     [address]
   )
-
-  const onPressSend = useCallback(() => {
-    dispatch(
-      openModal({
-        name: ModalName.Send,
-        ...{ initialState: initialSendState },
-      })
-    )
-  }, [dispatch, initialSendState])
 
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
@@ -136,11 +135,11 @@ export function ExternalProfileScreen({
             />
             <Button
               fill
-              IconName={isWatching ? EyeOffIcon : EyeIcon}
+              CustomIcon={isFavorited ? <StarIconFilled /> : <StarIconEmpty />}
               emphasis={ButtonEmphasis.Tertiary}
-              label={isWatching ? t('Unwatch') : t('Watch')}
+              label={isFavorited ? t('Unfavorite') : t('Favorite')}
               size={ButtonSize.Medium}
-              onPress={onWatchPress}
+              onPress={onPressFavorite}
             />
           </Flex>
         </Flex>
@@ -153,5 +152,30 @@ export function ExternalProfileScreen({
         />
       </Flex>
     </Screen>
+  )
+}
+
+const StarIconEmpty = () => {
+  const theme = useAppTheme()
+  return (
+    <StarIconImage
+      color={theme.colors.textPrimary}
+      height={theme.iconSizes.sm}
+      strokeWidth={3}
+      width={theme.iconSizes.sm}
+    />
+  )
+}
+
+const StarIconFilled = () => {
+  const theme = useAppTheme()
+  return (
+    <StarIconImage
+      color={theme.colors.none}
+      fill={theme.colors.accentWarning}
+      height={theme.iconSizes.sm}
+      strokeWidth={2}
+      width={theme.iconSizes.sm}
+    />
   )
 }
