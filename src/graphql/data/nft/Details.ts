@@ -37,6 +37,9 @@ const detailsQuery = graphql`
             name
             isVerified
             numAssets
+            twitterName
+            discordUrl
+            homepageUrl
             image {
               url
             }
@@ -158,6 +161,9 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
       collectionName: collection?.name ?? undefined,
       isVerified: collection?.isVerified ?? undefined,
       totalSupply: collection?.numAssets ?? undefined,
+      twitterUrl: collection?.twitterName ?? undefined,
+      discordUrl: collection?.discordUrl ?? undefined,
+      externalUrl: collection?.homepageUrl ?? undefined,
     },
   ]
 }
