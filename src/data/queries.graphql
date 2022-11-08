@@ -60,6 +60,58 @@ query Nfts($ownerAddress: String!) {
   }
 }
 
+query NFTItemScreen($contractAddress: String!, $filter: NftAssetsFilterInput) {
+  nftAssets(address: $contractAddress, filter: $filter) {
+    edges {
+      node {
+        id
+        collection {
+          id
+          collectionId
+          description
+          image {
+            id
+            url
+          }
+          isVerified
+          name
+          numAssets
+          markets(currencies: [USD]) {
+            id
+            floorPrice {
+              id
+              value
+            }
+            owners
+            totalVolume {
+              id
+              value
+            }
+          }
+        }
+        description
+        image {
+          id
+          url
+        }
+        name
+        nftContract {
+          id
+          address
+          chain
+          standard
+        }
+        tokenId
+        creator {
+          id
+          address
+          username
+        }
+      }
+    }
+  }
+}
+
 query NFTsTabQuery($ownerAddress: String!, $first: Int, $after: String) {
   nftBalances(ownerAddress: $ownerAddress, first: $first, after: $after) {
     edges {

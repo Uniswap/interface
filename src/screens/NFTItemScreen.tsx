@@ -18,7 +18,8 @@ import { NFTCollectionModal } from 'src/components/NFT/NFTCollectionModal'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { CHAIN_INFO } from 'src/constants/chains'
-import { useNFT } from 'src/features/nfts/hooks'
+import { PollingInterval } from 'src/constants/misc'
+import { useNftItemScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { logMessage } from 'src/features/telemetry'
 import { LogContext } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
@@ -42,7 +43,16 @@ export function NFTItemScreen({
 
   const [showCollectionModal, setShowCollectionModal] = useState(false)
 
-  const { data: asset, loading: nftLoading, refetch } = useNFT(owner, address, tokenId)
+  const {
+    data,
+    loading: nftLoading,
+    refetch,
+  } = useNftItemScreenQuery({
+    variables: { contractAddress: address, filter: { tokenIds: [tokenId] } },
+    pollInterval: PollingInterval.Slow,
+    errorPolicy: 'all',
+  })
+  const asset = data?.nftAssets?.edges[0]?.node
   const assetChainId = fromGraphQLChain(asset?.nftContract?.chain)
 
   const ownerDisplayName = useDisplayName(owner)
