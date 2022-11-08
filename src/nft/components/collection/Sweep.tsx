@@ -225,7 +225,7 @@ export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice, sh
     ['nftxSweepAssets', collectionStats, getSweepFetcherParams(Markets.NFTX)],
     () =>
       collectionStats.marketplaceCount?.some(
-        (marketStat) => marketStat.marketplace === Markets.NFTX && marketStat.count > 0
+        (marketStat) => marketStat.marketplace === Markets.NFTX && marketStat.listings > 0
       )
         ? fetchSweep(getSweepFetcherParams(Markets.NFTX))
         : [],
@@ -241,7 +241,7 @@ export const Sweep = ({ contractAddress, collectionStats, minPrice, maxPrice, sh
     ['nft20SweepAssets', getSweepFetcherParams(Markets.NFT20)],
     () =>
       collectionStats.marketplaceCount?.some(
-        (marketStat) => marketStat.marketplace === Markets.NFT20 && marketStat.count > 0
+        (marketStat) => marketStat.marketplace === Markets.NFT20 && marketStat.listings > 0
       )
         ? fetchSweep(getSweepFetcherParams(Markets.NFT20))
         : [],

@@ -420,7 +420,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   useEffect(() => {
     const marketCount: any = {}
-    collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
+    collectionStats?.marketplaceCount?.forEach(({ marketplace, listings: count }) => {
       marketCount[marketplace] = count
     })
     setMarketCount(marketCount)

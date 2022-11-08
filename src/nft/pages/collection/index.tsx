@@ -75,7 +75,7 @@ const Collection = () => {
 
   useEffect(() => {
     const marketCount: Record<string, number> = {}
-    collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
+    collectionStats?.marketplaceCount?.forEach(({ marketplace, listings: count }) => {
       marketCount[marketplace] = count
     })
     setMarketCount(marketCount)

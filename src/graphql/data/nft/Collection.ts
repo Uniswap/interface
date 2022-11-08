@@ -68,6 +68,11 @@ const collectionQuery = graphql`
               value
               currency
             }
+            marketplaces {
+              marketplace
+              listings
+              floorPrice
+            }
           }
         }
       }
@@ -121,7 +126,15 @@ export function useCollectionQuery(address: string): GenieCollection | undefined
         }
       : {},
     traits,
-    // marketplaceCount: { marketplace: string; count: number }[], // TODO add when backend supports
+    marketplaceCount: queryCollection?.markets
+      ? market?.marketplaces?.map((market) => {
+          return {
+            marketplace: market.marketplace?.toLowerCase() ?? '',
+            listings: market.listings ?? 0,
+            floorPrice: market.floorPrice ?? 0,
+          }
+        })
+      : undefined,
     imageUrl: queryCollection?.image?.url ?? '',
     twitterUrl: queryCollection?.twitterName ?? '',
     instagram: queryCollection?.instagramName ?? undefined,
