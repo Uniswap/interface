@@ -107,9 +107,11 @@ export function TokenDetailsStats({
         volume={tokenData?.market?.volume?.value}
       />
       <Flex gap="xxs">
-        <Text color="textTertiary" variant="subheadSmall">
-          {t('About {{ token }}', { token: tokenProjectData?.name })}
-        </Text>
+        {tokenProjectData?.name ? (
+          <Text color="textTertiary" variant="subheadSmall">
+            {t('About {{ token }}', { token: tokenProjectData.name })}
+          </Text>
+        ) : null}
         <Flex gap="sm">
           {tokenProjectData?.description && (
             <LongText

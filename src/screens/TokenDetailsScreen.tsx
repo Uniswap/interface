@@ -1,11 +1,13 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
@@ -18,6 +20,7 @@ import { TokenDetailsLoader } from 'src/components/TokenDetails/TokenDetailsLoad
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import { PollingInterval } from 'src/constants/misc'
+import { isNonPollingRequestInFlight } from 'src/data/utils'
 import {
   SafetyLevel,
   TokenDetailsScreenQuery,
@@ -80,13 +83,18 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
   const { currencyId: _currencyId } = route.params
   const currency = useCurrency(_currencyId)
 
-  const { data, loading } = useTokenDetailsScreenQuery({
+  const { data, error, refetch, networkStatus } = useTokenDetailsScreenQuery({
     variables: {
       contract: currencyIdToContractInput(_currencyId),
     },
     pollInterval: PollingInterval.Fast,
+    notifyOnNetworkStatusChange: true,
     errorPolicy: 'all',
   })
+
+  const retry = useCallback(() => {
+    refetch({ contract: currencyIdToContractInput(_currencyId) })
+  }, [_currencyId, refetch])
 
   if (!currency) {
     // truly cannot render the component or a loading state without a currency
@@ -94,21 +102,23 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
     return null
   }
 
-  if (!data) {
-    if (loading) {
-      return <TokenDetailsLoader currency={currency} />
-    }
+  if (!data && isNonPollingRequestInFlight(networkStatus)) {
+    return <TokenDetailsLoader currency={currency} />
   }
 
-  return <TokenDetails currency={currency} data={data} />
+  return <TokenDetails currency={currency} data={data} error={Boolean(error)} retry={retry} />
 }
 
 function TokenDetails({
   currency,
   data,
+  error,
+  retry,
 }: {
   currency: Currency
   data: TokenDetailsScreenQuery | undefined
+  error: boolean
+  retry: () => void
 }) {
   const dispatch = useAppDispatch()
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
@@ -235,6 +245,11 @@ function TokenDetails({
             />
             <CurrencyPriceChart currency={currency} />
           </Flex>
+          {error ? (
+            <AnimatedBox entering={FadeInDown} exiting={FadeOutDown}>
+              <BaseCard.InlineErrorState onRetry={retry} />
+            </AnimatedBox>
+          ) : null}
           <Flex gap="lg">
             <TokenBalances
               currentChainBalance={currentChainBalance}
