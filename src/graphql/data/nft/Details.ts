@@ -96,7 +96,8 @@ export function useDetailsQuery(address: string, tokenId: string): [GenieAsset, 
 
   const asset = queryData.nftAssets?.edges[0]?.node
   const collection = asset?.collection
-  const ethPrice = parseEther(asset?.listings?.edges[0].node.price.value?.toString() ?? '0').toString()
+  const price = asset?.listings?.edges.length ? asset?.listings?.edges[0].node.price.value?.toString() : '0'
+  const ethPrice = parseEther(price).toString()
 
   return [
     {

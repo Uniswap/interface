@@ -321,7 +321,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
               {totalVolumeStr} ETH
             </StatsItem>
           ) : null}
-          {stats.stats?.total_listings && listedPercentageStr > 0 ? (
+          {stats.stats?.total_listings && stats.standard !== 'ERC1155' && listedPercentageStr > 0 ? (
             <StatsItem label="Listed" shouldHide={isMobile ?? false}>
               {listedPercentageStr}%
             </StatsItem>

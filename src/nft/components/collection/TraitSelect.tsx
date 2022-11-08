@@ -136,13 +136,7 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
               trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
           )
 
-          return (
-            <TraitItem
-              isTraitSelected={!!isTraitSelected}
-              key={trait.trait_value}
-              {...{ trait, addTrait, removeTrait }}
-            />
-          )
+          return <TraitItem isTraitSelected={!!isTraitSelected} key={index} {...{ trait, addTrait, removeTrait }} />
         })}
       </Column>
     </TraitsHeader>
