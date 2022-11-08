@@ -7,8 +7,10 @@ export enum EventName {
   AppLoaded = 'app-loaded',
   Impression = 'impression',
   MarkMeasure = 'mark-measure',
+  OnboardingCompleted = 'onboarding-completed',
   Transaction = 'transaction',
   UserEvent = 'user-event',
+  WalletAdded = 'wallet-added',
   // alphabetize additional values.
 }
 
