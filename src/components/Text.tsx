@@ -7,7 +7,7 @@ import { HiddenFromScreenReaders } from 'src/components/text/HiddenFromScreenRea
 import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
 
-const DEFAULT_FONT_SCALE = 1
+export const DEFAULT_FONT_SCALE = 1
 
 export type TextProps = ComponentProps<typeof ThemedText> & {
   maxFontSizeMultiplier?: number

@@ -21,12 +21,14 @@ exports[`renders correctly 1`] = `
     }
   >
     <TextInput
+      allowFontScaling={true}
       animatedProps={
         Object {
           "text": "$1,551,331.34",
         }
       }
       editable={false}
+      maxFontSizeMultiplier={1.2}
       style={
         Array [
           Object {
@@ -70,12 +72,14 @@ exports[`renders correctly 1`] = `
         }
       >
         <TextInput
+          allowFontScaling={true}
           animatedProps={
             Object {
               "text": "↘",
             }
           }
           editable={false}
+          maxFontSizeMultiplier={1.4}
           style={
             Array [
               Object {
@@ -111,12 +115,14 @@ exports[`renders correctly 1`] = `
           }
         />
         <TextInput
+          allowFontScaling={true}
           animatedProps={
             Object {
               "text": "-50%",
             }
           }
           editable={false}
+          maxFontSizeMultiplier={1.4}
           style={
             Array [
               Object {
@@ -153,12 +159,14 @@ exports[`renders correctly 1`] = `
         }
       />
       <TextInput
+        allowFontScaling={true}
         animatedProps={
           Object {
             "text": "",
           }
         }
         editable={false}
+        maxFontSizeMultiplier={1.4}
         style={
           Array [
             Object {

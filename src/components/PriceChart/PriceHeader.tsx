@@ -5,14 +5,18 @@ import {
   createVariant,
   typography,
   TypographyProps,
+  useResponsiveProp,
   VariantProps,
 } from '@shopify/restyle'
 import React from 'react'
+import { useWindowDimensions } from 'react-native'
 import { SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { ReText, round } from 'react-native-redash'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
+import { DEFAULT_FONT_SCALE } from 'src/components/Text'
+import { textVariants } from 'src/styles/font'
 import { Theme } from 'src/styles/theme'
 import { numberToLocaleStringWorklet } from 'src/utils/reanimated'
 
@@ -29,6 +33,22 @@ const StyledReText = createRestyleComponent<
     React.ComponentProps<typeof ReText>,
   Theme
 >([createVariant({ themeKey: 'textVariants' }), typography, color], ReText)
+
+const ScaledReText = (props: React.ComponentProps<typeof StyledReText>) => {
+  const { fontScale } = useWindowDimensions()
+  const enableFontScaling = fontScale > DEFAULT_FONT_SCALE
+
+  const variant = useResponsiveProp(props.variant ?? 'bodySmall') as keyof typeof textVariants
+  const multiplier = textVariants[variant].maxFontSizeMultiplier
+
+  return (
+    <StyledReText
+      {...props}
+      allowFontScaling={enableFontScaling}
+      maxFontSizeMultiplier={multiplier}
+    />
+  )
+}
 
 export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
   const theme = useAppTheme()
@@ -54,17 +74,17 @@ export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
 
   return (
     <Box mx="sm">
-      <StyledReText color="textPrimary" text={priceFormatted} variant="headlineLarge" />
+      <ScaledReText color="textPrimary" text={priceFormatted} variant="headlineLarge" />
       <Flex row gap="xxs">
         <Flex row gap="xxxs">
-          <StyledReText style={percentChangeStyles} text={percentChangeIcon} variant="bodySmall" />
-          <StyledReText
+          <ScaledReText style={percentChangeStyles} text={percentChangeIcon} variant="bodySmall" />
+          <ScaledReText
             style={percentChangeStyles}
             text={percentChangeFormatted}
             variant="bodySmall"
           />
         </Flex>
-        <StyledReText color="textSecondary" text={date} variant="bodySmall" />
+        <ScaledReText color="textSecondary" text={date} variant="bodySmall" />
       </Flex>
     </Box>
   )
