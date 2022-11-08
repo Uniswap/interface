@@ -172,6 +172,7 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
               itemData={searchedTraits}
               itemCount={searchedTraits.length}
               itemSize={TRAIT_ROW_HEIGHT}
+              itemKey={itemKey}
             >
               {({ index, style, data }) => <Row style={style} key={itemKey(index, data)} data={data} index={index} />}
             </FixedSizeList>
