@@ -159,13 +159,13 @@ export function useAssetsQuery(
         ).toString()
         return {
           id: asset.id,
-          address: asset.collection.nftContracts[0]?.address,
-          notForSale: asset.listings?.edges.length === 0,
+          address: asset.collection?.nftContracts[0]?.address,
+          notForSale: asset.listings?.edges?.length === 0,
           collectionName: asset.collection?.name,
           collectionSymbol: asset.collection?.image?.url,
           imageUrl: asset.image?.url,
           animationUrl: asset.animationUrl,
-          marketplace: asset.listings?.edges[0]?.node.marketplace.toLowerCase(),
+          marketplace: asset.listings?.edges[0]?.node?.marketplace?.toLowerCase(),
           name: asset.name,
           priceInfo: asset.listings
             ? {
@@ -179,19 +179,19 @@ export function useAssetsQuery(
           sellorders: asset.listings?.edges.map((listingNode: { node: SellOrder }) => {
             return {
               ...listingNode.node,
-              protocolParameters: listingNode.node.protocolParameters
-                ? JSON.parse(listingNode.node.protocolParameters.toString())
+              protocolParameters: listingNode.node?.protocolParameters
+                ? JSON.parse(listingNode.node?.protocolParameters.toString())
                 : undefined,
             }
           }),
           smallImageUrl: asset.smallImage?.url,
           tokenId: asset.tokenId,
-          tokenType: asset.collection.nftContracts[0]?.standard,
+          tokenType: asset.collection?.nftContracts[0]?.standard,
           // totalCount?: number, // TODO waiting for BE changes
           collectionIsVerified: asset.collection?.isVerified,
           rarity: {
             primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
-            providers: asset.rarities.map((rarity: Rarity) => {
+            providers: asset.rarities?.map((rarity: Rarity) => {
               return {
                 ...rarity,
                 provider: 'Rarity Sniper',

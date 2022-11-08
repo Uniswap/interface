@@ -23,8 +23,8 @@ const compareFloats = (a: number, b: number): 1 | -1 => {
 const CollectionTable = ({ data }: { data: CollectionTableColumn[] }) => {
   const floorSort = useMemo(() => {
     return (rowA: Row<CollectionTableColumn>, rowB: Row<CollectionTableColumn>) => {
-      const aFloor = BigNumber.from(rowA.original.floor.value)
-      const bFloor = BigNumber.from(rowB.original.floor.value)
+      const aFloor = BigNumber.from(rowA.original.floor.value ?? 0)
+      const bFloor = BigNumber.from(rowB.original.floor.value ?? 0)
 
       return aFloor.gte(bFloor) ? 1 : -1
     }

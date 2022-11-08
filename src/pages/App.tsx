@@ -6,6 +6,8 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
+import { ProfilePageLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -248,9 +250,30 @@ export default function App() {
                           </Suspense>
                         }
                       />
-                      <Route path="/nfts/profile" element={<Profile />} />
-                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
-                      <Route path="/nfts/collection/:contractAddress/activity" element={<Collection />} />
+                      <Route
+                        path="/nfts/profile"
+                        element={
+                          <Suspense fallback={<ProfilePageLoadingSkeleton />}>
+                            <Profile />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="/nfts/collection/:contractAddress"
+                        element={
+                          <Suspense fallback={<CollectionPageSkeleton />}>
+                            <Collection />
+                          </Suspense>
+                        }
+                      />
+                      <Route
+                        path="/nfts/collection/:contractAddress/activity"
+                        element={
+                          <Suspense fallback={<CollectionPageSkeleton />}>
+                            <Collection />
+                          </Suspense>
+                        }
+                      />
                     </>
                   )}
                 </Routes>

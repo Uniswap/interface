@@ -26,6 +26,9 @@ export interface CollectionInfoForAsset {
   collectionName?: string
   isVerified?: boolean
   totalSupply?: number
+  discordUrl?: string
+  twitterUrl?: string
+  externalUrl?: string
 }
 
 export type CollectionSort = Record<

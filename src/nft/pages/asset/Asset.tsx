@@ -16,7 +16,17 @@ const AssetContainer = styled.div`
   width: 100%;
   justify-content: center;
   gap: 60px;
-  padding: 48px 40px 0 40px;
+  padding: 48px 48px 0 48px;
+
+  @media (max-width: 960px) {
+    padding: 40px 40px 0 40px;
+  }
+  @media (max-width: 540px) {
+    padding: 20px 20px 0 20px;
+  }
+  @media (max-width: 420px) {
+    padding: 16px 16px 0 16px;
+  }
 `
 
 const AssetPriceDetailsContainer = styled.div`
