@@ -16,7 +16,8 @@ import styled from 'styled-components/macro'
 import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
 import * as styles from './CollectionStats.css'
 
-const PercentChange = styled.div`
+const PercentChange = styled.div<{ isNegative: boolean }>`
+  color: ${({ theme, isNegative }) => (isNegative ? theme.accentFailure : theme.accentSuccess)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -286,7 +287,10 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
     stats.stats && stats.stats.one_day_floor_change
       ? Math.round(Math.abs(stats.stats.one_day_floor_change) * (isNftGraphQl ? 1 : 100))
       : 0
-  const arrow = stats.stats && stats.stats.one_day_change ? getDeltaArrow(stats.stats.one_day_floor_change) : null
+  const arrow =
+    stats.stats && stats.stats.one_day_floor_change !== undefined
+      ? getDeltaArrow(stats.stats.one_day_floor_change)
+      : null
 
   return (
     <Row gap={{ sm: '36', md: '60' }} {...props}>
@@ -299,11 +303,17 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
               {floorPriceStr} ETH
             </StatsItem>
           ) : null}
-          {stats.stats?.one_day_floor_change ? (
-            <StatsItem label="24-Hour Floor" shouldHide={false}>
-              <PercentChange>
-                {floorChangeStr}% {arrow}
+          {stats.stats?.one_day_floor_change !== undefined ? (
+            <StatsItem label="Floor 24H" shouldHide={false}>
+              <PercentChange isNegative={stats.stats.one_day_floor_change < 0}>
+                {arrow}
+                {floorChangeStr}%
               </PercentChange>
+            </StatsItem>
+          ) : null}
+          {stats.stats?.total_volume ? (
+            <StatsItem label="Total Volume" shouldHide={false}>
+              {totalVolumeStr} ETH
             </StatsItem>
           ) : null}
           {totalSupplyStr ? (
@@ -314,11 +324,6 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           {uniqueOwnersPercentage ? (
             <StatsItem label="Unique owners" shouldHide={isMobile ?? false}>
               {uniqueOwnersPercentage}%
-            </StatsItem>
-          ) : null}
-          {stats.stats?.total_volume ? (
-            <StatsItem label="Total Volume" shouldHide={false}>
-              {totalVolumeStr} ETH
             </StatsItem>
           ) : null}
           {stats.stats?.total_listings && listedPercentageStr > 0 ? (
