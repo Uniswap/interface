@@ -82,7 +82,6 @@
   "Items": "Items",
   "Owners": "Owners",
   "Floor": "Floor",
-  "{{price}} ETH": "{{price}} ETH",
   "Volume": "Volume",
   "Could not retrieve price history": "Could not retrieve price history",
   "When this wallet makes transactions, they’ll appear here.": "When this wallet makes transactions, they’ll appear here.",

@@ -24,7 +24,7 @@ import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
-import { formatNFTFloorPrice } from 'src/utils/format'
+import { formatNumber, NumberType } from 'src/utils/format'
 
 const MAX_NFT_IMAGE_SIZE = 375
 const ESTIMATED_ITEM_SIZE = 100
@@ -170,7 +170,7 @@ export function NftsTab({
                   ellipsizeMode="tail"
                   numberOfLines={1}
                   variant="bodySmall">
-                  {formatNFTFloorPrice(item.floorPrice)} ETH
+                  {formatNumber(item.floorPrice, NumberType.NFTTokenFloorPrice)} ETH
                 </Text>
               )}
             </Flex>

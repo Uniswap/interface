@@ -16,6 +16,12 @@ const FIVE_DECIMALS_MAX_TWO_DECIMALS_MIN_NO_COMMAS = new Intl.NumberFormat('en-U
   useGrouping: false,
 })
 
+const NO_DECIMALS = new Intl.NumberFormat('en-US', {
+  notation: 'standard',
+  maximumFractionDigits: 0,
+  minimumFractionDigits: 0,
+})
+
 const THREE_DECIMALS = new Intl.NumberFormat('en-US', {
   notation: 'standard',
   maximumFractionDigits: 3,
@@ -42,6 +48,12 @@ const TWO_DECIMALS_USD = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
   currency: 'USD',
   style: 'currency',
+})
+
+const SHORTHAND_ONE_DECIMAL = new Intl.NumberFormat('en-US', {
+  notation: 'compact',
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
 })
 
 const SHORTHAND_TWO_DECIMALS = new Intl.NumberFormat('en-US', {
@@ -176,6 +188,20 @@ const fiatGasPriceFormatter: FormatterRule[] = [
 
 const fiatTokenQuantityFormatter = [{ exact: 0, formatter: '$0.00' }, ...fiatGasPriceFormatter]
 
+const ntfTokenFloorPriceFormatter: FormatterRule[] = [
+  { exact: 0, formatter: '0' },
+  { upperBound: 0.001, formatter: '<0.001' },
+  { upperBound: 1, formatter: THREE_DECIMALS },
+  { upperBound: 1000, formatter: TWO_DECIMALS },
+  { upperBound: 1e15, formatter: SHORTHAND_TWO_DECIMALS },
+  { upperBound: Infinity, formatter: SCIENTIFIC },
+]
+
+const ntfCollectionStatsFormatter: FormatterRule[] = [
+  { upperBound: 1000, formatter: NO_DECIMALS },
+  { upperBound: Infinity, formatter: SHORTHAND_ONE_DECIMAL },
+]
+
 export enum NumberType {
   // used for token quantities in non-transaction contexts (e.g. portfolio balances)
   TokenNonTx = 'token-non-tx',
@@ -201,6 +227,12 @@ export enum NumberType {
 
   // fiat gas prices
   FiatGasPrice = 'fiat-gas-price',
+
+  // nft floor price denominated in a token (e.g, ETH)
+  NFTTokenFloorPrice = 'nft-token-floor-price',
+
+  // nft collection stats like number of items, holder, and sales
+  NFTCollectionStats = 'nft-collection-stats',
 }
 
 const TYPE_TO_FORMATTER_RULES = {
@@ -212,6 +244,8 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
   [NumberType.FiatTokenStats]: fiatTokenStatsFormatter,
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,
+  [NumberType.NFTTokenFloorPrice]: ntfTokenFloorPriceFormatter,
+  [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
 }
 
 function getFormatterRule(input: number, type: NumberType) {
@@ -293,35 +327,4 @@ export function formatUSDPrice(
   type: NumberType = NumberType.FiatTokenPrice
 ) {
   return formatNumberOrString(price, type)
-}
-
-export function formatNFTFloorPrice(num: NullUndefined<number>) {
-  if (!num) {
-    return '-'
-  }
-
-  if (num === 0) {
-    return '0'
-  }
-
-  if (num < 0.001) {
-    return '<0.001'
-  }
-
-  if (num < 1) {
-    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 3 }).format(num)
-  }
-
-  if (num < 1000000) {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(num)
-  }
-
-  return new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(num)
 }

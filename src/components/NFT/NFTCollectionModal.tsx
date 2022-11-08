@@ -11,7 +11,7 @@ import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { GQLNftAsset } from 'src/features/nfts/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
-import { formatNFTFloorPrice, formatNumber } from 'src/utils/format'
+import { formatNumber, NumberType } from 'src/utils/format'
 
 export function NFTCollectionModal({
   collection,
@@ -62,20 +62,22 @@ export function NFTCollectionModal({
         </Flex>
 
         {/* Collection stats */}
-        <Flex row gap="xxs" justifyContent="space-between">
+        <Flex row gap="xxs" justifyContent="space-between" py="md">
           <Flex fill alignItems="center" gap="xxs">
             <Text color="textTertiary" variant="subheadSmall">
               {t('Items')}
             </Text>
-            {collection?.numAssets && (
-              <Text variant="bodyLarge">{formatNumber(collection.numAssets)}</Text>
-            )}
+            <Text variant="bodyLarge">
+              {formatNumber(collection.numAssets, NumberType.NFTCollectionStats)}
+            </Text>
           </Flex>
           <Flex fill alignItems="center" gap="xxs">
             <Text color="textTertiary" variant="subheadSmall">
               {t('Owners')}
             </Text>
-            {stats?.owners && <Text variant="bodyLarge">{formatNumber(stats.owners)}</Text>}
+            <Text variant="bodyLarge">
+              {formatNumber(stats?.owners, NumberType.NFTCollectionStats)}
+            </Text>
           </Flex>
           {stats?.floorPrice && (
             <Flex fill alignItems="center" gap="xxs">
@@ -83,9 +85,9 @@ export function NFTCollectionModal({
                 {t('Floor')}
               </Text>
               <Text variant="bodyLarge">
-                {t('{{price}} ETH', {
-                  price: formatNFTFloorPrice(stats.floorPrice.value),
-                })}
+                {`${formatNumber(stats?.floorPrice?.value, NumberType.NFTTokenFloorPrice)} ${
+                  stats?.floorPrice?.value !== undefined ? 'ETH' : ''
+                }`}
               </Text>
             </Flex>
           )}
@@ -94,7 +96,9 @@ export function NFTCollectionModal({
               <Text color="textTertiary" variant="subheadSmall">
                 {t('Volume')}
               </Text>
-              <Text variant="bodyLarge">{formatNumber(stats?.totalVolume.value)}</Text>
+              <Text variant="bodyLarge">
+                {formatNumber(stats?.totalVolume?.value, NumberType.NFTCollectionStats)}
+              </Text>
             </Flex>
           )}
         </Flex>

@@ -26,7 +26,7 @@ import { Screens } from 'src/screens/Screens'
 import { iconSizes } from 'src/styles/sizing'
 import { shortenAddress } from 'src/utils/addresses'
 import { fromGraphQLChain } from 'src/utils/chainId'
-import { formatNFTFloorPrice } from 'src/utils/format'
+import { formatNumber, NumberType } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 
 // TODO {MOB-2827}: replace with `uniswapAppUrl` const when NFT feature is moved off vercel
@@ -194,8 +194,9 @@ export function NFTItemScreen({
                           textAlign="right"
                           variant="buttonLabelMicro">
                           {t('Floor: {{floorPrice}} ETH', {
-                            floorPrice: formatNFTFloorPrice(
-                              asset.collection.markets?.[0].floorPrice?.value
+                            floorPrice: formatNumber(
+                              asset.collection.markets?.[0].floorPrice?.value,
+                              NumberType.NFTTokenFloorPrice
                             ),
                           })}
                         </Text>
