@@ -104,10 +104,14 @@ const Collection = () => {
                     <CollectionBannerLoading />
                   ) : (
                     <Box
-                      as="img"
+                      as={collectionStats?.bannerImageUrl ? 'img' : 'div'}
                       height="full"
                       width="full"
-                      src={`${collectionStats?.bannerImageUrl}?w=${window.innerWidth}`}
+                      src={
+                        collectionStats?.bannerImageUrl
+                          ? `${collectionStats.bannerImageUrl}?w=${window.innerWidth}`
+                          : undefined
+                      }
                       className={isLoading ? styles.loadingBanner : styles.bannerImage}
                       background="none"
                     />
