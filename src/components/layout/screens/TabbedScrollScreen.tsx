@@ -32,6 +32,7 @@ const SIDEBAR_SWIPE_CONTAINER_WIDTH = 50
 
 type TabbedScrollScreenProps = {
   contentHeader?: ReactElement
+  headerHeightEstimate?: number
   renderTab: (
     route: Route,
     scrollProps: TabViewScrollProps,
@@ -121,6 +122,7 @@ export const panHeaderGestureAction = (openSidebar: () => void) =>
 
 export default function TabbedScrollScreen({
   contentHeader,
+  headerHeightEstimate,
   renderTab,
   tabs,
   disableOpenSidebarGesture,
@@ -129,7 +131,8 @@ export default function TabbedScrollScreen({
   const theme = useAppTheme()
   const navigation = useAppStackNavigation()
 
-  const [headerHeight, setHeaderHeight] = useState(INITIAL_TAB_BAR_HEIGHT) // estimation for initial height, updated on layout
+  // estimation for initial height, updated on layout
+  const [headerHeight, setHeaderHeight] = useState(headerHeightEstimate ?? INITIAL_TAB_BAR_HEIGHT)
   const animatedScrollY = useSharedValue(0)
   const isListGliding = useRef(false)
 

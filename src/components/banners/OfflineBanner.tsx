@@ -17,11 +17,7 @@ export function OfflineBanner() {
     return null
   }
 
-  if (netInfo.isConnected) {
-    return null
-  }
-
-  return (
+  return netInfo.isConnected === false ? (
     <TabsAwareBottomBanner
       icon={
         <InfoCircle
@@ -32,5 +28,5 @@ export function OfflineBanner() {
       }
       text={t('You are in offline mode')}
     />
-  )
+  ) : null
 }

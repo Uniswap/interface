@@ -20,6 +20,8 @@ import { ElementName, ModalName, SectionName } from 'src/features/telemetry/cons
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 
+const CONTENT_HEADER_HEIGHT_ESTIMATE = 186
+
 export function HomeScreen() {
   // imports test account for easy development/testing
   useTestAccount()
@@ -68,6 +70,7 @@ export function HomeScreen() {
   return (
     <TabbedScrollScreen
       contentHeader={contentHeader}
+      headerHeightEstimate={CONTENT_HEADER_HEIGHT_ESTIMATE}
       renderTab={renderTab}
       tabs={[
         { key: SectionName.HomeTokensTab, title: t('Tokens') },
