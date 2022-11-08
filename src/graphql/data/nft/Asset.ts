@@ -91,6 +91,7 @@ const assetPaginationQuery = graphql`
           metadataUrl
         }
       }
+      totalCount
     }
   }
 `
@@ -187,7 +188,7 @@ export function useAssetsQuery(
           smallImageUrl: asset.smallImage?.url,
           tokenId: asset.tokenId,
           tokenType: asset.collection?.nftContracts[0]?.standard,
-          // totalCount?: number, // TODO waiting for BE changes
+          totalCount: data.nftAssets?.totalCount,
           collectionIsVerified: asset.collection?.isVerified,
           rarity: {
             primaryProvider: 'Rarity Sniper', // TODO update when backend adds more providers
@@ -206,7 +207,7 @@ export function useAssetsQuery(
           metadataUrl: asset.metadataUrl,
         }
       }),
-    [data.nftAssets?.edges]
+    [data.nftAssets?.edges, data.nftAssets?.totalCount]
   )
 
   return { assets, hasNext, isLoadingNext, loadNext }
