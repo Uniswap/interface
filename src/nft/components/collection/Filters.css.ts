@@ -80,10 +80,13 @@ export const MAX_FILTER_DROPDOWN_HEIGHT = 302
 
 export const filterDropDowns = style([
   borderBottom,
-  {
-    maxHeight: `${MAX_FILTER_DROPDOWN_HEIGHT}px`,
+  sprinkles({
     paddingLeft: '0',
     paddingBottom: '8',
+  }),
+  {
+    maxHeight: `${MAX_FILTER_DROPDOWN_HEIGHT}px`,
+    scrollbarWidth: 'none',
   },
 ])
 
