@@ -13,6 +13,7 @@ const baseHeaders = {
 }
 const nftHeaders = {
   'Content-Type': 'application/json',
+  'from-x-api-key': process.env.REACT_APP_NFT_FROM_AWS_X_API_KEY ?? '',
   'x-api-key': process.env.REACT_APP_NFT_AWS_X_API_KEY ?? '',
 }
 
