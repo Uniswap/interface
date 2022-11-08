@@ -58,7 +58,7 @@ export const volumeFormatter = (n: number): string => {
     return '<0.01'
   }
   if (n >= 0.01 && n < 1) {
-    return `${parseFloat(n?.toFixed(2)).toLocaleString(DEFAULT_LOCALE)}`
+    return `${parseFloat(n.toFixed(2)).toLocaleString(DEFAULT_LOCALE)}`
   }
   if (n >= 1 && n < 1000) {
     return `${Number(Math.round(n).toLocaleString(DEFAULT_LOCALE))}`
