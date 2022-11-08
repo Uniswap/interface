@@ -4,7 +4,6 @@ import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { lazy } from 'react'
-import { useLocation } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 
@@ -17,7 +16,6 @@ export default function TopLevelModals() {
 
   const blockedAccountModalOpen = useModalIsOpen(ApplicationModal.BLOCKED_ACCOUNT)
   const { account } = useWeb3React()
-  const location = useLocation()
 
   useAccountRiskCheck(account)
   const open = Boolean(blockedAccountModalOpen && account)
