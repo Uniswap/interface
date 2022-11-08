@@ -133,7 +133,7 @@ export function useAssetsQuery(
   )
 
   // Poll for updates.
-  const POLLING_INTERVAL = ms`5s`
+  const POLLING_INTERVAL = ms`5m`
   const environment = useRelayEnvironment()
   const refresh = useCallback(async () => {
     const length = data.nftAssets?.edges?.length
