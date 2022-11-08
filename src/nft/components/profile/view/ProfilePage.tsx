@@ -9,6 +9,7 @@ import { CrossIcon, TagIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { buttonTextMedium, subhead } from 'nft/css/common.css'
 import {
+  useBag,
   useFiltersExpanded,
   useIsMobile,
   useProfilePageState,
@@ -70,15 +71,16 @@ export const ProfilePage = () => {
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
   const listFilter = useWalletCollections((state) => state.listFilter)
-  const { isSellMode, resetSellAssets, sellAssets, setIsSellMode } = useSellAsset(
-    ({ isSellMode, reset, sellAssets, setIsSellMode }) => ({
+  const { isSellMode, resetSellAssets, setIsSellMode } = useSellAsset(
+    ({ isSellMode, reset, setIsSellMode }) => ({
       isSellMode,
       resetSellAssets: reset,
-      sellAssets,
       setIsSellMode,
     }),
     shallow
   )
+  const sellAssets = useSellAsset((state) => state.sellAssets)
+  const { setBagExpanded } = useBag(({ setBagExpanded }) => ({ setBagExpanded }), shallow)
 
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
@@ -88,7 +90,8 @@ export const ProfilePage = () => {
   const handleSellModeClick = useCallback(() => {
     resetSellAssets()
     setIsSellMode(!isSellMode)
-  }, [isSellMode, resetSellAssets, setIsSellMode])
+    setBagExpanded({ bagExpanded: !isSellMode })
+  }, [isSellMode, resetSellAssets, setBagExpanded, setIsSellMode])
 
   const { data: ownerCollections, isLoading: collectionsAreLoading } = useQuery(
     ['ownerCollections', address],
