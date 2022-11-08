@@ -331,6 +331,8 @@
   "Wallet {{ number }}": "Wallet {{ number }}",
   "You can import any of your wallet addresses that are associated with your recovery phrase.": "You can import any of your wallet addresses that are associated with your recovery phrase.",
   "Select addresses to import": "Select addresses to import",
+  "Something went wrong on our side.": "Something went wrong on our side.",
+  "Couldn't load addresses": "Couldn't load addresses",
   "This address is already imported": "This address is already imported",
   "Address is a smart contract": "Address is a smart contract",
   "Address does not exist": "Address does not exist",

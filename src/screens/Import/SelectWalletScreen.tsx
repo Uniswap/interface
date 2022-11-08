@@ -5,7 +5,8 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loading } from 'src/components/loading'
 import { useSelectWalletScreenQuery } from 'src/data/__generated__/types-and-hooks'
 import { importAccountSagaName } from 'src/features/import/importAccountSaga'
@@ -38,9 +39,11 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
     )
     .map((account) => account.address)
 
-  const { data, loading } = useSelectWalletScreenQuery({
+  const { data, loading, refetch, error } = useSelectWalletScreenQuery({
     variables: { ownerAddresses: addresses },
   })
+
+  const onRetry = useCallback(() => refetch(), [refetch])
 
   const allAddressBalances = data?.portfolios
 
@@ -117,13 +120,24 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
   return (
     <>
       <OnboardingScreen
-        subtitle={t(
-          'You can import any of your wallet addresses that are associated with your recovery phrase.'
-        )}
-        title={t('Select addresses to import')}>
-        {isLoadingAccounts || loading ? (
+        subtitle={
+          !error
+            ? t(
+                'You can import any of your wallet addresses that are associated with your recovery phrase.'
+              )
+            : undefined
+        }
+        title={!error ? t('Select addresses to import') : ''}>
+        {error ? (
+          <BaseCard.ErrorState
+            description={t('Something went wrong on our side.')}
+            retry={onRetry}
+            retryButtonLabel={t('Retry')}
+            title={t("Couldn't load addresses")}
+          />
+        ) : isLoadingAccounts || loading ? (
           <Flex grow justifyContent="space-between">
-            <Loading repeat={4} type="wallets" />
+            <Loading repeat={5} type="wallets" />
           </Flex>
         ) : (
           <ScrollView>
@@ -145,12 +159,14 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
             </Flex>
           </ScrollView>
         )}
-        <Button
-          disabled={isLoadingAccounts || loading || selectedAddresses.length === 0}
-          label={t('Continue')}
-          name={ElementName.Next}
-          onPress={onSubmit}
-        />
+        <Box opacity={error ? 0 : 1}>
+          <Button
+            disabled={isLoadingAccounts || loading || !!error || selectedAddresses.length === 0}
+            label={t('Continue')}
+            name={ElementName.Next}
+            onPress={onSubmit}
+          />
+        </Box>
       </OnboardingScreen>
     </>
   )
