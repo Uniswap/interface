@@ -86,6 +86,7 @@ export const filterDropDowns = style([
   }),
   {
     maxHeight: `${MAX_FILTER_DROPDOWN_HEIGHT}px`,
+    '::-webkit-scrollbar': { display: 'none' },
     scrollbarWidth: 'none',
   },
 ])
