@@ -38,7 +38,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     backgroundColor = 'background1',
     clearIcon,
     disableClearable,
-    endAdornment = <SearchIcon color={theme.colors.textTertiary} height={20} width={20} />,
+    endAdornment,
     onCancel,
     onChangeText,
     onFocus,
@@ -140,7 +140,9 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         flexGrow={1}
         gap="none"
         minHeight={48}
+        px="sm"
         style={textInputStyle}>
+        <SearchIcon color={theme.colors.textTertiary} height={20} width={20} />
         <TextInput
           ref={ref}
           autoCapitalize="none"
@@ -149,11 +151,12 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           backgroundColor="none"
           borderWidth={0}
           flex={1}
-          fontFamily={theme.textVariants.subheadSmall.fontFamily}
-          fontSize={theme.textVariants.subheadSmall.fontSize}
-          maxFontSizeMultiplier={theme.textVariants.subheadSmall.maxFontSizeMultiplier}
+          fontFamily={theme.textVariants.bodyLarge.fontFamily}
+          fontSize={theme.textVariants.bodyLarge.fontSize}
+          maxFontSizeMultiplier={theme.textVariants.bodyLarge.maxFontSizeMultiplier}
           placeholder={placeholder}
           placeholderTextColor={theme.colors.textTertiary}
+          px="xs"
           returnKeyType="done"
           textContentType="none"
           value={value}
@@ -162,13 +165,11 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           onSubmitEditing={onTextInputSubmitEditing}
         />
         {showClearButton.value ? (
-          <AnimatedFlex mx="sm" style={[clearButtonStyle]}>
+          <AnimatedFlex style={[clearButtonStyle]}>
             <ClearButton clearIcon={clearIcon} onPress={onClear} />
           </AnimatedFlex>
         ) : (
-          <AnimatedFlex mx="md" style={[endAdornmentStyle]}>
-            {endAdornment}
-          </AnimatedFlex>
+          <AnimatedFlex style={[endAdornmentStyle]}>{endAdornment}</AnimatedFlex>
         )}
       </AnimatedFlex>
       {showCancelButton && (
