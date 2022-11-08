@@ -148,10 +148,10 @@ export function useNftBalanceQuery(
       lastPrice: queryAsset.node.lastPrice?.value,
       floorPrice: asset.collection?.markets[0]?.floorPrice?.value,
       creatorPercentage: queryAsset.node.listingFees && queryAsset.node.listingFees[0].basisPoints / 10000,
-      listing_date: asset.listings ? asset.listings[0]?.edges[0]?.node.createdAt : undefined,
+      listing_date: asset.listings?.edges[0] ? asset.listings?.edges[0]?.node?.createdAt : undefined,
       date_acquired: queryAsset.node.lastPrice?.timestamp,
-      sellOrders: asset.listings?.edges,
-      floor_sell_order_price: asset.listings ? asset.listings[0]?.edges[0]?.node.price.value : undefined,
+      sellOrders: asset.listings?.edges.map((edge: any) => edge.node),
+      floor_sell_order_price: asset.listings.edges[0] ? asset.listings?.edges[0]?.node?.price?.value : undefined,
     }
   })
   return { walletAssets, hasNext, isLoadingNext, loadNext }
