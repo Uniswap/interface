@@ -22,11 +22,4 @@ export enum VERSION {
   CLASSIC = 'classic',
 }
 
-export const TOBE_EXTENDED_FARMING_POOLS = [
-  // 2 farms on arbitrum
-  '0x7acbea3b8ab7cdf4a595c6ed81e7d3e26038d494',
-  '0x2149a5f5d7ca96eb98a2ee6e5b0ba1a5593a1a0a',
-  // Optimism
-  '0x5fc53f707c7aacd460a1cd564c06e0f07610fcb7',
-  '0xda74db17023750d02b83be2559a4eaa013b65c54',
-]
+export const TOBE_EXTENDED_FARMING_POOLS: string[] = []
