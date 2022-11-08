@@ -1,5 +1,6 @@
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { useCollectionQuery } from 'graphql/data/nft/Collection'
 import { VerifiedIcon } from 'nft/components/icons'
 import { CollectionStatsFetcher } from 'nft/queries'
 import { Markets, TrendingCollection } from 'nft/types'
@@ -202,6 +203,8 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
     }
   )
 
+  const gqlCollection = useCollectionQuery(collection.address)
+
   const theme = useTheme()
 
   return (
@@ -225,24 +228,25 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
         <HeaderOverlay />
       </CardHeaderContainer>
       <CardBottomContainer>
-        {isLoading || !collectionStats ? (
+        {isLoading || !gqlCollection ? (
           <LoadingTable />
         ) : (
           <>
             <HeaderRow>Uniswap</HeaderRow>
             <HeaderRow>{formatWeiToDecimal(collection.floor.toString())} ETH Floor</HeaderRow>
             <HeaderRow>
-              {collectionStats.marketplaceCount?.reduce((acc, cur) => acc + cur.listings, 0)} Listings
+              {gqlCollection.marketplaceCount?.reduce((acc, cur) => acc + cur.listings, 0)} Listings
             </HeaderRow>
             {MARKETS_TO_CHECK.map((market) => {
-              const marketplace = collectionStats.marketplaceCount?.find(
+              const marketplace = gqlCollection.marketplaceCount?.find(
                 (marketplace) => marketplace.marketplace === market
               )
               return (
                 <MarketplaceRow
                   key={'trendingCollection' + collection.address}
                   marketplace={MARKETS_ENUM_TO_NAME[market]}
-                  listings={marketplace?.listings.toString()}
+                  listings={marketplace?.listings?.toString()}
+                  floor={marketplace?.floorPrice?.toString()}
                 />
               )
             })}
