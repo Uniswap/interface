@@ -63,7 +63,7 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
         <Column>
           {Object.entries(traitsByGroup).map(([type, traits], index) => (
             // the index is offset by two because price range and marketplace appear prior to it
-            <TraitSelect key={index} {...{ type, traits }} index={index + TraitPosition.TRAIT_START_INDEX} />
+            <TraitSelect key={type} {...{ type, traits }} index={index + TraitPosition.TRAIT_START_INDEX} />
           ))}
         </Column>
       </Column>
