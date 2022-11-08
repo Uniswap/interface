@@ -49,7 +49,7 @@ export const FilterButton = ({
                 •
               </Box>
             )}
-            <Box className={buttonTextMedium} paddingLeft={!isFiltersExpanded ? '12' : '2'}>
+            <Box className={buttonTextMedium} paddingLeft={!isFiltersExpanded ? '12' : '4'}>
               {collectionCount > 0 ? putCommas(collectionCount) : 0} results
             </Box>
           </Box>
