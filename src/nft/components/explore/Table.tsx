@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useIsMobile } from 'nft/hooks'
@@ -84,9 +83,6 @@ interface TableProps<D extends Record<string, unknown>> {
   smallHiddenColumns: IdType<D>[]
   mediumHiddenColumns: IdType<D>[]
   largeHiddenColumns: IdType<D>[]
-  classNames?: {
-    td: string
-  }
 }
 export function Table<D extends Record<string, unknown>>({
   columns,
@@ -94,7 +90,6 @@ export function Table<D extends Record<string, unknown>>({
   smallHiddenColumns,
   mediumHiddenColumns,
   largeHiddenColumns,
-  classNames,
   ...props
 }: TableProps<D>) {
   const theme = useTheme()
@@ -188,7 +183,7 @@ export function Table<D extends Record<string, unknown>>({
             >
               {row.cells.map((cell, cellIndex) => {
                 return (
-                  <td className={clsx(styles.td, classNames?.td)} {...cell.getCellProps()} key={cellIndex}>
+                  <td className={styles.td} {...cell.getCellProps()} key={cellIndex}>
                     {cellIndex === 0 ? (
                       <RankCellContainer>
                         {!isMobile && (
