@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import clsx from 'clsx'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Box } from 'nft/components/Box'
@@ -13,7 +14,8 @@ import {
 import { body, bodySmall, buttonTextSmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
-import { GenieAsset, Rarity, UniformHeight, UniformHeights } from 'nft/types'
+import { GenieAsset, Rarity, UniformHeight, UniformHeights, WalletAsset } from 'nft/types'
+import { isAudio, isVideo } from 'nft/utils'
 import { fallbackProvider, putCommas } from 'nft/utils'
 import {
   createContext,
@@ -34,7 +36,7 @@ import * as styles from './Card.css'
 
 /* -------- ASSET CONTEXT -------- */
 export interface CardContextProps {
-  asset: GenieAsset
+  asset: GenieAsset | WalletAsset
   hovered: boolean
   selected: boolean
   href: string
@@ -51,7 +53,34 @@ const useCardContext = () => {
   return context
 }
 
-const baseHref = (asset: GenieAsset) => `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
+export enum AssetMediaType {
+  Image,
+  Video,
+  Audio,
+}
+
+const useNotForSale = (asset: GenieAsset) =>
+  useMemo(() => {
+    let notForSale = true
+    notForSale = asset.notForSale || BigNumber.from(asset.priceInfo ? asset.priceInfo.ETHPrice : 0).lt(0)
+    return notForSale
+  }, [asset])
+
+const useAssetMediaType = (asset: GenieAsset | WalletAsset) =>
+  useMemo(() => {
+    let assetMediaType = AssetMediaType.Image
+    if (asset.animationUrl) {
+      if (isAudio(asset.animationUrl)) {
+        assetMediaType = AssetMediaType.Audio
+      } else if (isVideo(asset.animationUrl)) {
+        assetMediaType = AssetMediaType.Video
+      }
+    }
+    return assetMediaType
+  }, [asset])
+
+const baseHref = (asset: GenieAsset | WalletAsset) =>
+  `/#/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
 
 const DetailsLinkContainer = styled.a`
   display: flex;
@@ -124,7 +153,7 @@ const StyledImageContainer = styled.div`
 
 /* -------- ASSET CARD -------- */
 interface CardProps {
-  asset: GenieAsset
+  asset: GenieAsset | WalletAsset
   selected: boolean
   addAssetToBag: () => void
   removeAssetFromBag: () => void
@@ -188,8 +217,8 @@ const ImageContainer = ({ children }: { children: ReactNode }) => (
 
 /* -------- CARD IMAGE -------- */
 interface ImageProps {
-  uniformHeight: UniformHeight
-  setUniformHeight: (height: UniformHeight) => void
+  uniformHeight?: UniformHeight
+  setUniformHeight?: (height: UniformHeight) => void
 }
 
 const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
@@ -199,7 +228,7 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
   const isMobile = useIsMobile()
 
   if (noContent) {
-    return <NoContentContainer uniformHeight={uniformHeight} />
+    return <NoContentContainer uniformHeight={uniformHeight ?? UniformHeights.unset} />
   }
 
   return (
@@ -216,10 +245,12 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
         draggable={false}
         onError={() => setNoContent(true)}
         onLoad={(e) => {
-          if (uniformHeight === UniformHeights.unset) {
-            setUniformHeight(e.currentTarget.clientHeight)
-          } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
-            setUniformHeight(UniformHeights.notUniform)
+          if (setUniformHeight) {
+            if (uniformHeight === UniformHeights.unset) {
+              setUniformHeight(e.currentTarget.clientHeight)
+            } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
+              setUniformHeight(UniformHeights.notUniform)
+            }
           }
           setLoaded(true)
         }}
@@ -230,8 +261,8 @@ const Image = ({ uniformHeight, setUniformHeight }: ImageProps) => {
 }
 
 interface MediaProps {
-  uniformHeight: UniformHeight
-  setUniformHeight: (u: UniformHeight) => void
+  uniformHeight?: UniformHeight
+  setUniformHeight?: (u: UniformHeight) => void
   shouldPlay: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }
@@ -270,7 +301,7 @@ const Video = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={() => {
-            if (uniformHeight !== UniformHeights.notUniform) {
+            if (setUniformHeight && uniformHeight !== UniformHeights.notUniform) {
               setUniformHeight(UniformHeights.notUniform)
             }
 
@@ -347,7 +378,7 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
   }
 
   if (noContent) {
-    return <NoContentContainer uniformHeight={uniformHeight} />
+    return <NoContentContainer uniformHeight={uniformHeight ?? UniformHeights.unset} />
   }
 
   return (
@@ -366,10 +397,15 @@ const Audio = ({ uniformHeight, setUniformHeight, shouldPlay, setCurrentTokenPla
           draggable={false}
           onError={() => setNoContent(true)}
           onLoad={(e) => {
-            if (uniformHeight === UniformHeights.unset) {
-              setUniformHeight(e.currentTarget.clientHeight)
-            } else if (uniformHeight !== UniformHeights.notUniform && e.currentTarget.clientHeight !== uniformHeight) {
-              setUniformHeight(UniformHeights.notUniform)
+            if (setUniformHeight) {
+              if (uniformHeight === UniformHeights.unset) {
+                setUniformHeight(e.currentTarget.clientHeight)
+              } else if (
+                uniformHeight !== UniformHeights.notUniform &&
+                e.currentTarget.clientHeight !== uniformHeight
+              ) {
+                setUniformHeight(UniformHeights.notUniform)
+              }
             }
             setImageLoaded(true)
           }}
@@ -723,5 +759,7 @@ export {
   Suspicious,
   SUSPICIOUS_TEXT,
   TertiaryInfo,
+  useAssetMediaType,
+  useNotForSale,
   Video,
 }

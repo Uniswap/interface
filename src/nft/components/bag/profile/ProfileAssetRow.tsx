@@ -27,7 +27,7 @@ const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
         >
           <img className={styles.removeIcon} src={'/nft/svgs/minusCircle.svg'} alt="Remove item" />
         </Box>
-        <img className={styles.tagAssetImage} src={asset.image_url} alt={asset.name} />
+        <img className={styles.tagAssetImage} src={asset.imageUrl} alt={asset.name} />
       </div>
       <Column gap="4" overflow="hidden" flexWrap="nowrap">
         <Box overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap" className={subhead}>

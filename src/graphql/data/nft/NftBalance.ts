@@ -135,8 +135,10 @@ export function useNftBalanceQuery(
     ).toString()
     return {
       id: asset.id,
-      image_url: asset.image?.url,
-      image_preview_url: asset.smallImage?.url,
+      imageUrl: asset.image?.url,
+      smallImageUrl: asset.smallImage?.url,
+      address: asset.collection?.nftContracts[0]?.address,
+      notForSale: asset.listings?.edges?.length === 0,
       animationUrl: asset.animationUrl,
       susFlag: asset.suspiciousFlag,
       priceInfo: asset.listings
@@ -160,6 +162,7 @@ export function useNftBalanceQuery(
       },
       collection: asset.collection,
       collectionIsVerified: asset.collection?.isVerified,
+      collectionName: asset.collection?.name,
       lastPrice: queryAsset.node.lastPrice?.value,
       floorPrice: asset.collection?.markets[0]?.floorPrice?.value,
       creatorPercentage: queryAsset.node.listingFees && queryAsset.node.listingFees[0].basisPoints / 10000,

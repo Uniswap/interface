@@ -59,8 +59,10 @@ export interface Listing {
 
 export interface WalletAsset {
   id?: string
-  image_url: string
-  image_preview_url: string
+  imageUrl: string
+  smallImageUrl: string
+  address: string
+  notForSale: boolean
   animationUrl: string
   susFlag: boolean
   priceInfo: PriceInfo
@@ -77,6 +79,7 @@ export interface WalletAsset {
   }
   collection: GenieCollection
   collectionIsVerified: boolean
+  collectionName: string
   lastPrice: number
   floorPrice: number
   creatorPercentage: number
