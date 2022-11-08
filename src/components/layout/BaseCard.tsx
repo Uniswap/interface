@@ -167,7 +167,7 @@ function ErrorState({ title, description, retry, retryButtonLabel, icon }: Error
       <Flex centered>
         {icon ?? (
           <AlertTriangle
-            color={theme.colors.textSecondary}
+            color={theme.colors.textTertiary}
             height={theme.iconSizes.xxxl}
             width={theme.iconSizes.xxxl}
           />

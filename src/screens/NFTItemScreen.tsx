@@ -11,7 +11,9 @@ import { TouchableArea } from 'src/components/buttons/TouchableArea'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { Loading } from 'src/components/loading'
 import { NFTCollectionModal } from 'src/components/NFT/NFTCollectionModal'
 import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
@@ -40,7 +42,7 @@ export function NFTItemScreen({
 
   const [showCollectionModal, setShowCollectionModal] = useState(false)
 
-  const { data: asset, loading: nftLoading } = useNFT(owner, address, tokenId)
+  const { data: asset, loading: nftLoading, refetch } = useNFT(owner, address, tokenId)
   const assetChainId = fromGraphQLChain(asset?.nftContract?.chain)
 
   const ownerDisplayName = useDisplayName(owner)
@@ -100,11 +102,6 @@ export function NFTItemScreen({
     }
   }, [asset, assetChainId])
 
-  // TODO: better handle error / loading states
-  if (nftLoading || !asset || !asset.collection) {
-    return null
-  }
-
   const onPressCollection = () => setShowCollectionModal(true)
   const onCloseCollectionModal = () => setShowCollectionModal(false)
 
@@ -113,107 +110,142 @@ export function NFTItemScreen({
       <HeaderScrollScreen contentHeader={<Box px="md">{Header}</Box>} fixedHeader={Header}>
         <Flex mb="xxl" mt="md" mx="lg" pb="xxl">
           <Flex centered borderRadius="lg" overflow="hidden">
-            {asset.image?.url && <NFTViewer autoplay uri={asset.image.url} />}
+            {nftLoading ? (
+              <Box aspectRatio={1} width="100%">
+                <Loading type="image" />
+              </Box>
+            ) : asset?.image?.url ? (
+              <NFTViewer autoplay uri={asset.image.url} />
+            ) : (
+              <Box aspectRatio={1} bg="background2" width="100%">
+                <BaseCard.ErrorState
+                  description={t('Something went wrong on our side')}
+                  retry={() => refetch?.()}
+                  retryButtonLabel="Retry"
+                  title={t("Couldn't load NFT details")}
+                />
+              </Box>
+            )}
           </Flex>
 
           <Flex gap="xxs">
-            <Text numberOfLines={2} variant="subheadLarge">
-              {asset.name}
-            </Text>
+            {nftLoading ? (
+              <Loading height={theme.textVariants.subheadLarge.lineHeight} type="text" />
+            ) : (
+              <Text numberOfLines={2} variant="subheadLarge">
+                {asset?.name || '-'}
+              </Text>
+            )}
             <Text color="textSecondary" variant="subheadSmall">
               {t('Owned by {{owner}}', { owner: ownerDisplayName?.name })}
             </Text>
           </Flex>
 
           {/* Collection info */}
-          <TouchableArea onPress={onPressCollection}>
-            <Flex
-              row
-              alignItems="center"
-              backgroundColor="background2"
-              borderRadius="lg"
-              gap="xs"
-              px="md"
-              py="sm">
-              <Flex row alignItems="center" gap="sm" overflow="hidden">
-                {asset.collection.image?.url ? (
-                  <Box
-                    borderRadius="full"
-                    height={theme.iconSizes.xl}
-                    overflow="hidden"
-                    width={theme.iconSizes.xl}>
-                    <NFTViewer uri={asset.collection.image.url} />
-                  </Box>
-                ) : null}
-                <Box flexShrink={1}>
-                  <Text color="textPrimary" variant="buttonLabelMicro">
-                    {t('Collection')}
-                  </Text>
-                  <Flex row alignItems="center" gap="xs">
+          <TouchableArea disabled={!asset?.collection} onPress={onPressCollection}>
+            {nftLoading ? (
+              <Loading type="nft-collection-button" />
+            ) : (
+              <Flex
+                row
+                alignItems="center"
+                backgroundColor="background2"
+                borderRadius="lg"
+                gap="xs"
+                px="md"
+                py="sm">
+                {nftLoading ? (
+                  <Loading height={40} type="text" />
+                ) : (
+                  <Flex row alignItems="center" gap="sm" overflow="hidden">
+                    {asset?.collection?.image?.url ? (
+                      <Box
+                        borderRadius="full"
+                        height={theme.iconSizes.xl}
+                        overflow="hidden"
+                        width={theme.iconSizes.xl}>
+                        <NFTViewer uri={asset.collection.image.url} />
+                      </Box>
+                    ) : null}
                     <Box flexShrink={1}>
-                      <Text color="textSecondary" numberOfLines={1} variant="bodyLarge">
-                        {asset.collection.name}
+                      <Text color="textTertiary" variant="buttonLabelMicro">
+                        {t('Collection')}
                       </Text>
+                      <Flex row alignItems="center" gap="xs">
+                        <Box flexShrink={1}>
+                          <Text color="textSecondary" numberOfLines={1} variant="bodyLarge">
+                            {asset?.collection?.name || '-'}
+                          </Text>
+                        </Box>
+                        {asset?.collection?.isVerified && (
+                          <VerifiedIcon
+                            color={theme.colors.userThemeMagenta}
+                            height={theme.iconSizes.sm}
+                            width={theme.iconSizes.sm}
+                          />
+                        )}
+                      </Flex>
                     </Box>
-                    {asset.collection.isVerified && (
-                      <VerifiedIcon color={theme.colors.userThemeMagenta} height={16} width={16} />
+                    {asset?.collection?.markets?.[0].floorPrice?.value && (
+                      <Box flexGrow={1}>
+                        <Text
+                          color="textSecondary"
+                          numberOfLines={1}
+                          textAlign="right"
+                          variant="buttonLabelMicro">
+                          {t('Floor: {{floorPrice}} ETH', {
+                            floorPrice: formatNFTFloorPrice(
+                              asset.collection.markets?.[0].floorPrice?.value
+                            ),
+                          })}
+                        </Text>
+                      </Box>
                     )}
                   </Flex>
-                </Box>
-                {asset.collection.markets?.[0].floorPrice?.value && (
-                  <Box flexGrow={1}>
-                    <Text
-                      color="textSecondary"
-                      numberOfLines={1}
-                      textAlign="right"
-                      variant="buttonLabelMicro">
-                      {t('Floor: {{floorPrice}} ETH', {
-                        floorPrice: formatNFTFloorPrice(
-                          asset.collection.markets?.[0].floorPrice?.value
-                        ),
-                      })}
-                    </Text>
-                  </Box>
                 )}
               </Flex>
-            </Flex>
+            )}
           </TouchableArea>
 
           {/* Action buttons */}
           {/* TODO(MOB-2841): add back SendButton when we fix Send NFT flow */}
 
           {/* Metadata */}
-          {asset.collection.description && (
-            <Box>
-              <Text color="textTertiary" variant="subheadSmall">
-                {t('Description')}
-              </Text>
+          <Box>
+            <Text color="textTertiary" variant="subheadSmall">
+              {t('Description')}
+            </Text>
+            {nftLoading ? (
+              <Box mt="sm">
+                <Loading height={theme.textVariants.bodySmall.lineHeight} repeat={6} type="text" />
+              </Box>
+            ) : asset?.description ? (
               <LongText
                 renderAsMarkdown
                 color="textPrimary"
                 initialDisplayedLines={12}
-                text={asset.collection.description}
+                text={asset?.description || '-'}
               />
-            </Box>
-          )}
+            ) : (
+              <Text>-</Text>
+            )}
+          </Box>
 
           <Flex row flexWrap="wrap">
-            {creatorInfo && (
-              <AssetMetadata
-                header={t('Creator')}
-                link={creatorInfo.link}
-                value={creatorInfo.value}
-              />
-            )}
+            <AssetMetadata
+              header={t('Creator')}
+              link={creatorInfo?.link}
+              value={creatorInfo?.value}
+            />
             <AssetMetadata
               header={t('Contract address')}
-              link={contractAddressInfo!.link}
-              value={contractAddressInfo!.value}
+              link={contractAddressInfo?.link}
+              value={contractAddressInfo?.value}
             />
-            <AssetMetadata header={t('Token ID')} value={asset.tokenId} />
+            <AssetMetadata header={t('Token ID')} value={asset?.tokenId} />
             <AssetMetadata
               header={t('Token standard')}
-              value={asset.nftContract?.standard ?? t('Unknown')}
+              value={asset?.nftContract?.standard ?? t('Unknown')}
             />
             <AssetMetadata
               header={t('Network')}
@@ -222,18 +254,18 @@ export function NFTItemScreen({
           </Flex>
         </Flex>
       </HeaderScrollScreen>
-      {showCollectionModal && (
+      {showCollectionModal && asset?.collection ? (
         <NFTCollectionModal
           isVisible
           collection={asset.collection}
           onClose={onCloseCollectionModal}
         />
-      )}
+      ) : null}
     </>
   )
 }
 
-function AssetMetadata({ header, value, link }: { header: string; value: string; link?: string }) {
+function AssetMetadata({ header, value, link }: { header: string; value?: string; link?: string }) {
   const itemWidth = '45%' // works with flexWrap to make 2 columns. It needs to be slightly less than 50% to account for padding on the entire section
 
   return (
@@ -241,7 +273,7 @@ function AssetMetadata({ header, value, link }: { header: string; value: string;
       <Text color="textTertiary" variant="subheadSmall">
         {header}
       </Text>
-      {link ? (
+      {link && value ? (
         <LinkButton
           justifyContent="flex-start"
           label={value}
@@ -252,7 +284,7 @@ function AssetMetadata({ header, value, link }: { header: string; value: string;
         />
       ) : (
         <Text numberOfLines={1} variant="bodyLarge">
-          {value}
+          {value || '-'}
         </Text>
       )}
     </Flex>

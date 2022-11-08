@@ -14,7 +14,7 @@ export function useNFT(
   tokenId?: string
 ): GqlResult<GQLNftAsset> {
   // TODO: do a direct cache lookup in Apollo using id instead of re-querying
-  const { data, loading } = useNftsQuery({
+  const { data, loading, refetch } = useNftsQuery({
     variables: { ownerAddress: owner },
     pollInterval: PollingInterval.Slow,
     errorPolicy: 'all',
@@ -30,5 +30,5 @@ export function useNFT(
     [data, address, tokenId]
   )
 
-  return { data: nft, loading }
+  return { data: nft, loading, refetch }
 }

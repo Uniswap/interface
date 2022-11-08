@@ -340,6 +340,8 @@
   "Address does not exist": "Address does not exist",
   "Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).": "Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).",
   "Enter a wallet address": "Enter a wallet address",
+  "Something went wrong on our side": "Something went wrong on our side",
+  "Couldn't load NFT details": "Couldn't load NFT details",
   "Owned by {{owner}}": "Owned by {{owner}}",
   "Collection": "Collection",
   "Floor: {{floorPrice}} ETH": "Floor: {{floorPrice}} ETH",

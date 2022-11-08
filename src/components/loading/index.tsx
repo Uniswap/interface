@@ -27,6 +27,7 @@ type SkeletonType =
   | 'wallets'
   | 'price-header'
   | 'balance'
+  | 'nft-collection-button'
 
 type LoadingProps = {
   type?: SkeletonType
@@ -99,7 +100,13 @@ const getChildFromType = (type: SkeletonType, repeat: number, height?: number) =
         </Box>
       )
     case 'text':
-      return <BoxLoader borderRadius="xs" height={height ?? 16} />
+      return (
+        <Flex gap="xs">
+          {new Array(repeat).fill(null).map((_, i) => (
+            <BoxLoader key={i} borderRadius="xs" height={height ?? 16} />
+          ))}
+        </Flex>
+      )
     case 'nft':
       return repeat === 1 ? (
         <NftCardLoader opacity={1} />
@@ -123,6 +130,8 @@ const getChildFromType = (type: SkeletonType, repeat: number, height?: number) =
       return <PriceHeaderLoader />
     case 'balance':
       return <TokenBalanceLoader />
+    case 'nft-collection-button':
+      return <BoxLoader borderRadius="lg" height={64} />
     case 'box':
     default:
       return (
