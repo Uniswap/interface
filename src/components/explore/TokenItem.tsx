@@ -147,20 +147,18 @@ export const TokenItem = memo(
             </Flex>
             <Flex row alignItems="center" justifyContent="flex-end">
               <TouchableArea disabled={!onCycleMetadata} onPress={onCycleMetadata}>
-                <TokenMetadata
-                  main={formatUSDPrice(price)}
-                  sub={
-                    metadataDisplayType === TokensMetadataDisplayType.MarketCap ? (
-                      <Text color="textSecondary" variant="subheadSmall">
-                        {t('MCap {{marketCap}}', {
-                          marketCap: formatNumber(marketCap, NumberType.FiatTokenDetails),
-                        })}
-                      </Text>
-                    ) : (
-                      <RelativeChange change={pricePercentChange24h} variant="subheadSmall" />
-                    )
-                  }
-                />
+                <TokenMetadata>
+                  <Text variant="bodyLarge">{formatUSDPrice(price)}</Text>
+                  {metadataDisplayType === TokensMetadataDisplayType.MarketCap ? (
+                    <Text color="textSecondary" variant="subheadSmall">
+                      {t('MCap {{marketCap}}', {
+                        marketCap: formatNumber(marketCap, NumberType.FiatTokenDetails),
+                      })}
+                    </Text>
+                  ) : (
+                    <RelativeChange change={pricePercentChange24h} variant="subheadSmall" />
+                  )}
+                </TokenMetadata>
               </TouchableArea>
               {isEditing ? (
                 <FavoriteButton disabled={Boolean(isFavorited)} onPress={toggleFavoriteToken} />

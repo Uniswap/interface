@@ -6,6 +6,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AnimatedTouchableArea } from 'src/components/buttons/TouchableArea'
 import RemoveButton from 'src/components/explore/RemoveButton'
+import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
@@ -159,17 +160,18 @@ function FavoriteTokenCard({
                 ]}
               />
             )}
-            <TokenMetadata
-              align="center"
-              main={<Text variant="bodyLarge">{formatUSDPrice(usdPrice)}</Text>}
-              sub={
-                <RelativeChange
-                  change={pricePercentChange ?? undefined}
-                  semanticColor={true}
-                  variant="subheadSmall"
-                />
-              }
-            />
+            <TokenMetadata align="center">
+              <Box>
+                <Text adjustsFontSizeToFit numberOfLines={1} textAlign="center" variant="bodyLarge">
+                  {formatUSDPrice(usdPrice)}
+                </Text>
+              </Box>
+              <RelativeChange
+                change={pricePercentChange ?? undefined}
+                semanticColor={true}
+                variant="subheadSmall"
+              />
+            </TokenMetadata>
           </Flex>
         </BaseCard.Shadow>
       </AnimatedTouchableArea>
