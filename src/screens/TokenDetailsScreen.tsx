@@ -20,7 +20,7 @@ import { TokenDetailsLoader } from 'src/components/TokenDetails/TokenDetailsLoad
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import { PollingInterval } from 'src/constants/misc'
-import { isNonPollingRequestInFlight } from 'src/data/utils'
+import { isError, isNonPollingRequestInFlight } from 'src/data/utils'
 import {
   SafetyLevel,
   TokenDetailsScreenQuery,
@@ -83,13 +83,14 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
   const { currencyId: _currencyId } = route.params
   const currency = useCurrency(_currencyId)
 
-  const { data, error, refetch, networkStatus } = useTokenDetailsScreenQuery({
+  const { data, refetch, networkStatus } = useTokenDetailsScreenQuery({
     variables: {
       contract: currencyIdToContractInput(_currencyId),
     },
     pollInterval: PollingInterval.Fast,
     notifyOnNetworkStatusChange: true,
     errorPolicy: 'all',
+    fetchPolicy: 'cache-and-network',
   })
 
   const retry = useCallback(() => {
@@ -106,7 +107,14 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
     return <TokenDetailsLoader currency={currency} />
   }
 
-  return <TokenDetails currency={currency} data={data} error={Boolean(error)} retry={retry} />
+  return (
+    <TokenDetails
+      currency={currency}
+      data={data}
+      error={isError(networkStatus, !!data)}
+      retry={retry}
+    />
+  )
 }
 
 function TokenDetails({
