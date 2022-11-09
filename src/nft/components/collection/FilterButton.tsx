@@ -4,7 +4,7 @@ import * as styles from 'nft/components/collection/FilterButton.css'
 import { FilterIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { useIsCollectionLoading } from 'nft/hooks'
-import { putCommas } from 'nft/utils'
+import { pluralize, putCommas } from 'nft/utils'
 
 export const FilterButton = ({
   onClick,
@@ -42,7 +42,12 @@ export const FilterButton = ({
       <FilterIcon />
       {!isMobile ? (
         <>
-          {!isFiltersExpanded && <Box className={buttonTextMedium}> Filter • {putCommas(collectionCount)} results</Box>}
+          {!isFiltersExpanded && (
+            <Box className={buttonTextMedium}>
+              {' '}
+              Filter • {putCommas(collectionCount)} result{pluralize(collectionCount)}
+            </Box>
+          )}
         </>
       ) : null}
     </Box>
