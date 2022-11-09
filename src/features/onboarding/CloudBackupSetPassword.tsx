@@ -35,7 +35,8 @@ export function CloudBackupSetPassword({
   const [consentChecked, setConsentChecked] = useState(false)
   const [error, setError] = useState<PasswordErrors | undefined>(undefined)
 
-  const errorStyle = { opacity: error ? 100 : 0 }
+  const isButtonDisabled =
+    !consentChecked || !!error || password.length === 0 || confirmPassword.length === 0
 
   const onPressConsent = () => {
     setConsentChecked(!consentChecked)
@@ -83,15 +84,17 @@ export function CloudBackupSetPassword({
       onDoneButtonPressed(password)
     }
   }
+
   return (
     <>
-      <Flex gap="xs" mb="lg">
+      <Flex gap="lg" mb="lg">
         <Flex gap="xs">
           <PasswordInput
             placeholder={t('Enter password')}
             returnKeyType="next"
             value={password}
             onChangeText={(newText: string) => {
+              setError(undefined)
               setPassword(newText)
             }}
             onSubmitEditing={onPasswordSubmitEditing}
@@ -100,17 +103,21 @@ export function CloudBackupSetPassword({
             ref={confirmPasswordRef}
             placeholder={t('Confirm password')}
             value={confirmPassword}
-            onChangeText={onConfirmPasswordChangeText}
+            onChangeText={(newText: string) => {
+              setError(undefined)
+              onConfirmPasswordChangeText(newText)
+            }}
             onSubmitEditing={onConfirmPasswordSubmitEditing}
           />
-          <PasswordError
-            errorText={
-              error === PasswordErrors.InvalidPassword
-                ? t('Password must be at least 8 characters')
-                : t('Passwords do not match')
-            }
-            style={errorStyle}
-          />
+          {error ? (
+            <PasswordError
+              errorText={
+                error === PasswordErrors.InvalidPassword
+                  ? t('Password must be at least 8 characters')
+                  : t('Passwords do not match')
+              }
+            />
+          ) : null}
         </Flex>
         <Flex row gap="xs">
           <CheckBox
@@ -118,15 +125,17 @@ export function CloudBackupSetPassword({
             size={theme.iconSizes.sm}
             onCheckPressed={onPressConsent}
           />
-          <Text color="textPrimary" variant="bodyLarge">
-            {t(
-              'I understand that if I forget my password, Uniswap Labs cannot retrieve my recovery phrase.'
-            )}
-          </Text>
+          <Flex fill>
+            <Text color="textPrimary" variant="buttonLabelMicro">
+              {t(
+                'I understand that if I forget my password, Uniswap Labs cannot retrieve my recovery phrase.'
+              )}
+            </Text>
+          </Flex>
         </Flex>
       </Flex>
       <Button
-        disabled={!consentChecked}
+        disabled={isButtonDisabled}
         label={doneButtonText}
         name={ElementName.Next}
         onPress={onPressNext}

@@ -3,7 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { CloudBackupSetPassword } from 'src/features/onboarding/CloudBackupSetPassword'
-import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 
 export type Props = NativeStackScreenProps<
@@ -25,13 +25,12 @@ export function CloudBackupPasswordScreen({ navigation }: Props) {
   }
 
   return (
-    <OnboardingScreen
-      keyboardAvoidingViewEnabled={false}
+    <SafeKeyboardOnboardingScreen
       subtitle={t(
         'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your iCloud account is ever compromised.'
       )}
       title={t('Create your backup password')}>
       <CloudBackupSetPassword doneButtonText={t('Continue')} onPressDone={onPressNext} />
-    </OnboardingScreen>
+    </SafeKeyboardOnboardingScreen>
   )
 }
