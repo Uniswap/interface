@@ -125,9 +125,9 @@ export const SearchBarDropdown = ({
 
   const trendingCollections = useMemo(
     () =>
-      trendingCollectionResults && trendingCollectionResults?.length > 0
+      trendingCollectionResults
         ? trendingCollectionResults
-            ?.map((collection) => ({
+            .map((collection) => ({
               ...collection,
               collectionAddress: collection.address,
               floorPrice: formatEthPrice(collection.floor?.toString()),
